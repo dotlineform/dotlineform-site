@@ -7,12 +7,12 @@
     "work_id": "01721",
     "detail_id": "004",
     "section_id": "01721-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "state of mind - detail 1.jpg",
     "title": "state of mind - detail 1",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01721",

@@ -29,28 +29,22 @@
   "detail_sections": [
     {
       "section_id": "01045-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 2,
       "details": [
         {
           "detail_uid": "01045-001",
           "detail_id": "001",
           "title": "entangled form' - spider",
-          "section_id": "01045-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "entangled form' - spider.jpg"
         },
         {
           "detail_uid": "01045-002",
           "detail_id": "002",
           "title": "entangled form' - spider (detail)",
-          "section_id": "01045-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "entangled form' - spider (detail).jpg"
         }
       ]

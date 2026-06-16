@@ -7,12 +7,12 @@
     "work_id": "01422",
     "detail_id": "005",
     "section_id": "01422-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "matter - detail 5.jpg",
     "title": "matter - detail 5",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01422",

@@ -7,12 +7,12 @@
     "work_id": "00875",
     "detail_id": "001",
     "section_id": "00875-1",
-    "section_title": "cell",
-    "details_subfolder": "cell",
     "project_filename": "doll cell - 2007-04-03 - 14-17-59.jpg",
     "title": "doll cell - 2007-04-03 - 14-17-59",
     "width_px": 3780,
-    "height_px": 2835
+    "height_px": 2835,
+    "section_title": "cell",
+    "details_subfolder": "cell"
   },
   "work_summary": {
     "work_id": "00875",

@@ -7,12 +7,12 @@
     "work_id": "01051",
     "detail_id": "006",
     "section_id": "01051-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "fireworks particles version - detail 6.jpg",
     "title": "fireworks particles version - detail 6",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01051",

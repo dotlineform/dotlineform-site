@@ -7,12 +7,12 @@
     "work_id": "00629",
     "detail_id": "010",
     "section_id": "00629-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "quantum random number theory (10,000) 10.jpg",
     "title": "quantum random number theory (10,000) 10",
     "width_px": 4800,
-    "height_px": 4800
+    "height_px": 4800,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00629",

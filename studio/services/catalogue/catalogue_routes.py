@@ -4,8 +4,6 @@
 HEALTH_PATH = "/health"
 WORK_SAVE_PATH = "/catalogue/work/save"
 WORK_CREATE_PATH = "/catalogue/work/create"
-DETAIL_SAVE_PATH = "/catalogue/work-detail/save"
-DETAIL_CREATE_PATH = "/catalogue/work-detail/create"
 WORK_FILE_SAVE_PATH = "/catalogue/work-file/save"
 WORK_FILE_CREATE_PATH = "/catalogue/work-file/create"
 WORK_FILE_DELETE_PATH = "/catalogue/work-file/delete"
@@ -41,8 +39,6 @@ POST_PATHS = (
     PUBLICATION_PREVIEW_PATH,
     PUBLICATION_APPLY_PATH,
     WORK_SAVE_PATH,
-    DETAIL_CREATE_PATH,
-    DETAIL_SAVE_PATH,
     WORK_FILE_CREATE_PATH,
     WORK_FILE_SAVE_PATH,
     WORK_FILE_DELETE_PATH,

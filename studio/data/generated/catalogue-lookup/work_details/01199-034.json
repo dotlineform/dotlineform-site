@@ -7,12 +7,12 @@
     "work_id": "01199",
     "detail_id": "034",
     "section_id": "01199-1",
-    "section_title": "particles",
-    "details_subfolder": "particles",
     "project_filename": "particle (qrnt).jpg",
     "title": "particle (qrnt)",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "particles",
+    "details_subfolder": "particles"
   },
   "work_summary": {
     "work_id": "01199",

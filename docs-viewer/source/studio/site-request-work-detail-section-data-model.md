@@ -3,13 +3,13 @@ doc_id: site-request-work-detail-section-data-model
 title: Work Detail Section Data Model Request
 added_date: 2026-06-16
 last_updated: 2026-06-16
-ui_status: planned
+ui_status: complete
 parent_id: change-requests
 viewable: true
 ---
 # Work Detail Section Data Model Request
 
-Status: planned
+Status: complete
 
 ## Summary
 
@@ -476,3 +476,18 @@ Update these stable docs after implementation:
 - [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor) - mark as retired
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+
+## Implementation Closeout
+
+Implemented on 2026-06-16.
+
+Final decisions:
+
+- canonical `work_details.json` uses `work_detail_sections` plus `work_details`
+- detail records no longer store `details_subfolder`, `section_title`, or `sort_order`
+- section ordering is `section_order`; section-level detail ordering is `detail_sort`
+- Studio work lookup projects section metadata once per section and nested detail summaries contain detail-owned fields only
+- public work JSON consumes the section map and strips section metadata from nested detail rows
+- optional null `section_order` and `detail_sort` are compacted out of public payloads until meaningful values exist, matching existing public JSON conventions
+- `/studio/catalogue-work-detail/` and its create/save endpoints are retired rather than adapted
+- current work-editor detail toolbar actions remain present but inert for future work-scoped modals

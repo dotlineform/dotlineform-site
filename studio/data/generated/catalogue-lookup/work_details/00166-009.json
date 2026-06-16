@@ -7,12 +7,12 @@
     "work_id": "00166",
     "detail_id": "009",
     "section_id": "00166-1",
-    "section_title": "pages",
-    "details_subfolder": "pages",
     "project_filename": "nerve (formaldehyde form) - 8.jpg",
     "title": "nerve (formaldehyde form) - 8",
     "width_px": 3566,
-    "height_px": 2594
+    "height_px": 2594,
+    "section_title": "pages",
+    "details_subfolder": "pages"
   },
   "work_summary": {
     "work_id": "00166",

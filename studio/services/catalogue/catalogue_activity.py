@@ -21,10 +21,6 @@ ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK = "catalogue-work"
 ACTIVITY_CONTEXT_ACTION_SAVE_WORK = "save-work"
 ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK = "/studio/catalogue-work/"
 ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE = "catalogueWorkSave"
-ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL = "catalogue-work-detail"
-ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL = "save-work-detail"
-ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL = "/studio/catalogue-work-detail/"
-ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE = "catalogueWorkDetailSave"
 ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES = "catalogue-series"
 ACTIVITY_CONTEXT_ACTION_SAVE_SERIES = "save-series"
 ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES = "/studio/catalogue-series/"
@@ -60,19 +56,6 @@ ACTIVITY_PROFILE_SAVE_WORK = ActivityActionProfile(
     endpoint=routes.WORK_SAVE_PATH,
     record_family="work",
     record_id_field="work_id",
-    script_purpose_ids=("save-canonical-data", "rebuild-published-work-data", "rebuild-lookups", "update-search"),
-    published_step_label="Generate Work Pages",
-    published_script_purpose_id="rebuild-published-work-data",
-)
-ACTIVITY_PROFILE_SAVE_WORK_DETAIL = ActivityActionProfile(
-    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
-    action_id=ACTIVITY_CONTEXT_ACTION_SAVE_WORK_DETAIL,
-    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
-    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
-    control_selector="#catalogueWorkDetailSave",
-    endpoint=routes.DETAIL_SAVE_PATH,
-    record_family="work_detail",
-    record_id_field="detail_uid",
     script_purpose_ids=("save-canonical-data", "rebuild-published-work-data", "rebuild-lookups", "update-search"),
     published_step_label="Generate Work Pages",
     published_script_purpose_id="rebuild-published-work-data",
@@ -113,17 +96,6 @@ ACTIVITY_PROFILE_CREATE_WORK = ActivityActionProfile(
     endpoint=routes.WORK_CREATE_PATH,
     record_family="work",
     record_id_field="work_id",
-    script_purpose_ids=("save-canonical-data", "rebuild-lookups"),
-)
-ACTIVITY_PROFILE_CREATE_WORK_DETAIL = ActivityActionProfile(
-    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
-    action_id="create-work-detail",
-    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
-    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_DETAIL_SAVE,
-    control_selector="#catalogueWorkDetailSave",
-    endpoint=routes.DETAIL_CREATE_PATH,
-    record_family="work_detail",
-    record_id_field="detail_uid",
     script_purpose_ids=("save-canonical-data", "rebuild-lookups"),
 )
 ACTIVITY_PROFILE_CREATE_SERIES = ActivityActionProfile(
@@ -225,17 +197,6 @@ ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
         record_id_field="work_id",
         script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
     ),
-    "work_detail": ActivityActionProfile(
-        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK_DETAIL,
-        action_id="delete-work-detail",
-        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK_DETAIL,
-        control_id="catalogueWorkDetailDelete",
-        control_selector="#catalogueWorkDetailDelete",
-        endpoint=routes.DELETE_APPLY_PATH,
-        record_family="work_detail",
-        record_id_field="detail_uid",
-        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
-    ),
     "series": ActivityActionProfile(
         page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
         action_id="delete-series",
@@ -295,11 +256,9 @@ ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
 )
 ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_SAVE_WORK,
-    ACTIVITY_PROFILE_SAVE_WORK_DETAIL,
     ACTIVITY_PROFILE_SAVE_SERIES,
     ACTIVITY_PROFILE_SAVE_MOMENT,
     ACTIVITY_PROFILE_CREATE_WORK,
-    ACTIVITY_PROFILE_CREATE_WORK_DETAIL,
     ACTIVITY_PROFILE_CREATE_SERIES,
     *ACTIVITY_PUBLICATION_PROFILES.values(),
     *ACTIVITY_DELETE_PROFILES.values(),

@@ -7,12 +7,12 @@
     "work_id": "01371",
     "detail_id": "004",
     "section_id": "01371-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "home 5 - detail 4.jpg",
     "title": "home 5 - detail 4",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01371",

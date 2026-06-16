@@ -7,12 +7,12 @@
     "work_id": "00816",
     "detail_id": "003",
     "section_id": "00816-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "colours kylie.3.jpg",
     "title": "colours kylie.3",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00816",

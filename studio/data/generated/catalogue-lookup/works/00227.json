@@ -29,18 +29,16 @@
   "detail_sections": [
     {
       "section_id": "00227-1",
+      "details_subfolder": "reverse",
       "section_title": "reverse",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 1,
       "details": [
         {
           "detail_uid": "00227-001",
           "detail_id": "001",
           "title": "untitled [227] reverse",
-          "section_id": "00227-1",
-          "section_title": "reverse",
-          "sort_order": null,
-          "details_subfolder": "reverse",
           "project_filename": "227-001.jpg"
         }
       ]

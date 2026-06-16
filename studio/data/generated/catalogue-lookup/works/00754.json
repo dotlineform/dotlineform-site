@@ -29,38 +29,28 @@
   "detail_sections": [
     {
       "section_id": "00754-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 3,
       "details": [
         {
           "detail_uid": "00754-004",
           "detail_id": "004",
           "title": "assembly code 2 (detail 1)",
-          "section_id": "00754-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "assembly code 2 (detail 1).jpg"
         },
         {
           "detail_uid": "00754-005",
           "detail_id": "005",
           "title": "assembly code 2 (detail 2)",
-          "section_id": "00754-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "assembly code 2 (detail 2).jpg"
         },
         {
           "detail_uid": "00754-006",
           "detail_id": "006",
           "title": "assembly code 2 (detail 3)",
-          "section_id": "00754-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "assembly code 2 (detail 3).jpg"
         }
       ]

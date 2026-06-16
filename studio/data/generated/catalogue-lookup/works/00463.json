@@ -29,86 +29,62 @@
   "detail_sections": [
     {
       "section_id": "00463-1",
+      "details_subfolder": "original painting",
       "section_title": "original painting",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 1,
       "details": [
         {
           "detail_uid": "00463-001",
           "detail_id": "001",
           "title": "living surface hand form (original painting, 1989)",
-          "section_id": "00463-1",
-          "section_title": "original painting",
-          "sort_order": null,
-          "details_subfolder": "original painting",
           "project_filename": "living surface hand form (original painting, 1989).jpg"
         }
       ]
     },
     {
       "section_id": "00463-2",
+      "details_subfolder": "versions",
       "section_title": "versions",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "00463-002",
           "detail_id": "002",
           "title": "living surface (version 1)",
-          "section_id": "00463-2",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "living surface version 1.jpg"
         },
         {
           "detail_uid": "00463-003",
           "detail_id": "003",
           "title": "living surface (version 2)",
-          "section_id": "00463-2",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "living surface version 2.jpg"
         },
         {
           "detail_uid": "00463-004",
           "detail_id": "004",
           "title": "living surface (version 3)",
-          "section_id": "00463-2",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "living surface version 3.jpg"
         },
         {
           "detail_uid": "00463-005",
           "detail_id": "005",
           "title": "living surface (version 3) detail",
-          "section_id": "00463-2",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "living surface version 3 detail.jpg"
         },
         {
           "detail_uid": "00463-006",
           "detail_id": "006",
           "title": "living surface (version 4)",
-          "section_id": "00463-2",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "living surface version 4.jpg"
         },
         {
           "detail_uid": "00463-007",
           "detail_id": "007",
           "title": "living surface (version 4) detail",
-          "section_id": "00463-2",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "living surface version 4 detail.jpg"
         }
       ]

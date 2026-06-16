@@ -9,9 +9,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+SERVICES_DIR = REPO_ROOT / "studio/services"
+if str(SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue.catalogue_field_registry import field_aware_build_plan, load_catalogue_field_registry  # noqa: E402
 from catalogue.catalogue_source import CatalogueSourceRecords, write_source_record_payloads  # noqa: E402
@@ -42,13 +42,23 @@ def write_fixture_source(source_dir: Path) -> CatalogueSourceRecords:
                 "series_ids": ["009"],
             },
         },
+        work_detail_sections={
+            "00001-1": {
+                "section_id": "00001-1",
+                "work_id": "00001",
+                "details_subfolder": "details",
+                "section_title": "Details",
+                "section_order": 1,
+                "detail_sort": None,
+            }
+        },
         work_details={
             "00001-001": {
                 "detail_uid": "00001-001",
                 "work_id": "00001",
                 "detail_id": "001",
+                "section_id": "00001-1",
                 "title": "Alpha detail",
-                "sort_order": 1,
                 "status": "published",
             }
         },
@@ -229,11 +239,11 @@ def test_work_targeted_refresh_reports_related_artifacts() -> None:
 def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
-        updated_record = dict(records.work_details["00001-001"], sort_order=2)
+        updated_record = dict(records.work_details["00001-001"], title="Alpha detail updated")
         lookup_plan = lookup_plan_for(
             records,
             record_family="work_detail",
-            changed_fields=["sort_order"],
+            changed_fields=["title"],
             current_record=records.work_details["00001-001"],
             updated_record=updated_record,
         )

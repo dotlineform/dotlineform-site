@@ -29,128 +29,82 @@
   "detail_sections": [
     {
       "section_id": "00869-1",
+      "details_subfolder": "versions",
       "section_title": "versions",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 12,
       "details": [
         {
           "detail_uid": "00869-001",
           "detail_id": "001",
           "title": "curve machine [1]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [1].jpg"
         },
         {
           "detail_uid": "00869-002",
           "detail_id": "002",
           "title": "curve machine [2]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [2].jpg"
         },
         {
           "detail_uid": "00869-003",
           "detail_id": "003",
           "title": "curve machine [3]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [3].jpg"
         },
         {
           "detail_uid": "00869-004",
           "detail_id": "004",
           "title": "curve machine [4]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [4].jpg"
         },
         {
           "detail_uid": "00869-005",
           "detail_id": "005",
           "title": "curve machine [5]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [5].jpg"
         },
         {
           "detail_uid": "00869-006",
           "detail_id": "006",
           "title": "curve machine [6]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [6].jpg"
         },
         {
           "detail_uid": "00869-007",
           "detail_id": "007",
           "title": "curve machine [7]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [7].jpg"
         },
         {
           "detail_uid": "00869-008",
           "detail_id": "008",
           "title": "curve machine [8]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [8].jpg"
         },
         {
           "detail_uid": "00869-009",
           "detail_id": "009",
           "title": "curve machine [9]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [9].jpg"
         },
         {
           "detail_uid": "00869-010",
           "detail_id": "010",
           "title": "curve machine [10]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [10].jpg"
         },
         {
           "detail_uid": "00869-011",
           "detail_id": "011",
           "title": "curve machine [11]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [11].jpg"
         },
         {
           "detail_uid": "00869-012",
           "detail_id": "012",
           "title": "curve machine [12]",
-          "section_id": "00869-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "curve machine [12].jpg"
         }
       ]

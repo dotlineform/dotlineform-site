@@ -7,12 +7,12 @@
     "work_id": "00639",
     "detail_id": "001",
     "section_id": "00639-1",
-    "section_title": "source",
-    "details_subfolder": "source",
     "project_filename": "16 forms - source photo.jpg",
     "title": "16 forms - source photo",
     "width_px": 4453,
-    "height_px": 4453
+    "height_px": 4453,
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "00639",

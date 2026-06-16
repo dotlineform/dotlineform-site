@@ -7,12 +7,12 @@
     "work_id": "00460",
     "detail_id": "015",
     "section_id": "00460-2",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "molecules (detail 11).jpg",
     "title": "molecules (detail 11)",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00460",

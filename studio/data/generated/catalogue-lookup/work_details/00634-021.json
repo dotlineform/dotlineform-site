@@ -7,12 +7,12 @@
     "work_id": "00634",
     "detail_id": "021",
     "section_id": "00634-3",
-    "section_title": "details ^2",
-    "details_subfolder": "details ^2",
     "project_filename": "bits symbols 1.2.2.jpg",
     "title": "bits symbols 1.2.2",
     "width_px": 1535,
-    "height_px": 1535
+    "height_px": 1535,
+    "section_title": "details ^2",
+    "details_subfolder": "details ^2"
   },
   "work_summary": {
     "work_id": "00634",

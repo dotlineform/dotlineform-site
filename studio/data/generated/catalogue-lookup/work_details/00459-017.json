@@ -7,12 +7,12 @@
     "work_id": "00459",
     "detail_id": "017",
     "section_id": "00459-1",
-    "section_title": "molecules",
-    "details_subfolder": "molecules",
     "project_filename": "molecule form 17 (2006-11-05).jpg",
     "title": "molecule form 17 (2006-11-05)",
     "width_px": 4724,
-    "height_px": 4724
+    "height_px": 4724,
+    "section_title": "molecules",
+    "details_subfolder": "molecules"
   },
   "work_summary": {
     "work_id": "00459",

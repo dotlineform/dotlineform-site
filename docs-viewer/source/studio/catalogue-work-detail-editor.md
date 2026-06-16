@@ -8,149 +8,23 @@ viewable: true
 ---
 # Catalogue Work Detail Editor
 
-Route:
+Status: retired
 
-- `/studio/catalogue-work-detail/`
-- focused record selection uses `?detail=<detail_uid>`
-- parent-scoped create mode uses `?work=<work_id>&mode=new`
+The standalone Studio route `/studio/catalogue-work-detail/` has been removed.
 
-The route runs inside the local Studio app server and is rendered by the local Studio frontend.
+Retired surfaces:
 
-This page edits canonical work detail source records from `studio/data/canonical/catalogue/work_details.json` through the local catalogue service. It supports focused single-record edit, bulk edit, and parent-scoped create mode on the same route.
+- Studio route registry entry and served route
+- frontend route shell, editor, state, form, selection, action, event, and UI-text modules
+- local Studio `POST /studio/api/catalogue/work-detail/create`
+- local Studio `POST /studio/api/catalogue/work-detail/save`
+- catalogue write-service `/work-detail/create` and `/work-detail/save` dispatch
 
-## Current Scope
+Current work-detail browsing lives on [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor). That browser reads generated work lookup `detail_sections[]`, where section metadata is projected once per section and nested detail summaries contain only detail-owned fields.
 
-The current route covers:
+Canonical work-detail source is still stored in `studio/data/canonical/catalogue/work_details.json`, but it now uses the v2 split model:
 
-- search by `detail_uid`
-- open one work detail record
-- open multiple work detail records by comma-delimited detail ids and same-work detail ranges
-- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
-- create a detail source record from the detail editor route when a parent work is supplied
-- edit `details_subfolder`
-- edit `section_title`
-- edit `sort_order`
-- edit `project_filename`
-- edit `title`
-- bulk-edit those same fields across the selected detail records
-- save source metadata, with saves for published parent works updating the parent work output internally
-- delete one work-detail source record in single-record mode
+- `work_detail_sections` for `details_subfolder`, `section_title`, `section_order`, and `detail_sort`
+- `work_details` for `detail_uid`, `work_id`, `detail_id`, `section_id`, `title`, `project_filename`, and generated dimensions
 
-Publishing is owned by the parent work record. Work detail records do not have independent `status` or `published_date` fields, and the public update remains work-scoped.
-
-Frontend implementation notes:
-
-- `studio/app/frontend/js/catalogue-work-detail-shell.js` renders the route shell: search/open controls, action buttons, and the work-detail metadata form.
-- `studio/app/frontend/js/catalogue-work-detail-editor.js` owns route bootstrap, state assembly, dirty-state handling, validation orchestration, and save/delete workflow coordination.
-- `studio/app/frontend/js/catalogue-work-detail-editor-state.js` collects required DOM nodes and creates the shared route state.
-- `studio/app/frontend/js/catalogue-work-detail-form.js` owns form field rendering, label refresh, field value synchronization, enabled/disabled state, and field validation message rendering.
-- `studio/app/frontend/js/catalogue-work-detail-selection.js` owns detail query parsing, search suggestions, single/bulk open flows, and initial `?detail=` / `?mode=new` route selection.
-- `studio/app/frontend/js/catalogue-work-detail-actions.js` builds create/save/delete API payloads, applies parent-work publication checks for save follow-through, and projects action result messages.
-- `studio/app/frontend/js/catalogue-work-detail-fields.js` owns work-detail field definitions, id normalization, draft shaping, save payload construction, and create validation.
-- `studio/app/frontend/config/ui-text/catalogue-work-detail-editor.json` owns route copy.
-
-Backend and route notes:
-
-- the local app exposes the route at `/studio/catalogue-work-detail/`
-- `studio/app/server/studio/studio_app_config.py` includes the work-detail shell and editor modules in the Studio asset version calculation
-- `studio/services/catalogue/catalogue_work_detail_service.py` handles create and single-record save requests
-- `studio/services/catalogue/catalogue_bulk_service.py` handles bulk work-detail saves
-- `studio/services/catalogue/catalogue_source.py` defines the canonical work-detail source fields and source directory default
-- `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py` covers local route boot and unavailable-service state
-
-## Route Ready State
-
-The page root `#catalogueWorkDetailRoot` implements the shared Studio ready-state contract:
-
-- `data-studio-ready="false"` during initial route setup
-- `data-studio-ready="true"` after the initial empty, new, single-detail, or bulk-detail render completes
-- `data-studio-busy="true"` while save, create, or delete commands are running
-- `data-studio-mode="empty|single|bulk|new"`
-- `data-studio-service="available|unavailable"`
-- `data-studio-record-loaded="true|false"`
-
-## New Mode
-
-New mode is entered with:
-
-- `/studio/catalogue-work-detail/?work=<work_id>&mode=new`
-
-In new mode:
-
-- the parent work id is required in the URL
-- the parent work must already be published, because detail publication is owned by the parent work
-- the suggested next `detail_id` is prefilled when available
-- `details_subfolder`, `section_title`, `sort_order`, `project_filename`, and `title` are editable
-- `section_id` is generated by the server
-- `Create` writes source JSON only through `POST /studio/api/catalogue/work-detail/create`
-- no public site update runs during create; save the new detail after creation if parent-work output needs to be refreshed
-- after create, the page opens the new detail in normal edit mode with `?detail=<detail_uid>`
-
-Draft works cannot receive work details. Publish the parent work first, then add details as a separate follow-up process.
-
-## Bulk Mode
-
-Bulk mode is entered by opening more than one detail from the search field.
-
-Current bulk-selection rules:
-
-- comma-delimited explicit `detail_uid` values are supported
-- same-work detail ranges are supported as `00001-003-010`
-
-Current bulk-edit behavior:
-
-- untouched fields preserve per-record values
-- an empty touched field clears that field across the selected details
-- `Save` updates affected parent-work public output for selected details whose parent works are published
-- delete is disabled in bulk mode
-
-## Save Boundary
-
-Current action labels:
-
-- `Save`
-  writes detail source JSON; if the parent work is published, it also updates the parent work output internally
-- `Delete`
-  removes the current detail source record in single-record mode after delete-preview validation and confirmation
-
-Current save flow:
-
-1. page loads the derived detail-search and work-search lookups through `GET /studio/api/catalogue/read`, not the full canonical detail map
-2. opening a detail fetches one focused lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_work_detail_base&record_id=<detail_uid>`
-3. browser uses the lookup-provided record hash for stale-write protection
-4. user edits the current detail form
-5. `POST /studio/api/catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, the normalized detail patch, and `apply_build: true` only when the parent work is published
-6. the local catalogue service validates the full source set, writes `studio/data/canonical/catalogue/work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update result for saves whose parent work is published
-7. the page reloads its focused detail lookup payload
-
-Bulk save flow:
-
-1. page expands the requested detail selection in the browser
-2. page loads focused lookup records for the selected details and tracks each record hash
-3. `POST /studio/api/catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, touched field updates, and `apply_build: true` only when the selection includes details whose parent works are published
-4. the local catalogue service validates the combined source write, writes `studio/data/canonical/catalogue/work_details.json` once, refreshes lookup payloads, and returns changed counts plus parent-work rebuild targets
-5. when `apply_build` is true and at least one affected parent work is published, the same save response also reports the nested public-update result; draft-parent bulk saves remain source-only
-
-Delete flow:
-
-1. single-record mode requests `POST /studio/api/catalogue/delete-preview`
-2. if preview is clean, the page confirms and sends `POST /studio/api/catalogue/delete-apply`
-3. the server deletes the detail source record, generated detail page/media artifacts, repo-local staged media, and the deleted detail from the parent work runtime JSON
-4. the page returns to the parent work editor
-
-## Current Editable Fields
-
-- `details_subfolder`
-- `section_title`
-- `sort_order`
-- `project_filename`
-- `title`
-
-Work detail records do not expose independent publication fields. Use the parent work editor to publish or unpublish the work and its details.
-
-## Related References
-
-- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
-- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+Future work-detail editing should be implemented as work-scoped modals and APIs that operate on sections and details together. Do not restore the retired standalone route or adapt the old create/save endpoints as a compatibility layer.

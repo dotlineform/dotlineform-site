@@ -7,12 +7,12 @@
     "work_id": "00519",
     "detail_id": "050",
     "section_id": "00519-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "version dall-e - 10.4.jpg",
     "title": "version dall-e - 10.4",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00519",

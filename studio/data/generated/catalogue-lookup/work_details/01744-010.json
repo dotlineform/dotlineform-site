@@ -7,12 +7,12 @@
     "work_id": "01744",
     "detail_id": "010",
     "section_id": "01744-2",
-    "section_title": "source",
-    "details_subfolder": "source",
     "project_filename": "tabula rasa - source.jpg",
     "title": "tabula rasa - source",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "01744",

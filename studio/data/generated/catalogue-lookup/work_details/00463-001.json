@@ -7,12 +7,12 @@
     "work_id": "00463",
     "detail_id": "001",
     "section_id": "00463-1",
-    "section_title": "original painting",
-    "details_subfolder": "original painting",
     "project_filename": "living surface hand form (original painting, 1989).jpg",
     "title": "living surface hand form (original painting, 1989)",
     "width_px": 2169,
-    "height_px": 2830
+    "height_px": 2830,
+    "section_title": "original painting",
+    "details_subfolder": "original painting"
   },
   "work_summary": {
     "work_id": "00463",

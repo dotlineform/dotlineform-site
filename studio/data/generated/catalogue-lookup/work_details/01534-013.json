@@ -7,12 +7,12 @@
     "work_id": "01534",
     "detail_id": "013",
     "section_id": "01534-1",
-    "section_title": "selected source",
-    "details_subfolder": "selected source",
     "project_filename": "poa 1 - 1803.jpg",
     "title": "poa 1 - 1803",
     "width_px": 3000,
-    "height_px": 2398
+    "height_px": 2398,
+    "section_title": "selected source",
+    "details_subfolder": "selected source"
   },
   "work_summary": {
     "work_id": "01534",

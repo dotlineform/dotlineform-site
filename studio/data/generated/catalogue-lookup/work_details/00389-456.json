@@ -7,12 +7,12 @@
     "work_id": "00389",
     "detail_id": "456",
     "section_id": "00389-1",
-    "section_title": "photos",
-    "details_subfolder": "photos",
     "project_filename": "2020-04-15 17꞉36.jpg",
     "title": "2020-04-15 17꞉36",
     "width_px": 4032,
-    "height_px": 3024
+    "height_px": 3024,
+    "section_title": "photos",
+    "details_subfolder": "photos"
   },
   "work_summary": {
     "work_id": "00389",

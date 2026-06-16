@@ -7,12 +7,12 @@
     "work_id": "00805",
     "detail_id": "029",
     "section_id": "00805-1",
-    "section_title": "dna",
-    "details_subfolder": "dna",
     "project_filename": "book dna 29.jpg",
     "title": "book dna 29",
     "width_px": 1200,
-    "height_px": 1200
+    "height_px": 1200,
+    "section_title": "dna",
+    "details_subfolder": "dna"
   },
   "work_summary": {
     "work_id": "00805",

@@ -7,12 +7,12 @@
     "work_id": "01720",
     "detail_id": "065",
     "section_id": "01720-1",
-    "section_title": "symbols",
-    "details_subfolder": "symbols",
     "project_filename": "strong clumsy.jpg",
     "title": "strong clumsy",
     "width_px": 1600,
-    "height_px": 1442
+    "height_px": 1442,
+    "section_title": "symbols",
+    "details_subfolder": "symbols"
   },
   "work_summary": {
     "work_id": "01720",

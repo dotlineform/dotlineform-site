@@ -160,7 +160,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 try:
     from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
-        build_detail_section_resolution_by_uid,
+        ordered_work_detail_sections,
         records_from_json_source,
         validate_source_records,
         write_source_record_payloads,
@@ -168,7 +168,7 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.catalogue_source import (
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
-        build_detail_section_resolution_by_uid,
+        ordered_work_detail_sections,
         records_from_json_source,
         validate_source_records,
         write_source_record_payloads,
@@ -1105,8 +1105,7 @@ def main() -> None:
             # Detail sections are sourced from currently published detail rows only.
             encountered_work_ids: List[str] = []
             encountered_work_id_set: set[str] = set()
-            detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
-            section_resolution_by_uid = build_detail_section_resolution_by_uid(source_records.work_details)
+            detail_records_by_work: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
             for work_record in source_records.works.values():
                 wid_raw = work_record.get("work_id")
@@ -1134,22 +1133,19 @@ def main() -> None:
                 if wid not in encountered_work_id_set:
                     continue
 
-                if normalize_status(detail_source_record.get("status")) != "published":
+                detail_status = normalize_status(detail_source_record.get("status"))
+                if detail_status and detail_status != "published":
                     continue
 
                 did = slug_id(did_raw, width=3)
-                section_resolution = section_resolution_by_uid.get(detail_uid, {})
                 detail_record = records.build_canonical_detail_record(
                     wid=wid,
                     did=did,
                     title=coerce_string(detail_source_record.get("title")),
-                    section_id=coerce_string(section_resolution.get("section_id")),
-                    section_title=coerce_string(section_resolution.get("section_title")),
-                    sort_order=coerce_int(section_resolution.get("sort_order")),
                     width_px=coerce_int(detail_source_record.get("width_px")),
                     height_px=coerce_int(detail_source_record.get("height_px")),
                 )
-                detail_records_by_work.setdefault(wid, []).append(detail_record)
+                detail_records_by_work.setdefault(wid, {})[detail_uid] = detail_record
 
             wj_written = 0
             wj_skipped = 0
@@ -1163,7 +1159,20 @@ def main() -> None:
 
                 source_prose_path = resolve_work_prose_source_path(wid)
 
-                sections = records.build_sections_from_detail_records(detail_records_by_work.get(wid, []))
+                source_sections = []
+                detail_payloads_by_uid = detail_records_by_work.get(wid, {})
+                for section in ordered_work_detail_sections(source_records, wid):
+                    details = [
+                        detail_payloads_by_uid[detail.get("detail_uid")]
+                        for detail in section.get("details", [])
+                        if isinstance(detail, dict) and detail.get("detail_uid") in detail_payloads_by_uid
+                    ]
+                    if not details:
+                        continue
+                    section_payload = dict(section)
+                    section_payload["details"] = details
+                    source_sections.append(section_payload)
+                sections = records.build_sections_from_detail_sections(source_sections)
                 details_total = sum(len(s.get("details", [])) for s in sections)
                 work_record = records.build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
                 content_html: Optional[str] = None

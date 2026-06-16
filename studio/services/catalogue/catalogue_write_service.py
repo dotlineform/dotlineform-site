@@ -15,7 +15,6 @@ from catalogue.catalogue_publication_service import publication_apply_response, 
 from catalogue.catalogue_prose_import_service import moment_import_apply_payload, prose_import_apply_response
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
-from catalogue.catalogue_work_detail_service import work_detail_create_payload, work_detail_save_payload
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
 
 
@@ -23,8 +22,6 @@ SERVICE_POST_PATHS = {
     "/bulk-save",
     "/work/create",
     "/work/save",
-    "/work-detail/create",
-    "/work-detail/save",
     "/series/create",
     "/series/save",
     "/delete-preview",
@@ -56,10 +53,6 @@ def handle_catalogue_post(
         return HTTPStatus.OK, bulk_save_payload(context, body)
     if api_path == "/work/save":
         return HTTPStatus.OK, work_save_payload(context, body)
-    if api_path == "/work-detail/create":
-        return HTTPStatus.OK, work_detail_create_payload(context, body)
-    if api_path == "/work-detail/save":
-        return HTTPStatus.OK, work_detail_save_payload(context, body)
     if api_path == "/series/create":
         return HTTPStatus.OK, series_create_payload(context, body)
     if api_path == "/series/save":

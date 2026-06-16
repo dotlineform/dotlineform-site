@@ -196,7 +196,6 @@ def assert_action_workflow_helpers(page: Page) -> None:
             ]);
             await Promise.all([
                 import('/studio/app/frontend/js/catalogue-work-actions.js'),
-                import('/studio/app/frontend/js/catalogue-work-detail-actions.js'),
                 import('/studio/app/frontend/js/catalogue-series-actions.js'),
                 import('/studio/app/frontend/js/catalogue-moment-actions.js')
             ]);

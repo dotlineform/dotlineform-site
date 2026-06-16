@@ -189,6 +189,11 @@ def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
     }
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(updated_works),
+        work_detail_sections=sort_record_map({
+            section_id: section_record
+            for section_id, section_record in source_records.work_detail_sections.items()
+            if str(section_record.get("work_id") or "") != work_id
+        }),
         work_details=sort_record_map(updated_work_details),
         series=sort_record_map(updated_series),
     )
@@ -200,6 +205,7 @@ def validate_work_detail_delete_records(source_dir: Path, detail_uid: str) -> li
     source_records.work_details.pop(detail_uid, None)
     normalized_records = CatalogueSourceRecords(
         works=source_records.works,
+        work_detail_sections=source_records.work_detail_sections,
         work_details=sort_record_map(source_records.work_details),
         series=source_records.series,
     )
@@ -222,6 +228,7 @@ def validate_series_delete_records(source_dir: Path, series_id: str) -> list[str
     source_records.works.update(updated_works)
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(source_records.works),
+        work_detail_sections=source_records.work_detail_sections,
         work_details=source_records.work_details,
         series=sort_record_map(source_records.series),
     )

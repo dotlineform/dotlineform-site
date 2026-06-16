@@ -7,12 +7,12 @@
     "work_id": "00389",
     "detail_id": "391",
     "section_id": "00389-1",
-    "section_title": "photos",
-    "details_subfolder": "photos",
     "project_filename": "2015-10-04 12꞉47.jpg",
     "title": "2015-10-04 12꞉47",
     "width_px": 2180,
-    "height_px": 2180
+    "height_px": 2180,
+    "section_title": "photos",
+    "details_subfolder": "photos"
   },
   "work_summary": {
     "work_id": "00389",

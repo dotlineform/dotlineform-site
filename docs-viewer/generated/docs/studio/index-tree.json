@@ -449,7 +449,7 @@
           "doc_id": "site-request-work-detail-section-data-model",
           "title": "Work Detail Section Data Model Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-work-detail-section-data-model.json",
-          "ui_status": "planned"
+          "ui_status": "complete"
         }
       ]
     },
@@ -1309,5 +1309,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-16T18:57:46Z"
+  "generated_at": "2026-06-16T19:24:04Z"
 }

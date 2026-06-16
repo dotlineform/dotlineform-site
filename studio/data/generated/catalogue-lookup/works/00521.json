@@ -29,68 +29,46 @@
   "detail_sections": [
     {
       "section_id": "00521-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "00521-007",
           "detail_id": "007",
           "title": "kylie structure 2.1",
-          "section_id": "00521-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "kylie structure 2.1.jpg"
         },
         {
           "detail_uid": "00521-008",
           "detail_id": "008",
           "title": "kylie structure 2.2",
-          "section_id": "00521-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "kylie structure 2.2.jpg"
         },
         {
           "detail_uid": "00521-009",
           "detail_id": "009",
           "title": "kylie structure 2.3",
-          "section_id": "00521-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "kylie structure 2.3.jpg"
         },
         {
           "detail_uid": "00521-010",
           "detail_id": "010",
           "title": "kylie structure 2.4",
-          "section_id": "00521-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "kylie structure 2.4.jpg"
         },
         {
           "detail_uid": "00521-011",
           "detail_id": "011",
           "title": "kylie structure 2.5",
-          "section_id": "00521-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "kylie structure 2.5.jpg"
         },
         {
           "detail_uid": "00521-012",
           "detail_id": "012",
           "title": "kylie structure 2.6",
-          "section_id": "00521-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "kylie structure 2.6.jpg"
         }
       ]

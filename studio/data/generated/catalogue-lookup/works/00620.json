@@ -29,138 +29,88 @@
   "detail_sections": [
     {
       "section_id": "00620-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 13,
       "details": [
         {
           "detail_uid": "00620-001",
           "detail_id": "001",
           "title": "harmony 3.1",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.1.jpg"
         },
         {
           "detail_uid": "00620-002",
           "detail_id": "002",
           "title": "harmony 3.2",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.2.jpg"
         },
         {
           "detail_uid": "00620-003",
           "detail_id": "003",
           "title": "harmony 3.3",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.3.jpg"
         },
         {
           "detail_uid": "00620-004",
           "detail_id": "004",
           "title": "harmony 3.4",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.4.jpg"
         },
         {
           "detail_uid": "00620-005",
           "detail_id": "005",
           "title": "harmony 3.5",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.5.jpg"
         },
         {
           "detail_uid": "00620-006",
           "detail_id": "006",
           "title": "harmony 3.6",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.6.jpg"
         },
         {
           "detail_uid": "00620-007",
           "detail_id": "007",
           "title": "harmony 3.7",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.7.jpg"
         },
         {
           "detail_uid": "00620-008",
           "detail_id": "008",
           "title": "harmony 3.8",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.8.jpg"
         },
         {
           "detail_uid": "00620-009",
           "detail_id": "009",
           "title": "harmony 3.9",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.9.jpg"
         },
         {
           "detail_uid": "00620-010",
           "detail_id": "010",
           "title": "harmony 3.10",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.10.jpg"
         },
         {
           "detail_uid": "00620-011",
           "detail_id": "011",
           "title": "harmony 3.11",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.11.jpg"
         },
         {
           "detail_uid": "00620-012",
           "detail_id": "012",
           "title": "harmony 3.12",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.12.jpg"
         },
         {
           "detail_uid": "00620-013",
           "detail_id": "013",
           "title": "harmony 3.13",
-          "section_id": "00620-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "harmony 3.13.jpg"
         }
       ]

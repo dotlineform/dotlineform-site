@@ -7,12 +7,12 @@
     "work_id": "00159",
     "detail_id": "002",
     "section_id": "00159-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "Michelle Pfeiffer - pages 2-3.jpg",
     "title": "Michelle Pfeiffer - pages 2-3",
     "width_px": 5712,
-    "height_px": 4038
+    "height_px": 4038,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00159",

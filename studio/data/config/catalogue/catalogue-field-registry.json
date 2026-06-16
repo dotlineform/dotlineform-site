@@ -251,7 +251,7 @@
       "id": "work_detail_media_source",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["details_subfolder", "project_filename"],
+      "fields": ["project_filename"],
       "current": {
         "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
         "fallback": true
@@ -265,14 +265,14 @@
           }
         ],
         "fallback": false,
-        "reason": "Detail source media folder and filename fields control Studio source-image editing, media readiness, and derivative generation; JSON rebuild follows only if derived dimensions change."
+        "reason": "Detail source media filename controls Studio source-image editing, media readiness, and derivative generation; section-owned source folders are tracked separately."
       }
     },
     {
       "id": "work_detail_section_metadata",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["section_id", "section_title", "sort_order"],
+      "fields": ["section_id"],
       "current": {
         "artifacts": ["source-json", "studio-lookup", "work-json"],
         "fallback": false
@@ -280,7 +280,7 @@
       "target": {
         "artifacts": ["source-json", "studio-lookup", "work-json"],
         "fallback": false,
-        "reason": "Detail section metadata controls parent work JSON grouping, section labels, and section ordering without affecting source media generation."
+        "reason": "Detail section_id controls parent work JSON grouping. Section labels, source folders, section ordering, and section detail-sort modes live in work_detail_sections."
       }
     },
     {
@@ -442,6 +442,24 @@
       "field": "series_prose_file",
       "removed_in": "Task 1A",
       "replacement": "studio/data/canonical/catalogue-markdown/series/<series_id>.md"
+    },
+    {
+      "record_family": "work_detail",
+      "field": "details_subfolder",
+      "removed_in": "Work Detail Section Data Model Request",
+      "replacement": "work_detail_sections.<section_id>.details_subfolder"
+    },
+    {
+      "record_family": "work_detail",
+      "field": "section_title",
+      "removed_in": "Work Detail Section Data Model Request",
+      "replacement": "work_detail_sections.<section_id>.section_title"
+    },
+    {
+      "record_family": "work_detail",
+      "field": "sort_order",
+      "removed_in": "Work Detail Section Data Model Request",
+      "replacement": "work_detail_sections.<section_id>.section_order"
     }
   ]
 }

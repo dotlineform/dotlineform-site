@@ -29,38 +29,28 @@
   "detail_sections": [
     {
       "section_id": "01047-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 3,
       "details": [
         {
           "detail_uid": "01047-001",
           "detail_id": "001",
           "title": "field I - detail 1",
-          "section_id": "01047-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "field I - detail 1.jpeg"
         },
         {
           "detail_uid": "01047-002",
           "detail_id": "002",
           "title": "field I - detail 2",
-          "section_id": "01047-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "field I - detail 2.jpeg"
         },
         {
           "detail_uid": "01047-003",
           "detail_id": "003",
           "title": "field I - detail 3",
-          "section_id": "01047-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "field I - detail 3.jpeg"
         }
       ]

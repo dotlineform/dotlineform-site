@@ -164,8 +164,13 @@ def resolve_detail_media_source(
     work_id = slug_id(detail_record.get("work_id"))
     work_record = records.works.get(work_id)
     project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
+    section_id = str(detail_record.get("section_id") or "").strip()
+    section_record = records.work_detail_sections.get(section_id) if hasattr(records, "work_detail_sections") else {}
     details_subfolder = str(
-        detail_record.get("details_subfolder") or detail_record.get("project_subfolder") or ""
+        (section_record or {}).get("details_subfolder")
+        or detail_record.get("details_subfolder")
+        or detail_record.get("project_subfolder")
+        or ""
     ).strip()
     project_filename = normalize_filename(detail_record.get("project_filename"))
     if not project_filename:

@@ -29,1206 +29,734 @@
   "detail_sections": [
     {
       "section_id": "01721-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "01721-001",
           "detail_id": "001",
           "title": "state of mind - detail (jewels)",
-          "section_id": "01721-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "state of mind - detail (jewels).jpg"
         },
         {
           "detail_uid": "01721-002",
           "detail_id": "002",
           "title": "state of mind - detail (leaf)",
-          "section_id": "01721-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "state of mind - detail (leaf).jpg"
         },
         {
           "detail_uid": "01721-003",
           "detail_id": "003",
           "title": "state of mind - detail (thorns)",
-          "section_id": "01721-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "state of mind - detail (thorns).jpg"
         },
         {
           "detail_uid": "01721-004",
           "detail_id": "004",
           "title": "state of mind - detail 1",
-          "section_id": "01721-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "state of mind - detail 1.jpg"
         },
         {
           "detail_uid": "01721-005",
           "detail_id": "005",
           "title": "state of mind - detail 2",
-          "section_id": "01721-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "state of mind - detail 2.jpg"
         },
         {
           "detail_uid": "01721-006",
           "detail_id": "006",
           "title": "state of mind - detail 3",
-          "section_id": "01721-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "state of mind - detail 3.jpg"
         }
       ]
     },
     {
       "section_id": "01721-2",
+      "details_subfolder": "source",
       "section_title": "source",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 113,
       "details": [
         {
           "detail_uid": "01721-007",
           "detail_id": "007",
           "title": "state of mind - source 1",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 1.jpg"
         },
         {
           "detail_uid": "01721-008",
           "detail_id": "008",
           "title": "state of mind - source 2",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 2.jpg"
         },
         {
           "detail_uid": "01721-009",
           "detail_id": "009",
           "title": "state of mind - source 3",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 3.jpg"
         },
         {
           "detail_uid": "01721-010",
           "detail_id": "010",
           "title": "state of mind - source 4",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 4.jpg"
         },
         {
           "detail_uid": "01721-011",
           "detail_id": "011",
           "title": "state of mind - source 5",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 5.jpg"
         },
         {
           "detail_uid": "01721-012",
           "detail_id": "012",
           "title": "state of mind - source 6",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 6.jpg"
         },
         {
           "detail_uid": "01721-013",
           "detail_id": "013",
           "title": "state of mind - source 7",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 7.jpg"
         },
         {
           "detail_uid": "01721-014",
           "detail_id": "014",
           "title": "state of mind - source 8",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 8.jpg"
         },
         {
           "detail_uid": "01721-015",
           "detail_id": "015",
           "title": "state of mind - source 9",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 9.jpg"
         },
         {
           "detail_uid": "01721-016",
           "detail_id": "016",
           "title": "state of mind - source 10",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 10.jpg"
         },
         {
           "detail_uid": "01721-017",
           "detail_id": "017",
           "title": "state of mind - source 11",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 11.jpg"
         },
         {
           "detail_uid": "01721-018",
           "detail_id": "018",
           "title": "state of mind - source 12",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 12.jpg"
         },
         {
           "detail_uid": "01721-019",
           "detail_id": "019",
           "title": "state of mind - source 13",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 13.jpg"
         },
         {
           "detail_uid": "01721-020",
           "detail_id": "020",
           "title": "state of mind - source 14",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 14.jpg"
         },
         {
           "detail_uid": "01721-021",
           "detail_id": "021",
           "title": "state of mind - source 15",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 15.jpg"
         },
         {
           "detail_uid": "01721-022",
           "detail_id": "022",
           "title": "state of mind - source 16",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 16.jpg"
         },
         {
           "detail_uid": "01721-023",
           "detail_id": "023",
           "title": "state of mind - source 17",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 17.jpg"
         },
         {
           "detail_uid": "01721-024",
           "detail_id": "024",
           "title": "state of mind - source 18",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 18.jpg"
         },
         {
           "detail_uid": "01721-025",
           "detail_id": "025",
           "title": "state of mind - source 19",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 19.jpg"
         },
         {
           "detail_uid": "01721-026",
           "detail_id": "026",
           "title": "state of mind - source 20",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 20.jpg"
         },
         {
           "detail_uid": "01721-027",
           "detail_id": "027",
           "title": "state of mind - source 21",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 21.jpg"
         },
         {
           "detail_uid": "01721-028",
           "detail_id": "028",
           "title": "state of mind - source 22",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 22.jpg"
         },
         {
           "detail_uid": "01721-029",
           "detail_id": "029",
           "title": "state of mind - source 23",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 23.jpg"
         },
         {
           "detail_uid": "01721-030",
           "detail_id": "030",
           "title": "state of mind - source 24",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 24.jpg"
         },
         {
           "detail_uid": "01721-031",
           "detail_id": "031",
           "title": "state of mind - source 25",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 25.jpg"
         },
         {
           "detail_uid": "01721-032",
           "detail_id": "032",
           "title": "state of mind - source 26",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 26.jpg"
         },
         {
           "detail_uid": "01721-033",
           "detail_id": "033",
           "title": "state of mind - source 27",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 27.jpg"
         },
         {
           "detail_uid": "01721-034",
           "detail_id": "034",
           "title": "state of mind - source 28",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 28.jpg"
         },
         {
           "detail_uid": "01721-035",
           "detail_id": "035",
           "title": "state of mind - source 29",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 29.jpg"
         },
         {
           "detail_uid": "01721-036",
           "detail_id": "036",
           "title": "state of mind - source 30",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 30.jpg"
         },
         {
           "detail_uid": "01721-037",
           "detail_id": "037",
           "title": "state of mind - source 31",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 31.jpg"
         },
         {
           "detail_uid": "01721-038",
           "detail_id": "038",
           "title": "state of mind - source 32",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 32.jpg"
         },
         {
           "detail_uid": "01721-039",
           "detail_id": "039",
           "title": "state of mind - source 33",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 33.jpg"
         },
         {
           "detail_uid": "01721-040",
           "detail_id": "040",
           "title": "state of mind - source 34",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 34.jpg"
         },
         {
           "detail_uid": "01721-041",
           "detail_id": "041",
           "title": "state of mind - source 35",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 35.jpg"
         },
         {
           "detail_uid": "01721-042",
           "detail_id": "042",
           "title": "state of mind - source 36",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 36.jpg"
         },
         {
           "detail_uid": "01721-043",
           "detail_id": "043",
           "title": "state of mind - source 37",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 37.jpg"
         },
         {
           "detail_uid": "01721-044",
           "detail_id": "044",
           "title": "state of mind - source 38",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 38.jpg"
         },
         {
           "detail_uid": "01721-045",
           "detail_id": "045",
           "title": "state of mind - source 39",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 39.jpg"
         },
         {
           "detail_uid": "01721-046",
           "detail_id": "046",
           "title": "state of mind - source 40",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 40.jpg"
         },
         {
           "detail_uid": "01721-047",
           "detail_id": "047",
           "title": "state of mind - source 41",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 41.jpg"
         },
         {
           "detail_uid": "01721-048",
           "detail_id": "048",
           "title": "state of mind - source 42",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 42.jpg"
         },
         {
           "detail_uid": "01721-049",
           "detail_id": "049",
           "title": "state of mind - source 43",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 43.jpg"
         },
         {
           "detail_uid": "01721-050",
           "detail_id": "050",
           "title": "state of mind - source 44",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 44.jpg"
         },
         {
           "detail_uid": "01721-051",
           "detail_id": "051",
           "title": "state of mind - source 45",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 45.jpg"
         },
         {
           "detail_uid": "01721-052",
           "detail_id": "052",
           "title": "state of mind - source 46",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 46.jpg"
         },
         {
           "detail_uid": "01721-053",
           "detail_id": "053",
           "title": "state of mind - source 47",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 47.jpg"
         },
         {
           "detail_uid": "01721-054",
           "detail_id": "054",
           "title": "state of mind - source 48",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 48.jpg"
         },
         {
           "detail_uid": "01721-055",
           "detail_id": "055",
           "title": "state of mind - source 49",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 49.jpg"
         },
         {
           "detail_uid": "01721-056",
           "detail_id": "056",
           "title": "state of mind - source 50",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 50.jpg"
         },
         {
           "detail_uid": "01721-057",
           "detail_id": "057",
           "title": "state of mind - source 51",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 51.jpg"
         },
         {
           "detail_uid": "01721-058",
           "detail_id": "058",
           "title": "state of mind - source 52",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 52.jpg"
         },
         {
           "detail_uid": "01721-059",
           "detail_id": "059",
           "title": "state of mind - source 53",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 53.jpg"
         },
         {
           "detail_uid": "01721-060",
           "detail_id": "060",
           "title": "state of mind - source 54",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 54.jpg"
         },
         {
           "detail_uid": "01721-061",
           "detail_id": "061",
           "title": "state of mind - source 55",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 55.jpg"
         },
         {
           "detail_uid": "01721-062",
           "detail_id": "062",
           "title": "state of mind - source 56",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 56.jpg"
         },
         {
           "detail_uid": "01721-063",
           "detail_id": "063",
           "title": "state of mind - source 57",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 57.jpg"
         },
         {
           "detail_uid": "01721-064",
           "detail_id": "064",
           "title": "state of mind - source 58",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 58.jpg"
         },
         {
           "detail_uid": "01721-065",
           "detail_id": "065",
           "title": "state of mind - source 59",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 59.jpg"
         },
         {
           "detail_uid": "01721-066",
           "detail_id": "066",
           "title": "state of mind - source 60",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 60.jpg"
         },
         {
           "detail_uid": "01721-067",
           "detail_id": "067",
           "title": "state of mind - source 61",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 61.jpg"
         },
         {
           "detail_uid": "01721-068",
           "detail_id": "068",
           "title": "state of mind - source 62",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 62.jpg"
         },
         {
           "detail_uid": "01721-069",
           "detail_id": "069",
           "title": "state of mind - source 63",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 63.jpg"
         },
         {
           "detail_uid": "01721-070",
           "detail_id": "070",
           "title": "state of mind - source 64",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 64.jpg"
         },
         {
           "detail_uid": "01721-071",
           "detail_id": "071",
           "title": "state of mind - source 65",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 65.jpg"
         },
         {
           "detail_uid": "01721-072",
           "detail_id": "072",
           "title": "state of mind - source 66",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 66.jpg"
         },
         {
           "detail_uid": "01721-073",
           "detail_id": "073",
           "title": "state of mind - source 67",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 67.jpg"
         },
         {
           "detail_uid": "01721-074",
           "detail_id": "074",
           "title": "state of mind - source 68",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 68.jpg"
         },
         {
           "detail_uid": "01721-075",
           "detail_id": "075",
           "title": "state of mind - source 69",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 69.jpg"
         },
         {
           "detail_uid": "01721-076",
           "detail_id": "076",
           "title": "state of mind - source 70",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 70.jpg"
         },
         {
           "detail_uid": "01721-077",
           "detail_id": "077",
           "title": "state of mind - source 71",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 71.jpg"
         },
         {
           "detail_uid": "01721-078",
           "detail_id": "078",
           "title": "state of mind - source 72",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 72.jpg"
         },
         {
           "detail_uid": "01721-079",
           "detail_id": "079",
           "title": "state of mind - source 73",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 73.jpg"
         },
         {
           "detail_uid": "01721-080",
           "detail_id": "080",
           "title": "state of mind - source 74",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 74.jpg"
         },
         {
           "detail_uid": "01721-081",
           "detail_id": "081",
           "title": "state of mind - source 75",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 75.jpg"
         },
         {
           "detail_uid": "01721-082",
           "detail_id": "082",
           "title": "state of mind - source 76",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 76.jpg"
         },
         {
           "detail_uid": "01721-083",
           "detail_id": "083",
           "title": "state of mind - source 77",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 77.jpg"
         },
         {
           "detail_uid": "01721-084",
           "detail_id": "084",
           "title": "state of mind - source 78",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 78.jpg"
         },
         {
           "detail_uid": "01721-085",
           "detail_id": "085",
           "title": "state of mind - source 79",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 79.jpg"
         },
         {
           "detail_uid": "01721-086",
           "detail_id": "086",
           "title": "state of mind - source 80",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 80.jpg"
         },
         {
           "detail_uid": "01721-087",
           "detail_id": "087",
           "title": "state of mind - source 81",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 81.jpg"
         },
         {
           "detail_uid": "01721-088",
           "detail_id": "088",
           "title": "state of mind - source 82",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 82.jpg"
         },
         {
           "detail_uid": "01721-089",
           "detail_id": "089",
           "title": "state of mind - source 83",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 83.jpg"
         },
         {
           "detail_uid": "01721-090",
           "detail_id": "090",
           "title": "state of mind - source 84",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 84.jpg"
         },
         {
           "detail_uid": "01721-091",
           "detail_id": "091",
           "title": "state of mind - source 85",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 85.jpg"
         },
         {
           "detail_uid": "01721-092",
           "detail_id": "092",
           "title": "state of mind - source 86",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 86.jpg"
         },
         {
           "detail_uid": "01721-093",
           "detail_id": "093",
           "title": "state of mind - source 87",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 87.jpg"
         },
         {
           "detail_uid": "01721-094",
           "detail_id": "094",
           "title": "state of mind - source 88",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 88.jpg"
         },
         {
           "detail_uid": "01721-095",
           "detail_id": "095",
           "title": "state of mind - source 89",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 89.jpg"
         },
         {
           "detail_uid": "01721-096",
           "detail_id": "096",
           "title": "state of mind - source 90",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 90.jpg"
         },
         {
           "detail_uid": "01721-097",
           "detail_id": "097",
           "title": "state of mind - source 91",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 91.jpg"
         },
         {
           "detail_uid": "01721-098",
           "detail_id": "098",
           "title": "state of mind - source 92",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 92.jpg"
         },
         {
           "detail_uid": "01721-099",
           "detail_id": "099",
           "title": "state of mind - source 93",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 93.jpg"
         },
         {
           "detail_uid": "01721-100",
           "detail_id": "100",
           "title": "state of mind - source 94",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 94.jpg"
         },
         {
           "detail_uid": "01721-101",
           "detail_id": "101",
           "title": "state of mind - source 95",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 95.jpg"
         },
         {
           "detail_uid": "01721-102",
           "detail_id": "102",
           "title": "state of mind - source 96",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 96.jpg"
         },
         {
           "detail_uid": "01721-103",
           "detail_id": "103",
           "title": "state of mind - source 97",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 97.jpg"
         },
         {
           "detail_uid": "01721-104",
           "detail_id": "104",
           "title": "state of mind - source 98",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 98.jpg"
         },
         {
           "detail_uid": "01721-105",
           "detail_id": "105",
           "title": "state of mind - source 99",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 99.jpg"
         },
         {
           "detail_uid": "01721-106",
           "detail_id": "106",
           "title": "state of mind - source 100",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 100.jpg"
         },
         {
           "detail_uid": "01721-107",
           "detail_id": "107",
           "title": "state of mind - source 101",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 101.jpg"
         },
         {
           "detail_uid": "01721-108",
           "detail_id": "108",
           "title": "state of mind - source 102",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 102.jpg"
         },
         {
           "detail_uid": "01721-109",
           "detail_id": "109",
           "title": "state of mind - source 103",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 103.jpg"
         },
         {
           "detail_uid": "01721-110",
           "detail_id": "110",
           "title": "state of mind - source 104",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 104.jpg"
         },
         {
           "detail_uid": "01721-111",
           "detail_id": "111",
           "title": "state of mind - source 105",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 105.jpg"
         },
         {
           "detail_uid": "01721-112",
           "detail_id": "112",
           "title": "state of mind - source 106",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 106.jpg"
         },
         {
           "detail_uid": "01721-113",
           "detail_id": "113",
           "title": "state of mind - source 107",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 107.jpg"
         },
         {
           "detail_uid": "01721-114",
           "detail_id": "114",
           "title": "state of mind - source 108",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 108.jpg"
         },
         {
           "detail_uid": "01721-115",
           "detail_id": "115",
           "title": "state of mind - source 109",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 109.jpg"
         },
         {
           "detail_uid": "01721-116",
           "detail_id": "116",
           "title": "state of mind - source 110",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 110.jpg"
         },
         {
           "detail_uid": "01721-117",
           "detail_id": "117",
           "title": "state of mind - source 111",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 111.jpg"
         },
         {
           "detail_uid": "01721-118",
           "detail_id": "118",
           "title": "state of mind - source 112",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 112.jpg"
         },
         {
           "detail_uid": "01721-119",
           "detail_id": "119",
           "title": "state of mind - source 113",
-          "section_id": "01721-2",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "state of mind - source 113.jpg"
         }
       ]

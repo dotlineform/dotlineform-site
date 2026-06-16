@@ -29,428 +29,262 @@
   "detail_sections": [
     {
       "section_id": "01199-1",
+      "details_subfolder": "particles",
       "section_title": "particles",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 42,
       "details": [
         {
           "detail_uid": "01199-001",
           "detail_id": "001",
           "title": "particle (3 symbols)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (3 symbols).jpg"
         },
         {
           "detail_uid": "01199-002",
           "detail_id": "002",
           "title": "particle (10000)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (10000).jpg"
         },
         {
           "detail_uid": "01199-003",
           "detail_id": "003",
           "title": "particle (a world of non-linearity)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (a world of non-linearity).jpg"
         },
         {
           "detail_uid": "01199-004",
           "detail_id": "004",
           "title": "particle (architecture)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (architecture).jpg"
         },
         {
           "detail_uid": "01199-005",
           "detail_id": "005",
           "title": "particle (balance machine)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (balance machine).jpg"
         },
         {
           "detail_uid": "01199-006",
           "detail_id": "006",
           "title": "particle (base series)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (base series).jpg"
         },
         {
           "detail_uid": "01199-007",
           "detail_id": "007",
           "title": "particle (bird nature)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (bird nature).jpg"
         },
         {
           "detail_uid": "01199-008",
           "detail_id": "008",
           "title": "particle (body space)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (body space).jpg"
         },
         {
           "detail_uid": "01199-009",
           "detail_id": "009",
           "title": "particle (colours)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (colours).jpg"
         },
         {
           "detail_uid": "01199-010",
           "detail_id": "010",
           "title": "particle (composit red blue smoke)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (composit red blue smoke).jpg"
         },
         {
           "detail_uid": "01199-011",
           "detail_id": "011",
           "title": "particle (dependent origination)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (dependent origination).jpg"
         },
         {
           "detail_uid": "01199-012",
           "detail_id": "012",
           "title": "particle (doll dissection)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (doll dissection).jpg"
         },
         {
           "detail_uid": "01199-013",
           "detail_id": "013",
           "title": "particle (doll forest)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (doll forest).jpg"
         },
         {
           "detail_uid": "01199-014",
           "detail_id": "014",
           "title": "particle (doll internal)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (doll internal).jpg"
         },
         {
           "detail_uid": "01199-015",
           "detail_id": "015",
           "title": "particle (doll still life)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (doll still life).jpg"
         },
         {
           "detail_uid": "01199-016",
           "detail_id": "016",
           "title": "particle (dots)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (dots).jpg"
         },
         {
           "detail_uid": "01199-017",
           "detail_id": "017",
           "title": "particle (forest)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (forest).jpg"
         },
         {
           "detail_uid": "01199-018",
           "detail_id": "018",
           "title": "particle (form space)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (form space).jpg"
         },
         {
           "detail_uid": "01199-019",
           "detail_id": "019",
           "title": "particle (fur map)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (fur map).jpg"
         },
         {
           "detail_uid": "01199-020",
           "detail_id": "020",
           "title": "particle (gesture)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (gesture).jpg"
         },
         {
           "detail_uid": "01199-021",
           "detail_id": "021",
           "title": "particle (harmony)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (harmony).jpg"
         },
         {
           "detail_uid": "01199-022",
           "detail_id": "022",
           "title": "particle (interior design)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (interior design).jpg"
         },
         {
           "detail_uid": "01199-023",
           "detail_id": "023",
           "title": "particle (lava disco)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (lava disco).jpg"
         },
         {
           "detail_uid": "01199-024",
           "detail_id": "024",
           "title": "particle (lipseyes)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (lipseyes).jpg"
         },
         {
           "detail_uid": "01199-025",
           "detail_id": "025",
           "title": "particle (memory loss hope)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (memory loss hope).jpg"
         },
         {
           "detail_uid": "01199-026",
           "detail_id": "026",
           "title": "particle (mm)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (mm).jpg"
         },
         {
           "detail_uid": "01199-027",
           "detail_id": "027",
           "title": "particle (nerve text)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (nerve text).jpg"
         },
         {
           "detail_uid": "01199-028",
           "detail_id": "028",
           "title": "particle (nerve)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (nerve).jpg"
         },
         {
           "detail_uid": "01199-029",
           "detail_id": "029",
           "title": "particle (particle forms)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (particle forms).jpg"
         },
         {
           "detail_uid": "01199-030",
           "detail_id": "030",
           "title": "particle (particle theory)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (particle theory).jpg"
         },
         {
           "detail_uid": "01199-031",
           "detail_id": "031",
           "title": "particle (petri)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (petri).jpg"
         },
         {
           "detail_uid": "01199-032",
           "detail_id": "032",
           "title": "particle (poa4)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (poa4).jpg"
         },
         {
           "detail_uid": "01199-033",
           "detail_id": "033",
           "title": "particle (pole vault)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (pole vault).jpg"
         },
         {
           "detail_uid": "01199-034",
           "detail_id": "034",
           "title": "particle (qrnt)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (qrnt).jpg"
         },
         {
           "detail_uid": "01199-035",
           "detail_id": "035",
           "title": "particle (qtot)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (qtot).jpg"
         },
         {
           "detail_uid": "01199-036",
           "detail_id": "036",
           "title": "particle (reduce and return)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (reduce and return).jpg"
         },
         {
           "detail_uid": "01199-037",
           "detail_id": "037",
           "title": "particle (string theory)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (string theory).jpg"
         },
         {
           "detail_uid": "01199-038",
           "detail_id": "038",
           "title": "particle (structure)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (structure).jpg"
         },
         {
           "detail_uid": "01199-039",
           "detail_id": "039",
           "title": "particle (theory of happiness)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (theory of happiness).jpg"
         },
         {
           "detail_uid": "01199-040",
           "detail_id": "040",
           "title": "particle (train moments)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (train moments).jpg"
         },
         {
           "detail_uid": "01199-041",
           "detail_id": "041",
           "title": "particle (wa)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (wa).jpg"
         },
         {
           "detail_uid": "01199-042",
           "detail_id": "042",
           "title": "particle (water)",
-          "section_id": "01199-1",
-          "section_title": "particles",
-          "sort_order": null,
-          "details_subfolder": "particles",
           "project_filename": "particle (water).jpg"
         }
       ]

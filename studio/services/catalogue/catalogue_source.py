@@ -20,7 +20,7 @@ ACTIONABLE_STATUSES = {"draft", "published"}
 
 SCHEMAS = {
     "works": "catalogue_source_works_v1",
-    "work_details": "catalogue_source_work_details_v1",
+    "work_details": "catalogue_source_work_details_v2",
     "series": "catalogue_source_series_v1",
     "meta": "catalogue_source_meta_v1",
 }
@@ -77,15 +77,23 @@ DETAIL_FIELDS = [
     "detail_uid",
     "work_id",
     "detail_id",
-    "details_subfolder",
     "section_id",
-    "section_title",
-    "sort_order",
     "project_filename",
     "title",
     "width_px",
     "height_px",
 ]
+
+DETAIL_SECTION_FIELDS = [
+    "section_id",
+    "work_id",
+    "details_subfolder",
+    "section_title",
+    "section_order",
+    "detail_sort",
+]
+
+DETAIL_SECTION_SORT_MODES = {"detail_id", "title"}
 
 DOWNLOAD_FIELDS = ["filename", "label"]
 WORK_LINK_ENTRY_FIELDS = ["url", "label"]
@@ -103,7 +111,7 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
 }
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
 DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px"}
-OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "sort_order"}
+OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "section_order", "detail_sort"}
 
 SOURCE_FIELDS_BY_RECORD_FAMILY = {
     "work": tuple(WORK_FIELDS),
@@ -153,10 +161,11 @@ def detail_section_id_number(work_id: str, section_id: Any) -> int | None:
 
 def next_detail_section_id(
     work_id: str,
-    detail_records: Iterable[Mapping[str, Any]],
+    detail_records: Iterable[Mapping[str, Any]] = (),
+    section_records: Iterable[Mapping[str, Any]] = (),
 ) -> str:
     max_section_number = 0
-    for record in detail_records:
+    for record in [*detail_records, *section_records]:
         if normalize_text(record.get("work_id")) != work_id:
             continue
         section_number = detail_section_id_number(work_id, record.get("section_id"))
@@ -174,7 +183,23 @@ def detail_record_sort_key(item: tuple[str, Mapping[str, Any]]) -> tuple[str, st
 
 def build_detail_section_resolution_by_uid(
     detail_records: Mapping[str, Mapping[str, Any]],
+    section_records: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> Dict[str, Dict[str, Any]]:
+    if section_records is not None:
+        resolutions: Dict[str, Dict[str, Any]] = {}
+        for detail_uid, record in sorted(detail_records.items(), key=detail_record_sort_key):
+            section_id = normalize_text(record.get("section_id"))
+            section_record = section_records.get(section_id, {})
+            resolutions[detail_uid] = {
+                "section_id": section_id,
+                "work_id": normalize_text(section_record.get("work_id") or record.get("work_id")),
+                "section_title": normalize_text(section_record.get("section_title")),
+                "details_subfolder": normalize_text(section_record.get("details_subfolder")),
+                "section_order": normalize_optional_int(section_record.get("section_order")),
+                "detail_sort": normalize_detail_sort_value(section_record.get("detail_sort")),
+            }
+        return resolutions
+
     existing_section_count_by_work: Dict[str, int] = {}
     for _key, record in sorted(detail_records.items(), key=detail_record_sort_key):
         work_id = normalize_text(record.get("work_id"))
@@ -206,9 +231,72 @@ def build_detail_section_resolution_by_uid(
             "section_id": section_id,
             "section_title": section_title,
             "details_subfolder": details_subfolder,
-            "sort_order": normalize_optional_int(record.get("sort_order")),
+            "section_order": normalize_optional_int(record.get("sort_order")),
+            "detail_sort": None,
         }
     return resolutions
+
+
+def section_sort_key(section: Mapping[str, Any]) -> tuple[int, int, str]:
+    section_order = normalize_optional_int(section.get("section_order"))
+    return (
+        1 if section_order is None else 0,
+        section_order if section_order is not None else 0,
+        normalize_text(section.get("section_id")),
+    )
+
+
+def detail_sort_key_for_section(section: Mapping[str, Any], detail: Mapping[str, Any]) -> tuple[str, str, str]:
+    sort_mode = normalize_detail_sort_value(section.get("detail_sort")) or "detail_id"
+    if sort_mode == "title":
+        return (
+            normalize_text(detail.get("title")),
+            normalize_text(detail.get("detail_id")),
+            normalize_text(detail.get("detail_uid")),
+        )
+    return (
+        normalize_text(detail.get("detail_id")),
+        normalize_text(detail.get("detail_uid")),
+        "",
+    )
+
+
+def ordered_work_detail_sections(
+    records: "CatalogueSourceRecords",
+    work_id: str,
+) -> list[Dict[str, Any]]:
+    sections_by_id = {
+        section_id: dict(section)
+        for section_id, section in records.work_detail_sections.items()
+        if normalize_text(section.get("work_id")) == work_id
+    }
+    details_by_section: Dict[str, list[Dict[str, Any]]] = {
+        section_id: []
+        for section_id in sections_by_id
+    }
+    for detail_uid, detail in records.work_details.items():
+        if normalize_text(detail.get("work_id")) != work_id:
+            continue
+        section_id = normalize_text(detail.get("section_id"))
+        if section_id not in sections_by_id:
+            continue
+        detail_payload = dict(detail)
+        detail_payload["detail_uid"] = normalize_text(detail_payload.get("detail_uid")) or detail_uid
+        details_by_section.setdefault(section_id, []).append(detail_payload)
+
+    ordered_sections: list[Dict[str, Any]] = []
+    for section_id, section in sorted(sections_by_id.items(), key=lambda item: section_sort_key(item[1])):
+        details = details_by_section.get(section_id, [])
+        details.sort(key=lambda detail: detail_sort_key_for_section(section, detail))
+        section_payload = dict(section)
+        section_payload["details"] = details
+        ordered_sections.append(section_payload)
+    return ordered_sections
+
+
+def normalize_detail_sort_value(value: Any) -> str | None:
+    text = normalize_text(value)
+    return text if text in DETAIL_SECTION_SORT_MODES else None
 
 
 def normalize_optional_int(value: Any) -> int | None:
@@ -229,12 +317,14 @@ def normalize_optional_int(value: Any) -> int | None:
 @dataclass(frozen=True)
 class CatalogueSourceRecords:
     works: Dict[str, Dict[str, Any]]
+    work_detail_sections: Dict[str, Dict[str, Any]]
     work_details: Dict[str, Dict[str, Any]]
     series: Dict[str, Dict[str, Any]]
 
     def as_maps(self) -> Dict[str, Dict[str, Dict[str, Any]]]:
         return {
             "works": self.works,
+            "work_detail_sections": self.work_detail_sections,
             "work_details": self.work_details,
             "series": self.series,
         }
@@ -377,10 +467,18 @@ def normalize_source_record(
             entries = normalize_links(value)
             if entries:
                 out[field] = entries
-        elif field == "sort_order":
+        elif field in {"sort_order", "section_order"}:
             normalized_int = normalize_optional_int(value)
             if normalized_int is not None:
                 out[field] = normalized_int
+            elif not is_empty(value):
+                out[field] = normalize_text(value)
+            elif field not in OMIT_EMPTY_SOURCE_FIELDS:
+                out[field] = None
+        elif field == "detail_sort":
+            normalized_sort = normalize_detail_sort_value(value)
+            if normalized_sort is not None:
+                out[field] = normalized_sort
             elif not is_empty(value):
                 out[field] = normalize_text(value)
             elif field not in OMIT_EMPTY_SOURCE_FIELDS:
@@ -412,11 +510,31 @@ def payload_for_map(kind: str, records: Mapping[str, Dict[str, Any]]) -> Dict[st
     }
 
 
+def work_details_payload_for_maps(
+    section_records: Mapping[str, Dict[str, Any]],
+    detail_records: Mapping[str, Dict[str, Any]],
+) -> Dict[str, Any]:
+    return {
+        "header": {
+            "schema": SCHEMAS["work_details"],
+            "section_count": len(section_records),
+            "count": len(detail_records),
+        },
+        "work_detail_sections": sort_record_map(section_records),
+        "work_details": sort_record_map(detail_records),
+    }
+
+
 def payloads_from_records(records: CatalogueSourceRecords) -> Dict[str, Dict[str, Any]]:
     payloads = {
         kind: payload_for_map(kind, record_map)
         for kind, record_map in records.as_maps().items()
+        if kind != "work_detail_sections"
     }
+    payloads["work_details"] = work_details_payload_for_maps(
+        records.work_detail_sections,
+        records.work_details,
+    )
     payloads["meta"] = {
         "header": {
             "schema": SCHEMAS["meta"],
@@ -452,10 +570,18 @@ def write_source_record_payloads(
     record_maps = records.as_maps()
     written: list[Path] = []
     for kind in kinds:
+        if kind == "work_detail_sections":
+            kind = "work_details"
         if kind not in record_maps:
             raise ValueError(f"Unknown source record kind: {kind}")
         path = source_dir / SOURCE_FILES[kind]
-        payload = payload_for_map(kind, record_maps[kind])
+        if kind == "work_details":
+            payload = work_details_payload_for_maps(
+                records.work_detail_sections,
+                records.work_details,
+            )
+        else:
+            payload = payload_for_map(kind, record_maps[kind])
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         written.append(path)
     return written
@@ -475,12 +601,21 @@ def load_json_file(path: Path) -> Dict[str, Any]:
 
 def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
     maps: Dict[str, Dict[str, Dict[str, Any]]] = {}
+    section_maps: Dict[str, Dict[str, Any]] = {}
     for kind in ["works", "work_details", "series"]:
         path = source_dir / SOURCE_FILES[kind]
         payload = load_json_file(path)
         record_map = payload.get(kind)
         if not isinstance(record_map, dict):
             raise ValueError(f"Invalid source file shape in {path}: missing object key {kind!r}")
+        if kind == "work_details":
+            raw_sections = payload.get("work_detail_sections")
+            if isinstance(raw_sections, dict):
+                section_maps = {
+                    str(record_id): dict(record)
+                    for record_id, record in raw_sections.items()
+                    if isinstance(record, dict)
+                }
         maps[kind] = {
             str(record_id): dict(record)
             for record_id, record in record_map.items()
@@ -492,6 +627,10 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
     })
     return CatalogueSourceRecords(
         works=works,
+        work_detail_sections=sort_record_map({
+            section_id: normalize_source_record(record, DETAIL_SECTION_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
+            for section_id, record in section_maps.items()
+        }),
         work_details=sort_record_map(maps["work_details"]),
         series=sort_record_map(maps["series"]),
     )
@@ -513,10 +652,43 @@ def validate_record_fields(
         errors.append(f"{kind} {key}: unsupported field(s): {', '.join(unknown)}")
 
 
+def validate_work_detail_section_record(key: str, record: Mapping[str, Any]) -> list[str]:
+    errors: list[str] = []
+    raw_work_id = record.get("work_id")
+    try:
+        work_id = slug_id(raw_work_id)
+    except ValueError as exc:
+        errors.append(f"work_detail_sections {key}: invalid work_id ({exc})")
+        work_id = normalize_text(raw_work_id)
+    raw_section_id = record.get("section_id")
+    raw_section_title = record.get("section_title")
+    if is_empty(raw_section_id):
+        errors.append(f"work_detail_sections {key}: missing section_id")
+    elif work_id and detail_section_id_number(work_id, raw_section_id) is None:
+        errors.append(f"work_detail_sections {key}: section_id must match {work_id}{DETAIL_SECTION_ID_SEPARATOR}<number>")
+    elif key != normalize_text(raw_section_id):
+        errors.append(f"work_detail_sections {key}: key/section_id does not match")
+    if is_empty(raw_section_title):
+        errors.append(f"work_detail_sections {key}: missing section_title")
+    if "section_order" in record and not is_empty(record.get("section_order")):
+        section_order = normalize_optional_int(record.get("section_order"))
+        if section_order is None:
+            errors.append(f"work_detail_sections {key}: section_order must be a whole number")
+        elif section_order < 0:
+            errors.append(f"work_detail_sections {key}: section_order must be zero or greater")
+    if "detail_sort" in record and not is_empty(record.get("detail_sort")):
+        if normalize_detail_sort_value(record.get("detail_sort")) is None:
+            errors.append(f"work_detail_sections {key}: detail_sort must be detail_id, title, or empty")
+    return errors
+
+
 def validate_work_detail_media_section_record(key: str, record: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
+    for field in ("details_subfolder", "section_title", "sort_order"):
+        if field in record:
+            errors.append(f"work_details {key}: {field} is section metadata; use work_detail_sections")
     if DETAIL_COMPAT_SUBFOLDER_FIELD in record:
-        errors.append(f"work_details {key}: project_subfolder is not supported; use details_subfolder")
+        errors.append(f"work_details {key}: project_subfolder is not supported; use work_detail_sections.details_subfolder")
     raw_work_id = record.get("work_id")
     try:
         work_id = slug_id(raw_work_id)
@@ -524,19 +696,10 @@ def validate_work_detail_media_section_record(key: str, record: Mapping[str, Any
         errors.append(f"work_details {key}: invalid work_id ({exc})")
         work_id = normalize_text(raw_work_id)
     raw_section_id = record.get("section_id")
-    raw_section_title = record.get("section_title")
     if is_empty(raw_section_id):
         errors.append(f"work_details {key}: missing section_id")
     elif work_id and detail_section_id_number(work_id, raw_section_id) is None:
         errors.append(f"work_details {key}: section_id must match {work_id}{DETAIL_SECTION_ID_SEPARATOR}<number>")
-    if is_empty(raw_section_title):
-        errors.append(f"work_details {key}: missing section_title")
-    if "sort_order" in record and not is_empty(record.get("sort_order")):
-        sort_order = normalize_optional_int(record.get("sort_order"))
-        if sort_order is None:
-            errors.append(f"work_details {key}: sort_order must be a whole number")
-        elif sort_order < 0:
-            errors.append(f"work_details {key}: sort_order must be zero or greater")
     return errors
 
 
@@ -659,6 +822,23 @@ def validate_source_records(
             if series_id not in all_series_ids:
                 errors.append(f"works {work_id}: references unknown series_id {series_id!r}")
 
+    section_work_by_id: Dict[str, str] = {}
+    for key, record in records.work_detail_sections.items():
+        validate_record_fields(
+            errors,
+            kind="work_detail_sections",
+            key=key,
+            record=record,
+            allowed_fields=DETAIL_SECTION_FIELDS,
+        )
+        errors.extend(validate_work_detail_section_record(key, record))
+        work_id = normalize_text(record.get("work_id"))
+        if work_id and work_id not in all_work_ids:
+            errors.append(f"work_detail_sections {key}: work_id {work_id!r} not found in works")
+        if key in section_work_by_id:
+            errors.append(f"work_detail_sections {key}: duplicate section_id")
+        section_work_by_id[key] = work_id
+
     for key, record in records.work_details.items():
         allowed_compat_fields = (
             [DETAIL_COMPAT_SUBFOLDER_FIELD]
@@ -691,10 +871,13 @@ def validate_source_records(
             errors.append(f"work_details {key}: key/detail_uid does not match normalized detail_uid {detail_uid}")
         if work_id not in all_work_ids:
             errors.append(f"work_details {key}: work_id {work_id!r} not found in works")
-        if require_detail_media_sections:
-            errors.extend(validate_work_detail_media_section_record(key, record))
-    if require_detail_media_sections:
-        errors.extend(validate_work_detail_section_metadata_consistency(records.work_details))
+        errors.extend(validate_work_detail_media_section_record(key, record))
+        section_id = normalize_text(record.get("section_id"))
+        section_work_id = section_work_by_id.get(section_id)
+        if section_id and section_work_id is None:
+            errors.append(f"work_details {key}: section_id {section_id!r} not found in work_detail_sections")
+        elif section_work_id and section_work_id != work_id:
+            errors.append(f"work_details {key}: section_id {section_id!r} belongs to work_id {section_work_id!r}")
 
     return sorted(dict.fromkeys(errors))
 

@@ -29,68 +29,46 @@
   "detail_sections": [
     {
       "section_id": "00529-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "00529-001",
           "detail_id": "001",
           "title": "body detail",
-          "section_id": "00529-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00529-001.jpg"
         },
         {
           "detail_uid": "00529-002",
           "detail_id": "002",
           "title": "body detail",
-          "section_id": "00529-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00529-002.jpg"
         },
         {
           "detail_uid": "00529-003",
           "detail_id": "003",
           "title": "body detail",
-          "section_id": "00529-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00529-003.jpg"
         },
         {
           "detail_uid": "00529-004",
           "detail_id": "004",
           "title": "body detail",
-          "section_id": "00529-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00529-004.jpg"
         },
         {
           "detail_uid": "00529-005",
           "detail_id": "005",
           "title": "body detail",
-          "section_id": "00529-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00529-005.jpg"
         },
         {
           "detail_uid": "00529-006",
           "detail_id": "006",
           "title": "body detail",
-          "section_id": "00529-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00529-006.jpg"
         }
       ]

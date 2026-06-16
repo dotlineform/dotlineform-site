@@ -7,12 +7,12 @@
     "work_id": "00622",
     "detail_id": "001",
     "section_id": "00622-1",
-    "section_title": "derivation",
-    "details_subfolder": "derivation",
     "project_filename": "k source.jpg",
     "title": "k source",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "derivation",
+    "details_subfolder": "derivation"
   },
   "work_summary": {
     "work_id": "00622",

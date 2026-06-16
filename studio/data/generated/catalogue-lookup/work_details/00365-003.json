@@ -7,12 +7,12 @@
     "work_id": "00365",
     "detail_id": "003",
     "section_id": "00365-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "00365 - the eye - detail 3.jpeg",
     "title": "the eye - detail 3",
     "width_px": 3024,
-    "height_px": 3024
+    "height_px": 3024,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00365",

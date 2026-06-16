@@ -7,12 +7,12 @@
     "work_id": "00163",
     "detail_id": "002",
     "section_id": "00163-1",
-    "section_title": "pages",
-    "details_subfolder": "pages",
     "project_filename": "nerve (abattoir) - inside cover.jpg",
     "title": "nerve (abattoir) - inside cover",
     "width_px": 3240,
-    "height_px": 2268
+    "height_px": 2268,
+    "section_title": "pages",
+    "details_subfolder": "pages"
   },
   "work_summary": {
     "work_id": "00163",

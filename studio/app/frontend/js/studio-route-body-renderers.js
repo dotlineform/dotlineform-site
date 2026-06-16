@@ -23,10 +23,6 @@ const ROUTE_BODY_RENDERERS = {
     const module = await importModule("./catalogue-status-shell.js");
     return module.renderCatalogueStatusShell();
   },
-  catalogue_work_detail_editor: async (config, importModule) => {
-    const module = await importModule("./catalogue-work-detail-shell.js");
-    return module.renderCatalogueWorkDetailShell(config);
-  },
   catalogue_work_editor: async (config, importModule) => {
     const module = await importModule("./catalogue-work-shell.js");
     return module.renderCatalogueWorkShell(config);

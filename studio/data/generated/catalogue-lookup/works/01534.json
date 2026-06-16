@@ -29,178 +29,112 @@
   "detail_sections": [
     {
       "section_id": "01534-1",
+      "details_subfolder": "selected source",
       "section_title": "selected source",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 17,
       "details": [
         {
           "detail_uid": "01534-001",
           "detail_id": "001",
           "title": "poa 1 - 0001",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0001.jpg"
         },
         {
           "detail_uid": "01534-002",
           "detail_id": "002",
           "title": "poa 1 - 0043",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0043.jpg"
         },
         {
           "detail_uid": "01534-003",
           "detail_id": "003",
           "title": "poa 1 - 0446",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0446.jpg"
         },
         {
           "detail_uid": "01534-004",
           "detail_id": "004",
           "title": "poa 1 - 0519",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0519.jpg"
         },
         {
           "detail_uid": "01534-005",
           "detail_id": "005",
           "title": "poa 1 - 0684",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0684.jpg"
         },
         {
           "detail_uid": "01534-006",
           "detail_id": "006",
           "title": "poa 1 - 0757",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0757.jpg"
         },
         {
           "detail_uid": "01534-007",
           "detail_id": "007",
           "title": "poa 1 - 0877",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 0877.jpg"
         },
         {
           "detail_uid": "01534-008",
           "detail_id": "008",
           "title": "poa 1 - 1076",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1076.jpg"
         },
         {
           "detail_uid": "01534-009",
           "detail_id": "009",
           "title": "poa 1 - 1297",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1297.jpg"
         },
         {
           "detail_uid": "01534-010",
           "detail_id": "010",
           "title": "poa 1 - 1457",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1457.jpg"
         },
         {
           "detail_uid": "01534-011",
           "detail_id": "011",
           "title": "poa 1 - 1527",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1527.jpg"
         },
         {
           "detail_uid": "01534-012",
           "detail_id": "012",
           "title": "poa 1 - 1700",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1700.jpg"
         },
         {
           "detail_uid": "01534-013",
           "detail_id": "013",
           "title": "poa 1 - 1803",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1803.jpg"
         },
         {
           "detail_uid": "01534-014",
           "detail_id": "014",
           "title": "poa 1 - 1814",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1814.jpg"
         },
         {
           "detail_uid": "01534-015",
           "detail_id": "015",
           "title": "poa 1 - 1862",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1862.jpg"
         },
         {
           "detail_uid": "01534-016",
           "detail_id": "016",
           "title": "poa 1 - 1935",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1935.jpg"
         },
         {
           "detail_uid": "01534-017",
           "detail_id": "017",
           "title": "poa 1 - 1975",
-          "section_id": "01534-1",
-          "section_title": "selected source",
-          "sort_order": null,
-          "details_subfolder": "selected source",
           "project_filename": "poa 1 - 1975.jpg"
         }
       ]

@@ -35,13 +35,6 @@ ROUTES = [
         "doc": "/docs/?scope=studio&doc=catalogue-work-editor&mode=manage",
     },
     {
-        "id": "catalogue_work_detail_editor",
-        "path": "/studio/catalogue-work-detail/",
-        "root": "#catalogueWorkDetailRoot",
-        "route": "catalogue-work-detail",
-        "doc": "/docs/?scope=studio&doc=catalogue-work-detail-editor&mode=manage",
-    },
-    {
         "id": "catalogue_moment_editor",
         "path": "/studio/catalogue-moment/",
         "root": "#catalogueMomentRoot",

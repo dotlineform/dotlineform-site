@@ -7,12 +7,12 @@
     "work_id": "00949",
     "detail_id": "005",
     "section_id": "00949-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "005 - 2024-05-10 18꞉52.jpg",
     "title": "005 - 2024-05-10 18꞉52",
     "width_px": 5712,
-    "height_px": 3213
+    "height_px": 3213,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00949",

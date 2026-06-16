@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-lookup
 title: Catalogue Lookup Export
 added_date: 2026-04-17
-last_updated: 2026-06-01
+last_updated: 2026-06-16
 parent_id: studio
 viewable: true
 ---
@@ -23,7 +23,7 @@ The lookup payloads are explicitly non-canonical. They exist to support:
 - lightweight work search
 - lightweight series search
 - lightweight detail search
-- focused per-record editor reads for work, detail, and series routes
+- focused per-record reads for work, transitional detail lookup consumers, and series routes
 
 Lookup payloads do not include full-source `record_hash` values. Studio save endpoints apply submitted changes to the current source record and return the normalized saved record.
 
@@ -56,9 +56,11 @@ Focused record lookup files:
 - `site/assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
 - `site/assets/studio/data/catalogue_lookup/series/<series_id>.json`
 
-Work lookup `detail_sections` group details by `section_id`, display `section_title`, and preserve section `sort_order`. Detail summaries include `details_subfolder` and `project_filename` so Studio can reconstruct source-image edit paths without treating public section labels as media paths.
+Work lookup `detail_sections` joins `work_detail_sections` with detail records. Each section projects `section_id`, `details_subfolder`, `section_title`, `section_order`, `detail_sort`, `count`, and `details[]`.
 
-Lookup export expects the migrated work-detail source shape. Focused detail lookup records expose `section_id`, `section_title`, `details_subfolder`, and `project_filename`; they do not expose legacy detail `project_subfolder`.
+Nested work lookup detail summaries contain detail-owned fields only: `detail_uid`, `detail_id`, `title`, and `project_filename`. They do not repeat `section_id`, `section_title`, `details_subfolder`, `section_order`, or `detail_sort`.
+
+Lookup export expects the v2 work-detail source shape. Focused detail lookup records still join section metadata onto the detail record for transitional consumers, but the standalone Studio work-detail editor route is retired.
 
 ## Runtime Use
 
@@ -67,7 +69,7 @@ The catalogue editors use these files as follows:
 - work editor:
   - search from `work_search.json`
   - focused record load from `works/<work_id>.json`
-- work detail editor:
+- transitional detail lookup consumers:
   - search from `work_detail_search.json`
   - focused record load from `work_details/<detail_uid>.json`
 - series editor:

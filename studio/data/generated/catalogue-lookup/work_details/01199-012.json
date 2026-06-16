@@ -7,12 +7,12 @@
     "work_id": "01199",
     "detail_id": "012",
     "section_id": "01199-1",
-    "section_title": "particles",
-    "details_subfolder": "particles",
     "project_filename": "particle (doll dissection).jpg",
     "title": "particle (doll dissection)",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "particles",
+    "details_subfolder": "particles"
   },
   "work_summary": {
     "work_id": "01199",

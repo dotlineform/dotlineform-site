@@ -7,12 +7,12 @@
     "work_id": "00623",
     "detail_id": "003",
     "section_id": "00623-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "k crystals (transparent) - detail 3.jpg",
     "title": "k crystals (transparent) - detail 3",
     "width_px": 5906,
-    "height_px": 4134
+    "height_px": 4134,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00623",

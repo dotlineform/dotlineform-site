@@ -15,11 +15,19 @@ from catalogue.catalogue_source import (  # noqa: E402
     next_detail_section_id,
     validate_source_records,
     validate_work_detail_media_section_record,
-    validate_work_detail_section_metadata_consistency,
+    validate_work_detail_section_record,
 )
 
 
-def source_records_with_detail(detail_record: dict) -> CatalogueSourceRecords:
+def source_records_with_detail(detail_record: dict, section_record: dict | None = None) -> CatalogueSourceRecords:
+    section = section_record or {
+        "section_id": "00001-1",
+        "work_id": "00001",
+        "details_subfolder": "details",
+        "section_title": "Details",
+        "section_order": None,
+        "detail_sort": None,
+    }
     return CatalogueSourceRecords(
         works={
             "00001": {
@@ -31,6 +39,7 @@ def source_records_with_detail(detail_record: dict) -> CatalogueSourceRecords:
                 "title": "One",
             }
         },
+        work_detail_sections={str(section["section_id"]): section},
         work_details={"00001-001": detail_record},
         series={},
     )
@@ -41,10 +50,7 @@ def assert_target_detail_schema_accepts_new_fields() -> None:
         "detail_uid": "00001-001",
         "work_id": "00001",
         "detail_id": "001",
-        "details_subfolder": "details",
         "section_id": "00001-1",
-        "section_title": "Details",
-        "sort_order": 2,
         "project_filename": "detail.jpg",
         "title": "Detail",
     }
@@ -56,17 +62,22 @@ def assert_target_detail_schema_accepts_new_fields() -> None:
     assert not errors, errors
 
 
-def assert_default_validation_accepts_compat_subfolder_field() -> None:
+def assert_detail_schema_rejects_retired_detail_section_fields() -> None:
     detail = {
         "detail_uid": "00001-001",
         "work_id": "00001",
         "detail_id": "001",
-        "project_subfolder": "details",
+        "details_subfolder": "details",
+        "section_id": "00001-1",
+        "section_title": "Details",
+        "sort_order": 1,
         "project_filename": "detail.jpg",
         "title": "Detail",
     }
     errors = validate_source_records(source_records_with_detail(detail))
-    assert not errors, errors
+    assert any("details_subfolder is section metadata" in error for error in errors), errors
+    assert any("section_title is section metadata" in error for error in errors), errors
+    assert any("sort_order is section metadata" in error for error in errors), errors
 
 
 def assert_target_detail_schema_rejects_compat_subfolder_field() -> None:
@@ -81,22 +92,17 @@ def assert_target_detail_schema_rejects_compat_subfolder_field() -> None:
     errors = validate_work_detail_media_section_record("00001-001", detail)
     assert any("project_subfolder is not supported" in error for error in errors), errors
     assert any("missing section_id" in error for error in errors), errors
-    assert any("missing section_title" in error for error in errors), errors
 
 
-def assert_target_detail_schema_rejects_bad_sort_order() -> None:
-    detail = {
-        "detail_uid": "00001-001",
-        "work_id": "00001",
-        "detail_id": "001",
+def assert_target_section_schema_rejects_bad_section_order() -> None:
+    section = {
         "section_id": "00001-1",
+        "work_id": "00001",
         "section_title": "Details",
-        "sort_order": "first",
-        "project_filename": "detail.jpg",
-        "title": "Detail",
+        "section_order": "first",
     }
-    errors = validate_work_detail_media_section_record("00001-001", detail)
-    assert any("sort_order must be a whole number" in error for error in errors), errors
+    errors = validate_work_detail_section_record("00001-1", section)
+    assert any("section_order must be a whole number" in error for error in errors), errors
 
 
 def assert_next_detail_section_id_uses_hyphen_suffix() -> None:
@@ -111,41 +117,32 @@ def assert_next_detail_section_id_uses_hyphen_suffix() -> None:
     assert next_id == "00001-3"
 
 
-def assert_shared_section_id_requires_consistent_metadata() -> None:
-    errors = validate_work_detail_section_metadata_consistency(
-        {
-            "00001-001": {
-                "work_id": "00001",
-                "section_id": "00001-1",
-                "section_title": "Details",
-                "sort_order": 1,
-            },
-            "00001-002": {
-                "work_id": "00001",
-                "section_id": "00001-1",
-                "section_title": "Pages",
-                "sort_order": 1,
-            },
-            "00001-003": {
-                "work_id": "00001",
-                "section_id": "00001-2",
-                "section_title": "Details",
-                "sort_order": 1,
-            },
-        }
-    )
-    assert len(errors) == 1, errors
-    assert "00001-002" in errors[0], errors
-    assert "section metadata conflicts" in errors[0], errors
+def assert_detail_section_id_must_match_section_work() -> None:
+    detail = {
+        "detail_uid": "00001-001",
+        "work_id": "00001",
+        "detail_id": "001",
+        "section_id": "00002-1",
+        "project_filename": "detail.jpg",
+        "title": "Detail",
+    }
+    section = {
+        "section_id": "00002-1",
+        "work_id": "00002",
+        "details_subfolder": "details",
+        "section_title": "Details",
+    }
+    errors = validate_source_records(source_records_with_detail(detail, section))
+    assert any("belongs to work_id '00002'" in error for error in errors), errors
 
 
 def main() -> int:
     assert_target_detail_schema_accepts_new_fields()
-    assert_default_validation_accepts_compat_subfolder_field()
+    assert_detail_schema_rejects_retired_detail_section_fields()
     assert_target_detail_schema_rejects_compat_subfolder_field()
-    assert_target_detail_schema_rejects_bad_sort_order()
+    assert_target_section_schema_rejects_bad_section_order()
     assert_next_detail_section_id_uses_hyphen_suffix()
-    assert_shared_section_id_requires_consistent_metadata()
+    assert_detail_section_id_must_match_section_work()
     print("catalogue source media section schema checks passed")
     return 0
 

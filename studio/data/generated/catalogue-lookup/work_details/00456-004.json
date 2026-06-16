@@ -7,12 +7,12 @@
     "work_id": "00456",
     "detail_id": "004",
     "section_id": "00456-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "dots [detail 4].jpg",
     "title": "dots [detail 4]",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00456",

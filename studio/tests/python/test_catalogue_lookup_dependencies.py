@@ -9,9 +9,9 @@ from typing import Any, Iterable, Mapping
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+SERVICES_DIR = REPO_ROOT / "studio/services"
+if str(SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue.catalogue_lookup import (  # noqa: E402
     SERIES_MEMBER_WORK_FIELDS,
@@ -30,6 +30,7 @@ from catalogue.catalogue_lookup import (  # noqa: E402
 )
 from catalogue.catalogue_source import (  # noqa: E402
     DETAIL_FIELDS,
+    DETAIL_SECTION_FIELDS,
     SERIES_FIELDS,
     WORK_FIELDS,
     CatalogueSourceRecords,
@@ -68,9 +69,16 @@ def dependency_fixture_records() -> CatalogueSourceRecords:
             "work_id": WORK_ID,
             "detail_id": "001",
             "section_id": f"{WORK_ID}-3",
-            "sort_order": 73,
         }
     )
+    section = {
+        "section_id": f"{WORK_ID}-3",
+        "work_id": WORK_ID,
+        "details_subfolder": "detail-details_subfolder-sentinel",
+        "section_title": "detail-section_title-sentinel",
+        "section_order": 73,
+        "detail_sort": "title",
+    }
 
     series = sentinel_record(SERIES_FIELDS, "series")
     series.update(
@@ -82,6 +90,7 @@ def dependency_fixture_records() -> CatalogueSourceRecords:
 
     return CatalogueSourceRecords(
         works={WORK_ID: work},
+        work_detail_sections={section["section_id"]: section},
         work_details={DETAIL_UID: detail},
         series={SERIES_ID: series},
     )
@@ -166,11 +175,15 @@ def test_work_detail_work_summary_fields_match_payload_dependencies() -> None:
 
 def test_work_detail_search_fields_match_payload_dependencies() -> None:
     records = dependency_fixture_records()
+    payload = only_item(build_work_detail_search_payload(records))
 
-    actual_fields = payload_source_fields(
-        only_item(build_work_detail_search_payload(records)),
-        records.work_details[DETAIL_UID],
-        DETAIL_FIELDS,
+    actual_fields = payload_source_fields(payload, records.work_details[DETAIL_UID], DETAIL_FIELDS)
+    actual_fields.update(
+        payload_source_fields(
+            payload,
+            records.work_detail_sections[f"{WORK_ID}-3"],
+            DETAIL_SECTION_FIELDS,
+        )
     )
 
     assert_equal(actual_fields, set(WORK_DETAIL_SEARCH_FIELDS), "work detail search dependencies")
@@ -181,6 +194,13 @@ def test_work_detail_parent_work_fields_match_payload_dependencies() -> None:
     detail_sections = build_work_lookup_payload(records, WORK_ID)["detail_sections"]
 
     actual_fields = payload_source_fields(detail_sections, records.work_details[DETAIL_UID], DETAIL_FIELDS)
+    actual_fields.update(
+        payload_source_fields(
+            detail_sections,
+            records.work_detail_sections[f"{WORK_ID}-3"],
+            DETAIL_SECTION_FIELDS,
+        )
+    )
     actual_fields.discard("detail_uid")
     actual_fields.add("work_id")
 

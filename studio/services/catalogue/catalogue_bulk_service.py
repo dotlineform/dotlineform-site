@@ -22,13 +22,12 @@ from catalogue.catalogue_source import (
     normalize_detail_uid_value,
     normalize_series_ids_value,
     normalize_status,
-    payload_for_map,
     records_from_json_source,
     slug_id,
     sort_record_map,
     validate_source_records,
     validate_work_detail_media_section_record,
-    validate_work_detail_section_metadata_consistency,
+    work_details_payload_for_maps,
 )
 
 
@@ -53,9 +52,6 @@ BULK_WORK_EDITABLE_FIELDS = {
 }
 
 BULK_DETAIL_EDITABLE_FIELDS = {
-    "details_subfolder",
-    "section_title",
-    "sort_order",
     "project_filename",
     "title",
 }
@@ -196,7 +192,12 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         if target_path not in context.allowed_write_paths:
             raise ValueError("write target not allowlisted")
         transactions.execute_source_json_write(
-            {target_path: payload_for_map("work_details", updated_details)},
+            {
+                target_path: work_details_payload_for_maps(
+                    source_records.work_detail_sections,
+                    updated_details,
+                )
+            },
             dry_run=context.dry_run,
             repo_root=context.repo_root,
         )
@@ -336,9 +337,9 @@ def validate_bulk_records(
         for detail_uid, detail_record in detail_updates.items():
             errors.extend(validate_work_detail_media_section_record(detail_uid, detail_record))
             source_records.work_details[detail_uid] = detail_record
-        errors.extend(validate_work_detail_section_metadata_consistency(source_records.work_details))
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(source_records.works),
+        work_detail_sections=source_records.work_detail_sections,
         work_details=sort_record_map(source_records.work_details),
         series=source_records.series,
     )

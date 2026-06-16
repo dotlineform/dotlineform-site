@@ -8,9 +8,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+SERVICES_DIR = REPO_ROOT / "studio/services"
+if str(SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue.catalogue_source import CatalogueSourceRecords  # noqa: E402
 from catalogue import catalogue_source_mutation as source_mutation  # noqa: E402
@@ -59,14 +59,22 @@ def fixture_records() -> CatalogueSourceRecords:
                 "year_display": "2026",
             },
         },
+        work_detail_sections={
+            "00001-1": {
+                "section_id": "00001-1",
+                "work_id": "00001",
+                "details_subfolder": "details",
+                "section_title": "Details",
+                "section_order": 1,
+                "detail_sort": None,
+            }
+        },
         work_details={
             "00001-001": {
                 "detail_uid": "00001-001",
                 "work_id": "00001",
                 "detail_id": "001",
                 "section_id": "00001-1",
-                "section_title": "Details",
-                "sort_order": 1,
                 "project_filename": "alpha-detail.jpg",
                 "title": "Alpha detail",
             }
@@ -121,47 +129,19 @@ def test_work_create_defaults_draft_and_series_ids() -> None:
     )
 
 
-def test_detail_save_preserves_read_only_section_id() -> None:
+def test_detail_update_normalizes_detail_owned_fields() -> None:
     records = fixture_records()
 
-    plan = source_mutation.plan_work_detail_save(
-        records,
-        records.work_details,
+    updated_record = source_mutation.normalize_work_detail_update(
         "00001-001",
         records.work_details["00001-001"],
-        {"title": "Alpha detail updated"},
+        {"title": "Alpha detail updated", "project_filename": "updated.jpg"},
     )
 
-    assert_equal(plan.work_id, "00001", "detail work id")
-    assert_equal(plan.changed_fields, ["title"], "detail changed fields")
-    assert_false(plan.validation_errors, "detail validation errors")
-    assert_raises(
-        "record.section_id is read-only",
-        lambda: source_mutation.plan_work_detail_save(
-            records,
-            records.work_details,
-            "00001-001",
-            records.work_details["00001-001"],
-            {"section_id": "00001-2"},
-        ),
-    )
-
-
-def test_detail_create_generates_section_id() -> None:
-    records = fixture_records()
-
-    plan = source_mutation.plan_work_detail_create(
-        records,
-        records.work_details,
-        "00001-002",
-        "00001",
-        "002",
-        {"title": "Second detail", "section_title": "More details", "project_filename": "second.jpg"},
-    )
-
-    assert_equal(plan.updated_record["section_id"], "00001-2", "created detail section id")
-    assert_equal(plan.payload["work_details"]["00001-002"]["title"], "Second detail", "detail payload")
-    assert_false(plan.validation_errors, "created detail validation errors")
+    assert_equal(updated_record["title"], "Alpha detail updated", "detail title")
+    assert_equal(updated_record["project_filename"], "updated.jpg", "detail filename")
+    assert "section_title" not in updated_record
+    assert "sort_order" not in updated_record
 
 
 def test_series_save_plans_member_work_updates() -> None:
@@ -230,8 +210,7 @@ def test_moment_save_normalizes_and_validates_metadata() -> None:
 def main() -> None:
     test_work_save_plans_changed_fields_and_payload()
     test_work_create_defaults_draft_and_series_ids()
-    test_detail_save_preserves_read_only_section_id()
-    test_detail_create_generates_section_id()
+    test_detail_update_normalizes_detail_owned_fields()
     test_series_save_plans_member_work_updates()
     test_series_create_plans_series_and_optional_work_payload()
     test_moment_save_normalizes_and_validates_metadata()

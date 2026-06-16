@@ -28,7 +28,6 @@ STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
     "studio_works": "/studio/studio-works/",
     "catalogue_series_editor": "/studio/catalogue-series/",
     "catalogue_work_editor": "/studio/catalogue-work/",
-    "catalogue_work_detail_editor": "/studio/catalogue-work-detail/",
     "catalogue_moment_editor": "/studio/catalogue-moment/",
 }
 
@@ -76,8 +75,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "publication_apply": "/studio/api/catalogue/publication-apply",
         "create_work": "/studio/api/catalogue/work/create",
         "save_work": "/studio/api/catalogue/work/save",
-        "create_work_detail": "/studio/api/catalogue/work-detail/create",
-        "save_work_detail": "/studio/api/catalogue/work-detail/save",
         "import_preview": "/studio/api/catalogue/import-preview",
         "import_apply": "/studio/api/catalogue/import-apply",
         "create_series": "/studio/api/catalogue/series/create",
@@ -238,7 +235,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-status-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-detail-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-works-shell.js",
@@ -249,7 +245,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-detail-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-editor.js",
         repo_root / "studio" / "app" / "assets" / "css" / "studio.css",
         repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json",

@@ -7,12 +7,12 @@
     "work_id": "00734",
     "detail_id": "006",
     "section_id": "00734-1",
-    "section_title": "layers",
-    "details_subfolder": "layers",
     "project_filename": "words.jpg",
     "title": "words",
     "width_px": 8753,
-    "height_px": 8850
+    "height_px": 8850,
+    "section_title": "layers",
+    "details_subfolder": "layers"
   },
   "work_summary": {
     "work_id": "00734",

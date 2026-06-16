@@ -7,12 +7,12 @@
     "work_id": "00782",
     "detail_id": "006",
     "section_id": "00782-2",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "birth of forms (generation 3 version 2).jpg",
     "title": "birth of forms (generation 3 version 2)",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00782",

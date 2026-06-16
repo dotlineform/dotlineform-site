@@ -7,12 +7,12 @@
     "work_id": "00782",
     "detail_id": "021",
     "section_id": "00782-2",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "birth of healing forms - 2.10.jpg",
     "title": "birth of healing forms - 2.10",
     "width_px": 1181,
-    "height_px": 1181
+    "height_px": 1181,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00782",

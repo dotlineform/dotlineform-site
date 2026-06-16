@@ -23,7 +23,7 @@ viewable: true
 | helper | `catalogue-work-fields.js` | work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers. |
 | helper | `catalogue-work-form.js` | editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering. |
 | helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-owned file/link section rendering, and the summary rail. |
-| helper | `catalogue-work-detail-browser.js` | shared-list detail section browsing, detail thumbnail rows, detail-id suffix search, and detail edit/delete/new actions. |
+| helper | `catalogue-work-detail-browser.js` | shared-list detail section browsing, detail thumbnail rows, detail-id suffix search, and inert edit/delete/new toolbar actions reserved for future work-scoped modals. |
 | helper | `catalogue-work-actions.js` | save, create, build-preview, build, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
 | helper | `catalogue-work-selection.js` | work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route. |
 | helper | `catalogue-project-media-picker.js` | project-folder search, source-image file modal rendering, subfolder/file selection state, and derived project media field application. |
@@ -62,8 +62,8 @@ The first implementation covers:
 - show a shared-list detail browser with available detail sections and selectable detail thumbnail rows
 - cap unfiltered visible detail rows at 10 in the selected section
 - search detail rows by the last three digits of `detail_id`
-- link into the dedicated work detail editor
-- provide detail actions for edit, delete, and new detail creation from the browser toolbar
+- browse detail sections using section-owned `details_subfolder`, `section_order`, and `detail_sort` from the work lookup payload
+- keep detail toolbar actions visible for future modals without linking to the retired standalone detail editor
 - list the current work's work-owned `downloads` metadata
 - list the current work's work-owned `links` metadata
 - add, edit, and delete work-owned downloads through modal forms
@@ -83,6 +83,7 @@ The first implementation covers:
 It does not yet:
 
 - edit work details inline on the work page
+- open work detail modals for create/edit/delete
 - edit series records directly
 - manage work prose; prose management is intentionally outside the metadata editor pending a separate process
 - upload primary images to remote media storage
@@ -107,7 +108,7 @@ In new mode:
 
 Draft works can be found later from Catalogue Drafts using `/studio/catalogue-status/?family=works`.
 
-Work details are added only after the parent work is published. The detail browser's `New` action is disabled while the current work is still draft.
+Work detail creation is waiting on the future work-scoped modal/API design. The detail browser's `New` action is disabled while the current work is still draft and is otherwise reserved for that modal follow-up.
 
 ## Series Picker
 

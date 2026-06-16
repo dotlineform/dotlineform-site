@@ -7,12 +7,12 @@
     "work_id": "01869",
     "detail_id": "003",
     "section_id": "01869-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "tulips 1 - detail 3.jpg",
     "title": "tulips 1 - detail 3",
     "width_px": 1077,
-    "height_px": 1077
+    "height_px": 1077,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01869",

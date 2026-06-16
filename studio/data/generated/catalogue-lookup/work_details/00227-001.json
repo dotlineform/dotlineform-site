@@ -7,12 +7,12 @@
     "work_id": "00227",
     "detail_id": "001",
     "section_id": "00227-1",
-    "section_title": "reverse",
-    "details_subfolder": "reverse",
     "project_filename": "227-001.jpg",
     "title": "untitled [227] reverse",
     "width_px": 2480,
-    "height_px": 3508
+    "height_px": 3508,
+    "section_title": "reverse",
+    "details_subfolder": "reverse"
   },
   "work_summary": {
     "work_id": "00227",

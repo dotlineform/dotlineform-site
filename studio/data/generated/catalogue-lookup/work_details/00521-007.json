@@ -7,12 +7,12 @@
     "work_id": "00521",
     "detail_id": "007",
     "section_id": "00521-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "kylie structure 2.1.jpg",
     "title": "kylie structure 2.1",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00521",

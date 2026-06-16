@@ -68,7 +68,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["studio_works"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_work_detail_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_moment_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
@@ -92,7 +91,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_work_detail_editor" and view["path"] == "/studio/catalogue-work-detail/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == []
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
@@ -127,8 +125,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["publication_apply"] == "/studio/api/catalogue/publication-apply"
     assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"
     assert runtime["services"]["catalogue"]["save_work"] == "/studio/api/catalogue/work/save"
-    assert runtime["services"]["catalogue"]["create_work_detail"] == "/studio/api/catalogue/work-detail/create"
-    assert runtime["services"]["catalogue"]["save_work_detail"] == "/studio/api/catalogue/work-detail/save"
     assert runtime["services"]["catalogue"]["import_preview"] == "/studio/api/catalogue/import-preview"
     assert runtime["services"]["catalogue"]["import_apply"] == "/studio/api/catalogue/import-apply"
     assert runtime["services"]["catalogue"]["create_series"] == "/studio/api/catalogue/series/create"
@@ -483,8 +479,6 @@ def test_catalogue_write_service_routes_are_registered() -> None:
         "/bulk-save",
         "/work/create",
         "/work/save",
-        "/work-detail/create",
-        "/work-detail/save",
         "/series/create",
         "/series/save",
         "/delete-preview",
@@ -640,66 +634,6 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
 
 
-def test_catalogue_editor_create_work_detail_dry_run_uses_callable_service_route() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
-        source_dir.mkdir(parents=True)
-        write_repo_marker(repo_root)
-        (source_dir / "works.json").write_text(
-            json.dumps(
-                {
-                    "catalogue_source_works_version": "catalogue_source_works_v1",
-                    "works": {
-                        "00042": {
-                            "work_id": "00042",
-                            "title": "Published Work",
-                            "status": "published",
-                            "series_ids": [],
-                        }
-                    },
-                }
-            ),
-            encoding="utf-8",
-        )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
-        (source_dir / "series.json").write_text(
-            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
-            encoding="utf-8",
-        )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
-            encoding="utf-8",
-        )
-
-        status, payload = catalogue_post_response(
-            repo_root,
-            "/work-detail/create",
-            {
-                "work_id": "42",
-                "detail_id": "1",
-                "record": {
-                    "title": "Detail",
-                    "section_title": "Details",
-                    "status": "draft",
-                },
-            },
-            dry_run=True,
-        )
-
-        assert status == HTTPStatus.OK
-        assert payload["ok"] is True
-        assert payload["detail_uid"] == "00042-001"
-        assert payload["work_id"] == "00042"
-        assert payload["created"] is True
-        assert payload["dry_run"] is True
-        assert payload["would_write"] is True
-        assert json.loads((source_dir / "work_details.json").read_text(encoding="utf-8"))["work_details"] == {}
-
-
 def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
@@ -759,83 +693,6 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
         assert payload["would_write"] is True
         assert "build_plan" in payload
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"]["00042"]["title"] == "Original"
-
-
-def test_catalogue_editor_save_work_detail_dry_run_uses_callable_service_route() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
-        source_dir.mkdir(parents=True)
-        write_repo_marker(repo_root)
-        (source_dir / "works.json").write_text(
-            json.dumps(
-                {
-                    "catalogue_source_works_version": "catalogue_source_works_v1",
-                    "works": {
-                        "00042": {
-                            "work_id": "00042",
-                            "title": "Published Work",
-                            "status": "published",
-                            "series_ids": [],
-                        }
-                    },
-                }
-            ),
-            encoding="utf-8",
-        )
-        (source_dir / "work_details.json").write_text(
-            json.dumps(
-                {
-                    "catalogue_source_work_details_version": "catalogue_source_work_details_v1",
-                    "work_details": {
-                        "00042-001": {
-                            "detail_uid": "00042-001",
-                            "work_id": "00042",
-                            "detail_id": "001",
-                            "title": "Original Detail",
-                            "section_id": "00042-1",
-                            "section_title": "Details",
-                            "status": "draft",
-                        }
-                    },
-                }
-            ),
-            encoding="utf-8",
-        )
-        (source_dir / "series.json").write_text(
-            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
-            encoding="utf-8",
-        )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
-            encoding="utf-8",
-        )
-        registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
-        registry_target.parent.mkdir(parents=True, exist_ok=True)
-        registry_target.write_text((REPO_ROOT / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json").read_text(encoding="utf-8"), encoding="utf-8")
-
-        status, payload = catalogue_post_response(
-            repo_root,
-            "/work-detail/save",
-            {
-                "detail_uid": "00042-001",
-                "record": {
-                    "title": "Updated Detail",
-                },
-            },
-            dry_run=True,
-        )
-
-        assert status == HTTPStatus.OK
-        assert payload["ok"] is True
-        assert payload["detail_uid"] == "00042-001"
-        assert payload["work_id"] == "00042"
-        assert payload["changed"] is True
-        assert payload["changed_fields"] == ["title"]
-        assert payload["dry_run"] is True
-        assert payload["would_write"] is True
-        assert "build_plan" in payload
-        assert json.loads((source_dir / "work_details.json").read_text(encoding="utf-8"))["work_details"]["00042-001"]["title"] == "Original Detail"
 
 
 def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() -> None:

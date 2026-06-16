@@ -29,68 +29,46 @@
   "detail_sections": [
     {
       "section_id": "00734-1",
+      "details_subfolder": "layers",
       "section_title": "layers",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "00734-001",
           "detail_id": "001",
           "title": "buddhism",
-          "section_id": "00734-1",
-          "section_title": "layers",
-          "sort_order": null,
-          "details_subfolder": "layers",
           "project_filename": "buddhism.jpg"
         },
         {
           "detail_uid": "00734-002",
           "detail_id": "002",
           "title": "chemicals",
-          "section_id": "00734-1",
-          "section_title": "layers",
-          "sort_order": null,
-          "details_subfolder": "layers",
           "project_filename": "chemicals.jpg"
         },
         {
           "detail_uid": "00734-003",
           "detail_id": "003",
           "title": "colour",
-          "section_id": "00734-1",
-          "section_title": "layers",
-          "sort_order": null,
-          "details_subfolder": "layers",
           "project_filename": "colour.jpg"
         },
         {
           "detail_uid": "00734-004",
           "detail_id": "004",
           "title": "music",
-          "section_id": "00734-1",
-          "section_title": "layers",
-          "sort_order": null,
-          "details_subfolder": "layers",
           "project_filename": "music.jpg"
         },
         {
           "detail_uid": "00734-005",
           "detail_id": "005",
           "title": "physics",
-          "section_id": "00734-1",
-          "section_title": "layers",
-          "sort_order": null,
-          "details_subfolder": "layers",
           "project_filename": "physics.jpg"
         },
         {
           "detail_uid": "00734-006",
           "detail_id": "006",
           "title": "words",
-          "section_id": "00734-1",
-          "section_title": "layers",
-          "sort_order": null,
-          "details_subfolder": "layers",
           "project_filename": "words.jpg"
         }
       ]

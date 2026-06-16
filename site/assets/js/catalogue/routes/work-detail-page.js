@@ -180,7 +180,7 @@ function bootWorkDetailRoute(rootNode) {
         if (text(detail.detail_uid) === ctx.detailUid) {
           return {
             detail: detail,
-            sectionId: slug(sec.section_id || sec.section_title || sec.project_subfolder || 'details')
+            sectionId: slug(sec.section_id || sec.section_title || 'details')
           };
         }
       }
@@ -198,7 +198,7 @@ function bootWorkDetailRoute(rootNode) {
     var sections = workPayload && Array.isArray(workPayload.sections) ? workPayload.sections : [];
     var details = [];
     sections.forEach(function (sec) {
-      var sectionId = slug(sec && (sec.section_id || sec.section_title || sec.project_subfolder || 'details'));
+      var sectionId = slug(sec && (sec.section_id || sec.section_title || 'details'));
       if (ctx.section && sectionId !== ctx.section) return;
       var list = sec && Array.isArray(sec.details) ? sec.details : [];
       list.forEach(function (detail) { details.push(detail); });

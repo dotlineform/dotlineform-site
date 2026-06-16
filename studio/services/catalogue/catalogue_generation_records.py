@@ -157,9 +157,6 @@ def build_canonical_detail_record(
     wid: str,
     did: str,
     title: Optional[str],
-    section_id: Optional[str],
-    section_title: Optional[str],
-    sort_order: Optional[int],
     width_px: Optional[int],
     height_px: Optional[int],
 ) -> Dict[str, Any]:
@@ -169,9 +166,6 @@ def build_canonical_detail_record(
         "detail_id": did,
         "detail_uid": detail_uid,
         "title": title,
-        "section_id": section_id,
-        "section_title": section_title,
-        "sort_order": sort_order,
         "width_px": width_px,
         "height_px": height_px,
     }
@@ -222,37 +216,20 @@ def build_moment_index_record(moment_record: Mapping[str, Any]) -> Dict[str, Any
     })
 
 
-def build_sections_from_detail_records(detail_records: List[Mapping[str, Any]]) -> List[Dict[str, Any]]:
-    section_index: Dict[str, int] = {}
+def build_sections_from_detail_sections(detail_sections: List[Mapping[str, Any]]) -> List[Dict[str, Any]]:
     sections: List[Dict[str, Any]] = []
-    for detail in detail_records:
-        section_title = coerce_string(detail.get("section_title") or detail.get("project_subfolder")) or ""
-        section_id = coerce_string(detail.get("section_id")) or section_title or "details"
-        sort_order = coerce_int(detail.get("sort_order"))
-        if section_id not in section_index:
-            section_index[section_id] = len(sections)
-            sections.append(
+    for section in detail_sections:
+        detail_records = section.get("details")
+        details = [dict(detail) for detail in detail_records] if isinstance(detail_records, list) else []
+        sections.append(
+            compact_json_object(
                 {
-                    "section_id": section_id,
-                    "section_title": section_title,
-                    "sort_order": sort_order,
-                    "details": [],
+                    "section_id": coerce_string(section.get("section_id")),
+                    "section_title": coerce_string(section.get("section_title")),
+                    "section_order": coerce_int(section.get("section_order")),
+                    "detail_sort": coerce_string(section.get("detail_sort")),
+                    "details": details,
                 }
             )
-        detail_payload = dict(detail)
-        detail_payload.pop("section_id", None)
-        detail_payload.pop("section_title", None)
-        detail_payload.pop("sort_order", None)
-        sections[section_index[section_id]]["details"].append(detail_payload)
-    for sec in sections:
-        details = sec.get("details")
-        if isinstance(details, list):
-            details.sort(key=lambda item: str(item.get("detail_id", "")))
-    sections.sort(
-        key=lambda sec: (
-            1 if sec.get("sort_order") is None else 0,
-            sec.get("sort_order") if sec.get("sort_order") is not None else 0,
-            str(sec.get("section_id", "")),
         )
-    )
     return sections

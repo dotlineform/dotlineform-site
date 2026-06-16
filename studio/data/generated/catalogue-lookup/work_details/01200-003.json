@@ -7,12 +7,12 @@
     "work_id": "01200",
     "detail_id": "003",
     "section_id": "01200-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "forms painting - detail 3.jpg",
     "title": "forms painting - detail 3",
     "width_px": 3024,
-    "height_px": 3024
+    "height_px": 3024,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01200",

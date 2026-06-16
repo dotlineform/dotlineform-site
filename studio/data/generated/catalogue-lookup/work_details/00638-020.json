@@ -7,12 +7,12 @@
     "work_id": "00638",
     "detail_id": "020",
     "section_id": "00638-3",
-    "section_title": "source",
-    "details_subfolder": "source",
     "project_filename": "source - give.jpg",
     "title": "source - give",
     "width_px": 1681,
-    "height_px": 1393
+    "height_px": 1393,
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "00638",

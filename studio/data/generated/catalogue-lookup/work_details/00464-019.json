@@ -7,12 +7,12 @@
     "work_id": "00464",
     "detail_id": "019",
     "section_id": "00464-2",
-    "section_title": "memories",
-    "details_subfolder": "memories",
     "project_filename": "memory - 5.3.jpg",
     "title": "memory - 5.3",
     "width_px": 2362,
-    "height_px": 2362
+    "height_px": 2362,
+    "section_title": "memories",
+    "details_subfolder": "memories"
   },
   "work_summary": {
     "work_id": "00464",

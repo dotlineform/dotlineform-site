@@ -29,58 +29,40 @@
   "detail_sections": [
     {
       "section_id": "00813-1",
+      "details_subfolder": "versions",
       "section_title": "versions",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 5,
       "details": [
         {
           "detail_uid": "00813-001",
           "detail_id": "001",
           "title": "colours 1958-2001.1",
-          "section_id": "00813-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours 1958-2001.1.jpg"
         },
         {
           "detail_uid": "00813-002",
           "detail_id": "002",
           "title": "colours 1958-2001.2",
-          "section_id": "00813-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours 1958-2001.2.jpg"
         },
         {
           "detail_uid": "00813-003",
           "detail_id": "003",
           "title": "colours 1958-2001.3",
-          "section_id": "00813-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours 1958-2001.3.jpg"
         },
         {
           "detail_uid": "00813-004",
           "detail_id": "004",
           "title": "colours 1958-2001.4",
-          "section_id": "00813-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours 1958-2001.4.jpg"
         },
         {
           "detail_uid": "00813-005",
           "detail_id": "005",
           "title": "colours 1958-2001.5",
-          "section_id": "00813-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours 1958-2001.5.jpg"
         }
       ]

@@ -142,6 +142,7 @@ def records_with_work_media_source(records: CatalogueSourceRecords, work_id: str
     works[work_id] = dict(media_record)
     return CatalogueSourceRecords(
         works=works,
+        work_detail_sections=records.work_detail_sections,
         work_details=records.work_details,
         series=records.series,
     )

@@ -29,28 +29,22 @@
   "detail_sections": [
     {
       "section_id": "00159-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 2,
       "details": [
         {
           "detail_uid": "00159-001",
           "detail_id": "001",
           "title": "Michelle Pfeiffer - page 1",
-          "section_id": "00159-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "Michelle Pfeiffer - page 1.jpg"
         },
         {
           "detail_uid": "00159-002",
           "detail_id": "002",
           "title": "Michelle Pfeiffer - pages 2-3",
-          "section_id": "00159-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "Michelle Pfeiffer - pages 2-3.jpg"
         }
       ]

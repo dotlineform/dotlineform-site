@@ -7,12 +7,12 @@
     "work_id": "00384",
     "detail_id": "004",
     "section_id": "00384-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "glass forms 004.jpg",
     "title": "glass forms 004",
     "width_px": 3444,
-    "height_px": 2528
+    "height_px": 2528,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00384",

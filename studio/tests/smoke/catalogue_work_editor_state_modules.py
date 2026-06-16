@@ -291,13 +291,7 @@ def assert_detail_browser_search_filters_suffix(page: Page) -> None:
                 mediaConfigLoader: () => ({{}}),
                 modalHostFactory: () => ({{}})
             }});
-            state.config = {{
-                app: {{
-                    routes: {{
-                        catalogue_work_detail_editor: {{ path: '/studio/catalogue-work-detail/' }}
-                    }}
-                }}
-            }};
+            state.config = {{ app: {{ routes: {{}} }} }};
             state.currentWorkId = '00001';
             state.currentRecord = {{ work_id: '00001', status: 'published' }};
             state.currentLookup = {{

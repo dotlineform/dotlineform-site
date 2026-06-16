@@ -7,12 +7,12 @@
     "work_id": "01003",
     "detail_id": "001",
     "section_id": "01003-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "dots (second normal form) [detail 1].jpg",
     "title": "dots (second normal form) [detail 1]",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01003",

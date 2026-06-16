@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue-source
 title: Catalogue Source Model
 added_date: 2026-05-19
-last_updated: 2026-06-11
+last_updated: 2026-06-16
 parent_id: studio
 viewable: true
 ---
@@ -96,15 +96,28 @@ Other work source-model notes:
 
 ### Work Detail Source Records
 
-Work-detail records in `site/assets/studio/data/catalogue/work_details.json` use the migrated media-section schema:
+Work-detail source in `studio/data/canonical/catalogue/work_details.json` is split into section records and detail records.
 
-- `details_subfolder`: optional source-image folder under the parent work's `project_folder`
+`work_detail_sections` owns section metadata:
+
 - `section_id`: stable generated public-section key, such as `00001-1`
+- `work_id`: parent work id
+- `details_subfolder`: optional source-image folder under the parent work's `project_folder`
 - `section_title`: public section label
-- `sort_order`: optional section ordering value
-- `project_filename`: detail source-image filename
+- `section_order`: optional section ordering value
+- `detail_sort`: optional section-level detail ordering mode (`detail_id` or `title`)
 
-Detail records no longer use legacy `project_subfolder`. Empty `details_subfolder` values are omitted from source JSON; when absent, the detail source image resolves directly under the parent work's `project_folder`.
+`work_details` owns individual detail metadata:
+
+- `detail_uid`
+- `work_id`
+- `detail_id`
+- `section_id`
+- `project_filename`
+- `title`
+- generated/media-maintained dimensions such as `width_px` and `height_px`
+
+Detail records do not repeat `details_subfolder`, `section_title`, or section ordering metadata. Detail records no longer use legacy `project_subfolder`.
 Detail records do not own `status` or `published_date`; parent work publication controls whether detail records appear in public output.
 
 ### Series Source Records
@@ -149,10 +162,11 @@ Each section owns:
 
 - `section_id`
 - `section_title`
-- optional `sort_order`
+- optional `section_order`
+- optional `detail_sort`
 - `details[]`
 
-Nested `details[]` records do not repeat section-level `section_id`, `section_title`, or `sort_order`. Detail records within a section remain sorted by `detail_id`.
+Nested `details[]` records do not repeat section-level metadata. Detail records within a section are generated in section `detail_sort` order, defaulting to `detail_id`.
 
 ## Catalogue Field Registry
 

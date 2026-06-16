@@ -7,12 +7,12 @@
     "work_id": "01052",
     "detail_id": "003",
     "section_id": "01052-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "flowers 1 - detail 3.jpg",
     "title": "flowers 1 - detail 3",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01052",

@@ -7,12 +7,12 @@
     "work_id": "00639",
     "detail_id": "012",
     "section_id": "00639-2",
-    "section_title": "forms",
-    "details_subfolder": "forms",
     "project_filename": "form 11.jpg",
     "title": "form 11",
     "width_px": 2362,
-    "height_px": 2362
+    "height_px": 2362,
+    "section_title": "forms",
+    "details_subfolder": "forms"
   },
   "work_summary": {
     "work_id": "00639",

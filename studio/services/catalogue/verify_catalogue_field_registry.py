@@ -15,6 +15,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 from catalogue.catalogue_field_registry import field_aware_build_plan, full_fallback_build_plan, load_catalogue_field_registry  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
     DETAIL_FIELDS,
+    DETAIL_SECTION_FIELDS,
     DETAIL_TEXT_FIELDS,
     OMIT_EMPTY_SOURCE_FIELDS,
     SERIES_FIELDS,
@@ -154,6 +155,7 @@ def plan_for(
 def work_sort_context() -> dict[str, Any]:
     records = CatalogueSourceRecords(
         works={"00001": {"work_id": "00001", "series_ids": ["009"]}},
+        work_detail_sections={},
         work_details={},
         series={"009": {"series_id": "009", "sort_fields": "title"}},
     )
@@ -283,7 +285,7 @@ def assert_field_omitted(label: str, record: Mapping[str, Any], field: str) -> N
 
 
 def verify_optional_source_serialization() -> int:
-    if OMIT_EMPTY_SOURCE_FIELDS != {"project_subfolder", "details_subfolder", "sort_order"}:
+    if OMIT_EMPTY_SOURCE_FIELDS != {"project_subfolder", "details_subfolder", "section_order", "detail_sort"}:
         fail(f"unexpected omit-empty source fields: {sorted(OMIT_EMPTY_SOURCE_FIELDS)!r}")
 
     work_with_subfolder = normalize_source_record(
@@ -300,36 +302,36 @@ def verify_optional_source_serialization() -> int:
         )
         assert_field_omitted(f"work project_subfolder empty {raw!r}", record, "project_subfolder")
 
-    detail_with_subfolder = normalize_source_record(
-        {"detail_uid": "00001-001", "details_subfolder": "details"},
-        DETAIL_FIELDS,
+    section_with_subfolder = normalize_source_record(
+        {"section_id": "00001-1", "details_subfolder": "details"},
+        DETAIL_SECTION_FIELDS,
         text_fields=DETAIL_TEXT_FIELDS,
     )
-    assert_field_present("detail details_subfolder non-empty", detail_with_subfolder, "details_subfolder", "details")
+    assert_field_present("section details_subfolder non-empty", section_with_subfolder, "details_subfolder", "details")
     for raw in (None, "", "   "):
         record = normalize_source_record(
-            {"detail_uid": "00001-001", "details_subfolder": raw},
-            DETAIL_FIELDS,
+            {"section_id": "00001-1", "details_subfolder": raw},
+            DETAIL_SECTION_FIELDS,
             text_fields=DETAIL_TEXT_FIELDS,
         )
-        assert_field_omitted(f"detail details_subfolder empty {raw!r}", record, "details_subfolder")
+        assert_field_omitted(f"section details_subfolder empty {raw!r}", record, "details_subfolder")
 
     for raw, expected in ((0, 0), ("7", 7)):
         record = normalize_source_record(
-            {"detail_uid": "00001-001", "sort_order": raw},
-            DETAIL_FIELDS,
+            {"section_id": "00001-1", "section_order": raw},
+            DETAIL_SECTION_FIELDS,
             text_fields=DETAIL_TEXT_FIELDS,
         )
-        assert_field_present(f"detail sort_order non-empty {raw!r}", record, "sort_order", expected)
+        assert_field_present(f"section section_order non-empty {raw!r}", record, "section_order", expected)
     for raw in (None, "", "   "):
         record = normalize_source_record(
-            {"detail_uid": "00001-001", "sort_order": raw},
-            DETAIL_FIELDS,
+            {"section_id": "00001-1", "section_order": raw},
+            DETAIL_SECTION_FIELDS,
             text_fields=DETAIL_TEXT_FIELDS,
         )
-        assert_field_omitted(f"detail sort_order empty {raw!r}", record, "sort_order")
+        assert_field_omitted(f"section section_order empty {raw!r}", record, "section_order")
 
-    for field in ("section_id", "section_title"):
+    for field in ("section_id",):
         blank_record = normalize_source_record(
             {"detail_uid": "00001-001", field: ""},
             DETAIL_FIELDS,
@@ -342,6 +344,20 @@ def verify_optional_source_serialization() -> int:
             text_fields=DETAIL_TEXT_FIELDS,
         )
         assert_field_present(f"detail required {field} non-empty", non_blank_record, field, "value")
+
+    for field in ("section_id", "section_title"):
+        blank_record = normalize_source_record(
+            {"section_id": "00001-1", field: ""},
+            DETAIL_SECTION_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_present(f"section required {field} blank", blank_record, field, None)
+        non_blank_record = normalize_source_record(
+            {"section_id": "00001-1", field: "value"},
+            DETAIL_SECTION_FIELDS,
+            text_fields=DETAIL_TEXT_FIELDS,
+        )
+        assert_field_present(f"section required {field} non-empty", non_blank_record, field, "value")
 
     return 14
 
@@ -469,7 +485,7 @@ def main() -> None:
         ),
         (
             "work-detail media source metadata",
-            plan_for(registry, record_family="work_detail", fields=["details_subfolder", "project_filename"]),
+            plan_for(registry, record_family="work_detail", fields=["project_filename"]),
             {
                 "rule_id": "work_detail_media_source",
                 "artifacts": ["source-json", "studio-lookup", "local-media"],
@@ -481,7 +497,7 @@ def main() -> None:
         ),
         (
             "work-detail section metadata",
-            plan_for(registry, record_family="work_detail", fields=["section_title", "sort_order"]),
+            plan_for(registry, record_family="work_detail", fields=["section_id"]),
             {
                 "rule_id": "work_detail_section_metadata",
                 "artifacts": ["source-json", "studio-lookup", "work-json"],

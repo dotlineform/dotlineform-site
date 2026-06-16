@@ -8,9 +8,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+SERVICES_DIR = REPO_ROOT / "studio/services"
+if str(SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVICES_DIR))
 
 from catalogue import catalogue_generation_records as records  # noqa: E402
 
@@ -141,9 +141,6 @@ def test_detail_record_grouping_is_deterministic() -> None:
         "00042",
         "001",
         title="Detail one",
-        section_id="b",
-        section_title="B section",
-        sort_order=2,
         width_px=None,
         height_px=600,
     )
@@ -152,25 +149,33 @@ def test_detail_record_grouping_is_deterministic() -> None:
         "detail_id": "001",
         "detail_uid": "00042-001",
         "title": "Detail one",
-        "section_id": "b",
-        "section_title": "B section",
-        "sort_order": 2,
         "height_px": 600,
     }
 
-    sections = records.build_sections_from_detail_records(
+    sections = records.build_sections_from_detail_sections(
         [
-            {"detail_id": "002", "title": "Second", "section_id": "b", "section_title": "B section", "sort_order": 2},
-            {"detail_id": "001", "title": "First", "section_id": "b", "section_title": "B section", "sort_order": 2},
-            {"detail_id": "003", "title": "Fallback", "project_subfolder": "Details"},
-            {"detail_id": "004", "title": "First section", "section_id": "a", "section_title": "A section", "sort_order": 1},
+            {
+                "section_id": "a",
+                "section_title": "A section",
+                "section_order": 1,
+                "details": [{"detail_id": "004", "title": "First section"}],
+            },
+            {
+                "section_id": "b",
+                "section_title": "B section",
+                "section_order": 2,
+                "details": [
+                    {"detail_id": "001", "title": "First"},
+                    {"detail_id": "002", "title": "Second"},
+                ],
+            },
         ]
     )
 
-    assert [section["section_id"] for section in sections] == ["a", "b", "Details"]
+    assert [section["section_id"] for section in sections] == ["a", "b"]
     assert [detail["detail_id"] for detail in sections[1]["details"]] == ["001", "002"]
     assert "section_id" not in sections[1]["details"][0]
-    assert "sort_order" not in sections[1]["details"][0]
+    assert "section_order" not in sections[1]["details"][0]
 
 
 def main() -> None:

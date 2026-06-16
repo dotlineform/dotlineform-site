@@ -7,12 +7,12 @@
     "work_id": "01046",
     "detail_id": "016",
     "section_id": "01046-1",
-    "section_title": "espressos",
-    "details_subfolder": "espressos",
     "project_filename": "espresso 16.jpg",
     "title": "espresso 16",
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "section_title": "espressos",
+    "details_subfolder": "espressos"
   },
   "work_summary": {
     "work_id": "01046",

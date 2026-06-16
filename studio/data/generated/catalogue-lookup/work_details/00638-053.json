@@ -7,12 +7,12 @@
     "work_id": "00638",
     "detail_id": "053",
     "section_id": "00638-4",
-    "section_title": "composites",
-    "details_subfolder": "composites",
     "project_filename": "composite - rwanda.jpg",
     "title": "composite - rwanda",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_title": "composites",
+    "details_subfolder": "composites"
   },
   "work_summary": {
     "work_id": "00638",

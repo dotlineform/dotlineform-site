@@ -29,48 +29,34 @@
   "detail_sections": [
     {
       "section_id": "00365-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 4,
       "details": [
         {
           "detail_uid": "00365-001",
           "detail_id": "001",
           "title": "the eye - detail 1",
-          "section_id": "00365-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00365 - the eye - detail 1.jpeg"
         },
         {
           "detail_uid": "00365-002",
           "detail_id": "002",
           "title": "the eye - detail 2",
-          "section_id": "00365-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00365 - the eye - detail 2.jpeg"
         },
         {
           "detail_uid": "00365-003",
           "detail_id": "003",
           "title": "the eye - detail 3",
-          "section_id": "00365-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00365 - the eye - detail 3.jpeg"
         },
         {
           "detail_uid": "00365-004",
           "detail_id": "004",
           "title": "the eye - detail 4",
-          "section_id": "00365-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "00365 - the eye - detail 4.jpeg"
         }
       ]

@@ -7,12 +7,12 @@
     "work_id": "01720",
     "detail_id": "022",
     "section_id": "01720-1",
-    "section_title": "symbols",
-    "details_subfolder": "symbols",
     "project_filename": "fussy (lower).jpg",
     "title": "fussy (lower)",
     "width_px": 1600,
-    "height_px": 1556
+    "height_px": 1556,
+    "section_title": "symbols",
+    "details_subfolder": "symbols"
   },
   "work_summary": {
     "work_id": "01720",

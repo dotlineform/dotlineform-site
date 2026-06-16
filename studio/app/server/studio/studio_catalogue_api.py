@@ -102,8 +102,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "publication-apply",
                 "work/create",
                 "work/save",
-                "work-detail/create",
-                "work-detail/save",
                 "series/create",
                 "series/save",
                 "build-preview",

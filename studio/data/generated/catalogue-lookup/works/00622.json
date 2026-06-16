@@ -29,68 +29,46 @@
   "detail_sections": [
     {
       "section_id": "00622-1",
+      "details_subfolder": "derivation",
       "section_title": "derivation",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 6,
       "details": [
         {
           "detail_uid": "00622-001",
           "detail_id": "001",
           "title": "k source",
-          "section_id": "00622-1",
-          "section_title": "derivation",
-          "sort_order": null,
-          "details_subfolder": "derivation",
           "project_filename": "k source.jpg"
         },
         {
           "detail_uid": "00622-002",
           "detail_id": "002",
           "title": "k crystals bits - detail",
-          "section_id": "00622-1",
-          "section_title": "derivation",
-          "sort_order": null,
-          "details_subfolder": "derivation",
           "project_filename": "k crystals bits - detail.jpg"
         },
         {
           "detail_uid": "00622-003",
           "detail_id": "003",
           "title": "k crystals bits - screenshot - detail",
-          "section_id": "00622-1",
-          "section_title": "derivation",
-          "sort_order": null,
-          "details_subfolder": "derivation",
           "project_filename": "k crystals bits - screenshot - detail.jpg"
         },
         {
           "detail_uid": "00622-004",
           "detail_id": "004",
           "title": "k crystals bits - screenshot",
-          "section_id": "00622-1",
-          "section_title": "derivation",
-          "sort_order": null,
-          "details_subfolder": "derivation",
           "project_filename": "k crystals bits - screenshot.jpg"
         },
         {
           "detail_uid": "00622-005",
           "detail_id": "005",
           "title": "k crystals bits",
-          "section_id": "00622-1",
-          "section_title": "derivation",
-          "sort_order": null,
-          "details_subfolder": "derivation",
           "project_filename": "k crystals bits.jpg"
         },
         {
           "detail_uid": "00622-006",
           "detail_id": "006",
           "title": "k crystals colours",
-          "section_id": "00622-1",
-          "section_title": "derivation",
-          "sort_order": null,
-          "details_subfolder": "derivation",
           "project_filename": "k crystals colours.jpg"
         }
       ]

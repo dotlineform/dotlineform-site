@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
@@ -13,6 +13,7 @@ try:
     from catalogue.catalogue_source import (
         CatalogueSourceRecords,
         DETAIL_FIELDS,
+        DETAIL_SECTION_FIELDS,
         DETAIL_TEXT_FIELDS,
         WORK_FIELDS,
         WORK_TEXT_FIELDS,
@@ -28,12 +29,12 @@ try:
         sort_record_map,
         validate_source_records,
         validate_work_detail_media_section_record,
-        validate_work_detail_section_metadata_consistency,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.catalogue_source import (
         CatalogueSourceRecords,
         DETAIL_FIELDS,
+        DETAIL_SECTION_FIELDS,
         DETAIL_TEXT_FIELDS,
         WORK_FIELDS,
         WORK_TEXT_FIELDS,
@@ -49,7 +50,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         sort_record_map,
         validate_source_records,
         validate_work_detail_media_section_record,
-        validate_work_detail_section_metadata_consistency,
     )
 
 try:
@@ -77,6 +77,7 @@ class WorkbookImportPlan:
     blocked_rows: list[Dict[str, str]]
     blocked_reason_counts: Dict[str, int]
     validation_errors: list[str]
+    importable_sections: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
     @property
     def target_kind(self) -> str:
@@ -122,14 +123,18 @@ def apply_workbook_import_plan(source_dir: Path, plan: WorkbookImportPlan) -> Ca
         merged.update(plan.importable_records)
         return CatalogueSourceRecords(
             works=sort_record_map(merged),
+            work_detail_sections=source_records.work_detail_sections,
             work_details=source_records.work_details,
             series=source_records.series,
         )
 
+    merged_sections = dict(source_records.work_detail_sections)
+    merged_sections.update(plan.importable_sections)
     merged = dict(source_records.work_details)
     merged.update(plan.importable_records)
     return CatalogueSourceRecords(
         works=source_records.works,
+        work_detail_sections=sort_record_map(merged_sections),
         work_details=sort_record_map(merged),
         series=source_records.series,
     )
@@ -376,6 +381,7 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
     _require_headers(headers, ["work_id", "detail_id", "title", "section_title"], sheet_name="WorkDetails")
 
     importable: Dict[str, Dict[str, Any]] = {}
+    importable_sections: Dict[str, Dict[str, Any]] = {}
     assigned_section_ids: Dict[tuple[str, str], str] = {}
     duplicate_ids: list[str] = []
     blocked_rows: list[Dict[str, str]] = []
@@ -434,12 +440,12 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
         if not section_title:
             _append_blocked(blocked_rows, blocked_reason_counts, row_number=row_number, record_id=detail_uid, reason="missing_section_title", message="section_title is required")
             continue
+        details_subfolder = normalize_scalar_text(cell(row, headers, "details_subfolder")) or section_title
 
         record = {
             "detail_uid": detail_uid,
             "work_id": work_id,
             "detail_id": detail_id,
-            "section_title": section_title,
         }
         raw_section_id = normalize_scalar_text(cell(row, headers, "section_id"))
         if raw_section_id:
@@ -447,9 +453,39 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
         else:
             section_key = (work_id, section_title)
             if section_key not in assigned_section_ids:
-                existing_detail_records = [*source_records.work_details.values(), *importable.values()]
-                assigned_section_ids[section_key] = next_detail_section_id(work_id, existing_detail_records)
+                existing_section = next(
+                    (
+                        section
+                        for section in source_records.work_detail_sections.values()
+                        if normalize_text(section.get("work_id")) == work_id
+                        and normalize_text(section.get("section_title")) == section_title
+                    ),
+                    None,
+                )
+                if existing_section:
+                    assigned_section_ids[section_key] = normalize_text(existing_section.get("section_id"))
+                else:
+                    assigned_section_ids[section_key] = next_detail_section_id(
+                        work_id,
+                        source_records.work_details.values(),
+                        [*source_records.work_detail_sections.values(), *importable_sections.values()],
+                    )
             record["section_id"] = assigned_section_ids[section_key]
+        section_id = normalize_text(record["section_id"])
+        if section_id not in source_records.work_detail_sections and section_id not in importable_sections:
+            section_record = {
+                "section_id": section_id,
+                "work_id": work_id,
+                "details_subfolder": details_subfolder,
+                "section_title": section_title,
+                "section_order": normalize_json_value(cell(row, headers, "section_order")) if "section_order" in headers else None,
+                "detail_sort": normalize_json_value(cell(row, headers, "detail_sort")) if "detail_sort" in headers else None,
+            }
+            importable_sections[section_id] = normalize_source_record(
+                section_record,
+                DETAIL_SECTION_FIELDS,
+                text_fields=DETAIL_TEXT_FIELDS,
+            )
         for field in DETAIL_FIELDS:
             if field in record:
                 continue
@@ -457,7 +493,12 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
         normalized_record = normalize_source_record(record, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
         importable[detail_uid] = normalized_record
 
-    validation_errors = _validate_imported_records(source_records, importable, mode=IMPORT_MODE_WORK_DETAILS)
+    validation_errors = _validate_imported_records(
+        source_records,
+        importable,
+        mode=IMPORT_MODE_WORK_DETAILS,
+        importable_sections=importable_sections,
+    )
     return WorkbookImportPlan(
         mode=IMPORT_MODE_WORK_DETAILS,
         workbook_path=workbook_path.expanduser().resolve(),
@@ -467,6 +508,7 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
         blocked_rows=blocked_rows,
         blocked_reason_counts=blocked_reason_counts,
         validation_errors=validation_errors,
+        importable_sections=sort_record_map(importable_sections),
     )
 
 
@@ -475,6 +517,7 @@ def _validate_imported_records(
     importable_records: Mapping[str, Dict[str, Any]],
     *,
     mode: str,
+    importable_sections: Mapping[str, Dict[str, Any]] | None = None,
 ) -> list[str]:
     if not importable_records:
         return []
@@ -485,17 +528,20 @@ def _validate_imported_records(
         merged.update(importable_records)
         candidate_records = CatalogueSourceRecords(
             works=sort_record_map(merged),
+            work_detail_sections=source_records.work_detail_sections,
             work_details=source_records.work_details,
             series=source_records.series,
         )
     else:
+        merged_sections = dict(source_records.work_detail_sections)
+        merged_sections.update(importable_sections or {})
         merged = dict(source_records.work_details)
         merged.update(importable_records)
         for detail_uid, detail_record in importable_records.items():
             errors.extend(validate_work_detail_media_section_record(detail_uid, detail_record))
-        errors.extend(validate_work_detail_section_metadata_consistency(merged))
         candidate_records = CatalogueSourceRecords(
             works=source_records.works,
+            work_detail_sections=sort_record_map(merged_sections),
             work_details=sort_record_map(merged),
             series=source_records.series,
         )

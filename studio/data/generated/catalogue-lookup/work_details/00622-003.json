@@ -7,12 +7,12 @@
     "work_id": "00622",
     "detail_id": "003",
     "section_id": "00622-1",
-    "section_title": "derivation",
-    "details_subfolder": "derivation",
     "project_filename": "k crystals bits - screenshot - detail.jpg",
     "title": "k crystals bits - screenshot - detail",
     "width_px": 800,
-    "height_px": 500
+    "height_px": 500,
+    "section_title": "derivation",
+    "details_subfolder": "derivation"
   },
   "work_summary": {
     "work_id": "00622",

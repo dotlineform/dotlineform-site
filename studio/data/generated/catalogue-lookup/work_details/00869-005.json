@@ -7,12 +7,12 @@
     "work_id": "00869",
     "detail_id": "005",
     "section_id": "00869-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "curve machine [5].jpg",
     "title": "curve machine [5]",
     "width_px": 4032,
-    "height_px": 3024
+    "height_px": 3024,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00869",

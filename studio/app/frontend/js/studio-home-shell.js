@@ -7,7 +7,6 @@ const HOME_COLUMNS = Object.freeze([
       Object.freeze({ routeId: "catalogue_status" }),
       Object.freeze({ routeId: "catalogue_series_editor" }),
       Object.freeze({ routeId: "catalogue_work_editor" }),
-      Object.freeze({ routeId: "catalogue_work_detail_editor" }),
       Object.freeze({ routeId: "bulk_add_work" }),
       Object.freeze({ routeId: "catalogue_moment_editor" }),
       Object.freeze({ routeId: "catalogue_field_registry" }),

@@ -7,12 +7,12 @@
     "work_id": "00158",
     "detail_id": "001",
     "section_id": "00158-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "grid dissection - cover.jpg",
     "title": "grid dissection - cover",
     "width_px": 2138,
-    "height_px": 3024
+    "height_px": 3024,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00158",

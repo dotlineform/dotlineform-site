@@ -7,12 +7,12 @@
     "work_id": "01523",
     "detail_id": "005",
     "section_id": "01523-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "pi - detail 5.jpg",
     "title": "pi - detail 5",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01523",

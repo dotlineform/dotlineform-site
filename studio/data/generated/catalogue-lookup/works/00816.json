@@ -29,58 +29,40 @@
   "detail_sections": [
     {
       "section_id": "00816-1",
+      "details_subfolder": "versions",
       "section_title": "versions",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 5,
       "details": [
         {
           "detail_uid": "00816-001",
           "detail_id": "001",
           "title": "colours kylie.1",
-          "section_id": "00816-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours kylie.1.jpg"
         },
         {
           "detail_uid": "00816-002",
           "detail_id": "002",
           "title": "colours kylie.2",
-          "section_id": "00816-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours kylie.2.jpg"
         },
         {
           "detail_uid": "00816-003",
           "detail_id": "003",
           "title": "colours kylie.3",
-          "section_id": "00816-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours kylie.3.jpg"
         },
         {
           "detail_uid": "00816-004",
           "detail_id": "004",
           "title": "colours kylie.4",
-          "section_id": "00816-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours kylie.4.jpg"
         },
         {
           "detail_uid": "00816-005",
           "detail_id": "005",
           "title": "colours kylie.5",
-          "section_id": "00816-1",
-          "section_title": "versions",
-          "sort_order": null,
-          "details_subfolder": "versions",
           "project_filename": "colours kylie.5.jpg"
         }
       ]

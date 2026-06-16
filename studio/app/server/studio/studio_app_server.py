@@ -127,9 +127,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         if path in {"/studio/catalogue-work", "/studio/catalogue-work/"}:
             self.send_html(studio_app_bootstrap_view(self.version))
             return
-        if path in {"/studio/catalogue-work-detail", "/studio/catalogue-work-detail/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
         if path in {"/studio/catalogue-moment", "/studio/catalogue-moment/"}:
             self.send_html(studio_app_bootstrap_view(self.version))
             return

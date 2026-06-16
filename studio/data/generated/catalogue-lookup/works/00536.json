@@ -29,18 +29,16 @@
   "detail_sections": [
     {
       "section_id": "00536-1",
+      "details_subfolder": "details",
       "section_title": "details",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 1,
       "details": [
         {
           "detail_uid": "00536-001",
           "detail_id": "001",
           "title": "model 2 - 001",
-          "section_id": "00536-1",
-          "section_title": "details",
-          "sort_order": null,
-          "details_subfolder": "details",
           "project_filename": "model 2 - 001.jpg"
         }
       ]

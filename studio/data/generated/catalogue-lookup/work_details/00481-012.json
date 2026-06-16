@@ -7,12 +7,12 @@
     "work_id": "00481",
     "detail_id": "012",
     "section_id": "00481-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "mm negative future .4.jpg",
     "title": "mm negative future .4",
     "width_px": 2000,
-    "height_px": 2000
+    "height_px": 2000,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00481",

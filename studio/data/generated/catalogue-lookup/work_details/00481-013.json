@@ -7,12 +7,12 @@
     "work_id": "00481",
     "detail_id": "013",
     "section_id": "00481-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "versions II (mm).jpg",
     "title": "versions II (mm)",
     "width_px": 5906,
-    "height_px": 11811
+    "height_px": 11811,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00481",

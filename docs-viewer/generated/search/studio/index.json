@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-566826db4e8afae84e8151e2bfb333bb",
-    "generated_at_utc": "2026-06-16T17:49:03Z",
+    "version": "blake2b-e58516d0eb6d6b93492f8b9725f39664",
+    "generated_at_utc": "2026-06-16T19:23:44Z",
     "count": 238
   },
   "entries": [
@@ -4807,10 +4807,10 @@
       "kind": "doc",
       "title": "Catalogue Lookup Export",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-16",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-01 • Studio",
+      "display_meta": "2026-06-16 • Studio",
       "search_terms": [
         "scripts-catalogue-lookup",
         "scripts",
@@ -4819,12 +4819,12 @@
         "catalogue lookup export",
         "export",
         "studio",
-        "2026-06-01",
+        "2026-06-16",
         "2026",
         "06",
-        "01"
+        "16"
       ],
-      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export studio 2026-06-01 2026 06 01"
+      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export studio 2026-06-16 2026 06 16"
     },
     {
       "id": "data-models-catalogue-maintenance",
@@ -4926,10 +4926,10 @@
       "kind": "doc",
       "title": "Catalogue Source Model",
       "href": "/docs/?scope=studio&doc=data-models-catalogue-source",
-      "last_updated": "2026-06-11",
+      "last_updated": "2026-06-16",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-11 • Studio",
+      "display_meta": "2026-06-16 • Studio",
       "search_terms": [
         "data-models-catalogue-source",
         "data",
@@ -4939,12 +4939,12 @@
         "catalogue source model",
         "model",
         "studio",
-        "2026-06-11",
+        "2026-06-16",
         "2026",
         "06",
-        "11"
+        "16"
       ],
-      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model studio 2026-06-11 2026 06 11"
+      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model studio 2026-06-16 2026 06 16"
     },
     {
       "id": "scripts-catalogue-source",
@@ -5070,10 +5070,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server Build And Lookup",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup",
-      "last_updated": "2026-06-06",
+      "last_updated": "2026-06-16",
       "parent_id": "scripts-catalogue-write-server",
       "parent_title": "Catalogue Write Services",
-      "display_meta": "2026-06-06 • Catalogue Write Services",
+      "display_meta": "2026-06-16 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-build-lookup",
         "scripts",
@@ -5086,11 +5086,12 @@
         "and",
         "catalogue write services",
         "services",
-        "2026-06-06",
+        "2026-06-16",
         "2026",
-        "06"
+        "06",
+        "16"
       ],
-      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write services services 2026-06-06 2026 06"
+      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write services services 2026-06-16 2026 06 16"
     },
     {
       "id": "scripts-catalogue-write-server-endpoints",

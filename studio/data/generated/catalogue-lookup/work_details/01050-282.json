@@ -7,12 +7,12 @@
     "work_id": "01050",
     "detail_id": "282",
     "section_id": "01050-2",
-    "section_title": "particles",
-    "details_subfolder": "particles",
     "project_filename": "particle 276.jpg",
     "title": "particle 276",
     "width_px": 1890,
-    "height_px": 1890
+    "height_px": 1890,
+    "section_title": "particles",
+    "details_subfolder": "particles"
   },
   "work_summary": {
     "work_id": "01050",

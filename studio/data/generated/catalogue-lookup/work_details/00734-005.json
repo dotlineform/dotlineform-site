@@ -7,12 +7,12 @@
     "work_id": "00734",
     "detail_id": "005",
     "section_id": "00734-1",
-    "section_title": "layers",
-    "details_subfolder": "layers",
     "project_filename": "physics.jpg",
     "title": "physics",
     "width_px": 8858,
-    "height_px": 8858
+    "height_px": 8858,
+    "section_title": "layers",
+    "details_subfolder": "layers"
   },
   "work_summary": {
     "work_id": "00734",

@@ -7,12 +7,12 @@
     "work_id": "01197",
     "detail_id": "005",
     "section_id": "01197-1",
-    "section_title": "paths",
-    "details_subfolder": "paths",
     "project_filename": "form paths 33-40.jpg",
     "title": "form paths 33-40",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "paths",
+    "details_subfolder": "paths"
   },
   "work_summary": {
     "work_id": "01197",

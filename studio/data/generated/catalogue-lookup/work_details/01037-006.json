@@ -7,12 +7,12 @@
     "work_id": "01037",
     "detail_id": "006",
     "section_id": "01037-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "egg forms - detail 6.jpg",
     "title": "egg forms - detail 6",
     "width_px": 4032,
-    "height_px": 2268
+    "height_px": 2268,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01037",

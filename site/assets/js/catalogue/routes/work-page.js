@@ -333,7 +333,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     content.innerHTML = '';
 
     sections.forEach(function (sec) {
-      var label = text(sec && (sec.section_title || sec.project_subfolder)) || 'Details';
+      var label = text(sec && sec.section_title) || 'Details';
       var sectionId = slug(sec && (sec.section_id || label)) || 'details';
       var details = sec && Array.isArray(sec.details) ? sec.details : [];
       var items = details.map(function (detail) {

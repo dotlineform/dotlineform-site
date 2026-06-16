@@ -6,8 +6,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   publicationApply: "/studio/api/catalogue/publication-apply",
   createWork: "/studio/api/catalogue/work/create",
   saveWork: "/studio/api/catalogue/work/save",
-  createWorkDetail: "/studio/api/catalogue/work-detail/create",
-  saveWorkDetail: "/studio/api/catalogue/work-detail/save",
   importPreview: "/studio/api/catalogue/import-preview",
   importApply: "/studio/api/catalogue/import-apply",
   createSeries: "/studio/api/catalogue/series/create",

@@ -7,12 +7,12 @@
     "work_id": "00464",
     "detail_id": "003",
     "section_id": "00464-1",
-    "section_title": "moments",
-    "details_subfolder": "moments",
     "project_filename": "memories of the forest 3.jpg",
     "title": "memories of the forest 3",
     "width_px": 8268,
-    "height_px": 8268
+    "height_px": 8268,
+    "section_title": "moments",
+    "details_subfolder": "moments"
   },
   "work_summary": {
     "work_id": "00464",

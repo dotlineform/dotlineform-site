@@ -7,12 +7,12 @@
     "work_id": "00166",
     "detail_id": "001",
     "section_id": "00166-1",
-    "section_title": "pages",
-    "details_subfolder": "pages",
     "project_filename": "nerve (formaldehyde form) - front cover.jpg",
     "title": "nerve (formaldehyde form) - front cover",
     "width_px": 1859,
-    "height_px": 2676
+    "height_px": 2676,
+    "section_title": "pages",
+    "details_subfolder": "pages"
   },
   "work_summary": {
     "work_id": "00166",

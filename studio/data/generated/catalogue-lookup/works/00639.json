@@ -29,504 +29,318 @@
   "detail_sections": [
     {
       "section_id": "00639-1",
+      "details_subfolder": "source",
       "section_title": "source",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 1,
       "details": [
         {
           "detail_uid": "00639-001",
           "detail_id": "001",
           "title": "16 forms - source photo",
-          "section_id": "00639-1",
-          "section_title": "source",
-          "sort_order": null,
-          "details_subfolder": "source",
           "project_filename": "16 forms - source photo.jpg"
         }
       ]
     },
     {
       "section_id": "00639-2",
+      "details_subfolder": "forms",
       "section_title": "forms",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 31,
       "details": [
         {
           "detail_uid": "00639-002",
           "detail_id": "002",
           "title": "form 1",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 1.jpg"
         },
         {
           "detail_uid": "00639-003",
           "detail_id": "003",
           "title": "form 2",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 2.jpg"
         },
         {
           "detail_uid": "00639-004",
           "detail_id": "004",
           "title": "form 3",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 3.jpg"
         },
         {
           "detail_uid": "00639-005",
           "detail_id": "005",
           "title": "form 4",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 4.jpg"
         },
         {
           "detail_uid": "00639-006",
           "detail_id": "006",
           "title": "form 5",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 5.jpg"
         },
         {
           "detail_uid": "00639-007",
           "detail_id": "007",
           "title": "form 6",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 6.jpg"
         },
         {
           "detail_uid": "00639-008",
           "detail_id": "008",
           "title": "form 7",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 7.jpg"
         },
         {
           "detail_uid": "00639-009",
           "detail_id": "009",
           "title": "form 8",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 8.jpg"
         },
         {
           "detail_uid": "00639-010",
           "detail_id": "010",
           "title": "form 9",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 9.jpg"
         },
         {
           "detail_uid": "00639-011",
           "detail_id": "011",
           "title": "form 10",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 10.jpg"
         },
         {
           "detail_uid": "00639-012",
           "detail_id": "012",
           "title": "form 11",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 11.jpg"
         },
         {
           "detail_uid": "00639-013",
           "detail_id": "013",
           "title": "form 12",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 12.jpg"
         },
         {
           "detail_uid": "00639-014",
           "detail_id": "014",
           "title": "form 13",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 13.jpg"
         },
         {
           "detail_uid": "00639-015",
           "detail_id": "015",
           "title": "form 14",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 14.jpg"
         },
         {
           "detail_uid": "00639-016",
           "detail_id": "016",
           "title": "form 15",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 15.jpg"
         },
         {
           "detail_uid": "00639-017",
           "detail_id": "017",
           "title": "form 16",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 16.jpg"
         },
         {
           "detail_uid": "00639-018",
           "detail_id": "018",
           "title": "form 17",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 17.jpg"
         },
         {
           "detail_uid": "00639-019",
           "detail_id": "019",
           "title": "form 18",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 18.jpg"
         },
         {
           "detail_uid": "00639-020",
           "detail_id": "020",
           "title": "form 19",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 19.jpg"
         },
         {
           "detail_uid": "00639-021",
           "detail_id": "021",
           "title": "form 20",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 20.jpg"
         },
         {
           "detail_uid": "00639-022",
           "detail_id": "022",
           "title": "form 21",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 21.jpg"
         },
         {
           "detail_uid": "00639-023",
           "detail_id": "023",
           "title": "form 22",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 22.jpg"
         },
         {
           "detail_uid": "00639-024",
           "detail_id": "024",
           "title": "form 23",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 23.jpg"
         },
         {
           "detail_uid": "00639-025",
           "detail_id": "025",
           "title": "form 24",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 24.jpg"
         },
         {
           "detail_uid": "00639-026",
           "detail_id": "026",
           "title": "form 25",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 25.jpg"
         },
         {
           "detail_uid": "00639-027",
           "detail_id": "027",
           "title": "form 26",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 26.jpg"
         },
         {
           "detail_uid": "00639-028",
           "detail_id": "028",
           "title": "form 27",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 27.jpg"
         },
         {
           "detail_uid": "00639-029",
           "detail_id": "029",
           "title": "form 28",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 28.jpg"
         },
         {
           "detail_uid": "00639-030",
           "detail_id": "030",
           "title": "form 29",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 29.jpg"
         },
         {
           "detail_uid": "00639-031",
           "detail_id": "031",
           "title": "form 30",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 30.jpg"
         },
         {
           "detail_uid": "00639-032",
           "detail_id": "032",
           "title": "form 31",
-          "section_id": "00639-2",
-          "section_title": "forms",
-          "sort_order": null,
-          "details_subfolder": "forms",
           "project_filename": "form 31.jpg"
         }
       ]
     },
     {
       "section_id": "00639-3",
+      "details_subfolder": "transformed forms",
       "section_title": "transformed forms",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 16,
       "details": [
         {
           "detail_uid": "00639-033",
           "detail_id": "033",
           "title": "transformed form 1",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 1.jpg"
         },
         {
           "detail_uid": "00639-034",
           "detail_id": "034",
           "title": "transformed form 2",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 2.jpg"
         },
         {
           "detail_uid": "00639-035",
           "detail_id": "035",
           "title": "transformed form 3",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 3.jpg"
         },
         {
           "detail_uid": "00639-036",
           "detail_id": "036",
           "title": "transformed form 4",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 4.jpg"
         },
         {
           "detail_uid": "00639-037",
           "detail_id": "037",
           "title": "transformed form 5",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 5.jpg"
         },
         {
           "detail_uid": "00639-038",
           "detail_id": "038",
           "title": "transformed form 6",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 6.jpg"
         },
         {
           "detail_uid": "00639-039",
           "detail_id": "039",
           "title": "transformed form 7",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 7.jpg"
         },
         {
           "detail_uid": "00639-040",
           "detail_id": "040",
           "title": "transformed form 8",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 8.jpg"
         },
         {
           "detail_uid": "00639-041",
           "detail_id": "041",
           "title": "transformed form 9",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 9.jpg"
         },
         {
           "detail_uid": "00639-042",
           "detail_id": "042",
           "title": "transformed form 10",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 10.jpg"
         },
         {
           "detail_uid": "00639-043",
           "detail_id": "043",
           "title": "transformed form 11",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 11.jpg"
         },
         {
           "detail_uid": "00639-044",
           "detail_id": "044",
           "title": "transformed form 12",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 12.jpg"
         },
         {
           "detail_uid": "00639-045",
           "detail_id": "045",
           "title": "transformed form 13",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 13.jpg"
         },
         {
           "detail_uid": "00639-046",
           "detail_id": "046",
           "title": "transformed form 14",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 14.jpg"
         },
         {
           "detail_uid": "00639-047",
           "detail_id": "047",
           "title": "transformed form 15",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 15.jpg"
         },
         {
           "detail_uid": "00639-048",
           "detail_id": "048",
           "title": "transformed form 16",
-          "section_id": "00639-3",
-          "section_title": "transformed forms",
-          "sort_order": null,
-          "details_subfolder": "transformed forms",
           "project_filename": "transformed form 16.jpg"
         }
       ]

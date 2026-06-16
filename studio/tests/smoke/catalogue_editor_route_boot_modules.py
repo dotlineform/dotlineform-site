@@ -137,7 +137,6 @@ def assert_route_boot_helpers(page: Page) -> None:
             });
             await Promise.all([
                 import('/studio/app/frontend/js/catalogue-work-editor.js'),
-                import('/studio/app/frontend/js/catalogue-work-detail-editor.js'),
                 import('/studio/app/frontend/js/catalogue-series-editor.js'),
                 import('/studio/app/frontend/js/catalogue-moment-editor.js')
             ]);

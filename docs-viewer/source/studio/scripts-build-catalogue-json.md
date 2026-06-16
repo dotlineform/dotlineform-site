@@ -146,7 +146,7 @@ When `--changed-fields` is supplied, the `--only` selection, catalogue-search st
 
 Planner behavior is covered by `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`.
 
-For work scopes, `work-json` writes `site/assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Each section carries `section_id`, `section_title`, optional `sort_order`, and `details[]`; nested detail records do not repeat section-level metadata.
+For work scopes, `work-json` writes `site/assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Sections are sourced from `work_detail_sections` and carry `section_id`, `section_title`, optional `section_order`, optional `detail_sort`, and `details[]`. Nested detail records do not repeat section-level metadata. Null optional section fields are compacted out of public payloads until they carry meaningful values.
 
 For `--moment-file`, the helper:
 

@@ -1,7 +1,4 @@
-import {
-  buildStudioRouteUrl,
-  getStudioText
-} from "./studio-config.js";
+import { getStudioText } from "./studio-config.js";
 import {
   createRecordList,
   createRecordListActions
@@ -118,24 +115,6 @@ function selectedSection(rows, selectedId) {
   return rows.find((row) => row.id === selectedId) || rows[0];
 }
 
-function buildDetailEditorHref(state, detailUid) {
-  return buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
-    detail: detailUid
-  });
-}
-
-function buildNewDetailHref(state) {
-  return buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
-    work: state.currentWorkId,
-    mode: "new"
-  });
-}
-
-function navigateToHref(href) {
-  if (!href || typeof window === "undefined") return;
-  window.location.href = href;
-}
-
 function canCreateDetail(state, options) {
   if (options && typeof options.isCurrentWorkPublished === "function") {
     return Boolean(options.isCurrentWorkPublished(state));
@@ -150,7 +129,6 @@ function detailRows(state, options, details) {
     return {
       detailUid,
       title: displayValue(detail && detail.title),
-      editorHref: buildDetailEditorHref(state, detailUid),
       thumbSrc: preview.src,
       thumbSrcset: preview.srcset || "",
       thumbSizes: "48px",
@@ -218,12 +196,10 @@ function renderDetailActions(state, options, { list = null, hasDetails = false }
     onAction: ({ actionKey, selection }) => {
       if (actionKey === "new") {
         if (!canCreateDetail(state, options)) return;
-        navigateToHref(buildNewDetailHref(state));
         return;
       }
       const detailUid = selection && selection.record ? selection.record.detailUid : "";
       if (!detailUid) return;
-      navigateToHref(buildDetailEditorHref(state, detailUid));
     }
   });
 }
@@ -277,9 +253,6 @@ function renderSelectedImages(state, options, row) {
         key: "detailUid",
         label: text(state, options, "detail_browser_detail_heading", "detail"),
         width: "minmax(6rem, 8rem)",
-        type: "link",
-        hrefKey: "editorHref",
-        external: false,
         truncate: false
       },
       {

@@ -7,12 +7,12 @@
     "work_id": "01720",
     "detail_id": "073",
     "section_id": "01720-2",
-    "section_title": "source",
-    "details_subfolder": "source",
     "project_filename": "symbols decoded.jpg",
     "title": "symbols decoded",
     "width_px": 3000,
-    "height_px": 1687
+    "height_px": 1687,
+    "section_title": "source",
+    "details_subfolder": "source"
   },
   "work_summary": {
     "work_id": "01720",

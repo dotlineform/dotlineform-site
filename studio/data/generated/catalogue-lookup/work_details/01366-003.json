@@ -7,12 +7,12 @@
     "work_id": "01366",
     "detail_id": "003",
     "section_id": "01366-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "heaven and earth (green).jpg",
     "title": "heaven and earth (green)",
     "width_px": 5906,
-    "height_px": 4429
+    "height_px": 4429,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01366",

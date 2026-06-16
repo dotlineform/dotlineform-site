@@ -29,48 +29,34 @@
   "detail_sections": [
     {
       "section_id": "00875-1",
+      "details_subfolder": "cell",
       "section_title": "cell",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 4,
       "details": [
         {
           "detail_uid": "00875-001",
           "detail_id": "001",
           "title": "doll cell - 2007-04-03 - 14-17-59",
-          "section_id": "00875-1",
-          "section_title": "cell",
-          "sort_order": null,
-          "details_subfolder": "cell",
           "project_filename": "doll cell - 2007-04-03 - 14-17-59.jpg"
         },
         {
           "detail_uid": "00875-002",
           "detail_id": "002",
           "title": "doll cell - 2007-04-08 - 22-13-45",
-          "section_id": "00875-1",
-          "section_title": "cell",
-          "sort_order": null,
-          "details_subfolder": "cell",
           "project_filename": "doll cell - 2007-04-08 - 22-13-45.jpg"
         },
         {
           "detail_uid": "00875-003",
           "detail_id": "003",
           "title": "doll cell - 2007-04-08 - 22-14-01",
-          "section_id": "00875-1",
-          "section_title": "cell",
-          "sort_order": null,
-          "details_subfolder": "cell",
           "project_filename": "doll cell - 2007-04-08 - 22-14-01.jpg"
         },
         {
           "detail_uid": "00875-004",
           "detail_id": "004",
           "title": "doll cell - 2007-04-08 - 22-14-13",
-          "section_id": "00875-1",
-          "section_title": "cell",
-          "sort_order": null,
-          "details_subfolder": "cell",
           "project_filename": "doll cell - 2007-04-08 - 22-14-13.jpg"
         }
       ]

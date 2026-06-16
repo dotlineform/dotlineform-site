@@ -78,20 +78,13 @@ def assert_sibling_state_factories(page: Page) -> None:
                 <button id="catalogueMomentImportPreview"></button><button id="catalogueMomentImportApply"></button>
               </section>
             `;
-            const detailModule = await import('/studio/app/frontend/js/catalogue-work-detail-editor-state.js');
             const seriesModule = await import('/studio/app/frontend/js/catalogue-series-editor-state.js');
             const momentModule = await import('/studio/app/frontend/js/catalogue-moment-editor-state.js');
-            const detailState = detailModule.createWorkDetailEditorState(
-                detailModule.collectWorkDetailEditorElements()
-            );
             const seriesState = seriesModule.createSeriesEditorState(seriesModule.collectSeriesEditorElements(), {
                 seriesTypeOptions: new Map([['custom', { label: 'Custom' }]])
             });
             const momentState = momentModule.createMomentEditorState(momentModule.collectMomentEditorElements());
             return {
-                detailRoute: detailModule.WORK_DETAIL_ROUTE_STATE.route,
-                detailBulkKey: detailModule.WORK_DETAIL_ROUTE_STATE.bulkIdsKey,
-                detailMaps: detailState.detailSearchByUid instanceof Map && detailState.bulkTouchedFields instanceof Set,
                 seriesRoute: seriesModule.SERIES_ROUTE_STATE.route,
                 seriesType: seriesState.seriesTypeOptions.get('custom').label,
                 seriesMemberMaps: seriesState.memberSeriesIdsByWorkId instanceof Map && seriesState.baselineMemberSeriesIdsByWorkId instanceof Map,
@@ -109,9 +102,6 @@ def assert_sibling_state_factories(page: Page) -> None:
             };
         }"""
     )
-    assert result["detailRoute"] == "catalogue-work-detail"
-    assert result["detailBulkKey"] == "bulkDetailUids"
-    assert result["detailMaps"] is True
     assert result["seriesRoute"] == "catalogue-series"
     assert result["seriesType"] == "Custom"
     assert result["seriesMemberMaps"] is True
@@ -127,7 +117,6 @@ def assert_sibling_event_binders(page: Page) -> None:
     page.evaluate(
         """async () => {
             document.body.innerHTML = `
-              <button id="detailSave"></button><button id="detailDelete"></button>
               <button id="seriesNew"></button><button id="seriesSave"></button><button id="seriesPub"></button>
               <button id="seriesDelete"></button><input id="seriesMemberSearch" />
               <input id="seriesMemberAdd" /><button id="seriesMemberAddButton"></button>
@@ -138,19 +127,10 @@ def assert_sibling_event_binders(page: Page) -> None:
               <button id="momentPreview"></button><button id="momentApply"></button>
               <div id="momentReady"><button data-media-refresh>media</button><button data-prose-import>prose</button></div>
             `;
-            const detailEvents = await import('/studio/app/frontend/js/catalogue-work-detail-editor-events.js');
             const seriesEvents = await import('/studio/app/frontend/js/catalogue-series-editor-events.js');
             const momentEvents = await import('/studio/app/frontend/js/catalogue-moment-editor-events.js');
             window.__siblingCalls = [];
             const push = (...args) => window.__siblingCalls.push(args);
-            detailEvents.bindWorkDetailEditorEvents({
-                saveButton: document.getElementById('detailSave'),
-                deleteButton: document.getElementById('detailDelete')
-            }, {
-                bindSelectionControls: () => push('detail.bind'),
-                saveCurrentDetail: () => push('detail.save'),
-                deleteCurrentDetail: () => push('detail.delete')
-            });
             seriesEvents.bindSeriesEditorEvents({
                 readinessNode: document.getElementById('seriesReady'),
                 newButton: document.getElementById('seriesNew'),
@@ -196,8 +176,6 @@ def assert_sibling_event_binders(page: Page) -> None:
         }"""
     )
     for selector in [
-        "#detailSave",
-        "#detailDelete",
         "#seriesNew",
         "#seriesSave",
         "#seriesPub",
@@ -224,11 +202,8 @@ def assert_sibling_event_binders(page: Page) -> None:
     page.fill("#momentImportFile", "keys.md")
     calls = page.evaluate("window.__siblingCalls")
     assert calls == [
-        ["detail.bind"],
         ["series.bind"],
         ["moment.bind"],
-        ["detail.save"],
-        ["detail.delete"],
         ["series.new"],
         ["series.save"],
         ["series.pub"],

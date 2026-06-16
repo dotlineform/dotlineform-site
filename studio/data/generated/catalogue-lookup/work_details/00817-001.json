@@ -7,12 +7,12 @@
     "work_id": "00817",
     "detail_id": "001",
     "section_id": "00817-1",
-    "section_title": "versions",
-    "details_subfolder": "versions",
     "project_filename": "colours marilyn.1.jpg",
     "title": "colours marilyn.1",
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "section_title": "versions",
+    "details_subfolder": "versions"
   },
   "work_summary": {
     "work_id": "00817",

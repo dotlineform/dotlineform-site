@@ -7,12 +7,12 @@
     "work_id": "00464",
     "detail_id": "004",
     "section_id": "00464-1",
-    "section_title": "moments",
-    "details_subfolder": "moments",
     "project_filename": "3 moments.jpg",
     "title": "3 moments",
     "width_px": 4000,
-    "height_px": 4000
+    "height_px": 4000,
+    "section_title": "moments",
+    "details_subfolder": "moments"
   },
   "work_summary": {
     "work_id": "00464",

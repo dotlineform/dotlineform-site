@@ -29,88 +29,58 @@
   "detail_sections": [
     {
       "section_id": "01197-1",
+      "details_subfolder": "paths",
       "section_title": "paths",
-      "sort_order": null,
+      "section_order": null,
+      "detail_sort": null,
       "count": 8,
       "details": [
         {
           "detail_uid": "01197-001",
           "detail_id": "001",
           "title": "form paths 1-8",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 1-8.jpg"
         },
         {
           "detail_uid": "01197-002",
           "detail_id": "002",
           "title": "form paths 9-16",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 9-16.jpg"
         },
         {
           "detail_uid": "01197-003",
           "detail_id": "003",
           "title": "form paths 17-24",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 17-24.jpg"
         },
         {
           "detail_uid": "01197-004",
           "detail_id": "004",
           "title": "form paths 25-32",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 25-32.jpg"
         },
         {
           "detail_uid": "01197-005",
           "detail_id": "005",
           "title": "form paths 33-40",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 33-40.jpg"
         },
         {
           "detail_uid": "01197-006",
           "detail_id": "006",
           "title": "form paths 41-48",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 41-48.jpg"
         },
         {
           "detail_uid": "01197-007",
           "detail_id": "007",
           "title": "form paths 49-56",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 49-56.jpg"
         },
         {
           "detail_uid": "01197-008",
           "detail_id": "008",
           "title": "form paths 57-64",
-          "section_id": "01197-1",
-          "section_title": "paths",
-          "sort_order": null,
-          "details_subfolder": "paths",
           "project_filename": "form paths 57-64.jpg"
         }
       ]

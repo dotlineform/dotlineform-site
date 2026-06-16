@@ -54,10 +54,6 @@ def main(argv: list[str] | None = None) -> int:
                         empty: "",
                         zero: 0
                     });
-                    const newDetailUrl = configMod.buildStudioRouteUrl(config, "catalogue_work_detail_editor", {
-                        work: "00001",
-                        mode: "new"
-                    });
                     const publicWorkUrl = mod.buildPublicSiteUrl(config, "/works/", {
                         work: "00123",
                         from: "studio",
@@ -172,8 +168,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected view URL: {result['url']!r}")
         if result["workEditorUrl"] != "/studio/catalogue-work/?work=00001&zero=0":
             raise AssertionError(f"unexpected work editor URL: {result['workEditorUrl']!r}")
-        if result["newDetailUrl"] != "/studio/catalogue-work-detail/?work=00001&mode=new":
-            raise AssertionError(f"unexpected new detail URL: {result['newDetailUrl']!r}")
         if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/?work=00123&from=studio&zero=0":
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
         if result["cataloguePublicWorkUrl"] != "http://127.0.0.1:4000/works/?from=studio&work=00123":
@@ -194,7 +188,6 @@ def main(argv: list[str] | None = None) -> int:
             "/studio/catalogue-status/",
             "/studio/catalogue-series/",
             "/studio/catalogue-work/",
-            "/studio/catalogue-work-detail/",
             "/studio/bulk-add-work/",
             "/studio/catalogue-moment/",
             "/studio/catalogue-field-registry/",

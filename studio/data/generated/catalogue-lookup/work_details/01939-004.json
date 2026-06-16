@@ -7,12 +7,12 @@
     "work_id": "01939",
     "detail_id": "004",
     "section_id": "01939-1",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "sea - detail 4.jpg",
     "title": "sea - detail 4",
     "width_px": 3000,
-    "height_px": 3000
+    "height_px": 3000,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "01939",

@@ -7,12 +7,12 @@
     "work_id": "00160",
     "detail_id": "008",
     "section_id": "00160-2",
-    "section_title": "details",
-    "details_subfolder": "details",
     "project_filename": "mouse story - detail 3.jpg",
     "title": "mouse story - detail 3",
     "width_px": 2000,
-    "height_px": 1125
+    "height_px": 1125,
+    "section_title": "details",
+    "details_subfolder": "details"
   },
   "work_summary": {
     "work_id": "00160",
