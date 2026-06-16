@@ -259,11 +259,10 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     });
   }
 
-  function detailHref(uid, workTitle, sectionId, detailsPage) {
+  function detailHref(uid, sectionId, detailsPage) {
     var normalizedPage = toPositiveInteger(detailsPage) || 1;
     return workDetailUrl(uid, baseurl, {
       from_work: workId,
-      from_work_title: workTitle,
       section: sectionId,
       details_section: sectionId,
       details_page: normalizedPage > 1 ? normalizedPage : '',
@@ -272,14 +271,14 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     });
   }
 
-  function detailItem(detail, workTitle, sectionId, detailsPage) {
+  function detailItem(detail, sectionId, detailsPage) {
     var uid = text(detail && detail.detail_uid);
     if (!uid) return null;
     var title = text(detail && detail.title) || uid;
     return {
       id: uid,
       title: title,
-      href: detailHref(uid, workTitle, sectionId, detailsPage),
+      href: detailHref(uid, sectionId, detailsPage),
       thumbnail: thumbnailImageData({
         base: detailsThumbBase,
         id: uid,
@@ -324,7 +323,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     };
   }
 
-  function renderDetails(payload, workTitle) {
+  function renderDetails(payload) {
     var section = document.getElementById('selectedWorkDetailsSection');
     var content = document.getElementById('selectedWorkDetailsContent');
     if (!section || !content) return;
@@ -337,7 +336,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       var sectionId = slug(sec && (sec.section_id || label)) || 'details';
       var details = sec && Array.isArray(sec.details) ? sec.details : [];
       var items = details.map(function (detail) {
-        return detailItem(detail, workTitle, sectionId, 1);
+        return detailItem(detail, sectionId, 1);
       }).filter(Boolean);
       if (!items.length) return;
 
@@ -361,7 +360,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       var renderDetailsPage = function (page) {
         var normalizedPage = Math.min(toPositiveInteger(page) || 1, pageCount);
         var pageItems = details.map(function (detail) {
-          return detailItem(detail, workTitle, sectionId, normalizedPage);
+          return detailItem(detail, sectionId, normalizedPage);
         }).filter(Boolean);
         return thumbnailGridList.render({
           items: pageItems,
@@ -433,7 +432,7 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
       updateBackLink();
       dispatchMetadata(work);
       renderProse(payload);
-      renderDetails(payload, title);
+      renderDetails(payload);
     })
     .catch(function () {
       rootNode.hidden = false;

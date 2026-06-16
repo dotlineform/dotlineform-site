@@ -59,7 +59,7 @@ function bootWorkDetailRoute(rootNode) {
   var ctx = {
     detailUid: detailUid,
     fromWork: text(params.get('from_work')) || detailWorkId(detailUid),
-    fromWorkTitle: text(params.get('from_work_title')),
+    fromWorkTitle: '',
     section: text(params.get('section')).toLowerCase(),
     detailsSection: routeState.detailsSection,
     detailsPage: routeState.detailsPage || 1,
@@ -161,7 +161,6 @@ function bootWorkDetailRoute(rootNode) {
   function detailHref(uid) {
     return workDetailUrl(uid, baseurl, {
       from_work: ctx.fromWork,
-      from_work_title: ctx.fromWorkTitle,
       section: ctx.section,
       series: ctx.series,
       series_page: ctx.seriesPage,
@@ -248,7 +247,7 @@ function bootWorkDetailRoute(rootNode) {
     .then(function (workPayload) {
       var work = workPayload && workPayload.work && typeof workPayload.work === 'object' ? workPayload.work : null;
       var workTitle = text(work && work.title);
-      if (workTitle && (!params.get('from_work_title') || !ctx.fromWorkTitle)) ctx.fromWorkTitle = workTitle;
+      if (workTitle) ctx.fromWorkTitle = workTitle;
       var found = findDetailRecord(workPayload);
       if (found.detail) {
         ctx.title = text(found.detail.title) || ctx.detailUid;

@@ -8,6 +8,7 @@ from typing import Any, Iterable, Mapping
 from catalogue import catalogue_activity as activity
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir, read_image_dims_px
+from catalogue.catalogue_build_service import run_build_operation
 from catalogue.catalogue_generation_common import compact_json_object
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
@@ -175,6 +176,8 @@ def create_detail_section_payload(context: CatalogueWriteContext, body: Mapping[
     else:
         payload["saved_at_utc"] = activity.utc_now()
         payload["lookup_refresh"] = refresh_lookup_payloads(context)
+        payload["build_requested"] = True
+        payload["build"] = build_created_details(context, work_id, sorted(created_details))
 
     log_event(
         context.repo_root,
@@ -189,6 +192,49 @@ def create_detail_section_payload(context: CatalogueWriteContext, body: Mapping[
         },
     )
     return payload
+
+
+def build_created_details(context: CatalogueWriteContext, work_id: str, detail_uids: list[str]) -> dict[str, Any]:
+    results: list[dict[str, Any]] = []
+    for index, detail_uid in enumerate(detail_uids):
+        success, build_payload = run_build_operation(
+            context,
+            work_id=work_id,
+            series_id="",
+            moment_id="",
+            extra_series_ids=[],
+            extra_work_ids=[],
+            detail_uid=detail_uid,
+            force=False,
+        )
+        results.append(
+            {
+                "detail_uid": detail_uid,
+                "ok": success,
+                "completed_at_utc": build_payload.get("completed_at_utc"),
+                "error": build_payload.get("error"),
+                "failed_step": build_payload.get("failed_step"),
+                "media": build_payload.get("media"),
+            }
+        )
+        if not success:
+            return {
+                "ok": False,
+                "requested_count": len(detail_uids),
+                "completed_count": index,
+                "details": results,
+                "remaining_detail_uids": detail_uids[index:],
+                "error": build_payload.get("error"),
+                "failed_step": build_payload.get("failed_step"),
+            }
+    return {
+        "ok": True,
+        "requested_count": len(detail_uids),
+        "completed_count": len(detail_uids),
+        "details": results,
+        "remaining_detail_uids": [],
+        "completed_at_utc": activity.utc_now(),
+    }
 
 
 def extract_create_detail_section_request(body: Mapping[str, Any]) -> dict[str, Any]:

@@ -16,7 +16,7 @@ for candidate in (SERVICES_DIR, SHARED_PYTHON_DIR):
         sys.path.insert(0, str(candidate))
 
 from catalogue.catalogue_build_media import PROJECTS_BASE_DIR_ENV_NAME  # noqa: E402
-from catalogue.catalogue_detail_section_service import create_detail_section_payload  # noqa: E402
+from catalogue import catalogue_detail_section_service as detail_section_service  # noqa: E402
 from catalogue.catalogue_service_context import build_catalogue_write_context  # noqa: E402
 
 
@@ -89,11 +89,21 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
     return repo_root, projects_base
 
 
-def test_create_detail_section_writes_section_and_records(tmp_path: Path) -> None:
+def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
     context = build_catalogue_write_context(repo_root)
+    build_calls: list[dict[str, str]] = []
 
-    payload = create_detail_section_payload(
+    def fake_build_operation(_context, **kwargs):
+        build_calls.append(dict(kwargs))
+        return True, {
+            "completed_at_utc": "2026-01-01T00:00:00Z",
+            "media": {"generated": {"work_details": [kwargs["detail_uid"]]}},
+        }
+
+    monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
+
+    payload = detail_section_service.create_detail_section_payload(
         context,
         {
             "work_id": "00782",
@@ -108,6 +118,9 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path) -> Non
     assert payload["section_id"] == "00782-1"
     assert payload["created_detail_uids"] == ["00782-001", "00782-002"]
     assert payload["created_count"] == 2
+    assert payload["build_requested"] is True
+    assert payload["build"]["ok"] is True
+    assert [call["detail_uid"] for call in build_calls] == ["00782-001", "00782-002"]
 
     source = read_json(repo_root / "studio/data/canonical/catalogue/work_details.json")
     assert source["header"]["section_count"] == 1
@@ -131,7 +144,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path) -> Non
         assert isinstance(first_detail["height_px"], int)
     assert source["work_details"]["00782-002"]["title"] == "detail-02"
 
-    duplicate_payload = create_detail_section_payload(
+    duplicate_payload = detail_section_service.create_detail_section_payload(
         context,
         {
             "work_id": "00782",
@@ -151,7 +164,7 @@ def test_create_detail_section_rejects_missing_file(tmp_path: Path) -> None:
     context = build_catalogue_write_context(repo_root)
 
     try:
-        create_detail_section_payload(
+        detail_section_service.create_detail_section_payload(
             context,
             {
                 "work_id": "00782",

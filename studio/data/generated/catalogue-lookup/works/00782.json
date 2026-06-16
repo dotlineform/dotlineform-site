@@ -322,6 +322,34 @@
           "project_filename": "birth of healing forms - 3.08.jpg"
         }
       ]
+    },
+    {
+      "section_id": "00782-3",
+      "details_subfolder": "details test",
+      "section_title": "details test",
+      "section_order": null,
+      "detail_sort": null,
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00782-047",
+          "detail_id": "047",
+          "title": "birth of forms - detail 1",
+          "project_filename": "birth of forms - detail 1.jpg"
+        },
+        {
+          "detail_uid": "00782-048",
+          "detail_id": "048",
+          "title": "birth of forms - detail 2",
+          "project_filename": "birth of forms - detail 2.jpg"
+        },
+        {
+          "detail_uid": "00782-049",
+          "detail_id": "049",
+          "title": "birth of forms - detail 3",
+          "project_filename": "birth of forms - detail 3.jpg"
+        }
+      ]
     }
   ],
   "downloads": [],
