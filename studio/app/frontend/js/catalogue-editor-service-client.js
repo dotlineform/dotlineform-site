@@ -24,6 +24,10 @@ export function applyCataloguePublication(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.publicationApply, payload);
 }
 
+export function createCatalogueWorkDetailSection(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkDetailSection, payload);
+}
+
 export function createCatalogueWork(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.createWork, payload);
 }

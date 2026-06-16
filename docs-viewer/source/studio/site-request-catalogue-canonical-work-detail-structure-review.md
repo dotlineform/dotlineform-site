@@ -3,23 +3,21 @@ doc_id: site-request-catalogue-canonical-work-detail-structure-review
 title: Catalogue Canonical Work Detail Structure Review Request
 added_date: 2026-06-16
 last_updated: 2026-06-16
-ui_status: draft
+ui_status: planned
 parent_id: change-requests
 viewable: true
 ---
 # Catalogue Canonical Work Detail Structure Review Request
 
-Status:
-
-- proposed
+Status: planned
 
 ## Summary
 
 Review whether canonical work-detail source data should remain a normalized keyed record model or move to a nested work-owned model.
 
-This request is intentionally separate from [Work Detail Section Data Model Request](/docs/?scope=studio&doc=site-request-work-detail-section-data-model). The section model request fixes the immediate ambiguity around section metadata, `section_order`, `detail_sort`, and detail-owned fields. This request asks the larger design question: what should the canonical source shape be once the historical spreadsheet and standalone-detail workflows no longer drive the model?
+What should the canonical source shape be once the historical spreadsheet and standalone-detail workflows no longer drive the model?
 
-The likely blast radius is broad, but it may be controllable if catalogue code consistently goes through helper functions for source reads, source writes, lookup projection, and publication generation.
+The likely blast radius is broad, but it should be controllable if catalogue code consistently goes through helper functions for source reads, source writes, lookup projection, and publication generation.
 
 ## Context
 

@@ -3595,6 +3595,12 @@ button.tagStudioList__cellLink {
   gap: 0.45rem;
 }
 
+.catalogueWorkDetailBrowser__paneActionRow {
+  min-height: var(--shared-record-list-icon-action-size, 2rem);
+  display: flex;
+  justify-content: flex-end;
+}
+
 .catalogueWorkDetailBrowser__sectionList .sharedRecordList__row {
   padding-inline: 0.25rem;
 }

@@ -51,6 +51,40 @@
   gap: 1.1rem;
 }
 
+.sharedFilePicker__fileToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 1.8rem;
+}
+
+.sharedFilePicker__fileToolbar[hidden] {
+  display: none;
+}
+
+.sharedFilePicker__toolbarButton {
+  border: 1px solid var(--studio-line-input, #cfcfcf);
+  border-radius: var(--studio-radius-sm, 0.35rem);
+  background: var(--surface, var(--studio-surface, #fff));
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-caption, 0.9rem);
+  padding: 0.2rem 0.45rem;
+  cursor: pointer;
+}
+
+.sharedFilePicker__toolbarButton:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.sharedFilePicker__selectionCount {
+  color: var(--studio-muted, #666);
+  font-size: var(--font-caption, 0.9rem);
+}
+
 .sharedFilePicker__listbox {
   box-sizing: border-box;
   width: 100%;
@@ -85,10 +119,27 @@
   border-radius: var(--studio-radius-sm, 0.35rem);
   padding: 0.2rem 0.3rem;
   overflow-wrap: anywhere;
+  display: flex;
+  gap: 0.45rem;
+  align-items: baseline;
 }
 
 .sharedFilePicker__option[aria-selected="true"] {
   background: var(--studio-focus-ring, rgba(95, 143, 251, 0.18));
+}
+
+.sharedFilePicker__option[aria-disabled="true"] {
+  color: var(--studio-muted, #666);
+  opacity: 0.65;
+}
+
+.sharedFilePicker__optionCheck {
+  flex: 0 0 1rem;
+  text-align: center;
+}
+
+.sharedFilePicker__optionText {
+  min-width: 0;
 }
 
 .sharedFilePicker__option--parent {

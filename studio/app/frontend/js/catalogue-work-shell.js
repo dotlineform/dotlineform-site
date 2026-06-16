@@ -78,13 +78,18 @@ export function renderCatalogueWorkShell(config) {
                 <input type="text" class="tagStudio__input catalogueWorkDetailBrowser__searchInput" id="catalogueWorkDetailBrowserSearch" placeholder="find detail id" autocomplete="off" inputmode="numeric">
                 <button type="button" class="catalogueWorkDetailBrowser__searchClear" id="catalogueWorkDetailBrowserSearchClear" aria-label="Clear detail search" title="Clear detail search" hidden>×</button>
               </div>
-              <div class="catalogueWorkDetails__rowActions catalogueWorkDetailBrowser__actions" id="catalogueWorkDetailBrowserActions" aria-label="Detail actions"></div>
             </div>
             <div class="catalogueWorkDetailBrowser__layout">
               <section class="catalogueWorkDetailBrowser__pane" aria-label="Detail sections">
+                <div class="catalogueWorkDetailBrowser__paneActionRow">
+                  <div class="catalogueWorkDetails__rowActions catalogueWorkDetailBrowser__sectionActions" id="catalogueWorkDetailBrowserSectionActions" aria-label="Section actions"></div>
+                </div>
                 <div class="catalogueWorkDetailBrowser__sectionList" id="catalogueWorkDetailBrowserSections"></div>
               </section>
               <section class="catalogueWorkDetailBrowser__pane" aria-label="Details in selected section">
+                <div class="catalogueWorkDetailBrowser__paneActionRow">
+                  <div class="catalogueWorkDetails__rowActions catalogueWorkDetailBrowser__actions" id="catalogueWorkDetailBrowserActions" aria-label="Detail actions"></div>
+                </div>
                 <div class="catalogueWorkDetailBrowser__imageList" id="catalogueWorkDetailBrowserImages"></div>
               </section>
             </div>

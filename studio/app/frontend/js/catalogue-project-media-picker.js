@@ -67,6 +67,16 @@ function renderPickerBody() {
   return '<div data-role="catalogue-project-media-picker"></div>';
 }
 
+function lookupText(text, key, fallback, tokens = null) {
+  if (typeof text === "function") return text(key, fallback, tokens);
+  let value = normalizeText(fallback);
+  if (!tokens || typeof tokens !== "object") return value;
+  Object.entries(tokens).forEach(([token, tokenValue]) => {
+    value = value.replaceAll(`{${token}}`, String(tokenValue == null ? "" : tokenValue));
+  });
+  return value;
+}
+
 export async function openProjectMediaFileModal(state, options = {}) {
   const host = state.modalHost;
   if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
@@ -125,6 +135,96 @@ export async function openProjectMediaFileModal(state, options = {}) {
           project_folder: selection.folder,
           project_subfolder: selection.subfolder || "",
           project_filename: selection.filename
+        }
+      };
+    }
+  });
+  pickerController.ready.then(() => {
+    if (host.querySelector('[data-role="studio-modal"]')) pickerController.focusPreferred();
+  });
+
+  const result = await modalController.promise;
+  pickerController.destroy();
+  return result;
+}
+
+export async function openProjectMediaMultiFileModal(state, options = {}) {
+  const host = state.modalHost;
+  if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
+  const pickerConfig = createFilePickerConfig({
+    ...(options.filePickerConfig || {}),
+    text: {
+      modalTitle: lookupText(options.text, "detail_section_picker_title", "New detail section"),
+      confirmButton: lookupText(options.text, "detail_section_picker_confirm_button", "Create"),
+      ...(options.filePickerConfig && options.filePickerConfig.text ? options.filePickerConfig.text : {})
+    }
+  });
+  host.innerHTML = renderStudioModalFrame({
+    hidden: false,
+    modalRole: "studio-modal",
+    backdropRole: "modal-cancel",
+    title: filePickerText(pickerConfig, "modalTitle"),
+    size: "wide",
+    bodyHtml: renderPickerBody(),
+    statusHtml: '<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" hidden></p>',
+    actions: [
+      { role: "modal-cancel", label: filePickerText(pickerConfig, "cancelButton") },
+      { role: "modal-primary", label: filePickerText(pickerConfig, "confirmButton"), primary: true, disabled: true }
+    ]
+  });
+
+  let modalController = null;
+  const pickerRoot = host.querySelector('[data-role="catalogue-project-media-picker"]');
+  const primaryNode = host.querySelector('[data-role="modal-primary"]');
+  const initialSelection = options.initialSelection || {};
+  const pickerController = createFilePicker(pickerRoot, {
+    id: "catalogueProjectMediaMultiFilePicker",
+    scope: "projects",
+    selectionMode: "multiple",
+    files: {
+      selectAll: true,
+      defaultSelection: "all"
+    },
+    disabledSubfolders: options.disabledSubfolders || [],
+    primaryNode,
+    config: pickerConfig,
+    initialSelection: {
+      folder: initialSelection.folder || initialSelection.project_folder,
+      subfolder: initialSelection.subfolder || initialSelection.project_subfolder,
+      filenames: initialSelection.filenames || []
+    },
+    loadFolders: () => loadProjectFolders(state, options),
+    loadFiles: (request) => options.loadProjectFiles({
+      projectFolder: request.folder,
+      projectSubfolder: request.subfolder,
+      query: request.query || ""
+    }),
+    onSubmit: () => {
+      if (modalController) modalController.submit();
+    }
+  });
+
+  modalController = activateStudioModalFrame(host, {
+    focusSelector: '[role="dialog"]',
+    submitOnEnter: false,
+    async onSubmit(api) {
+      await pickerController.ready;
+      const result = pickerController.submit();
+      if (result && result.ok === false) {
+        if ("status" in result) api.setStatus(result.statusKind || "error", result.status || "");
+        return false;
+      }
+      const selection = result.selection || {};
+      if (!normalizeText(selection.subfolder)) {
+        api.setStatus("error", lookupText(options.text, "detail_section_picker_subfolder_required", "Select a subfolder."));
+        return false;
+      }
+      return {
+        selection: {
+          project_folder: selection.folder,
+          project_subfolder: selection.subfolder,
+          filenames: Array.isArray(selection.filenames) ? selection.filenames : [],
+          file_titles: Array.isArray(selection.file_titles) ? selection.file_titles : []
         }
       };
     }

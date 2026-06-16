@@ -3,9 +3,8 @@ doc_id: site-request-work-detail-section-data-model
 title: Work Detail Section Data Model Request
 added_date: 2026-06-16
 last_updated: 2026-06-16
-ui_status: complete
+ui_status: done
 parent_id: change-requests
-viewable: true
 ---
 # Work Detail Section Data Model Request
 

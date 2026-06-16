@@ -14,9 +14,13 @@ export const FILE_PICKER_DEFAULT_CONFIG = Object.freeze({
     folderLabel: "folder",
     subfolderLabel: "subfolders",
     filesLabel: "files",
+    selectAllButton: "select all",
+    deselectAllButton: "deselect all",
+    selectedFilesCount: "{count} selected",
     noFolderMatch: "No matching folders.",
     foldersFailed: "Folders could not be loaded.",
     filesFailed: "Files could not be loaded.",
+    subfolderUnavailable: "Already used.",
     fileNotFound: "file not found",
     folderRequired: "Select a folder.",
     fileRequired: "Select a file."

@@ -9,6 +9,7 @@ from typing import Any, Mapping
 from catalogue import catalogue_prose_import as prose_import
 from catalogue.catalogue_bulk_service import bulk_save_payload
 from catalogue.catalogue_build_service import build_apply_payload, build_preview_payload
+from catalogue.catalogue_detail_section_service import create_detail_section_payload
 from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
 from catalogue.catalogue_moment_service import moment_preview_payload, moment_save_payload
 from catalogue.catalogue_publication_service import publication_apply_response, publication_preview_payload
@@ -20,6 +21,7 @@ from catalogue.catalogue_work_service import work_create_payload, work_save_payl
 
 SERVICE_POST_PATHS = {
     "/bulk-save",
+    "/work-detail-section/create",
     "/work/create",
     "/work/save",
     "/series/create",
@@ -51,6 +53,8 @@ def handle_catalogue_post(
         return HTTPStatus.OK, work_create_payload(context, body)
     if api_path == "/bulk-save":
         return HTTPStatus.OK, bulk_save_payload(context, body)
+    if api_path == "/work-detail-section/create":
+        return HTTPStatus.OK, create_detail_section_payload(context, body)
     if api_path == "/work/save":
         return HTTPStatus.OK, work_save_payload(context, body)
     if api_path == "/series/create":

@@ -58,6 +58,15 @@ function clearActions(state) {
   state.detailBrowserActionsController = null;
 }
 
+function clearSectionActions(state) {
+  if (state.detailBrowserSectionActionsController && typeof state.detailBrowserSectionActionsController.destroy === "function") {
+    state.detailBrowserSectionActionsController.destroy();
+  } else if (state.detailBrowserSectionActionsNode) {
+    state.detailBrowserSectionActionsNode.innerHTML = "";
+  }
+  state.detailBrowserSectionActionsController = null;
+}
+
 function searchDigits(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   return digits.slice(-3);
@@ -154,7 +163,7 @@ function syncDetailBrowserSearchControl(state, query) {
   }
 }
 
-function renderDetailActions(state, options, { list = null, hasDetails = false } = {}) {
+function renderDetailActions(state, options, { list = null, hasDetails = false, showNew = true } = {}) {
   if (!state.detailBrowserActionsNode) return;
   clearActions(state);
   if (!state.currentWorkId) return;
@@ -177,7 +186,7 @@ function renderDetailActions(state, options, { list = null, hasDetails = false }
         tone: "danger"
       }
     ] : []),
-    {
+    ...(showNew ? [{
       key: "new",
       label: "📄",
       title: createEnabled
@@ -187,7 +196,7 @@ function renderDetailActions(state, options, { list = null, hasDetails = false }
       appearance: "icon",
       requiresSelection: false,
       disabled: () => !createEnabled
-    }
+    }] : [])
   ];
   state.detailBrowserActionsController = createRecordListActions(state.detailBrowserActionsNode, {
     id: "catalogueWorkDetailBrowserActionsList",
@@ -196,10 +205,64 @@ function renderDetailActions(state, options, { list = null, hasDetails = false }
     onAction: ({ actionKey, selection }) => {
       if (actionKey === "new") {
         if (!canCreateDetail(state, options)) return;
+        if (typeof options.openDetailSectionPicker === "function") {
+          options.openDetailSectionPicker();
+        }
         return;
       }
       const detailUid = selection && selection.record ? selection.record.detailUid : "";
       if (!detailUid) return;
+    }
+  });
+}
+
+function renderSectionActions(state, options, { list = null, hasSections = false } = {}) {
+  if (!state.detailBrowserSectionActionsNode) return;
+  clearSectionActions(state);
+  if (!state.currentWorkId) return;
+  const createEnabled = canCreateDetail(state, options);
+  const actions = [
+    ...(hasSections ? [{
+      key: "edit",
+      label: "✏️",
+      title: text(state, options, "detail_section_edit_button", "Edit"),
+      ariaLabel: text(state, options, "detail_section_edit_button", "Edit"),
+      appearance: "icon"
+    },
+    {
+      key: "delete",
+      label: "🗑️",
+      title: text(state, options, "detail_section_delete_button", "Delete"),
+      ariaLabel: text(state, options, "detail_section_delete_button", "Delete"),
+      appearance: "icon",
+      tone: "danger"
+    }] : []),
+    {
+      key: "new",
+      label: "📄",
+      title: createEnabled
+        ? text(state, options, "detail_section_new_button", "New")
+        : text(state, options, "details_new_unavailable_draft", "Publish this work before adding work details."),
+      ariaLabel: text(state, options, "detail_section_new_button", "New"),
+      appearance: "icon",
+      requiresSelection: false,
+      disabled: () => !createEnabled
+    }
+  ];
+  state.detailBrowserSectionActionsController = createRecordListActions(state.detailBrowserSectionActionsNode, {
+    id: "catalogueWorkDetailBrowserSectionActionsList",
+    list,
+    actions,
+    onAction: ({ actionKey, selection }) => {
+      if (actionKey === "new") {
+        if (!canCreateDetail(state, options)) return;
+        if (typeof options.openDetailSectionPicker === "function") {
+          options.openDetailSectionPicker();
+        }
+        return;
+      }
+      const sectionId = selection && selection.record ? selection.record.id : "";
+      if (!sectionId) return;
     }
   });
 }
@@ -277,6 +340,7 @@ function resetDetailBrowser(state) {
   clearSectionList(state);
   clearImageList(state);
   clearActions(state);
+  clearSectionActions(state);
   state.detailBrowserSelectedSectionId = "";
   state.detailBrowserSelectedDetailUid = "";
   if (state.detailBrowserImagesNode) state.detailBrowserImagesNode.innerHTML = "";
@@ -298,7 +362,8 @@ export function updateWorkDetailBrowser(state, options = {}) {
     state.detailBrowserSelectedDetailUid = "";
     state.detailBrowserSectionsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "detail_browser_empty", "No work details for this work."))}</p>`;
     renderSelectedImages(state, options, null);
-    renderDetailActions(state, options, { hasDetails: false });
+    renderSectionActions(state, options, { list: null, hasSections: false });
+    renderDetailActions(state, options, { hasDetails: false, showNew: false });
     return;
   }
 
@@ -339,6 +404,10 @@ export function updateWorkDetailBrowser(state, options = {}) {
   });
 
   const listSelection = state.detailBrowserSectionsController.selection();
+  renderSectionActions(state, options, {
+    list: state.detailBrowserSectionsController,
+    hasSections: true
+  });
   renderSelectedImages(state, options, listSelection && listSelection.record ? listSelection.record : selected);
   renderDetailActions(state, options, {
     list: state.detailBrowserImagesController,

@@ -294,6 +294,115 @@ def assert_project_media_picker(page: Page) -> None:
     assert ["files", "nerve", "", ""] in result["calls"]
 
 
+def assert_project_media_multi_file_picker(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <style>
+                .sharedSearchList__popup {
+                  display: grid;
+                  gap: 4px;
+                  max-height: 64px;
+                  overflow: auto;
+                  padding: 4px 4px 8px;
+                }
+                .sharedSearchList__option {
+                  border: 0;
+                  display: block;
+                  min-height: 28px;
+                  width: 100%;
+                }
+              </style>
+              <main id="catalogueWorkRoot" class="tagStudioPage catalogueWorkPage"></main>
+            `;
+            const pickerModule = await import('/studio/app/frontend/js/catalogue-project-media-picker.js');
+            const root = document.getElementById('catalogueWorkRoot');
+            const modalHost = document.createElement('div');
+            root.appendChild(modalHost);
+            const state = {
+                root,
+                modalHost,
+                projectMediaPicker: {
+                    folders: [],
+                    folderLoadPromise: null
+                }
+            };
+            window.__multiFilePickerCalls = [];
+            window.__multiFilePickerResult = null;
+            window.__multiFilePickerPromise = pickerModule.openProjectMediaMultiFileModal(state, {
+                text: (key, fallback) => fallback,
+                initialSelection: {
+                    project_folder: 'natural'
+                },
+                disabledSubfolders: ['used'],
+                loadProjectFolders: async (query) => {
+                    window.__multiFilePickerCalls.push(['folders', query]);
+                    return {
+                        ok: true,
+                        project_folders: [{ project_folder: 'natural' }]
+                    };
+                },
+                loadProjectFiles: async (request) => {
+                    window.__multiFilePickerCalls.push(['files', request.projectFolder, request.projectSubfolder || '', request.query || '']);
+                    if (request.projectSubfolder === 'details') {
+                        return {
+                            ok: true,
+                            subfolders: [{ project_subfolder: 'used' }, { project_subfolder: 'details' }],
+                            files: [{ filename: 'detail-01.jpg' }, { filename: 'detail-02.png' }]
+                        };
+                    }
+                    return {
+                        ok: true,
+                        subfolders: [{ project_subfolder: 'used' }, { project_subfolder: 'details' }],
+                        files: [{ filename: 'cover.jpg' }]
+                    };
+                }
+            }).then((result) => {
+                window.__multiFilePickerResult = result;
+                return result;
+            });
+        }"""
+    )
+
+    page.wait_for_selector('[data-role="studio-modal"]')
+    assert page.locator("#studioModalTitle").text_content() == "New detail section"
+    assert page.locator('button[data-role="modal-primary"]').text_content() == "Create"
+    file_list = page.locator('[data-role="file-picker-file-list"]')
+    used_option = page.locator('[data-role="file-picker-subfolder-list"] [data-listbox-option-value="used"]')
+    details_option = page.locator('[data-role="file-picker-subfolder-list"] [data-listbox-option-value="details"]')
+    page.wait_for_selector('[data-role="file-picker-file-list"] [data-listbox-option-value="cover.jpg"]')
+    assert used_option.get_attribute("aria-disabled") == "true"
+    used_option.evaluate("node => node.click()")
+    assert page.locator('[data-role="file-picker-subfolder-list"]').evaluate("node => node.dataset.selectedValue || ''") == ""
+    details_option.click()
+    page.wait_for_selector('[data-role="file-picker-file-list"] [data-listbox-option-value="detail-02.png"]')
+    assert file_list.evaluate(
+        """node => Array.from(node.querySelectorAll('[aria-selected="true"]')).map(option => option.dataset.listboxOptionValue)"""
+    ) == ["detail-01.jpg", "detail-02.png"]
+    assert page.locator('[data-role="file-picker-selection-count"]').text_content() == "2 selected"
+    assert page.locator('[data-role="modal-primary"]').is_disabled() is False
+
+    page.locator('[data-role="file-picker-deselect-all"]').click()
+    assert page.locator('[data-role="file-picker-selection-count"]').text_content() == "0 selected"
+    assert page.locator('[data-role="modal-primary"]').is_disabled() is True
+    page.locator('[data-role="file-picker-select-all"]').click()
+    assert page.locator('[data-role="file-picker-selection-count"]').text_content() == "2 selected"
+    assert page.locator('[data-role="modal-primary"]').is_disabled() is False
+
+    page.locator('button[data-role="modal-primary"]').click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached")
+    page.wait_for_function("() => Boolean(window.__multiFilePickerResult)")
+    result = page.evaluate("window.__multiFilePickerResult")
+    assert result["confirmed"] is True
+    assert result["selection"]["project_folder"] == "natural"
+    assert result["selection"]["project_subfolder"] == "details"
+    assert result["selection"]["filenames"] == ["detail-01.jpg", "detail-02.png"]
+    assert result["selection"]["file_titles"] == [
+        {"filename": "detail-01.jpg", "title": "detail-01"},
+        {"filename": "detail-02.png", "title": "detail-02"},
+    ]
+
+
 def run(site_root: Path) -> None:
     server, base_url = start_static_server(site_root)
     try:
@@ -302,6 +411,7 @@ def run(site_root: Path) -> None:
             page = browser.new_page()
             page.goto(f"{base_url}/", wait_until="domcontentloaded")
             assert_project_media_picker(page)
+            assert_project_media_multi_file_picker(page)
             browser.close()
     finally:
         server.shutdown()

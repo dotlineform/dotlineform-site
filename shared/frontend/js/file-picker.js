@@ -49,6 +49,12 @@ function fileValue(record) {
   return optionValue(record, ["filename", "file", "value"]);
 }
 
+function fileStem(filename) {
+  const value = normalizeText(filename);
+  const dotIndex = value.lastIndexOf(".");
+  return dotIndex > 0 ? value.slice(0, dotIndex) : value;
+}
+
 function normalizeList(records, valueForRecord) {
   const seen = new Set();
   const values = [];
@@ -80,6 +86,11 @@ function renderBody(id, config) {
           <div class="sharedFilePicker__listbox" id="${escapeHtml(id)}-subfolders" data-role="file-picker-subfolder-list" role="listbox" tabindex="-1" aria-disabled="true" aria-label="${escapeHtml(subfolderLabel)}"></div>
         </div>
         <div class="sharedFilePicker__listboxField">
+          <div class="sharedFilePicker__fileToolbar" data-role="file-picker-file-toolbar" hidden>
+            <button class="sharedFilePicker__toolbarButton" type="button" data-role="file-picker-select-all">${escapeHtml(filePickerText(config, "selectAllButton"))}</button>
+            <button class="sharedFilePicker__toolbarButton" type="button" data-role="file-picker-deselect-all">${escapeHtml(filePickerText(config, "deselectAllButton"))}</button>
+            <span class="sharedFilePicker__selectionCount" data-role="file-picker-selection-count"></span>
+          </div>
           <div class="sharedFilePicker__listbox" id="${escapeHtml(id)}-files" data-role="file-picker-file-list" role="listbox" tabindex="-1" aria-disabled="true" aria-label="${escapeHtml(fileLabel)}"></div>
         </div>
       </div>
@@ -96,28 +107,40 @@ function listboxItem(item) {
     const value = normalizeText(item.value);
     return {
       className: normalizeText(item.className),
+      disabled: Boolean(item.disabled),
       label: normalizeText(item.label) || value,
+      title: normalizeText(item.title),
       value
     };
   }
   const value = normalizeText(item);
-  return { className: "", label: value, value };
+  return { className: "", disabled: false, label: value, title: "", value };
 }
 
-function renderListboxOptions(listboxNode, options, selectedValue) {
+function renderListboxOptions(listboxNode, options, selectedValue, renderOptions = {}) {
   if (!listboxNode) return;
   const items = (Array.isArray(options) ? options : []).map(listboxItem);
-  const selected = normalizeText(selectedValue);
-  const selectedIndex = items.findIndex((item) => item.value === selected);
+  const multipleSelected = renderOptions.multipleSelected instanceof Set ? renderOptions.multipleSelected : null;
+  const selected = multipleSelected ? "" : normalizeText(selectedValue);
+  const selectedIndex = multipleSelected
+    ? items.findIndex((item) => !item.disabled)
+    : items.findIndex((item) => item.value === selected && !item.disabled);
   const activeIndex = selectedIndex >= 0 ? selectedIndex : -1;
+  listboxNode.filePickerItems = items;
   listboxNode.filePickerValues = items.map((item) => item.value);
-  listboxNode.dataset.selectedValue = selectedIndex >= 0 ? selected : "";
+  listboxNode.dataset.selectedValue = selectedIndex >= 0 && !multipleSelected ? selected : "";
   listboxNode.dataset.activeIndex = String(activeIndex);
   listboxNode.innerHTML = items.map((item, index) => {
     const optionId = listboxOptionId(listboxNode, index);
-    const selectedAttr = index === selectedIndex ? "true" : "false";
+    const selectedOption = multipleSelected ? multipleSelected.has(item.value) : index === selectedIndex;
+    const selectedAttr = selectedOption ? "true" : "false";
     const className = ["sharedFilePicker__option", item.className].filter(Boolean).join(" ");
-    return `<div class="${escapeHtml(className)}" id="${escapeHtml(optionId)}" data-listbox-option-index="${index}" data-listbox-option-value="${escapeHtml(item.value)}" role="option" aria-selected="${selectedAttr}">${escapeHtml(item.label)}</div>`;
+    const disabledAttr = item.disabled ? ' aria-disabled="true"' : "";
+    const titleAttr = item.title ? ` title="${escapeHtml(item.title)}"` : "";
+    const checkboxHtml = multipleSelected
+      ? `<span class="sharedFilePicker__optionCheck" aria-hidden="true">${selectedOption ? "✓" : ""}</span>`
+      : "";
+    return `<div class="${escapeHtml(className)}" id="${escapeHtml(optionId)}" data-listbox-option-index="${index}" data-listbox-option-value="${escapeHtml(item.value)}" role="option" aria-selected="${selectedAttr}"${disabledAttr}${titleAttr}>${checkboxHtml}<span class="sharedFilePicker__optionText">${escapeHtml(item.label)}</span></div>`;
   }).join("");
   if (activeIndex >= 0) {
     listboxNode.setAttribute("aria-activedescendant", listboxOptionId(listboxNode, activeIndex));
@@ -130,32 +153,63 @@ function selectedListboxValue(listboxNode) {
   return normalizeText(listboxNode && listboxNode.dataset.selectedValue);
 }
 
-function setListboxSelection(listboxNode, index) {
+function listboxItemAt(listboxNode, index) {
+  const items = Array.isArray(listboxNode && listboxNode.filePickerItems) ? listboxNode.filePickerItems : [];
+  return index >= 0 && index < items.length ? items[index] : null;
+}
+
+function listboxItemDisabled(listboxNode, index) {
+  const item = listboxItemAt(listboxNode, index);
+  return Boolean(item && item.disabled);
+}
+
+function setListboxActive(listboxNode, index) {
   const values = Array.isArray(listboxNode && listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
-  if (!listboxNode || !values.length || index < 0 || index >= values.length) return false;
-  const value = values[index];
-  listboxNode.dataset.selectedValue = value;
+  if (!listboxNode || !values.length || index < 0 || index >= values.length || listboxItemDisabled(listboxNode, index)) return false;
   listboxNode.dataset.activeIndex = String(index);
   listboxNode.setAttribute("aria-activedescendant", listboxOptionId(listboxNode, index));
+  const activeNode = listboxNode.querySelector(`[data-listbox-option-index="${index}"]`);
+  if (activeNode && typeof activeNode.scrollIntoView === "function") {
+    activeNode.scrollIntoView({ block: "nearest" });
+  }
+  return true;
+}
+
+function setListboxSelection(listboxNode, index) {
+  const values = Array.isArray(listboxNode && listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
+  if (!listboxNode || !values.length || index < 0 || index >= values.length || listboxItemDisabled(listboxNode, index)) return false;
+  const value = values[index];
+  listboxNode.dataset.selectedValue = value;
+  setListboxActive(listboxNode, index);
   listboxNode.querySelectorAll("[data-listbox-option-index]").forEach((optionNode) => {
     optionNode.setAttribute("aria-selected", optionNode.getAttribute("data-listbox-option-index") === String(index) ? "true" : "false");
   });
-  const selectedNode = listboxNode.querySelector(`[data-listbox-option-index="${index}"]`);
-  if (selectedNode && typeof selectedNode.scrollIntoView === "function") {
-    selectedNode.scrollIntoView({ block: "nearest" });
-  }
   listboxNode.dispatchEvent(new Event("change", { bubbles: true }));
   return true;
 }
 
-function moveListboxSelection(listboxNode, direction) {
+function nextEnabledIndex(listboxNode, startIndex, direction) {
+  const values = Array.isArray(listboxNode && listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
+  if (!listboxNode || !values.length) return -1;
+  let nextIndex = Math.max(0, Math.min(values.length - 1, startIndex));
+  while (nextIndex >= 0 && nextIndex < values.length) {
+    if (!listboxItemDisabled(listboxNode, nextIndex)) return nextIndex;
+    nextIndex += direction;
+  }
+  return -1;
+}
+
+function moveListboxSelection(listboxNode, direction, options = {}) {
   const values = Array.isArray(listboxNode && listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
   if (!listboxNode || !values.length) return false;
   const currentIndex = Number(listboxNode.dataset.activeIndex);
-  const nextIndex = currentIndex < 0
+  const candidateIndex = currentIndex < 0
     ? (direction > 0 ? 0 : values.length - 1)
     : Math.max(0, Math.min(values.length - 1, currentIndex + direction));
+  const nextIndex = nextEnabledIndex(listboxNode, candidateIndex, direction > 0 ? 1 : -1);
+  if (nextIndex < 0) return false;
   if (nextIndex === currentIndex) return false;
+  if (options.activeOnly) return setListboxActive(listboxNode, nextIndex);
   return setListboxSelection(listboxNode, nextIndex);
 }
 
@@ -165,10 +219,21 @@ function setListboxDisabled(listboxNode, disabled) {
   listboxNode.tabIndex = disabled ? -1 : 0;
 }
 
-function subfolderListOptions(folder, subfolders, config) {
+function disabledValueSet(values) {
+  if (values instanceof Set) {
+    return new Set([...values].map((value) => normalizeText(value).toLowerCase()).filter(Boolean));
+  }
+  if (Array.isArray(values)) {
+    return new Set(values.map((value) => normalizeText(value).toLowerCase()).filter(Boolean));
+  }
+  return new Set();
+}
+
+function subfolderListOptions(folder, subfolders, config, disabledSubfolders = new Set()) {
   const parentFolder = normalizeText(folder);
   const subfolderConfig = config && config.subfolders ? config.subfolders : {};
   const prefix = normalizeText(subfolderConfig.prefix) || "⨽";
+  const disabledTitle = filePickerText(config, "subfolderUnavailable");
   const records = [
     {
       className: "sharedFilePicker__option--parent",
@@ -177,9 +242,12 @@ function subfolderListOptions(folder, subfolders, config) {
     }
   ];
   (Array.isArray(subfolders) ? subfolders : []).forEach((subfolder) => {
+    const disabled = disabledSubfolders.has(normalizeText(subfolder).toLowerCase());
     records.push({
       className: "sharedFilePicker__option--subfolder",
+      disabled,
       label: `${prefix} ${subfolder}`,
+      title: disabled ? disabledTitle : "",
       value: subfolder
     });
   });
@@ -192,28 +260,42 @@ function bindListbox(listboxNode, options = {}) {
     const optionNode = event.target && event.target.closest ? event.target.closest("[data-listbox-option-index]") : null;
     if (!optionNode || !listboxNode.contains(optionNode)) return;
     const index = Number(optionNode.getAttribute("data-listbox-option-index"));
-    if (Number.isInteger(index)) setListboxSelection(listboxNode, index);
+    if (!Number.isInteger(index) || listboxItemDisabled(listboxNode, index)) return;
+    if (options.selectionMode === "multiple") {
+      setListboxActive(listboxNode, index);
+      if (typeof options.onToggle === "function") options.onToggle(index);
+      return;
+    }
+    setListboxSelection(listboxNode, index);
   });
   listboxNode.addEventListener("keydown", (event) => {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      moveListboxSelection(listboxNode, 1);
+      moveListboxSelection(listboxNode, 1, { activeOnly: options.selectionMode === "multiple" });
       return;
     }
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      moveListboxSelection(listboxNode, -1);
+      moveListboxSelection(listboxNode, -1, { activeOnly: options.selectionMode === "multiple" });
       return;
     }
     if (event.key === "Home") {
       event.preventDefault();
-      setListboxSelection(listboxNode, 0);
+      if (options.selectionMode === "multiple") setListboxActive(listboxNode, nextEnabledIndex(listboxNode, 0, 1));
+      else setListboxSelection(listboxNode, nextEnabledIndex(listboxNode, 0, 1));
       return;
     }
     if (event.key === "End") {
       const values = Array.isArray(listboxNode.filePickerValues) ? listboxNode.filePickerValues : [];
       event.preventDefault();
-      setListboxSelection(listboxNode, values.length - 1);
+      if (options.selectionMode === "multiple") setListboxActive(listboxNode, nextEnabledIndex(listboxNode, values.length - 1, -1));
+      else setListboxSelection(listboxNode, nextEnabledIndex(listboxNode, values.length - 1, -1));
+      return;
+    }
+    if (event.key === " " && options.selectionMode === "multiple") {
+      event.preventDefault();
+      const activeIndex = Number(listboxNode.dataset.activeIndex);
+      if (Number.isInteger(activeIndex) && typeof options.onToggle === "function") options.onToggle(activeIndex);
       return;
     }
     if (event.key === "Enter" && typeof options.onEnter === "function") {
@@ -225,7 +307,7 @@ function bindListbox(listboxNode, options = {}) {
     if (!event.deltaY) return;
     event.preventDefault();
     event.stopPropagation();
-    moveListboxSelection(listboxNode, event.deltaY > 0 ? 1 : -1);
+    moveListboxSelection(listboxNode, event.deltaY > 0 ? 1 : -1, { activeOnly: options.selectionMode === "multiple" });
   }, { passive: false });
 }
 
@@ -245,6 +327,11 @@ export function createFilePicker(rootNode, options = {}) {
   }
   const id = normalizeText(options.id) || `sharedFilePicker-${++pickerId}`;
   const config = createFilePickerConfig(options.config);
+  const multipleFiles = options.selectionMode === "multiple";
+  const fileOptions = options.files && typeof options.files === "object" ? options.files : {};
+  const selectAllEnabled = multipleFiles && fileOptions.selectAll !== false;
+  const defaultFileSelection = normalizeText(fileOptions.defaultSelection || (multipleFiles ? "all" : "first"));
+  const disabledSubfolders = disabledValueSet(options.disabledSubfolders);
   rootNode.innerHTML = renderBody(id, config);
 
   const initial = options.initialSelection || {};
@@ -252,7 +339,8 @@ export function createFilePicker(rootNode, options = {}) {
     scope: normalizeText(initial.scope || options.scope),
     folder: normalizeText(initial.folder || initial.project_folder),
     subfolder: normalizeText(initial.subfolder || initial.project_subfolder),
-    filename: normalizeText(initial.filename || initial.project_filename)
+    filename: normalizeText(initial.filename || initial.project_filename),
+    filenames: new Set(Array.isArray(initial.filenames) ? initial.filenames.map(normalizeText).filter(Boolean) : [])
   };
   const state = {
     folders: [],
@@ -265,6 +353,10 @@ export function createFilePicker(rootNode, options = {}) {
   const statusNode = rootNode.querySelector('[data-role="file-picker-status"]');
   const subfolderNode = rootNode.querySelector('[data-role="file-picker-subfolder-list"]');
   const fileNode = rootNode.querySelector('[data-role="file-picker-file-list"]');
+  const fileToolbarNode = rootNode.querySelector('[data-role="file-picker-file-toolbar"]');
+  const selectAllNode = rootNode.querySelector('[data-role="file-picker-select-all"]');
+  const deselectAllNode = rootNode.querySelector('[data-role="file-picker-deselect-all"]');
+  const selectionCountNode = rootNode.querySelector('[data-role="file-picker-selection-count"]');
   const primaryNode = options.primaryNode || null;
 
   function setStatus(kind, message) {
@@ -279,6 +371,82 @@ export function createFilePicker(rootNode, options = {}) {
   function setListboxesDisabled(disabled) {
     setListboxDisabled(subfolderNode, Boolean(disabled));
     setListboxDisabled(fileNode, Boolean(disabled));
+  }
+
+  function selectedFileCount() {
+    return multipleFiles ? selected.filenames.size : (selected.filename ? 1 : 0);
+  }
+
+  function setPrimaryForFileSelection() {
+    setPrimaryDisabled(primaryNode, selectedFileCount() <= 0);
+  }
+
+  function updateFileSelectionToolbar() {
+    if (!fileToolbarNode) return;
+    fileToolbarNode.hidden = !selectAllEnabled || !state.files.length;
+    if (selectionCountNode) {
+      selectionCountNode.textContent = filePickerText(config, "selectedFilesCount", {
+        count: String(selected.filenames.size)
+      });
+    }
+    if (selectAllNode) selectAllNode.disabled = !state.files.length || selected.filenames.size === state.files.length;
+    if (deselectAllNode) deselectAllNode.disabled = !selected.filenames.size;
+  }
+
+  function renderFileList() {
+    if (multipleFiles) {
+      renderListboxOptions(fileNode, state.files, "", { multipleSelected: selected.filenames });
+      updateFileSelectionToolbar();
+      setPrimaryForFileSelection();
+      return;
+    }
+    renderListboxOptions(fileNode, state.files, selected.filename);
+    setPrimaryForFileSelection();
+  }
+
+  function resetFileSelectionForLoadedFiles(loadOptions = {}) {
+    if (!multipleFiles) {
+      const requestedFilename = normalizeText(loadOptions.filename);
+      if (requestedFilename && state.files.includes(requestedFilename)) {
+        selected.filename = requestedFilename;
+      } else if (loadOptions.autoSelectFirst) {
+        selected.filename = state.files[0] || "";
+      } else {
+        selected.filename = "";
+      }
+      return Boolean(requestedFilename && !selected.filename);
+    }
+
+    const requestedFilenames = Array.isArray(loadOptions.filenames) ? loadOptions.filenames.map(normalizeText).filter(Boolean) : [];
+    selected.filenames.clear();
+    requestedFilenames.forEach((filename) => {
+      if (state.files.includes(filename)) selected.filenames.add(filename);
+    });
+    if (!requestedFilenames.length && defaultFileSelection === "all") {
+      state.files.forEach((filename) => selected.filenames.add(filename));
+    }
+    return requestedFilenames.some((filename) => !selected.filenames.has(filename));
+  }
+
+  function toggleFileSelection(index) {
+    if (!multipleFiles) return;
+    const filename = state.files[index];
+    if (!filename) return;
+    if (selected.filenames.has(filename)) selected.filenames.delete(filename);
+    else selected.filenames.add(filename);
+    renderFileList();
+  }
+
+  function selectAllFiles() {
+    if (!multipleFiles) return;
+    state.files.forEach((filename) => selected.filenames.add(filename));
+    renderFileList();
+  }
+
+  function deselectAllFiles() {
+    if (!multipleFiles) return;
+    selected.filenames.clear();
+    renderFileList();
   }
 
   async function loadFolders() {
@@ -317,28 +485,22 @@ export function createFilePicker(rootNode, options = {}) {
       state.subfolders = normalizeList(payload && payload.subfolders, subfolderValue);
       state.files = normalizeList(payload && payload.files, fileValue);
 
-      const requestedFilename = normalizeText(loadOptions.filename);
-      if (requestedFilename && state.files.includes(requestedFilename)) {
-        selected.filename = requestedFilename;
-      } else if (loadOptions.autoSelectFirst) {
-        selected.filename = state.files[0] || "";
-      } else {
-        selected.filename = "";
-      }
-
-      if (requestedFilename && !selected.filename) {
+      const missingRequestedFile = resetFileSelectionForLoadedFiles(loadOptions);
+      if (missingRequestedFile) {
         setStatus("warning", filePickerText(config, "fileNotFound"));
       } else if (!loadOptions.keepStatus) {
         setStatus("", "");
       }
 
-      renderListboxOptions(subfolderNode, subfolderListOptions(folder, state.subfolders, config), selected.subfolder);
-      renderListboxOptions(fileNode, state.files, selected.filename);
+      renderListboxOptions(subfolderNode, subfolderListOptions(folder, state.subfolders, config, disabledSubfolders), selected.subfolder);
+      renderFileList();
       setListboxesDisabled(false);
-      setPrimaryDisabled(primaryNode, !selected.filename);
+      setPrimaryForFileSelection();
     } catch (error) {
       state.files = [];
-      renderListboxOptions(fileNode, [], "");
+      selected.filename = "";
+      selected.filenames.clear();
+      renderFileList();
       setListboxDisabled(fileNode, true);
       setListboxDisabled(subfolderNode, false);
       setPrimaryDisabled(primaryNode, true);
@@ -350,6 +512,7 @@ export function createFilePicker(rootNode, options = {}) {
     selected.folder = normalizeText(folder);
     selected.subfolder = "";
     selected.filename = "";
+    selected.filenames.clear();
     if (folderInput) folderInput.value = selected.folder;
     await loadFilesForSelection({ autoSelectFirst: loadOptions.autoSelectFirst !== false });
     if (loadOptions.focusFiles !== false && fileNode && !fileNode.disabled) {
@@ -371,10 +534,10 @@ export function createFilePicker(rootNode, options = {}) {
     renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(filePickerText(config, "noFolderMatch"))}</p>`,
     renderError: (error) => `<p class="sharedSearchList__empty">${escapeHtml(normalizeText(error && error.message) || filePickerText(config, "foldersFailed"))}</p>`,
     onTransientInput: ({ value }) => {
-      setPrimaryDisabled(primaryNode, normalizeText(value) !== selected.folder || !selected.filename);
+      setPrimaryDisabled(primaryNode, normalizeText(value) !== selected.folder || selectedFileCount() <= 0);
     },
     onCancel: () => {
-      setPrimaryDisabled(primaryNode, !selected.filename);
+      setPrimaryForFileSelection();
     },
     onCommit: (folder) => selectFolder(folder, { autoSelectFirst: true }).catch((error) => {
       setStatus("error", normalizeText(error && error.message) || filePickerText(config, "filesFailed"));
@@ -385,6 +548,7 @@ export function createFilePicker(rootNode, options = {}) {
     subfolderNode.addEventListener("change", () => {
       selected.subfolder = selectedListboxValue(subfolderNode);
       selected.filename = "";
+      selected.filenames.clear();
       loadFilesForSelection({ autoSelectFirst: true }).catch((error) => {
         setStatus("error", normalizeText(error && error.message) || filePickerText(config, "filesFailed"));
       });
@@ -395,18 +559,23 @@ export function createFilePicker(rootNode, options = {}) {
   if (fileNode) {
     fileNode.addEventListener("change", () => {
       selected.filename = selectedListboxValue(fileNode);
-      setPrimaryDisabled(primaryNode, !selected.filename);
+      setPrimaryForFileSelection();
     });
     fileNode.addEventListener("dblclick", () => {
       selected.filename = selectedListboxValue(fileNode);
-      if (selected.filename && typeof options.onSubmit === "function") options.onSubmit();
+      if (selectedFileCount() > 0 && typeof options.onSubmit === "function") options.onSubmit();
     });
     bindListbox(fileNode, {
+      selectionMode: multipleFiles ? "multiple" : "single",
+      onToggle: toggleFileSelection,
       onEnter() {
-        if (selected.filename && typeof options.onSubmit === "function") options.onSubmit();
+        if (selectedFileCount() > 0 && typeof options.onSubmit === "function") options.onSubmit();
       }
     });
   }
+
+  if (selectAllNode) selectAllNode.addEventListener("click", selectAllFiles);
+  if (deselectAllNode) deselectAllNode.addEventListener("click", deselectAllFiles);
 
   async function initialize() {
     setPrimaryDisabled(primaryNode, true);
@@ -425,21 +594,25 @@ export function createFilePicker(rootNode, options = {}) {
 
     const requestedSubfolder = selected.subfolder;
     const requestedFilename = selected.filename;
+    const requestedFilenames = [...selected.filenames];
     selected.subfolder = "";
     selected.filename = "";
+    selected.filenames.clear();
     await loadFilesForSelection({
       filename: requestedSubfolder ? "" : requestedFilename,
+      filenames: requestedSubfolder ? [] : requestedFilenames,
       keepStatus: true
     });
 
     if (requestedSubfolder) {
       if (state.subfolders.includes(requestedSubfolder)) {
         selected.subfolder = requestedSubfolder;
-        await loadFilesForSelection({ filename: requestedFilename });
+        await loadFilesForSelection({ filename: requestedFilename, filenames: requestedFilenames });
       } else {
         selected.subfolder = "";
         selected.filename = "";
-        renderListboxOptions(subfolderNode, subfolderListOptions(selected.folder, state.subfolders, config), "");
+        selected.filenames.clear();
+        renderListboxOptions(subfolderNode, subfolderListOptions(selected.folder, state.subfolders, config, disabledSubfolders), "");
         setPrimaryDisabled(primaryNode, true);
         setStatus("warning", filePickerText(config, "fileNotFound"));
       }
@@ -455,7 +628,7 @@ export function createFilePicker(rootNode, options = {}) {
         status: filePickerText(config, "folderRequired")
       };
     }
-    if (!selected.filename) {
+    if (selectedFileCount() <= 0) {
       return {
         ok: false,
         statusKind: "error",
@@ -467,7 +640,12 @@ export function createFilePicker(rootNode, options = {}) {
         scope: selected.scope,
         folder: selected.folder,
         subfolder: selected.subfolder,
-        filename: selected.filename
+        filename: selected.filename,
+        filenames: multipleFiles ? [...selected.filenames] : (selected.filename ? [selected.filename] : []),
+        file_titles: multipleFiles ? [...selected.filenames].map((filename) => ({
+          filename,
+          title: fileStem(filename)
+        })) : []
       }
     };
   }
@@ -496,7 +674,10 @@ export function createFilePicker(rootNode, options = {}) {
       if (searchController && typeof searchController.destroy === "function") searchController.destroy();
     },
     getSelection() {
-      return { ...selected };
+      return {
+        ...selected,
+        filenames: [...selected.filenames]
+      };
     }
   };
 }
