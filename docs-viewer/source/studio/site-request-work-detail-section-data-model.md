@@ -3,15 +3,13 @@ doc_id: site-request-work-detail-section-data-model
 title: Work Detail Section Data Model Request
 added_date: 2026-06-16
 last_updated: 2026-06-16
-ui_status: draft
+ui_status: planned
 parent_id: change-requests
 viewable: true
 ---
 # Work Detail Section Data Model Request
 
-Status:
-
-- proposed
+Status: planned
 
 ## Summary
 
@@ -327,7 +325,7 @@ Update the public work page runtime to consume `section_order` instead of `sort_
 
 Future work-detail modals will get new work-scoped APIs that understand sections and detail operations together. The future server allowlist and write API will probably differ from the current standalone detail create/save endpoints, so adapting the old endpoints should not be part of this migration. Hence a complete retirement.
 
-## Concrete Task List
+## Task List
 
 ### 1. Retire The Standalone Work Detail Editor
 
