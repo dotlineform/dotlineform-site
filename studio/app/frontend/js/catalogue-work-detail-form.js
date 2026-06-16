@@ -2,7 +2,6 @@ import { displayValue } from "./catalogue-editor-records.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
   WORK_DETAIL_FIELD_DEFINITIONS,
-  WORK_DETAIL_READONLY_FIELDS as READONLY_FIELDS,
   normalizeText
 } from "./catalogue-work-detail-fields.js";
 
@@ -91,36 +90,12 @@ function renderField(field, fieldsNode, state, options) {
   state.fieldStatusNodes.set(field.key, message);
 }
 
-function renderReadonlyField(field, readonlyNode, state, options) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.dataset.fieldLabel = field.key;
-  label.textContent = formText(options, `field_label_${field.key}`, field.label);
-  wrapper.appendChild(label);
-
-  const value = document.createElement("div");
-  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  value.dataset.readonlyField = field.key;
-  value.textContent = "—";
-  wrapper.appendChild(value);
-
-  readonlyNode.appendChild(wrapper);
-  state.readonlyNodes.set(field.key, value);
-}
-
 export function renderWorkDetailEditorFields(fieldsNode, state, options = {}) {
   WORK_DETAIL_FORM_FIELDS.forEach((field) => renderField(field, fieldsNode, state, options));
 }
 
-export function renderWorkDetailReadonlyFields(readonlyNode, state, options = {}) {
-  READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state, options));
-}
-
 export function applyWorkDetailFieldLabels(state, options = {}) {
-  [...WORK_DETAIL_FORM_FIELDS, ...READONLY_FIELDS].forEach((field) => {
+  WORK_DETAIL_FORM_FIELDS.forEach((field) => {
     const labels = state.root.querySelectorAll(`[data-field-label="${field.key}"]`);
     labels.forEach((label) => {
       label.textContent = formText(options, `field_label_${field.key}`, field.label);
@@ -133,19 +108,6 @@ export function applyWorkDetailDraftToInputs(state) {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     setWorkDetailFieldNodeValue(node, normalizeText(state.draft[field.key]));
-  });
-}
-
-export function applyWorkDetailReadonly(state) {
-  setWorkDetailReadonlyValues(state, (field) => state.currentRecord ? state.currentRecord[field.key] : "");
-}
-
-export function setWorkDetailReadonlyValues(state, valueForField) {
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (!node) return;
-    const value = typeof valueForField === "function" ? valueForField(field) : valueForField;
-    node.textContent = displayValue(value);
   });
 }
 

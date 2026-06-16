@@ -20,25 +20,16 @@ export function renderCatalogueWorkDetailShell(config) {
             </div>
           </section>
 
-          <div class="tagStudio__grid catalogueWorkPage__grid">
-            <section class="tagStudio__panel tagStudio__panel--editor">
-              <div class="tagStudio__headingRow">
-                <h2 class="tagStudio__heading">work detail metadata</h2>
-                <div class="catalogueWorkPage__actions">
-                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailSave">Save</button>
-                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailDelete">Delete</button>
-                </div>
+          <section class="tagStudio__panel tagStudio__panel--editor">
+            <div class="tagStudio__headingRow">
+              <h2 class="tagStudio__heading">work detail metadata</h2>
+              <div class="catalogueWorkPage__actions">
+                <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailSave">Save</button>
+                <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailDelete">Delete</button>
               </div>
-              <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueWorkDetailFields"></div>
-            </section>
-            <aside class="tagStudio__panel catalogueWorkSummary">
-              <h2 class="tagStudio__heading">current record</h2>
-              <div class="tagStudioForm__fields" id="catalogueWorkDetailReadonly"></div>
-              <p class="tagStudioForm__impact" id="catalogueWorkDetailRuntimeState"></p>
-              <p class="tagStudioForm__impact" id="catalogueWorkDetailBuildImpact"></p>
-              <div class="tagStudioForm__fields" id="catalogueWorkDetailSummary"></div>
-            </aside>
-          </div>
+            </div>
+            <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueWorkDetailFields"></div>
+          </section>
         </div>
         <p class="tagStudio__status" id="catalogueWorkDetailLoading">loading catalogue work detail editor...</p>
         <p class="tagStudio__empty" id="catalogueWorkDetailEmpty" hidden></p>`;

@@ -34,10 +34,7 @@ def assert_sibling_state_factories(page: Page) -> None:
             document.body.innerHTML = `
               <section id="catalogueWorkDetailRoot">
                 <div id="catalogueWorkDetailLoading"></div><div id="catalogueWorkDetailEmpty"></div>
-                <div id="catalogueWorkDetailFields"></div><div id="catalogueWorkDetailReadonly"></div>
-                <div id="catalogueWorkDetailSummary"></div>
-                <div id="catalogueWorkDetailRuntimeState"></div>
-                <div id="catalogueWorkDetailBuildImpact"></div><input id="catalogueWorkDetailSearchGlobal" />
+                <div id="catalogueWorkDetailFields"></div><input id="catalogueWorkDetailSearchGlobal" />
                 <div id="catalogueWorkDetailPopup"></div><div id="catalogueWorkDetailPopupList"></div>
                 <button id="catalogueWorkDetailOpen"></button><button id="catalogueWorkDetailSave"></button>
                 <button id="catalogueWorkDetailDelete"></button>

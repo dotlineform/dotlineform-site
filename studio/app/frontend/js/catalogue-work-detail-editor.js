@@ -28,24 +28,19 @@ import {
 } from "./catalogue-work-detail-fields.js";
 import {
   deleteCurrentDetail,
-  refreshWorkDetailBuildPreview,
   saveCurrentDetail
 } from "./catalogue-work-detail-actions.js";
 import {
   WORK_DETAIL_FORM_FIELDS as FORM_FIELDS,
   applyWorkDetailDraftToInputs,
   applyWorkDetailFieldLabels,
-  applyWorkDetailReadonly,
   getWorkDetailFieldNodeValue,
   renderWorkDetailEditorFields,
-  renderWorkDetailReadonlyFields,
   setWorkDetailFieldNodeValue,
-  setWorkDetailModeFieldAvailability,
-  setWorkDetailReadonlyValues
+  setWorkDetailModeFieldAvailability
 } from "./catalogue-work-detail-form.js";
 import {
-  formatWorkDetailSelectionList,
-  updateWorkDetailSummary
+  formatWorkDetailSelectionList
 } from "./catalogue-work-detail-sections.js";
 import {
   applyInitialWorkDetailRouteSelection,
@@ -191,7 +186,6 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   state.baselineDraft = buildWorkDetailDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   applyWorkDetailDraftToInputs(state);
-  applyWorkDetailReadonly(state);
   syncUrl(detailUid);
   state.messageController.setRouteTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for detail {detail_uid}.", { detail_uid: detailUid }));
   state.messageController.setRouteTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: detailUid }));
@@ -222,9 +216,7 @@ function setNewDetailMode(state, workId, options = {}) {
   state.draft.work_id = normalizedWorkId;
   state.draft.detail_id = suggestNextDetailId(state.detailSearchByUid, normalizedWorkId);
   state.rebuildPending = false;
-  state.buildPreview = null;
   applyWorkDetailDraftToInputs(state);
-  setWorkDetailReadonlyValues(state, (field) => field.key === "work_id" ? normalizedWorkId : "");
   state.searchNode.value = "";
   setWorkDetailSelectionPopupVisibility(state, false);
   syncUrl("", { mode: "new", workId: normalizedWorkId });
@@ -261,7 +253,6 @@ function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, opti
   state.bulkMixedFields = bulkDraft.mixedFields;
   state.bulkTouchedFields = new Set();
   applyWorkDetailDraftToInputs(state);
-  setWorkDetailReadonlyValues(state, "");
   syncUrl(detailUids.join(","));
   state.messageController.setRouteTextWithState(
     state.contextNode,
@@ -285,23 +276,6 @@ function updateEditorState(state) {
   state.validationErrors = errors;
   clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState);
   setWorkDetailModeFieldAvailability(state);
-  updateSummary(state);
-  if (!hasRecord) {
-    setNodeTextWithState(state.buildImpactNode, "");
-  } else if (state.mode === "bulk") {
-    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
-      ? state.bulkBuildTargets
-      : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
-        const record = state.bulkRecords.get(detailUid);
-        return normalizeWorkId(record && record.work_id);
-      }).filter(Boolean)));
-    setNodeTextWithState(
-      state.buildImpactNode,
-      t(state, "bulk_build_preview", "Build preview: {count} parent work scopes will be rebuilt.", {
-        count: String(previewTargets.length)
-      })
-    );
-  }
 
   const dirty = hasRecord && draftHasChanges(state);
   if (state.mode === "bulk" && hasRecord) {
@@ -358,18 +332,6 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_detail_editor.${key}`, fallback, tokens);
 }
 
-function buildWorkDetailSectionContext(state) {
-  return {
-    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState: setNodeTextWithState,
-    draftHasChanges: () => draftHasChanges(state)
-  };
-}
-
-function updateSummary(state) {
-  updateWorkDetailSummary(state, buildWorkDetailSectionContext(state));
-}
-
 function buildWorkDetailFormContext(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
@@ -398,10 +360,6 @@ function buildWorkDetailActionContext(state) {
   };
 }
 
-function refreshBuildPreview(state) {
-  return refreshWorkDetailBuildPreview(state, buildWorkDetailActionContext(state));
-}
-
 function buildWorkDetailSelectionContext(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
@@ -415,9 +373,7 @@ function buildWorkDetailSelectionContext(state) {
     setNewDetailMode: (workId, options = {}) => {
       setNewDetailMode(state, workId, options);
     },
-    refreshBuildPreview: () => refreshBuildPreview(state),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
-    updateSummary: () => updateSummary(state),
     updateEditorState: () => updateEditorState(state)
   };
 }
@@ -430,10 +386,6 @@ async function init() {
     loadingNode,
     emptyNode,
     fieldsNode,
-    readonlyNode,
-    summaryNode,
-    runtimeStateNode,
-    buildImpactNode,
     searchNode,
     popupNode,
     popupListNode,
@@ -451,7 +403,6 @@ async function init() {
 
   const formContext = buildWorkDetailFormContext(state);
   renderWorkDetailEditorFields(fieldsNode, state, formContext);
-  renderWorkDetailReadonlyFields(readonlyNode, state, formContext);
 
   try {
     await configureCatalogueEditorRouteRuntime(state, {

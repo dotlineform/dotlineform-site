@@ -183,7 +183,6 @@ export async function openWorkDetailSelection(state, requestedValue, context) {
     recordHashes.set(detailUid, normalizeText(lookup.record_hash) || await computeRecordHash(record));
   }
   context.setLoadedBulkDetails(detailUids, recordsById, recordHashes);
-  await context.refreshBuildPreview();
 }
 
 export async function openWorkDetailByUid(state, requestedDetailUid, context) {
@@ -213,7 +212,6 @@ export async function openWorkDetailByUid(state, requestedDetailUid, context) {
     recordHash: normalizeText(lookup.record_hash) || await computeRecordHash(record),
     lookup
   });
-  await context.refreshBuildPreview();
 }
 
 export function bindWorkDetailSelectionControls(state, context) {
@@ -267,7 +265,6 @@ export async function applyInitialWorkDetailRouteSelection(state, context) {
     });
   } else {
     context.setTextWithState(state.contextNode, text(context, "missing_detail_param", "Search for a work detail by detail id."));
-    context.updateSummary();
     context.updateEditorState();
   }
 }

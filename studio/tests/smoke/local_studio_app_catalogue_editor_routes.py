@@ -129,12 +129,6 @@ def main(argv: list[str] | None = None) -> int:
                     "prefix": f"{public_preview_base}/series/?series=001",
                 },
                 {
-                    "url": "/studio/catalogue-work-detail/?detail=00001-001",
-                    "root": "#catalogueWorkDetailRoot",
-                    "selector": "#catalogueWorkDetailSummary a[href*='/work-details/']",
-                    "prefix": f"{public_preview_base}/work-details/?detail=00001-001",
-                },
-                {
                     "url": "/studio/catalogue-moment/?moment=13-moments-in-october",
                     "root": "#catalogueMomentRoot",
                     "selector": "#catalogueMomentSummary a[href*='/moments/']",

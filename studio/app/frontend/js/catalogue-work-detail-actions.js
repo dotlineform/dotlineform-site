@@ -1,30 +1,22 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
 import {
-  applyCatalogueBuild,
   applyCatalogueDelete,
   createCatalogueWorkDetail,
-  previewCatalogueBuild,
   previewCatalogueDelete,
   saveCatalogueBulkRecords,
   saveCatalogueWorkDetail
 } from "./catalogue-editor-service-client.js";
 import { computeRecordHash } from "./catalogue-editor-records.js";
-import {
-  formatCatalogueBuildPreview,
-  formatCatalogueDeletePreview
-} from "./catalogue-editor-modal-formatters.js";
+import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import {
   CATALOGUE_ACTION_OUTCOME,
   extractCatalogueActionPreview,
   getCataloguePreviewBlocker,
-  projectCatalogueActionPresentation,
   projectCatalogueSaveOutcomePresentation,
-  resolveCataloguePendingBuildTargets,
   resolveCatalogueSaveBuildOutcome
 } from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
-import { utcTimestamp } from "./studio-save-utils.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
   buildCreateWorkDetailPayload,
@@ -102,19 +94,6 @@ export function bulkSelectionHasPublishedParentWorks(state) {
     const record = state.bulkRecords.get(detailUid);
     return parentWorkIsPublished(state, record && record.work_id);
   });
-}
-
-export function bulkPublishedParentBuildTargets(state) {
-  return state.bulkDetailUids
-    .filter((detailUid) => {
-      const record = state.bulkRecords.get(detailUid);
-      return parentWorkIsPublished(state, record && record.work_id);
-    })
-    .map((detailUid) => {
-      const record = state.bulkRecords.get(detailUid);
-      return { work_id: normalizeWorkId(record && record.work_id), extra_series_ids: [] };
-    })
-    .filter((target) => target.work_id);
 }
 
 function applySingleSaveBuildOutcome(state, response) {
@@ -232,80 +211,6 @@ function projectBulkDetailSavePresentation(state, context, response, outcome) {
   });
 }
 
-function projectDetailBuildPresentation(state, context, { bulk = false, count = "", completedAt = "" } = {}) {
-  return projectCatalogueActionPresentation({
-    resultKey: bulk ? "bulkSuccess" : "success",
-    statusKey: "success",
-    resultLabels: {
-      bulkSuccess: {
-        text: t(state, context, "bulk_build_result_success", "Updated {count} parent work scopes at {completed_at}. Studio Activity updated.", {
-          count,
-          completed_at: completedAt
-        }),
-        tone: "success"
-      },
-      success: {
-        text: t(state, context, "build_result_success", "Parent work output updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
-        tone: "success"
-      }
-    },
-    statusLabels: {
-      success: {
-        text: t(state, context, "build_status_success", "Site update completed."),
-        tone: "success"
-      }
-    }
-  });
-}
-
-export async function refreshWorkDetailBuildPreview(state, context) {
-  if (state.mode === "bulk") {
-    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
-      ? state.bulkBuildTargets
-      : bulkPublishedParentBuildTargets(state);
-    state.buildPreview = null;
-    setTextWithState(
-      context,
-      state.buildImpactNode,
-      previewTargets.length
-        ? t(state, context, "bulk_build_preview", "Build preview: {count} parent work scopes will be rebuilt.", {
-          count: String(previewTargets.length)
-        })
-        : ""
-    );
-    return;
-  }
-  if (!state.currentWorkId || !state.serverAvailable) {
-    state.buildPreview = null;
-    setTextWithState(context, state.buildImpactNode, "");
-    return;
-  }
-  if (!currentDetailParentWorkIsPublished(state)) {
-    state.buildPreview = null;
-    setTextWithState(context, state.buildImpactNode, t(state, context, "build_preview_unpublished", "Public update unavailable while the parent work is not published."));
-    return;
-  }
-  try {
-    const response = await previewCatalogueBuild({
-      work_id: state.currentWorkId,
-      detail_uid: state.currentDetailUid
-    });
-    state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(context, state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
-      text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
-      defaultTemplate: "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
-    }));
-  } catch (error) {
-    state.buildPreview = null;
-    setTextWithState(
-      context,
-      state.buildImpactNode,
-      `${t(state, context, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  }
-}
-
 export async function saveCurrentDetail(state, context) {
   if (state.mode === "new") {
     await createCurrentDetail(state, context);
@@ -379,7 +284,6 @@ export async function saveCurrentDetail(state, context) {
         record_hash: recordHash
       }
     });
-    await refreshWorkDetailBuildPreview(state, context);
     applyActionPresentation(context, state, projectSingleDetailSavePresentation(state, context, response, outcome));
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
@@ -438,62 +342,6 @@ async function createCurrentDetail(state, context) {
     setTextWithState(context, state.statusNode, message, "error");
     setTextWithState(context, state.resultNode, message, "error");
     state.isSaving = false;
-    context.updateEditorState();
-  }
-}
-
-export async function buildCurrentDetail(state, context) {
-  if (state.mode === "bulk") {
-    if (!state.bulkDetailUids.length || !state.serverAvailable) return;
-  } else if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) {
-    return;
-  }
-  state.isBuilding = true;
-  context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "build_status_running", "Updating site…"));
-  setTextWithState(context, state.resultNode, "");
-  try {
-    if (state.mode === "bulk") {
-      const buildTargets = resolveCataloguePendingBuildTargets({
-        rebuildPending: state.rebuildPending,
-        pendingTargets: state.bulkBuildTargets,
-        fallbackTargets: bulkPublishedParentBuildTargets(state)
-      });
-      for (const target of buildTargets) {
-        await applyCatalogueBuild({
-          work_id: target.work_id,
-          extra_series_ids: Array.isArray(target.extra_series_ids) ? target.extra_series_ids : []
-        });
-      }
-      state.rebuildPending = false;
-      state.bulkBuildTargets = [];
-      await refreshWorkDetailBuildPreview(state, context);
-      const completedAt = utcTimestamp();
-      applyActionPresentation(context, state, projectDetailBuildPresentation(state, context, {
-        bulk: true,
-        count: String(buildTargets.length),
-        completedAt
-      }));
-      return;
-    }
-
-    const response = await applyCatalogueBuild({
-      work_id: state.currentWorkId,
-      detail_uid: state.currentDetailUid
-    });
-    state.rebuildPending = false;
-    await refreshWorkDetailBuildPreview(state, context);
-    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    applyActionPresentation(context, state, projectDetailBuildPresentation(state, context, { completedAt }));
-  } catch (error) {
-    setTextWithState(
-      context,
-      state.statusNode,
-      `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-  } finally {
-    state.isBuilding = false;
     context.updateEditorState();
   }
 }

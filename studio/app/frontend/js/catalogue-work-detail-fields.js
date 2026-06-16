@@ -1,5 +1,4 @@
 const WORK_DETAIL_FIELD_DEFINITIONS = Object.freeze({
-  detail_uid: Object.freeze({ key: "detail_uid", label: "detail id" }),
   work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
   detail_id: Object.freeze({ key: "detail_id", label: "detail id", type: "text" }),
   details_subfolder: Object.freeze({ key: "details_subfolder", label: "details subfolder", type: "text" }),
@@ -7,9 +6,7 @@ const WORK_DETAIL_FIELD_DEFINITIONS = Object.freeze({
   section_title: Object.freeze({ key: "section_title", label: "section title", type: "text" }),
   sort_order: Object.freeze({ key: "sort_order", label: "section sort order", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
-  title: Object.freeze({ key: "title", label: "title", type: "text" }),
-  width_px: Object.freeze({ key: "width_px", label: "width px" }),
-  height_px: Object.freeze({ key: "height_px", label: "height px" })
+  title: Object.freeze({ key: "title", label: "title", type: "text" })
 });
 
 const WORK_DETAIL_EDITABLE_FIELDS = Object.freeze([
@@ -28,15 +25,6 @@ const NEW_WORK_DETAIL_EDITABLE_FIELDS = Object.freeze([
   WORK_DETAIL_FIELD_DEFINITIONS.details_subfolder,
   WORK_DETAIL_FIELD_DEFINITIONS.sort_order,
   WORK_DETAIL_FIELD_DEFINITIONS.project_filename
-]);
-
-const WORK_DETAIL_READONLY_FIELDS = Object.freeze([
-  WORK_DETAIL_FIELD_DEFINITIONS.detail_uid,
-  Object.freeze({ key: "work_id", label: "work id" }),
-  Object.freeze({ key: "detail_id", label: "detail row id" }),
-  WORK_DETAIL_FIELD_DEFINITIONS.section_id,
-  WORK_DETAIL_FIELD_DEFINITIONS.width_px,
-  WORK_DETAIL_FIELD_DEFINITIONS.height_px
 ]);
 
 function normalizeText(value) {
@@ -212,7 +200,6 @@ export {
   NEW_WORK_DETAIL_EDITABLE_FIELDS,
   WORK_DETAIL_EDITABLE_FIELDS,
   WORK_DETAIL_FIELD_DEFINITIONS,
-  WORK_DETAIL_READONLY_FIELDS,
   buildCreateWorkDetailPayload,
   buildSaveWorkDetailPayload,
   buildWorkDetailDraftFromRecord,

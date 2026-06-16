@@ -17,10 +17,6 @@ export function collectWorkDetailEditorElements() {
     loadingNode: "catalogueWorkDetailLoading",
     emptyNode: "catalogueWorkDetailEmpty",
     fieldsNode: "catalogueWorkDetailFields",
-    readonlyNode: "catalogueWorkDetailReadonly",
-    summaryNode: "catalogueWorkDetailSummary",
-    runtimeStateNode: "catalogueWorkDetailRuntimeState",
-    buildImpactNode: "catalogueWorkDetailBuildImpact",
     searchNode: "catalogueWorkDetailSearchGlobal",
     popupNode: "catalogueWorkDetailPopup",
     popupListNode: "catalogueWorkDetailPopupList",
@@ -52,7 +48,6 @@ export function createWorkDetailEditorState(elements, options = {}) {
     draft: {},
     validationErrors: new Map(),
     rebuildPending: false,
-    buildPreview: null,
     isSaving: false,
     isBuilding: false,
     isDeleting: false,
@@ -62,7 +57,6 @@ export function createWorkDetailEditorState(elements, options = {}) {
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     messageController: null,
-    readonlyNodes: new Map(),
     searchNode: elements.searchNode,
     popupNode: elements.popupNode,
     popupListNode: elements.popupListNode,
@@ -72,9 +66,6 @@ export function createWorkDetailEditorState(elements, options = {}) {
     contextNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailContext", "context"),
     statusNode: elements.statusNode,
     warningNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailWarning", "warning"),
-    resultNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailResult", "result"),
-    summaryNode: elements.summaryNode,
-    runtimeStateNode: elements.runtimeStateNode,
-    buildImpactNode: elements.buildImpactNode
+    resultNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailResult", "result")
   };
 }
