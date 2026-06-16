@@ -271,6 +271,7 @@ The review should produce:
 ## Open Questions
 
 - If nested source wins, should detail data live inside `works.json`, `work_details.json`, or one file per work?
+- If the normalized keyed source model remains, should section records stay inside `studio/data/canonical/catalogue/work_details.json`, or move to a separate `studio/data/canonical/catalogue/work_detail_sections.json` file?
 - Should canonical work source and generated public work payload intentionally look similar, or is that too easy to confuse?
 - Should detail `detail_uid` remain stored, or be derived from `work_id` and `detail_id` inside a nested work?
 - Should section ids remain generated strings like `00782-1`, or should nested section order allow simpler per-work section keys?

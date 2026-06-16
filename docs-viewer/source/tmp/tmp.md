@@ -6,9 +6,136 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+## Future modal UI:
+
+- section modal edits `details_subfolder`, `section_title`, `section_order`, and `detail_sort`
+- detail modal edits `detail_id`, `title`, `project_filename`, and selected `section_id`
+- detail move workflows should change only the detail `section_id`
+- empty sections are allowed while editing draft works so users can create sections before adding details
+- saving a published work should be disabled while any detail section is empty
+- deleting a section deletes all contained detail records after explicit confirmation
+
+### Add Work-Scoped Section/Detail Save Rules
+
+The later modal implementation should not reuse the old detail-route API.
+
+Touched areas:
+
+- new or updated work-scoped service APIs: define section create/update/delete and detail create/update/move/delete operations around the parent work.
+- write allowlist and transaction planning: allow writes to the canonical source file through the new work-scoped operations, not through retired route endpoints.
+- publication/build preview and apply paths: block saving a published work while any detail section is empty; allow empty sections for draft works.
+- delete planning: deleting a section deletes contained detail records after explicit confirmation.
+
+---
+
+
 we are working in the work details section on the works editor page `/studio/catalogue-work/` using the shared lists component [Record List And Action Layer Implementation Note](/docs/?scope=studio&doc=ui-pattern-record-action-list)
 
 
+please review and update [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor) - it mentions `site/assets/studio/js/catalogue-work-detail-editor.js` which doesn't exist, so I think the document picked up some errors during maintenance.
+
+
+the plan is to replace the current work details editor page with modals on the works editor page. however there is a problem with the current data model that needs to be fixed first. we will use `studio/data/generated/catalogue-lookup/works/00782.json` as the example.
+this contains the work metadata, and then a section for each work detail section:
+
+```
+  "detail_sections": [
+    {
+      "section_id": "00782-1",
+      "section_title": "details",
+      "sort_order": null,
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "00782-001",
+          "detail_id": "001",
+          "title": "birth of forms - detail 1",
+          "section_id": "00782-1",
+          "section_title": "details",
+          "sort_order": null,
+          "details_subfolder": "details",
+          "project_filename": "birth of forms - detail 1.jpg"
+        },
+```
+
+issues:
+
+- `section_id`, `section_title`, `details_subfolder` are repeated for every detail, even though this is a nested structure.
+- `details_subfolder` doesn't appear in the section metadata
+
+this gives the impression that section and subfolder are independent attributes, but in reality they are not. source detail images are organised into subfolders, and each subfolder relates to a 'section' on the published site.
+
+this matters because the current work details page mixes editing sections and editing detail records in the same thing. we need to change this when we migrate detail editing to the work editor. detail_section `section_title` and `sort_order` need to be editable independently of the details within them.
+
+---
+
+ok this is an opportunity to address the sorting. currently it is only `/studio/catalogue-series/` that enables works within a series to be sorted by id or title (for the thumbnail gallery of works in a series). sorting work details has happened in Excel as part of the bulk import process, i.e. the rows have been sorted in a meaningful order and then assigned sequential detail ids. there is currently no UI way of changing detail sort order.
+
+so let's make the changes to the data model and associated plumbing first, before looking at the UI:
+
+- rename the section `sort_order` to `section_order` which works as current: null means default to sort by section_id, otherwise use the entered numeric sort order.
+- add `detail_sort` to the section which will be editable in the ui by choosing a sort key: detail_id or title. null values are interpreted as by id, which is what happens currently.
+- remove the unused work detail `sort_order` field.
+
+have I interpreted correctly?
+
+~
+
+Yes, interpreted correctly, with one explicit correction from the earlier version: the current plan is **null `section_order` defaults to sorting by `section_id`**, not alpha by `section_title`.
+
+Target model:
+
+- Section-owned fields:
+  - `section_id`
+  - `work_id`
+  - `details_subfolder`
+  - `section_title`
+  - `section_order`
+  - `detail_sort`
+
+- Detail-owned fields:
+  - `detail_uid`
+  - `work_id`
+  - `detail_id`
+  - `section_id`
+  - `title`
+  - `project_filename`
+  - dimensions/derived metadata as needed
+
+Semantics:
+
+- `section_order`
+  - numeric values sort sections explicitly
+  - `null` falls back to current behavior: sort by `section_id`
+  - replaces the current ambiguous section-level use of `sort_order`
+
+- `detail_sort`
+  - section-level enum: `detail_id` or `title`
+  - `null` means `detail_id`
+  - controls generated order of details inside that section
+  - gives Studio a future UI hook without changing detail IDs
+
+- Work detail `sort_order`
+  - removed from detail records
+  - no current data loss, because existing canonical values are all `null`
+  - no current UI behavior loss, because details are currently sorted by `detail_id`
+
+That is the right foundation before moving detail editing into work-editor modals.
+
+~
+
+edit sections:
+
+
+
+new (file picker)
+- subfolder
+- filename
+- section title: = subfolder
+- title: = filename stem
+- section sort order: inherited from existing section
+
+title
 
 ___
 
