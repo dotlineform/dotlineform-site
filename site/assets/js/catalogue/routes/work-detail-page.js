@@ -149,9 +149,9 @@ function bootWorkDetailRoute(rootNode) {
     }
     var href = workUrl(ctx.fromWork, baseurl, {
       series: ctx.series,
-      series_page: ctx.seriesPage,
+      series_page: ctx.seriesPage > 0 ? ctx.seriesPage : '',
       details_section: ctx.detailsSection,
-      details_page: ctx.detailsPage
+      details_page: ctx.detailsPage > 1 ? ctx.detailsPage : ''
     });
     if (ctx.section) href += '#details-' + encodeURIComponent(ctx.section);
     link.textContent = '\u2190 ' + (ctx.fromWorkTitle || ctx.fromWork);
@@ -163,9 +163,9 @@ function bootWorkDetailRoute(rootNode) {
       from_work: ctx.fromWork,
       section: ctx.section,
       series: ctx.series,
-      series_page: ctx.seriesPage,
-      details_section: ctx.detailsSection,
-      details_page: ctx.detailsPage
+      series_page: ctx.seriesPage > 0 ? ctx.seriesPage : '',
+      details_section: ctx.detailsSection && ctx.detailsSection !== ctx.section ? ctx.detailsSection : '',
+      details_page: ctx.detailsPage > 1 ? ctx.detailsPage : ''
     });
   }
 

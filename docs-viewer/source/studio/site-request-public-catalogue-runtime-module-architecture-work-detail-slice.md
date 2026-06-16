@@ -26,6 +26,7 @@ This slice should migrate selected work-detail behavior out of legacy `site/asse
 - Preserve the selected-work return contract created by the selected-work route migration.
 - Preserve `detail`, `from_work`, `section`, `details_section`, `details_page`, `series`, and `series_page` query behavior.
 - Derive the selected-work back-link title from the fetched work payload instead of carrying `from_work_title` in detail URLs.
+- Use `section` as the canonical section key in generated `/work-details/` URLs; keep `details_section` for accepted legacy/detail return state and for `/works/` return URLs.
 - Preserve primary detail media rendering, title/category rows, back-link behavior, detail previous/next navigation, and unavailable-state behavior.
 - Keep `work.js` keyboard navigation behavior in place unless a focused navigation extraction becomes unavoidable.
 - Keep `swipe-nav.js` ownership in place; route code may bind the existing helper to detail media when the helper is present.
@@ -61,6 +62,7 @@ Scope:
 - port work-detail route bootstrapping, route-context parsing, payload lookup, record selection, primary media rendering, title/category rows, back-link rendering, and detail previous/next navigation into the new ES module route;
 - preserve work-detail URL/query behavior, including `detail`, `from_work`, `section`, `details_section`, `details_page`, `series`, and `series_page`;
 - remove `from_work_title` from generated detail URLs and resolve the back-link label from the source work payload;
+- avoid generating duplicate `section` and `details_section` keys when both refer to the same detail section;
 - preserve fallback behavior when no detail is selected, no source work can be loaded, or the selected detail cannot be found;
 - switch the `/work-details/` route shell script from legacy `work-detail-page.js` to the new module;
 - keep `work.js` loaded for current keyboard navigation unless a route-local event or markup contract must change;
@@ -108,9 +110,9 @@ The exact filenames should follow the implementation, but ownership should stay 
   - `node --check site/assets/js/swipe-nav.js`
 - `bin/site-validate` passed: `57 required files; 9 required directories; 44 Docs Viewer runtime modules`.
 - Manual browser validation against `http://127.0.0.1:8175` covered:
-  - `/work-details/?detail=00001-001&from_work=00001&section=00001-1&details_section=00001-1&series=009` renders the selected detail title, category id, primary image state, back link, and `1/17` detail navigation with no console errors;
+  - `/work-details/?detail=00001-001&from_work=00001&section=00001-1&series=009` renders the selected detail title, category id, primary image state, back link, and `1/17` detail navigation with no console errors;
   - `/work-details/` leaves `#detailPageRoot` hidden, shows `#detailPageEmpty`, and reports no console errors;
-  - `/works/?work=00001&series=009` still generates a detail link with work, section, details section, series, and detail context;
+  - `/works/?work=00001&series=009` still generates a detail link with work, section, series, and detail context;
   - navigating through that generated detail link resolves the selected-work back-link label from the work payload and preserves detail navigation state.
 - `swipe-nav.js` was served with the new stable global/no-op fallback for browsers without `PointerEvent`; the in-app browser runtime reported no `PointerEvent` support, so real swipe gesture behavior was not exercised there.
 - Automated browser smoke tests were not run, per the slice validation policy.
@@ -128,6 +130,7 @@ The exact filenames should follow the implementation, but ownership should stay 
   - Detail title, category id, document title, primary image `href`/`src`/`srcset`/`alt`, aspect ratio, back link, previous/next detail links, counter text, and unavailable state remain behavior-equivalent.
   - Query-state behavior for `detail`, `from_work`, `section`, `details_section`, `details_page`, `series`, and `series_page` remains stable.
   - `from_work_title` is intentionally not part of generated detail URLs; back-link labels are resolved from the source work payload.
+  - Generated detail URLs use `section` as the detail section key and omit duplicate `details_section` when it would carry the same value.
   - `work.js` keyboard navigation continues to use the existing `detailNavPrev` and `detailNavNext` anchors.
   - `swipe-nav.js` remains the swipe behavior owner; the route now performs the missing local binding to the detail media zone.
 - Normalized into module contracts:

@@ -72,7 +72,7 @@ $HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py \
 | `series -> work` | `series`, `series_page` | `series`, `series_page`, `from`, `return_sort`, `return_dir`, `return_series`, `details_section`, `details_page` |
 | `works index -> work` | `from`, `return_sort`, `return_dir`, `return_series` | `series`, `series_page`, `from`, `return_sort`, `return_dir`, `return_series`, `details_section`, `details_page` |
 | `work -> work_details index` | `from_work`, `section`, `section_label`, `series`, `series_page` | `sort`, `dir`, `from_work`, `section`, `section_label`, `series`, `series_page` |
-| `work -> work_details page` | `from_work`, `section`, `details_section`, `details_page`, `series`, `series_page` | `from_work`, `section`, `series`, `series_page`, `details_section`, `details_page`, `section_label` |
+| `work -> work_details page` | `from_work`, `section`, `details_page`, `series`, `series_page` | `from_work`, `section`, `series`, `series_page`, `details_section`, `details_page`, `section_label` |
 | `work_details page -> work` | `series`, `series_page`, `details_section`, `details_page` | `series`, `series_page`, `from`, `return_sort`, `return_dir`, `return_series`, `details_section`, `details_page` |
 
 Optional orphan-media scan:

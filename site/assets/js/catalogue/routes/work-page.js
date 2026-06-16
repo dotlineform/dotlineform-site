@@ -264,7 +264,6 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     return workDetailUrl(uid, baseurl, {
       from_work: workId,
       section: sectionId,
-      details_section: sectionId,
       details_page: normalizedPage > 1 ? normalizedPage : '',
       series: routeState.series,
       series_page: routeState.seriesPage > 0 ? routeState.seriesPage : ''
