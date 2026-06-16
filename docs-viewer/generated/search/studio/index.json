@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e921557ac54039e0ef566abcb66f5829",
-    "generated_at_utc": "2026-06-16T15:59:50Z",
-    "count": 236
+    "version": "blake2b-566826db4e8afae84e8151e2bfb333bb",
+    "generated_at_utc": "2026-06-16T17:49:03Z",
+    "count": 238
   },
   "entries": [
     {
@@ -1265,6 +1265,36 @@
       "search_text": "site-request-canonical-static-site-root-tasks site request canonical static root tasks canonical static site root migration tasks migration canonical static site root request 2026-06-13 2026 06 13"
     },
     {
+      "id": "site-request-catalogue-canonical-work-detail-structure-review",
+      "kind": "doc",
+      "title": "Catalogue Canonical Work Detail Structure Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-canonical-work-detail-structure-review",
+      "last_updated": "2026-06-16",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-16 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-canonical-work-detail-structure-review",
+        "site",
+        "request",
+        "catalogue",
+        "canonical",
+        "work",
+        "detail",
+        "structure",
+        "review",
+        "catalogue canonical work detail structure review request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-16",
+        "2026",
+        "06",
+        "16"
+      ],
+      "search_text": "site-request-catalogue-canonical-work-detail-structure-review site request catalogue canonical work detail structure review catalogue canonical work detail structure review request change requests change requests 2026-06-16 2026 06 16"
+    },
+    {
       "id": "site-request-docs-semantic-references-v2",
       "kind": "doc",
       "title": "Docs Semantic References v2 Request",
@@ -1927,6 +1957,35 @@
         "00"
       ],
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
+    },
+    {
+      "id": "site-request-work-detail-section-data-model",
+      "kind": "doc",
+      "title": "Work Detail Section Data Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-work-detail-section-data-model",
+      "last_updated": "2026-06-16",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-16 • Change Requests",
+      "search_terms": [
+        "site-request-work-detail-section-data-model",
+        "site",
+        "request",
+        "work",
+        "detail",
+        "section",
+        "data",
+        "model",
+        "work detail section data model request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-16",
+        "2026",
+        "06",
+        "16"
+      ],
+      "search_text": "site-request-work-detail-section-data-model site request work detail section data model work detail section data model request change requests change requests 2026-06-16 2026 06 16"
     },
     {
       "id": "data-sharing",

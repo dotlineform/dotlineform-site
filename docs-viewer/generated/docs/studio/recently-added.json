@@ -3,6 +3,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-catalogue-canonical-work-detail-structure-review",
+      "title": "Catalogue Canonical Work Detail Structure Review Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-canonical-work-detail-structure-review.json",
+      "added_date": "2026-06-16",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
+      "doc_id": "site-request-work-detail-section-data-model",
+      "title": "Work Detail Section Data Model Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-work-detail-section-data-model.json",
+      "added_date": "2026-06-16",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "ui-pattern-file-picker",
       "title": "File Picker Pattern",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json",
@@ -65,23 +81,7 @@
       "added_date": "2026-06-13",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "site-request-public-catalogue-runtime-module-architecture-slices",
-      "title": "Public Catalogue Runtime Module Architecture Slices",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-slices.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
-      "parent_title": "Public Catalogue Runtime Module Architecture Request"
-    },
-    {
-      "doc_id": "site-request-public-catalogue-runtime-module-architecture-moments-route-slice",
-      "title": "Public Catalogue Runtime Moments Route Slice",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-moments-route-slice.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
-      "parent_title": "Public Catalogue Runtime Module Architecture Request"
     }
   ],
-  "generated_at": "2026-06-16T15:59:50Z"
+  "generated_at": "2026-06-16T17:49:03Z"
 }

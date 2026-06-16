@@ -305,6 +305,12 @@
           ]
         },
         {
+          "doc_id": "site-request-catalogue-canonical-work-detail-structure-review",
+          "title": "Catalogue Canonical Work Detail Structure Review Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-canonical-work-detail-structure-review.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
@@ -438,6 +444,12 @@
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
           "ui_status": "paused"
+        },
+        {
+          "doc_id": "site-request-work-detail-section-data-model",
+          "title": "Work Detail Section Data Model Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-work-detail-section-data-model.json",
+          "ui_status": "draft"
         }
       ]
     },
@@ -1297,5 +1309,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-16T15:59:50Z"
+  "generated_at": "2026-06-16T17:49:03Z"
 }
