@@ -196,7 +196,7 @@ export async function openWorkSelection(state, requestedValue, context) {
   }
 
   state.searchNode.value = workIds.join(", ");
-  state.detailSearchNode.value = "";
+  state.detailBrowserSearchNode.value = "";
   setWorkSelectionPopupVisibility(state, false);
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;
@@ -237,7 +237,7 @@ export async function openWorkById(state, requestedWorkId, context) {
   }
 
   state.searchNode.value = workId;
-  state.detailSearchNode.value = "";
+  state.detailBrowserSearchNode.value = "";
   setWorkSelectionPopupVisibility(state, false);
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;

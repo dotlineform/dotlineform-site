@@ -73,6 +73,11 @@ export function renderCatalogueWorkShell(config) {
 
           <section class="tagStudio__panel catalogueWorkDetailBrowser" id="catalogueWorkDetailBrowserPanel" aria-label="Browse details">
             <div class="tagStudio__headingRow catalogueWorkDetailBrowser__actionRow">
+              <div class="tagStudioForm__searchWrap catalogueWorkDetailBrowser__searchWrap">
+                <label class="visually-hidden" for="catalogueWorkDetailBrowserSearch">Find detail by row id</label>
+                <input type="text" class="tagStudio__input catalogueWorkDetailBrowser__searchInput" id="catalogueWorkDetailBrowserSearch" placeholder="find detail id" autocomplete="off" inputmode="numeric">
+                <button type="button" class="catalogueWorkDetailBrowser__searchClear" id="catalogueWorkDetailBrowserSearchClear" aria-label="Clear detail search" title="Clear detail search" hidden>×</button>
+              </div>
               <div class="catalogueWorkDetails__rowActions catalogueWorkDetailBrowser__actions" id="catalogueWorkDetailBrowserActions" aria-label="Detail actions"></div>
             </div>
             <div class="catalogueWorkDetailBrowser__layout">
@@ -83,21 +88,6 @@ export function renderCatalogueWorkShell(config) {
                 <div class="catalogueWorkDetailBrowser__imageList" id="catalogueWorkDetailBrowserImages"></div>
               </section>
             </div>
-          </section>
-
-          <section class="tagStudio__panel catalogueWorkDetails">
-            <div class="tagStudio__headingRow">
-              <h2 class="tagStudio__heading" id="catalogueWorkDetailsHeading">work details</h2>
-              <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewDetailLink" href="/studio/catalogue-work-detail/">new work detail -&gt;</a>
-            </div>
-            <div class="catalogueWorkDetails__searchRow" id="catalogueWorkDetailsSearchRow" hidden>
-              <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">
-                <label class="visually-hidden" for="catalogueWorkDetailSearch">Find detail by id</label>
-                <input type="text" class="tagStudio__input" id="catalogueWorkDetailSearch" placeholder="find detail by id" autocomplete="off">
-              </div>
-            </div>
-            <p class="tagStudioForm__meta" id="catalogueWorkDetailsMeta"></p>
-            <div class="catalogueWorkDetails__results" id="catalogueWorkDetailsResults"></div>
           </section>
 
         </div>

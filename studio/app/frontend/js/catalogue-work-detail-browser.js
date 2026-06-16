@@ -61,6 +61,17 @@ function clearActions(state) {
   state.detailBrowserActionsController = null;
 }
 
+function searchDigits(value) {
+  const digits = normalizeText(value).replace(/\D/g, "");
+  return digits.slice(-3);
+}
+
+function detailRowDigits(detail) {
+  const detailIdDigits = searchDigits(detail && detail.detail_id);
+  if (detailIdDigits) return detailIdDigits.padStart(3, "0");
+  return searchDigits(detail && detail.detail_uid).padStart(3, "0");
+}
+
 function detailSectionId(section, index) {
   return normalizeText(section && (section.section_id || section.section_title)) || `section-${index + 1}`;
 }
@@ -81,6 +92,15 @@ function detailSections(state) {
   return state.currentLookup && Array.isArray(state.currentLookup.detail_sections)
     ? state.currentLookup.detail_sections
     : [];
+}
+
+function allDetails(state) {
+  const details = [];
+  detailSections(state).forEach((section) => {
+    const items = Array.isArray(section && section.details) ? section.details : [];
+    items.forEach((detail) => details.push(detail));
+  });
+  return details;
 }
 
 function sectionRows(state) {
@@ -116,6 +136,13 @@ function navigateToHref(href) {
   window.location.href = href;
 }
 
+function canCreateDetail(state, options) {
+  if (options && typeof options.isCurrentWorkPublished === "function") {
+    return Boolean(options.isCurrentWorkPublished(state));
+  }
+  return normalizeText(state.currentRecord && state.currentRecord.status).toLowerCase() === "published";
+}
+
 function detailRows(state, options, details) {
   return details.map((detail) => {
     const detailUid = normalizeText(detail && detail.detail_uid);
@@ -135,10 +162,25 @@ function detailRows(state, options, details) {
   });
 }
 
+function detailBrowserSearchQuery(state) {
+  return searchDigits(state.detailBrowserSearchNode && state.detailBrowserSearchNode.value);
+}
+
+function syncDetailBrowserSearchControl(state, query) {
+  if (!state.detailBrowserSearchNode) return;
+  if (state.detailBrowserSearchNode.value !== query) {
+    state.detailBrowserSearchNode.value = query;
+  }
+  if (state.detailBrowserSearchClearNode) {
+    state.detailBrowserSearchClearNode.hidden = !query;
+  }
+}
+
 function renderDetailActions(state, options, { list = null, hasDetails = false } = {}) {
   if (!state.detailBrowserActionsNode) return;
   clearActions(state);
   if (!state.currentWorkId) return;
+  const createEnabled = canCreateDetail(state, options);
   const actions = [
     ...(hasDetails ? [
       {
@@ -160,10 +202,13 @@ function renderDetailActions(state, options, { list = null, hasDetails = false }
     {
       key: "new",
       label: "📄",
-      title: text(state, options, "detail_browser_new_button", "New"),
+      title: createEnabled
+        ? text(state, options, "detail_browser_new_button", "New")
+        : text(state, options, "details_new_unavailable_draft", "Publish this work before adding work details."),
       ariaLabel: text(state, options, "detail_browser_new_button", "New"),
       appearance: "icon",
-      requiresSelection: false
+      requiresSelection: false,
+      disabled: () => !createEnabled
     }
   ];
   state.detailBrowserActionsController = createRecordListActions(state.detailBrowserActionsNode, {
@@ -172,6 +217,7 @@ function renderDetailActions(state, options, { list = null, hasDetails = false }
     actions,
     onAction: ({ actionKey, selection }) => {
       if (actionKey === "new") {
+        if (!canCreateDetail(state, options)) return;
         navigateToHref(buildNewDetailHref(state));
         return;
       }
@@ -189,17 +235,23 @@ function selectedDetailId(records, selectedId) {
 function renderSelectedImages(state, options, row) {
   if (!state.detailBrowserImagesNode) return;
   clearImageList(state);
-  if (!row) {
+  const query = detailBrowserSearchQuery(state);
+  syncDetailBrowserSearchControl(state, query);
+  if (!row && !query) {
     state.detailBrowserImagesNode.innerHTML = "";
     state.detailBrowserSelectedDetailUid = "";
     return;
   }
-  const details = Array.isArray(row.section && row.section.details) ? row.section.details : [];
-  const visible = details.slice(0, DETAIL_BROWSER_LIMIT);
+  const details = query
+    ? allDetails(state).filter((detail) => detailRowDigits(detail).includes(query))
+    : (Array.isArray(row.section && row.section.details) ? row.section.details : []);
+  const visible = query ? details : details.slice(0, DETAIL_BROWSER_LIMIT);
   const records = detailRows(state, options, visible);
   if (!records.length) {
     state.detailBrowserSelectedDetailUid = "";
-    state.detailBrowserImagesNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "detail_browser_section_empty", "No images in the selected section."))}</p>`;
+    state.detailBrowserImagesNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(query
+      ? text(state, options, "detail_browser_search_empty", "No matching detail ids.")
+      : text(state, options, "detail_browser_section_empty", "No images in the selected section."))}</p>`;
     return;
   }
   state.detailBrowserSelectedDetailUid = selectedDetailId(records, state.detailBrowserSelectedDetailUid);

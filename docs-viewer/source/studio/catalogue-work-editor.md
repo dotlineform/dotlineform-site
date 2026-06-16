@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
 added_date: 2026-04-22
-last_updated: 2026-06-15
+last_updated: 2026-06-16
 parent_id: studio
 viewable: true
 ---
@@ -22,7 +22,8 @@ viewable: true
 | route entry | `catalogue-work-editor.js` | route startup, focused lookup reads, draft state, validation, dirty state interpretation, modal sequencing, route-ready state, and local-service coordination |
 | helper | `catalogue-work-fields.js` | work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers. |
 | helper | `catalogue-work-form.js` | editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering. |
-| helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail. |
+| helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-owned file/link section rendering, and the summary rail. |
+| helper | `catalogue-work-detail-browser.js` | shared-list detail section browsing, detail thumbnail rows, detail-id suffix search, and detail edit/delete/new actions. |
 | helper | `catalogue-work-actions.js` | save, create, build-preview, build, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
 | helper | `catalogue-work-selection.js` | work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route. |
 | helper | `catalogue-project-media-picker.js` | project-folder search, source-image file modal rendering, subfolder/file selection state, and derived project media field application. |
@@ -58,12 +59,11 @@ The first implementation covers:
 - bulk-change `series_ids` by exact replacement or `+series_id` / `-series_id` diff entries
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
 - show a compact current-record media preview at the top of the summary rail
-- list the current work's detail records grouped by `section_id` and labeled by `section_title`
-- show thumbnail images beside detail rows in those work-detail lists
-- cap visible detail rows at 10 per section
-- provide per-work detail search by `detail_uid`
+- show a shared-list detail browser with available detail sections and selectable detail thumbnail rows
+- cap unfiltered visible detail rows at 10 in the selected section
+- search detail rows by the last three digits of `detail_id`
 - link into the dedicated work detail editor
-- provide a direct `new work detail →` entry link to `/studio/catalogue-work-detail/?work=<work_id>&mode=new` for the current work when the work is published
+- provide detail actions for edit, delete, and new detail creation from the browser toolbar
 - list the current work's work-owned `downloads` metadata
 - list the current work's work-owned `links` metadata
 - add, edit, and delete work-owned downloads through modal forms
@@ -75,7 +75,6 @@ The first implementation covers:
 - refresh local work image derivatives from the displayed source image path without changing source metadata
 - publish draft works through a dedicated `Publish` command
 - unpublish public works through a dedicated `Unpublish` command
-- show a parallel detail browser that lists available detail sections and a selectable shared-list view of the first 10 images in the selected section
 - when the public update path runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `site/assets/works/img/`
 - delete one work source record in single-record mode
 - show saved-state feedback and public-update failure state after save
@@ -88,7 +87,6 @@ It does not yet:
 - manage work prose; prose management is intentionally outside the metadata editor pending a separate process
 - upload primary images to remote media storage
 - paginate detail/member lists
-- search inside the selected detail-browser section
 
 ## New Mode
 
@@ -109,7 +107,7 @@ In new mode:
 
 Draft works can be found later from Catalogue Drafts using `/studio/catalogue-status/?family=works`.
 
-Work details are added only after the parent work is published. The `new work detail →` link is disabled while the current work is still draft.
+Work details are added only after the parent work is published. The detail browser's `New` action is disabled while the current work is still draft.
 
 ## Series Picker
 
@@ -170,7 +168,7 @@ Current bulk-edit behavior:
 - `status` remains read-only
 - an empty touched field clears that field across the selected works
 - `series_ids` accepts either a plain comma-delimited replacement list or only `+id` / `-id` diff entries
-- detail, file, and link sections are hidden while bulk mode is active
+- detail browser, file, and link sections are hidden while bulk mode is active
 - `Save` internally updates public catalogue output for changed records that are already published
 - delete is disabled in bulk mode
 

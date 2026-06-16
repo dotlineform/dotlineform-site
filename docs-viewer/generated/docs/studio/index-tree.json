@@ -438,6 +438,12 @@
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
           "ui_status": "paused"
+        },
+        {
+          "doc_id": "site-request-work-detail-status-workflow-removal",
+          "title": "Work Detail Status Workflow Removal",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-work-detail-status-workflow-removal.json",
+          "ui_status": "planned"
         }
       ]
     },
@@ -1297,5 +1303,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-15T18:01:17Z"
+  "generated_at": "2026-06-16T12:54:08Z"
 }

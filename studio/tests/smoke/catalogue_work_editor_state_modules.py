@@ -41,16 +41,12 @@ WORK_EDITOR_DOM = """
       <div id="catalogueWorkRuntimeState"></div>
       <div id="catalogueWorkBuildImpact"></div>
       <section id="catalogueWorkDetailBrowserPanel">
+        <input id="catalogueWorkDetailBrowserSearch" />
+        <button id="catalogueWorkDetailBrowserSearchClear"></button>
         <div id="catalogueWorkDetailBrowserActions"></div>
         <div id="catalogueWorkDetailBrowserSections"></div>
         <div id="catalogueWorkDetailBrowserImages"></div>
       </section>
-      <h2 id="catalogueWorkDetailsHeading"></h2>
-      <a id="catalogueWorkNewDetailLink"></a>
-      <div id="catalogueWorkDetailsSearchRow"></div>
-      <input id="catalogueWorkDetailSearch" />
-      <div id="catalogueWorkDetailsMeta"></div>
-      <section><div id="catalogueWorkDetailsResults"></div></section>
       <div id="catalogueWorkResourcesPanel">
         <div id="catalogueWorkResourcesActions"></div>
         <div id="catalogueWorkResourcesMeta"></div>
@@ -110,8 +106,8 @@ def assert_state_factory(page: Page) -> None:
                 validationErrorsIsMap: state.validationErrors instanceof Map,
                 mediaConfig: state.mediaConfig,
                 modalHost: state.modalHost,
-                detailsPanelTag: state.detailsPanelNode && state.detailsPanelNode.tagName,
                 detailBrowserPanelTag: state.detailBrowserPanelNode && state.detailBrowserPanelNode.tagName,
+                detailBrowserSearchTag: state.detailBrowserSearchNode && state.detailBrowserSearchNode.tagName,
                 detailBrowserSelectedSectionId: state.detailBrowserSelectedSectionId,
                 resourcesPanelTag: state.resourcesPanelNode && state.resourcesPanelNode.tagName,
                 contextNodeInState: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
@@ -133,8 +129,8 @@ def assert_state_factory(page: Page) -> None:
     assert result["validationErrorsIsMap"] is True
     assert result["mediaConfig"] == {"rootId": "catalogueWorkRoot", "source": "stub-media"}
     assert result["modalHost"] == {"rootId": "catalogueWorkRoot", "source": "stub-modal"}
-    assert result["detailsPanelTag"] == "SECTION"
     assert result["detailBrowserPanelTag"] == "SECTION"
+    assert result["detailBrowserSearchTag"] == "INPUT"
     assert result["detailBrowserSelectedSectionId"] == ""
     assert result["resourcesPanelTag"] == "DIV"
     assert result["contextNodeInState"] is False
@@ -161,7 +157,7 @@ def assert_event_binder(page: Page) -> None:
             const push = (...args) => window.__workEventCalls.push(args);
             eventModule.bindWorkEditorEvents(state, {{
                 bindSelectionControls: () => push('bindSelectionControls'),
-                updateDetailSections: () => push('updateDetailSections'),
+                updateWorkDetailBrowser: () => push('updateWorkDetailBrowser'),
                 openEmbeddedEntryModal: (kind, index = null) => push('openEmbeddedEntryModal', kind, index),
                 deleteEmbeddedEntry: (kind, index) => push('deleteEmbeddedEntry', kind, index),
                 clearMediaRefreshStatus: () => push('clearMediaRefreshStatus'),
@@ -173,7 +169,7 @@ def assert_event_binder(page: Page) -> None:
             }});
         }}"""
     )
-    page.fill("#catalogueWorkDetailSearch", "001")
+    page.fill("#catalogueWorkDetailBrowserSearch", "001")
     page.click("#catalogueWorkNew")
     page.click('[data-media-refresh="work"]')
     page.click("#catalogueWorkSave")
@@ -182,7 +178,7 @@ def assert_event_binder(page: Page) -> None:
     calls = page.evaluate("window.__workEventCalls")
     assert calls == [
         ["bindSelectionControls"],
-        ["updateDetailSections"],
+        ["updateWorkDetailBrowser"],
         ["clearMediaRefreshStatus"],
         ["setNewWorkMode"],
         ["refreshWorkMedia"],
@@ -281,6 +277,82 @@ def assert_work_search_list_selection(page: Page) -> None:
         "draftWorkId": "00123",
         "popupHidden": True,
         "calls": [["update"]],
+    }
+
+
+def assert_detail_browser_search_filters_suffix(page: Page) -> None:
+    result = page.evaluate(
+        f"""async () => {{
+            document.body.innerHTML = `{WORK_EDITOR_DOM}`;
+            const stateModule = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
+            const browserModule = await import('/studio/app/frontend/js/catalogue-work-detail-browser.js');
+            const elements = stateModule.collectWorkEditorElements();
+            const state = stateModule.createWorkEditorState(elements, {{
+                mediaConfigLoader: () => ({{}}),
+                modalHostFactory: () => ({{}})
+            }});
+            state.config = {{
+                app: {{
+                    routes: {{
+                        catalogue_work_detail_editor: {{ path: '/studio/catalogue-work-detail/' }}
+                    }}
+                }}
+            }};
+            state.currentWorkId = '00001';
+            state.currentRecord = {{ work_id: '00001', status: 'published' }};
+            state.currentLookup = {{
+                detail_sections: [
+                    {{
+                        section_id: 'front',
+                        section_title: 'front',
+                        details: [
+                            {{ detail_uid: '00001-001', detail_id: '001', title: 'one' }},
+                            {{ detail_uid: '00001-002', detail_id: '002', title: 'two' }}
+                        ]
+                    }},
+                    {{
+                        section_id: 'back',
+                        section_title: 'back',
+                        details: [
+                            {{ detail_uid: '00001-011', detail_id: '011', title: 'eleven' }},
+                            {{ detail_uid: '00001-111', detail_id: '111', title: 'one eleven' }},
+                            {{ detail_uid: '00001-222', detail_id: '222', title: 'two twenty two' }}
+                        ]
+                    }}
+                ]
+            }};
+            browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
+            const newDisabledForPublished = document.querySelector('#catalogueWorkDetailBrowserActions [data-record-list-action="new"]').disabled;
+            state.detailBrowserSearchNode.value = '1';
+            browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
+            const valuesAfterSearch = Array.from(document.querySelectorAll('#catalogueWorkDetailBrowserImages [data-record-list-cell="detailUid"]'))
+                .map((node) => node.textContent.trim());
+            const clearHiddenAfterSearch = state.detailBrowserSearchClearNode.hidden;
+            state.detailBrowserSearchNode.value = '00001-011';
+            browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
+            const normalizedSearchValue = state.detailBrowserSearchNode.value;
+            const valuesAfterFullUid = Array.from(document.querySelectorAll('#catalogueWorkDetailBrowserImages [data-record-list-cell="detailUid"]'))
+                .map((node) => node.textContent.trim());
+            state.currentRecord.status = 'draft';
+            browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
+            const newDisabledForDraft = document.querySelector('#catalogueWorkDetailBrowserActions [data-record-list-action="new"]').disabled;
+            return {{
+                valuesAfterSearch,
+                clearHiddenAfterSearch,
+                normalizedSearchValue,
+                valuesAfterFullUid,
+                newDisabledForPublished,
+                newDisabledForDraft
+            }};
+        }}"""
+    )
+    assert result == {
+        "valuesAfterSearch": ["00001-001", "00001-011", "00001-111"],
+        "clearHiddenAfterSearch": False,
+        "normalizedSearchValue": "011",
+        "valuesAfterFullUid": ["00001-011"],
+        "newDisabledForPublished": False,
+        "newDisabledForDraft": True,
     }
 
 
@@ -478,6 +550,7 @@ def run(site_root: Path) -> None:
             assert_state_factory(page)
             assert_event_binder(page)
             assert_work_search_list_selection(page)
+            assert_detail_browser_search_filters_suffix(page)
             assert_route_state_status_target(page)
             assert_series_chip_public_links(page)
             assert_media_refresh_button_uses_preview_actions(page)

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-29739d5b2ff0379553bcd197645e4184",
-    "generated_at_utc": "2026-06-15T21:06:08Z",
-    "count": 236
+    "version": "blake2b-30c194ecc38f712750d1594920006fdc",
+    "generated_at_utc": "2026-06-16T12:54:08Z",
+    "count": 237
   },
   "entries": [
     {
@@ -1927,6 +1927,35 @@
         "00"
       ],
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
+    },
+    {
+      "id": "site-request-work-detail-status-workflow-removal",
+      "kind": "doc",
+      "title": "Work Detail Status Workflow Removal",
+      "href": "/docs/?scope=studio&doc=site-request-work-detail-status-workflow-removal",
+      "last_updated": "2026-06-16",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-16 • Change Requests",
+      "search_terms": [
+        "site-request-work-detail-status-workflow-removal",
+        "site",
+        "request",
+        "work",
+        "detail",
+        "status",
+        "workflow",
+        "removal",
+        "work detail status workflow removal",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-16",
+        "2026",
+        "06",
+        "16"
+      ],
+      "search_text": "site-request-work-detail-status-workflow-removal site request work detail status workflow removal work detail status workflow removal change requests change requests 2026-06-16 2026 06 16"
     },
     {
       "id": "data-sharing",
@@ -4942,10 +4971,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-06-15",
+      "last_updated": "2026-06-16",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-15 • Studio",
+      "display_meta": "2026-06-16 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -4953,12 +4982,12 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-06-15",
+        "2026-06-16",
         "2026",
         "06",
-        "15"
+        "16"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-15 2026 06 15"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-16 2026 06 16"
     },
     {
       "id": "studio-works",

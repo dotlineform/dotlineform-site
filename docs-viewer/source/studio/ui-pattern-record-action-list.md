@@ -23,6 +23,7 @@ Route adapters own the actual workflow behind each action.
 Production consumer:
 
 - `studio/app/frontend/js/catalogue-work-sections.js`
+- `studio/app/frontend/js/catalogue-work-detail-browser.js`
 - `studio/app/frontend/js/catalogue-work-shell.js`
 - `studio/app/frontend/js/catalogue-work-editor-state.js`
 
@@ -238,6 +239,27 @@ Toolbar state:
 - `Edit` and `Delete` are only rendered when the list has rows
 - `Edit` and `Delete` remain disabled until a row is selected
 - when the last row is deleted, the adapter re-renders and removes `Edit` and `Delete`
+
+## Work Detail Browser Adapter
+
+The Catalogue Work editor uses the shared list for the work-detail browser that replaced the legacy grouped detail list.
+
+The adapter renders:
+
+- a section list from `currentLookup.detail_sections`
+- a detail thumbnail list for the selected section
+- a route-owned search field beside the action toolbar
+- external actions for `Edit`, `Delete`, and `New`
+
+The search field is outside `RecordList`.
+The route adapter filters records before passing them to the shared list.
+The current filter matches only the last three digits of `detail_id`, falling back to the suffix of `detail_uid` when needed.
+
+Actions:
+
+- `Edit` opens the selected detail in `/studio/catalogue-work-detail/`
+- `Delete` currently opens the selected detail editor; destructive detail deletion remains owned by the dedicated detail route
+- `New` opens the detail editor in new mode for the current work and is disabled until the parent work is published
 
 ## Styling Contract
 

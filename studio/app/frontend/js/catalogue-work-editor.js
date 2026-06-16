@@ -33,7 +33,6 @@ import {
 import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
-  updateWorkDetailSections,
   updateWorkSummary
 } from "./catalogue-work-sections.js";
 import {
@@ -548,10 +547,6 @@ function renderReadiness(state) {
   renderWorkReadiness(state, workSectionOptions(state));
 }
 
-function updateDetailSections(state) {
-  updateWorkDetailSections(state, workSectionOptions(state));
-}
-
 function updateDetailBrowser(state) {
   updateWorkDetailBrowser(state, workSectionOptions(state));
 }
@@ -564,9 +559,7 @@ function updateSummary(state) {
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
   applyWorkFormText(state, workFormOptions(state));
-  elements.detailsHeadingNode.textContent = t(state, "details_heading", "work details");
-  elements.newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
-  elements.detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
+  elements.detailBrowserSearchNode.placeholder = t(state, "detail_browser_search_placeholder", "find detail id");
   elements.openButton.textContent = t(state, "open_button", "Open");
   elements.newButton.textContent = t(state, "new_button", "New");
   elements.saveButton.textContent = t(state, "save_button", "Save");
@@ -629,7 +622,7 @@ async function init() {
     await loadInitialWorkEditorData(state);
     bindWorkEditorEvents(state, {
       bindSelectionControls: () => bindWorkSelectionControls(state, workSelectionOptions(state)),
-      updateDetailSections: () => updateDetailSections(state),
+      updateWorkDetailBrowser: () => updateDetailBrowser(state),
       openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
       clearMediaRefreshStatus: () => clearMediaRefreshStatus(state),

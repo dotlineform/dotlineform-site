@@ -1,5 +1,4 @@
 import {
-  buildStudioRouteUrl,
   getStudioText
 } from "./studio-config.js";
 import {
@@ -17,24 +16,18 @@ import {
   catalogueReadinessTone
 } from "./catalogue-editor-readiness.js";
 import {
-  displayValue
-} from "./catalogue-editor-records.js";
-import {
   getWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
 import {
   bindPreviewImages,
-  buildDetailThumbPreview,
   buildWorkPrimaryPreview
 } from "./catalogue-media-preview.js";
 import {
   dedupeSeriesIds,
   normalizeText,
-  normalizeWorkId,
   parseSeriesIds
 } from "./catalogue-work-fields.js";
 
-const DETAIL_LIST_LIMIT = 10;
 const BULK_PREVIEW_LIMIT = 12;
 
 function escapeHtml(value) {
@@ -80,31 +73,6 @@ function clearRecordListActions(state, key, rootNode) {
     delete rootNode.dataset.recordListActionsId;
   }
   state[key] = null;
-}
-
-function normalizeDetailId(value) {
-  const digits = normalizeText(value).replace(/\D/g, "");
-  if (!digits) return "";
-  return digits.padStart(3, "0");
-}
-
-function normalizeDetailUid(value, currentWorkId = "") {
-  const textValue = normalizeText(value);
-  if (!textValue) return "";
-  const match = textValue.match(/^(\d{5})-(\d{3})$/);
-  if (match) return `${match[1]}-${match[2]}`;
-  const digits = textValue.replace(/\D/g, "");
-  if (digits.length === 8) {
-    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
-  }
-  if (currentWorkId && digits && digits.length <= 3) {
-    return `${normalizeWorkId(currentWorkId)}-${digits.padStart(3, "0")}`;
-  }
-  return "";
-}
-
-function compareDetailUid(a, b) {
-  return normalizeText(a).localeCompare(normalizeText(b), undefined, { numeric: true, sensitivity: "base" });
 }
 
 function isCurrentWorkPublished(state, options) {
@@ -166,96 +134,6 @@ export function formatWorkSelectionList(ids) {
   const items = Array.isArray(ids) ? ids.slice(0, BULK_PREVIEW_LIMIT) : [];
   const suffix = Array.isArray(ids) && ids.length > items.length ? `, +${ids.length - items.length}` : "";
   return `${items.join(", ")}${suffix}`;
-}
-
-function detailSectionLabel(state, options, sectionKey) {
-  return normalizeText(sectionKey) || text(state, options, "details_section_blank", "root");
-}
-
-function getWorkDetails(state, workId) {
-  if (!state.currentLookup || state.currentWorkId !== workId) return [];
-  const sections = Array.isArray(state.currentLookup.detail_sections) ? state.currentLookup.detail_sections : [];
-  const details = [];
-  sections.forEach((section) => {
-    const items = Array.isArray(section && section.details) ? section.details : [];
-    items.forEach((item) => details.push(item));
-  });
-  return details.sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid));
-}
-
-function groupWorkDetailsBySection(details) {
-  const groups = new Map();
-  details.forEach((detail) => {
-    const sectionId = normalizeText(detail && detail.section_id) || normalizeText(detail && detail.project_subfolder);
-    const sectionTitle = normalizeText(detail && detail.section_title) || normalizeText(detail && detail.project_subfolder);
-    const rawSortOrder = normalizeText(detail && detail.sort_order);
-    const key = sectionId || sectionTitle;
-    if (!groups.has(key)) {
-      groups.set(key, {
-        sectionKey: key,
-        sectionTitle,
-        sortOrder: rawSortOrder && Number.isFinite(Number(rawSortOrder)) ? Number(rawSortOrder) : null,
-        items: []
-      });
-    }
-    groups.get(key).items.push(detail);
-  });
-  return Array.from(groups.values())
-    .map((group) => ({
-      sectionKey: group.sectionTitle || group.sectionKey,
-      sortOrder: group.sortOrder,
-      items: group.items.slice().sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid))
-    }))
-    .sort((a, b) => {
-      if (a.sortOrder !== null && b.sortOrder !== null && a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
-      if (a.sortOrder !== null && b.sortOrder === null) return -1;
-      if (a.sortOrder === null && b.sortOrder !== null) return 1;
-      return a.sectionKey.localeCompare(b.sectionKey, undefined, { sensitivity: "base" });
-    });
-}
-
-function getCurrentWorkDetailMatches(state, rawQuery) {
-  const details = getWorkDetails(state, state.currentWorkId);
-  const queryText = normalizeText(rawQuery).toLowerCase();
-  const normalizedUid = normalizeDetailUid(rawQuery, state.currentWorkId);
-  const normalizedDetailId = normalizeDetailId(rawQuery);
-  if (!queryText && !normalizedUid && !normalizedDetailId) return [];
-  return details.filter((detail) => {
-    const detailUid = normalizeText(detail && detail.detail_uid);
-    const detailId = normalizeText(detail && detail.detail_id);
-    const title = normalizeText(detail && detail.title).toLowerCase();
-    return (
-      (normalizedUid && detailUid.startsWith(normalizedUid)) ||
-      (normalizedDetailId && detailId.startsWith(normalizedDetailId)) ||
-      detailUid.toLowerCase().startsWith(queryText) ||
-      title.includes(queryText)
-    );
-  });
-}
-
-function buildDetailEditorHref(state, detailUid) {
-  return buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
-    detail: detailUid
-  });
-}
-
-function renderDetailRows(state, options, details) {
-  return details.map((detail) => {
-    const detailUid = normalizeText(detail && detail.detail_uid);
-    const title = displayValue(detail && detail.title);
-    const href = buildDetailEditorHref(state, detailUid);
-    const preview = buildDetailThumbPreview(state.mediaConfig, detailUid);
-    return `
-      <div class="catalogueWorkDetails__row catalogueWorkDetails__row--detail">
-        <a class="catalogueThumbPreview" href="${escapeHtml(href)}" data-preview-state="${preview.src ? "loading" : "missing-generated"}" data-preview-fallback="missing-generated" aria-label="${escapeHtml(title)}">
-          ${preview.src ? `<img class="catalogueThumbPreview__img" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="48px" width="${escapeHtml(String(preview.width || 48))}" height="${escapeHtml(String(preview.height || 48))}" alt="" loading="lazy" decoding="async">` : ""}
-          <span class="catalogueThumbPreview__placeholder">${escapeHtml(text(state, options, "detail_preview_missing", "No preview"))}</span>
-        </a>
-        <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(detailUid)}</a>
-        <span class="catalogueWorkDetails__title">${escapeHtml(title)}</span>
-      </div>
-    `;
-  }).join("");
 }
 
 export function renderWorkCurrentPreview(state, options = {}) {
@@ -343,74 +221,6 @@ export function renderWorkReadiness(state, options = {}) {
       </div>
     `;
   }).join("");
-}
-
-export function updateWorkDetailSections(state, options = {}) {
-  if (!state.detailsResultsNode || !state.detailsMetaNode || !state.detailSearchRowNode) return;
-  if (!state.currentWorkId) {
-    if (state.detailSearchNode) state.detailSearchNode.value = "";
-    state.detailSearchRowNode.hidden = true;
-    state.detailsMetaNode.textContent = "";
-    state.detailsResultsNode.innerHTML = "";
-    return;
-  }
-
-  const details = getWorkDetails(state, state.currentWorkId);
-  if (!details.length) {
-    if (state.detailSearchNode) state.detailSearchNode.value = "";
-    state.detailSearchRowNode.hidden = true;
-    state.detailsMetaNode.textContent = "";
-    state.detailsResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "details_empty", "No work details for this work."))}</p>`;
-    return;
-  }
-
-  const groups = groupWorkDetailsBySection(details);
-  const showDetailSearch = groups.some((group) => group.items.length > DETAIL_LIST_LIMIT);
-  if (!showDetailSearch && state.detailSearchNode) {
-    state.detailSearchNode.value = "";
-  }
-  state.detailSearchRowNode.hidden = !showDetailSearch;
-  const query = showDetailSearch ? normalizeText(state.detailSearchNode && state.detailSearchNode.value) : "";
-  const blocks = [];
-
-  if (query) {
-    const matches = getCurrentWorkDetailMatches(state, query);
-    if (matches.length) {
-      blocks.push(`
-        <section class="catalogueWorkDetails__section">
-          <div class="tagStudio__headingRow">
-            <h3 class="tagStudioForm__key">${escapeHtml(text(state, options, "details_search_results", "matching details"))}</h3>
-          </div>
-          <div class="catalogueWorkDetails__rows">${renderDetailRows(state, options, matches)}</div>
-        </section>
-      `);
-    } else {
-      blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "details_search_no_match", "No matching detail ids for this work."))}</p>`);
-    }
-  }
-
-  groups.forEach((group) => {
-    const visible = group.items.slice(0, DETAIL_LIST_LIMIT);
-    const moreText = group.items.length > DETAIL_LIST_LIMIT
-      ? text(state, options, "details_more_count", "showing {visible} of {total}", {
-        visible: String(visible.length),
-        total: String(group.items.length)
-      })
-      : "";
-    blocks.push(`
-      <section class="catalogueWorkDetails__section">
-        <div class="tagStudio__headingRow">
-          <h3 class="tagStudioForm__key">${escapeHtml(detailSectionLabel(state, options, group.sectionKey))}</h3>
-          ${moreText ? `<span class="tagStudioForm__meta">${escapeHtml(moreText)}</span>` : ""}
-        </div>
-        <div class="catalogueWorkDetails__rows">${renderDetailRows(state, options, visible)}</div>
-      </section>
-    `);
-  });
-
-  state.detailsMetaNode.textContent = `${details.length} total`;
-  state.detailsResultsNode.innerHTML = blocks.join("");
-  bindPreviewImages(state.detailsResultsNode);
 }
 
 function buildWorkDownloadHref(state, filename, options = {}) {
@@ -594,13 +404,7 @@ export function updateWorkSummary(state, options = {}) {
     `;
     state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public site update is unavailable until the draft exists");
     setTextWithState(options, state.buildImpactNode, "");
-    if (state.newDetailLinkNode) {
-      state.newDetailLinkNode.removeAttribute("href");
-      state.newDetailLinkNode.setAttribute("aria-disabled", "true");
-    }
-    if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
-    updateWorkDetailSections(state, options);
     updateWorkResourcesSection(state, options);
     renderWorkCurrentPreview(state, options);
     renderWorkReadiness(state, options);
@@ -633,11 +437,6 @@ export function updateWorkSummary(state, options = {}) {
     state.runtimeStateNode.textContent = state.rebuildPending
       ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
       : "";
-    if (state.newDetailLinkNode) {
-      state.newDetailLinkNode.removeAttribute("aria-disabled");
-      state.newDetailLinkNode.href = buildStudioRouteUrl(state.config, "catalogue_work_detail_editor");
-    }
-    if (state.detailsPanelNode) state.detailsPanelNode.hidden = true;
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;
     renderWorkCurrentPreview(state, options);
     renderWorkReadiness(state, options);
@@ -654,23 +453,7 @@ export function updateWorkSummary(state, options = {}) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
     : "";
-  if (state.newDetailLinkNode) {
-    if (record && isCurrentWorkPublished(state, options)) {
-      state.newDetailLinkNode.removeAttribute("aria-disabled");
-      state.newDetailLinkNode.removeAttribute("title");
-      state.newDetailLinkNode.href = buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
-        work: record.work_id,
-        mode: "new"
-      });
-    } else {
-      state.newDetailLinkNode.setAttribute("aria-disabled", "true");
-      state.newDetailLinkNode.title = text(state, options, "details_new_unavailable_draft", "Publish this work before adding work details.");
-      state.newDetailLinkNode.removeAttribute("href");
-    }
-  }
-  if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
   if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
-  updateWorkDetailSections(state, options);
   updateWorkResourcesSection(state, options);
   renderWorkCurrentPreview(state, options);
   renderWorkReadiness(state, options);

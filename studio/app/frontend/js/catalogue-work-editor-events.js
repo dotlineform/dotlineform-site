@@ -19,8 +19,13 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
     invoke(callbacks.clearMediaRefreshStatus);
   }, { capture: true });
 
-  state.detailSearchNode.addEventListener("input", () => {
-    invoke(callbacks.updateDetailSections);
+  state.detailBrowserSearchNode.addEventListener("input", () => {
+    invoke(callbacks.updateWorkDetailBrowser);
+  });
+  state.detailBrowserSearchClearNode.addEventListener("click", () => {
+    state.detailBrowserSearchNode.value = "";
+    state.detailBrowserSearchNode.focus();
+    invoke(callbacks.updateWorkDetailBrowser);
   });
 
   state.newButton.addEventListener("click", () => {
