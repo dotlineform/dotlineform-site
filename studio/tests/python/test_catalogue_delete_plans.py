@@ -77,7 +77,6 @@ def write_source_fixture(source_dir: Path) -> None:
                     "section_title": "Details",
                     "project_filename": "alpha-detail.jpg",
                     "title": "Alpha detail",
-                    "status": "published",
                 }
             },
         ),

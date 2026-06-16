@@ -102,7 +102,7 @@ def modal_shell_state(page) -> dict[str, object]:
     )
 
 
-def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int) -> dict[str, object]:
+def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int, *, active_role: str = "modal-primary") -> dict[str, object]:
     page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
     state = modal_shell_state(page)
     if state["role"] != "dialog" or state["modal"] != "true":
@@ -117,8 +117,8 @@ def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int) ->
         raise AssertionError(f"unexpected modal actions: {state!r}")
     if not all("tagStudio__button--defaultWidth" in value for value in state["actionClasses"]):
         raise AssertionError(f"modal actions are missing default-width buttons: {state!r}")
-    if state["activeRole"] != "modal-primary":
-        raise AssertionError(f"confirmation modal did not focus the primary action: {state!r}")
+    if state["activeRole"] != active_role:
+        raise AssertionError(f"confirmation modal did not focus the expected action: {state!r}")
     return state
 
 
@@ -170,8 +170,6 @@ def main() -> int:
         "sort_order": "1",
         "project_filename": "smoke-detail.jpg",
         "title": "Smoke detail",
-        "status": "published",
-        "published_date": "2026-05-15",
         "width_px": "1200",
         "height_px": "900",
     }
@@ -181,7 +179,6 @@ def main() -> int:
         "year_display": "2026",
         "status": "published",
     }
-    publication_apply_requests: list[dict[str, object]] = []
     delete_apply_requests: list[dict[str, object]] = []
 
     def fulfil_json(route: Route, payload: dict[str, object]) -> None:
@@ -221,27 +218,6 @@ def main() -> int:
                 },
             })
             return
-        if request.method == "POST" and path == "/catalogue/publication-preview":
-            fulfil_json(route, {
-                "ok": True,
-                "preview": {
-                    "blocked": False,
-                    "blockers": [],
-                    "summary": f"Unpublish detail {DETAIL_UID} and clean public output.",
-                },
-            })
-            return
-        if request.method == "POST" and path == "/catalogue/publication-apply":
-            body = request_json(route)
-            publication_apply_requests.append(body)
-            detail_record = {**detail_record, "status": "draft"}
-            fulfil_json(route, {
-                "ok": True,
-                "status": "ok",
-                "record": detail_record,
-                "record_hash": "hash-detail-draft",
-            })
-            return
         if request.method == "POST" and path == "/catalogue/delete-preview":
             fulfil_json(route, {
                 "ok": True,
@@ -272,32 +248,10 @@ def main() -> int:
             attrs = wait_for_studio_route_ready(page, args.timeout_ms)
             assert_ready_contract(attrs)
 
-            publication_button = "#catalogueWorkDetailPublication"
             delete_button = "#catalogueWorkDetailDelete"
 
-            page.locator(publication_button).click()
-            unpublish_modal = assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms)
-            if f"Unpublish detail {DETAIL_UID}" not in unpublish_modal["bodyText"]:
-                raise AssertionError(f"unpublish preview text missing from modal: {unpublish_modal!r}")
-            close_with_escape(page, publication_button, args.timeout_ms)
-            if publication_apply_requests:
-                raise AssertionError(f"publication apply ran after Escape close: {publication_apply_requests!r}")
-
-            page.locator(publication_button).click()
-            assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms)
-            page.locator('[data-role="modal-primary"]').click()
-            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
-            page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
-            if len(publication_apply_requests) != 1:
-                raise AssertionError(f"publication apply should be route-owned and confirmed once: {publication_apply_requests!r}")
-            publication_request = publication_apply_requests[0]
-            if publication_request.get("kind") != "work_detail" or publication_request.get("action") != "unpublish":
-                raise AssertionError(f"unexpected publication apply request: {publication_request!r}")
-            if publication_request.get("detail_uid") != DETAIL_UID:
-                raise AssertionError(f"publication apply lost detail ownership: {publication_request!r}")
-
             page.locator(delete_button).click()
-            delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
+            delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, active_role="modal-cancel")
             if f"Delete source record {DETAIL_UID}" not in delete_modal["bodyText"]:
                 raise AssertionError(f"delete preview text missing from modal: {delete_modal!r}")
             close_with_backdrop(page, delete_button, args.timeout_ms)
@@ -305,13 +259,13 @@ def main() -> int:
                 raise AssertionError(f"delete apply ran after backdrop close: {delete_apply_requests!r}")
 
             page.locator(delete_button).click()
-            assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
+            assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, active_role="modal-cancel")
             close_with_cancel(page, delete_button, args.timeout_ms)
             if delete_apply_requests:
                 raise AssertionError(f"delete apply ran after cancel action: {delete_apply_requests!r}")
 
             page.locator(delete_button).click()
-            assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
+            assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, active_role="modal-cancel")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_function(
                 "() => window.location.pathname === '/studio/catalogue-work/'",
@@ -325,9 +279,7 @@ def main() -> int:
 
             print(json.dumps({
                 "route": attrs,
-                "publication_apply_requests": len(publication_apply_requests),
                 "delete_apply_requests": len(delete_apply_requests),
-                "unpublish_modal": unpublish_modal,
                 "delete_modal": delete_modal,
             }, sort_keys=True))
         finally:

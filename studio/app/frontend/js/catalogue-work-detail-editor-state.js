@@ -5,9 +5,6 @@ import {
 import {
   createCatalogueEditorMessageRoleNode
 } from "./catalogue-editor-message-controller.js";
-import {
-  loadCatalogueMediaConfig
-} from "./catalogue-media-preview.js";
 
 export const WORK_DETAIL_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
   route: "catalogue-work-detail",
@@ -21,9 +18,7 @@ export function collectWorkDetailEditorElements() {
     emptyNode: "catalogueWorkDetailEmpty",
     fieldsNode: "catalogueWorkDetailFields",
     readonlyNode: "catalogueWorkDetailReadonly",
-    previewNode: "catalogueWorkDetailPreview",
     summaryNode: "catalogueWorkDetailSummary",
-    readinessNode: "catalogueWorkDetailReadiness",
     runtimeStateNode: "catalogueWorkDetailRuntimeState",
     buildImpactNode: "catalogueWorkDetailBuildImpact",
     searchNode: "catalogueWorkDetailSearchGlobal",
@@ -31,14 +26,12 @@ export function collectWorkDetailEditorElements() {
     popupListNode: "catalogueWorkDetailPopupList",
     openButton: "catalogueWorkDetailOpen",
     saveButton: "catalogueWorkDetailSave",
-    publicationButton: "catalogueWorkDetailPublication",
     deleteButton: "catalogueWorkDetailDelete",
     statusNode: "catalogueWorkDetailStatus",
   });
 }
 
 export function createWorkDetailEditorState(elements, options = {}) {
-  const mediaConfigLoader = options.mediaConfigLoader || loadCatalogueMediaConfig;
   return {
     config: null,
     mode: "single",
@@ -58,7 +51,6 @@ export function createWorkDetailEditorState(elements, options = {}) {
     baselineDraft: null,
     draft: {},
     validationErrors: new Map(),
-    mediaConfig: mediaConfigLoader(elements.root),
     rebuildPending: false,
     buildPreview: null,
     isSaving: false,
@@ -76,15 +68,12 @@ export function createWorkDetailEditorState(elements, options = {}) {
     popupListNode: elements.popupListNode,
     openButton: elements.openButton,
     saveButton: elements.saveButton,
-    publicationButton: elements.publicationButton,
     deleteButton: elements.deleteButton,
     contextNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailContext", "context"),
     statusNode: elements.statusNode,
     warningNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailWarning", "warning"),
     resultNode: createCatalogueEditorMessageRoleNode("catalogueWorkDetailResult", "result"),
-    previewNode: elements.previewNode,
     summaryNode: elements.summaryNode,
-    readinessNode: elements.readinessNode,
     runtimeStateNode: elements.runtimeStateNode,
     buildImpactNode: elements.buildImpactNode
   };

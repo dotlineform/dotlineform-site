@@ -11,8 +11,7 @@ from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_service import run_build_operation, run_catalogue_search_rebuild
 from catalogue.catalogue_moment_service import extract_moment_update
 from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, refresh_lookup_payloads
-from catalogue.catalogue_source import normalize_detail_uid_value, normalize_series_ids_value, slug_id
-from catalogue.catalogue_work_detail_service import extract_work_detail_update
+from catalogue.catalogue_source import normalize_series_ids_value, slug_id
 from catalogue.catalogue_work_service import extract_work_update
 from catalogue.catalogue_series_service import extract_series_update
 from catalogue.series_ids import normalize_series_id
@@ -171,8 +170,8 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
 
 def extract_publication_request(body: Mapping[str, Any]) -> dict[str, Any]:
     kind = str(body.get("kind") or "").strip().lower()
-    if kind not in {"work", "work_detail", "series", "moment"}:
-        raise ValueError("publication kind must be work, work_detail, series, or moment")
+    if kind not in {"work", "series", "moment"}:
+        raise ValueError("publication kind must be work, series, or moment")
 
     action = str(body.get("action") or "").strip().lower().replace("-", "_")
     if action not in {"publish", "unpublish", "save_published"}:
@@ -180,8 +179,6 @@ def extract_publication_request(body: Mapping[str, Any]) -> dict[str, Any]:
 
     if kind == "work":
         record_id = slug_id(body.get("work_id") or body.get("id"))
-    elif kind == "work_detail":
-        record_id = normalize_detail_uid_value(body.get("detail_uid") or body.get("id"))
     elif kind == "series":
         record_id = normalize_series_id(body.get("series_id") or body.get("id"))
     else:
@@ -193,8 +190,6 @@ def extract_publication_request(body: Mapping[str, Any]) -> dict[str, Any]:
     if action == "save_published":
         if kind == "work":
             record_update = extract_work_update(body)
-        elif kind == "work_detail":
-            record_update = extract_work_detail_update(body)
         elif kind == "series":
             record_update = extract_series_update(body)
         else:

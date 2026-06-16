@@ -26,8 +26,6 @@ from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metad
 def publication_source_path_key(kind: str) -> str:
     if kind == "work":
         return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["works"])
-    if kind == "work_detail":
-        return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["work_details"])
     if kind == "series":
         return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["series"])
     return str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME)
@@ -60,13 +58,6 @@ def publication_affected_for_record(source_dir: Path, kind: str, record_id: str)
             for detail_uid, detail_record in source_records.work_details.items()
             if str(detail_record.get("work_id") or "") == record_id
         )
-    elif kind == "work_detail":
-        detail_record = source_records.work_details.get(record_id)
-        if not isinstance(detail_record, dict):
-            raise ValueError(f"detail_uid not found: {record_id}")
-        work_id = str(detail_record.get("work_id") or "")
-        affected["works"] = [work_id] if work_id else []
-        affected["work_details"] = [record_id]
     elif kind == "series":
         series_record = source_records.series.get(record_id)
         if not isinstance(series_record, dict):
@@ -117,11 +108,6 @@ def publication_source_payload(source_dir: Path, kind: str, record_id: str, targ
         records = dict(payload["works"])
         records[record_id] = dict(target_record)
         return (source_dir / SOURCE_FILES["works"]).resolve(), payload_for_map("works", records)
-    if kind == "work_detail":
-        payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
-        records = dict(payload["work_details"])
-        records[record_id] = dict(target_record)
-        return (source_dir / SOURCE_FILES["work_details"]).resolve(), payload_for_map("work_details", records)
     if kind == "series":
         payload = _source_payload(source_dir, SOURCE_FILES["series"], "series")
         records = dict(payload["series"])
@@ -161,11 +147,6 @@ def current_publication_record(source_dir: Path, kind: str, record_id: str) -> D
         if not isinstance(record, dict):
             raise ValueError(f"work_id not found: {record_id}")
         return dict(record)
-    if kind == "work_detail":
-        record = records_from_json_source(source_dir).work_details.get(record_id)
-        if not isinstance(record, dict):
-            raise ValueError(f"detail_uid not found: {record_id}")
-        return dict(record)
     if kind == "series":
         record = records_from_json_source(source_dir).series.get(record_id)
         if not isinstance(record, dict):
@@ -197,8 +178,6 @@ def normalize_publication_record(
 
     if kind == "work":
         return source_mutation.normalize_work_update(record_id, current_record, update)
-    if kind == "work_detail":
-        return source_mutation.normalize_work_detail_update(record_id, current_record, update)
     if kind == "series":
         return source_mutation.normalize_series_update(record_id, current_record, update)
     return source_mutation.normalize_moment_update(record_id, current_record, update)
@@ -215,8 +194,6 @@ def validate_publication_target(
     source_records = records_from_json_source(source_dir)
     if kind == "work":
         return source_mutation.validate_work_records(source_records, record_id, target_record)
-    if kind == "work_detail":
-        return source_mutation.validate_detail_records(source_records, record_id, target_record)
     if kind == "series":
         errors = source_mutation.validate_series_save_record(target_record)
         errors.extend(source_mutation.validate_series_records(source_records, record_id, target_record, work_updates or {}))
@@ -249,15 +226,6 @@ def publication_specific_blockers(
         ]
         if not published_series_ids:
             return [f"work {record_id} must belong to a published series before publishing"]
-        return []
-
-    if kind == "work_detail":
-        work_id = slug_id(target_record.get("work_id"))
-        parent = effective_works.get(work_id)
-        if not isinstance(parent, dict):
-            return [f"parent work_id not found: {work_id}"]
-        if normalize_status(parent.get("status")) != "published":
-            return [f"parent work {work_id} must be published before publishing detail {record_id}"]
         return []
 
     if kind == "series":
@@ -306,10 +274,6 @@ def build_publication_build_impact(
         if kind == "work":
             build = build_scope_for_work(source_dir, record_id, extra_series_ids=extra_series_ids)
             build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
-        elif kind == "work_detail":
-            work_id = slug_id(target_record.get("work_id"))
-            build = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids, detail_uid=record_id)
-            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
         elif kind == "series":
             build = build_scope_for_series(source_dir, record_id, extra_work_ids=extra_work_ids)
             build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
@@ -326,7 +290,7 @@ def build_publication_build_impact(
             "type": "scoped_public_update",
             "available": action == "publish",
             "build": {
-                "work_ids": [record_id] if kind == "work" else [slug_id(target_record.get("work_id"))] if kind == "work_detail" else [],
+                "work_ids": [record_id] if kind == "work" else [],
                 "series_ids": [record_id] if kind == "series" else [],
                 "moment_ids": [record_id] if kind == "moment" else [],
                 "rebuild_search": True,
@@ -408,8 +372,6 @@ def run_publication_build_transaction(
 
     if kind == "work":
         success, payload = run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
-    elif kind == "work_detail":
-        success, payload = run_build_operation(work_id=slug_id(target_record.get("work_id")), series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid=record_id, force=force)
     elif kind == "series":
         success, payload = run_build_operation(work_id="", series_id=record_id, moment_id="", extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
     else:

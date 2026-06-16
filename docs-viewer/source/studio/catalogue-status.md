@@ -2,7 +2,7 @@
 doc_id: catalogue-status
 title: Catalogue Drafts
 added_date: 2026-04-18
-last_updated: "2026-06-02"
+last_updated: "2026-06-16"
 parent_id: studio
 viewable: true
 ---
@@ -15,7 +15,6 @@ Family views:
 
 - `/studio/catalogue-status/`
 - `/studio/catalogue-status/?family=works`
-- `/studio/catalogue-status/?family=work_details`
 - `/studio/catalogue-status/?family=moments`
 
 ## Purpose
@@ -40,7 +39,6 @@ The page root `#catalogueStatusRoot` implements the shared Studio ready-state co
 The page reads canonical source JSON through the local Studio app catalogue API:
 
 - `GET /studio/api/catalogue/read?key=catalogue_works`
-- `GET /studio/api/catalogue/read?key=catalogue_work_details`
 - `GET /studio/api/catalogue/read?key=catalogue_series`
 - `GET /studio/api/catalogue/read?key=catalogue_moments`
 
@@ -53,7 +51,7 @@ The page:
 
 - loads the source record families that still own publication status
 - filters to rows where normalized status is `draft`
-- offers four draft-family pills in this order: `series`, `works`, `work details`, `moments`
+- offers three draft-family pills in this order: `series`, `works`, `moments`
 - shows draft counts by record family
 - supports a simple search across id, status, title, and parent/reference fields
 - shows id, type, status, title, and reference columns
@@ -62,7 +60,7 @@ The page:
 
 It remains a review surface rather than an editor. Editing still happens on the focused record pages.
 
-Work-owned `downloads` and `links` are not listed here because they no longer have independent `status` or `published_date` fields.
+Work-owned `downloads`, `links`, and work detail records are not listed here because they do not have independent `status` or `published_date` fields.
 
 ## Family Views
 
@@ -72,7 +70,6 @@ Supported family keys:
 
 - `series`
 - `works`
-- `work_details`
 - `moments`
 
 Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.

@@ -103,8 +103,6 @@ def normalize_work_detail_update(
     if normalized_uid != detail_uid:
         raise ValueError("record.work_id/detail_id do not match detail_uid")
 
-    if "status" in update:
-        merged["status"] = normalize_status(update.get("status")) or None
     merged["work_id"] = work_id
     merged["detail_id"] = detail_id
     merged["detail_uid"] = normalized_uid
@@ -325,8 +323,6 @@ def plan_work_detail_create(
     if not normalize_text(normalized_update.get("section_title")):
         raise ValueError("work detail section_title is required")
     normalized_update["section_id"] = next_detail_section_id(work_id, work_details.values())
-    if not normalize_status(normalized_update.get("status")):
-        normalized_update["status"] = "draft"
 
     created_record = normalize_work_detail_update(detail_uid, blank_record, normalized_update)
     if not str(created_record.get("title") or "").strip():

@@ -8,8 +8,6 @@ const WORK_DETAIL_FIELD_DEFINITIONS = Object.freeze({
   sort_order: Object.freeze({ key: "sort_order", label: "section sort order", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
   title: Object.freeze({ key: "title", label: "title", type: "text" }),
-  status: Object.freeze({ key: "status", label: "status", type: "text", readonly: true }),
-  published_date: Object.freeze({ key: "published_date", label: "published date" }),
   width_px: Object.freeze({ key: "width_px", label: "width px" }),
   height_px: Object.freeze({ key: "height_px", label: "height px" })
 });
@@ -19,8 +17,7 @@ const WORK_DETAIL_EDITABLE_FIELDS = Object.freeze([
   WORK_DETAIL_FIELD_DEFINITIONS.section_title,
   WORK_DETAIL_FIELD_DEFINITIONS.sort_order,
   WORK_DETAIL_FIELD_DEFINITIONS.project_filename,
-  WORK_DETAIL_FIELD_DEFINITIONS.title,
-  WORK_DETAIL_FIELD_DEFINITIONS.status
+  WORK_DETAIL_FIELD_DEFINITIONS.title
 ]);
 
 const NEW_WORK_DETAIL_EDITABLE_FIELDS = Object.freeze([
@@ -38,12 +35,9 @@ const WORK_DETAIL_READONLY_FIELDS = Object.freeze([
   Object.freeze({ key: "work_id", label: "work id" }),
   Object.freeze({ key: "detail_id", label: "detail row id" }),
   WORK_DETAIL_FIELD_DEFINITIONS.section_id,
-  WORK_DETAIL_FIELD_DEFINITIONS.published_date,
   WORK_DETAIL_FIELD_DEFINITIONS.width_px,
   WORK_DETAIL_FIELD_DEFINITIONS.height_px
 ]);
-
-const WORK_DETAIL_STATUS_OPTIONS = new Set(["", "draft", "published"]);
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -124,10 +118,7 @@ function buildWorkDetailRecordFromDraft(draft, options = {}) {
     section_title: normalizeText(source.section_title) || null,
     sort_order: normalizeSortOrder(source.sort_order) || null,
     project_filename: normalizeText(source.project_filename) || null,
-    title: normalizeText(source.title) || null,
-    status: Object.prototype.hasOwnProperty.call(options, "status")
-      ? options.status
-      : normalizeText(source.status).toLowerCase() || null
+    title: normalizeText(source.title) || null
   };
   const sectionId = normalizeText(options.sectionId == null ? source.section_id : options.sectionId);
   if (sectionId) record.section_id = sectionId;
@@ -165,8 +156,7 @@ function buildCreateWorkDetailPayload(draft) {
       section_title: normalizeText(draft && draft.section_title) || null,
       details_subfolder: normalizeText(draft && draft.details_subfolder) || null,
       sort_order: normalizeSortOrder(draft && draft.sort_order) || null,
-      project_filename: normalizeText(draft && draft.project_filename) || null,
-      status: "draft"
+      project_filename: normalizeText(draft && draft.project_filename) || null
     }
   };
 }
@@ -223,7 +213,6 @@ export {
   WORK_DETAIL_EDITABLE_FIELDS,
   WORK_DETAIL_FIELD_DEFINITIONS,
   WORK_DETAIL_READONLY_FIELDS,
-  WORK_DETAIL_STATUS_OPTIONS,
   buildCreateWorkDetailPayload,
   buildSaveWorkDetailPayload,
   buildWorkDetailDraftFromRecord,

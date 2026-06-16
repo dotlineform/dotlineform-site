@@ -105,6 +105,7 @@ Work-detail records in `site/assets/studio/data/catalogue/work_details.json` use
 - `project_filename`: detail source-image filename
 
 Detail records no longer use legacy `project_subfolder`. Empty `details_subfolder` values are omitted from source JSON; when absent, the detail source image resolves directly under the parent work's `project_folder`.
+Detail records do not own `status` or `published_date`; parent work publication controls whether detail records appear in public output.
 
 ### Series Source Records
 

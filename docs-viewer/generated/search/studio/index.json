@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-30c194ecc38f712750d1594920006fdc",
-    "generated_at_utc": "2026-06-16T12:54:08Z",
+    "version": "blake2b-11a6ee982f1801dcbfb9735cd1278851",
+    "generated_at_utc": "2026-06-16T14:59:46Z",
     "count": 237
   },
   "entries": [
@@ -4678,10 +4678,10 @@
       "kind": "doc",
       "title": "Catalogue Drafts",
       "href": "/docs/?scope=studio&doc=catalogue-status",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-16",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-16 • Studio",
       "search_terms": [
         "catalogue-status",
         "catalogue",
@@ -4689,12 +4689,12 @@
         "catalogue drafts",
         "drafts",
         "studio",
-        "2026-06-02",
+        "2026-06-16",
         "2026",
         "06",
-        "02"
+        "16"
       ],
-      "search_text": "catalogue-status catalogue status catalogue drafts drafts studio 2026-06-02 2026 06 02"
+      "search_text": "catalogue-status catalogue status catalogue drafts drafts studio 2026-06-16 2026 06 16"
     },
     {
       "id": "catalogue-field-registry-review",
@@ -4947,10 +4947,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-06-16",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "display_meta": "2026-06-16 • Studio",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -4959,12 +4959,12 @@
         "editor",
         "catalogue work detail editor",
         "studio",
-        "2026-05-22",
+        "2026-06-16",
         "2026",
-        "05",
-        "22"
+        "06",
+        "16"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-05-22 2026 05 22"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-06-16 2026 06 16"
     },
     {
       "id": "catalogue-work-editor",

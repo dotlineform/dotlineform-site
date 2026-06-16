@@ -41,8 +41,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "heaven and earth (blue).jpg",
-          "status": "published"
+          "project_filename": "heaven and earth (blue).jpg"
         },
         {
           "detail_uid": "01366-002",
@@ -52,8 +51,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "heaven and earth (cyan).jpg",
-          "status": "published"
+          "project_filename": "heaven and earth (cyan).jpg"
         },
         {
           "detail_uid": "01366-003",
@@ -63,8 +61,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "heaven and earth (green).jpg",
-          "status": "published"
+          "project_filename": "heaven and earth (green).jpg"
         }
       ]
     }

@@ -457,7 +457,7 @@ def main() -> None:
         ),
         (
             "work-detail public metadata",
-            plan_for(registry, record_family="work_detail", fields=["status"]),
+            plan_for(registry, record_family="work_detail", fields=["title"]),
             {
                 "rule_id": "work_detail_public_metadata",
                 "artifacts": ["source-json", "studio-lookup", "work-json"],

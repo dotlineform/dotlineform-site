@@ -1,20 +1,8 @@
-import {
-  readCatalogueEditorMediaAttrs,
-  renderMediaAttrs
-} from "./catalogue-editor-shell-media.js";
-
 export function renderCatalogueWorkDetailShell(config) {
-  const mediaAttrs = renderMediaAttrs(readCatalogueEditorMediaAttrs(config), [
-    "thumbWorkDetailsBase",
-    "thumbSizes",
-    "thumbSuffix",
-    "assetFormat"
-  ]);
   return `<div
           class="tagStudioPage catalogueWorkPage"
           id="catalogueWorkDetailRoot"
           hidden
-          ${mediaAttrs}
           data-studio-ready="false"
           data-studio-busy="false"
         >
@@ -38,7 +26,6 @@ export function renderCatalogueWorkDetailShell(config) {
                 <h2 class="tagStudio__heading">work detail metadata</h2>
                 <div class="catalogueWorkPage__actions">
                   <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailSave">Save</button>
-                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailPublication">Publish</button>
                   <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailDelete">Delete</button>
                 </div>
               </div>
@@ -46,12 +33,10 @@ export function renderCatalogueWorkDetailShell(config) {
             </section>
             <aside class="tagStudio__panel catalogueWorkSummary">
               <h2 class="tagStudio__heading">current record</h2>
-              <div id="catalogueWorkDetailPreview"></div>
               <div class="tagStudioForm__fields" id="catalogueWorkDetailReadonly"></div>
               <p class="tagStudioForm__impact" id="catalogueWorkDetailRuntimeState"></p>
               <p class="tagStudioForm__impact" id="catalogueWorkDetailBuildImpact"></p>
               <div class="tagStudioForm__fields" id="catalogueWorkDetailSummary"></div>
-              <div class="tagStudioForm__fields" id="catalogueWorkDetailReadiness"></div>
             </aside>
           </div>
         </div>

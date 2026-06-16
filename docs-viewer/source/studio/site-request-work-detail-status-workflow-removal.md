@@ -3,12 +3,12 @@ doc_id: site-request-work-detail-status-workflow-removal
 title: Work Detail Status Workflow Removal
 added_date: 2026-06-16
 last_updated: 2026-06-16
-ui_status: planned
+ui_status: completed
 parent_id: change-requests
 ---
 # Work Detail Status Workflow Removal
 
-Status: `planned`
+Status: `completed`
 
 ## Scope
 
@@ -58,3 +58,10 @@ Remove the independent publish/draft workflow from work detail records, and remo
 - Manually check `/studio/catalogue-work/` for a work with details:
   - detail links still open existing detail records
   - work publish/draft behavior remains work-scoped
+
+## Implementation Notes
+
+- Removed detail `status` and `published_date` from canonical work detail source records and regenerated catalogue lookup payloads.
+- Detail editor save/build decisions now use parent work status.
+- Removed detail publish/unpublish controls, publication API calls, current-record image preview, media readiness, and detail refresh-media UI.
+- Catalogue drafts/status no longer lists work details as independently draft/publishable records.

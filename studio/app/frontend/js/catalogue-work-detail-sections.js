@@ -2,21 +2,8 @@ import {
   buildStudioRouteUrl,
   getStudioText
 } from "./studio-config.js";
-import {
-  buildPublicWorkDetailUrl
-} from "./catalogue-public-links.js";
-import {
-  cataloguePreviewFallback,
-  catalogueReadinessItem,
-  catalogueReadinessItems,
-  catalogueReadinessItemSummary,
-  catalogueReadinessTone
-} from "./catalogue-editor-readiness.js";
 import { displayValue } from "./catalogue-editor-records.js";
-import {
-  bindPreviewImages,
-  buildDetailThumbPreview
-} from "./catalogue-media-preview.js";
+import { buildPublicWorkDetailUrl } from "./catalogue-public-links.js";
 import {
   normalizeText,
   normalizeWorkId
@@ -51,13 +38,6 @@ function setTextWithState(options, node, value, state = "") {
   else delete node.dataset.state;
 }
 
-function draftHasChanges(state, options) {
-  if (options && typeof options.draftHasChanges === "function") {
-    return Boolean(options.draftHasChanges(state));
-  }
-  return false;
-}
-
 export function buildWorkDetailRecordSummary(record) {
   const title = normalizeText(record && record.title);
   const section = normalizeText(record && record.section_title);
@@ -80,74 +60,6 @@ export function formatWorkDetailSelectionList(items) {
   return more > 0 ? `${list.join(", ")} +${more} more` : list.join(", ");
 }
 
-export function renderWorkDetailCurrentPreview(state, options = {}) {
-  if (!state.previewNode) return;
-  if (state.mode === "bulk" || !state.currentRecord) {
-    state.previewNode.innerHTML = "";
-    return;
-  }
-  const record = state.currentRecord;
-  const mediaItem = catalogueReadinessItem(state.buildPreview, "detail_media", { keys: ["detail_media"] });
-  const preview = buildDetailThumbPreview(state.mediaConfig, record.detail_uid);
-  const fallback = cataloguePreviewFallback(mediaItem, {
-    missingGeneratedText: text(state, options, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
-    missingSourceText: text(state, options, "preview_source_missing", "Source media missing."),
-    unavailableText: text(state, options, "preview_unavailable", "Preview unavailable."),
-    notConfiguredText: text(state, options, "preview_not_configured", "Preview not configured.")
-  });
-  const caption = buildWorkDetailRecordSummary(record);
-  const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
-  const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
-  state.previewNode.innerHTML = `
-    <figure class="catalogueRecordPreview">
-      <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
-        ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="180px" width="${escapeHtml(String(preview.width || 96))}" height="${escapeHtml(String(preview.height || 96))}" alt="${escapeHtml(caption)}">` : ""}
-        <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallback.fallbackText)}</div>
-      </div>
-      <figcaption class="catalogueRecordPreview__caption">${escapeHtml(caption)}</figcaption>
-    </figure>
-  `;
-  bindPreviewImages(state.previewNode);
-}
-
-export function renderWorkDetailReadiness(state, options = {}) {
-  if (!state.readinessNode) return;
-  if (state.mode === "bulk" || !state.currentRecord) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
-  const items = catalogueReadinessItems(state.buildPreview, { keys: ["detail_media"] });
-  if (!items.length) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
-  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state, options);
-  state.readinessNode.innerHTML = items.map((item) => {
-    const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
-    const tone = catalogueReadinessTone(summaryItem.status);
-    const mediaAction = summaryItem.key === "detail_media";
-    const mediaActionDisabled = actionDisabled || !summaryItem.exists;
-    const disabledNote = mediaAction && actionDisabled
-      ? (draftHasChanges(state, options)
-        ? text(state, options, "media_refresh_save_first", "Save source changes before refreshing media.")
-        : text(state, options, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
-      : "";
-    const mediaActionLabel = text(state, options, "media_refresh_button", "Refresh media");
-    return `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
-          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
-          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
-          ${mediaAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-media-refresh="detail" ${mediaActionDisabled ? "disabled" : ""}>${escapeHtml(mediaActionLabel)}</button></div>` : ""}
-          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
 export function updateWorkDetailSummary(state, options = {}) {
   if (state.mode === "new") {
     const workId = normalizeWorkId(state.draft.work_id);
@@ -165,18 +77,12 @@ export function updateWorkDetailSummary(state, options = {}) {
         <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(state.draft.detail_id))}</div>
       </div>
       <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_status_label", "status"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_status", "draft source record; not published"))}</div>
-      </div>
-      <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_next_label", "next step"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Create the draft, then continue editing and update the parent work when ready."))}</div>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Create the detail, then continue editing."))}</div>
       </div>
     `;
     state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public site update is unavailable until the draft detail exists");
     setTextWithState(options, state.buildImpactNode, "");
-    renderWorkDetailCurrentPreview(state, options);
-    renderWorkDetailReadiness(state, options);
     return;
   }
 
@@ -203,8 +109,6 @@ export function updateWorkDetailSummary(state, options = {}) {
     state.runtimeStateNode.textContent = state.rebuildPending
       ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
       : text(state, options, "summary_rebuild_current", "source and parent work output are aligned in this session");
-    renderWorkDetailCurrentPreview(state, options);
-    renderWorkDetailReadiness(state, options);
     return;
   }
 
@@ -233,6 +137,4 @@ export function updateWorkDetailSummary(state, options = {}) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
     : text(state, options, "summary_rebuild_current", "source and parent work output are aligned in this session");
-  renderWorkDetailCurrentPreview(state, options);
-  renderWorkDetailReadiness(state, options);
 }

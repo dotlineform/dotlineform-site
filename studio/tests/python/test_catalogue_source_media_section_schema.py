@@ -47,7 +47,6 @@ def assert_target_detail_schema_accepts_new_fields() -> None:
         "sort_order": 2,
         "project_filename": "detail.jpg",
         "title": "Detail",
-        "status": "draft",
     }
     errors = validate_source_records(
         source_records_with_detail(detail),
@@ -65,7 +64,6 @@ def assert_default_validation_accepts_compat_subfolder_field() -> None:
         "project_subfolder": "details",
         "project_filename": "detail.jpg",
         "title": "Detail",
-        "status": "draft",
     }
     errors = validate_source_records(source_records_with_detail(detail))
     assert not errors, errors
@@ -79,7 +77,6 @@ def assert_target_detail_schema_rejects_compat_subfolder_field() -> None:
         "project_subfolder": "details",
         "project_filename": "detail.jpg",
         "title": "Detail",
-        "status": "draft",
     }
     errors = validate_work_detail_media_section_record("00001-001", detail)
     assert any("project_subfolder is not supported" in error for error in errors), errors
@@ -97,7 +94,6 @@ def assert_target_detail_schema_rejects_bad_sort_order() -> None:
         "sort_order": "first",
         "project_filename": "detail.jpg",
         "title": "Detail",
-        "status": "draft",
     }
     errors = validate_work_detail_media_section_record("00001-001", detail)
     assert any("sort_order must be a whole number" in error for error in errors), errors

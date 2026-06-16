@@ -157,7 +157,7 @@ export function setWorkDetailModeFieldAvailability(state) {
     if (wrapper) wrapper.hidden = newModeOnly && state.mode !== "new";
     if (!node) return;
     if ("disabled" in node) node.disabled = state.isSaving || state.isBuilding || state.isDeleting;
-    if (state.mode === "new" && (field.key === "work_id" || field.key === "status")) {
+    if (state.mode === "new" && field.key === "work_id") {
       if ("disabled" in node) node.disabled = true;
     }
   });

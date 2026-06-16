@@ -50,16 +50,6 @@ def test_published_refresh_and_force_are_actionable_without_mutation_plan() -> N
     assert plan.transition is None
 
 
-def test_detail_publication_update_sets_status_and_date() -> None:
-    plan = updates.plan_detail_publication_update(
-        detail_uid="00042-001",
-        status="draft",
-        today=dt.date(2026, 5, 9),
-    )
-
-    assert plan.updates == {"status": "published", "published_date": "2026-05-09"}
-
-
 def test_dimension_update_suppresses_unchanged_values() -> None:
     plan = updates.plan_dimension_update(
         record_kind=updates.WORK_RECORD,
@@ -126,7 +116,6 @@ def test_detail_source_path_resolution_uses_parent_work_folder() -> None:
 def main() -> None:
     test_draft_work_publication_update_includes_recent_transition()
     test_published_refresh_and_force_are_actionable_without_mutation_plan()
-    test_detail_publication_update_sets_status_and_date()
     test_dimension_update_suppresses_unchanged_values()
     test_dimension_update_reports_changed_values_without_mutating_source_record()
     test_work_source_path_warning_is_structured_when_project_folder_is_missing()

@@ -230,7 +230,7 @@
       "id": "work_detail_public_metadata",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["title", "status", "published_date"],
+      "fields": ["title"],
       "current": {
         "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
         "fallback": true

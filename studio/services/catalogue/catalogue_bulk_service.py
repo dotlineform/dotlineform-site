@@ -58,7 +58,6 @@ BULK_DETAIL_EDITABLE_FIELDS = {
     "sort_order",
     "project_filename",
     "title",
-    "status",
 }
 
 
@@ -186,7 +185,9 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         changed_record_payloads.append({"detail_uid": detail_uid, "record": updated_record})
         work_id = str(updated_record.get("work_id") or "")
         affected_work_ids.append(work_id)
-        build_targets.append({"work_id": work_id, "extra_series_ids": []})
+        parent_work = source_records.works.get(work_id)
+        if normalize_status(parent_work.get("status") if isinstance(parent_work, Mapping) else None) == "published":
+            build_targets.append({"work_id": work_id, "extra_series_ids": []})
         updated_details[detail_uid] = updated_record
 
     changed = bool(changed_ids)
@@ -210,7 +211,11 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "changed_count": len(changed_ids),
         "changed_fields": sorted(changed_field_names),
         "records": changed_record_payloads,
-        "build_targets": [{"work_id": work_id, "extra_series_ids": []} for work_id in sorted(set(affected_work_ids))],
+        "build_targets": [{"work_id": work_id, "extra_series_ids": []} for work_id in sorted({
+            str(target.get("work_id") or "")
+            for target in build_targets
+            if str(target.get("work_id") or "")
+        })],
         "affected_work_ids": sorted(set(affected_work_ids)),
         "affected_series_ids": [],
     }
@@ -223,8 +228,8 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         changed_ids=changed_ids,
         changed_field_names=changed_field_names,
     )
-    payload["build_requested"] = bool(apply_build and changed)
-    if apply_build and changed:
+    payload["build_requested"] = bool(apply_build and changed and payload["build_targets"])
+    if apply_build and changed and payload["build_targets"]:
         payload["build"] = run_build_targets(context, payload["build_targets"])
     return payload
 

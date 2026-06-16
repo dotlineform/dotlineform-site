@@ -22,7 +22,7 @@ from catalogue.catalogue_service_context import (
     refresh_lookup_payloads,
     refresh_lookup_payloads_for_detail_change,
 )
-from catalogue.catalogue_source import DETAIL_FIELDS, normalize_detail_uid_value, records_from_json_source, slug_id
+from catalogue.catalogue_source import DETAIL_FIELDS, normalize_detail_uid_value, normalize_status, records_from_json_source, slug_id
 
 
 def work_detail_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -109,7 +109,7 @@ def work_detail_create_payload(context: CatalogueWriteContext, body: Mapping[str
                         script_purpose_id="save-canonical-data",
                         record_groups=record_groups,
                         detail_items=[
-                            f"Created canonical draft work detail record {detail_uid}",
+                            f"Created canonical work detail record {detail_uid}",
                             f"Changed fields: {', '.join(payload['changed_fields'])}",
                         ],
                     ),
@@ -156,6 +156,8 @@ def work_detail_save_payload(context: CatalogueWriteContext, body: Mapping[str, 
     )
     updated_record = mutation_plan.updated_record
     work_id = mutation_plan.work_id
+    parent_work = source_records.works.get(work_id)
+    parent_work_published = normalize_status(parent_work.get("status") if isinstance(parent_work, Mapping) else None) == "published"
     fields_changed = mutation_plan.changed_fields
     if mutation_plan.validation_errors:
         raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
@@ -269,7 +271,7 @@ def work_detail_save_payload(context: CatalogueWriteContext, body: Mapping[str, 
     build_payload = save_build.apply_save_build_follow_through(
         payload,
         requested_apply_build=apply_build,
-        apply_build=apply_build,
+        apply_build=apply_build and parent_work_published,
         changed=changed,
         build_plan=build_plan,
         run_build=lambda: run_build_operation(
@@ -282,6 +284,8 @@ def work_detail_save_payload(context: CatalogueWriteContext, body: Mapping[str, 
             force=False,
             build_plan=build_plan,
         ),
+        unpublished_reason="parent_work_not_published",
+        unpublished_message="Parent work must be published before a public update can run.",
     )
     if build_payload is not None and activity_context:
         append_activity_rows(

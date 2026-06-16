@@ -41,8 +41,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "00530-001.jpg",
-          "status": "published"
+          "project_filename": "00530-001.jpg"
         },
         {
           "detail_uid": "00530-002",
@@ -52,8 +51,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "00530-002.jpg",
-          "status": "published"
+          "project_filename": "00530-002.jpg"
         },
         {
           "detail_uid": "00530-003",
@@ -63,8 +61,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "00530-003.jpg",
-          "status": "published"
+          "project_filename": "00530-003.jpg"
         },
         {
           "detail_uid": "00530-004",
@@ -74,8 +71,7 @@
           "section_title": "details",
           "sort_order": null,
           "details_subfolder": "details",
-          "project_filename": "00530-004.jpg",
-          "status": "published"
+          "project_filename": "00530-004.jpg"
         }
       ]
     }

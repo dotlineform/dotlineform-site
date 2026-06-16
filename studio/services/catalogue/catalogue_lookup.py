@@ -49,7 +49,6 @@ WORK_DETAIL_SEARCH_FIELDS = frozenset({
     "sort_order",
     "details_subfolder",
     "project_filename",
-    "status",
 })
 WORK_DETAIL_PARENT_WORK_FIELDS = frozenset({
     "work_id",
@@ -60,7 +59,6 @@ WORK_DETAIL_PARENT_WORK_FIELDS = frozenset({
     "sort_order",
     "details_subfolder",
     "project_filename",
-    "status",
 })
 
 SERIES_SEARCH_FIELDS = frozenset({"series_id", "title", "status", "primary_work_id"})
@@ -131,7 +129,6 @@ def build_work_detail_search_item(
         "sort_order": normalize_text(section_resolution.get("sort_order")),
         "details_subfolder": normalize_text(section_resolution.get("details_subfolder")),
         "project_filename": normalize_text(record.get("project_filename")),
-        "status": normalize_text(record.get("status")),
     }
 
 
@@ -174,7 +171,6 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
                 "sort_order": sort_order,
                 "details_subfolder": details_subfolder,
                 "project_filename": normalize_text(detail_record.get("project_filename")),
-                "status": normalize_text(detail_record.get("status")),
             }
         )
 

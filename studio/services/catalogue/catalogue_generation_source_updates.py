@@ -181,13 +181,3 @@ def plan_work_publication_update(
         updates={"status": "published", "published_date": today_iso},
         transition=transition,
     )
-
-
-def plan_detail_publication_update(*, detail_uid: str, status: Any, today: dt.date) -> SourceRecordUpdatePlan:
-    if normalize_status(status) != "draft":
-        return SourceRecordUpdatePlan(record_kind=WORK_DETAIL_RECORD, record_id=detail_uid, updates={})
-    return SourceRecordUpdatePlan(
-        record_kind=WORK_DETAIL_RECORD,
-        record_id=detail_uid,
-        updates={"status": "published", "published_date": today.isoformat()},
-    )

@@ -134,7 +134,6 @@ def test_batch_b_contexts_are_normalized() -> None:
         (activity.ACTIVITY_PROFILE_CREATE_WORK_DETAIL, "00001-099"),
         (activity.ACTIVITY_PROFILE_CREATE_SERIES, "099"),
         (activity.activity_profile_for_publication("work", "publish"), "00001"),
-        (activity.activity_profile_for_publication("work_detail", "unpublish"), "00001-001"),
         (activity.activity_profile_for_publication("series", "publish"), "009"),
         (activity.activity_profile_for_publication("moment", "unpublish"), "studio-test"),
         (activity.activity_profile_for_delete("work"), "00001"),

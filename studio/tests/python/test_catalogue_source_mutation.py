@@ -69,7 +69,6 @@ def fixture_records() -> CatalogueSourceRecords:
                 "sort_order": 1,
                 "project_filename": "alpha-detail.jpg",
                 "title": "Alpha detail",
-                "status": "published",
             }
         },
         series={
@@ -160,7 +159,6 @@ def test_detail_create_generates_section_id() -> None:
         {"title": "Second detail", "section_title": "More details", "project_filename": "second.jpg"},
     )
 
-    assert_equal(plan.updated_record["status"], "draft", "created detail status")
     assert_equal(plan.updated_record["section_id"], "00001-2", "created detail section id")
     assert_equal(plan.payload["work_details"]["00001-002"]["title"], "Second detail", "detail payload")
     assert_false(plan.validation_errors, "created detail validation errors")

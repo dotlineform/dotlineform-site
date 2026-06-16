@@ -83,8 +83,6 @@ DETAIL_FIELDS = [
     "sort_order",
     "project_filename",
     "title",
-    "status",
-    "published_date",
     "width_px",
     "height_px",
 ]
@@ -691,7 +689,7 @@ def validate_source_records(
         detail_uid = f"{work_id}-{detail_id}"
         if key != detail_uid or record.get("detail_uid") != detail_uid:
             errors.append(f"work_details {key}: key/detail_uid does not match normalized detail_uid {detail_uid}")
-        if normalize_status(record.get("status")) in ACTIONABLE_STATUSES and work_id not in all_work_ids:
+        if work_id not in all_work_ids:
             errors.append(f"work_details {key}: work_id {work_id!r} not found in works")
         if require_detail_media_sections:
             errors.extend(validate_work_detail_media_section_record(key, record))

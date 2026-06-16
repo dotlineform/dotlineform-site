@@ -35,12 +35,12 @@ def assert_sibling_state_factories(page: Page) -> None:
               <section id="catalogueWorkDetailRoot">
                 <div id="catalogueWorkDetailLoading"></div><div id="catalogueWorkDetailEmpty"></div>
                 <div id="catalogueWorkDetailFields"></div><div id="catalogueWorkDetailReadonly"></div>
-                <div id="catalogueWorkDetailPreview"></div><div id="catalogueWorkDetailSummary"></div>
-                <div id="catalogueWorkDetailReadiness"></div><div id="catalogueWorkDetailRuntimeState"></div>
+                <div id="catalogueWorkDetailSummary"></div>
+                <div id="catalogueWorkDetailRuntimeState"></div>
                 <div id="catalogueWorkDetailBuildImpact"></div><input id="catalogueWorkDetailSearchGlobal" />
                 <div id="catalogueWorkDetailPopup"></div><div id="catalogueWorkDetailPopupList"></div>
                 <button id="catalogueWorkDetailOpen"></button><button id="catalogueWorkDetailSave"></button>
-                <button id="catalogueWorkDetailPublication"></button><button id="catalogueWorkDetailDelete"></button>
+                <button id="catalogueWorkDetailDelete"></button>
                 <div id="catalogueWorkDetailSaveMode"></div><div id="catalogueWorkDetailContext"></div>
                 <div id="catalogueWorkDetailStatus"></div><div id="catalogueWorkDetailWarning"></div>
                 <div id="catalogueWorkDetailResult"></div>
@@ -85,8 +85,7 @@ def assert_sibling_state_factories(page: Page) -> None:
             const seriesModule = await import('/studio/app/frontend/js/catalogue-series-editor-state.js');
             const momentModule = await import('/studio/app/frontend/js/catalogue-moment-editor-state.js');
             const detailState = detailModule.createWorkDetailEditorState(
-                detailModule.collectWorkDetailEditorElements(),
-                { mediaConfigLoader: () => ({ source: 'detail-media' }) }
+                detailModule.collectWorkDetailEditorElements()
             );
             const seriesState = seriesModule.createSeriesEditorState(seriesModule.collectSeriesEditorElements(), {
                 seriesTypeOptions: new Map([['custom', { label: 'Custom' }]])
@@ -95,7 +94,6 @@ def assert_sibling_state_factories(page: Page) -> None:
             return {
                 detailRoute: detailModule.WORK_DETAIL_ROUTE_STATE.route,
                 detailBulkKey: detailModule.WORK_DETAIL_ROUTE_STATE.bulkIdsKey,
-                detailMedia: detailState.mediaConfig,
                 detailMaps: detailState.detailSearchByUid instanceof Map && detailState.bulkTouchedFields instanceof Set,
                 seriesRoute: seriesModule.SERIES_ROUTE_STATE.route,
                 seriesType: seriesState.seriesTypeOptions.get('custom').label,
@@ -116,7 +114,6 @@ def assert_sibling_state_factories(page: Page) -> None:
     )
     assert result["detailRoute"] == "catalogue-work-detail"
     assert result["detailBulkKey"] == "bulkDetailUids"
-    assert result["detailMedia"] == {"source": "detail-media"}
     assert result["detailMaps"] is True
     assert result["seriesRoute"] == "catalogue-series"
     assert result["seriesType"] == "Custom"
@@ -133,8 +130,7 @@ def assert_sibling_event_binders(page: Page) -> None:
     page.evaluate(
         """async () => {
             document.body.innerHTML = `
-              <button id="detailSave"></button><button id="detailPub"></button><button id="detailDelete"></button>
-              <div id="detailReady"><button data-media-refresh>media</button></div>
+              <button id="detailSave"></button><button id="detailDelete"></button>
               <button id="seriesNew"></button><button id="seriesSave"></button><button id="seriesPub"></button>
               <button id="seriesDelete"></button><input id="seriesMemberSearch" />
               <input id="seriesMemberAdd" /><button id="seriesMemberAddButton"></button>
@@ -151,15 +147,11 @@ def assert_sibling_event_binders(page: Page) -> None:
             window.__siblingCalls = [];
             const push = (...args) => window.__siblingCalls.push(args);
             detailEvents.bindWorkDetailEditorEvents({
-                readinessNode: document.getElementById('detailReady'),
                 saveButton: document.getElementById('detailSave'),
-                publicationButton: document.getElementById('detailPub'),
                 deleteButton: document.getElementById('detailDelete')
             }, {
                 bindSelectionControls: () => push('detail.bind'),
-                refreshWorkDetailMedia: () => push('detail.media'),
                 saveCurrentDetail: () => push('detail.save'),
-                applyPublicationChange: () => push('detail.pub'),
                 deleteCurrentDetail: () => push('detail.delete')
             });
             seriesEvents.bindSeriesEditorEvents({
@@ -207,9 +199,7 @@ def assert_sibling_event_binders(page: Page) -> None:
         }"""
     )
     for selector in [
-        "#detailReady [data-media-refresh]",
         "#detailSave",
-        "#detailPub",
         "#detailDelete",
         "#seriesNew",
         "#seriesSave",
@@ -240,9 +230,7 @@ def assert_sibling_event_binders(page: Page) -> None:
         ["detail.bind"],
         ["series.bind"],
         ["moment.bind"],
-        ["detail.media"],
         ["detail.save"],
-        ["detail.pub"],
         ["detail.delete"],
         ["series.new"],
         ["series.save"],

@@ -19,7 +19,6 @@ import {
 } from "./catalogue-editor-dirty-state.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  WORK_DETAIL_STATUS_OPTIONS as STATUS_OPTIONS,
   buildWorkDetailDraftFromRecord,
   canonicalizeWorkDetailScalar as canonicalizeScalar,
   normalizeText,
@@ -30,10 +29,7 @@ import {
 import {
   deleteCurrentDetail,
   refreshWorkDetailBuildPreview,
-  refreshWorkDetailMedia,
-  saveCurrentDetail,
-  applyWorkDetailPublicationChange,
-  updateWorkDetailPublishControls
+  saveCurrentDetail
 } from "./catalogue-work-detail-actions.js";
 import {
   WORK_DETAIL_FORM_FIELDS as FORM_FIELDS,
@@ -49,8 +45,6 @@ import {
 } from "./catalogue-work-detail-form.js";
 import {
   formatWorkDetailSelectionList,
-  renderWorkDetailCurrentPreview,
-  renderWorkDetailReadiness,
   updateWorkDetailSummary
 } from "./catalogue-work-detail-sections.js";
 import {
@@ -105,8 +99,7 @@ function buildDetailSearchRecord(detailUid, record) {
     section_title: normalizeText(record && record.section_title),
     sort_order: normalizeText(record && record.sort_order),
     details_subfolder: normalizeText(record && record.details_subfolder),
-    project_filename: normalizeText(record && record.project_filename),
-    status: normalizeText(record && record.status)
+    project_filename: normalizeText(record && record.project_filename)
   };
 }
 
@@ -170,11 +163,6 @@ function validateDraft(state) {
   if (state.mode !== "bulk" && !normalizeText(state.draft.section_title)) {
     errors.set("section_title", t(state, "field_required_section_title", "Enter a section title."));
   }
-  if (state.mode === "bulk" && !state.bulkTouchedFields.has("status")) return errors;
-  const status = normalizeText(state.draft.status).toLowerCase();
-  if (!STATUS_OPTIONS.has(status)) {
-    errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
-  }
   return errors;
 }
 
@@ -233,7 +221,6 @@ function setNewDetailMode(state, workId, options = {}) {
   });
   state.draft.work_id = normalizedWorkId;
   state.draft.detail_id = suggestNextDetailId(state.detailSearchByUid, normalizedWorkId);
-  state.draft.status = "draft";
   state.rebuildPending = false;
   state.buildPreview = null;
   applyWorkDetailDraftToInputs(state);
@@ -248,7 +235,7 @@ function setNewDetailMode(state, workId, options = {}) {
   } else if (normalizeText(state.workSearchById.get(normalizedWorkId) && state.workSearchById.get(normalizedWorkId).status).toLowerCase() !== "published") {
     state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_parent_unpublished", "Publish work {work_id} before adding work details.", { work_id: normalizedWorkId }), "error");
   } else {
-    state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft detail under work {work_id}.", { work_id: normalizedWorkId }));
+    state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a detail under work {work_id}.", { work_id: normalizedWorkId }));
   }
   state.messageController.setRouteTextWithState(state.statusNode, "");
   state.messageController.setRouteTextWithState(state.warningNode, "");
@@ -353,8 +340,6 @@ function updateEditorState(state) {
     isDeleting: state.isDeleting,
     serverAvailable: state.serverAvailable
   });
-  updateWorkDetailPublishControls(state, buildWorkDetailActionContext(state), { hasRecord, dirty, errors });
-  renderReadiness(state);
   syncRouteBusyState(state);
 }
 
@@ -362,12 +347,6 @@ function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   state.messageController.clearActionMessages();
-  if (state.mode === "new" && fieldKey === "status") {
-    state.draft.status = "draft";
-    setWorkDetailFieldNodeValue(node, "draft");
-    updateEditorState(state);
-    return;
-  }
   state.draft[fieldKey] = getWorkDetailFieldNodeValue(node);
   if (state.mode === "bulk") {
     state.bulkTouchedFields.add(fieldKey);
@@ -385,14 +364,6 @@ function buildWorkDetailSectionContext(state) {
     setTextWithState: setNodeTextWithState,
     draftHasChanges: () => draftHasChanges(state)
   };
-}
-
-function renderCurrentPreview(state) {
-  renderWorkDetailCurrentPreview(state, buildWorkDetailSectionContext(state));
-}
-
-function renderReadiness(state) {
-  renderWorkDetailReadiness(state, buildWorkDetailSectionContext(state));
 }
 
 function updateSummary(state) {
@@ -415,8 +386,6 @@ function buildWorkDetailActionContext(state) {
     updateFieldMessages: () => clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState),
     updateEditorState: () => updateEditorState(state),
     syncRouteBusyState: () => syncRouteBusyState(state),
-    renderCurrentPreview: () => renderCurrentPreview(state),
-    renderReadiness: () => renderReadiness(state),
     setLoadedBulkDetails: (detailUids, recordsById, recordHashes, options = {}) => {
       setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, options);
     },
@@ -462,9 +431,7 @@ async function init() {
     emptyNode,
     fieldsNode,
     readonlyNode,
-    previewNode,
     summaryNode,
-    readinessNode,
     runtimeStateNode,
     buildImpactNode,
     searchNode,
@@ -472,7 +439,6 @@ async function init() {
     popupListNode,
     openButton,
     saveButton,
-    publicationButton,
     deleteButton
   } = elements;
 
@@ -495,7 +461,6 @@ async function init() {
         searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
         openButton.textContent = t(state, "open_button", "Open");
         saveButton.textContent = t(state, "save_button", "Save");
-        publicationButton.textContent = t(state, "publish_button", "Publish");
         deleteButton.textContent = t(state, "delete_button", "Delete");
       }
     });
@@ -524,9 +489,7 @@ async function init() {
     const actionContext = buildWorkDetailActionContext(state);
     bindWorkDetailEditorEvents(state, {
       bindSelectionControls: () => bindWorkDetailSelectionControls(state, selectionContext),
-      refreshWorkDetailMedia: () => refreshWorkDetailMedia(state, actionContext),
       saveCurrentDetail: () => saveCurrentDetail(state, actionContext),
-      applyPublicationChange: () => applyWorkDetailPublicationChange(state, actionContext),
       deleteCurrentDetail: () => deleteCurrentDetail(state, actionContext)
     });
 

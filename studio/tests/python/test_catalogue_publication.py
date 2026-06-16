@@ -101,7 +101,6 @@ def write_source_fixture(source_dir: Path) -> None:
                     "section_title": "Details",
                     "project_filename": "beta-detail.jpg",
                     "title": "Beta detail",
-                    "status": "draft",
                 }
             },
         ),
@@ -181,26 +180,6 @@ def test_series_publish_bootstraps_draft_member_work() -> None:
     assert_equal(preview["bootstrap_publish_work_ids"], ["00002"], "bootstrap work ids")
     assert_true(preview["source_changed"], "series source changed")
     assert_equal(preview["impact"]["source"]["additional_paths"][0]["changed_record_ids"], ["00002"], "additional paths")
-
-
-def test_detail_publish_requires_published_parent_work() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        source_dir = root / "studio/data/canonical/catalogue"
-        write_source_fixture(source_dir)
-
-        preview = catalogue_publication.build_publication_preview(
-            source_dir,
-            root,
-            {"kind": "work_detail", "action": "publish", "id": "00002-001"},
-        )
-
-    assert_true(preview["blocked"], "detail publish blocked")
-    assert_equal(
-        preview["blockers"],
-        ["parent work 00002 must be published before publishing detail 00002-001"],
-        "detail blockers",
-    )
 
 
 def test_unpublish_preview_attaches_cleanup_impact() -> None:
@@ -290,7 +269,6 @@ def test_publication_build_transaction_dry_run_preserves_payload_shape() -> None
 def main() -> None:
     test_work_publish_requires_published_series()
     test_series_publish_bootstraps_draft_member_work()
-    test_detail_publish_requires_published_parent_work()
     test_unpublish_preview_attaches_cleanup_impact()
     test_save_published_rejects_status_change()
     test_publication_source_payloads_include_series_bootstrap_work_write()

@@ -440,8 +440,6 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
             "work_id": work_id,
             "detail_id": detail_id,
             "section_title": section_title,
-            "status": "draft",
-            "published_date": None,
         }
         raw_section_id = normalize_scalar_text(cell(row, headers, "section_id"))
         if raw_section_id:
@@ -453,7 +451,7 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
                 assigned_section_ids[section_key] = next_detail_section_id(work_id, existing_detail_records)
             record["section_id"] = assigned_section_ids[section_key]
         for field in DETAIL_FIELDS:
-            if field in record or field in {"status", "published_date"}:
+            if field in record:
                 continue
             record[field] = normalize_json_value(cell(row, headers, field))
         normalized_record = normalize_source_record(record, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
