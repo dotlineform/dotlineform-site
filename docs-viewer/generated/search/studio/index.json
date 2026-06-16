@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-11a6ee982f1801dcbfb9735cd1278851",
-    "generated_at_utc": "2026-06-16T14:59:46Z",
-    "count": 237
+    "version": "blake2b-e921557ac54039e0ef566abcb66f5829",
+    "generated_at_utc": "2026-06-16T15:59:50Z",
+    "count": 236
   },
   "entries": [
     {
@@ -1927,35 +1927,6 @@
         "00"
       ],
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
-    },
-    {
-      "id": "site-request-work-detail-status-workflow-removal",
-      "kind": "doc",
-      "title": "Work Detail Status Workflow Removal",
-      "href": "/docs/?scope=studio&doc=site-request-work-detail-status-workflow-removal",
-      "last_updated": "2026-06-16",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-16 • Change Requests",
-      "search_terms": [
-        "site-request-work-detail-status-workflow-removal",
-        "site",
-        "request",
-        "work",
-        "detail",
-        "status",
-        "workflow",
-        "removal",
-        "work detail status workflow removal",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-16",
-        "2026",
-        "06",
-        "16"
-      ],
-      "search_text": "site-request-work-detail-status-workflow-removal site request work detail status workflow removal work detail status workflow removal change requests change requests 2026-06-16 2026 06 16"
     },
     {
       "id": "data-sharing",
