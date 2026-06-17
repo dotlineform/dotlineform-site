@@ -1,0 +1,114 @@
+---
+doc_id: docs-viewer-moments-migration-plan
+title: Docs Viewer Moments Migration Plan
+added_date: 2026-06-17
+last_updated: 2026-06-17
+ui_status: draft
+parent_id: docs-viewer-public-scopes
+viewable: true
+---
+# Docs Viewer Moments Migration Plan
+
+This note records the intended migration shape for moving public moments from the catalogue moments route into a public Docs Viewer scope.
+
+The goal is to preserve moment presentation with source Markdown, generated Docs Viewer JSON, and narrow scope-specific CSS. Avoid a moments-specific Docs Viewer runtime fork.
+
+## Route Migration
+
+Retire the existing static route shell before creating the Docs Viewer public scope:
+
+- archive `site/moments/index.html` so `/moments/` is available for the scope lifecycle tool
+- keep existing moment source data, generated moment payloads, and media assets in place during migration
+- create a public Docs Viewer scope with `scope_id: moments` and `public_route_path: /moments/`
+- generate source Markdown under `docs-viewer/source/moments/`
+- build the new docs and search payloads after source migration
+
+The archived route shell is rollback material only. It should not remain active once the Docs Viewer route owns `/moments/`.
+
+## Markdown Shape
+
+Each migrated moment source file should carry moment metadata in front matter and render the public-facing title/date/image/body in Markdown.
+
+Example:
+
+```md
+---
+doc_id: a-doll-story
+title: a doll story
+date: 2025-06-14
+date_display: 14 Jun 2025
+added_date: 2025-06-14
+parent_id: ""
+viewable: true
+---
+# a doll story
+
+<p class="momentDate">14 Jun 2025</p>
+
+[[media:moments/img/a-doll-story-primary-1600.webp]]
+
+<pre class="moment-text">
+doll was created many years before she came into my care
+but we don't know why or by whom
+</pre>
+```
+
+`title`, `date`, and `date_display` should remain in front matter for generated metadata and search behavior. The `#` heading and `.momentDate` paragraph are the rendered public document content.
+
+## Date Presentation
+
+Use a raw HTML paragraph for the rendered date so it can be styled without introducing a Docs Viewer runtime feature.
+
+Suggested CSS:
+
+```css
+.docsViewer[data-route-id="moments"] .momentDate{
+  margin: -0.25rem 0 1.5rem;
+  color: var(--docs-viewer-muted);
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+```
+
+Prefer `data-route-id="moments"` for the public route because it exists in the static route shell before runtime state resolves. `data-viewer-scope="moments"` is available after config load and is better suited to manage-mode or scope-switching concerns.
+
+## Primary Image
+
+Render the optional primary image as a Docs Viewer media token in the migrated Markdown.
+
+The migration should emit a path that resolves to the existing R2-served moment image variant. If the media resolver needs a scope-specific convention, keep it in the media/token layer or source data transform rather than in a moments-specific route runtime.
+
+Do not rebuild moment-specific image rendering JavaScript inside Docs Viewer. The image should be ordinary document content.
+
+## Moment Text
+
+Keep the existing `<pre class="moment-text">` wrapper during the migration.
+
+The current moments route uses this wrapper to preserve line breaks, blank lines, indentation, and poem-like spacing while resetting the browser's default code-block appearance. Converting the body to ordinary Markdown paragraphs would collapse single newlines unless the migration inserted hard breaks or paragraph boundaries throughout the text.
+
+Docs Viewer already preserves line breaks in generic `pre` blocks, but its default `pre` styling is code-like. Add a narrow CSS reset instead:
+
+```css
+.docsViewer[data-route-id="moments"] pre.moment-text{
+  font-family: inherit;
+  white-space: pre-wrap;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+```
+
+Removing `<pre class="moment-text">` should be a later editorial cleanup, not part of the first migration.
+
+## CSS Boundary
+
+Scope-specific CSS is acceptable here because it preserves migrated content semantics without forking Docs Viewer runtime code.
+
+Keep the CSS narrow:
+
+- target `.docsViewer[data-route-id="moments"]`
+- style only migrated content classes such as `.momentDate`, `.momentPrimaryImage`, and `pre.moment-text`
+- do not change shared Docs Viewer layout, routing, document loading, or hosted-view behavior for moments
+
+If a later migration needs behavior that cannot be expressed as Markdown, media tokens, generated metadata, or scoped CSS, treat that as a separate Docs Viewer feature decision rather than a hidden moments-route fork.

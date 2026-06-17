@@ -777,6 +777,12 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-scopes.json",
           "children": [
             {
+              "doc_id": "docs-viewer-moments-migration-plan",
+              "title": "Docs Viewer Moments Migration Plan",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-moments-migration-plan.json",
+              "ui_status": "draft"
+            },
+            {
               "doc_id": "docs-viewer-public-route-shell-template",
               "title": "Public Route Shell Template",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
@@ -1314,5 +1320,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-17T18:31:19Z"
+  "generated_at": "2026-06-17T20:53:15Z"
 }
