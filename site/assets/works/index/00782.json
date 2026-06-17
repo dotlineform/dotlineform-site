@@ -1,10 +1,10 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-2a953e690fab5eba574655b6e0276144",
-    "generated_at_utc": "2026-06-16T20:54:55Z",
+    "version": "blake2b-c7a9c84ff474351781a301fceb80c7f5",
+    "generated_at_utc": "2026-06-17T08:50:35Z",
     "work_id": "00782",
-    "count": 49
+    "count": 46
   },
   "work": {
     "work_id": "00782",
@@ -399,36 +399,6 @@
           "title": "birth of healing forms - 3.08",
           "width_px": 5906,
           "height_px": 5906
-        }
-      ]
-    },
-    {
-      "section_id": "00782-3",
-      "section_title": "details test",
-      "details": [
-        {
-          "work_id": "00782",
-          "detail_id": "047",
-          "detail_uid": "00782-047",
-          "title": "birth of forms - detail 1",
-          "width_px": 2362,
-          "height_px": 2362
-        },
-        {
-          "work_id": "00782",
-          "detail_id": "048",
-          "detail_uid": "00782-048",
-          "title": "birth of forms - detail 2",
-          "width_px": 2362,
-          "height_px": 2362
-        },
-        {
-          "work_id": "00782",
-          "detail_id": "049",
-          "detail_uid": "00782-049",
-          "title": "birth of forms - detail 3",
-          "width_px": 2362,
-          "height_px": 2362
         }
       ]
     }

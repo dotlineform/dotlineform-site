@@ -141,6 +141,50 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     assert "00001" not in payloads[(root / TAG_ASSIGNMENTS_PATH).resolve()]["series"]["009"]["works"]
 
 
+def test_work_detail_generated_payloads_remove_all_affected_details() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        touch(root / "site/assets/work_details/img/00001-001-thumb-800.jpg")
+        touch(root / "site/assets/work_details/img/00001-002-thumb-800.jpg")
+        touch(root / "var/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp")
+        touch(root / "var/catalogue/media/work_details/srcset_images/thumb/00001-002-thumb-800.webp")
+        write_json(
+            root / "site/assets/works/index/00001.json",
+            {
+                "header": {"schema": "work_record_v3"},
+                "work": {"work_id": "00001"},
+                "sections": [
+                    {
+                        "section_id": "00001-1",
+                        "details": [
+                            {"detail_uid": "00001-001"},
+                            {"detail_uid": "00001-002"},
+                            {"detail_uid": "00001-003"},
+                        ],
+                    }
+                ],
+            },
+        )
+
+        preview = catalogue_cleanup.catalogue_delete_preview_cleanup(
+            root,
+            "work_detail",
+            "00001-1",
+            {"works": ["00001"], "work_details": ["00001-001", "00001-002"], "series": []},
+        )
+        payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(
+            root,
+            "work_detail",
+            "00001-1",
+            {"works": ["00001"], "work_details": ["00001-001", "00001-002"], "series": []},
+        )
+
+    assert preview["repo_media"] == 2
+    assert preview["staged_media"] == 2
+    work_payload = payloads[(root / "site/assets/works/index/00001.json").resolve()]
+    assert work_payload["sections"][0]["details"] == [{"detail_uid": "00001-003"}]
+
+
 def test_moment_delete_generated_payloads_remove_moment_index_record() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -169,6 +213,7 @@ def main() -> None:
     test_work_delete_cleanup_preview_counts_generated_and_media_paths()
     test_cleanup_scope_rejects_unallowlisted_delete_path()
     test_work_delete_generated_payloads_remove_generated_records()
+    test_work_detail_generated_payloads_remove_all_affected_details()
     test_moment_delete_generated_payloads_remove_moment_index_record()
     print("Catalogue cleanup tests OK")
 

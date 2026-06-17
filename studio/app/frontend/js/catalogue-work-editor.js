@@ -30,10 +30,25 @@ import {
   openProjectMediaMultiFileModal
 } from "./catalogue-project-media-picker.js";
 import {
+  applyCatalogueDelete,
   createCatalogueWorkDetailSection,
+  previewCatalogueDelete,
   readProjectMediaFiles,
   readProjectMediaFolders
 } from "./catalogue-editor-service-client.js";
+import {
+  formatCatalogueDeletePreview
+} from "./catalogue-editor-modal-formatters.js";
+import {
+  confirmCatalogueActionModal
+} from "./catalogue-editor-action-modals.js";
+import {
+  extractCatalogueActionPreview,
+  getCataloguePreviewBlocker
+} from "./catalogue-editor-action-workflow.js";
+import {
+  buildStudioActivityContext
+} from "./studio-activity-context.js";
 import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
@@ -223,6 +238,107 @@ async function openDetailSectionPicker(state) {
   return result;
 }
 
+function buildDetailSectionActivityContext(sectionId) {
+  return buildStudioActivityContext({
+    pageId: "catalogue-work",
+    actionId: "delete-work-detail-section",
+    route: "/studio/catalogue-work/",
+    controlId: "catalogueWorkDetailBrowserSectionActions",
+    controlSelector: "#catalogueWorkDetailBrowserSectionActions",
+    recordIdField: "section_id",
+    recordId: sectionId
+  });
+}
+
+async function deleteDetailSection(state, row) {
+  if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
+  const sectionId = normalizeText(row && row.id);
+  if (!sectionId) return;
+  const restoreFocus = document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : state.detailBrowserSectionActionsNode;
+  state.isDeleting = true;
+  syncWorkRouteBusyState(state);
+  renderEditorMessage(state);
+  state.messageController.setActionTextWithState(
+    state.statusNode,
+    t(state, "detail_section_delete_status_running", "Preparing detail section delete preview..."),
+    "info"
+  );
+  state.messageController.setActionTextWithState(state.resultNode, "");
+  const request = {
+    kind: "work_detail_section",
+    section_id: sectionId,
+    activity_context: buildDetailSectionActivityContext(sectionId)
+  };
+  try {
+    const previewResponse = await previewCatalogueDelete(request);
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      includeValidationErrors: true,
+      fallback: t(state, "detail_section_delete_status_blocked", "Detail section delete is blocked.")
+    });
+    if (blocker) {
+      state.messageController.setActionTextWithState(state.statusNode, blocker, "error");
+      return;
+    }
+    const summary = formatCatalogueDeletePreview(preview, {
+      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
+      defaultText: "Delete this detail section?"
+    });
+    state.isDeleting = false;
+    syncWorkRouteBusyState(state);
+    renderEditorMessage(state);
+    const confirmed = await confirmCatalogueActionModal(state, {
+      title: t(state, "detail_section_delete_confirm_title", "Confirm detail section delete"),
+      message: summary,
+      primaryLabel: t(state, "detail_section_delete_confirm_button", "Delete"),
+      cancelLabel: t(state, "confirm_cancel_button", "Cancel"),
+      defaultAction: "cancel",
+      restoreFocus
+    });
+    if (!confirmed) {
+      state.messageController.setActionTextWithState(
+        state.statusNode,
+        t(state, "detail_section_delete_status_cancelled", "Detail section delete cancelled.")
+      );
+      return;
+    }
+    state.isDeleting = true;
+    syncWorkRouteBusyState(state);
+    renderEditorMessage(state);
+    state.messageController.setActionTextWithState(
+      state.statusNode,
+      t(state, "detail_section_delete_status_deleting", "Deleting detail section..."),
+      "info"
+    );
+    await applyCatalogueDelete(request);
+    state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
+    state.detailBrowserSelectedSectionId = "";
+    state.detailBrowserSelectedDetailUid = "";
+    updateSummary(state);
+    state.messageController.setActionTextWithState(
+      state.resultNode,
+      t(state, "detail_section_delete_status_deleted", "Deleted detail section {section_id}.", {
+        section_id: sectionId
+      }),
+      "success"
+    );
+    state.clearActionMessagesOnNextClick = true;
+    state.messageController.setActionTextWithState(state.statusNode, "");
+  } catch (error) {
+    state.messageController.setActionTextWithState(
+      state.statusNode,
+      `${t(state, "detail_section_delete_status_failed", "Detail section delete failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isDeleting = false;
+    syncWorkRouteBusyState(state);
+    renderEditorMessage(state);
+  }
+}
+
 function draftHasChanges(state) {
   return catalogueDraftHasChanges({
     mode: state.mode,
@@ -407,9 +523,9 @@ function clearActionMessages(state) {
   state.messageController.clearActionMessages();
 }
 
-function clearMediaRefreshStatus(state) {
-  if (!state.clearMediaRefreshStatusOnNextClick) return;
-  state.clearMediaRefreshStatusOnNextClick = false;
+function clearActionMessagesOnNextClick(state) {
+  if (!state.clearActionMessagesOnNextClick) return;
+  state.clearActionMessagesOnNextClick = false;
   clearActionMessages(state);
   renderEditorMessage(state);
 }
@@ -611,6 +727,7 @@ function workSectionOptions(state) {
     draftHasChanges,
     isCurrentWorkPublished: currentWorkIsPublished,
     openDetailSectionPicker: () => openDetailSectionPicker(state),
+    deleteDetailSection: (row) => deleteDetailSection(state, row),
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
     deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)
@@ -703,7 +820,7 @@ async function init() {
       updateWorkDetailBrowser: () => updateDetailBrowser(state),
       openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
-      clearMediaRefreshStatus: () => clearMediaRefreshStatus(state),
+      clearActionMessagesOnNextClick: () => clearActionMessagesOnNextClick(state),
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
       refreshWorkMedia: () => refreshWorkMedia(state, workActionOptions(state)),
       saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),

@@ -18,6 +18,7 @@ from catalogue.catalogue_source import (
     records_from_json_source,
     sort_record_map,
     validate_source_records,
+    work_details_payload_for_maps,
 )
 from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload
 
@@ -120,6 +121,38 @@ def preview_work_detail_delete(source_dir: Path, detail_uid: str, *, repo_root: 
     }
 
 
+def preview_work_detail_section_delete(source_dir: Path, section_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
+    source_records = records_from_json_source(source_dir)
+    section_record = source_records.work_detail_sections.get(section_id)
+    if not isinstance(section_record, dict):
+        raise ValueError(f"section_id not found: {section_id}")
+    work_id = str(section_record.get("work_id") or "")
+    dependent_detail_ids = sorted(
+        detail_uid
+        for detail_uid, detail_record in source_records.work_details.items()
+        if str(detail_record.get("section_id") or "") == section_id
+    )
+    affected = {
+        "works": [work_id] if work_id else [],
+        "series": [],
+        "work_details": dependent_detail_ids,
+    }
+    cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, "work_detail", section_id, affected) if repo_root is not None else {}
+    cleanup_count = sum(
+        int(cleanup.get(key, 0) or 0)
+        for key in ("repo_artifacts", "repo_media", "staged_media")
+    )
+    return {
+        "kind": "work_detail_section",
+        "id": section_id,
+        "record": section_record,
+        "blockers": [],
+        "affected": affected,
+        "cleanup": cleanup,
+        "summary": f"Delete detail section {section_id}, {len(dependent_detail_ids)} detail record(s), and remove {cleanup_count} generated/media file(s).",
+    }
+
+
 def preview_series_delete(source_dir: Path, series_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     source_records = records_from_json_source(source_dir)
     series_record = source_records.series.get(series_id)
@@ -212,6 +245,22 @@ def validate_work_detail_delete_records(source_dir: Path, detail_uid: str) -> li
     return validate_source_records(normalized_records)
 
 
+def validate_work_detail_section_delete_records(source_dir: Path, section_id: str) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_detail_sections.pop(section_id, None)
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_detail_sections=sort_record_map(source_records.work_detail_sections),
+        work_details=sort_record_map({
+            detail_uid: detail_record
+            for detail_uid, detail_record in source_records.work_details.items()
+            if str(detail_record.get("section_id") or "") != section_id
+        }),
+        series=source_records.series,
+    )
+    return validate_source_records(normalized_records)
+
+
 def validate_series_delete_records(source_dir: Path, series_id: str) -> list[str]:
     source_records = records_from_json_source(source_dir)
     source_records.series.pop(series_id, None)
@@ -254,6 +303,9 @@ def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_ro
     elif kind == "work_detail":
         preview = preview_work_detail_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_work_detail_delete_records(source_dir, record_id)
+    elif kind == "work_detail_section":
+        preview = preview_work_detail_section_delete(source_dir, record_id, repo_root=repo_root)
+        preview["validation_errors"] = validate_work_detail_section_delete_records(source_dir, record_id)
     elif kind == "series":
         preview = preview_series_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
@@ -289,6 +341,9 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
         series_path = (source_dir / SOURCE_FILES["series"]).resolve()
         works_payload = _source_payload(source_dir, SOURCE_FILES["works"], "works")
         details_payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
+        sections_payload = details_payload.get("work_detail_sections")
+        if not isinstance(sections_payload, dict):
+            sections_payload = {}
         series_payload = _source_payload(source_dir, SOURCE_FILES["series"], "series")
         current_record = works_payload["works"].get(record_id)
         if not isinstance(current_record, dict):
@@ -305,7 +360,14 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
         generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
         payloads = {
             works_path: payload_for_map("works", updated_works),
-            details_path: payload_for_map("work_details", updated_details),
+            details_path: work_details_payload_for_maps(
+                {
+                    section_id: section_record
+                    for section_id, section_record in sections_payload.items()
+                    if str(section_record.get("work_id") or "") != record_id
+                },
+                updated_details,
+            ),
             **generated_payloads,
         }
         if changed_series_ids:
@@ -324,6 +386,9 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
     if kind == "work_detail":
         details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
         details_payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
+        sections_payload = details_payload.get("work_detail_sections")
+        if not isinstance(sections_payload, dict):
+            sections_payload = {}
         current_record = details_payload["work_details"].get(record_id)
         if not isinstance(current_record, dict):
             raise ValueError(f"detail_uid not found: {record_id}")
@@ -335,7 +400,36 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
             kind=kind,
             record_id=record_id,
             payloads={
-                details_path: payload_for_map("work_details", updated_details),
+                details_path: work_details_payload_for_maps(sections_payload, updated_details),
+                **generated_payloads,
+            },
+            cleanup=cleanup,
+            activity_affected=affected,
+        )
+
+    if kind == "work_detail_section":
+        details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
+        details_payload = _source_payload(source_dir, SOURCE_FILES["work_details"], "work_details")
+        sections_payload = details_payload.get("work_detail_sections")
+        if not isinstance(sections_payload, dict):
+            sections_payload = {}
+        current_record = sections_payload.get(record_id)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"section_id not found: {record_id}")
+        updated_sections = dict(sections_payload)
+        del updated_sections[record_id]
+        updated_details = {
+            detail_uid: detail_record
+            for detail_uid, detail_record in details_payload["work_details"].items()
+            if str(detail_record.get("section_id") or "") != record_id
+        }
+        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, "work_detail", record_id, affected)
+        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, "work_detail", record_id, affected)
+        return DeleteApplyPlan(
+            kind=kind,
+            record_id=record_id,
+            payloads={
+                details_path: work_details_payload_for_maps(updated_sections, updated_details),
                 **generated_payloads,
             },
             cleanup=cleanup,

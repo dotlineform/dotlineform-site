@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "studio_catalogue_lookup_work_detail_search_v1",
-    "count": 2684
+    "count": 2681
   },
   "items": [
     {
@@ -17751,42 +17751,6 @@
       "detail_sort": "",
       "details_subfolder": "versions",
       "project_filename": "birth of healing forms - 3.08.jpg"
-    },
-    {
-      "detail_uid": "00782-047",
-      "work_id": "00782",
-      "detail_id": "047",
-      "title": "birth of forms - detail 1",
-      "section_id": "00782-3",
-      "section_title": "details test",
-      "section_order": null,
-      "detail_sort": "",
-      "details_subfolder": "details test",
-      "project_filename": "birth of forms - detail 1.jpg"
-    },
-    {
-      "detail_uid": "00782-048",
-      "work_id": "00782",
-      "detail_id": "048",
-      "title": "birth of forms - detail 2",
-      "section_id": "00782-3",
-      "section_title": "details test",
-      "section_order": null,
-      "detail_sort": "",
-      "details_subfolder": "details test",
-      "project_filename": "birth of forms - detail 2.jpg"
-    },
-    {
-      "detail_uid": "00782-049",
-      "work_id": "00782",
-      "detail_id": "049",
-      "title": "birth of forms - detail 3",
-      "section_id": "00782-3",
-      "section_title": "details test",
-      "section_order": null,
-      "detail_sort": "",
-      "details_subfolder": "details test",
-      "project_filename": "birth of forms - detail 3.jpg"
     },
     {
       "detail_uid": "00805-001",

@@ -249,12 +249,29 @@ def main() -> int:
         "title": "Smoke series",
         "status": "published",
     }
+    detail_sections = [
+        {
+            "section_id": f"{WORK_ID}-1",
+            "section_title": "details",
+            "details_subfolder": "details",
+            "count": 1,
+            "details": [
+                {
+                    "detail_uid": f"{WORK_ID}-001",
+                    "detail_id": "001",
+                    "title": "Smoke detail",
+                    "project_filename": "detail-001.jpg",
+                }
+            ],
+        }
+    ]
     build_preview_requests: list[dict[str, object]] = []
     publication_apply_requests: list[dict[str, object]] = []
-    delete_apply_requests: list[dict[str, object]] = []
+    work_delete_apply_requests: list[dict[str, object]] = []
+    section_delete_apply_requests: list[dict[str, object]] = []
 
     def handle_catalogue(route: Route) -> None:
-        nonlocal work_record
+        nonlocal work_record, detail_sections
         request = route.request
         parsed = urlparse(request.url)
         query = parse_qs(parsed.query)
@@ -274,7 +291,7 @@ def main() -> int:
                 fulfil_json(route, {
                     "work": work_record,
                     "record_hash": "hash-work-current",
-                    "detail_sections": [],
+                    "detail_sections": detail_sections,
                 })
                 return
         if request.method == "POST" and path == "/catalogue/build-preview":
@@ -302,6 +319,18 @@ def main() -> int:
             })
             return
         if request.method == "POST" and path == "/catalogue/delete-preview":
+            delete_request = request_json(route)
+            if delete_request.get("kind") == "work_detail_section":
+                fulfil_json(route, {
+                    "ok": True,
+                    "preview": {
+                        "blocked": False,
+                        "blockers": [],
+                        "validation_errors": [],
+                        "summary": f"Delete detail section {WORK_ID}-1, 1 detail record(s), and remove generated detail output.",
+                    },
+                })
+                return
             fulfil_json(route, {
                 "ok": True,
                 "preview": {
@@ -313,7 +342,13 @@ def main() -> int:
             })
             return
         if request.method == "POST" and path == "/catalogue/delete-apply":
-            delete_apply_requests.append(request_json(route))
+            delete_request = request_json(route)
+            if delete_request.get("kind") == "work_detail_section":
+                section_delete_apply_requests.append(delete_request)
+                detail_sections = []
+                fulfil_json(route, {"ok": True, "deleted": True})
+                return
+            work_delete_apply_requests.append(delete_request)
             fulfil_json(route, {"ok": True, "deleted": True})
             return
         fulfil_json(route, {"ok": False, "error": f"Unhandled mock route: {request.method} {path}"})
@@ -361,6 +396,52 @@ def main() -> int:
                 "actionAppearance": "icon,icon,icon,icon",
             }:
                 raise AssertionError(f"embedded list chrome did not match compact toolbar contract: {embedded_section_state!r}")
+
+            section_delete_button = '#catalogueWorkDetailBrowserSectionActions [data-record-list-action="delete"]'
+            page.locator(section_delete_button).click()
+            section_delete_modal = assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            if f"Delete detail section {WORK_ID}-1" not in section_delete_modal["bodyText"]:
+                raise AssertionError(f"section delete preview text missing from modal: {section_delete_modal!r}")
+            page.wait_for_function(
+                "() => document.activeElement && document.activeElement.getAttribute('data-role') === 'modal-cancel'",
+                timeout=args.timeout_ms,
+            )
+            close_with_escape(page, section_delete_button, args.timeout_ms)
+            if section_delete_apply_requests:
+                raise AssertionError(f"section delete apply ran after Escape close: {section_delete_apply_requests!r}")
+
+            page.locator(section_delete_button).click()
+            assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            page.locator('[data-role="modal-primary"]').click()
+            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
+            page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
+            if len(section_delete_apply_requests) != 1:
+                raise AssertionError(f"section delete apply should be route-owned and confirmed once: {section_delete_apply_requests!r}")
+            section_delete_request = section_delete_apply_requests[0]
+            if section_delete_request.get("kind") != "work_detail_section" or section_delete_request.get("section_id") != f"{WORK_ID}-1":
+                raise AssertionError(f"unexpected section delete apply request: {section_delete_request!r}")
+            empty_detail_browser = page.locator("#catalogueWorkDetailBrowserSections").inner_text()
+            if "No work details for this work." not in empty_detail_browser:
+                raise AssertionError(f"detail browser did not hide section UI after last section delete: {empty_detail_browser!r}")
+            detail_sections = [
+                {
+                    "section_id": f"{WORK_ID}-1",
+                    "section_title": "details",
+                    "details_subfolder": "details",
+                    "count": 1,
+                    "details": [
+                        {
+                            "detail_uid": f"{WORK_ID}-001",
+                            "detail_id": "001",
+                            "title": "Smoke detail",
+                            "project_filename": "detail-001.jpg",
+                        }
+                    ],
+                }
+            ]
+            page.goto(route_url(base_url, f"/studio/catalogue-work/?work={WORK_ID}"), wait_until="domcontentloaded")
+            attrs = wait_for_studio_route_ready(page, args.timeout_ms)
+            assert_ready_contract(attrs)
 
             page.locator(add_download_button).click()
             try:
@@ -588,14 +669,15 @@ def main() -> int:
                 raise AssertionError(f"delete primary action should not be the default: {delete_modal!r}")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_url("**/studio/catalogue-status/", timeout=args.timeout_ms)
-            if len(delete_apply_requests) != 1 or delete_apply_requests[0].get("kind") != "work":
-                raise AssertionError(f"delete apply should be route-owned and confirmed once: {delete_apply_requests!r}")
+            if len(work_delete_apply_requests) != 1 or work_delete_apply_requests[0].get("kind") != "work":
+                raise AssertionError(f"delete apply should be route-owned and confirmed once: {work_delete_apply_requests!r}")
 
             print(json.dumps({
                 "route": attrs,
                 "build_preview_requests": len(build_preview_requests),
                 "publication_apply_requests": len(publication_apply_requests),
-                "delete_apply_requests": len(delete_apply_requests),
+                "section_delete_apply_requests": len(section_delete_apply_requests),
+                "delete_apply_requests": len(work_delete_apply_requests),
             }, sort_keys=True))
         finally:
             browser.close()

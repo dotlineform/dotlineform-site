@@ -344,9 +344,11 @@ def collect_catalogue_delete_cleanup(
         )
         rebuild_search = True
     elif kind == "work_detail":
-        repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, record_id))
-        repo_media.extend(collect_detail_repo_media_artifacts(repo_root, record_id))
-        staged_media.extend(collect_detail_staged_media_artifacts(repo_root, record_id))
+        target_detail_uids = detail_uids or [normalize_detail_uid_value(record_id)]
+        for detail_uid in target_detail_uids:
+            repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, detail_uid))
+            repo_media.extend(collect_detail_repo_media_artifacts(repo_root, detail_uid))
+            staged_media.extend(collect_detail_staged_media_artifacts(repo_root, detail_uid))
         public_json_updates.extend(existing_repo_paths(repo_root, [public_paths.work_record_path(work_id) for work_id in work_ids]))
     elif kind == "series":
         repo_artifacts.extend(collect_series_repo_artifacts(repo_root, record_id))
@@ -657,12 +659,20 @@ def build_catalogue_delete_generated_payloads(
                 payloads[path] = payload
 
     elif kind == "work_detail":
+        target_detail_uids = [
+            normalize_detail_uid_value(value)
+            for value in affected.get("work_details") or []
+            if str(value or "").strip()
+        ] or [normalize_detail_uid_value(record_id)]
         for work_id in affected.get("works") or []:
             work_payload = load_existing(public_paths.work_record_path(str(work_id)))
             if work_payload is None:
                 continue
             path, payload = work_payload
-            if remove_detail_from_work_record_payload(payload, record_id):
+            changed = False
+            for detail_uid in target_detail_uids:
+                changed = remove_detail_from_work_record_payload(payload, detail_uid) or changed
+            if changed:
                 payloads[path] = finalize_work_record_payload(payload, str(work_id))
 
     elif kind == "series":

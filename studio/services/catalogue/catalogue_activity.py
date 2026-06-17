@@ -197,6 +197,17 @@ ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
         record_id_field="work_id",
         script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
     ),
+    "work_detail_section": ActivityActionProfile(
+        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+        action_id="delete-work-detail-section",
+        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+        control_id="catalogueWorkDetailBrowserSectionActions",
+        control_selector="#catalogueWorkDetailBrowserSectionActions",
+        endpoint=routes.DELETE_APPLY_PATH,
+        record_family="work_detail_section",
+        record_id_field="section_id",
+        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
+    ),
     "series": ActivityActionProfile(
         page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES,
         action_id="delete-series",
@@ -324,6 +335,8 @@ def normalize_activity_record_id(record_id_field: str, value: Any) -> str:
         return slug_id(value)
     if record_id_field == "detail_uid":
         return normalize_detail_uid_value(value)
+    if record_id_field == "section_id":
+        return activity_context_value(value)
     if record_id_field == "series_id":
         return normalize_series_id(value)
     if record_id_field == "moment_id":

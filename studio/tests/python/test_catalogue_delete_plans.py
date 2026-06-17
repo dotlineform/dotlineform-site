@@ -15,7 +15,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_delete_plans  # noqa: E402
-from catalogue.catalogue_source import payload_for_map  # noqa: E402
+from catalogue.catalogue_source import payload_for_map, work_details_payload_for_maps  # noqa: E402
 from catalogue.moment_sources import moment_metadata_payload  # noqa: E402
 
 
@@ -66,15 +66,21 @@ def write_source_fixture(source_dir: Path) -> None:
     )
     write_json(
         source_dir / "work_details.json",
-        payload_for_map(
-            "work_details",
+        work_details_payload_for_maps(
+            {
+                "00001-1": {
+                    "section_id": "00001-1",
+                    "work_id": "00001",
+                    "section_title": "Details",
+                    "details_subfolder": "details",
+                }
+            },
             {
                 "00001-001": {
                     "detail_uid": "00001-001",
                     "work_id": "00001",
                     "detail_id": "001",
                     "section_id": "00001-1",
-                    "section_title": "Details",
                     "project_filename": "alpha-detail.jpg",
                     "title": "Alpha detail",
                 }
@@ -150,11 +156,14 @@ def test_detail_series_and_moment_delete_preview_shapes() -> None:
         write_source_fixture(source_dir)
 
         detail = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail", "00001-001", repo_root=root)
+        section = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail_section", "00001-1", repo_root=root)
         series = catalogue_delete_plans.build_delete_preview(source_dir, "series", "009", repo_root=root)
         moment = catalogue_delete_plans.build_delete_preview(source_dir, "moment", "keys", repo_root=root)
 
     assert_equal(detail["affected"], {"works": ["00001"], "series": [], "work_details": ["00001-001"]}, "detail affected")
     assert_equal(detail["summary"], "Delete work detail 00001-001 and remove 0 generated/media file(s).", "detail summary")
+    assert_equal(section["affected"], {"works": ["00001"], "series": [], "work_details": ["00001-001"]}, "section affected")
+    assert_equal(section["summary"], "Delete detail section 00001-1, 1 detail record(s), and remove 0 generated/media file(s).", "section summary")
     assert_equal(series["affected"], {"works": ["00001"], "series": ["009"], "work_details": []}, "series affected")
     assert_equal(series["summary"], "Delete series 009, remove it from 1 member work record(s), and remove 0 generated/media file(s).", "series summary")
     assert_equal(moment["affected"]["moments"], ["keys"], "moment affected")
@@ -192,11 +201,44 @@ def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> Non
     assert_equal(plan.activity_affected["series"], ["010"], "activity affected series")
 
 
+def test_section_delete_apply_plan_removes_section_and_details() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        source_dir = root / "studio/data/canonical/catalogue"
+        write_source_fixture(source_dir)
+        details_path = source_dir / "work_details.json"
+        payload = json.loads(details_path.read_text(encoding="utf-8"))
+        payload["work_detail_sections"]["00001-2"] = {
+            "section_id": "00001-2",
+            "work_id": "00001",
+            "section_title": "Versions",
+            "details_subfolder": "versions",
+        }
+        payload["work_details"]["00001-002"] = {
+            "detail_uid": "00001-002",
+            "work_id": "00001",
+            "detail_id": "002",
+            "section_id": "00001-2",
+            "project_filename": "alpha-version.jpg",
+            "title": "Alpha version",
+        }
+        write_json(details_path, payload)
+
+        preview = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail_section", "00001-1", repo_root=root)
+        plan = catalogue_delete_plans.build_delete_apply_plan(source_dir, root, "work_detail_section", "00001-1", preview)
+
+    details_payload = plan.payloads[(source_dir / "work_details.json").resolve()]
+    assert_equal(sorted(details_payload["work_detail_sections"]), ["00001-2"], "remaining sections")
+    assert_equal(sorted(details_payload["work_details"]), ["00001-002"], "remaining details")
+    assert_equal(plan.activity_affected["work_details"], ["00001-001"], "section activity affected details")
+
+
 def main() -> None:
     test_work_delete_preview_reports_dependents_and_primary_blocker()
     test_detail_series_and_moment_delete_preview_shapes()
     test_draft_series_primary_reference_is_cleared_for_work_delete_validation()
     test_delete_apply_plan_builds_source_payloads_and_activity_affected()
+    test_section_delete_apply_plan_removes_section_and_details()
     print("Catalogue delete plan tests OK")
 
 

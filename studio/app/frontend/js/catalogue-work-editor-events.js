@@ -16,7 +16,7 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
   state.root.addEventListener("click", (event) => {
     const refreshButton = event.target && event.target.closest ? event.target.closest('[data-media-refresh="work"]') : null;
     if (refreshButton) return;
-    invoke(callbacks.clearMediaRefreshStatus);
+    invoke(callbacks.clearActionMessagesOnNextClick);
   }, { capture: true });
 
   state.detailBrowserSearchNode.addEventListener("input", () => {

@@ -263,6 +263,9 @@ function renderSectionActions(state, options, { list = null, hasSections = false
       }
       const sectionId = selection && selection.record ? selection.record.id : "";
       if (!sectionId) return;
+      if (actionKey === "delete" && typeof options.deleteDetailSection === "function") {
+        options.deleteDetailSection(selection.record);
+      }
     }
   });
 }
