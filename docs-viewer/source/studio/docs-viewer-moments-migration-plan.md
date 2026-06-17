@@ -23,7 +23,7 @@ Retire the existing static route shell before creating the Docs Viewer public sc
 - generate source Markdown under `docs-viewer/source/moments/`
 - build the new docs and search payloads after source migration
 
-The archived route shell is rollback material only. It should not remain active once the Docs Viewer route owns `/moments/`.
+The archived route shell now lives at `studio/retired/site-routes/moments/index.html`. It is rollback material only and should not remain active once the Docs Viewer route owns `/moments/`.
 
 ## Markdown Shape
 
@@ -45,7 +45,7 @@ viewable: true
 
 <p class="momentDate">14 Jun 2025</p>
 
-[[media:moments/img/a-doll-story-primary-1600.webp]]
+![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 doll was created many years before she came into my care
@@ -76,7 +76,24 @@ Prefer `data-route-id="moments"` for the public route because it exists in the s
 
 Render the optional primary image as a Docs Viewer media token in the migrated Markdown.
 
-The migration should emit a path that resolves to the existing R2-served moment image variant. If the media resolver needs a scope-specific convention, keep it in the media/token layer or source data transform rather than in a moments-specific route runtime.
+The migration should emit the 800px primary variant:
+
+```md
+![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
+```
+
+Use the path shape:
+
+```text
+docs/moments/img/<moment_id>-primary-800.webp
+```
+
+Keep `width` and `height` as token-local attributes rather than front-matter fields. This keeps dimensions attached to the exact image and remains unambiguous if a document later contains multiple images.
+
+The media-token resolver should treat dimensions as optional:
+
+- if both `width` and `height` are present and valid positive integers, emit them as image attributes;
+- if either value is missing or invalid, omit both dimension attributes and render the image as a normal media token.
 
 Do not rebuild moment-specific image rendering JavaScript inside Docs Viewer. The image should be ordinary document content.
 
