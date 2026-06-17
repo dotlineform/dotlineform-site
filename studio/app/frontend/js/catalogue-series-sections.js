@@ -32,11 +32,6 @@ function text(state, options, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_series_editor.${key}`, fallback, tokens);
 }
 
-function buildSeriesRecordSummary(record) {
-  const title = normalizeText(record && record.title);
-  return title || "-";
-}
-
 function buildWorkRecordSummary(record, workId) {
   const title = normalizeText(record && record.title);
   const yearDisplay = normalizeText(record && record.year_display) || normalizeText(record && record.year);
@@ -71,16 +66,6 @@ function buildSeriesPrimaryWorkHref(state, workId, record, preview) {
     }
   }
   return normalizeText(preview && preview.fullSrc);
-}
-
-export function updateSeriesSummary(state, options = {}) {
-  if (!state.metaNode) return;
-  if (state.mode === "new") {
-    state.metaNode.textContent = text(state, options, "new_meta", "draft source record");
-    return;
-  }
-  const record = state.currentRecord;
-  state.metaNode.textContent = record ? `${record.series_id} · ${buildSeriesRecordSummary(record)}` : "";
 }
 
 export function renderSeriesPrimaryWorkPreview(state, options = {}) {

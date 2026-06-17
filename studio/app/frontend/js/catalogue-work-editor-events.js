@@ -1,3 +1,7 @@
+import {
+  bindCatalogueEditorActionMessageClearer
+} from "./catalogue-editor-message-controller.js";
+
 function invoke(callback, ...args) {
   if (typeof callback === "function") return callback(...args);
   return undefined;
@@ -13,11 +17,11 @@ function runAsync(callback, label, ...args) {
 export function bindWorkEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
 
-  state.root.addEventListener("click", (event) => {
-    const refreshButton = event.target && event.target.closest ? event.target.closest('[data-media-refresh="work"]') : null;
-    if (refreshButton) return;
-    invoke(callbacks.clearActionMessagesOnNextClick);
-  }, { capture: true });
+  bindCatalogueEditorActionMessageClearer(state.root, state.messageController, {
+    ignoreEvent: (event) => Boolean(event.target && event.target.closest && event.target.closest('[data-media-refresh="work"]')),
+    isBusy: () => Boolean(state.isSaving || state.isBuilding || state.isDeleting),
+    renderMessages: () => invoke(callbacks.renderEditorMessage)
+  });
 
   state.detailBrowserSearchNode.addEventListener("input", () => {
     invoke(callbacks.updateWorkDetailBrowser);

@@ -22,7 +22,7 @@ This page edits one canonical series source record from `site/assets/studio/data
 
 The first implementation covers:
 
-- search by series title with `series_id` shown in results
+- search by series title with `series_id` shown in results through the shared search-list control
 - open one series record
 - open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - create a draft series from the same route with `New` or `/studio/catalogue-series/?mode=new`
@@ -46,7 +46,7 @@ The first implementation covers:
 
 Series prose is no longer edited or imported through the series metadata editor. Existing permanent Markdown under `studio/data/canonical/catalogue-markdown/series/<series_id>.md` remains a generator input until a separate prose management workflow replaces it.
 
-The previous current-record side panel contents have been removed. The Series editor no longer renders side-panel readonly fields, public-link summary rows, build-impact text, runtime-state text, or readiness rows. The side panel now renders only the primary work media preview. Save, publish, unpublish, and delete status remains in the route status/result message area.
+The previous current-record side panel contents have been removed. The Series editor no longer renders side-panel readonly fields, public-link summary rows, build-impact text, runtime-state text, readiness rows, or a loaded-record status message. The side panel now renders only the primary work media preview. Save, publish, unpublish, and delete status remains in the route status/result message area and clears on the next ordinary route click through the shared Catalogue message handler.
 
 ## Runtime Ownership
 
@@ -54,7 +54,7 @@ The Series Editor route is split into route orchestration, action workflows, fie
 
 - `site/assets/studio/js/catalogue-series-editor.js` owns route bootstrap, generated lookup reads, create/edit mode transitions, validation orchestration, field rendering, and membership UI coordination.
 - `site/assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
-- `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, popup result rendering, search-input behavior, Open-button behavior, popup-click behavior, focused-series opening, and initial route selection.
+- `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, shared search-list option rendering, Open-button behavior, focused-series opening, and initial route selection.
 - `site/assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
 - `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
 - `site/assets/studio/js/catalogue-series-sections.js` owns the small form meta line and the primary-work image preview in the side panel.

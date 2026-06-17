@@ -110,7 +110,6 @@ def assert_state_factory(page: Page) -> None:
                 detailBrowserPanelTag: state.detailBrowserPanelNode && state.detailBrowserPanelNode.tagName,
                 detailBrowserSearchTag: state.detailBrowserSearchNode && state.detailBrowserSearchNode.tagName,
                 detailBrowserSelectedSectionId: state.detailBrowserSelectedSectionId,
-                clearActionMessagesOnNextClick: state.clearActionMessagesOnNextClick,
                 resourcesPanelTag: state.resourcesPanelNode && state.resourcesPanelNode.tagName,
                 contextNodeInState: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
                 routeOptionText: routeOptions.text('key', 'fallback'),
@@ -134,7 +133,6 @@ def assert_state_factory(page: Page) -> None:
     assert result["detailBrowserPanelTag"] == "SECTION"
     assert result["detailBrowserSearchTag"] == "INPUT"
     assert result["detailBrowserSelectedSectionId"] == ""
-    assert result["clearActionMessagesOnNextClick"] is False
     assert result["resourcesPanelTag"] == "DIV"
     assert result["contextNodeInState"] is False
     assert result["routeOptionText"] == "key:fallback"
@@ -163,7 +161,6 @@ def assert_event_binder(page: Page) -> None:
                 updateWorkDetailBrowser: () => push('updateWorkDetailBrowser'),
                 openEmbeddedEntryModal: (kind, index = null) => push('openEmbeddedEntryModal', kind, index),
                 deleteEmbeddedEntry: (kind, index) => push('deleteEmbeddedEntry', kind, index),
-                clearActionMessagesOnNextClick: () => push('clearActionMessagesOnNextClick'),
                 setNewWorkMode: () => push('setNewWorkMode'),
                 refreshWorkMedia: () => push('refreshWorkMedia'),
                 saveCurrentWork: () => push('saveCurrentWork'),
@@ -182,14 +179,10 @@ def assert_event_binder(page: Page) -> None:
     assert calls == [
         ["bindSelectionControls"],
         ["updateWorkDetailBrowser"],
-        ["clearActionMessagesOnNextClick"],
         ["setNewWorkMode"],
         ["refreshWorkMedia"],
-        ["clearActionMessagesOnNextClick"],
         ["saveCurrentWork"],
-        ["clearActionMessagesOnNextClick"],
         ["applyPublicationChange"],
-        ["clearActionMessagesOnNextClick"],
         ["deleteCurrentWork"],
     ]
 

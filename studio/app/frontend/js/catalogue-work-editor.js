@@ -255,7 +255,6 @@ async function editDetailSection(state, row, rows = []) {
       t(state, "detail_section_edit_status_unchanged", "Detail section already matches the current values."),
       "info"
     );
-    state.clearActionMessagesOnNextClick = true;
     return;
   }
   state.isSaving = true;
@@ -282,7 +281,6 @@ async function editDetailSection(state, row, rows = []) {
       }),
       "success"
     );
-    state.clearActionMessagesOnNextClick = true;
     state.messageController.setActionTextWithState(state.statusNode, "");
   } catch (error) {
     state.messageController.setActionTextWithState(
@@ -383,7 +381,6 @@ async function deleteDetailSection(state, row) {
       }),
       "success"
     );
-    state.clearActionMessagesOnNextClick = true;
     state.messageController.setActionTextWithState(state.statusNode, "");
   } catch (error) {
     state.messageController.setActionTextWithState(
@@ -580,13 +577,6 @@ function validateDraft(state) {
 
 function clearActionMessages(state) {
   state.messageController.clearActionMessages();
-}
-
-function clearActionMessagesOnNextClick(state) {
-  if (!state.clearActionMessagesOnNextClick) return;
-  state.clearActionMessagesOnNextClick = false;
-  clearActionMessages(state);
-  renderEditorMessage(state);
 }
 
 function firstBulkMixedMessage(state) {
@@ -877,10 +867,10 @@ async function init() {
     await loadInitialWorkEditorData(state);
     bindWorkEditorEvents(state, {
       bindSelectionControls: () => bindWorkSelectionControls(state, workSelectionOptions(state)),
+      renderEditorMessage: () => renderEditorMessage(state),
       updateWorkDetailBrowser: () => updateDetailBrowser(state),
       openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
-      clearActionMessagesOnNextClick: () => clearActionMessagesOnNextClick(state),
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
       refreshWorkMedia: () => refreshWorkMedia(state, workActionOptions(state)),
       saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),

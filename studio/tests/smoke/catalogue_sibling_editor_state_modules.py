@@ -51,7 +51,7 @@ def assert_sibling_state_factories(page: Page) -> None:
                 <button id="catalogueSeriesPublication"></button><button id="catalogueSeriesDelete"></button>
                 <div id="catalogueSeriesSaveMode"></div><div id="catalogueSeriesContext"></div>
                 <div id="catalogueSeriesStatus"></div><div id="catalogueSeriesWarning"></div>
-                <div id="catalogueSeriesResult"></div><div id="catalogueSeriesMeta"></div>
+                <div id="catalogueSeriesResult"></div>
                 <div id="catalogueSeriesSidePanel"></div>
                 <h2 id="catalogueSeriesMembersHeading"></h2><div id="catalogueSeriesMemberSearchRow"></div>
                 <input id="catalogueSeriesMemberSearch" /><div id="catalogueSeriesMemberSearchMeta"></div>
@@ -224,6 +224,129 @@ def assert_sibling_event_binders(page: Page) -> None:
     ]
 
 
+def assert_series_shared_search(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <section id="seriesSearchFixture">
+                <input id="catalogueSeriesSearch" />
+                <div id="catalogueSeriesPopup"><span id="catalogueSeriesPopupList" hidden></span></div>
+                <button id="catalogueSeriesOpen"></button>
+              </section>
+            `;
+            const selectionModule = await import('/studio/app/frontend/js/catalogue-series-selection.js');
+            const records = new Map([
+                ['001', { series_id: '001', title: 'Red Forms' }],
+                ['002', { series_id: '002', title: 'Blue Forms' }],
+                ['010', { series_id: '010', title: 'Red Archive' }]
+            ]);
+            const state = {
+                mode: 'single',
+                seriesById: records,
+                searchNode: document.getElementById('catalogueSeriesSearch'),
+                popupNode: document.getElementById('catalogueSeriesPopup'),
+                popupListNode: document.getElementById('catalogueSeriesPopupList'),
+                openButton: document.getElementById('catalogueSeriesOpen'),
+                draft: {},
+                rebuildPending: true
+            };
+            window.__seriesSearchCalls = [];
+            const context = {
+                loadSeriesLookupRecord: async (seriesId) => {
+                    window.__seriesSearchCalls.push(['load', seriesId]);
+                    return { series: records.get(seriesId), record_hash: `hash-${seriesId}` };
+                },
+                setLoadedSeries: (seriesId, record, options) => {
+                    window.__seriesSearchCalls.push(['loaded', seriesId, record.title, options.recordHash]);
+                },
+                refreshBuildPreview: async () => window.__seriesSearchCalls.push(['refresh']),
+                updateEditorState: () => window.__seriesSearchCalls.push(['update']),
+                saveCurrentSeries: async () => window.__seriesSearchCalls.push(['save']),
+                setEmptySearchMode: () => window.__seriesSearchCalls.push(['empty']),
+                text: (_key, fallback) => fallback
+            };
+            selectionModule.bindSeriesSelectionControls(state, context);
+            window.__seriesSelectionState = state;
+        }"""
+    )
+    page.fill("#catalogueSeriesSearch", "red")
+    page.wait_for_selector('#catalogueSeriesSearchList [data-search-list-value="001"]', state="attached")
+    result = page.evaluate(
+        """() => ({
+            values: Array.from(document.querySelectorAll('#catalogueSeriesSearchList [data-search-list-value]')).map((node) => node.dataset.searchListValue),
+            labels: Array.from(document.querySelectorAll('#catalogueSeriesSearchList .catalogueSeriesSearch__title')).map((node) => node.textContent)
+        })"""
+    )
+    assert result == {
+        "values": ["001", "010"],
+        "labels": ["Red Forms", "Red Archive"],
+    }
+    page.press("#catalogueSeriesSearch", "Enter")
+    page.wait_for_function("() => window.__seriesSearchCalls.some((call) => call[0] === 'loaded' && call[1] === '001')")
+    assert page.evaluate("document.querySelector('#catalogueSeriesSearch').value") == "001 Red Forms"
+
+    page.evaluate(
+        """() => {
+            window.__seriesSelectionState.mode = 'new';
+            window.__seriesSelectionState.draft = {};
+            window.__seriesSearchCalls.length = 0;
+        }"""
+    )
+    page.fill("#catalogueSeriesSearch", "12")
+    new_mode_result = page.evaluate(
+        """() => ({
+            draftSeriesId: window.__seriesSelectionState.draft.series_id,
+            popupHidden: document.querySelector('#catalogueSeriesSearchList').hidden,
+            calls: window.__seriesSearchCalls
+        })"""
+    )
+    assert new_mode_result == {
+        "draftSeriesId": "012",
+        "popupHidden": True,
+        "calls": [["update"]],
+    }
+
+
+def assert_shared_message_clearer(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <section id="messageRoot">
+                <p id="messageStatus"></p>
+                <button id="messageButton">Clear</button>
+              </section>
+            `;
+            const messageModule = await import('/studio/app/frontend/js/catalogue-editor-message-controller.js');
+            const statusNode = document.getElementById('messageStatus');
+            const root = document.getElementById('messageRoot');
+            const controller = messageModule.createCatalogueEditorMessageController({ statusNode });
+            let renderCount = 0;
+            controller.setActionTextWithState(statusNode, 'Saved.', 'success');
+            const before = statusNode.textContent;
+            messageModule.bindCatalogueEditorActionMessageClearer(root, controller, {
+                isBusy: () => false,
+                renderMessages: () => {
+                    renderCount += 1;
+                    controller.render();
+                }
+            });
+            document.getElementById('messageButton').click();
+            return {
+                before,
+                after: statusNode.textContent,
+                hasActionMessages: controller.hasActionMessages,
+                renderCount
+            };
+        }"""
+    )
+    assert result == {
+        "before": "Saved.",
+        "after": "",
+        "hasActionMessages": False,
+        "renderCount": 1,
+    }
+
+
 def run(site_root: Path) -> None:
     server, base_url = start_static_server(site_root)
     try:
@@ -233,6 +356,8 @@ def run(site_root: Path) -> None:
             page.goto(f"{base_url}/", wait_until="domcontentloaded")
             assert_sibling_state_factories(page)
             assert_sibling_event_binders(page)
+            assert_series_shared_search(page)
+            assert_shared_message_clearer(page)
             browser.close()
     finally:
         server.shutdown()

@@ -1,3 +1,7 @@
+import {
+  bindCatalogueEditorActionMessageClearer
+} from "./catalogue-editor-message-controller.js";
+
 function invoke(callback, ...args) {
   if (typeof callback === "function") return callback(...args);
   return undefined;
@@ -16,6 +20,11 @@ function closestTarget(event, selector) {
 
 export function bindMomentEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
+  bindCatalogueEditorActionMessageClearer(state.root, state.messageController, {
+    ignoreEvent: (event) => Boolean(event.target && event.target.closest && event.target.closest("[data-media-refresh], [data-prose-import]")),
+    isBusy: () => Boolean(state.isSaving || state.isBuilding || state.isDeleting || state.importIsBusy),
+    renderMessages: () => invoke(callbacks.updateEditorState)
+  });
   state.newButton.addEventListener("click", () => invoke(callbacks.enterImportMode));
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentMoment, "catalogue_moment_editor: save failed");

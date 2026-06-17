@@ -383,6 +383,7 @@ function buildMomentRows(payload) {
 function bindEvents(state) {
   bindMomentEditorEvents(state, {
     bindSelectionControls: () => bindMomentSelectionControls(state, buildSelectionContext(state)),
+    updateEditorState: () => updateDirtyState(state),
     enterImportMode: () => enterImportMode(state),
     saveCurrentMoment: () => saveCurrentMoment(state, buildActionContext(state)),
     applyPublicationChange: () => applyPublicationChange(state, buildActionContext(state)),

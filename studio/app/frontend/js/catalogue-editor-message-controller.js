@@ -155,6 +155,32 @@ export function createCatalogueEditorMessageController(options) {
     },
     get actionResultMessage() {
       return actionResultMessage;
+    },
+    get hasActionMessages() {
+      return Boolean(actionStatusMessage.text || actionResultMessage.text);
     }
   };
+}
+
+export function bindCatalogueEditorActionMessageClearer(root, messageController, options = {}) {
+  if (!root || !messageController || typeof messageController.clearActionMessages !== "function") {
+    return () => undefined;
+  }
+
+  const isBusy = typeof options.isBusy === "function" ? options.isBusy : () => false;
+  const ignoreEvent = typeof options.ignoreEvent === "function" ? options.ignoreEvent : () => false;
+  const renderMessages = typeof options.renderMessages === "function"
+    ? options.renderMessages
+    : () => messageController.render();
+
+  function onRootClick(event) {
+    if (ignoreEvent(event)) return;
+    if (isBusy()) return;
+    if (!messageController.hasActionMessages) return;
+    messageController.clearActionMessages();
+    renderMessages();
+  }
+
+  root.addEventListener("click", onRootClick, { capture: true });
+  return () => root.removeEventListener("click", onRootClick, { capture: true });
 }

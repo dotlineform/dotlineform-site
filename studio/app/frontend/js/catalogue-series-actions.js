@@ -130,8 +130,8 @@ function projectSeriesSavePresentation(state, context, response, outcome) {
         tone: "error"
       },
       loaded: {
-        text: t(state, context, "save_status_loaded", "Loaded series {series_id}.", loadedSeries),
-        tone: "success"
+        text: "",
+        tone: ""
       }
     }
   });

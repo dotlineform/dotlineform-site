@@ -3219,18 +3219,21 @@ button.tagStudioList__cellLink {
   display: block;
 }
 
-.catalogueWorkSearch__option {
+.catalogueWorkSearch__option,
+.catalogueSeriesSearch__option {
   grid-template-columns: auto minmax(0, 1fr);
   align-items: baseline;
   column-gap: 0.85rem;
 }
 
-.catalogueWorkSearch__id {
+.catalogueWorkSearch__id,
+.catalogueSeriesSearch__id {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.catalogueWorkSearch__title {
+.catalogueWorkSearch__title,
+.catalogueSeriesSearch__title {
   min-width: 0;
   overflow-wrap: anywhere;
   color: var(--muted, var(--studio-muted-body));

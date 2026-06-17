@@ -3,6 +3,9 @@ import {
   normalizeSeriesId,
   normalizeText
 } from "./catalogue-series-fields.js";
+import {
+  bindSearchList
+} from "/shared/frontend/js/search-list.js";
 
 const SEARCH_LIMIT = 20;
 
@@ -37,7 +40,8 @@ function buildSearchToken(value) {
 }
 
 export function setSeriesSelectionPopupVisibility(state, visible) {
-  state.popupNode.hidden = !visible;
+  if (state.popupListNode) state.popupListNode.hidden = !visible;
+  else if (state.popupNode) state.popupNode.hidden = !visible;
 }
 
 export function getSeriesSearchMatches(state, rawQuery) {
@@ -61,17 +65,17 @@ export function renderSeriesSearchMatches(state, matches, message = "") {
     return;
   }
   if (!matches.length) {
-    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
+    state.popupListNode.innerHTML = `<p class="sharedSearchList__empty">${escapeHtml(message)}</p>`;
     setSeriesSelectionPopupVisibility(state, true);
     return;
   }
   const rows = matches.map(({ seriesId, record }) => `
-    <button type="button" class="tagStudioSuggest__workButton" data-series-id="${escapeHtml(seriesId)}">
-      <span class="tagStudioSuggest__workId">${escapeHtml(seriesId)}</span>
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
+    <button type="button" class="sharedSearchList__option catalogueSeriesSearch__option" data-series-id="${escapeHtml(seriesId)}">
+      <span class="catalogueSeriesSearch__id">${escapeHtml(seriesId)}</span>
+      <span class="catalogueSeriesSearch__title">${escapeHtml(buildRecordSummary(record))}</span>
     </button>
   `);
-  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
+  state.popupListNode.innerHTML = rows.join("");
   setSeriesSelectionPopupVisibility(state, true);
 }
 
@@ -126,33 +130,40 @@ export function openFirstSeriesSearchMatch(state, context) {
 }
 
 export function bindSeriesSelectionControls(state, context) {
-  state.searchNode.addEventListener("input", () => {
-    if (state.mode === "new") {
+  const searchController = bindSearchList(state.searchNode, state.popupListNode, {
+    id: "catalogueSeriesSearchList",
+    maxOptions: SEARCH_LIMIT,
+    shouldOpen: ({ value }) => state.mode !== "new" && Boolean(normalizeText(value)),
+    loadOptions: () => Array.from(state.seriesById.entries()).map(([seriesId, record]) => ({ seriesId, record })),
+    filterOptions: (options, rawQuery) => getSeriesSearchMatches(
+      { ...state, seriesById: new Map(options.map((option) => [option.seriesId, option.record])) },
+      rawQuery
+    ),
+    getOptionValue: (option) => option.seriesId,
+    renderOption: ({ seriesId, record }) => `
+      <span class="catalogueSeriesSearch__id">${escapeHtml(seriesId)}</span>
+      <span class="catalogueSeriesSearch__title">${escapeHtml(buildRecordSummary(record))}</span>
+    `,
+    renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(text(context, "search_no_match", "No matching series records."))}</p>`,
+    classNames: {
+      option: "catalogueSeriesSearch__option"
+    },
+    onTransientInput: ({ value }) => {
+      if (state.mode !== "new") return;
       state.draft.series_id = normalizeSeriesId(state.searchNode.value);
-      setSeriesSelectionPopupVisibility(state, false);
       context.updateEditorState();
-      return;
-    }
-    renderSeriesSearchSuggestions(state, context, state.searchNode.value);
+    },
+    onCommit: (option) => openSeriesById(state, option.seriesId, context)
   });
+  state.seriesSearchController = searchController;
 
   state.searchNode.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented) return;
     if (event.key !== "Enter") return;
+    if (state.mode !== "new") return;
     event.preventDefault();
-    if (state.mode === "new") {
-      context.saveCurrentSeries().catch((error) => {
-        console.warn("catalogue_series_editor: unexpected create failure", error);
-      });
-      return;
-    }
-    openFirstSeriesSearchMatch(state, context);
-  });
-
-  state.popupListNode.addEventListener("click", (event) => {
-    const button = event.target && event.target.closest ? event.target.closest("[data-series-id]") : null;
-    if (!button) return;
-    openSeriesById(state, button.getAttribute("data-series-id"), context).catch((error) => {
-      console.warn("catalogue_series_editor: failed to open selected series", error);
+    context.saveCurrentSeries().catch((error) => {
+      console.warn("catalogue_series_editor: unexpected create failure", error);
     });
   });
 
@@ -163,10 +174,6 @@ export function bindSeriesSelectionControls(state, context) {
     openFirstSeriesSearchMatch(state, context);
   });
 
-  document.addEventListener("click", (event) => {
-    if (event.target === state.searchNode || state.popupNode.contains(event.target)) return;
-    setSeriesSelectionPopupVisibility(state, false);
-  });
 }
 
 export async function applyInitialSeriesRouteSelection(state, context) {

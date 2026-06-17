@@ -759,7 +759,6 @@ function workMediaSourceFromDraft(state) {
 
 export async function refreshWorkMedia(state, context) {
   if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
-  state.clearActionMessagesOnNextClick = false;
   state.isBuilding = true;
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_running", "Refreshing media…"));
@@ -779,15 +778,12 @@ export async function refreshWorkMedia(state, context) {
       mediaSource: () => mediaSource
     });
     if (blockedCount > 0) {
-      state.clearActionMessagesOnNextClick = false;
       setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_blocked", "Media refresh blocked."), "error");
       setTextWithState(context, state.resultNode, normalizeText(response && response.media && response.media.summary), "error");
       return;
     }
     setTextWithState(context, state.statusNode, t(state, context, "media_refresh_status_success", "Media refresh completed."), "success");
-    state.clearActionMessagesOnNextClick = true;
   } catch (error) {
-    state.clearActionMessagesOnNextClick = false;
     setTextWithState(
       context,
       state.statusNode,

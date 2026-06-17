@@ -60,8 +60,7 @@ import {
   setSeriesSelectionPopupVisibility
 } from "./catalogue-series-selection.js";
 import {
-  renderSeriesPrimaryWorkPreview,
-  updateSeriesSummary
+  renderSeriesPrimaryWorkPreview
 } from "./catalogue-series-sections.js";
 import {
   bindSeriesEditorEvents
@@ -174,19 +173,11 @@ function updateEditorState(state) {
   state.validationErrors = errors;
   clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState);
   setSeriesModeFieldAvailability(state);
-  updateSeriesSummary(state, {
-    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState: setNodeTextWithState,
-    draftHasChanges: () => draftHasChanges(state)
-  });
   renderSeriesPrimaryWorkPreview(state, {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
   });
   updateSeriesMemberList(state, membershipOptions(state));
   const dirty = hasRecord && draftHasChanges(state);
-  if (state.mode === "single" && hasRecord) {
-    state.messageController.setDefaultMessage(t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }));
-  }
   state.messageController.render({
     busy: state.isSaving || state.isBuilding || state.isDeleting,
     validationMessage: firstCatalogueValidationMessage(errors),
@@ -256,7 +247,7 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   setNodeTextWithState(state.membersStatusNode, "");
   setOpenInputMode(state);
   state.messageController.setRouteTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
-  state.messageController.setRouteTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: seriesId }));
+  state.messageController.setRouteTextWithState(state.statusNode, "");
   state.messageController.setRouteTextWithState(state.warningNode, "");
   if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
   updateEditorState(state);
@@ -384,7 +375,6 @@ async function init() {
     saveButton,
     publicationButton,
     deleteButton,
-    metaNode,
     membersHeadingNode,
     memberSearchRowNode,
     memberSearchNode,

@@ -1,3 +1,7 @@
+import {
+  bindCatalogueEditorActionMessageClearer
+} from "./catalogue-editor-message-controller.js";
+
 function invoke(callback, ...args) {
   if (typeof callback === "function") return callback(...args);
   return undefined;
@@ -16,6 +20,10 @@ function closestTarget(event, selector) {
 
 export function bindSeriesEditorEvents(state, callbacks = {}) {
   invoke(callbacks.bindSelectionControls);
+  bindCatalogueEditorActionMessageClearer(state.root, state.messageController, {
+    isBusy: () => Boolean(state.isSaving || state.isBuilding || state.isDeleting),
+    renderMessages: () => invoke(callbacks.updateEditorState)
+  });
   state.newButton.addEventListener("click", () => invoke(callbacks.setNewSeriesMode));
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentSeries, "catalogue_series_editor: unexpected save failure");
