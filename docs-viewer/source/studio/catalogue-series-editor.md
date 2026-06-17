@@ -30,8 +30,8 @@ The first implementation covers:
 - show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
 - edit `sort_fields`
 - edit `primary_work_id`
-- list current member works through the shared record-list component
-- show shared record-list toolbar buttons for future member-work new/edit/delete workflows
+- list current member works as thumbnail-led rows through the shared record-list component
+- show shared record-list toolbar buttons for member-work actions, with `New` opening the Work editor in preselected series create mode and Delete staging a guarded membership removal
 - preview the scoped public update impact for the current series
 - save metadata, with published-series saves updating the public catalogue internally
 - publish draft series through a dedicated `Publish` command
@@ -51,7 +51,7 @@ The Series Editor route is split into route orchestration, action workflows, fie
 - `site/assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
 - `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, shared search-list option rendering, Open-button behavior, focused-series opening, and initial route selection.
 - `site/assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
-- `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, shared member record-list rendering, and placeholder member toolbar actions.
+- `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, shared member record-list rendering, and member toolbar actions.
 - `site/assets/studio/js/catalogue-series-sections.js` owns the primary-work image preview in the side panel.
 
 Membership remains route-local to the Series Editor because it edits affected work `series_ids` arrays as part of the series workflow.
@@ -102,7 +102,7 @@ In new mode:
 - `Create` writes through `POST /studio/api/catalogue/series/create`
 - successful create opens `/studio/catalogue-series/?series=<series_id>` in normal edit mode
 
-Create mode does not update the public site. Add member works, set a valid `primary_work_id`, save the draft, and then use `Publish` when ready.
+Create mode does not update the public site. The member-work `New` action opens the Work editor with the current series preselected; edit remains a placeholder until that workflow is implemented. Set a valid `primary_work_id`, save the draft, and then use `Publish` when ready.
 
 ## Membership Constraints
 
@@ -110,11 +110,13 @@ Locked constraints for this phase:
 
 - each work's `series_ids` order is preserved exactly as edited
 - membership save does not sort a work's series list
-- adding the first member work to a series with blank `primary_work_id` automatically sets that work as `primary_work_id`
-- adding later member works never overwrites an existing `primary_work_id`
-- the member list uses the shared record-list component
+- the member list uses the shared record-list component with work thumbnails, work ids, and titles
 - the member toolbar uses shared record-list action buttons
-- member new/edit/delete workflows are not implemented yet; the toolbar buttons are placeholders until those modals or links are designed
+- member `New` opens `/studio/catalogue-work/?mode=new&series=<series_id>` in a new tab
+- member Delete opens a modal and means remove the selected work from the current series, not delete the work source record
+- member Delete is blocked when the selected work is the current `primary_work_id`; set a different primary work first
+- member Delete is blocked when the selected work has no other `series_ids`; use the Work editor to unpublish or delete that work completely
+- member Edit is not implemented yet; the toolbar button is a placeholder until its modal or link is designed
 
 ## Save Boundary
 
@@ -133,7 +135,7 @@ Current save/publication flow:
 
 1. page loads derived series-search and work-search lookup payloads through `GET /studio/api/catalogue/read`, not full canonical source maps
 2. opening a series fetches one focused lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_series_base&record_id=<series_id>`
-3. membership edits are currently not exposed in the UI; the save payload still supports changed work membership rows for the later member-work modal/link workflow
+3. member Delete stages membership edits in the UI by removing the current series id from the selected work's `series_ids`; the change is persisted only after Save
 4. `POST /studio/api/catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and local app adapter reject saves where `year` or `year_display` is blank
 5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command
 6. the local app adapter validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves

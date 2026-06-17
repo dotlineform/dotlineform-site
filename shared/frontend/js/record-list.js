@@ -170,6 +170,10 @@ function columnTemplate(columns) {
   return columns.map((column) => normalizeText(column.width) || "minmax(0, 1fr)").join(" ");
 }
 
+function hasImageColumn(columns) {
+  return columns.some((column) => column && column.type === "image");
+}
+
 function renderHeader(rootNode, columns, options) {
   if (options.showHeader === false) return;
   const header = document.createElement("div");
@@ -332,6 +336,7 @@ function renderRows(controller, options) {
   records.forEach((record, index) => {
     const row = document.createElement("div");
     row.className = "sharedRecordList__row";
+    if (hasImageColumn(columns)) row.classList.add("sharedRecordList__row--withImage");
     row.setAttribute("role", "row");
     row.style.gridTemplateColumns = columnTemplate(columns);
     row.dataset.recordListRow = "true";

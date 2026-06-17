@@ -3,6 +3,7 @@ import {
   buildWorkRecordSummary as buildRecordSummary
 } from "./catalogue-work-sections.js";
 import {
+  normalizeSeriesId,
   normalizeText,
   normalizeWorkId
 } from "./catalogue-work-fields.js";
@@ -329,6 +330,8 @@ export async function applyInitialWorkRouteSelection(state, context) {
   const params = new URLSearchParams(window.location.search);
   const requestedMode = normalizeText(params.get("mode")).toLowerCase();
   const requestedWorkValue = normalizeText(params.get("work"));
+  const requestedSeriesRaw = normalizeText(params.get("series"));
+  const requestedSeriesId = normalizeSeriesId(requestedSeriesRaw);
   if (requestedWorkValue) {
     try {
       await openWorkSelection(state, requestedWorkValue, context);
@@ -342,7 +345,18 @@ export async function applyInitialWorkRouteSelection(state, context) {
       );
     }
   } else if (requestedMode === "new") {
-    context.setNewWorkMode();
+    const hasSeriesParam = Boolean(requestedSeriesRaw);
+    const seriesIsValid = Boolean(requestedSeriesId && state.seriesById.has(requestedSeriesId));
+    context.setNewWorkMode({ seriesId: seriesIsValid ? requestedSeriesId : "" });
+    if (hasSeriesParam && !seriesIsValid) {
+      context.setTextWithState(
+        state.statusNode,
+        requestedSeriesId
+          ? text(context, "unknown_series_error", "Unknown series id: {series_id}.", { series_id: requestedSeriesId })
+          : text(context, "invalid_series_error", "Invalid series id."),
+        "error"
+      );
+    }
   } else {
     context.setEmptySearchMode();
   }

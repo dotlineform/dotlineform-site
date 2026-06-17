@@ -750,7 +750,7 @@ function workSelectionOptions(state) {
     saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     setEmptySearchMode: (overrides = {}) => setEmptySearchMode(state, workRouteStateOptions(state, overrides)),
-    setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state))
+    setNewWorkMode: (overrides = {}) => setNewWorkMode(state, workRouteStateOptions(state, overrides))
   };
 }
 

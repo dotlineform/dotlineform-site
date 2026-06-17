@@ -1,4 +1,11 @@
 import {
+  buildStudioRouteUrl
+} from "./studio-config.js";
+import {
+  openConfirmModal,
+  openNoticeModal
+} from "./studio-modal.js";
+import {
   createRecordList,
   createRecordListActions
 } from "/shared/frontend/js/record-list.js";
@@ -7,6 +14,9 @@ import {
   displayValue,
   stableStringify
 } from "./catalogue-editor-records.js";
+import {
+  buildWorkThumbPreview
+} from "./catalogue-media-preview.js";
 import {
   normalizeSeriesId,
   normalizeText,
@@ -40,11 +50,9 @@ export function getCurrentSeriesMemberEntries(state) {
     .filter(({ seriesIds }) => seriesIds.includes(state.currentSeriesId))
     .map(({ workId, seriesIds }) => {
       const record = state.workSearchById.get(workId) || {};
-      const position = seriesIds.indexOf(state.currentSeriesId);
       return {
         workId,
         seriesIds,
-        position,
         record,
       };
     });
@@ -130,17 +138,100 @@ function selectedMemberWorkId(records, selectedId) {
 }
 
 function memberRecords(state, options) {
-  return getCurrentSeriesMemberEntries(state).map((entry) => ({
-    workId: entry.workId,
-    title: displayValue(entry.record && entry.record.title),
-    position: text(options, "members_position", "position {position}", { position: String(entry.position + 1) }),
-    primary: entry.position === 0 ? text(options, "members_primary_badge", "primary") : ""
-  }));
+  return getCurrentSeriesMemberEntries(state).map((entry) => {
+    const preview = buildWorkThumbPreview(state.mediaConfig, entry.workId);
+    return {
+      workId: entry.workId,
+      title: displayValue(entry.record && entry.record.title),
+      thumbSrc: preview.src,
+      thumbSrcset: preview.srcset || "",
+      thumbSizes: "48px",
+      thumbWidth: 48,
+      thumbHeight: 48,
+      thumbAlt: "",
+      thumbFallback: text(options, "members_preview_missing", "No preview")
+    };
+  });
+}
+
+function memberRemoveBlocker(state, workId, seriesIds, options) {
+  const primaryWorkId = normalizeWorkId(state.draft && state.draft.primary_work_id);
+  const isPrimary = Boolean(primaryWorkId && primaryWorkId === workId);
+  const hasOtherSeries = seriesIds.some((seriesId) => seriesId !== state.currentSeriesId);
+  if (isPrimary && !hasOtherSeries) {
+    return text(
+      options,
+      "members_remove_blocked_primary_only",
+      "work {work_id} is the primary work for this series, and it is only associated with this series.",
+      { work_id: workId }
+    );
+  }
+  if (isPrimary) {
+    return text(
+      options,
+      "members_remove_blocked_primary",
+      "work {work_id} is the primary work for this series, please set a different primary work before removing from the series",
+      { work_id: workId }
+    );
+  }
+  if (!hasOtherSeries) {
+    return text(
+      options,
+      "members_remove_blocked_only_series",
+      "work {work_id} is only associated with this series, so use the works editor to unpublish or delete it completely.",
+      { work_id: workId }
+    );
+  }
+  return "";
+}
+
+async function removeSelectedMemberFromSeries(state, selection, options) {
+  const workId = normalizeWorkId(selection && selection.record && selection.record.workId);
+  if (!workId || !state.currentSeriesId) return;
+  const seriesIds = (state.memberSeriesIdsByWorkId.get(workId) || [])
+    .map((seriesId) => normalizeSeriesId(seriesId))
+    .filter(Boolean);
+  const blocker = memberRemoveBlocker(state, workId, seriesIds, options);
+  if (blocker) {
+    await openNoticeModal({
+      root: state.root,
+      title: text(options, "members_remove_blocked_title", "Cannot remove work"),
+      body: [blocker],
+      closeLabel: text(options, "modal_close_button", "Close"),
+      size: "compact"
+    });
+    return;
+  }
+  const result = await openConfirmModal({
+    root: state.root,
+    title: text(options, "members_remove_confirm_title", "Remove work from series?"),
+    body: [
+      text(options, "members_remove_confirm_message", "Remove work {work_id} from this series?", { work_id: workId }),
+      text(options, "members_remove_confirm_note", "This does not delete the work source record. Save to persist the membership change.")
+    ],
+    primaryLabel: text(options, "members_remove_confirm_button", "Remove"),
+    cancelLabel: text(options, "confirm_cancel_button", "Cancel"),
+    defaultAction: "cancel",
+    size: "compact"
+  });
+  if (!result || !result.confirmed) return;
+  const nextSeriesIds = seriesIds.filter((seriesId) => seriesId !== state.currentSeriesId);
+  state.memberSeriesIdsByWorkId.set(workId, nextSeriesIds);
+  state.selectedMemberWorkId = "";
+  if (typeof options.setTextWithState === "function") {
+    options.setTextWithState(
+      state.statusNode,
+      text(options, "members_remove_staged", "Removed work {work_id} from this series. Save to persist the membership change.", { work_id: workId }),
+      "warn"
+    );
+  }
+  if (typeof options.updateEditorState === "function") options.updateEditorState();
 }
 
 function renderMemberActions(state, options, list = null) {
   clearMemberActions(state);
   if (!state.membersActionsNode) return;
+  const canCreateMemberWork = Boolean(state.currentRecord && state.currentSeriesId);
   const actions = [
     {
       key: "edit",
@@ -153,26 +244,41 @@ function renderMemberActions(state, options, list = null) {
     {
       key: "delete",
       label: "🗑️",
-      title: text(options, "members_action_delete_unavailable", "Delete member work is not implemented yet."),
-      ariaLabel: text(options, "members_action_delete", "Delete"),
+      title: text(options, "members_action_remove", "Remove from this series"),
+      ariaLabel: text(options, "members_action_remove", "Remove"),
       appearance: "icon",
-      tone: "danger",
-      disabled: () => true
+      tone: "danger"
     },
     {
       key: "new",
       label: "📄",
-      title: text(options, "members_action_new_unavailable", "New member work is not implemented yet."),
+      title: canCreateMemberWork
+        ? text(options, "members_action_new", "New")
+        : text(options, "members_action_new_unavailable", "Open a saved series before adding member works."),
       ariaLabel: text(options, "members_action_new", "New"),
       appearance: "icon",
       requiresSelection: false,
-      disabled: () => true
+      disabled: () => !canCreateMemberWork
     }
   ];
   state.membersActionsController = createRecordListActions(state.membersActionsNode, {
     id: "catalogueSeriesMembersActionsList",
     list,
-    actions
+    actions,
+    onAction: ({ actionKey, selection }) => {
+      if (actionKey === "delete") {
+        void removeSelectedMemberFromSeries(state, selection, options);
+        return;
+      }
+      if (actionKey !== "new" || !canCreateMemberWork) return;
+      const href = buildStudioRouteUrl(state.config, "catalogue_work_editor", {
+        mode: "new",
+        series: state.currentSeriesId
+      });
+      if (href && typeof window !== "undefined" && typeof window.open === "function") {
+        window.open(href, "_blank", "noopener");
+      }
+    }
   });
 }
 
@@ -181,15 +287,29 @@ export function updateSeriesMemberList(state, options = {}) {
   clearMemberList(state);
   const records = memberRecords(state, options);
   state.selectedMemberWorkId = selectedMemberWorkId(records, state.selectedMemberWorkId);
-  state.membersMetaNode.textContent = records.length ? `${records.length} total` : "";
+  state.membersMetaNode.textContent = "";
   state.membersListController = createRecordList(state.membersResultsNode, {
     id: "catalogueSeriesMembers",
     records,
     columns: [
       {
+        key: "thumbSrc",
+        label: text(options, "members_thumbnail_heading", "thumbnail"),
+        width: "48px",
+        type: "image",
+        srcKey: "thumbSrc",
+        srcsetKey: "thumbSrcset",
+        sizesKey: "thumbSizes",
+        widthKey: "thumbWidth",
+        heightKey: "thumbHeight",
+        altKey: "thumbAlt",
+        fallbackTextKey: "thumbFallback",
+        truncate: false
+      },
+      {
         key: "workId",
         label: text(options, "members_work_id_heading", "work"),
-        width: "minmax(5rem, 7rem)",
+        width: "minmax(3.5rem, 4.9rem)",
         truncate: false
       },
       {
@@ -197,18 +317,6 @@ export function updateSeriesMemberList(state, options = {}) {
         label: text(options, "members_title_heading", "title"),
         width: "minmax(0, 1fr)",
         truncate: true
-      },
-      {
-        key: "position",
-        label: text(options, "members_position_heading", "position"),
-        width: "minmax(6rem, 8rem)",
-        truncate: false
-      },
-      {
-        key: "primary",
-        label: text(options, "members_primary_heading", "primary"),
-        width: "5rem",
-        truncate: false
       }
     ],
     showHeader: false,

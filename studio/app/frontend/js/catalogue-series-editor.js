@@ -94,8 +94,9 @@ function t(state, key, fallback, tokens = null) {
 function membershipOptions(state) {
   return {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    setTextWithState: setNodeTextWithState,
-    setFieldNodeValue: setSeriesFieldNodeValue
+    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
+    setFieldNodeValue: setSeriesFieldNodeValue,
+    updateEditorState: () => updateEditorState(state)
   };
 }
 

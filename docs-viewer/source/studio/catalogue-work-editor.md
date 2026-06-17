@@ -95,17 +95,21 @@ It does not yet:
 New mode is entered from either:
 
 - `/studio/catalogue-work/?mode=new`
+- `/studio/catalogue-work/?mode=new&series=<series_id>` to preselect one series
 - the `New` button beside `Open`
 
 In new mode:
 
 - the top input becomes the new `work_id` input
 - the suggested next id is prefilled when available
+- a valid single `series` URL parameter preselects `series_ids`
 - `status` is visible but fixed to `draft`
 - `published_date` is unavailable until the record exists
 - `Create` writes source JSON only through `POST /studio/api/catalogue/work/create`
 - no public site update runs during create
 - after create, the page opens the new work in normal edit mode
+
+The `series` URL parameter is intentionally single-series only. Additional series should be linked after the work exists in normal edit mode.
 
 Draft works can be found later from Catalogue Drafts using `/studio/catalogue-status/?family=works`.
 

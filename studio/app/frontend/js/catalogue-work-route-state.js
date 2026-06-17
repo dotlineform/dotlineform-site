@@ -15,6 +15,7 @@ import {
   buildWorkDraftFromRecord,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
   canonicalizeWorkScalar as canonicalizeScalar,
+  normalizeSeriesId,
   normalizeText,
   normalizeWorkId,
   suggestNextWorkId
@@ -200,6 +201,7 @@ export function setNewWorkMode(state, options = {}) {
   state.draft.published_date = "";
   state.draft.downloads = [];
   state.draft.links = [];
+  state.draft.series_ids = normalizeSeriesId(options.seriesId);
   state.draft.work_id = normalizeWorkId(options.workId) || state.nextSuggestedWorkId || suggestNextWorkId(Array.from(state.workSearchById.values()));
   state.searchNode.value = state.draft.work_id;
   state.searchNode.placeholder = text(options, "new_work_id_placeholder", "new work id");

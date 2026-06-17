@@ -36,6 +36,10 @@
   align-items: baseline;
 }
 
+.sharedRecordList__row--withImage {
+  align-items: center;
+}
+
 .sharedRecordList__row::before {
   content: "";
   position: absolute;

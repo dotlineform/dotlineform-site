@@ -6,9 +6,12 @@ import {
 export function renderCatalogueSeriesShell(config) {
   const mediaAttrs = renderMediaAttrs(readCatalogueEditorMediaAttrs(config), [
     "worksPrimaryBase",
+    "thumbWorksBase",
     "primaryDisplayWidth",
     "primaryFullWidth",
     "primarySuffix",
+    "thumbSizes",
+    "thumbSuffix",
     "assetFormat"
   ]);
   return `<div
