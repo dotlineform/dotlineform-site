@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">25 Mar 2019</p>
 
-<img src="[[media:docs/moments/img/a-light-inside-a-flower-primary-800.webp]]" alt="a light inside a flower" width="800" height="800">
+![a light inside a flower]([[media:docs/moments/img/a-light-inside-a-flower-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 do the squirrels wonder why

@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">23 Oct 2024</p>
 
-<img src="[[media:docs/moments/img/13-moments-in-october-primary-800.webp]]" alt="13 moments in october" width="800" height="800">
+![13 moments in october]([[media:docs/moments/img/13-moments-in-october-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 we should be sleeping

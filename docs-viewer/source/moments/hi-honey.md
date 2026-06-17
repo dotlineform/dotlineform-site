@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2024</p>
 
-<img src="[[media:docs/moments/img/hi-honey-primary-800.webp]]" alt="hi honey" width="800" height="552">
+![hi honey]([[media:docs/moments/img/hi-honey-primary-800.webp width=800 height=552]])
 
 <pre class="moment-text">
 Hi honey

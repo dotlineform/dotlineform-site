@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">7 Jul 2019</p>
 
-<img src="[[media:docs/moments/img/occasionally-primary-800.webp]]" alt="occasionally" width="800" height="800">
+![occasionally]([[media:docs/moments/img/occasionally-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 occasionally I find myself

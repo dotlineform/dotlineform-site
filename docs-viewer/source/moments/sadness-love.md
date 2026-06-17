@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">23 Jan 2010</p>
 
-<img src="[[media:docs/moments/img/sadness-love-primary-800.webp]]" alt="sadness love" width="800" height="600">
+![sadness love]([[media:docs/moments/img/sadness-love-primary-800.webp width=800 height=600]])
 
 <pre class="moment-text">
 sadness permeates this world, infuses it like a fog. philosophy abstracts it, turns it into a property of language, invents names for it. but there is no way to escape it by understanding how it is defined because it has no substance, nothing you can take hold of and mold. belief comes closer, in seeing sadness as something real but by the grace of God also something from somewhere else, as if it is a divine property that is put upon us to be embraced and absorbed, so that we can be forgiven. but there is no way to release grief in guilt, forgive ourselves for something that we cannot separate out because it is an irreducible part of our lives.

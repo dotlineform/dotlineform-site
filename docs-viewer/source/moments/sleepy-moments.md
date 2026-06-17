@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">2 Apr 2019</p>
 
-<img src="[[media:docs/moments/img/sleepy-moments-primary-800.webp]]" alt="sleepy moments" width="800" height="800">
+![sleepy moments]([[media:docs/moments/img/sleepy-moments-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 warm breath in my ear

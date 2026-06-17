@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">16 May 2018</p>
 
-<img src="[[media:docs/moments/img/winter-primary-800.webp]]" alt="winter" width="800" height="800">
+![winter]([[media:docs/moments/img/winter-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 before you know it

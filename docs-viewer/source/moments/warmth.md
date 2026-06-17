@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">25 Nov 2018</p>
 
-<img src="[[media:docs/moments/img/warmth-primary-800.webp]]" alt="warmth" width="800" height="800">
+![warmth]([[media:docs/moments/img/warmth-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 her smile is a heart

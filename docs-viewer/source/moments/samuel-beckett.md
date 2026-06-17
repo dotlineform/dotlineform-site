@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 1992</p>
 
-<img src="[[media:docs/moments/img/samuel-beckett-primary-800.webp]]" alt="Samuel Beckett" width="541" height="800">
+![Samuel Beckett]([[media:docs/moments/img/samuel-beckett-primary-800.webp width=541 height=800]])
 
 <pre class="moment-text">
 I had a dream a few years ago. It sticks to me, like a strange glue.

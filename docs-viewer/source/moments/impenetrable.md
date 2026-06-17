@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2018</p>
 
-<img src="[[media:docs/moments/img/impenetrable-primary-800.webp]]" alt="impenetrable" width="800" height="800">
+![impenetrable]([[media:docs/moments/img/impenetrable-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 dream life is a thing

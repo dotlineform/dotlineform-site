@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2020?</p>
 
-<img src="[[media:docs/moments/img/4-stories-primary-800.webp]]" alt="4 stories" width="800" height="800">
+![4 stories]([[media:docs/moments/img/4-stories-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 There is a form

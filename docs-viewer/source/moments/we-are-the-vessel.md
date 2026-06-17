@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">12 May 2018</p>
 
-<img src="[[media:docs/moments/img/we-are-the-vessel-primary-800.webp]]" alt="we are the vessel" width="800" height="800">
+![we are the vessel]([[media:docs/moments/img/we-are-the-vessel-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 i don’t draw lines without any reason

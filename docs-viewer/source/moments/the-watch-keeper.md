@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">28 Jan 2014</p>
 
-<img src="[[media:docs/moments/img/the-watch-keeper-primary-800.webp]]" alt="the watch keeper" width="800" height="800">
+![the watch keeper]([[media:docs/moments/img/the-watch-keeper-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 the watch keeper’s watches keep time

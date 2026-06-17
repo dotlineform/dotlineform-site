@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2015</p>
 
-<img src="[[media:docs/moments/img/i-felt-my-self-sinking-primary-800.webp]]" alt="i felt my self sinking" width="600" height="800">
+![i felt my self sinking]([[media:docs/moments/img/i-felt-my-self-sinking-primary-800.webp width=600 height=800]])
 
 <pre class="moment-text">
 I felt my self sinking

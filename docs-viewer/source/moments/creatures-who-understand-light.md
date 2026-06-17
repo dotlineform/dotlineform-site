@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2019</p>
 
-<img src="[[media:docs/moments/img/creatures-who-understand-light-primary-800.webp]]" alt="creatures who understand light" width="800" height="600">
+![creatures who understand light]([[media:docs/moments/img/creatures-who-understand-light-primary-800.webp width=800 height=600]])
 
 <pre class="moment-text">
 (perhaps somewhere…)

@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">6 May 2018</p>
 
-<img src="[[media:docs/moments/img/where-words-end-primary-800.webp]]" alt="where words end" width="800" height="800">
+![where words end]([[media:docs/moments/img/where-words-end-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 love shines where words end

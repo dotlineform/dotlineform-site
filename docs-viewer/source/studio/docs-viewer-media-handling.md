@@ -107,6 +107,10 @@ The wrapper body uses the `img` media class:
 
 ![Example](&#91;&#91;media:docs/library/img/example.png&#93;&#93;)</code></pre>
 
+Markdown image media tokens may include optional positive-integer dimensions:
+
+<pre><code>![Example](&#91;&#91;media:docs/library/img/example.png width=800 height=600&#93;&#93;)</code></pre>
+
 The import response uses a singular `media_plan` for standalone image imports.
 That plan includes:
 

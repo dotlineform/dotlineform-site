@@ -167,6 +167,8 @@ viewer_report: semantic_references
 
 Intro with [parent](parent.md), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
 
+![Measured diagram]([[media:docs/studio/measured-diagram.png width=800 height=600]])
+
 <!-- [[ref:work:638999|commented missing work]] -->
 
 <!--
@@ -301,6 +303,10 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     content_html = child["content_html"]
     assert 'href="/docs/?scope=studio&doc=parent"' in content_html
     assert 'src="https://media.example.test/docs/studio/diagram.png"' in content_html
+    assert (
+        '<img src="https://media.example.test/docs/studio/measured-diagram.png" '
+        'alt="Measured diagram" width="800" height="600"'
+    ) in content_html
     assert 'title="Alt text"' in content_html
     assert 'class="docsViewer__interactiveFrame"' in content_html
     assert "--docs-viewer-interactive-height: 420px" in content_html

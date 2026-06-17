@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">7 Jan 2018</p>
 
-<img src="[[media:docs/moments/img/the-moment-collector-primary-800.webp]]" alt="the moment collector" width="800" height="800">
+![the moment collector]([[media:docs/moments/img/the-moment-collector-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 deep in a warm cellar

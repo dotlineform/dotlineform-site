@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">19 Feb 2015</p>
 
-<img src="[[media:docs/moments/img/a-beautiful-route-primary-800.webp]]" alt="a beautiful route" width="800" height="800">
+![a beautiful route]([[media:docs/moments/img/a-beautiful-route-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 this picture is before the heron

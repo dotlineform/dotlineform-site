@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. Apr 1998</p>
 
-<img src="[[media:docs/moments/img/angels-primary-800.webp]]" alt="angels" width="783" height="800">
+![angels]([[media:docs/moments/img/angels-primary-800.webp width=783 height=800]])
 
 <pre class="moment-text">
 their faces are blank and empty

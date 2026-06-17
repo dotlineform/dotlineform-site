@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">22 Apr 2019</p>
 
-<img src="[[media:docs/moments/img/leaves-primary-800.webp]]" alt="leaves" width="800" height="600">
+![leaves]([[media:docs/moments/img/leaves-primary-800.webp width=800 height=600]])
 
 <pre class="moment-text">
 leaves float on silky stems

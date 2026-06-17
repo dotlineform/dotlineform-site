@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2013</p>
 
-<img src="[[media:docs/moments/img/particles-primary-800.webp]]" alt="particles" width="800" height="800">
+![particles]([[media:docs/moments/img/particles-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 it is very quiet

@@ -46,7 +46,7 @@ viewable: true
 
 <p class="momentDate">14 Jun 2025</p>
 
-<img src="[[media:docs/moments/img/a-doll-story-primary-800.webp]]" alt="a doll story" width="800" height="800">
+![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 doll was created many years before she came into my care
@@ -86,7 +86,7 @@ Render the optional primary image as a Docs Viewer media token in the migrated M
 The migration should emit the 800px primary variant:
 
 ```md
-<img src="[[media:docs/moments/img/a-doll-story-primary-800.webp]]" alt="a doll story" width="800" height="800">
+![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
 ```
 
 Use the path shape:
@@ -95,7 +95,7 @@ Use the path shape:
 docs/moments/img/<moment_id>-primary-800.webp
 ```
 
-Keep `width` and `height` as local `<img>` attributes rather than front-matter fields. This keeps dimensions attached to the exact image and remains unambiguous if a document later contains multiple images.
+Keep `width` and `height` as local media token attributes rather than front-matter fields. This keeps dimensions attached to the exact image and remains unambiguous if a document later contains multiple images.
 
 The migration should treat dimensions as optional:
 

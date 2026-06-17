@@ -145,9 +145,13 @@ Docs media tokens:
 
 - use the literal token <code>&#91;&#91;media:path/to/file.jpg&#93;&#93;</code> in Markdown or raw HTML doc bodies
 - the builder resolves this token against `_config.yml` `media_base`
-- example:
-  - <code>![Example](&#91;&#91;media:library/example.jpg&#93;&#93;)</code>
-  - <code>&lt;img src="&#91;&#91;media:library/example.jpg&#93;&#93;" alt="Example"&gt;</code>
+- examples:
+
+<pre><code>![Example](&#91;&#91;media:library/example.jpg&#93;&#93;)
+![Example](&#91;&#91;media:library/example.jpg width=800 height=600&#93;&#93;)
+&lt;img src="&#91;&#91;media:library/example.jpg&#93;&#93;" alt="Example"&gt;</code></pre>
+
+- Markdown image media tokens support optional positive-integer <code>width</code> and <code>height</code> attributes
 - this is intended for remotely hosted docs media, keeping the repo free of full-size docs images
 - repo-local docs assets are ordinary public asset paths such as `/assets/docs/...`; they are not a builder token
 

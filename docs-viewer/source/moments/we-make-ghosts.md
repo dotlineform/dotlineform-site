@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2014</p>
 
-<img src="[[media:docs/moments/img/we-make-ghosts-primary-800.webp]]" alt="we make ghosts" width="600" height="800">
+![we make ghosts]([[media:docs/moments/img/we-make-ghosts-primary-800.webp width=600 height=800]])
 
 <pre class="moment-text">
 ghosts pass through us all the time

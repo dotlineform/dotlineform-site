@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">23 Oct 2024</p>
 
-<img src="[[media:docs/moments/img/a-feeling-of-free-will-primary-800.webp]]" alt="a feeling of free will" width="800" height="499">
+![a feeling of free will]([[media:docs/moments/img/a-feeling-of-free-will-primary-800.webp width=800 height=499]])
 
 <pre class="moment-text">
 an

@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">19 Nov 2016</p>
 
-<img src="[[media:docs/moments/img/droplets-primary-800.webp]]" alt="droplets" width="800" height="800">
+![droplets]([[media:docs/moments/img/droplets-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 love flows through our bodies like molten hands

@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">14 Jun 2025</p>
 
-<img src="[[media:docs/moments/img/a-doll-story-primary-800.webp]]" alt="a doll story" width="800" height="800">
+![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 doll was created many years before she came into my care

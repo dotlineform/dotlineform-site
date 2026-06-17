@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">27 Aug 2019</p>
 
-<img src="[[media:docs/moments/img/peace-of-mind-primary-800.webp]]" alt="peace of mind" width="800" height="400">
+![peace of mind]([[media:docs/moments/img/peace-of-mind-primary-800.webp width=800 height=400]])
 
 <pre class="moment-text">
 keep me close to you honey

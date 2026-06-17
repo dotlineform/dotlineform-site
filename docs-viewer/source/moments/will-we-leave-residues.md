@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2022</p>
 
-<img src="[[media:docs/moments/img/will-we-leave-residues-primary-800.webp]]" alt="will we leave residues" width="800" height="330">
+![will we leave residues]([[media:docs/moments/img/will-we-leave-residues-primary-800.webp width=800 height=330]])
 
 <pre class="moment-text">
 will we leave residues

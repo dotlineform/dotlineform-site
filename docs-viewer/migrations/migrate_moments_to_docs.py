@@ -109,10 +109,6 @@ def markdown_alt_text(value: str) -> str:
     return str(value).replace("\\", "\\\\").replace("]", "\\]")
 
 
-def html_attr(value: str) -> str:
-    return html.escape(str(value), quote=True)
-
-
 def scaled_image_dimensions(width: Any, height: Any) -> tuple[int, int] | None:
     if not isinstance(width, int) or not isinstance(height, int) or width <= 0 or height <= 0:
         return None
@@ -133,10 +129,10 @@ def image_token(moment_id: str, title: str, generated_record: dict[str, Any]) ->
         return ""
     target = f"{TARGET_IMAGE_PREFIX}/{moment_id}-primary-{TARGET_IMAGE_SIZE}.webp"
     dimensions = scaled_image_dimensions(moment.get("width_px"), moment.get("height_px"))
-    attrs = f' src="[[media:{html_attr(target)}]]" alt="{html_attr(title)}"'
+    attrs = ""
     if dimensions:
-        attrs += f' width="{dimensions[0]}" height="{dimensions[1]}"'
-    return f"<img{attrs}>"
+        attrs = f" width={dimensions[0]} height={dimensions[1]}"
+    return f"![{markdown_alt_text(title)}]([[media:{target}{attrs}]])"
 
 
 def normalize_body(text: str) -> str:

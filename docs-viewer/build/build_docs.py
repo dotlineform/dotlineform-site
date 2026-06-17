@@ -41,6 +41,7 @@ DOCS_RECENTLY_ADDED_SCHEMA_VERSION = "docs_recently_added_v1"
 DEFAULT_RECENTLY_ADDED_LIMIT = 10
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")
+MEDIA_IMAGE_TOKEN_PATTERN = re.compile(r"!\[(?P<alt>(?:\\.|[^\]\\])*)\]\(\s*\[\[media:(?P<body>.+?)\]\]\s*\)")
 INTERACTIVE_HTML_TOKEN_PATTERN = re.compile(r"\[\[interactive-html:(.+?)\]\]")
 SEMANTIC_REF_TOKEN_PATTERN = re.compile(r"\[\[ref:(.*?)\]\](\{[^}\n]*\})?", re.DOTALL)
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9._-]*\.html\Z", re.IGNORECASE)
@@ -51,6 +52,8 @@ INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SAFE_REF_KIND_PATTERN = re.compile(r"\A[a-z0-9_-]+\Z")
 SEMANTIC_REF_ALLOWED_ACTIONS = {"link"}
 SEMANTIC_REF_SUPPORTED_KINDS = {"work", "series", "moment"}
+MEDIA_TOKEN_ALLOWED_ATTRS = {"width", "height"}
+MEDIA_TOKEN_DIMENSION_PATTERN = re.compile(r"\A[1-9][0-9]{0,5}\Z")
 
 
 class FrontMatterSyntaxError(Exception):
@@ -745,7 +748,32 @@ class DocsDataBuilder:
     def resolve_media_tokens(self, markdown: str) -> str:
         if "[[media:" not in markdown:
             return markdown
-        return MEDIA_TOKEN_PATTERN.sub(lambda match: self.resolve_media_url(match.group(1)), markdown)
+        rendered = MEDIA_IMAGE_TOKEN_PATTERN.sub(self.render_media_image_token, markdown)
+        return MEDIA_TOKEN_PATTERN.sub(lambda match: self.resolve_media_url(self.parse_media_token(match.group(1))[0]), rendered)
+
+    def render_media_image_token(self, match: re.Match[str]) -> str:
+        media_path, media_attrs = self.parse_media_token(match.group("body"))
+        attrs: dict[str, Any] = {
+            "src": self.resolve_media_url(media_path),
+            "alt": self.unescape_markdown_label(match.group("alt")),
+        }
+        attrs.update(media_attrs)
+        return f"<img {self.html_attrs(attrs)}>"
+
+    def parse_media_token(self, raw_body: str) -> tuple[str, dict[str, int]]:
+        parts = raw_body.strip().split()
+        media_path = parts.pop(0) if parts else ""
+        attrs: dict[str, int] = {}
+        for part in parts:
+            key, sep, value = part.partition("=")
+            if key not in MEDIA_TOKEN_ALLOWED_ATTRS or not sep or not MEDIA_TOKEN_DIMENSION_PATTERN.fullmatch(value):
+                supported = ", ".join(sorted(MEDIA_TOKEN_ALLOWED_ATTRS))
+                raise RuntimeError(f"Invalid media token attribute {part!r}; supported attributes: {supported}")
+            attrs[key] = int(value)
+        return media_path, attrs
+
+    def unescape_markdown_label(self, value: str) -> str:
+        return re.sub(r"\\([\\`*{}\[\]()#+\-.!_>])", r"\1", value or "")
 
     def resolve_media_url(self, raw_path: str) -> str:
         relative_path = raw_path.strip()

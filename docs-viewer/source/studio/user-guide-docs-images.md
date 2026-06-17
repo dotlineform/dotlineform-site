@@ -65,6 +65,10 @@ Markdown example:
 
 <pre><code>![Library example](&#91;&#91;media:library/example.jpg&#93;&#93;)</code></pre>
 
+Markdown image tokens can include optional dimensions:
+
+<pre><code>![Library example](&#91;&#91;media:library/example.jpg width=800 height=600&#93;&#93;)</code></pre>
+
 Raw HTML example:
 
 <pre><code>&lt;img src="&#91;&#91;media:library/example.jpg&#93;&#93;" alt="Library example"&gt;</code></pre>

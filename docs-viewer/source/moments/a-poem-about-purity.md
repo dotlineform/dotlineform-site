@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">20 Dec 2017</p>
 
-<img src="[[media:docs/moments/img/a-poem-about-purity-primary-800.webp]]" alt="a poem about purity" width="800" height="800">
+![a poem about purity]([[media:docs/moments/img/a-poem-about-purity-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 i only write this poem

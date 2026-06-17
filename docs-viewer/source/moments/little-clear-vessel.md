@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 1992</p>
 
-<img src="[[media:docs/moments/img/little-clear-vessel-primary-800.webp]]" alt="little clear vessel" width="800" height="800">
+![little clear vessel]([[media:docs/moments/img/little-clear-vessel-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 There is a little man and a little woman. They are holding hands because they love each other.

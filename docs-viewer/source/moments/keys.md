@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">1 Jul 2019</p>
 
-<img src="[[media:docs/moments/img/keys-primary-800.webp]]" alt="keys" width="600" height="800">
+![keys]([[media:docs/moments/img/keys-primary-800.webp width=600 height=800]])
 
 <pre class="moment-text">
 they say that the loops go on forever

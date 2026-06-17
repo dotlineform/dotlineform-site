@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2012?</p>
 
-<img src="[[media:docs/moments/img/blue-sky-primary-800.webp]]" alt="blue sky" width="800" height="399">
+![blue sky]([[media:docs/moments/img/blue-sky-primary-800.webp width=800 height=399]])
 
 <pre class="moment-text">
 perhaps it is an alchemical truth

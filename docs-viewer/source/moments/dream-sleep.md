@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">29 Apr 2018</p>
 
-<img src="[[media:docs/moments/img/dream-sleep-primary-800.webp]]" alt="dream sleep" width="450" height="800">
+![dream sleep]([[media:docs/moments/img/dream-sleep-primary-800.webp width=450 height=800]])
 
 <pre class="moment-text">
 i believe in Angels

@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">c. 2014</p>
 
-<img src="[[media:docs/moments/img/perfection-of-flowers-primary-800.webp]]" alt="perfection of flowers" width="800" height="654">
+![perfection of flowers]([[media:docs/moments/img/perfection-of-flowers-primary-800.webp width=800 height=654]])
 
 <pre class="moment-text">
 drip drip drip

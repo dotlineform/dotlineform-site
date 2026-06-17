@@ -12,7 +12,7 @@ viewable: true
 
 <p class="momentDate">3 Jun 2022</p>
 
-<img src="[[media:docs/moments/img/a-lemon-tart-poem-primary-800.webp]]" alt="a lemon tart poem" width="800" height="800">
+![a lemon tart poem]([[media:docs/moments/img/a-lemon-tart-poem-primary-800.webp width=800 height=800]])
 
 <pre class="moment-text">
 light falls down from above
