@@ -11,7 +11,6 @@ import {
 } from "./catalogue-editor-service-client.js";
 import { computeRecordHash } from "./catalogue-editor-records.js";
 import {
-  formatCatalogueBuildPreview,
   formatCatalogueDeletePreview,
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
@@ -197,8 +196,6 @@ function projectSeriesPublicationPresentation(state, context, action, response) 
 export async function refreshBuildPreview(state, context) {
   if (!state.currentSeriesId || !state.serverAvailable || !currentSeriesIsPublished(state)) {
     state.buildPreview = null;
-    setTextWithState(context, state.buildImpactNode, "");
-    context.renderReadiness();
     return;
   }
   try {
@@ -207,20 +204,8 @@ export async function refreshBuildPreview(state, context) {
       extra_work_ids: state.pendingBuildExtraWorkIds
     });
     state.buildPreview = response && response.build ? response.build : null;
-    setTextWithState(context, state.buildImpactNode, formatCatalogueBuildPreview(state.buildPreview, {
-      text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
-      defaultTemplate: "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}."
-    }));
-    context.renderReadiness();
   } catch (error) {
     state.buildPreview = null;
-    setTextWithState(
-      context,
-      state.buildImpactNode,
-      `${t(state, context, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
-      "error"
-    );
-    context.renderReadiness();
   }
 }
 

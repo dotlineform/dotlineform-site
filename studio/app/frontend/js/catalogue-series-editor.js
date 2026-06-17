@@ -30,12 +30,9 @@ import {
 } from "./catalogue-series-fields.js";
 import {
   applySeriesDraftToInputs,
-  applySeriesReadonly,
-  clearSeriesReadonly,
   getSeriesFieldNodeValue,
   refreshSeriesTypeOptions,
   renderSeriesEditorFields,
-  renderSeriesReadonlyFields,
   setSeriesFieldNodeValue,
   setSeriesModeFieldAvailability
 } from "./catalogue-series-form.js";
@@ -63,7 +60,7 @@ import {
   setSeriesSelectionPopupVisibility
 } from "./catalogue-series-selection.js";
 import {
-  renderSeriesReadiness,
+  renderSeriesPrimaryWorkPreview,
   updateSeriesSummary
 } from "./catalogue-series-sections.js";
 import {
@@ -182,9 +179,10 @@ function updateEditorState(state) {
     setTextWithState: setNodeTextWithState,
     draftHasChanges: () => draftHasChanges(state)
   });
+  renderSeriesPrimaryWorkPreview(state, {
+    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
+  });
   updateSeriesMemberList(state, membershipOptions(state));
-  if (!hasRecord) setNodeTextWithState(state.buildImpactNode, "");
-
   const dirty = hasRecord && draftHasChanges(state);
   if (state.mode === "single" && hasRecord) {
     state.messageController.setDefaultMessage(t(state, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }));
@@ -218,10 +216,6 @@ function updateEditorState(state) {
     serverAvailable: state.serverAvailable
   });
   updatePublishControls(state, { hasRecord, dirty, errors });
-  renderSeriesReadiness(state, {
-    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-    draftHasChanges: () => draftHasChanges(state)
-  });
   syncRouteBusyState(state);
 }
 
@@ -255,7 +249,6 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   state.draft = { ...state.baselineDraft };
   initializeSeriesMembershipState(state, seriesId);
   applySeriesDraftToInputs(state);
-  applySeriesReadonly(state);
   syncUrl(seriesId);
   state.memberSearchNode.value = "";
   state.memberAddNode.value = "";
@@ -293,7 +286,6 @@ function setNewSeriesMode(state, options = {}) {
   state.searchNode.value = state.draft.series_id;
   setNewInputMode(state);
   applySeriesDraftToInputs(state);
-  clearSeriesReadonly(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("", "new");
   state.memberSearchNode.value = "";
@@ -325,7 +317,6 @@ function setEmptySearchMode(state, options = {}) {
   setOpenInputMode(state);
   if (!options.keepSearchValue) state.searchNode.value = "";
   applySeriesDraftToInputs(state);
-  clearSeriesReadonly(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("");
   state.memberSearchNode.value = "";
@@ -346,10 +337,7 @@ function buildSeriesActionContext(state) {
     updateFieldMessages: () => clearCatalogueFieldStatusMessages(state.fieldStatusNodes, setNodeTextWithState),
     updateEditorState: () => updateEditorState(state),
     syncRouteBusyState: () => syncRouteBusyState(state),
-    renderReadiness: () => renderSeriesReadiness(state, {
-      text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
-      draftHasChanges: () => draftHasChanges(state)
-    }),
+    renderReadiness: () => undefined,
     setLoadedSeries: (seriesId, record, options = {}) => {
       setLoadedSeries(state, seriesId, record, options);
     },
@@ -388,11 +376,6 @@ async function init() {
     root,
     loadingNode,
     fieldsNode,
-    readonlyNode,
-    summaryNode,
-    readinessNode,
-    runtimeStateNode,
-    buildImpactNode,
     searchNode,
     popupNode,
     popupListNode,
@@ -424,10 +407,6 @@ async function init() {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey)
   });
-  renderSeriesReadonlyFields(readonlyNode, state, {
-    text: (key, fallback, tokens = null) => t(state, key, fallback, tokens)
-  });
-
   try {
     await configureCatalogueEditorRouteRuntime(state, {
       namespace: "catalogue_series_editor",

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5819ccd8888e4a332141a65daef58ac6",
-    "generated_at_utc": "2026-06-17T11:18:28Z",
+    "version": "blake2b-be1df42dcefd66dd6a0e8e2e2958e682",
+    "generated_at_utc": "2026-06-17T11:43:55Z",
     "count": 238
   },
   "entries": [
@@ -4903,10 +4903,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-06-15",
+      "last_updated": "2026-06-17",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-15 • Studio",
+      "display_meta": "2026-06-17 • Studio",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -4914,12 +4914,12 @@
         "editor",
         "catalogue series editor",
         "studio",
-        "2026-06-15",
+        "2026-06-17",
         "2026",
         "06",
-        "15"
+        "17"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-06-15 2026 06 15"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor studio 2026-06-17 2026 06 17"
     },
     {
       "id": "data-models-catalogue-source",

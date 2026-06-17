@@ -44,9 +44,7 @@ def assert_sibling_state_factories(page: Page) -> None:
               </section>
               <section id="catalogueSeriesRoot">
                 <div id="catalogueSeriesLoading"></div><div id="catalogueSeriesEmpty"></div>
-                <div id="catalogueSeriesFields"></div><div id="catalogueSeriesReadonly"></div>
-                <div id="catalogueSeriesSummary"></div><div id="catalogueSeriesReadiness"></div>
-                <div id="catalogueSeriesRuntimeState"></div><div id="catalogueSeriesBuildImpact"></div>
+                <div id="catalogueSeriesFields"></div>
                 <input id="catalogueSeriesSearch" /><div id="catalogueSeriesPopup"></div>
                 <div id="catalogueSeriesPopupList"></div><button id="catalogueSeriesOpen"></button>
                 <button id="catalogueSeriesNew"></button><button id="catalogueSeriesSave"></button>
@@ -54,6 +52,7 @@ def assert_sibling_state_factories(page: Page) -> None:
                 <div id="catalogueSeriesSaveMode"></div><div id="catalogueSeriesContext"></div>
                 <div id="catalogueSeriesStatus"></div><div id="catalogueSeriesWarning"></div>
                 <div id="catalogueSeriesResult"></div><div id="catalogueSeriesMeta"></div>
+                <div id="catalogueSeriesSidePanel"></div>
                 <h2 id="catalogueSeriesMembersHeading"></h2><div id="catalogueSeriesMemberSearchRow"></div>
                 <input id="catalogueSeriesMemberSearch" /><div id="catalogueSeriesMemberSearchMeta"></div>
                 <input id="catalogueSeriesMemberAdd" /><button id="catalogueSeriesMemberAddButton"></button>

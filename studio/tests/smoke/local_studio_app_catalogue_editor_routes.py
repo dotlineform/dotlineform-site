@@ -116,12 +116,6 @@ def main(argv: list[str] | None = None) -> int:
 
             public_link_checks = [
                 {
-                    "url": "/studio/catalogue-series/?series=001",
-                    "root": "#catalogueSeriesRoot",
-                    "selector": "#catalogueSeriesSummary a[href*='/series/']",
-                    "prefix": f"{public_preview_base}/series/?series=001",
-                },
-                {
                     "url": "/studio/catalogue-moment/?moment=13-moments-in-october",
                     "root": "#catalogueMomentRoot",
                     "selector": "#catalogueMomentSummary a[href*='/moments/']",

@@ -6,6 +6,9 @@ import {
   createCatalogueEditorMessageRoleNode
 } from "./catalogue-editor-message-controller.js";
 import {
+  loadCatalogueMediaConfig
+} from "./catalogue-media-preview.js";
+import {
   getSeriesTypeOptions
 } from "./catalogue-series-fields.js";
 
@@ -19,11 +22,6 @@ export function collectSeriesEditorElements() {
     loadingNode: "catalogueSeriesLoading",
     emptyNode: "catalogueSeriesEmpty",
     fieldsNode: "catalogueSeriesFields",
-    readonlyNode: "catalogueSeriesReadonly",
-    summaryNode: "catalogueSeriesSummary",
-    readinessNode: "catalogueSeriesReadiness",
-    runtimeStateNode: "catalogueSeriesRuntimeState",
-    buildImpactNode: "catalogueSeriesBuildImpact",
     searchNode: "catalogueSeriesSearch",
     popupNode: "catalogueSeriesPopup",
     popupListNode: "catalogueSeriesPopupList",
@@ -34,6 +32,7 @@ export function collectSeriesEditorElements() {
     deleteButton: "catalogueSeriesDelete",
     statusNode: "catalogueSeriesStatus",
     metaNode: "catalogueSeriesMeta",
+    previewNode: "catalogueSeriesSidePanel",
     membersHeadingNode: "catalogueSeriesMembersHeading",
     memberSearchRowNode: "catalogueSeriesMemberSearchRow",
     memberSearchNode: "catalogueSeriesMemberSearch",
@@ -48,6 +47,7 @@ export function collectSeriesEditorElements() {
 
 export function createSeriesEditorState(elements, options = {}) {
   const seriesTypeOptions = options.seriesTypeOptions || getSeriesTypeOptions();
+  const mediaConfigLoader = options.mediaConfigLoader || loadCatalogueMediaConfig;
   return {
     config: null,
     mode: "single",
@@ -62,6 +62,7 @@ export function createSeriesEditorState(elements, options = {}) {
     baselineDraft: null,
     draft: {},
     validationErrors: new Map(),
+    mediaConfig: mediaConfigLoader(elements.root),
     rebuildPending: false,
     pendingBuildExtraWorkIds: [],
     buildPreview: null,
@@ -73,7 +74,6 @@ export function createSeriesEditorState(elements, options = {}) {
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     messageController: null,
-    readonlyNodes: new Map(),
     memberSeriesIdsByWorkId: new Map(),
     baselineMemberSeriesIdsByWorkId: new Map(),
     searchNode: elements.searchNode,
@@ -88,11 +88,9 @@ export function createSeriesEditorState(elements, options = {}) {
     statusNode: elements.statusNode,
     warningNode: createCatalogueEditorMessageRoleNode("catalogueSeriesWarning", "warning"),
     resultNode: createCatalogueEditorMessageRoleNode("catalogueSeriesResult", "result"),
-    summaryNode: elements.summaryNode,
-    readinessNode: elements.readinessNode,
-    runtimeStateNode: elements.runtimeStateNode,
-    buildImpactNode: elements.buildImpactNode,
+    buildImpactNode: null,
     metaNode: elements.metaNode,
+    previewNode: elements.previewNode,
     memberSearchRowNode: elements.memberSearchRowNode,
     memberSearchNode: elements.memberSearchNode,
     memberSearchMetaNode: elements.memberSearchMetaNode,

@@ -1,10 +1,23 @@
-export function renderCatalogueSeriesShell() {
+import {
+  readCatalogueEditorMediaAttrs,
+  renderMediaAttrs
+} from "./catalogue-editor-shell-media.js";
+
+export function renderCatalogueSeriesShell(config) {
+  const mediaAttrs = renderMediaAttrs(readCatalogueEditorMediaAttrs(config), [
+    "worksPrimaryBase",
+    "primaryDisplayWidth",
+    "primaryFullWidth",
+    "primarySuffix",
+    "assetFormat"
+  ]);
   return `<div
           class="tagStudioPage catalogueWorkPage"
           id="catalogueSeriesRoot"
           hidden
           data-studio-ready="false"
           data-studio-busy="false"
+          ${mediaAttrs}
         >
           <section class="tagStudio__panel tagStudio__panel--editor">
             <div class="tagStudio__inputRow tagStudio__inputRow--editor">
@@ -34,14 +47,7 @@ export function renderCatalogueSeriesShell() {
               <p class="tagStudioForm__meta" id="catalogueSeriesMeta"></p>
               <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueSeriesFields"></div>
             </section>
-            <aside class="tagStudio__panel catalogueWorkSummary">
-              <h2 class="tagStudio__heading">current record</h2>
-              <div class="tagStudioForm__fields" id="catalogueSeriesReadonly"></div>
-              <p class="tagStudioForm__impact" id="catalogueSeriesRuntimeState"></p>
-              <p class="tagStudioForm__impact" id="catalogueSeriesBuildImpact"></p>
-              <div class="tagStudioForm__fields" id="catalogueSeriesSummary"></div>
-              <div class="tagStudioForm__fields" id="catalogueSeriesReadiness"></div>
-            </aside>
+            <aside class="tagStudio__panel catalogueWorkSummary" id="catalogueSeriesSidePanel"></aside>
           </div>
 
           <section class="tagStudio__panel catalogueSeriesMembers">

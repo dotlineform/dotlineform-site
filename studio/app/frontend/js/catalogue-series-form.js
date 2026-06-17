@@ -1,7 +1,5 @@
-import { displayValue } from "./catalogue-editor-records.js";
 import {
   SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  SERIES_READONLY_FIELDS as READONLY_FIELDS,
   normalizeText
 } from "./catalogue-series-fields.js";
 
@@ -94,31 +92,8 @@ function renderField(field, fieldsNode, state, options) {
   state.fieldStatusNodes.set(field.key, message);
 }
 
-function renderReadonlyField(field, readonlyNode, state, options) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
-
-  const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
-  label.dataset.fieldLabel = field.key;
-  label.textContent = formText(options, `field_label_${field.key}`, field.label);
-  wrapper.appendChild(label);
-
-  const value = document.createElement("div");
-  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
-  value.textContent = "—";
-  wrapper.appendChild(value);
-
-  readonlyNode.appendChild(wrapper);
-  state.readonlyNodes.set(field.key, value);
-}
-
 export function renderSeriesEditorFields(fieldsNode, state, options = {}) {
   EDITABLE_FIELDS.forEach((field) => renderField(field, fieldsNode, state, options));
-}
-
-export function renderSeriesReadonlyFields(readonlyNode, state, options = {}) {
-  READONLY_FIELDS.forEach((field) => renderReadonlyField(field, readonlyNode, state, options));
 }
 
 export function setSeriesFieldNodeValue(node, value) {
@@ -126,7 +101,7 @@ export function setSeriesFieldNodeValue(node, value) {
   if ("value" in node) {
     node.value = text;
   } else {
-    node.textContent = displayValue(text);
+    node.textContent = text || "-";
   }
 }
 
@@ -141,21 +116,6 @@ export function applySeriesDraftToInputs(state) {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     setSeriesFieldNodeValue(node, normalizeText(state.draft[field.key]));
-  });
-}
-
-export function applySeriesReadonly(state) {
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (!node) return;
-    node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
-  });
-}
-
-export function clearSeriesReadonly(state) {
-  READONLY_FIELDS.forEach((field) => {
-    const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
   });
 }
 

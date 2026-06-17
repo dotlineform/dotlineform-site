@@ -15,9 +15,9 @@ const ROUTE_BODY_RENDERERS = {
     const module = await importModule("./catalogue-moment-shell.js");
     return module.renderCatalogueMomentShell();
   },
-  catalogue_series_editor: async (_config, importModule) => {
+  catalogue_series_editor: async (config, importModule) => {
     const module = await importModule("./catalogue-series-shell.js");
-    return module.renderCatalogueSeriesShell();
+    return module.renderCatalogueSeriesShell(config);
   },
   catalogue_status: async (_config, importModule) => {
     const module = await importModule("./catalogue-status-shell.js");

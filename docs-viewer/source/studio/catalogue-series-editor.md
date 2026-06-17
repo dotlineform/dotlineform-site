@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: Catalogue Series Editor
 added_date: 2026-04-22
-last_updated: 2026-06-15
+last_updated: 2026-06-17
 parent_id: studio
 viewable: true
 ---
@@ -42,8 +42,11 @@ The first implementation covers:
 - publish draft series through a dedicated `Publish` command
 - unpublish public series through a dedicated `Unpublish` command
 - delete one series source record and remove its membership from affected works
+- show the primary work image in the right-hand side panel with a title/year caption
 
 Series prose is no longer edited or imported through the series metadata editor. Existing permanent Markdown under `studio/data/canonical/catalogue-markdown/series/<series_id>.md` remains a generator input until a separate prose management workflow replaces it.
+
+The previous current-record side panel contents have been removed. The Series editor no longer renders side-panel readonly fields, public-link summary rows, build-impact text, runtime-state text, or readiness rows. The side panel now renders only the primary work media preview. Save, publish, unpublish, and delete status remains in the route status/result message area.
 
 ## Runtime Ownership
 
@@ -54,6 +57,7 @@ The Series Editor route is split into route orchestration, action workflows, fie
 - `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, popup result rendering, search-input behavior, Open-button behavior, popup-click behavior, focused-series opening, and initial route selection.
 - `site/assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
 - `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
+- `site/assets/studio/js/catalogue-series-sections.js` owns the small form meta line and the primary-work image preview in the side panel.
 
 Membership remains route-local to the Series Editor because it edits affected work `series_ids` arrays as part of the series workflow.
 It is not a generic Catalogue membership controller.

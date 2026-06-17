@@ -2,16 +2,19 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  buildPublicSeriesUrl
+  buildPublicWorkUrl
 } from "./catalogue-public-links.js";
 import {
-  catalogueReadinessItems,
-  catalogueReadinessItemSummary,
-  catalogueReadinessTone
-} from "./catalogue-editor-readiness.js";
-import { displayValue } from "./catalogue-editor-records.js";
-import { getCurrentSeriesMemberEntries } from "./catalogue-series-membership.js";
-import { normalizeText } from "./catalogue-series-fields.js";
+  bindPreviewImages,
+  buildWorkPrimaryPreview
+} from "./catalogue-media-preview.js";
+import {
+  normalizeText,
+  normalizeWorkId
+} from "./catalogue-series-fields.js";
+import {
+  getCurrentSeriesMemberEntries
+} from "./catalogue-series-membership.js";
 
 function escapeHtml(value) {
   return normalizeText(value)
@@ -29,90 +32,94 @@ function text(state, options, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_series_editor.${key}`, fallback, tokens);
 }
 
-function setTextWithState(options, node, value, state = "") {
-  if (options && typeof options.setTextWithState === "function") {
-    options.setTextWithState(node, value, state);
-    return;
-  }
-  if (!node) return;
-  node.textContent = value || "";
-  if (state) node.dataset.state = state;
-  else delete node.dataset.state;
-}
-
-export function buildSeriesRecordSummary(record) {
+function buildSeriesRecordSummary(record) {
   const title = normalizeText(record && record.title);
-  return title || "—";
+  return title || "-";
 }
 
-export function renderSeriesReadiness(state, options = {}) {
-  if (!state.readinessNode || !state.currentRecord) {
-    if (state.readinessNode) state.readinessNode.innerHTML = "";
-    return;
-  }
-  const items = catalogueReadinessItems(state.buildPreview);
-  if (!items.length) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
+function buildWorkRecordSummary(record, workId) {
+  const title = normalizeText(record && record.title);
+  const yearDisplay = normalizeText(record && record.year_display) || normalizeText(record && record.year);
+  if (title && yearDisplay) return `${title} · ${yearDisplay}`;
+  return title || yearDisplay || normalizeText(workId) || "-";
+}
 
-  state.readinessNode.innerHTML = items.map((item) => {
-    const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
-    const tone = catalogueReadinessTone(summaryItem.status);
-    return `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
-          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
-          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
-        </div>
-      </div>
-    `;
-  }).join("");
+function getSeriesPrimaryWorkEntry(state) {
+  const explicitWorkId = normalizeWorkId(state.draft && state.draft.primary_work_id)
+    || normalizeWorkId(state.currentRecord && state.currentRecord.primary_work_id);
+  const members = getCurrentSeriesMemberEntries(state);
+  if (explicitWorkId) {
+    const member = members.find((entry) => entry.workId === explicitWorkId);
+    return {
+      workId: explicitWorkId,
+      record: member && member.record ? member.record : state.workSearchById.get(explicitWorkId) || {}
+    };
+  }
+  const firstMember = members[0];
+  return firstMember
+    ? { workId: firstMember.workId, record: firstMember.record || state.workSearchById.get(firstMember.workId) || {} }
+    : { workId: "", record: {} };
+}
+
+function buildSeriesPrimaryWorkHref(state, workId, record, preview) {
+  const isPublished = normalizeText(record && record.status).toLowerCase() === "published";
+  if (isPublished) {
+    try {
+      return buildPublicWorkUrl(state.config, workId);
+    } catch (_error) {
+      return "";
+    }
+  }
+  return normalizeText(preview && preview.fullSrc);
 }
 
 export function updateSeriesSummary(state, options = {}) {
+  if (!state.metaNode) return;
   if (state.mode === "new") {
     state.metaNode.textContent = text(state, options, "new_meta", "draft source record");
-    state.summaryNode.innerHTML = `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_series_id_label", "series id"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(state.draft.series_id))}</div>
-      </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_status_label", "status"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_status", "draft source record; not published"))}</div>
-      </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_next_label", "next step"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Create the draft, then add member works, set primary_work_id, and update the site when ready."))}</div>
-      </div>
-    `;
-    state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "Public site update is unavailable until the draft series exists.");
-    setTextWithState(options, state.buildImpactNode, "");
-    renderSeriesReadiness(state, options);
+    return;
+  }
+  const record = state.currentRecord;
+  state.metaNode.textContent = record ? `${record.series_id} · ${buildSeriesRecordSummary(record)}` : "";
+}
+
+export function renderSeriesPrimaryWorkPreview(state, options = {}) {
+  if (!state.previewNode) return;
+  if (state.mode === "new" || !state.currentRecord) {
+    state.previewNode.innerHTML = "";
     return;
   }
 
-  const record = state.currentRecord;
-  state.metaNode.textContent = record ? `${record.series_id} · ${buildSeriesRecordSummary(record)}` : "";
-  const publicHref = record ? buildPublicSeriesUrl(state.config, record.series_id) : "";
-  const memberCount = getCurrentSeriesMemberEntries(state).length;
-  state.summaryNode.innerHTML = `
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_public_link", "Open public series page"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
-        ${record ? `<a href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">${escapeHtml(record.series_id)}</a>` : "—"}
-      </div>
-    </div>
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_member_count", "member works"))}</span>
-      <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(String(memberCount))}</div>
+  const { workId, record } = getSeriesPrimaryWorkEntry(state);
+  if (!workId) {
+    state.previewNode.innerHTML = "";
+    return;
+  }
+
+  const preview = buildWorkPrimaryPreview(state.mediaConfig, workId);
+  const caption = buildWorkRecordSummary(record, workId);
+  const fallbackState = preview.src ? "unavailable" : "not-configured";
+  const fallbackText = preview.src
+    ? text(state, options, "preview_unavailable", "Preview unavailable.")
+    : text(state, options, "preview_not_configured", "Preview not configured.");
+  const previewState = preview.src ? "loading" : fallbackState;
+  const previewHref = buildSeriesPrimaryWorkHref(state, workId, record, preview);
+  const previewTarget = previewHref && normalizeText(record && record.status).toLowerCase() !== "published" ? "_blank" : "";
+  const previewRel = previewTarget ? "noopener" : "";
+  const frameHtml = `
+    <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallbackState)}">
+      ${preview.src ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset)}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" alt="${escapeHtml(caption)}">` : ""}
+      <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallbackText)}</div>
     </div>
   `;
-  state.runtimeStateNode.textContent = state.rebuildPending
-    ? text(state, options, "summary_rebuild_needed", "source saved; site update pending")
-    : text(state, options, "summary_rebuild_current", "source and public catalogue are aligned in this session");
-  renderSeriesReadiness(state, options);
+
+  state.previewNode.innerHTML = `
+    <figure class="catalogueRecordPreview">
+      ${previewHref ? `<a class="catalogueRecordPreview__link" href="${escapeHtml(previewHref)}"${previewTarget ? ` target="${escapeHtml(previewTarget)}"` : ""}${previewRel ? ` rel="${escapeHtml(previewRel)}"` : ""}>${frameHtml}</a>` : frameHtml}
+      <figcaption class="catalogueRecordPreview__caption">
+        <span>${escapeHtml(caption)}</span>
+      </figcaption>
+    </figure>
+  `;
+  bindPreviewImages(state.previewNode);
 }
