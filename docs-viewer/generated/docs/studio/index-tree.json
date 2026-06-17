@@ -329,6 +329,11 @@
           "ui_status": "draft"
         },
         {
+          "doc_id": "site-request-docs-viewer-view-mode-registry",
+          "title": "Docs Viewer View And Mode Registry",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json"
+        },
+        {
           "doc_id": "site-request-docs-viewer-workspace-mount-architecture",
           "title": "Docs Viewer Workspace Mount Architecture Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workspace-mount-architecture.json",
@@ -1309,5 +1314,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-17T16:02:09Z"
+  "generated_at": "2026-06-17T18:31:19Z"
 }

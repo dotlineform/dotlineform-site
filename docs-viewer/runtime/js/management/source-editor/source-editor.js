@@ -43,18 +43,6 @@ function diagnosticsText(payload) {
   return messages.join(" ");
 }
 
-function selectedDocLabel(context) {
-  var doc = context.selectedDoc || {};
-  return cleanString(doc.title) || cleanString(doc.doc_id) || "Selected document";
-}
-
-function sourceFilename(value) {
-  var path = cleanString(value).replace(/\\/g, "/");
-  if (!path) return "";
-  var parts = path.split("/").filter(Boolean);
-  return parts.length ? parts[parts.length - 1] : "";
-}
-
 function openLeavePrompt(root) {
   return openDocsViewerManagementModal({
     root: root,
@@ -79,48 +67,10 @@ function renderEditorShell(context, state) {
   root.className = "docsViewerSourceEditor";
   root.setAttribute("data-docs-viewer-source-editor", "");
 
-  var header = document.createElement("div");
-  header.className = "docsViewerSourceEditor__header";
-
-  var headingGroup = document.createElement("div");
-  headingGroup.className = "docsViewerSourceEditor__headingGroup";
-
-  var heading = document.createElement("h2");
-  heading.className = "docsViewerSourceEditor__title";
-  heading.textContent = "Markdown source";
-
-  var meta = document.createElement("p");
-  meta.className = "docsViewerSourceEditor__meta muted small";
-  meta.textContent = selectedDocLabel(context);
-
-  headingGroup.append(heading, meta);
-
-  var actions = document.createElement("div");
-  actions.className = "docsViewerSourceEditor__actions";
-
   var dirty = document.createElement("span");
   dirty.className = "docsViewerSourceEditor__dirty muted small";
   dirty.textContent = "Unsaved changes";
   dirty.hidden = true;
-
-  var back = document.createElement("button");
-  back.className = "docsViewerSourceEditor__actionButton";
-  back.type = "button";
-  back.textContent = "×";
-  back.setAttribute("aria-label", "Back");
-  back.title = "Back";
-  back.dataset.sourceEditorAction = "back";
-
-  var rebuild = document.createElement("button");
-  rebuild.className = "docsViewerSourceEditor__actionButton";
-  rebuild.type = "button";
-  rebuild.textContent = "💾";
-  rebuild.setAttribute("aria-label", "Rebuild doc");
-  rebuild.title = "Rebuild doc";
-  rebuild.dataset.sourceEditorAction = "rebuild";
-
-  actions.append(dirty, rebuild, back);
-  header.append(headingGroup, actions);
 
   var status = document.createElement("p");
   status.className = "docsViewerSourceEditor__status muted small";
@@ -141,15 +91,12 @@ function renderEditorShell(context, state) {
   textarea.setAttribute("aria-label", "Markdown source body");
 
   editor.append(gutter, textarea);
-  root.append(header, status, editor);
+  root.append(dirty, status, editor);
   mount.appendChild(root);
 
   state.root = root;
   state.status = status;
   state.dirty = dirty;
-  state.meta = meta;
-  state.back = back;
-  state.rebuild = rebuild;
   state.gutter = gutter;
   state.textarea = textarea;
 }
@@ -168,8 +115,7 @@ function dirtyNow(state) {
 function projectDirty(state) {
   state.dirtyValue = dirtyNow(state);
   setHidden(state.dirty, !state.dirtyValue);
-  if (state.rebuild) state.rebuild.disabled = state.busy || !state.loaded;
-  if (state.back) state.back.disabled = state.busy;
+  if (state.toolbarSave) state.toolbarSave.disabled = state.busy || !state.loaded;
 }
 
 function setBusy(state, busy) {
@@ -197,9 +143,6 @@ function loadSource(context, state) {
       state.revision = cleanString(payload.source_revision);
       state.lastCleanBody = normalizeBody(payload.source_body);
       state.loaded = true;
-      if (state.meta) {
-        state.meta.textContent = sourceFilename(payload.path) || selectedDocLabel(context);
-      }
       if (state.textarea) {
         state.textarea.value = state.lastCleanBody;
         state.textarea.focus();
@@ -224,6 +167,7 @@ function rebuildSource(context, state) {
   setBusy(state, true);
   setStatus(state, "Rebuilding doc...", false);
   var nextBody = normalizeBody(state.textarea ? state.textarea.value : "");
+  var switchedToRendered = false;
   return services.rebuildSource({
     doc_id: state.docId,
     source_revision: state.revision,
@@ -234,17 +178,20 @@ function rebuildSource(context, state) {
       state.lastCleanBody = nextBody;
       projectDirty(state);
       setStatus(state, diagnosticsText(payload) || "Doc rebuilt.", false);
+      context.documentView.requestMode("rendered-document", { force: true, warn: false });
+      switchedToRendered = true;
       if (typeof services.reloadRenderedDoc === "function") {
-        return services.reloadRenderedDoc(state.docId).then(function () {
-          context.mainView.requestView("rendered-document", { force: true, warn: false });
-          return true;
-        });
+        return services.reloadRenderedDoc(state.docId).then(function () { return true; });
       }
-      context.mainView.requestView("rendered-document", { force: true, warn: false });
       return true;
     })
     .catch(function (error) {
-      setStatus(state, error && error.message ? error.message : "Rebuild failed.", true);
+      var message = error && error.message ? error.message : "Rebuild failed.";
+      if (switchedToRendered) {
+        context.documentView.requestMode("markdown-source", { force: true, warn: false });
+        if (typeof services.setStatus === "function") services.setStatus(message, true);
+      }
+      setStatus(state, message, true);
       return false;
     })
     .finally(function () {
@@ -254,19 +201,19 @@ function rebuildSource(context, state) {
 
 function returnToRendered(context, state) {
   var services = context.sourceEditorServices || {};
+  context.documentView.requestMode("rendered-document", { force: true, warn: false });
   if (typeof services.reloadRenderedDoc !== "function") {
-    context.mainView.requestView("rendered-document", { force: true, warn: false });
     return Promise.resolve(true);
   }
 
   setBusy(state, true);
   return services.reloadRenderedDoc(state.docId)
     .then(function () {
-      context.mainView.requestView("rendered-document", { force: true, warn: false });
       return true;
     })
     .catch(function (error) {
       setStatus(state, error && error.message ? error.message : "Failed to return to rendered view.", true);
+      context.documentView.requestMode("markdown-source", { force: true, warn: false });
       return false;
     })
     .finally(function () {
@@ -291,6 +238,9 @@ function leaveSource(context, state) {
 }
 
 function bindEvents(context, state) {
+  var root = context.root || document;
+  var ownerDocument = context.mount && context.mount.ownerDocument ? context.mount.ownerDocument : document;
+  state.toolbarSave = ownerDocument.getElementById("docsViewerManageSourceSaveButton");
   state.onInput = function () {
     renderLineNumbers(state.gutter, state.textarea ? state.textarea.value : "");
     projectDirty(state);
@@ -301,11 +251,12 @@ function bindEvents(context, state) {
   state.onClick = function (event) {
     var action = event.target.closest("[data-source-editor-action]");
     if (!action || action.disabled) return;
-    if (action.dataset.sourceEditorAction === "rebuild") {
-      rebuildSource(context, state);
-    } else if (action.dataset.sourceEditorAction === "back") {
+    if (action.dataset.sourceEditorAction === "back") {
       leaveSource(context, state);
     }
+  };
+  state.onToolbarSave = function () {
+    rebuildSource(context, state);
   };
   state.onBeforeUnload = function (event) {
     if (!dirtyNow(state)) return;
@@ -318,17 +269,22 @@ function bindEvents(context, state) {
     state.textarea.addEventListener("scroll", state.onScroll);
   }
   if (state.root) state.root.addEventListener("click", state.onClick);
+  if (root && state.onToolbarSave) root.addEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
   window.addEventListener("beforeunload", state.onBeforeUnload);
+  projectDirty(state);
 }
 
-function unbindEvents(state) {
+function unbindEvents(context, state) {
+  var root = context && context.root ? context.root : document;
   if (state.textarea && state.onInput) state.textarea.removeEventListener("input", state.onInput);
   if (state.textarea && state.onScroll) state.textarea.removeEventListener("scroll", state.onScroll);
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
+  if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
+  state.toolbarSave = null;
 }
 
-export function createDocsViewerSourceEditorView() {
+export function createDocsViewerSourceEditorMode() {
   var state = {
     busy: false,
     dirtyValue: false,
@@ -336,18 +292,19 @@ export function createDocsViewerSourceEditorView() {
     gutter: null,
     lastCleanBody: "",
     loaded: false,
-    rebuild: null,
-    meta: null,
     revision: "",
     root: null,
     status: null,
-    textarea: null
+    textarea: null,
+    toolbarSave: null
   };
 
   return {
     mount: function (context) {
-      context.mainView.projectToolbar({
-        toolbarHidden: true,
+      context.documentView.projectToolbar({
+        toolbarHidden: false,
+        infoToggleHidden: true,
+        bookmarkToggleHidden: true,
         metaHidden: true,
         contentHidden: false,
         resultsHidden: true,
@@ -359,7 +316,7 @@ export function createDocsViewerSourceEditorView() {
       return loadSource(context, state);
     },
     beforeLeave: function (context) {
-      if (!dirtyNow(state) || cleanString(context.requestedViewId) === "markdown-source") return true;
+      if (cleanString(context.requestedModeId) === "markdown-source") return true;
       leaveSource(context, state);
       return false;
     },
@@ -368,11 +325,11 @@ export function createDocsViewerSourceEditorView() {
       return loadSource(context, state);
     },
     unmount: function (context) {
-      unbindEvents(state);
+      unbindEvents(context, state);
       if (context && context.mount) context.mount.replaceChildren();
     },
     dispose: function (context) {
-      unbindEvents(state);
+      unbindEvents(context, state);
       if (context && context.mount) context.mount.replaceChildren();
     }
   };

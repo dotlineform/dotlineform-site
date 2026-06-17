@@ -104,3 +104,24 @@ export function createDocsViewerMainViewModuleContext(options = {}) {
   }
   return context;
 }
+
+export function createDocsViewerDocumentDisplayModeContext(options = {}) {
+  const base = createDocsViewerHostedViewContext(options);
+  const routeAccess = options.routeAccess || {};
+  const documentView = options.documentView && typeof options.documentView === "object" ? options.documentView : {};
+
+  const context = Object.assign({}, base, {
+    mount: options.mount || null,
+    documentView: {
+      activeModeId: cleanString(documentView.activeModeId),
+      projectToolbar: typeof documentView.projectToolbar === "function" ? documentView.projectToolbar : noop,
+      requestMode: typeof documentView.requestMode === "function" ? documentView.requestMode : function () { return false; },
+      showWarning: typeof documentView.showWarning === "function" ? documentView.showWarning : noop
+    },
+    requestedModeId: cleanString(options.requestedModeId)
+  });
+  if (routeAccess.allowManagement) {
+    context.sourceEditorServices = options.sourceEditorServices || null;
+  }
+  return context;
+}

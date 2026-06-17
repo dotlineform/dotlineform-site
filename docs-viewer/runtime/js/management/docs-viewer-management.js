@@ -112,6 +112,7 @@ export function initDocsViewerManagement(context) {
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
   var manageSourceButton = document.getElementById("docsViewerManageSourceButton");
+  var manageSourceSaveButton = document.getElementById("docsViewerManageSourceSaveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
@@ -317,11 +318,25 @@ export function initDocsViewerManagement(context) {
   }
 
   function projectDocumentActionButtons(hidden, disabled) {
-    [manageEditButton, manageSourceButton].forEach(function (button) {
-      if (!button) return;
-      button.hidden = Boolean(hidden);
-      button.disabled = Boolean(disabled);
-    });
+    var actionsHidden = Boolean(hidden);
+    var actionsDisabled = Boolean(disabled);
+    var documentMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
+    var markdownMode = documentMode === "markdown-source";
+    if (manageEditButton) {
+      manageEditButton.hidden = actionsHidden || markdownMode;
+      manageEditButton.disabled = actionsDisabled || markdownMode;
+    }
+    if (manageSourceButton) {
+      manageSourceButton.hidden = actionsHidden;
+      manageSourceButton.disabled = actionsDisabled;
+      manageSourceButton.setAttribute("aria-pressed", markdownMode ? "true" : "false");
+      manageSourceButton.setAttribute("aria-label", markdownMode ? "Show rendered document" : "Show Markdown source");
+      manageSourceButton.title = markdownMode ? "Show rendered document" : "Show Markdown source";
+    }
+    if (manageSourceSaveButton) {
+      manageSourceSaveButton.hidden = actionsHidden || !markdownMode;
+      manageSourceSaveButton.disabled = actionsDisabled || !markdownMode;
+    }
   }
 
   function renderManagementUi() {
@@ -732,6 +747,13 @@ export function initDocsViewerManagement(context) {
         hideContextMenu();
         hideManageActionsMenu();
         actionController.handleMarkdownSource();
+      });
+    }
+    if (manageSourceSaveButton) {
+      manageSourceSaveButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        actionController.handleMarkdownSave();
       });
     }
     if (manageDeleteButton) {

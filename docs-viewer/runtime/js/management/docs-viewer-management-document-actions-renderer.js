@@ -43,16 +43,25 @@ export function renderDocsViewerManagementDocumentActions(options) {
     label: "Markdown source"
   });
 
+  var sourceSaveButton = renderDocumentActionButton(documentRef, {
+    id: "docsViewerManageSourceSaveButton",
+    action: "markdown-save",
+    emoji: "💾",
+    label: "Save Markdown source"
+  });
+
   var bookmark = bookmarkToggle(root);
   if (bookmark && bookmark.parentElement === mount) {
     mount.insertBefore(editButton, bookmark);
+    mount.insertBefore(sourceSaveButton, bookmark);
     mount.insertBefore(sourceButton, bookmark);
   } else {
-    mount.prepend(editButton, sourceButton);
+    mount.prepend(editButton, sourceSaveButton, sourceButton);
   }
 
   return {
     editButton: editButton,
+    sourceSaveButton: sourceSaveButton,
     sourceButton: sourceButton
   };
 }

@@ -127,6 +127,7 @@
         "shared/docs-viewer-config-service.js",
         "shared/docs-viewer-data.js",
         "shared/docs-viewer-document-controller.js",
+        "shared/docs-viewer-document-display-mode-host.js",
         "shared/docs-viewer-document-index-state.js",
         "shared/docs-viewer-favourites.js",
         "shared/docs-viewer-generated-data-runtime.js",

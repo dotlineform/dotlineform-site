@@ -34,6 +34,9 @@ import {
   createDocsViewerInfoPanelController
 } from "./docs-viewer-info-panel-controller.js";
 import {
+  createDocsViewerDocumentDisplayModeHost
+} from "./docs-viewer-document-display-mode-host.js";
+import {
   createDocsViewerMainViewHost
 } from "./docs-viewer-main-view-host.js";
 import {
@@ -123,6 +126,7 @@ export function startDocsViewerRuntime(options) {
   var routeWorkflow = null;
   var documentIndex = null;
   var infoPanelController = null;
+  var documentDisplayModeHost = null;
   var mainViewHost = null;
 
   var appSession = composition.appSession;
@@ -130,6 +134,22 @@ export function startDocsViewerRuntime(options) {
   documentIndex = composition.documentIndex;
   var generatedDataRuntime = composition.generatedDataRuntime;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
+
+  function documentViewContextOptions() {
+    return {
+      allDocsById: appSession.domains.documentIndex.allDocsById,
+      docsById: appSession.domains.documentIndex.docsById,
+      payloadCache: appSession.domains.selectedDocument.payloadCache,
+      routeAccess: routeContext.access,
+      selectedDocId: appSession.domains.selectedDocument.selectedDocId,
+      sourceEditorServices: allowManagement ? sourceEditorServices() : null,
+      uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
+      viewerScope: viewerScope,
+      viewerTargetDocId: documentIndex.viewerTargetDocId,
+      viewerUrl: viewerUrl
+    };
+  }
+
   mainViewHost = createDocsViewerMainViewHost({
     contextOptions: function () {
       return {
@@ -138,7 +158,6 @@ export function startDocsViewerRuntime(options) {
         payloadCache: appSession.domains.selectedDocument.payloadCache,
         routeAccess: routeContext.access,
         selectedDocId: appSession.domains.selectedDocument.selectedDocId,
-        sourceEditorServices: allowManagement ? sourceEditorServices() : null,
         uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
         viewerScope: viewerScope,
         viewerTargetDocId: documentIndex.viewerTargetDocId,
@@ -153,6 +172,17 @@ export function startDocsViewerRuntime(options) {
     registry: hostedViewRegistry,
     showWarning: setStatus,
     updatePanelViewState: function (viewState) { appSession.domains.panelView.viewState = viewState; }
+  });
+  documentDisplayModeHost = createDocsViewerDocumentDisplayModeHost({
+    accessProjection: routeContext.access,
+    contextOptions: documentViewContextOptions,
+    defaultModeId: "rendered-document",
+    modes: settings.documentDisplayModes,
+    mount: content,
+    onModeChange: renderManagementUi,
+    projectToolbar: projectMainView,
+    root: root,
+    showWarning: setStatus
   });
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
@@ -385,6 +415,7 @@ export function startDocsViewerRuntime(options) {
       searchInput: searchInput,
       setStatus: setStatus,
       requestMainView: function (viewId) { return mainViewHost.requestView(viewId); },
+      requestDocumentMode: function (modeId, options) { return documentDisplayModeHost.requestMode(modeId, options); },
       markdownDocLink: markdownDocLink,
       viewerScope: function () { return viewerScope; }
     },
@@ -685,36 +716,57 @@ export function startDocsViewerRuntime(options) {
   }
 
   function hideDocPane() {
-    mainViewHost.requestView("rendered-document", {
-      onAccepted: function () { documentController.hideDocPane(); }
+    documentDisplayModeHost.requestMode("rendered-document", {
+      onAccepted: function () {
+        mainViewHost.requestView("rendered-document", {
+          onAccepted: function () { documentController.hideDocPane(); }
+        });
+      }
     });
     updateInfoPanel();
   }
 
   function showDocPane() {
-    mainViewHost.requestView("rendered-document", {
-      onAccepted: function () { documentController.showDocPane(); }
+    documentDisplayModeHost.requestMode("rendered-document", {
+      onAccepted: function () {
+        mainViewHost.requestView("rendered-document", {
+          onAccepted: function () { documentController.showDocPane(); }
+        });
+      }
     });
   }
 
   function showSearchPane() {
-    mainViewHost.requestView("search-results", {
-      onAccepted: function () { documentController.showSearchPane(); }
+    documentDisplayModeHost.requestMode("rendered-document", {
+      onAccepted: function () {
+        mainViewHost.requestView("search-results", {
+          onAccepted: function () { documentController.showSearchPane(); }
+        });
+      }
     });
     updateInfoPanel();
   }
 
   function showRecentPane() {
-    mainViewHost.requestView("recent-results", {
-      onAccepted: function () { documentController.showRecentPane(); }
+    documentDisplayModeHost.requestMode("rendered-document", {
+      onAccepted: function () {
+        mainViewHost.requestView("recent-results", {
+          onAccepted: function () { documentController.showRecentPane(); }
+        });
+      }
     });
     updateInfoPanel();
   }
 
   function renderPayload(doc, payload, hash) {
-    mainViewHost.requestView("rendered-document", { warn: false });
-    documentController.renderPayload(doc, payload, hash);
-    updateInfoPanel();
+    documentDisplayModeHost.requestMode("rendered-document", {
+      warn: false,
+      onAccepted: function () {
+        mainViewHost.requestView("rendered-document", { warn: false });
+        documentController.renderPayload(doc, payload, hash);
+        updateInfoPanel();
+      }
+    });
   }
 
   function cancelSearchDebounce() {
@@ -725,21 +777,36 @@ export function startDocsViewerRuntime(options) {
   }
 
   function handleMissingDoc() {
-    mainViewHost.requestView("rendered-document", { warn: false });
-    documentController.handleMissingDoc();
-    updateInfoPanel();
+    documentDisplayModeHost.requestMode("rendered-document", {
+      warn: false,
+      onAccepted: function () {
+        mainViewHost.requestView("rendered-document", { warn: false });
+        documentController.handleMissingDoc();
+        updateInfoPanel();
+      }
+    });
   }
 
   function renderDocLoadingState(doc) {
-    mainViewHost.requestView("rendered-document", { warn: false });
-    documentController.renderDocLoadingState(doc);
-    updateInfoPanel();
+    documentDisplayModeHost.requestMode("rendered-document", {
+      warn: false,
+      onAccepted: function () {
+        mainViewHost.requestView("rendered-document", { warn: false });
+        documentController.renderDocLoadingState(doc);
+        updateInfoPanel();
+      }
+    });
   }
 
   function handlePayloadError(error) {
-    mainViewHost.requestView("rendered-document", { warn: false });
-    documentController.handlePayloadError(error);
-    updateInfoPanel();
+    documentDisplayModeHost.requestMode("rendered-document", {
+      warn: false,
+      onAccepted: function () {
+        mainViewHost.requestView("rendered-document", { warn: false });
+        documentController.handlePayloadError(error);
+        updateInfoPanel();
+      }
+    });
   }
 
   function bindLinkInterception() {

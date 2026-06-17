@@ -318,9 +318,17 @@ export function createDocsViewerManagementActionController(options) {
 
   function handleMarkdownSource() {
     var doc = currentSelectedDoc();
-    if (!doc || typeof context.requestMainView !== "function") return;
+    if (!doc || typeof context.requestDocumentMode !== "function") return;
     hideContextMenu();
-    context.requestMainView("markdown-source");
+    var activeMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
+    context.requestDocumentMode(activeMode === "markdown-source" ? "rendered-document" : "markdown-source");
+  }
+
+  function handleMarkdownSave() {
+    if (!root || typeof root.dispatchEvent !== "function") return;
+    root.dispatchEvent(new CustomEvent("docs-viewer-source-editor-save", {
+      bubbles: true
+    }));
   }
 
   function handleSettingsSave() {
@@ -479,6 +487,7 @@ export function createDocsViewerManagementActionController(options) {
     handleCreateRelatedDoc: handleCreateRelatedDoc,
     handleDeleteDoc: handleDeleteDoc,
     handleEditMetadataSave: handleEditMetadataSave,
+    handleMarkdownSave: handleMarkdownSave,
     handleMarkdownSource: handleMarkdownSource,
     handleMakeViewable: handleMakeViewable,
     handleMoveDoc: handleMoveDoc,

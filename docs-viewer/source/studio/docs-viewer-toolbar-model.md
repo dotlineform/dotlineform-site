@@ -75,7 +75,7 @@ Owner: `docs-viewer-management-actions-renderer.js`
 ## Main-View Toolbar
 
 The main-view toolbar owns controls for the active central-panel view.
-When the active view is `rendered-document`, it can contain document-specific controls.
+When the active main view is `rendered-document`, the document view can switch document display modes such as rendered HTML and Markdown source without becoming a different main view.
 The top bar provides its mount slot, but the active main view remains responsible for rendering the toolbar surface and projecting its controls.
 
 Example controls:
@@ -84,21 +84,22 @@ Example controls:
 - context/info panel toggle for selected-document metadata
 - bookmark toggle
 - manage-mode `Edit` action for the current document
-- manage-mode `Markdown source` action that requests `markdown-source`
-- source-editor actions such as `Rebuild doc` and back when the editor view is active
+- manage-mode `Markdown source` toggle that switches between rendered HTML and the `markdown-source` document display mode
+- manage-mode `Save Markdown source` action, shown next to the Markdown toggle only while `markdown-source` is active
 
 Implemented owner:
 
 - `site/docs-viewer/runtime/js/shared/docs-viewer-top-bar-renderer.js` provides the `docsViewerMainViewToolbarMount` slot between the viewer toolbar and manage toolbar.
 - `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface into that slot and keeps the current rendered-document breadcrumbs, bookmark toggle, and info-panel toggle in that toolbar.
 - `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-display-mode-host.js` owns document display mode lifecycle inside the document main view.
 - `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
-- `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js` composes manage-mode `Edit` and `Markdown source` actions into the same main-view toolbar action area.
-- `docs-viewer/runtime/js/management/source-editor/source-editor.js` projects the source-editor toolbar/body state and hosts `Rebuild doc` plus back-to-rendered controls in the source view.
+- `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js` composes manage-mode `Edit`, `Markdown source`, and `Save Markdown source` actions into the same main-view toolbar action area.
+- `docs-viewer/runtime/js/management/source-editor/source-editor.js` projects the source-editor body state, hides rendered-document-only toolbar controls such as edit/info/bookmark, and routes toolbar save/back-to-rendered requests for the `markdown-source` document display mode.
 
 Current limitation:
 
-- rendered-document, search-results, and recent-results still use existing controllers for content rendering; `markdown-source` is the first manage-only mounted main-view module.
+- rendered-document, search-results, and recent-results still use existing controllers for content rendering; Markdown source is now a document display mode within `rendered-document`, not a peer main view.
 
 ## Context Panel Toolbar
 

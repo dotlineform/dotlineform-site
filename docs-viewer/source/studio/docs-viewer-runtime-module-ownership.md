@@ -49,8 +49,9 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Shared app shell | `docs-viewer-app-shell.js` | Public-safe JavaScript-owned shell composition before route behavior wiring; manage renderers are supplied by the manage entrypoint. |
 | Manage shell composition | `docs-viewer-management-shell-composition.js`, `docs-viewer-management-shell-renderer.js`, `docs-viewer-management-document-actions-renderer.js` | Manage-owned renderer bundle, context menu, metadata modal, import modal, settings modal, import host refs, and selected-document `Edit` / `Markdown source` controls. |
 | Panel layout/view state | `docs-viewer-panel-layout.js`, `docs-viewer-view-state.js` | App-shell panel projection and index/main/info view-state skeleton. |
-| Hosted-view registry | `docs-viewer-hosted-views.js`, `docs-viewer-management-hosted-views.js` | Minimal hosted-view registration, public-safe built-in records, access/availability checks, graceful absence, and manage-owned records such as `markdown-source`. |
-| Main-view host | `docs-viewer-main-view-host.js`, `docs-viewer-view-context.js` | Main-view availability checks, active view projection, switch-intent handling, toolbar handoff, selected-document context projection, and capability-gated source-editor service slots. |
+| Hosted-view registry | `docs-viewer-hosted-views.js`, `docs-viewer-management-hosted-views.js` | Minimal hosted-view registration, public-safe built-in records, access/availability checks, graceful absence, and manage-owned records for true panel views. |
+| Main-view host | `docs-viewer-main-view-host.js`, `docs-viewer-view-context.js` | Main-view availability checks, active view projection, switch-intent handling, toolbar handoff, and selected-document context projection. |
+| Document display modes | `docs-viewer-document-display-mode-host.js`, `docs-viewer-management-hosted-views.js`, `docs-viewer-view-context.js` | Rendered/source display-mode lifecycle inside the document main view, including capability-gated source-editor service slots. |
 | Info-panel host | `docs-viewer-info-panel-controller.js`, `docs-viewer-info-panel-renderer.js`, `docs-viewer-info-panel-host.js`, `docs-viewer-metadata-info-view.js` | Info toggle/toolbar binding, selected-document hosted-view context, open/close/update behavior, public-safe metadata rendering, and graceful absence. |
 
 ## Document, Navigation, Search, And Bookmarks
@@ -73,7 +74,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Management client | `docs-viewer-management-client.js` | Docs Viewer service transport helpers used by management controller workflows. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |
-| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Manage-only source-body editor rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |
+| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Manage-only source-body document display mode rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |
 | Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. |
 
 ## Public Index Slimming Ownership

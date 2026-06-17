@@ -5,6 +5,7 @@ import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";
 import {
+  createDocsViewerManagementDocumentDisplayModes,
   createDocsViewerManagementHostedViews
 } from "./docs-viewer-management-hosted-views.js";
 import {
@@ -12,6 +13,7 @@ import {
 } from "./docs-viewer-management-shell-composition.js";
 
 startDocsViewerManageApp({
+  documentDisplayModes: createDocsViewerManagementDocumentDisplayModes(),
   entrypointHostedViews: createDocsViewerManagementHostedViews(),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageDocumentExtras

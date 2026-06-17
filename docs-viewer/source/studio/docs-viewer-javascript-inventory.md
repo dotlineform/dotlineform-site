@@ -41,6 +41,7 @@ Risk themes:
 | docs-viewer-favourites.js                           | bookmark/favourite support.                                                                                                                                                                                                 |
 | docs-viewer-generated-data-runtime.js               | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods.                  |
 | docs-viewer-hosted-views.js                         | App-shell-owned hosted-view registration shape, public-safe built-in records, route-record filtering, availability/access checks, and graceful absence.                                                                     |
+| docs-viewer-document-display-mode-host.js           | Document-view display-mode lifecycle owner for rendered/source modes inside the rendered-document main view.                                                                                                               |
 | docs-viewer-index-panel-renderer.js                 | App-shell-owned index panel chrome renderer and projection applier.                                                                                                                                                         |
 | docs-viewer-index-panel.js                          | index panel state, current-key persistence, toggle projection, and document-pane visibility helper.                                                                                                                         |
 | docs-viewer-info-panel-controller.js                | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability.                                                         |
@@ -55,7 +56,7 @@ Risk themes:
 | docs-viewer-management-client.js                    | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-config.js                    | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-document-actions-renderer.js | Manage-owned selected-document edit/source controls rendered into the shared main-view toolbar action area.                                                                                                                 |
-| docs-viewer-management-hosted-views.js              | Manage-owned hosted-view records, currently the markdown-sourcesource-editor view supplied by the manage entrypoint.                                                                                                        |
+| docs-viewer-management-hosted-views.js              | Manage-owned hosted-view and document display mode records supplied by the manage entrypoint.                                                                                                                              |
 | docs-viewer-management-interactions.js              | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-modals.js                    | management modal controller after transient modal shell and metadata parent-picker extraction.                                                                                                                              |
 | docs-viewer-management-render.js                    | management support module.                                                                                                                                                                                                  |
@@ -288,7 +289,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js`
 
 - the focused main-view switch-intent owner.
-- the host now exposes main-view module context creation and a toolbar projection helper, but source-editor service details remain outside the host and are supplied only through explicit context options.
+- the host exposes main-view module context creation and a toolbar projection helper. Source-editor service details remain outside the host and are supplied only through document display mode context options.
 - Keep this module limited to resolving main-view hosted-view availability, projecting active main-view state through panel layout, accepting switch requests for built-in main views, and passing generic main-view intent/toolbar/warning helpers into module contexts.
 - Do not add source-editor service details, report migration behavior, arbitrary module loading, plugin behavior, or rendered-document/search/recent rendering into it.
 
@@ -332,14 +333,14 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
 - built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. The old `createDocsViewerCompatibilityHostedViews()` alias was removed during architecture cleanup after active runtime callers and focused smokes had moved to the built-in factory.
 - `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for public-safe built-in records; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
-- manage-only `markdown-source` moved out of this shared hosted-view registry and into `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`, which is imported by the manage entrypoint.
+- manage-only `markdown-source` is not a hosted main view; it is a document display mode supplied by `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`, which is imported by the manage entrypoint.
 - Keep this module limited to records, lifecycle method names, public-safe built-in hosted-view records, route-record filtering, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering, panel state, source editing, or management services.
 - Do not turn it into a plugin system, arbitrary dependency loader, panel toolbar renderer, route-config module loader, or third-party visualization owner.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`
 
-- the manage-owned hosted-view record owner.
-- This module currently defines the `markdown-source` main hosted view and lazy-loads `docs-viewer/runtime/js/management/source-editor/source-editor.js`.
+- the manage-owned hosted-view and document display mode record owner.
+- This module currently defines the `markdown-source` document display mode and lazy-loads `docs-viewer/runtime/js/management/source-editor/source-editor.js`.
 - Keep this module loaded only through `docs-viewer/runtime/js/management/docs-viewer-manage.js`; public entrypoints must not import it or the source-editor module.
 - Do not move public hosted-view registration, route-config hosted-view filtering, panel state, or source-editor service implementation into it.
 
@@ -368,15 +369,15 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - the focused selected-document hosted-view context projector.
 - public-safe hosted views should receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from this helper rather than reading broad runtime state.
-- main-view module contexts now add generic `mainView` helpers for active-view id, switch requests, toolbar projection, and local warnings, plus source-editor service slots that are omitted unless route access allows management.
+- main-view module contexts add generic `mainView` helpers for active-view id, switch requests, toolbar projection, and local warnings. Document display mode contexts add `documentView` helpers and source-editor service slots that are omitted unless route access allows management.
 - selected metadata comes from the selected by-id payload cache; public contexts project only reader metadata while manage contexts can retain richer selected-document metadata.
-- Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, display labels, and generic main-view helper slots from explicit inputs.
+- Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, display labels, and generic main-view/document-view helper slots from explicit inputs.
 - Future info views should extend or consume this helper
 - Do not add DOM rendering, hosted-view lifecycle, URL history mutation, source-editor service implementation, or backend writes to it.
 
 ### `docs-viewer/runtime/js/management/source-editor/source-editor.js`
 
-- the manage-only Markdown source body editor module for the `markdown-source` main hosted view.
+- the manage-only Markdown source body editor module for the `markdown-source` document display mode.
 - Keep this module limited to source-body view orchestration, native textarea/gutter rendering, dirty-state projection, dirty leave confirmation, `Rebuild doc` submission, diagnostics display, rendered-payload reload handoff, and back-to-rendered switching.
 - Do not add front matter editing, metadata writes, semantic-reference target picking, generated-data builder ownership, third-party editor dependencies, route URL state, or public-route source services to it.
 

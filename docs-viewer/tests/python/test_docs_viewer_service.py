@@ -282,15 +282,22 @@ def test_manage_shell_composition_owns_manage_shell_renderer_imports() -> None:
     assert "createDocsViewerManagementShellRenderers" in manage_entry
 
 
-def test_manage_hosted_views_module_owns_source_editor_view_import() -> None:
+def test_manage_hosted_views_module_owns_document_display_mode_import() -> None:
     source = (
         REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js"
     ).read_text(encoding="utf-8")
     manage_entry = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js").read_text(encoding="utf-8")
+    source_editor = (
+        REPO_ROOT / "docs-viewer/runtime/js/management/source-editor/source-editor.js"
+    ).read_text(encoding="utf-8")
 
     assert "./source-editor/source-editor.js" in source
+    assert "createDocsViewerSourceEditorMode" in source
     assert "markdown-source" in source
     assert "createDocsViewerManagementHostedViews" in manage_entry
+    assert "createDocsViewerManagementDocumentDisplayModes" in manage_entry
+    assert "documentDisplayModes" in manage_entry
+    assert "createDocsViewerSourceEditorMode" in source_editor
 
 
 def test_shared_main_view_renderer_excludes_manage_document_actions() -> None:

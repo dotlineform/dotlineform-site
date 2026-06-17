@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8387b83e8c06a1cfedaf5dd11a7580f5",
-    "generated_at_utc": "2026-06-17T16:20:10Z",
-    "count": 238
+    "version": "blake2b-18207faa3fd087c14d35dbbb68e5f15e",
+    "generated_at_utc": "2026-06-17T18:31:19Z",
+    "count": 239
   },
   "entries": [
     {
@@ -1381,6 +1381,36 @@
         "07"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-07 2026 06 07"
+    },
+    {
+      "id": "site-request-docs-viewer-view-mode-registry",
+      "kind": "doc",
+      "title": "Docs Viewer View And Mode Registry",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry",
+      "last_updated": "2026-06-17",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-17 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-view-mode-registry",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "view",
+        "mode",
+        "registry",
+        "docs viewer view and mode registry",
+        "and",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-17",
+        "2026",
+        "06",
+        "17"
+      ],
+      "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view and mode registry and change requests change requests 2026-06-17 2026 06 17"
     },
     {
       "id": "site-request-docs-viewer-workspace-mount-architecture",

@@ -122,6 +122,9 @@ export function applyDocsViewerMainViewProjection(options = {}) {
       refs.infoToggle.title = projection.infoToggleLabel || "Show document info";
     }
   }
+  if (refs.bookmarkToggle && Object.prototype.hasOwnProperty.call(projection, "bookmarkToggleHidden")) {
+    refs.bookmarkToggle.hidden = Boolean(projection.bookmarkToggleHidden);
+  }
   if (refs.resultsStatus) {
     if (Object.prototype.hasOwnProperty.call(projection, "resultsStatusText")) {
       refs.resultsStatus.textContent = String(projection.resultsStatusText || "");

@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-docs-viewer-view-mode-registry",
+      "title": "Docs Viewer View And Mode Registry",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
+      "added_date": "2026-06-17",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-catalogue-canonical-work-detail-structure-review",
       "title": "Catalogue Canonical Work Detail Structure Review Request",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-canonical-work-detail-structure-review.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-13",
       "parent_id": "site-request-public-catalogue-runtime-module-architecture",
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
-    },
-    {
-      "doc_id": "site-request-public-catalogue-runtime-module-architecture",
-      "title": "Public Catalogue Runtime Module Architecture Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture.json",
-      "added_date": "2026-06-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-06-16T17:49:03Z"
+  "generated_at": "2026-06-17T18:31:19Z"
 }
