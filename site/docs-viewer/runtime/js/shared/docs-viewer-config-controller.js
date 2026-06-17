@@ -299,19 +299,11 @@ export function initDocsViewerConfigController(context) {
       recentButton.setAttribute("aria-label", label);
       recentButton.title = label;
     }
-    scopeConfig.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", scopeConfig.managementText.statusPillSetLabel);
-    scopeConfig.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", scopeConfig.managementText.statusPillClearLabel);
-    scopeConfig.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", scopeConfig.managementText.statusPillReadonlyLabel);
-    scopeConfig.managementText.statusMenuLabel = getConfigText(config, "docs_viewer.status_menu_label", scopeConfig.managementText.statusMenuLabel);
-    scopeConfig.managementText.statusPillSaving = getConfigText(config, "docs_viewer.status_pill_saving", scopeConfig.managementText.statusPillSaving);
-    scopeConfig.managementText.statusPillSaved = getConfigText(config, "docs_viewer.status_pill_saved", scopeConfig.managementText.statusPillSaved);
-    scopeConfig.managementText.statusPillFailed = getConfigText(config, "docs_viewer.status_pill_failed", scopeConfig.managementText.statusPillFailed);
     if (context.managementController()) {
       context.managementController().applyConfig(config);
     }
     if (documentIndex.docs.length) {
       context.renderSidebar();
-      context.renderStatusPills();
     }
     if (searchRecent.recentModeActive) {
       context.renderRecentMode();

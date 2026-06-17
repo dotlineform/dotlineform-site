@@ -94,7 +94,6 @@ export function initDocsViewerBookmarks(context) {
   function renderUi() {
     renderToggle();
     renderRow();
-    context.renderStatusPills();
   }
 
   function renderToggle() {

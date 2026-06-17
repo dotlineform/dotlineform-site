@@ -145,7 +145,7 @@ The standalone Docs Viewer service injects `DOCS_VIEWER_BASE_URL` into the serve
 The checked-in static route-config asset keeps those URLs blank so public builds do not expose localhost state.
 The management scope selector and browser route map come from `docs-viewer/config/defaults/docs-viewer-config.json`.
 Adding a configured scope does not require editing Docs Viewer shell markup or the Docs Viewer runtime entrypoints.
-If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
+If the new scope needs metadata status options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
 The scope delete lifecycle action removes the matching `ui_statuses_by_scope` entry from `docs-viewer/config/scopes/docs_scopes.json` along with the scope record.
 If the new scope uses a new availability type, add or update its `docs_viewer.scope_type_badges` entry so the management scope dropdown can prefix the scope name consistently.
 Set the scope record `meta` to the short descriptor that should appear beside the scope id in the custom scope dropdown.

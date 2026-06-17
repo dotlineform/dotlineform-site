@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-be1df42dcefd66dd6a0e8e2e2958e682",
-    "generated_at_utc": "2026-06-17T11:43:55Z",
+    "version": "blake2b-8387b83e8c06a1cfedaf5dd11a7580f5",
+    "generated_at_utc": "2026-06-17T16:20:10Z",
     "count": 238
   },
   "entries": [
@@ -2489,10 +2489,10 @@
       "kind": "doc",
       "title": "CSS Cascade Design",
       "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-17",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-02 • Docs Viewer",
+      "display_meta": "2026-06-17 • Docs Viewer",
       "search_terms": [
         "docs-viewer-css-cascade-design",
         "docs",
@@ -2502,12 +2502,12 @@
         "design",
         "css cascade design",
         "docs viewer",
-        "2026-06-02",
+        "2026-06-17",
         "2026",
         "06",
-        "02"
+        "17"
       ],
-      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-06-02 2026 06 02"
+      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-06-17 2026 06 17"
     },
     {
       "id": "docs-viewer-dependencies",
@@ -3603,10 +3603,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-06-04",
+      "last_updated": "2026-06-17",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-04 • Runtime",
+      "display_meta": "2026-06-17 • Runtime",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3615,12 +3615,12 @@
         "inventory",
         "javascript inventory",
         "runtime",
-        "2026-06-04",
+        "2026-06-17",
         "2026",
         "06",
-        "04"
+        "17"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-06-04 2026 06 04"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-06-17 2026 06 17"
     },
     {
       "id": "docs-viewer-runtime-module-ownership",
@@ -3771,10 +3771,10 @@
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=docs-viewer-toolbar-model",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-17",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-03 • Docs Viewer",
+      "display_meta": "2026-06-17 • Docs Viewer",
       "search_terms": [
         "docs-viewer-toolbar-model",
         "docs",
@@ -3783,12 +3783,12 @@
         "model",
         "toolbar model",
         "docs viewer",
-        "2026-06-03",
+        "2026-06-17",
         "2026",
         "06",
-        "03"
+        "17"
       ],
-      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model toolbar model docs viewer 2026-06-03 2026 06 03"
+      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model toolbar model docs viewer 2026-06-17 2026 06 17"
     },
     {
       "id": "doc-ui-status",

@@ -133,7 +133,7 @@ Current content families:
 
 - one row per generated doc
 - identity, title, optional non-empty `parent_id`, optional `viewable: false`, optional `ui_status`, and per-doc content URL
-- `viewer_options` for scope-level display behavior such as hiding document-view updated dates
+- `viewer_options` for legacy scope-level display behavior
 
 Current site mapping:
 

@@ -50,7 +50,7 @@ Returned data:
       "source_path": "scopes[].show_updated_date",
       "generated_path": "viewer_options.show_updated_date",
       "requires_rebuild": true,
-      "description": "Show updated-date metadata in the Docs Viewer for this scope."
+      "description": "Legacy updated-date display option retained in scope config."
     }
   ],
   "blocked_scope_fields": [],

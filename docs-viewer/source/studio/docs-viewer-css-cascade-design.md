@@ -2,7 +2,7 @@
 doc_id: docs-viewer-css-cascade-design
 title: CSS Cascade Design
 added_date: 2026-05-11
-last_updated: 2026-06-02
+last_updated: 2026-06-17
 parent_id: docs-viewer
 viewable: true
 ---
@@ -60,11 +60,11 @@ The `content` class is intentional. It lets generated markdown output inherit th
 - `.docsViewer` grid and responsive shell
 - sidebar/index layout
 - nav rows, toggles, active states, and collapsed index state
-- scope selector and search controls
+- search controls
 - action button baseline used by public viewer controls
 - status text
 - bookmark row and bookmark controls
-- metadata row, path, updated date, and status/bookmark display
+- main-view toolbar, breadcrumb path, info toggle, and document action controls
 - search and recently-added results
 - viewer-specific content constraints such as measure width
 - rendered Markdown content should not force mid-word wrapping by default
@@ -103,6 +103,7 @@ Use the wrapper only where a table needs local width behavior; do not replace or
 It should own management-only surfaces:
 
 - management toolbar row
+- scope selector controls
 - selected-document status mutation/menu controls
 - non-viewable/viewable toggle controls
 - drag/drop index states

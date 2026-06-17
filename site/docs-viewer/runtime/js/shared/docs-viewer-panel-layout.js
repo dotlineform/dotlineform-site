@@ -13,8 +13,7 @@ import {
   renderDocsViewerAppShellMainViewState,
   renderDocsViewerAppShellIndexViewToggleState,
   renderDocsViewerAppShellInfoPanelState,
-  renderDocsViewerAppShellIndexPanelState,
-  renderDocsViewerAppShellViewerToolbarState
+  renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
 import {
   createDocsViewerViewState,
@@ -228,10 +227,6 @@ export function createDocsViewerPanelLayout(options) {
   function projectMainView(projection) {
     renderDocsViewerAppShellMainViewState({
       refs: mainViewRefs,
-      projection: projection || {}
-    });
-    renderDocsViewerAppShellViewerToolbarState({
-      refs: indexViewToggleRefs,
       projection: projection || {}
     });
   }

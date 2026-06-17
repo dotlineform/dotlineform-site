@@ -26,13 +26,6 @@ var MANAGEMENT_TEXT_KEYS = [
   ["metadataParentRootOption", "docs_viewer.metadata_parent_root_option"],
   ["metadataParentInvalid", "docs_viewer.metadata_parent_invalid"],
   ["metadataParentNoMatches", "docs_viewer.metadata_parent_no_matches"],
-  ["statusMenuLabel", "docs_viewer.status_menu_label"],
-  ["statusPillSetLabel", "docs_viewer.status_pill_set_label"],
-  ["statusPillClearLabel", "docs_viewer.status_pill_clear_label"],
-  ["statusPillReadonlyLabel", "docs_viewer.status_pill_readonly_label"],
-  ["statusPillSaving", "docs_viewer.status_pill_saving"],
-  ["statusPillSaved", "docs_viewer.status_pill_saved"],
-  ["statusPillFailed", "docs_viewer.status_pill_failed"],
   ["settingsLoading", "docs_viewer.settings_loading"],
   ["settingsEmpty", "docs_viewer.settings_empty"],
   ["settingsSaving", "docs_viewer.settings_saving"],
@@ -170,9 +163,6 @@ export function applyDocsViewerManagementConfig(options) {
 
   if (refs.settingsHeading) {
     refs.settingsHeading.textContent = context.getConfigText(config, "docs_viewer.settings_title", "Settings");
-  }
-  if (refs.settingsUpdatedLabel) {
-    refs.settingsUpdatedLabel.textContent = context.getConfigText(config, "docs_viewer.settings_show_updated_date_label", "show updated dates");
   }
 
   applyManagementText(config, state, context);

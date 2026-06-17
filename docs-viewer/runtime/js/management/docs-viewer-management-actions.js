@@ -7,7 +7,6 @@ import {
   openManagedDocSource,
   previewManagedDocDelete,
   rebuildManagedDocs,
-  updateSourceConfigSettings,
   updateManagedDocMetadata,
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
@@ -40,14 +39,6 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.currentContextMenuDoc ? callbacks.currentContextMenuDoc() : null;
   }
 
-  function currentStatusValue(doc) {
-    return callbacks.currentStatusValue ? callbacks.currentStatusValue(doc) : "";
-  }
-
-  function statusPillsCanWrite(doc) {
-    return callbacks.statusPillsCanWrite ? callbacks.statusPillsCanWrite(doc) : false;
-  }
-
   function managementClientOptions() {
     return callbacks.managementClientOptions ? callbacks.managementClientOptions() : {};
   }
@@ -74,10 +65,6 @@ export function createDocsViewerManagementActionController(options) {
 
   function renderManagementUi() {
     if (callbacks.renderManagementUi) callbacks.renderManagementUi();
-  }
-
-  function renderStatusPills() {
-    if (callbacks.renderStatusPills) callbacks.renderStatusPills();
   }
 
   function reloadDocsIndex(targetDocId, summaryText) {
@@ -119,17 +106,6 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage(state.managementText.viewableInvalidChoice, true);
       }
     });
-  }
-
-  function metadataPayloadForStatus(doc, uiStatus) {
-    return {
-      doc_id: doc.doc_id,
-      title: String(doc.title || "").trim(),
-      summary: String(doc.summary || "").replace(/\s+/g, " ").trim(),
-      ui_status: String(uiStatus || "").trim(),
-      viewable: !isDocNonViewable(doc),
-      parent_id: String(doc.parent_id || "").trim()
-    };
   }
 
   function writeClipboardText(text) {
@@ -261,35 +237,6 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleStatusPillClick(statusValue) {
-    var doc = currentSelectedDoc();
-    if (!statusPillsCanWrite(doc)) return;
-    var selectedStatus = String(statusValue || "").trim();
-    if (!selectedStatus || !state.uiStatusByValue.has(selectedStatus)) return;
-
-    var nextStatus = currentStatusValue(doc) === selectedStatus ? "" : selectedStatus;
-    var savingText = context.formatText(state.managementText.statusPillSaving, { title: doc.title });
-
-    setManagementBusy(true);
-    setManagementMessage(savingText, false);
-    renderStatusPills();
-
-    updateManagedDocMetadata(metadataPayloadForStatus(doc, nextStatus), managementClientOptions())
-      .then(function () {
-        setManagementMessage("", false);
-        return reloadDocsIndex(doc.doc_id, "");
-      })
-      .catch(function (error) {
-        var failedText = error.message || state.managementText.statusPillFailed;
-        setManagementMessage(failedText, true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-        renderStatusPills();
-      });
-  }
-
   function handleRebuildDocs() {
     setManagementBusy(true);
     setManagementMessage("Rebuilding docs...", false);
@@ -379,38 +326,9 @@ export function createDocsViewerManagementActionController(options) {
   function handleSettingsSave() {
     var modalController = getModalController();
     var settingsFieldState = modalController ? modalController.getSettingsFieldState() : null;
-    if (!refs.settingsUpdatedInput || !settingsFieldState) return;
-    var nextValue = Boolean(refs.settingsUpdatedInput.checked);
-    var currentValue = settingsFieldState.current_value !== false;
-    if (nextValue === currentValue) {
-      modalController.closeSettingsModal();
-      return;
+    if (!settingsFieldState) {
+      if (modalController) modalController.closeSettingsModal();
     }
-
-    setManagementBusy(true);
-    modalController.setSettingsSaving();
-    setManagementMessage(state.managementText.settingsSaving, false);
-
-    updateSourceConfigSettings({
-      show_updated_date: nextValue
-    }, managementClientOptions())
-      .then(function (payload) {
-        modalController.renderSettingsWarnings(payload.warnings || []);
-        var targetDocId = state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
-        setManagementMessage("", false);
-        return reloadDocsIndex(targetDocId, "").then(function () {
-          modalController.closeSettingsModal();
-        });
-      })
-      .catch(function (error) {
-        var message = error.message || state.managementText.settingsSaveFailed;
-        modalController.setSettingsSaveError(message);
-        setManagementMessage(message, true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
   }
 
   function handleSettingsSubmit(event) {
@@ -567,7 +485,6 @@ export function createDocsViewerManagementActionController(options) {
     handleOpenSource: handleOpenSource,
     handlePublishDocs: handlePublishDocs,
     handleRebuildDocs: handleRebuildDocs,
-    handleSettingsSubmit: handleSettingsSubmit,
-    handleStatusPillClick: handleStatusPillClick
+    handleSettingsSubmit: handleSettingsSubmit
   };
 }

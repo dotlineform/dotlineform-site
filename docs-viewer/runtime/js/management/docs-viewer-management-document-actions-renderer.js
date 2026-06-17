@@ -1,6 +1,6 @@
-function metaActionsMount(root) {
+function mainViewToolbarActionsMount(root) {
   if (!root) return null;
-  return root.querySelector(".docsViewer__metaActions");
+  return root.querySelector(".docsViewer__mainViewToolbarActions");
 }
 
 function bookmarkToggle(root) {
@@ -26,13 +26,8 @@ export function renderDocsViewerManagementDocumentActions(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
   var root = settings.root || documentRef;
-  var mount = settings.mount || metaActionsMount(root);
+  var mount = settings.mount || mainViewToolbarActionsMount(root);
   if (!mount) return null;
-
-  var statusPills = documentRef.createElement("div");
-  statusPills.className = "docsViewer__statusPills";
-  statusPills.id = "docsViewerStatusPills";
-  statusPills.hidden = true;
 
   var editButton = renderDocumentActionButton(documentRef, {
     id: "docsViewerManageEditButton",
@@ -50,15 +45,13 @@ export function renderDocsViewerManagementDocumentActions(options) {
 
   var bookmark = bookmarkToggle(root);
   if (bookmark && bookmark.parentElement === mount) {
-    mount.insertBefore(statusPills, bookmark);
     mount.insertBefore(editButton, bookmark);
     mount.insertBefore(sourceButton, bookmark);
   } else {
-    mount.prepend(statusPills, editButton, sourceButton);
+    mount.prepend(editButton, sourceButton);
   }
 
   return {
-    statusPills: statusPills,
     editButton: editButton,
     sourceButton: sourceButton
   };

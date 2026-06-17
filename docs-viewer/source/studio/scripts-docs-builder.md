@@ -113,7 +113,7 @@ For public scopes only, `publish_output` and `publish_search_output` own the pub
 - `added_date`
   generated docs recently-added metadata; legacy source docs without this field fall back to `last_updated`; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
 - `last_updated`
-  display metadata for viewer scopes whose generated `viewer_options.show_updated_date` is not `false`, and search metadata for docs-domain search; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
+  selected-document metadata for the info panel and search metadata for docs-domain search; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
 - `summary`
   optional plain-text summary carried into docs-viewer per-doc payloads
 - `ui_status`

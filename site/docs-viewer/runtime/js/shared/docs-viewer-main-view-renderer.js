@@ -18,26 +18,25 @@ export function renderDocsViewerMainView(options = {}) {
   const toolbar = documentRef.createElement("div");
   toolbar.className = "docsViewer__mainViewToolbar";
   toolbar.id = "docsViewerMainViewToolbar";
+  toolbar.hidden = true;
   toolbar.setAttribute("role", "toolbar");
   toolbar.setAttribute("aria-label", "Document controls");
 
-  const meta = documentRef.createElement("div");
-  meta.className = "docsViewer__meta";
-  meta.id = "docsViewerMeta";
-  meta.hidden = true;
+  const path = renderParagraph(documentRef, "docsViewerPath", "docsViewer__path small");
+  path.hidden = true;
 
-  const metaRow = documentRef.createElement("div");
-  metaRow.className = "docsViewer__metaRow";
+  const actions = documentRef.createElement("div");
+  actions.className = "docsViewer__mainViewToolbarActions";
 
-  const metaCopy = documentRef.createElement("div");
-  metaCopy.className = "docsViewer__metaCopy";
-  metaCopy.append(
-    renderParagraph(documentRef, "docsViewerPath", "docsViewer__path small"),
-    renderParagraph(documentRef, "docsViewerUpdated", "docsViewer__updated muted small")
-  );
-
-  const metaActions = documentRef.createElement("div");
-  metaActions.className = "docsViewer__metaActions";
+  const infoToggle = documentRef.createElement("button");
+  infoToggle.className = "docsViewer__infoToggle";
+  infoToggle.id = "docsViewerInfoToggle";
+  infoToggle.type = "button";
+  infoToggle.hidden = true;
+  infoToggle.setAttribute("aria-label", "Show document info");
+  infoToggle.setAttribute("aria-expanded", "false");
+  infoToggle.title = "Show document info";
+  infoToggle.textContent = "i";
 
   const bookmarkToggle = documentRef.createElement("button");
   bookmarkToggle.className = "docsViewer__bookmarkToggle";
@@ -49,10 +48,8 @@ export function renderDocsViewerMainView(options = {}) {
   bookmarkToggle.title = "Add bookmark";
   bookmarkToggle.textContent = "☆";
 
-  metaActions.append(bookmarkToggle);
-  metaRow.append(metaCopy, metaActions);
-  meta.appendChild(metaRow);
-  toolbar.appendChild(meta);
+  actions.append(bookmarkToggle, infoToggle);
+  toolbar.append(path, actions);
 
   const content = documentRef.createElement("div");
   content.className = "docsViewer__content content";
@@ -85,10 +82,8 @@ export function findDocsViewerMainViewRefs(options = {}) {
   return {
     main: root.querySelector(".docsViewer__main"),
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
-    meta: root.querySelector("#docsViewerMeta"),
     pathEl: root.querySelector("#docsViewerPath"),
-    updatedEl: root.querySelector("#docsViewerUpdated"),
-    summaryEl: root.querySelector("#docsViewerSummary"),
+    infoToggle: root.querySelector("#docsViewerInfoToggle"),
     bookmarkToggle: root.querySelector("#docsViewerBookmarkToggle"),
     content: root.querySelector("#docsViewerContent"),
     resultsStatus: root.querySelector("#docsViewerResultsStatus"),
@@ -102,11 +97,24 @@ export function applyDocsViewerMainViewProjection(options = {}) {
   const projection = options.projection || {};
 
   applyHidden(refs.toolbar, projection, "toolbarHidden");
-  applyHidden(refs.meta, projection, "metaHidden");
   applyHidden(refs.content, projection, "contentHidden");
   applyHidden(refs.resultsStatus, projection, "resultsStatusHidden");
   applyHidden(refs.results, projection, "resultsHidden");
   applyHidden(refs.more, projection, "moreHidden");
+
+  if (refs.infoToggle) {
+    if (Object.prototype.hasOwnProperty.call(projection, "infoToggleHidden")) {
+      refs.infoToggle.hidden = Boolean(projection.infoToggleHidden);
+    }
+    if (Object.prototype.hasOwnProperty.call(projection, "infoTogglePressed")) {
+      refs.infoToggle.classList.toggle("is-active", Boolean(projection.infoTogglePressed));
+      refs.infoToggle.setAttribute("aria-expanded", projection.infoTogglePressed ? "true" : "false");
+    }
+    if (Object.prototype.hasOwnProperty.call(projection, "infoToggleLabel")) {
+      refs.infoToggle.setAttribute("aria-label", projection.infoToggleLabel || "Show document info");
+      refs.infoToggle.title = projection.infoToggleLabel || "Show document info";
+    }
+  }
   if (refs.resultsStatus) {
     if (Object.prototype.hasOwnProperty.call(projection, "resultsStatusText")) {
       refs.resultsStatus.textContent = String(projection.resultsStatusText || "");

@@ -26,10 +26,9 @@ It is checked in and is read by docs builds, docs search builds, Docs Import, th
 In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report&mode=manage) reads this source config through the Docs Viewer service and shows it alongside browser and generated projections.
 The report is read-only; source edits still go through source JSON edits or explicit manage-mode write controls.
 
-- The Docs Viewer service also exposes a source-config settings contract for manage-mode settings controls.
-- That contract currently allows scoped `show_updated_date` edits only, blocks install-time fields such as route bases and source/output roots, and defers global settings such as `recently_added_limit`.
-- It does not create a new settings layer; it describes guarded edits to the existing source config.
-- The `/docs/` manage-mode Settings modal writes allowlisted changes through that contract and rebuilds the affected generated docs scope so browser payloads stay in sync.
+- The Docs Viewer service still exposes a source-config settings contract for guarded source config writes.
+- The current `/docs/` manage-mode Settings modal has no active editable fields; future scope-level toolbar/display controls should use an explicit settings contract rather than ad hoc route-local state.
+- The settings contract does not create a new settings layer; it describes guarded edits to the existing source config.
 
 Each scope entry owns:
 
@@ -44,7 +43,7 @@ Each scope entry owns:
 - `allow_nested_source`: whether source Markdown may live below nested folders
 - `non_loadable_doc_ids`: tree nodes that should not load as documents
 - `manage_only_tree_root_ids`: tree roots excluded from public routes
-- `show_updated_date`: whether the viewer should show updated-date metadata
+- `show_updated_date`: legacy generated viewer option retained in scope config; selected-document date display now belongs to the info panel metadata view
 - `allow_unresolved_parent_ids`: whether unknown parent ids are tolerated
 - `import_media_storage`: Docs Import media save behavior for that scope
 

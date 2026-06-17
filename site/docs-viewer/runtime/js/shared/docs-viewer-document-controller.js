@@ -5,7 +5,6 @@ export function initDocsViewerDocumentController(context) {
   var statusCommands = context.statusCommands || {};
   var content = context.content;
   var toolbar = context.toolbar;
-  var meta = context.meta;
   var results = context.results;
   var more = context.more;
 
@@ -19,10 +18,6 @@ export function initDocsViewerDocumentController(context) {
 
   function managementModeActive() {
     return Boolean(routeSession && routeSession.managementMode);
-  }
-
-  function closeStatusMenu() {
-    if (typeof statusCommands.closeStatusMenu === "function") statusCommands.closeStatusMenu();
   }
 
   function setStatus(message, isError) {
@@ -69,11 +64,9 @@ export function initDocsViewerDocumentController(context) {
   function hideDocPane() {
     projectDocumentShell({
       toolbarHidden: true,
-      metaHidden: true,
       contentHidden: true
     });
     context.renderBookmarkToggle();
-    context.renderStatusPills();
   }
 
   function showDocPane() {
@@ -93,8 +86,7 @@ export function initDocsViewerDocumentController(context) {
     showDocPane();
     if (settings.hideMeta) {
       projectDocumentShell({
-        toolbarHidden: true,
-        metaHidden: true
+        toolbarHidden: true
       });
     }
     if (!content) return;
@@ -118,7 +110,6 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function renderPayload(doc, payload, hash) {
-    closeStatusMenu();
     selectedDocument.selectedDocId = doc.doc_id;
     context.renderSidebar();
     context.renderBookmarkUi();
@@ -169,9 +160,6 @@ export function initDocsViewerDocumentController(context) {
     }
     if (toolbar && Object.prototype.hasOwnProperty.call(projection || {}, "toolbarHidden")) {
       toolbar.hidden = Boolean(projection.toolbarHidden);
-    }
-    if (meta && Object.prototype.hasOwnProperty.call(projection || {}, "metaHidden")) {
-      meta.hidden = Boolean(projection.metaHidden);
     }
     if (content && Object.prototype.hasOwnProperty.call(projection || {}, "contentHidden")) {
       content.hidden = Boolean(projection.contentHidden);

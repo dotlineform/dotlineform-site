@@ -65,14 +65,10 @@ export function startDocsViewerRuntime(options) {
   var infoPanelRefs = appShellRefs.infoPanel;
   var status = appShellRefs.status;
   var mainViewToolbar = mainViewRefs.toolbar;
-  var meta = mainViewRefs.meta;
   var pathEl = mainViewRefs.pathEl;
-  var updatedEl = mainViewRefs.updatedEl;
-  var summaryEl = mainViewRefs.summaryEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
-  var infoToggle = viewerToolbarRefs.infoToggle;
+  var infoToggle = mainViewRefs.infoToggle;
   var bookmarkToggle = mainViewRefs.bookmarkToggle;
-  var statusPills = mainViewRefs.statusPills;
   var content = mainViewRefs.content;
   var scopeSelect = appShellRefs.headerControls.scopeSelect;
   var recentButton = appShellRefs.headerControls.recentButton;
@@ -161,17 +157,14 @@ export function startDocsViewerRuntime(options) {
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
     documentIndex: appSession.domains.documentIndex,
-    meta: meta,
+    toolbar: mainViewToolbar,
     nav: nav,
     pathEl: pathEl,
     renderBookmarkToggle: renderBookmarkToggle,
-    renderStatusPills: renderStatusPills,
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
-    summaryEl: summaryEl,
     updateNavDragState: updateNavDragState,
-    updatedEl: updatedEl,
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
@@ -200,7 +193,6 @@ export function startDocsViewerRuntime(options) {
     generatedData: generatedDataRuntime,
     hasActiveQuery: hasActiveQuery,
     managementBaseUrl: function () { return managementBaseUrl; },
-    meta: meta,
     mountDocumentExtras: settings.mountDocumentExtras,
     more: more,
     projectDocumentShell: projectMainView,
@@ -210,7 +202,6 @@ export function startDocsViewerRuntime(options) {
     renderMeta: renderMeta,
     renderSearchMode: renderSearchMode,
     renderSidebar: renderSidebar,
-    renderStatusPills: renderStatusPills,
     results: results,
     routeContext: function () { return routeContext; },
     routeSession: appSession.domains.routeSession,
@@ -218,7 +209,6 @@ export function startDocsViewerRuntime(options) {
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     statusCommands: {
-      closeStatusMenu: function () { appSession.domains.management.statusMenuOpen = false; },
       setStatus: setStatus
     },
     toolbar: mainViewToolbar,
@@ -328,7 +318,6 @@ export function startDocsViewerRuntime(options) {
     recentButton: recentButton,
     renderRecentMode: renderRecentMode,
     renderSidebar: renderSidebar,
-    renderStatusPills: renderStatusPills,
     root: root,
     routeCommands: {
       applyRouteGlobals: applyRouteGlobals
@@ -559,7 +548,6 @@ export function startDocsViewerRuntime(options) {
       bookmarkController.renderUi();
       return;
     }
-    renderStatusPills();
   }
 
   function renderBookmarkToggle() {
@@ -574,18 +562,6 @@ export function startDocsViewerRuntime(options) {
 
   function updateInfoPanel() {
     infoPanelController.update();
-  }
-
-  function renderStatusPills() {
-    if (!statusPills) return;
-    var controller = managementRuntime ? managementRuntime.controller() : null;
-    if (controller && typeof controller.renderStatusPills === "function") {
-      controller.renderStatusPills();
-      return;
-    }
-    statusPills.hidden = true;
-    statusPills.innerHTML = "";
-    state.statusMenuOpen = false;
   }
 
   function initializeBookmarks() {
@@ -858,7 +834,6 @@ export function startDocsViewerRuntime(options) {
     dbVersion: BOOKMARK_DB_VERSION,
     documentIndex: appSession.domains.documentIndex,
     hideContextMenu: hideContextMenu,
-    renderStatusPills: renderStatusPills,
     routeCommands: bookmarkRouteCommands,
     searchRecent: appSession.domains.searchRecent,
     searchResetCommand: bookmarkSearchResetCommand,

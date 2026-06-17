@@ -250,11 +250,10 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function openSettingsModalShell() {
-    if (!refs.settingsModal || !refs.settingsForm || !refs.settingsUpdatedInput) return false;
+    if (!refs.settingsModal || !refs.settingsForm) return false;
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
     if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
     settingsFieldState = null;
-    refs.settingsUpdatedInput.disabled = true;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     if (refs.settingsScope) refs.settingsScope.textContent = "scope: " + viewerScope();
     setSettingsStatus(state.managementText.settingsLoading, "");
@@ -265,19 +264,21 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   function setSettingsField(field) {
     settingsFieldState = field || null;
-    if (!refs.settingsUpdatedInput || !settingsFieldState) return;
-    refs.settingsUpdatedInput.checked = settingsFieldState.current_value !== false;
-    refs.settingsUpdatedInput.disabled = false;
+    if (!settingsFieldState) {
+      if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
+      renderSettingsWarnings([]);
+      setSettingsStatus(state.managementText.settingsEmpty, "");
+      window.requestAnimationFrame(function () {
+        focusWithoutScroll(refs.settingsCancelButton || refs.settingsModal);
+      });
+      return;
+    }
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = state.managementBusy;
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
-    window.requestAnimationFrame(function () {
-      refs.settingsUpdatedInput.focus();
-    });
   }
 
   function setSettingsLoadError(message) {
-    if (refs.settingsUpdatedInput) refs.settingsUpdatedInput.disabled = true;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     renderSettingsWarnings([]);
     setSettingsStatus(message || state.managementText.settingsLoadFailed, "error");
@@ -285,13 +286,11 @@ export function createDocsViewerManagementModalController(options = {}) {
 
   function setSettingsSaving() {
     setSettingsStatus(state.managementText.settingsSaving, "");
-    if (refs.settingsUpdatedInput) refs.settingsUpdatedInput.disabled = true;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
   }
 
   function setSettingsSaveError(message) {
     setSettingsStatus(message || state.managementText.settingsSaveFailed, "error");
-    if (refs.settingsUpdatedInput) refs.settingsUpdatedInput.disabled = false;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = false;
   }
 

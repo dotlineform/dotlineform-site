@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-06-04
+last_updated: 2026-06-17
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer JavaScript Inventory
@@ -47,14 +47,14 @@ Risk themes:
 | docs-viewer-info-panel-host.js                      | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence.                                                                                                                       |
 | docs-viewer-info-panel-renderer.js                  | App-shell-owned info-panel chrome renderer and projection applier.                                                                                                                                                          |
 | docs-viewer-main-view-host.js                       | Main-view switch-intent and availability owner for rendered-document, search-results, and recent-results.                                                                                                                   |
-| docs-viewer-main-view-renderer.js                   | App-shell-owned main-view shell, rendered-document metadata chrome, and narrow rendered/search/recent projection applier.                                                                                                   |
+| docs-viewer-main-view-renderer.js                   | App-shell-owned main-view shell, rendered-document toolbar chrome, and narrow rendered/search/recent projection applier.                                                                                                    |
 | docs-viewer-manage.js                               | Manage entrypoint wrapper that imports manage-owned document extras, hosted views, shell composition, and starts the manage app boot owner.                                                                                 |
 | docs-viewer-management-action-workflow.js           | management viewability target workflow helper.                                                                                                                                                                              |
 | docs-viewer-management-actions.js                   | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-capabilities.js              | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-client.js                    | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-config.js                    | management support module.                                                                                                                                                                                                  |
-| docs-viewer-management-document-actions-renderer.js | Manage-owned selected-document status/edit/source controls rendered above the shared main-view toolbar surface.                                                                                                             |
+| docs-viewer-management-document-actions-renderer.js | Manage-owned selected-document edit/source controls rendered into the shared main-view toolbar action area.                                                                                                                 |
 | docs-viewer-management-hosted-views.js              | Manage-owned hosted-view records, currently the markdown-sourcesource-editor view supplied by the manage entrypoint.                                                                                                        |
 | docs-viewer-management-interactions.js              | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-modals.js                    | management modal controller after transient modal shell and metadata parent-picker extraction.                                                                                                                              |
@@ -232,8 +232,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js`
 
-- the focused renderer for scope picker, recently-added button, search input, index-view toggle, and info/context panel toggle.
-- the scope picker shell now renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
+- the focused renderer for the recently-added button, search input, and index-view toggle.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount from route context.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-scope-select-menu.js`
@@ -243,7 +242,8 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`
 
-- the focused renderer for management action markup.
+- the focused renderer for management toolbar markup, including the Actions menu, viewability controls, and scope picker shell.
+- the scope picker shell renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
 - the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; command behavior remains outside this renderer.
 - selected-document `Edit` and `Markdown source` controls moved to the rendered-document main-view toolbar; this renderer keeps broader management/admin Actions such as create, import, delete, settings, rebuild, and scope lifecycle commands.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
@@ -268,13 +268,13 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`
 
 - the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
-- the shared main-view renderer is public-safe and no longer defines selected-document status pills or edit/source controls; those manage-only controls are rendered by `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`.
-- Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document metadata chrome, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
-- Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb metadata rendering, status-pill content rendering, selected-document edit/source controls, bookmark storage, or search/recent result rendering into it.
+- the shared main-view renderer is public-safe and defines the selected-document breadcrumb path, bookmark toggle, info-panel toggle, and action mount; manage-only edit/source controls are rendered by `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`.
+- Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
+- Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb path population, selected-document edit/source controls, bookmark storage, metadata display, or search/recent result rendering into it.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`
 
-- the manage-owned renderer for selected-document status pills, `Edit`, and `Markdown source` controls.
+- the manage-owned renderer for selected-document `Edit` and `Markdown source` controls.
 - Keep this module loaded only through manage-capable shell composition; public entrypoints and public-safe shared renderers must not import it statically or duplicate its control ids/labels.
 - Keep command behavior in `docs-viewer/runtime/js/management/docs-viewer-management.js` and its action/controller children.
 
@@ -388,7 +388,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - Keep preview/write orchestration in `docs-viewer/runtime/js/import/docs-html-import-workflow.js`.
 - Keep import writes behind `docs-viewer/runtime/js/management/docs-viewer-management-client.js` and management endpoints such as `/docs/import-source`.
 - Keep management-only workflows behind the lazy management boundary.
-- management initialization, capability refresh, action/menu/modal binding, imports, settings, scope lifecycle, status pills, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; hosted-view visibility must not imply write authority.
+- management initialization, capability refresh, action/menu/modal binding, imports, settings, scope lifecycle, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; hosted-view visibility must not imply write authority.
 - Keep make-viewable target resolution in `docs-viewer/runtime/js/management/docs-viewer-management-action-workflow.js`.
 - Move command-specific write behavior to `docs-viewer/runtime/js/management/docs-viewer-management-actions.js` or a workflow-specific module when it gains independent state.
 

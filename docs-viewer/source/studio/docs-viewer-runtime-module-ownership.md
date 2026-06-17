@@ -47,7 +47,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Shared app shell | `docs-viewer-app-shell.js` | Public-safe JavaScript-owned shell composition before route behavior wiring; manage renderers are supplied by the manage entrypoint. |
-| Manage shell composition | `docs-viewer-management-shell-composition.js`, `docs-viewer-management-shell-renderer.js`, `docs-viewer-management-document-actions-renderer.js` | Manage-owned renderer bundle, context menu, metadata modal, import modal, settings modal, import host refs, status pills, `Edit`, and `Markdown source` controls. |
+| Manage shell composition | `docs-viewer-management-shell-composition.js`, `docs-viewer-management-shell-renderer.js`, `docs-viewer-management-document-actions-renderer.js` | Manage-owned renderer bundle, context menu, metadata modal, import modal, settings modal, import host refs, and selected-document `Edit` / `Markdown source` controls. |
 | Panel layout/view state | `docs-viewer-panel-layout.js`, `docs-viewer-view-state.js` | App-shell panel projection and index/main/info view-state skeleton. |
 | Hosted-view registry | `docs-viewer-hosted-views.js`, `docs-viewer-management-hosted-views.js` | Minimal hosted-view registration, public-safe built-in records, access/availability checks, graceful absence, and manage-owned records such as `markdown-source`. |
 | Main-view host | `docs-viewer-main-view-host.js`, `docs-viewer-view-context.js` | Main-view availability checks, active view projection, switch-intent handling, toolbar handoff, selected-document context projection, and capability-gated source-editor service slots. |
@@ -58,7 +58,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Document controller | `docs-viewer-document-controller.js` | Rendered-document visibility, loading/missing/error states, final payload rendering, selected-document projection, search/recent pane handoff, and optional document-extras hook. |
-| Sidebar/tree rendering | `docs-viewer-sidebar.js`, `docs-viewer-tree.js` | Sidebar tree rendering, breadcrumb metadata rendering, expanded-row projection, selected-document highlighting, pure tree and visibility helpers. |
+| Sidebar/tree rendering | `docs-viewer-sidebar.js`, `docs-viewer-tree.js` | Sidebar tree rendering, main-view breadcrumb path rendering, expanded-row projection, selected-document highlighting, pure tree and visibility helpers. |
 | Search/recent | `docs-viewer-search-controller.js`, `docs-viewer-search.js` | Search index loading, result rendering, recent rendering, debounce behavior, search/recent state-domain input, route command consumption, more-results behavior, and pane command requests. |
 | Bookmarks/favourites | `docs-viewer-bookmarks.js`, `docs-viewer-favourites.js` | Bookmark state, rendering, IndexedDB storage orchestration, bookmark events, selected-document bookmark UI projection, route command consumption, and bookmark record storage helpers. |
 | Read-oriented rendering | `docs-viewer-render.js` | Result and bookmark markup helpers imported by entry and bookmark controllers. |
@@ -69,9 +69,8 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Lazy management boundary | `docs-viewer-runtime-lazy-controller.js` | Neutral lazy-controller loading, named management state-domain, service-client, and route-reload contracts, and gated management controller import. |
-| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, status pills, and write orchestration. |
+| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, and write orchestration. |
 | Management client | `docs-viewer-management-client.js` | Docs Viewer service transport helpers used by management controller workflows. |
-| Management render helpers | `docs-viewer-management-render.js` | Management-only markup helpers imported by management controller. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |
 | Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Manage-only source-body editor rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |

@@ -2,9 +2,6 @@ import {
   renderDocsViewerTopBar
 } from "./docs-viewer-top-bar-renderer.js";
 import {
-  applyDocsViewerViewerToolbarProjection
-} from "./docs-viewer-viewer-toolbar-renderer.js";
-import {
   applyDocsViewerMainViewProjection,
   findDocsViewerMainViewRefs,
   mainViewMount,
@@ -245,8 +242,7 @@ export function getDocsViewerAppShellRefs(options) {
     },
     viewerToolbar: {
       root: documentRef.getElementById("docsViewerViewerToolbar"),
-      indexViewToggle: documentRef.getElementById("docsViewerIndexViewToggle"),
-      infoToggle: documentRef.getElementById("docsViewerInfoToggle")
+      indexViewToggle: documentRef.getElementById("docsViewerIndexViewToggle")
     },
     indexPanel: getDocsViewerAppShellIndexPanelRefs({ root: root, document: documentRef }),
     mainView: getDocsViewerAppShellMainViewRefs({ root: root, document: documentRef }),
@@ -269,10 +265,6 @@ export function renderDocsViewerAppShellIndexPanelState(options) {
 
 export function renderDocsViewerAppShellMainViewState(options) {
   applyDocsViewerMainViewProjection(options || {});
-}
-
-export function renderDocsViewerAppShellViewerToolbarState(options) {
-  applyDocsViewerViewerToolbarProjection(options || {});
 }
 
 export function renderDocsViewerAppShellInfoPanelState(options) {

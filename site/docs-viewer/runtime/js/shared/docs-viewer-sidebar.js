@@ -1,29 +1,13 @@
 import {
-  isDocNonViewable,
-  isDocViewable
+  isDocNonViewable
 } from "./docs-viewer-tree.js";
 
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
   var selectedDocument = context.selectedDocument;
-  var scopeConfig = context.scopeConfig;
   var nav = context.nav;
-  var meta = context.meta;
+  var toolbar = context.toolbar;
   var pathEl = context.pathEl;
-  var updatedEl = context.updatedEl;
-  var summaryEl = context.summaryEl;
-
-  function managementText() {
-    return scopeConfig && scopeConfig.managementText ? scopeConfig.managementText : {};
-  }
-
-  function managementTextValue(key) {
-    return String(managementText()[key] || "");
-  }
-
-  function showUpdatedDate() {
-    return !scopeConfig || scopeConfig.showUpdatedDate !== false;
-  }
 
   function docChildren(docId) {
     return documentIndex.childrenByParent.get(docId) || [];
@@ -157,24 +141,8 @@ export function initDocsViewerSidebarRenderer(context) {
       pathEl.appendChild(link);
     });
 
-    var nonViewableLabel = managementTextValue("metadataNonViewableLabel");
-    if (!showUpdatedDate()) {
-      updatedEl.textContent = isDocNonViewable(doc) ? nonViewableLabel : "";
-      updatedEl.hidden = isDocViewable(doc);
-    } else if (doc.last_updated) {
-      updatedEl.textContent = (isDocNonViewable(doc) ? nonViewableLabel + " • " : "") + "Updated " + doc.last_updated;
-      updatedEl.hidden = false;
-    } else {
-      updatedEl.textContent = isDocNonViewable(doc) ? nonViewableLabel : "";
-      updatedEl.hidden = isDocViewable(doc);
-    }
-    if (summaryEl) {
-      summaryEl.textContent = "";
-      summaryEl.hidden = true;
-    }
-    meta.hidden = false;
+    if (toolbar) toolbar.hidden = false;
     context.renderBookmarkToggle();
-    context.renderStatusPills();
   }
 
   return {

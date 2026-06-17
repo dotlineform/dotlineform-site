@@ -42,7 +42,7 @@ Current content families:
 
 - nested rows for generated Studio docs
 - identity, title, optional `ui_status`, optional `viewable: false`, and per-doc content URL
-- `viewer_options` for scope-level display behavior such as keeping document-view updated dates visible
+- `viewer_options` for legacy scope-level display behavior
 
 Current site mapping:
 

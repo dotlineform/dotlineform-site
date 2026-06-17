@@ -302,7 +302,7 @@ The first implemented hosted info view is the read-only metadata view.
 
 It is public-safe and selected-document scoped.
 It can be shown in public routes and manage mode.
-It complements the existing document metadata and sidebar display; it does not replace the metadata edit modal or create a save path.
+It is the selected-document metadata display surface; it does not replace the metadata edit modal or create a save path.
 
 The metadata info view may show values such as:
 
@@ -405,7 +405,7 @@ Current state:
 
 - index-panel controls are projected through the app shell
 - info panel has close and view-option chrome
-- the shared main-view toolbar surface owns public-safe rendered-document metadata and bookmark controls, while manage-only status/edit/source controls are composed by the manage-owned document-actions renderer
+- the shared main-view toolbar surface owns public-safe rendered-document breadcrumbs, bookmark controls, and the info-panel toggle, while manage-only edit/source controls are composed by the manage-owned document-actions renderer
 - search, recent, and reports still use their existing controls
 
 What this means:

@@ -3,9 +3,6 @@ import {
   isDocNonViewable
 } from "../shared/docs-viewer-tree.js";
 import {
-  readSourceConfigSettings
-} from "./docs-viewer-management-client.js";
-import {
   createDocsViewerManagementCapabilityController,
   scopeCreateSupported,
   scopeDeleteSupported,
@@ -15,9 +12,6 @@ import {
 import {
   applyDocsViewerManagementConfig
 } from "./docs-viewer-management-config.js";
-import {
-  renderStatusPillsMarkup
-} from "./docs-viewer-management-render.js";
 import {
   createDocsViewerManagementInteractionController
 } from "./docs-viewer-management-interactions.js";
@@ -67,7 +61,6 @@ function createDocsViewerManagementStateFacade(domains) {
     searchVisibleCount: sources.searchRecent,
     selectedDocId: sources.selectedDocument,
     showNonViewable: sources.documentIndex,
-    statusMenuOpen: sources.management,
     uiStatusByValue: sources.scopeConfig,
     uiStatuses: sources.scopeConfig
   };
@@ -121,7 +114,6 @@ export function initDocsViewerManagement(context) {
   var manageSourceButton = document.getElementById("docsViewerManageSourceButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
-  var statusPills = document.getElementById("docsViewerStatusPills");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var metadataModal = shellRef("metadataModal", "docsViewerMetadataModal");
@@ -144,8 +136,6 @@ export function initDocsViewerManagement(context) {
   var settingsForm = shellRef("settingsForm", "docsViewerSettingsForm");
   var settingsHeading = shellRef("settingsHeading", "docsViewerSettingsHeading");
   var settingsScope = shellRef("settingsScope", "docsViewerSettingsScope");
-  var settingsUpdatedInput = shellRef("settingsUpdatedInput", "docsViewerSettingsUpdatedInput");
-  var settingsUpdatedLabel = shellRef("settingsUpdatedLabel", "docsViewerSettingsUpdatedLabel");
   var settingsWarnings = shellRef("settingsWarnings", "docsViewerSettingsWarnings");
   var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
   var settingsCancelButton = shellRef("settingsCancelButton", "docsViewerSettingsCancelButton");
@@ -183,56 +173,6 @@ export function initDocsViewerManagement(context) {
 
   function canDragCurrentDoc(doc) {
     return Boolean(interactionController && interactionController.canDragCurrentDoc(doc));
-  }
-
-  function currentStatusValue(doc) {
-    return String(doc && doc.ui_status || "").trim();
-  }
-
-  function statusPillsCanWrite(doc) {
-    return Boolean(
-      doc &&
-      state.managementMode &&
-      state.managementAvailable &&
-      !state.managementBusy &&
-      !state.searchRouteActive
-    );
-  }
-
-  function statusPillsCanRender(doc) {
-    return Boolean(
-      doc &&
-      state.managementMode &&
-      state.managementAvailable &&
-      state.uiStatuses.length > 0 &&
-      !state.searchRouteActive
-    );
-  }
-
-  function renderStatusPills() {
-    if (!statusPills) return;
-    var doc = currentSelectedDoc();
-    var canShow = statusPillsCanRender(doc);
-    statusPills.hidden = !canShow;
-    if (!canShow) {
-      statusPills.innerHTML = "";
-      state.statusMenuOpen = false;
-      return;
-    }
-
-    var activeStatus = currentStatusValue(doc);
-    var canWrite = statusPillsCanWrite(doc);
-    var activeStatusConfig = activeStatus ? state.uiStatusByValue.get(activeStatus) : null;
-    statusPills.innerHTML = renderStatusPillsMarkup({
-      activeStatus: activeStatus,
-      activeStatusConfig: activeStatusConfig,
-      canWrite: canWrite,
-      doc: doc,
-      formatText: context.formatText,
-      menuOpen: state.statusMenuOpen,
-      statuses: state.uiStatuses,
-      text: state.managementText
-    });
   }
 
   function clearDragState() {
@@ -338,31 +278,9 @@ export function initDocsViewerManagement(context) {
     if (modalController) modalController.closeImportModal();
   }
 
-  function currentSettingsField(payload) {
-    var scopes = payload && Array.isArray(payload.scopes) ? payload.scopes : [];
-    var scopePayload = scopes.find(function (item) {
-      return item && item.scope_id === viewerScope();
-    }) || scopes[0] || null;
-    var fields = scopePayload && Array.isArray(scopePayload.fields) ? scopePayload.fields : [];
-    return fields.find(function (field) {
-      return field && field.field === "show_updated_date";
-    }) || null;
-  }
-
   function openSettingsModal() {
     if (!modalController || !modalController.openSettingsModalShell()) return;
-
-    readSourceConfigSettings(managementClientOptions())
-      .then(function (payload) {
-        var field = currentSettingsField(payload);
-        if (!field) {
-          throw new Error(state.managementText.settingsEmpty);
-        }
-        modalController.setSettingsField(field);
-      })
-      .catch(function (error) {
-        modalController.setSettingsLoadError(error.message || state.managementText.settingsLoadFailed);
-      });
+    modalController.setSettingsField(null);
   }
 
   function openMetadataModalForDoc(doc) {
@@ -503,7 +421,6 @@ export function initDocsViewerManagement(context) {
     if (settingsSaveButton && settingsModalOpen()) {
       settingsSaveButton.disabled = state.managementBusy || !modalController.getSettingsFieldState();
     }
-    renderStatusPills();
   }
 
   function initializeManagement() {
@@ -721,8 +638,7 @@ export function initDocsViewerManagement(context) {
         metadataNonViewableLabel: metadataNonViewableLabel,
         metadataStatusInput: metadataStatusInput,
         metadataStatusLabel: metadataStatusLabel,
-        settingsHeading: settingsHeading,
-        settingsUpdatedLabel: settingsUpdatedLabel
+        settingsHeading: settingsHeading
       },
       modalController: modalController
     });
@@ -730,10 +646,6 @@ export function initDocsViewerManagement(context) {
 
   function handleRootClick(event) {
     if (interactionController) interactionController.handleRootClick(event);
-    if (state.statusMenuOpen && statusPills && !statusPills.contains(event.target)) {
-      state.statusMenuOpen = false;
-      renderStatusPills();
-    }
     if (manageActionsMenu && !event.target.closest(".docsViewer__manageActions")) {
       hideManageActionsMenu();
     }
@@ -742,12 +654,6 @@ export function initDocsViewerManagement(context) {
 
   function handleDocumentKeydown(event) {
     if (interactionController && interactionController.handleDocumentKeydown(event)) {
-      return true;
-    }
-    if (event.key === "Escape" && state.statusMenuOpen) {
-      event.preventDefault();
-      state.statusMenuOpen = false;
-      renderStatusPills();
       return true;
     }
     if (event.key === "Escape" && manageActionsMenu && !manageActionsMenu.hidden) {
@@ -847,30 +753,6 @@ export function initDocsViewerManagement(context) {
         handleDraftToggleChange();
       });
     }
-    if (statusPills) {
-      statusPills.addEventListener("click", function (event) {
-        var toggle = event.target.closest("[data-ui-status-menu-toggle]");
-        if (toggle) {
-          event.preventDefault();
-          event.stopPropagation();
-          if (toggle.disabled) return;
-          state.statusMenuOpen = !state.statusMenuOpen;
-          renderStatusPills();
-          return;
-        }
-        var button = event.target.closest("[data-ui-status]");
-        if (!button) return;
-        event.preventDefault();
-        event.stopPropagation();
-        state.statusMenuOpen = false;
-        actionController.handleStatusPillClick(button.dataset.uiStatus);
-      });
-    }
-    document.addEventListener("click", function (event) {
-      if (!state.statusMenuOpen || !statusPills || statusPills.contains(event.target)) return;
-      state.statusMenuOpen = false;
-      renderStatusPills();
-    });
     if (modalController) modalController.wireEvents();
   }
 
@@ -930,14 +812,11 @@ export function initDocsViewerManagement(context) {
     root: root,
     state: state,
     context: context,
-    refs: {
-      settingsUpdatedInput: settingsUpdatedInput
-    },
+    refs: {},
     callbacks: {
       clearDragState: clearDragState,
       currentContextMenuDoc: currentContextMenuDoc,
       currentSelectedDoc: currentSelectedDoc,
-      currentStatusValue: currentStatusValue,
       getModalController: function () {
         return modalController;
       },
@@ -946,10 +825,8 @@ export function initDocsViewerManagement(context) {
       reloadDocsIndex: reloadDocsIndex,
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
-      renderStatusPills: renderStatusPills,
       setManagementBusy: setManagementBusy,
-      setManagementMessage: setManagementMessage,
-      statusPillsCanWrite: statusPillsCanWrite
+      setManagementMessage: setManagementMessage
     }
   });
 
@@ -978,7 +855,6 @@ export function initDocsViewerManagement(context) {
       settingsSaveButton: settingsSaveButton,
       settingsScope: settingsScope,
       settingsStatus: settingsStatus,
-      settingsUpdatedInput: settingsUpdatedInput,
       settingsWarnings: settingsWarnings,
       manageSettingsButton: manageSettingsButton
     },
@@ -1007,7 +883,6 @@ export function initDocsViewerManagement(context) {
     initialize: initializeManagement,
     openImportModal: openImportModal,
     render: renderManagementUi,
-    renderStatusPills: renderStatusPills,
     updateNavDragState: updateNavDragState
   };
 }

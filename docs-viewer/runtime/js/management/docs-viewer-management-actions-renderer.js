@@ -71,6 +71,21 @@ function renderActionMenuItem(item) {
   ].join("");
 }
 
+function renderScopeSelect() {
+  return [
+    '    <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">',
+    '      <select class="docsViewer__scopeSelectNative visually-hidden" id="docsViewerScopeSelect" tabindex="-1" aria-hidden="true"></select>',
+    '      <div class="docsViewer__scopeSelectMenu" data-docs-viewer-scope-select-menu>',
+    '        <button class="docsViewer__scopeSelectButton" type="button" id="docsViewerScopeSelectButton" aria-haspopup="listbox" aria-expanded="false" aria-controls="docsViewerScopeSelectList" aria-label="Docs scope">',
+    '          <span class="docsViewer__scopeSelectEmoji" aria-hidden="true"></span>',
+    '          <span class="docsViewer__scopeSelectText" data-docs-viewer-scope-select-label></span>',
+    '        </button>',
+    '        <div class="docsViewer__scopeSelectSurface" id="docsViewerScopeSelectList" role="listbox" hidden></div>',
+    '      </div>',
+    '    </label>'
+  ].join("");
+}
+
 var MANAGEMENT_ACTIONS_MARKUP = [
   '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
   '  <div class="docsViewer__manageActions" role="toolbar" aria-label="Management actions">',
@@ -85,6 +100,7 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">',
   '      <span class="docsViewer__draftLabel">non-viewable</span>',
   '    </label>',
+  renderScopeSelect(),
   '  </div>',
   '  <button class="docsViewer__themeToggle" type="button" data-docs-viewer-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">',
   '    <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">',

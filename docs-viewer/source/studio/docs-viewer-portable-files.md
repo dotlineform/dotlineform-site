@@ -252,6 +252,6 @@ Generated-data reads, source writes, import targets, and rebuild commands use `d
 
 The local management package also includes the read-only source config report and the Settings modal. The report inspects configured source, browser, and generated projections.
 
-The Settings modal writes only allowlisted source config fields; the first portable field is scoped `show_updated_date`, which saves to `docs-viewer/config/scopes/docs_scopes.json` and triggers a same-scope docs rebuild.
+The Settings modal currently has no active editable fields. Future scope-level display controls should write only allowlisted source config fields and rebuild affected generated docs scopes when browser payloads need to stay in sync.
 
 For the full config split and media-storage choices, see [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer).

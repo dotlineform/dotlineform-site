@@ -64,7 +64,7 @@ The public route shell template renders:
 - the sidebar nav container
 - the main content pane
 - the optional inline search input
-- status, path, and updated metadata areas
+- main-view toolbar breadcrumbs and document controls
 
 The management service shell renders the same app-owned mount contract plus management-only mounts and local-service context when enabled.
 
@@ -180,11 +180,9 @@ At runtime the viewer:
 Current document metadata behavior:
 
 - the document H1 is treated as the visible title
-- the metadata path shows ancestor docs only, so it does not duplicate the current document title
-- root-level docs hide the metadata path and let remaining metadata move up
-- the updated date uses `last_updated` only when the active scope's generated `viewer_options.show_updated_date` is not `false`
-- Studio Docs shows the updated date; Library hides it in document view
-- the source `summary` is not shown in the document header metadata row; it remains available in the info panel metadata view
+- the main-view toolbar breadcrumb path shows ancestor docs only, so it does not duplicate the current document title
+- root-level docs hide the breadcrumb path while preserving the main-view toolbar for document controls
+- selected-document metadata such as summary, dates, UI status, visibility, and route belongs in the info panel metadata view
 
 Current sidebar behavior:
 
@@ -245,7 +243,7 @@ Current manage-mode draft behavior:
 - non-viewable docs are prefixed with the configured draft marker in the index and use Docs Viewer config and CSS policy for draft display
 - a selected non-viewable doc can be made viewable through the manage toolbar; the action prompts before also making required non-viewable ancestors or optional descendants viewable
 
-Document view updated-date metadata is scope-configurable because it is more useful in Studio Docs than Library. Docs search continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
+Document metadata display is centralized in the info panel so public and management routes do not need separate inline header metadata rules. Docs search continues to use `last_updated`; revisiting search metadata and ranking is a separate search task.
 
 ## Scope Boundary
 
