@@ -220,14 +220,14 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - the app-shell owner for management action-area coordination.
 - Current scope is intentionally narrow: render top-bar layout through `site/docs-viewer/runtime/js/shared/docs-viewer-top-bar-renderer.js`, render viewer toolbar controls through `site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js`, render index panel chrome through `site/docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js`, clear management mounts when present, call optional manage-owned shell renderers supplied by the manage entrypoint, and return the rendered surfaces before existing management/theme binding continues.
-- It also renders the main-view shell through `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` before existing document, sidebar, bookmark, search, and management controllers read the preserved rendered-document/search/recent IDs.
+- It also renders the main-view shell through `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` and passes the top-bar main-view toolbar slot to that renderer before existing document, sidebar, bookmark, search, and management controllers read the preserved rendered-document/search/recent IDs.
 - It also renders the info panel shell through `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`; lifecycle and metadata presentation stay in the focused info-panel host/view modules.
 - It does not import management action, selected-document action, or management shell renderers. Manage-only shell rendering is injected through `docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js` during manage boot.
 - The existing lazy management controller continues to own backend reachability, capability refresh, command wiring, and status projection.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-top-bar-renderer.js`
 
-- the focused top-bar layout owner for the viewer-toolbar surface and management-toolbar mount.
+- the focused top-bar layout owner for the viewer-toolbar surface, main-view toolbar mount, and management-toolbar mount.
 - Keep this module limited to rendering layout mounts and delegating control rendering to toolbar owners.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js`
@@ -268,7 +268,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`
 
 - the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
-- the shared main-view renderer is public-safe and defines the selected-document breadcrumb path, bookmark toggle, info-panel toggle, and action mount; manage-only edit/source controls are rendered by `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`.
+- the shared main-view renderer is public-safe and defines the selected-document breadcrumb path, bookmark toggle, info-panel toggle, and action mount; the app shell mounts that toolbar in the top bar, and manage-only edit/source controls are rendered by `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`.
 - Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
 - Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb path population, selected-document edit/source controls, bookmark storage, metadata display, or search/recent result rendering into it.
 

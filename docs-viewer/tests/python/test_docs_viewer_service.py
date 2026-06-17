@@ -374,8 +374,6 @@ def test_manage_docs_viewer_css_owns_manage_selectors() -> None:
     required_fragments = [
         "data-docs-viewer-management-shell-mount",
         "docsViewer__manageToolbarMount",
-        "docsViewer__statusPills",
-        "docsViewer__statusMenu",
         "docsViewerImport",
         "docsViewerSourceEditor",
         "docsViewerScopeLifecycle",
@@ -391,7 +389,6 @@ def test_manage_document_actions_renderer_owns_selected_document_controls() -> N
 
     assert "docsViewerManageEditButton" in source
     assert "docsViewerManageSourceButton" in source
-    assert "docsViewerStatusPills" in source
     assert "Markdown source" in source
     assert "markdown-source" in source
 

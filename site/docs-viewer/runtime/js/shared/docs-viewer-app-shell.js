@@ -43,6 +43,11 @@ function headerControlsMount(root) {
   return root.querySelector("[data-docs-viewer-header-controls-mount]");
 }
 
+function mainViewToolbarMount(root) {
+  if (!root) return null;
+  return root.querySelector("[data-docs-viewer-main-view-toolbar-mount]");
+}
+
 function managementActionsMount(root) {
   if (!root) return null;
   return root.querySelector("[data-docs-viewer-management-actions-mount]");
@@ -105,7 +110,8 @@ export function initDocsViewerAppShell(options) {
   var mainView = renderDocsViewerMainView({
     document: documentRef,
     root: root,
-    mount: settings.mainViewMount || mainViewMount(root)
+    mount: settings.mainViewMount || mainViewMount(root),
+    toolbarMount: settings.mainViewToolbarMount || (topBar && topBar.mainViewToolbarMount) || mainViewToolbarMount(root)
   });
   var indexPanel = renderDocsViewerIndexPanelShell({
     document: documentRef,

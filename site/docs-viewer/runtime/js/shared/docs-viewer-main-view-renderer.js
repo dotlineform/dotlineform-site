@@ -8,6 +8,7 @@ export function mainViewMount(root) {
 export function renderDocsViewerMainView(options = {}) {
   const documentRef = options.document || document;
   const mount = options.mount || null;
+  const toolbarMount = options.toolbarMount || null;
   if (!mount) return findDocsViewerMainViewRefs({ document: documentRef, root: options.root });
 
   const main = documentRef.createElement("article");
@@ -50,6 +51,9 @@ export function renderDocsViewerMainView(options = {}) {
 
   actions.append(bookmarkToggle, infoToggle);
   toolbar.append(path, actions);
+  if (toolbarMount) {
+    toolbarMount.replaceChildren(toolbar);
+  }
 
   const content = documentRef.createElement("div");
   content.className = "docsViewer__content content";
@@ -70,10 +74,13 @@ export function renderDocsViewerMainView(options = {}) {
   more.id = "docsViewerMore";
   more.hidden = true;
 
-  main.append(toolbar, content, resultsStatus, results, more);
+  if (!toolbarMount) {
+    main.appendChild(toolbar);
+  }
+  main.append(content, resultsStatus, results, more);
   mount.replaceChildren(main);
 
-  return findDocsViewerMainViewRefs({ document: documentRef, root: mount });
+  return findDocsViewerMainViewRefs({ document: documentRef, root: options.root || mount });
 }
 
 export function findDocsViewerMainViewRefs(options = {}) {

@@ -391,15 +391,21 @@ body.docs-viewer-service{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0;
 }
 
 .docsViewer__viewerToolbar{
   display: flex;
-  flex: 1 1 32rem;
+  flex: 0 1 32rem;
+  width: 32rem;
+  max-width: 100%;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.65rem;
+}
+
+.docsViewer__mainViewToolbarMount{
+  display: contents;
 }
 
 .docsViewer__search{
@@ -496,12 +502,18 @@ body.docs-viewer-service{
 }
 
 .docsViewer__mainViewToolbar{
-  max-width: var(--docs-viewer-measure);
-  margin: 0 0 var(--docs-viewer-space-4);
+  flex: 0 1 auto;
+  max-width: var(--docs-viewer-doc-width);
+  min-width: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+}
+
+.docsViewer__mainViewToolbar:has(.docsViewer__path[hidden]){
+  gap: 0;
 }
 
 .docsViewer__mainViewToolbar[hidden]{

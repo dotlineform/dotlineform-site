@@ -1,5 +1,8 @@
 import {
-  startDocsViewerPublicApp
-} from "../shared/docs-viewer-app-boot.js";
+  appendAssetVersion
+} from "../shared/docs-viewer-asset-url.js";
 
-startDocsViewerPublicApp();
+import(appendAssetVersion("../shared/docs-viewer-app-boot.js"))
+  .then(function (module) {
+    module.startDocsViewerPublicApp();
+  });

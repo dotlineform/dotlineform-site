@@ -26,7 +26,7 @@ The model is:
 ## Top Bar
 
 The top bar is a visual layout container.
-It can place the viewer toolbar and manage toolbar on the same row when space allows, then wrap one toolbar below the other on narrower screens.
+It can place the viewer toolbar, main-view toolbar, and manage toolbar on the same row when space allows, then wrap toolbar groups onto additional rows on narrower screens.
 
 The top bar should not own control behavior.
 It should render or mount named toolbar surfaces and let those toolbar owners expose refs to the runtime.
@@ -36,6 +36,7 @@ Structure:
 ```text
 top bar
   viewer toolbar
+  main-view toolbar
   manage toolbar
 ```
 
@@ -75,6 +76,7 @@ Owner: `docs-viewer-management-actions-renderer.js`
 
 The main-view toolbar owns controls for the active central-panel view.
 When the active view is `rendered-document`, it can contain document-specific controls.
+The top bar provides its mount slot, but the active main view remains responsible for rendering the toolbar surface and projecting its controls.
 
 Example controls:
 
@@ -87,7 +89,8 @@ Example controls:
 
 Implemented owner:
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface and keeps the current rendered-document breadcrumbs, bookmark toggle, and info-panel toggle in that toolbar.
+- `site/docs-viewer/runtime/js/shared/docs-viewer-top-bar-renderer.js` provides the `docsViewerMainViewToolbarMount` slot between the viewer toolbar and manage toolbar.
+- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface into that slot and keeps the current rendered-document breadcrumbs, bookmark toggle, and info-panel toggle in that toolbar.
 - `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
 - `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
 - `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js` composes manage-mode `Edit` and `Markdown source` actions into the same main-view toolbar action area.
