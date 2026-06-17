@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-05-29T09:20:57Z",
+  "updated_at": "2026-06-17T21:33:28Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -266,6 +266,129 @@
         "viewer_base_url": "/docs/",
         "default_doc_id": "tmp",
         "publishing_mode": "local_committed",
+        "build_inline_search": true,
+        "write_generated_outputs": true
+      }
+    },
+    {
+      "scope_id": "moments",
+      "scope_type": "public",
+      "owner": "user",
+      "user_created": true,
+      "created_by_tool": true,
+      "tool_id": "docs-viewer-scope-lifecycle",
+      "repo_status_at_creation": "tracked",
+      "created_at": "2026-06-17T21:33:28Z",
+      "updated_at": "2026-06-17T21:33:28Z",
+      "files": [
+        {
+          "kind": "source_root",
+          "path": "docs-viewer/source/moments",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "default_source_doc",
+          "path": "docs-viewer/source/moments/moments.md",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "route_file",
+          "path": "site/moments/index.html",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "generated_docs_root",
+          "path": "docs-viewer/generated/docs/moments",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_docs_index_tree",
+          "path": "docs-viewer/generated/docs/moments/index-tree.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_docs_recently_added",
+          "path": "docs-viewer/generated/docs/moments/recently-added.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_docs_payload_root",
+          "path": "docs-viewer/generated/docs/moments/by-id",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_search_index",
+          "path": "docs-viewer/generated/search/moments/index.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "published_docs_root",
+          "path": "site/assets/data/docs/scopes/moments",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "published_docs_index_tree",
+          "path": "site/assets/data/docs/scopes/moments/index-tree.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "published_docs_recently_added",
+          "path": "site/assets/data/docs/scopes/moments/recently-added.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "published_docs_payload_root",
+          "path": "site/assets/data/docs/scopes/moments/by-id",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "published_search_index",
+          "path": "site/assets/data/search/moments/index.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "scope_config",
+          "path": "docs-viewer/config/scopes/docs_scopes.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "route_config",
+          "path": "docs-viewer/config/routes/docs-viewer-routes.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_route_config",
+          "path": "docs-viewer/config/routes/docs-viewer-public-routes.json",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "public_route_config",
+          "path": "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
+          "action": "track",
+          "exists": true
+        }
+      ],
+      "metadata": {
+        "backfilled": false,
+        "viewer_base_url": "/moments/",
+        "default_doc_id": "moments",
+        "publishing_mode": "public_readonly",
         "build_inline_search": true,
         "write_generated_outputs": true
       }

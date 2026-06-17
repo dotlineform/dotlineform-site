@@ -995,6 +995,34 @@ body:not(.studio-local-app) .site-header .container{
   }
 }
 
+@media (max-width: 480px){
+  body:not(.studio-local-app) .site-header .container{
+    grid-template-columns: 1fr;
+    align-items: start;
+    row-gap: 10px;
+  }
+
+  body:not(.studio-local-app) .siteHeader__actions{
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  body:not(.studio-local-app) .site-nav{
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px 8px;
+  }
+
+  body:not(.studio-local-app) .site-nav .nav-item{
+    margin-left: 0;
+  }
+
+  body:not(.studio-local-app) .siteThemeToggle{
+    flex: 0 0 auto;
+  }
+}
+
 
 .siteThemeToggle{
   box-sizing: border-box;

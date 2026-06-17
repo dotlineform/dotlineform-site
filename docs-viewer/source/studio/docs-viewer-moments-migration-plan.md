@@ -22,6 +22,7 @@ Retire the existing static route shell before creating the Docs Viewer public sc
 - create a public Docs Viewer scope with `scope_id: moments` and `public_route_path: /moments/`
 - generate source Markdown under `docs-viewer/source/moments/`
 - build the new docs and search payloads after source migration
+- after migration, remove moments from catalogue, works, and studio surfaces so Docs Viewer is the only long-term owner
 
 The archived route shell now lives at `studio/retired/site-routes/moments/index.html`. It is rollback material only and should not remain active once the Docs Viewer route owns `/moments/`.
 

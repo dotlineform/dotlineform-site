@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "search_index_moments_v1",
+    "scope": "moments",
+    "version": "blake2b-54bb915f30a7f60ca374368b51f7faca",
+    "generated_at_utc": "2026-06-17T21:33:28Z",
+    "count": 1
+  },
+  "entries": [
+    {
+      "id": "moments",
+      "kind": "doc",
+      "title": "moments",
+      "href": "/moments/?doc=moments",
+      "last_updated": "2026-06-17",
+      "display_meta": "2026-06-17",
+      "search_terms": [
+        "moments",
+        "2026-06-17",
+        "2026",
+        "06",
+        "17"
+      ],
+      "search_text": "moments 2026-06-17 2026 06 17"
+    }
+  ]
+}

@@ -47,6 +47,29 @@
           "delete"
         ]
       }
+    },
+    {
+      "scope_id": "moments",
+      "scope_type": "public",
+      "meta": "public scope",
+      "viewer_base_url": "/moments/",
+      "include_scope_param": false,
+      "default_doc_id": "moments",
+      "media_path_prefix": "docs/moments",
+      "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
+      "recently_added_url": "/assets/data/docs/scopes/moments/recently-added.json",
+      "search_index_url": "/assets/data/search/moments/index.json",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "search_index_moments_v1",
+        "index_url": "/assets/data/search/moments/index.json",
+        "targeted_policy": "record_update",
+        "targeted_operations": [
+          "create",
+          "update",
+          "delete"
+        ]
+      }
     }
   ],
   "docs_viewer": {

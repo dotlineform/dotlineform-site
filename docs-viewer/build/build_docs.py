@@ -34,6 +34,7 @@ from markdown_renderer import plain_text_from_html, render_markdown_to_html  # n
 
 DOCS_VIEWER_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
 DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-public-config.json")
+SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("site/docs-viewer/config/defaults/docs-viewer-public-config.json")
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
 DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
 DOCS_RECENTLY_ADDED_SCHEMA_VERSION = "docs_recently_added_v1"
@@ -1640,6 +1641,12 @@ def main(argv: list[str] | None = None) -> int:
             public_readonly_configs(all_configs),
             path=DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
             label="Docs Viewer public browser config",
+        )
+        write_browser_config(
+            repo_root,
+            public_readonly_configs(all_configs),
+            path=SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
+            label="Docs Viewer site public browser config",
         )
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]
     for config in selected:

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>dotlineform</title>
-  <meta name="dlf-asset-version" content="static">
+  <title>moments | dotlineform</title>
+  <meta name="dlf-asset-version" content="docs-document-mode-20260617">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -22,10 +22,9 @@
     })();
   </script>
   <link rel="stylesheet" href="/assets/css/main.css?v=static">
-  <meta http-equiv="refresh" content="0; url=/series/">
-  <link rel="canonical" href="/series/">
+  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer.css?v=docs-document-mode-20260617">
 </head>
-<body class="series">
+<body class="moments">
   <header class="site-header">
     <div class="container">
       <div class="site-title">
@@ -33,8 +32,8 @@
       </div>
       <div class="siteHeader__actions">
         <nav class="site-nav" aria-label="Primary">
-          <a class="nav-item is-active" href="/series/" aria-current="page">works</a>
-          <a class="nav-item" href="/moments/">moments</a>
+          <a class="nav-item" href="/series/">works</a>
+          <span class="nav-item is-active" aria-current="page">moments</span>
           <a class="nav-item" href="/analysis/">analysis</a>
           <a class="nav-item" href="/library/">library</a>
         </nav>
@@ -59,7 +58,30 @@
   </header>
 
   <main class="container">
-    <p><a href="/series/">continue to works</a></p>
+    <section
+      class="docsViewer"
+      id="docsViewerRoot"
+      data-route-id="moments"
+      data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"
+    >
+      <div class="docsViewer__controls">
+        <div
+          id="docsViewerHeaderControlsMount"
+          data-docs-viewer-header-controls-mount
+          data-enable-search="true"
+          data-search-placeholder="search moments"
+          data-search-aria-label="Search moments"
+        ></div>
+        <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
+        <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
+      </div>
+      <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+      <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount>
+        <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
+      </div>
+      <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+    </section>
+    <script type="module" src="/docs-viewer/runtime/js/public/docs-viewer-public.js?v=docs-document-mode-20260617"></script>
   </main>
 
   <footer class="site-footer">

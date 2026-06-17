@@ -1,0 +1,17 @@
+{
+  "schema": "docs_index_tree_v1",
+  "viewer_options": {
+    "non_loadable_doc_ids": [],
+    "manage_only_tree_root_ids": [],
+    "show_updated_date": true
+  },
+  "docs": [
+    {
+      "doc_id": "moments",
+      "title": "moments",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/moments.json",
+      "ui_status": "draft"
+    }
+  ],
+  "generated_at": "2026-06-17T21:33:28Z"
+}

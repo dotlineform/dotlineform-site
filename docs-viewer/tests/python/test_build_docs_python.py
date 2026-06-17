@@ -448,6 +448,7 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
         assert exit_code == 0
         browser_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-config.json")
         public_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-public-config.json")
+        site_public_config = read_json(root / "site/docs-viewer/config/defaults/docs-viewer-public-config.json")
 
     assert browser_config["schema_version"] == "docs_viewer_config_v1"
     assert browser_config["scopes"][0]["scope_id"] == "studio"
@@ -455,6 +456,24 @@ def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:
     assert browser_config["scopes"][0]["recently_added_url"] == "/docs-viewer/generated/docs/studio/recently-added.json"
     assert browser_config["docs_viewer"]["ui_statuses_by_scope"] == {"studio": [{"ui_status": "done", "label": "Done"}]}
     assert public_config["scopes"] == []
+    assert site_public_config == public_config
+
+
+def test_python_docs_builder_writes_site_public_browser_config_on_cli_write() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_site_tools_config(root, media_base="")
+        write_public_scope_config(root)
+        write_public_source_docs(root)
+        exit_code, _, _ = run_cli(root, ["--scope", "library", "--write"])
+
+        assert exit_code == 0
+        public_config = read_json(root / "docs-viewer/config/defaults/docs-viewer-public-config.json")
+        site_public_config = read_json(root / "site/docs-viewer/config/defaults/docs-viewer-public-config.json")
+
+    assert site_public_config == public_config
+    assert [scope["scope_id"] for scope in site_public_config["scopes"]] == ["library"]
+    assert site_public_config["scopes"][0]["viewer_base_url"] == "/library/"
 
 
 def test_python_docs_builder_cli_dry_run_does_not_write_outputs() -> None:

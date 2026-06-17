@@ -92,6 +92,30 @@
         "repo_assets_path_prefix": "site/assets/docs/tmp",
         "repo_assets_public_path_prefix": "/assets/docs/tmp"
       }
+    },
+    {
+      "scope_id": "moments",
+      "scope_type": "public",
+      "meta": "public scope",
+      "source": "docs-viewer/source/moments",
+      "media_path_prefix": "docs/moments",
+      "output": "docs-viewer/generated/docs/moments",
+      "search_output": "docs-viewer/generated/search/moments/index.json",
+      "publish_output": "site/assets/data/docs/scopes/moments",
+      "publish_search_output": "site/assets/data/search/moments/index.json",
+      "viewer_base_url": "/moments/",
+      "include_scope_param": false,
+      "default_doc_id": "moments",
+      "allow_nested_source": false,
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "show_updated_date": true,
+      "allow_unresolved_parent_ids": false,
+      "import_media_storage": {
+        "storage_mode": "staging_manual",
+        "repo_assets_path_prefix": "site/assets/docs/moments",
+        "repo_assets_public_path_prefix": "/assets/docs/moments"
+      }
     }
   ],
   "docs_viewer": {
