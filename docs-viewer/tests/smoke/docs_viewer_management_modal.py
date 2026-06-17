@@ -79,6 +79,14 @@ def install_modal_fixture(page: Page) -> None:
                         <textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="docsViewerMetadataSummaryInput" name="summary" rows="4"></textarea>
                       </label>
                       <label class="docsViewer__field">
+                        <span class="docsViewer__fieldLabel">date</span>
+                        <input class="docsViewer__fieldInput" id="docsViewerMetadataDateInput" name="date" type="text">
+                      </label>
+                      <label class="docsViewer__field">
+                        <span class="docsViewer__fieldLabel">date display</span>
+                        <input class="docsViewer__fieldInput" id="docsViewerMetadataDateDisplayInput" name="date_display" type="text">
+                      </label>
+                      <label class="docsViewer__field">
                         <span class="docsViewer__fieldLabel" id="docsViewerMetadataStatusLabel">status</span>
                         <select class="docsViewer__fieldInput docsViewer__fieldInput--listbox" id="docsViewerMetadataStatusInput" name="ui_status"></select>
                       </label>
@@ -173,6 +181,8 @@ def install_modal_fixture(page: Page) -> None:
                         doc_id: 'current-doc',
                         title: 'Current Doc',
                         summary: 'Smoke fixture doc.',
+                        date: '2026-06-02',
+                        date_display: 'June 2026',
                         parent_id: '',
                         ui_status: 'in-progress',
                         hidden: false
@@ -204,6 +214,8 @@ def install_modal_fixture(page: Page) -> None:
                 manageImportButton: document.getElementById('docsViewerManageImportButton'),
                 manageSettingsButton: document.getElementById('docsViewerManageSettingsButton'),
                 metadataCancelButton: document.getElementById('docsViewerMetadataCancelButton'),
+                metadataDateDisplayInput: document.getElementById('docsViewerMetadataDateDisplayInput'),
+                metadataDateInput: document.getElementById('docsViewerMetadataDateInput'),
                 metadataDocId: document.getElementById('docsViewerMetadataDocId'),
                 metadataForm: document.getElementById('docsViewerMetadataForm'),
                 metadataNonViewableInput: document.getElementById('docsViewerMetadataNonViewableInput'),
@@ -390,6 +402,14 @@ def run_metadata_modal_check(page: Page) -> None:
     )
     if focus_wrap_id(page, "#docsViewerMetadataTitleInput", "Shift+Tab") != "docsViewerMetadataSaveButton":
         raise AssertionError(f"metadata modal did not wrap focus backward to OK: {modal_state(page, '#docsViewerMetadataModal')!r}")
+    values = page.locator("#docsViewerMetadataModal").evaluate(
+        """modal => ({
+            date: modal.querySelector('#docsViewerMetadataDateInput')?.value || '',
+            dateDisplay: modal.querySelector('#docsViewerMetadataDateDisplayInput')?.value || ''
+        })"""
+    )
+    if values != {"date": "2026-06-02", "dateDisplay": "June 2026"}:
+        raise AssertionError(f"metadata date fields were not populated: {values!r}")
     page.locator("#docsViewerMetadataCancelButton").click()
     assert_hidden_with_focus(page, "#docsViewerMetadataModal", "currentDocLink")
 
@@ -1432,6 +1452,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
                     <form id="docsViewerMetadataForm">
                       <input id="docsViewerMetadataTitleInput" name="title" required>
                       <textarea id="docsViewerMetadataSummaryInput" name="summary"></textarea>
+                      <input id="docsViewerMetadataDateInput" name="date">
+                      <input id="docsViewerMetadataDateDisplayInput" name="date_display">
                       <select id="docsViewerMetadataStatusInput" name="ui_status"></select>
                       <input id="docsViewerMetadataNonViewableInput" name="non_viewable" type="checkbox">
                       <span id="docsViewerMetadataNonViewableLabel">non-viewable</span>

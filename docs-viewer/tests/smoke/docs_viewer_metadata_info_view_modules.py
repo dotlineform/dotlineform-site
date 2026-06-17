@@ -74,6 +74,8 @@ def assert_context_hydrates_from_payload(page: Page) -> None:
             const payload = {
                 title: 'Payload Title',
                 summary: 'Payload summary',
+                date: '2026-06-02',
+                date_display: 'June 2026',
                 last_updated: '2026-06-05',
                 ui_status: 'done',
                 viewable: false
@@ -102,6 +104,8 @@ def assert_context_hydrates_from_payload(page: Page) -> None:
     if result["publicMetadata"] != {
         "title": "Payload Title",
         "summary": "Payload summary",
+        "date": "2026-06-02",
+        "date_display": "June 2026",
         "last_updated": "2026-06-05",
     }:
         raise AssertionError(f"public context did not use reader payload metadata: {result!r}")
@@ -134,6 +138,8 @@ def assert_public_reader_metadata(page: Page) -> None:
             selectedMetadata: {
                 title: 'Payload Title',
                 summary: 'Payload summary',
+                date: '2026-06-02',
+                date_display: 'June 2026',
                 last_updated: '2026-06-05'
             },
             statusLabel: 'Draft',
@@ -142,7 +148,7 @@ def assert_public_reader_metadata(page: Page) -> None:
     )
     if result["title"] != "Payload Title":
         raise AssertionError(f"public title did not use payload metadata: {result!r}")
-    if result["terms"] != ["Summary", "Updated"]:
+    if result["terms"] != ["Summary", "Date", "Updated"]:
         raise AssertionError(f"public info terms are not reader-only: {result!r}")
     text = str(result["text"])
     blocked = ["Doc ID", "Scope", "Parent path", "Added", "UI status", "Visibility", "Route", "Tree summary"]
@@ -167,6 +173,8 @@ def assert_manage_metadata(page: Page) -> None:
                 doc_id: 'payload-doc',
                 title: 'Payload Title',
                 summary: 'Payload summary',
+                date: '2026-06-02',
+                date_display: 'June 2026',
                 added_date: '2026-06-01',
                 last_updated: '2026-06-05',
                 ui_status: 'done',
@@ -176,11 +184,11 @@ def assert_manage_metadata(page: Page) -> None:
             viewerScope: 'studio'
         }""",
     )
-    expected_terms = ["Scope", "Summary", "Parent path", "Added", "Updated", "UI status", "Visibility", "Route"]
+    expected_terms = ["Scope", "Summary", "Parent path", "Date", "Added", "Updated", "UI status", "Visibility", "Route"]
     if result["title"] != "Payload Title" or result["terms"] != expected_terms:
         raise AssertionError(f"manage info rendering changed: {result!r}")
     text = str(result["text"])
-    for expected in ["payload-doc", "Payload summary", "Done", "Non-viewable"]:
+    for expected in ["payload-doc", "Payload summary", "June 2026", "Done", "Non-viewable"]:
       if expected not in text:
         raise AssertionError(f"manage info missing {expected!r}: {result!r}")
     if "Tree summary" in text:

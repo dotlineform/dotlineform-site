@@ -81,6 +81,8 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "target",
             "title": "Target",
+            "date": "2026-05-03",
+            "date_display": "May 2026",
             "last_updated": "2026-05-01 10:00",
             "summary": "old summary",
             "ui_status": "ready",
@@ -139,6 +141,8 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
                 "title": "Renamed Target",
                 "parent_id": "",
                 "summary": "new summary",
+                "date": "2026-05-04",
+                "date_display": "early May 2026",
                 "ui_status": "ready",
                 "viewable": True,
             },
@@ -147,7 +151,30 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
     assert plan.response["changes"]["title_changed"] is True
     assert plan.search_doc_ids == ["target", "target-child"]
     assert "title: Renamed Target" in plan.source_writes[0].text
+    assert "date: 2026-05-04" in plan.source_writes[0].text
+    assert "date_display: early May 2026" in plan.source_writes[0].text
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
+
+
+def test_metadata_plan_removes_empty_date_fields() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_update_metadata(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "title": "Target",
+                "parent_id": "",
+                "date": "",
+                "date_display": "",
+            },
+        )
+
+    assert plan.response["changes"]["date_changed"] is True
+    assert plan.response["changes"]["date_display_changed"] is True
+    assert "\ndate:" not in plan.source_writes[0].text
+    assert "\ndate_display:" not in plan.source_writes[0].text
 
 
 def test_metadata_status_only_plan_suppresses_search_target() -> None:
@@ -292,6 +319,7 @@ def main() -> None:
     tests = [
         test_create_plan_selects_unique_source_path_and_search_target,
         test_metadata_plan_keeps_child_search_target_for_title_changes,
+        test_metadata_plan_removes_empty_date_fields,
         test_metadata_status_only_plan_suppresses_search_target,
         test_metadata_viewable_plan_writes_current_viewability,
         test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,

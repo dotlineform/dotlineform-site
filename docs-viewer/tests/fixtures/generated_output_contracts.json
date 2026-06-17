@@ -29,6 +29,8 @@
       "doc_entry": {
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
+        "date": "2026-06-02",
+        "date_display": "June 2026",
         "added_date": "2026-06-01",
         "last_updated": "2026-06-01",
         "parent_id": "site-request-rubyless-app-runtimes",
@@ -107,6 +109,8 @@
       "payload": {
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
+        "date": "2026-06-02",
+        "date_display": "June 2026",
         "added_date": "2026-06-01",
         "last_updated": "2026-06-01",
         "parent_id": "site-request-rubyless-app-runtimes",
@@ -141,12 +145,16 @@
       "allowed_top_level_keys": [
         "title",
         "summary",
+        "date",
+        "date_display",
         "last_updated",
         "content_html"
       ],
       "payload": {
         "title": "Public Contract Fixture",
         "summary": "Reader-facing summary.",
+        "date": "2026-06-02",
+        "date_display": "June 2026",
         "last_updated": "2026-06-01",
         "content_html": "<h1 id=\"public-contract-fixture\">Public Contract Fixture</h1>\n<p>Reader body.</p>\n"
       }

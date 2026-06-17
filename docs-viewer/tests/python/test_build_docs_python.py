@@ -154,6 +154,8 @@ Parent body.
         f"""---
 doc_id: child
 title: Child
+date: 2026-06-02
+date_display: June 2026
 added_date: 2026-06-01
 last_updated: 2026-06-01
 summary: Child summary
@@ -198,12 +200,13 @@ def write_public_source_docs(root: Path) -> None:
     for doc_id, title, added_date, last_updated, parent_id, viewable in rows:
         viewable_line = "" if viewable else "viewable: false\n"
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
+        date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == "child" else ""
         write_text(
             root / f"docs-viewer/source/library/{doc_id}.md",
             f"""---
 doc_id: {doc_id}
 title: {json.dumps(title)}
-added_date: {added_date}
+{date_lines}added_date: {added_date}
 last_updated: {last_updated}
 summary: {json.dumps(title + " summary")}
 ui_status: done
@@ -265,6 +268,8 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     docs = result["index_payload"]["docs"]
     assert [doc["doc_id"] for doc in docs] == ["parent", "child"]
     assert docs[1]["summary"] == "Child summary"
+    assert docs[1]["date"] == "2026-06-02"
+    assert docs[1]["date_display"] == "June 2026"
     assert docs[1]["ui_status"] == "done"
     assert docs[1]["content_url"] == "/docs-viewer/generated/docs/studio/by-id/child.json"
     assert isinstance(docs[1]["content_text_length"], int)
@@ -305,6 +310,8 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert "[[ref:series:26]]" in content_html
     assert "[[ref:moment:dark-sky]]" in content_html
     assert child["viewer_report"] == "semantic_references"
+    assert child["date"] == "2026-06-02"
+    assert child["date_display"] == "June 2026"
 
     assert references_index["header"]["schema"] == "docs_semantic_references_index_v1"
     assert references_index["header"]["count"] == 1
@@ -338,6 +345,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert result["diagnostics"]["docs_emitted"] == 6
     public_tree_forbidden_keys = {
         "summary",
+        "date",
+        "date_display",
         "added_date",
         "last_updated",
         "source_path",
@@ -350,6 +359,8 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     }
     public_recent_forbidden_keys = {
         "summary",
+        "date",
+        "date_display",
         "last_updated",
         "source_path",
         "viewer_url",
@@ -396,8 +407,10 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert [doc["doc_id"] for doc in recently_added["docs"]] == ["manage-child", "hidden-child"]
     assert recently_added["docs"][0]["parent_title"] == "Manage Root"
     assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in recently_added["docs"])
-    assert set(child_payload) == {"content_html", "last_updated", "summary", "title"}
+    assert set(child_payload) == {"content_html", "date", "date_display", "last_updated", "summary", "title"}
     assert child_payload["title"] == "Child"
+    assert child_payload["date"] == "2026-06-02"
+    assert child_payload["date_display"] == "June 2026"
     assert child_payload["summary"] == "Child summary"
     assert child_payload["last_updated"] == "2026-06-03"
     assert "content_html" in child_payload
@@ -549,7 +562,7 @@ invalid front matter
 
 def main() -> None:
     test_python_docs_builder_writes_docs_payloads_and_references()
-    test_python_docs_builder_public_tree_and_recently_added_filter_private_rows()
+    test_python_docs_builder_public_generated_payloads_include_manage_rows()
     test_python_docs_builder_preserves_existing_payloads_for_targeted_builds()
     test_python_docs_builder_writes_browser_configs_on_cli_write()
     test_python_docs_builder_cli_dry_run_does_not_write_outputs()

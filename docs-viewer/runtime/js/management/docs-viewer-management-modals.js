@@ -157,7 +157,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function openMetadataModal(doc) {
-    if (!doc || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataStatusInput || !refs.metadataNonViewableInput || !refs.metadataParentInput) {
+    if (!doc || !refs.metadataModal || !refs.metadataForm || !refs.metadataTitleInput || !refs.metadataSummaryInput || !refs.metadataDateInput || !refs.metadataDateDisplayInput || !refs.metadataStatusInput || !refs.metadataNonViewableInput || !refs.metadataParentInput) {
       return Promise.resolve(null);
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
@@ -169,6 +169,8 @@ export function createDocsViewerManagementModalController(options = {}) {
 
     refs.metadataTitleInput.value = doc.title || "";
     refs.metadataSummaryInput.value = doc.summary || "";
+    refs.metadataDateInput.value = doc.date || "";
+    refs.metadataDateDisplayInput.value = doc.date_display || "";
     renderMetadataStatusOptions(doc);
     refs.metadataNonViewableInput.checked = typeof callbacks.isDocNonViewable === "function" ? callbacks.isDocNonViewable(doc) : doc.viewable === false;
     renderMetadataParentOptions(doc);

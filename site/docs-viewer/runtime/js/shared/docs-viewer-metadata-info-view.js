@@ -72,6 +72,7 @@ function renderPublicMetadata(context, metadata) {
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
   appendDefinition(list, "Summary", valueOrFallback(metadata.summary, "No summary"));
+  appendDefinition(list, "Date", valueOrFallback(metadata.date_display || metadata.date, "Not set"));
   appendDefinition(list, "Updated", valueOrFallback(metadata.last_updated, "Not set"));
 
   article.append(title, list);
@@ -97,6 +98,7 @@ function renderManageMetadata(context, metadata) {
   appendDefinition(list, "Scope", valueOrFallback(context.viewerScope, "Not set"));
   appendDefinition(list, "Summary", valueOrFallback(metadata.summary, "No summary"));
   appendDefinition(list, "Parent path", parentPathLabel(context));
+  appendDefinition(list, "Date", valueOrFallback(metadata.date_display || metadata.date, "Not set"));
   appendDefinition(list, "Added", valueOrFallback(metadata.added_date, "Not set"));
   appendDefinition(list, "Updated", valueOrFallback(metadata.last_updated, "Not set"));
   appendDefinition(list, "UI status", valueOrFallback(context.statusLabel || metadata.ui_status, "Not set"));

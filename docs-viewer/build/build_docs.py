@@ -61,6 +61,8 @@ class DocRecord:
     scope_id: str
     doc_id: str
     title: str
+    date: str
+    date_display: str
     added_date: str
     last_updated: str
     summary: str
@@ -369,6 +371,8 @@ class DocsDataBuilder:
             doc_id = str(front_matter.get("doc_id") or stem).strip()
             title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
             parent_id = str(front_matter.get("parent_id") if "parent_id" in front_matter else "").strip()
+            date = str(front_matter.get("date") or "").strip()
+            date_display = str(front_matter.get("date_display") or "").strip()
             last_updated = str(front_matter.get("last_updated") or "").strip()
             added_date = str(front_matter.get("added_date") or last_updated).strip()
             summary = normalize_text(front_matter.get("summary"))
@@ -379,6 +383,8 @@ class DocsDataBuilder:
                     scope_id=self.scope_id,
                     doc_id=doc_id,
                     title=title,
+                    date=date,
+                    date_display=date_display,
                     added_date=added_date,
                     last_updated=last_updated,
                     summary=summary,
@@ -464,6 +470,10 @@ class DocsDataBuilder:
             "source_path": doc.source_path,
             "viewer_url": doc.viewer_url,
         }
+        if doc.date:
+            entry["date"] = doc.date
+        if doc.date_display:
+            entry["date_display"] = doc.date_display
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id:
             entry["parent_id"] = parent_id
@@ -484,6 +494,10 @@ class DocsDataBuilder:
             "title": doc.title,
             "last_updated": doc.last_updated,
         }
+        if doc.date:
+            entry["date"] = doc.date
+        if doc.date_display:
+            entry["date_display"] = doc.date_display
         if doc.summary:
             entry["summary"] = doc.summary
         return entry

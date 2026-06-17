@@ -19,6 +19,10 @@ def normalize_summary(value: Any) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
+def normalize_metadata_text(value: Any) -> str:
+    return str(value or "").strip()
+
+
 def ordered_doc_ids(doc_ids: list[str]) -> list[str]:
     seen: set[str] = set()
     ordered: list[str] = []
@@ -167,6 +171,14 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
     current_summary = normalize_summary(target.front_matter.get("summary"))
     summary = normalize_summary(body.get("summary")) if summary_was_provided else current_summary
     summary_changed = summary_was_provided and summary != current_summary
+    date_was_provided = "date" in body
+    current_date = normalize_metadata_text(target.front_matter.get("date"))
+    date = normalize_metadata_text(body.get("date")) if date_was_provided else current_date
+    date_changed = date_was_provided and date != current_date
+    date_display_was_provided = "date_display" in body
+    current_date_display = normalize_metadata_text(target.front_matter.get("date_display"))
+    date_display = normalize_metadata_text(body.get("date_display")) if date_display_was_provided else current_date_display
+    date_display_changed = date_display_was_provided and date_display != current_date_display
     status_was_provided = "ui_status" in body
     current_ui_status = source_model.normalize_ui_status(target.front_matter.get("ui_status"))
     ui_status = source_model.normalize_ui_status(body.get("ui_status")) if status_was_provided else current_ui_status
@@ -179,6 +191,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         "title_changed": title_changed,
         "parent_changed": parent_changed,
         "summary_changed": summary_changed,
+        "date_changed": date_changed,
+        "date_display_changed": date_display_changed,
         "status_changed": status_changed,
         "viewable_changed": viewable_changed,
     }
@@ -195,6 +209,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                     "title": target.title,
                     "parent_id": target.parent_id,
                     "summary": current_summary,
+                    "date": current_date,
+                    "date_display": current_date_display,
                     "ui_status": current_ui_status,
                     "viewable": current_viewable,
                 },
@@ -214,6 +230,16 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter["summary"] = summary
         else:
             updated_front_matter.pop("summary", None)
+    if date_was_provided:
+        if date:
+            updated_front_matter["date"] = date
+        else:
+            updated_front_matter.pop("date", None)
+    if date_display_was_provided:
+        if date_display:
+            updated_front_matter["date_display"] = date_display
+        else:
+            updated_front_matter.pop("date_display", None)
     if status_was_provided:
         if ui_status:
             updated_front_matter["ui_status"] = ui_status
@@ -243,6 +269,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
                 "title": title,
                 "parent_id": parent_id,
                 "summary": summary,
+                "date": date,
+                "date_display": date_display,
                 "ui_status": ui_status,
                 "viewable": viewable,
             },
@@ -260,6 +288,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             "title_changed": title_changed,
             "parent_changed": parent_changed,
             "summary_changed": summary_changed,
+            "date_changed": date_changed,
+            "date_display_changed": date_display_changed,
             "status_changed": status_changed,
             "viewable_changed": viewable_changed,
         },

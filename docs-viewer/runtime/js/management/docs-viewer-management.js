@@ -122,6 +122,8 @@ export function initDocsViewerManagement(context) {
   var metadataDocId = shellRef("metadataDocId", "docsViewerMetadataDocId");
   var metadataTitleInput = shellRef("metadataTitleInput", "docsViewerMetadataTitleInput");
   var metadataSummaryInput = shellRef("metadataSummaryInput", "docsViewerMetadataSummaryInput");
+  var metadataDateInput = shellRef("metadataDateInput", "docsViewerMetadataDateInput");
+  var metadataDateDisplayInput = shellRef("metadataDateDisplayInput", "docsViewerMetadataDateDisplayInput");
   var metadataStatusLabel = shellRef("metadataStatusLabel", "docsViewerMetadataStatusLabel");
   var metadataStatusInput = shellRef("metadataStatusInput", "docsViewerMetadataStatusInput");
   var metadataNonViewableInput = shellRef("metadataNonViewableInput", "docsViewerMetadataNonViewableInput");
@@ -502,7 +504,7 @@ export function initDocsViewerManagement(context) {
 
   function metadataPayloadFromModal() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataNonViewableInput || !metadataParentInput) return null;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataDateInput || !metadataDateDisplayInput || !metadataStatusInput || !metadataNonViewableInput || !metadataParentInput) return null;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
@@ -521,6 +523,8 @@ export function initDocsViewerManagement(context) {
       doc_id: doc.doc_id,
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
+      date: String(metadataDateInput.value || "").trim(),
+      date_display: String(metadataDateDisplayInput.value || "").trim(),
       ui_status: selectedStatus,
       viewable: !metadataNonViewableInput.checked,
       parent_id: parentId
@@ -864,6 +868,8 @@ export function initDocsViewerManagement(context) {
       metadataCancelButton: metadataCancelButton,
       metadataDocId: metadataDocId,
       metadataForm: metadataForm,
+      metadataDateDisplayInput: metadataDateDisplayInput,
+      metadataDateInput: metadataDateInput,
       metadataNonViewableInput: metadataNonViewableInput,
       metadataModal: metadataModal,
       metadataParentInput: metadataParentInput,

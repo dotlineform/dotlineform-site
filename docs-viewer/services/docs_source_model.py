@@ -109,6 +109,8 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
     preferred_order = [
         "doc_id",
         "title",
+        "date",
+        "date_display",
         "added_date",
         "last_updated",
         "summary",
