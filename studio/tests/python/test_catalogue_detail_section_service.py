@@ -303,7 +303,7 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
         },
     )
     before_details = read_json(source_path)["work_details"]
-    build_calls: list[dict[str, str]] = []
+    build_calls: list[dict[str, object]] = []
 
     def fake_build_operation(_context, **kwargs):
         build_calls.append(dict(kwargs))
@@ -335,3 +335,55 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
         "work_id": "00782",
     }
     assert source["work_details"] == before_details
+
+
+def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) -> None:
+    repo_root, _projects_base = prepare_repo(tmp_path)
+    source_path = repo_root / "studio/data/canonical/catalogue/work_details.json"
+    source_payload = {
+        "header": {"schema": "catalogue_source_work_details_v2", "section_count": 1, "count": 1},
+        "work_detail_sections": {
+            "00782-1": {
+                "section_id": "00782-1",
+                "work_id": "00782",
+                "details_subfolder": "details",
+                "section_title": "details",
+                "detail_sort": "title",
+            },
+        },
+        "work_details": {
+            "00782-001": {
+                "detail_uid": "00782-001",
+                "work_id": "00782",
+                "detail_id": "001",
+                "section_id": "00782-1",
+                "project_filename": "detail-001.jpg",
+                "title": "Detail",
+            },
+        },
+    }
+    write_json(source_path, source_payload)
+    build_calls: list[dict[str, object]] = []
+
+    def fake_build_operation(_context, **kwargs):
+        build_calls.append(dict(kwargs))
+        return True, {"completed_at_utc": "2026-01-01T00:00:00Z"}
+
+    monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
+
+    payload = detail_section_service.save_detail_section_payload(
+        build_catalogue_write_context(repo_root),
+        {
+            "work_id": "00782",
+            "section_id": "00782-1",
+            "section_title": "details",
+            "section_position": 1,
+            "detail_sort": "title",
+        },
+    )
+
+    assert payload["ok"] is True
+    assert payload["changed"] is False
+    assert "build_requested" not in payload
+    assert build_calls == []
+    assert read_json(source_path) == source_payload

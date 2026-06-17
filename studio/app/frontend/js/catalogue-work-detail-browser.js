@@ -55,6 +55,7 @@ function clearActions(state) {
   } else if (state.detailBrowserActionsNode) {
     state.detailBrowserActionsNode.innerHTML = "";
   }
+  if (state.detailBrowserActionsNode) state.detailBrowserActionsNode.hidden = true;
   state.detailBrowserActionsController = null;
 }
 
@@ -163,57 +164,10 @@ function syncDetailBrowserSearchControl(state, query) {
   }
 }
 
-function renderDetailActions(state, options, { list = null, hasDetails = false, showNew = true } = {}) {
+function renderDetailActions(state) {
   if (!state.detailBrowserActionsNode) return;
   clearActions(state);
-  if (!state.currentWorkId) return;
-  const createEnabled = canCreateDetail(state, options);
-  const actions = [
-    ...(hasDetails ? [
-      {
-        key: "edit",
-        label: "✏️",
-        title: text(state, options, "detail_browser_edit_button", "Edit"),
-        ariaLabel: text(state, options, "detail_browser_edit_button", "Edit"),
-        appearance: "icon"
-      },
-      {
-        key: "delete",
-        label: "🗑️",
-        title: text(state, options, "detail_browser_delete_button", "Delete"),
-        ariaLabel: text(state, options, "detail_browser_delete_button", "Delete"),
-        appearance: "icon",
-        tone: "danger"
-      }
-    ] : []),
-    ...(showNew ? [{
-      key: "new",
-      label: "📄",
-      title: createEnabled
-        ? text(state, options, "detail_browser_new_button", "New")
-        : text(state, options, "details_new_unavailable_draft", "Publish this work before adding work details."),
-      ariaLabel: text(state, options, "detail_browser_new_button", "New"),
-      appearance: "icon",
-      requiresSelection: false,
-      disabled: () => !createEnabled
-    }] : [])
-  ];
-  state.detailBrowserActionsController = createRecordListActions(state.detailBrowserActionsNode, {
-    id: "catalogueWorkDetailBrowserActionsList",
-    list,
-    actions,
-    onAction: ({ actionKey, selection }) => {
-      if (actionKey === "new") {
-        if (!canCreateDetail(state, options)) return;
-        if (typeof options.openDetailSectionPicker === "function") {
-          options.openDetailSectionPicker();
-        }
-        return;
-      }
-      const detailUid = selection && selection.record ? selection.record.detailUid : "";
-      if (!detailUid) return;
-    }
-  });
+  state.detailBrowserActionsNode.hidden = true;
 }
 
 function renderSectionActions(state, options, { list = null, hasSections = false } = {}) {

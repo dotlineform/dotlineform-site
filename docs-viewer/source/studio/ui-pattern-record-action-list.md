@@ -249,7 +249,8 @@ The adapter renders:
 - a section list from `currentLookup.detail_sections`
 - a detail thumbnail list for the selected section
 - a route-owned search field beside the action toolbar
-- external actions for `Edit`, `Delete`, and `New`
+- visible external actions for section-level `Edit`, `Delete`, and `New`
+- a hidden detail-record toolbar host reserved for future individual detail actions
 
 The search field is outside `RecordList`.
 The route adapter filters records before passing them to the shared list.
@@ -257,9 +258,10 @@ The current filter matches only the last three digits of `detail_id`, falling ba
 
 Actions:
 
-- `Edit` opens the selected detail in `/studio/catalogue-work-detail/`
-- `Delete` currently opens the selected detail editor; destructive detail deletion remains owned by the dedicated detail route
-- `New` opens the detail editor in new mode for the current work and is disabled until the parent work is published
+- section `Edit` opens the section-level modal for section title, order, and `detail_sort`
+- section `Delete` uses the route-owned delete preview/apply workflow for the selected section
+- section `New` opens the project-media picker to create a new detail section and is disabled until the parent work is published
+- individual detail create/edit/delete buttons are not implemented yet; their toolbar host exists in the route shell but is hidden to keep source files and generated public payloads synchronized through section-level workflows
 
 ## Styling Contract
 

@@ -489,4 +489,4 @@ Final decisions:
 - public work JSON consumes the section map and strips section metadata from nested detail rows
 - optional null `section_order` and `detail_sort` are compacted out of public payloads until meaningful values exist, matching existing public JSON conventions
 - `/studio/catalogue-work-detail/` and its create/save endpoints are retired rather than adapted
-- current work-editor detail toolbar actions remain present but inert for future work-scoped modals
+- current work-editor detail-record toolbar host remains present but hidden; individual detail create/edit/delete actions are not implemented until a future work-scoped modal/API design keeps source files and generated public payloads synchronized

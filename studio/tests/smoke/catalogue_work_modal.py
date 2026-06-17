@@ -459,6 +459,14 @@ def main() -> int:
                 "sortOptions": ["id", "title"],
             }:
                 raise AssertionError(f"section edit modal fields do not match source section: {edit_section_fields!r}")
+            page.locator('[data-role="detail-section-modal-save"]').click()
+            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
+            page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
+            if section_save_requests:
+                raise AssertionError(f"unchanged section edit should not call save: {section_save_requests!r}")
+
+            page.locator(section_edit_button).click()
+            assert_modal_shell(page, "Edit detail section", ["Cancel", "Save"], args.timeout_ms)
             page.fill("#catalogueWorkDetailSectionTitle", "smoke details")
             page.select_option("#catalogueWorkDetailSectionSort", "title")
             page.locator('[data-role="detail-section-modal-save"]').click()

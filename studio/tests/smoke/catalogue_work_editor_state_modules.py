@@ -319,7 +319,8 @@ def assert_detail_browser_search_filters_suffix(page: Page) -> None:
                 ]
             }};
             browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
-            const newDisabledForPublished = document.querySelector('#catalogueWorkDetailBrowserActions [data-record-list-action="new"]').disabled;
+            const detailToolbarHidden = document.querySelector('#catalogueWorkDetailBrowserActions').hidden;
+            const newDisabledForPublished = document.querySelector('#catalogueWorkDetailBrowserSectionActions [data-record-list-action="new"]').disabled;
             state.detailBrowserSearchNode.value = '1';
             browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
             const valuesAfterSearch = Array.from(document.querySelectorAll('#catalogueWorkDetailBrowserImages [data-record-list-cell="detailUid"]'))
@@ -332,12 +333,13 @@ def assert_detail_browser_search_filters_suffix(page: Page) -> None:
                 .map((node) => node.textContent.trim());
             state.currentRecord.status = 'draft';
             browserModule.updateWorkDetailBrowser(state, {{ text: (_key, fallback) => fallback }});
-            const newDisabledForDraft = document.querySelector('#catalogueWorkDetailBrowserActions [data-record-list-action="new"]').disabled;
+            const newDisabledForDraft = document.querySelector('#catalogueWorkDetailBrowserSectionActions [data-record-list-action="new"]').disabled;
             return {{
                 valuesAfterSearch,
                 clearHiddenAfterSearch,
                 normalizedSearchValue,
                 valuesAfterFullUid,
+                detailToolbarHidden,
                 newDisabledForPublished,
                 newDisabledForDraft
             }};
@@ -348,6 +350,7 @@ def assert_detail_browser_search_filters_suffix(page: Page) -> None:
         "clearHiddenAfterSearch": False,
         "normalizedSearchValue": "011",
         "valuesAfterFullUid": ["00001-011"],
+        "detailToolbarHidden": True,
         "newDisabledForPublished": False,
         "newDisabledForDraft": True,
     }

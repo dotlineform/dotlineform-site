@@ -391,6 +391,7 @@ export function updateWorkResourcesSection(state, options = {}) {
 
 export function updateWorkSummary(state, options = {}) {
   if (state.mode === "new") {
+    state.metaNode.hidden = false;
     state.metaNode.textContent = text(state, options, "new_meta", "Creating a draft work.");
     state.summaryNode.innerHTML = `
       <div class="tagStudioForm__field">
@@ -417,6 +418,7 @@ export function updateWorkSummary(state, options = {}) {
     const seriesIds = dedupeSeriesIds(
       selectedRecords.flatMap((record) => parseSeriesIds(record && record.series_ids))
     );
+    state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
       ? text(state, options, "bulk_meta", "{count} works selected", { count: String(selectedCount) })
       : "";
@@ -443,10 +445,8 @@ export function updateWorkSummary(state, options = {}) {
     return;
   }
 
-  const record = state.currentRecord;
-  state.metaNode.textContent = record
-    ? `${record.work_id} · ${buildWorkRecordSummary(record)}`
-    : "";
+  state.metaNode.textContent = "";
+  state.metaNode.hidden = true;
 
   state.summaryNode.innerHTML = "";
 
