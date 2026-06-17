@@ -33,13 +33,8 @@ export function collectSeriesEditorElements() {
     statusNode: "catalogueSeriesStatus",
     previewNode: "catalogueSeriesSidePanel",
     membersHeadingNode: "catalogueSeriesMembersHeading",
-    memberSearchRowNode: "catalogueSeriesMemberSearchRow",
-    memberSearchNode: "catalogueSeriesMemberSearch",
-    memberSearchMetaNode: "catalogueSeriesMemberSearchMeta",
-    memberAddNode: "catalogueSeriesMemberAdd",
-    memberAddButton: "catalogueSeriesMemberAddButton",
+    membersActionsNode: "catalogueSeriesMembersActions",
     membersMetaNode: "catalogueSeriesMembersMeta",
-    membersStatusNode: "catalogueSeriesMembersStatus",
     membersResultsNode: "catalogueSeriesMembersResults"
   });
 }
@@ -75,6 +70,9 @@ export function createSeriesEditorState(elements, options = {}) {
     messageController: null,
     memberSeriesIdsByWorkId: new Map(),
     baselineMemberSeriesIdsByWorkId: new Map(),
+    membersListController: null,
+    membersActionsController: null,
+    selectedMemberWorkId: "",
     searchNode: elements.searchNode,
     popupNode: elements.popupNode,
     popupListNode: elements.popupListNode,
@@ -89,13 +87,8 @@ export function createSeriesEditorState(elements, options = {}) {
     resultNode: createCatalogueEditorMessageRoleNode("catalogueSeriesResult", "result"),
     buildImpactNode: null,
     previewNode: elements.previewNode,
-    memberSearchRowNode: elements.memberSearchRowNode,
-    memberSearchNode: elements.memberSearchNode,
-    memberSearchMetaNode: elements.memberSearchMetaNode,
-    memberAddNode: elements.memberAddNode,
-    memberAddButton: elements.memberAddButton,
+    membersActionsNode: elements.membersActionsNode,
     membersMetaNode: elements.membersMetaNode,
-    membersStatusNode: elements.membersStatusNode,
     membersResultsNode: elements.membersResultsNode
   };
 }

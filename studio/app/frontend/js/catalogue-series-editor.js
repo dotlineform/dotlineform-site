@@ -37,11 +37,8 @@ import {
   setSeriesModeFieldAvailability
 } from "./catalogue-series-form.js";
 import {
-  addSeriesMember,
   getCurrentSeriesMemberEntries,
   initializeSeriesMembershipState,
-  makeSeriesMemberPrimary,
-  removeSeriesMember,
   seriesMembershipHasChanges,
   updateSeriesMemberList
 } from "./catalogue-series-membership.js";
@@ -241,10 +238,7 @@ function setLoadedSeries(state, seriesId, record, options = {}) {
   initializeSeriesMembershipState(state, seriesId);
   applySeriesDraftToInputs(state);
   syncUrl(seriesId);
-  state.memberSearchNode.value = "";
-  state.memberAddNode.value = "";
   state.pendingBuildExtraWorkIds = Array.isArray(options.pendingBuildExtraWorkIds) ? options.pendingBuildExtraWorkIds.slice() : [];
-  setNodeTextWithState(state.membersStatusNode, "");
   setOpenInputMode(state);
   state.messageController.setRouteTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for series {series_id}.", { series_id: seriesId }));
   state.messageController.setRouteTextWithState(state.statusNode, "");
@@ -271,6 +265,7 @@ function setNewSeriesMode(state, options = {}) {
   state.draft.primary_work_id = "";
   state.memberSeriesIdsByWorkId = new Map();
   state.baselineMemberSeriesIdsByWorkId = new Map();
+  state.selectedMemberWorkId = "";
   state.pendingBuildExtraWorkIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
@@ -279,9 +274,6 @@ function setNewSeriesMode(state, options = {}) {
   applySeriesDraftToInputs(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("", "new");
-  state.memberSearchNode.value = "";
-  state.memberAddNode.value = "";
-  setNodeTextWithState(state.membersStatusNode, "");
   state.messageController.setRouteTextWithState(state.contextNode, t(state, "new_context_loaded", "Creating a draft series source record."));
   state.messageController.setRouteTextWithState(state.statusNode, "");
   state.messageController.setRouteTextWithState(state.warningNode, "");
@@ -302,6 +294,7 @@ function setEmptySearchMode(state, options = {}) {
   });
   state.memberSeriesIdsByWorkId = new Map();
   state.baselineMemberSeriesIdsByWorkId = new Map();
+  state.selectedMemberWorkId = "";
   state.pendingBuildExtraWorkIds = [];
   state.rebuildPending = false;
   state.buildPreview = null;
@@ -310,9 +303,6 @@ function setEmptySearchMode(state, options = {}) {
   applySeriesDraftToInputs(state);
   setSeriesSelectionPopupVisibility(state, false);
   syncUrl("");
-  state.memberSearchNode.value = "";
-  state.memberAddNode.value = "";
-  setNodeTextWithState(state.membersStatusNode, "");
   state.messageController.setRouteTextWithState(state.contextNode, t(state, "missing_series_param", "Search for a series by title."));
   state.messageController.setRouteTextWithState(state.warningNode, "");
   if (!options.keepResult) state.messageController.setRouteTextWithState(state.resultNode, "");
@@ -376,13 +366,7 @@ async function init() {
     publicationButton,
     deleteButton,
     membersHeadingNode,
-    memberSearchRowNode,
-    memberSearchNode,
-    memberSearchMetaNode,
-    memberAddNode,
-    memberAddButton,
     membersMetaNode,
-    membersStatusNode,
     membersResultsNode
   } = elements;
 
@@ -410,9 +394,6 @@ async function init() {
         publicationButton.textContent = t(state, "publish_button", "Publish");
         deleteButton.textContent = t(state, "delete_button", "Delete");
         membersHeadingNode.textContent = t(state, "members_heading", "member works");
-        memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
-        memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
-        memberAddButton.textContent = t(state, "members_add_button", "Add");
       }
     });
     if (!state.serverAvailable) {
@@ -444,26 +425,7 @@ async function init() {
       setNewSeriesMode: () => setNewSeriesMode(state),
       saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
       applyPublicationChange: () => applyPublicationChange(state, buildSeriesActionContext(state)),
-      deleteCurrentSeries: () => deleteCurrentSeries(state, buildSeriesActionContext(state)),
-      updateMemberList: () => updateSeriesMemberList(state, membershipOptions(state)),
-      addMember: () => {
-        if (addSeriesMember(state, membershipOptions(state))) {
-          state.messageController.clearActionMessages();
-          updateEditorState(state);
-        }
-      },
-      makeMemberPrimary: (workId) => {
-        if (makeSeriesMemberPrimary(state, normalizeWorkId(workId))) {
-          state.messageController.clearActionMessages();
-          updateEditorState(state);
-        }
-      },
-      removeMember: (workId) => {
-        if (removeSeriesMember(state, normalizeWorkId(workId), membershipOptions(state))) {
-          state.messageController.clearActionMessages();
-          updateEditorState(state);
-        }
-      }
+      deleteCurrentSeries: () => deleteCurrentSeries(state, buildSeriesActionContext(state))
     });
 
     await applyInitialSeriesRouteSelection(state, buildSeriesSelectionContext(state));

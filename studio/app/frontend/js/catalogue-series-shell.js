@@ -51,23 +51,9 @@ export function renderCatalogueSeriesShell(config) {
           <section class="tagStudio__panel catalogueSeriesMembers">
             <div class="tagStudio__headingRow">
               <h2 class="tagStudio__heading" id="catalogueSeriesMembersHeading">member works</h2>
+              <div class="catalogueWorkDetails__rowActions catalogueSeriesMembers__actions" id="catalogueSeriesMembersActions" aria-label="Member work actions"></div>
             </div>
-            <div class="tagStudio__headingRow catalogueSeriesMembers__searchRow" id="catalogueSeriesMemberSearchRow" hidden>
-              <div class="tagStudioForm__searchWrap catalogueSeriesMembers__searchWrap">
-                <label class="visually-hidden" for="catalogueSeriesMemberSearch">Find member work by id</label>
-                <input type="text" class="tagStudio__input" id="catalogueSeriesMemberSearch" placeholder="find member work by id" autocomplete="off">
-              </div>
-              <span class="tagStudioForm__meta" id="catalogueSeriesMemberSearchMeta"></span>
-            </div>
-            <div class="tagStudio__inputRow tagStudio__inputRow--editor">
-              <div class="tagStudioForm__searchWrap catalogueSeriesMembers__searchWrap">
-                <label class="visually-hidden" for="catalogueSeriesMemberAdd">Add work by id</label>
-                <input type="text" class="tagStudio__input" id="catalogueSeriesMemberAdd" placeholder="add work by id" autocomplete="off">
-              </div>
-              <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesMemberAddButton">Add</button>
-              <span class="tagStudioForm__meta" id="catalogueSeriesMembersMeta"></span>
-            </div>
-            <p class="tagStudio__status" id="catalogueSeriesMembersStatus"></p>
+            <p class="tagStudioForm__meta" id="catalogueSeriesMembersMeta"></p>
             <div class="catalogueSeriesMembers__results" id="catalogueSeriesMembersResults"></div>
           </section>
         </div>

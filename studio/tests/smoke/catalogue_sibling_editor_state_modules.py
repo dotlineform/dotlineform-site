@@ -53,10 +53,8 @@ def assert_sibling_state_factories(page: Page) -> None:
                 <div id="catalogueSeriesStatus"></div><div id="catalogueSeriesWarning"></div>
                 <div id="catalogueSeriesResult"></div>
                 <div id="catalogueSeriesSidePanel"></div>
-                <h2 id="catalogueSeriesMembersHeading"></h2><div id="catalogueSeriesMemberSearchRow"></div>
-                <input id="catalogueSeriesMemberSearch" /><div id="catalogueSeriesMemberSearchMeta"></div>
-                <input id="catalogueSeriesMemberAdd" /><button id="catalogueSeriesMemberAddButton"></button>
-                <div id="catalogueSeriesMembersMeta"></div><div id="catalogueSeriesMembersStatus"></div>
+                <h2 id="catalogueSeriesMembersHeading"></h2><div id="catalogueSeriesMembersActions"></div>
+                <div id="catalogueSeriesMembersMeta"></div>
                 <div id="catalogueSeriesMembersResults"></div>
               </section>
               <section id="catalogueMomentRoot">
@@ -117,10 +115,9 @@ def assert_sibling_event_binders(page: Page) -> None:
         """async () => {
             document.body.innerHTML = `
               <button id="seriesNew"></button><button id="seriesSave"></button><button id="seriesPub"></button>
-              <button id="seriesDelete"></button><input id="seriesMemberSearch" />
-              <input id="seriesMemberAdd" /><button id="seriesMemberAddButton"></button>
+              <button id="seriesDelete"></button>
               <div id="seriesReady"></div>
-              <div id="seriesMembers"><button data-member-primary="001"></button><button data-member-remove="002"></button></div>
+              <div id="seriesMembers"></div>
               <button id="momentNew"></button><button id="momentSave"></button><button id="momentPub"></button>
               <button id="momentDelete"></button><input id="momentImportFile" />
               <button id="momentPreview"></button><button id="momentApply"></button>
@@ -135,21 +132,13 @@ def assert_sibling_event_binders(page: Page) -> None:
                 newButton: document.getElementById('seriesNew'),
                 saveButton: document.getElementById('seriesSave'),
                 publicationButton: document.getElementById('seriesPub'),
-                deleteButton: document.getElementById('seriesDelete'),
-                memberSearchNode: document.getElementById('seriesMemberSearch'),
-                memberAddNode: document.getElementById('seriesMemberAdd'),
-                memberAddButton: document.getElementById('seriesMemberAddButton'),
-                membersResultsNode: document.getElementById('seriesMembers')
+                deleteButton: document.getElementById('seriesDelete')
             }, {
                 bindSelectionControls: () => push('series.bind'),
                 setNewSeriesMode: () => push('series.new'),
                 saveCurrentSeries: () => push('series.save'),
                 applyPublicationChange: () => push('series.pub'),
-                deleteCurrentSeries: () => push('series.delete'),
-                updateMemberList: () => push('series.memberSearch'),
-                addMember: () => push('series.add'),
-                makeMemberPrimary: (workId) => push('series.primary', workId),
-                removeMember: (workId) => push('series.remove', workId)
+                deleteCurrentSeries: () => push('series.delete')
             });
             momentEvents.bindMomentEditorEvents({
                 newButton: document.getElementById('momentNew'),
@@ -179,10 +168,6 @@ def assert_sibling_event_binders(page: Page) -> None:
         "#seriesSave",
         "#seriesPub",
         "#seriesDelete",
-        "#seriesMemberSearch",
-        "#seriesMemberAddButton",
-        "#seriesMembers [data-member-primary]",
-        "#seriesMembers [data-member-remove]",
         "#momentNew",
         "#momentSave",
         "#momentPub",
@@ -196,8 +181,6 @@ def assert_sibling_event_binders(page: Page) -> None:
             page.fill(selector, "a")
         else:
             page.click(selector)
-    page.fill("#seriesMemberAdd", "enter")
-    page.press("#seriesMemberAdd", "Enter")
     page.fill("#momentImportFile", "keys.md")
     calls = page.evaluate("window.__siblingCalls")
     assert calls == [
@@ -207,10 +190,6 @@ def assert_sibling_event_binders(page: Page) -> None:
         ["series.save"],
         ["series.pub"],
         ["series.delete"],
-        ["series.memberSearch"],
-        ["series.add"],
-        ["series.primary", "001"],
-        ["series.remove", "002"],
         ["moment.new"],
         ["moment.save"],
         ["moment.pub"],
@@ -219,7 +198,6 @@ def assert_sibling_event_binders(page: Page) -> None:
         ["moment.apply"],
         ["moment.media"],
         ["moment.prose"],
-        ["series.add"],
         ["moment.file", "keys.md"],
     ]
 

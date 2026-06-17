@@ -30,13 +30,8 @@ The first implementation covers:
 - show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
 - edit `sort_fields`
 - edit `primary_work_id`
-- list current member works
-- cap visible member rows at 10 by default
-- search current members by `work_id` when the list is truncated
-- add a work to the current series
-- automatically fill blank `primary_work_id` when the first member work is added
-- remove a work from the current series
-- make the current series primary for a member work by moving it to the front of that work's `series_ids`
+- list current member works through the shared record-list component
+- show shared record-list toolbar buttons for future member-work new/edit/delete workflows
 - preview the scoped public update impact for the current series
 - save metadata, with published-series saves updating the public catalogue internally
 - publish draft series through a dedicated `Publish` command
@@ -56,8 +51,8 @@ The Series Editor route is split into route orchestration, action workflows, fie
 - `site/assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
 - `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, shared search-list option rendering, Open-button behavior, focused-series opening, and initial route selection.
 - `site/assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
-- `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.
-- `site/assets/studio/js/catalogue-series-sections.js` owns the small form meta line and the primary-work image preview in the side panel.
+- `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, shared member record-list rendering, and placeholder member toolbar actions.
+- `site/assets/studio/js/catalogue-series-sections.js` owns the primary-work image preview in the side panel.
 
 Membership remains route-local to the Series Editor because it edits affected work `series_ids` arrays as part of the series workflow.
 It is not a generic Catalogue membership controller.
@@ -117,10 +112,9 @@ Locked constraints for this phase:
 - membership save does not sort a work's series list
 - adding the first member work to a series with blank `primary_work_id` automatically sets that work as `primary_work_id`
 - adding later member works never overwrites an existing `primary_work_id`
-- the member list uses the same capped list pattern as the work-detail navigation surface
-- long member lists stay navigable through member search rather than rendering every row by default
-- the member search box sits below the section heading and is only shown when the member list is truncated
-- the `work_id` link is the navigation affordance for opening a member work; row action buttons stay focused on membership changes
+- the member list uses the shared record-list component
+- the member toolbar uses shared record-list action buttons
+- member new/edit/delete workflows are not implemented yet; the toolbar buttons are placeholders until those modals or links are designed
 
 ## Save Boundary
 
@@ -139,7 +133,7 @@ Current save/publication flow:
 
 1. page loads derived series-search and work-search lookup payloads through `GET /studio/api/catalogue/read`, not full canonical source maps
 2. opening a series fetches one focused lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_series_base&record_id=<series_id>`
-3. membership edits operate on affected work `series_ids` arrays in the browser, using lookup-provided work hashes for stale-write checks
+3. membership edits are currently not exposed in the UI; the save payload still supports changed work membership rows for the later member-work modal/link workflow
 4. `POST /studio/api/catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and local app adapter reject saves where `year` or `year_display` is blank
 5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command
 6. the local app adapter validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
