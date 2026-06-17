@@ -253,7 +253,7 @@ function renderSectionActions(state, options, { list = null, hasSections = false
     id: "catalogueWorkDetailBrowserSectionActionsList",
     list,
     actions,
-    onAction: ({ actionKey, selection }) => {
+    onAction: ({ actionKey, selection, records }) => {
       if (actionKey === "new") {
         if (!canCreateDetail(state, options)) return;
         if (typeof options.openDetailSectionPicker === "function") {
@@ -263,6 +263,9 @@ function renderSectionActions(state, options, { list = null, hasSections = false
       }
       const sectionId = selection && selection.record ? selection.record.id : "";
       if (!sectionId) return;
+      if (actionKey === "edit" && typeof options.editDetailSection === "function") {
+        options.editDetailSection(selection.record, records);
+      }
       if (actionKey === "delete" && typeof options.deleteDetailSection === "function") {
         options.deleteDetailSection(selection.record);
       }

@@ -28,6 +28,10 @@ export function createCatalogueWorkDetailSection(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkDetailSection, payload);
 }
 
+export function saveCatalogueWorkDetailSection(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkDetailSection, payload);
+}
+
 export function createCatalogueWork(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.createWork, payload);
 }

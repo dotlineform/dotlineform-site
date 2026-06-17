@@ -22,6 +22,7 @@ from catalogue.catalogue_source import (
     normalize_detail_uid_value,
     normalize_series_ids_value,
     normalize_status,
+    payload_for_map,
     records_from_json_source,
     slug_id,
     sort_record_map,

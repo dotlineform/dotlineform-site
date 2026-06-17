@@ -268,6 +268,7 @@ def main() -> int:
     build_preview_requests: list[dict[str, object]] = []
     publication_apply_requests: list[dict[str, object]] = []
     work_delete_apply_requests: list[dict[str, object]] = []
+    section_save_requests: list[dict[str, object]] = []
     section_delete_apply_requests: list[dict[str, object]] = []
 
     def handle_catalogue(route: Route) -> None:
@@ -316,6 +317,27 @@ def main() -> int:
                 "status": "ok",
                 "record": work_record,
                 "record_hash": "hash-work-draft",
+            })
+            return
+        if request.method == "POST" and path == "/catalogue/work-detail-section/save":
+            save_request = request_json(route)
+            section_save_requests.append(save_request)
+            detail_sections = [
+                {
+                    **section,
+                    "section_title": str(save_request.get("section_title") or section.get("section_title") or ""),
+                    **({"detail_sort": "title"} if save_request.get("detail_sort") == "title" else {}),
+                }
+                if section.get("section_id") == save_request.get("section_id")
+                else section
+                for section in detail_sections
+            ]
+            fulfil_json(route, {
+                "ok": True,
+                "changed": True,
+                "section_id": save_request.get("section_id"),
+                "section": detail_sections[0],
+                "build_requested": True,
             })
             return
         if request.method == "POST" and path == "/catalogue/delete-preview":
@@ -398,6 +420,61 @@ def main() -> int:
                 raise AssertionError(f"embedded list chrome did not match compact toolbar contract: {embedded_section_state!r}")
 
             section_delete_button = '#catalogueWorkDetailBrowserSectionActions [data-record-list-action="delete"]'
+            section_edit_button = '#catalogueWorkDetailBrowserSectionActions [data-record-list-action="edit"]'
+            page.locator(section_edit_button).click()
+            try:
+                edit_section_modal = assert_modal_shell(page, "Edit detail section", ["Cancel", "Save"], args.timeout_ms)
+            except PlaywrightTimeoutError as error:
+                section_action_state = page.locator("#catalogueWorkDetailBrowserSectionActions").evaluate(
+                    """node => ({
+                        text: node.textContent || '',
+                        selectedId: document.querySelector('#catalogueWorkDetailBrowserSections')?.dataset.recordListSelectedId || '',
+                        editDisabled: Boolean(node.querySelector('[data-record-list-action="edit"]')?.disabled),
+                        editLabel: node.querySelector('[data-record-list-action="edit"]')?.getAttribute('aria-label') || '',
+                        activeAction: document.activeElement ? document.activeElement.getAttribute('data-record-list-action') || '' : ''
+                    })"""
+                )
+                raise AssertionError({
+                    "message": "Section edit modal did not open",
+                    "actions": section_action_state,
+                    "page_errors": page_errors,
+                    "console": console_warnings,
+                }) from error
+            if edit_section_modal["activeId"] != "catalogueWorkDetailSectionTitle":
+                raise AssertionError(f"section edit modal did not focus title field: {edit_section_modal!r}")
+            edit_section_fields = page.locator('[data-role="studio-modal"]').evaluate(
+                """modal => ({
+                    title: modal.querySelector('#catalogueWorkDetailSectionTitle')?.value || '',
+                    order: modal.querySelector('#catalogueWorkDetailSectionOrder')?.value || '',
+                    orderDisabled: Boolean(modal.querySelector('#catalogueWorkDetailSectionOrder')?.disabled),
+                    sort: modal.querySelector('#catalogueWorkDetailSectionSort')?.value || '',
+                    sortOptions: Array.from(modal.querySelectorAll('#catalogueWorkDetailSectionSort option')).map(option => option.textContent.trim())
+                })"""
+            )
+            if edit_section_fields != {
+                "title": "details",
+                "order": "1",
+                "orderDisabled": True,
+                "sort": "detail_id",
+                "sortOptions": ["id", "title"],
+            }:
+                raise AssertionError(f"section edit modal fields do not match source section: {edit_section_fields!r}")
+            page.fill("#catalogueWorkDetailSectionTitle", "smoke details")
+            page.select_option("#catalogueWorkDetailSectionSort", "title")
+            page.locator('[data-role="detail-section-modal-save"]').click()
+            page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
+            page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
+            if section_save_requests != [{
+                "work_id": WORK_ID,
+                "section_id": f"{WORK_ID}-1",
+                "section_title": "smoke details",
+                "detail_sort": "title",
+            }]:
+                raise AssertionError(f"unexpected section save request: {section_save_requests!r}")
+            detail_browser_text = page.locator("#catalogueWorkDetailBrowserSections").inner_text()
+            if "smoke details" not in detail_browser_text:
+                raise AssertionError(f"detail browser did not refresh after section edit: {detail_browser_text!r}")
+
             page.locator(section_delete_button).click()
             section_delete_modal = assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
             if f"Delete detail section {WORK_ID}-1" not in section_delete_modal["bodyText"]:

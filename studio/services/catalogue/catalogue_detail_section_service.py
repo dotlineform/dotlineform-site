@@ -1,4 +1,4 @@
-"""Catalogue work-detail section create service routes for Local Studio."""
+"""Catalogue work-detail section service routes for Local Studio."""
 
 from __future__ import annotations
 
@@ -19,10 +19,13 @@ from catalogue.catalogue_source import (
     DETAIL_FIELDS,
     DETAIL_SECTION_FIELDS,
     CatalogueSourceRecords,
+    normalize_detail_sort_value,
     next_detail_section_id,
     normalize_source_record,
     normalize_status,
+    normalize_optional_int,
     normalize_text,
+    ordered_work_detail_sections,
     records_from_json_source,
     slug_id,
     sort_record_map,
@@ -194,6 +197,114 @@ def create_detail_section_payload(context: CatalogueWriteContext, body: Mapping[
     return payload
 
 
+def save_detail_section_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
+    request = extract_save_detail_section_request(body)
+    work_id = request["work_id"]
+    section_id = request["section_id"]
+
+    source_records = records_from_json_source(context.source_dir)
+    section_record = source_records.work_detail_sections.get(section_id)
+    if not isinstance(section_record, dict):
+        raise ValueError(f"section_id not found: {section_id}")
+    if normalize_text(section_record.get("work_id")) != work_id:
+        raise ValueError("section_id does not belong to work_id")
+
+    next_sections = {key: dict(value) for key, value in source_records.work_detail_sections.items()}
+    next_record = dict(section_record)
+    next_record["section_title"] = request["section_title"]
+    if request["detail_sort"] == "title":
+        next_record["detail_sort"] = "title"
+    else:
+        next_record.pop("detail_sort", None)
+    next_sections[section_id] = normalize_source_record(
+        next_record,
+        DETAIL_SECTION_FIELDS,
+    )
+
+    current_sections = ordered_work_detail_sections(source_records, work_id)
+    requested_position = request["section_position"]
+    if requested_position is not None and len(current_sections) > 1:
+        ordered_section_ids = [normalize_text(section.get("section_id")) for section in current_sections]
+        if section_id not in ordered_section_ids:
+            raise ValueError("section_id not found in current work order")
+        ordered_section_ids.remove(section_id)
+        to_index = max(0, min(requested_position - 1, len(ordered_section_ids)))
+        ordered_section_ids.insert(to_index, section_id)
+        for index, ordered_section_id in enumerate(ordered_section_ids, start=1):
+            section = dict(next_sections[ordered_section_id])
+            section["section_order"] = index
+            next_sections[ordered_section_id] = normalize_source_record(
+                section,
+                DETAIL_SECTION_FIELDS,
+            )
+
+    validation_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_detail_sections=sort_record_map(next_sections),
+        work_details=source_records.work_details,
+        series=source_records.series,
+    )
+    validation_errors = validate_source_records(validation_records, allow_compat_detail_project_subfolder=False)
+    if validation_errors:
+        raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+
+    target_path = context.work_details_path.resolve()
+    if target_path not in context.allowed_write_paths:
+        raise ValueError("write target not allowlisted")
+
+    changed = sort_record_map(next_sections) != sort_record_map(source_records.work_detail_sections)
+    if changed:
+        transactions.execute_source_json_write(
+            {
+                target_path: work_details_payload_for_maps(
+                    next_sections,
+                    source_records.work_details,
+                )
+            },
+            dry_run=context.dry_run,
+            repo_root=context.repo_root,
+        )
+
+    payload: dict[str, Any] = {
+        "ok": True,
+        "changed": changed,
+        "work_id": work_id,
+        "section_id": section_id,
+        "section": next_sections[section_id],
+    }
+    if context.dry_run:
+        payload["dry_run"] = True
+        payload["would_write"] = changed
+    elif changed:
+        payload["saved_at_utc"] = activity.utc_now()
+        payload["lookup_refresh"] = refresh_lookup_payloads(context)
+        payload["build_requested"] = True
+        success, build_payload = run_build_operation(
+            context,
+            work_id=work_id,
+            series_id="",
+            moment_id="",
+            extra_series_ids=[],
+            extra_work_ids=[],
+            detail_uid="",
+            force=False,
+        )
+        payload["build"] = build_payload
+        if not success:
+            payload["build_failed"] = True
+    log_event(
+        context.repo_root,
+        "catalogue_detail_section_save",
+        {
+            "work_id": work_id,
+            "section_id": section_id,
+            "changed": changed,
+            "dry_run": context.dry_run,
+        },
+    )
+    return payload
+
+
 def build_created_details(context: CatalogueWriteContext, work_id: str, detail_uids: list[str]) -> dict[str, Any]:
     results: list[dict[str, Any]] = []
     for index, detail_uid in enumerate(detail_uids):
@@ -260,6 +371,34 @@ def extract_create_detail_section_request(body: Mapping[str, Any]) -> dict[str, 
         "project_folder": project_folder,
         "project_subfolder": project_subfolder,
         "filenames": filenames,
+    }
+
+
+def extract_save_detail_section_request(body: Mapping[str, Any]) -> dict[str, Any]:
+    work_id = slug_id(body.get("work_id"))
+    section_id = normalize_text(body.get("section_id"))
+    if not section_id:
+        raise ValueError("section_id is required")
+    section_title = normalize_text(body.get("section_title"))
+    if not section_title:
+        raise ValueError("section_title is required")
+    raw_position = body.get("section_position")
+    section_position = normalize_optional_int(raw_position)
+    if raw_position is not None and normalize_text(raw_position) and section_position is None:
+        raise ValueError("section_position must be a whole number")
+    if section_position is not None and section_position < 1:
+        raise ValueError("section_position must be one or greater")
+    raw_detail_sort = normalize_text(body.get("detail_sort"))
+    detail_sort_input = "detail_id" if raw_detail_sort == "id" else raw_detail_sort
+    detail_sort = normalize_detail_sort_value(detail_sort_input) or ""
+    if raw_detail_sort and not detail_sort:
+        raise ValueError("detail_sort must be id, detail_id, or title")
+    return {
+        "work_id": work_id,
+        "section_id": section_id,
+        "section_title": section_title,
+        "section_position": section_position,
+        "detail_sort": detail_sort or "detail_id",
     }
 
 

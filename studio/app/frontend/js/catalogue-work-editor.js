@@ -24,6 +24,7 @@ import {
 } from "./catalogue-editor-embedded-items.js";
 import {
   confirmWorkEmbeddedDeleteModal,
+  openWorkDetailSectionEditModal,
   openWorkEmbeddedEntryModal
 } from "./catalogue-work-editor-modals.js";
 import {
@@ -34,7 +35,8 @@ import {
   createCatalogueWorkDetailSection,
   previewCatalogueDelete,
   readProjectMediaFiles,
-  readProjectMediaFolders
+  readProjectMediaFolders,
+  saveCatalogueWorkDetailSection
 } from "./catalogue-editor-service-client.js";
 import {
   formatCatalogueDeletePreview
@@ -236,6 +238,63 @@ async function openDetailSectionPicker(state) {
     renderEditorMessage(state);
   }
   return result;
+}
+
+async function editDetailSection(state, row, rows = []) {
+  if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
+  const sectionId = normalizeText(row && row.id);
+  if (!sectionId) return;
+  clearActionMessages(state);
+  const result = await openWorkDetailSectionEditModal(state, row, rows, {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+  });
+  if (!result || !result.confirmed) return;
+  if (!result.changed) {
+    state.messageController.setActionTextWithState(
+      state.resultNode,
+      t(state, "detail_section_edit_status_unchanged", "Detail section already matches the current values."),
+      "info"
+    );
+    state.clearActionMessagesOnNextClick = true;
+    return;
+  }
+  state.isSaving = true;
+  syncWorkRouteBusyState(state);
+  renderEditorMessage(state);
+  state.messageController.setActionTextWithState(
+    state.statusNode,
+    t(state, "detail_section_edit_status_saving", "Saving detail section..."),
+    "info"
+  );
+  state.messageController.setActionTextWithState(state.resultNode, "");
+  try {
+    await saveCatalogueWorkDetailSection({
+      work_id: state.currentWorkId,
+      ...(result.payload || {})
+    });
+    state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
+    state.detailBrowserSelectedSectionId = sectionId;
+    updateSummary(state);
+    state.messageController.setActionTextWithState(
+      state.resultNode,
+      t(state, "detail_section_edit_status_saved", "Saved detail section {section_id}.", {
+        section_id: sectionId
+      }),
+      "success"
+    );
+    state.clearActionMessagesOnNextClick = true;
+    state.messageController.setActionTextWithState(state.statusNode, "");
+  } catch (error) {
+    state.messageController.setActionTextWithState(
+      state.statusNode,
+      `${t(state, "detail_section_edit_status_failed", "Detail section save failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isSaving = false;
+    syncWorkRouteBusyState(state);
+    renderEditorMessage(state);
+  }
 }
 
 function buildDetailSectionActivityContext(sectionId) {
@@ -727,6 +786,7 @@ function workSectionOptions(state) {
     draftHasChanges,
     isCurrentWorkPublished: currentWorkIsPublished,
     openDetailSectionPicker: () => openDetailSectionPicker(state),
+    editDetailSection: (row, rows) => editDetailSection(state, row, rows),
     deleteDetailSection: (row) => deleteDetailSection(state, row),
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
     deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
