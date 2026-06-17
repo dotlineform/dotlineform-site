@@ -105,7 +105,7 @@
       "publish_search_output": "site/assets/data/search/moments/index.json",
       "viewer_base_url": "/moments/",
       "include_scope_param": false,
-      "default_doc_id": "moments",
+      "default_doc_id": "",
       "allow_nested_source": false,
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],

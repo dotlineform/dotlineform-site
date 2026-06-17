@@ -159,7 +159,7 @@
       "route_path": "/moments/",
       "route_type": "public",
       "default_scope_id": "moments",
-      "default_doc_id": "moments",
+      "default_doc_id": "",
       "include_scope_param": false,
       "allow_scope_query": false,
       "viewer_base_url": "/moments/",

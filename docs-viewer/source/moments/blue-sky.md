@@ -1,0 +1,30 @@
+---
+doc_id: blue-sky
+title: blue sky
+date: 2012-01-01
+date_display: c. 2012?
+added_date: 2026-02-15
+parent_id: ""
+viewable: true
+---
+
+# blue sky
+
+<p class="momentDate">c. 2012?</p>
+
+<img src="[[media:docs/moments/img/blue-sky-primary-800.webp]]" alt="blue sky" width="800" height="399">
+
+<pre class="moment-text">
+perhaps it is an alchemical truth
+that the sky is always blue
+but most of the time purity is hidden from us
+ 
+and then when we find the blue
+it is only gas molecules scattering the sun
+the atmosphere thins to a layer
+beyond which there is only emptiness
+ 
+which is not really empty
+no matter how far you look or travel
+there is no emptiness to be found
+</pre>

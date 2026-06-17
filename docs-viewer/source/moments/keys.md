@@ -1,0 +1,41 @@
+---
+doc_id: keys
+title: keys
+date: 2019-07-01
+date_display: 1 Jul 2019
+added_date: 2026-02-15
+parent_id: ""
+viewable: true
+---
+
+# keys
+
+<p class="momentDate">1 Jul 2019</p>
+
+<img src="[[media:docs/moments/img/keys-primary-800.webp]]" alt="keys" width="600" height="800">
+
+<pre class="moment-text">
+they say that the loops go on forever
+ 
+in that sense we are caught
+ 
+is it possible to be open?
+ 
+like a key hanging on a chain
+ 
+next to the locked door
+ 
+but the key has rusted beyond repair
+ 
+do our keys also corrode
+ 
+when left alone
+ 
+in damp tunnels where our demons prowl in darkness
+ 
+reach in hold them
+ 
+they will float to the surface
+ 
+cleanse in the sun
+</pre>

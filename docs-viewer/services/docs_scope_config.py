@@ -130,8 +130,6 @@ def validate_generated_output_contract(
 
 def normalize_doc_id(value: Any, *, field: str) -> str:
     text = str(value or "").strip()
-    if not text:
-        raise ValueError(f"docs scope config field {field} is required")
     return text
 
 

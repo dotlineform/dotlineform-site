@@ -387,7 +387,7 @@
       "metadata": {
         "backfilled": false,
         "viewer_base_url": "/moments/",
-        "default_doc_id": "moments",
+        "default_doc_id": "",
         "publishing_mode": "public_readonly",
         "build_inline_search": true,
         "write_generated_outputs": true

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-moments-migration-plan
 title: Docs Viewer Moments Migration Plan
 added_date: 2026-06-17
-last_updated: 2026-06-17
+last_updated: 2026-06-18
 ui_status: draft
 parent_id: docs-viewer-public-scopes
 viewable: true
@@ -46,7 +46,7 @@ viewable: true
 
 <p class="momentDate">14 Jun 2025</p>
 
-![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
+<img src="[[media:docs/moments/img/a-doll-story-primary-800.webp]]" alt="a doll story" width="800" height="800">
 
 <pre class="moment-text">
 doll was created many years before she came into my care
@@ -63,11 +63,17 @@ Use a raw HTML paragraph for the rendered date so it can be styled without intro
 Suggested CSS:
 
 ```css
+.docsViewer[data-route-id="moments"] .docsViewer__content > h1:first-child{
+  margin: 0 0 0.375rem;
+  font-size: var(--docs-viewer-font-heading-2);
+  line-height: 1.25;
+}
+
 .docsViewer[data-route-id="moments"] .momentDate{
-  margin: -0.25rem 0 1.5rem;
+  margin: 0 0 1.5rem;
   color: var(--docs-viewer-muted);
-  font-size: 1.15rem;
-  line-height: 1.35;
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
 }
 ```
 
@@ -80,7 +86,7 @@ Render the optional primary image as a Docs Viewer media token in the migrated M
 The migration should emit the 800px primary variant:
 
 ```md
-![a doll story]([[media:docs/moments/img/a-doll-story-primary-800.webp width=800 height=800]])
+<img src="[[media:docs/moments/img/a-doll-story-primary-800.webp]]" alt="a doll story" width="800" height="800">
 ```
 
 Use the path shape:
@@ -89,11 +95,11 @@ Use the path shape:
 docs/moments/img/<moment_id>-primary-800.webp
 ```
 
-Keep `width` and `height` as token-local attributes rather than front-matter fields. This keeps dimensions attached to the exact image and remains unambiguous if a document later contains multiple images.
+Keep `width` and `height` as local `<img>` attributes rather than front-matter fields. This keeps dimensions attached to the exact image and remains unambiguous if a document later contains multiple images.
 
-The media-token resolver should treat dimensions as optional:
+The migration should treat dimensions as optional:
 
-- if both `width` and `height` are present and valid positive integers, emit them as image attributes;
+- if both `width` and `height` are present and valid positive integers, emit them as `<img>` attributes;
 - if either value is missing or invalid, omit both dimension attributes and render the image as a normal media token.
 
 Do not rebuild moment-specific image rendering JavaScript inside Docs Viewer. The image should be ordinary document content.

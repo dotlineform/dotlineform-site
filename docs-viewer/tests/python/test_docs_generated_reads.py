@@ -15,6 +15,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_generated_reads as generated_reads  # noqa: E402
+from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -136,6 +137,18 @@ def test_generated_data_availability_checks_scope_files() -> None:
         assert generated_reads.generated_search_data_available(repo_root, "studio") is True
         assert generated_reads.generated_scope_data_available(repo_root, "library") is False
         assert generated_reads.generated_search_data_available(repo_root, "library") is False
+
+
+def test_docs_scope_config_default_doc_id_is_optional() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        config = scope_config("moments", "docs-viewer/generated/docs/moments", "docs-viewer/generated/search/moments/index.json")
+        config["default_doc_id"] = ""
+        write_scope_config(repo_root, extra_scopes=[config])
+
+        configs = load_docs_scope_configs(repo_root)
+
+    assert configs["moments"].default_doc_id == ""
 
 
 def test_generated_doc_payload_allows_non_viewable_tree_doc() -> None:

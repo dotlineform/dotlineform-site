@@ -3,11 +3,65 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "moments",
-      "title": "moments",
-      "content_url": "/assets/data/docs/scopes/moments/by-id/moments.json",
-      "added_date": "2026-06-17"
+      "doc_id": "4-stories",
+      "title": "4 stories",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/4-stories.json",
+      "added_date": "2026-04-01"
+    },
+    {
+      "doc_id": "13-moments-in-october",
+      "title": "13 moments in october",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/13-moments-in-october.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-beautiful-route",
+      "title": "a beautiful route",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-beautiful-route.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-dance",
+      "title": "a dance",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-dance.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-doll-story",
+      "title": "a doll story",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-doll-story.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-feeling-of-free-will",
+      "title": "a feeling of free will",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-feeling-of-free-will.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-lemon-tart-poem",
+      "title": "a lemon tart poem",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-lemon-tart-poem.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-light-inside-a-flower",
+      "title": "a light inside a flower",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-light-inside-a-flower.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-poem-about-love",
+      "title": "a poem about love",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-poem-about-love.json",
+      "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-poem-about-purity",
+      "title": "a poem about purity",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-poem-about-purity.json",
+      "added_date": "2026-02-15"
     }
   ],
-  "generated_at": "2026-06-17T21:33:28Z"
+  "generated_at": "2026-06-17T22:38:06Z"
 }

@@ -95,6 +95,7 @@ export function resolveViewerRouteDocId(options) {
   var resolvedDocId = requestedDocId;
   var docsById = settings.docsById;
   var defaultRouteDocId = settings.defaultRouteDocId || "";
+  var viewerScope = settings.viewerScope || "";
   var resolveLoadableDocId = settings.resolveLoadableDocId;
   var defaultDocId = settings.defaultDocId;
 
@@ -107,6 +108,14 @@ export function resolveViewerRouteDocId(options) {
   }
 
   if (requestedDocId && !docsById.has(requestedDocId)) {
+    if (!defaultRouteDocId && viewerScope && requestedDocId === viewerScope && typeof defaultDocId === "function") {
+      resolvedDocId = defaultDocId();
+      return {
+        requestedDocId: requestedDocId,
+        docId: resolvedDocId,
+        corrected: resolvedDocId !== requestedDocId
+      };
+    }
     return {
       requestedDocId: requestedDocId,
       docId: requestedDocId,
@@ -157,6 +166,7 @@ export function applyViewerRoute(options) {
     requestedDocId: typeof settings.currentDocId === "function" ? settings.currentDocId() : "",
     docsById: state ? state.docsById : null,
     defaultRouteDocId: settings.defaultRouteDocId,
+    viewerScope: settings.viewerScope,
     resolveLoadableDocId: settings.resolveLoadableDocId,
     defaultDocId: settings.defaultDocId
   });

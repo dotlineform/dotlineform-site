@@ -7,11 +7,285 @@
   },
   "docs": [
     {
-      "doc_id": "moments",
-      "title": "moments",
-      "content_url": "/assets/data/docs/scopes/moments/by-id/moments.json",
-      "ui_status": "draft"
+      "doc_id": "13-moments-in-october",
+      "title": "13 moments in october",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/13-moments-in-october.json"
+    },
+    {
+      "doc_id": "4-stories",
+      "title": "4 stories",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/4-stories.json"
+    },
+    {
+      "doc_id": "a-beautiful-route",
+      "title": "a beautiful route",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-beautiful-route.json"
+    },
+    {
+      "doc_id": "a-dance",
+      "title": "a dance",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-dance.json"
+    },
+    {
+      "doc_id": "a-doll-story",
+      "title": "a doll story",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-doll-story.json"
+    },
+    {
+      "doc_id": "a-feeling-of-free-will",
+      "title": "a feeling of free will",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-feeling-of-free-will.json"
+    },
+    {
+      "doc_id": "a-lemon-tart-poem",
+      "title": "a lemon tart poem",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-lemon-tart-poem.json"
+    },
+    {
+      "doc_id": "a-light-inside-a-flower",
+      "title": "a light inside a flower",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-light-inside-a-flower.json"
+    },
+    {
+      "doc_id": "a-poem-about-love",
+      "title": "a poem about love",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-poem-about-love.json"
+    },
+    {
+      "doc_id": "a-poem-about-purity",
+      "title": "a poem about purity",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-poem-about-purity.json"
+    },
+    {
+      "doc_id": "a-question",
+      "title": "a question",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-question.json"
+    },
+    {
+      "doc_id": "a-selina",
+      "title": "a selina",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-selina.json"
+    },
+    {
+      "doc_id": "all-the-little-cracks",
+      "title": "all the little cracks",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/all-the-little-cracks.json"
+    },
+    {
+      "doc_id": "angels",
+      "title": "angels",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/angels.json"
+    },
+    {
+      "doc_id": "blue-sky",
+      "title": "blue sky",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/blue-sky.json"
+    },
+    {
+      "doc_id": "boundary-conditions",
+      "title": "boundary conditions",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/boundary-conditions.json"
+    },
+    {
+      "doc_id": "cascading-waterfalls",
+      "title": "cascading waterfalls",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/cascading-waterfalls.json"
+    },
+    {
+      "doc_id": "circle",
+      "title": "circle",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/circle.json"
+    },
+    {
+      "doc_id": "clouds",
+      "title": "clouds",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/clouds.json"
+    },
+    {
+      "doc_id": "compiled",
+      "title": "compiled",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/compiled.json"
+    },
+    {
+      "doc_id": "creatures-who-understand-light",
+      "title": "creatures who understand light",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/creatures-who-understand-light.json"
+    },
+    {
+      "doc_id": "dream-sleep",
+      "title": "dream sleep",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/dream-sleep.json"
+    },
+    {
+      "doc_id": "droplets",
+      "title": "droplets",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/droplets.json"
+    },
+    {
+      "doc_id": "exit-dreams",
+      "title": "exit dreams",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/exit-dreams.json"
+    },
+    {
+      "doc_id": "healing-forms",
+      "title": "healing forms",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/healing-forms.json"
+    },
+    {
+      "doc_id": "hi-honey",
+      "title": "hi honey",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/hi-honey.json"
+    },
+    {
+      "doc_id": "i-felt-my-self-sinking",
+      "title": "i felt my self sinking",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/i-felt-my-self-sinking.json"
+    },
+    {
+      "doc_id": "impenetrable",
+      "title": "impenetrable",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/impenetrable.json"
+    },
+    {
+      "doc_id": "keys",
+      "title": "keys",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/keys.json"
+    },
+    {
+      "doc_id": "leaves",
+      "title": "leaves",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/leaves.json"
+    },
+    {
+      "doc_id": "little-clear-vessel",
+      "title": "little clear vessel",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/little-clear-vessel.json"
+    },
+    {
+      "doc_id": "lotus-pond",
+      "title": "lotus pond",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/lotus-pond.json"
+    },
+    {
+      "doc_id": "memory",
+      "title": "memory",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/memory.json"
+    },
+    {
+      "doc_id": "occasionally",
+      "title": "occasionally",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/occasionally.json"
+    },
+    {
+      "doc_id": "particles",
+      "title": "particles",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/particles.json"
+    },
+    {
+      "doc_id": "peace-of-mind",
+      "title": "peace of mind",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/peace-of-mind.json"
+    },
+    {
+      "doc_id": "perfection-of-flowers",
+      "title": "perfection of flowers",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/perfection-of-flowers.json"
+    },
+    {
+      "doc_id": "rose",
+      "title": "rose",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/rose.json"
+    },
+    {
+      "doc_id": "sadness-love",
+      "title": "sadness love",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/sadness-love.json"
+    },
+    {
+      "doc_id": "samuel-beckett",
+      "title": "Samuel Beckett",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/samuel-beckett.json"
+    },
+    {
+      "doc_id": "sleep",
+      "title": "sleep",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/sleep.json"
+    },
+    {
+      "doc_id": "sleepy-moments",
+      "title": "sleepy moments",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/sleepy-moments.json"
+    },
+    {
+      "doc_id": "snow",
+      "title": "snow",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/snow.json"
+    },
+    {
+      "doc_id": "the-moment-collector",
+      "title": "the moment collector",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/the-moment-collector.json"
+    },
+    {
+      "doc_id": "the-moon-and-the-sun",
+      "title": "the moon and the sun",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/the-moon-and-the-sun.json"
+    },
+    {
+      "doc_id": "the-watch-keeper",
+      "title": "the watch keeper",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/the-watch-keeper.json"
+    },
+    {
+      "doc_id": "timeless",
+      "title": "timeless",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/timeless.json"
+    },
+    {
+      "doc_id": "vessels",
+      "title": "vessels",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/vessels.json"
+    },
+    {
+      "doc_id": "warmth",
+      "title": "warmth",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/warmth.json"
+    },
+    {
+      "doc_id": "we-are-the-vessel",
+      "title": "we are the vessel",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/we-are-the-vessel.json"
+    },
+    {
+      "doc_id": "we-make-ghosts",
+      "title": "we make ghosts",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/we-make-ghosts.json"
+    },
+    {
+      "doc_id": "where",
+      "title": "where",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/where.json"
+    },
+    {
+      "doc_id": "where-words-end",
+      "title": "where words end",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/where-words-end.json"
+    },
+    {
+      "doc_id": "will-we-leave-residues",
+      "title": "will we leave residues",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/will-we-leave-residues.json"
+    },
+    {
+      "doc_id": "winter",
+      "title": "winter",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/winter.json"
+    },
+    {
+      "doc_id": "without-words",
+      "title": "without words",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/without-words.json"
     }
   ],
-  "generated_at": "2026-06-17T21:33:28Z"
+  "generated_at": "2026-06-17T22:38:06Z"
 }

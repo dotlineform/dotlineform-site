@@ -209,6 +209,7 @@ export function initDocsViewerRouteWorkflow(context) {
       requestedDocId: currentDocId(),
       docsById: state.docsById,
       defaultRouteDocId: defaultRouteDocId(),
+      viewerScope: viewerScope(),
       resolveLoadableDocId: context.resolveLoadableDocId,
       defaultDocId: context.defaultDocId
     });
@@ -280,7 +281,8 @@ export function initDocsViewerRouteWorkflow(context) {
       setRecentModeActive: context.setRecentModeActive,
       setStatus: setStatus,
       state: state,
-      syncNonViewableVisibilityForRequestedDoc: context.syncNonViewableVisibilityForRequestedDoc
+      syncNonViewableVisibilityForRequestedDoc: context.syncNonViewableVisibilityForRequestedDoc,
+      viewerScope: viewerScope()
     });
     if (typeof context.updateInfoPanel === "function") {
       context.updateInfoPanel();

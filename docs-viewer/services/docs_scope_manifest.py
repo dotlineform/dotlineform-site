@@ -128,6 +128,8 @@ def git_path_status(repo_root: Path, path: Path) -> str:
 
 
 def default_source_doc_record(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any] | None:
+    if not config.default_doc_id:
+        return None
     candidate = repo_root / config.source / f"{config.default_doc_id}.md"
     if candidate.exists():
         return path_record(repo_root, "default_source_doc", candidate)

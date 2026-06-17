@@ -102,8 +102,8 @@ export function initDocsViewerConfigController(context) {
       throw new Error("Docs Viewer config does not define any scopes.");
     }
     scopes.forEach(function (config) {
-      if (!config.defaultDocId || !config.indexTreeUrl || !config.recentlyAddedUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing default_doc_id, index_tree_url, or recently_added_url.");
+      if (!config.indexTreeUrl || !config.recentlyAddedUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing index_tree_url or recently_added_url.");
       }
     });
     return {

@@ -55,6 +55,19 @@ def assert_missing_doc_history(page: Page) -> None:
                 defaultRouteDocId: 'default-doc',
                 defaultDocId: () => 'known'
             });
+            const resolvedDefaultless = router.resolveViewerRouteDocId({
+                requestedDocId: '',
+                docsById,
+                defaultRouteDocId: '',
+                defaultDocId: () => 'known'
+            });
+            const resolvedStaleScopeDefault = router.resolveViewerRouteDocId({
+                requestedDocId: 'moments',
+                docsById,
+                defaultRouteDocId: '',
+                viewerScope: 'moments',
+                defaultDocId: () => 'known'
+            });
             const historyCalls = [];
             let missingHandled = false;
             await router.loadViewerDoc({
@@ -70,7 +83,7 @@ def assert_missing_doc_history(page: Page) -> None:
                 setHistory: (docId, hash, query, mode) => historyCalls.push({ docId, hash, query, mode }),
                 handleMissingDoc: () => { missingHandled = true; }
             });
-            return { resolved, historyCalls, missingHandled };
+            return { resolved, resolvedDefaultless, resolvedStaleScopeDefault, historyCalls, missingHandled };
         }"""
     )
     if result["resolved"] != {
@@ -84,10 +97,22 @@ def assert_missing_doc_history(page: Page) -> None:
         raise AssertionError(f"missing doc history changed: {result!r}")
     if result["missingHandled"] is not True:
         raise AssertionError(f"missing doc handler was not called: {result!r}")
+    if result["resolvedDefaultless"] != {
+        "requestedDocId": "",
+        "docId": "known",
+        "corrected": True,
+    }:
+        raise AssertionError(f"defaultless route fallback changed: {result!r}")
+    if result["resolvedStaleScopeDefault"] != {
+        "requestedDocId": "moments",
+        "docId": "known",
+        "corrected": True,
+    }:
+        raise AssertionError(f"stale scope default fallback changed: {result!r}")
 
 
 def run_smoke(page: Page, base_url: str) -> None:
-    page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
+    page.goto(route_url(base_url, "/404.html"), wait_until="domcontentloaded")
     install_fixture(page)
     assert_missing_doc_history(page)
 
