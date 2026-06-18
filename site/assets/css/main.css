@@ -57,8 +57,7 @@
   --space-6: 28px;
   --space-7: 60px;
 
-  --moment-measure: 72ch; /* adjust: 60ch–80ch typical */
-  --content-measure: var(--moment-measure); /* shared prose/media measure for new layouts */
+  --content-measure: 72ch;
 
   /* Navigation spacing tokens */
   --nav-gap-grid: 4px;
@@ -1097,8 +1096,7 @@ body:not(.studio-local-app) .site-header .container{
 .seriesIndex__toolbarPrimary,
 .seriesIndex__toolbarSecondary,
 .seriesIndex__viewControls,
-.seriesIndex__sortControls,
-.seriesIndex__modeControls{
+.seriesIndex__sortControls{
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
@@ -1135,21 +1133,18 @@ body:not(.studio-local-app) .site-header .container{
 }
 
 .seriesIndex__viewBtn[aria-pressed="true"],
-.seriesIndex__sortBtn[aria-pressed="true"],
-.seriesIndex__modeBtn[aria-pressed="true"]{
+.seriesIndex__sortBtn[aria-pressed="true"]{
   background: var(--panel-2);
   border-color: var(--border-strong);
 }
 
 .seriesIndex__viewBtn:focus-visible,
-.seriesIndex__sortBtn:focus-visible,
-.seriesIndex__modeBtn:focus-visible{
+.seriesIndex__sortBtn:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
 }
 
 .seriesIndex__sortBtn.theme-toggle,
-.seriesIndex__modeBtn.theme-toggle,
 .seriesIndex__recentBtn.theme-toggle,
 .seriesIndex__searchBtn.theme-toggle{
   margin-left: 0;
@@ -1162,11 +1157,6 @@ body:not(.studio-local-app) .site-header .container{
 }
 
 .seriesIndex__sortText{
-  display: inline-block;
-  line-height: 1;
-}
-
-.seriesIndex__modeText{
   display: inline-block;
   line-height: 1;
 }
@@ -1236,8 +1226,7 @@ body:not(.studio-local-app) .site-header .container{
     order: 3;
   }
 
-  .seriesIndex__sortBtn.theme-toggle,
-  .seriesIndex__modeBtn.theme-toggle{
+  .seriesIndex__sortBtn.theme-toggle{
     padding: 0 0.44rem;
   }
 
@@ -1345,7 +1334,6 @@ figure.diagram figcaption{
 
 /* Section-specific index column layouts */
 .works .index__item{ grid-template-columns: 6ch 1fr; }      /* work_id, title */
-.moments .index__item{ grid-template-columns: 12ch 1fr; }   /* date, title */
 
 /* Single-column index rows (no date/prefix column) */
 .index__item--single{
@@ -1353,14 +1341,6 @@ figure.diagram figcaption{
 }
 /* work_id column (used by works indexes) */
 .index__work_id{
-  font-size: var(--font-caption);
-  color: var(--list-caption-color);
-  white-space: nowrap;
-  text-align: left;
-}
-
-/* date/prefix column (used by moments indexes) */
-.index__date{
   font-size: var(--font-caption);
   color: var(--list-caption-color);
   white-space: nowrap;
@@ -1668,10 +1648,6 @@ figure.diagram figcaption{
   outline-offset: 2px;
 }
 
-.moment__nav{
-  margin-top: calc(var(--space-6) + var(--space-2));
-}
-
 /* Supplements: links should read like prose by default */
 .supplements a:link,
 .supplements a:visited{
@@ -1697,22 +1673,9 @@ pre.theme-text{
   margin: 0 0 var(--space-4);
 }
 
-/* Constrain the moment title to the same measure */
-.moment-header{
-  max-width: var(--moment-measure);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* override global h1 */
-.moment-header h1{
-  font-size: var(--font-heading-2);
-  margin-bottom: 6px;
-}
-
 @media (max-width: 640px){
   .index__item { grid-template-columns: 1fr; }
-  .index__work_id, .index__date { text-align: left; }
+  .index__work_id { text-align: left; }
   .about-link-item{ grid-template-columns: 1fr; }
   .about-link-prefix{ justify-self: start; text-align: left; }
 }
@@ -1888,7 +1851,7 @@ pre.theme-text{
 
 /* Base components (shared across sections):
 Use “structure-first” naming and scope section-specific differences via the root page class
-(e.g. .work, .moment).
+(e.g. .work).
 */
 
 .page{
@@ -2195,7 +2158,6 @@ note: works tags are not currently in use on the work pages themselves.
 }
 
 .index__work_id,
-.index__date,
 .worksList__headLabel,
 .worksList__sortBtn,
 .worksList__cat,

@@ -11,14 +11,12 @@
     "base": "https://media.dotlineform.com",
     "image_works": "/works/img",
     "files_works": "/works/files",
-    "image_work_details": "/work_details/img",
-    "image_moments": "/moments/img"
+    "image_work_details": "/work_details/img"
   },
   "thumbs": {
     "base": "",
     "works": "/assets/works/img",
-    "work_details": "/assets/work_details/img",
-    "moments": "/assets/moments/img"
+    "work_details": "/assets/work_details/img"
   },
   "home_media": {
     "base": "https://media.dotlineform.com",
@@ -63,7 +61,6 @@
       "assets/js/catalogue/navigation/keyboard-navigation.js",
       "assets/js/catalogue/navigation/swipe-navigation.js",
       "assets/js/catalogue/navigation/work-series-navigation.js",
-      "assets/js/catalogue/routes/moment-page.js",
       "assets/js/catalogue/routes/recent-index.js",
       "assets/js/catalogue/routes/series-index.js",
       "assets/js/catalogue/routes/work-detail-page.js",
@@ -82,7 +79,6 @@
       "assets/series/index/105.json",
       "assets/works/index/00008.json",
       "assets/work_details/img/00001-001-thumb-96.webp",
-      "assets/moments/index/compiled.json",
       "assets/docs/interactive/library/coincidence-salience-demo.html",
       "assets/data/docs/scopes/library/index-tree.json",
       "assets/data/docs/scopes/library/by-id/library.json",
@@ -101,7 +97,6 @@
     "required_directories": [
       "assets/data/docs/scopes/analysis/by-id",
       "assets/data/docs/scopes/library/by-id",
-      "assets/moments/img",
       "assets/series/index",
       "assets/work_details/img",
       "assets/works/img",

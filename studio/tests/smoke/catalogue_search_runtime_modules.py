@@ -76,8 +76,7 @@ def assert_catalogue_search_runtime(page: Page) -> None:
                 load_more: 'more',
                 result_meta_separator: ' / ',
                 result_kind_work: 'work',
-                result_kind_series: 'series',
-                result_kind_moment: 'moment'
+                result_kind_series: 'series'
             };
             const text = (key, fallback, tokens) => {
                 const template = messages[key] || fallback;

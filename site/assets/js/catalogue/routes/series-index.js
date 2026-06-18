@@ -1,8 +1,6 @@
 import { createThumbnailGridList } from '../components/thumbnail-grid-list.js';
 import {
   catalogueIndexUrl,
-  momentUrl,
-  momentsIndexUrl,
   parseRouteState,
   seriesIndexUrl,
   trimBaseurl,
@@ -15,7 +13,6 @@ import { lowerText, normalizePositiveSizes, text } from '../shared/text.js';
 import { thumbnailImageData } from '../shared/thumbnails.js';
 
 var PAGE_SIZE = 80;
-var MODE_STORAGE_KEY = 'dlf.catalogIndex.mode';
 
 var DEFAULT_SORT = {
   key: 'year',
@@ -26,22 +23,12 @@ var DEFAULT_SORT = {
 };
 
 var STORAGE_KEYS = {
-  works: {
-    view: 'dlf.catalogIndex.works.view',
-    sort: 'dlf.catalogIndex.works.sort',
-    page: 'dlf.catalogIndex.works.page',
-    legacyView: 'dlf.seriesIndex.view',
-    legacySort: 'dlf.seriesIndex.sort',
-    legacyPage: 'dlf.seriesIndex.page'
-  },
-  moments: {
-    view: 'dlf.catalogIndex.moments.view',
-    sort: 'dlf.catalogIndex.moments.sort',
-    page: 'dlf.catalogIndex.moments.page',
-    legacyView: 'dlf.momentsIndex.view',
-    legacySort: 'dlf.momentsIndex.sort',
-    legacyPage: ''
-  }
+  view: 'dlf.catalogIndex.works.view',
+  sort: 'dlf.catalogIndex.works.sort',
+  page: 'dlf.catalogIndex.works.page',
+  legacyView: 'dlf.seriesIndex.view',
+  legacySort: 'dlf.seriesIndex.sort',
+  legacyPage: 'dlf.seriesIndex.page'
 };
 
 var UI_TEXT_DEFAULTS = {
@@ -51,15 +38,8 @@ var UI_TEXT_DEFAULTS = {
   sort_direction_desc: '↓',
   pager_prev_label: 'Previous page',
   pager_next_label: 'Next page',
-  mode_works_label: 'works',
-  mode_moments_label: 'moments',
-  empty_works: 'no works yet',
-  empty_moments: 'no moments yet'
+  empty_works: 'no works yet'
 };
-
-function normalizeMode(value) {
-  return lowerText(value) === 'moments' ? 'moments' : 'works';
-}
 
 function normalizeView(value) {
   return lowerText(value) === 'list' ? 'list' : 'grid';
@@ -92,27 +72,16 @@ function sanitizeSortState(raw) {
   };
 }
 
-function readStoredMode() {
-  return normalizeMode(readStoredItem(MODE_STORAGE_KEY, ''));
+function readStoredView() {
+  return normalizeView(readStoredItem(STORAGE_KEYS.view, STORAGE_KEYS.legacyView));
 }
 
-function persistMode(mode) {
-  writeStoredItem(MODE_STORAGE_KEY, normalizeMode(mode));
+function persistView(view) {
+  writeStoredItem(STORAGE_KEYS.view, normalizeView(view));
 }
 
-function readStoredView(mode) {
-  var keys = STORAGE_KEYS[normalizeMode(mode)];
-  return normalizeView(readStoredItem(keys.view, keys.legacyView));
-}
-
-function persistView(mode, view) {
-  var keys = STORAGE_KEYS[normalizeMode(mode)];
-  writeStoredItem(keys.view, normalizeView(view));
-}
-
-function readStoredSort(mode) {
-  var keys = STORAGE_KEYS[normalizeMode(mode)];
-  var raw = readStoredItem(keys.sort, keys.legacySort);
+function readStoredSort() {
+  var raw = readStoredItem(STORAGE_KEYS.sort, STORAGE_KEYS.legacySort);
   if (raw == null) return sanitizeSortState(DEFAULT_SORT);
   try {
     return sanitizeSortState(JSON.parse(raw));
@@ -121,19 +90,16 @@ function readStoredSort(mode) {
   }
 }
 
-function persistSort(mode, sortState) {
-  var keys = STORAGE_KEYS[normalizeMode(mode)];
-  writeStoredItem(keys.sort, JSON.stringify(sanitizeSortState(sortState)));
+function persistSort(sortState) {
+  writeStoredItem(STORAGE_KEYS.sort, JSON.stringify(sanitizeSortState(sortState)));
 }
 
-function readStoredPage(mode) {
-  var keys = STORAGE_KEYS[normalizeMode(mode)];
-  return normalizePage(readStoredItem(keys.page, keys.legacyPage));
+function readStoredPage() {
+  return normalizePage(readStoredItem(STORAGE_KEYS.page, STORAGE_KEYS.legacyPage));
 }
 
-function persistPage(mode, page) {
-  var keys = STORAGE_KEYS[normalizeMode(mode)];
-  writeStoredItem(keys.page, String(normalizePage(page)));
+function persistPage(page) {
+  writeStoredItem(STORAGE_KEYS.page, String(normalizePage(page)));
 }
 
 function copyUiText(source) {
@@ -144,10 +110,7 @@ function copyUiText(source) {
     sort_direction_desc: text((source && source.sort_direction_desc) || UI_TEXT_DEFAULTS.sort_direction_desc),
     pager_prev_label: text((source && source.pager_prev_label) || UI_TEXT_DEFAULTS.pager_prev_label),
     pager_next_label: text((source && source.pager_next_label) || UI_TEXT_DEFAULTS.pager_next_label),
-    mode_works_label: text((source && source.mode_works_label) || UI_TEXT_DEFAULTS.mode_works_label),
-    mode_moments_label: text((source && source.mode_moments_label) || UI_TEXT_DEFAULTS.mode_moments_label),
-    empty_works: text((source && source.empty_works) || UI_TEXT_DEFAULTS.empty_works),
-    empty_moments: text((source && source.empty_moments) || UI_TEXT_DEFAULTS.empty_moments)
+    empty_works: text((source && source.empty_works) || UI_TEXT_DEFAULTS.empty_works)
   };
 }
 
@@ -245,20 +208,15 @@ function loadThumbSizes(root) {
 
 function createThumbProjector(root) {
   var thumbWorksBase = text(root.getAttribute('data-thumb-works-base'));
-  var thumbMomentsBase = text(root.getAttribute('data-thumb-moments-base'));
   var thumbSizes = loadThumbSizes(root);
   var primaryThumbSize = thumbSizes[0];
   var thumbSrcsetSizes = thumbSizes.slice(0, 2);
   var thumbSuffix = text(root.getAttribute('data-thumb-suffix')) || 'thumb';
   var assetFormat = text(root.getAttribute('data-asset-format')) || 'webp';
 
-  function thumbBaseFor(item) {
-    return item && item.kind === 'moments' ? thumbMomentsBase : thumbWorksBase;
-  }
-
   return function itemThumbnail(item) {
     return thumbnailImageData({
-      base: thumbBaseFor(item),
+      base: thumbWorksBase,
       id: item && item.thumb_id,
       suffix: thumbSuffix,
       size: primaryThumbSize,
@@ -277,56 +235,25 @@ function initSeriesIndexRoute() {
   var pagerStatus = document.getElementById('seriesIndexPagerStatus');
   var prevBtn = document.getElementById('seriesIndexPrev');
   var nextBtn = document.getElementById('seriesIndexNext');
-  var recentBtn = document.getElementById('seriesIndexRecentBtn');
   var empty = document.getElementById('seriesIndexEmpty');
-  if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !recentBtn || !empty) return;
+  if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !empty) return;
 
   var viewButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-view-btn"]'));
   var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-sort-btn"]'));
-  var modeButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-mode-btn"]'));
-  if (!viewButtons.length || !sortButtons.length || !modeButtons.length) return;
+  if (!viewButtons.length || !sortButtons.length) return;
 
   var baseurl = trimBaseurl(root.getAttribute('data-baseurl'));
   var routeState = parseRouteState(window.location);
   var selectedSeriesId = lowerText(routeState.series);
-  var currentMode = selectedSeriesId ? 'works' : (routeState.mode === 'moments' ? 'moments' : readStoredMode());
-  var modeState = {
-    works: {
-      view: readStoredView('works'),
-      sort: readStoredSort('works'),
-      page: readStoredPage('works')
-    },
-    moments: {
-      view: readStoredView('moments'),
-      sort: readStoredSort('moments'),
-      page: readStoredPage('moments')
-    }
+  var state = {
+    view: readStoredView(),
+    sort: readStoredSort(),
+    page: readStoredPage()
   };
   var uiText = copyUiText(UI_TEXT_DEFAULTS);
-  var catalogueItems = {
-    works: [],
-    moments: []
-  };
+  var catalogueItems = [];
   var getSortedItems = createCatalogueSorter();
   var itemThumbnail = createThumbProjector(root);
-
-  function currentItems() {
-    return Array.isArray(catalogueItems[currentMode]) ? catalogueItems[currentMode] : [];
-  }
-
-  function currentState() {
-    return modeState[currentMode];
-  }
-
-  function projectThumbnailItem(item) {
-    return {
-      id: text(item && item.id),
-      title: text((item && item.title) || (item && item.id)),
-      caption: yearDisplayText(item),
-      href: text(item && item.href),
-      thumbnail: itemThumbnail(item)
-    };
-  }
 
   var thumbnailGridList = createThumbnailGridList({
     listElement: list,
@@ -341,46 +268,16 @@ function initSeriesIndexRoute() {
       next: uiText.pager_next_label
     },
     onPageChange: function (page) {
-      currentState().page = normalizePage(page);
-      persistPage(currentMode, currentState().page);
+      state.page = normalizePage(page);
+      persistPage(state.page);
     }
   });
 
-  function updateModeUi() {
-    modeButtons.forEach(function (button) {
-      var mode = normalizeMode(button.getAttribute('data-mode'));
-      var label = mode === 'moments' ? uiText.mode_moments_label : uiText.mode_works_label;
-      var active = mode === currentMode;
-      var hasItems = Array.isArray(catalogueItems[mode]) && catalogueItems[mode].length > 0;
-      var labelEl = button.querySelector('.seriesIndex__modeText');
-
-      button.setAttribute('aria-pressed', active ? 'true' : 'false');
-      button.setAttribute('aria-label', 'Show ' + label);
-      button.disabled = !hasItems;
-      if (labelEl) labelEl.textContent = label;
-    });
-    syncRecentButtonState();
-  }
-
-  function syncRecentButtonState() {
-    var enabledHref = text(recentBtn.getAttribute('data-enabled-href'));
-    var disabled = currentMode === 'moments' || !!selectedSeriesId;
-    recentBtn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    if (disabled) {
-      recentBtn.removeAttribute('href');
-      recentBtn.setAttribute('tabindex', '-1');
-    } else {
-      if (enabledHref) recentBtn.setAttribute('href', enabledHref);
-      recentBtn.removeAttribute('tabindex');
-    }
-  }
-
   function updateSortUi() {
-    var sortState = currentState().sort;
     sortButtons.forEach(function (button) {
       var key = normalizeSortKey(button.getAttribute('data-sort-key'));
-      var direction = sortState.directions[key];
-      var isActive = key === sortState.key;
+      var direction = state.sort.directions[key];
+      var isActive = key === state.sort.key;
       var labelEl = button.querySelector('.seriesIndex__sortText');
       var arrowEl = button.querySelector('.seriesIndex__sortArrow');
       var buttonLabel = key === 'title' ? uiText.sort_title_label : uiText.sort_year_label;
@@ -397,10 +294,8 @@ function initSeriesIndexRoute() {
   }
 
   function updateViewUi() {
-    var state = currentState();
-    var hasItems = currentItems().length > 0;
-    empty.textContent = currentMode === 'moments' ? uiText.empty_moments : uiText.empty_works;
-    empty.hidden = hasItems;
+    empty.textContent = uiText.empty_works;
+    empty.hidden = catalogueItems.length > 0;
     viewButtons.forEach(function (button) {
       var buttonView = normalizeView(button.getAttribute('data-view'));
       var active = buttonView === state.view;
@@ -408,10 +303,18 @@ function initSeriesIndexRoute() {
     });
   }
 
+  function projectThumbnailItem(item) {
+    return {
+      id: text(item && item.id),
+      title: text((item && item.title) || (item && item.id)),
+      caption: yearDisplayText(item),
+      href: text(item && item.href),
+      thumbnail: itemThumbnail(item)
+    };
+  }
+
   function renderCurrentView() {
-    var items = currentItems();
-    var state = currentState();
-    var sortedItems = getSortedItems(items, state.sort);
+    var sortedItems = getSortedItems(catalogueItems, state.sort);
     var projectedItems = sortedItems.map(projectThumbnailItem);
     var result = thumbnailGridList.render({
       items: projectedItems,
@@ -419,7 +322,7 @@ function initSeriesIndexRoute() {
       page: state.page
     });
     state.page = normalizePage(result.page);
-    persistPage(currentMode, state.page);
+    persistPage(state.page);
     updateViewUi();
   }
 
@@ -467,51 +370,12 @@ function initSeriesIndexRoute() {
     };
   }
 
-  function mergeMomentIndexItem(item, indexMap) {
-    var momentId = text((item && item.moment_id) || (item && item.id));
-    var row = indexMap && momentId ? indexMap[momentId] : null;
-    return {
-      moment_id: momentId,
-      title: text((row && row.title) || (item && item.title) || momentId),
-      date: text(row && row.date),
-      date_display: text(row && row.date_display),
-      thumb_id: text(row && row.thumb_id)
-    };
-  }
-
-  function buildMomentItem(momentItem) {
-    var momentId = text(momentItem && momentItem.moment_id);
-    if (!momentId) return null;
-    var yearDisplay = text(momentItem && momentItem.date_display);
-    if (!yearDisplay) {
-      var fallbackYear = parseYearNumber(momentItem && momentItem.date, momentItem && momentItem.date_display);
-      yearDisplay = Number.isFinite(fallbackYear) ? String(fallbackYear) : '';
-    }
-    return {
-      kind: 'moments',
-      id: momentId,
-      title: text((momentItem && momentItem.title) || momentId),
-      href: momentUrl(momentId, baseurl),
-      year_display: yearDisplay,
-      year_sort: parseYearNumber(momentItem && momentItem.date, momentItem && momentItem.date_display),
-      thumb_id: text(momentItem && momentItem.thumb_id)
-    };
-  }
-
-  function loadMomentsIndexMap() {
-    return fetchJson(momentsIndexUrl(baseurl))
-      .then(function (payload) {
-        var moments = payload && payload.moments && typeof payload.moments === 'object' ? payload.moments : null;
-        return moments || {};
-      });
-  }
-
   viewButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       var nextView = normalizeView(button.getAttribute('data-view'));
-      if (nextView === currentState().view) return;
-      currentState().view = nextView;
-      persistView(currentMode, nextView);
+      if (nextView === state.view) return;
+      state.view = nextView;
+      persistView(nextView);
       renderCurrentView();
     });
   });
@@ -519,32 +383,13 @@ function initSeriesIndexRoute() {
   sortButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       var nextKey = normalizeSortKey(button.getAttribute('data-sort-key'));
-      if (currentState().sort.key === nextKey) {
-        currentState().sort.directions[nextKey] = currentState().sort.directions[nextKey] === 'desc' ? 'asc' : 'desc';
+      if (state.sort.key === nextKey) {
+        state.sort.directions[nextKey] = state.sort.directions[nextKey] === 'desc' ? 'asc' : 'desc';
       } else {
-        currentState().sort.key = nextKey;
+        state.sort.key = nextKey;
       }
-      currentState().sort = sanitizeSortState(currentState().sort);
-      persistSort(currentMode, currentState().sort);
-      updateSortUi();
-      renderCurrentView();
-    });
-  });
-
-  modeButtons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      var nextMode = normalizeMode(button.getAttribute('data-mode'));
-      if (selectedSeriesId) {
-        window.location.href = catalogueIndexUrl(baseurl, nextMode === 'moments' ? { mode: 'moments' } : {});
-        return;
-      }
-      if (nextMode === currentMode || !catalogueItems[nextMode].length) return;
-      currentMode = nextMode;
-      persistMode(currentMode);
-      if (window.history && window.history.replaceState) {
-        window.history.replaceState({}, '', catalogueIndexUrl(baseurl, { mode: currentMode }));
-      }
-      updateModeUi();
+      state.sort = sanitizeSortState(state.sort);
+      persistSort(state.sort);
       updateSortUi();
       renderCurrentView();
     });
@@ -552,13 +397,11 @@ function initSeriesIndexRoute() {
 
   Promise.all([
     fetchJson(seriesIndexUrl(baseurl)),
-    loadMomentsIndexMap(),
     selectedSeriesId ? fetchJson(worksIndexUrl(baseurl)).catch(function () { return {}; }) : Promise.resolve({})
   ])
     .then(function (results) {
       var seriesPayload = results[0];
-      var momentsIndexMap = results[1];
-      var worksPayload = results[2];
+      var worksPayload = results[1];
       var seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === 'object'
         ? seriesPayload.series
         : {};
@@ -572,32 +415,23 @@ function initSeriesIndexRoute() {
           ? seriesMap[selectedSeriesId]
           : null;
         var selectedWorkIds = Array.isArray(selectedSeries && selectedSeries.works) ? selectedSeries.works : [];
-        catalogueItems.works = selectedWorkIds.map(function (workId) {
+        catalogueItems = selectedWorkIds.map(function (workId) {
           return buildWorkItem(workId, worksMap, selectedSeries);
         }).filter(Boolean);
       } else {
-        catalogueItems.works = Object.keys(seriesMap).map(function (sid) {
+        catalogueItems = Object.keys(seriesMap).map(function (sid) {
           return buildSeriesItem(seriesMap[sid]);
         }).filter(Boolean);
       }
-      catalogueItems.moments = Object.keys(momentsIndexMap).map(function (momentId) {
-        return buildMomentItem(mergeMomentIndexItem({ moment_id: momentId }, momentsIndexMap));
-      }).filter(Boolean);
 
-      if (!catalogueItems.works.length && !catalogueItems.moments.length) {
+      if (!catalogueItems.length) {
         empty.textContent = uiText.empty_works;
         empty.hidden = false;
         root.hidden = true;
         return;
       }
 
-      if (!catalogueItems[currentMode].length) {
-        currentMode = catalogueItems.works.length ? 'works' : 'moments';
-        persistMode(currentMode);
-      }
-
       root.hidden = false;
-      updateModeUi();
       updateSortUi();
       renderCurrentView();
     })

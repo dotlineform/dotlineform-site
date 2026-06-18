@@ -132,24 +132,6 @@
   outline-offset: 2px;
 }
 
-.moment .moment-hero{
-  max-width: var(--moment-measure);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.moment .moment-hero img{
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-}
-
-.moment .page__mediaImg{
-  aspect-ratio: auto;
-  object-fit: initial;
-}
-
 .catalogueMetadata__rows{
   font-size: var(--font-small);
   line-height: var(--line-snug);
@@ -196,35 +178,10 @@
   margin-top: var(--space-6);
 }
 
-.catalogueProse--moment{
-  max-width: var(--moment-measure);
-}
-
-.catalogueProse--moment p{
-  margin: 0;
-}
-
-.catalogueProse--moment p + p{
-  margin-top: 1em;
-}
-
-.catalogueProse--moment figure{
-  margin: 0;
-}
-
 .catalogueProse a:link,
 .catalogueProse a:visited{
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-.catalogueProse pre.moment-text{
-  font-family: inherit;
-  white-space: pre-wrap;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  margin: 0 0 var(--space-4);
 }
 
 .catalogueGridList__pager{

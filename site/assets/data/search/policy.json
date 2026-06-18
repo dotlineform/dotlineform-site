@@ -17,8 +17,8 @@
       "scope_label": "catalogue",
       "back_label": "← works",
       "back_route_key": "series_page_base",
-      "input_aria_label": "Search works, series, and moments",
-      "input_placeholder": "search works, series, moments",
+      "input_aria_label": "Search works and series",
+      "input_placeholder": "search works, series",
       "index": "/assets/data/search/catalogue/index.json",
       "back_href": "/series/"
     }
@@ -37,7 +37,6 @@
     "result_meta_separator": " • ",
     "result_kind_work": "work",
     "result_kind_series": "series",
-    "result_kind_moment": "moment",
     "performance_summary": "Search performance"
   }
 }

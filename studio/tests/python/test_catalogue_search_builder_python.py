@@ -43,7 +43,7 @@ def search_build_config() -> dict[str, Any]:
         "search_build_config_version": "search_build_config_v2",
         "source_families": {
             "catalogue_indexes": {
-                "description": "Generated catalogue aggregate indexes for series, works, and moments.",
+                "description": "Generated catalogue aggregate indexes for series and works.",
                 "scopes": ["catalogue"],
                 **family_policy,
                 "id_field": "id",
@@ -67,7 +67,6 @@ def search_build_config() -> dict[str, Any]:
                     "id": {"source_families": ["catalogue_indexes"]},
                     "title": {"source_families": ["catalogue_indexes"]},
                     "year": {"source_families": ["catalogue_indexes"]},
-                    "date": {"source_families": ["catalogue_indexes"]},
                     "display_meta": {"source_families": ["catalogue_indexes"]},
                     "series_ids": {"source_families": ["catalogue_indexes"]},
                     "series_titles": {"source_families": ["catalogue_indexes"]},
@@ -101,41 +100,29 @@ def series_index_payload() -> dict[str, Any]:
     }
 
 
-def works_index_payload() -> dict[str, Any]:
-    return {
-        "works": {
-            "00001": {
-                "title": "Blue Field",
-                "year": 2025,
-                "year_display": "2025",
-                "series_ids": ["009"],
-            }
-        }
-    }
-
-
-def moments_index_payload(*, extra_moment: bool = False, first_title: str = "4 stories") -> dict[str, Any]:
-    moments = {
-        "4-stories": {
+def works_index_payload(*, extra_work: bool = False, first_title: str = "Blue Field") -> dict[str, Any]:
+    works = {
+        "00001": {
             "title": first_title,
-            "date": "2020-01-01",
-            "date_display": "c. 2020?",
+            "year": 2025,
+            "year_display": "2025",
+            "series_ids": ["009"],
         }
     }
-    if extra_moment:
-        moments["blue-sky"] = {
+    if extra_work:
+        works["00002"] = {
             "title": "Blue Sky",
-            "date": "2026-06-01",
-            "date_display": "2026",
+            "year": 2026,
+            "year_display": "2026",
+            "series_ids": ["009"],
         }
-    return {"moments": moments}
+    return {"works": works}
 
 
-def prepare_repo(root: Path, *, extra_moment: bool = False, first_moment_title: str = "4 stories") -> None:
+def prepare_repo(root: Path, *, extra_work: bool = False, first_work_title: str = "Blue Field") -> None:
     write_json(root / "studio/services/catalogue/search/build_config.json", search_build_config())
     write_json(root / "site/assets/data/series_index.json", series_index_payload())
-    write_json(root / "site/assets/data/works_index.json", works_index_payload())
-    write_json(root / "site/assets/data/moments_index.json", moments_index_payload(extra_moment=extra_moment, first_title=first_moment_title))
+    write_json(root / "site/assets/data/works_index.json", works_index_payload(extra_work=extra_work, first_title=first_work_title))
     write_json(
         root / "site/assets/works/index/00001.json",
         {
@@ -145,6 +132,16 @@ def prepare_repo(root: Path, *, extra_moment: bool = False, first_moment_title: 
             }
         },
     )
+    if extra_work:
+        write_json(
+            root / "site/assets/works/index/00002.json",
+            {
+                "work": {
+                    "medium_type": "painting",
+                    "medium_caption": "Ink on panel",
+                }
+            },
+        )
 
 
 def run_cli(root: Path, args: list[str]) -> tuple[int, str, str]:
@@ -171,20 +168,19 @@ def test_python_catalogue_search_builder_writes_current_schema_and_hash() -> Non
 
     assert exit_code == 0
     assert stderr == ""
-    assert "Wrote site/assets/data/search/catalogue/index.json with 3 catalogue search entries" in stdout
+    assert "Wrote site/assets/data/search/catalogue/index.json with 2 catalogue search entries" in stdout
     header = payload["header"]
     entries = payload["entries"]
     assert header["schema"] == "search_index_v1"
     assert header["version"].startswith("blake2b-")
-    assert header["count"] == 3
+    assert header["count"] == 2
     assert [(entry["kind"], entry["id"]) for entry in entries] == [
-        ("moment", "4-stories"),
         ("series", "009"),
         ("work", "00001"),
     ]
-    series = entries[1]
+    series = entries[0]
     assert "href" not in series
-    work = entries[2]
+    work = entries[1]
     assert "href" not in work
     assert work["series_ids"] == ["009"]
     assert work["series_titles"] == ["Field Notes"]
@@ -219,7 +215,7 @@ def test_python_catalogue_search_builder_dry_run_does_not_write() -> None:
 
         assert exit_code == 0
         assert stderr == ""
-        assert "Dry run: 3 catalogue search entries" in stdout
+        assert "Dry run: 2 catalogue search entries" in stdout
         assert "Would write: site/assets/data/search/catalogue/index.json" in stdout
         assert not (root / "site/assets/data/search/catalogue/index.json").exists()
 
@@ -239,7 +235,7 @@ def test_python_catalogue_search_builder_skips_unchanged_second_write_and_force_
     assert "Search index JSON done. Wrote: 0. Skipped: 1." in second_stdout
     assert force_exit == 0
     assert force_stderr == ""
-    assert "Wrote site/assets/data/search/catalogue/index.json with 3 catalogue search entries" in force_stdout
+    assert "Wrote site/assets/data/search/catalogue/index.json with 2 catalogue search entries" in force_stdout
     assert force_payload["header"]["version"] == first_payload["header"]["version"]
 
 
@@ -248,19 +244,18 @@ def test_python_catalogue_search_builder_targeted_additive_insert() -> None:
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "catalogue", "--write"])
-        prepare_repo(root, extra_moment=True)
+        prepare_repo(root, extra_work=True)
 
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "catalogue", "--write", "--only-records", "moment:blue-sky"])
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "catalogue", "--write", "--only-records", "work:00002"])
         payload = read_json(root / "site/assets/data/search/catalogue/index.json")
 
     assert exit_code == 0
     assert stderr == ""
     assert "Targeted search index JSON done. Wrote: 1. Skipped: 0. Changed: 1. Removed: 0. Unchanged: 0. Full fallback: 0." in stdout
     assert [(entry["kind"], entry["id"]) for entry in payload["entries"]] == [
-        ("moment", "4-stories"),
-        ("moment", "blue-sky"),
         ("series", "009"),
         ("work", "00001"),
+        ("work", "00002"),
     ]
 
 
@@ -269,17 +264,17 @@ def test_python_catalogue_search_builder_targeted_changed_record_requires_full_r
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "catalogue", "--write"])
-        prepare_repo(root, first_moment_title="4 stories changed")
+        prepare_repo(root, first_work_title="Blue Field changed")
 
         try:
-            run_cli(root, ["--scope", "catalogue", "--write", "--only-records", "moment:4-stories"])
+            run_cli(root, ["--scope", "catalogue", "--write", "--only-records", "work:00001"])
         except SystemExit as exc:
             error = str(exc)
         else:
             raise AssertionError("targeted changed catalogue record should fail")
 
     assert "Targeted catalogue search is additive-only" in error
-    assert "moment:4-stories" in error
+    assert "work:00001" in error
 
 
 def test_python_catalogue_search_builder_rejects_docs_only_flags() -> None:

@@ -23,7 +23,6 @@
       "repo_paths": [
         "site/assets/data/works_index.json",
         "site/assets/data/series_index.json",
-        "site/assets/data/moments_index.json",
         "site/assets/data/recent_index.json"
       ],
       "public_output": {
@@ -31,7 +30,6 @@
         "paths": [
           "assets/data/works_index.json",
           "assets/data/series_index.json",
-          "assets/data/moments_index.json",
           "assets/data/recent_index.json"
         ]
       },
@@ -42,15 +40,13 @@
       "classification": "public_projection",
       "repo_paths": [
         "site/assets/works/index/*.json",
-        "site/assets/series/index/*.json",
-        "site/assets/moments/index/*.json"
+        "site/assets/series/index/*.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
           "assets/works/index/*.json",
-          "assets/series/index/*.json",
-          "assets/moments/index/*.json"
+          "assets/series/index/*.json"
         ]
       },
       "owner_doc": "data-models-catalogue-indexes"
@@ -321,7 +317,6 @@
       "repo_paths": [
         "site/assets/works/img/**",
         "site/assets/work_details/img/**",
-        "site/assets/moments/img/**",
         "site/assets/docs/**"
       ],
       "public_output": {
@@ -329,7 +324,6 @@
         "paths": [
           "assets/works/img/**",
           "assets/work_details/img/**",
-          "assets/moments/img/**",
           "assets/docs/**"
         ]
       },
@@ -399,11 +393,9 @@
       "public_paths": [
         "site/assets/data/works_index.json",
         "site/assets/data/series_index.json",
-        "site/assets/data/moments_index.json",
         "site/assets/data/recent_index.json",
         "site/assets/works/index/*.json",
         "site/assets/series/index/*.json",
-        "site/assets/moments/index/*.json",
         "site/assets/data/search/catalogue/index.json"
       ]
     }

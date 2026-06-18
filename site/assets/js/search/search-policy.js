@@ -19,8 +19,8 @@ const DEFAULT_SEARCH_POLICY = {
       back_route_key: "series_page_base",
       back_href: "/series/",
       index: "/assets/data/search/catalogue/index.json",
-      input_aria_label: "Search works, series, and moments",
-      input_placeholder: "search works, series, moments"
+      input_aria_label: "Search works and series",
+      input_placeholder: "search works, series"
     }
   },
   messages: {
@@ -37,7 +37,6 @@ const DEFAULT_SEARCH_POLICY = {
     result_meta_separator: " • ",
     result_kind_work: "work",
     result_kind_series: "series",
-    result_kind_moment: "moment",
     performance_summary: "Search performance"
   }
 };

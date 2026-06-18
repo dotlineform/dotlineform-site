@@ -62,30 +62,26 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     goto(page, base_url, "/series/")
     expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
     show_list_view(page)
-    expect(page.locator("#seriesIndexList .seriesIndexItem").first).to_be_visible(timeout=10_000)
+    expect(page.locator("#seriesIndexList .catalogueGridList__item").first).to_be_visible(timeout=10_000)
 
     goto(page, base_url, "/series/?mode=moments")
     expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
     show_list_view(page)
-    expect(page.locator("[data-role='catalog-index-mode-btn'][data-mode='moments']")).to_have_attribute("aria-pressed", "true")
-    expect(page.locator("#seriesIndexList .seriesIndexItem").first).to_be_visible(timeout=10_000)
-    moment_href = first_href(page, "#seriesIndexList .seriesIndexItem")
-    if "/moments/?" not in moment_href or "moment=" not in moment_href:
-        raise AssertionError(f"moment browse link should open the canonical selected-moment shell: {moment_href!r}")
+    expect(page.locator("#seriesIndexList .catalogueGridList__item").first).to_be_visible(timeout=10_000)
+    series_href = first_href(page, "#seriesIndexList .catalogueGridList__item")
+    if "/series/?" not in series_href or "series=" not in series_href:
+        raise AssertionError(f"series list should ignore deprecated moments mode and keep works navigation: {series_href!r}")
 
     goto(page, base_url, "/series/?series=009&from=recent")
     expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
     show_list_view(page)
-    expect(page.locator("#seriesIndexList .seriesIndexItem").first).to_contain_text("a poem divided into 4 parts", timeout=10_000)
-    series_work_href = first_href(page, "#seriesIndexList .seriesIndexItem")
+    expect(page.locator("#seriesIndexList .catalogueGridList__item").first).to_contain_text("a poem divided into 4 parts", timeout=10_000)
+    series_work_href = first_href(page, "#seriesIndexList .catalogueGridList__item")
     if "/works/?" not in series_work_href or "work=" not in series_work_href or "series=009" not in series_work_href:
         raise AssertionError(f"selected-series work link is not canonical: {series_work_href!r}")
     works_nav_href = first_href(page, ".site-nav .nav-item[href$='/series/']")
     if not works_nav_href.endswith("/series/"):
         raise AssertionError(f"works top nav should be a reset link on selected-series state: {works_nav_href!r}")
-    page.locator("[data-role='catalog-index-mode-btn'][data-mode='works']").click()
-    page.wait_for_url("**/series/", timeout=10_000)
-    expect(page.locator("#seriesIndexRoot")).to_be_visible(timeout=10_000)
 
     goto(page, base_url, "/works/?work=00001")
     expect(page.locator("#selectedWorkRoot")).to_be_visible(timeout=10_000)
@@ -108,21 +104,15 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     if "/works/?" not in detail_back_href or "work=00001" not in detail_back_href or "series=009" not in detail_back_href:
         raise AssertionError(f"detail back link is not canonical: {detail_back_href!r}")
 
-    goto(page, base_url, "/moments/?moment=a-doll-story")
-    expect(page.locator("#momentPageRoot")).to_be_visible(timeout=10_000)
-    expect(page.locator("#momentTitleText")).to_contain_text("a doll story", timeout=10_000)
-    moment_back_href = first_href(page, "#momentBackLink")
-    if "/series/?" not in moment_back_href or "mode=moments" not in moment_back_href:
-        raise AssertionError(f"moment back link should return to moments browse mode: {moment_back_href!r}")
+    goto(page, base_url, "/moments/?doc=a-doll-story")
+    expect(page.locator("#docsViewerRoot[data-route-id='moments']")).to_be_visible(timeout=10_000)
 
     response = page.context.request.get(f"{base_url.rstrip('/')}/moments/")
     body = response.text()
-    if response.status != 200 or 'id="momentPageRoot"' not in body:
+    if response.status != 200 or 'id="docsViewerRoot"' not in body:
         raise AssertionError("moments shell did not render")
     goto(page, base_url, "/moments/")
-    expect(page.locator("#momentPageRoot")).to_be_visible(timeout=10_000)
-    expect(page.locator("#momentBody .index__item").first).to_be_visible(timeout=10_000)
-    expect(page.locator("#momentBackNav")).to_be_hidden(timeout=10_000)
+    expect(page.locator("#docsViewerRoot[data-route-id='moments']")).to_be_visible(timeout=10_000)
 
     goto(page, base_url, "/catalogue/search/")
     expect(page.locator("#studioSearchRoot")).to_be_visible(timeout=10_000)

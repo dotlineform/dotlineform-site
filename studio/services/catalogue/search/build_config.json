@@ -2,7 +2,7 @@
   "search_build_config_version": "search_build_config_v2",
   "source_families": {
     "catalogue_indexes": {
-      "description": "Generated catalogue aggregate indexes for series, works, and moments.",
+      "description": "Generated catalogue aggregate indexes for series and works.",
       "scopes": ["catalogue"],
       "targeted_policy": "additive_only",
       "targeted_operations": ["create"],
@@ -28,7 +28,6 @@
         "id": { "source_families": ["catalogue_indexes"] },
         "title": { "source_families": ["catalogue_indexes"] },
         "year": { "source_families": ["catalogue_indexes"] },
-        "date": { "source_families": ["catalogue_indexes"] },
         "display_meta": { "source_families": ["catalogue_indexes"] },
         "series_ids": { "source_families": ["catalogue_indexes"] },
         "series_titles": { "source_families": ["catalogue_indexes"] },

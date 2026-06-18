@@ -26,14 +26,11 @@ export function appendQuery(url, params) {
 export function catalogueIndexUrl(baseurl, options) {
   var opts = options || {};
   var params = {};
-  var mode = lowerText(opts.mode);
   var seriesId = text(opts.series || opts.seriesId);
   var page = toPositiveInteger(opts.seriesPage || opts.series_page);
   var from = lowerText(opts.from);
   if (seriesId) {
     params.series = seriesId;
-  } else if (mode === 'moments') {
-    params.mode = 'moments';
   }
   if (page > 0) params.series_page = String(page);
   if (from) params.from = from;
@@ -54,22 +51,13 @@ export function workDetailUrl(detailUid, baseurl, options) {
   return appendQuery(buildPath(baseurl, '/work-details/'), params);
 }
 
-export function momentUrl(momentId, baseurl, options) {
-  var params = Object.assign({}, options || {});
-  var id = text(momentId);
-  if (id) params.moment = id;
-  return appendQuery(buildPath(baseurl, '/moments/'), params);
-}
-
 export function parseRouteState(locationLike) {
   var source = locationLike || {};
   var params = new URLSearchParams(source.search || '');
   return {
-    mode: lowerText(params.get('mode')) === 'moments' ? 'moments' : 'works',
     series: lowerText(params.get('series')),
     work: text(params.get('work')),
     detail: text(params.get('detail')),
-    moment: text(params.get('moment')),
     seriesPage: toPositiveInteger(params.get('series_page')),
     from: lowerText(params.get('from')),
     detailsSection: lowerText(params.get('details_section')),
@@ -81,18 +69,10 @@ export function seriesIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/series_index.json');
 }
 
-export function momentsIndexUrl(baseurl) {
-  return buildPath(baseurl, '/assets/data/moments_index.json');
-}
-
 export function worksIndexUrl(baseurl) {
   return buildPath(baseurl, '/assets/data/works_index.json');
 }
 
 export function workPayloadUrl(workId, baseurl) {
   return buildPath(baseurl, '/assets/works/index/' + encodeURIComponent(text(workId)) + '.json');
-}
-
-export function momentPayloadUrl(momentId, baseurl) {
-  return buildPath(baseurl, '/assets/moments/index/' + encodeURIComponent(text(momentId)) + '.json');
 }

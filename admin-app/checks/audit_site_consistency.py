@@ -272,7 +272,7 @@ def load_generated_route_contracts(site_root: Path) -> Tuple[
         for detail_uid, ref in load_detail_refs_from_work_json(site_root).items()
         if normalize_text(detail_uid) != ""
     }
-    moments = load_object_map_keys(site_root / "assets/data/moments_index.json", "moments")
+    moments: Dict[str, Dict[str, Any]] = {}
     return works, series, details, moments
 
 

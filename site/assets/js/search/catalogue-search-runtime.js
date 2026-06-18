@@ -255,16 +255,15 @@ function renderSeriesLinks(entry, options) {
 function catalogueEntryHref(entry, baseurl) {
   if (entry.kind === "series") return withBaseUrl(baseurl, `/series/?series=${encodeURIComponent(entry.id)}`);
   if (entry.kind === "work") return withBaseUrl(baseurl, `/works/?work=${encodeURIComponent(entry.id)}`);
-  if (entry.kind === "moment") return withBaseUrl(baseurl, `/moments/?moment=${encodeURIComponent(entry.id)}`);
   return withBaseUrl(baseurl, entry.href);
 }
 
 function isCatalogueRouteKind(kind) {
-  return kind === "series" || kind === "work" || kind === "moment";
+  return kind === "series" || kind === "work";
 }
 
 function catalogueEntryTargetAttrs(entry) {
-  return entry.kind === "work" || entry.kind === "series" || entry.kind === "moment"
+  return entry.kind === "work" || entry.kind === "series"
     ? ' target="_blank" rel="noopener"'
     : "";
 }
@@ -280,7 +279,6 @@ function withBaseUrl(baseurl, href) {
 function kindLabel(text, kind) {
   if (kind === "work") return text("result_kind_work", "work");
   if (kind === "series") return text("result_kind_series", "series");
-  if (kind === "moment") return text("result_kind_moment", "moment");
   return kind;
 }
 

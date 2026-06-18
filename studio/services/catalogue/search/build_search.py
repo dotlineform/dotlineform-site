@@ -30,13 +30,12 @@ SEARCH_BUILD_TARGETED_POLICY_OPERATIONS = {
     "record_update": {"create", "update", "delete"},
     "additive_only": {"create"},
 }
-CATALOGUE_TARGET_KINDS = {"moment", "series", "work"}
+CATALOGUE_TARGET_KINDS = {"series", "work"}
 CATALOGUE_DEFAULTS = {
     "schema": "search_index_v1",
     "output_path": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
     "series_index_path": public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
     "works_index_path": public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
-    "moments_index_path": public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
 }
 
 
@@ -147,7 +146,6 @@ class CatalogueSearchDataBuilder:
         output_path: Path | None = None,
         series_index_path: Path | None = None,
         works_index_path: Path | None = None,
-        moments_index_path: Path | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.scope = normalize(scope)
@@ -155,7 +153,6 @@ class CatalogueSearchDataBuilder:
         self.output_path = self.resolve_path(output_path or CATALOGUE_DEFAULTS["output_path"])
         self.series_index_path = self.resolve_path(series_index_path or CATALOGUE_DEFAULTS["series_index_path"])
         self.works_index_path = self.resolve_path(works_index_path or CATALOGUE_DEFAULTS["works_index_path"])
-        self.moments_index_path = self.resolve_path(moments_index_path or CATALOGUE_DEFAULTS["moments_index_path"])
         self.works_json_dir = self.resolve_path(public_paths.WORKS_JSON_DIR)
         self.work_search_metadata_by_id: dict[str, dict[str, str]] = {}
         self.search_build_config: dict[str, Any] = {}
@@ -286,7 +283,6 @@ class CatalogueSearchDataBuilder:
         target_records = target_records or []
         series_payload = self.load_index_hash(self.series_index_path, "series")
         works_payload = self.load_index_hash(self.works_index_path, "works")
-        moments_payload = self.load_index_hash(self.moments_index_path, "moments")
         series_title_by_id = {
             series_id: normalize_text(row.get("title")) for series_id, row in series_payload.items()
         }
@@ -323,21 +319,6 @@ class CatalogueSearchDataBuilder:
                     series_titles=series_titles,
                     medium_type=work_search_metadata["medium_type"],
                     medium_caption=work_search_metadata["medium_caption"],
-                )
-            )
-
-        for moment_id in sorted(moments_payload):
-            moment_record = moments_payload[moment_id]
-            date = normalize_text(moment_record.get("date"))
-            display_meta = normalize_text(moment_record.get("date_display")) or date
-            title = normalize_text(moment_record.get("title")) or moment_id
-            entries.append(
-                self.build_catalogue_entry(
-                    kind="moment",
-                    item_id=moment_id,
-                    title=title,
-                    date=date,
-                    display_meta=display_meta,
                 )
             )
 
@@ -607,7 +588,7 @@ class CatalogueSearchDataBuilder:
                 kind = normalize(parts[0])
                 item_id = parts[1]
                 if kind not in CATALOGUE_TARGET_KINDS:
-                    kinds = ", ".join(["moment", "series", "work"])
+                    kinds = ", ".join(["series", "work"])
                     raise SystemExit(f"Targeted catalogue record kind must be one of {kinds}")
                 key = catalogue_record_key(kind, item_id)
                 if key in seen:
@@ -623,7 +604,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--source-index", help="Docs Viewer-only source index path.")
     parser.add_argument("--series-index", help="Canonical series index JSON path for catalogue scope.")
     parser.add_argument("--works-index", help="Canonical works index JSON path for catalogue scope.")
-    parser.add_argument("--moments-index", help="Canonical moments index JSON path for catalogue scope.")
     parser.add_argument("--output", help="Generated search index output path.")
     parser.add_argument("--only-doc-ids", help="Docs Viewer-only targeted search ids.")
     parser.add_argument(
@@ -654,7 +634,6 @@ def main(argv: list[str] | None = None) -> int:
         output_path=Path(args.output) if args.output else None,
         series_index_path=Path(args.series_index) if args.series_index else None,
         works_index_path=Path(args.works_index) if args.works_index else None,
-        moments_index_path=Path(args.moments_index) if args.moments_index else None,
     )
     builder.run(write=args.write, force=args.force, only_records=args.only_records)
     return 0
