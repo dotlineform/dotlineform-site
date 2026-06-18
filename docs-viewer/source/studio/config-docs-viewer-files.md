@@ -13,7 +13,7 @@ Config files:
 - `docs-viewer/config/scopes/docs_scopes.json`
 - `docs-viewer/config/scopes/docs_scope_manifest.json`
 - `docs-viewer/config/routes/docs-viewer-routes.json`
-- `docs-viewer/config/routes/docs-viewer-public-routes.json`
+- `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
 - `docs-viewer/config/defaults/docs-viewer-config.json`
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `docs-viewer/config/defaults/docs-viewer-service.json`
@@ -39,7 +39,7 @@ Docs Viewer config is split by responsibility:
 The docs/search builders read `docs-viewer/config/scopes/docs_scopes.json` to produce generated docs payloads, generated search payloads, and default browser config files.
 
 The browser runtime reads route config through the route-config resolver.
-Public routes use the public route registry and public browser default config.
+Public routes use the site-owned public route registry and public browser default config.
 The local management route uses the management route registry and local browser default config.
 
 `docs-viewer/services/docs_viewer_service.py` reads service defaults and injects local service base URLs and capabilities for the management route.

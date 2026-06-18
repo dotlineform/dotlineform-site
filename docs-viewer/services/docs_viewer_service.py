@@ -57,6 +57,9 @@ RUNTIME_STATIC_ROUTES = (
 )
 SHARED_STATIC_ROUTES = {
     "/docs-viewer/static/css/docs-viewer.css": Path("site/docs-viewer/static/css/docs-viewer.css"),
+    "/docs-viewer/config/routes/docs-viewer-public-routes.json": Path(
+        "site/docs-viewer/config/routes/docs-viewer-public-routes.json"
+    ),
 }
 STATIC_FILES = {
     "/apple-touch-icon.png",
@@ -213,6 +216,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
+        repo_root / "site" / "docs-viewer" / "config" / "routes" / "docs-viewer-public-routes.json",
         repo_root / "docs-viewer" / "config" / "ui-text" / "manage.json",
         repo_root / "docs-viewer" / "config" / "ui-text" / "public.json",
     ]

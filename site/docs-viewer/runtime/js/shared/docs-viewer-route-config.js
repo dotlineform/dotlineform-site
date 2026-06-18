@@ -60,6 +60,13 @@ function normalizePanelDefaults(rawPanels) {
   };
 }
 
+function normalizeRouteUi(rawUi) {
+  var ui = rawUi && typeof rawUi === "object" && !Array.isArray(rawUi) ? rawUi : {};
+  return {
+    mainViewToolbar: ui.main_view_toolbar !== false
+  };
+}
+
 function normalizeHostedViews(rawHostedViews) {
   var hostedViews = rawHostedViews && typeof rawHostedViews === "object" && !Array.isArray(rawHostedViews)
     ? rawHostedViews
@@ -217,6 +224,7 @@ export function resolveDocsViewerRouteConfig(options) {
       managementModeValue: cleanString(access.management_mode_value) || "manage"
     },
     panels: normalizePanelDefaults(rawConfig.panels),
+    ui: normalizeRouteUi(rawConfig.ui),
     hostedViews: normalizeHostedViews(rawConfig.hosted_views)
   };
 }

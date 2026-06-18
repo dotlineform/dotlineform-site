@@ -9,6 +9,7 @@ export function renderDocsViewerMainView(options = {}) {
   const documentRef = options.document || document;
   const mount = options.mount || null;
   const toolbarMount = options.toolbarMount || null;
+  const toolbarDisabled = options.showToolbar === false;
   if (!mount) return findDocsViewerMainViewRefs({ document: documentRef, root: options.root });
 
   const main = documentRef.createElement("article");
@@ -22,6 +23,9 @@ export function renderDocsViewerMainView(options = {}) {
   toolbar.hidden = true;
   toolbar.setAttribute("role", "toolbar");
   toolbar.setAttribute("aria-label", "Document controls");
+  if (toolbarDisabled) {
+    toolbar.setAttribute("data-docs-viewer-toolbar-disabled", "");
+  }
 
   const path = renderParagraph(documentRef, "docsViewerPath", "docsViewer__path small");
   path.hidden = true;
@@ -103,7 +107,7 @@ export function applyDocsViewerMainViewProjection(options = {}) {
   const refs = options.refs || {};
   const projection = options.projection || {};
 
-  applyHidden(refs.toolbar, projection, "toolbarHidden");
+  applyToolbarHidden(refs.toolbar, projection, "toolbarHidden");
   applyHidden(refs.content, projection, "contentHidden");
   applyHidden(refs.resultsStatus, projection, "resultsStatusHidden");
   applyHidden(refs.results, projection, "resultsHidden");
@@ -149,4 +153,9 @@ function renderParagraph(documentRef, id, className) {
 function applyHidden(element, projection, key) {
   if (!element || !Object.prototype.hasOwnProperty.call(projection, key)) return;
   element.hidden = Boolean(projection[key]);
+}
+
+function applyToolbarHidden(element, projection, key) {
+  if (!element || !Object.prototype.hasOwnProperty.call(projection, key)) return;
+  element.hidden = element.hasAttribute("data-docs-viewer-toolbar-disabled") || Boolean(projection[key]);
 }

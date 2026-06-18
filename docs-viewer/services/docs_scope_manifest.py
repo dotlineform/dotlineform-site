@@ -39,7 +39,6 @@ SCOPE_DELETE_CHANGE_KINDS = {"scope_config", "scope_manifest", "route_config", "
 PUBLIC_ROUTE_TEMPLATE_REL_PATH = Path("docs-viewer/templates/public-route/index.html")
 ROUTE_CONFIG_REL_PATH = Path("docs-viewer/config/routes/docs-viewer-routes.json")
 PUBLIC_ROUTE_CONFIG_REL_PATHS = (
-    Path("docs-viewer/config/routes/docs-viewer-public-routes.json"),
     Path("site/docs-viewer/config/routes/docs-viewer-public-routes.json"),
 )
 

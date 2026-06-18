@@ -99,7 +99,7 @@ New Scope renders the route shell into `site/<route>/index.html`; there is no de
 The route must also be represented in browser-safe route config:
 
 - `docs-viewer/config/routes/docs-viewer-routes.json`
-- `docs-viewer/config/routes/docs-viewer-public-routes.json`
+- `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
 
 The static route shell sets:
 

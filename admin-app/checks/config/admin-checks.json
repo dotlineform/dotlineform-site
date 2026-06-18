@@ -191,7 +191,7 @@
       "include": [
         "site/assets/css/",
         "site/assets/js/",
-        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
         "docs-viewer/config/defaults/docs-viewer-public-config.json",
         "site-tools/",
         "site-tools/config/site-tools.json"
@@ -623,7 +623,7 @@
       "status": "mapped",
       "include": [
         "docs-viewer/config/scopes/docs_scopes.json",
-        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
         "site/assets/js/search/"
       ],
       "shared": [
@@ -642,7 +642,7 @@
       "status": "mapped",
       "include": [
         "docs-viewer/config/scopes/docs_scopes.json",
-        "docs-viewer/config/routes/docs-viewer-public-routes.json",
+        "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
         "site/assets/js/search/"
       ],
       "shared": [

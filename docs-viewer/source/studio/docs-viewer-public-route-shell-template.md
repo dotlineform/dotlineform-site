@@ -81,7 +81,7 @@ For `publishing_mode: "public_readonly"`, New Scope creates or updates this file
 - scope manifest ownership records
 
 The route shell is created from the template.
-The route record is written to the existing public route registries.
+The route record is written to the site-owned public route registry.
 The initial generated docs/search outputs are synced into the configured public `site/assets/data/...` publish roots.
 
 ## Delete Scope Flow

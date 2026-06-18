@@ -18,7 +18,7 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | Route file | `site/library/index.html` | `site/analysis/index.html` | `docs-viewer/shell/docs-viewer-shell.html` |
 | Shell source | tracked static route shell; new shells render from `docs-viewer/templates/public-route/index.html` | tracked static route shell; new shells render from `docs-viewer/templates/public-route/index.html` | service-rendered standalone shell |
 | Entrypoint | `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | `docs-viewer/runtime/js/management/docs-viewer-manage.js` |
-| Route registry | `docs-viewer/config/routes/docs-viewer-public-routes.json` | `docs-viewer/config/routes/docs-viewer-public-routes.json` | `docs-viewer/config/routes/docs-viewer-routes.json` served with service-local URLs |
+| Route registry | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` served at `/docs-viewer/config/routes/docs-viewer-public-routes.json` | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` served at `/docs-viewer/config/routes/docs-viewer-public-routes.json` | `docs-viewer/config/routes/docs-viewer-routes.json` served with service-local URLs |
 | UI text | `docs-viewer/config/ui-text/public.json` | `docs-viewer/config/ui-text/public.json` | `docs-viewer/config/ui-text/manage.json` |
 | Management controls | absent | absent | present when management is enabled |
 | Report runtime | absent unless explicitly public-promoted | absent unless explicitly public-promoted | available through manage-owned report mounting |

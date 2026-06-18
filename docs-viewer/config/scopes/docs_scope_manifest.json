@@ -373,12 +373,6 @@
         },
         {
           "kind": "public_route_config",
-          "path": "docs-viewer/config/routes/docs-viewer-public-routes.json",
-          "action": "track",
-          "exists": true
-        },
-        {
-          "kind": "public_route_config",
           "path": "site/docs-viewer/config/routes/docs-viewer-public-routes.json",
           "action": "track",
           "exists": true

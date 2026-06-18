@@ -38,6 +38,12 @@ function managementAllowed(routeContext) {
   return Boolean(routeContext && routeContext.access && routeContext.access.canLoadManagementUi);
 }
 
+function mainViewToolbarEnabled(routeContext) {
+  var routeConfig = routeContext && routeContext.routeConfig ? routeContext.routeConfig : {};
+  var ui = routeConfig.ui && typeof routeConfig.ui === "object" ? routeConfig.ui : {};
+  return ui.mainViewToolbar !== false;
+}
+
 function headerControlsMount(root) {
   if (!root) return null;
   return root.querySelector("[data-docs-viewer-header-controls-mount]");
@@ -111,7 +117,8 @@ export function initDocsViewerAppShell(options) {
     document: documentRef,
     root: root,
     mount: settings.mainViewMount || mainViewMount(root),
-    toolbarMount: settings.mainViewToolbarMount || (topBar && topBar.mainViewToolbarMount) || mainViewToolbarMount(root)
+    toolbarMount: settings.mainViewToolbarMount || (topBar && topBar.mainViewToolbarMount) || mainViewToolbarMount(root),
+    showToolbar: mainViewToolbarEnabled(routeContext)
   });
   var indexPanel = renderDocsViewerIndexPanelShell({
     document: documentRef,

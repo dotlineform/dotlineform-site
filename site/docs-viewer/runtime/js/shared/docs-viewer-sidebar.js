@@ -141,7 +141,7 @@ export function initDocsViewerSidebarRenderer(context) {
       pathEl.appendChild(link);
     });
 
-    if (toolbar) toolbar.hidden = false;
+    if (toolbar) toolbar.hidden = toolbar.hasAttribute("data-docs-viewer-toolbar-disabled");
     context.renderBookmarkToggle();
   }
 

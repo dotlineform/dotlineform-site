@@ -160,7 +160,6 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 def write_docs_route_configs(root: Path) -> None:
     registry = {"schema_version": "docs_viewer_route_config_registry_v1", "routes": []}
     write_json(root / "docs-viewer/config/routes/docs-viewer-routes.json", registry)
-    write_json(root / "docs-viewer/config/routes/docs-viewer-public-routes.json", registry)
     write_json(root / "site/docs-viewer/config/routes/docs-viewer-public-routes.json", registry)
 
 
@@ -414,7 +413,6 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert any(file["path"] == "site/assets/data/search/research/index.json" for file in payload["publish_files"])
     changed_paths = {file["path"] for file in payload["changed_files"]}
     assert "docs-viewer/config/routes/docs-viewer-routes.json" in changed_paths
-    assert "docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
     assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
 
 
@@ -769,7 +767,6 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert records["research"]["scope_type"] == "public"
     recorded_paths = {file["path"] for file in records["research"]["files"]}
     assert "site/research/index.html" in recorded_paths
-    assert "docs-viewer/config/routes/docs-viewer-public-routes.json" in recorded_paths
     assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in recorded_paths
 
 

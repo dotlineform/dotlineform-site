@@ -129,6 +129,9 @@
           "default_view": "metadata-info"
         }
       },
+      "ui": {
+        "main_view_toolbar": false
+      },
       "hosted_views": {
         "records": []
       }

@@ -135,7 +135,7 @@ Current owner:
 - `docs-viewer/shell/docs-viewer-shell.html`
 - `site/docs-viewer/config/views/docs-viewer-view-registry.json`
 - `site/docs-viewer/config/defaults/docs-viewer-public-config.json`
-- `docs-viewer/config/routes/docs-viewer-public-routes.json`
+- `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
 
 Current behavior:
 

@@ -339,7 +339,7 @@ def test_report_runtime_has_no_fallback_registry() -> None:
 
 def test_public_route_config_excludes_report_registry() -> None:
     public_payload = json.loads(
-        (REPO_ROOT / "docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8")
+        (REPO_ROOT / "site/docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8")
     )
     manage_payload = json.loads(
         (REPO_ROOT / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8")
@@ -596,6 +596,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-public.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
+    assert allowed("/docs-viewer/config/routes/docs-viewer-public-routes.json") is True
     assert allowed("/docs-viewer/config/reports/reports.json") is True
     assert allowed("/docs-viewer/generated/docs/studio/index-tree.json") is True
     assert allowed("/assets/docs/library/img/example.png") is True
@@ -632,6 +633,9 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-manage.css"
     ) is None
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/config/routes/docs-viewer-public-routes.json"
+    ) == Path("site/docs-viewer/config/routes/docs-viewer-public-routes.json")
 
 
 def test_public_browser_config_projects_public_readonly_scope_routes() -> None:
