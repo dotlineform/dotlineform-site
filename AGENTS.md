@@ -10,6 +10,7 @@
 - Answer questions based on domain best practice, suggest ways to reduce maintenance risk and improve performance, and raise likely side effects or missing requirements.
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs.
+- The public site has no deploy-time build or copy step: `site/` is the tracked GitHub Pages artifact. Local apps and `/docs/` may share site-owned config, CSS, and runtime files through explicit service route mapping, especially Docs Viewer public/shared assets.
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff note with changed files, decisions made, remaining tasks, commands run, and known risks. If the implementation is documented, add the handoff note to that document.
 - For material new changes, requirements, or refactors, state the main benefits and risks. For trivial or mechanical edits, a short summary is enough.
 

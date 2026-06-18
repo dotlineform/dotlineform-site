@@ -2,7 +2,7 @@
 doc_id: dev-home
 title: Dev Home
 added_date: 2026-04-19
-last_updated: 2026-05-23
+last_updated: 2026-06-18
 summary: This section contains technical reference documents that apply to the repo as a whole.
 parent_id: ""
 viewable: true
@@ -17,6 +17,18 @@ The repo also contains locally run web apps:
 - **[Analytics](/docs/?scope=studio&doc=analytics)**, which adds a semantic tagging layer to catalogue data.
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using manage mode, which is served by the standalone Docs Viewer service.
 - **[Admin](/docs/?scope=studio&doc=admin)**, which includes audit, risks and activity reporting.
+
+## How The Site Works
+
+`site/` is the checked-in static site root and the GitHub Pages artifact.
+The public site is published directly by the GitHub Actions workflow after validation; there is no deploy-time build, copy, or shell-rendering step.
+Public route HTML, public CSS, public JavaScript, browser-safe config, and published data payloads are source files under `site/`.
+
+The local apps exist to maintain and inspect that site.
+They may share browser-safe config, CSS, and runtime modules with the public site when that is the real owner of the behavior.
+Docs Viewer is the clearest example: public routes such as `/library/`, `/analysis/`, and `/moments/` load site-owned Docs Viewer CSS, public/shared runtime JavaScript, and the site-owned public route registry.
+The local `/docs/` manage route uses the standalone Docs Viewer service, and that service maps shared public URLs such as `/docs-viewer/static/css/docs-viewer.css`, `/docs-viewer/runtime/js/shared/...`, and `/docs-viewer/config/routes/docs-viewer-public-routes.json` back to their `site/` files.
+Local-only management, import, report, and write behavior stays in `docs-viewer/` and behind local service routes.
 
 Note on document structure:
 
