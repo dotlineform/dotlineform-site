@@ -6,6 +6,44 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+The archive is present at `studio/retired/site-routes/moments/index.html`
+
+
+That makes sense. Leaving it as-is is consistent with the migration direction: `/series/` moments is now stale catalogue navigation, not something to preserve with compatibility code.
+
+Next session, the retirement work is probably:
+- remove moments mode/gallery from `/series/`
+- remove moments surfaces from Studio/catalogue source editing
+- keep old source/generated moment files only as archived rollback/data-migration material where needed
+- run the GH workflow after the public scope payloads are settled
+
+No redirect bridge needed if we’re intentionally retiring the old entry point.
+
+
+---
+
+
+## doc viewer toolbars
+
+- `docsViewer__controls`
+  - mount point only, plus status/bookmark row
+- `docsViewer__topBar`
+  - `docsViewer__viewerToolbar` with `role="toolbar"` and `aria-label="Viewer controls"`
+    - scope selector
+    - recently added
+    - search input
+    - panel controls group: folder toggle + info toggle
+  - management toolbar mount
+    - `docsViewer__manageActions` with `role="toolbar"` and `aria-label="Management actions"`
+      - Actions
+      - Show
+      - show non-viewable
+    - theme toggle sits in the management row beside that toolbar
+
+So search and recents are not floating controls. Structurally they are inside the viewer toolbar. The visual top row is a top bar containing two toolbar groups: viewer controls on the left, management controls on the right.
+
+---
+
 ## Future modal UI:
 
 - section modal edits `details_subfolder`, `section_title`, `section_order`, and `detail_sort`

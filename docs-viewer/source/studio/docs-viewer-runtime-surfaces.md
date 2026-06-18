@@ -42,11 +42,11 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | CSS | Public routes | Manage route | Boundary rule |
 | --- | --- | --- | --- |
 | `site/assets/css/main.css` | inherited from the public site layout | absent from standalone shell | Host public-site CSS is not a Docs Viewer runtime dependency. |
-| `docs-viewer/static/css/docs-viewer.css` | loaded | loaded | Basic/public viewer styling and portable Docs Viewer tokens. |
+| `site/docs-viewer/static/css/docs-viewer.css` | loaded via `/docs-viewer/static/css/docs-viewer.css` | loaded via service mapping for the same URL | Basic/public viewer styling and portable Docs Viewer tokens. |
 | `docs-viewer/static/css/docs-viewer-reports.css` | absent unless explicitly public-promoted | loaded | Report styling is manage-only until a report is promoted. |
 | `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | Management shell/modal styling only. |
 
-`docs-viewer/static/css/docs-viewer.css` supplies portable Docs Viewer tokens, shell utilities such as `visually-hidden`, `muted`, `small`, hidden-state handling inside `.docsViewer`, and viewer component tokens with Docs Viewer theme-token and host-token fallbacks.
+`site/docs-viewer/static/css/docs-viewer.css` supplies portable Docs Viewer tokens, shell utilities such as `visually-hidden`, `muted`, `small`, hidden-state handling inside `.docsViewer`, and viewer component tokens with Docs Viewer theme-token and host-token fallbacks.
 
 ## Route Config Surface
 

@@ -22,12 +22,12 @@ viewable: true
 The intended cascade for public routes is:
 
 1. host layout stylesheet, currently `site/assets/css/main.css`
-2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
+2. Docs Viewer basic/public stylesheet, served at `/docs-viewer/static/css/docs-viewer.css` from `site/docs-viewer/static/css/docs-viewer.css`
 
 The intended cascade for local or standalone management routes is:
 
 1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
-2. Docs Viewer basic/public stylesheet, `docs-viewer/static/css/docs-viewer.css`
+2. Docs Viewer basic/public stylesheet, served at `/docs-viewer/static/css/docs-viewer.css` from `site/docs-viewer/static/css/docs-viewer.css`
 3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
 4. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
 
@@ -51,7 +51,8 @@ The `content` class is intentional. It lets generated markdown output inherit th
 
 ## Docs Viewer Basic Stylesheet Responsibilities
 
-`docs-viewer/static/css/docs-viewer.css` owns the basic/public viewer contract:
+`site/docs-viewer/static/css/docs-viewer.css` owns the basic/public viewer contract.
+The public static site serves it directly from the `site/` deploy root, and the local Docs Viewer service maps the same `/docs-viewer/static/css/docs-viewer.css` URL to that file so public and manage mode share one CSS owner.
 
 - Docs Viewer-prefixed font, type scale, spacing, color, radius, and container tokens with host-token fallbacks
 - `.docsViewer`-scoped utilities such as `visually-hidden`, `muted`, `small`, and hidden-state handling

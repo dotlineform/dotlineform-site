@@ -125,6 +125,7 @@
         "analytics-app/app/assets/",
         "site/assets/docs/",
         "site/assets/css/",
+        "site/docs-viewer/static/",
         "docs-viewer/shell/",
         "docs-viewer/static/",
         "studio/app/assets/"

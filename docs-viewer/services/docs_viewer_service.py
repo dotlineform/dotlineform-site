@@ -55,6 +55,9 @@ RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/js/reports/", Path("docs-viewer/runtime/js/reports")),
     ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
 )
+SHARED_STATIC_ROUTES = {
+    "/docs-viewer/static/css/docs-viewer.css": Path("site/docs-viewer/static/css/docs-viewer.css"),
+}
 STATIC_FILES = {
     "/apple-touch-icon.png",
     "/favicon.ico",
@@ -95,6 +98,10 @@ def runtime_static_relative_path(request_path: str) -> Path | None:
             return None
         return root / suffix
     return None
+
+
+def shared_static_relative_path(request_path: str) -> Path | None:
+    return SHARED_STATIC_ROUTES.get(request_path)
 
 
 @dataclass(frozen=True)
@@ -201,7 +208,7 @@ def asset_version(repo_root: Path) -> str:
     runtime_candidates.extend((repo_root / "docs-viewer/runtime/js").rglob("*.js"))
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-shell.html",
-        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
+        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
@@ -501,8 +508,11 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_static(self, request_path: str) -> None:
+        shared_relative_path = shared_static_relative_path(request_path)
         runtime_relative_path = runtime_static_relative_path(request_path)
-        if runtime_relative_path is not None:
+        if shared_relative_path is not None:
+            relative_path = shared_relative_path
+        elif runtime_relative_path is not None:
             relative_path = runtime_relative_path
         elif request_path.startswith("/assets/"):
             relative_path = Path("site") / request_path.lstrip("/")

@@ -40,7 +40,7 @@ def test_source_file_discovery_excludes_markdown_documents(tmp_path: Path) -> No
 def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     config = checks_config.load_checks_config(repo_root=REPO_ROOT)
     source_files = [
-        "docs-viewer/static/css/docs-viewer.css",
+        "site/docs-viewer/static/css/docs-viewer.css",
         "site/docs-viewer/runtime/js/shared/docs-viewer-search.js",
         "site/docs-viewer/runtime/js/public/docs-viewer-public.js",
         "docs-viewer/services/docs_management_routes.py",
@@ -51,7 +51,7 @@ def test_resolve_scope_reports_families_routes_shared_and_exclusions() -> None:
     by_path = {row["path"]: row for row in scope["files"]}
 
     assert "docs-viewer/generated/docs/studio/index.json" not in by_path
-    assert by_path["docs-viewer/static/css/docs-viewer.css"]["families"] == ["runtime-assets"]
+    assert by_path["site/docs-viewer/static/css/docs-viewer.css"]["families"] == ["runtime-assets"]
     assert by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["families"] == ["runtime-js"]
     assert "search" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["areas"]
     assert "/library/" in by_path["site/docs-viewer/runtime/js/shared/docs-viewer-search.js"]["shared_routes"]
