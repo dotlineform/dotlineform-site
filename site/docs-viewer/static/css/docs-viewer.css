@@ -918,6 +918,26 @@ body.docs-viewer-service{
   margin-block: 1rem;
 }
 
+.docsViewer__content > img{
+  display: block;
+}
+
+/* top text margin for image followed by text */
+.docsViewer__content > img + p,
+.docsViewer__content > img + pre,
+.docsViewer__content > img + ul,
+.docsViewer__content > img + ol,
+.docsViewer__content > img + blockquote{
+  margin-top: 1.5rem;
+}
+
+/* moments - scope specific */
+
+.docsViewer[data-route-id="moments"]{
+  --docs-viewer-doc-width: 50ch;
+  --docs-viewer-measure: var(--docs-viewer-doc-width);
+}
+
 .docsViewer[data-route-id="moments"] .docsViewer__content > h1:first-child{
   margin: 0 0 0.375rem;
   font-size: var(--docs-viewer-font-heading-2);
@@ -938,7 +958,7 @@ body.docs-viewer-service{
   border: 0;
   border-radius: 0;
   padding: 0;
-  margin: 0 0 1.5rem;
+  margin-block-end: 1.5rem;
   overflow-x: visible;
 }
 
