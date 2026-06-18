@@ -37,33 +37,18 @@ export function formatCatalogueBuildPreview(build, options = {}) {
   const searchText = build.rebuild_search
     ? lookupText(options, "build_preview_search_yes", "yes")
     : lookupText(options, "build_preview_search_no", "no");
-  let baseText = "";
-  if (options.target === "moment") {
-    const momentIds = Array.isArray(build.moment_ids) ? build.moment_ids : [];
-    const momentText = momentIds.length ? momentIds.join(", ") : normalizeText(options.fallbackMomentId) || "none";
-    baseText = lookupText(
-      options,
-      "build_preview_template",
-      options.defaultTemplate || "Public update preview: moment {moment_ids}; catalogue search {search_rebuild}.",
-      {
-        moment_ids: momentText,
-        search_rebuild: searchText
-      }
-    );
-  } else {
-    const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
-    const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
-    baseText = lookupText(
-      options,
-      "build_preview_template",
-      options.defaultTemplate || "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
-      {
-        work_ids: workIds.length ? workIds.join(", ") : "none",
-        series_ids: seriesIds.length ? seriesIds.join(", ") : "none",
-        search_rebuild: searchText
-      }
-    );
-  }
+  const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
+  const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
+  const baseText = lookupText(
+    options,
+    "build_preview_template",
+    options.defaultTemplate || "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
+    {
+      work_ids: workIds.length ? workIds.join(", ") : "none",
+      series_ids: seriesIds.length ? seriesIds.join(", ") : "none",
+      search_rebuild: searchText
+    }
+  );
 
   const localMedia = build.local_media && typeof build.local_media === "object" ? build.local_media : null;
   const localCounts = localMedia && typeof localMedia.counts === "object" ? localMedia.counts : null;

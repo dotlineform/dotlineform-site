@@ -25,7 +25,6 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
         sys.path.insert(0, str(candidate))
 
 from catalogue import catalogue_activity as activity  # noqa: E402
-from catalogue import catalogue_prose_import as prose_import  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
@@ -56,7 +55,6 @@ from catalogue.catalogue_workbook_import import (  # noqa: E402
     normalize_import_mode,
     plan_to_response,
 )
-from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, MOMENT_METADATA_FILENAME  # noqa: E402
 from catalogue.project_state_report import (  # noqa: E402
     DEFAULT_OUTPUT_REL_PATH,
     IMAGE_EXTENSIONS,
@@ -79,7 +77,6 @@ CATALOGUE_READ_KEYS = {
     "catalogue_works",
     "catalogue_work_details",
     "catalogue_series",
-    "catalogue_moments",
     "catalogue_lookup_work_search",
     "catalogue_lookup_series_search",
     "catalogue_lookup_work_detail_search",
@@ -106,12 +103,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "series/save",
                 "build-preview",
                 "build-apply",
-                "prose/import-preview",
-                "prose/import-apply",
-                "moment/import-preview",
-                "moment/import-apply",
-                "moment/preview",
-                "moment/save",
                 "import-preview",
                 "import-apply",
                 "project-state-report",
@@ -159,8 +150,6 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         return load_source_payload(paths["work_details_path"], "work_details")
     if key == "catalogue_series":
         return load_source_payload(paths["series_path"], "series")
-    if key == "catalogue_moments":
-        return load_source_payload(paths["moments_path"], "moments")
 
     source_records = records_from_json_source(paths["source_dir"])
     if key == "catalogue_lookup_work_search":
@@ -465,7 +454,6 @@ def project_state_report_payload(
                         "works": [],
                         "series": [],
                         "work_details": [],
-                        "moments": [],
                         "files": [str(result["output_path"])],
                     },
                     detail_items=[
@@ -512,26 +500,19 @@ def catalogue_paths(repo_root: Path) -> dict[str, Any]:
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
     work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
-    moments_path = (source_dir / MOMENT_METADATA_FILENAME).resolve()
     allowed_write_paths = {
         (source_dir / filename).resolve()
         for kind, filename in SOURCE_FILES.items()
         if kind != "meta"
     }
-    allowed_write_paths.add(moments_path)
     return {
         "source_dir": source_dir,
         "lookup_dir": lookup_dir,
         "works_path": works_path,
         "work_details_path": work_details_path,
         "series_path": series_path,
-        "moments_path": moments_path,
         "allowed_write_paths": allowed_write_paths,
-        "allowed_write_roots": {
-            (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
-            (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
-            (repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
-        },
+        "allowed_write_roots": set(),
     }
 
 

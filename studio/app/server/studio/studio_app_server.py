@@ -40,7 +40,6 @@ STATIC_PREFIXES = (
     "/assets/data/",
     "/assets/home/",
     "/assets/js/",
-    "/assets/moments/",
     "/assets/series/",
     "/assets/site/",
     "/assets/work_details/",
@@ -125,9 +124,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if path in {"/studio/catalogue-work", "/studio/catalogue-work/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/catalogue-moment", "/studio/catalogue-moment/"}:
             self.send_html(studio_app_bootstrap_view(self.version))
             return
         if self.is_allowed_static_path(path):

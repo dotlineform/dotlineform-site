@@ -22,12 +22,6 @@ from catalogue.catalogue_source import (
     sort_record_map,
     validate_source_records,
 )
-from catalogue.moment_sources import (
-    moment_metadata_payload,
-    normalize_moment_filename,
-    normalize_moment_metadata_record,
-    validate_moment_metadata_record,
-)
 from catalogue.series_ids import normalize_series_id
 
 
@@ -54,13 +48,6 @@ class SeriesPlan(SourceRecordPlan):
     @property
     def changed(self) -> bool:
         return bool(self.changed_fields or self.changed_work_ids)
-
-
-def normalize_moment_id_value(value: Any) -> str:
-    text = str(value or "").strip()
-    if not text:
-        raise ValueError("moment_id is required")
-    return normalize_moment_filename(text if text.endswith(".md") else f"{text}.md")[:-3]
 
 
 def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
@@ -133,19 +120,6 @@ def validate_series_save_record(record: Mapping[str, Any]) -> list[str]:
     return errors
 
 
-def normalize_moment_update(
-    moment_id: str,
-    current_record: Mapping[str, Any],
-    update: Mapping[str, Any],
-) -> Dict[str, Any]:
-    merged = dict(current_record)
-    merged.update(update)
-    merged["moment_id"] = normalize_moment_id_value(merged.get("moment_id") or moment_id)
-    if merged["moment_id"] != moment_id:
-        raise ValueError("record.moment_id must match moment_id")
-    return normalize_moment_metadata_record(moment_id, merged)
-
-
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
     return [field for field in sorted(set(before.keys()) | set(after.keys())) if before.get(field) != after.get(field)]
 
@@ -184,14 +158,6 @@ def validate_series_records(
         series=sort_record_map(series),
     )
     return validate_source_records(normalized_records)
-
-
-def validate_moment_record(moment_id: str, moment_record: Dict[str, Any]) -> list[str]:
-    errors = validate_moment_metadata_record(moment_record)
-    normalized_id = normalize_moment_id_value(moment_record.get("moment_id") or moment_id)
-    if normalized_id != moment_id:
-        errors.append("record.moment_id must match moment_id")
-    return errors
 
 
 def plan_work_save(
@@ -349,23 +315,4 @@ def plan_series_create(
         work_updates=pending_work_updates,
         work_records=work_records,
         works_payload=works_payload,
-    )
-
-
-def plan_moment_save(
-    moments: Mapping[str, Dict[str, Any]],
-    moment_id: str,
-    current_record: Mapping[str, Any],
-    update: Mapping[str, Any],
-) -> SourceRecordPlan:
-    normalized_current = normalize_moment_metadata_record(moment_id, current_record)
-    updated_record = normalize_moment_update(moment_id, normalized_current, update)
-    updated_moments = dict(moments)
-    updated_moments[moment_id] = updated_record
-    return SourceRecordPlan(
-        baseline_record=normalized_current,
-        updated_record=updated_record,
-        changed_fields=changed_fields(normalized_current, updated_record),
-        validation_errors=validate_moment_record(moment_id, updated_record),
-        payload=moment_metadata_payload(updated_moments),
     )

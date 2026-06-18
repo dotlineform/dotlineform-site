@@ -20,7 +20,6 @@ from catalogue.catalogue_source import (
     validate_source_records,
     work_details_payload_for_maps,
 )
-from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload
 
 
 @dataclass(frozen=True)
@@ -30,7 +29,6 @@ class DeleteApplyPlan:
     payloads: Dict[Path, Dict[str, Any]]
     cleanup: Dict[str, Any]
     activity_affected: Dict[str, list[str]]
-    moment_id: str = ""
 
 
 def preview_work_delete(source_dir: Path, work_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
@@ -184,32 +182,6 @@ def preview_series_delete(source_dir: Path, series_id: str, *, repo_root: Path |
     }
 
 
-def preview_moment_delete(source_dir: Path, moment_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
-    moment_records = load_moment_metadata_records(source_dir)
-    moment_record = moment_records.get(moment_id)
-    if not isinstance(moment_record, dict):
-        raise ValueError(f"moment_id not found: {moment_id}")
-    cleanup = catalogue_cleanup.moment_delete_preview_cleanup(repo_root, moment_id) if repo_root is not None else {}
-    cleanup_count = sum(
-        int(cleanup.get(key, 0) or 0)
-        for key in ("repo_artifacts", "repo_media", "staged_media")
-    )
-    return {
-        "kind": "moment",
-        "id": moment_id,
-        "record": moment_record,
-        "blockers": [],
-        "affected": {
-            "works": [],
-            "series": [],
-            "work_details": [],
-            "moments": [moment_id],
-        },
-        "cleanup": cleanup,
-        "summary": f"Delete moment {moment_id}, remove {cleanup_count} generated/media file(s), update the moments index, and rebuild catalogue search.",
-    }
-
-
 def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
     source_records = records_from_json_source(source_dir)
     updated_works = dict(source_records.works)
@@ -284,18 +256,6 @@ def validate_series_delete_records(source_dir: Path, series_id: str) -> list[str
     return validate_source_records(normalized_records)
 
 
-def validate_moment_delete_records(source_dir: Path, moment_id: str) -> list[str]:
-    moment_records = load_moment_metadata_records(source_dir)
-    moment_records.pop(moment_id, None)
-    errors: list[str] = []
-    for remaining_moment_id, moment_record in sorted(moment_records.items()):
-        errors.extend(
-            f"{remaining_moment_id}: {error}"
-            for error in source_mutation.validate_moment_record(remaining_moment_id, moment_record)
-        )
-    return errors
-
-
 def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_root: Path | None = None) -> Dict[str, Any]:
     if kind == "work":
         preview = preview_work_delete(source_dir, record_id, repo_root=repo_root)
@@ -310,8 +270,7 @@ def build_delete_preview(source_dir: Path, kind: str, record_id: str, *, repo_ro
         preview = preview_series_delete(source_dir, record_id, repo_root=repo_root)
         preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
     else:
-        preview = preview_moment_delete(source_dir, record_id, repo_root=repo_root)
-        preview["validation_errors"] = validate_moment_delete_records(source_dir, record_id)
+        raise ValueError("delete kind must be work, work_detail, work_detail_section, or series")
     blockers = list(preview.get("blockers") or [])
     validation_errors = list(preview.get("validation_errors") or [])
     preview["blockers"] = blockers
@@ -332,7 +291,6 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
         "works": [str(value) for value in (preview.get("affected") or {}).get("works") or []],
         "series": [str(value) for value in (preview.get("affected") or {}).get("series") or []],
         "work_details": [str(value) for value in (preview.get("affected") or {}).get("work_details") or []],
-        "moments": [str(value) for value in (preview.get("affected") or {}).get("moments") or []],
     }
 
     if kind == "work":
@@ -467,19 +425,4 @@ def build_delete_apply_plan(source_dir: Path, repo_root: Path, kind: str, record
             activity_affected=affected,
         )
 
-    moments_path = (source_dir / MOMENT_METADATA_FILENAME).resolve()
-    moments_payload = _source_payload(source_dir, MOMENT_METADATA_FILENAME, "moments")
-    current_record = moments_payload["moments"].get(record_id)
-    if not isinstance(current_record, dict):
-        raise ValueError(f"moment_id not found: {record_id}")
-    updated_moments = dict(moments_payload["moments"])
-    del updated_moments[record_id]
-    cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
-    return DeleteApplyPlan(
-        kind=kind,
-        record_id=record_id,
-        payloads={moments_path: moment_metadata_payload(updated_moments)},
-        cleanup=cleanup,
-        activity_affected=affected,
-        moment_id=record_id,
-    )
+    raise ValueError("delete kind must be work, work_detail, work_detail_section, or series")

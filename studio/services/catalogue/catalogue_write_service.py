@@ -6,14 +6,11 @@ from http import HTTPStatus
 from pathlib import Path
 from typing import Any, Mapping
 
-from catalogue import catalogue_prose_import as prose_import
 from catalogue.catalogue_bulk_service import bulk_save_payload
 from catalogue.catalogue_build_service import build_apply_payload, build_preview_payload
 from catalogue.catalogue_detail_section_service import create_detail_section_payload, save_detail_section_payload
 from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
-from catalogue.catalogue_moment_service import moment_preview_payload, moment_save_payload
 from catalogue.catalogue_publication_service import publication_apply_response, publication_preview_payload
-from catalogue.catalogue_prose_import_service import moment_import_apply_payload, prose_import_apply_response
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
@@ -33,12 +30,6 @@ SERVICE_POST_PATHS = {
     "/publication-apply",
     "/build-preview",
     "/build-apply",
-    "/moment/preview",
-    "/moment/save",
-    "/prose/import-preview",
-    "/prose/import-apply",
-    "/moment/import-preview",
-    "/moment/import-apply",
 }
 
 
@@ -77,16 +68,4 @@ def handle_catalogue_post(
     if api_path == "/build-apply":
         success, payload = build_apply_payload(context, body)
         return HTTPStatus.OK if success else HTTPStatus.INTERNAL_SERVER_ERROR, payload
-    if api_path == "/moment/preview":
-        return HTTPStatus.OK, moment_preview_payload(context, body)
-    if api_path == "/moment/save":
-        return HTTPStatus.OK, moment_save_payload(context, body)
-    if api_path == "/prose/import-preview":
-        return HTTPStatus.OK, prose_import.build_prose_import_preview(context.repo_root, context.source_dir, body)
-    if api_path == "/prose/import-apply":
-        return prose_import_apply_response(context, body)
-    if api_path == "/moment/import-preview":
-        return HTTPStatus.OK, prose_import.build_moment_import_preview(context.repo_root, body)
-    if api_path == "/moment/import-apply":
-        return HTTPStatus.OK, moment_import_apply_payload(context, body)
     raise FileNotFoundError(f"Unknown catalogue service route: {api_path}")

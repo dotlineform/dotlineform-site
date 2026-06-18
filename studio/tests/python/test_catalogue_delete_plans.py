@@ -16,7 +16,6 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue import catalogue_delete_plans  # noqa: E402
 from catalogue.catalogue_source import payload_for_map, work_details_payload_for_maps  # noqa: E402
-from catalogue.moment_sources import moment_metadata_payload  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -111,22 +110,6 @@ def write_source_fixture(source_dir: Path) -> None:
             },
         ),
     )
-    write_json(
-        source_dir / "moments.json",
-        moment_metadata_payload(
-            {
-                "keys": {
-                    "moment_id": "keys",
-                    "title": "Keys",
-                    "status": "published",
-                    "published_date": "2026-01-01",
-                    "date": "2026-01-01",
-                    "date_display": "January 2026",
-                    "image_alt": "Keys",
-                }
-            }
-        ),
-    )
 
 
 def test_work_delete_preview_reports_dependents_and_primary_blocker() -> None:
@@ -149,7 +132,7 @@ def test_work_delete_preview_reports_dependents_and_primary_blocker() -> None:
     assert_true(preview["blocked"], "work delete blocked")
 
 
-def test_detail_series_and_moment_delete_preview_shapes() -> None:
+def test_detail_and_series_delete_preview_shapes() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         source_dir = root / "studio/data/canonical/catalogue"
@@ -158,7 +141,6 @@ def test_detail_series_and_moment_delete_preview_shapes() -> None:
         detail = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail", "00001-001", repo_root=root)
         section = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail_section", "00001-1", repo_root=root)
         series = catalogue_delete_plans.build_delete_preview(source_dir, "series", "009", repo_root=root)
-        moment = catalogue_delete_plans.build_delete_preview(source_dir, "moment", "keys", repo_root=root)
 
     assert_equal(detail["affected"], {"works": ["00001"], "series": [], "work_details": ["00001-001"]}, "detail affected")
     assert_equal(detail["summary"], "Delete work detail 00001-001 and remove 0 generated/media file(s).", "detail summary")
@@ -166,12 +148,6 @@ def test_detail_series_and_moment_delete_preview_shapes() -> None:
     assert_equal(section["summary"], "Delete detail section 00001-1, 1 detail record(s), and remove 0 generated/media file(s).", "section summary")
     assert_equal(series["affected"], {"works": ["00001"], "series": ["009"], "work_details": []}, "series affected")
     assert_equal(series["summary"], "Delete series 009, remove it from 1 member work record(s), and remove 0 generated/media file(s).", "series summary")
-    assert_equal(moment["affected"]["moments"], ["keys"], "moment affected")
-    assert_equal(
-        moment["summary"],
-        "Delete moment keys, remove 0 generated/media file(s), update the moments index, and rebuild catalogue search.",
-        "moment summary",
-    )
 
 
 def test_draft_series_primary_reference_is_cleared_for_work_delete_validation() -> None:
@@ -235,7 +211,7 @@ def test_section_delete_apply_plan_removes_section_and_details() -> None:
 
 def main() -> None:
     test_work_delete_preview_reports_dependents_and_primary_blocker()
-    test_detail_series_and_moment_delete_preview_shapes()
+    test_detail_and_series_delete_preview_shapes()
     test_draft_series_primary_reference_is_cleared_for_work_delete_validation()
     test_delete_apply_plan_builds_source_payloads_and_activity_affected()
     test_section_delete_apply_plan_removes_section_and_details()

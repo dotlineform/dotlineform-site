@@ -243,7 +243,7 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
                         now_utc=now_utc,
                         script_purpose_id="save-canonical-data",
                         status="completed",
-                        record_groups={"works": [work_id], "series": [], "work_details": [], "moments": []},
+                        record_groups={"works": [work_id], "series": [], "work_details": []},
                         detail_items=[
                             f"Saved canonical work record {work_id}",
                             f"Changed fields: {', '.join(fields_changed)}",
@@ -255,7 +255,7 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
                         now_utc=now_utc,
                         script_purpose_id="rebuild-lookups",
                         status="completed",
-                        record_groups={"works": [work_id], "series": related_series_ids, "work_details": [], "moments": []},
+                        record_groups={"works": [work_id], "series": related_series_ids, "work_details": []},
                         detail_items=[
                             f"Refreshed catalogue lookup data for work {work_id}",
                             f"Wrote {refresh_result['written_count']} lookup file(s)",
@@ -296,7 +296,7 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
                 build_payload,
                 published_detail=f"Updated published work JSON for {work_id}",
                 search_detail=f"Rebuilt catalogue search for work {work_id}",
-                fallback_record_groups={"works": [work_id], "series": [], "work_details": [], "moments": []},
+                fallback_record_groups={"works": [work_id], "series": [], "work_details": []},
             ),
         )
     return payload

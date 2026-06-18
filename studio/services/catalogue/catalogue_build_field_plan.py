@@ -13,7 +13,7 @@ from catalogue.catalogue_field_registry import (
 from catalogue.catalogue_source import records_from_json_source
 
 
-RECORD_FAMILIES = {"work", "work_detail", "series", "moment"}
+RECORD_FAMILIES = {"work", "work_detail", "series"}
 
 
 def parse_csv_tokens(value: Any) -> list[str]:
@@ -36,10 +36,8 @@ def infer_record_family_for_scope(scope: Mapping[str, Any], explicit_family: str
     family = str(explicit_family or "").strip().lower().replace("-", "_")
     if family:
         if family not in RECORD_FAMILIES:
-            raise ValueError("--record-family must be work, work_detail, series, or moment")
+            raise ValueError("--record-family must be work, work_detail, or series")
         return family
-    if str(scope.get("kind") or "") == "moment":
-        return "moment"
     if scope.get("detail_uid"):
         return "work_detail"
     if scope.get("series_ids") and not scope.get("work_ids"):

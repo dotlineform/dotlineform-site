@@ -8,7 +8,6 @@ const HOME_COLUMNS = Object.freeze([
       Object.freeze({ routeId: "catalogue_series_editor" }),
       Object.freeze({ routeId: "catalogue_work_editor" }),
       Object.freeze({ routeId: "bulk_add_work" }),
-      Object.freeze({ routeId: "catalogue_moment_editor" }),
       Object.freeze({ routeId: "catalogue_field_registry" }),
       Object.freeze({ routeId: "studio_works", params: Object.freeze({ sort: "cat", dir: "asc" }) }),
       Object.freeze({ routeId: "project_state" })

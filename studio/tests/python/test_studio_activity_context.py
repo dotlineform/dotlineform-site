@@ -14,7 +14,6 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_activity as activity  # noqa: E402
-from catalogue import catalogue_invalidation as invalidation_rules  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -103,9 +102,7 @@ def test_server_assigns_missing_correlation_id() -> None:
 
 def test_batch_a_save_contexts_are_normalized() -> None:
     scenarios = [
-        (activity.ACTIVITY_PROFILE_SAVE_WORK_DETAIL, "00001-001"),
         (activity.ACTIVITY_PROFILE_SAVE_SERIES, "009"),
-        (activity.ACTIVITY_PROFILE_SAVE_MOMENT, "studio-test"),
     ]
     for profile, record_id in scenarios:
         context = normalize_for_profile(
@@ -131,15 +128,12 @@ def test_batch_a_save_contexts_are_normalized() -> None:
 def test_batch_b_contexts_are_normalized() -> None:
     scenarios = [
         (activity.ACTIVITY_PROFILE_CREATE_WORK, "09999"),
-        (activity.ACTIVITY_PROFILE_CREATE_WORK_DETAIL, "00001-099"),
         (activity.ACTIVITY_PROFILE_CREATE_SERIES, "099"),
         (activity.activity_profile_for_publication("work", "publish"), "00001"),
         (activity.activity_profile_for_publication("series", "publish"), "009"),
-        (activity.activity_profile_for_publication("moment", "unpublish"), "studio-test"),
         (activity.activity_profile_for_delete("work"), "00001"),
-        (activity.activity_profile_for_delete("work_detail"), "00001-001"),
+        (activity.activity_profile_for_delete("work_detail_section"), "00001-1"),
         (activity.activity_profile_for_delete("series"), "009"),
-        (activity.activity_profile_for_delete("moment"), "studio-test"),
     ]
     for profile, record_id in scenarios:
         context = normalize_for_profile(
@@ -166,7 +160,6 @@ def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
     scenarios = [
         (activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "works"),
         (activity.ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS, "work_details"),
-        (activity.ACTIVITY_PROFILE_IMPORT_MOMENT, "studio-test"),
         (activity.ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT, "project-state"),
     ]
     for profile, record_id in scenarios:
@@ -268,7 +261,7 @@ def test_catalogue_build_studio_activity_rows_follow_attempted_steps() -> None:
         },
         published_detail="Updated published series/work JSON for series 009",
         search_detail="Rebuilt catalogue search for series 009",
-        fallback_record_groups={"works": [], "series": ["009"], "work_details": [], "moments": []},
+        fallback_record_groups={"works": [], "series": ["009"], "work_details": []},
     )
     assert_equal([row["script_purpose_id"] for row in rows], ["rebuild-published-series-data", "update-search"], "build row purpose order")
     assert_equal([row["status"] for row in rows], ["completed", "warning"], "build row statuses")
@@ -300,7 +293,7 @@ def test_delete_activity_rows_follow_profile_order() -> None:
             "search_exit_code": 0,
         },
         now_utc="2026-05-08T12:00:00Z",
-        record_groups={"works": ["00001"], "series": [], "work_details": [], "moments": [], "search": []},
+        record_groups={"works": ["00001"], "series": [], "work_details": [], "search": []},
         source_detail_items=["Deleted canonical work source record 00001"],
         cleanup_detail_items=["Cleaned generated artifacts for deleted work 00001"],
     )
@@ -311,32 +304,6 @@ def test_delete_activity_rows_follow_profile_order() -> None:
     )
     assert_equal([row["status"] for row in rows], ["completed", "completed", "completed", "completed"], "delete row statuses")
     assert_equal(rows[3]["record_groups"]["search"], ["catalogue"], "delete search scope")
-
-
-def test_moment_create_stays_out_of_batch_b_contract() -> None:
-    contract = json.loads((REPO_ROOT / "studio/data/config/runtime/activity-contract.json").read_text(encoding="utf-8"))
-    moment_actions = contract["pages"]["catalogue-moment"]["actions"]
-    if "create-moment" in moment_actions:
-        raise AssertionError("moment creation belongs to import/apply coverage, not Batch B create-mode coverage")
-
-
-def test_moment_profiles_do_not_emit_lookup_rows() -> None:
-    profiles = [
-        activity.ACTIVITY_PROFILE_SAVE_MOMENT,
-        activity.activity_profile_for_publication("moment", "publish"),
-        activity.activity_profile_for_publication("moment", "unpublish"),
-        activity.activity_profile_for_delete("moment"),
-    ]
-    for profile in profiles:
-        if "rebuild-lookups" in profile.script_purpose_ids:
-            raise AssertionError(f"{profile.action_id} should not advertise Studio lookup refresh activity")
-        assert_equal(profile.lookup_script_purpose_id, "", f"{profile.action_id} lookup purpose")
-
-
-def test_moment_build_invalidation_uses_moment_artifacts() -> None:
-    invalidation = invalidation_rules.moment_build_invalidation_for_fields(["title"])
-    assert_equal(invalidation["class"], invalidation_rules.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD, "moment invalidation class")
-    assert_equal(invalidation["artifacts"], ["catalogue_search", "moment_record", "moments_index"], "moment invalidation artifacts")
 
 
 def main() -> None:
@@ -350,9 +317,6 @@ def main() -> None:
     test_context_must_match_expected_action_and_record()
     test_catalogue_build_studio_activity_rows_follow_attempted_steps()
     test_delete_activity_rows_follow_profile_order()
-    test_moment_create_stays_out_of_batch_b_contract()
-    test_moment_profiles_do_not_emit_lookup_rows()
-    test_moment_build_invalidation_uses_moment_artifacts()
     print("Studio activity context tests OK")
 
 

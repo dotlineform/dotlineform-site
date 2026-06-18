@@ -10,7 +10,7 @@ from catalogue import catalogue_delete_plans
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_service import run_catalogue_search_rebuild
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_text, slug_id
-from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, normalize_moment_id_value, refresh_lookup_payloads
+from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, refresh_lookup_payloads
 from catalogue.series_ids import normalize_series_id
 
 
@@ -46,28 +46,15 @@ def delete_apply_response(context: CatalogueWriteContext, body: Mapping[str, Any
         record_id=record_id,
     )
     plan = catalogue_delete_plans.build_delete_apply_plan(context.source_dir, context.repo_root, kind, record_id, preview)
-    if kind == "moment":
-        metadata_path, metadata_payload = next(iter(plan.payloads.items()))
-        transaction_result = transactions.execute_moment_cleanup_transaction(
-            repo_root=context.repo_root,
-            dry_run=context.dry_run,
-            allowed_write_paths=context.allowed_write_paths,
-            metadata_path=metadata_path,
-            metadata_payload=metadata_payload,
-            cleanup=plan.cleanup,
-            moment_id=plan.moment_id,
-            rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
-        )
-    else:
-        transaction_result = transactions.execute_catalogue_cleanup_transaction(
-            repo_root=context.repo_root,
-            dry_run=context.dry_run,
-            allowed_write_paths=context.allowed_write_paths,
-            payloads=plan.payloads,
-            cleanup=plan.cleanup,
-            rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
-            refresh_lookup_payloads=lambda: refresh_lookup_payloads(context),
-        )
+    transaction_result = transactions.execute_catalogue_cleanup_transaction(
+        repo_root=context.repo_root,
+        dry_run=context.dry_run,
+        allowed_write_paths=context.allowed_write_paths,
+        payloads=plan.payloads,
+        cleanup=plan.cleanup,
+        rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
+        refresh_lookup_payloads=lambda: refresh_lookup_payloads(context),
+    )
     cleanup_result = transaction_result.payload
     payload: dict[str, Any] = {
         "ok": True,
@@ -88,8 +75,6 @@ def delete_apply_response(context: CatalogueWriteContext, body: Mapping[str, Any
         now_utc = activity.utc_now()
         cleanup_payload = payload.get("cleanup") if isinstance(payload.get("cleanup"), Mapping) else {}
         updated_json_files = cleanup_payload.get("updated_json_files")
-        if updated_json_files is None and cleanup_payload.get("moments_index_updated"):
-            updated_json_files = 1
         record_groups = activity.activity_record_groups_from_affected(plan.activity_affected)
         append_activity_rows(
             context.repo_root,
@@ -113,8 +98,8 @@ def delete_apply_response(context: CatalogueWriteContext, body: Mapping[str, Any
 
 def extract_delete_request(body: Mapping[str, Any]) -> dict[str, str]:
     kind = str(body.get("kind") or "").strip().lower()
-    if kind not in {"work", "work_detail", "work_detail_section", "series", "moment"}:
-        raise ValueError("delete kind must be work, work_detail, work_detail_section, series, or moment")
+    if kind not in {"work", "work_detail", "work_detail_section", "series"}:
+        raise ValueError("delete kind must be work, work_detail, work_detail_section, or series")
     if kind == "work":
         record_id = slug_id(body.get("work_id") or body.get("id"))
     elif kind == "work_detail":
@@ -125,8 +110,6 @@ def extract_delete_request(body: Mapping[str, Any]) -> dict[str, str]:
             raise ValueError("section_id is required")
     elif kind == "series":
         record_id = normalize_series_id(body.get("series_id") or body.get("id"))
-    else:
-        record_id = normalize_moment_id_value(body.get("moment_id") or body.get("id"))
     return {
         "kind": kind,
         "id": record_id,

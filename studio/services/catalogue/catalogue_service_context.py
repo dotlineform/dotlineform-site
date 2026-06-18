@@ -10,7 +10,6 @@ from catalogue import catalogue_activity as activity
 from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
 from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
-from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, MOMENT_METADATA_FILENAME, normalize_moment_filename
 from script_logging import append_script_log
 from studio_activity import append_studio_activity
 
@@ -26,7 +25,6 @@ class CatalogueWriteContext:
     works_path: Path
     work_details_path: Path
     series_path: Path
-    moments_path: Path
     allowed_write_paths: set[Path]
     allowed_write_roots: set[Path]
     dry_run: bool = False
@@ -48,25 +46,14 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
         works_path=(source_dir / SOURCE_FILES["works"]).resolve(),
         work_details_path=(source_dir / SOURCE_FILES["work_details"]).resolve(),
         series_path=(source_dir / SOURCE_FILES["series"]).resolve(),
-        moments_path=(source_dir / MOMENT_METADATA_FILENAME).resolve(),
         allowed_write_paths={
             (source_dir / filename).resolve()
             for kind, filename in SOURCE_FILES.items()
             if kind != "meta"
-        } | {(source_dir / MOMENT_METADATA_FILENAME).resolve()},
-        allowed_write_roots={
-            (resolved_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
         },
+        allowed_write_roots=set(),
         dry_run=dry_run,
     )
-
-
-def load_moments_payload(path: Path) -> dict[str, Any]:
-    payload = load_json_file(path)
-    moments = payload.get("moments")
-    if not isinstance(moments, dict):
-        raise ValueError("moments source file must include a moments object")
-    return payload
 
 
 def load_works_payload(path: Path) -> dict[str, Any]:
@@ -226,13 +213,6 @@ def focused_lookup_refresh_response(refresh_result: Mapping[str, Any]) -> dict[s
         "unknown_fields": refresh_result["unknown_fields"],
         "written_count": refresh_result["written_count"],
     }
-
-
-def normalize_moment_id_value(value: Any) -> str:
-    text = str(value or "").strip()
-    if not text:
-        raise ValueError("moment_id is required")
-    return normalize_moment_filename(text if text.endswith(".md") else f"{text}.md")[:-3]
 
 
 def extract_apply_build(body: Mapping[str, Any]) -> bool:

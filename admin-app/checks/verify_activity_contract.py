@@ -32,19 +32,6 @@ EXPECTED_BATCH_A_ACTIONS = {
             "update-search",
         ],
     },
-    "catalogue-work-detail": {
-        "route": "/studio/catalogue-work-detail/",
-        "action_id": "save-work-detail",
-        "control_id": "catalogueWorkDetailSave",
-        "control_selector": "#catalogueWorkDetailSave",
-        "endpoint": "/catalogue/work-detail/save",
-        "purpose_ids": [
-            "save-canonical-data",
-            "rebuild-published-work-data",
-            "rebuild-lookups",
-            "update-search",
-        ],
-    },
     "catalogue-series": {
         "route": "/studio/catalogue-series/",
         "action_id": "save-series",
@@ -55,18 +42,6 @@ EXPECTED_BATCH_A_ACTIONS = {
             "save-canonical-data",
             "rebuild-published-series-data",
             "rebuild-lookups",
-            "update-search",
-        ],
-    },
-    "catalogue-moment": {
-        "route": "/studio/catalogue-moment/",
-        "action_id": "save-moment",
-        "control_id": "catalogueMomentSave",
-        "control_selector": "#catalogueMomentSave",
-        "endpoint": "/catalogue/moment/save",
-        "purpose_ids": [
-            "save-canonical-data",
-            "rebuild-published-moment-data",
             "update-search",
         ],
     },

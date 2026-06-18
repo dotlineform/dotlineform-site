@@ -9,13 +9,10 @@ Work-details JSON index files are written to site/assets/works/index/<work_id>.j
 Lightweight works index JSON is written to site/assets/data/works_index.json (object keyed by work_id).
 Recent publications JSON is written to site/assets/data/recent_index.json.
 Studio-only work storage index JSON is written to studio/data/generated/activity/work-storage-index.json (object keyed by work_id).
-Moment JSON index files are written to site/assets/moments/index/<moment_id>.json (one per selected moment).
-Lightweight moments index JSON is written to site/assets/data/moments_index.json (object keyed by moment_id).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
 - WorkDetails: additional detail images associated with a work
-- Moments: standalone moment entries sourced from catalogue moment metadata JSON plus repo-local body Markdown
 
 YAML typing rules enforced by this script:
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
@@ -42,16 +39,10 @@ Common flags:
 - --force: regenerate even when generated output would otherwise match existing files
 - --work-ids / --work-ids-file: limit work/work_details generation scope
 - --series-ids / --series-ids-file: limit series JSON scope
-- --moment-ids / --moment-ids-file: limit moments generation scope
-- --moments-output-dir: retired compatibility option; route anchors are no longer written
-- --moments-json-dir: moment JSON output destination
-- --moments-index-json-path: moments index JSON output destination
-- --projects-base-dir: base path used for work/work_details dimension lookups and moment source-image lookup
+- --projects-base-dir: base path used for work/work_details dimension lookups
 
 Path variables used by the script:
 - projects_root = [projects-base-dir]/projects (work + work_details source lookup)
-- moment prose root = studio/data/canonical/catalogue-markdown/moments
-- moments_images_root = [projects-base-dir]/moments/images (moment source image lookup)
 
 """
 
@@ -87,7 +78,6 @@ from markdown_renderer import render_markdown_to_html  # noqa: E402
 
 try:
     from catalogue import catalogue_generation_indexes as indexes
-    from catalogue import catalogue_generation_moments as moment_artifacts
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
     from catalogue import catalogue_generation_source_updates as source_updates
@@ -106,7 +96,6 @@ try:
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue import catalogue_generation_indexes as indexes
-    from catalogue import catalogue_generation_moments as moment_artifacts
     from catalogue import catalogue_generation_recent as recent
     from catalogue import catalogue_generation_records as records
     from catalogue import catalogue_generation_source_updates as source_updates
@@ -139,7 +128,6 @@ try:
         env_var_name,
         env_var_value,
         load_pipeline_config,
-        source_moments_images_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -147,7 +135,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         env_var_name,
         env_var_value,
         load_pipeline_config,
-        source_moments_images_subdir,
         source_works_root_subdir,
     )
 
@@ -178,12 +165,6 @@ try:
     from catalogue.series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id
-
-try:
-    from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, build_moment_metadata_source_index
-
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
@@ -417,9 +398,6 @@ def main() -> None:
     ap.add_argument("--works-index-json-path", default=public_paths.WORKS_INDEX_JSON_PATH.as_posix(), help="Output path for generated lightweight works index JSON")
     ap.add_argument("--recent-index-json-path", default=public_paths.RECENT_INDEX_JSON_PATH.as_posix(), help="Output path for generated recent publications index JSON")
     ap.add_argument("--work-storage-index-json-path", default="studio/data/generated/activity/work-storage-index.json", help="Output path for generated Studio-only work storage index JSON")
-    ap.add_argument("--moments-output-dir", default="_moments", help="Retired compatibility option; moment route stubs are no longer written")
-    ap.add_argument("--moments-json-dir", default=public_paths.MOMENTS_JSON_DIR.as_posix(), help="Output folder for generated per-moment JSON index files")
-    ap.add_argument("--moments-index-json-path", default=public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(), help="Output path for generated lightweight moments index JSON")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
@@ -458,22 +436,12 @@ def main() -> None:
         help="Path to series_ids file (one id per line). If set, only these series are processed.",
     )
     ap.add_argument(
-        "--moment-ids",
-        default="",
-        help="Comma-separated moment_ids to process.",
-    )
-    ap.add_argument(
-        "--moment-ids-file",
-        default="",
-        help="Path to moment_ids file (one id per line). If set, only these moments are processed.",
-    )
-    ap.add_argument(
         "--only",
         action="append",
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,series-pages,series-index-json,work-details-pages,work-json,works-index-json,recent-index-json,moments,moments-index-json. "
+            "Allowed: work-pages,series-pages,series-index-json,work-details-pages,work-json,works-index-json,recent-index-json. "
             "Retired page artifact names are accepted as aliases for the current generated JSON/index contracts. "
             "Aggregate index JSON artifacts are always rebuilt on every run."
         ),
@@ -530,8 +498,6 @@ def main() -> None:
         "work-json",
         "works-index-json",
         "recent-index-json",
-        "moments",
-        "moments-index-json",
     }
     selected_artifacts: Optional[set[str]] = None
     if args.only:
@@ -564,10 +530,8 @@ def main() -> None:
     run_work_details_pages = False
     run_work_json = artifact_enabled("work-json") or requested_work_pages or requested_work_details_pages
     run_works_index_json = True
-    run_moments_artifact = artifact_enabled("moments")
-    run_moments_index_json = True
 
-    needs_projects_base = run_work_details_pages or run_work_json or run_series_pages or run_moments_artifact or run_moments_index_json
+    needs_projects_base = run_work_details_pages or run_work_json or run_series_pages
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
@@ -588,10 +552,6 @@ def main() -> None:
     recent_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_storage_index_json_path = Path(args.work_storage_index_json_path).expanduser()
     work_storage_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    moments_json_dir = Path(args.moments_json_dir).expanduser()
-    moments_json_dir.mkdir(parents=True, exist_ok=True)
-    moments_index_json_path = Path(args.moments_index_json_path).expanduser()
-    moments_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
@@ -689,23 +649,6 @@ def main() -> None:
         except ValueError as exc:
             raise SystemExit(f"Invalid --series-ids value: {exc}") from exc
 
-    selected_moment_ids = None
-    if args.moment_ids_file:
-        mids_path = Path(args.moment_ids_file).expanduser()
-        if not mids_path.exists():
-            raise SystemExit(f"moment_ids file not found: {mids_path}")
-        selected_moment_ids = {
-            require_slug_safe("moment_id", normalize_text(line).lower())
-            for line in mids_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        }
-    elif args.moment_ids:
-        selected_moment_ids = {
-            require_slug_safe("moment_id", normalize_text(mid).lower())
-            for mid in args.moment_ids.split(",")
-            if mid.strip()
-        }
-    explicit_moment_filter = bool(args.moment_ids_file or args.moment_ids)
     # If caller scopes by series but does not provide an explicit work filter:
     # - when work artifacts are explicitly selected via --only, derive selected work_ids from those series
     # - otherwise skip work-page processing by default (backward compatible behavior)
@@ -722,17 +665,6 @@ def main() -> None:
                     selected_ids.add(wid)
         else:
             selected_ids = set()
-    # If caller scopes by work/series and does not provide an explicit moments filter,
-    # skip moments generation by default (unless moments was explicitly selected via --only).
-    run_moments = run_moments_artifact
-    if (
-        selected_artifacts is None
-        and (explicit_work_filter or selected_series_ids is not None)
-        and not explicit_moment_filter
-    ):
-        run_moments = False
-        run_moments_index_json = False
-
     source_validation_errors = validate_source_records(source_records)
     if source_validation_errors:
         raise SystemExit("JSON source validation failed: " + "; ".join(source_validation_errors[:20]))
@@ -1283,226 +1215,6 @@ def main() -> None:
         path=work_storage_index_json_path,
         payload=work_storage_payload_out,
         payload_version=work_storage_payload_version,
-        write=args.write,
-        force=args.force,
-        display_path=display_path,
-    )
-
-    # ----------------------------
-    # Moment page + JSON generation (Moments)
-    # ----------------------------
-    # Required columns:
-    # - moment_id, title, status, published_date, date, date_display,
-    #   width_px, height_px
-    # Optional columns:
-    # - moment_id / slug / id (preferred filename stem)
-    # - date, date_display
-    # - image_file/image_filename/project_filename
-    # - image_alt
-    # - width_px, height_px
-    # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
-    moment_source_records: List[Dict[str, Any]] = []
-    projects_base_dir = Path(args.projects_base_dir).expanduser()
-    moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
-    moments_prose_root = repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR
-    source_moment_index = build_moment_metadata_source_index(
-        json_source_dir,
-        repo_root=repo_root,
-        moments_images_root=moments_images_root,
-    )
-    if not run_moments and not run_moments_index_json:
-        if selected_artifacts is not None and not run_moments_artifact and not run_moments_index_json:
-            print("Moment pages/JSON skipped: not selected by --only.")
-        else:
-            print("Moment pages/JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
-    elif not source_moment_index:
-        print("No moment artifacts to generate (no moment metadata records found).")
-    else:
-        moment_source_records = moment_artifacts.build_moment_source_records(
-            source_moment_index,
-            moments_prose_root=moments_prose_root,
-            moments_images_root=moments_images_root,
-        )
-
-        moments_pages_total = 0
-        moments_json_total = 0
-        for moment_entry in moment_source_records:
-            mid = moment_artifacts.moment_entry_id(moment_entry)
-            if not mid:
-                continue
-            if selected_moment_ids is not None and mid not in selected_moment_ids:
-                continue
-            status = normalize_status(moment_entry.get("status"))
-            if run_moments and moment_artifacts.is_actionable_moment_status(status, refresh_published=refresh_published):
-                moments_pages_total += 1
-                moments_json_total += 1
-
-        moments_pages_written = 0
-        moments_pages_skipped = 0
-        moments_json_written = 0
-        moments_json_skipped = 0
-        moment_json_generated_at_utc = utc_timestamp_now()
-        moments_processed = 0
-
-        for moment_entry in moment_source_records:
-            moment_id = moment_artifacts.moment_entry_id(moment_entry)
-            if not moment_id:
-                if run_moments:
-                    moments_pages_skipped += 1
-                    moments_json_skipped += 1
-                continue
-            mid = moment_id
-            if selected_moment_ids is not None and mid not in selected_moment_ids:
-                if run_moments:
-                    moments_pages_skipped += 1
-                    moments_json_skipped += 1
-                continue
-            status = normalize_status(moment_entry.get("status"))
-            moment_actionable = run_moments and moment_artifacts.is_actionable_moment_status(
-                status,
-                refresh_published=refresh_published,
-            )
-            if not moment_actionable and run_moments:
-                moments_pages_skipped += 1
-                moments_json_skipped += 1
-            if not moment_actionable:
-                continue
-
-            if not moment_artifacts.is_slug_safe(moment_id):
-                raise SystemExit(f"Moment source filename must be slug-safe; got: {moment_id!r}")
-
-            moments_processed += 1
-            prefix_m = f"[moment {moment_id}] "
-            print(f"[moment {moments_processed}/{moments_pages_total}] {moment_id}", flush=True)
-
-            width_px = coerce_int(moment_entry.get("width_px"))
-            height_px = coerce_int(moment_entry.get("height_px"))
-
-            source_image_file = coerce_string(moment_entry.get("source_image_file")) or f"{moment_id}.jpg"
-
-            # Resolve source image for dimensions when possible.
-            src_path: Optional[Path] = None
-            source_filename = source_image_file
-            if source_filename:
-                source_image_path_value = coerce_string(moment_entry.get("source_image_path"))
-                src_path = Path(source_image_path_value) if source_image_path_value else (moments_images_root / source_filename)
-
-            source_image_exists = bool(src_path is not None and src_path.exists())
-
-            if src_path is not None:
-                src_w, src_h = read_image_dims_px(src_path)
-                if src_w is not None and src_h is not None:
-                    width_px = src_w
-                    height_px = src_h
-
-            moment_record = moment_artifacts.build_moment_runtime_record(
-                moment_entry,
-                source_image_exists=source_image_exists,
-                width_px=width_px,
-                height_px=height_px,
-            )
-            source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
-            source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
-            if not source_prose_path.exists():
-                print(f"{prefix_m}WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moment.")
-                if moment_actionable:
-                    moments_pages_skipped += 1
-                    moments_json_skipped += 1
-                continue
-
-            if moment_actionable:
-                content_html = render_catalogue_prose_markdown(source_prose_path)
-                payload = moment_artifacts.build_moment_record_payload(
-                    moment_record,
-                    content_html=content_html,
-                    generated_at_utc=moment_json_generated_at_utc,
-                )
-                out_json_path = moments_json_dir / f"{moment_id}.json"
-                exists = out_json_path.exists()
-                existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
-                payload_version = payload["header"]["version"]
-                moment_json_decision = writes.decide_json_payload_write(
-                    path_exists=exists,
-                    existing_version=existing_version,
-                    payload_version=payload_version,
-                    force=args.force,
-                )
-
-                if not moment_json_decision.should_write:
-                    moments_json_skipped += 1
-                else:
-                    if args.write:
-                        out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                        print(f"{prefix_m}WRITE moment JSON: {display_path(out_json_path)}")
-                        moments_json_written += 1
-                    else:
-                        print(f"{prefix_m}DRY-RUN: would write moment JSON {display_path(out_json_path)} (overwrite={exists})")
-                        moments_json_written += 1
-
-        if run_moments:
-            print(
-                f"Moment JSON done. {'Would write' if not args.write else 'Wrote'}: {moments_json_written}. Skipped: {moments_json_skipped}."
-            )
-
-    moment_index_records: List[Dict[str, Any]] = []
-    projects_base_dir = Path(args.projects_base_dir).expanduser()
-    moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
-
-    for moment_entry in moment_source_records:
-        moment_id = moment_artifacts.moment_entry_id(moment_entry)
-        if not moment_id:
-            continue
-
-        status = normalize_status(moment_entry.get("status"))
-        if status not in {"draft", "published"}:
-            continue
-
-        if not moment_artifacts.is_slug_safe(moment_id):
-            raise SystemExit(f"Moment source filename must be slug-safe; got: {moment_id!r}")
-
-        width_px = coerce_int(moment_entry.get("width_px"))
-        height_px = coerce_int(moment_entry.get("height_px"))
-        source_image_file = coerce_string(moment_entry.get("source_image_file")) or f"{moment_id}.jpg"
-
-        src_path: Optional[Path] = None
-        source_filename = source_image_file
-        if source_filename:
-            source_image_path_value = coerce_string(moment_entry.get("source_image_path"))
-            src_path = Path(source_image_path_value) if source_image_path_value else (moments_images_root / source_filename)
-
-        source_image_exists = bool(src_path is not None and src_path.exists())
-
-        if src_path is not None:
-            src_w, src_h = read_image_dims_px(src_path)
-            if src_w is not None and src_h is not None:
-                width_px = src_w
-                height_px = src_h
-
-        source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
-        source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_prose_root / f"{moment_id}.md")
-        if not source_prose_path.exists():
-            print(f"[moment {moment_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moments index.")
-            continue
-
-        moment_index_records.append(
-            moment_artifacts.build_moment_runtime_record(
-                moment_entry,
-                source_image_exists=source_image_exists,
-                width_px=width_px,
-                height_px=height_px,
-            )
-        )
-
-    payload = moment_artifacts.build_moments_index_payload(
-        moment_index_records,
-        generated_at_utc=utc_timestamp_now(),
-    )
-    payload_version = payload["header"]["version"]
-    write_index_json_payload(
-        label="Moments index JSON",
-        path=moments_index_json_path,
-        payload=payload,
-        payload_version=payload_version,
         write=args.write,
         force=args.force,
         display_path=display_path,

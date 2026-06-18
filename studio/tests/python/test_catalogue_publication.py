@@ -15,8 +15,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_publication  # noqa: E402
-from catalogue.catalogue_source import payload_for_map  # noqa: E402
-from catalogue.moment_sources import moment_metadata_payload  # noqa: E402
+from catalogue.catalogue_source import payload_for_map, work_details_payload_for_maps  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -90,15 +89,20 @@ def write_source_fixture(source_dir: Path) -> None:
     )
     write_json(
         source_dir / "work_details.json",
-        payload_for_map(
-            "work_details",
+        work_details_payload_for_maps(
+            {
+                "00002-1": {
+                    "section_id": "00002-1",
+                    "work_id": "00002",
+                    "section_title": "Details",
+                }
+            },
             {
                 "00002-001": {
                     "detail_uid": "00002-001",
                     "work_id": "00002",
                     "detail_id": "001",
                     "section_id": "00002-1",
-                    "section_title": "Details",
                     "project_filename": "beta-detail.jpg",
                     "title": "Beta detail",
                 }
@@ -128,21 +132,6 @@ def write_source_fixture(source_dir: Path) -> None:
                     "primary_work_id": "00002",
                 },
             },
-        ),
-    )
-    write_json(
-        source_dir / "moments.json",
-        moment_metadata_payload(
-            {
-                "keys": {
-                    "moment_id": "keys",
-                    "title": "Keys",
-                    "status": "draft",
-                    "date": "2026-01-01",
-                    "date_display": "January 2026",
-                    "image_alt": "Keys",
-                }
-            }
         ),
     )
 

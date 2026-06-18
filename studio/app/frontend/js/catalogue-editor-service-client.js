@@ -56,30 +56,6 @@ export function applyCatalogueBuild(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, payload);
 }
 
-export function previewCatalogueProseImport(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.previewProseImport, payload);
-}
-
-export function applyCatalogueProseImport(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.applyProseImport, payload);
-}
-
-export function previewCatalogueMomentImport(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.previewMomentImport, payload);
-}
-
-export function applyCatalogueMomentImport(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.applyMomentImport, payload);
-}
-
-export function previewCatalogueMoment(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.previewMoment, payload);
-}
-
-export function saveCatalogueMoment(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveMoment, payload);
-}
-
 function queryString(params = {}) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {

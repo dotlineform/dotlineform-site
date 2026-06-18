@@ -617,22 +617,6 @@
         "catalogue"
       ]
     },
-    "/studio/catalogue-moment/": {
-      "label": "Studio Catalogue Moment Editor",
-      "path": "/studio/catalogue-moment/",
-      "status": "inventory-only",
-      "include": [
-        "studio/app/frontend/js/catalogue-moment*",
-        "studio/app/frontend/config/ui-text/catalogue-moment-editor.json",
-        "studio/services/catalogue/catalogue_moment_service.py"
-      ],
-      "shared": [
-        "studio/app/server/studio/studio_app_server.py"
-      ],
-      "areas": [
-        "catalogue"
-      ]
-    },
     "/library/": {
       "label": "Library",
       "path": "/library/",

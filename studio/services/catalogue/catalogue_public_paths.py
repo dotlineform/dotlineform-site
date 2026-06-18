@@ -14,8 +14,6 @@ SERIES_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "series_index.json"
 WORKS_JSON_DIR = PUBLIC_ASSETS_ROOT / "works" / "index"
 WORKS_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "works_index.json"
 RECENT_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "recent_index.json"
-MOMENTS_JSON_DIR = PUBLIC_ASSETS_ROOT / "moments" / "index"
-MOMENTS_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "moments_index.json"
 CATALOGUE_SEARCH_INDEX_JSON_PATH = PUBLIC_DATA_ROOT / "search" / "catalogue" / "index.json"
 
 
@@ -24,8 +22,6 @@ def thumb_output_dir(kind: str) -> Path:
         return PUBLIC_ASSETS_ROOT / "works" / "img"
     if kind == "work_details":
         return PUBLIC_ASSETS_ROOT / "work_details" / "img"
-    if kind == "moment":
-        return PUBLIC_ASSETS_ROOT / "moments" / "img"
     raise ValueError(f"unsupported local media kind: {kind}")
 
 
@@ -35,7 +31,3 @@ def work_record_path(work_id: str) -> Path:
 
 def series_record_path(series_id: str) -> Path:
     return SERIES_JSON_DIR / f"{series_id}.json"
-
-
-def moment_record_path(moment_id: str) -> Path:
-    return MOMENTS_JSON_DIR / f"{moment_id}.json"

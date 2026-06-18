@@ -76,11 +76,5 @@ export function cataloguePreviewFallback(item, options = {}) {
 
 export function catalogueGeneratedStatusText(preview, options = {}) {
   if (!preview) return normalizeText(options.missingText) || "-";
-  const parts = [
-    preview.generated_json_exists ? "json yes" : "json no"
-  ];
-  if (options.includeIndex !== false) {
-    parts.push(preview.in_moments_index ? "index yes" : "index no");
-  }
-  return parts.join(" / ");
+  return preview.generated_json_exists ? "json yes" : "json no";
 }

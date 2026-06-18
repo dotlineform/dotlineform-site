@@ -91,7 +91,6 @@ def test_parse_csv_tokens_dedupes_append_values() -> None:
 
 
 def test_infer_record_family_for_scope() -> None:
-    assert field_plan.infer_record_family_for_scope({"kind": "moment", "moment_ids": ["keys"]}) == "moment"
     assert field_plan.infer_record_family_for_scope({"work_ids": ["00001"], "detail_uid": "00001-001"}) == "work_detail"
     assert field_plan.infer_record_family_for_scope({"series_ids": ["009"], "work_ids": []}) == "series"
     assert field_plan.infer_record_family_for_scope({"work_ids": ["00001"], "series_ids": ["009"]}) == "work"
@@ -99,7 +98,7 @@ def test_infer_record_family_for_scope() -> None:
     try:
         field_plan.infer_record_family_for_scope({}, "invalid")
     except ValueError as exc:
-        assert str(exc) == "--record-family must be work, work_detail, series, or moment"
+        assert str(exc) == "--record-family must be work, work_detail, or series"
     else:
         raise AssertionError("expected invalid record-family failure")
 
@@ -149,7 +148,7 @@ def test_work_media_source_reduces_to_local_media_only() -> None:
     assert scope["generate_local_media"] is True
 
 
-def test_detail_series_and_moment_field_plans_use_inferred_families() -> None:
+def test_detail_and_series_field_plans_use_inferred_families() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
@@ -166,12 +165,6 @@ def test_detail_series_and_moment_field_plans_use_inferred_families() -> None:
             {"kind": "series", "work_ids": [], "series_ids": ["009"]},
             changed_fields=["title"],
         )
-        moment_plan = field_plan.build_field_plan_for_scope(
-            REPO_ROOT,
-            source_dir,
-            {"kind": "moment", "moment_ids": ["keys"]},
-            changed_fields=["source_image_file"],
-        )
 
     assert detail_plan["rule_ids"] == ["work_detail_public_metadata"]
     assert detail_plan["generate_only"] == ["work-json"]
@@ -181,10 +174,6 @@ def test_detail_series_and_moment_field_plans_use_inferred_families() -> None:
     assert series_plan["generate_only"] == ["series-pages", "series-index-json", "recent-index-json"]
     assert series_plan["rebuild_search"] is True
     assert series_plan["generate_local_media"] is False
-    assert moment_plan["rule_ids"] == ["moment_media_source"]
-    assert moment_plan["generate_only"] == []
-    assert moment_plan["rebuild_search"] is False
-    assert moment_plan["generate_local_media"] is True
 
 
 def main() -> None:
@@ -193,7 +182,7 @@ def main() -> None:
     test_empty_changed_fields_return_no_plan()
     test_work_public_metadata_reduces_to_focused_work_json()
     test_work_media_source_reduces_to_local_media_only()
-    test_detail_series_and_moment_field_plans_use_inferred_families()
+    test_detail_and_series_field_plans_use_inferred_families()
     print("Catalogue build field-plan tests OK")
 
 

@@ -17,7 +17,6 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue import catalogue_build_scopes as scopes  # noqa: E402
 from catalogue.catalogue_source import payload_for_map  # noqa: E402
-from catalogue.moment_sources import moment_metadata_payload  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -98,22 +97,6 @@ def write_source_fixture(source_dir: Path) -> None:
                     "primary_work_id": "00003",
                 },
             },
-        ),
-    )
-    write_json(
-        source_dir / "moments.json",
-        moment_metadata_payload(
-            {
-                "keys": {
-                    "moment_id": "keys",
-                    "title": "Keys",
-                    "status": "published",
-                    "published_date": "2026-01-02",
-                    "date": "2026-01-01",
-                    "date_display": "January 2026",
-                    "image_alt": "Keys",
-                }
-            }
         ),
     )
 
@@ -255,68 +238,11 @@ def test_invalid_series_scope_reports_build_preconditions() -> None:
             raise AssertionError("expected invalid primary-work failure")
 
 
-def test_moment_scope_uses_preview_metadata_and_readiness_dependencies() -> None:
-    repo_root = Path("/tmp/catalogue-build-scope-test")
-
-    def preview(repo_root_arg: Path, moment_file: str, **kwargs: Any) -> dict[str, Any]:
-        assert repo_root_arg == repo_root
-        assert moment_file == "keys.md"
-        return {"valid": True, "moment_id": "keys", "moment_file": "keys.md", "title": "Keys"}
-
-    def metadata(source_dir: Path, moment_id: str, incoming: dict[str, Any] | None) -> dict[str, Any]:
-        assert source_dir == repo_root / "studio/data/canonical/catalogue"
-        assert moment_id == "keys"
-        return {"moment_id": "keys", "title": incoming["title"] if incoming else "Keys"}
-
-    scope = scopes.build_scope_for_moment(
-        repo_root,
-        "keys.md",
-        metadata={"title": "Updated Keys"},
-        force=True,
-        moment_preview_builder=preview,
-        moment_metadata_builder=metadata,
-        moment_readiness_builder=lambda root, moment_file, **kwargs: readiness_item(f"moment:{moment_file}"),
-    )
-
-    assert scope == {
-        "kind": "moment",
-        "moment_ids": ["keys"],
-        "moment_file": "keys.md",
-        "moment_metadata": {"moment_id": "keys", "title": "Updated Keys"},
-        "work_ids": [],
-        "series_ids": [],
-        "generate_only": ["moments"],
-        "rebuild_search": True,
-        "search_scope": "catalogue",
-        "source_mode": "moment-source",
-        "summary": "Build moments [keys], rebuild the moments index, and rebuild catalogue search.",
-        "effective_force": True,
-        "refresh_published": True,
-        "preview": {"valid": True, "moment_id": "keys", "moment_file": "keys.md", "title": "Keys"},
-        "readiness": {"items": [{"key": "moment:keys.md", "status": "ready"}]},
-    }
-
-
-def test_moment_import_metadata_merges_existing_record_and_overrides() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
-        write_source_fixture(source_dir)
-
-        metadata = scopes.build_moment_import_metadata(source_dir, "keys", {"title": "Updated Keys"})
-
-    assert metadata["moment_id"] == "keys"
-    assert metadata["title"] == "Updated Keys"
-    assert metadata["status"] == "published"
-    assert metadata["published_date"] == "2026-01-02"
-
-
 def main() -> None:
     test_work_scope_includes_extra_series_detail_readiness_and_stable_keys()
     test_work_scope_can_carry_transient_media_source()
     test_series_scope_includes_extra_work_ids_and_stable_keys()
     test_invalid_series_scope_reports_build_preconditions()
-    test_moment_scope_uses_preview_metadata_and_readiness_dependencies()
-    test_moment_import_metadata_merges_existing_record_and_overrides()
     print("Catalogue build scope tests OK")
 
 

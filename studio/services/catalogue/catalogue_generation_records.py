@@ -193,29 +193,6 @@ def build_series_json_record(series_record: Mapping[str, Any]) -> Dict[str, Any]
     return compact_json_object(public_record)
 
 
-def build_moment_json_record(moment_record: Mapping[str, Any]) -> Dict[str, Any]:
-    public_record = dict(moment_record)
-    public_record.pop("layout", None)
-    public_record.pop("checksum", None)
-    return compact_json_object(public_record)
-
-
-def build_moment_index_record(moment_record: Mapping[str, Any]) -> Dict[str, Any]:
-    moment_id_value = coerce_string(moment_record.get("moment_id"))
-    title_value = coerce_string(moment_record.get("title"))
-    date_value = coerce_string(moment_record.get("date"))
-    date_display_value = coerce_string(moment_record.get("date_display"))
-    images_value = moment_record.get("images")
-    thumb_id_value = moment_id_value if isinstance(images_value, list) and len(images_value) > 0 else None
-    return compact_json_object({
-        "moment_id": moment_id_value,
-        "title": title_value,
-        "date": date_value,
-        "date_display": date_display_value,
-        "thumb_id": thumb_id_value,
-    })
-
-
 def build_sections_from_detail_sections(detail_sections: List[Mapping[str, Any]]) -> List[Dict[str, Any]]:
     sections: List[Dict[str, Any]] = []
     for section in detail_sections:

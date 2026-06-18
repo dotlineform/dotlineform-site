@@ -18,8 +18,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue import catalogue_build_media as media  # noqa: E402
 from catalogue.catalogue_source import payload_for_map  # noqa: E402
-from catalogue.moment_sources import moment_metadata_payload  # noqa: E402
-from pipeline_config import source_moments_images_subdir, source_works_root_subdir  # noqa: E402
+from pipeline_config import source_works_root_subdir  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -66,27 +65,6 @@ def write_source_fixture(source_dir: Path) -> None:
         ),
     )
     write_json(source_dir / "series.json", payload_for_map("series", {}))
-    write_json(
-        source_dir / "moments.json",
-        moment_metadata_payload(
-            {
-                "keys": {
-                    "moment_id": "keys",
-                    "title": "Keys",
-                    "status": "published",
-                    "date": "2026-01-01",
-                    "source_image_file": "keys-source.jpg",
-                },
-                "missing-moment": {
-                    "moment_id": "missing-moment",
-                    "title": "Missing Moment",
-                    "status": "published",
-                    "date": "2026-01-02",
-                    "source_image_file": "missing-moment-source.jpg",
-                },
-            }
-        ),
-    )
 
 
 def projects_env(projects_base: Path) -> dict[str, str]:
@@ -168,11 +146,8 @@ def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
-        moment_image = projects_base / source_moments_images_subdir(media.PIPELINE_CONFIG) / "keys-source.jpg"
         source_image.parent.mkdir(parents=True, exist_ok=True)
-        moment_image.parent.mkdir(parents=True, exist_ok=True)
         source_image.write_bytes(b"source")
-        moment_image.write_bytes(b"moment source")
         write_source_fixture(source_dir)
 
         scope = {"source_dir": str(source_dir), "work_ids": ["00001", "00002"], "detail_uid": "00001-001"}
@@ -305,7 +280,7 @@ def test_execute_local_media_plan_dry_run_suppresses_writes() -> None:
         result = media.execute_local_media_plan(root, scope={}, write=False, plan_builder=lambda *args, **kwargs: plan)
 
     assert result["status"] == "completed"
-    assert result["planned"] == {"work": ["00001"], "work_details": [], "moment": []}
+    assert result["planned"] == {"work": ["00001"], "work_details": []}
     assert not staged_source.exists()
     assert not asset_thumb.exists()
 
@@ -317,11 +292,8 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
-        moment_image = projects_base / source_moments_images_subdir(media.PIPELINE_CONFIG) / "keys-source.jpg"
         source_image.parent.mkdir(parents=True, exist_ok=True)
-        moment_image.parent.mkdir(parents=True, exist_ok=True)
         source_image.write_bytes(b"source")
-        moment_image.write_bytes(b"moment source")
         write_source_fixture(source_dir)
 
         plan = media.build_catalogue_thumbnail_only_plan(
@@ -331,7 +303,7 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
             force=True,
         )
 
-    assert plan["counts"] == {"pending": 2, "current": 0, "skipped": 3}
+    assert plan["counts"] == {"pending": 1, "current": 0, "skipped": 2}
     assert plan["tasks"][0]["status"] == "pending"
     assert plan["tasks"][0]["pending_outputs"] == [
         {
@@ -345,17 +317,6 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
     assert plan["tasks"][2]["status"] == "skipped"
     assert plan["tasks"][2]["kind"] == "work_details"
     assert plan["tasks"][2]["reason"] == "configured source media file is missing"
-    assert plan["tasks"][3]["status"] == "pending"
-    assert plan["tasks"][3]["kind"] == "moment"
-    assert plan["tasks"][3]["pending_outputs"] == [
-        {
-            "size": 96,
-            "path": "site/assets/moments/img/keys-thumb-96.webp",
-            "absolute_path": str((repo_root / "site/assets/moments/img/keys-thumb-96.webp").resolve()),
-        }
-    ]
-    assert plan["tasks"][4]["status"] == "skipped"
-    assert plan["tasks"][4]["kind"] == "moment"
 
 
 def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> None:
@@ -365,11 +326,8 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
         source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
-        moment_image = projects_base / source_moments_images_subdir(media.PIPELINE_CONFIG) / "keys-source.jpg"
         source_image.parent.mkdir(parents=True, exist_ok=True)
-        moment_image.parent.mkdir(parents=True, exist_ok=True)
         source_image.write_bytes(b"source")
-        moment_image.write_bytes(b"moment source")
         write_source_fixture(source_dir)
 
         def fake_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
@@ -386,18 +344,15 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
             thumb_runner=fake_thumb,
         )
         asset_thumb = repo_root / "site/assets/works/img/00001-thumb-96.webp"
-        moment_thumb = repo_root / "site/assets/moments/img/keys-thumb-96.webp"
         staged_root = repo_root / "var/catalogue/media"
         asset_thumb_bytes = asset_thumb.read_bytes()
-        moment_thumb_bytes = moment_thumb.read_bytes()
         staged_root_exists = staged_root.exists()
 
     assert result["status"] == "completed"
-    assert result["generated"] == {"work": ["00001"], "work_details": [], "moment": ["keys"]}
-    assert result["skipped"] == {"work": ["00002"], "work_details": ["00001-001"], "moment": ["missing-moment"]}
-    assert "3 skipped" in result["summary"]
+    assert result["generated"] == {"work": ["00001"], "work_details": []}
+    assert result["skipped"] == {"work": ["00002"], "work_details": ["00001-001"]}
+    assert "2 skipped" in result["summary"]
     assert asset_thumb_bytes == b"alpha.jpg:96"
-    assert moment_thumb_bytes == b"keys-source.jpg:96"
     assert not staged_root_exists
 
 

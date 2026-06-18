@@ -99,7 +99,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     assert public_record["series_ids"] == ["009", "010"]
 
 
-def test_public_series_and_moment_records_prune_internal_fields() -> None:
+def test_public_series_records_prune_internal_fields() -> None:
     series = records.build_series_json_record(
         {
             "series_id": "009",
@@ -112,29 +112,6 @@ def test_public_series_and_moment_records_prune_internal_fields() -> None:
         }
     )
     assert series == {"series_id": "009", "title": "Series"}
-
-    moment = records.build_moment_json_record(
-        {
-            "moment_id": "blue-room",
-            "layout": "moment",
-            "checksum": "abc",
-            "title": "Blue Room",
-            "images": [],
-            "height_px": None,
-        }
-    )
-    assert moment == {"moment_id": "blue-room", "title": "Blue Room", "images": []}
-
-    assert records.build_moment_index_record({"moment_id": "blue-room", "title": "Blue Room", "images": []}) == {
-        "moment_id": "blue-room",
-        "title": "Blue Room",
-    }
-    assert records.build_moment_index_record({"moment_id": "blue-room", "title": "Blue Room", "images": [{}]}) == {
-        "moment_id": "blue-room",
-        "title": "Blue Room",
-        "thumb_id": "blue-room",
-    }
-
 
 def test_detail_record_grouping_is_deterministic() -> None:
     detail_record = records.build_canonical_detail_record(
@@ -182,7 +159,7 @@ def main() -> None:
     test_work_projection_order_and_coercion()
     test_work_series_ids_are_normalized_and_deduped()
     test_canonical_work_record_orders_fields_and_prunes_public_record()
-    test_public_series_and_moment_records_prune_internal_fields()
+    test_public_series_records_prune_internal_fields()
     test_detail_record_grouping_is_deterministic()
     print("Catalogue generation record tests OK")
 

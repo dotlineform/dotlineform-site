@@ -96,7 +96,7 @@ def test_no_public_artifacts_reports_existing_skip_reason() -> None:
     )
 
 
-def test_moment_skip_payloads_use_message_key() -> None:
+def test_custom_skip_payloads_use_message_key() -> None:
     response = {"ok": True}
 
     save_build.apply_save_build_follow_through(
@@ -105,8 +105,8 @@ def test_moment_skip_payloads_use_message_key() -> None:
         apply_build=False,
         changed=True,
         build_plan={"build_required": True},
-        unpublished_reason="moment_not_published",
-        unpublished_message="Public moment update skipped because the saved moment is not published.",
+        unpublished_reason="record_not_published",
+        unpublished_message="Public update skipped because the saved record is not published.",
         unpublished_message_key="message",
         run_build=lambda: (True, {"ok": True}),
     )
@@ -114,10 +114,10 @@ def test_moment_skip_payloads_use_message_key() -> None:
     assert_equal(
         response["build_skipped"],
         {
-            "reason": "moment_not_published",
-            "message": "Public moment update skipped because the saved moment is not published.",
+            "reason": "record_not_published",
+            "message": "Public update skipped because the saved record is not published.",
         },
-        "moment unpublished skip payload",
+        "custom unpublished skip payload",
     )
 
     response = {"ok": True}
@@ -137,7 +137,7 @@ def test_moment_skip_payloads_use_message_key() -> None:
             "reason": "no_public_build_artifacts",
             "message": "Changed fields do not require public build artifacts.",
         },
-        "moment no-artifacts skip payload",
+        "custom no-artifacts skip payload",
     )
 
 
@@ -166,7 +166,7 @@ def main() -> None:
     test_published_changed_save_runs_build_and_preserves_payload()
     test_requested_draft_save_reports_unpublished_skip_without_build()
     test_no_public_artifacts_reports_existing_skip_reason()
-    test_moment_skip_payloads_use_message_key()
+    test_custom_skip_payloads_use_message_key()
     test_build_failure_payload_stays_attached_to_save_response()
     print("Catalogue save build tests OK")
 

@@ -174,6 +174,41 @@
               "when": "catalogue search rebuild is attempted"
             }
           ]
+        },
+        "delete-work-detail-section": {
+          "label": "delete work detail section",
+          "status": "v1-target",
+          "control_id": "catalogueWorkDetailBrowserSectionActions",
+          "control_selector": "#catalogueWorkDetailBrowserSectionActions",
+          "endpoint": "/catalogue/delete-apply",
+          "record_family": "work_detail_section",
+          "record_id_field": "section_id",
+          "script_purposes": [
+            {
+              "id": "delete-canonical-data",
+              "optional": false,
+              "when": "work detail section source JSON and dependent detail records are removed"
+            },
+            {
+              "id": "clean-generated-artifacts",
+              "optional": true,
+              "when": "published artifacts, generated index records, or local media are cleaned"
+            },
+            {
+              "id": "rebuild-lookups",
+              "optional": true,
+              "when": "Studio lookup refresh is attempted"
+            },
+            {
+              "id": "update-search",
+              "optional": true,
+              "when": "catalogue search rebuild is attempted"
+            }
+          ],
+          "control_label": "Delete section",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers delete apply after the preview/confirmation flow for a work detail section and dependent details."
         }
       }
     },
@@ -343,152 +378,6 @@
               "id": "update-search",
               "optional": true,
               "when": "catalogue search rebuild is attempted"
-            }
-          ]
-        }
-      }
-    },
-    "catalogue-moment": {
-      "label": "catalogue moment editor",
-      "route": "/studio/catalogue-moment/",
-      "actions": {
-        "save-moment": {
-          "label": "save moment",
-          "status": "v1-target",
-          "control_id": "catalogueMomentSave",
-          "control_selector": "#catalogueMomentSave",
-          "control_label": "Save",
-          "endpoint": "/catalogue/moment/save",
-          "record_family": "moment",
-          "record_id_field": "moment_id",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers metadata edits to one existing moment. Moment saves do not currently write Studio catalogue lookup payloads; published moment builds update moment runtime data and search.",
-          "script_purposes": [
-            {
-              "id": "save-canonical-data",
-              "optional": false,
-              "when": "core moment source JSON changes"
-            },
-            {
-              "id": "rebuild-published-moment-data",
-              "optional": true,
-              "when": "published moment output is attempted"
-            },
-            {
-              "id": "update-search",
-              "optional": true,
-              "when": "catalogue search rebuild is attempted"
-            }
-          ]
-        },
-        "publish-moment": {
-          "label": "publish moment",
-          "status": "v1-target",
-          "control_id": "catalogueMomentPublication",
-          "control_selector": "#catalogueMomentPublication",
-          "control_label": "Publish",
-          "endpoint": "/catalogue/publication-apply",
-          "record_family": "moment",
-          "record_id_field": "moment_id",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers publication apply for one existing moment. Moment publish updates moment runtime data and search, not Studio catalogue lookup payloads. Moment import/create remains a separate import action.",
-          "script_purposes": [
-            {
-              "id": "save-canonical-data",
-              "optional": false,
-              "when": "moment status source data changes"
-            },
-            {
-              "id": "rebuild-published-moment-data",
-              "optional": true,
-              "when": "published moment output is attempted"
-            },
-            {
-              "id": "update-search",
-              "optional": true,
-              "when": "catalogue search rebuild is attempted"
-            }
-          ]
-        },
-        "unpublish-moment": {
-          "label": "unpublish moment",
-          "status": "v1-target",
-          "control_id": "catalogueMomentPublication",
-          "control_selector": "#catalogueMomentPublication",
-          "control_label": "Unpublish",
-          "endpoint": "/catalogue/publication-apply",
-          "record_family": "moment",
-          "record_id_field": "moment_id",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers unpublication apply for one existing moment. Moment unpublish updates generated moment artifacts and search, not Studio catalogue lookup payloads.",
-          "script_purposes": [
-            {
-              "id": "save-canonical-data",
-              "optional": false,
-              "when": "moment status source data changes"
-            },
-            {
-              "id": "clean-generated-artifacts",
-              "optional": true,
-              "when": "published moment artifacts or generated index records are cleaned"
-            },
-            {
-              "id": "update-search",
-              "optional": true,
-              "when": "catalogue search rebuild is attempted"
-            }
-          ]
-        },
-        "delete-moment": {
-          "label": "delete moment",
-          "status": "v1-target",
-          "control_id": "catalogueMomentDelete",
-          "control_selector": "#catalogueMomentDelete",
-          "control_label": "Delete",
-          "endpoint": "/catalogue/delete-apply",
-          "record_family": "moment",
-          "record_id_field": "moment_id",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": true,
-          "notes": "Covers delete apply for one moment after confirmation. Moment delete updates generated moment artifacts and search, not Studio catalogue lookup payloads.",
-          "script_purposes": [
-            {
-              "id": "delete-canonical-data",
-              "optional": false,
-              "when": "moment source JSON is removed"
-            },
-            {
-              "id": "clean-generated-artifacts",
-              "optional": true,
-              "when": "published moment artifacts, generated index records, or local media are cleaned"
-            },
-            {
-              "id": "update-search",
-              "optional": true,
-              "when": "catalogue search rebuild is attempted"
-            }
-          ]
-        },
-        "import-moment": {
-          "label": "import moment",
-          "status": "v1-target",
-          "control_id": "catalogueMomentImportApply",
-          "control_selector": "#catalogueMomentImportApply",
-          "control_label": "Import",
-          "endpoint": "/catalogue/moment/import-apply",
-          "record_family": "moment",
-          "record_id_field": "moment_id",
-          "no_change_activity": "skip",
-          "report_forced_rewrites": false,
-          "notes": "Covers moment draft creation through the staged import/apply path on the Moment editor.",
-          "script_purposes": [
-            {
-              "id": "import-source-data",
-              "optional": false,
-              "when": "staged moment prose and canonical moment metadata are written"
             }
           ]
         }
@@ -1074,7 +963,6 @@
       "artifact_families": [
         "work-json",
         "series-json",
-        "moment-json",
         "index-json",
         "local-media"
       ],
@@ -1107,17 +995,6 @@
       ],
       "detail_templates": [
         "Updated published series/work JSON for series {series_id}"
-      ]
-    },
-    "rebuild-published-moment-data": {
-      "label": "rebuild published moment data",
-      "status": "v1-target",
-      "artifact_families": [
-        "moment-json",
-        "moments-index-json"
-      ],
-      "detail_templates": [
-        "Updated published moment JSON for {moment_id}"
       ]
     },
     "rebuild-lookups": {

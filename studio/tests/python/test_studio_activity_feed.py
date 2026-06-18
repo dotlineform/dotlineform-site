@@ -91,7 +91,7 @@ def test_append_hydrates_registry_labels_and_writes_feed() -> None:
                 "page_id": "catalogue-work",
                 "user_action_id": "save-work",
                 "script_purpose_id": "save-canonical-data",
-                "record_groups": {"works": ["00001"], "series": [], "work_details": [], "moments": []},
+                "record_groups": {"works": ["00001"], "series": [], "work_details": []},
                 "detail_items": ["Saved canonical work record 00001"],
                 "source_refs": [{"kind": "log", "path": "var/studio/catalogue/logs/catalogue_service_context.log"}],
             },

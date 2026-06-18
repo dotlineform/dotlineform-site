@@ -28,7 +28,6 @@ STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
     "studio_works": "/studio/studio-works/",
     "catalogue_series_editor": "/studio/catalogue-series/",
     "catalogue_work_editor": "/studio/catalogue-work/",
-    "catalogue_moment_editor": "/studio/catalogue-moment/",
 }
 
 STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS: dict[str, tuple[str, ...]] = {
@@ -52,14 +51,12 @@ STUDIO_MEDIA: dict[str, object] = {
         "base": "",
         "works": "/assets/works/img",
         "work_details": "/assets/work_details/img",
-        "moments": "/assets/moments/img",
     },
     "media": {
         "base": "https://media.dotlineform.com",
         "works_images": "/works/img",
         "works_files": "/works/files",
         "work_details_images": "/work_details/img",
-        "moments_images": "/moments/img",
     },
 }
 
@@ -82,12 +79,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "save_series": "/studio/api/catalogue/series/save",
         "build_preview": "/studio/api/catalogue/build-preview",
         "build_apply": "/studio/api/catalogue/build-apply",
-        "prose_import_preview": "/studio/api/catalogue/prose/import-preview",
-        "prose_import_apply": "/studio/api/catalogue/prose/import-apply",
-        "moment_import_preview": "/studio/api/catalogue/moment/import-preview",
-        "moment_import_apply": "/studio/api/catalogue/moment/import-apply",
-        "moment_preview": "/studio/api/catalogue/moment/preview",
-        "save_moment": "/studio/api/catalogue/moment/save",
         "project_state_report": "/studio/api/catalogue/project-state-report",
         "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
     },
@@ -233,7 +224,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-status-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-shell.js",
@@ -246,7 +236,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-editor.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-project-media-picker.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-editor.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-moment-editor.js",
         repo_root / "studio" / "app" / "assets" / "css" / "studio.css",
         repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json",
     ]

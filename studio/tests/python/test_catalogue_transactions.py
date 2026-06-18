@@ -228,31 +228,6 @@ def test_catalogue_cleanup_transaction_restores_deleted_files_on_failure() -> No
         assert artifact.read_text(encoding="utf-8") == "generated"
 
 
-def test_moment_cleanup_transaction_dry_run_reports_moment_keys() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        metadata = root / "studio/data/canonical/catalogue/moments.json"
-        moments_index = root / "site/assets/data/moments_index.json"
-        write_text(metadata, json.dumps({"moments": {"keys": {"title": "Keys"}}}) + "\n")
-        write_text(moments_index, json.dumps({"moments": {"keys": {}}}) + "\n")
-
-        result = transactions.execute_moment_cleanup_transaction(
-            repo_root=root,
-            dry_run=True,
-            allowed_write_paths={metadata},
-            metadata_path=metadata,
-            metadata_payload={"moments": {}},
-            cleanup={"delete_paths": []},
-            moment_id="keys",
-            rebuild_catalogue_search=lambda repo_root: {"ok": True, "exit_code": 0},
-        )
-
-        assert result.payload["moments_index_updated"] is False
-        assert result.payload["would_update_moments_index"] is True
-        assert result.payload["would_rebuild_catalogue_search"] is True
-        assert result.written_paths == []
-
-
 def test_atomic_write_text_no_backup_replaces_text_without_backup() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -274,6 +249,5 @@ if __name__ == "__main__":
     test_execute_source_json_write_rejects_empty_payload_map()
     test_catalogue_cleanup_transaction_writes_deletes_and_reports_written_paths()
     test_catalogue_cleanup_transaction_restores_deleted_files_on_failure()
-    test_moment_cleanup_transaction_dry_run_reports_moment_keys()
     test_atomic_write_text_no_backup_replaces_text_without_backup()
     print("catalogue transaction tests passed")

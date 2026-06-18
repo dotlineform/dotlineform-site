@@ -63,9 +63,6 @@ def main(argv: list[str] | None = None) -> int:
                     const cataloguePublicWorkUrl = publicLinks.buildPublicWorkUrl(config, "00123", {
                         from: "studio"
                     });
-                    const cataloguePublicMomentUrl = publicLinks.buildPublicMomentUrl(config, "13-moments-in-october", {
-                        from: "studio"
-                    });
                     let cataloguePublicMissingBaseError = "";
                     try {
                         publicLinks.buildPublicSeriesUrl({}, "009");
@@ -116,10 +113,8 @@ def main(argv: list[str] | None = None) -> int:
                         modalEventName: config.app.runtime.modals.event,
                         url,
                         workEditorUrl,
-                        newDetailUrl,
                         publicWorkUrl,
                         cataloguePublicWorkUrl,
-                        cataloguePublicMomentUrl,
                         cataloguePublicMissingBaseError,
                         liveWorkUrl,
                         runtimePrimaryNav: config.app.runtime.navigation.primary,
@@ -172,8 +167,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
         if result["cataloguePublicWorkUrl"] != "http://127.0.0.1:4000/works/?from=studio&work=00123":
             raise AssertionError(f"unexpected catalogue public work URL: {result['cataloguePublicWorkUrl']!r}")
-        if result["cataloguePublicMomentUrl"] != "http://127.0.0.1:4000/moments/?from=studio&moment=13-moments-in-october":
-            raise AssertionError(f"unexpected catalogue public moment URL: {result['cataloguePublicMomentUrl']!r}")
         if "Missing Studio site base" not in result["cataloguePublicMissingBaseError"]:
             raise AssertionError(f"catalogue public links did not fail closed without a public base: {result['cataloguePublicMissingBaseError']!r}")
         if result["liveWorkUrl"] != "https://dotlineform.com/works/?work=00123":
@@ -189,14 +182,13 @@ def main(argv: list[str] | None = None) -> int:
             "/studio/catalogue-series/",
             "/studio/catalogue-work/",
             "/studio/bulk-add-work/",
-            "/studio/catalogue-moment/",
             "/studio/catalogue-field-registry/",
             "/studio/studio-works/?sort=cat&dir=asc",
             "/studio/project-state/",
         }
         if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")
-        if home_link_labels[:5] != ["drafts", "series editor", "work editor", "detail editor", "bulk add"]:
+        if home_link_labels[:5] != ["drafts", "series editor", "work editor", "bulk add", "field registry"]:
             raise AssertionError(f"Studio home has unexpected first links: {result['homeLinks']!r}")
         if result["homeReady"] != "true":
             raise AssertionError(f"Studio home did not expose ready state: {result['homeReady']!r}")

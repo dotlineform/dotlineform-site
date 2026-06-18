@@ -11,7 +11,6 @@ from typing import Any, Dict, Iterable, Mapping
 
 from catalogue import catalogue_routes as routes
 from catalogue.catalogue_source import slug_id
-from catalogue.moment_sources import normalize_moment_filename
 from catalogue.series_ids import normalize_series_id
 
 
@@ -25,10 +24,6 @@ ACTIVITY_CONTEXT_PAGE_CATALOGUE_SERIES = "catalogue-series"
 ACTIVITY_CONTEXT_ACTION_SAVE_SERIES = "save-series"
 ACTIVITY_CONTEXT_ROUTE_CATALOGUE_SERIES = "/studio/catalogue-series/"
 ACTIVITY_CONTEXT_CONTROL_CATALOGUE_SERIES_SAVE = "catalogueSeriesSave"
-ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT = "catalogue-moment"
-ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT = "save-moment"
-ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT = "/studio/catalogue-moment/"
-ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE = "catalogueMomentSave"
 
 
 @dataclass(frozen=True)
@@ -72,20 +67,6 @@ ACTIVITY_PROFILE_SAVE_SERIES = ActivityActionProfile(
     script_purpose_ids=("save-canonical-data", "rebuild-published-series-data", "rebuild-lookups", "update-search"),
     published_step_label="Generate Work Pages",
     published_script_purpose_id="rebuild-published-series-data",
-)
-ACTIVITY_PROFILE_SAVE_MOMENT = ActivityActionProfile(
-    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-    action_id=ACTIVITY_CONTEXT_ACTION_SAVE_MOMENT,
-    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_MOMENT_SAVE,
-    control_selector="#catalogueMomentSave",
-    endpoint=routes.MOMENT_SAVE_PATH,
-    record_family="moment",
-    record_id_field="moment_id",
-    script_purpose_ids=("save-canonical-data", "rebuild-published-moment-data", "update-search"),
-    published_step_label="Generate Moment Pages",
-    published_script_purpose_id="rebuild-published-moment-data",
-    lookup_script_purpose_id="",
 )
 ACTIVITY_PROFILE_CREATE_WORK = ActivityActionProfile(
     page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
@@ -158,32 +139,6 @@ ACTIVITY_PUBLICATION_PROFILES: dict[tuple[str, str], ActivityActionProfile] = {
         record_id_field="series_id",
         script_purpose_ids=("save-canonical-data", "rebuild-lookups", "clean-generated-artifacts", "update-search"),
     ),
-    ("moment", "publish"): ActivityActionProfile(
-        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-        action_id="publish-moment",
-        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-        control_id="catalogueMomentPublication",
-        control_selector="#catalogueMomentPublication",
-        endpoint=routes.PUBLICATION_APPLY_PATH,
-        record_family="moment",
-        record_id_field="moment_id",
-        script_purpose_ids=("save-canonical-data", "rebuild-published-moment-data", "update-search"),
-        published_step_label="Generate Moment Pages",
-        published_script_purpose_id="rebuild-published-moment-data",
-        lookup_script_purpose_id="",
-    ),
-    ("moment", "unpublish"): ActivityActionProfile(
-        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-        action_id="unpublish-moment",
-        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-        control_id="catalogueMomentPublication",
-        control_selector="#catalogueMomentPublication",
-        endpoint=routes.PUBLICATION_APPLY_PATH,
-        record_family="moment",
-        record_id_field="moment_id",
-        script_purpose_ids=("save-canonical-data", "clean-generated-artifacts", "update-search"),
-        lookup_script_purpose_id="",
-    ),
 }
 ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
     "work": ActivityActionProfile(
@@ -219,18 +174,6 @@ ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
         record_id_field="series_id",
         script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "rebuild-lookups", "update-search"),
     ),
-    "moment": ActivityActionProfile(
-        page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-        action_id="delete-moment",
-        route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-        control_id="catalogueMomentDelete",
-        control_selector="#catalogueMomentDelete",
-        endpoint=routes.DELETE_APPLY_PATH,
-        record_family="moment",
-        record_id_field="moment_id",
-        script_purpose_ids=("delete-canonical-data", "clean-generated-artifacts", "update-search"),
-        lookup_script_purpose_id="",
-    ),
 }
 ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS = ActivityActionProfile(
     page_id="bulk-add-work",
@@ -242,17 +185,6 @@ ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS = ActivityActionProfile(
     record_family="workbook_import",
     record_id_field="import_mode",
     script_purpose_ids=("import-source-data", "rebuild-lookups"),
-)
-ACTIVITY_PROFILE_IMPORT_MOMENT = ActivityActionProfile(
-    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_MOMENT,
-    action_id="import-moment",
-    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_MOMENT,
-    control_id="catalogueMomentImportApply",
-    control_selector="#catalogueMomentImportApply",
-    endpoint=routes.MOMENT_IMPORT_APPLY_PATH,
-    record_family="moment",
-    record_id_field="moment_id",
-    script_purpose_ids=("import-source-data",),
 )
 ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
     page_id="project-state",
@@ -268,13 +200,11 @@ ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
 ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_SAVE_WORK,
     ACTIVITY_PROFILE_SAVE_SERIES,
-    ACTIVITY_PROFILE_SAVE_MOMENT,
     ACTIVITY_PROFILE_CREATE_WORK,
     ACTIVITY_PROFILE_CREATE_SERIES,
     *ACTIVITY_PUBLICATION_PROFILES.values(),
     *ACTIVITY_DELETE_PROFILES.values(),
     ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS,
-    ACTIVITY_PROFILE_IMPORT_MOMENT,
     ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT,
 )
 
@@ -323,13 +253,6 @@ def normalize_detail_uid_value(value: Any) -> str:
     return f"{work_id}-{detail_id}"
 
 
-def normalize_moment_id_value(value: Any) -> str:
-    text = str(value or "").strip()
-    if not text:
-        raise ValueError("moment_id is required")
-    return normalize_moment_filename(text if text.endswith(".md") else f"{text}.md")[:-3]
-
-
 def normalize_activity_record_id(record_id_field: str, value: Any) -> str:
     if record_id_field == "work_id":
         return slug_id(value)
@@ -339,8 +262,6 @@ def normalize_activity_record_id(record_id_field: str, value: Any) -> str:
         return activity_context_value(value)
     if record_id_field == "series_id":
         return normalize_series_id(value)
-    if record_id_field == "moment_id":
-        return normalize_moment_id_value(value)
     return activity_context_value(value)
 
 
@@ -425,14 +346,12 @@ def activity_record_groups(
     works: Iterable[str] = (),
     series: Iterable[str] = (),
     work_details: Iterable[str] = (),
-    moments: Iterable[str] = (),
     search: Iterable[str] = (),
 ) -> Dict[str, list[str]]:
     return {
         "works": sorted({str(value) for value in works if str(value).strip()}),
         "series": sorted({str(value) for value in series if str(value).strip()}),
         "work_details": sorted({str(value) for value in work_details if str(value).strip()}),
-        "moments": sorted({str(value) for value in moments if str(value).strip()}),
         "search": sorted({str(value) for value in search if str(value).strip()}),
     }
 
@@ -443,7 +362,6 @@ def activity_record_groups_from_affected(affected: Any) -> Dict[str, list[str]]:
         works=data.get("works") or [],
         series=data.get("series") or [],
         work_details=data.get("work_details") or [],
-        moments=data.get("moments") or [],
     )
 
 
@@ -515,7 +433,6 @@ def catalogue_build_record_groups(build_payload: Mapping[str, Any], fallback: Ma
         "works": list(build_scope.get("work_ids") or fallback.get("works") or []),
         "series": list(build_scope.get("series_ids") or fallback.get("series") or []),
         "work_details": list(build_scope.get("work_detail_uids") or fallback.get("work_details") or []),
-        "moments": list(build_scope.get("moment_ids") or fallback.get("moments") or []),
         "search": ["catalogue"] if build_step_attempted(build_payload, "Build Catalogue Search Index") else [],
     }
 

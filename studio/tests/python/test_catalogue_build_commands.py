@@ -27,10 +27,6 @@ GENERATE_OUTPUT_ARGS = [
     public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
     "--recent-index-json-path",
     public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
-    "--moments-json-dir",
-    public_paths.MOMENTS_JSON_DIR.as_posix(),
-    "--moments-index-json-path",
-    public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
 ]
 
 
@@ -73,33 +69,6 @@ def test_generate_work_command_preserves_scope_and_flags() -> None:
     ]
 
 
-def test_generate_moment_command_preserves_scope_and_flags() -> None:
-    repo_root = Path("/repo")
-    cmd = commands.build_generate_moment_command(
-        repo_root,
-        repo_root / "studio/data/canonical/catalogue",
-        {"moment_ids": ["leaves"]},
-        write=False,
-        force=True,
-        refresh_published=True,
-    )
-
-    assert cmd == [
-        sys.executable,
-        "/repo/studio/services/catalogue/generate_work_pages.py",
-        "--internal-json-source-run",
-        "--source-dir",
-        "/repo/studio/data/canonical/catalogue",
-        "--only",
-        "moments",
-        "--moment-ids",
-        "leaves",
-        *GENERATE_OUTPUT_ARGS,
-        "--refresh-published",
-        "--force",
-    ]
-
-
 def test_search_command_uses_python_builder_and_catalogue_scope() -> None:
     cmd = commands.build_search_command(
         Path("/repo"),
@@ -119,8 +88,6 @@ def test_search_command_uses_python_builder_and_catalogue_scope() -> None:
         public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
         "--works-index",
         public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
-        "--moments-index",
-        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
         "--write",
         "--force",
     ]
@@ -147,7 +114,6 @@ def test_failed_command_step_shape_and_message_without_running_subprocess() -> N
 
 if __name__ == "__main__":
     test_generate_work_command_preserves_scope_and_flags()
-    test_generate_moment_command_preserves_scope_and_flags()
     test_search_command_uses_python_builder_and_catalogue_scope()
     test_failed_command_step_shape_and_message_without_running_subprocess()
     print("Catalogue build command tests OK")

@@ -28,29 +28,6 @@ from catalogue.catalogue_source import (  # noqa: E402
     CatalogueSourceRecords,
     normalize_source_record,
 )
-from catalogue.moment_sources import (  # noqa: E402
-    MOMENT_DERIVED_FIELDS,
-    MOMENT_IDENTITY_FIELDS,
-    MOMENT_METADATA_FIELDS,
-    MOMENT_METADATA_UPDATE_FIELDS,
-)
-
-
-MOMENT_SOURCE_FIELDS = {
-    "moment": tuple(MOMENT_METADATA_FIELDS),
-}
-
-MOMENT_SOURCE_IDENTITY_FIELDS = {
-    "moment": tuple(MOMENT_IDENTITY_FIELDS),
-}
-
-MOMENT_SOURCE_DERIVED_FIELDS = {
-    "moment": tuple(MOMENT_DERIVED_FIELDS),
-}
-
-MOMENT_SOURCE_METADATA_FIELDS = {
-    "moment": tuple(MOMENT_METADATA_UPDATE_FIELDS),
-}
 
 REGISTRY_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {}
 SOURCE_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {}
@@ -164,31 +141,19 @@ def work_sort_context() -> dict[str, Any]:
 
 
 def source_fields_by_family() -> dict[str, set[str]]:
-    return {
-        **{family: set(fields) for family, fields in SOURCE_FIELDS_BY_RECORD_FAMILY.items()},
-        **{family: set(fields) for family, fields in MOMENT_SOURCE_FIELDS.items()},
-    }
+    return {family: set(fields) for family, fields in SOURCE_FIELDS_BY_RECORD_FAMILY.items()}
 
 
 def source_identity_fields_by_family() -> dict[str, set[str]]:
-    return {
-        **{family: set(fields) for family, fields in SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY.items()},
-        **{family: set(fields) for family, fields in MOMENT_SOURCE_IDENTITY_FIELDS.items()},
-    }
+    return {family: set(fields) for family, fields in SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY.items()}
 
 
 def source_derived_fields_by_family() -> dict[str, set[str]]:
-    return {
-        **{family: set(fields) for family, fields in SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY.items()},
-        **{family: set(fields) for family, fields in MOMENT_SOURCE_DERIVED_FIELDS.items()},
-    }
+    return {family: set(fields) for family, fields in SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY.items()}
 
 
 def source_metadata_fields_by_family() -> dict[str, set[str]]:
-    return {
-        **{family: set(fields) for family, fields in SOURCE_METADATA_FIELDS_BY_RECORD_FAMILY.items()},
-        **{family: set(fields) for family, fields in MOMENT_SOURCE_METADATA_FIELDS.items()},
-    }
+    return {family: set(fields) for family, fields in SOURCE_METADATA_FIELDS_BY_RECORD_FAMILY.items()}
 
 
 def iter_registry_field_rows(registry: Mapping[str, Any]) -> list[tuple[str, str, str, str]]:
@@ -367,7 +332,7 @@ def verify_registry_defaults(registry: Mapping[str, Any]) -> None:
     for key in ("unknown_field", "mixed_dependency_classes"):
         target = (defaults.get(key) or {}).get("target") if isinstance(defaults.get(key), Mapping) else {}
         by_family = target.get("artifacts_by_record_family") if isinstance(target, Mapping) else {}
-        for family in ("work", "work_detail", "series", "moment"):
+        for family in ("work", "work_detail", "series"):
             artifacts = by_family.get(family) if isinstance(by_family, Mapping) else None
             if not isinstance(artifacts, list) or not artifacts:
                 fail(f"registry default {key} missing artifacts_by_record_family.{family}")
@@ -521,30 +486,6 @@ def main() -> None:
                     "catalogue-search",
                 ],
                 "generate_only": ["series-pages", "series-index-json", "recent-index-json"],
-                "rebuild_search": True,
-                "generate_local_media": False,
-                "build_required": True,
-            },
-        ),
-        (
-            "moment media source metadata",
-            plan_for(registry, record_family="moment", fields=["source_image_file"]),
-            {
-                "rule_id": "moment_media_source",
-                "artifacts": ["source-json", "local-media"],
-                "generate_only": [],
-                "rebuild_search": False,
-                "generate_local_media": True,
-                "build_required": True,
-            },
-        ),
-        (
-            "moment display metadata",
-            plan_for(registry, record_family="moment", fields=["title"]),
-            {
-                "rule_id": "moment_display_search",
-                "artifacts": ["source-json", "moment-json", "moments-index-json", "catalogue-search"],
-                "generate_only": ["moments", "moments-index-json"],
                 "rebuild_search": True,
                 "generate_local_media": False,
                 "build_required": True,

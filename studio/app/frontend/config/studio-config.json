@@ -74,15 +74,6 @@
         "nav": false,
         "shell_type": "javascript",
         "ready_state_route_id": "catalogue-work"
-      },
-      "catalogue_moment_editor": {
-        "label": "moment editor",
-        "title": "Catalogue Moment Editor",
-        "path": "/studio/catalogue-moment/",
-        "script": "/studio/app/frontend/js/catalogue-moment-editor.js",
-        "nav": false,
-        "shell_type": "javascript",
-        "ready_state_route_id": "catalogue-moment"
       }
     }
   },
@@ -92,7 +83,6 @@
         "catalogue_works": "/studio/data/canonical/catalogue/works.json",
         "catalogue_work_details": "/studio/data/canonical/catalogue/work_details.json",
         "catalogue_series": "/studio/data/canonical/catalogue/series.json",
-        "catalogue_moments": "/studio/data/canonical/catalogue/moments.json",
         "catalogue_lookup_work_search": "/studio/data/generated/catalogue-lookup/work_search.json",
         "catalogue_lookup_series_search": "/studio/data/generated/catalogue-lookup/series_search.json",
         "catalogue_lookup_work_detail_search": "/studio/data/generated/catalogue-lookup/work_detail_search.json",
@@ -104,7 +94,6 @@
       "ui_text": {
         "catalogue_work_editor": "/studio/app/frontend/config/ui-text/catalogue-work-editor.json",
         "catalogue_series_editor": "/studio/app/frontend/config/ui-text/catalogue-series-editor.json",
-        "catalogue_moment_editor": "/studio/app/frontend/config/ui-text/catalogue-moment-editor.json",
         "bulk_add_work": "/studio/app/frontend/config/ui-text/bulk-add-work.json",
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
         "catalogue_status": "/studio/app/frontend/config/ui-text/catalogue-status.json",

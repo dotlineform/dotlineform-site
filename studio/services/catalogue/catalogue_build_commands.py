@@ -36,59 +36,12 @@ def build_generate_command(
         public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
         "--recent-index-json-path",
         public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
-        "--moments-json-dir",
-        public_paths.MOMENTS_JSON_DIR.as_posix(),
-        "--moments-index-json-path",
-        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
     ]
     series_ids = [str(series_id) for series_id in scope.get("series_ids", [])]
     if series_ids:
         cmd += ["--series-ids", ",".join(series_ids)]
     for artifact in scope.get("generate_only", []):
         cmd += ["--only", str(artifact)]
-    if write:
-        cmd.append("--write")
-    if refresh_published:
-        cmd.append("--refresh-published")
-    if force:
-        cmd.append("--force")
-    return cmd
-
-
-def build_generate_moment_command(
-    repo_root: Path,
-    source_dir: Path,
-    scope: Mapping[str, Any],
-    *,
-    write: bool,
-    force: bool,
-    refresh_published: bool,
-) -> list[str]:
-    cmd = [
-        sys.executable,
-        str(repo_root / "studio" / "services" / "catalogue" / "generate_work_pages.py"),
-        "--internal-json-source-run",
-        "--source-dir",
-        str(source_dir),
-        "--only",
-        "moments",
-        "--moment-ids",
-        ",".join(str(moment_id) for moment_id in scope["moment_ids"]),
-        "--series-json-dir",
-        public_paths.SERIES_JSON_DIR.as_posix(),
-        "--series-index-json-path",
-        public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
-        "--works-json-dir",
-        public_paths.WORKS_JSON_DIR.as_posix(),
-        "--works-index-json-path",
-        public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
-        "--recent-index-json-path",
-        public_paths.RECENT_INDEX_JSON_PATH.as_posix(),
-        "--moments-json-dir",
-        public_paths.MOMENTS_JSON_DIR.as_posix(),
-        "--moments-index-json-path",
-        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
-    ]
     if write:
         cmd.append("--write")
     if refresh_published:
@@ -111,8 +64,6 @@ def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Mapp
         public_paths.SERIES_INDEX_JSON_PATH.as_posix(),
         "--works-index",
         public_paths.WORKS_INDEX_JSON_PATH.as_posix(),
-        "--moments-index",
-        public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
     ]
     if write:
         cmd.append("--write")

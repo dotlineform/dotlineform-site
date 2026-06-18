@@ -22,9 +22,6 @@ REGISTRY_ARTIFACT_TO_GENERATE_ONLY = {
     "series-json": "series-pages",
     "series-index-json": "series-index-json",
     "recent-index-json": "recent-index-json",
-    "moment-page": "moments",
-    "moment-json": "moments",
-    "moments-index-json": "moments-index-json",
 }
 
 BUILD_ARTIFACT_ORDER = [
@@ -35,8 +32,6 @@ BUILD_ARTIFACT_ORDER = [
     "series-index-json",
     "works-index-json",
     "recent-index-json",
-    "moments",
-    "moments-index-json",
 ]
 
 def normalize_series_ids_value(value: Any) -> list[str]:
@@ -496,10 +491,6 @@ def apply_field_build_plan_to_scope(scope: Dict[str, Any], build_plan: Mapping[s
     artifacts = ", ".join(scope["generate_only"]) if scope["generate_only"] else "none"
     search = "yes" if scope["rebuild_search"] else "no"
     media = "yes" if scope["generate_local_media"] else "no"
-    if str(scope.get("kind") or "work") == "moment":
-        ids = ", ".join(str(item) for item in scope.get("moment_ids", [])) or "none"
-        scope["summary"] = f"Field-aware build moments [{ids}]; mode {mode}; generate [{artifacts}], search {search}, local media {media}."
-    else:
-        work_ids = ", ".join(str(item) for item in scope.get("work_ids", [])) or "none"
-        series_ids = ", ".join(str(item) for item in scope.get("series_ids", [])) or "none"
-        scope["summary"] = f"Field-aware build works [{work_ids}], series [{series_ids}]; mode {mode}; generate [{artifacts}], search {search}, local media {media}."
+    work_ids = ", ".join(str(item) for item in scope.get("work_ids", [])) or "none"
+    series_ids = ", ".join(str(item) for item in scope.get("series_ids", [])) or "none"
+    scope["summary"] = f"Field-aware build works [{work_ids}], series [{series_ids}]; mode {mode}; generate [{artifacts}], search {search}, local media {media}."

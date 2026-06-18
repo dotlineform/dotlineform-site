@@ -68,7 +68,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["app"]["routes"]["studio_works"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "javascript"
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_moment_editor"]["shell_type"] == "javascript"
+    assert "catalogue_moment_editor" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
@@ -91,7 +91,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
-    assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
+    assert not any(view["id"] == "catalogue_moment_editor" or view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
     assert runtime["navigation"]["primary"] == []
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert "analytics" not in runtime["services"]
@@ -106,7 +106,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
         "catalogue_works",
         "catalogue_work_details",
         "catalogue_series",
-        "catalogue_moments",
         "catalogue_lookup_work_search",
         "catalogue_lookup_series_search",
         "catalogue_lookup_work_detail_search",
@@ -131,12 +130,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
     assert runtime["services"]["catalogue"]["build_preview"] == "/studio/api/catalogue/build-preview"
     assert runtime["services"]["catalogue"]["build_apply"] == "/studio/api/catalogue/build-apply"
-    assert runtime["services"]["catalogue"]["prose_import_preview"] == "/studio/api/catalogue/prose/import-preview"
-    assert runtime["services"]["catalogue"]["prose_import_apply"] == "/studio/api/catalogue/prose/import-apply"
-    assert runtime["services"]["catalogue"]["moment_import_preview"] == "/studio/api/catalogue/moment/import-preview"
-    assert runtime["services"]["catalogue"]["moment_import_apply"] == "/studio/api/catalogue/moment/import-apply"
-    assert runtime["services"]["catalogue"]["moment_preview"] == "/studio/api/catalogue/moment/preview"
-    assert runtime["services"]["catalogue"]["save_moment"] == "/studio/api/catalogue/moment/save"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
     assert runtime["services"]["catalogue"]["project_state_open_report"] == "/studio/api/catalogue/project-state-open-report"
     assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
@@ -373,10 +366,6 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "draft"}}}),
             encoding="utf-8",
         )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
-            encoding="utf-8",
-        )
 
         works_payload = catalogue_get_payload(repo_root, "/read", {"key": ["catalogue_works"]})
 
@@ -487,12 +476,6 @@ def test_catalogue_write_service_routes_are_registered() -> None:
         "/publication-apply",
         "/build-preview",
         "/build-apply",
-        "/moment/preview",
-        "/moment/save",
-        "/prose/import-preview",
-        "/prose/import-apply",
-        "/moment/import-preview",
-        "/moment/import-apply",
     } <= service_paths
 
 
@@ -512,10 +495,6 @@ def test_catalogue_delete_preview_uses_callable_service_route() -> None:
         )
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
-            encoding="utf-8",
-        )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
 
@@ -558,10 +537,6 @@ def test_catalogue_bulk_save_work_dry_run_uses_callable_service_route() -> None:
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
         )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
-            encoding="utf-8",
-        )
 
         status, payload = catalogue_post_response(
             repo_root,
@@ -601,10 +576,6 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
         )
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
-            encoding="utf-8",
-        )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
         registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
@@ -664,10 +635,6 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
         )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
-            encoding="utf-8",
-        )
         registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
         registry_target.parent.mkdir(parents=True, exist_ok=True)
         registry_target.write_text((REPO_ROOT / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json").read_text(encoding="utf-8"), encoding="utf-8")
@@ -711,10 +678,6 @@ def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() ->
         )
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
-            encoding="utf-8",
-        )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
 
@@ -771,10 +734,6 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
                     },
                 }
             ),
-            encoding="utf-8",
-        )
-        (source_dir / "moments.json").write_text(
-            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
         registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"

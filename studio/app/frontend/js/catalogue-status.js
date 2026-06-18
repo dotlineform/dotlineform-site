@@ -14,8 +14,7 @@ import {
 
 const FAMILIES = [
   { key: "series", label: "series", singular: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" },
-  { key: "works", label: "works", singular: "work", pathKey: "catalogue_works", objectKey: "works", idField: "work_id", routeKey: "catalogue_work_editor", paramKey: "work" },
-  { key: "moments", label: "moments", singular: "moment", pathKey: "catalogue_moments", objectKey: "moments", idField: "moment_id", routeKey: "catalogue_moment_editor", paramKey: "moment" }
+  { key: "works", label: "works", singular: "work", pathKey: "catalogue_works", objectKey: "works", idField: "work_id", routeKey: "catalogue_work_editor", paramKey: "work" }
 ];
 
 const SORT_KEYS = ["id", "type", "status", "title", "reference"];
@@ -52,9 +51,6 @@ function recordReference(record, family) {
   } else if (family.key === "series") {
     const primaryWorkId = normalizeText(record.primary_work_id);
     if (primaryWorkId) parts.push(`primary work ${primaryWorkId}`);
-  } else if (family.key === "moments") {
-    const date = normalizeText(record.date || record.date_display);
-    if (date) parts.push(date);
   }
   return parts.join(" · ");
 }
@@ -178,7 +174,6 @@ function normalizeFamilyKey(value) {
   const key = normalizeText(value).replace(/-/g, "_");
   if (key === "draft_works") return "works";
   if (key === "draft_series") return "series";
-  if (key === "draft_moments") return "moments";
   return FAMILIES.some((family) => family.key === key) ? key : "";
 }
 

@@ -185,36 +185,11 @@ def test_work_detail_generated_payloads_remove_all_affected_details() -> None:
     assert work_payload["sections"][0]["details"] == [{"detail_uid": "00001-003"}]
 
 
-def test_moment_delete_generated_payloads_remove_moment_index_record() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        write_json(
-            root / "site/assets/data/moments_index.json",
-            {
-                "header": {"schema": "moments_index_v1"},
-                "moments": {
-                    "keys": {"title": "Keys"},
-                    "clouds": {"title": "Clouds"},
-                },
-            },
-        )
-
-        payloads = catalogue_cleanup.build_moment_delete_generated_payloads(root, "keys")
-
-    assert rel_paths(root, payloads.keys()) == ["site/assets/data/moments_index.json"]
-    moments_payload = payloads[(root / "site/assets/data/moments_index.json").resolve()]
-    assert "keys" not in moments_payload["moments"]
-    assert moments_payload["moments"] == {"clouds": {"title": "Clouds"}}
-    assert moments_payload["header"]["count"] == 1
-    assert moments_payload["header"]["schema"] == "moments_index_v1"
-
-
 def main() -> None:
     test_work_delete_cleanup_preview_counts_generated_and_media_paths()
     test_cleanup_scope_rejects_unallowlisted_delete_path()
     test_work_delete_generated_payloads_remove_generated_records()
     test_work_detail_generated_payloads_remove_all_affected_details()
-    test_moment_delete_generated_payloads_remove_moment_index_record()
     print("Catalogue cleanup tests OK")
 
 

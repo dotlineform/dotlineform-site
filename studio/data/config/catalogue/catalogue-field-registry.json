@@ -11,15 +11,12 @@
     "work-page": "Metadata-free public work route shell.",
     "work-details-page": "Metadata-free public work-detail route shell.",
     "series-page": "Metadata-free public series route shell.",
-    "moment-page": "Metadata-free public moment route shell.",
     "work-json": "Focused public work JSON.",
     "works-index-json": "Aggregate public works index JSON.",
     "work-storage-index-json": "Studio storage lookup derived from work storage metadata.",
     "series-json": "Focused public series JSON.",
     "series-index-json": "Aggregate public series index JSON.",
     "recent-index-json": "Public recent-publications index.",
-    "moment-json": "Focused public moment JSON.",
-    "moments-index-json": "Aggregate public moments index JSON.",
     "catalogue-search": "Public catalogue search index.",
     "local-media": "Local media staging, derivative generation, and public thumbnail copy outputs."
   },
@@ -32,10 +29,37 @@
       "target": {
         "fallback": true,
         "artifacts_by_record_family": {
-          "work": ["source-json", "studio-lookup", "work-page", "work-json", "works-index-json", "series-page", "series-json", "series-index-json", "recent-index-json", "catalogue-search", "local-media"],
-          "work_detail": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
-          "series": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
-          "moment": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"]
+          "work": [
+            "source-json",
+            "studio-lookup",
+            "work-page",
+            "work-json",
+            "works-index-json",
+            "series-page",
+            "series-json",
+            "series-index-json",
+            "recent-index-json",
+            "catalogue-search",
+            "local-media"
+          ],
+          "work_detail": [
+            "source-json",
+            "studio-lookup",
+            "work-details-page",
+            "work-json",
+            "catalogue-search",
+            "local-media"
+          ],
+          "series": [
+            "source-json",
+            "studio-lookup",
+            "series-page",
+            "series-json",
+            "series-index-json",
+            "works-index-json",
+            "recent-index-json",
+            "catalogue-search"
+          ]
         },
         "reason": "Unknown source fields use conservative fallback until explicitly classified."
       }
@@ -44,10 +68,37 @@
       "target": {
         "fallback": true,
         "artifacts_by_record_family": {
-          "work": ["source-json", "studio-lookup", "work-page", "work-json", "works-index-json", "series-page", "series-json", "series-index-json", "recent-index-json", "catalogue-search", "local-media"],
-          "work_detail": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
-          "series": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
-          "moment": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"]
+          "work": [
+            "source-json",
+            "studio-lookup",
+            "work-page",
+            "work-json",
+            "works-index-json",
+            "series-page",
+            "series-json",
+            "series-index-json",
+            "recent-index-json",
+            "catalogue-search",
+            "local-media"
+          ],
+          "work_detail": [
+            "source-json",
+            "studio-lookup",
+            "work-details-page",
+            "work-json",
+            "catalogue-search",
+            "local-media"
+          ],
+          "series": [
+            "source-json",
+            "studio-lookup",
+            "series-page",
+            "series-json",
+            "series-index-json",
+            "works-index-json",
+            "recent-index-json",
+            "catalogue-search"
+          ]
         },
         "reason": "Mixed edits spanning dependency classes use conservative fallback until the planner can combine field rules safely."
       }
@@ -58,13 +109,36 @@
       "id": "work_identity",
       "record_family": "work",
       "operation": "create_delete_identity",
-      "fields": ["work_id"],
+      "fields": [
+        "work_id"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "works-index-json", "series-page", "series-index-json", "recent-index-json", "catalogue-search", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "works-index-json",
+          "series-page",
+          "series-index-json",
+          "recent-index-json",
+          "catalogue-search",
+          "local-media"
+        ],
         "fallback": true
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "works-index-json", "series-index-json", "recent-index-json", "catalogue-search", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "works-index-json",
+          "series-index-json",
+          "recent-index-json",
+          "catalogue-search",
+          "local-media"
+        ],
         "fallback": false,
         "reason": "Work identity controls route creation/removal, public payload identity, aggregate membership references, search identity, and media output names."
       }
@@ -73,13 +147,35 @@
       "id": "work_publish_membership",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["status", "published_date", "series_ids"],
+      "fields": [
+        "status",
+        "published_date",
+        "series_ids"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json", "works-index-json", "series-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json",
+          "works-index-json",
+          "series-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "conditional_artifacts": [
           {
             "artifact": "work-page",
@@ -98,13 +194,34 @@
       "id": "work_display_core",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["title", "year", "year_display"],
+      "fields": [
+        "title",
+        "year",
+        "year_display"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "conditional_artifacts": [
           {
             "artifact": "series-index-json",
@@ -119,13 +236,31 @@
       "id": "work_search_enrichment",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["medium_type", "medium_caption"],
+      "fields": [
+        "medium_type",
+        "medium_caption"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json",
+          "catalogue-search"
+        ],
         "fallback": false,
         "reason": "Medium fields enrich focused work metadata and catalogue search, but do not affect series membership or aggregate work cards."
       }
@@ -134,13 +269,35 @@
       "id": "work_local_public_metadata",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["duration", "artist", "width_cm", "height_cm", "depth_cm", "downloads", "links"],
+      "fields": [
+        "duration",
+        "artist",
+        "width_cm",
+        "height_cm",
+        "depth_cm",
+        "downloads",
+        "links"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "fallback": false,
         "reason": "These fields are focused work metadata and should not select series artifacts or broad aggregate indexes unless a future public artifact starts serializing them."
       }
@@ -149,13 +306,30 @@
       "id": "work_storage",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["storage_location"],
+      "fields": [
+        "storage_location"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json", "work-storage-index-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json",
+          "work-storage-index-json"
+        ],
         "fallback": false,
         "reason": "Storage metadata is serialized to focused work runtime data and the Studio storage lookup only."
       }
@@ -164,13 +338,32 @@
       "id": "work_media_source",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["project_folder", "project_subfolder", "project_filename"],
+      "fields": [
+        "project_folder",
+        "project_subfolder",
+        "project_filename"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search",
+          "local-media"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "local-media"
+        ],
         "conditional_artifacts": [
           {
             "artifact": "work-json",
@@ -185,13 +378,30 @@
       "id": "work_derived_image_dimensions",
       "record_family": "work",
       "operation": "derived_update",
-      "fields": ["width_px", "height_px"],
+      "fields": [
+        "width_px",
+        "height_px"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-page", "work-json", "series-page", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-page",
+          "work-json",
+          "series-page",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "fallback": false,
         "reason": "Pixel dimensions are derived from image files and affect focused work image aspect ratio."
       }
@@ -200,13 +410,21 @@
       "id": "work_editor_only",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["provenance"],
+      "fields": [
+        "provenance"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup"
+        ],
         "fallback": false,
         "reason": "These fields are Studio/editor-only and are not published to public runtime artifacts."
       }
@@ -215,13 +433,30 @@
       "id": "work_detail_identity",
       "record_family": "work_detail",
       "operation": "create_delete_identity",
-      "fields": ["detail_uid", "work_id", "detail_id"],
+      "fields": [
+        "detail_uid",
+        "work_id",
+        "detail_id"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-details-page",
+          "work-json",
+          "catalogue-search",
+          "local-media"
+        ],
         "fallback": true
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-details-page",
+          "work-json",
+          "local-media"
+        ],
         "fallback": false,
         "reason": "Detail identity controls route creation/removal, parent work sections, lookup identity, and media output names."
       }
@@ -230,13 +465,26 @@
       "id": "work_detail_public_metadata",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["title"],
+      "fields": [
+        "title"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-details-page",
+          "work-json",
+          "catalogue-search",
+          "local-media"
+        ],
         "fallback": true
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "conditional_artifacts": [
           {
             "artifact": "work-details-page",
@@ -251,13 +499,26 @@
       "id": "work_detail_media_source",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["project_filename"],
+      "fields": [
+        "project_filename"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-details-page", "work-json", "catalogue-search", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-details-page",
+          "work-json",
+          "catalogue-search",
+          "local-media"
+        ],
         "fallback": true
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "local-media"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "local-media"
+        ],
         "conditional_artifacts": [
           {
             "artifact": "work-json",
@@ -272,13 +533,23 @@
       "id": "work_detail_section_metadata",
       "record_family": "work_detail",
       "operation": "metadata_update",
-      "fields": ["section_id"],
+      "fields": [
+        "section_id"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "fallback": false,
         "reason": "Detail section_id controls parent work JSON grouping. Section labels, source folders, section ordering, and section detail-sort modes live in work_detail_sections."
       }
@@ -287,13 +558,24 @@
       "id": "work_detail_dimensions",
       "record_family": "work_detail",
       "operation": "derived_update",
-      "fields": ["width_px", "height_px"],
+      "fields": [
+        "width_px",
+        "height_px"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "fallback": true
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "work-json"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
         "fallback": false,
         "reason": "Detail dimensions are serialized into the parent focused work payload."
       }
@@ -302,13 +584,33 @@
       "id": "series_identity",
       "record_family": "series",
       "operation": "create_delete_identity",
-      "fields": ["series_id"],
+      "fields": [
+        "series_id"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "series-page",
+          "series-json",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": true
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "series-page",
+          "series-json",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false,
         "reason": "Series identity controls route creation/removal, related work membership references, public aggregate indexes, recent entries, and search."
       }
@@ -317,13 +619,34 @@
       "id": "series_display_search",
       "record_family": "series",
       "operation": "metadata_update",
-      "fields": ["title", "series_type", "year", "year_display"],
+      "fields": [
+        "title",
+        "series_type",
+        "year",
+        "year_display"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "series-page",
+          "series-json",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "series-json", "series-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "series-json",
+          "series-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false,
         "reason": "Series display fields affect focused series JSON, aggregate series data, related search entries, and recent display context."
       }
@@ -332,13 +655,34 @@
       "id": "series_publish_primary_order",
       "record_family": "series",
       "operation": "metadata_update",
-      "fields": ["status", "published_date", "primary_work_id", "sort_fields"],
+      "fields": [
+        "status",
+        "published_date",
+        "primary_work_id",
+        "sort_fields"
+      ],
       "current": {
-        "artifacts": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "works-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "series-page",
+          "series-json",
+          "series-index-json",
+          "works-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "series-json", "series-index-json", "recent-index-json", "catalogue-search"],
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "series-json",
+          "series-index-json",
+          "recent-index-json",
+          "catalogue-search"
+        ],
         "conditional_artifacts": [
           {
             "artifact": "works-index-json",
@@ -347,80 +691,6 @@
         ],
         "fallback": false,
         "reason": "Publication state, primary work, and ordering affect public series membership, thumbnails, recent pruning, and search."
-      }
-    },
-    {
-      "id": "moment_identity",
-      "record_family": "moment",
-      "operation": "create_delete_identity",
-      "fields": ["moment_id"],
-      "current": {
-        "artifacts": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"],
-        "fallback": true
-      },
-      "target": {
-        "artifacts": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"],
-        "fallback": false,
-        "reason": "Moment identity controls route creation/removal, focused payload, aggregate index, search identity, and media output names."
-      }
-    },
-    {
-      "id": "moment_display_search",
-      "record_family": "moment",
-      "operation": "metadata_update",
-      "fields": ["title", "date", "date_display", "image_alt"],
-      "current": {
-        "artifacts": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search"],
-        "fallback": true
-      },
-      "target": {
-        "artifacts": ["source-json", "moment-json", "moments-index-json", "catalogue-search"],
-        "fallback": false,
-        "reason": "Moment display metadata is serialized to focused moment JSON, aggregate moments index, and catalogue search; route shells are identity-only."
-      }
-    },
-    {
-      "id": "moment_publish_state",
-      "record_family": "moment",
-      "operation": "metadata_update",
-      "fields": ["status", "published_date"],
-      "current": {
-        "artifacts": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search"],
-        "fallback": true
-      },
-      "target": {
-        "artifacts": ["source-json", "moment-json", "moments-index-json", "catalogue-search"],
-        "fallback": false,
-        "reason": "Moment publication state controls public inclusion in focused and aggregate moment artifacts and search."
-      }
-    },
-    {
-      "id": "moment_media_source",
-      "record_family": "moment",
-      "operation": "metadata_update",
-      "fields": ["source_image_file"],
-      "current": {
-        "artifacts": ["source-json", "moment-page", "moment-json", "moments-index-json", "catalogue-search", "local-media"],
-        "fallback": true
-      },
-      "target": {
-        "artifacts": ["source-json", "local-media"],
-        "conditional_artifacts": [
-          {
-            "artifact": "moment-json",
-            "when": "media refresh changes source image availability or dimensions"
-          },
-          {
-            "artifact": "moments-index-json",
-            "when": "thumbnail availability changes"
-          },
-          {
-            "artifact": "catalogue-search",
-            "when": "public moment index data changes"
-          }
-        ],
-        "fallback": false,
-        "reason": "Moment source image controls media readiness and derivatives; JSON/search follow public image availability changes."
       }
     }
   ],

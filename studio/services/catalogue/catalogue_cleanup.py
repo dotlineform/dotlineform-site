@@ -49,20 +49,6 @@ def compute_payload_version(payload: Any) -> str:
     return f"blake2b-{hashlib.blake2b(canonical, digest_size=16).hexdigest()}"
 
 
-def finalize_moments_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
-    moments_map = payload.get("moments")
-    if not isinstance(moments_map, dict):
-        raise ValueError("moments_index.json must include a moments object")
-    schema = str((payload.get("header") or {}).get("schema") or "moments_index_v1")
-    payload["header"] = {
-        "schema": schema,
-        "version": compute_payload_version({"schema": schema, "moments": moments_map}),
-        "generated_at_utc": activity.utc_now(),
-        "count": len(moments_map),
-    }
-    return payload
-
-
 def sorted_object_map(value: Mapping[str, Any]) -> Dict[str, Any]:
     return {str(key): value[key] for key in sorted(value.keys(), key=lambda item: str(item))}
 
@@ -197,40 +183,6 @@ def unique_existing_paths(paths: Iterable[Path]) -> list[Path]:
         seen.add(resolved)
         out.append(path)
     return out
-
-
-def collect_moment_repo_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
-    return unique_existing_paths(
-        [
-            repo_root / public_paths.moment_record_path(moment_id),
-        ]
-    )
-
-
-def collect_moment_repo_media_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
-    return collect_matching_paths(repo_root / public_paths.thumb_output_dir("moment"), [f"{moment_id}-thumb-*.*"])
-
-
-def collect_moment_staged_media_artifacts(repo_root: Path, moment_id: str) -> list[Path]:
-    staging_root = repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "moments"
-    paths: list[Path] = []
-    paths.extend(collect_matching_paths(staging_root / "make_srcset_images", [f"{moment_id}.*"]))
-    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "primary", [f"{moment_id}-primary-*.*"]))
-    paths.extend(collect_matching_paths(staging_root / "srcset_images" / "thumb", [f"{moment_id}-thumb-*.*"]))
-    return paths
-
-
-def collect_moment_delete_cleanup(repo_root: Path, moment_id: str) -> Dict[str, Any]:
-    repo_artifacts = collect_moment_repo_artifacts(repo_root, moment_id)
-    repo_media = collect_moment_repo_media_artifacts(repo_root, moment_id)
-    staged_media = collect_moment_staged_media_artifacts(repo_root, moment_id)
-    delete_paths = unique_existing_paths([*repo_artifacts, *repo_media, *staged_media])
-    return {
-        "repo_artifacts": repo_artifacts,
-        "repo_media": repo_media,
-        "staged_media": staged_media,
-        "delete_paths": delete_paths,
-    }
 
 
 def collect_work_repo_artifacts(repo_root: Path, work_id: str) -> list[Path]:
@@ -379,18 +331,6 @@ def collect_catalogue_delete_cleanup(
         "delete_paths": unique_existing_paths([*repo_artifacts, *repo_media, *staged_media]),
         "catalogue_search": rebuild_search,
     }
-
-
-def ensure_moment_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
-    roots = [
-        repo_root / public_paths.MOMENTS_JSON_DIR,
-        repo_root / public_paths.thumb_output_dir("moment"),
-        repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "moments",
-    ]
-    for raw_path in cleanup.get("delete_paths") or []:
-        path = Path(raw_path)
-        if not any(path_is_under(path, root) for root in roots):
-            raise ValueError(f"delete target is outside allowlisted moment cleanup roots: {path.name}")
 
 
 def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
@@ -722,33 +662,6 @@ def build_catalogue_delete_generated_payloads(
                 payloads[path] = payload
 
     return payloads
-
-
-def build_moment_delete_generated_payloads(repo_root: Path, moment_id: str) -> Dict[Path, Dict[str, Any]]:
-    payloads: Dict[Path, Dict[str, Any]] = {}
-    moments_index_path = (repo_root / public_paths.MOMENTS_INDEX_JSON_PATH).resolve()
-    if not moments_index_path.exists():
-        return payloads
-
-    moments_index_payload = load_json_file(moments_index_path)
-    moments_map = moments_index_payload.get("moments")
-    if not isinstance(moments_map, dict):
-        raise ValueError("moments_index.json must include a moments object")
-    moments_map.pop(moment_id, None)
-    payloads[moments_index_path] = finalize_moments_index_payload(moments_index_payload)
-    return payloads
-
-
-def moment_delete_preview_cleanup(repo_root: Path, moment_id: str) -> Dict[str, Any]:
-    cleanup = collect_moment_delete_cleanup(repo_root, moment_id)
-    return {
-        "repo_artifacts": len(cleanup["repo_artifacts"]),
-        "repo_media": len(cleanup["repo_media"]),
-        "staged_media": len(cleanup["staged_media"]),
-        "delete_paths": [str(path.relative_to(repo_root)) if path_is_under(path, repo_root) else path.name for path in cleanup["delete_paths"]],
-        "moments_index": public_paths.MOMENTS_INDEX_JSON_PATH.as_posix(),
-        "catalogue_search": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix(),
-    }
 
 
 def delete_existing_files(paths: Iterable[Path]) -> int:

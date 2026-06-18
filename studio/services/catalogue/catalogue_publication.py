@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, Mapping, Optional
 
 from catalogue import catalogue_cleanup
 from catalogue.catalogue_build_media import build_local_media_plan
-from catalogue.catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work, preview_moment_source
+from catalogue.catalogue_build_scopes import build_scope_for_series, build_scope_for_work
 from catalogue import catalogue_source_mutation as source_mutation
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_source import (
@@ -20,7 +20,6 @@ from catalogue.catalogue_source import (
     records_from_json_source,
     slug_id,
 )
-from catalogue.moment_sources import MOMENT_METADATA_FILENAME, load_moment_metadata_records, moment_metadata_payload, normalize_moment_metadata_record
 
 
 def publication_source_path_key(kind: str) -> str:
@@ -28,7 +27,7 @@ def publication_source_path_key(kind: str) -> str:
         return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["works"])
     if kind == "series":
         return str(DEFAULT_SOURCE_DIR / SOURCE_FILES["series"])
-    return str(DEFAULT_SOURCE_DIR / MOMENT_METADATA_FILENAME)
+    raise ValueError("publication kind must be work or series")
 
 
 def _source_payload(source_dir: Path, filename: str, map_key: str) -> Dict[str, Any]:
@@ -45,7 +44,6 @@ def publication_affected_for_record(source_dir: Path, kind: str, record_id: str)
         "works": [],
         "series": [],
         "work_details": [],
-        "moments": [],
     }
     if kind == "work":
         work_record = source_records.works.get(record_id)
@@ -69,10 +67,7 @@ def publication_affected_for_record(source_dir: Path, kind: str, record_id: str)
             if record_id in normalize_series_ids_value(work_record.get("series_ids"))
         )
     else:
-        moment_records = load_moment_metadata_records(source_dir)
-        if record_id not in moment_records:
-            raise ValueError(f"moment_id not found: {record_id}")
-        affected["moments"] = [record_id]
+        raise ValueError("publication kind must be work or series")
     return affected
 
 
@@ -113,10 +108,7 @@ def publication_source_payload(source_dir: Path, kind: str, record_id: str, targ
         records = dict(payload["series"])
         records[record_id] = dict(target_record)
         return (source_dir / SOURCE_FILES["series"]).resolve(), payload_for_map("series", records)
-    payload = _source_payload(source_dir, MOMENT_METADATA_FILENAME, "moments")
-    records = dict(payload["moments"])
-    records[record_id] = dict(target_record)
-    return (source_dir / MOMENT_METADATA_FILENAME).resolve(), moment_metadata_payload(records)
+    raise ValueError("publication kind must be work or series")
 
 
 def publication_source_payloads(
@@ -152,10 +144,7 @@ def current_publication_record(source_dir: Path, kind: str, record_id: str) -> D
         if not isinstance(record, dict):
             raise ValueError(f"series_id not found: {record_id}")
         return dict(record)
-    record = load_moment_metadata_records(source_dir).get(record_id)
-    if not isinstance(record, dict):
-        raise ValueError(f"moment_id not found: {record_id}")
-    return normalize_moment_metadata_record(record_id, record)
+    raise ValueError("publication kind must be work or series")
 
 
 def normalize_publication_record(
@@ -180,7 +169,7 @@ def normalize_publication_record(
         return source_mutation.normalize_work_update(record_id, current_record, update)
     if kind == "series":
         return source_mutation.normalize_series_update(record_id, current_record, update)
-    return source_mutation.normalize_moment_update(record_id, current_record, update)
+    raise ValueError("publication kind must be work or series")
 
 
 def validate_publication_target(
@@ -198,7 +187,7 @@ def validate_publication_target(
         errors = source_mutation.validate_series_save_record(target_record)
         errors.extend(source_mutation.validate_series_records(source_records, record_id, target_record, work_updates or {}))
         return errors
-    return source_mutation.validate_moment_record(record_id, target_record)
+    raise ValueError("publication kind must be work or series")
 
 
 def publication_specific_blockers(
@@ -251,10 +240,8 @@ def publication_specific_blockers(
             blockers.append("series must have at least one published member work before publishing")
         return blockers
 
-    if kind == "moment":
-        preview = preview_moment_source(repo_root, f"{record_id}.md", metadata=dict(target_record))
-        if not preview.get("valid"):
-            return [str(error) for error in preview.get("errors") or []] or ["moment source preview failed"]
+    if kind not in {"work", "series"}:
+        return ["publication kind must be work or series"]
     return []
 
 
@@ -278,8 +265,7 @@ def build_publication_build_impact(
             build = build_scope_for_series(source_dir, record_id, extra_work_ids=extra_work_ids)
             build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
         else:
-            build = build_scope_for_moment(repo_root, f"{record_id}.md", metadata=dict(target_record), force=force)
-            build["local_media"] = build_local_media_plan(repo_root, scope=build, force=force)
+            raise ValueError("publication kind must be work or series")
         return {
             "type": "scoped_public_update",
             "available": True,
@@ -292,7 +278,6 @@ def build_publication_build_impact(
             "build": {
                 "work_ids": [record_id] if kind == "work" else [],
                 "series_ids": [record_id] if kind == "series" else [],
-                "moment_ids": [record_id] if kind == "moment" else [],
                 "rebuild_search": True,
                 "search_scope": "catalogue",
                 "refresh_published": True,
@@ -320,30 +305,17 @@ def apply_publication_unpublish_cleanup(
     refresh_lookup_payloads: Callable[[], Any] | None = None,
 ) -> transactions.CleanupTransactionResult:
     source_path, source_payload = publication_source_payload(source_dir, kind, record_id, target_record)
-    if kind != "moment":
-        affected = preview["affected"]
-        cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
-        generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
-        return transactions.execute_catalogue_cleanup_transaction(
-            repo_root=repo_root,
-            dry_run=dry_run,
-            allowed_write_paths=allowed_write_paths,
-            payloads={source_path: source_payload, **generated_payloads},
-            cleanup=cleanup,
-            rebuild_catalogue_search=rebuild_catalogue_search,
-            refresh_lookup_payloads=refresh_lookup_payloads,
-        )
-
-    cleanup = catalogue_cleanup.collect_moment_delete_cleanup(repo_root, record_id)
-    return transactions.execute_moment_cleanup_transaction(
+    affected = preview["affected"]
+    cleanup = catalogue_cleanup.collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+    generated_payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(repo_root, kind, record_id, affected)
+    return transactions.execute_catalogue_cleanup_transaction(
         repo_root=repo_root,
         dry_run=dry_run,
         allowed_write_paths=allowed_write_paths,
-        metadata_path=source_path,
-        metadata_payload=source_payload,
+        payloads={source_path: source_payload, **generated_payloads},
         cleanup=cleanup,
-        moment_id=record_id,
         rebuild_catalogue_search=rebuild_catalogue_search,
+        refresh_lookup_payloads=refresh_lookup_payloads,
     )
 
 
@@ -371,11 +343,11 @@ def run_publication_build_transaction(
         }
 
     if kind == "work":
-        success, payload = run_build_operation(work_id=record_id, series_id="", moment_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
+        success, payload = run_build_operation(work_id=record_id, series_id="", extra_series_ids=extra_series_ids, extra_work_ids=[], detail_uid="", force=force)
     elif kind == "series":
-        success, payload = run_build_operation(work_id="", series_id=record_id, moment_id="", extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
+        success, payload = run_build_operation(work_id="", series_id=record_id, extra_series_ids=[], extra_work_ids=extra_work_ids, detail_uid="", force=force)
     else:
-        success, payload = run_build_operation(work_id="", series_id="", moment_id=record_id, extra_series_ids=[], extra_work_ids=[], detail_uid="", force=force)
+        raise ValueError("publication kind must be work or series")
     return success, payload
 
 
@@ -425,10 +397,7 @@ def build_publication_preview(source_dir: Path, repo_root: Path, request: Mappin
         ]
 
     if action == "unpublish":
-        if kind == "moment":
-            cleanup = catalogue_cleanup.moment_delete_preview_cleanup(repo_root, record_id)
-        else:
-            cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, kind, record_id, affected)
+        cleanup = catalogue_cleanup.catalogue_delete_preview_cleanup(repo_root, kind, record_id, affected)
         impact["public"] = {
             "type": "public_cleanup",
             "cleanup": cleanup,

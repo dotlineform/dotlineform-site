@@ -34,13 +34,6 @@ ROUTES = [
         "route": "catalogue-work",
         "doc": "/docs/?scope=studio&doc=catalogue-work-editor&mode=manage",
     },
-    {
-        "id": "catalogue_moment_editor",
-        "path": "/studio/catalogue-moment/",
-        "root": "#catalogueMomentRoot",
-        "route": "catalogue-moment",
-        "doc": "/docs/?scope=studio&doc=catalogue-moment-editor&mode=manage",
-    },
 ]
 
 
@@ -112,25 +105,6 @@ def main(argv: list[str] | None = None) -> int:
                         raise AssertionError(f"{route['id']} still renders header doc pill")
                     if page.locator(f'.site-nav [data-studio-navigate="{route["id"]}"]').count():
                         raise AssertionError(f"{route['id']} should not appear as a top-nav item")
-                page.close()
-
-            public_link_checks = [
-                {
-                    "url": "/studio/catalogue-moment/?moment=13-moments-in-october",
-                    "root": "#catalogueMomentRoot",
-                    "selector": "#catalogueMomentSummary a[href*='/moments/']",
-                    "prefix": f"{public_preview_base}/moments/?moment=13-moments-in-october",
-                },
-            ]
-            for check in public_link_checks:
-                page = browser.new_page(viewport={"width": 1280, "height": 900})
-                page.goto(f"{base_url}{check['url']}", wait_until="domcontentloaded")
-                root = page.locator(check["root"])
-                expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-                expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
-                public_href = page.locator(check["selector"]).first.get_attribute("href")
-                if not public_href or not public_href.startswith(check["prefix"]):
-                    raise AssertionError(f"catalogue editor public link did not use public preview base: {public_href!r}")
                 page.close()
 
             browser.close()

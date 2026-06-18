@@ -9,7 +9,6 @@ from catalogue import catalogue_activity as activity
 from catalogue import catalogue_publication
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_service import run_build_operation, run_catalogue_search_rebuild
-from catalogue.catalogue_moment_service import extract_moment_update
 from catalogue.catalogue_service_context import CatalogueWriteContext, append_activity_rows, refresh_lookup_payloads
 from catalogue.catalogue_source import normalize_series_ids_value, slug_id
 from catalogue.catalogue_work_service import extract_work_update
@@ -63,7 +62,7 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
             target_record=target_record,
             preview=preview,
             rebuild_catalogue_search=lambda repo_root: run_catalogue_search_rebuild(repo_root, write=True),
-            refresh_lookup_payloads=(lambda: refresh_lookup_payloads(context)) if kind != "moment" else None,
+            refresh_lookup_payloads=lambda: refresh_lookup_payloads(context),
         )
         public_update = cleanup_result.payload
     else:
@@ -77,7 +76,7 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
                 dry_run=context.dry_run,
                 repo_root=context.repo_root,
             )
-            if not context.dry_run and kind != "moment":
+            if not context.dry_run:
                 refresh_lookup_payloads(context)
         public_update_ok, public_update = catalogue_publication.run_publication_build_transaction(
             repo_root=context.repo_root,
@@ -170,8 +169,8 @@ def publication_apply_response(context: CatalogueWriteContext, body: Mapping[str
 
 def extract_publication_request(body: Mapping[str, Any]) -> dict[str, Any]:
     kind = str(body.get("kind") or "").strip().lower()
-    if kind not in {"work", "series", "moment"}:
-        raise ValueError("publication kind must be work, series, or moment")
+    if kind not in {"work", "series"}:
+        raise ValueError("publication kind must be work or series")
 
     action = str(body.get("action") or "").strip().lower().replace("-", "_")
     if action not in {"publish", "unpublish", "save_published"}:
@@ -179,21 +178,15 @@ def extract_publication_request(body: Mapping[str, Any]) -> dict[str, Any]:
 
     if kind == "work":
         record_id = slug_id(body.get("work_id") or body.get("id"))
-    elif kind == "series":
-        record_id = normalize_series_id(body.get("series_id") or body.get("id"))
     else:
-        from catalogue.catalogue_service_context import normalize_moment_id_value
-
-        record_id = normalize_moment_id_value(body.get("moment_id") or body.get("id"))
+        record_id = normalize_series_id(body.get("series_id") or body.get("id"))
 
     record_update: dict[str, Any] = {}
     if action == "save_published":
         if kind == "work":
             record_update = extract_work_update(body)
-        elif kind == "series":
-            record_update = extract_series_update(body)
         else:
-            record_update = extract_moment_update(body)
+            record_update = extract_series_update(body)
 
     return {
         "kind": kind,

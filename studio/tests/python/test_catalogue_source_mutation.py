@@ -183,37 +183,12 @@ def test_series_create_plans_series_and_optional_work_payload() -> None:
     assert_false(plan.validation_errors, "created series validation errors")
 
 
-def test_moment_save_normalizes_and_validates_metadata() -> None:
-    moments = {
-        "spring-note": {
-            "moment_id": "spring-note",
-            "title": "Spring note",
-            "status": "draft",
-            "date": "2026-03-01",
-            "date_display": "March 2026",
-            "image_alt": "Spring note",
-        }
-    }
-
-    plan = source_mutation.plan_moment_save(
-        moments,
-        "spring-note",
-        moments["spring-note"],
-        {"status": "published", "published_date": "2026-03-02"},
-    )
-
-    assert_equal(plan.changed_fields, ["published_date", "status"], "moment changed fields")
-    assert_equal(plan.payload["moments"]["spring-note"]["published_date"], "2026-03-02", "moment payload")
-    assert_false(plan.validation_errors, "moment validation errors")
-
-
 def main() -> None:
     test_work_save_plans_changed_fields_and_payload()
     test_work_create_defaults_draft_and_series_ids()
     test_detail_update_normalizes_detail_owned_fields()
     test_series_save_plans_member_work_updates()
     test_series_create_plans_series_and_optional_work_payload()
-    test_moment_save_normalizes_and_validates_metadata()
     print("Catalogue source mutation tests OK")
 
 

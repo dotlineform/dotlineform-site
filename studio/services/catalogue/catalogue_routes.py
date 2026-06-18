@@ -17,12 +17,6 @@ SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
-PROSE_IMPORT_PREVIEW_PATH = "/catalogue/prose/import-preview"
-PROSE_IMPORT_APPLY_PATH = "/catalogue/prose/import-apply"
-MOMENT_IMPORT_PREVIEW_PATH = "/catalogue/moment/import-preview"
-MOMENT_IMPORT_APPLY_PATH = "/catalogue/moment/import-apply"
-MOMENT_PREVIEW_PATH = "/catalogue/moment/preview"
-MOMENT_SAVE_PATH = "/catalogue/moment/save"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
@@ -51,12 +45,6 @@ POST_PATHS = (
     SERIES_CREATE_PATH,
     BUILD_PREVIEW_PATH,
     BUILD_APPLY_PATH,
-    PROSE_IMPORT_PREVIEW_PATH,
-    PROSE_IMPORT_APPLY_PATH,
-    MOMENT_IMPORT_PREVIEW_PATH,
-    MOMENT_IMPORT_APPLY_PATH,
-    MOMENT_PREVIEW_PATH,
-    MOMENT_SAVE_PATH,
     PROJECT_STATE_REPORT_PATH,
     THUMBNAIL_QUALITY_PREVIEW_PATH,
 )

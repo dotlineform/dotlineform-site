@@ -10,10 +10,10 @@ from catalogue import catalogue_activity as activity
 from catalogue.catalogue_build_commands import build_search_command
 from catalogue.catalogue_build_field_plan import apply_field_build_plan_to_scope, build_field_plan_for_scope
 from catalogue.catalogue_build_media import build_local_media_plan
-from catalogue.catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work
+from catalogue.catalogue_build_scopes import build_scope_for_series, build_scope_for_work
 from catalogue.catalogue_json_build import run_scoped_build_scope
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_series_ids_value, slug_id
-from catalogue.catalogue_service_context import CatalogueWriteContext, normalize_moment_id_value
+from catalogue.catalogue_service_context import CatalogueWriteContext
 from catalogue.series_ids import normalize_series_id
 from local_env import runtime_env
 
@@ -21,7 +21,7 @@ WORK_MEDIA_SOURCE_FIELDS = frozenset({"project_folder", "project_subfolder", "pr
 
 
 def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+    work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
     detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
     media_only = bool(body.get("media_only"))
     work_media_source = extract_work_media_source(body, work_id=work_id, media_only=media_only)
@@ -38,7 +38,7 @@ def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any
     elif series_id:
         scope = build_scope_for_series(context.source_dir, series_id, extra_work_ids=extra_work_ids)
     else:
-        scope = build_scope_for_moment(context.repo_root, f"{moment_id}.md", force=force)
+        raise ValueError("build request must include work_id or series_id")
     if changed_fields:
         build_plan = build_field_plan_for_scope(
             context.repo_root,
@@ -58,7 +58,6 @@ def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         "ok": True,
         "work_id": work_id,
         "series_id": series_id,
-        "moment_id": moment_id,
         "detail_uid": detail_uid,
         "force": force,
         "media_only": media_only,
@@ -67,7 +66,7 @@ def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any
 
 
 def build_apply_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> tuple[bool, dict[str, Any]]:
-    work_id, series_id, moment_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+    work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
     detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
     media_only = bool(body.get("media_only"))
     work_media_source = extract_work_media_source(body, work_id=work_id, media_only=media_only)
@@ -75,7 +74,6 @@ def build_apply_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         context,
         work_id=work_id,
         series_id=series_id,
-        moment_id=moment_id,
         extra_series_ids=extra_series_ids,
         extra_work_ids=extra_work_ids,
         detail_uid=detail_uid,
@@ -90,7 +88,6 @@ def run_build_operation(
     *,
     work_id: str,
     series_id: str,
-    moment_id: str = "",
     extra_series_ids: list[str],
     extra_work_ids: list[str],
     detail_uid: str,
@@ -110,7 +107,7 @@ def run_build_operation(
     elif series_id:
         scope = build_scope_for_series(context.source_dir, series_id, extra_work_ids=extra_work_ids)
     else:
-        scope = build_scope_for_moment(context.repo_root, f"{moment_id}.md", force=force)
+        raise ValueError("build request must include work_id or series_id")
     if build_plan:
         apply_field_build_plan_to_scope(scope, build_plan)
     result = run_scoped_build_scope(
@@ -125,7 +122,6 @@ def run_build_operation(
         "ok": result.get("status") == "completed",
         "work_id": work_id,
         "series_id": series_id,
-        "moment_id": moment_id,
         "detail_uid": detail_uid,
         "force": force,
         "media_only": media_only,
@@ -183,7 +179,6 @@ def run_build_targets(context: CatalogueWriteContext, build_targets: list[dict[s
             context,
             work_id=work_id,
             series_id="",
-            moment_id="",
             extra_series_ids=extra_series_ids,
             extra_work_ids=[],
             detail_uid="",
@@ -219,18 +214,16 @@ def run_build_targets(context: CatalogueWriteContext, build_targets: list[dict[s
     }
 
 
-def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, str, list[str], list[str], bool]:
+def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, list[str], list[str], bool]:
     work_id = str(body.get("work_id") or "").strip()
     series_id = str(body.get("series_id") or "").strip()
-    moment_value = str(body.get("moment_id") or body.get("moment_file") or "").strip()
-    if sum(1 for value in (work_id, series_id, moment_value) if value) != 1:
-        raise ValueError("build request must include exactly one of work_id, series_id, or moment_id")
+    if sum(1 for value in (work_id, series_id) if value) != 1:
+        raise ValueError("build request must include exactly one of work_id or series_id")
     normalized_work_id = slug_id(work_id) if work_id else ""
     normalized_series_id = normalize_series_id(series_id) if series_id else ""
-    normalized_moment_id = normalize_moment_id_value(moment_value) if moment_value else ""
     extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
     extra_work_ids = [slug_id(raw) for raw in body.get("extra_work_ids") or []]
-    return normalized_work_id, normalized_series_id, normalized_moment_id, extra_series_ids, extra_work_ids, bool(body.get("force"))
+    return normalized_work_id, normalized_series_id, extra_series_ids, extra_work_ids, bool(body.get("force"))
 
 
 def extract_changed_field_names(body: Mapping[str, Any]) -> list[str]:

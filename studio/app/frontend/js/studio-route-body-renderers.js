@@ -11,10 +11,6 @@ const ROUTE_BODY_RENDERERS = {
     const module = await importModule("./catalogue-field-registry-shell.js");
     return module.renderCatalogueFieldRegistryShell();
   },
-  catalogue_moment_editor: async (_config, importModule) => {
-    const module = await importModule("./catalogue-moment-shell.js");
-    return module.renderCatalogueMomentShell();
-  },
   catalogue_series_editor: async (config, importModule) => {
     const module = await importModule("./catalogue-series-shell.js");
     return module.renderCatalogueSeriesShell(config);
