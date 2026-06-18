@@ -9,16 +9,14 @@ ui_status: draft
 The archive is present at `studio/retired/site-routes/moments/index.html`
 
 
-That makes sense. Leaving it as-is is consistent with the migration direction: `/series/` moments is now stale catalogue navigation, not something to preserve with compatibility code.
+[Docs Viewer View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry).
 
-Next session, the retirement work is probably:
-- remove moments mode/gallery from `/series/`
-- remove moments surfaces from Studio/catalogue source editing
-- keep old source/generated moment files only as archived rollback/data-migration material where needed
-- run the GH workflow after the public scope payloads are settled
-
-No redirect bridge needed if we’re intentionally retiring the old entry point.
-
+The useful core was the original:
+- create site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js
+- use it as the shared owner for normalization and lookup
+- centralize the decisions currently split across hosted views, display modes, and toolbar rendering
+- keep runtime implementations where they are
+- make config answer “is this view/mode/control available here?”
 
 ---
 

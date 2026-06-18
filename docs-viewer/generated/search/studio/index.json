@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2d376cc5c21cf7b6784257d5e13685e0",
-    "generated_at_utc": "2026-06-17T23:08:56Z",
-    "count": 240
+    "version": "blake2b-d2d8c565f6e21ddb6c93360889d2394d",
+    "generated_at_utc": "2026-06-18T10:07:09Z",
+    "count": 239
   },
   "entries": [
     {
@@ -1387,10 +1387,10 @@
       "kind": "doc",
       "title": "Docs Viewer View And Mode Registry",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry",
-      "last_updated": "2026-06-17",
+      "last_updated": "2026-06-18",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-17 • Change Requests",
+      "display_meta": "2026-06-18 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-view-mode-registry",
         "site",
@@ -1405,12 +1405,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-17",
+        "2026-06-18",
         "2026",
         "06",
-        "17"
+        "18"
       ],
-      "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view and mode registry and change requests change requests 2026-06-17 2026 06 17"
+      "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view and mode registry and change requests change requests 2026-06-18 2026 06 18"
     },
     {
       "id": "site-request-docs-viewer-workspace-mount-architecture",
@@ -3509,6 +3509,32 @@
       "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape portable source shape portable setup setup 2026-05-19 2026 05 19"
     },
     {
+      "id": "docs-viewer-public-route-shell-template",
+      "kind": "doc",
+      "title": "Public Route Shell Template",
+      "href": "/docs/?scope=studio&doc=docs-viewer-public-route-shell-template",
+      "last_updated": "2026-06-13",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-13 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-public-route-shell-template",
+        "docs",
+        "viewer",
+        "public",
+        "route",
+        "shell",
+        "template",
+        "public route shell template",
+        "docs viewer",
+        "2026-06-13",
+        "2026",
+        "06",
+        "13"
+      ],
+      "search_text": "docs-viewer-public-route-shell-template docs viewer public route shell template public route shell template docs viewer 2026-06-13 2026 06 13"
+    },
+    {
       "id": "docs-viewer-public-scopes",
       "kind": "doc",
       "title": "Public Scopes",
@@ -3531,60 +3557,6 @@
         "13"
       ],
       "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-13 2026 06 13"
-    },
-    {
-      "id": "docs-viewer-moments-migration-plan",
-      "kind": "doc",
-      "title": "Docs Viewer Moments Migration Plan",
-      "href": "/docs/?scope=studio&doc=docs-viewer-moments-migration-plan",
-      "last_updated": "2026-06-18",
-      "parent_id": "docs-viewer-public-scopes",
-      "parent_title": "Public Scopes",
-      "display_meta": "2026-06-18 • Public Scopes",
-      "search_terms": [
-        "docs-viewer-moments-migration-plan",
-        "docs",
-        "viewer",
-        "moments",
-        "migration",
-        "plan",
-        "docs viewer moments migration plan",
-        "public scopes",
-        "public",
-        "scopes",
-        "2026-06-18",
-        "2026",
-        "06",
-        "18"
-      ],
-      "search_text": "docs-viewer-moments-migration-plan docs viewer moments migration plan docs viewer moments migration plan public scopes public scopes 2026-06-18 2026 06 18"
-    },
-    {
-      "id": "docs-viewer-public-route-shell-template",
-      "kind": "doc",
-      "title": "Public Route Shell Template",
-      "href": "/docs/?scope=studio&doc=docs-viewer-public-route-shell-template",
-      "last_updated": "2026-06-13",
-      "parent_id": "docs-viewer-public-scopes",
-      "parent_title": "Public Scopes",
-      "display_meta": "2026-06-13 • Public Scopes",
-      "search_terms": [
-        "docs-viewer-public-route-shell-template",
-        "docs",
-        "viewer",
-        "public",
-        "route",
-        "shell",
-        "template",
-        "public route shell template",
-        "public scopes",
-        "scopes",
-        "2026-06-13",
-        "2026",
-        "06",
-        "13"
-      ],
-      "search_text": "docs-viewer-public-route-shell-template docs viewer public route shell template public route shell template public scopes scopes 2026-06-13 2026 06 13"
     },
     {
       "id": "docs-viewer-reports",

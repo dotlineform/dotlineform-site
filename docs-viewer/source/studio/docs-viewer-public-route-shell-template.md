@@ -3,7 +3,7 @@ doc_id: docs-viewer-public-route-shell-template
 title: Public Route Shell Template
 added_date: 2026-06-13
 last_updated: 2026-06-13
-parent_id: docs-viewer-public-scopes
+parent_id: docs-viewer
 viewable: true
 ---
 # Public Route Shell Template

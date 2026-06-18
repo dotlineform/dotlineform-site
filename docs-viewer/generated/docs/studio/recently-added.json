@@ -3,14 +3,6 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "docs-viewer-moments-migration-plan",
-      "title": "Docs Viewer Moments Migration Plan",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-moments-migration-plan.json",
-      "added_date": "2026-06-17",
-      "parent_id": "docs-viewer-public-scopes",
-      "parent_title": "Public Scopes"
-    },
-    {
       "doc_id": "site-request-docs-viewer-view-mode-registry",
       "title": "Docs Viewer View And Mode Registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-13",
       "parent_id": "site-request-public-catalogue-runtime-module-architecture",
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
+    },
+    {
+      "doc_id": "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
+      "title": "Public Catalogue Runtime Metadata Panel Component Slice",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
+      "parent_title": "Public Catalogue Runtime Module Architecture Request"
     }
   ],
-  "generated_at": "2026-06-17T20:53:15Z"
+  "generated_at": "2026-06-18T09:36:02Z"
 }

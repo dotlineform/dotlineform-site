@@ -19,6 +19,8 @@ gh run watch <run-id>
 gh run view <run-id>
 ```
 
+gh run watch 82098597040
+
 For more detail:
 
 ```bash
