@@ -162,7 +162,7 @@ Use per-scope `meta` for compact operational context such as `public scope` or `
 
 ## UI Text
 
-`docs-viewer/config/ui-text/public.json` owns public read-only Docs Viewer copy.
+`site/docs-viewer/config/ui-text/public.json` owns public read-only Docs Viewer copy and is served at `/docs-viewer/config/ui-text/public.json`.
 It currently includes only reader-facing public-entrypoint text consumed during public route execution.
 
 `docs-viewer/config/ui-text/manage.json` owns local/manage Docs Viewer copy, including management actions, settings, import workflow, scope lifecycle, status mutation, source-management, and manage-only modal text.

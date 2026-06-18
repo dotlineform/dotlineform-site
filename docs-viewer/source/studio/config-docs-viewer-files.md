@@ -17,7 +17,7 @@ Config files:
 - `docs-viewer/config/defaults/docs-viewer-config.json`
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `docs-viewer/config/defaults/docs-viewer-service.json`
-- `docs-viewer/config/ui-text/public.json`
+- `site/docs-viewer/config/ui-text/public.json`
 - `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
 - `docs-viewer/config/schema/docs-viewer-service.schema.json`
@@ -45,7 +45,7 @@ The local management route uses the management route registry and local browser 
 `docs-viewer/services/docs_viewer_service.py` reads service defaults and injects local service base URLs and capabilities for the management route.
 
 Docs Viewer UI modules read the route-owned UI text bundle declared by `config_urls.ui_text`.
-Public route records use `docs-viewer/config/ui-text/public.json`; the local management route uses `docs-viewer/config/ui-text/manage.json`.
+Public route records use `/docs-viewer/config/ui-text/public.json`, served from `site/docs-viewer/config/ui-text/public.json`; the local management route uses `docs-viewer/config/ui-text/manage.json`.
 
 ## Edit Class
 

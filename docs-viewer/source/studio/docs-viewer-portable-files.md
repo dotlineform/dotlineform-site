@@ -133,13 +133,14 @@ Copy:
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `docs-viewer/config/defaults/docs-viewer-service.json`
 - `docs-viewer/config/routes/docs-viewer-routes.json`
-- `docs-viewer/config/ui-text/public.json`
+- `site/docs-viewer/config/ui-text/public.json`
 - `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
 - `site/assets/data/docs/reports.json`
 
 `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe manage/local route-config registry.
 `site/docs-viewer/config/routes/docs-viewer-public-routes.json` is the browser-safe public route-config registry served at `/docs-viewer/config/routes/docs-viewer-public-routes.json`.
+`site/docs-viewer/config/ui-text/public.json` is the browser-safe public UI text bundle served at `/docs-viewer/config/ui-text/public.json`.
 Route shells should point at the appropriate registry with `data-route-config-url` and identify themselves with `data-route-id`.
 
 For standalone local manage mode, the Docs Viewer service serves this registry path with local loopback management/generated-read base URLs injected at request time.

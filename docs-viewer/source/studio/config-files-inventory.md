@@ -51,7 +51,7 @@ Every config contract review should answer:
 | `docs-viewer/config/defaults/docs-viewer-config.json` | local/manage browser default config | generated-by-builder default, source-controlled | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
 | `docs-viewer/config/defaults/docs-viewer-public-config.json` | public browser default config | generated-by-builder default, source-controlled | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
 | `docs-viewer/config/defaults/docs-viewer-service.json` | standalone Docs Viewer service defaults and endpoints | code infrastructure | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/ui-text/public.json` | Docs Viewer public UI copy | maintainer-editable copy config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
+| `site/docs-viewer/config/ui-text/public.json` | Docs Viewer public UI copy | maintainer-editable copy config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
 | `docs-viewer/config/ui-text/manage.json` | Docs Viewer manage UI copy | maintainer-editable copy config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
 | `docs-viewer/config/reports/reports.json` | Docs Viewer report registry source | maintainer-editable app config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
 | `docs-viewer/config/schema/docs-viewer-service.schema.json` | service config schema | code infrastructure | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |

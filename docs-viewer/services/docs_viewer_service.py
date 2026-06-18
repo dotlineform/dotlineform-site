@@ -60,6 +60,7 @@ SHARED_STATIC_ROUTES = {
     "/docs-viewer/config/routes/docs-viewer-public-routes.json": Path(
         "site/docs-viewer/config/routes/docs-viewer-public-routes.json"
     ),
+    "/docs-viewer/config/ui-text/public.json": Path("site/docs-viewer/config/ui-text/public.json"),
 }
 STATIC_FILES = {
     "/apple-touch-icon.png",
@@ -218,7 +219,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
         repo_root / "site" / "docs-viewer" / "config" / "routes" / "docs-viewer-public-routes.json",
         repo_root / "docs-viewer" / "config" / "ui-text" / "manage.json",
-        repo_root / "docs-viewer" / "config" / "ui-text" / "public.json",
+        repo_root / "site" / "docs-viewer" / "config" / "ui-text" / "public.json",
     ]
     candidates.extend(runtime_candidates)
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]

@@ -636,6 +636,9 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/config/routes/docs-viewer-public-routes.json"
     ) == Path("site/docs-viewer/config/routes/docs-viewer-public-routes.json")
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/config/ui-text/public.json"
+    ) == Path("site/docs-viewer/config/ui-text/public.json")
 
 
 def test_public_browser_config_projects_public_readonly_scope_routes() -> None:
