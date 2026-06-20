@@ -102,7 +102,7 @@ def modal_shell_state(page) -> dict[str, object]:
     )
 
 
-def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int) -> dict[str, object]:
+def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int, *, active_role: str = "modal-primary") -> dict[str, object]:
     page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
     state = modal_shell_state(page)
     if state["role"] != "dialog" or state["modal"] != "true":
@@ -117,8 +117,8 @@ def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int) ->
         raise AssertionError(f"unexpected modal actions: {state!r}")
     if not all("tagStudio__button--defaultWidth" in value for value in state["actionClasses"]):
         raise AssertionError(f"modal actions are missing default-width buttons: {state!r}")
-    if state["activeRole"] != "modal-primary":
-        raise AssertionError(f"confirmation modal did not focus the primary action: {state!r}")
+    if state["activeRole"] != active_role:
+        raise AssertionError(f"confirmation modal did not focus the expected action: {state!r}")
     return state
 
 
@@ -306,7 +306,7 @@ def main() -> int:
                 raise AssertionError(f"publication apply lost series ownership: {publication_request!r}")
 
             page.locator(delete_button).click()
-            delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
+            delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, active_role="modal-cancel")
             if f"Delete source record {SERIES_ID}" not in delete_modal["bodyText"]:
                 raise AssertionError(f"delete preview text missing from modal: {delete_modal!r}")
             close_with_backdrop(page, delete_button, args.timeout_ms)
@@ -314,7 +314,7 @@ def main() -> int:
                 raise AssertionError(f"delete apply ran after backdrop close: {delete_apply_requests!r}")
 
             page.locator(delete_button).click()
-            assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
+            assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, active_role="modal-cancel")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_url("**/studio/catalogue-status/", timeout=args.timeout_ms)
             if len(delete_apply_requests) != 1:
