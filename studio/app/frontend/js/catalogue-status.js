@@ -102,7 +102,7 @@ function buildFamilyCounts(entries) {
 function renderKey(keyNode, counts, activeFamily) {
   keyNode.innerHTML = FAMILIES.map((family) => {
     const count = Number(counts[family.key] || 0);
-    return `<button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-family="${family.key}" data-state="${activeFamily === family.key ? "active" : ""}">${escapeHtml(family.label)} ${count}</button>`;
+    return `<button type="button" class="studioUi__keyPill studioFilters__groupBtn" data-family="${family.key}" data-state="${activeFamily === family.key ? "active" : ""}">${escapeHtml(family.label)} ${count}</button>`;
   }).join("");
 }
 
@@ -112,7 +112,7 @@ function renderList(listNode, entries, state) {
     return;
   }
   const rows = entries.map((entry) => `
-    <li class="tagStudioList__row catalogueStatusRow">
+    <li class="studioList__row catalogueStatusRow">
       <span class="catalogueStatusRow__id">${entry.editorHref ? `<a href="${escapeHtml(entry.editorHref)}" target="_blank" rel="noopener">${escapeHtml(entry.id)}</a>` : escapeHtml(entry.id)}</span>
       <span class="catalogueStatusRow__family">${escapeHtml(entry.familyLabel)}</span>
       <span class="catalogueStatusRow__status">${escapeHtml(entry.status)}</span>
@@ -121,21 +121,21 @@ function renderList(listNode, entries, state) {
     </li>
   `);
   listNode.innerHTML = `
-    <div class="tagStudioList__head catalogueStatusPage__head">
+    <div class="studioList__head catalogueStatusPage__head">
       ${renderSortButton("id", state.sortKey, state.sortDir)}
       ${renderSortButton("type", state.sortKey, state.sortDir)}
       ${renderSortButton("status", state.sortKey, state.sortDir)}
       ${renderSortButton("title", state.sortKey, state.sortDir)}
       ${renderSortButton("reference", state.sortKey, state.sortDir)}
     </div>
-    <ul class="tagStudioList__rows catalogueStatusPage__rows">${rows.join("")}</ul>
+    <ul class="studioList__rows catalogueStatusPage__rows">${rows.join("")}</ul>
   `;
 }
 
 function renderSortButton(label, activeKey, activeDir) {
   const buttonState = activeKey === label ? "active" : "";
   const suffix = activeKey === label ? (activeDir === "desc" ? " ↓" : " ↑") : "";
-  return `<button type="button" class="tagStudioList__sortBtn" data-sort-key="${escapeHtml(label)}" data-state="${buttonState}">${escapeHtml(`${label}${suffix}`)}</button>`;
+  return `<button type="button" class="studioList__sortBtn" data-sort-key="${escapeHtml(label)}" data-state="${buttonState}">${escapeHtml(`${label}${suffix}`)}</button>`;
 }
 
 function compareEntries(a, b, sortKey, sortDir) {

@@ -197,11 +197,11 @@ export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {
     modalRole: "studio-modal",
     backdropRole: ENTRY_CANCEL_ROLE,
     bodyHtml: `
-      <div class="tagStudioForm__fields">
+      <div class="studioForm__fields">
         ${modalFieldHtml(firstField)}
         ${modalFieldHtml(secondField)}
       </div>
-      <p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" id="${escapeHtml(descriptor.statusId)}" hidden></p>
+      <p class="studioForm__status studioModal__status" data-role="modal-status" id="${escapeHtml(descriptor.statusId)}" hidden></p>
     `,
     actions: [
       { role: ENTRY_CANCEL_ROLE, label: lookupText(text, "entry_modal_cancel_button", "Cancel") },
@@ -220,24 +220,24 @@ function renderDetailSectionEditModalHtml(descriptor, options = {}) {
     modalRole: "studio-modal",
     backdropRole: SECTION_CANCEL_ROLE,
     bodyHtml: `
-      <div class="tagStudioForm__fields">
-        <label class="tagStudioForm__field" for="catalogueWorkDetailSectionTitle">
-          <span class="tagStudioForm__label">${escapeHtml(lookupText(text, "detail_section_title_label", "section title"))}</span>
-          <input class="tagStudio__input" id="catalogueWorkDetailSectionTitle" type="text" value="${escapeHtml(descriptor.currentTitle)}">
+      <div class="studioForm__fields">
+        <label class="studioForm__field" for="catalogueWorkDetailSectionTitle">
+          <span class="studioForm__label">${escapeHtml(lookupText(text, "detail_section_title_label", "section title"))}</span>
+          <input class="studioUi__input" id="catalogueWorkDetailSectionTitle" type="text" value="${escapeHtml(descriptor.currentTitle)}">
         </label>
-        <label class="tagStudioForm__field" for="catalogueWorkDetailSectionOrder">
-          <span class="tagStudioForm__label">${escapeHtml(lookupText(text, "detail_section_order_label", "order"))}</span>
-          <input class="tagStudio__input" id="catalogueWorkDetailSectionOrder" type="number" min="1" max="${escapeHtml(descriptor.totalSections)}" step="1" value="${escapeHtml(descriptor.currentPosition)}"${orderDisabled ? " disabled" : ""}>
+        <label class="studioForm__field" for="catalogueWorkDetailSectionOrder">
+          <span class="studioForm__label">${escapeHtml(lookupText(text, "detail_section_order_label", "order"))}</span>
+          <input class="studioUi__input" id="catalogueWorkDetailSectionOrder" type="number" min="1" max="${escapeHtml(descriptor.totalSections)}" step="1" value="${escapeHtml(descriptor.currentPosition)}"${orderDisabled ? " disabled" : ""}>
         </label>
-        <label class="tagStudioForm__field" for="catalogueWorkDetailSectionSort">
-          <span class="tagStudioForm__label">${escapeHtml(lookupText(text, "detail_section_detail_sort_label", "detail sort"))}</span>
-          <select class="tagStudio__input" id="catalogueWorkDetailSectionSort">
+        <label class="studioForm__field" for="catalogueWorkDetailSectionSort">
+          <span class="studioForm__label">${escapeHtml(lookupText(text, "detail_section_detail_sort_label", "detail sort"))}</span>
+          <select class="studioUi__input" id="catalogueWorkDetailSectionSort">
             ${detailSortOptionHtml("detail_id", lookupText(text, "detail_section_detail_sort_id", "id"), descriptor.currentSort)}
             ${detailSortOptionHtml("title", lookupText(text, "detail_section_detail_sort_title", "title"), descriptor.currentSort)}
           </select>
         </label>
       </div>
-      <p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" id="${escapeHtml(descriptor.statusId)}" hidden></p>
+      <p class="studioForm__status studioModal__status" data-role="modal-status" id="${escapeHtml(descriptor.statusId)}" hidden></p>
     `,
     actions: [
       { role: SECTION_CANCEL_ROLE, label: lookupText(text, "entry_modal_cancel_button", "Cancel") },
@@ -248,9 +248,9 @@ function renderDetailSectionEditModalHtml(descriptor, options = {}) {
 
 function modalFieldHtml({ fieldId, label, value, type = "text" }) {
   return `
-    <label class="tagStudioForm__field" for="${escapeHtml(fieldId)}">
-      <span class="tagStudioForm__label">${escapeHtml(label)}</span>
-      <input class="tagStudio__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}">
+    <label class="studioForm__field" for="${escapeHtml(fieldId)}">
+      <span class="studioForm__label">${escapeHtml(label)}</span>
+      <input class="studioUi__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}">
     </label>
   `;
 }

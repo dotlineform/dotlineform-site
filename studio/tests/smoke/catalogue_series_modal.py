@@ -84,8 +84,8 @@ def modal_shell_state(page) -> dict[str, object]:
     return page.locator('[data-role="studio-modal"]').evaluate(
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
-            const title = modal.querySelector('.tagStudioModal__title');
-            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const title = modal.querySelector('.studioModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.studioModal__actions button'));
             return {
                 role: dialog ? dialog.getAttribute('role') : "",
                 modal: dialog ? dialog.getAttribute('aria-modal') : "",
@@ -111,11 +111,11 @@ def assert_modal_shell(page, title: str, actions: list[str], timeout_ms: int, *,
         raise AssertionError(f"modal is not labelled by its title: {state!r}")
     if state["title"] != title:
         raise AssertionError(f"unexpected modal title: {state!r}")
-    if "tagStudioModal__dialog--compact" not in state["dialogClass"]:
+    if "studioModal__dialog--compact" not in state["dialogClass"]:
         raise AssertionError(f"confirmation modal is not compact: {state!r}")
     if state["actionLabels"] != actions:
         raise AssertionError(f"unexpected modal actions: {state!r}")
-    if not all("tagStudio__button--defaultWidth" in value for value in state["actionClasses"]):
+    if not all("studioUi__button--defaultWidth" in value for value in state["actionClasses"]):
         raise AssertionError(f"modal actions are missing default-width buttons: {state!r}")
     if state["activeRole"] != active_role:
         raise AssertionError(f"confirmation modal did not focus the expected action: {state!r}")

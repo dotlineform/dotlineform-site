@@ -88,7 +88,7 @@ export async function openProjectMediaFileModal(state, options = {}) {
     title: filePickerText(pickerConfig, "modalTitle"),
     size: "wide",
     bodyHtml: renderPickerBody(),
-    statusHtml: '<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" hidden></p>',
+    statusHtml: '<p class="studioForm__status studioModal__status" data-role="modal-status" hidden></p>',
     actions: [
       { role: "modal-cancel", label: filePickerText(pickerConfig, "cancelButton") },
       { role: "modal-primary", label: filePickerText(pickerConfig, "confirmButton"), primary: true, disabled: true }
@@ -166,7 +166,7 @@ export async function openProjectMediaMultiFileModal(state, options = {}) {
     title: filePickerText(pickerConfig, "modalTitle"),
     size: "wide",
     bodyHtml: renderPickerBody(),
-    statusHtml: '<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" hidden></p>',
+    statusHtml: '<p class="studioForm__status studioModal__status" data-role="modal-status" hidden></p>',
     actions: [
       { role: "modal-cancel", label: filePickerText(pickerConfig, "cancelButton") },
       { role: "modal-primary", label: filePickerText(pickerConfig, "confirmButton"), primary: true, disabled: true }

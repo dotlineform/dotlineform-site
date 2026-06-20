@@ -17,7 +17,7 @@ export function renderCatalogueWorkShell(config) {
     "assetFormat"
   ]);
   return `<div
-          class="tagStudioPage catalogueWorkPage"
+          class="studioPage catalogueWorkPage"
           id="catalogueWorkRoot"
           hidden
           data-studio-route="catalogue-work"
@@ -25,57 +25,57 @@ export function renderCatalogueWorkShell(config) {
           data-studio-busy="false"
           ${mediaAttrs}
         >
-          <section class="tagStudio__panel tagStudio__panel--editor">
-            <div class="tagStudio__inputRow tagStudio__inputRow--editor">
-              <div class="tagStudioForm__searchWrap catalogueWorkPage__searchWrap">
+          <section class="studioUi__panel studioUi__panel--editor">
+            <div class="studioUi__inputRow studioUi__inputRow--editor">
+              <div class="studioForm__searchWrap catalogueWorkPage__searchWrap">
                 <label class="visually-hidden" for="catalogueWorkSearch">Find work by id</label>
                 <div class="sharedSearchList__control catalogueWorkPage__searchControl" id="catalogueWorkPopup">
-                  <input type="text" class="tagStudio__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
+                  <input type="text" class="studioUi__input" id="catalogueWorkSearch" placeholder="find work by id" autocomplete="off">
                   <span id="catalogueWorkPopupList" hidden></span>
                 </div>
               </div>
-              <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkOpen">Open</button>
-              <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkNew">New</button>
-              <p class="tagStudio__status catalogueEditorMessage catalogueWorkPage__message" id="catalogueWorkStatus" aria-live="polite"></p>
+              <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkOpen">Open</button>
+              <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkNew">New</button>
+              <p class="studioUi__status catalogueEditorMessage catalogueWorkPage__message" id="catalogueWorkStatus" aria-live="polite"></p>
             </div>
           </section>
 
-          <div class="tagStudio__grid catalogueWorkPage__grid">
-            <section class="tagStudio__panel tagStudio__panel--editor">
-              <div class="tagStudio__headingRow">
+          <div class="studioUi__grid catalogueWorkPage__grid">
+            <section class="studioUi__panel studioUi__panel--editor">
+              <div class="studioUi__headingRow">
                 <div class="catalogueWorkPage__actions">
-                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkSave">Save</button>
-                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkPublication">Publish</button>
-                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDelete">Delete</button>
+                  <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkSave">Save</button>
+                  <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkPublication">Publish</button>
+                  <button type="button" class="studioUi__button studioUi__button--defaultWidth" id="catalogueWorkDelete">Delete</button>
                 </div>
               </div>
-              <p class="tagStudioForm__meta" id="catalogueWorkMeta"></p>
-              <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueWorkFields"></div>
+              <p class="studioForm__meta" id="catalogueWorkMeta"></p>
+              <div class="studioForm__fields catalogueWorkForm__fields" id="catalogueWorkFields"></div>
             </section>
 
-            <aside class="tagStudio__panel catalogueWorkSummary">
+            <aside class="studioUi__panel catalogueWorkSummary">
               <div id="catalogueWorkPreview"></div>
               <div class="catalogueWorkResources" id="catalogueWorkResourcesPanel">
-                <div class="tagStudio__headingRow catalogueWorkResources__actionRow">
-                  <span class="tagStudioForm__label">links</span>
+                <div class="studioUi__headingRow catalogueWorkResources__actionRow">
+                  <span class="studioForm__label">links</span>
                   <div class="catalogueWorkDetails__rowActions" id="catalogueWorkResourcesActions" aria-label="Resource actions"></div>
                 </div>
-                <p class="tagStudioForm__meta" id="catalogueWorkResourcesMeta"></p>
+                <p class="studioForm__meta" id="catalogueWorkResourcesMeta"></p>
                 <div class="catalogueWorkDetails__results" id="catalogueWorkResourcesResults"></div>
               </div>
-              <div class="tagStudioForm__fields" id="catalogueWorkReadonly"></div>
-              <p class="tagStudioForm__impact" id="catalogueWorkRuntimeState"></p>
-              <p class="tagStudioForm__impact" id="catalogueWorkBuildImpact"></p>
-              <div class="tagStudioForm__fields" id="catalogueWorkSummary"></div>
-              <div class="tagStudioForm__fields" id="catalogueWorkReadiness"></div>
+              <div class="studioForm__fields" id="catalogueWorkReadonly"></div>
+              <p class="studioForm__impact" id="catalogueWorkRuntimeState"></p>
+              <p class="studioForm__impact" id="catalogueWorkBuildImpact"></p>
+              <div class="studioForm__fields" id="catalogueWorkSummary"></div>
+              <div class="studioForm__fields" id="catalogueWorkReadiness"></div>
             </aside>
           </div>
 
-          <section class="tagStudio__panel catalogueWorkDetailBrowser" id="catalogueWorkDetailBrowserPanel" aria-label="Browse details">
-            <div class="tagStudio__headingRow catalogueWorkDetailBrowser__actionRow">
-              <div class="tagStudioForm__searchWrap catalogueWorkDetailBrowser__searchWrap">
+          <section class="studioUi__panel catalogueWorkDetailBrowser" id="catalogueWorkDetailBrowserPanel" aria-label="Browse details">
+            <div class="studioUi__headingRow catalogueWorkDetailBrowser__actionRow">
+              <div class="studioForm__searchWrap catalogueWorkDetailBrowser__searchWrap">
                 <label class="visually-hidden" for="catalogueWorkDetailBrowserSearch">Find detail by row id</label>
-                <input type="text" class="tagStudio__input catalogueWorkDetailBrowser__searchInput" id="catalogueWorkDetailBrowserSearch" placeholder="find detail id" autocomplete="off" inputmode="numeric">
+                <input type="text" class="studioUi__input catalogueWorkDetailBrowser__searchInput" id="catalogueWorkDetailBrowserSearch" placeholder="find detail id" autocomplete="off" inputmode="numeric">
                 <button type="button" class="catalogueWorkDetailBrowser__searchClear" id="catalogueWorkDetailBrowserSearchClear" aria-label="Clear detail search" title="Clear detail search" hidden>×</button>
               </div>
             </div>
@@ -96,6 +96,6 @@ export function renderCatalogueWorkShell(config) {
           </section>
 
         </div>
-        <p class="tagStudio__status" id="catalogueWorkLoading">loading catalogue work editor...</p>
-        <p class="tagStudio__empty" id="catalogueWorkEmpty" hidden></p>`;
+        <p class="studioUi__status" id="catalogueWorkLoading">loading catalogue work editor...</p>
+        <p class="studioUi__empty" id="catalogueWorkEmpty" hidden></p>`;
 }

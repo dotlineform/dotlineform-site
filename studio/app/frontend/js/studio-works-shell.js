@@ -1,6 +1,6 @@
 export function renderStudioWorksShell() {
   return `<div
-          class="index worksList worksList--studio tagStudioList tagStudioList--dense"
+          class="index worksList worksList--studio studioList studioList--dense"
           id="worksStudioRoot"
           data-role="studio-works"
           data-baseurl=""
@@ -15,29 +15,29 @@ export function renderStudioWorksShell() {
           <div class="worksList__metaRow">
             <p class="worksList__count" id="worksListCount"></p>
             <div class="worksList__metaActions">
-              <button class="tagStudio__button worksList__metaButton" type="button" id="worksListCopySeriesButton">copy series</button>
+              <button class="studioUi__button worksList__metaButton" type="button" id="worksListCopySeriesButton">copy series</button>
             </div>
           </div>
 
-          <div class="tagStudioList__head worksList__head" role="group" aria-label="Sort studio works">
-            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
-              cat <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+          <div class="studioList__head worksList__head" role="group" aria-label="Sort studio works">
+            <button class="studioList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
+              cat <span class="studioList__sortIndicator" aria-hidden="true"></span>
             </button>
-            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="year">
-              year <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            <button class="studioList__sortBtn" type="button" data-role="sort-button" data-sort-key="year">
+              year <span class="studioList__sortIndicator" aria-hidden="true"></span>
             </button>
-            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="title">
-              title <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            <button class="studioList__sortBtn" type="button" data-role="sort-button" data-sort-key="title">
+              title <span class="studioList__sortIndicator" aria-hidden="true"></span>
             </button>
-            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="series">
-              series <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            <button class="studioList__sortBtn" type="button" data-role="sort-button" data-sort-key="series">
+              series <span class="studioList__sortIndicator" aria-hidden="true"></span>
             </button>
-            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="storage">
-              storage <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            <button class="studioList__sortBtn" type="button" data-role="sort-button" data-sort-key="storage">
+              storage <span class="studioList__sortIndicator" aria-hidden="true"></span>
             </button>
           </div>
 
-          <ul class="tagStudioList__rows" id="worksList"></ul>
+          <ul class="studioList__rows" id="worksList"></ul>
 
           <nav class="page__nav" id="worksIndexBackNav" hidden>
             <a class="page__back" id="worksIndexBackLink" href="#">series</a>

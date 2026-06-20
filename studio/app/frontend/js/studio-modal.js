@@ -1,6 +1,6 @@
 function ensureHost(options = {}) {
   const root = options.root
-    || document.querySelector(".tagStudioPage")
+    || document.querySelector(".studioPage")
     || document.body;
   let host = root.querySelector('[data-studio-modal-host="true"]');
   if (host) return host;
@@ -12,10 +12,10 @@ function ensureHost(options = {}) {
 }
 
 const MODAL_SIZE_CLASSES = Object.freeze({
-  compact: "tagStudioModal__dialog--compact",
-  default: "tagStudioModal__dialog--default",
-  wide: "tagStudioModal__dialog--wide",
-  document: "tagStudioModal__dialog--document"
+  compact: "studioModal__dialog--compact",
+  default: "studioModal__dialog--default",
+  wide: "studioModal__dialog--wide",
+  document: "studioModal__dialog--document"
 });
 
 function normalizeText(value) {
@@ -37,7 +37,7 @@ function renderBodyText(body) {
   return lines
     .map((line) => String(line || "").trim())
     .filter(Boolean)
-    .map((line) => `<p class="tagStudioModal__label">${escapeHtml(line)}</p>`)
+    .map((line) => `<p class="studioModal__label">${escapeHtml(line)}</p>`)
     .join("");
 }
 
@@ -45,12 +45,12 @@ function renderStatus(status) {
   const message = normalizeText(status && status.message);
   const stateAttr = status && status.kind ? ` data-state="${escapeHtml(status.kind)}"` : "";
   const hiddenAttr = message ? "" : " hidden";
-  return `<p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
+  return `<p class="studioForm__status studioModal__status" data-role="modal-status"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
 }
 
 function renderSnippet(snippet) {
   if (!snippet) return "";
-  return `<pre class="tagStudioModal__pre" data-role="modal-snippet">${escapeHtml(snippet)}</pre>`;
+  return `<pre class="studioModal__pre" data-role="modal-snippet">${escapeHtml(snippet)}</pre>`;
 }
 
 function renderActions(options = {}) {
@@ -59,17 +59,17 @@ function renderActions(options = {}) {
   const cancelDefault = normalizeText(options.defaultAction).toLowerCase() === "cancel";
   const primaryAttrs = options.primaryDisabled ? " disabled" : "";
   const cancelClass = [
-    "tagStudio__button",
-    "tagStudio__button--defaultWidth",
-    cancelDefault ? "tagStudio__button--defaultAction" : ""
+    "studioUi__button",
+    "studioUi__button--defaultWidth",
+    cancelDefault ? "studioUi__button--defaultAction" : ""
   ].filter(Boolean).join(" ");
   const primaryClass = [
-    "tagStudio__button",
-    "tagStudio__button--defaultWidth",
-    cancelDefault ? "" : "tagStudio__button--defaultAction"
+    "studioUi__button",
+    "studioUi__button--defaultWidth",
+    cancelDefault ? "" : "studioUi__button--defaultAction"
   ].filter(Boolean).join(" ");
   return `
-    <div class="tagStudioModal__actions">
+    <div class="studioModal__actions">
       <button type="button" class="${escapeHtml(cancelClass)}" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
       <button type="button" class="${escapeHtml(primaryClass)}" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
     </div>
@@ -79,8 +79,8 @@ function renderActions(options = {}) {
 function renderCloseAction(options = {}) {
   const closeLabel = String(options.closeLabel || options.cancelLabel || "Close");
   return `
-    <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
+    <div class="studioModal__actions">
+      <button type="button" class="studioUi__button studioUi__button--defaultWidth" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
     </div>
   `;
 }
@@ -89,8 +89,8 @@ function renderActionList(actions = []) {
   if (!Array.isArray(actions) || !actions.length) return "";
   return actions.map((action, index) => {
     const label = String(action && action.label ? action.label : `Action ${index + 1}`);
-    const classes = ["tagStudio__button", "tagStudio__button--defaultWidth"];
-    if (action && action.primary) classes.push("tagStudio__button--defaultAction");
+    const classes = ["studioUi__button", "studioUi__button--defaultWidth"];
+    if (action && action.primary) classes.push("studioUi__button--defaultAction");
     if (action && action.className) classes.push(String(action.className));
     const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
     const disabledAttr = action && action.disabled ? " disabled" : "";
@@ -100,7 +100,7 @@ function renderActionList(actions = []) {
 }
 
 export function renderStudioModalActions(actions = []) {
-  return `<div class="tagStudioModal__actions">${renderActionList(actions)}</div>`;
+  return `<div class="studioModal__actions">${renderActionList(actions)}</div>`;
 }
 
 export function renderStudioModalFrame(options = {}) {
@@ -118,10 +118,10 @@ export function renderStudioModalFrame(options = {}) {
   const statusHtml = options.statusHtml || (options.status || options.includeStatus ? renderStatus(options.status) : "");
   const actionsHtml = options.actionsHtml || renderStudioModalActions(options.actions || []);
   const contentHtml = `
-        <header class="tagStudioModal__header">
-          <div class="tagStudioModal__headerCopy">
-            <h3 class="tagStudioModal__title" id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
-            ${meta ? `<p class="tagStudioModal__meta">${escapeHtml(meta)}</p>` : ""}
+        <header class="studioModal__header">
+          <div class="studioModal__headerCopy">
+            <h3 class="studioModal__title" id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
+            ${meta ? `<p class="studioModal__meta">${escapeHtml(meta)}</p>` : ""}
           </div>
         </header>
         ${bodyHtml}
@@ -129,10 +129,10 @@ export function renderStudioModalFrame(options = {}) {
         ${actionsHtml}
   `;
   return `
-    <div class="tagStudioModal"${modalRole}${hiddenAttr}>
-      <div class="tagStudioModal__backdrop"${backdropRole}></div>
-      <div class="tagStudioModal__dialog${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}" tabindex="-1">
-        ${options.form ? `<form class="tagStudioModal__form" data-role="modal-form">${contentHtml}</form>` : contentHtml}
+    <div class="studioModal"${modalRole}${hiddenAttr}>
+      <div class="studioModal__backdrop"${backdropRole}></div>
+      <div class="studioModal__dialog${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}" tabindex="-1">
+        ${options.form ? `<form class="studioModal__form" data-role="modal-form">${contentHtml}</form>` : contentHtml}
       </div>
     </div>
   `;
@@ -140,7 +140,7 @@ export function renderStudioModalFrame(options = {}) {
 
 export function activateStudioModalFrame(host, options = {}) {
   const restoreFocus = options.restoreFocus || document.activeElement;
-  const modal = host && host.querySelector('[data-role="studio-modal"], .tagStudioModal');
+  const modal = host && host.querySelector('[data-role="studio-modal"], .studioModal');
   const dialog = host && host.querySelector('[role="dialog"]');
   const form = host && host.querySelector('[data-role="modal-form"]');
   const cancelRoles = Array.isArray(options.cancelRoles) && options.cancelRoles.length
@@ -185,7 +185,7 @@ export function activateStudioModalFrame(host, options = {}) {
     modal,
     dialog,
     setStatus(kind, message) {
-      setRoleMessage(host, "modal-status", "tagStudioForm__status tagStudioModal__status", kind, message);
+      setRoleMessage(host, "modal-status", "studioForm__status studioModal__status", kind, message);
     },
     cancel(settleOptions = {}) {
       settle({ confirmed: false }, settleOptions);
@@ -307,7 +307,7 @@ function renderModal(type, options = {}) {
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   const statusHtml = type === "confirm-detail" || options.includeStatus ? renderStatus(options.status) : "";
   const impactHtml = type === "confirm-detail" && options.impact
-    ? `<p class="tagStudioForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
+    ? `<p class="studioForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
     : "";
   const snippetHtml = type === "patch-preview" ? renderSnippet(options.snippet) : "";
   const actionsHtml = type === "notice" ? renderCloseAction(options) : renderActions(options);
@@ -384,9 +384,9 @@ function renderTextInputBody(options = {}) {
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   return `
     ${bodyHtml}
-    <label class="tagStudioForm__field" for="${inputId}">
-      <span class="tagStudioForm__label">${escapeHtml(options.label || "Title")}</span>
-      <input class="tagStudio__input" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(options.initialValue || "")}">
+    <label class="studioForm__field" for="${inputId}">
+      <span class="studioForm__label">${escapeHtml(options.label || "Title")}</span>
+      <input class="studioUi__input" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(options.initialValue || "")}">
     </label>
   `;
 }
@@ -398,13 +398,13 @@ function renderChoiceBody(options = {}) {
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
   return `
     ${bodyHtml}
-    <div class="tagStudioModal__choices">
+    <div class="studioModal__choices">
       ${choices.map((choice) => {
         const value = normalizeText(choice && choice.value);
         const label = normalizeText(choice && choice.label) || value;
         const checkedAttr = value === selected ? " checked" : "";
         return `
-          <label class="tagStudioForm__field tagStudioModal__choice">
+          <label class="studioForm__field studioModal__choice">
             <input type="radio" name="${name}" value="${escapeHtml(value)}"${checkedAttr}>
             <span>${escapeHtml(label)}</span>
           </label>

@@ -90,7 +90,7 @@ function renderNavItems(config, activeRoute) {
 function renderAppError(root, message) {
   root.innerHTML = `<main class="container">
     <div class="studio">
-      <p class="tagStudio__status" data-state="error">${escapeHtml(message)}</p>
+      <p class="studioUi__status" data-state="error">${escapeHtml(message)}</p>
     </div>
   </main>`;
 }

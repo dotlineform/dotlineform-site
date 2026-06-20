@@ -248,7 +248,7 @@ function renderSelectedImages(state, options, row) {
   const records = detailRows(state, options, visible);
   if (!records.length) {
     state.detailBrowserSelectedDetailUid = "";
-    state.detailBrowserImagesNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(query
+    state.detailBrowserImagesNode.innerHTML = `<p class="studioForm__meta">${escapeHtml(query
       ? text(state, options, "detail_browser_search_empty", "No matching detail ids.")
       : text(state, options, "detail_browser_section_empty", "No images in the selected section."))}</p>`;
     return;
@@ -320,7 +320,7 @@ export function updateWorkDetailBrowser(state, options = {}) {
   if (!rows.length) {
     state.detailBrowserSelectedSectionId = "";
     state.detailBrowserSelectedDetailUid = "";
-    state.detailBrowserSectionsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(text(state, options, "detail_browser_empty", "No work details for this work."))}</p>`;
+    state.detailBrowserSectionsNode.innerHTML = `<p class="studioForm__meta">${escapeHtml(text(state, options, "detail_browser_empty", "No work details for this work."))}</p>`;
     renderSelectedImages(state, options, null);
     renderSectionActions(state, options, { list: null, hasSections: false });
     renderDetailActions(state, options, { hasDetails: false, showNew: false });

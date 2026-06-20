@@ -77,9 +77,9 @@ function renderSummary(state) {
     { label: t(state, "summary_unrepresented_images", "extra images in represented folders"), value: summaryValue(summary, "unrepresented_image_count") }
   ];
   state.summaryNode.innerHTML = fields.map((field) => `
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-      <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(field.value)}</span>
+    <div class="studioForm__field">
+      <span class="studioForm__label">${escapeHtml(field.label)}</span>
+      <span class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(field.value)}</span>
     </div>
   `).join("");
 }

@@ -187,7 +187,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
         ${dimensionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(dimensionCaption)}</span>` : ""}
       </figcaption>
       <div class="catalogueRecordPreview__actions">
-        ${mediaSummaryItem ? `<button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-media-refresh="work"${mediaRefreshDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "media_refresh_button", "Refresh media"))}</button>` : ""}
+        ${mediaSummaryItem ? `<button type="button" class="studioUi__button studioUi__button--defaultWidth" data-media-refresh="work"${mediaRefreshDisabled ? " disabled" : ""}>${escapeHtml(text(state, options, "media_refresh_button", "Refresh media"))}</button>` : ""}
       </div>
     </figure>
   `;
@@ -211,12 +211,12 @@ export function renderWorkReadiness(state, options = {}) {
     const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
     const tone = catalogueReadinessTone(summaryItem.status);
     return `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(summaryItem.title)}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
+      <div class="studioForm__field">
+        <span class="studioForm__label">${escapeHtml(summaryItem.title)}</span>
+        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueReadiness__body">
           <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
-          ${summaryItem.sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
-          ${summaryItem.nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
+          ${summaryItem.sourcePath ? `<span class="studioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
+          ${summaryItem.nextStep ? `<span class="studioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
         </div>
       </div>
     `;
@@ -394,13 +394,13 @@ export function updateWorkSummary(state, options = {}) {
     state.metaNode.hidden = false;
     state.metaNode.textContent = text(state, options, "new_meta", "Creating a draft work.");
     state.summaryNode.innerHTML = `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_status_label", "status"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_status", "draft source record; not published"))}</div>
+      <div class="studioForm__field">
+        <span class="studioForm__label">${escapeHtml(text(state, options, "new_summary_status_label", "status"))}</span>
+        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_status", "draft source record; not published"))}</div>
       </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_next_label", "next step"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Create the draft, then continue editing or publish from edit mode."))}</div>
+      <div class="studioForm__field">
+        <span class="studioForm__label">${escapeHtml(text(state, options, "new_summary_next_label", "next step"))}</span>
+        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(text(state, options, "new_summary_next", "Create the draft, then continue editing or publish from edit mode."))}</div>
       </div>
     `;
     state.runtimeStateNode.textContent = text(state, options, "new_runtime_state", "public site update is unavailable until the draft exists");
@@ -423,17 +423,17 @@ export function updateWorkSummary(state, options = {}) {
       ? text(state, options, "bulk_meta", "{count} works selected", { count: String(selectedCount) })
       : "";
     state.summaryNode.innerHTML = `
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "bulk_summary_selected", "selected works"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(formatWorkSelectionList(state.bulkWorkIds) || "—")}</div>
+      <div class="studioForm__field">
+        <span class="studioForm__label">${escapeHtml(text(state, options, "bulk_summary_selected", "selected works"))}</span>
+        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(formatWorkSelectionList(state.bulkWorkIds) || "—")}</div>
       </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "bulk_summary_count", "record count"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(String(selectedCount || 0))}</div>
+      <div class="studioForm__field">
+        <span class="studioForm__label">${escapeHtml(text(state, options, "bulk_summary_count", "record count"))}</span>
+        <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(String(selectedCount || 0))}</div>
       </div>
-      <div class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_series_label", "series"))}</span>
-        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesIds.length ? formatWorkSelectionList(seriesIds) : "—")}</div>
+      <div class="studioForm__field">
+        <span class="studioForm__label">${escapeHtml(text(state, options, "summary_series_label", "series"))}</span>
+        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesIds.length ? formatWorkSelectionList(seriesIds) : "—")}</div>
       </div>
     `;
     state.runtimeStateNode.textContent = state.rebuildPending

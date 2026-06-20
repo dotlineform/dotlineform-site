@@ -1,19 +1,19 @@
 export function renderCatalogueStatusShell() {
   return `<div
-          class="tagStudioPage catalogueStatusPage"
+          class="studioPage catalogueStatusPage"
           id="catalogueStatusRoot"
           hidden
           data-studio-ready="false"
           data-studio-busy="false"
         >
-          <section class="tagStudio__panel">
-            <div class="tagStudioFilters catalogueStatusPage__filters">
-              <div class="tagStudio__key tagStudioFilters__key" id="catalogueStatusKey"></div>
-              <label class="tagStudioFilters__searchWrap catalogueStatusPage__searchWrap">
+          <section class="studioUi__panel">
+            <div class="studioFilters catalogueStatusPage__filters">
+              <div class="studioUi__key studioFilters__key" id="catalogueStatusKey"></div>
+              <label class="studioFilters__searchWrap catalogueStatusPage__searchWrap">
                 <span class="visually-hidden">Search catalogue draft rows</span>
                 <input
                   type="text"
-                  class="tagStudio__input tagStudioFilters__searchInput"
+                  class="studioUi__input studioFilters__searchInput"
                   id="catalogueStatusSearch"
                   placeholder="search"
                   autocomplete="off"
@@ -21,11 +21,11 @@ export function renderCatalogueStatusShell() {
               </label>
             </div>
 
-            <p class="tagStudio__status catalogueStatusPage__meta" id="catalogueStatusMeta"></p>
+            <p class="studioUi__status catalogueStatusPage__meta" id="catalogueStatusMeta"></p>
             <div id="catalogueStatusList"></div>
           </section>
         </div>
 
-        <p class="tagStudio__status" id="catalogueStatusLoading">loading catalogue drafts...</p>
-        <p class="tagStudio__empty" id="catalogueStatusEmpty" hidden>No draft catalogue source records.</p>`;
+        <p class="studioUi__status" id="catalogueStatusLoading">loading catalogue drafts...</p>
+        <p class="studioUi__empty" id="catalogueStatusEmpty" hidden>No draft catalogue source records.</p>`;
 }

@@ -47,8 +47,8 @@ def assert_project_media_picker(page: Page) -> None:
                   width: 100%;
                 }
               </style>
-              <main id="catalogueWorkRoot" class="tagStudioPage catalogueWorkPage">
-                <div id="catalogueWorkFields" class="tagStudioForm__fields catalogueWorkForm__fields"></div>
+              <main id="catalogueWorkRoot" class="studioPage catalogueWorkPage">
+                <div id="catalogueWorkFields" class="studioForm__fields catalogueWorkForm__fields"></div>
                 <div id="catalogueWorkReadonly"></div>
               </main>
             `;
@@ -313,7 +313,7 @@ def assert_project_media_multi_file_picker(page: Page) -> None:
                   width: 100%;
                 }
               </style>
-              <main id="catalogueWorkRoot" class="tagStudioPage catalogueWorkPage"></main>
+              <main id="catalogueWorkRoot" class="studioPage catalogueWorkPage"></main>
             `;
             const pickerModule = await import('/studio/app/frontend/js/catalogue-project-media-picker.js');
             const root = document.getElementById('catalogueWorkRoot');

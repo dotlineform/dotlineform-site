@@ -88,9 +88,9 @@ def modal_shell_state(page) -> dict[str, object]:
     return page.locator('[data-role="studio-modal"]').evaluate(
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
-            const title = modal.querySelector('.tagStudioModal__title');
-            const status = modal.querySelector('.tagStudioModal__status');
-            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const title = modal.querySelector('.studioModal__title');
+            const status = modal.querySelector('.studioModal__status');
+            const actionButtons = Array.from(modal.querySelectorAll('.studioModal__actions button'));
             return {
                 role: dialog ? dialog.getAttribute('role') : "",
                 modal: dialog ? dialog.getAttribute('aria-modal') : "",
@@ -130,7 +130,7 @@ def assert_modal_shell(
         raise AssertionError(f"modal size class missing: {state!r}")
     if state["actionLabels"] != actions:
         raise AssertionError(f"unexpected modal actions: {state!r}")
-    if not all("tagStudio__button--defaultWidth" in value for value in state["actionClasses"]):
+    if not all("studioUi__button--defaultWidth" in value for value in state["actionClasses"]):
         raise AssertionError(f"modal actions are missing default-width buttons: {state!r}")
     return state
 
@@ -484,7 +484,7 @@ def main() -> int:
                 raise AssertionError(f"detail browser did not refresh after section edit: {detail_browser_text!r}")
 
             page.locator(section_delete_button).click()
-            section_delete_modal = assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            section_delete_modal = assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="studioModal__dialog--compact")
             if f"Delete detail section {WORK_ID}-1" not in section_delete_modal["bodyText"]:
                 raise AssertionError(f"section delete preview text missing from modal: {section_delete_modal!r}")
             page.wait_for_function(
@@ -496,7 +496,7 @@ def main() -> int:
                 raise AssertionError(f"section delete apply ran after Escape close: {section_delete_apply_requests!r}")
 
             page.locator(section_delete_button).click()
-            assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            assert_modal_shell(page, "Confirm detail section delete", ["Cancel", "Delete"], args.timeout_ms, size_class="studioModal__dialog--compact")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
             page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
@@ -619,7 +619,7 @@ def main() -> int:
 
             page.locator(f"{resources_results} [data-record-list-record-id='download-0']").click()
             page.locator(delete_download_button).click()
-            delete_download_modal = assert_modal_shell(page, "Delete download", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            delete_download_modal = assert_modal_shell(page, "Delete download", ["Cancel", "Delete"], args.timeout_ms, size_class="studioModal__dialog--compact")
             if "Original PDF" not in delete_download_modal["bodyText"]:
                 raise AssertionError(f"embedded delete text missing from modal: {delete_download_modal!r}")
             page.wait_for_function(
@@ -627,9 +627,9 @@ def main() -> int:
                 timeout=args.timeout_ms,
             )
             delete_download_modal = modal_shell_state(page)
-            if "tagStudio__button--defaultAction" not in delete_download_modal["actionClasses"][0]:
+            if "studioUi__button--defaultAction" not in delete_download_modal["actionClasses"][0]:
                 raise AssertionError(f"embedded delete cancel action is not the default: {delete_download_modal!r}")
-            if "tagStudio__button--defaultAction" in delete_download_modal["actionClasses"][1]:
+            if "studioUi__button--defaultAction" in delete_download_modal["actionClasses"][1]:
                 raise AssertionError(f"embedded delete primary action should not be the default: {delete_download_modal!r}")
             page.mouse.click(12, 12)
             page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
@@ -704,7 +704,7 @@ def main() -> int:
 
             page.locator(f"{resources_results} [data-record-list-record-id='link-0']").click()
             page.locator(delete_link_button).click()
-            delete_link_modal = assert_modal_shell(page, "Delete link", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            delete_link_modal = assert_modal_shell(page, "Delete link", ["Cancel", "Delete"], args.timeout_ms, size_class="studioModal__dialog--compact")
             if "Original link" not in delete_link_modal["bodyText"]:
                 raise AssertionError(f"link delete text missing from modal: {delete_link_modal!r}")
             page.wait_for_function(
@@ -712,16 +712,16 @@ def main() -> int:
                 timeout=args.timeout_ms,
             )
             delete_link_modal = modal_shell_state(page)
-            if "tagStudio__button--defaultAction" not in delete_link_modal["actionClasses"][0]:
+            if "studioUi__button--defaultAction" not in delete_link_modal["actionClasses"][0]:
                 raise AssertionError(f"link delete cancel action is not the default: {delete_link_modal!r}")
-            if "tagStudio__button--defaultAction" in delete_link_modal["actionClasses"][1]:
+            if "studioUi__button--defaultAction" in delete_link_modal["actionClasses"][1]:
                 raise AssertionError(f"link delete primary action should not be the default: {delete_link_modal!r}")
             page.mouse.click(12, 12)
             page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
             page.wait_for_timeout(50)
 
             page.locator(publication_button).click()
-            unpublish_modal = assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            unpublish_modal = assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms, size_class="studioModal__dialog--compact")
             if f"Unpublish work {WORK_ID}" not in unpublish_modal["bodyText"]:
                 raise AssertionError(f"unpublish preview text missing from modal: {unpublish_modal!r}")
             close_with_escape(page, publication_button, args.timeout_ms)
@@ -729,7 +729,7 @@ def main() -> int:
                 raise AssertionError(f"publication apply ran after Escape close: {publication_apply_requests!r}")
 
             page.locator(publication_button).click()
-            assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            assert_modal_shell(page, "Confirm unpublish", ["Cancel", "Unpublish"], args.timeout_ms, size_class="studioModal__dialog--compact")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=args.timeout_ms)
             page.wait_for_function("selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'", arg=ROOT_SELECTOR, timeout=args.timeout_ms)
@@ -740,7 +740,7 @@ def main() -> int:
                 raise AssertionError(f"unexpected publication apply request: {publication_request!r}")
 
             page.locator(delete_button).click()
-            delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, size_class="tagStudioModal__dialog--compact")
+            delete_modal = assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms, size_class="studioModal__dialog--compact")
             if f"Delete source record {WORK_ID}" not in delete_modal["bodyText"]:
                 raise AssertionError(f"delete preview text missing from modal: {delete_modal!r}")
             page.wait_for_function(
@@ -748,9 +748,9 @@ def main() -> int:
                 timeout=args.timeout_ms,
             )
             delete_modal = modal_shell_state(page)
-            if "tagStudio__button--defaultAction" not in delete_modal["actionClasses"][0]:
+            if "studioUi__button--defaultAction" not in delete_modal["actionClasses"][0]:
                 raise AssertionError(f"delete cancel action is not the default: {delete_modal!r}")
-            if "tagStudio__button--defaultAction" in delete_modal["actionClasses"][1]:
+            if "studioUi__button--defaultAction" in delete_modal["actionClasses"][1]:
                 raise AssertionError(f"delete primary action should not be the default: {delete_modal!r}")
             page.locator('[data-role="modal-primary"]').click()
             page.wait_for_url("**/studio/catalogue-status/", timeout=args.timeout_ms)

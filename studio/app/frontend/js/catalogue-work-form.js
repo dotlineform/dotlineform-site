@@ -119,9 +119,9 @@ function renderSeriesPickerMatches(state, options) {
     return;
   }
   state.seriesPicker.popupNode.innerHTML = matches.map(([seriesId]) => `
-    <button type="button" class="tagStudioSuggest__workButton catalogueWorkSeriesPicker__option" data-series-id="${escapeHtml(seriesId)}">
-      <span class="tagStudioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
-      <span class="tagStudioSuggest__workMeta">${escapeHtml(seriesId)}</span>
+    <button type="button" class="studioSuggest__workButton catalogueWorkSeriesPicker__option" data-series-id="${escapeHtml(seriesId)}">
+      <span class="studioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
+      <span class="studioSuggest__workMeta">${escapeHtml(seriesId)}</span>
     </button>
   `).join("");
   state.seriesPicker.popupNode.hidden = false;
@@ -136,19 +136,19 @@ function renderSeriesPicker(state, options = {}) {
       const title = seriesDisplayTitle(state, seriesId);
       const href = publicSeriesHref(state, seriesId);
       const labelHtml = `
-        <span class="tagStudio__chipText">${escapeHtml(title)}</span>
+        <span class="studioUi__chipText">${escapeHtml(title)}</span>
         <span class="catalogueWorkSeriesPicker__chipId">${escapeHtml(seriesId)}</span>
       `;
       return `
-      <span class="tagStudio__chip catalogueWorkSeriesPicker__chip">
+      <span class="studioUi__chip catalogueWorkSeriesPicker__chip">
         ${href
           ? `<a class="catalogueWorkSeriesPicker__chipLink" href="${escapeHtml(href)}" target="_blank" rel="noopener">${labelHtml}</a>`
           : labelHtml}
-        <button type="button" class="tagStudio__chipRemove" data-remove-series-id="${escapeHtml(seriesId)}" aria-label="${escapeHtml(`Remove ${formatSeriesChoice(state, seriesId)}`)}">×</button>
+        <button type="button" class="studioUi__chipRemove" data-remove-series-id="${escapeHtml(seriesId)}" aria-label="${escapeHtml(`Remove ${formatSeriesChoice(state, seriesId)}`)}">×</button>
       </span>
     `;
     }).join("")
-    : `<span class="tagStudioForm__meta">${escapeHtml(formText(options, "series_picker_empty", "No series selected."))}</span>`;
+    : `<span class="studioForm__meta">${escapeHtml(formText(options, "series_picker_empty", "No series selected."))}</span>`;
 }
 
 function renderField(field, fieldsNode, state, options) {
@@ -170,26 +170,26 @@ function renderField(field, fieldsNode, state, options) {
   }
 
   const wrapper = document.createElement(field.readonly ? "div" : "label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
+  wrapper.className = "studioForm__field catalogueWorkForm__field";
+  if (field.type === "textarea") wrapper.classList.add("studioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
   if (!field.readonly) wrapper.htmlFor = `catalogueWorkField-${field.key}`;
 
   const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
+  label.className = "studioForm__label";
   label.textContent = field.label;
   wrapper.appendChild(label);
 
   let input;
   if (field.readonly) {
     input = document.createElement("span");
-    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+    input.className = "studioUi__input studioUi__input--readonlyDisplay";
   } else if (field.type === "textarea") {
     input = document.createElement("textarea");
-    input.className = "tagStudio__input tagStudioForm__descriptionInput";
+    input.className = "studioUi__input studioForm__descriptionInput";
     input.rows = 4;
   } else if (field.type === "select") {
     input = document.createElement("select");
-    input.className = "tagStudio__input";
+    input.className = "studioUi__input";
     field.options.forEach((optionValue) => {
       const option = document.createElement("option");
       option.value = optionValue;
@@ -198,7 +198,7 @@ function renderField(field, fieldsNode, state, options) {
     });
   } else {
     input = document.createElement("input");
-    input.className = "tagStudio__input";
+    input.className = "studioUi__input";
     input.type = field.type === "date" ? "date" : "text";
     if (field.type === "number") {
       input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";
@@ -214,7 +214,7 @@ function renderField(field, fieldsNode, state, options) {
 
   if (field.description) {
     const help = document.createElement("span");
-    help.className = "tagStudioForm__meta catalogueWorkForm__fieldMeta";
+    help.className = "studioForm__meta catalogueWorkForm__fieldMeta";
     help.id = `catalogueWorkFieldHelp-${field.key}`;
     help.textContent = field.description;
     wrapper.appendChild(help);
@@ -236,10 +236,10 @@ function renderField(field, fieldsNode, state, options) {
 
 function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__displayField";
+  wrapper.className = "studioForm__field catalogueWorkForm__field catalogueProjectMediaPicker__displayField";
 
   const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
+  label.className = "studioForm__label";
   label.textContent = field.label;
   wrapper.appendChild(label);
 
@@ -247,7 +247,7 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   control.className = "catalogueProjectMediaPicker__displayControl";
 
   const display = document.createElement("span");
-  display.className = "tagStudio__input tagStudio__input--readonlyDisplay catalogueProjectMediaPicker__displayValue";
+  display.className = "studioUi__input studioUi__input--readonlyDisplay catalogueProjectMediaPicker__displayValue";
   display.id = `catalogueWorkFieldDisplay-${field.key}`;
   display.dataset.projectMediaDisplay = field.key;
   display.textContent = "—";
@@ -291,10 +291,10 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
 
 function renderSeriesField(field, fieldsNode, state, options) {
   const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field catalogueWorkForm__field--topAligned catalogueWorkSeriesPicker";
+  wrapper.className = "studioForm__field catalogueWorkForm__field catalogueWorkForm__field--topAligned catalogueWorkSeriesPicker";
 
   const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
+  label.className = "studioForm__label";
   label.textContent = field.label;
   wrapper.appendChild(label);
 
@@ -314,20 +314,20 @@ function renderSeriesField(field, fieldsNode, state, options) {
   const searchWrap = document.createElement("div");
   searchWrap.className = "catalogueWorkSeriesPicker__searchWrap";
   const searchInput = document.createElement("input");
-  searchInput.className = "tagStudio__input catalogueWorkSeriesPicker__search";
+  searchInput.className = "studioUi__input catalogueWorkSeriesPicker__search";
   searchInput.type = "text";
   searchInput.autocomplete = "off";
   searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
   searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
   const popupNode = document.createElement("div");
-  popupNode.className = "tagStudio__popupInner catalogueWorkSeriesPicker__popup";
+  popupNode.className = "studioUi__popupInner catalogueWorkSeriesPicker__popup";
   popupNode.hidden = true;
   searchWrap.appendChild(searchInput);
   searchWrap.appendChild(popupNode);
   pickerNode.appendChild(searchWrap);
 
   const bulkInput = document.createElement("input");
-  bulkInput.className = "tagStudio__input catalogueWorkSeriesPicker__bulkInput";
+  bulkInput.className = "studioUi__input catalogueWorkSeriesPicker__bulkInput";
   bulkInput.type = "text";
   bulkInput.autocomplete = "off";
   bulkInput.placeholder = "+009, -010";
@@ -337,7 +337,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
 
   if (field.description) {
     const help = document.createElement("span");
-    help.className = "tagStudioForm__meta catalogueWorkForm__fieldMeta";
+    help.className = "studioForm__meta catalogueWorkForm__fieldMeta";
     help.textContent = field.description;
     wrapper.appendChild(help);
   }
@@ -386,15 +386,15 @@ function renderSeriesField(field, fieldsNode, state, options) {
 
 function renderReadonlyField(field, readonlyNode, state) {
   const wrapper = document.createElement("div");
-  wrapper.className = "tagStudioForm__field";
+  wrapper.className = "studioForm__field";
 
   const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
+  label.className = "studioForm__label";
   label.textContent = field.label;
   wrapper.appendChild(label);
 
   const value = document.createElement("div");
-  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+  value.className = "studioUi__input studioUi__input--readonlyDisplay";
   value.dataset.readonlyField = field.key;
   value.textContent = "—";
   wrapper.appendChild(value);

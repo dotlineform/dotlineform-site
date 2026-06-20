@@ -37,12 +37,12 @@ export function refreshSeriesTypeOptions(state) {
 
 function renderField(field, fieldsNode, state, options) {
   const wrapper = document.createElement(field.readonly ? "div" : "label");
-  wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
-  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
+  wrapper.className = "studioForm__field catalogueWorkForm__field";
+  if (field.type === "textarea") wrapper.classList.add("studioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
   if (!field.readonly) wrapper.htmlFor = `catalogueSeriesField-${field.key}`;
 
   const label = document.createElement("span");
-  label.className = "tagStudioForm__label";
+  label.className = "studioForm__label";
   label.dataset.fieldLabel = field.key;
   label.textContent = formText(options, `field_label_${field.key}`, field.label);
   wrapper.appendChild(label);
@@ -50,14 +50,14 @@ function renderField(field, fieldsNode, state, options) {
   let input;
   if (field.readonly) {
     input = document.createElement("span");
-    input.className = "tagStudio__input tagStudio__input--readonlyDisplay";
+    input.className = "studioUi__input studioUi__input--readonlyDisplay";
   } else if (field.type === "textarea") {
     input = document.createElement("textarea");
-    input.className = "tagStudio__input tagStudioForm__descriptionInput";
+    input.className = "studioUi__input studioForm__descriptionInput";
     input.rows = 4;
   } else if (field.type === "select") {
     input = document.createElement("select");
-    input.className = "tagStudio__input";
+    input.className = "studioUi__input";
     const optionsList = field.key === "series_type" ? state.seriesTypeOptions : field.options;
     optionsList.forEach((optionValue) => {
       const option = document.createElement("option");
@@ -67,7 +67,7 @@ function renderField(field, fieldsNode, state, options) {
     });
   } else {
     input = document.createElement("input");
-    input.className = "tagStudio__input";
+    input.className = "studioUi__input";
     input.type = field.type === "date" ? "date" : "text";
     if (field.type === "number") {
       input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";

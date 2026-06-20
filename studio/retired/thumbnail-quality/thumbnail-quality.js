@@ -175,7 +175,7 @@ function renderRows(state) {
       ...variants.map((variant) => renderImageTile(variant, normalizeText(variant.label)))
     ];
     return `
-      <article class="tagStudio__panel thumbnailQualityRow">
+      <article class="studioUi__panel thumbnailQualityRow">
         <header class="thumbnailQualityRow__header">
           <h3>${escapeHtml(normalizeText(row.source_name) || pageText(state.config, "source_label", "source"))}</h3>
           <p>${escapeHtml(normalizeText(row.source_display))}</p>

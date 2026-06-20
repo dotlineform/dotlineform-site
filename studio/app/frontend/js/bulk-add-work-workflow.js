@@ -150,16 +150,16 @@ function buildBulkAddWorkSummaryHtml(state, preview, options) {
     { label: text(options, "summary_blocked", "blocked"), value: String(Number(summary.blocked_count) || 0) }
   ];
   return fields.map((field) => `
-    <div class="tagStudioForm__field">
-      <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-      <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(field.value)}</span>
+    <div class="studioForm__field">
+      <span class="studioForm__label">${escapeHtml(field.label)}</span>
+      <span class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(field.value)}</span>
     </div>
   `).join("");
 }
 
 function buildBulkAddWorkPreviewDetailsHtml(state, preview, options) {
   if (!preview) {
-    return `<p class="tagStudioForm__meta">${escapeHtml(text(options, "preview_empty", "Run preview to inspect workbook rows before import."))}</p>`;
+    return `<p class="studioForm__meta">${escapeHtml(text(options, "preview_empty", "Run preview to inspect workbook rows before import."))}</p>`;
   }
 
   const sections = [];
@@ -169,33 +169,33 @@ function buildBulkAddWorkPreviewDetailsHtml(state, preview, options) {
 
   sections.push(`
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudio__headingRow">
-        <h3 class="tagStudioForm__key">${escapeHtml(text(options, "section_importable", "importable"))}</h3>
+      <div class="studioUi__headingRow">
+        <h3 class="studioForm__key">${escapeHtml(text(options, "section_importable", "importable"))}</h3>
       </div>
-      <p class="tagStudioForm__meta">${escapeHtml(importableIds.length ? importableIds.join(", ") : text(options, "section_none", "none"))}</p>
+      <p class="studioForm__meta">${escapeHtml(importableIds.length ? importableIds.join(", ") : text(options, "section_none", "none"))}</p>
     </section>
   `);
 
   sections.push(`
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudio__headingRow">
-        <h3 class="tagStudioForm__key">${escapeHtml(text(options, "section_duplicates", "duplicates already in source"))}</h3>
+      <div class="studioUi__headingRow">
+        <h3 class="studioForm__key">${escapeHtml(text(options, "section_duplicates", "duplicates already in source"))}</h3>
       </div>
-      <p class="tagStudioForm__meta">${escapeHtml(Array.isArray(duplicates.sample_ids) && duplicates.sample_ids.length ? duplicates.sample_ids.join(", ") : text(options, "section_none", "none"))}</p>
+      <p class="studioForm__meta">${escapeHtml(Array.isArray(duplicates.sample_ids) && duplicates.sample_ids.length ? duplicates.sample_ids.join(", ") : text(options, "section_none", "none"))}</p>
     </section>
   `);
 
   sections.push(`
     <section class="catalogueWorkDetails__section">
-      <div class="tagStudio__headingRow">
-        <h3 class="tagStudioForm__key">${escapeHtml(text(options, "section_blocked", "blocked rows"))}</h3>
+      <div class="studioUi__headingRow">
+        <h3 class="studioForm__key">${escapeHtml(text(options, "section_blocked", "blocked rows"))}</h3>
       </div>
       ${buildReasonList(blocked.reason_counts)}
       ${buildBlockedRowsHtml(blocked.rows)}
       ${(Array.isArray(blocked.validation_errors) && blocked.validation_errors.length) ? `
-        <p class="tagStudioForm__meta">${escapeHtml(blocked.validation_errors.join(" | "))}</p>
+        <p class="studioForm__meta">${escapeHtml(blocked.validation_errors.join(" | "))}</p>
       ` : ""}
-      ${(!blocked.count) ? `<p class="tagStudioForm__meta">${escapeHtml(text(options, "section_none", "none"))}</p>` : ""}
+      ${(!blocked.count) ? `<p class="studioForm__meta">${escapeHtml(text(options, "section_none", "none"))}</p>` : ""}
     </section>
   `);
 

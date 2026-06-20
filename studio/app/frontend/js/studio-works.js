@@ -286,7 +286,7 @@ function initStudioWorksPage() {
   function updateHeaderState(key, dir) {
     buttons.forEach((btn) => {
       const btnKey = btn.getAttribute("data-sort-key");
-      const icon = btn.querySelector(".tagStudioList__sortIndicator");
+      const icon = btn.querySelector(".studioList__sortIndicator");
       const active = btnKey === key;
       if (active) {
         btn.dataset.state = UI_STATE.active;
@@ -355,7 +355,7 @@ function initStudioWorksPage() {
     }
 
     const li = document.createElement("li");
-    li.className = "tagStudioList__row tagStudioList__row--start worksList__item";
+    li.className = "studioList__row studioList__row--start worksList__item";
     li.setAttribute("data-cat", wid.toLowerCase());
     li.setAttribute("data-series-sort", seriesSort.toLowerCase());
     li.setAttribute("data-series-primary-sort", seriesPrimarySort.toLowerCase());
@@ -371,30 +371,30 @@ function initStudioWorksPage() {
     });
 
     const catA = document.createElement("a");
-    catA.className = "tagStudioList__cellLink worksList__cat";
+    catA.className = "studioList__cellLink worksList__cat";
     catA.href = workHref;
     catA.textContent = wid;
     li.appendChild(catA);
 
     const yearSpan = document.createElement("span");
-    yearSpan.className = "tagStudioList__cellMeta worksList__year";
+    yearSpan.className = "studioList__cellMeta worksList__year";
     yearSpan.textContent = yearDisplay;
     li.appendChild(yearSpan);
 
     const titleA = document.createElement("a");
-    titleA.className = "tagStudioList__cellLink tagStudioList__cellTitle worksList__title";
+    titleA.className = "studioList__cellLink studioList__cellTitle worksList__title";
     titleA.href = workHref;
     titleA.textContent = titleRaw;
     li.appendChild(titleA);
 
     const seriesA = document.createElement("a");
-    seriesA.className = "tagStudioList__cellLink worksList__series";
+    seriesA.className = "studioList__cellLink worksList__series";
     seriesA.href = seriesHref(sid);
     seriesA.textContent = seriesLabel;
     li.appendChild(seriesA);
 
     const storageSpan = document.createElement("span");
-    storageSpan.className = "tagStudioList__cellMeta worksList__storage";
+    storageSpan.className = "studioList__cellMeta worksList__storage";
     storageSpan.textContent = storageRaw || "—";
     li.appendChild(storageSpan);
 
