@@ -2401,6 +2401,10 @@ textarea.analytics__input:disabled {
   align-items: center;
 }
 
+.analyticsList__rows > .seriesTags__row {
+  margin: 0;
+}
+
 .seriesTags__col--title,
 .seriesTags__col--count,
 .seriesTags__col--tags {
@@ -2416,7 +2420,7 @@ textarea.analytics__input:disabled {
   align-items: center;
 }
 
-.seriesTags__chipList {
+.seriesTags__col--tags .seriesTags__chipList {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -2424,6 +2428,11 @@ textarea.analytics__input:disabled {
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
+  align-content: center;
+}
+
+.seriesTags__col--tags .seriesTags__chipList > li {
+  margin: 0;
 }
 
 .analytics__chipCaption {

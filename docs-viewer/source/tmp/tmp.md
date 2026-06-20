@@ -7,11 +7,7 @@ ui_status: draft
 ---
 
 
-please add a third sortable column to `/analytics/tag-registry/` containing `updated_at_utc`.
-- header: 'updated'
-- format: yyyy-mm-dd hh:mm
-
-The route has both analytics-ui.js and studio-ui.js contracts with the same class map
+please adjust dropdowns and 'format' pills on `/analytics/data-sharing/prepare/?mode=manage&scope=library` so that they are vertically stacked, as styled on `/admin/checks/`
 
 ---
 
