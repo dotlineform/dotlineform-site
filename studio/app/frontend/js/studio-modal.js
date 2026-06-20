@@ -11,6 +11,13 @@ function ensureHost(options = {}) {
   return host;
 }
 
+const MODAL_SIZE_CLASSES = Object.freeze({
+  compact: "tagStudioModal__dialog--compact",
+  default: "tagStudioModal__dialog--default",
+  wide: "tagStudioModal__dialog--wide",
+  document: "tagStudioModal__dialog--document"
+});
+
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -99,7 +106,8 @@ export function renderStudioModalActions(actions = []) {
 export function renderStudioModalFrame(options = {}) {
   const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
   const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
-  const sizeClass = options.size ? ` tagStudioModal__dialog--${escapeHtml(options.size)}` : "";
+  const sizeClassName = MODAL_SIZE_CLASSES[normalizeText(options.size)];
+  const sizeClass = sizeClassName ? ` ${sizeClassName}` : "";
   const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
   const hiddenAttr = options.hidden === false ? "" : " hidden";
   const titleId = String(options.titleId || "studioModalTitle");
