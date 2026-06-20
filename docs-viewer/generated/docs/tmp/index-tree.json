@@ -43,6 +43,11 @@
       "ui_status": "draft"
     },
     {
+      "doc_id": "hd",
+      "title": "HD",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/hd.json"
+    },
+    {
       "doc_id": "index-space",
       "title": "index workspace",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/index-space.json"
@@ -57,6 +62,11 @@
       "title": "links",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/links.json",
       "ui_status": "draft"
+    },
+    {
+      "doc_id": "notes-cache",
+      "title": "notes cache",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/notes-cache.json"
     },
     {
       "doc_id": "panel-sizes",
@@ -95,5 +105,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
     }
   ],
-  "generated_at": "2026-06-14T14:36:56Z"
+  "generated_at": "2026-06-20T18:23:55Z"
 }
