@@ -18,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 ANALYTICS_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {}
 
 
-STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
+ANALYTICS_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
     {
         "label": "tags",
         "links": (
@@ -44,7 +44,7 @@ STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
 )
 
 
-def studio_nav(active_view_id: str = "") -> str:
+def analytics_nav(active_view_id: str = "") -> str:
     items = []
     active_nav_id = ANALYTICS_TOP_NAV_ACTIVE_VIEW_IDS.get(active_view_id, active_view_id)
     views = analytics_views(REPO_ROOT)
@@ -58,16 +58,16 @@ def studio_nav(active_view_id: str = "") -> str:
     return "\n        ".join(items)
 
 
-def studio_header(active_view_id: str = "") -> str:
+def analytics_header(active_view_id: str = "") -> str:
     return f"""<header class="site-header">
     <div class="container">
       <div class="site-title"><a href="/analytics/">dotlineform analytics</a></div>
-      <div class="studioHeader__actions">
-        <nav class="site-nav" aria-label="Studio">
-          {studio_nav(active_view_id)}
+      <div class="analyticsHeader__actions">
+        <nav class="site-nav" aria-label="Analytics">
+          {analytics_nav(active_view_id)}
         </nav>
-        <button class="studioThemeToggle" type="button" data-analytics-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
-          <svg class="studioThemeToggle__icon" data-analytics-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+        <button class="analyticsThemeToggle" type="button" data-analytics-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
+          <svg class="analyticsThemeToggle__icon" data-analytics-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2"></path>
             <path d="M12 20v2"></path>
@@ -78,7 +78,7 @@ def studio_header(active_view_id: str = "") -> str:
             <path d="M4.93 19.07l1.41-1.41"></path>
             <path d="M17.66 6.34l1.41-1.41"></path>
           </svg>
-          <svg class="studioThemeToggle__icon" data-analytics-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
+          <svg class="analyticsThemeToggle__icon" data-analytics-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
             <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
           </svg>
         </button>
@@ -87,7 +87,7 @@ def studio_header(active_view_id: str = "") -> str:
   </header>"""
 
 
-def studio_theme_boot_script() -> str:
+def analytics_theme_boot_script() -> str:
     return """<script>
     (function () {
       try {
@@ -100,21 +100,21 @@ def studio_theme_boot_script() -> str:
   </script>"""
 
 
-def studio_home_column_links() -> str:
+def analytics_home_column_links() -> str:
     columns = []
-    for column in STUDIO_HOME_LINK_COLUMNS:
+    for column in ANALYTICS_HOME_LINK_COLUMNS:
         heading = html.escape(str(column["label"]))
         links = "\n              ".join(
-            '<li><a class="studioHomeLinks__pill studioLinkList__item" href="{href}">{label}</a></li>'.format(
+            '<li><a class="analyticsHomeLinks__pill" href="{href}">{label}</a></li>'.format(
                 href=html.escape(href, quote=True),
                 label=html.escape(label),
             )
             for label, href in column["links"]
         )
         columns.append(
-            f"""<section class="studioHomeLinks__column">
+            f"""<section class="analyticsHomeLinks__column">
             <h3>{heading}</h3>
-            <ul class="studioHomeLinks__pills">
+            <ul class="analyticsHomeLinks__pills">
               {links}
             </ul>
           </section>"""
@@ -122,7 +122,7 @@ def studio_home_column_links() -> str:
     return "\n          ".join(columns)
 
 
-def studio_route_view(version: str, view_id: str, body_html: str) -> str:
+def analytics_route_view(version: str, view_id: str, body_html: str) -> str:
     view = analytics_views(REPO_ROOT)[view_id]
     escaped_version = html.escape(version, quote=True)
     title = html.escape(view["title"])
@@ -135,17 +135,17 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-analytics-config-url" content="/analytics/runtime-config.json">
   <title>{title} | dotlineform Analytics</title>
-  {studio_theme_boot_script()}
+  {analytics_theme_boot_script()}
   <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v={escaped_version}">
 </head>
-<body class="studio-local-app">
-  {studio_header(view_id)}
+<body class="analytics-local-app">
+  {analytics_header(view_id)}
   <main class="container">
-    <div class="studio">
-      <div class="studio__headerRow">
+    <div class="analyticsShell">
+      <div class="analyticsShell__headerRow">
         <h2>{title}</h2>
       </div>
-      <div class="studio__content">
+      <div class="analyticsShell__content">
         {body_html}
       </div>
     </div>
@@ -156,7 +156,6 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
 </html>
 """
 
-
 def tag_groups_view(version: str) -> str:
     body = """<div class="analyticsPage tagGroupsPage">
           <div id="tag-groups" data-role="tag-groups" data-analytics-ready="false" data-analytics-busy="false">
@@ -165,7 +164,7 @@ def tag_groups_view(version: str) -> str:
             </div>
           </div>
         </div>"""
-    return studio_route_view(version, "tag_groups", body)
+    return analytics_route_view(version, "tag_groups", body)
 
 
 def tag_registry_view(version: str) -> str:
@@ -194,7 +193,7 @@ def tag_registry_view(version: str) -> str:
             <div data-role="modal-host"></div>
           </div>
         </div>"""
-    return studio_route_view(version, "tag_registry", body)
+    return analytics_route_view(version, "tag_registry", body)
 
 
 def tag_aliases_view(version: str) -> str:
@@ -223,7 +222,7 @@ def tag_aliases_view(version: str) -> str:
             <div data-role="modal-host"></div>
           </div>
         </div>"""
-    return studio_route_view(version, "tag_aliases", body)
+    return analytics_route_view(version, "tag_aliases", body)
 
 
 def series_tags_view(version: str) -> str:
@@ -238,7 +237,7 @@ def series_tags_view(version: str) -> str:
             <div id="series-tags" data-role="series-tags" data-analytics-ready="false" data-analytics-busy="false"></div>
           </div>
         </div>"""
-    return studio_route_view(version, "series_tags", body)
+    return analytics_route_view(version, "series_tags", body)
 
 
 def series_tag_editor_view(version: str, repo_root: Path) -> str:
@@ -356,7 +355,7 @@ def series_tag_editor_view(version: str, repo_root: Path) -> str:
           </section>
         </article>
         <p id="seriesTagEditorEmpty" hidden></p>"""
-    return studio_route_view(version, "series_tag_editor", body)
+    return analytics_route_view(version, "series_tag_editor", body)
 
 
 def data_sharing_prepare_view(version: str) -> str:
@@ -407,7 +406,7 @@ def data_sharing_prepare_view(version: str) -> str:
         </div>
 
         <p class="analytics__status" id="dataSharingPrepareBootStatus">loading Data Sharing...</p>"""
-    return studio_route_view(version, "data_sharing_prepare", body)
+    return analytics_route_view(version, "data_sharing_prepare", body)
 
 
 def data_sharing_review_view(version: str) -> str:
@@ -471,7 +470,7 @@ def data_sharing_review_view(version: str) -> str:
         </div>
 
         <p class="analytics__status" id="dataSharingReviewBootStatus">loading Data Sharing...</p>"""
-    return studio_route_view(version, "data_sharing_review", body)
+    return analytics_route_view(version, "data_sharing_review", body)
 
 
 def load_pipeline(repo_root: Path) -> dict[str, object]:
@@ -483,9 +482,9 @@ def load_pipeline(repo_root: Path) -> dict[str, object]:
     return payload if isinstance(payload, dict) else {}
 
 
-def studio_home_view(version: str) -> str:
+def analytics_home_view(version: str) -> str:
     escaped_version = html.escape(version, quote=True)
-    links = studio_home_column_links()
+    links = analytics_home_column_links()
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -494,15 +493,15 @@ def studio_home_view(version: str) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-analytics-config-url" content="/analytics/runtime-config.json">
   <title>dotlineform Analytics</title>
-  {studio_theme_boot_script()}
+  {analytics_theme_boot_script()}
   <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v={escaped_version}">
 </head>
-<body class="studio-local-app">
-  {studio_header()}
+<body class="analytics-local-app">
+  {analytics_header()}
   <main class="container">
-    <div class="studio" id="studioHomeRoot" data-analytics-ready="true" data-analytics-busy="false">
-      <div class="studio__content">
-        <section class="studioHomeLinks" aria-label="Analytics home links">
+    <div class="analyticsShell" id="analyticsHomeRoot" data-analytics-ready="true" data-analytics-busy="false">
+      <div class="analyticsShell__content">
+        <section class="analyticsHomeLinks" aria-label="Analytics home links">
           {links}
         </section>
       </div>
@@ -512,6 +511,3 @@ def studio_home_view(version: str) -> str:
 </body>
 </html>
 """
-
-
-analytics_home_view = studio_home_view
