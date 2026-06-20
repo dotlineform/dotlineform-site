@@ -239,6 +239,7 @@ export const tagRegistryUi = createUiContract({
     tagInlineButton: "tagRegistry__tagInlineBtn",
     demoteButton: "tagRegistry__demoteBtn",
     descCol: "tagRegistry__descCol",
+    updatedCol: "tagRegistry__updatedCol",
     formMeta: "analyticsForm__meta",
     formFields: "analyticsForm__fields",
     formField: "analyticsForm__field",

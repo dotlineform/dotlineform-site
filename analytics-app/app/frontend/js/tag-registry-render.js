@@ -3,6 +3,7 @@ import {
 } from "./analytics-config.js";
 import {
   countTagsByGroup,
+  formatTimestampMinute,
   getVisibleSortedTags
 } from "./tag-registry-domain.js";
 import {
@@ -44,6 +45,7 @@ export function renderTagRegistryList(state) {
   const visible = getVisibleSortedTags(state);
   const tagHeading = registryText(state.config, "table_heading_tag", "tag");
   const descriptionHeading = registryText(state.config, "table_heading_description", "description");
+  const updatedHeading = registryText(state.config, "table_heading_updated", "updated");
   const headerHtml = `
     <div class="${UI_CLASS.listHead}">
       <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="label"${stateAttr(state.sortKey === "label" ? UI_STATE.active : "")}>
@@ -51,6 +53,9 @@ export function renderTagRegistryList(state) {
       </button>
       <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="description"${stateAttr(state.sortKey === "description" ? UI_STATE.active : "")}>
         ${escapeHtml(descriptionHeading)}${sortIndicator(state, "description")}
+      </button>
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="updated"${stateAttr(state.sortKey === "updated" ? UI_STATE.active : "")}>
+        ${escapeHtml(updatedHeading)}${sortIndicator(state, "updated")}
       </button>
     </div>
   `;
@@ -104,6 +109,9 @@ function renderTagRow(state, tag) {
       </div>
       <div class="${UI_CLASS.descCol}">
         ${escapeHtml(tag.description || "—")}
+      </div>
+      <div class="${UI_CLASS.updatedCol}">
+        ${escapeHtml(formatTimestampMinute(tag.updatedAtUtc) || "—")}
       </div>
     </li>
   `;

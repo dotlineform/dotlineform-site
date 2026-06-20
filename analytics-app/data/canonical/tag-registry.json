@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-03-12T19:44:52Z",
+  "updated_at_utc": "2026-06-20T19:02:24Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -15,8 +15,8 @@
       "group": "subject",
       "label": "flower",
       "status": "active",
-      "description": "Depicted flower: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "description": "Depicted flower: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference.",
+      "updated_at_utc": "2026-06-20T19:02:24Z"
     },
     {
       "tag_id": "subject:branch",

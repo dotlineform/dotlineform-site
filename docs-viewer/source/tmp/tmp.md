@@ -6,6 +6,15 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
+
+please add a third sortable column to `/analytics/tag-registry/` containing `updated_at_utc`.
+- header: 'updated'
+- format: yyyy-mm-dd hh:mm
+
+The route has both analytics-ui.js and studio-ui.js contracts with the same class map
+
+---
+
 The archive is present at `studio/retired/site-routes/moments/index.html`
 
 
@@ -17,9 +26,6 @@ The useful core was the original:
 - centralize the decisions currently split across hosted views, display modes, and toolbar rendering
 - keep runtime implementations where they are
 - make config answer “is this view/mode/control available here?”
-
----
-
 
 ---
 
@@ -799,5 +805,6 @@ scripts:
 
 ./studio/services/catalogue/search/build_search.py
 
+./docs-viewer/build/build_docs.py --scope tmp --write
 
 ---

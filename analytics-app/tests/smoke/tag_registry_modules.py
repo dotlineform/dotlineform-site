@@ -74,6 +74,7 @@ def install_fixture(page: Page) -> None:
                         all_tags_filter: 'All tags [{count}]',
                         table_heading_tag: 'tag',
                         table_heading_description: 'description',
+                        table_heading_updated: 'updated',
                         group_info_title: 'Open group descriptions',
                         group_info_aria_label: 'Open group descriptions',
                         patch_import_message: 'Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared.',
@@ -104,6 +105,7 @@ def install_fixture(page: Page) -> None:
                         group: 'subject',
                         label: 'trees',
                         description: '<unsafe copy>',
+                        updatedAtUtc: '2026-03-04T08:09:10Z',
                         updatedAtMs: 20
                     },
                     {
@@ -111,6 +113,7 @@ def install_fixture(page: Page) -> None:
                         group: 'domain',
                         label: 'studio',
                         description: 'Studio work',
+                        updatedAtUtc: '2026-03-03T17:43:04Z',
                         updatedAtMs: 10
                     }
                 ],
@@ -167,10 +170,18 @@ def assert_render_output(page: Page) -> None:
                 sortHeadings: Array.from(state.refs.list.querySelectorAll('button[data-sort-key]')).map((button) => button.textContent.trim()),
                 rowLabels: rows.map((row) => row.querySelector('[data-tag-id]')?.textContent.trim() || ''),
                 firstRowDescriptionHtml: rows[0]?.querySelector('.tagRegistry__descCol')?.innerHTML.trim() || '',
+                firstRowUpdated: rows[0]?.querySelector('.tagRegistry__updatedCol')?.textContent.trim() || '',
                 firstRowEditLabel: rows[0]?.querySelector('[data-tag-id]')?.getAttribute('aria-label') || '',
                 demoteButtonCount: state.refs.list.querySelectorAll('[data-demote-tag-id]').length,
                 deleteButtonCount: state.refs.list.querySelectorAll('[data-delete-tag-id]').length
             };
+        }"""
+    )
+    expected_first_updated = page.evaluate(
+        """() => {
+            const date = new Date('2026-03-03T17:43:04Z');
+            const pad = (value) => String(value).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
         }"""
     )
     expected_group_labels = ["subject [1]", "domain [1]", "form [0]", "theme [0]"]
@@ -182,12 +193,14 @@ def assert_render_output(page: Page) -> None:
         raise AssertionError(f"group title was not rendered: {result!r}")
     if result["infoLinkCount"]:
         raise AssertionError(f"group info link mismatch: {result!r}")
-    if result["sortHeadings"] != ["tag ↑", "description"]:
+    if result["sortHeadings"] != ["tag ↑", "description", "updated"]:
         raise AssertionError(f"sort headings mismatch: {result!r}")
     if result["rowLabels"] != ["studio", "trees"]:
         raise AssertionError(f"row sort/order mismatch: {result!r}")
     if result["firstRowDescriptionHtml"] != "Studio work":
         raise AssertionError(f"description output mismatch: {result!r}")
+    if result["firstRowUpdated"] != expected_first_updated:
+        raise AssertionError(f"updated output mismatch: {result!r}")
     if result["firstRowEditLabel"] != "Edit domain:studio":
         raise AssertionError(f"edit aria label mismatch: {result!r}")
     if result["demoteButtonCount"] != 2 or result["deleteButtonCount"] != 2:

@@ -2536,12 +2536,12 @@ button.analyticsList__cellLink {
 
 .tagRegistry__head {
   --studio-list-head-line: var(--line, var(--studio-line));
-  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
+  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr) minmax(8.5rem, 10rem);
 }
 
 .tagRegistry__row {
   --studio-list-row-line: var(--line, var(--studio-line));
-  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
+  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr) minmax(8.5rem, 10rem);
   align-items: start;
 }
 
@@ -2641,6 +2641,15 @@ button.analyticsList__cellLink {
   color: var(--muted, var(--studio-muted-body));
   font-size: var(--font-small);
   line-height: 1.35;
+}
+
+.tagRegistry__updatedCol {
+  min-width: 0;
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-small);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
 .tagRegistryDelete__metaTag {

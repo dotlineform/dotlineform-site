@@ -238,6 +238,7 @@ export const tagRegistryUi = createUiContract({
     tagInlineButton: "tagRegistry__tagInlineBtn",
     demoteButton: "tagRegistry__demoteBtn",
     descCol: "tagRegistry__descCol",
+    updatedCol: "tagRegistry__updatedCol",
     formMeta: "tagStudioForm__meta",
     formFields: "tagStudioForm__fields",
     formField: "tagStudioForm__field",

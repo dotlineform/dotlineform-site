@@ -303,7 +303,7 @@ function wireEvents(state) {
     const sortButton = event.target.closest("button[data-sort-key]");
     if (!sortButton) return;
     const nextSortKey = normalize(sortButton.getAttribute("data-sort-key"));
-    if (!["label", "description"].includes(nextSortKey)) return;
+    if (!["label", "description", "updated"].includes(nextSortKey)) return;
     if (state.sortKey === nextSortKey) {
       state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     } else {

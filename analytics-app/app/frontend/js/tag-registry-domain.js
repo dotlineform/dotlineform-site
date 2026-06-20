@@ -96,6 +96,14 @@ export function getVisibleSortedTags(state) {
 }
 
 export function compareTags(a, b, sortKey) {
+  if (sortKey === "updated") {
+    const am = Number.isFinite(a.updatedAtMs) ? a.updatedAtMs : -Infinity;
+    const bm = Number.isFinite(b.updatedAtMs) ? b.updatedAtMs : -Infinity;
+    const byUpdated = am - bm;
+    if (byUpdated !== 0) return byUpdated;
+    return compareTags(a, b, "label");
+  }
+
   if (sortKey === "description") {
     const ad = normalize(a.description);
     const bd = normalize(b.description);
@@ -121,6 +129,18 @@ export function normalizeTimestamp(value) {
   const ms = Date.parse(raw);
   if (!Number.isFinite(ms)) return "";
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
+export function formatTimestampMinute(value) {
+  const ms = Date.parse(value);
+  if (!Number.isFinite(ms)) return "";
+  const date = new Date(ms);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
 export function normalize(value) {
