@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
-last_updated: 2026-06-05
+last_updated: 2026-06-21
 parent_id: data-sharing
 viewable: true
 ---
@@ -18,6 +18,8 @@ Config files:
 `adapters.json` is the source-controlled dispatch registry for Data Sharing workflows.
 Requests provide a `data_domain` and canonical `operation`.
 The registry maps that pair to exactly one adapter id.
+Each data domain also declares an `app` value for UI grouping: `docs-viewer`, `studio`, or `analytics`.
+Only Docs Viewer-backed data domains declare `docs_scope`; generic Data Sharing config must not use unqualified `scope`.
 The registry is owned by the headless `data-sharing/` subsystem, not by Analytics app route code, Studio route code, or Docs Viewer service code.
 
 Analytics reads this config through its same-origin Data Sharing API.
@@ -28,17 +30,17 @@ The Analytics app may serve the config it needs directly through its static allo
 ## Current Mapping
 
 The implemented adapters are `documents` and `analytics-tags`.
-It maps `data_domain: "library"` to the Library Docs Viewer source root and local Data Sharing workflow roots.
+It maps `data_domain: "library"` to `app: "docs-viewer"`, `docs_scope: "library"`, the Library Docs Viewer source root, and local Data Sharing workflow roots.
 
 The first non-document adapter is:
 
 - `data_domain: "tags"`
-- UI scope: `Analytics`
+- `app: "analytics"`
 - `adapter_id: "analytics-tags"`
 - `module: "analytics.tags"`
 
 The data domain stays `tags` so future Analytics workflows do not inherit tag-specific assumptions.
-The Analytics Data Sharing scope selector presents that domain as Analytics, while the sharing profile selector names the tag-specific package families.
+The Analytics Data Sharing app selector presents Analytics as the app, while the data-domain selector presents `tags` and the sharing profile selector names the tag-specific package families.
 
 The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.

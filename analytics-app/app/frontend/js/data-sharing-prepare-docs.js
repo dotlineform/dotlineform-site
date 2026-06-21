@@ -7,7 +7,7 @@ import {
 
 export async function loadDataSharingPrepareDocsState(options = {}) {
   const {
-    scope,
+    dataDomain,
     prepareCapability,
     workflowActive,
     exportConfigCount,
@@ -24,10 +24,10 @@ export async function loadDataSharingPrepareDocsState(options = {}) {
     && Number(exportConfigCount || 0) > 0
   ) {
     try {
-      selectableRecordsPayload = await loadJson(selectableRecordsUrl(scope));
+      selectableRecordsPayload = await loadJson(selectableRecordsUrl(dataDomain));
     } catch (error) {
       docsIndexError = true;
-      if (typeof onError === "function") onError(error, { scope, path: selectableRecordsUrl(scope) });
+      if (typeof onError === "function") onError(error, { dataDomain, path: selectableRecordsUrl(dataDomain) });
     }
   }
 
@@ -81,9 +81,9 @@ export function buildVisibleDocs(indexPayload) {
   return { docs: orderedDocs, childrenByParent, depthById };
 }
 
-function selectableRecordsUrl(scope) {
+function selectableRecordsUrl(dataDomain) {
   const url = new URL(DATA_SHARING_ENDPOINTS.selectableRecords, window.location.origin);
-  url.searchParams.set("data_domain", scope);
+  url.searchParams.set("data_domain", dataDomain);
   return url.href;
 }
 

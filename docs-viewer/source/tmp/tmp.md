@@ -7,12 +7,9 @@ ui_status: draft
 ---
 
 
-please adjust dropdowns and 'format' pills on `/analytics/data-sharing/prepare/?mode=manage&scope=library` so that they are vertically stacked, as styled on `/admin/checks/`
+
 
 ---
-
-The archive is present at `studio/retired/site-routes/moments/index.html`
-
 
 [Docs Viewer View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry).
 

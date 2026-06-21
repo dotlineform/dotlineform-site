@@ -49,8 +49,8 @@ def make_registry_payload() -> dict[str, object]:
                 "portability": {"package": "analytics-tags-data-sharing"},
                 "data_domains": {
                     "tags": {
+                        "app": "analytics",
                         "label": "Tags",
-                        "scope": "tags",
                         "status": "active",
                         "selection_model": "records",
                         "paths": {
@@ -86,7 +86,7 @@ def make_registry_payload() -> dict[str, object]:
                                 "id": "tag-registry",
                                 "label": "Tag registry",
                                 "enabled": True,
-                                "scopes": ["tags"],
+                                "data_domains": ["tags"],
                                 "family": "registry",
                                 "target": {"format": "json", "supported_formats": ["json"]},
                                 "selection": {"mode": "none"},
@@ -95,7 +95,7 @@ def make_registry_payload() -> dict[str, object]:
                                 "id": "tags-bundle",
                                 "label": "Combined tags bundle",
                                 "enabled": True,
-                                "scopes": ["tags"],
+                                "data_domains": ["tags"],
                                 "family": "bundle",
                                 "target": {"format": "json", "supported_formats": ["json"]},
                                 "selection": {"mode": "none"},

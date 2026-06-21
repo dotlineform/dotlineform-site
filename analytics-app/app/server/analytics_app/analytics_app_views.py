@@ -37,8 +37,8 @@ ANALYTICS_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
     {
         "label": "data sharing",
         "links": (
-            ("prepare package", "/analytics/data-sharing/prepare/?mode=manage&scope=library"),
-            ("returned package", "/analytics/data-sharing/review/?mode=manage&scope=library"),
+            ("prepare package", "/analytics/data-sharing/prepare/?mode=manage"),
+            ("returned package", "/analytics/data-sharing/review/?mode=manage"),
         ),
     },
 )
@@ -368,10 +368,16 @@ def data_sharing_prepare_view(version: str) -> str:
         >
           <div class="analytics__panel dataSharingPreparePage__panel">
             <div class="dataSharingPreparePage__controls">
-              <label class="analyticsField dataSharingPreparePage__scopeField" for="dataSharingPrepareScopeSelect">
-                <span class="analyticsField__label" id="dataSharingPrepareScopeLabel"></span>
+              <label class="analyticsField dataSharingPreparePage__appField" for="dataSharingPrepareAppSelect">
+                <span class="analyticsField__label" id="dataSharingPrepareAppLabel"></span>
                 <span class="analyticsField__control">
-                  <select class="analytics__input" id="dataSharingPrepareScopeSelect"></select>
+                  <select class="analytics__input" id="dataSharingPrepareAppSelect"></select>
+                </span>
+              </label>
+              <label class="analyticsField dataSharingPreparePage__dataDomainField" for="dataSharingPrepareDataDomainSelect">
+                <span class="analyticsField__label" id="dataSharingPrepareDataDomainLabel"></span>
+                <span class="analyticsField__control">
+                  <select class="analytics__input" id="dataSharingPrepareDataDomainSelect"></select>
                 </span>
               </label>
               <label class="analyticsField dataSharingPreparePage__field" for="dataSharingPrepareConfigSelect">
@@ -381,8 +387,8 @@ def data_sharing_prepare_view(version: str) -> str:
                 </span>
               </label>
               <button type="button" class="analytics__button analytics__button--defaultWidth" id="dataSharingPrepareRun"></button>
-              <fieldset class="dataSharingPreparePage__format" id="dataSharingPrepareFormatWrap">
-                <legend id="dataSharingPrepareFormatLabel"></legend>
+              <fieldset class="dataSharingPreparePage__format" id="dataSharingPrepareFormatWrap" aria-labelledby="dataSharingPrepareFormatLabel">
+                <span class="dataSharingPreparePage__formatLabel" id="dataSharingPrepareFormatLabel"></span>
                 <span class="dataSharingPreparePage__formatOptions" id="dataSharingPrepareFormatOptions"></span>
               </fieldset>
               <label class="dataSharingPreparePage__toggle" id="dataSharingPrepareMissingSummaryWrap" hidden>
@@ -419,10 +425,16 @@ def data_sharing_review_view(version: str) -> str:
         >
           <div class="analytics__panel dataSharingReviewPage__panel">
             <div class="dataSharingReviewPage__controls">
-              <label class="analyticsField dataSharingReviewPage__scopeField" for="dataSharingReviewScopeSelect">
-                <span class="analyticsField__label" id="dataSharingReviewScopeLabel"></span>
+              <label class="analyticsField dataSharingReviewPage__appField" for="dataSharingReviewAppSelect">
+                <span class="analyticsField__label" id="dataSharingReviewAppLabel"></span>
                 <span class="analyticsField__control">
-                  <select class="analytics__input" id="dataSharingReviewScopeSelect"></select>
+                  <select class="analytics__input" id="dataSharingReviewAppSelect"></select>
+                </span>
+              </label>
+              <label class="analyticsField dataSharingReviewPage__dataDomainField" for="dataSharingReviewDataDomainSelect">
+                <span class="analyticsField__label" id="dataSharingReviewDataDomainLabel"></span>
+                <span class="analyticsField__control">
+                  <select class="analytics__input" id="dataSharingReviewDataDomainSelect"></select>
                 </span>
               </label>
               <label class="analyticsField dataSharingReviewPage__field" for="dataSharingReviewFileSelect">

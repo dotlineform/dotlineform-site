@@ -108,8 +108,9 @@ def write_adapter_registry(root: Path) -> None:
                     "portability": {"package": "docs-viewer-documents-data-sharing"},
                     "data_domains": {
                         "library": {
+                            "app": "docs-viewer",
                             "label": "Library",
-                            "scope": "library",
+                            "docs_scope": "library",
                             "status": "active",
                             "selection_model": "documents",
                             "paths": {
@@ -199,10 +200,10 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     "id": "library-smoke",
                     "label": "Library smoke",
                     "enabled": True,
-                    "scopes": ["library"],
+                    "data_domains": ["library"],
                     "target": {"format": "json", "supported_formats": ["json"]},
                     "output": {
-                        "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.json",
+                        "path_pattern": "var/analytics/data-sharing/{data_domain}/exports/{export_id}-{timestamp}.json",
                     },
                     "selection": {
                         "mode": "explicit_doc_ids",
@@ -211,7 +212,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                         "supports_missing_summary_only": True,
                         "default_missing_summary_only": False,
                     },
-                    "metadata": {"include": ["export_id", "scope"]},
+                    "metadata": {"include": ["export_id", "data_domain"]},
                     "document_fields": [
                         {"source": "doc_id", "output_path": "doc_id"},
                     ],
@@ -273,8 +274,9 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     adapter = payload["adapters"][0]
     assert adapter["id"] == "documents"
     assert adapter["data_domains"]["library"] == {
+        "app": "docs-viewer",
         "label": "Library",
-        "scope": "library",
+        "docs_scope": "library",
         "status": "active",
         "selection_model": "documents",
     }
@@ -282,6 +284,7 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     profile = prepare["sharing_profiles"][0]
     assert profile["id"] == "library-smoke"
     assert profile["label"] == "Library smoke"
+    assert profile["data_domains"] == ["library"]
     assert profile["target"] == {"format": "json", "supported_formats": ["json"]}
     assert profile["selection"] == {
         "mode": "explicit_doc_ids",

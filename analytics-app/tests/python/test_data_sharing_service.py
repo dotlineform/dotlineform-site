@@ -128,8 +128,9 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
                             "portability": {"package": "documents-package"},
                             "data_domains": {
                                 "library": {
+                                    "app": "docs-viewer",
                                     "label": "Library",
-                                    "scope": "library",
+                                    "docs_scope": "library",
                                     "status": "active",
                                     "selection_model": "documents",
                                     "paths": {

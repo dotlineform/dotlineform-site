@@ -13,15 +13,15 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function scopeLabel(state, scope = state.scope) {
-  const item = (state.workflowScopes || []).find((candidate) => candidate.key === scope);
+function dataDomainLabel(state, dataDomain = state.dataDomain) {
+  const item = (state.dataDomains || []).find((candidate) => candidate.key === dataDomain);
   if (item && item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
-  return normalizeText(item && item.label) || normalizeText(item && item.fallback) || scope;
+  return normalizeText(item && item.label) || normalizeText(item && item.fallback) || dataDomain;
 }
 
-function scopeTitle(state, scope = state.scope) {
-  const label = scopeLabel(state, scope);
-  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
+function dataDomainTitle(state, dataDomain = state.dataDomain) {
+  const label = dataDomainLabel(state, dataDomain);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : dataDomain;
 }
 
 function issueLabel(issue) {
@@ -92,9 +92,9 @@ function rowMetaParts(state, { docId, duplicate, currentLibrary }) {
   if (currentLibrary && currentLibrary.exists === false) {
     parts.push(getAnalyticsText(
       state.config,
-      "data_sharing_review.not_current_scope",
-      "not in current {scope_label}",
-      { scope_label: scopeTitle(state) }
+      "data_sharing_review.not_current_data_domain",
+      "not in current {data_domain_label}",
+      { data_domain_label: dataDomainTitle(state) }
     ));
   }
   return parts.filter(Boolean);

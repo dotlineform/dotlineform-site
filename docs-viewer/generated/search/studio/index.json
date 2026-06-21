@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ab449572027a68122cc5a7ed87cf6ac9",
-    "generated_at_utc": "2026-06-18T12:28:20Z",
+    "version": "blake2b-ce8a4fc5aca4e20ae36c1678662f6f65",
+    "generated_at_utc": "2026-06-21T10:26:45Z",
     "count": 239
   },
   "entries": [
@@ -2092,10 +2092,10 @@
       "kind": "doc",
       "title": "Data Sharing Adapters",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-21",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-05 • Data Sharing",
+      "display_meta": "2026-06-21 • Data Sharing",
       "search_terms": [
         "config-data-sharing-adapters",
         "config",
@@ -2104,12 +2104,12 @@
         "adapters",
         "data sharing adapters",
         "data sharing",
-        "2026-06-05",
+        "2026-06-21",
         "2026",
         "06",
-        "05"
+        "21"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-06-05 2026 06 05"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-06-21 2026 06 21"
     },
     {
       "id": "config-library-export-configs",

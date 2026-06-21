@@ -117,8 +117,12 @@ class AdapterResolution:
         return str(self.domain.get("label") or self.data_domain.title())
 
     @property
-    def scope(self) -> str:
-        return normalize_id(self.domain.get("scope") or self.data_domain)
+    def app(self) -> str:
+        return normalize_id(self.domain.get("app"))
+
+    @property
+    def docs_scope(self) -> str:
+        return normalize_id(self.domain.get("docs_scope") or self.data_domain)
 
     def path(self, key: str) -> Path:
         paths = self.domain.get("paths") if isinstance(self.domain.get("paths"), dict) else {}
@@ -179,8 +183,14 @@ def validate_registry(payload: dict[str, Any]) -> None:
         for data_domain, domain in data_domains.items():
             domain_id = _require_id(data_domain, field=f"adapters[{index}].data_domains key")
             domain = _require_object(domain, field=f"adapters[{index}].data_domains.{domain_id}")
+            app_id = _require_id(domain.get("app"), field=f"adapters[{index}].data_domains.{domain_id}.app")
+            if app_id not in {"docs-viewer", "studio", "analytics"}:
+                raise ValueError(
+                    f"adapter config field adapters[{index}].data_domains.{domain_id}.app is unsupported"
+                )
             _require_id(domain.get("label"), field=f"adapters[{index}].data_domains.{domain_id}.label")
-            _require_id(domain.get("scope"), field=f"adapters[{index}].data_domains.{domain_id}.scope")
+            if app_id == "docs-viewer":
+                _require_id(domain.get("docs_scope"), field=f"adapters[{index}].data_domains.{domain_id}.docs_scope")
             _validate_status(domain.get("status"), field=f"adapters[{index}].data_domains.{domain_id}.status")
             selection_model = _require_id(
                 domain.get("selection_model"),

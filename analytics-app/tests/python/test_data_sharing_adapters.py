@@ -83,8 +83,9 @@ def capability(operation: str, status: str = "active") -> dict[str, object]:
 
 def domain_payload(status: str = "active", data_domain: str = "library") -> dict[str, object]:
     return {
+        "app": "docs-viewer",
         "label": "Library",
-        "scope": data_domain,
+        "docs_scope": data_domain,
         "status": status,
         "selection_model": "documents",
         "paths": {
@@ -157,8 +158,9 @@ def registry_payload() -> dict[str, object]:
                 data_domain="tags",
                 domain={
                     **domain_payload(status="stub", data_domain="tags"),
+                    "app": "analytics",
                     "label": "Tags",
-                    "scope": "tags",
+                    "docs_scope": None,
                     "selection_model": "records",
                     "source_write_targets": {
                         "tag_registry": "analytics-app/data/canonical/tag-registry.json",
@@ -195,7 +197,7 @@ def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
         resolution = adapters.resolve_adapter(repo_root, data_domain="library", operation="prepare")
 
         assert resolution.adapter_id == "documents"
-        assert resolution.scope == "library"
+        assert resolution.docs_scope == "library"
         assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/library/exports"
         assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
         assert resolution.capability["selection_model"] == "documents"

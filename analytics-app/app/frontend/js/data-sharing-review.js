@@ -20,18 +20,22 @@ import {
   renderDataSharingReviewPreviewList
 } from "./data-sharing-review-render.js";
 import {
-  workflowCapabilityForOperation,
-  workflowDomainIsActive,
-  workflowDomainsForOperation
+  dataSharingAppsForDomains,
+  dataSharingCapabilityForOperation,
+  dataSharingDomainIsActive,
+  dataSharingDomainsForApp,
+  dataSharingDomainsForOperation
 } from "./data-sharing-adapters.js";
 import {
-  DATA_SHARING_REVIEW_SCOPES,
+  DATA_SHARING_REVIEW_APPS,
+  DATA_SHARING_REVIEW_DOMAINS,
   clearDataSharingReviewPreviewSelection,
   dataSharingReviewApplyActionsForCapability,
-  dataSharingReviewScopeLabel,
-  dataSharingReviewScopeSupportsApply,
-  dataSharingReviewScopeTitle,
-  dataSharingReviewScopeUnavailableMessage,
+  dataSharingReviewAppFromUrl,
+  dataSharingReviewDataDomainLabel,
+  dataSharingReviewDataDomainSupportsApply,
+  dataSharingReviewDataDomainTitle,
+  dataSharingReviewDataDomainUnavailableMessage,
   escapeDataSharingReviewHtml,
   handleDataSharingReviewPreviewListChange,
   hideDataSharingReviewApplyActionsMenu,
@@ -39,15 +43,16 @@ import {
   maybeShowDataSharingReviewResultButton,
   normalizeDataSharingReviewText,
   renderDataSharingReviewApplyActions,
-  renderDataSharingReviewScopeSelect,
+  renderDataSharingReviewAppSelect,
+  renderDataSharingReviewDataDomainSelect,
   resetDataSharingReviewResult,
   selectAllDataSharingReviewPreviewRows,
   selectedDataSharingReviewFile,
   setDataSharingReviewControlsDisabled,
   toggleDataSharingReviewApplyActionsMenu,
-  updateDataSharingReviewScopeUrl,
+  updateDataSharingReviewUrl,
   updateDataSharingReviewSelectionState,
-  workflowScopeFromDataSharingReviewUrl
+  dataDomainFromDataSharingReviewUrl
 } from "./data-sharing-review-workflow.js";
 
 function normalizeText(value) {
@@ -85,7 +90,10 @@ function routeModeForState(state) {
 }
 
 function routeStateDetail(state) {
-  if (state && state.root) state.root.dataset.analyticsScope = state.scope;
+  if (state && state.root) {
+    state.root.dataset.analyticsApp = state.app;
+    state.root.dataset.analyticsDataDomain = state.dataDomain;
+  }
   return {
     route: "data-sharing-review",
     mode: routeModeForState(state),
@@ -147,8 +155,8 @@ function renderResult(state, payload, failed = false) {
   showDataSharingReviewResultModal(state, result, { restoreFocus: state.previewButton });
 }
 
-async function loadImportFiles(scope) {
-  const url = `${DATA_SHARING_ENDPOINTS.returnedPackages}?data_domain=${encodeURIComponent(scope)}`;
+async function loadImportFiles(dataDomain) {
+  const url = `${DATA_SHARING_ENDPOINTS.returnedPackages}?data_domain=${encodeURIComponent(dataDomain)}`;
   const payload = await getJson(url);
   return Array.isArray(payload.files) ? payload.files : [];
 }
@@ -179,7 +187,7 @@ async function runPreview(state) {
 
   try {
     const payload = await postJson(DATA_SHARING_ENDPOINTS.review, {
-      data_domain: state.scope,
+      data_domain: state.dataDomain,
       operation: "review",
       staged_filename: file.filename
     });
@@ -216,14 +224,18 @@ async function init() {
   const state = {
     bootStatus,
     root,
-    scope: workflowScopeFromDataSharingReviewUrl(),
-    workflowScopes: DATA_SHARING_REVIEW_SCOPES,
+    app: "docs-viewer",
+    dataDomain: "library",
+    apps: DATA_SHARING_REVIEW_APPS,
+    dataDomains: DATA_SHARING_REVIEW_DOMAINS,
     adapterRegistry: null,
     applyCapability: null,
     applyActions: [],
     applyButtons: new Map(),
-    scopeLabelNode: document.getElementById("dataSharingReviewScopeLabel"),
-    scopeSelect: document.getElementById("dataSharingReviewScopeSelect"),
+    appLabelNode: document.getElementById("dataSharingReviewAppLabel"),
+    appSelect: document.getElementById("dataSharingReviewAppSelect"),
+    dataDomainLabelNode: document.getElementById("dataSharingReviewDataDomainLabel"),
+    dataDomainSelect: document.getElementById("dataSharingReviewDataDomainSelect"),
     fileLabelNode: document.getElementById("dataSharingReviewFileLabel"),
     fileSelect: document.getElementById("dataSharingReviewFileSelect"),
     previewButton: document.getElementById("dataSharingReviewRun"),
@@ -246,8 +258,10 @@ async function init() {
   };
 
   const requiredNodes = [
-    state.scopeLabelNode,
-    state.scopeSelect,
+    state.appLabelNode,
+    state.appSelect,
+    state.dataDomainLabelNode,
+    state.dataDomainSelect,
     state.fileLabelNode,
     state.fileSelect,
     state.previewButton,
@@ -268,28 +282,36 @@ async function init() {
     configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry();
     state.adapterRegistry = adapterRegistry;
-    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_SCOPES);
-    state.scope = workflowScopeFromDataSharingReviewUrl(state.workflowScopes);
-    state.applyCapability = workflowCapabilityForOperation(adapterRegistry, "apply", state.scope);
+    state.dataDomains = dataSharingDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_DOMAINS);
+    state.apps = dataSharingAppsForDomains(state.dataDomains, DATA_SHARING_REVIEW_APPS);
+    state.dataDomain = dataDomainFromDataSharingReviewUrl(state.dataDomains);
+    state.app = dataSharingReviewAppFromUrl(state.apps, state.dataDomains, state.dataDomain);
+    const appDomains = dataSharingDomainsForApp(state.dataDomains, state.app);
+    if (!appDomains.some((item) => item.key === state.dataDomain)) {
+      state.dataDomain = appDomains[0] ? appDomains[0].key : "library";
+    }
+    state.applyCapability = dataSharingCapabilityForOperation(adapterRegistry, "apply", state.dataDomain);
     state.applyActions = dataSharingReviewApplyActionsForCapability(state.applyCapability && state.applyCapability.capability)
       .filter((action) => action.status === "active");
-    renderDataSharingReviewScopeSelect(state);
+    renderDataSharingReviewAppSelect(state);
+    renderDataSharingReviewDataDomainSelect(state);
     renderDataSharingReviewApplyActions(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
-    setText(state.scopeLabelNode, getAnalyticsText(state.config, "data_sharing_review.scope_label", "scope"));
+    setText(state.appLabelNode, getAnalyticsText(state.config, "data_sharing_review.app_label", "app"));
+    setText(state.dataDomainLabelNode, getAnalyticsText(state.config, "data_sharing_review.data_domain_label", "data domain"));
     setText(state.fileLabelNode, getAnalyticsText(state.config, "data_sharing_review.file_label", "staged file"));
     setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review package"));
     setText(state.actionMenuButton, getAnalyticsText(state.config, "data_sharing_review.actions_button", "Actions"));
     setText(state.resultButton, getAnalyticsText(state.config, "data_sharing_review.result_button", "results"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
-    if (!dataSharingReviewScopeSupportsApply(state)) {
+    if (!dataSharingReviewDataDomainSupportsApply(state)) {
       const unsupportedApplyTitle = getAnalyticsText(
         state.config,
         "data_sharing_review.apply_unsupported_title",
-        "{scope_label} source apply actions are not implemented yet.",
-        { scope_label: dataSharingReviewScopeTitle(state) }
+        "{data_domain_label} source apply actions are not implemented yet.",
+        { data_domain_label: dataSharingReviewDataDomainTitle(state) }
       );
       state.applyButtons.forEach((button) => {
         button.title = unsupportedApplyTitle;
@@ -302,11 +324,16 @@ async function init() {
     root.hidden = false;
     bootStatus.hidden = true;
 
-    state.scopeSelect.addEventListener("change", () => updateDataSharingReviewScopeUrl(state.scopeSelect.value, state.workflowScopes));
+    state.appSelect.addEventListener("change", () => {
+      const appDomains = dataSharingDomainsForApp(state.dataDomains, state.appSelect.value);
+      const nextDomain = appDomains[0] ? appDomains[0].key : state.dataDomain;
+      updateDataSharingReviewUrl(state, state.appSelect.value, nextDomain);
+    });
+    state.dataDomainSelect.addEventListener("change", () => updateDataSharingReviewUrl(state, state.app, state.dataDomainSelect.value));
 
-    if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
+    if (!dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
       setDataSharingReviewControlsDisabled(state, true);
-      setStatus(state.statusNode, "warn", dataSharingReviewScopeUnavailableMessage(state));
+      setStatus(state.statusNode, "warn", dataSharingReviewDataDomainUnavailableMessage(state));
       markRouteReady(state, true);
       return;
     }
@@ -319,15 +346,15 @@ async function init() {
         getAnalyticsText(
           state.config,
           "data_sharing_review.service_unavailable",
-          "Studio Data Sharing API unavailable. Restart Local Studio to review {scope_label} returned packages.",
-          { scope_label: dataSharingReviewScopeLabel(state) }
+          "Studio Data Sharing API unavailable. Restart Local Studio to review {data_domain_label} returned packages.",
+          { data_domain_label: dataSharingReviewDataDomainLabel(state) }
         )
       );
       markRouteReady(state, true);
       return;
     }
 
-    state.files = await loadImportFiles(state.scope);
+    state.files = await loadImportFiles(state.dataDomain);
     if (!state.files.length) {
       setDataSharingReviewControlsDisabled(state, true);
       setStatus(
@@ -336,8 +363,8 @@ async function init() {
         getAnalyticsText(
           state.config,
           "data_sharing_review.no_files",
-          "No staged {scope_label} data files found under var/analytics/data-sharing/{scope}/import-staging/.",
-          { scope_label: dataSharingReviewScopeLabel(state), scope: state.scope }
+          "No staged {data_domain_label} data files found under var/analytics/data-sharing/{data_domain}/import-staging/.",
+          { data_domain_label: dataSharingReviewDataDomainLabel(state), data_domain: state.dataDomain }
         )
       );
       markRouteReady(state, true);
@@ -355,8 +382,8 @@ async function init() {
       getAnalyticsText(
         state.config,
         "data_sharing_review.idle_status",
-        "Select a staged {scope_label} data file and generate previews.",
-        { scope_label: dataSharingReviewScopeLabel(state) }
+        "Select a staged {data_domain_label} data file and generate previews.",
+        { data_domain_label: dataSharingReviewDataDomainLabel(state) }
       )
     );
     markRouteReady(state, true);
@@ -372,8 +399,8 @@ async function init() {
         getAnalyticsText(
           state.config,
           "data_sharing_review.idle_status",
-          "Select a staged {scope_label} data file and generate previews.",
-          { scope_label: dataSharingReviewScopeLabel(state) }
+          "Select a staged {data_domain_label} data file and generate previews.",
+          { data_domain_label: dataSharingReviewDataDomainLabel(state) }
         )
       );
       syncRouteBusyState(state);
@@ -425,8 +452,8 @@ async function init() {
       getAnalyticsText(
         state.config || {},
         "data_sharing_review.load_failed",
-        "Failed to load {scope_label} returned package data.",
-        { scope_label: state.config ? dataSharingReviewScopeTitle(state) : "Library" }
+        "Failed to load {data_domain_label} returned package data.",
+        { data_domain_label: state.config ? dataSharingReviewDataDomainTitle(state) : "Library" }
       )
     );
     markRouteReady(state, true);

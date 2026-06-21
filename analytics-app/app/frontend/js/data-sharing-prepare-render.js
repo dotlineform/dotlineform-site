@@ -30,15 +30,15 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function scopeLabel(state, scope = state.scope) {
-  const item = (state.workflowScopes || []).find((candidate) => candidate.key === scope);
+function dataDomainLabel(state, dataDomain = state.dataDomain) {
+  const item = (state.dataDomains || []).find((candidate) => candidate.key === dataDomain);
   if (item && item.labelKey) return getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
-  return normalizeText(item && item.label) || normalizeText(item && item.fallback) || scope;
+  return normalizeText(item && item.label) || normalizeText(item && item.fallback) || dataDomain;
 }
 
-function scopeTitle(state, scope = state.scope) {
-  const label = scopeLabel(state, scope);
-  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
+function dataDomainTitle(state, dataDomain = state.dataDomain) {
+  const label = dataDomainLabel(state, dataDomain);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : dataDomain;
 }
 
 function setText(node, value) {
@@ -280,8 +280,8 @@ export function renderDataSharingPrepareDocList(state) {
     : `<p class="analytics__status">${escapeHtml(getAnalyticsText(
       state.config,
       "data_sharing_prepare.empty_state",
-      "No matching {scope_label} documents.",
-      { scope_label: scopeTitle(state) }
+      "No matching {data_domain_label} documents.",
+      { data_domain_label: dataDomainTitle(state) }
     ))}</p>`;
   syncDataSharingPrepareCheckboxes(state);
   updateDataSharingPrepareSelectionSummary(state);

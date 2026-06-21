@@ -6,7 +6,7 @@
       "label": "Parent-child relationships",
       "description": "Exports Library document hierarchy, relationship metadata, summaries, and headings for structure review.",
       "enabled": true,
-      "scopes": ["library"],
+      "data_domains": ["library"],
       "target": {
         "format": "json",
         "supported_formats": ["json"],
@@ -15,7 +15,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.json",
+        "path_pattern": "var/analytics/data-sharing/{data_domain}/exports/{export_id}-{timestamp}.json",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -40,7 +40,7 @@
           "export_id",
           "config_id",
           "config_checksum",
-          "scope",
+          "data_domain",
           "generated_at",
           "selected_doc_ids",
           "source_last_updated",
@@ -117,7 +117,7 @@
       "label": "Document summaries",
       "description": "Exports Library document summary metadata for missing-summary review and summary audit.",
       "enabled": true,
-      "scopes": ["library"],
+      "data_domains": ["library"],
       "target": {
         "format": "jsonl",
         "supported_formats": ["jsonl", "json"],
@@ -125,7 +125,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
+        "path_pattern": "var/analytics/data-sharing/{data_domain}/exports/{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -150,7 +150,7 @@
           "export_id",
           "config_id",
           "config_checksum",
-          "scope",
+          "data_domain",
           "generated_at",
           "selected_doc_ids",
           "source_last_updated",
@@ -202,7 +202,7 @@
       "label": "Full document content",
       "description": "Exports multiple Library documents with summaries, headings, and fuller plain text content in one JSONL file.",
       "enabled": true,
-      "scopes": ["library"],
+      "data_domains": ["library"],
       "target": {
         "format": "jsonl",
         "supported_formats": ["jsonl", "json"],
@@ -210,7 +210,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
+        "path_pattern": "var/analytics/data-sharing/{data_domain}/exports/{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -235,7 +235,7 @@
           "export_id",
           "config_id",
           "config_checksum",
-          "scope",
+          "data_domain",
           "generated_at",
           "selected_doc_ids",
           "source_last_updated",

@@ -70,14 +70,18 @@
             "minProperties": 1,
             "additionalProperties": {
               "type": "object",
-              "required": ["label", "scope", "status", "selection_model", "paths", "source_write_targets", "sources", "config"],
+              "required": ["app", "label", "status", "selection_model", "paths", "source_write_targets", "sources", "config"],
               "additionalProperties": false,
               "properties": {
+                "app": {
+                  "type": "string",
+                  "enum": ["docs-viewer", "studio", "analytics"]
+                },
                 "label": {
                   "type": "string",
                   "minLength": 1
                 },
-                "scope": {
+                "docs_scope": {
                   "type": "string",
                   "minLength": 1
                 },

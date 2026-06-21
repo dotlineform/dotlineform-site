@@ -153,7 +153,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
 
   try {
     const preflight = await postJson(DATA_SHARING_ENDPOINTS.apply, {
-      data_domain: state.scope,
+      data_domain: state.dataDomain,
       operation: "apply",
       apply_action: action.id,
       staged_filename: stagedFilename,
@@ -183,7 +183,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
       action.runningStatus || getAnalyticsText(state.config, "data_sharing_review.apply_running_status", "Applying selected changes...")
     );
     const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
-      data_domain: state.scope,
+      data_domain: state.dataDomain,
       operation: "apply",
       apply_action: action.id,
       staged_filename: stagedFilename,

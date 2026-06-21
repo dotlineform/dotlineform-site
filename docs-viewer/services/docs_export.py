@@ -377,9 +377,9 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     errors: list[str] = []
     warnings: list[str] = []
 
-    scopes = config.get("scopes")
-    if not isinstance(scopes, list) or not scopes or not all(normalize_text(scope) for scope in scopes):
-        errors.append(f"config {config_id}: scopes must be a non-empty array")
+    data_domains = config.get("data_domains")
+    if not isinstance(data_domains, list) or not data_domains or not all(normalize_text(data_domain) for data_domain in data_domains):
+        errors.append(f"config {config_id}: data_domains must be a non-empty array")
 
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     target_format = normalize_text(target.get("format"))
@@ -407,8 +407,8 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     path_pattern = normalize_text(output.get("path_pattern"))
     if not path_pattern:
         errors.append(f"config {config_id}: output.path_pattern is required")
-    elif "{scope}" not in path_pattern or "{export_id}" not in path_pattern or "{timestamp}" not in path_pattern:
-        errors.append(f"config {config_id}: output.path_pattern must include scope, export_id, and timestamp placeholders")
+    elif "{data_domain}" not in path_pattern or "{export_id}" not in path_pattern or "{timestamp}" not in path_pattern:
+        errors.append(f"config {config_id}: output.path_pattern must include data_domain, export_id, and timestamp placeholders")
     elif target_format and not path_pattern.endswith(f".{target_format}"):
         errors.append(f"config {config_id}: output.path_pattern extension must match target.format")
     timestamp_format = normalize_text(output.get("timestamp_format") or "%Y%m%d-%H%M%S")
@@ -837,7 +837,7 @@ def export_metadata(
         "export_id": config_id,
         "config_id": config_id,
         "config_checksum": config_checksum(context.config),
-        "scope": context.scope,
+        "data_domain": context.scope,
         "generated_at": generated_at,
         "selected_doc_ids": selected_doc_ids,
         "source_last_updated": source_last_updated,
@@ -861,7 +861,7 @@ def resolve_output_path(
         raise ValueError(f"Export config {config_id} is missing output.path_pattern")
     relative = Path(
         pattern.format(
-            scope=scope,
+            data_domain=scope,
             timestamp=timestamp,
             export_id=config_id,
         )
@@ -988,8 +988,8 @@ def build_export(
     config_errors, config_warnings = validate_export_config(config)
     warnings: list[str] = [*payload_warnings, *config_warnings]
     errors: list[str] = [*config_errors]
-    if scope not in config.get("scopes", []):
-        errors.append(f"config {config_id}: scope {scope} is not supported")
+    if scope not in config.get("data_domains", []):
+        errors.append(f"config {config_id}: data_domain {scope} is not supported")
     if not config.get("enabled", False):
         errors.append(f"config {config_id}: export config is disabled")
 

@@ -21,15 +21,18 @@ import {
   showDataSharingPrepareResultModal
 } from "./data-sharing-prepare-modals.js";
 import {
-  workflowCapabilityForOperation,
-  workflowDomainForKey,
-  workflowDomainFromUrl,
-  workflowDomainIsActive,
-  workflowScopeParamForKey,
-  workflowDomainsForOperation
+  dataSharingAppForDomain,
+  dataSharingAppFromUrl,
+  dataSharingAppsForDomains,
+  dataSharingCapabilityForOperation,
+  dataSharingDomainForKey,
+  dataSharingDomainFromUrl,
+  dataSharingDomainIsActive,
+  dataSharingDomainsForApp,
+  dataSharingDomainsForOperation
 } from "./data-sharing-adapters.js";
 import {
-  enabledPrepareConfigsForScope,
+  enabledPrepareConfigsForDataDomain,
   prepareProfilesForCapability,
   prepareSelectionModel,
   usesPrepareDocumentSelection
@@ -58,10 +61,21 @@ import {
   runDataSharingPreparePackage
 } from "./data-sharing-prepare-service.js";
 
-const DEFAULT_SCOPE = "library";
-const WORKFLOW_SCOPES = [
-  { key: "library", labelKey: "scope_library", fallback: "library" },
-  { key: "tags", labelKey: "scope_tags", fallback: "tags" }
+const DEFAULT_APP = "docs-viewer";
+const DEFAULT_DATA_DOMAIN = "library";
+const DATA_SHARING_APPS = [
+  { key: "docs-viewer", labelKey: "app_docs_viewer", fallback: "Docs Viewer" },
+  { key: "studio", labelKey: "app_studio", fallback: "Studio" },
+  { key: "analytics", labelKey: "app_analytics", fallback: "Analytics" }
+];
+const DATA_SHARING_DOMAINS = [
+  { key: "library", app: "docs-viewer", labelKey: "data_domain_library", fallback: "library" },
+  { key: "analysis", app: "docs-viewer", labelKey: "data_domain_analysis", fallback: "analysis" },
+  { key: "studio", app: "docs-viewer", labelKey: "data_domain_studio", fallback: "studio" },
+  { key: "series", app: "studio", labelKey: "data_domain_series", fallback: "series" },
+  { key: "works", app: "studio", labelKey: "data_domain_works", fallback: "works" },
+  { key: "tags", app: "analytics", labelKey: "data_domain_tags", fallback: "tags" },
+  { key: "tag_assignments", app: "analytics", labelKey: "data_domain_tag_assignments", fallback: "tag assignments" }
 ];
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -91,40 +105,63 @@ function setStatus(node, state, message) {
   }
 }
 
-function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
-  return workflowDomainFromUrl(domains, DEFAULT_SCOPE);
+function dataDomainFromUrl(domains = DATA_SHARING_DOMAINS) {
+  return dataSharingDomainFromUrl(domains, DEFAULT_DATA_DOMAIN);
 }
 
-function scopeLabel(state, scope = state.scope) {
-  const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
+function appLabel(state, app = state.app) {
+  const item = (state.apps || DATA_SHARING_APPS).find((candidate) => candidate.key === app) || DATA_SHARING_APPS[0];
   if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
-  return normalizeText(item.label) || item.fallback || scope;
+  return normalizeText(item.label) || item.fallback || app;
 }
 
-function scopeTitle(state, scope = state.scope) {
-  const label = scopeLabel(state, scope);
-  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
+function dataDomainLabel(state, dataDomain = state.dataDomain) {
+  const item = dataSharingDomainForKey(state.dataDomains, dataDomain) || DATA_SHARING_DOMAINS[0];
+  if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
+  return normalizeText(item.label) || item.fallback || dataDomain;
 }
 
-function renderScopeSelect(state) {
-  state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
+function dataDomainTitle(state, dataDomain = state.dataDomain) {
+  const label = dataDomainLabel(state, dataDomain);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : dataDomain;
+}
+
+function renderAppSelect(state) {
+  state.appSelect.innerHTML = state.apps.map((item) => {
     const label = item.labelKey
       ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
-      : (normalizeText(item.label) || item.fallback);
-    const selected = item.key === state.scope ? " selected" : "";
+      : (normalizeText(item.label) || item.fallback || item.key);
+    const selected = item.key === state.app ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
   }).join("");
 }
 
-function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
-  const nextScope = normalizeText(scope).toLowerCase();
-  if (!domains.some((item) => item.key === nextScope)) return;
-  const scopeParam = workflowScopeParamForKey(domains, nextScope);
+function renderDataDomainSelect(state) {
+  const domains = dataSharingDomainsForApp(state.dataDomains, state.app);
+  state.dataDomainSelect.innerHTML = domains.map((item) => {
+    const label = item.labelKey
+      ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
+      : (normalizeText(item.label) || item.fallback);
+    const selected = item.key === state.dataDomain ? " selected" : "";
+    return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
+  }).join("");
+}
+
+function updateDataSharingUrl(state, app, dataDomain) {
+  const nextApp = normalizeText(app).toLowerCase();
+  const nextDomain = normalizeText(dataDomain).toLowerCase();
+  if (!state.apps.some((item) => item.key === nextApp)) return;
+  if (!dataSharingDomainsForApp(state.dataDomains, nextApp).some((item) => item.key === nextDomain)) return;
   const url = new URL(window.location.href);
-  if (nextScope === DEFAULT_SCOPE) {
-    url.searchParams.delete("scope");
+  if (nextApp === DEFAULT_APP) {
+    url.searchParams.delete("app");
   } else {
-    url.searchParams.set("scope", scopeParam);
+    url.searchParams.set("app", nextApp);
+  }
+  if (nextDomain === DEFAULT_DATA_DOMAIN) {
+    url.searchParams.delete("data_domain");
+  } else {
+    url.searchParams.set("data_domain", nextDomain);
   }
   window.location.href = url.toString();
 }
@@ -133,19 +170,22 @@ async function loadAdapterRegistry() {
   return getJson(DATA_SHARING_ENDPOINTS.config);
 }
 
-function scopeUnavailableMessage(state) {
-  const domain = workflowDomainForKey(state.workflowScopes, state.scope);
+function dataDomainUnavailableMessage(state) {
+  const domain = dataSharingDomainForKey(state.dataDomains, state.dataDomain);
   return normalizeText(domain && domain.message)
     || getAnalyticsText(
       state.config,
-      "data_sharing_prepare.scope_unsupported",
-      "{scope_label} package preparation is not implemented yet.",
-      { scope_label: scopeTitle(state) }
+      "data_sharing_prepare.data_domain_unsupported",
+      "{data_domain_label} package preparation is not implemented yet.",
+      { data_domain_label: dataDomainTitle(state) }
     );
 }
 
 function routeStateDetail(state) {
-  if (state && state.root) state.root.dataset.analyticsScope = state.scope;
+  if (state && state.root) {
+    state.root.dataset.analyticsApp = state.app;
+    state.root.dataset.analyticsDataDomain = state.dataDomain;
+  }
   return {
     route: "data-sharing-prepare",
     mode: prepareSelectionModel(state.prepareCapability),
@@ -171,8 +211,8 @@ async function loadJson(path) {
 }
 
 function updateStatus(state) {
-  if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
-    setStatus(state.statusNode, "warn", scopeUnavailableMessage(state));
+  if (!dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
+    setStatus(state.statusNode, "warn", dataDomainUnavailableMessage(state));
     state.runButton.disabled = true;
     return;
   }
@@ -184,8 +224,8 @@ function updateStatus(state) {
       getAnalyticsText(
         state.config,
         "data_sharing_prepare.no_config",
-        "No enabled {scope_label} sharing profiles found.",
-        { scope_label: scopeTitle(state) }
+        "No enabled {data_domain_label} sharing profiles found.",
+        { data_domain_label: dataDomainTitle(state) }
       )
     );
     state.runButton.disabled = true;
@@ -211,8 +251,8 @@ function updateStatus(state) {
       getAnalyticsText(
         state.config,
         "data_sharing_prepare.docs_index_unavailable",
-        "No generated {scope_label} data index is available for this sharing profile.",
-        { scope_label: scopeTitle(state) }
+        "No generated {data_domain_label} data index is available for this sharing profile.",
+        { data_domain_label: dataDomainTitle(state) }
       )
     );
     state.runButton.disabled = true;
@@ -236,7 +276,7 @@ function resetResult(state) {
 
 async function runPreparePackage(state) {
   if (!state.serviceAvailable || state.isRunning) return;
-  if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
+  if (!dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
     updateStatus(state);
     return;
   }
@@ -280,10 +320,14 @@ async function init() {
   const state = {
     bootStatus,
     root,
-    scope: workflowScopeFromUrl(),
-    workflowScopes: WORKFLOW_SCOPES,
-    scopeLabelNode: document.getElementById("dataSharingPrepareScopeLabel"),
-    scopeSelect: document.getElementById("dataSharingPrepareScopeSelect"),
+    app: DEFAULT_APP,
+    dataDomain: DEFAULT_DATA_DOMAIN,
+    apps: DATA_SHARING_APPS,
+    dataDomains: DATA_SHARING_DOMAINS,
+    appLabelNode: document.getElementById("dataSharingPrepareAppLabel"),
+    appSelect: document.getElementById("dataSharingPrepareAppSelect"),
+    dataDomainLabelNode: document.getElementById("dataSharingPrepareDataDomainLabel"),
+    dataDomainSelect: document.getElementById("dataSharingPrepareDataDomainSelect"),
     configLabelNode: document.getElementById("dataSharingPrepareConfigLabel"),
     configSelect: document.getElementById("dataSharingPrepareConfigSelect"),
     missingSummaryOnlyWrap: document.getElementById("dataSharingPrepareMissingSummaryWrap"),
@@ -315,8 +359,10 @@ async function init() {
   };
 
   const requiredNodes = [
-    state.scopeLabelNode,
-    state.scopeSelect,
+    state.appLabelNode,
+    state.appSelect,
+    state.dataDomainLabelNode,
+    state.dataDomainSelect,
     state.configLabelNode,
     state.configSelect,
     state.missingSummaryOnlyWrap,
@@ -340,26 +386,33 @@ async function init() {
     state.config = await loadAnalyticsConfigWithText("data_sharing_prepare");
     configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry();
-    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
-    state.scope = workflowScopeFromUrl(state.workflowScopes);
-    state.prepareCapability = workflowCapabilityForOperation(adapterRegistry, "prepare", state.scope);
-    renderScopeSelect(state);
+    state.dataDomains = dataSharingDomainsForOperation(adapterRegistry, "prepare", DATA_SHARING_DOMAINS);
+    state.apps = dataSharingAppsForDomains(state.dataDomains, DATA_SHARING_APPS);
+    state.dataDomain = dataDomainFromUrl(state.dataDomains);
+    state.app = dataSharingAppFromUrl(state.apps, dataSharingAppForDomain(state.dataDomains, state.dataDomain, DEFAULT_APP));
+    const appDomains = dataSharingDomainsForApp(state.dataDomains, state.app);
+    if (!appDomains.some((item) => item.key === state.dataDomain)) {
+      state.dataDomain = appDomains[0] ? appDomains[0].key : DEFAULT_DATA_DOMAIN;
+    }
+    state.prepareCapability = dataSharingCapabilityForOperation(adapterRegistry, "prepare", state.dataDomain);
+    renderAppSelect(state);
+    renderDataDomainSelect(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
-    if (workflowDomainIsActive(state.workflowScopes, state.scope)) {
+    if (dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
       const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
       const exportConfigPayload = { configs: capabilityProfiles };
-      state.exportConfigs = enabledPrepareConfigsForScope(exportConfigPayload, state.scope);
+      state.exportConfigs = enabledPrepareConfigsForDataDomain(exportConfigPayload, state.dataDomain);
     }
 
     const docsState = await loadDataSharingPrepareDocsState({
       config: state.config,
-      scope: state.scope,
+      dataDomain: state.dataDomain,
       serviceAvailable: state.serviceAvailable,
       prepareCapability: state.prepareCapability,
-      workflowActive: workflowDomainIsActive(state.workflowScopes, state.scope),
+      workflowActive: dataSharingDomainIsActive(state.dataDomains, state.dataDomain),
       exportConfigCount: state.exportConfigs.length,
       loadJson,
-      onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.scope, error)
+      onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.dataDomain, error)
     });
     state.docsIndexError = docsState.docsIndexError;
     state.docs = docsState.docs;
@@ -367,7 +420,8 @@ async function init() {
     state.depthById = docsState.depthById;
     state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
-    setText(state.scopeLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.scope_label", "scope"));
+    setText(state.appLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.app_label", "app"));
+    setText(state.dataDomainLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.data_domain_label", "data domain"));
     setText(state.configLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.config_label", "sharing profile"));
     setText(
       state.missingSummaryLabelNode,
@@ -387,7 +441,12 @@ async function init() {
     syncDataSharingPrepareConfigOptions(state);
     updateStatus(state);
 
-    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value, state.workflowScopes));
+    state.appSelect.addEventListener("change", () => {
+      const appDomains = dataSharingDomainsForApp(state.dataDomains, state.appSelect.value);
+      const nextDomain = appDomains[0] ? appDomains[0].key : state.dataDomain;
+      updateDataSharingUrl(state, state.appSelect.value, nextDomain);
+    });
+    state.dataDomainSelect.addEventListener("change", () => updateDataSharingUrl(state, state.app, state.dataDomainSelect.value));
     state.configSelect.addEventListener("change", () => {
       syncDataSharingPrepareConfigOptions(state);
       updateStatus(state);
@@ -449,8 +508,8 @@ async function init() {
       getAnalyticsText(
         state.config,
         "data_sharing_prepare.load_failed",
-        "Failed to load {scope_label} package data.",
-        { scope_label: state.config ? scopeTitle(state) : "Library" }
+        "Failed to load {data_domain_label} package data.",
+        { data_domain_label: state.config ? dataDomainTitle(state) : "Library" }
       )
     );
     markReady(state, true);

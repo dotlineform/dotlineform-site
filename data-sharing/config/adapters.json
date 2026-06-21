@@ -53,8 +53,9 @@
       },
       "data_domains": {
         "library": {
+          "app": "docs-viewer",
           "label": "Library",
-          "scope": "library",
+          "docs_scope": "library",
           "status": "active",
           "selection_model": "documents",
           "paths": {
@@ -250,8 +251,8 @@
       },
       "data_domains": {
         "tags": {
-          "label": "Analytics",
-          "scope": "analytics",
+          "app": "analytics",
+          "label": "Tags",
           "status": "active",
           "selection_model": "records",
           "paths": {
@@ -287,7 +288,7 @@
               "id": "tag-registry",
               "label": "Tag registry",
               "enabled": true,
-              "scopes": ["tags"],
+              "data_domains": ["tags"],
               "family": "registry",
               "target": {
                 "format": "json",
@@ -301,7 +302,7 @@
               "id": "tag-aliases",
               "label": "Tag aliases",
               "enabled": true,
-              "scopes": ["tags"],
+              "data_domains": ["tags"],
               "family": "aliases",
               "target": {
                 "format": "json",
@@ -315,7 +316,7 @@
               "id": "tag-assignments",
               "label": "Tag assignments",
               "enabled": true,
-              "scopes": ["tags"],
+              "data_domains": ["tags"],
               "family": "assignments",
               "target": {
                 "format": "json",
@@ -329,7 +330,7 @@
               "id": "tags-bundle",
               "label": "Combined tags bundle",
               "enabled": true,
-              "scopes": ["tags"],
+              "data_domains": ["tags"],
               "family": "bundle",
               "target": {
                 "format": "json",

@@ -72,8 +72,9 @@ def config_payload() -> dict[str, object]:
                 "status": "active",
                 "data_domains": {
                     "library": {
+                        "app": "docs-viewer",
                         "label": "Library",
-                        "scope": "library",
+                        "docs_scope": "library",
                         "status": "active",
                         "selection_model": "documents",
                     }
@@ -89,7 +90,7 @@ def config_payload() -> dict[str, object]:
                                 "id": "library-parent-child-relationships",
                                 "label": "Parent-child relationships",
                                 "enabled": True,
-                                "scopes": ["library"],
+                                "data_domains": ["library"],
                                 "target": {"format": "json", "supported_formats": ["json"]},
                                 "selection": {
                                     "mode": "explicit_doc_ids",
@@ -277,7 +278,7 @@ def assert_data_sharing_api(base_url: str) -> None:
 
 
 def assert_prepare(page, base_url: str) -> None:
-    page.goto(f"{base_url}/analytics/data-sharing/prepare/?mode=manage&scope=library", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/prepare/?mode=manage&data_domain=library", wait_until="domcontentloaded")
     root = page.locator("#dataSharingPrepareRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
@@ -293,7 +294,7 @@ def assert_prepare(page, base_url: str) -> None:
 
 
 def assert_review(page, base_url: str) -> None:
-    page.goto(f"{base_url}/analytics/data-sharing/review/?mode=manage&scope=library", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/review/?mode=manage&data_domain=library", wait_until="domcontentloaded")
     root = page.locator("#dataSharingReviewRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)

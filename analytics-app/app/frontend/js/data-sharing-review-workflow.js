@@ -8,15 +8,28 @@ import {
   updateDataSharingReviewSelectionSummary
 } from "./data-sharing-review-render.js";
 import {
-  workflowDomainForKey,
-  workflowDomainFromUrl,
-  workflowScopeParamForKey
+  dataSharingAppForDomain,
+  dataSharingAppFromUrl,
+  dataSharingDomainForKey,
+  dataSharingDomainFromUrl,
+  dataSharingDomainsForApp
 } from "./data-sharing-adapters.js";
 
-export const DEFAULT_DATA_SHARING_REVIEW_SCOPE = "library";
-export const DATA_SHARING_REVIEW_SCOPES = [
-  { key: "library", labelKey: "scope_library", fallback: "library" },
-  { key: "tags", labelKey: "scope_tags", fallback: "tags" }
+export const DEFAULT_DATA_SHARING_REVIEW_APP = "docs-viewer";
+export const DEFAULT_DATA_SHARING_REVIEW_DOMAIN = "library";
+export const DATA_SHARING_REVIEW_APPS = [
+  { key: "docs-viewer", labelKey: "app_docs_viewer", fallback: "Docs Viewer" },
+  { key: "studio", labelKey: "app_studio", fallback: "Studio" },
+  { key: "analytics", labelKey: "app_analytics", fallback: "Analytics" }
+];
+export const DATA_SHARING_REVIEW_DOMAINS = [
+  { key: "library", app: "docs-viewer", labelKey: "data_domain_library", fallback: "library" },
+  { key: "analysis", app: "docs-viewer", labelKey: "data_domain_analysis", fallback: "analysis" },
+  { key: "studio", app: "docs-viewer", labelKey: "data_domain_studio", fallback: "studio" },
+  { key: "series", app: "studio", labelKey: "data_domain_series", fallback: "series" },
+  { key: "works", app: "studio", labelKey: "data_domain_works", fallback: "works" },
+  { key: "tags", app: "analytics", labelKey: "data_domain_tags", fallback: "tags" },
+  { key: "tag_assignments", app: "analytics", labelKey: "data_domain_tag_assignments", fallback: "tag assignments" }
 ];
 
 export function normalizeDataSharingReviewText(value) {
@@ -32,23 +45,29 @@ export function escapeDataSharingReviewHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-export function workflowScopeFromDataSharingReviewUrl(domains = DATA_SHARING_REVIEW_SCOPES) {
-  return workflowDomainFromUrl(domains, DEFAULT_DATA_SHARING_REVIEW_SCOPE);
+export function dataDomainFromDataSharingReviewUrl(domains = DATA_SHARING_REVIEW_DOMAINS) {
+  return dataSharingDomainFromUrl(domains, DEFAULT_DATA_SHARING_REVIEW_DOMAIN);
 }
 
-export function dataSharingReviewScopeSupportsApply(state) {
+export function dataSharingReviewDataDomainSupportsApply(state) {
   return state.applyActions.some((action) => action.status === "active");
 }
 
-export function dataSharingReviewScopeLabel(state, scope = state.scope) {
-  const item = workflowDomainForKey(state.workflowScopes, scope) || DATA_SHARING_REVIEW_SCOPES[0];
+export function dataSharingReviewAppLabel(state, app = state.app) {
+  const item = (state.apps || DATA_SHARING_REVIEW_APPS).find((candidate) => candidate.key === app) || DATA_SHARING_REVIEW_APPS[0];
   if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
-  return normalizeDataSharingReviewText(item.label) || item.fallback || scope;
+  return normalizeDataSharingReviewText(item.label) || item.fallback || app;
 }
 
-export function dataSharingReviewScopeTitle(state, scope = state.scope) {
-  const label = dataSharingReviewScopeLabel(state, scope);
-  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
+export function dataSharingReviewDataDomainLabel(state, dataDomain = state.dataDomain) {
+  const item = dataSharingDomainForKey(state.dataDomains, dataDomain) || DATA_SHARING_REVIEW_DOMAINS[0];
+  if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
+  return normalizeDataSharingReviewText(item.label) || item.fallback || dataDomain;
+}
+
+export function dataSharingReviewDataDomainTitle(state, dataDomain = state.dataDomain) {
+  const label = dataSharingReviewDataDomainLabel(state, dataDomain);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : dataDomain;
 }
 
 export function dataSharingReviewApplyActionsForCapability(capability) {
@@ -56,12 +75,23 @@ export function dataSharingReviewApplyActionsForCapability(capability) {
   return rawActions.map(normalizeApplyAction).filter(Boolean);
 }
 
-export function renderDataSharingReviewScopeSelect(state) {
-  state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
+export function renderDataSharingReviewAppSelect(state) {
+  state.appSelect.innerHTML = state.apps.map((item) => {
     const label = item.labelKey
       ? getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback)
       : (normalizeDataSharingReviewText(item.label) || item.fallback);
-    const selected = item.key === state.scope ? " selected" : "";
+    const selected = item.key === state.app ? " selected" : "";
+    return `<option value="${escapeDataSharingReviewHtml(item.key)}"${selected}>${escapeDataSharingReviewHtml(label)}</option>`;
+  }).join("");
+}
+
+export function renderDataSharingReviewDataDomainSelect(state) {
+  const domains = dataSharingDomainsForApp(state.dataDomains, state.app);
+  state.dataDomainSelect.innerHTML = domains.map((item) => {
+    const label = item.labelKey
+      ? getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback)
+      : (normalizeDataSharingReviewText(item.label) || item.fallback);
+    const selected = item.key === state.dataDomain ? " selected" : "";
     return `<option value="${escapeDataSharingReviewHtml(item.key)}"${selected}>${escapeDataSharingReviewHtml(label)}</option>`;
   }).join("");
 }
@@ -119,35 +149,45 @@ export function renderDataSharingReviewApplyActions(state) {
     button.disabled = true;
     button.title = action.status === "active"
       ? normalizeDataSharingReviewText(action.title)
-      : (action.unavailableTitle || dataSharingReviewScopeUnavailableMessage(state));
+      : (action.unavailableTitle || dataSharingReviewDataDomainUnavailableMessage(state));
     state.applyActionMenu.appendChild(button);
     state.applyButtons.set(action.id, button);
   });
   hideDataSharingReviewApplyActionsMenu(state);
 }
 
-export function updateDataSharingReviewScopeUrl(scope, domains = DATA_SHARING_REVIEW_SCOPES) {
-  const nextScope = normalizeDataSharingReviewText(scope).toLowerCase();
-  if (!domains.some((item) => item.key === nextScope)) return;
-  const scopeParam = workflowScopeParamForKey(domains, nextScope);
+export function updateDataSharingReviewUrl(state, app, dataDomain) {
+  const nextApp = normalizeDataSharingReviewText(app).toLowerCase();
+  const nextDomain = normalizeDataSharingReviewText(dataDomain).toLowerCase();
+  if (!state.apps.some((item) => item.key === nextApp)) return;
+  if (!dataSharingDomainsForApp(state.dataDomains, nextApp).some((item) => item.key === nextDomain)) return;
   const url = new URL(window.location.href);
-  if (nextScope === DEFAULT_DATA_SHARING_REVIEW_SCOPE) {
-    url.searchParams.delete("scope");
+  if (nextApp === DEFAULT_DATA_SHARING_REVIEW_APP) {
+    url.searchParams.delete("app");
   } else {
-    url.searchParams.set("scope", scopeParam);
+    url.searchParams.set("app", nextApp);
+  }
+  if (nextDomain === DEFAULT_DATA_SHARING_REVIEW_DOMAIN) {
+    url.searchParams.delete("data_domain");
+  } else {
+    url.searchParams.set("data_domain", nextDomain);
   }
   window.location.href = url.toString();
 }
 
-export function dataSharingReviewScopeUnavailableMessage(state) {
-  const domain = workflowDomainForKey(state.workflowScopes, state.scope);
+export function dataSharingReviewDataDomainUnavailableMessage(state) {
+  const domain = dataSharingDomainForKey(state.dataDomains, state.dataDomain);
   return normalizeDataSharingReviewText(domain && domain.message)
     || getAnalyticsText(
       state.config,
-      "data_sharing_review.scope_unsupported",
-      "{scope_label} returned-package review is not implemented yet.",
-      { scope_label: dataSharingReviewScopeTitle(state) }
+      "data_sharing_review.data_domain_unsupported",
+      "{data_domain_label} returned-package review is not implemented yet.",
+      { data_domain_label: dataSharingReviewDataDomainTitle(state) }
     );
+}
+
+export function dataSharingReviewAppFromUrl(apps, domains, dataDomain) {
+  return dataSharingAppFromUrl(apps, dataSharingAppForDomain(domains, dataDomain, DEFAULT_DATA_SHARING_REVIEW_APP));
 }
 
 export function selectedDataSharingReviewFile(state) {
@@ -196,7 +236,7 @@ export function clearDataSharingReviewPreviewSelection(state) {
 }
 
 export function setDataSharingReviewControlsDisabled(state, disabled) {
-  const supportsApply = dataSharingReviewScopeSupportsApply(state);
+  const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.fileSelect.disabled = disabled || !state.files.length;
@@ -216,7 +256,7 @@ export function setDataSharingReviewControlsDisabled(state, disabled) {
 }
 
 export function syncDataSharingReviewApplyActionState(state) {
-  const supportsApply = dataSharingReviewScopeSupportsApply(state);
+  const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   const disableApplyMenu = state.isRunning || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.actionMenuButton.disabled = disableApplyMenu;

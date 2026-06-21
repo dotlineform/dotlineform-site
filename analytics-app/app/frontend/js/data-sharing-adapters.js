@@ -38,9 +38,15 @@ function capabilityStatus(adapter, domain, capability) {
   return adapterStatus(adapter);
 }
 
-export function workflowDomainsForOperation(registry, operation, fallbackDomains) {
+export function dataSharingDomainsForOperation(registry, operation, fallbackDomains) {
   const targetOperation = normalizeId(operation);
-  const domains = [];
+  const domains = (Array.isArray(fallbackDomains) ? fallbackDomains : []).map((item) => ({
+    ...item,
+    key: normalizeId(item && item.key),
+    app: normalizeId(item && item.app),
+    status: normalizeId(item && item.status) || "planned",
+    message: normalizeText(item && item.message)
+  })).filter((item) => item.key && item.app);
   const adapters = Array.isArray(registry && registry.adapters) ? registry.adapters : [];
   adapters.forEach((adapter) => {
     if (!adapter || typeof adapter !== "object") return;
@@ -51,22 +57,28 @@ export function workflowDomainsForOperation(registry, operation, fallbackDomains
     Object.entries(dataDomains).forEach(([key, domain]) => {
       if (!domain || typeof domain !== "object") return;
       const domainKey = normalizeId(key);
-      if (!domainKey || domains.some((item) => item.key === domainKey)) return;
-      const scopeKey = normalizeId(domain.scope) || domainKey;
-      domains.push({
+      if (!domainKey) return;
+      const projected = {
         key: domainKey,
-        scope: scopeKey,
+        app: normalizeId(domain.app),
+        docsScope: normalizeId(domain.docs_scope),
         label: normalizeText(domain.label) || domainKey,
         fallback: normalizeText(domain.label) || domainKey,
         status: capabilityStatus(adapter, domain, capability),
         message: capability.message
-      });
+      };
+      const existingIndex = domains.findIndex((item) => item.key === domainKey);
+      if (existingIndex >= 0) {
+        domains[existingIndex] = { ...domains[existingIndex], ...projected };
+      } else {
+        domains.push(projected);
+      }
     });
   });
-  return domains.length ? domains : fallbackDomains;
+  return domains;
 }
 
-export function workflowCapabilityForOperation(registry, operation, domainKey) {
+export function dataSharingCapabilityForOperation(registry, operation, domainKey) {
   const targetOperation = normalizeId(operation);
   const targetDomain = normalizeId(domainKey);
   const adapters = Array.isArray(registry && registry.adapters) ? registry.adapters : [];
@@ -92,27 +104,54 @@ export function workflowCapabilityForOperation(registry, operation, domainKey) {
   return null;
 }
 
-export function workflowDomainFromUrl(domains, defaultDomain) {
+export function dataSharingDomainFromUrl(domains, defaultDomain) {
   const params = new URLSearchParams(window.location.search);
-  const requested = normalizeId(params.get("scope"));
+  const requested = normalizeId(params.get("data_domain"));
   const items = Array.isArray(domains) ? domains : [];
-  const match = items.find((item) => item.key === requested || normalizeId(item.scope) === requested);
+  const match = items.find((item) => item.key === requested);
   if (match) return match.key;
   return defaultDomain;
 }
 
-export function workflowDomainForKey(domains, key) {
+export function dataSharingDomainForKey(domains, key) {
   const domainKey = normalizeId(key);
   const items = Array.isArray(domains) ? domains : [];
   return items.find((item) => item.key === domainKey) || items[0] || null;
 }
 
-export function workflowDomainIsActive(domains, key) {
-  const domain = workflowDomainForKey(domains, key);
+export function dataSharingDomainIsActive(domains, key) {
+  const domain = dataSharingDomainForKey(domains, key);
   return normalizeId(domain && domain.status) === "active";
 }
 
-export function workflowScopeParamForKey(domains, key) {
-  const domain = workflowDomainForKey(domains, key);
-  return normalizeId(domain && domain.scope) || normalizeId(domain && domain.key) || normalizeId(key);
+export function dataSharingAppsForDomains(domains, fallbackApps) {
+  const apps = (Array.isArray(fallbackApps) ? fallbackApps : []).map((item) => ({
+    ...item,
+    key: normalizeId(item && item.key)
+  })).filter((item) => item.key);
+  const items = Array.isArray(domains) ? domains : [];
+  items.forEach((domain) => {
+    const app = normalizeId(domain && domain.app);
+    if (!app || apps.some((item) => item.key === app)) return;
+    apps.push({ key: app });
+  });
+  return apps.length ? apps : fallbackApps;
+}
+
+export function dataSharingDomainsForApp(domains, app) {
+  const appKey = normalizeId(app);
+  return (Array.isArray(domains) ? domains : []).filter((domain) => normalizeId(domain && domain.app) === appKey);
+}
+
+export function dataSharingAppFromUrl(apps, defaultApp) {
+  const params = new URLSearchParams(window.location.search);
+  const requested = normalizeId(params.get("app"));
+  const items = Array.isArray(apps) ? apps : [];
+  const match = items.find((item) => item.key === requested);
+  return match ? match.key : defaultApp;
+}
+
+export function dataSharingAppForDomain(domains, domainKey, defaultApp) {
+  const domain = dataSharingDomainForKey(domains, domainKey);
+  return normalizeId(domain && domain.app) || normalizeId(defaultApp);
 }

@@ -79,7 +79,7 @@ def selectable_records(
     adapter = require_documents_adapter(adapter)
     report = selectable_document_records(
         repo_root,
-        scope=adapter.scope,
+        scope=adapter.docs_scope,
         selection_model=selection_model(adapter),
     )
     return attach_adapter_context(report, adapter)
@@ -97,7 +97,7 @@ def prepare_package(
     target_format = str(body.get("target_format") or "").strip()
     report = build_document_package(
         repo_root,
-        scope=adapter.scope,
+        scope=adapter.docs_scope,
         config_id=config_id,
         raw_doc_ids=body.get("doc_ids", []),
         select_all=bool(body.get("select_all")),
@@ -115,7 +115,7 @@ def prepare_package(
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
-                "scope": report.get("scope", source_model.normalize_scope(adapter.scope)),
+                "docs_scope": report.get("scope", source_model.normalize_scope(adapter.docs_scope)),
                 "config_id": config_id,
                 "dry_run": dry_run,
                 "target_format": report.get("target_format", ""),
@@ -150,7 +150,7 @@ def list_returned_packages(
     adapter = require_documents_adapter(adapter)
     report = list_returned_document_packages(
         repo_root,
-        scope=adapter.scope,
+        scope=adapter.docs_scope,
         staging_root=adapter.path("returned_package_staging_root"),
     )
     report = attach_adapter_context(report, adapter)
@@ -161,7 +161,7 @@ def list_returned_packages(
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
-                "scope": report.get("scope", source_model.normalize_scope(adapter.scope)),
+                "docs_scope": report.get("scope", source_model.normalize_scope(adapter.docs_scope)),
                 "count": len(report.get("files", [])),
             },
         )
@@ -182,14 +182,14 @@ def review_returned_package(
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     report = review_returned_document_package(
         repo_root,
-        scope=adapter.scope,
+        scope=adapter.docs_scope,
         staged_filename=staged_filename,
         dry_run=dry_run,
         staging_root=adapter.path("returned_package_staging_root"),
         preview_root=adapter.path("review_output_root"),
     )
     report = attach_adapter_context(report, adapter)
-    scope = source_model.normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.docs_scope)
     if dependencies is not None:
         dependencies.log_event(
             repo_root,
@@ -241,7 +241,7 @@ def apply_returned_changes(
     if dependencies is None:
         raise ValueError("documents apply requires service dependencies")
     adapter = require_documents_adapter(adapter)
-    scope = source_model.normalize_scope(adapter.scope)
+    scope = source_model.normalize_scope(adapter.docs_scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     confirmed = bool(body.get("confirm"))
     identity = DocumentsApplyIdentity(

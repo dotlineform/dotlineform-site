@@ -64,7 +64,7 @@ def install_fixture(page: Page) -> None:
                             id: 'library-documents',
                             enabled: true,
                             label: 'Library documents',
-                            scopes: ['library'],
+                            data_domains: ['library'],
                             target: {
                                 format: 'jsonl',
                                 supported_formats: ['json', 'jsonl']
@@ -77,7 +77,7 @@ def install_fixture(page: Page) -> None:
                         {
                             id: 'disabled-profile',
                             enabled: false,
-                            scopes: ['library']
+                            data_domains: ['library']
                         }
                     ]
                 }
@@ -103,7 +103,7 @@ def install_fixture(page: Page) -> None:
                         }
                     }
                 },
-                scope: 'library',
+                dataDomain: 'library',
                 prepareCapability: docCapability,
                 targetFormat: 'jsonl',
                 selectedIds: new Set(['alpha', 'beta']),
@@ -123,7 +123,7 @@ def install_fixture(page: Page) -> None:
                     {
                         id: 'library-documents',
                         enabled: true,
-                        scopes: ['library'],
+                        data_domains: ['library'],
                         target: {
                             format: 'jsonl',
                             supported_formats: ['json', 'jsonl']
@@ -135,13 +135,13 @@ def install_fixture(page: Page) -> None:
                     {
                         id: 'tags-registry',
                         enabled: true,
-                        scopes: ['tags'],
+                        data_domains: ['tags'],
                         target: { format: 'json' }
                     },
                     {
                         id: 'disabled-library',
                         enabled: false,
-                        scopes: ['library'],
+                        data_domains: ['library'],
                         target: { format: 'json' }
                     }
                 ]
@@ -155,7 +155,7 @@ def assert_package_state_projection(page: Page) -> None:
         """() => {
             const smoke = window.__dataSharingPrepareModuleSmoke;
             const { workflow, service, state, configs } = smoke;
-            const enabledConfigs = workflow.enabledPrepareConfigsForScope({ configs }, 'library');
+            const enabledConfigs = workflow.enabledPrepareConfigsForDataDomain({ configs }, 'library');
             const config = enabledConfigs[0];
             const submission = service.buildDataSharingPrepareSubmission(state, {
                 config,
@@ -163,7 +163,7 @@ def assert_package_state_projection(page: Page) -> None:
             });
             const profileOnlyCapability = { capability: { selection_model: 'profile' } };
             const profileRequest = workflow.buildPreparePackageRequest({
-                scope: 'tags',
+                dataDomain: 'tags',
                 config: {
                     id: 'tags-registry',
                     selection: { mode: 'all_matching' }
@@ -175,7 +175,7 @@ def assert_package_state_projection(page: Page) -> None:
                 missingSummaryOnly: true
             });
             const allMatchingRequest = workflow.buildPreparePackageRequest({
-                scope: 'library',
+                dataDomain: 'library',
                 config: {
                     id: 'library-all',
                     selection: { mode: 'all_matching' }
@@ -260,7 +260,7 @@ def assert_selectable_records_loading(page: Page) -> None:
             const requested = [];
             const loaded = await docs.loadDataSharingPrepareDocsState({
                 config: state.config,
-                scope: 'library',
+                dataDomain: 'library',
                 serviceAvailable: true,
                 prepareCapability: state.prepareCapability,
                 workflowActive: true,

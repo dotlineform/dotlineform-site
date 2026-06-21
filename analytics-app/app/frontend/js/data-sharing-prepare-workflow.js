@@ -25,12 +25,12 @@ export function prepareProfilesForCapability(capabilityInfo) {
   return profiles.filter((profile) => profile && profile.enabled !== false);
 }
 
-export function enabledPrepareConfigsForScope(payload, scope) {
+export function enabledPrepareConfigsForDataDomain(payload, dataDomain) {
   const configs = Array.isArray(payload && payload.configs) ? payload.configs : [];
   return configs.filter((config) => {
     if (!config || config.enabled === false) return false;
-    const scopes = Array.isArray(config.scopes) ? config.scopes : [];
-    return scopes.includes(scope);
+    const dataDomains = Array.isArray(config.data_domains) ? config.data_domains : [];
+    return dataDomains.includes(dataDomain);
   });
 }
 
@@ -66,8 +66,8 @@ export function prepareSelectsAllMatching(config, usesDocumentSelection) {
   return Boolean(usesDocumentSelection) && normalizeText(prepareConfigSelection(config).mode) === "all_matching";
 }
 
-export function buildPrepareActivityContext({ scope, configId } = {}) {
-  const safeScope = normalizeText(scope);
+export function buildPrepareActivityContext({ dataDomain, configId } = {}) {
+  const safeDataDomain = normalizeText(dataDomain);
   const safeConfigId = normalizeText(configId);
   return buildAnalyticsActivityContext({
     pageId: "data-sharing-prepare",
@@ -76,12 +76,12 @@ export function buildPrepareActivityContext({ scope, configId } = {}) {
     controlId: "dataSharingPrepareRun",
     controlSelector: "#dataSharingPrepareRun",
     recordIdField: "export_id",
-    recordId: `${safeScope}:${safeConfigId}`
+    recordId: `${safeDataDomain}:${safeConfigId}`
   });
 }
 
 export function buildPreparePackageRequest({
-  scope,
+  dataDomain,
   config,
   targetFormat,
   selectedIds,
@@ -93,7 +93,7 @@ export function buildPreparePackageRequest({
   const selectAll = prepareSelectsAllMatching(config, usesDocumentSelection);
   const docIds = selectAll ? [] : Array.from(selectedIds || []);
   return {
-    data_domain: normalizeText(scope),
+    data_domain: normalizeText(dataDomain),
     config_id: configId,
     target_format: normalizeText(targetFormat),
     doc_ids: docIds,
@@ -101,6 +101,6 @@ export function buildPreparePackageRequest({
     missing_summary_only: usesDocumentSelection && missingSummaryOnlyAvailable
       ? Boolean(missingSummaryOnly)
       : null,
-    activity_context: buildPrepareActivityContext({ scope, configId })
+    activity_context: buildPrepareActivityContext({ dataDomain, configId })
   };
 }

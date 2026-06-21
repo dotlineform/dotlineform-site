@@ -26,7 +26,7 @@
         "label",
         "description",
         "enabled",
-        "scopes",
+        "data_domains",
         "target",
         "output",
         "selection",
@@ -48,11 +48,11 @@
         "enabled": {
           "type": "boolean"
         },
-        "scopes": {
+        "data_domains": {
           "type": "array",
           "minItems": 1,
           "items": {
-            "$ref": "#/$defs/scope"
+            "$ref": "#/$defs/data_domain"
           },
           "uniqueItems": true
         },
@@ -118,7 +118,7 @@
       "properties": {
         "path_pattern": {
           "type": "string",
-          "pattern": "^var/analytics/data-sharing/\\{scope\\}/exports/\\{export_id\\}-\\{timestamp\\}\\.(json|jsonl)$"
+          "pattern": "^var/analytics/data-sharing/\\{data_domain\\}/exports/\\{export_id\\}-\\{timestamp\\}\\.(json|jsonl)$"
         },
         "timestamp_format": {
           "type": "string",
@@ -201,7 +201,7 @@
               "export_id",
               "config_id",
               "config_checksum",
-              "scope",
+              "data_domain",
               "generated_at",
               "selected_doc_ids",
               "source_last_updated",
@@ -291,7 +291,7 @@
       "type": "string",
       "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$"
     },
-    "scope": {
+    "data_domain": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9_-]*$"
     }

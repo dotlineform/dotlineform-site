@@ -34,7 +34,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
     );
   }
   const request = buildPreparePackageRequest({
-    scope: state.scope,
+    dataDomain: state.dataDomain,
     config,
     targetFormat,
     selectedIds: state.selectedIds,

@@ -124,8 +124,8 @@ def public_sharing_profile(profile: dict[str, Any]) -> dict[str, object]:
         "id": str(profile.get("id") or "").strip(),
         "label": str(profile.get("label") or "").strip(),
         "enabled": profile.get("enabled") is not False,
-        "scopes": [str(item).strip() for item in profile.get("scopes", []) if str(item).strip()]
-        if isinstance(profile.get("scopes"), list)
+        "data_domains": [str(item).strip() for item in profile.get("data_domains", []) if str(item).strip()]
+        if isinstance(profile.get("data_domains"), list)
         else [],
     }
     description = str(profile.get("description") or "").strip()
@@ -191,12 +191,16 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
         for key, domain in domains.items():
             if not isinstance(domain, dict):
                 continue
-            public_domains[str(key)] = {
+            public_domain: dict[str, object] = {
+                "app": str(domain.get("app") or "").strip(),
                 "label": str(domain.get("label") or "").strip(),
-                "scope": str(domain.get("scope") or key).strip(),
                 "status": str(domain.get("status") or adapter.get("status") or "active").strip(),
                 "selection_model": str(domain.get("selection_model") or "").strip(),
             }
+            docs_scope = str(domain.get("docs_scope") or "").strip()
+            if docs_scope:
+                public_domain["docs_scope"] = docs_scope
+            public_domains[str(key)] = public_domain
         public_adapter["data_domains"] = public_domains
 
         public_capabilities: list[dict[str, object]] = []
