@@ -241,6 +241,18 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
             dataDomainSelectedIndex: document.querySelector("#dataSharingPrepareDataDomainSelect")?.selectedIndex ?? null,
             configSelectedIndex: document.querySelector("#dataSharingPrepareConfigSelect")?.selectedIndex ?? null,
             formatHidden: document.querySelector("#dataSharingPrepareFormatWrap")?.hidden === true,
+            formatHalfWidth: (() => {
+                const field = document.querySelector("#dataSharingPrepareFormatWrap");
+                const controls = document.querySelector(".dataSharingPreparePage__controls");
+                if (!field || !controls) return false;
+                return Math.round(field.getBoundingClientRect().width) <= Math.ceil(controls.getBoundingClientRect().width / 2) + 1;
+            })(),
+            formatSelectCompact: (() => {
+                const select = document.querySelector("#dataSharingPrepareFormatSelect");
+                const rootFontSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+                if (!select) return false;
+                return Math.round(select.getBoundingClientRect().width) <= Math.ceil(rootFontSize * 22);
+            })(),
             optionsHidden: document.querySelector("#dataSharingPrepareOptionsGroup")?.hidden === true,
             listActionsHidden: document.querySelector(".dataSharingPreparePage__listActions")?.hidden === true,
             listHidden: document.querySelector("#dataSharingPrepareList")?.hidden === true,
@@ -259,7 +271,9 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
         "appSelectedIndex": -1,
         "dataDomainSelectedIndex": -1,
         "configSelectedIndex": -1,
-        "formatHidden": True,
+        "formatHidden": False,
+        "formatHalfWidth": True,
+        "formatSelectCompact": True,
         "optionsHidden": True,
         "listActionsHidden": False,
         "listHidden": False,
@@ -314,6 +328,22 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     missing_checked = page.locator("#dataSharingPrepareMissingSummaryOnly").evaluate("input => input.checked")
     if scope_value != "" or missing_checked:
         raise AssertionError(f"options should start unselected: scope={scope_value!r}, missing={missing_checked!r}")
+    scope_layout = page.evaluate(
+        """() => {
+            const field = document.querySelector(".dataSharingPreparePage__docsScopeField");
+            const select = document.querySelector("#dataSharingPrepareDocsScopeSelect");
+            const controls = document.querySelector(".dataSharingPreparePage__controls");
+            const rootFontSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+            if (!field || !select || !controls) return { hidden: true, halfWidth: false, compactSelect: false };
+            return {
+                hidden: field.hidden === true,
+                halfWidth: Math.round(field.getBoundingClientRect().width) <= Math.ceil(controls.getBoundingClientRect().width / 2) + 1,
+                compactSelect: Math.round(select.getBoundingClientRect().width) <= Math.ceil(rootFontSize * 22)
+            };
+        }"""
+    )
+    if scope_layout != {"hidden": False, "halfWidth": True, "compactSelect": True}:
+        raise AssertionError(f"docs scope field should be visible at half width for docs profiles: {scope_layout!r}")
 
     if expect_unavailable_service:
         run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")

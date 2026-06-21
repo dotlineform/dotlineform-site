@@ -395,14 +395,14 @@ def data_sharing_prepare_view(version: str) -> str:
               <label class="analyticsField dataSharingPreparePage__format" id="dataSharingPrepareFormatWrap" for="dataSharingPrepareFormatSelect">
                 <span class="analyticsField__label dataSharingPreparePage__formatLabel" id="dataSharingPrepareFormatLabel"></span>
                 <span class="analyticsField__control">
-                  <select class="analytics__input" id="dataSharingPrepareFormatSelect"></select>
+                  <select class="analytics__input dataSharingPreparePage__compactSelect" id="dataSharingPrepareFormatSelect"></select>
                 </span>
               </label>
               <div class="dataSharingPreparePage__optionsGroup" id="dataSharingPrepareOptionsGroup" hidden>
                 <label class="analyticsField dataSharingPreparePage__docsScopeField" for="dataSharingPrepareDocsScopeSelect">
                   <span class="analyticsField__label" id="dataSharingPrepareDocsScopeLabel"></span>
                   <span class="analyticsField__control">
-                    <select class="analytics__input" id="dataSharingPrepareDocsScopeSelect"></select>
+                    <select class="analytics__input dataSharingPreparePage__compactSelect" id="dataSharingPrepareDocsScopeSelect"></select>
                   </span>
                 </label>
                 <label class="dataSharingPreparePage__toggle" id="dataSharingPrepareMissingSummaryWrap" hidden>

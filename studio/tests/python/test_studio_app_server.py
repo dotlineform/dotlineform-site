@@ -16,11 +16,12 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio.studio_app_config import asset_version, runtime_config, validate_studio_route_registry  # noqa: E402
+from studio.app.server.studio.studio_app_config import asset_version, runtime_config, studio_shell_route_paths, validate_studio_route_registry  # noqa: E402
 from studio.app.server.studio.studio_app_server import STATIC_PREFIXES, StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
-from studio.app.server.studio.studio_app_views import studio_app_bootstrap_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
+
+STUDIO_SHELL_PATH = REPO_ROOT / "studio/app/frontend/studio-shell.html"
 
 
 def write_repo_marker(repo_root: Path) -> None:
@@ -30,7 +31,7 @@ def write_repo_marker(repo_root: Path) -> None:
 
 
 def test_studio_bootstrap_exposes_shared_search_list_assets() -> None:
-    html = studio_app_bootstrap_view("test-version")
+    html = STUDIO_SHELL_PATH.read_text(encoding="utf-8").replace("__STUDIO_ASSET_VERSION__", "test-version")
 
     assert "/shared/frontend/" in STATIC_PREFIXES
     assert '<link rel="stylesheet" href="/shared/frontend/css/search-list.css?v=test-version">' in html
@@ -168,18 +169,31 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     with pytest.raises(RuntimeError, match="project_state: unsupported shell_type"):
         validate_studio_route_registry(REPO_ROOT, unsupported_shell)
 
-    unserved_route = json.loads(json.dumps(payload))
-    unserved_route["app"]["routes"]["unserved_route"] = {
-        "label": "unserved",
-        "title": "Unserved",
-        "path": "/studio/unserved/",
+    external_route = json.loads(json.dumps(payload))
+    external_route["app"]["routes"]["external_route"] = {
+        "label": "external",
+        "title": "External",
+        "path": "/external/",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": False,
         "shell_type": "javascript",
-        "ready_state_route_id": "unserved",
+        "ready_state_route_id": "external",
     }
-    with pytest.raises(RuntimeError, match="unserved_route: no current Studio route serves this shell route"):
-        validate_studio_route_registry(REPO_ROOT, unserved_route)
+    with pytest.raises(RuntimeError, match="external_route: shell route path must be under /studio/"):
+        validate_studio_route_registry(REPO_ROOT, external_route)
+
+    configured_route = json.loads(json.dumps(payload))
+    configured_route["app"]["routes"]["configured_route"] = {
+        "label": "configured",
+        "title": "Configured",
+        "path": "/studio/configured/",
+        "script": "/studio/app/frontend/js/project-state.js",
+        "nav": False,
+        "shell_type": "javascript",
+        "ready_state_route_id": "configured",
+    }
+    validate_studio_route_registry(REPO_ROOT, configured_route)
+    assert "/studio/configured/" in studio_shell_route_paths(REPO_ROOT, configured_route)
 
     duplicated_route_metadata = json.loads(json.dumps(payload))
     duplicated_route_metadata["paths"]["routes"] = {
@@ -248,7 +262,7 @@ def test_studio_server_excludes_data_sharing_config() -> None:
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
-        studio_app_bootstrap_view("test-version"),
+        STUDIO_SHELL_PATH.read_text(encoding="utf-8").replace("__STUDIO_ASSET_VERSION__", "test-version"),
     ]
 
     for shell in html_shells:

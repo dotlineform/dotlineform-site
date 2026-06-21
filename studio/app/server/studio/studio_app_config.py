@@ -19,17 +19,6 @@ STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
 STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("javascript",))
 STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES
 
-STUDIO_SERVED_ROUTE_PATHS: dict[str, str] = {
-    "studio_home": "/studio/",
-    "project_state": "/studio/project-state/",
-    "bulk_add_work": "/studio/bulk-add-work/",
-    "catalogue_field_registry": "/studio/catalogue-field-registry/",
-    "catalogue_status": "/studio/catalogue-status/",
-    "studio_works": "/studio/studio-works/",
-    "catalogue_series_editor": "/studio/catalogue-series/",
-    "catalogue_work_editor": "/studio/catalogue-work/",
-}
-
 STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS: dict[str, tuple[str, ...]] = {
     "catalogue_field_registry": ("catalogue_field_registry_review",),
 }
@@ -163,11 +152,8 @@ def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) 
             elif not (repo_root / script.strip().lstrip("/")).exists():
                 errors.append(f"{route_id}: script does not exist: {script}")
 
-            served_path = STUDIO_SERVED_ROUTE_PATHS.get(route_id)
-            if not served_path:
-                errors.append(f"{route_id}: no current Studio route serves this shell route")
-            elif normalize_route_path(served_path) != normalized_path:
-                errors.append(f"{route_id}: path {path} does not match served route {served_path}")
+            if not normalized_path.startswith("/studio/"):
+                errors.append(f"{route_id}: shell route path must be under /studio/: {path}")
 
         if not isinstance(route.get("nav"), bool):
             errors.append(f"{route_id}: nav must be boolean")
@@ -201,6 +187,17 @@ def studio_views(repo_root: Path, payload: dict[str, object] | None = None) -> d
     return studio_route_registry(repo_root, payload)
 
 
+def studio_shell_route_paths(repo_root: Path, payload: dict[str, object] | None = None) -> frozenset[str]:
+    routes = studio_route_registry(repo_root, payload)
+    return frozenset(
+        normalize_route_path(route["path"])
+        for route in routes.values()
+        if route.get("shell_type") in STUDIO_SHELL_ROUTE_TYPES
+        and isinstance(route.get("path"), str)
+        and str(route.get("path")).strip()
+    )
+
+
 def studio_service_endpoints(_repo_root: Path) -> dict[str, object]:
     endpoints = {service: dict(values) for service, values in STUDIO_SERVICE_ENDPOINTS.items()}
     return endpoints
@@ -214,6 +211,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "shared" / "frontend" / "css" / "file-picker.css",
         repo_root / "shared" / "frontend" / "js" / "record-list.js",
         repo_root / "shared" / "frontend" / "css" / "record-list.css",
+        repo_root / "studio" / "app" / "frontend" / "studio-shell.html",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",

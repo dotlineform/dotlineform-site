@@ -486,7 +486,7 @@
       ],
       "shared": [
         "studio/app/server/studio/studio_app_server.py",
-        "studio/app/server/studio/studio_app_views.py"
+        "studio/app/frontend/studio-shell.html"
       ],
       "areas": []
     },

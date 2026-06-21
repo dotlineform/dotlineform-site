@@ -28,10 +28,7 @@ STUDIO_DIR = Path(__file__).resolve().parent
 if str(STUDIO_DIR) not in sys.path:
     sys.path.insert(0, str(STUDIO_DIR))
 
-from studio_app_config import asset_version, runtime_config  # noqa: E402
-from studio_app_views import (  # noqa: E402
-    studio_app_bootstrap_view,
-)
+from studio_app_config import asset_version, normalize_route_path, runtime_config, studio_shell_route_paths  # noqa: E402
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
 
@@ -64,6 +61,8 @@ STATIC_FILES = {
 }
 MAX_BODY_BYTES = 1024 * 1024
 ENABLED_VALUES = {"1", "on", "true", "yes"}
+STUDIO_SHELL_PATH = Path("studio/app/frontend/studio-shell.html")
+STUDIO_ASSET_VERSION_TOKEN = "__STUDIO_ASSET_VERSION__"
 
 
 def env_flag(name: str, default: bool = False) -> bool:
@@ -102,29 +101,8 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/studio/api/catalogue/"):
             self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
             return
-        if path in {"/studio", "/studio/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/project-state", "/studio/project-state/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/bulk-add-work", "/studio/bulk-add-work/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/catalogue-field-registry", "/studio/catalogue-field-registry/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/catalogue-status", "/studio/catalogue-status/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/studio-works", "/studio/studio-works/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/catalogue-series", "/studio/catalogue-series/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
-            return
-        if path in {"/studio/catalogue-work", "/studio/catalogue-work/"}:
-            self.send_html(studio_app_bootstrap_view(self.version))
+        if self.is_studio_shell_route(path):
+            self.send_studio_shell()
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)
@@ -163,6 +141,9 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
 
     def is_allowed_static_path(self, path: str) -> bool:
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+
+    def is_studio_shell_route(self, path: str) -> bool:
+        return normalize_route_path(path) in studio_shell_route_paths(self.repo_root)
 
     def allowed_origin(self) -> str:
         origin = self.headers.get("Origin", "")
@@ -254,6 +235,20 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def send_studio_shell(self) -> None:
+        path = (self.repo_root / STUDIO_SHELL_PATH).resolve()
+        try:
+            path.relative_to(self.repo_root)
+        except ValueError:
+            self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+            return
+        try:
+            shell = path.read_text(encoding="utf-8")
+        except OSError:
+            self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+            return
+        self.send_html(shell.replace(STUDIO_ASSET_VERSION_TOKEN, self.version))
 
     def send_static(self, request_path: str) -> None:
         if request_path.startswith("/assets/"):

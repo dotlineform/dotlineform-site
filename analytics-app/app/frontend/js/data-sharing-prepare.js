@@ -248,7 +248,7 @@ function clearDocumentSelectionState(state) {
 
 function setProgressiveGroups(state) {
   const complete = selectedDropdownsComplete(state);
-  state.formatWrap.hidden = !complete;
+  state.formatWrap.hidden = false;
   state.optionsGroup.hidden = !complete;
   state.configSelect.disabled = !state.dataDomain || !state.exportConfigs.length;
   state.formatOptionsNode.disabled = !complete;

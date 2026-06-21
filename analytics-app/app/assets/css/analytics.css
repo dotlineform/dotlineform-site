@@ -1313,17 +1313,24 @@ textarea.analytics__input:disabled {
   gap: 0.8rem;
 }
 
-.dataSharingPreparePage__selectionSummary {
-  flex: 1 1 12rem;
+.analyticsForm__meta.dataSharingPreparePage__selectionSummary {
+  flex: 0 1 auto;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--analytics-pill-height, 1.8rem);
   margin: 0;
+  padding: 0;
   color: var(--muted, var(--analytics-muted-body));
   font-size: var(--font-small);
+  line-height: 1;
 }
 
 .dataSharingPreparePage__controls {
   --field-label-width: 8rem;
   --field-gap: 0.65rem;
   --half-control-width: calc((100% - var(--field-label-width) - var(--field-gap)) / 2);
+  --compact-control-width: 12rem;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -1369,9 +1376,18 @@ textarea.analytics__input:disabled {
   grid-template-columns: var(--field-label-width) minmax(0, 1fr);
   gap: var(--field-gap);
   align-items: center;
-  width: calc(var(--field-label-width) + var(--field-gap) + var(--half-control-width));
   max-width: 100%;
   min-inline-size: 0;
+}
+
+.dataSharingPreparePage__field {
+  width: calc(var(--field-label-width) + var(--field-gap) + var(--half-control-width));
+}
+
+.dataSharingPreparePage__docsScopeField,
+.dataSharingPreparePage__format {
+  grid-template-columns: var(--field-label-width) minmax(0, var(--compact-control-width));
+  width: min(100%, calc(var(--field-label-width) + var(--field-gap) + var(--compact-control-width)));
 }
 
 .dataSharingPreparePage__docsScopeField .analyticsField__label,
@@ -1383,14 +1399,18 @@ textarea.analytics__input:disabled {
 .dataSharingPreparePage__choiceField,
 .dataSharingPreparePage__choiceField .analyticsField__control,
 .dataSharingPreparePage__choiceField .analyticsField__control > .analytics__input,
-.dataSharingPreparePage__docsScopeField .analyticsField__control,
 .dataSharingPreparePage__field .analyticsField__control,
-.dataSharingPreparePage__format .analyticsField__control,
-.dataSharingPreparePage__docsScopeField .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__field .analyticsField__control > .analytics__input,
+.dataSharingPreparePage__docsScopeField .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__format .analyticsField__control > .analytics__input {
   flex: 1 1 auto;
   width: 100%;
+}
+
+.dataSharingPreparePage__docsScopeField .analyticsField__control,
+.dataSharingPreparePage__format .analyticsField__control {
+  justify-self: start;
+  width: min(100%, var(--compact-control-width));
 }
 
 .dataSharingPreparePage__choiceField {
@@ -1403,6 +1423,19 @@ select.analytics__input.dataSharingPreparePage__listbox {
   height: auto;
   padding-block: 0.25rem;
   overflow-y: auto;
+}
+
+select.analytics__input.dataSharingPreparePage__compactSelect {
+  flex: 0 0 var(--compact-control-width);
+  width: var(--compact-control-width);
+  max-width: 100%;
+}
+
+#dataSharingPrepareFormatSelect,
+#dataSharingPrepareDocsScopeSelect {
+  flex: 0 0 var(--compact-control-width);
+  width: var(--compact-control-width);
+  max-width: 100%;
 }
 
 .dataSharingPreparePage__format {
@@ -1443,6 +1476,10 @@ select.analytics__input.dataSharingPreparePage__listbox {
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
+}
+
+#dataSharingPrepareClear + .dataSharingPreparePage__selectionSummary {
+  margin-inline-start: 0.85rem;
 }
 
 .dataSharingPreparePage__filterPills {
@@ -2329,6 +2366,13 @@ select.analytics__input.dataSharingPreparePage__listbox {
     gap: 0.22rem;
   }
 
+  .dataSharingPreparePage__docsScopeField,
+  .dataSharingPreparePage__format {
+    grid-template-columns: var(--field-label-width) minmax(0, var(--compact-control-width));
+    gap: var(--field-gap);
+    width: min(100%, calc(var(--field-label-width) + var(--field-gap) + var(--compact-control-width)));
+  }
+
   #dataSharingPrepareRun,
   .dataSharingPreparePage__toggle {
     grid-column: auto;
@@ -2389,6 +2433,15 @@ select.analytics__input.dataSharingPreparePage__listbox {
     align-items: start;
   }
 
+}
+
+@media (max-width: 480px) {
+  .dataSharingPreparePage__docsScopeField,
+  .dataSharingPreparePage__format {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.22rem;
+    width: 100%;
+  }
 }
 
 .seriesTags {

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="dlf-asset-version" content="__STUDIO_ASSET_VERSION__">
+  <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
+  <title>dotlineform Studio</title>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/shared/frontend/css/search-list.css?v=__STUDIO_ASSET_VERSION__">
+  <link rel="stylesheet" href="/shared/frontend/css/file-picker.css?v=__STUDIO_ASSET_VERSION__">
+  <link rel="stylesheet" href="/shared/frontend/css/record-list.css?v=__STUDIO_ASSET_VERSION__">
+  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v=__STUDIO_ASSET_VERSION__">
+</head>
+<body class="studio-local-app">
+  <div id="studioApp" data-studio-app-root="true"></div>
+  <script type="module" src="/studio/app/frontend/js/studio-app.js?v=__STUDIO_ASSET_VERSION__"></script>
+</body>
+</html>
