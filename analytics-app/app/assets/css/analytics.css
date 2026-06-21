@@ -1329,13 +1329,30 @@ textarea.analytics__input:disabled {
   align-items: stretch;
 }
 
-.dataSharingPreparePage__buttonGroup,
-.dataSharingPreparePage__dropdownGroup,
 .dataSharingPreparePage__optionsGroup {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
   align-items: start;
+}
+
+.dataSharingPreparePage__buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+}
+
+.dataSharingPreparePage__buttonGroup > .analytics__status {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.dataSharingPreparePage__dropdownGroup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  align-items: stretch;
 }
 
 .dataSharingPreparePage__buttonGroup[hidden],
@@ -1344,8 +1361,6 @@ textarea.analytics__input:disabled {
   display: none;
 }
 
-.dataSharingPreparePage__appField,
-.dataSharingPreparePage__dataDomainField,
 .dataSharingPreparePage__docsScopeField,
 .dataSharingPreparePage__field,
 .dataSharingPreparePage__format {
@@ -1358,26 +1373,35 @@ textarea.analytics__input:disabled {
   min-inline-size: 0;
 }
 
-.dataSharingPreparePage__appField .analyticsField__label,
-.dataSharingPreparePage__dataDomainField .analyticsField__label,
 .dataSharingPreparePage__docsScopeField .analyticsField__label,
 .dataSharingPreparePage__field .analyticsField__label,
 .dataSharingPreparePage__formatLabel {
   color: var(--text, var(--analytics-text));
 }
 
-.dataSharingPreparePage__appField .analyticsField__control,
-.dataSharingPreparePage__dataDomainField .analyticsField__control,
+.dataSharingPreparePage__choiceField,
+.dataSharingPreparePage__choiceField .analyticsField__control,
+.dataSharingPreparePage__choiceField .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__docsScopeField .analyticsField__control,
 .dataSharingPreparePage__field .analyticsField__control,
 .dataSharingPreparePage__format .analyticsField__control,
-.dataSharingPreparePage__appField .analyticsField__control > .analytics__input,
-.dataSharingPreparePage__dataDomainField .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__docsScopeField .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__field .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__format .analyticsField__control > .analytics__input {
   flex: 1 1 auto;
   width: 100%;
+}
+
+.dataSharingPreparePage__choiceField {
+  display: block;
+  min-width: 0;
+}
+
+select.analytics__input.dataSharingPreparePage__listbox {
+  min-height: 0;
+  height: auto;
+  padding-block: 0.25rem;
+  overflow-y: auto;
 }
 
 .dataSharingPreparePage__format {
@@ -2298,8 +2322,10 @@ textarea.analytics__input:disabled {
     align-items: stretch;
   }
 
-  .dataSharingPreparePage__appField,
-  .dataSharingPreparePage__dataDomainField,
+  .dataSharingPreparePage__dropdownGroup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .dataSharingPreparePage__docsScopeField,
   .dataSharingPreparePage__field,
   .dataSharingPreparePage__format {

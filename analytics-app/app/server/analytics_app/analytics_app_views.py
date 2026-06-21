@@ -370,24 +370,25 @@ def data_sharing_prepare_view(version: str) -> str:
             <div class="dataSharingPreparePage__controls">
               <div class="dataSharingPreparePage__buttonGroup">
                 <button type="button" class="analytics__button analytics__button--defaultWidth" id="dataSharingPrepareRun"></button>
+                <p class="analytics__status" id="dataSharingPrepareStatus"></p>
               </div>
               <div class="dataSharingPreparePage__dropdownGroup">
-                <label class="analyticsField dataSharingPreparePage__appField" for="dataSharingPrepareAppSelect">
-                  <span class="analyticsField__label" id="dataSharingPrepareAppLabel"></span>
+                <label class="dataSharingPreparePage__choiceField" for="dataSharingPrepareAppSelect">
+                  <span class="visually-hidden" id="dataSharingPrepareAppLabel"></span>
                   <span class="analyticsField__control">
-                    <select class="analytics__input" id="dataSharingPrepareAppSelect"></select>
+                    <select class="analytics__input dataSharingPreparePage__listbox" id="dataSharingPrepareAppSelect" size="5"></select>
                   </span>
                 </label>
-                <label class="analyticsField dataSharingPreparePage__dataDomainField" for="dataSharingPrepareDataDomainSelect">
-                  <span class="analyticsField__label" id="dataSharingPrepareDataDomainLabel"></span>
+                <label class="dataSharingPreparePage__choiceField" for="dataSharingPrepareDataDomainSelect">
+                  <span class="visually-hidden" id="dataSharingPrepareDataDomainLabel"></span>
                   <span class="analyticsField__control">
-                    <select class="analytics__input" id="dataSharingPrepareDataDomainSelect"></select>
+                    <select class="analytics__input dataSharingPreparePage__listbox" id="dataSharingPrepareDataDomainSelect" size="5"></select>
                   </span>
                 </label>
-                <label class="analyticsField dataSharingPreparePage__field" for="dataSharingPrepareConfigSelect">
-                  <span class="analyticsField__label" id="dataSharingPrepareConfigLabel"></span>
+                <label class="dataSharingPreparePage__choiceField" for="dataSharingPrepareConfigSelect">
+                  <span class="visually-hidden" id="dataSharingPrepareConfigLabel"></span>
                   <span class="analyticsField__control">
-                    <select class="analytics__input" id="dataSharingPrepareConfigSelect"></select>
+                    <select class="analytics__input dataSharingPreparePage__listbox" id="dataSharingPrepareConfigSelect" size="5"></select>
                   </span>
                 </label>
               </div>
@@ -411,7 +412,6 @@ def data_sharing_prepare_view(version: str) -> str:
               </div>
             </div>
 
-            <p class="analytics__status" id="dataSharingPrepareStatus"></p>
             <p class="analyticsForm__meta dataSharingPreparePage__selectionSummary" id="dataSharingPrepareSelectionSummary"></p>
 
             <div class="dataSharingPreparePage__listActions" aria-label="Share package document selection actions">

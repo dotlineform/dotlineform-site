@@ -296,7 +296,10 @@ def assert_prepare(page, base_url: str) -> None:
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "false", timeout=10_000)
-    if page.locator("#dataSharingPrepareAppSelect").evaluate("select => select.value") != "":
+    app_initial = page.locator("#dataSharingPrepareAppSelect").evaluate(
+        "select => ({ value: select.value, size: select.size, selectedIndex: select.selectedIndex })"
+    )
+    if app_initial != {"value": "", "size": 5, "selectedIndex": -1}:
         raise AssertionError("prepare app select should start blank")
     page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
     page.locator("#dataSharingPrepareDataDomainSelect").select_option("documents")

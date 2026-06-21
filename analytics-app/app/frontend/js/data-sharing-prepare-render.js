@@ -171,14 +171,7 @@ export function applyDataSharingPrepareSelectionFilter(state) {
 
 export function updateDataSharingPrepareSelectionSummary(state) {
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    setText(
-      state.selectionSummary,
-      getAnalyticsText(
-        state.config,
-        "data_sharing_prepare.selection_not_required",
-        "No record selection required."
-      )
-    );
+    setText(state.selectionSummary, "");
     return;
   }
   const count = state.selectedIds.size;
@@ -252,22 +245,18 @@ export function syncDataSharingPrepareConfigOptions(state) {
 }
 
 export function renderDataSharingPrepareConfigSelect(state) {
-  const placeholder = getAnalyticsText(state.config, "data_sharing_prepare.select_placeholder", "Select...");
-  state.configSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + state.exportConfigs.map((config) => {
+  state.configSelect.innerHTML = state.exportConfigs.map((config) => {
     const id = normalizeText(config.id);
     const label = normalizeText(config.label) || id;
     return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
   }).join("");
-  state.configSelect.value = "";
+  state.configSelect.selectedIndex = -1;
 }
 
 export function renderDataSharingPrepareDocList(state) {
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    state.listNode.innerHTML = `<p class="analytics__status">${escapeHtml(getAnalyticsText(
-      state.config,
-      "data_sharing_prepare.profile_only_empty_state",
-      "This profile packages the selected data family."
-    ))}</p>`;
+    state.listNode.innerHTML = "";
+    state.listNode.hidden = true;
     updateDataSharingPrepareSelectionSummary(state);
     return;
   }
@@ -275,14 +264,10 @@ export function renderDataSharingPrepareDocList(state) {
   const rows = state.docs
     .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
     .map((doc) => renderDocRow(state, doc));
+  state.listNode.hidden = !rows.length;
   state.listNode.innerHTML = rows.length
     ? `<ul class="analyticsList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
-    : `<p class="analytics__status">${escapeHtml(getAnalyticsText(
-      state.config,
-      "data_sharing_prepare.empty_state",
-      "No matching {data_domain_label} documents.",
-      { data_domain_label: dataDomainTitle(state) }
-    ))}</p>`;
+    : "";
   syncDataSharingPrepareCheckboxes(state);
   updateDataSharingPrepareSelectionSummary(state);
 }

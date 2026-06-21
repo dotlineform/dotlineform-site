@@ -131,32 +131,33 @@ function dataDomainTitle(state, dataDomain = state.dataDomain) {
 }
 
 function renderAppSelect(state) {
-  const placeholder = selectPlaceholder(state);
-  state.appSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + state.apps.map((item) => {
+  state.appSelect.innerHTML = state.apps.map((item) => {
     const label = item.labelKey
       ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback || item.key);
     const selected = item.key === state.app ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
   }).join("");
+  if (!state.app) state.appSelect.selectedIndex = -1;
 }
 
 function renderDataDomainSelect(state) {
-  const placeholder = selectPlaceholder(state);
   if (!state.app) {
-    state.dataDomainSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>`;
+    state.dataDomainSelect.innerHTML = "";
     state.dataDomainSelect.disabled = true;
+    state.dataDomainSelect.selectedIndex = -1;
     return;
   }
   const domains = dataSharingDomainsForApp(state.dataDomains, state.app);
   state.dataDomainSelect.disabled = false;
-  state.dataDomainSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + domains.map((item) => {
+  state.dataDomainSelect.innerHTML = domains.map((item) => {
     const label = item.labelKey
       ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback);
     const selected = item.key === state.dataDomain ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
   }).join("");
+  if (!state.dataDomain) state.dataDomainSelect.selectedIndex = -1;
 }
 
 function renderDocsScopeSelect(state) {
@@ -226,6 +227,7 @@ function clearDocumentSelectionState(state) {
   state.docsById = new Map();
   state.selectedIds.clear();
   state.listNode.innerHTML = "";
+  state.listNode.hidden = true;
   state.selectionSummary.textContent = "";
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
   if (actions) actions.hidden = true;

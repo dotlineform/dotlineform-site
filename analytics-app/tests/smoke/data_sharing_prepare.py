@@ -228,6 +228,12 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
             app: document.querySelector("#dataSharingPrepareAppSelect")?.value || "",
             dataDomain: document.querySelector("#dataSharingPrepareDataDomainSelect")?.value || "",
             config: document.querySelector("#dataSharingPrepareConfigSelect")?.value || "",
+            appSize: document.querySelector("#dataSharingPrepareAppSelect")?.size || 0,
+            dataDomainSize: document.querySelector("#dataSharingPrepareDataDomainSelect")?.size || 0,
+            configSize: document.querySelector("#dataSharingPrepareConfigSelect")?.size || 0,
+            appSelectedIndex: document.querySelector("#dataSharingPrepareAppSelect")?.selectedIndex ?? null,
+            dataDomainSelectedIndex: document.querySelector("#dataSharingPrepareDataDomainSelect")?.selectedIndex ?? null,
+            configSelectedIndex: document.querySelector("#dataSharingPrepareConfigSelect")?.selectedIndex ?? null,
             formatHidden: document.querySelector("#dataSharingPrepareFormatWrap")?.hidden === true,
             optionsHidden: document.querySelector("#dataSharingPrepareOptionsGroup")?.hidden === true,
             runDisabled: document.querySelector("#dataSharingPrepareRun")?.disabled === true
@@ -237,11 +243,42 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
         "app": "",
         "dataDomain": "",
         "config": "",
+        "appSize": 5,
+        "dataDomainSize": 5,
+        "configSize": 5,
+        "appSelectedIndex": -1,
+        "dataDomainSelectedIndex": -1,
+        "configSelectedIndex": -1,
         "formatHidden": True,
         "optionsHidden": True,
         "runDisabled": True,
     }:
         raise AssertionError(f"prepare route should start with blank selections: {initial!r}")
+    listbox_geometry = page.evaluate(
+        """() => {
+            const ids = [
+                "dataSharingPrepareAppSelect",
+                "dataSharingPrepareDataDomainSelect",
+                "dataSharingPrepareConfigSelect"
+            ];
+            return ids.map((id) => {
+                const rect = document.getElementById(id).getBoundingClientRect();
+                return {
+                    id,
+                    left: Math.round(rect.left),
+                    top: Math.round(rect.top),
+                    width: Math.round(rect.width),
+                    height: Math.round(rect.height)
+                };
+            });
+        }"""
+    )
+    if len({item["top"] for item in listbox_geometry}) != 1:
+        raise AssertionError(f"prepare listboxes should share one row: {listbox_geometry!r}")
+    if not (listbox_geometry[0]["left"] < listbox_geometry[1]["left"] < listbox_geometry[2]["left"]):
+        raise AssertionError(f"prepare listboxes should be ordered left to right: {listbox_geometry!r}")
+    if any(item["height"] < 90 for item in listbox_geometry):
+        raise AssertionError(f"prepare listboxes should render at 5-row height: {listbox_geometry!r}")
 
     page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
     page.wait_for_function("""() => Array.from(document.querySelectorAll("#dataSharingPrepareDataDomainSelect option")).some((option) => option.value === "documents")""")
