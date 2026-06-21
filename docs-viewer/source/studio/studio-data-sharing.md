@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing
 title: Analytics Data Sharing Runtime
 added_date: 2026-05-06
-last_updated: 2026-06-05
+last_updated: 2026-06-21
 parent_id: data-sharing
 viewable: true
 ---
@@ -14,9 +14,10 @@ Routes:
 - `/analytics/data-sharing/review/`
 
 Analytics Data Sharing is the local shell for preparing outbound share packages and reviewing returned packages from supported local data domains.
-It defaults to the Library data domain and exposes Tags as a named workflow scope for package preparation, returned-package listing, review, and confirmed apply.
+It exposes Library document profiles and Analytics tag profiles for package preparation, returned-package listing, review, and confirmed apply.
 
-The durable architecture contract is recorded in [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
+- The durable runtime boundary is recorded here and in [Analytics Data Sharing Runtime](/docs/?scope=studio&doc=studio-data-sharing)
+- The adapter implementation pattern is recorded in [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture).
 
 ## Target Boundary
 
@@ -53,7 +54,7 @@ Disposable packages under old `var/studio/export-import/...` roots are not part 
 
 Library is the implemented documents data domain.
 Tags are implemented for package preparation, returned-package listing, review, and confirmed apply through the Analytics tags adapter.
-The page scope selector presents this as Analytics; the internal data domain remains `tags`.
+The page app selector presents Tags under Analytics; the internal data domain remains `tags`.
 
 The prepare page:
 
@@ -61,8 +62,10 @@ The prepare page:
 - requests adapter-owned selectable records from the Analytics Data Sharing API
 - renders the returned records using the active adapter's selection model
 - supports JSON and JSONL target formats according to each profile
-- posts the selected profile, format, and record ids to the Analytics Data Sharing API
+- posts the selected profile, format, and selected ids to the Analytics Data Sharing API
+- uses `selection.doc_ids` for document-backed profiles and `selection.record_ids` for generic record-backed profiles such as `tag-registry`
 - can prepare tag registry, tag aliases, tag assignments, or a combined tags bundle
+- can prepare a tag registry package containing only the selected tag records
 - displays the output package path, counts, warnings, and errors returned by the adapter workflow
 
 The review page:
@@ -107,15 +110,21 @@ The page shells load:
 - `data-sharing/workflows/review.py`
 - `data-sharing/workflows/apply.py`
 - `data-sharing/config/adapters.json`
-- `data-sharing/config/library-export-configs.json`
+- `data-sharing/adapters/documents/config/prepare-profiles.json`
 - `data-sharing/adapters/documents/`
 - `data-sharing/adapters/tags/`
 
-The dashboard, prepare, and review shells are hosted by the Local Analytics app server.
+The prepare and review shells are hosted by the Local Analytics app server.
 The browser modules and CSS contracts are Analytics-owned assets under `analytics-app/`.
-The documents adapter implementation lives at `data-sharing/adapters/documents/adapter.py` and owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
+The documents adapter lives under `data-sharing/adapters/documents/`.
+Its `adapter.py` module only wires `DataSharingAdapterHandlers`.
+Prepare, returned-package orchestration, shared context, and document-family behavior live in `prepare.py`, `returned.py`, `context.py`, and `families/documents.py`.
+The implemented document family owns the Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
 Those helpers are split by responsibility under the `docs-viewer/services/docs_data_sharing/` package.
-The Analytics tags adapter implementation lives at `data-sharing/adapters/tags/adapter.py` and owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
+The Analytics tags adapter lives under `data-sharing/adapters/tags/`.
+Its `adapter.py` module only wires `DataSharingAdapterHandlers`.
+Prepare, returned-package orchestration, shared context, and tag-family behavior live in `prepare.py`, `returned.py`, `context.py`, and `families/`.
+The tags families own tag registry, alias, assignment, and bundle package behavior, including selected tag-record export for `tag-registry`, returned-package review, and confirmed apply through Analytics tag mutation/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 The headless `data-sharing/` workflow modules own shared operation dispatch; the Analytics server provides the local HTTP boundary, adapter resolver handoff, and activity timing.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
@@ -153,8 +162,10 @@ The retained smoke entry points are:
 
 - `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
 - `analytics-app/tests/smoke/data_sharing_prepare.py`
+- `analytics-app/tests/smoke/data_sharing_prepare_modules.py`
 - `analytics-app/tests/smoke/data_sharing_review.py`
 - `analytics-app/tests/python/test_analytics_data_sharing_api.py`
+- `analytics-app/tests/python/test_tags_data_sharing_adapter.py`
 - `docs-viewer/tests/python/test_docs_import_service.py`
 
 The architecture request tracker records the latest focused evidence for Analytics API dispatch, Docs Management and Local Studio non-publication of Data Sharing endpoints, mock/block prepare and review smokes, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.

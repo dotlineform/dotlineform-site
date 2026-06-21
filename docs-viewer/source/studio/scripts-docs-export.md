@@ -22,7 +22,7 @@ It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
 
-- `data-sharing/config/library-export-configs.json`
+- `data-sharing/adapters/documents/config/prepare-profiles.json`
 - `docs-viewer/config/scopes/docs_scopes.json`
 - `docs-viewer/source/<scope>/*.md` or the configured source root for that scope
 
@@ -41,7 +41,7 @@ It is intentionally source-read-only: the only write it performs is the generate
 
 Inputs:
 
-- a sharing profile id from `data-sharing/config/library-export-configs.json`
+- a sharing profile id from `data-sharing/adapters/documents/config/prepare-profiles.json`
 - a Docs Viewer scope, currently Library in v1
 - explicit document ids or `--all`
 - an optional `--format json|jsonl` override when the selected profile declares that format in `target.supported_formats`
@@ -216,7 +216,7 @@ Warnings report non-blocking context:
 - truncation
 - deferred `max_total_chars` enforcement
 
-The static sharing profile schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
+The documents prepare profile contract remains documented in [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles).
 
 The Analytics Data Sharing page runs the same documents package engine through the Analytics-owned same-origin endpoint `POST /analytics/api/data-sharing/prepare`.
 The local service first resolves `data_domain` and `operation` through `data-sharing/config/adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.

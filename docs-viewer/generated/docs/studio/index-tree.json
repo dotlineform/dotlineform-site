@@ -469,11 +469,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json"
         },
         {
-          "doc_id": "studio-data-sharing-technical-spec",
-          "title": "Analytics Data Sharing Technical Spec",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json"
-        },
-        {
           "doc_id": "data-sharing-adapter-architecture",
           "title": "Data Sharing Adapter Architecture",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-adapter-architecture.json"
@@ -489,9 +484,9 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-adapter-structure.json"
         },
         {
-          "doc_id": "config-library-export-configs",
-          "title": "Library Export Configs",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-library-export-configs.json"
+          "doc_id": "data-sharing-documents-prepare-profiles",
+          "title": "Documents Prepare Profiles",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-prepare-profiles.json"
         },
         {
           "doc_id": "data-sharing-tags-adapter-structure",
@@ -1327,5 +1322,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-21T18:46:19Z"
+  "generated_at": "2026-06-21T19:53:37Z"
 }

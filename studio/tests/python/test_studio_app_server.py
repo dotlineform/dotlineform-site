@@ -217,7 +217,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/studio/data/generated/catalogue-lookup/work-search.json") is True
     assert allowed("/assets/docs/interactive/library/coincidence-salience.html") is False
     assert allowed("/data-sharing/config/adapters.json") is False
-    assert allowed("/data-sharing/config/library-export-configs.json") is False
+    assert allowed("/data-sharing/adapters/documents/config/prepare-profiles.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
     assert allowed("/var/catalogue/media/works/srcset_images/primary/00008-primary-1600.webp") is True
@@ -243,7 +243,7 @@ def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
 
 def test_studio_server_excludes_data_sharing_config() -> None:
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
-    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is False
+    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/adapters/documents/config/prepare-profiles.json") is False
 
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:

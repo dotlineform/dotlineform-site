@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-930ddb77edc0482a77a9536bbbbb04a0",
-    "generated_at_utc": "2026-06-21T18:46:56Z",
-    "count": 242
+    "version": "blake2b-e561dda6e0ecb3f4939c954572b3219d",
+    "generated_at_utc": "2026-06-21T19:54:05Z",
+    "count": 241
   },
   "entries": [
     {
@@ -2041,10 +2041,10 @@
       "kind": "doc",
       "title": "Analytics Data Sharing Runtime",
       "href": "/docs/?scope=studio&doc=studio-data-sharing",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-21",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-05 • Data Sharing",
+      "display_meta": "2026-06-21 • Data Sharing",
       "search_terms": [
         "studio-data-sharing",
         "studio",
@@ -2054,38 +2054,12 @@
         "analytics",
         "runtime",
         "data sharing",
-        "2026-06-05",
+        "2026-06-21",
         "2026",
         "06",
-        "05"
+        "21"
       ],
-      "search_text": "studio-data-sharing studio data sharing analytics data sharing runtime analytics runtime data sharing 2026-06-05 2026 06 05"
-    },
-    {
-      "id": "studio-data-sharing-technical-spec",
-      "kind": "doc",
-      "title": "Analytics Data Sharing Technical Spec",
-      "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
-      "last_updated": "2026-06-05",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing",
-      "display_meta": "2026-06-05 • Data Sharing",
-      "search_terms": [
-        "studio-data-sharing-technical-spec",
-        "studio",
-        "data",
-        "sharing",
-        "technical",
-        "spec",
-        "analytics data sharing technical spec",
-        "analytics",
-        "data sharing",
-        "2026-06-05",
-        "2026",
-        "06",
-        "05"
-      ],
-      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec analytics data sharing technical spec analytics data sharing 2026-06-05 2026 06 05"
+      "search_text": "studio-data-sharing studio data sharing analytics data sharing runtime analytics runtime data sharing 2026-06-21 2026 06 21"
     },
     {
       "id": "data-sharing-adapter-architecture",
@@ -2163,30 +2137,29 @@
       "search_text": "data-sharing-documents-adapter-structure data sharing documents adapter structure documents data sharing adapter structure data sharing 2026-06-21 2026 06 21"
     },
     {
-      "id": "config-library-export-configs",
+      "id": "data-sharing-documents-prepare-profiles",
       "kind": "doc",
-      "title": "Library Export Configs",
-      "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-06-05",
+      "title": "Documents Prepare Profiles",
+      "href": "/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles",
+      "last_updated": "2026-06-21",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-05 • Data Sharing",
+      "display_meta": "2026-06-21 • Data Sharing",
       "search_terms": [
-        "config-library-export-configs",
-        "config",
-        "library",
-        "export",
-        "configs",
-        "library export configs",
-        "data sharing",
+        "data-sharing-documents-prepare-profiles",
         "data",
         "sharing",
-        "2026-06-05",
+        "documents",
+        "prepare",
+        "profiles",
+        "documents prepare profiles",
+        "data sharing",
+        "2026-06-21",
         "2026",
         "06",
-        "05"
+        "21"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs data sharing data sharing 2026-06-05 2026 06 05"
+      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-21 2026 06 21"
     },
     {
       "id": "data-sharing-tags-adapter-structure",
@@ -5396,10 +5369,10 @@
       "kind": "doc",
       "title": "Data Sharing Config Files",
       "href": "/docs/?scope=studio&doc=config-data-sharing-files",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-21",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-03 • Studio",
+      "display_meta": "2026-06-21 • Studio",
       "search_terms": [
         "config-data-sharing-files",
         "config",
@@ -5408,12 +5381,12 @@
         "files",
         "data sharing config files",
         "studio",
-        "2026-06-03",
+        "2026-06-21",
         "2026",
         "06",
-        "03"
+        "21"
       ],
-      "search_text": "config-data-sharing-files config data sharing files data sharing config files studio 2026-06-03 2026 06 03"
+      "search_text": "config-data-sharing-files config data sharing files data sharing config files studio 2026-06-21 2026 06 21"
     },
     {
       "id": "config-docs-viewer-files",

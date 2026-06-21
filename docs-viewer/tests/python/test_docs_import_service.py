@@ -83,12 +83,12 @@ def make_repo() -> tempfile.TemporaryDirectory:
     write_scope_config(root)
     write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
     write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
-    config_path = root / "data-sharing/config/library-export-configs.json"
+    config_path = root / "data-sharing/adapters/documents/config/prepare-profiles.json"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
         json.dumps(
             {
-                "schema_version": "library_export_configs_v1",
+                "schema_version": "documents_prepare_profiles_v1",
                 "configs": [
                     {
                         "id": "library-document-summaries",
@@ -140,6 +140,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
         encoding="utf-8",
     )
     adapter_path = root / "data-sharing/config/adapters.json"
+    adapter_path.parent.mkdir(parents=True, exist_ok=True)
     adapter_path.write_text(
         json.dumps(
             {
@@ -176,7 +177,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                     "source_root": "docs-viewer/source/library",
                                 },
                                 "config": {
-                                    "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
+                                    "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
                                 },
                             }
                         },

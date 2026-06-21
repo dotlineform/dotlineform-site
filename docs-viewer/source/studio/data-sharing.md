@@ -51,4 +51,4 @@ Key implementation references:
 - [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture)
 - [Documents Data Sharing Adapter Structure](/docs/?scope=studio&doc=data-sharing-documents-adapter-structure)
 - [Tags Data Sharing Adapter Structure](/docs/?scope=studio&doc=data-sharing-tags-adapter-structure)
-- [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)
+- [Analytics Data Sharing Runtime](/docs/?scope=studio&doc=studio-data-sharing)

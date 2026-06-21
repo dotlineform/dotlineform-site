@@ -61,10 +61,10 @@ Generated Docs Viewer tree, by-id, search, recently-added, report, and generated
 The documents prepare flow uses export configs from:
 
 ```text
-data-sharing/config/library-export-configs.json
+data-sharing/adapters/documents/config/prepare-profiles.json
 ```
 
-Those configs are documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
+Those configs are documented in [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles).
 
 `families/documents.py` passes the selected docs, target format, missing-summary option, output root, and config path to Docs Viewer package helpers.
 The adapter adds Data Sharing context and summary text, and logs a `docs-export` event through dependencies.

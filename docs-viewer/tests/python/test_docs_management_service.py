@@ -138,7 +138,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "source_root": "docs-viewer/source/library",
                             },
                             "config": {
-                                "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
+                                "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
                             },
                         }
                     },

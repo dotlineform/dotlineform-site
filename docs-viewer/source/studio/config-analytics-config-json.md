@@ -32,7 +32,7 @@ Analytics route modules use it for:
 - RAG scoring thresholds under `analysis.rag`
 
 Analytics-hosted Data Sharing routes get workflow metadata from `/analytics/api/data-sharing/config`.
-They should not read `data-sharing/config/adapters.json` or `data-sharing/config/library-export-configs.json` directly through Analytics bootstrap config or static file serving.
+They should not read `data-sharing/config/adapters.json` or `data-sharing/adapters/documents/config/prepare-profiles.json` directly through Analytics bootstrap config or static file serving.
 
 The Analytics app server also treats this file as part of the local app route/runtime contract when serving Analytics pages.
 It validates `app.routes` against currently served route shells, checks script paths, rejects duplicate paths, and rejects Analytics route metadata left in `paths.routes`.

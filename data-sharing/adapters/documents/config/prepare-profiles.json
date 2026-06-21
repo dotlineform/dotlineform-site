@@ -1,5 +1,5 @@
 {
-  "schema_version": "library_export_configs_v1",
+  "schema_version": "documents_prepare_profiles_v1",
   "configs": [
     {
       "id": "library-parent-child-relationships",
@@ -15,7 +15,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/exports/{export_id}-{timestamp}.json",
+        "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.json",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -125,7 +125,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl",
+        "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -210,7 +210,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl",
+        "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {

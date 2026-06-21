@@ -128,7 +128,7 @@ def write_adapter_registry(root: Path) -> None:
                                 "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
                             },
                             "config": {
-                                "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
+                                "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
                             },
                         }
                     },
@@ -193,9 +193,9 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     write_docs_scope_config(root)
     write_adapter_registry(root)
     write_json(
-        root / "data-sharing/config/library-export-configs.json",
+        root / "data-sharing/adapters/documents/config/prepare-profiles.json",
         {
-            "schema_version": "library_export_configs_v1",
+            "schema_version": "documents_prepare_profiles_v1",
             "configs": [
                 {
                     "id": "library-smoke",

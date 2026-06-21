@@ -28,7 +28,7 @@ When used directly, add `data-sharing/` to `PYTHONPATH` or `sys.path` and import
 - `services`
 - `workflows`
 
-The source-controlled registry, schemas, and Library sharing profiles live under
-`data-sharing/config/`.
+The source-controlled adapter registry and registry schema live under `data-sharing/config/`.
+Adapter-specific config, such as documents prepare profiles, lives with the owning adapter.
 Current shared workflow dispatch and the implemented documents and tags adapters live under `data-sharing/services/`, `data-sharing/workflows/`, and `data-sharing/adapters/`.
 Analytics owns the local API, browser routes, and adapter resolver gateway; Docs Viewer still supplies reusable docs-domain helpers for document workflows.

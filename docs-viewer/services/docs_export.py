@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export generated Docs Viewer data through configured export patterns.
+"""Export Docs Viewer source data through configured prepare profiles.
 
 Run:
   ./docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library
@@ -23,9 +23,9 @@ from typing import Any
 from docs_data_sharing import source_metadata
 
 
-DEFAULT_CONFIG_PATH = Path("data-sharing/config/library-export-configs.json")
+DEFAULT_CONFIG_PATH = Path("data-sharing/adapters/documents/config/prepare-profiles.json")
 OUTPUT_ROOT = Path("var/analytics/data-sharing")
-SCHEMA_VERSION = "library_export_configs_v1"
+SCHEMA_VERSION = "documents_prepare_profiles_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 PUNCTUATION_SPACING_RE = re.compile(r"\s+([,.;:!?])")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")

@@ -73,7 +73,7 @@
             "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json"
           },
           "config": {
-            "sharing_profiles_path": "data-sharing/config/library-export-configs.json"
+            "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json"
           }
         }
       },

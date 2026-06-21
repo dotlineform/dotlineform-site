@@ -38,7 +38,7 @@ def test_subsystem_root_and_core_modules_are_importable() -> None:
     assert paths.IMPORT_STAGING_ROOT.as_posix() == "var/analytics/data-sharing/import-staging"
     assert paths.IMPORT_PREVIEW_ROOT.as_posix() == "var/analytics/data-sharing/import-preview"
     assert registry.ADAPTER_REGISTRY_REL_PATH.as_posix() == "data-sharing/config/adapters.json"
-    assert registry.LIBRARY_EXPORT_CONFIG_SCHEMA_REL_PATH.as_posix() == "data-sharing/config/library-export-configs.schema.json"
+    assert registry.DOCUMENTS_PREPARE_PROFILES_REL_PATH.as_posix() == "data-sharing/adapters/documents/config/prepare-profiles.json"
 
 
 def test_subsystem_contains_expected_headless_ownership_roots() -> None:
@@ -58,8 +58,7 @@ def test_subsystem_config_files_live_under_data_sharing_boundary() -> None:
     expected = [
         SUBSYSTEM_ROOT / "config" / "adapters.json",
         SUBSYSTEM_ROOT / "config" / "adapters.schema.json",
-        SUBSYSTEM_ROOT / "config" / "library-export-configs.json",
-        SUBSYSTEM_ROOT / "config" / "library-export-configs.schema.json",
+        SUBSYSTEM_ROOT / "adapters" / "documents" / "config" / "prepare-profiles.json",
     ]
     missing = [path.relative_to(REPO_ROOT).as_posix() for path in expected if not path.is_file()]
     assert missing == []

@@ -33,14 +33,14 @@ docs_export = load_docs_export_module()
 
 
 BASE_CONFIG = {
-    "schema_version": "library_export_configs_v1",
+    "schema_version": "documents_prepare_profiles_v1",
     "configs": [
         {
             "id": "library-document-summaries",
             "label": "Document summaries",
             "description": "Exports summary metadata.",
             "enabled": True,
-            "scopes": ["library"],
+            "data_domains": ["documents"],
             "target": {
                 "format": "jsonl",
                 "supported_formats": ["jsonl", "json"],
@@ -48,7 +48,7 @@ BASE_CONFIG = {
                 "include_export_metadata": True,
             },
             "output": {
-                "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
+                "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "selection": {
@@ -153,7 +153,7 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
-    write_json(root / "data-sharing/config/library-export-configs.json", config or BASE_CONFIG)
+    write_json(root / "data-sharing/adapters/documents/config/prepare-profiles.json", config or BASE_CONFIG)
     write_scope_config(root)
     write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")
     write_doc(
@@ -233,7 +233,7 @@ def test_unknown_config_returns_structured_validation_report() -> None:
 
 def test_jsonl_config_requires_jsonl_output_extension() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.json"
+    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.json"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
@@ -259,7 +259,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
 
     assert first_report["ok"] is True
     assert first_report["output_file"] == (
-        "var/analytics/data-sharing/library/exports/library-document-summaries-20260503-161507.jsonl"
+        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.jsonl"
     )
     assert first_text == second_text
     rows = [json.loads(line) for line in first_text.splitlines()]
@@ -284,7 +284,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["ok"] is True, report
     assert report["target_format"] == "json"
     assert report["output_file"] == (
-        "var/analytics/data-sharing/library/exports/library-document-summaries-20260503-161507.json"
+        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.json"
     )
     assert isinstance(payload, list)
     assert [row["doc_id"] for row in payload] == ["library", "child-with-summary"]
@@ -313,7 +313,7 @@ def test_export_run_times_use_utc_metadata_and_local_filename_time() -> None:
     assert filename_dt.strftime("%Y%m%d-%H%M%S") == "20260503-161507"
 
 
-def test_repo_library_export_configs_load_and_validate() -> None:
+def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     payload = docs_export.load_config_file(REPO_ROOT)
     payload_errors, payload_warnings = docs_export.validate_config_payload(payload)
     assert payload_errors == []
@@ -516,7 +516,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["counts"]["exported"] > 0
         assert report["counts"]["failed"] == 0
         assert report["output_written"] is False
-        assert report["output_file"].startswith(f"var/analytics/data-sharing/library/exports/{case['config_id']}-")
+        assert report["output_file"].startswith(f"var/analytics/data-sharing/exports/documents-{case['config_id']}-")
         assert report["output_file"].endswith(f".{case['target_format']}")
 
 
@@ -532,7 +532,7 @@ def main() -> None:
         test_document_rows_json_format_override_writes_json_array,
         test_unsupported_format_override_blocks_export,
         test_export_run_times_use_utc_metadata_and_local_filename_time,
-        test_repo_library_export_configs_load_and_validate,
+        test_repo_documents_prepare_profiles_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
         test_export_uses_source_metadata_for_document_content,
         test_missing_source_metadata_returns_structured_export_error,

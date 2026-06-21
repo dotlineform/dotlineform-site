@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-files
 title: Data Sharing Config Files
 added_date: 2026-06-02
-last_updated: 2026-06-03
+last_updated: 2026-06-21
 parent_id: studio
 viewable: true
 ---
@@ -12,24 +12,24 @@ Config files:
 
 - `data-sharing/config/adapters.json`
 - `data-sharing/config/adapters.schema.json`
-- `data-sharing/config/library-export-configs.json`
-- `data-sharing/config/library-export-configs.schema.json`
+- `data-sharing/adapters/documents/config/prepare-profiles.json`
 
 ## Contract Role
 
 `adapters.json` is the Data Sharing domain registry.
 It defines domain dispatch, adapter modules, operation capabilities, path contracts, source write targets, returned-package staging roots, review output roots, and operation-level UI/action metadata needed by the Data Sharing services.
 
-`library-export-configs.json` defines Library export profiles.
-Profiles describe which documents or fields are packaged for outbound Data Sharing workflows.
+`data-sharing/adapters/documents/config/prepare-profiles.json` defines documents adapter prepare profiles.
+Profiles describe which documents or fields are packaged for outbound documents Data Sharing workflows.
 
-Schema files validate those config shapes.
+`adapters.schema.json` validates the adapter registry shape.
+Documents prepare profiles are validated semantically by the documents package engine; there is no separate profile schema file.
 
 ## What Reads Them
 
 Data Sharing services read the adapter registry to dispatch prepare, list-returned, review, and apply operations.
-Library export tooling reads Library export profiles during package preparation.
-Analytics-hosted Data Sharing browser routes read workflow metadata through `/analytics/api/data-sharing/config`; that endpoint publishes a UI-safe registry view and attaches Library sharing profiles to the prepare capability.
+Documents package tooling reads documents prepare profiles during package preparation.
+Analytics-hosted Data Sharing browser routes read workflow metadata through `/analytics/api/data-sharing/config`; that endpoint publishes a UI-safe registry view and attaches documents prepare profiles to the prepare capability.
 The browser should not fetch these files directly through Analytics static file serving.
 The public config endpoint projects only browser-needed fields.
 It exposes adapter/domain labels, operation status, selection model, sharing profile identity, UI format choices, limited selection UI flags, apply-action UI copy, confirmations, and result display rows.
@@ -40,10 +40,10 @@ It does not expose adapter path contracts, source-write targets, output path pat
 `adapters.json` is maintainer-editable workflow config.
 It can change behavior, source-write scope, and adapter dispatch, so changes require focused Data Sharing tests.
 
-`library-export-configs.json` is user/maintainer-editable workflow config.
+`data-sharing/adapters/documents/config/prepare-profiles.json` is user/maintainer-editable documents-adapter workflow config.
 It is safer to edit than the adapter registry, but profile changes should still be checked with prepare/export tests.
 
-Schemas are code infrastructure.
+The adapter registry schema is code infrastructure.
 
 ## Cleanup Review
 

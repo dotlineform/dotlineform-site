@@ -98,7 +98,7 @@ def domain_payload(status: str = "active", data_domain: str = "documents") -> di
             "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
         },
         "config": {
-            "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
+            "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
         },
     }
 
@@ -200,7 +200,7 @@ def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
 
         assert resolution.adapter_id == "documents"
         assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/exports"
-        assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
+        assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/adapters/documents/config/prepare-profiles.json"
         assert resolution.capability["selection_model"] == "documents"
         assert resolution.capability["output_formats"] == ["json"]
         assert resolution.domain["record_selectors"]["docs_scope"]["source"] == "docs_scope_config"

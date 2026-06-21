@@ -62,8 +62,7 @@ Every config contract review should answer:
 | --- | --- | --- | --- |
 | `data-sharing/config/adapters.json` | Data Sharing domain, adapter, capability, and path registry | maintainer-editable workflow config | [Data Sharing Config Files](/docs/?scope=studio&doc=config-data-sharing-files) |
 | `data-sharing/config/adapters.schema.json` | adapter config schema | code infrastructure | [Data Sharing Config Files](/docs/?scope=studio&doc=config-data-sharing-files) |
-| `data-sharing/config/library-export-configs.json` | Library export profiles | user/maintainer-editable workflow config | [Data Sharing Config Files](/docs/?scope=studio&doc=config-data-sharing-files) |
-| `data-sharing/config/library-export-configs.schema.json` | Library export profile schema | code infrastructure | [Data Sharing Config Files](/docs/?scope=studio&doc=config-data-sharing-files) |
+| `data-sharing/adapters/documents/config/prepare-profiles.json` | documents adapter prepare profiles | user/maintainer-editable workflow config | [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles) |
 
 ## Public Site And Build
 

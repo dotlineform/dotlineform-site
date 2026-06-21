@@ -38,11 +38,14 @@ data-sharing/adapters/tags/
 - supporting series and works index loading
 - prepare profile lookup
 - package metadata helpers
+- selected record-id validation for prepare exports
 - selected record-index validation
 - activity append helpers
 
 `prepare.py` resolves a prepare `config_id` to a tag family and writes outbound JSON packages.
-Tags prepare is profile-driven and currently returns no selectable source records; profiles are selected rather than individual tag records.
+Tags prepare is profile-driven.
+Profiles can be profile-only, or they can expose selectable source records through the active family.
+The current `tag-registry` profile exposes tag records and uses selected `record_ids` to limit the exported registry package.
 
 `returned.py` lists staged JSON/JSONL files, parses returned packages, detects tag family, builds review payloads, and dispatches apply actions.
 It owns the `ReturnedPackage` contract shared by returned-package family code.
@@ -51,7 +54,7 @@ It owns the `ReturnedPackage` contract shared by returned-package family code.
 
 | Family | Module | Prepare | Review | Apply |
 | --- | --- | --- | --- | --- |
-| `registry` | `families/registry.py` | tag registry package | registry row preview | `registry_apply` |
+| `registry` | `families/registry.py` | selectable tag records and tag registry package | registry row preview | `registry_apply` |
 | `aliases` | `families/aliases.py` | tag aliases package | alias row preview | `aliases_apply` |
 | `assignments` | `families/assignments.py` | tag assignment package | series assignment preview | `assignments_apply` |
 | `bundle` | `families/bundle.py` | combined package | none | none |
@@ -64,18 +67,35 @@ A returned bundle workflow would need an explicit design before review/apply sup
 
 Current prepare profiles map to families like this:
 
-| Profile | Family |
-| --- | --- |
-| `tag-registry` | `registry` |
-| `tag-aliases` | `aliases` |
-| `tag-assignments` | `assignments` |
-| `tags-bundle` | `bundle` |
+| Profile | Family | Selection |
+| --- | --- | --- |
+| `tag-registry` | `registry` | `explicit_record_ids` |
+| `tag-aliases` | `aliases` | `none` |
+| `tag-assignments` | `assignments` | `none` |
+| `tags-bundle` | `bundle` | `none` |
 
 The profile mapping comes from the tags `prepare` capability in `data-sharing/config/adapters.json`.
 If no valid profile list is configured, `context.py` falls back to the built-in default profile map.
 
 Adding a new tags profile can be config-only when it uses an existing family and only changes family-supported options.
 Adding a new tags family requires code in `families/`, returned-package detection when imports are supported, and focused tests.
+
+## Prepare Selection
+
+The `tag-registry` profile uses the shared generic prepare list.
+`families/registry.py` loads `tag_registry.tags[]` and returns records with the shared `id` and `name` fields:
+
+```json
+{ "id": "subject:trees", "name": "trees" }
+```
+
+The family can include tag-specific fields such as `tag_id`, `group`, and `status`, but the browser selection UI must use `id` and `name`.
+When the prepare request includes `selection.record_ids`, `prepare.py` validates the ids and passes them to `families/registry.py`.
+The registry package builder exports only matching source tags, preserving source order.
+Unknown selected tag ids fail validation instead of being silently ignored.
+
+The alias, assignment, and bundle profiles currently remain profile-only exports.
+They do not expose selectable prepare records until their families define what selected records mean for those package shapes.
 
 ## Source Files
 

@@ -115,7 +115,7 @@ The current adapters are:
 
 The documents adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Its current apply actions are `summary_apply` and `hierarchy_apply`.
-Its prepare profiles are defined in `data-sharing/config/library-export-configs.json`, documented separately in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
+Its prepare profiles are defined in `data-sharing/adapters/documents/config/prepare-profiles.json`, documented separately in [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles).
 
 The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Its current apply actions are `registry_apply`, `aliases_apply`, and `assignments_apply`.
