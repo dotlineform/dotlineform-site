@@ -93,11 +93,6 @@ def domain_payload(status: str = "active", data_domain: str = "documents") -> di
                 "required": True,
             },
         },
-        "paths": {
-            "outbound_package_root": f"var/analytics/data-sharing/{data_domain}/exports",
-            "returned_package_staging_root": f"var/analytics/data-sharing/{data_domain}/import-staging",
-            "review_output_root": f"var/analytics/data-sharing/{data_domain}/import-preview",
-        },
         "source_write_targets": {},
         "sources": {
             "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
@@ -136,6 +131,11 @@ def adapter_payload(
 def registry_payload() -> dict[str, object]:
     return {
         "schema_version": "data_sharing_adapters_v2",
+        "paths": {
+            "outbound_package_root": "var/analytics/data-sharing/exports",
+            "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
+            "review_output_root": "var/analytics/data-sharing/import-preview",
+        },
         "dispatch": [
             {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
             {"data_domain": "documents", "operation": "list_returned", "adapter_id": "documents"},
@@ -199,7 +199,7 @@ def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
         resolution = adapters.resolve_adapter(repo_root, data_domain="documents", operation="prepare")
 
         assert resolution.adapter_id == "documents"
-        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/documents/exports"
+        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/exports"
         assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
         assert resolution.capability["selection_model"] == "documents"
         assert resolution.capability["output_formats"] == ["json"]
@@ -249,13 +249,23 @@ def test_registry_rejects_unsafe_paths() -> None:
 
 def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
     payload = registry_payload()
-    payload["adapters"][0]["data_domains"]["documents"]["paths"]["returned_package_staging_root"] = (
-        "var/studio/export-import/documents/import-staging"
-    )
+    payload["paths"]["returned_package_staging_root"] = "var/studio/export-import/import-staging"
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
-            "must be var/analytics/data-sharing/documents/import-staging",
+            "must be var/analytics/data-sharing/import-staging",
+        )
+
+
+def test_registry_rejects_domain_level_runtime_paths() -> None:
+    payload = registry_payload()
+    payload["adapters"][0]["data_domains"]["documents"]["paths"] = {
+        "outbound_package_root": "var/analytics/data-sharing/exports",
+    }
+    with registry_repo(payload) as repo_root:
+        expect_value_error(
+            lambda: adapters.load_registry(repo_root),
+            "is no longer supported; use top-level paths",
         )
 
 
@@ -289,15 +299,14 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
     document_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="documents", operation="apply")
     tags_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="tags", operation="review", require_active=False)
     for resolution in (document_resolution, tags_resolution):
-        domain_root = f"var/analytics/data-sharing/{resolution.data_domain}"
-        assert resolution.path("outbound_package_root").as_posix() == f"{domain_root}/exports"
-        assert resolution.path("returned_package_staging_root").as_posix() == f"{domain_root}/import-staging"
-        assert resolution.path("review_output_root").as_posix() == f"{domain_root}/import-preview"
+        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/exports"
+        assert resolution.path("returned_package_staging_root").as_posix() == "var/analytics/data-sharing/import-staging"
+        assert resolution.path("review_output_root").as_posix() == "var/analytics/data-sharing/import-preview"
     assert document_resolution.capability["apply_actions"][0]["id"] == "summary_apply"
     assert tags_resolution.adapter_id == "analytics-tags"
 
 
-def test_repo_documents_adapter_declares_source_root_not_generated_docs_sources() -> None:
+def test_repo_documents_adapter_declares_docs_scope_config_not_generated_docs_sources() -> None:
     resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="documents", operation="prepare")
     sources = resolution.domain.get("sources")
 
@@ -315,10 +324,11 @@ def main() -> None:
         test_registry_rejects_duplicate_domain_operation_dispatch,
         test_registry_rejects_unsafe_paths,
         test_registry_rejects_non_standard_runtime_artifact_roots,
+        test_registry_rejects_domain_level_runtime_paths,
         test_registry_distinguishes_non_active_capability_statuses,
         test_registry_rejects_unknown_operation_names,
         test_repo_registry_loads_and_resolves_documents_and_tags,
-        test_repo_documents_adapter_declares_source_root_not_generated_docs_sources,
+        test_repo_documents_adapter_declares_docs_scope_config_not_generated_docs_sources,
     ]
     for test in tests:
         test()

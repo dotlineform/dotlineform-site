@@ -118,7 +118,7 @@
       "properties": {
         "path_pattern": {
           "type": "string",
-          "pattern": "^var/analytics/data-sharing/\\{data_domain\\}/exports/\\{export_id\\}-\\{timestamp\\}\\.(json|jsonl)$"
+          "pattern": "^var/analytics/data-sharing/exports/\\{export_id\\}-\\{timestamp\\}\\.(json|jsonl)$"
         },
         "timestamp_format": {
           "type": "string",

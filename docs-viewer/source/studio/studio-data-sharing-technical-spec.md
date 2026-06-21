@@ -259,11 +259,11 @@ The tags adapter owns:
 - atomic writes through existing Analytics tag transaction helpers
 - activity metadata for tags, aliases, series, works, and files
 
-Tags workflow roots:
+Shared Data Sharing workflow roots:
 
-- outbound packages: `var/analytics/data-sharing/tags/exports/`
-- returned package staging: `var/analytics/data-sharing/tags/import-staging/`
-- review output root: `var/analytics/data-sharing/tags/import-preview/`
+- outbound packages: `var/analytics/data-sharing/exports/`
+- returned package staging: `var/analytics/data-sharing/import-staging/`
+- review output root: `var/analytics/data-sharing/import-preview/`
 - source root: `analytics-app/data/canonical/`
 Implemented sharing profiles:
 

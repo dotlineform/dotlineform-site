@@ -3,11 +3,27 @@
   "$id": "https://dotlineform.com/schemas/data_sharing_adapters.schema.json",
   "title": "Data Sharing adapter registry",
   "type": "object",
-  "required": ["schema_version", "dispatch", "adapters"],
+  "required": ["schema_version", "paths", "dispatch", "adapters"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {
       "const": "data_sharing_adapters_v2"
+    },
+    "paths": {
+      "type": "object",
+      "required": ["outbound_package_root", "returned_package_staging_root", "review_output_root"],
+      "additionalProperties": false,
+      "properties": {
+        "outbound_package_root": {
+          "const": "var/analytics/data-sharing/exports"
+        },
+        "returned_package_staging_root": {
+          "const": "var/analytics/data-sharing/import-staging"
+        },
+        "review_output_root": {
+          "const": "var/analytics/data-sharing/import-preview"
+        }
+      }
     },
     "dispatch": {
       "type": "array",
@@ -70,7 +86,7 @@
             "minProperties": 1,
             "additionalProperties": {
               "type": "object",
-              "required": ["app", "label", "status", "selection_model", "paths", "source_write_targets", "sources", "config"],
+              "required": ["app", "label", "status", "selection_model", "source_write_targets", "sources", "config"],
               "additionalProperties": false,
               "properties": {
                 "app": {
@@ -105,9 +121,6 @@
                 },
                 "selection_model": {
                   "$ref": "#/$defs/selection_model"
-                },
-                "paths": {
-                  "$ref": "#/$defs/path_object"
                 },
                 "source_write_targets": {
                   "$ref": "#/$defs/path_object"

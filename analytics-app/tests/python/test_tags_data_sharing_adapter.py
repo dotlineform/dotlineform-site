@@ -34,6 +34,11 @@ def read_json(path: Path) -> object:
 def make_registry_payload() -> dict[str, object]:
     return {
         "schema_version": "data_sharing_adapters_v2",
+        "paths": {
+            "outbound_package_root": "var/analytics/data-sharing/exports",
+            "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
+            "review_output_root": "var/analytics/data-sharing/import-preview",
+        },
         "dispatch": [
             {"data_domain": "tags", "operation": "prepare", "adapter_id": "analytics-tags"},
             {"data_domain": "tags", "operation": "list_returned", "adapter_id": "analytics-tags"},
@@ -53,12 +58,6 @@ def make_registry_payload() -> dict[str, object]:
                         "label": "Tags",
                         "status": "active",
                         "selection_model": "records",
-                        "paths": {
-                            "outbound_package_root": "var/analytics/data-sharing/tags/exports",
-                            "returned_package_staging_root": "var/analytics/data-sharing/tags/import-staging",
-                            "review_output_root": "var/analytics/data-sharing/tags/import-preview",
-                            "source_root": "analytics-app/data/canonical",
-                        },
                         "source_write_targets": {
                             "tag_registry": "analytics-app/data/canonical/tag-registry.json",
                             "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
@@ -139,7 +138,6 @@ def make_registry_payload() -> dict[str, object]:
                         "output_formats": [],
                         "path_contract": {
                             "staging_root": "returned_package_staging_root",
-                            "source_root": "source_root",
                         },
                         "requires_confirmation": True,
                         "apply_actions": [
@@ -267,7 +265,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_activity_contract(root)
-    (root / "var/analytics/data-sharing/tags/import-staging").mkdir(parents=True, exist_ok=True)
+    (root / "var/analytics/data-sharing/import-staging").mkdir(parents=True, exist_ok=True)
     return temp_dir
 
 
@@ -287,7 +285,7 @@ def resolve_tags_adapter(root: Path, operation: str = "prepare"):
 def test_list_returned_packages_finds_json_files() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_json(root / "var/analytics/data-sharing/tags/import-staging/registry.json", {"import_registry": {"tags": []}})
+        write_json(root / "var/analytics/data-sharing/import-staging/registry.json", {"import_registry": {"tags": []}})
 
         payload = adapter.list_returned_packages(
             root,
@@ -373,7 +371,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
 
     assert payload["ok"] is True
     assert payload["output_written"] is True
-    assert payload["output_file"].startswith("var/analytics/data-sharing/tags/exports/tags-bundle-")
+    assert payload["output_file"].startswith("var/analytics/data-sharing/exports/tags-bundle-")
     assert package["package_metadata"]["package_family"] == "bundle"
     assert set(package["families"]) == {"registry", "aliases", "assignments"}
     assert activity["record_groups"]["files"]["sample_ids"] == [payload["output_file"]]
@@ -384,7 +382,7 @@ def test_registry_review_and_confirmed_apply_writes_source() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/tags/import-staging/registry.json",
+            root / "var/analytics/data-sharing/import-staging/registry.json",
             {
                 "mode": "merge",
                 "import_registry": {
@@ -446,7 +444,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/tags/import-staging/aliases.json",
+            root / "var/analytics/data-sharing/import-staging/aliases.json",
             {
                 "mode": "merge",
                 "import_aliases": {
@@ -491,7 +489,7 @@ def test_assignments_review_reports_applicable_conflict_invalid_and_missing() ->
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/tags/import-staging/assignments.json",
+            root / "var/analytics/data-sharing/import-staging/assignments.json",
             {
                 "import_assignments": {
                     "series": {
@@ -543,7 +541,7 @@ def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/tags/import-staging/assignments.json",
+            root / "var/analytics/data-sharing/import-staging/assignments.json",
             {
                 "import_assignments": {
                     "series": {

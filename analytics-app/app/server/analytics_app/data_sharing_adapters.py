@@ -92,11 +92,10 @@ def _validate_optional_path_object(value: Any, *, field: str) -> dict[str, Any]:
     return payload
 
 
-def _validate_runtime_artifact_roots(paths: dict[str, Any], *, data_domain: str, field: str) -> None:
-    domain_root = RUNTIME_ARTIFACT_ROOT / data_domain
+def _validate_runtime_artifact_roots(paths: dict[str, Any], *, field: str) -> None:
     for key, leaf in RUNTIME_PATH_KEYS.items():
         actual = safe_relative_path(paths.get(key), field=f"{field}.{key}")
-        expected = domain_root / leaf
+        expected = RUNTIME_ARTIFACT_ROOT / leaf
         if actual != expected:
             raise ValueError(
                 f"adapter config field {field}.{key} must be {expected.as_posix()}"
@@ -108,6 +107,7 @@ class AdapterResolution:
     data_domain: str
     operation: str
     adapter_id: str
+    paths: dict[str, Any]
     adapter: dict[str, Any]
     domain: dict[str, Any]
     capability: dict[str, Any]
@@ -121,8 +121,7 @@ class AdapterResolution:
         return normalize_id(self.domain.get("app"))
 
     def path(self, key: str) -> Path:
-        paths = self.domain.get("paths") if isinstance(self.domain.get("paths"), dict) else {}
-        return safe_relative_path(paths.get(key), field=f"paths.{key}")
+        return safe_relative_path(self.paths.get(key), field=f"paths.{key}")
 
     def config_path(self, key: str) -> Path:
         config = self.domain.get("config") if isinstance(self.domain.get("config"), dict) else {}
@@ -156,6 +155,12 @@ def capability_records(adapter: dict[str, Any]) -> list[dict[str, Any]]:
 def validate_registry(payload: dict[str, Any]) -> None:
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"Data Sharing adapter registry schema_version must be {SCHEMA_VERSION}")
+
+    registry_paths = _validate_optional_path_object(
+        payload.get("paths"),
+        field="paths",
+    )
+    _validate_runtime_artifact_roots(registry_paths, field="paths")
 
     dispatch = _require_array(payload.get("dispatch"), field="dispatch")
     adapters = _require_array(payload.get("adapters"), field="adapters")
@@ -194,12 +199,11 @@ def validate_registry(payload: dict[str, Any]) -> None:
                 raise ValueError(
                     f"adapter config field adapters[{index}].data_domains.{domain_id}.selection_model is unsupported"
                 )
-            paths = _validate_optional_path_object(domain.get("paths"), field=f"adapters[{index}].data_domains.{domain_id}.paths")
-            _validate_runtime_artifact_roots(
-                paths,
-                data_domain=domain_id,
-                field=f"adapters[{index}].data_domains.{domain_id}.paths",
-            )
+            if "paths" in domain:
+                raise ValueError(
+                    f"adapter config field adapters[{index}].data_domains.{domain_id}.paths "
+                    "is no longer supported; use top-level paths"
+                )
             _validate_optional_path_object(
                 domain.get("source_write_targets", {}),
                 field=f"adapters[{index}].data_domains.{domain_id}.source_write_targets",
@@ -316,6 +320,7 @@ def resolve_adapter(
         raise ValueError(f"operation must be one of {', '.join(sorted(CANONICAL_OPERATIONS))}")
 
     registry = load_registry(repo_root, config_path)
+    registry_paths = registry["paths"]
     matches = [
         item
         for item in registry["dispatch"]
@@ -357,6 +362,7 @@ def resolve_adapter(
             data_domain=resolved_data_domain,
             operation=resolved_operation,
             adapter_id=adapter_id,
+            paths=registry_paths,
             adapter=adapter,
             domain=domain,
             capability=capability,
@@ -377,6 +383,7 @@ def resolve_adapter(
         data_domain=resolved_data_domain,
         operation=resolved_operation,
         adapter_id=adapter_id,
+        paths=registry_paths,
         adapter=adapter,
         domain=domain,
         capability=capability,

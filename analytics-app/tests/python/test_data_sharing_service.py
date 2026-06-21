@@ -116,6 +116,11 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
             json.dumps(
                 {
                     "schema_version": "data_sharing_adapters_v2",
+                    "paths": {
+                        "outbound_package_root": "var/analytics/data-sharing/exports",
+                        "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
+                        "review_output_root": "var/analytics/data-sharing/import-preview",
+                    },
                     "dispatch": [
                         {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
                     ],
@@ -137,11 +142,6 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
                                             "source": "docs_scope_config",
                                             "required": True,
                                         },
-                                    },
-                                    "paths": {
-                                        "outbound_package_root": "var/analytics/data-sharing/documents/exports",
-                                        "returned_package_staging_root": "var/analytics/data-sharing/documents/import-staging",
-                                        "review_output_root": "var/analytics/data-sharing/documents/import-preview",
                                     },
                                     "source_write_targets": {},
                                     "sources": {
