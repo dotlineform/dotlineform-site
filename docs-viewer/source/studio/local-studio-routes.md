@@ -30,29 +30,29 @@ Active Local Studio routes:
 
 The local app owns `/studio/`.
 Studio home navigation is rendered by the JavaScript Studio app shell.
-The local home exposes Studio-owned catalogue links through `studio-home-shell.js` by grouping route IDs from `app.routes`; route labels and base paths come from the runtime route registry, while the home layout owns grouping, order, and route-specific query-string defaults.
+The local home exposes Studio-owned catalogue links through `studio-home.js` by grouping route IDs from `app.routes`; route labels and base paths come from the runtime route registry, while the home template owns the stable link-list mount point.
 The shared Studio top navigation is separate from that home link list.
 Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs` plus the light/dark toggle right-aligned.
 
-## JavaScript Shell Pattern
+## Template Shell Pattern
 
 Catalogue-maintenance Studio route shells are hosted by the local app.
-For active JavaScript-shell routes, Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, route-local `*-shell.js` modules render the body markup, and the route controller keeps route boot and behavior.
+For active template-backed routes, Python serves the generic `#studioApp` bootstrap, `studio/app/frontend/js/studio-app.js` renders the shared shell chrome, `studio/app/frontend/js/studio-route-templates.js` fetches the configured body template, and the route controller keeps route boot and behavior.
 
-Current JavaScript-shell route families:
+Current template-backed route families:
 
 - Project State:
-  `project-state-shell.js` renders the body and `project-state.js` owns route behavior.
+  `routes/project-state.html` owns stable body markup and `project-state.js` owns route behavior.
 - Bulk Add Work:
-  `bulk-add-work-shell.js` renders the body and `bulk-add-work.js` owns route behavior.
+  `routes/bulk-add-work.html` owns stable body markup and `bulk-add-work.js` owns route behavior.
 - Catalogue Field Registry:
-  `catalogue-field-registry-shell.js` renders the body and `catalogue-field-registry-review.js` owns route behavior.
+  `routes/catalogue-field-registry.html` owns stable body markup and `catalogue-field-registry-review.js` owns route behavior.
 - Catalogue Drafts:
-  `catalogue-status-shell.js` renders the body and `catalogue-status.js` owns route behavior.
+  `routes/catalogue-status.html` owns stable body markup and `catalogue-status.js` owns route behavior.
 - Studio Works:
-  `studio-works-shell.js` renders the body and `studio-works.js` owns route behavior.
+  `routes/studio-works.html` owns stable body markup and `studio-works.js` owns route behavior.
 - Catalogue editors:
-  route-local editor `*-shell.js` modules render the body and the existing editor controllers own route behavior.
+  route-local editor templates render the stable body and the existing editor controllers own route behavior.
 
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at plain `/studio/.../` paths.
 The editor shell media attributes are projected in the browser from `app.runtime.media` and `app.runtime.pipeline`.

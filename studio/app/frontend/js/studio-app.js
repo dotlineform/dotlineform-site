@@ -1,6 +1,6 @@
 import { loadStudioConfig } from "./studio-config.js";
-import { hasStudioRouteBodyRenderer, renderStudioRouteBody } from "./studio-route-body-renderers.js";
 import { buildStudioShellContract, listStudioRoutes } from "./studio-route-registry.js";
+import { loadStudioRouteTemplate } from "./studio-route-templates.js";
 import { initStudioThemeToggle } from "./studio-theme.js";
 
 async function bootStudioApp() {
@@ -11,12 +11,7 @@ async function bootStudioApp() {
     const config = await loadStudioConfig();
     const contract = buildStudioShellContract(config, window.location);
     if (!contract.route || !contract.shouldRenderShell) {
-      renderAppError(root, "Studio route is not available in the JavaScript shell.");
-      return;
-    }
-
-    if (!hasStudioRouteBodyRenderer(contract.route.id)) {
-      renderAppError(root, `Studio route body is not registered: ${contract.route.id}`);
+      renderAppError(root, "Studio route is not available in the template shell.");
       return;
     }
 
@@ -24,7 +19,7 @@ async function bootStudioApp() {
     root.innerHTML = renderStudioShell(
       config,
       contract.route,
-      await renderStudioRouteBody(contract.route.id, config, { importModule: importVersioned })
+      await loadStudioRouteTemplate(contract.route)
     );
     initStudioThemeToggle({ root: document });
     await importVersioned(contract.route.script);

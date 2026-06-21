@@ -11,12 +11,14 @@ STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
     "path",
+    "template",
+    "script",
     "nav",
     "shell_type",
     "ready_state_route_id",
 )
 
-STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("javascript",))
+STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("html-template",))
 STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES
 
 STUDIO_ROUTE_PATHS_WITH_COMPAT_KEYS: dict[str, tuple[str, ...]] = {
@@ -29,6 +31,7 @@ STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
     "label",
     "title",
     "path",
+    "template",
     "script",
     "nav",
     "shell_type",
@@ -146,6 +149,14 @@ def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) 
             seen_paths[normalized_path] = route_id
 
         if shell_type in STUDIO_SHELL_ROUTE_TYPES:
+            template = route.get("template")
+            if not isinstance(template, str) or not template.strip():
+                errors.append(f"{route_id}: shell route is missing template")
+            elif not template.strip().startswith("/studio/app/frontend/routes/"):
+                errors.append(f"{route_id}: shell route template must be under /studio/app/frontend/routes/: {template}")
+            elif not (repo_root / template.strip().lstrip("/")).exists():
+                errors.append(f"{route_id}: template does not exist: {template}")
+
             script = route.get("script")
             if not isinstance(script, str) or not script.strip():
                 errors.append(f"{route_id}: shell route is missing script")
@@ -215,18 +226,18 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-body-renderers.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
+        repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-templates.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-home.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-home-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work-shell.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-series-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-status-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-work-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "project-state-shell.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-works-shell.js",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "studio-home.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "bulk-add-work.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-field-registry.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-series.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-status.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "catalogue-work.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "project-state.html",
+        repo_root / "studio" / "app" / "frontend" / "routes" / "studio-works.html",
         repo_root / "studio" / "app" / "frontend" / "js" / "project-state.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "bulk-add-work.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-field-registry-review.js",

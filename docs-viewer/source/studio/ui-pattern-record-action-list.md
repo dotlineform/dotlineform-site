@@ -24,7 +24,7 @@ Production consumer:
 
 - `studio/app/frontend/js/catalogue-work-sections.js`
 - `studio/app/frontend/js/catalogue-work-detail-browser.js`
-- `studio/app/frontend/js/catalogue-work-shell.js`
+- `studio/app/frontend/routes/catalogue-work.html`
 - `studio/app/frontend/js/catalogue-work-editor-state.js`
 
 ## Component Boundary

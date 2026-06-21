@@ -57,6 +57,20 @@ export function renderMediaAttrs(attrs, keys) {
   return output.join("\n          ");
 }
 
+export function applyCatalogueEditorMediaAttrs(root, config, keys) {
+  if (!root || !root.dataset) return;
+  const attrs = readCatalogueEditorMediaAttrs(config);
+  keys.forEach((key) => {
+    const value = attrs[key];
+    const datasetKey = key;
+    if (value == null) {
+      delete root.dataset[datasetKey];
+      return;
+    }
+    root.dataset[datasetKey] = Array.isArray(value) ? JSON.stringify(value) : String(value);
+  });
+}
+
 export function escapeHtml(value, attribute = false) {
   const text = String(value == null ? "" : value);
   const escaped = text

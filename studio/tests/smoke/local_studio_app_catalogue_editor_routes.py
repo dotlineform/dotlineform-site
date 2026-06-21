@@ -61,15 +61,17 @@ def main(argv: list[str] | None = None) -> int:
             runtime_view = runtime_by_id.get(route["id"])
             if not runtime_view or runtime_view.get("path") != route["path"]:
                 raise AssertionError(f"runtime config missing {route['id']}: {runtime_views!r}")
-            if runtime_view.get("shell_type") != "javascript":
-                raise AssertionError(f"{route['id']} should be a JavaScript shell route: {runtime_view!r}")
+            if runtime_view.get("shell_type") != "html-template":
+                raise AssertionError(f"{route['id']} should be an HTML template route: {runtime_view!r}")
+            if not str(runtime_view.get("template", "")).startswith("/studio/app/frontend/routes/"):
+                raise AssertionError(f"{route['id']} should expose a route template: {runtime_view!r}")
 
             with urllib.request.urlopen(f"{base_url}{route['path']}", timeout=10) as response:
                 bootstrap_html = response.read().decode("utf-8")
             if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
-                raise AssertionError(f"{route['id']} should be served through the JavaScript Studio app bootstrap")
+                raise AssertionError(f"{route['id']} should be served through the Studio app bootstrap")
             if route["root"].removeprefix("#") in bootstrap_html:
-                raise AssertionError(f"{route['id']} body should be rendered by JavaScript, not Python")
+                raise AssertionError(f"{route['id']} body should be rendered from the route template, not Python")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)

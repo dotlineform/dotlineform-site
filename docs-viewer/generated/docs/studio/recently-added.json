@@ -27,6 +27,22 @@
       "parent_title": "Data Sharing"
     },
     {
+      "doc_id": "analytics-static-route-template-migration",
+      "title": "Analytics Static Route Template Migration",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template-migration.json",
+      "added_date": "2026-06-21",
+      "parent_id": "analytics",
+      "parent_title": "Analytics"
+    },
+    {
+      "doc_id": "studio-static-route-template-migration",
+      "title": "Studio Static Route Template Migration",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-static-route-template-migration.json",
+      "added_date": "2026-06-21",
+      "parent_id": "studio-runtime",
+      "parent_title": "Studio Runtime"
+    },
+    {
       "doc_id": "site-request-docs-viewer-view-mode-registry",
       "title": "Docs Viewer View And Mode Registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
@@ -65,23 +81,7 @@
       "added_date": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI"
-    },
-    {
-      "doc_id": "site-request-canonical-static-site-root-tasks",
-      "title": "Canonical Static Site Root Migration Tasks",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root-tasks.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-canonical-static-site-root",
-      "parent_title": "Canonical Static Site Root Request"
-    },
-    {
-      "doc_id": "site-request-canonical-static-site-root",
-      "title": "Canonical Static Site Root Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root.json",
-      "added_date": "2026-06-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-06-21T18:46:19Z"
+  "generated_at": "2026-06-21T21:35:26Z"
 }

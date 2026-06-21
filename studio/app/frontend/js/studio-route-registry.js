@@ -3,7 +3,7 @@ import {
   getStudioRouteRegistry
 } from "./studio-config.js";
 
-const SHELL_ROUTE_TYPES = new Set(["javascript"]);
+const SHELL_ROUTE_TYPES = new Set(["html-template"]);
 
 export function listStudioRoutes(config) {
   return Object.entries(getStudioRouteRegistry(config))
@@ -33,7 +33,7 @@ export function buildStudioShellContract(config, locationLike = currentLocation(
     };
   }
 
-  const shouldRenderShell = route.shellType === "javascript";
+  const shouldRenderShell = routeRequiresShellScript(route);
   return {
     route,
     shouldRenderShell,
@@ -59,6 +59,7 @@ function normalizeRoute(routeId, route) {
     label: normalizeText(route.label),
     title: normalizeText(route.title),
     path: normalizeText(route.path),
+    template: normalizeText(route.template),
     script: normalizeText(route.script),
     nav: route.nav === true,
     shellType: normalizeText(route.shell_type),

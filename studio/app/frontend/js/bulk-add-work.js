@@ -45,6 +45,12 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `bulk_add_work.${key}`, fallback, tokens);
 }
 
+function readBulkImportWorkbookPath(config) {
+  const pipeline = config && config.app && config.app.runtime && config.app.runtime.pipeline;
+  const workbooks = pipeline && pipeline.workbooks;
+  return normalizeText(workbooks && workbooks.bulk_import) || "data/works_bulk_import.xlsx";
+}
+
 function syncRouteBusyState(state) {
   syncOperationalRouteBusyState(state, bulkAddWorkRouteOptions());
 }
@@ -204,6 +210,8 @@ async function init() {
   try {
     const config = await loadStudioConfigWithText("bulk_add_work");
     state.config = config;
+    state.workbookPath = readBulkImportWorkbookPath(config);
+    root.dataset.workbookPath = state.workbookPath;
     state.serverAvailable = Boolean(await probeBulkAddWorkCatalogueHealth());
     pageHeadingNode.textContent = t(state, "page_heading", "bulk add work");
     importHeadingNode.textContent = t(state, "import_heading", "import");

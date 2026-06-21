@@ -1,6 +1,12 @@
 import {
   getStudioText
 } from "./studio-config.js";
+import {
+  applyCatalogueEditorMediaAttrs
+} from "./catalogue-editor-shell-media.js";
+import {
+  loadCatalogueMediaConfig
+} from "./catalogue-media-preview.js";
 import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
   configureCatalogueEditorRouteRuntime,
@@ -386,6 +392,17 @@ async function init() {
     await configureCatalogueEditorRouteRuntime(state, {
       namespace: "catalogue_series_editor",
       applyText: (config) => {
+        applyCatalogueEditorMediaAttrs(root, config, [
+          "worksPrimaryBase",
+          "thumbWorksBase",
+          "primaryDisplayWidth",
+          "primaryFullWidth",
+          "primarySuffix",
+          "thumbSizes",
+          "thumbSuffix",
+          "assetFormat"
+        ]);
+        state.mediaConfig = loadCatalogueMediaConfig(root);
         state.seriesTypeOptions = getSeriesTypeOptions();
         refreshSeriesTypeOptions(state);
         searchNode.placeholder = t(state, "search_placeholder", "find series by title");

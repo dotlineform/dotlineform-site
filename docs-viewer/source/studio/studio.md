@@ -43,7 +43,7 @@ Studio landing and operational routes expose the shared route-ready contract:
 - **[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)** for the implemented route-ready contract, helper modules, route inventory, and audit coverage
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell architecture, route registry, shared browser modules, and Docs Viewer integration
 - **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the app server boundary, sibling-service split, runtime config shape, and server module ownership
-- **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for mounted local routes, route-local shell ownership, retired route notes, page-level doc links, and route checks
+- **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for mounted local routes, route template ownership, retired route notes, page-level doc links, and route checks
 - **[Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis)** for `/studio/api/...` endpoint groups and adapter ownership
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 - **[Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)** for Codex-run browser smoke-test harness rules

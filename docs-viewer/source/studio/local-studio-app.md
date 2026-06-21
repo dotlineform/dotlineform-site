@@ -11,7 +11,7 @@ viewable: true
 This document defines the operational boundary for the Local Studio app server.
 
 - Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the browser shell, route registry, shared runtime modules, and sibling-app boundary.
-- Use [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the mounted route inventory and route-local shell ownership.
+- Use [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the mounted route inventory and route template ownership.
 - Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint groups and server adapter ownership.
 
 Local Studio is intentionally separate from the public dotlineform.com site.
@@ -45,7 +45,7 @@ The app server owns:
 Local app views declare the runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 `/studio/runtime-config.json` exposes the local app runtime contract for migrated views:
 
-- `app.routes` route ids, labels, paths, scripts, shell types, ready-state route IDs, and navigation visibility
+- `app.routes` route ids, labels, paths, templates, scripts, shell types, ready-state route IDs, and navigation visibility
 - runtime view records derived from `app.routes`
 - local service endpoints such as `/studio/api/catalogue`
 - generated data, search, and UI-text paths from checked-in Studio config

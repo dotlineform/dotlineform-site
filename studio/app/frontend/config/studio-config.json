@@ -7,72 +7,80 @@
         "label": "home",
         "title": "",
         "path": "/studio/",
+        "template": "/studio/app/frontend/routes/studio-home.html",
         "script": "/studio/app/frontend/js/studio-home.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "studio-home"
       },
       "project_state": {
         "label": "project state",
         "title": "Project State",
         "path": "/studio/project-state/",
+        "template": "/studio/app/frontend/routes/project-state.html",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "project-state"
       },
       "bulk_add_work": {
         "label": "bulk add",
         "title": "Bulk Add Work",
         "path": "/studio/bulk-add-work/",
+        "template": "/studio/app/frontend/routes/bulk-add-work.html",
         "script": "/studio/app/frontend/js/bulk-add-work.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "bulk-add-work"
       },
       "catalogue_field_registry": {
         "label": "field registry",
         "title": "Catalogue Field Registry",
         "path": "/studio/catalogue-field-registry/",
+        "template": "/studio/app/frontend/routes/catalogue-field-registry.html",
         "script": "/studio/app/frontend/js/catalogue-field-registry-review.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "catalogue-field-registry"
       },
       "catalogue_status": {
         "label": "drafts",
         "title": "Catalogue Drafts",
         "path": "/studio/catalogue-status/",
+        "template": "/studio/app/frontend/routes/catalogue-status.html",
         "script": "/studio/app/frontend/js/catalogue-status.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "catalogue-status"
       },
       "studio_works": {
         "label": "works",
         "title": "Studio Works",
         "path": "/studio/studio-works/",
+        "template": "/studio/app/frontend/routes/studio-works.html",
         "script": "/studio/app/frontend/js/studio-works.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "studio-works"
       },
       "catalogue_series_editor": {
         "label": "series editor",
         "title": "Catalogue Series Editor",
         "path": "/studio/catalogue-series/",
+        "template": "/studio/app/frontend/routes/catalogue-series.html",
         "script": "/studio/app/frontend/js/catalogue-series-editor.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "catalogue-series"
       },
       "catalogue_work_editor": {
         "label": "work editor",
         "title": "Catalogue Work Editor",
         "path": "/studio/catalogue-work/",
+        "template": "/studio/app/frontend/routes/catalogue-work.html",
         "script": "/studio/app/frontend/js/catalogue-work-editor.js",
         "nav": false,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "catalogue-work"
       }
     }

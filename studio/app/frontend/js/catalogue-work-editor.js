@@ -2,6 +2,12 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
+  applyCatalogueEditorMediaAttrs
+} from "./catalogue-editor-shell-media.js";
+import {
+  loadCatalogueMediaConfig
+} from "./catalogue-media-preview.js";
+import {
   loadStudioLookupRecordJson
 } from "./studio-data.js";
 import {
@@ -815,7 +821,22 @@ function applyWorkEditorText(state, elements) {
 async function configureWorkEditorRuntime(state, elements) {
   return configureCatalogueEditorRouteRuntime(state, {
     namespace: "catalogue_work_editor",
-    applyText: () => applyWorkEditorText(state, elements)
+    applyText: (config) => {
+      applyCatalogueEditorMediaAttrs(elements.root, config, [
+        "worksPrimaryBase",
+        "stagedWorksPrimaryBase",
+        "thumbWorksBase",
+        "thumbWorkDetailsBase",
+        "primaryDisplayWidth",
+        "primaryFullWidth",
+        "primarySuffix",
+        "thumbSizes",
+        "thumbSuffix",
+        "assetFormat"
+      ]);
+      state.mediaConfig = loadCatalogueMediaConfig(elements.root);
+      applyWorkEditorText(state, elements);
+    }
   });
 }
 

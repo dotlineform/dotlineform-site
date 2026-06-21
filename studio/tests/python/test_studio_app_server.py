@@ -60,17 +60,18 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
-    assert payload["app"]["routes"]["studio_home"]["shell_type"] == "javascript"
+    assert payload["app"]["routes"]["studio_home"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["studio_home"]["template"] == "/studio/app/frontend/routes/studio-home.html"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"
-    assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["studio_works"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "javascript"
-    assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "javascript"
+    assert payload["app"]["routes"]["project_state"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["bulk_add_work"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["catalogue_status"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["studio_works"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["catalogue_series_editor"]["shell_type"] == "html-template"
+    assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "html-template"
     assert "catalogue_moment_editor" not in payload["app"]["routes"]
-    assert payload["app"]["routes"]["project_state"]["shell_type"] == "javascript"
+    assert payload["app"]["routes"]["project_state"]["shell_type"] == "html-template"
     assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
     assert "routes" not in payload["paths"]
@@ -164,6 +165,16 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     with pytest.raises(RuntimeError, match="project_state: shell route is missing script"):
         validate_studio_route_registry(REPO_ROOT, missing_script)
 
+    missing_template = json.loads(json.dumps(payload))
+    missing_template["app"]["routes"]["project_state"].pop("template")
+    with pytest.raises(RuntimeError, match="project_state: missing required field template"):
+        validate_studio_route_registry(REPO_ROOT, missing_template)
+
+    missing_template_path = json.loads(json.dumps(payload))
+    missing_template_path["app"]["routes"]["project_state"]["template"] = "/studio/app/frontend/routes/missing.html"
+    with pytest.raises(RuntimeError, match="project_state: template does not exist"):
+        validate_studio_route_registry(REPO_ROOT, missing_template_path)
+
     unsupported_shell = json.loads(json.dumps(payload))
     unsupported_shell["app"]["routes"]["project_state"]["shell_type"] = "server"
     with pytest.raises(RuntimeError, match="project_state: unsupported shell_type"):
@@ -174,9 +185,10 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "label": "external",
         "title": "External",
         "path": "/external/",
+        "template": "/studio/app/frontend/routes/project-state.html",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": False,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "external",
     }
     with pytest.raises(RuntimeError, match="external_route: shell route path must be under /studio/"):
@@ -187,9 +199,10 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
         "label": "configured",
         "title": "Configured",
         "path": "/studio/configured/",
+        "template": "/studio/app/frontend/routes/project-state.html",
         "script": "/studio/app/frontend/js/project-state.js",
         "nav": False,
-        "shell_type": "javascript",
+        "shell_type": "html-template",
         "ready_state_route_id": "configured",
     }
     validate_studio_route_registry(REPO_ROOT, configured_route)

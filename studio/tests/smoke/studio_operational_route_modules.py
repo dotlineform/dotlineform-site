@@ -91,20 +91,22 @@ def assert_operational_route_helpers(page: Page) -> None:
                             label: 'project state',
                             title: 'Project State',
                             path: '/studio/project-state/',
+                            template: '/studio/app/frontend/routes/project-state.html',
                             script: '/studio/app/frontend/js/project-state.js',
                             doc_id: 'project-state-page',
                             nav: false,
-                            shell_type: 'javascript',
+                            shell_type: 'html-template',
                             ready_state_route_id: 'project-state'
                         },
                         catalogue_work_editor: {
                             label: 'work editor',
                             title: 'Catalogue Work Editor',
                             path: '/studio/catalogue-work/',
+                            template: '/studio/app/frontend/routes/catalogue-work.html',
                             script: '/studio/app/frontend/js/catalogue-work-editor.js',
                             doc_id: 'catalogue-work-editor',
                             nav: false,
-                            shell_type: 'javascript',
+                            shell_type: 'html-template',
                             ready_state_route_id: 'catalogue-work'
                         }
                     }
@@ -135,6 +137,7 @@ def assert_operational_route_helpers(page: Page) -> None:
                 contractReason: contract.reason,
                 missingContractReason: missing.reason,
                 workRoutePath: workRoute && workRoute.path,
+                workRouteTemplate: workRoute && workRoute.template,
                 workRouteNeedsScript: registry.routeRequiresShellScript(workRoute)
             };
         }"""
@@ -162,6 +165,7 @@ def assert_operational_route_helpers(page: Page) -> None:
     assert result["contractReason"] == ""
     assert result["missingContractReason"] == "route_not_registered"
     assert result["workRoutePath"] == "/studio/catalogue-work/"
+    assert result["workRouteTemplate"] == "/studio/app/frontend/routes/catalogue-work.html"
     assert result["workRouteNeedsScript"] is True
 
 

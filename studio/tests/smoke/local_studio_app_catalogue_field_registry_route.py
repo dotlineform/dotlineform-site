@@ -40,13 +40,17 @@ def main(argv: list[str] | None = None) -> int:
         runtime_view = runtime_by_id.get("catalogue_field_registry")
         if not runtime_view or runtime_view.get("path") != "/studio/catalogue-field-registry/":
             raise AssertionError(f"runtime config missing catalogue_field_registry: {runtime_views!r}")
+        if runtime_view.get("shell_type") != "html-template":
+            raise AssertionError(f"catalogue_field_registry should be an HTML template route: {runtime_view!r}")
+        if runtime_view.get("template") != "/studio/app/frontend/routes/catalogue-field-registry.html":
+            raise AssertionError(f"catalogue_field_registry should expose its route template: {runtime_view!r}")
 
         with urllib.request.urlopen(f"{base_url}/studio/catalogue-field-registry/", timeout=10) as response:
             bootstrap_html = response.read().decode("utf-8")
         if 'id="studioApp"' not in bootstrap_html or "studio-app.js" not in bootstrap_html:
-            raise AssertionError("catalogue-field-registry should be served through the JavaScript Studio app bootstrap")
+            raise AssertionError("catalogue-field-registry should be served through the Studio app bootstrap")
         if "fieldRegistryReviewRoot" in bootstrap_html:
-            raise AssertionError("catalogue-field-registry route body should be rendered by JavaScript, not Python")
+            raise AssertionError("catalogue-field-registry route body should be rendered from the route template, not Python")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
@@ -77,9 +81,9 @@ def main(argv: list[str] | None = None) -> int:
                 expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
                 expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("catalogue_field_registry_v1"), timeout=10_000)
 
-                page.locator("#fieldRegistryReviewSearch").fill("details_subfolder")
+                page.locator("#fieldRegistryReviewSearch").fill("work_id")
                 expect(page.locator("#fieldRegistryReviewMeta")).to_contain_text("exact", timeout=10_000)
-                expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("details_subfolder"), timeout=10_000)
+                expect(page.locator("#fieldRegistryReviewOutput")).to_have_value(re.compile("work_id"), timeout=10_000)
 
                 doc_link_count = page.locator(".studioLayout__docLink").count()
                 if doc_link_count:

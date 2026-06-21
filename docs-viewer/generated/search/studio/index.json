@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e561dda6e0ecb3f4939c954572b3219d",
-    "generated_at_utc": "2026-06-21T19:54:05Z",
-    "count": 241
+    "version": "blake2b-c28e049d43063928e89220451ac86452",
+    "generated_at_utc": "2026-06-21T21:35:26Z",
+    "count": 243
   },
   "entries": [
     {
@@ -470,6 +470,30 @@
         "03"
       ],
       "search_text": "config-analytics-config-json config analytics json analytics config json 2026-06-03 2026 06 03"
+    },
+    {
+      "id": "analytics-static-route-template-migration",
+      "kind": "doc",
+      "title": "Analytics Static Route Template Migration",
+      "href": "/docs/?scope=studio&doc=analytics-static-route-template-migration",
+      "last_updated": "2026-06-21",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-06-21 • Analytics",
+      "search_terms": [
+        "analytics-static-route-template-migration",
+        "analytics",
+        "static",
+        "route",
+        "template",
+        "migration",
+        "analytics static route template migration",
+        "2026-06-21",
+        "2026",
+        "06",
+        "21"
+      ],
+      "search_text": "analytics-static-route-template-migration analytics static route template migration analytics static route template migration 2026-06-21 2026 06 21"
     },
     {
       "id": "config-analytics-ui-text-json",
@@ -5758,6 +5782,32 @@
         "02"
       ],
       "search_text": "studio-runtime studio runtime studio runtime 2026-06-02 2026 06 02"
+    },
+    {
+      "id": "studio-static-route-template-migration",
+      "kind": "doc",
+      "title": "Studio Static Route Template Migration",
+      "href": "/docs/?scope=studio&doc=studio-static-route-template-migration",
+      "last_updated": "2026-06-21",
+      "parent_id": "studio-runtime",
+      "parent_title": "Studio Runtime",
+      "display_meta": "2026-06-21 • Studio Runtime",
+      "search_terms": [
+        "studio-static-route-template-migration",
+        "studio",
+        "static",
+        "route",
+        "template",
+        "migration",
+        "studio static route template migration",
+        "studio runtime",
+        "runtime",
+        "2026-06-21",
+        "2026",
+        "06",
+        "21"
+      ],
+      "search_text": "studio-static-route-template-migration studio static route template migration studio static route template migration studio runtime runtime 2026-06-21 2026 06 21"
     },
     {
       "id": "config-studio-ui-text-json",

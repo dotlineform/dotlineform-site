@@ -14,7 +14,7 @@ Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the local s
 ## Route Shell
 
 The local Studio app server owns active Studio route URLs.
-For JavaScript-shell routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
+For template-backed routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
 `studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
 The browser-rendered Studio shell provides the shared admin-facing navigation model:
@@ -30,7 +30,7 @@ Catalogue search administration should be reached from the Catalogue dashboard, 
 The Studio shell renders:
 
 - the page title
-- the route body from the route-local shell module
+- the route body from the configured static route template
 
 The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
 
@@ -57,7 +57,7 @@ Each registered route uses these fields:
 
 Current shell type:
 
-- `javascript` for active Studio routes rendered by the browser shell
+- `html-template` for active Studio routes rendered by the browser shell from `studio/app/frontend/routes/*.html`
 
 `studio/app/server/studio/studio_app_config.py` validates the registry before exposing runtime config.
 Validation catches duplicate paths, missing required fields, missing scripts for shell-rendered routes, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route IDs/paths that do not match a current Local Studio route.
@@ -68,9 +68,9 @@ The runtime config exposes the same records as `app.runtime.views` for existing 
 It resolves the active route from `window.location.pathname`, normalizes route fields for the future shell, and returns a shell contract without rendering or mounting any route.
 
 `studio/app/frontend/js/studio-app.js` is the browser-owned Studio app shell.
-For routes marked `shell_type: "javascript"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title shell, asks the route-local body renderer for markup, and then imports the configured route script.
+For routes marked `shell_type: "html-template"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title shell, fetches the configured route template, and then imports the configured route script.
 Project State, Studio Audits, Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Studio Works, and the Catalogue editor family use this path.
-Their body markup lives in route-local `*-shell.js` modules, and their existing controllers stay in the configured route scripts.
+Their stable body markup lives in `studio/app/frontend/routes/*.html`, and their controllers stay in the configured route scripts.
 
 ## Studio Pages
 
@@ -87,8 +87,8 @@ Shared Studio runtime and wiring currently live in:
   loads the configured runtime URL from `meta[name="dlf-studio-config-url"]`, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state. Local Studio views use `/studio/runtime-config.json`, which the app server builds from checked-in Studio config plus local runtime endpoints.
 - `studio/app/frontend/js/studio-app.js`
   owns the browser-rendered Studio shell and route script import for active Studio-local routes
-- `studio/app/frontend/js/studio-route-body-renderers.js`
-  owns the route-id to route-body-renderer mapping for JavaScript-shell routes
+- `studio/app/frontend/js/studio-route-templates.js`
+  fetches and validates configured static route templates before route scripts boot
 - `studio/app/frontend/js/studio-navigation.js`
   resolves local Studio route URLs, public preview links, and modal event dispatch
 - `studio/app/frontend/js/studio-data.js`
@@ -97,8 +97,8 @@ Shared Studio runtime and wiring currently live in:
   provides local-write endpoint definitions, health probing, and shared JSON POST transport
 - `studio/app/frontend/js/studio-route-state.js`
   provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
-- `studio/app/frontend/js/*-shell.js`
-  own static route body markup for the JavaScript shell before the existing side-effect route controllers boot
+- `studio/app/frontend/routes/*.html`
+  own stable route body markup for template-backed Studio routes before the route controllers boot
 - `studio/app/frontend/js/catalogue-*-editor.js` and focused sibling modules
   own catalogue editor route orchestration, forms, selection flows, modals, actions, and section rendering
 
