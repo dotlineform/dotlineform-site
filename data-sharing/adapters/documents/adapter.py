@@ -9,14 +9,14 @@ from typing import Any, Callable, Dict
 from services.dispatch import DataSharingAdapterHandlers
 
 from . import context, prepare, returned
-from .families import library
+from .families import documents
 
 
 def handlers_for(
     dependencies_factory: Callable[[], context.DocumentsDataSharingDependencies],
 ) -> DataSharingAdapterHandlers:
     def selectable_records_handler(repo_root: Path, data_domain: Any, selectors: Any, adapter: Any) -> Dict[str, Any]:
-        return library.selectable_records(repo_root, data_domain, selectors, adapter, dependencies_factory())
+        return documents.selectable_records(repo_root, data_domain, selectors, adapter, dependencies_factory())
 
     def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return prepare.prepare_package(repo_root, body, dry_run, adapter, dependencies_factory())

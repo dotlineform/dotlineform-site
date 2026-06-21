@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Library document family for the Documents Data Sharing adapter."""
+"""Document record family for the Documents Data Sharing adapter."""
 
 from __future__ import annotations
 

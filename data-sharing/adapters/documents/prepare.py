@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from .context import DocumentsDataSharingDependencies
-from .families import library
+from .families import documents
 
 
 def prepare_package(
@@ -17,4 +17,4 @@ def prepare_package(
     adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    return library.prepare_package(repo_root, body, dry_run, adapter, dependencies)
+    return documents.prepare_package(repo_root, body, dry_run, adapter, dependencies)

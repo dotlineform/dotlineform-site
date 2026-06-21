@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from .context import DocumentsDataSharingDependencies
-from .families import library
+from .families import documents
 
 
 def list_returned_packages(
@@ -16,7 +16,7 @@ def list_returned_packages(
     adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    return library.list_returned_packages(repo_root, data_domain, adapter, dependencies)
+    return documents.list_returned_packages(repo_root, data_domain, adapter, dependencies)
 
 
 def review_returned_package(
@@ -26,7 +26,7 @@ def review_returned_package(
     adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    return library.review_returned_package(repo_root, body, dry_run, adapter, dependencies)
+    return documents.review_returned_package(repo_root, body, dry_run, adapter, dependencies)
 
 
 def apply_returned_changes(
@@ -36,4 +36,4 @@ def apply_returned_changes(
     adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    return library.apply_returned_changes(repo_root, body, dry_run, adapter, dependencies)
+    return documents.apply_returned_changes(repo_root, body, dry_run, adapter, dependencies)

@@ -9,7 +9,7 @@ viewable: true
 # Documents Data Sharing Adapter Structure
 
 The documents adapter implements Data Sharing for Docs Viewer-backed document records.
-It follows the shared [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture) and delegates document-specific behavior to the current `library` family.
+It follows the shared [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture) and delegates document-record behavior to the `documents` family.
 
 ## Layout
 
@@ -21,7 +21,7 @@ data-sharing/adapters/documents/
   returned.py
 
   families/
-    library.py
+    documents.py
 ```
 
 `adapter.py` only wires `DataSharingAdapterHandlers` for module `documents`.
@@ -37,11 +37,11 @@ data-sharing/adapters/documents/
 - adapter-domain scope fallback through `domain.scope` or `domain.docs_scope`
 - request selection validation
 
-`prepare.py` delegates prepare operations to the current document family.
+`prepare.py` delegates prepare operations to the document-record family.
 
-`returned.py` delegates returned-package list, review, and apply operations to the current document family.
+`returned.py` delegates returned-package list, review, and apply operations to the document-record family.
 
-`families/library.py` owns the active document implementation.
+`families/documents.py` owns document-record implementation.
 It calls Docs Viewer data-sharing helpers for selectable records, package preparation, returned package listing, returned package review, and source apply actions.
 
 ## Scope And Selectable Records
@@ -66,7 +66,7 @@ data-sharing/config/library-export-configs.json
 
 Those configs are documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
-`families/library.py` passes the selected docs, target format, missing-summary option, output root, and config path to Docs Viewer package helpers.
+`families/documents.py` passes the selected docs, target format, missing-summary option, output root, and config path to Docs Viewer package helpers.
 The adapter adds Data Sharing context and summary text, and logs a `docs-export` event through dependencies.
 
 ## Returned Packages
@@ -84,10 +84,11 @@ Current apply actions are:
 Apply requires `DocumentsDataSharingDependencies` because source writes must run through Docs Viewer write/rebuild dependencies.
 Successful applies can update source Markdown and trigger Docs/search rebuild follow-through through Docs Viewer helpers.
 
-## Current Family Boundary
+## Family Boundary
 
-The only current documents family is `library`.
-That family covers the existing Library export configs and document returned-package review/apply behavior.
+The current documents family is `documents`.
+It is about document records, not a selected Docs Viewer scope.
+The existing Library export configs are one current use of that family because they select `docs_scope: library`.
 
 Add a new documents family when a document-backed profile needs a different source record shape, package contract, returned-package parser, review row model, apply action, or validation model.
 Do not add those branches to `adapter.py`.
