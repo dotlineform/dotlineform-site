@@ -33,6 +33,11 @@ def tag_record_name(tag: Dict[str, Any], tag_id: str) -> str:
     return normalize_text(tag.get("label")) or tag_id
 
 
+def tag_sort_key(tag: Dict[str, Any]) -> tuple[str, str]:
+    tag_id = normalize_text(tag.get("tag_id"))
+    return (tag_record_name(tag, tag_id).casefold(), tag_id.casefold())
+
+
 def selectable_records(repo_root: Path, adapter: AdapterResolution) -> Dict[str, Any]:
     registry = load_current_registry(repo_root, adapter)
     source_tags = registry.get("tags") if isinstance(registry.get("tags"), list) else []
@@ -53,6 +58,7 @@ def selectable_records(repo_root: Path, adapter: AdapterResolution) -> Dict[str,
                 "selectable": True,
             }
         )
+    records.sort(key=lambda record: (normalize_text(record.get("name")).casefold(), normalize_text(record.get("id")).casefold()))
     return {
         "ok": True,
         "data_domain": adapter.data_domain,
@@ -72,13 +78,13 @@ def selectable_records(repo_root: Path, adapter: AdapterResolution) -> Dict[str,
 def selected_tags(source_tags: list[Any], selected_tag_ids: Optional[list[str]]) -> list[Dict[str, Any]]:
     tags = [tag for tag in source_tags if isinstance(tag, dict)]
     if selected_tag_ids is None:
-        return tags
+        return sorted(tags, key=tag_sort_key)
     by_id = {normalize_text(tag.get("tag_id")): tag for tag in tags if normalize_text(tag.get("tag_id"))}
     unknown = [tag_id for tag_id in selected_tag_ids if tag_id not in by_id]
     if unknown:
         raise ValueError(f"record_ids contains unknown tag id: {unknown[0]}")
     selected = set(selected_tag_ids)
-    return [tag for tag in tags if normalize_text(tag.get("tag_id")) in selected]
+    return sorted([tag for tag in tags if normalize_text(tag.get("tag_id")) in selected], key=tag_sort_key)
 
 
 def build_package(

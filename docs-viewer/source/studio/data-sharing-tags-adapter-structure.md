@@ -91,7 +91,7 @@ The `tag-registry` profile uses the shared generic prepare list.
 
 The family can include tag-specific fields such as `tag_id`, `group`, and `status`, but the browser selection UI must use `id` and `name`.
 When the prepare request includes `selection.record_ids`, `prepare.py` validates the ids and passes them to `families/registry.py`.
-The registry package builder exports only matching source tags, preserving source order.
+The registry package builder exports only matching source tags, sorted by tag display name with tag id as a stable tiebreaker.
 Unknown selected tag ids fail validation instead of being silently ignored.
 
 The alias, assignment, and bundle profiles currently remain profile-only exports.

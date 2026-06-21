@@ -335,9 +335,9 @@ def test_selectable_records_returns_tag_registry_records() -> None:
     assert payload["selection_model"] == "records"
     assert payload["source"]["source"] == "tag_registry"
     assert [(record["id"], record["name"]) for record in payload["records"]] == [
+        ("subject:stone", "stone"),
         ("subject:trees", "trees"),
         ("subject:water", "water"),
-        ("subject:stone", "stone"),
     ]
 
 
@@ -351,7 +351,7 @@ def test_prepare_registry_package_uses_selected_tag_records() -> None:
                 "data_domain": "tags",
                 "config_id": "tag-registry",
                 "target_format": "json",
-                "selection": {"record_ids": ["subject:water", "subject:trees"], "select_all": False},
+                "selection": {"record_ids": ["subject:water", "subject:stone", "subject:trees"], "select_all": False},
             },
             dry_run=False,
             adapter=resolve_tags_adapter(root, "prepare"),
@@ -360,9 +360,9 @@ def test_prepare_registry_package_uses_selected_tag_records() -> None:
         package = read_json(root / payload["output_file"])
 
     assert payload["ok"] is True
-    assert payload["counts"]["selected"] == 2
-    assert payload["counts"]["tags"] == 2
-    assert [tag["tag_id"] for tag in package["tags"]] == ["subject:trees", "subject:water"]
+    assert payload["counts"]["selected"] == 3
+    assert payload["counts"]["tags"] == 3
+    assert [tag["tag_id"] for tag in package["tags"]] == ["subject:stone", "subject:trees", "subject:water"]
 
 
 def test_tags_handlers_dispatch_through_data_sharing_workflow() -> None:
@@ -381,7 +381,7 @@ def test_tags_handlers_dispatch_through_data_sharing_workflow() -> None:
     assert selectable["ok"] is True
     assert selectable["adapter_id"] == "analytics-tags"
     assert selectable["source"]["source"] == "tag_registry"
-    assert [record["id"] for record in selectable["records"]] == ["subject:trees", "subject:water", "subject:stone"]
+    assert [record["id"] for record in selectable["records"]] == ["subject:stone", "subject:trees", "subject:water"]
     assert payload["ok"] is True
     assert payload["adapter_id"] == "analytics-tags"
     assert payload["tag_family"] == "registry"
