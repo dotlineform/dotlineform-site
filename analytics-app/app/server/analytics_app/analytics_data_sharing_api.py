@@ -29,6 +29,7 @@ from docs_scope_config import load_docs_scope_configs  # noqa: E402
 from adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from adapters.documents import context as documents_data_sharing_context  # noqa: E402
 from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
+from adapters.tags import context as tags_data_sharing_context  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
@@ -70,8 +71,8 @@ def documents_data_sharing_dependencies() -> documents_data_sharing_context.Docu
     )
 
 
-def tags_data_sharing_dependencies() -> tags_data_sharing_adapter.TagsDataSharingDependencies:
-    return tags_data_sharing_adapter.TagsDataSharingDependencies(log_event=log_event)
+def tags_data_sharing_dependencies() -> tags_data_sharing_context.TagsDataSharingDependencies:
+    return tags_data_sharing_context.TagsDataSharingDependencies(log_event=log_event)
 
 
 DATA_SHARING_HANDLERS = {

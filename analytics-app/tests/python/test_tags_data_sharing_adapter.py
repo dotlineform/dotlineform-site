@@ -18,7 +18,7 @@ for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from adapters.tags import adapter  # noqa: E402
+from adapters.tags import adapter, context, prepare, returned  # noqa: E402
 import data_sharing_service  # noqa: E402
 
 
@@ -269,13 +269,13 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     return temp_dir
 
 
-def dependencies() -> adapter.TagsDataSharingDependencies:
+def dependencies() -> context.TagsDataSharingDependencies:
     events: list[tuple[Path, str, dict[str, object]]] = []
 
     def log_event(repo_root: Path, event: str, details: dict[str, object]) -> None:
         events.append((repo_root, event, details))
 
-    return adapter.TagsDataSharingDependencies(log_event=log_event)
+    return context.TagsDataSharingDependencies(log_event=log_event)
 
 
 def resolve_tags_adapter(root: Path, operation: str = "prepare"):
@@ -287,7 +287,7 @@ def test_list_returned_packages_finds_json_files() -> None:
         root = Path(temp)
         write_json(root / "var/analytics/data-sharing/import-staging/registry.json", {"import_registry": {"tags": []}})
 
-        payload = adapter.list_returned_packages(
+        payload = returned.list_returned_packages(
             root,
             "tags",
             adapter=resolve_tags_adapter(root, "list_returned"),
@@ -302,7 +302,7 @@ def test_prepare_registry_package_dry_run_does_not_write() -> None:
     with make_repo() as temp:
         root = Path(temp)
 
-        payload = adapter.prepare_package(
+        payload = prepare.prepare_package(
             root,
             {"data_domain": "tags", "config_id": "tag-registry", "target_format": "json"},
             dry_run=True,
@@ -344,7 +344,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
     with make_repo() as temp:
         root = Path(temp)
 
-        payload = adapter.prepare_package(
+        payload = prepare.prepare_package(
             root,
             {
                 "data_domain": "tags",
@@ -394,14 +394,14 @@ def test_registry_review_and_confirmed_apply_writes_source() -> None:
             },
         )
 
-        review = adapter.review_returned_package(
+        review = returned.review_returned_package(
             root,
             {"data_domain": "tags", "operation": "review", "staged_filename": "registry.json"},
             dry_run=True,
             adapter=resolve_tags_adapter(root, "review"),
             dependencies=dependencies(),
         )
-        preflight = adapter.apply_returned_changes(
+        preflight = returned.apply_returned_changes(
             root,
             {
                 "data_domain": "tags",
@@ -415,7 +415,7 @@ def test_registry_review_and_confirmed_apply_writes_source() -> None:
             adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
-        applied = adapter.apply_returned_changes(
+        applied = returned.apply_returned_changes(
             root,
             {
                 "data_domain": "tags",
@@ -456,14 +456,14 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
             },
         )
 
-        review = adapter.review_returned_package(
+        review = returned.review_returned_package(
             root,
             {"data_domain": "tags", "operation": "review", "staged_filename": "aliases.json"},
             dry_run=True,
             adapter=resolve_tags_adapter(root, "review"),
             dependencies=dependencies(),
         )
-        preflight = adapter.apply_returned_changes(
+        preflight = returned.apply_returned_changes(
             root,
             {
                 "data_domain": "tags",
@@ -517,7 +517,7 @@ def test_assignments_review_reports_applicable_conflict_invalid_and_missing() ->
             },
         )
 
-        review = adapter.review_returned_package(
+        review = returned.review_returned_package(
             root,
             {"data_domain": "tags", "operation": "review", "staged_filename": "assignments.json"},
             dry_run=True,
@@ -557,7 +557,7 @@ def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None
             },
         )
 
-        preflight = adapter.apply_returned_changes(
+        preflight = returned.apply_returned_changes(
             root,
             {
                 "data_domain": "tags",
@@ -571,7 +571,7 @@ def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None
             adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
-        applied = adapter.apply_returned_changes(
+        applied = returned.apply_returned_changes(
             root,
             {
                 "data_domain": "tags",

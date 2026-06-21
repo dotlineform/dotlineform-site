@@ -22,6 +22,31 @@ from .context import (
 from .families import aliases, assignments, bundle, registry
 
 
+def selectable_records(
+    repo_root: Path,
+    data_domain: Any,
+    selectors: Optional[Dict[str, Any]] = None,
+    adapter: Optional[AdapterResolution] = None,
+    dependencies: Optional[TagsDataSharingDependencies] = None,
+) -> Dict[str, Any]:
+    del repo_root, data_domain, selectors, dependencies
+    adapter = require_tags_adapter(adapter)
+    return {
+        "ok": True,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
+        "selection_model": str(adapter.capability.get("selection_model") or adapter.domain.get("selection_model") or "").strip(),
+        "records": [],
+        "docs": [],
+        "source": {
+            "kind": "adapter",
+            "module": "analytics.tags",
+            "source": "profile_only",
+            "data_domain": adapter.data_domain,
+        },
+    }
+
+
 def count_record_total(family: str, counts: dict[str, int]) -> int:
     if family == "registry":
         return int(counts.get("tags") or 0)
