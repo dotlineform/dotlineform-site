@@ -38,6 +38,7 @@ PUBLISHING_MODES = (PUBLIC_MODE, LOCAL_UNCOMMITTED_MODE, LOCAL_COMMITTED_MODE)
 SCOPE_DELETE_CHANGE_KINDS = {"scope_config", "scope_manifest", "route_config", "public_route_config"}
 PUBLIC_ROUTE_TEMPLATE_REL_PATH = Path("docs-viewer/templates/public-route/index.html")
 ROUTE_CONFIG_REL_PATH = Path("docs-viewer/config/routes/docs-viewer-routes.json")
+DOCS_MANAGEMENT_ROUTE_PATH = "/docs/"
 PUBLIC_ROUTE_CONFIG_REL_PATHS = (
     Path("site/docs-viewer/config/routes/docs-viewer-public-routes.json"),
 )
@@ -45,6 +46,13 @@ PUBLIC_ROUTE_CONFIG_REL_PATHS = (
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def normalize_route_path(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    return f"/{text.strip('/')}/"
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
@@ -572,7 +580,6 @@ def public_route_record(scope_id: str, public_route_path: str, default_doc_id: s
         "schema_version": "docs_viewer_route_config_v1",
         "route_id": scope_id,
         "route_path": public_route_path,
-        "route_type": "public",
         "default_scope_id": scope_id,
         "default_doc_id": default_doc_id,
         "include_scope_param": False,
@@ -580,10 +587,8 @@ def public_route_record(scope_id: str, public_route_path: str, default_doc_id: s
         "viewer_base_url": public_route_path,
         "generated_base_url": "",
         "access": {
-            "allow_management": False,
             "allow_scope_query": False,
             "management_base_url": "",
-            "management_mode_value": "manage",
         },
         "docs_paths": {
             "index_tree_url": f"/assets/data/docs/scopes/{scope_id}/index-tree.json",
@@ -668,7 +673,8 @@ def manage_default_route_ids_for_scope(repo_root: Path, scope_id: str) -> list[s
     for route in payload["routes"]:
         if not isinstance(route, dict):
             continue
-        if str(route.get("route_type") or "").strip() != "manage":
+        route_path = route.get("route_path") or route.get("viewer_base_url")
+        if normalize_route_path(route_path) != DOCS_MANAGEMENT_ROUTE_PATH:
             continue
         if str(route.get("default_scope_id") or "").strip() != scope_id:
             continue

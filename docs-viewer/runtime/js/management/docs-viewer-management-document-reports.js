@@ -112,7 +112,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     fetchDocsIndexTree: function (scope) {
       return fetchDocsIndexTreeForScope(settings, scope);
     },
-    managementMode: Boolean(settings.managementMode),
+    managementContext: Boolean(settings.managementContext),
     payload: payload,
     reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
     reportService: reportManagementBaseUrl

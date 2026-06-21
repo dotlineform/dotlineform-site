@@ -114,7 +114,7 @@ function appendSourcesCell(row, state, bucket) {
     link.href = state.context.viewerUrlForScope(
       cleanString(ref.source_scope) || state.sourceScope,
       cleanString(ref.source_doc_id),
-      { manage: state.context.managementMode }
+      { manage: state.context.managementContext }
     );
     link.textContent = cleanString(ref.source_title) || cleanString(ref.source_doc_id);
 

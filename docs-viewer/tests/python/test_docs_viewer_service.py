@@ -454,7 +454,6 @@ def test_manage_shell_uses_docs_viewer_service_api_base() -> None:
     assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"' in rendered
     assert manage_route["viewer_base_url"] == "/docs/"
     assert manage_route["include_scope_param"] is True
-    assert manage_route["access"]["allow_management"] is True
     assert manage_route["access"]["allow_scope_query"] is True
     assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
     assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
@@ -492,7 +491,7 @@ def test_manage_shell_can_disable_management_markup_by_capability_flag() -> None
     route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
     manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
-    assert manage_route["access"]["allow_management"] is False
+    assert manage_route["viewer_base_url"] == "/docs/"
     assert manage_route["access"]["management_base_url"] == ""
     assert 'data-allow-management="false"' in rendered
     assert "docs-viewer-manage.css" not in rendered

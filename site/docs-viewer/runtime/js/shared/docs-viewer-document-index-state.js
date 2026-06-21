@@ -23,8 +23,8 @@ export function createDocsViewerDocumentIndexState(options) {
   }
 
   function shouldIncludeDoc(doc) {
-    if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
-    if (!state.managementMode) return isDocViewable(doc) && !hasNonViewableAncestor(doc, state.allDocsById);
+    if (!state.managementContext && isManageOnlyTreeDoc(doc)) return false;
+    if (!state.managementContext) return isDocViewable(doc) && !hasNonViewableAncestor(doc, state.allDocsById);
     return isDocViewable(doc) || state.showNonViewable;
   }
 
@@ -41,7 +41,7 @@ export function createDocsViewerDocumentIndexState(options) {
       })
     );
     state.childrenByParent = buildChildrenMap(state.docs, {
-      managementMode: state.managementMode,
+      managementContext: state.managementContext,
       showNonViewable: state.showNonViewable
     });
   }
@@ -54,7 +54,7 @@ export function createDocsViewerDocumentIndexState(options) {
   }
 
   function syncNonViewableVisibilityForRequestedDoc(getCurrentDocId) {
-    if (!state.managementMode) return;
+    if (!state.managementContext) return;
     var requestedDocId = typeof getCurrentDocId === "function" ? getCurrentDocId() : "";
     if (!requestedDocId) return;
     var requestedDoc = findAllDocById(requestedDocId);
@@ -69,8 +69,8 @@ export function createDocsViewerDocumentIndexState(options) {
 
   function statusForIndexDoc(doc) {
     if (!doc || isNonLoadableDoc(doc)) return null;
-    if (!state.managementMode && isManageOnlyTreeDoc(doc)) return null;
-    if (!isDocViewable(doc) && !state.managementMode) return null;
+    if (!state.managementContext && isManageOnlyTreeDoc(doc)) return null;
+    if (!isDocViewable(doc) && !state.managementContext) return null;
     var statusValue = String(doc.ui_status || "").trim();
     return statusValue ? state.uiStatusByValue.get(statusValue) || null : null;
   }

@@ -55,8 +55,7 @@ def assert_capability_error_projection(page: Page) -> None:
                 context: {
                     MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS: 60,
                     MANAGEMENT_CAPABILITY_RETRY_DELAY_MS: 500,
-                    MANAGEMENT_MODE: 'manage',
-                    getCurrentMode: () => 'manage',
+                    isManagementContext: () => true,
                     managementBaseUrl: 'http://127.0.0.1:9999'
                 },
                 callbacks: {

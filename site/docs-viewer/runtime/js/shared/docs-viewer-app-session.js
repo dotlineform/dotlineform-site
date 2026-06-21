@@ -166,7 +166,7 @@ function createStateDefaults(settings) {
     bookmarkSupport: Boolean(windowRef.indexedDB),
     editingBookmarkKey: "",
     pendingBookmarkFocusKey: "",
-    managementMode: false,
+    managementContext: false,
     managementChecked: false,
     managementAvailable: false,
     managementBusy: false,
@@ -209,11 +209,11 @@ function createStateDomains(state, settings) {
       authority: "route config and current browser URL",
       routeContext: routeContext,
       accessProjection: accessProjection,
-      get managementMode() {
-        return Boolean(state.managementMode);
+      get managementContext() {
+        return Boolean(state.managementContext);
       },
-      set managementMode(value) {
-        state.managementMode = Boolean(value);
+      set managementContext(value) {
+        state.managementContext = Boolean(value);
       },
       publicReadOnly: Boolean(accessProjection.publicReadOnly),
       canLoadManagementUi: Boolean(accessProjection.canLoadManagementUi),
@@ -288,7 +288,7 @@ function createStateDomains(state, settings) {
       "expandedDocIds"
     ]),
     management: stateDomain("management", "management backend capability and write flow", state, [
-      "managementMode",
+      "managementContext",
       "managementChecked",
       "managementAvailable",
       "managementBusy",

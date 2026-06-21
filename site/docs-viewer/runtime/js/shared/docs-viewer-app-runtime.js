@@ -101,7 +101,6 @@ export function startDocsViewerRuntime(options) {
   var BOOKMARK_DB_NAME = runtimeDefaults.bookmarkDbName;
   var BOOKMARK_DB_VERSION = runtimeDefaults.bookmarkDbVersion;
   var BOOKMARK_STORE_NAME = runtimeDefaults.bookmarkStoreName;
-  var MANAGEMENT_MODE = runtimeDefaults.managementMode;
   var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = runtimeDefaults.managementCapabilityRetryAttempts;
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
   var UI_STATUS_EMOJI_MAX_LENGTH = runtimeDefaults.uiStatusEmojiMaxLength;
@@ -267,7 +266,6 @@ export function startDocsViewerRuntime(options) {
     generatedData: generatedDataRuntime,
     includeScopeParam: function () { return includeScopeParam; },
     indexTreeUrl: function () { return indexTreeUrl; },
-    managementModeValue: MANAGEMENT_MODE,
     more: more,
     renderBookmarkUi: renderBookmarkUi,
     renderDocLoadingState: renderDocLoadingState,
@@ -340,11 +338,9 @@ export function startDocsViewerRuntime(options) {
     configService: composition.configService,
     defaultRecentLimit: DEFAULT_RECENT_LIMIT,
     documentIndex: appSession.domains.documentIndex,
-    getCurrentMode: getCurrentMode,
     managementController: function () {
       return managementRuntime ? managementRuntime.controller() : null;
     },
-    managementMode: MANAGEMENT_MODE,
     recentButton: recentButton,
     renderRecentMode: renderRecentMode,
     renderSidebar: renderSidebar,
@@ -368,7 +364,6 @@ export function startDocsViewerRuntime(options) {
     constants: {
       MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS: MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS,
       MANAGEMENT_CAPABILITY_RETRY_DELAY_MS: MANAGEMENT_CAPABILITY_RETRY_DELAY_MS,
-      MANAGEMENT_MODE: MANAGEMENT_MODE,
       SEARCH_BATCH_SIZE: SEARCH_BATCH_SIZE
     },
     context: {
@@ -384,7 +379,7 @@ export function startDocsViewerRuntime(options) {
       formatText: formatText,
       getConfigText: getConfigText,
       getConfigValue: getConfigValue,
-      getCurrentMode: getCurrentMode,
+      isManagementContext: function () { return routeWorkflow.isManagementContext(); },
       serviceClient: {
         docsViewerConfigUrl: docsViewerConfigUrl,
         managementBaseUrl: managementBaseUrl,
@@ -462,10 +457,6 @@ export function startDocsViewerRuntime(options) {
 
   function getCurrentHash() {
     return routeWorkflow.currentHash();
-  }
-
-  function getCurrentMode() {
-    return routeWorkflow.currentMode();
   }
 
   function hasActiveQuery(query) {
@@ -708,8 +699,8 @@ export function startDocsViewerRuntime(options) {
 
   function initializeManagement() {
     if (!allowManagement) return;
-    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    if (!state.managementMode) return;
+    state.managementContext = routeWorkflow.isManagementContext();
+    if (!state.managementContext) return;
     loadManagementController().then(function (controller) {
       if (controller) controller.initialize();
     });
@@ -923,7 +914,6 @@ export function startDocsViewerRuntime(options) {
         if (controller) controller.openImportModal();
       });
     },
-    getCurrentMode: getCurrentMode,
     setStatus: setStatus,
     hideDocPane: hideDocPane,
     content: content,

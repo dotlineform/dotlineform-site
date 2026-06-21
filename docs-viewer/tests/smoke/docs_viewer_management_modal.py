@@ -13,9 +13,19 @@ from threading import Thread
 from playwright.sync_api import Page, sync_playwright
 
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOCS_VIEWER_SHARED_RUNTIME_PREFIX = "/docs-viewer/runtime/js/shared/"
+
+
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
+
+    def translate_path(self, path: str) -> str:
+        if path.startswith(DOCS_VIEWER_SHARED_RUNTIME_PREFIX):
+            relative_path = path.removeprefix(DOCS_VIEWER_SHARED_RUNTIME_PREFIX).split("?", 1)[0].split("#", 1)[0]
+            return str(REPO_ROOT / "site/docs-viewer/runtime/js/shared" / relative_path)
+        return super().translate_path(path)
 
 
 def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
@@ -1298,7 +1308,7 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                 payloadCache: new Map(),
                 searchEntries: [],
                 selectedDocId: 'current-doc',
-                managementMode: true,
+                managementContext: true,
                 managementChecked: true,
                 managementAvailable: true,
                 managementBusy: false,
@@ -1364,9 +1374,8 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                         selectedDocument: state
                     }
                 },
-                MANAGEMENT_MODE: 'manage',
                 managementBaseUrl: 'http://docs-management.test',
-                getCurrentMode: () => 'manage',
+                isManagementContext: () => true,
                 currentViewerConfig: () => ({}),
                 getConfigValue: () => undefined,
                 getConfigText: (_config, _path, fallback) => fallback || '',
@@ -1499,7 +1508,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 searchLoaded: false,
                 searchRequestPromise: null,
                 selectedDocId: 'current-doc',
-                managementMode: true,
+                managementContext: true,
                 managementChecked: true,
                 managementAvailable: true,
                 managementBusy: false,
@@ -1554,9 +1563,8 @@ def run_index_double_click_edit_check(page: Page) -> None:
                     }
                 },
                 SEARCH_BATCH_SIZE: 20,
-                MANAGEMENT_MODE: 'manage',
                 managementBaseUrl: 'http://docs-management.test',
-                getCurrentMode: () => 'manage',
+                isManagementContext: () => true,
                 currentViewerConfig: () => ({}),
                 getConfigValue: () => undefined,
                 getConfigText: (_config, _path, fallback) => fallback || '',

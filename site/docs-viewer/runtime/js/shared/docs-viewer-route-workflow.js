@@ -24,8 +24,8 @@ function createRouteWorkflowStateBridge(inputs) {
   var searchRecent = inputs.searchRecent || {};
 
   return {
-    get managementMode() { return Boolean(routeSession.managementMode); },
-    set managementMode(value) { routeSession.managementMode = Boolean(value); },
+    get managementContext() { return Boolean(routeSession.managementContext); },
+    set managementContext(value) { routeSession.managementContext = Boolean(value); },
     get allDocs() { return documentIndex.allDocs || []; },
     set allDocs(value) { documentIndex.allDocs = value; },
     get docs() { return documentIndex.docs || []; },
@@ -74,7 +74,6 @@ export function initDocsViewerRouteWorkflow(context) {
   var searchInput = context.searchInput;
   var scopeConfig = context.scopeConfig || {};
   var statusCommands = context.statusCommands || {};
-  var managementModeValue = context.managementModeValue || "manage";
 
   function viewerScope() {
     return currentValue(context.viewerScope);
@@ -141,9 +140,8 @@ export function initDocsViewerRouteWorkflow(context) {
     return (new URLSearchParams(window.location.search).get("q") || "").trim();
   }
 
-  function currentMode() {
-    if (!allowManagement()) return "";
-    return managementModeValue;
+  function isManagementContext() {
+    return allowManagement();
   }
 
   function hasCanonicalScopeInUrl() {
@@ -164,8 +162,6 @@ export function initDocsViewerRouteWorkflow(context) {
       docId: docId,
       hash: hash,
       includeScopeParam: includeScopeParam(),
-      managementMode: state.managementMode,
-      managementModeValue: managementModeValue,
       origin: window.location.origin,
       query: query,
       viewerBaseUrl: viewerBaseUrl(),
@@ -177,7 +173,6 @@ export function initDocsViewerRouteWorkflow(context) {
     return buildViewerUrlForScope({
       allowManagement: allowManagement(),
       docId: docId,
-      managementModeValue: managementModeValue,
       manage: Boolean(options && options.manage),
       origin: window.location.origin,
       routeViewerBaseUrl: routeViewerBaseUrl(),
@@ -194,8 +189,6 @@ export function initDocsViewerRouteWorkflow(context) {
       hash: hash,
       history: window.history,
       includeScopeParam: includeScopeParam(),
-      managementMode: state.managementMode,
-      managementModeValue: managementModeValue,
       mode: mode,
       origin: window.location.origin,
       query: query,
@@ -270,7 +263,7 @@ export function initDocsViewerRouteWorkflow(context) {
       hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
       loadDoc: loadDoc,
-      managementModeActive: function () { return currentMode() === managementModeValue; },
+      managementContextActive: isManagementContext,
       renderBookmarkUi: context.renderBookmarkUi,
       renderManagementUi: context.renderManagementUi,
       renderSearchMode: context.renderSearchMode,
@@ -291,7 +284,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function initializeIndex(payload) {
-    state.managementMode = currentMode() === managementModeValue;
+    state.managementContext = isManagementContext();
     var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
       ? payload.viewer_options
       : {};
@@ -339,9 +332,7 @@ export function initDocsViewerRouteWorkflow(context) {
       allowManagement: allowManagement(),
       allowScopeQuery: allowScopeQuery(),
       currentHref: window.location.href,
-      currentMode: currentMode(),
       includeScopeParam: includeScopeParam(),
-      managementModeValue: managementModeValue,
       origin: window.location.origin,
       viewerPathname: viewerPathname(),
       viewerScope: viewerScope()
@@ -431,12 +422,12 @@ export function initDocsViewerRouteWorkflow(context) {
     commands: commands,
     currentDocId: currentDocId,
     currentHash: currentHash,
-    currentMode: currentMode,
     currentQuery: currentQuery,
     hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
     hasDisallowedModeInUrl: hasDisallowedModeInUrl,
     hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
     initializeIndex: initializeIndex,
+    isManagementContext: isManagementContext,
     routeFromAnchor: routeFromAnchor,
     shouldUseNativeNavigation: shouldUseNativeNavigation,
     viewerUrl: viewerUrl,

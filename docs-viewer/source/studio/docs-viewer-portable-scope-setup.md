@@ -110,7 +110,6 @@ The route config record sets:
 
 - `route_id`: the public route id, normally the scope id
 - `route_path`: the public route path, such as `/research/`
-- `route_type`: `public`
 - `default_scope_id`: the fixed scope id
 - `default_doc_id`: the scope's default doc id
 - `include_scope_param`: `false`

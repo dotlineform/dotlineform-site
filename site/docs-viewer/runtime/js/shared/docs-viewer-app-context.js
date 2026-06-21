@@ -5,6 +5,7 @@ import {
   createDocsViewerAccessProjection
 } from "./docs-viewer-access.js";
 import {
+  isDocsManagementRoutePath,
   resolveDocsViewerRouteConfig
 } from "./docs-viewer-route-config.js";
 
@@ -53,10 +54,11 @@ export function createDocsViewerRouteContext(options) {
   });
   var routeViewerBaseUrl = routeConfig.viewerBaseUrl;
   var viewerBaseUrl = routeViewerBaseUrl || locationPathname(windowRef);
+  var resolvedViewerPathname = viewerPathname(viewerBaseUrl, windowRef);
+  var docsManagementRoute = isDocsManagementRoutePath(resolvedViewerPathname);
   var access = createDocsViewerAccessProjection({
     routeConfig: routeConfig,
-    managementModeValue: settings.managementModeValue,
-    search: locationSearch(windowRef)
+    isDocsManagementRoute: docsManagementRoute
   });
   var allowManagement = access.allowManagement;
   var managementBaseUrl = allowManagement ? cleanBaseUrl(routeConfig.access.managementBaseUrl) : "";
@@ -65,6 +67,7 @@ export function createDocsViewerRouteContext(options) {
     root: root,
     routeConfig: routeConfig,
     access: access,
+    isDocsManagementRoute: docsManagementRoute,
     allowManagement: allowManagement,
     allowScopeQuery: access.allowScopeQuery,
     docsViewerConfigUrl: routeConfig.docsViewerConfigUrl,
@@ -75,7 +78,7 @@ export function createDocsViewerRouteContext(options) {
     viewerScope: routeConfig.defaultScopeId,
     includeScopeParam: Boolean(routeConfig.includeScopeParam),
     defaultRouteDocId: routeConfig.defaultDocId,
-    viewerPathname: viewerPathname(viewerBaseUrl, windowRef),
+    viewerPathname: resolvedViewerPathname,
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),
     uiTextUrl: routeConfig.uiTextUrl,
     reportRegistryUrl: routeConfig.reportRegistryUrl,
@@ -83,7 +86,7 @@ export function createDocsViewerRouteContext(options) {
     generatedBaseUrl: generatedBaseUrl
   };
   context.bookmarkScope = context.viewerScope || context.viewerPathname || "docs";
-  context.openImportOnLoad = context.access.importRequested;
+  context.openImportOnLoad = context.isDocsManagementRoute && new URLSearchParams(locationSearch(windowRef)).get("import") === "1";
   return context;
 }
 

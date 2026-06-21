@@ -30,7 +30,6 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   bookmarkDbName: "dotlineform-docs-viewer",
   bookmarkDbVersion: 1,
   bookmarkStoreName: "favorites",
-  managementMode: "manage",
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,
   reloadRetryAttempts: 12,
@@ -207,12 +206,12 @@ export function createDocsViewerAppComposition(options) {
     uiTextUrl: serviceContext.config.uiTextUrl
   });
 
-  function shouldInitializeManagement(getCurrentMode) {
-    return Boolean(access.allowManagement && typeof getCurrentMode === "function" && getCurrentMode() === constants.managementMode);
+  function shouldInitializeManagement() {
+    return Boolean(access.allowManagement);
   }
 
-  function shouldOpenImportOnLoad(getCurrentMode) {
-    return Boolean(routeContext.openImportOnLoad && shouldInitializeManagement(getCurrentMode));
+  function shouldOpenImportOnLoad() {
+    return Boolean(routeContext.openImportOnLoad && shouldInitializeManagement());
   }
 
   return {
@@ -259,14 +258,14 @@ export function startDocsViewerStartupPhases(options) {
     .then(function () {
       if (typeof settings.initializeBookmarks === "function") settings.initializeBookmarks();
       var shouldInitializeManagement = typeof composition.shouldInitializeManagement === "function"
-        ? composition.shouldInitializeManagement(settings.getCurrentMode)
+        ? composition.shouldInitializeManagement()
         : true;
       if (shouldInitializeManagement && typeof settings.initializeManagement === "function") settings.initializeManagement();
       return callPhase("loadIndex");
     })
     .then(function () {
       var shouldOpenImport = typeof composition.shouldOpenImportOnLoad === "function"
-        ? composition.shouldOpenImportOnLoad(settings.getCurrentMode)
+        ? composition.shouldOpenImportOnLoad()
         : false;
       if (!shouldOpenImport) return null;
       return callPhase("openImportOnLoad");

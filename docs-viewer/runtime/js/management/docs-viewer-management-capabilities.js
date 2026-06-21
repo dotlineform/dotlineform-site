@@ -144,9 +144,9 @@ export function createDocsViewerManagementCapabilityController(options) {
   }
 
   function initialize() {
-    state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
+    state.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     renderManagementUi();
-    if (!state.managementMode) return;
+    if (!state.managementContext) return;
 
     if (!context.managementBaseUrl) {
       markUnavailable(new Error(state.managementText.serverNotConfiguredError));
@@ -157,7 +157,7 @@ export function createDocsViewerManagementCapabilityController(options) {
   }
 
   function refresh() {
-    if (!state.managementMode || !context.managementBaseUrl) return;
+    if (!state.managementContext || !context.managementBaseUrl) return;
     startCapabilityCheck();
   }
 

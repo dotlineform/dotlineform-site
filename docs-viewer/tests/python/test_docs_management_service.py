@@ -914,7 +914,7 @@ def test_scope_delete_preview_blocks_manage_route_default_scope() -> None:
                     {
                         "schema_version": "docs_viewer_route_config_v1",
                         "route_id": "docs-manage",
-                        "route_type": "manage",
+                        "route_path": "/docs/",
                         "default_scope_id": "notes",
                     }
                 ],

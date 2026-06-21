@@ -59,8 +59,7 @@ export function createDocsViewerHostedViewContext(options = {}) {
   const routeAccess = options.routeAccess || {};
   const access = {
     allowManagement: Boolean(routeAccess.allowManagement),
-    publicReadOnly: Boolean(routeAccess.publicReadOnly),
-    routeType: cleanString(routeAccess.routeType)
+    publicReadOnly: Boolean(routeAccess.publicReadOnly)
   };
   const payload = docId ? mapGet(options.payloadCache, docId) || null : null;
   const selectedMetadata = selectedPayloadMetadata(payload, access, docId);

@@ -278,6 +278,9 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = state.managementBusy;
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
+    window.requestAnimationFrame(function () {
+      focusWithoutScroll(refs.settingsUpdatedInput || refs.settingsSaveButton || refs.settingsModal);
+    });
   }
 
   function setSettingsLoadError(message) {

@@ -16,8 +16,8 @@ export function initDocsViewerDocumentController(context) {
     return typeof context.managementBaseUrl === "function" ? context.managementBaseUrl() : context.managementBaseUrl;
   }
 
-  function managementModeActive() {
-    return Boolean(routeSession && routeSession.managementMode);
+  function managementContextActive() {
+    return Boolean(routeSession && routeSession.managementContext);
   }
 
   function setStatus(message, isError) {
@@ -37,7 +37,7 @@ export function initDocsViewerDocumentController(context) {
       doc: doc,
       generatedData: context.generatedData,
       managementBaseUrl: currentManagementBaseUrl(),
-      managementMode: managementModeActive(),
+      managementContext: managementContextActive(),
       payload: payload,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       scopeConfigState: scopeConfigState,

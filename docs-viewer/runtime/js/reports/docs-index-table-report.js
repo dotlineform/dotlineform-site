@@ -150,7 +150,7 @@ function appendLinkCell(row, state, className, doc, text) {
   const link = document.createElement("a");
   link.className = className;
   link.href = state.context.viewerUrlForScope(state.sourceScope, docId(doc), {
-    manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementMode)
+    manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementContext)
   });
   link.textContent = text;
   row.appendChild(link);
@@ -160,7 +160,7 @@ function appendTitleCell(row, state, doc) {
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title docsViewerReport__treeTitle";
   link.href = state.context.viewerUrlForScope(state.sourceScope, docId(doc), {
-    manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementMode)
+    manage: state.preset.linkMode === "manage" || (state.preset.linkMode === "auto" && state.context.managementContext)
   });
   link.style.setProperty("--docs-report-tree-indent", `${docTreeDepth(doc) * 1.15}rem`);
   link.textContent = docTitle(doc);

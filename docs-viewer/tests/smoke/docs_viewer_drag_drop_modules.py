@@ -126,7 +126,7 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
             const controller = module.createDocsViewerManagementInteractionController({
                 nav,
                 state: {
-                    managementMode: true,
+                    managementContext: true,
                     managementAvailable: true,
                     managementBusy: false,
                     searchRouteActive: false,
@@ -206,7 +206,7 @@ def assert_management_interaction_first_child_drop(page: Page) -> None:
             const controller = module.createDocsViewerManagementInteractionController({
                 nav,
                 state: {
-                    managementMode: true,
+                    managementContext: true,
                     managementAvailable: true,
                     managementBusy: false,
                     searchRouteActive: false,

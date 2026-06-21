@@ -64,7 +64,6 @@ export function resolveDocsViewerAppBootContext(options) {
       root: root,
       window: windowRef,
       assetVersion: assetVersion,
-      managementModeValue: "manage",
       resolvedRouteConfig: resolvedRouteConfig
     });
     var appShellReady = initDocsViewerAppShell({

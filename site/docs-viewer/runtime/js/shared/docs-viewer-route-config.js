@@ -7,6 +7,7 @@ import {
 
 export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v1";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";
+export const DOCS_VIEWER_MANAGEMENT_ROUTE_PATH = "/docs/";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -33,10 +34,24 @@ function defaultFetch(url, options) {
   return window.fetch(url, options);
 }
 
-function normalizeRouteType(value, allowManagement) {
-  var routeType = cleanString(value).toLowerCase();
-  if (routeType === "manage" || routeType === "public") return routeType;
-  return allowManagement ? "manage" : "public";
+function normalizeRoutePath(value) {
+  var path = cleanString(value);
+  if (!path) return "";
+  try {
+    path = new URL(path, "http://docs-viewer.local").pathname;
+  } catch (error) {
+    return "";
+  }
+  path = path.replace(/\/+$/, "/") || "/";
+  return path;
+}
+
+export function isDocsManagementRoutePath(value) {
+  return normalizeRoutePath(value) === DOCS_VIEWER_MANAGEMENT_ROUTE_PATH;
+}
+
+function routeConfigPath(rawConfig) {
+  return cleanString(rawConfig.route_path || rawConfig.viewer_base_url);
 }
 
 function normalizePanelDefaults(rawPanels) {
@@ -189,9 +204,8 @@ export function resolveDocsViewerRouteConfig(options) {
   var resolvedSource = routeConfigSource(settings);
   var rawConfig = resolvedSource.config || {};
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
-  var allowManagement = normalizeBoolean(configuredValue(access.allow_management, rawConfig.allow_management));
   var allowScopeQuery = normalizeBoolean(configuredValue(access.allow_scope_query, rawConfig.allow_scope_query));
-  var routeType = normalizeRouteType(rawConfig.route_type, allowManagement);
+  var docsManagementRoute = isDocsManagementRoutePath(routeConfigPath(rawConfig));
   var docsPaths = rawConfig.docs_paths && typeof rawConfig.docs_paths === "object" ? rawConfig.docs_paths : {};
   var configUrls = rawConfig.config_urls && typeof rawConfig.config_urls === "object" ? rawConfig.config_urls : {};
   var schemaVersion = cleanString(rawConfig.schema_version) || DOCS_VIEWER_ROUTE_CONFIG_SCHEMA;
@@ -202,7 +216,6 @@ export function resolveDocsViewerRouteConfig(options) {
     schemaVersion: schemaVersion,
     source: resolvedSource.source,
     routeId: requireRouteConfigField(rawConfig.route_id, "route_id"),
-    routeType: routeType,
     defaultScopeId: requireRouteConfigField(rawConfig.default_scope_id, "default_scope_id"),
     defaultDocId: cleanString(rawConfig.default_doc_id),
     includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
@@ -216,12 +229,12 @@ export function resolveDocsViewerRouteConfig(options) {
     recentlyAddedUrl: normalizePath(requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")),
     searchIndexUrl: normalizePath(requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")),
     access: {
-      allowManagement: allowManagement,
+      isDocsManagementRoute: docsManagementRoute,
+      allowManagement: docsManagementRoute,
       allowScopeQuery: allowScopeQuery,
-      managementBaseUrl: allowManagement
+      managementBaseUrl: docsManagementRoute
         ? cleanBaseUrl(access.management_base_url)
-        : "",
-      managementModeValue: cleanString(access.management_mode_value) || "manage"
+        : ""
     },
     panels: normalizePanelDefaults(rawConfig.panels),
     ui: normalizeRouteUi(rawConfig.ui),

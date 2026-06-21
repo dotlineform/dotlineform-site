@@ -117,7 +117,7 @@ def manage_route_state(page: Page) -> dict[str, object]:
                 routeId: root.dataset.routeId || "",
                 routeConfigUrl,
                 docsPaths: routeConfig.docs_paths || {},
-                allowManagementConfig: routeConfig.access?.allow_management,
+                viewerBaseUrl: routeConfig.viewer_base_url || "",
                 managementBaseUrl: routeConfig.access?.management_base_url || "",
                 generatedBaseUrl: routeConfig.generated_base_url || ""
             };
@@ -127,7 +127,7 @@ def manage_route_state(page: Page) -> dict[str, object]:
 
 def assert_manage_route_contract(state: dict[str, object], base_url: str) -> None:
     docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
-    if state["allowManagement"] != "true" or state["allowManagementConfig"] is not True:
+    if state["allowManagement"] != "true" or state["viewerBaseUrl"] != "/docs/":
         raise AssertionError(f"manage route did not expose management access: {state!r}")
     if state["includeScopeParam"] != "true":
         raise AssertionError(f"manage route did not include scope param: {state!r}")

@@ -5,7 +5,6 @@
       "schema_version": "docs_viewer_route_config_v1",
       "route_id": "docs-manage",
       "route_path": "/docs/",
-      "route_type": "manage",
       "default_scope_id": "studio",
       "default_doc_id": "dev-home",
       "include_scope_param": true,
@@ -13,10 +12,8 @@
       "viewer_base_url": "/docs/",
       "generated_base_url": "",
       "access": {
-        "allow_management": true,
         "allow_scope_query": true,
-        "management_base_url": "",
-        "management_mode_value": "manage"
+        "management_base_url": ""
       },
       "docs_paths": {
         "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
@@ -69,7 +66,6 @@
       "schema_version": "docs_viewer_route_config_v1",
       "route_id": "library",
       "route_path": "/library/",
-      "route_type": "public",
       "default_scope_id": "library",
       "default_doc_id": "library",
       "include_scope_param": false,
@@ -77,10 +73,8 @@
       "viewer_base_url": "/library/",
       "generated_base_url": "",
       "access": {
-        "allow_management": false,
         "allow_scope_query": false,
-        "management_base_url": "",
-        "management_mode_value": "manage"
+        "management_base_url": ""
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
@@ -113,7 +107,6 @@
       "schema_version": "docs_viewer_route_config_v1",
       "route_id": "analysis",
       "route_path": "/analysis/",
-      "route_type": "public",
       "default_scope_id": "analysis",
       "default_doc_id": "analysis",
       "include_scope_param": false,
@@ -121,10 +114,8 @@
       "viewer_base_url": "/analysis/",
       "generated_base_url": "",
       "access": {
-        "allow_management": false,
         "allow_scope_query": false,
-        "management_base_url": "",
-        "management_mode_value": "manage"
+        "management_base_url": ""
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
@@ -157,7 +148,6 @@
       "schema_version": "docs_viewer_route_config_v1",
       "route_id": "moments",
       "route_path": "/moments/",
-      "route_type": "public",
       "default_scope_id": "moments",
       "default_doc_id": "",
       "include_scope_param": false,
@@ -165,10 +155,8 @@
       "viewer_base_url": "/moments/",
       "generated_base_url": "",
       "access": {
-        "allow_management": false,
         "allow_scope_query": false,
-        "management_base_url": "",
-        "management_mode_value": "manage"
+        "management_base_url": ""
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",

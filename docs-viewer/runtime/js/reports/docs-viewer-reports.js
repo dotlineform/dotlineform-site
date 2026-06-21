@@ -146,7 +146,7 @@ function canMountReport(meta, reportMeta, context) {
     return Promise.resolve({ ok: true, access });
   }
   if (access === "manage") {
-    return Promise.resolve({ ok: Boolean(context.managementMode), access });
+    return Promise.resolve({ ok: Boolean(context.managementContext), access });
   }
   if (access === "local") {
     if (typeof context.checkGeneratedDataReadCapability !== "function") {

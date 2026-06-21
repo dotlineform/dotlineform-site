@@ -75,7 +75,7 @@ def public_route_state(page: Page) -> dict[str, object]:
                 routeConfigUrl,
                 docsPaths: routeConfig.docs_paths || {},
                 scopeConfig,
-                allowManagementConfig: routeConfig.access?.allow_management,
+                viewerBaseUrl: routeConfig.viewer_base_url || "",
                 managementControls: document.querySelectorAll(
                     ".docsViewer__manageActions, #docsViewerManageActionsButton, #docsViewerManageEditButton, #docsViewerStatusPills"
                 ).length
@@ -90,8 +90,8 @@ def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
     scope_config = state.get("scopeConfig") if isinstance(state.get("scopeConfig"), dict) else {}
     if state["allowManagement"] == "true" or state["managementBaseUrl"]:
         raise AssertionError(f"{route} exposed management access: {state!r}")
-    if state["allowManagementConfig"] is not False:
-        raise AssertionError(f"{route} route config allows management: {state!r}")
+    if state["viewerBaseUrl"] == "/docs/":
+        raise AssertionError(f"{route} used management route base: {state!r}")
     if state["managementControls"]:
         raise AssertionError(f"{route} rendered management controls: {state!r}")
     if state["routeConfigUrl"] != "/docs-viewer/config/routes/docs-viewer-public-routes.json":

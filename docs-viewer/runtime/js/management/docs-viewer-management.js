@@ -41,7 +41,7 @@ function createDocsViewerManagementStateFacade(domains) {
     managementChecked: sources.management,
     managementMessage: sources.management,
     managementMessageIsError: sources.management,
-    managementMode: sources.routeSession || sources.management,
+    managementContext: sources.routeSession || sources.management,
     managementStatusOwnsViewerStatus: sources.management,
     managementText: sources.scopeConfig || sources.management,
     metadataEditingDocId: sources.management,
@@ -217,7 +217,7 @@ export function initDocsViewerManagement(context) {
     var blockedIds = collectDescendantDocIds(state.allDocs, doc.doc_id, new Set([doc.doc_id]));
     var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
     var docsByParent = buildChildrenMap(state.allDocs, {
-      managementMode: state.managementMode,
+      managementContext: state.managementContext,
       showNonViewable: state.showNonViewable
     });
     function pushChildren(parentId, depth) {
@@ -344,8 +344,8 @@ export function initDocsViewerManagement(context) {
   function renderManagementUi() {
     if (!manageRow) return;
 
-    state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
-    if (!state.managementMode) {
+    state.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    if (!state.managementContext) {
       syncManagementStatus("", false);
       manageRow.hidden = true;
       projectDocumentActionButtons(true, true);
@@ -619,7 +619,7 @@ export function initDocsViewerManagement(context) {
   function handleDraftToggleChange() {
     if (!draftToggle) return;
     state.showNonViewable = Boolean(draftToggle.checked);
-    state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
+    state.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     context.applyDocVisibility();
     context.renderSidebar();
     context.renderBookmarkUi();

@@ -31,15 +31,15 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function dragEnabled() {
-    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return state.managementContext && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
   }
 
   function contextMenuEnabled() {
-    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return state.managementContext && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
   }
 
   function editFromIndexEnabled() {
-    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return state.managementContext && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
   }
 
   function dragDropOptions() {

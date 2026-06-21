@@ -38,9 +38,7 @@ export function routeFromAnchorHref(href, options) {
   if (url.pathname !== settings.viewerPathname) return null;
 
   var scope = String(url.searchParams.get("scope") || "").trim();
-  var linkMode = String(url.searchParams.get("mode") || "");
-  var managementModeValue = settings.managementModeValue || "manage";
-  if (settings.allowManagement && linkMode && linkMode !== managementModeValue) return null;
+  url.searchParams.delete("mode");
   if (settings.includeScopeParam && scope && scope !== settings.viewerScope) {
     if (!settings.allowScopeQuery || !settings.allowManagement) {
       return null;
@@ -147,8 +145,8 @@ export function applyViewerRoute(options) {
   if (typeof settings.setRecentModeActive === "function") {
     settings.setRecentModeActive(false);
   }
-  if (state && typeof settings.managementModeActive === "function") {
-    state.managementMode = settings.managementModeActive();
+  if (state && typeof settings.managementContextActive === "function") {
+    state.managementContext = settings.managementContextActive();
   }
   if (typeof settings.syncNonViewableVisibilityForRequestedDoc === "function") {
     settings.syncNonViewableVisibilityForRequestedDoc();

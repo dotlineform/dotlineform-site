@@ -2,41 +2,26 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function locationSearch(windowRef) {
-  return windowRef && windowRef.location ? windowRef.location.search : "";
-}
-
-function normalizeRouteType(value, allowManagement) {
-  var routeType = cleanString(value).toLowerCase();
-  if (routeType === "manage" || routeType === "public") return routeType;
-  return allowManagement ? "manage" : "public";
-}
-
 export function createDocsViewerAccessProjection(options) {
   var settings = options || {};
   var routeConfig = settings.routeConfig || {};
   var routeAccess = routeConfig.access || {};
-  var allowManagement = Boolean(
-    settings.allowManagement != null ? settings.allowManagement : routeAccess.allowManagement
+  var isDocsManagementRoute = Boolean(
+    settings.isDocsManagementRoute != null
+      ? settings.isDocsManagementRoute
+      : routeAccess.isDocsManagementRoute
   );
+  var allowManagement = isDocsManagementRoute;
   var allowScopeQuery = Boolean(
     settings.allowScopeQuery != null ? settings.allowScopeQuery : routeAccess.allowScopeQuery
   );
-  var searchParams = new URLSearchParams(settings.search || locationSearch(settings.window));
-  var managementModeValue = cleanString(settings.managementModeValue || routeAccess.managementModeValue) || "manage";
-  var requestedMode = allowManagement ? cleanString(searchParams.get("mode")) : "";
-  var routeType = normalizeRouteType(settings.routeType || routeConfig.routeType, allowManagement);
-  var managementRequested = allowManagement && routeType === "manage";
   return {
-    routeType: routeType,
+    isDocsManagementRoute: isDocsManagementRoute,
     allowManagement: allowManagement,
     allowScopeQuery: allowScopeQuery,
     publicReadOnly: !allowManagement,
-    requestedMode: requestedMode,
-    managementModeValue: managementModeValue,
-    managementRequested: managementRequested,
-    importRequested: managementRequested && searchParams.get("import") === "1",
-    canLoadManagementUi: allowManagement && routeType === "manage",
+    managementRequested: allowManagement,
+    canLoadManagementUi: allowManagement,
     backendReachability: allowManagement ? "unknown" : "unavailable",
     writeAvailability: allowManagement ? "backend-gated" : "unavailable",
     hostedViewDefaults: {

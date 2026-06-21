@@ -23,7 +23,7 @@ export function buildChildrenMap(docs, options) {
   }));
   docs.forEach(function (doc) {
     var parentId = doc.parent_id || "";
-    if (settings.managementMode && !settings.showNonViewable && parentId && !visibleDocIds.has(parentId)) {
+    if (settings.managementContext && !settings.showNonViewable && parentId && !visibleDocIds.has(parentId)) {
       parentId = "";
     }
     if (!childrenByParent.has(parentId)) {

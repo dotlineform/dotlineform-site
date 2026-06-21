@@ -229,7 +229,7 @@ def asset_version(repo_root: Path) -> str:
 def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, version: str) -> str:
     shell = (repo_root / SHELL_TEMPLATE.relative_to(REPO_ROOT)).read_text(encoding="utf-8")
     escaped_version = html.escape(version, quote=True)
-    allow_management = "true" if config.management_enabled else "false"
+    management_markup_enabled = "true" if config.management_enabled else "false"
     management_stylesheet = (
         f'<link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-manage.css?v={escaped_version}">'
         if config.management_enabled
@@ -242,7 +242,7 @@ def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, v
     )
     replacements = {
         "__DOCS_VIEWER_ASSET_VERSION__": escaped_version,
-        "__DOCS_VIEWER_ALLOW_MANAGEMENT__": allow_management,
+        "__DOCS_VIEWER_ALLOW_MANAGEMENT__": management_markup_enabled,
         "__DOCS_VIEWER_MANAGEMENT_STYLESHEET__": management_stylesheet,
         "__DOCS_VIEWER_MANAGEMENT_MOUNT__": management_mount,
     }
@@ -263,7 +263,6 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
         if not isinstance(access, dict):
             access = {}
             route["access"] = access
-        access["allow_management"] = bool(config.management_enabled)
         access["management_base_url"] = config.base_url if config.management_enabled else ""
     return payload
 

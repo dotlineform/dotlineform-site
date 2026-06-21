@@ -100,7 +100,7 @@ Use the wrapper only where a table needs local width behavior; do not replace or
 
 ## Docs Viewer Management Stylesheet Responsibilities
 
-`docs-viewer/static/css/docs-viewer-manage.css` should only load when `allow_management=true`.
+`docs-viewer/static/css/docs-viewer-manage.css` should only load in the local `/docs/` service shell when management markup is enabled.
 It should own management-only surfaces:
 
 - management toolbar row
