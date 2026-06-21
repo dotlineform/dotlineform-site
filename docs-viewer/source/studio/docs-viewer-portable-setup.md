@@ -21,12 +21,12 @@ The standalone Docs Viewer service owns local `/docs/` manage mode.
 
 Current live scopes:
 
-- `studio`: source docs in `docs-viewer/source/studio/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=studio&mode=manage`
-- `library`: source docs in `docs-viewer/source/library/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=library&mode=manage`, read at `/library/`
-- `analysis`: source docs in `docs-viewer/source/analysis/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=analysis&mode=manage`, read at `/analysis/`
+- `studio`: source docs in `docs-viewer/source/studio/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=studio`
+- `library`: source docs in `docs-viewer/source/library/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=library`, read at `/library/`
+- `analysis`: source docs in `docs-viewer/source/analysis/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=analysis`, read at `/analysis/`
 
 The public `/library/` and `/analysis/` routes are read-only.
-They should not expose `?mode=manage`, management CSS, management JS, localhost write endpoints, or Docs Import.
+They should not expose management query state, management CSS, management JS, localhost write endpoints, or Docs Import.
 
 The `/docs/` route is the local management page served by `docs-viewer/bin/docs-viewer`.
 It can switch the active scope with the `scope` query parameter.

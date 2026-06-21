@@ -70,7 +70,7 @@ def write_activity_contract(repo_root: Path) -> None:
                     },
                     "docs-broken-links": {
                         "label": "docs broken links",
-                        "route": "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
+                        "route": "/docs/?scope=studio&doc=docs-broken-links",
                         "actions": {
                             "run-broken-links-audit": {
                                 "label": "run broken-links audit",
@@ -238,7 +238,7 @@ def test_broken_links_activity_uses_warning_status_for_broken_links() -> None:
             "activity_context": {
                 "page_id": "docs-broken-links",
                 "action_id": "run-broken-links-audit",
-                "route": "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
+                "route": "/docs/?scope=studio&doc=docs-broken-links",
                 "control_id": "docsBrokenLinksReportRun",
                 "control_selector": "#docsBrokenLinksReportRun",
                 "correlation_id": "broken-links:studio",

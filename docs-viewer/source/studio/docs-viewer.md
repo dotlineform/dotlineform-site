@@ -30,8 +30,8 @@ Use runtime and source-boundary docs for current module ownership when an implem
 
 Public viewer routes are read-only:
 
-- `/library/` loads the Library scope directly and does not expose `?mode=manage`
-- `/analysis/` loads the Analysis scope directly and does not expose `?mode=manage`
+- `/library/` loads the Library scope directly and does not expose management query state
+- `/analysis/` loads the Analysis scope directly and does not expose management query state
 - `/docs/` is the local management shell served by the standalone Docs Viewer service and can load `studio`, `library`, or `analysis` through its `scope` query parameter
 
 The CSS base contract is explicit.

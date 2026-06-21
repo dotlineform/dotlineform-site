@@ -272,7 +272,7 @@ If the source no longer matches the preview plan, the write fails rather than si
 For a normal media import:
 
 1. Place the source file in `var/docs/import-staging/`.
-2. Open `/docs/?scope=<scope>&mode=manage&import=1`.
+2. Open `/docs/?scope=<scope>&import=1`.
 3. Import the source file.
 4. Review the result panel's media plan.
 5. Copy any staged media file to the reported media path when `manual_copy_required` is true.

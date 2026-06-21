@@ -53,7 +53,7 @@ function reportActivityContext(scope) {
   return {
     page_id: "docs-broken-links",
     action_id: "run-broken-links-audit",
-    route: "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
+    route: "/docs/?scope=studio&doc=docs-broken-links",
     control_id: "docsBrokenLinksReportRun",
     control_selector: "#docsBrokenLinksReportRun",
     correlation_id: "broken-links:" + scope + ":" + Date.now(),
@@ -86,7 +86,7 @@ function manageModeHref(href, scopes) {
   try {
     const url = new URL(raw, window.location.href);
     if (viewerBaseMatches(url.pathname, scopes)) {
-      url.searchParams.set("mode", "manage");
+      url.searchParams.delete("mode");
       if (url.origin === window.location.origin) {
         return url.pathname + url.search + url.hash;
       }

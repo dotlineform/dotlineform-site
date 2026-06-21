@@ -13,8 +13,8 @@ viewable: true
 Use this when adding a scope that behaves like the current `library` scope:
 a public read-only route plus local management through `/docs/`.
 
-For a repo-tracked manage-mode-only scope, do not use the public `site/assets/data/` generated roots.
-Use the committed manage-mode procedure below instead.
+For a local tracked scope, do not use the public `site/assets/data/` generated roots.
+Use the local tracked procedure below instead.
 
 ### 1. Choose Scope Values
 
@@ -75,7 +75,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 Use `include_scope_param: false` for a public route that only ever reads one scope.
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
 Public read-only scopes use `docs-viewer/generated/` as their working output roots and separate `site/assets/data/` publish roots.
-Manage-mode scopes use only `docs-viewer/generated/` roots, and the builders reject manage-mode configs that point generated docs/search output at public `site/assets/data/` roots.
+Local scopes use only `docs-viewer/generated/` roots, and the builders reject local scope configs that point generated docs/search output at public `site/assets/data/` roots.
 
 Running `./docs-viewer/build/build_docs.py --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
 The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to public route config after the docs build refreshes the config and generated docs payloads.
@@ -138,7 +138,7 @@ It renders `/docs/` with:
 - `data-route-id="docs-manage"`
 - `data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"`
 
-Public builds keep `docs_viewer_management_enabled: false`, so the same route adapter emits the read-only shell and ignores `mode=manage` without loading management CSS or localhost server configuration.
+Public builds keep `docs_viewer_management_enabled: false`, so the same route adapter emits the read-only shell and ignores management query state without loading management CSS or localhost server configuration.
 Local Studio points Docs links, generated reads, and management actions at the configured Docs Viewer service rather than hosting the shell itself.
 
 The standalone Docs Viewer service injects `DOCS_VIEWER_BASE_URL` into the served route-config registry for local management and generated-read URLs.
@@ -161,7 +161,7 @@ Management route adapter inputs:
 Management canonical URL behavior:
 
 - `scope` selects the active configured docs scope
-- `mode=manage` enables local management features when the localhost server is available
+- `/docs/` enables local management features when the localhost server is available
 - missing `scope` normalizes to the configured default scope
 - `doc` selects the active document in the selected scope
 - `q` activates inline docs search for the selected scope
@@ -214,7 +214,7 @@ Public-site preview/validation parity uses `bin/site-validate` and `bin/site-pre
 Then open:
 
 ```text
-/docs/?scope=research&mode=manage&doc=research
+/docs/?scope=research&doc=research
 ```
 
 Docs Import reads the configured scope list and source roots from `docs-viewer/config/scopes/docs_scopes.json`.
@@ -234,7 +234,7 @@ Confirm:
 - the tree loads
 - the root doc loads
 - search loads if configured
-- `?mode=manage` is ignored or normalized away on the public route
+- management queries are ignored or normalized away on the public route
 - no management controls are rendered
 - no management-only CSS or import JavaScript is fetched
 
@@ -249,7 +249,7 @@ Choose:
 - source root: `docs-viewer/source/notes`
 - generated docs output: `docs-viewer/generated/docs/notes`
 - generated search output: `docs-viewer/generated/search/notes/index.json`
-- management route: `/docs/?scope=notes&mode=manage`
+- management route: `/docs/?scope=notes`
 - root doc id: for example `notes`
 
 Scope config example:
@@ -277,7 +277,7 @@ Scope config example:
 }
 ```
 
-Do not create a public static route shell, public route-config record, or published public payload root for a manage-mode-only scope.
+Do not create a public static route shell, public route-config record, or published public payload root for a local-only scope.
 The scope is loaded through the local Docs Viewer management shell, not through a public static route.
 
 Build the generated docs and search payloads:
@@ -295,10 +295,10 @@ After this, the local Docs Viewer service should be able to fetch:
 - `/docs-viewer/generated/search/notes/index.json`
 
 Keep the generated JSON under `docs-viewer/generated/` tracked when the scope is committed.
-Do not place committed manage-mode generated runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`; those are public static payload roots.
+Do not place local tracked generated runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`; those are public static payload roots.
 
 Open:
 
 ```text
-/docs/?scope=notes&mode=manage&doc=notes
+/docs/?scope=notes&doc=notes
 ```

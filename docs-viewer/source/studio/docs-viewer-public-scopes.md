@@ -138,7 +138,7 @@ Current content families:
 Current site mapping:
 
 - the nav/tree layer on `/<scope>/`
-- public/default `/<scope>/` hides docs with `viewable: false`; `/docs/?scope=<scope>&mode=manage` can show those generated docs for local management
+- public/default `/<scope>/` hides docs with `viewable: false`; `/docs/?scope=<scope>` can show those generated docs for local management
 
 ### `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
 

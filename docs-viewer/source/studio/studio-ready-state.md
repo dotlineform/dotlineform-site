@@ -156,7 +156,7 @@ Retired Studio Analytics, Data Sharing, UI Catalogue, and thumbnail-quality rout
 
 Docs Viewer ready root:
 
-- `/docs/?mode=manage&import=1` with `#docsHtmlImportRoot`
+- `/docs/?import=1` with `#docsHtmlImportRoot`
 
 ## Smoke Test Usage
 

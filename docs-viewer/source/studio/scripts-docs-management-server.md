@@ -8,7 +8,7 @@ viewable: true
 ---
 # Docs Viewer Management Services
 
-Docs Viewer management is the local service boundary that lets `/docs/?mode=manage` read generated Docs Viewer data, inspect source configuration, edit Markdown source docs, import staged files, run rebuilds, and perform local-only maintenance actions.
+Docs Viewer management is the local service boundary that lets `/docs/` read generated Docs Viewer data, inspect source configuration, edit Markdown source docs, import staged files, run rebuilds, and perform local-only maintenance actions.
 
 The management surface is served by the standalone Docs Viewer service:
 

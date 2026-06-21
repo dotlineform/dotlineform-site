@@ -146,7 +146,7 @@ Current URL state:
 - `doc` selects the active document
 - `scope` selects the active docs scope on `/docs/`
 - `q` activates inline docs search for the current scope
-- `mode=manage` enables local manage mode only on `/docs/` when the Docs Viewer service is available
+- `/docs/` is the local manage route when the Docs Viewer service is available
 - `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document
 
@@ -159,8 +159,8 @@ The local management shell normalizes onto canonical scoped URLs:
 - `/docs/?scope=library&doc=<doc_id>`
 - `/docs/?scope=analysis&doc=<doc_id>`
 
-When the current `/docs/` session is already in `mode=manage`, the browser runtime preserves that mode for internal canonical `/docs/?scope=<scope>&doc=<doc_id>` clicks.
-Source Markdown links should stay canonical and should not include `mode=manage`.
+The browser runtime keeps internal `/docs/?scope=<scope>&doc=<doc_id>` links canonical and does not add a management query.
+Source Markdown links should stay canonical and should not include management route state.
 
 Public read-only docs routes use:
 

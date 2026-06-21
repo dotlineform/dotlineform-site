@@ -118,12 +118,12 @@ def validate_generated_output_contract(
         return
     if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
         raise ValueError(
-            f"docs scope config {field_prefix}.output for manage-mode scope {scope_id!r} "
+            f"docs scope config {field_prefix}.output for local scope {scope_id!r} "
             "must not be under site/assets/data/docs/scopes"
         )
     if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
         raise ValueError(
-            f"docs scope config {field_prefix}.search_output for manage-mode scope {scope_id!r} "
+            f"docs scope config {field_prefix}.search_output for local scope {scope_id!r} "
             "must not be under site/assets/data/search"
         )
 

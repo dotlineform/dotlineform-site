@@ -601,7 +601,7 @@
     },
     "docs-broken-links": {
       "label": "docs broken links",
-      "route": "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
+      "route": "/docs/?scope=studio&doc=docs-broken-links",
       "actions": {
         "run-broken-links-audit": {
           "label": "run broken-links audit",

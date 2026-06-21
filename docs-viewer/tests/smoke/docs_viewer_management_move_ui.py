@@ -43,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
                     else None,
                 )
 
-                page.goto(f"{base_url}/docs/?scope=studio&doc=root-doc&mode=manage", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/docs/?scope=studio&doc=root-doc", wait_until="domcontentloaded")
                 wait_for_doc(page, "root-doc", args.timeout_ms)
                 wait_for_management_ready(page, args.timeout_ms)
                 page.wait_for_selector('[data-drag-doc-id="child-doc"]', timeout=args.timeout_ms)
@@ -72,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"missing expected move POST; saw {posts!r}")
             if errors:
                 raise AssertionError(f"page errors during local Docs move UI smoke: {errors!r}")
-            print(f"Docs Viewer service move UI OK: {base_url}/docs/?scope=studio&doc=root-doc&mode=manage")
+            print(f"Docs Viewer service move UI OK: {base_url}/docs/?scope=studio&doc=root-doc")
             return 0
         finally:
             server.shutdown()

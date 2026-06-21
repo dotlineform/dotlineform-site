@@ -41,7 +41,7 @@ def main(argv: list[str] | None = None) -> int:
 
     server, base_url = start_server()
     try:
-        assert_http_status(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", 404)
+        assert_http_status(f"{base_url}/docs/?scope=studio&doc=docs-viewer", 404)
         assert_http_status(f"{base_url}/docs-viewer/runtime/js/docs-viewer.js", 404)
         assert_http_status(f"{base_url}/docs-viewer/static/css/docs-viewer.css", 404)
         assert_http_status(f"{base_url}/assets/docs/interactive/library/coincidence-salience.html", 404)

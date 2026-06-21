@@ -74,10 +74,10 @@ Search indexes do not consume these optional fields until a scope-specific searc
 Docs-scope generated index location depends on the scope's publishing contract.
 Public read-only docs routes no longer publish or load flat `site/assets/data/docs/scopes/<scope>/index.json`.
 Public docs routes use `index-tree.json` for navigation, `recently-added.json` for recently-added mode, by-id payloads for selected documents, and separate search payloads.
-Committed manage-mode scopes may still use `docs-viewer/generated/docs/<scope>/index.json` as a rich local/manage generated artifact.
+Local tracked scopes may still use `docs-viewer/generated/docs/<scope>/index.json` as a rich local `/docs/` generated artifact.
 
 All of these are generated runtime data.
-The `site/assets/` location is the public static asset location; `docs-viewer/generated/` is a tracked non-public Docs Viewer data location served by the local Docs Viewer service for manage-mode scopes.
+The `site/assets/` location is the public static asset location; `docs-viewer/generated/` is a tracked non-public Docs Viewer data location served by the local Docs Viewer service for local scopes.
 Document Data Sharing does not use either public or manage generated docs indexes as metadata input; it reads Docs Viewer source metadata from scope config and source Markdown.
 
 ### 3. Generated per-record JSON

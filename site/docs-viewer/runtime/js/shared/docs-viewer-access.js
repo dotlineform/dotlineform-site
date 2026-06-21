@@ -26,7 +26,7 @@ export function createDocsViewerAccessProjection(options) {
   var managementModeValue = cleanString(settings.managementModeValue || routeAccess.managementModeValue) || "manage";
   var requestedMode = allowManagement ? cleanString(searchParams.get("mode")) : "";
   var routeType = normalizeRouteType(settings.routeType || routeConfig.routeType, allowManagement);
-  var managementRequested = allowManagement && requestedMode === managementModeValue;
+  var managementRequested = allowManagement && routeType === "manage";
   return {
     routeType: routeType,
     allowManagement: allowManagement,

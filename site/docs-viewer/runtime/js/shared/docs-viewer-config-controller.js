@@ -247,9 +247,6 @@ export function initDocsViewerConfigController(context) {
 
     var url = new URL(context.routeViewerBaseUrl || context.viewerBaseUrl(), window.location.origin);
     url.searchParams.set("scope", nextScope);
-    if (routeSession.managementMode || context.getCurrentMode() === context.managementMode) {
-      url.searchParams.set("mode", context.managementMode);
-    }
     if (config.defaultDocId) {
       url.searchParams.set("doc", config.defaultDocId);
     }

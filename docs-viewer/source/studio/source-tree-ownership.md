@@ -121,7 +121,7 @@ Current Docs Viewer-owned source homes:
 | `docs-viewer/static/` | Docs Viewer CSS and runtime-owned static assets. |
 | `docs-viewer/shell/` | Standalone Docs Viewer service shell template for built-in `/docs/` manage mode. |
 | `docs-viewer/config/` | Scope config, runtime config source, UI text, report/source config, and local service defaults/schema. |
-| `docs-viewer/generated/` | Tracked non-public generated Docs Viewer runtime payloads for committed manage-mode scopes such as Studio. |
+| `docs-viewer/generated/` | Tracked non-public generated Docs Viewer runtime payloads for local tracked scopes such as Studio. |
 | `docs-viewer/services/` | Standalone Docs Viewer service, Docs management, import/export, generated-read, scope, live rebuild, and data-sharing services. |
 | `docs-viewer/bin/` | Docs Viewer-owned launcher for the standalone local service. |
 
@@ -162,7 +162,7 @@ Generated public files remain under `site/assets/` when public pages need them.
 Examples include public catalogue JSON, public search indexes, public Docs Viewer payloads for `/library/` and `/analysis/`, public thumbnails, and public route media.
 
 Generated Studio read models remain under `studio/data/generated/` when they are only for Local Studio authoring/review.
-Generated committed manage-mode Docs Viewer payloads remain under `docs-viewer/generated/`; they are tracked for local manage-mode runtime use but are not public static assets.
+Generated local tracked Docs Viewer payloads remain under `docs-viewer/generated/`; they are tracked for local `/docs/` runtime use but are not public static assets.
 
 `var/` remains local working output for staging, imports, generated run logs, temporary media derivatives, and test run summaries.
 

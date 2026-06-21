@@ -81,7 +81,7 @@ This is a lifecycle retargeting problem, not a new static-site framework.
   - working generated outputs
   - published public snapshots
   - canonical static route HTML under `site/`
-- Preserve manage-mode scope creation behavior.
+- Preserve local scope creation behavior.
 - Preserve public read-only behavior with no management assets, backend probes, or local write capability.
 - Keep existing Library and Analysis public routes working during the transition.
 

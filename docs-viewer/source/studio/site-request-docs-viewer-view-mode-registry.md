@@ -168,7 +168,7 @@ Required change:
 - replace assertions that only prove hardcoded button strings with assertions that prove registry/config-driven presence and absence
 - keep static import boundary assertions proving public entrypoints do not import management modules
 - add focused coverage for global public policy hiding `bookmark`
-- add focused coverage for `moments` public policy hiding `bookmark` and `info` without affecting `/docs/?scope=moments&mode=manage`
+- add focused coverage for `moments` public policy hiding `bookmark` and `info` without affecting `/docs/?scope=moments`
 
 ## Target Model
 
@@ -284,7 +284,7 @@ Implementation steps:
 - The document-view toolbar is projected from registry/config rather than hardcoded per control.
 - Global public policy can hide `bookmark` across public scopes.
 - `moments` public policy can hide both `bookmark` and `info`, causing `/moments/` to render no docs-view toolbar if no controls remain.
-- `/docs/?scope=moments&mode=manage` can still show the `moments` scope with full controls for the active view/mode.
+- `/docs/?scope=moments` can still show the `moments` scope with full controls for the active view/mode.
 - Adding a new view or mode should require adding its supported controls to the registry/config, not adding scattered toolbar visibility conditionals.
 
 ## Acceptance Checks
@@ -293,7 +293,7 @@ Implementation steps:
 - Document-view toolbar controls are rendered from central projection, including `edit`, `bookmark`, `info`, and `markdown-source`.
 - Global public policy can hide `bookmark` from public scopes without adding a hardcoded runtime branch.
 - Public `moments` policy can hide `bookmark` and `info` so `/moments/` has no empty docs-view toolbar.
-- `/docs/?scope=moments&mode=manage` still shows full active-view controls.
+- `/docs/?scope=moments` still shows full active-view controls.
 - Clicking Markdown source changes document display mode, not main view.
 - Toolbar controls can be hidden by global or scope policy without view-specific runtime conditionals.
 - Existing management toolbar actions still render and execute through their current workflows, including New Scope and Delete Scope.

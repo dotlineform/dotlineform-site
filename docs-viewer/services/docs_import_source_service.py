@@ -54,7 +54,7 @@ def relative_path(repo_root: Path, path: Path) -> str:
 
 def viewer_url_for(scope: str, doc_id: str) -> str:
     normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
-    return f"/docs/?scope={normalized_scope}&doc={doc_id}&mode=manage"
+    return f"/docs/?scope={normalized_scope}&doc={doc_id}"
 
 
 def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:

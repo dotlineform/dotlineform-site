@@ -11,7 +11,7 @@ viewable: true
 Use this page when you have a staged source file that should become a Library, Analysis, or Studio docs source doc.
 
 The import workflow is owned by Docs Viewer management.
-Open it from `/docs/?scope=<scope>&mode=manage` with the `Import` toolbar action.
+Open it from `/docs/?scope=<scope>` with the `Import` toolbar action.
 
 The import UI runs directly inside the Docs Viewer management modal.
 There is no separate Studio Docs Import route.
@@ -62,7 +62,7 @@ The import modal:
 
 ## Basic Workflow
 
-1. Open `/docs/?scope=library&mode=manage&import=1` or the matching Docs Viewer management scope.
+1. Open `/docs/?scope=library&import=1` or the matching Docs Viewer management scope.
 2. Click `Import`.
 3. Choose the staged file.
    Choose `< all >` to import every listed staged source file in one run.

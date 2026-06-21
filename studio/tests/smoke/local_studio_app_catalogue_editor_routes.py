@@ -25,14 +25,14 @@ ROUTES = [
         "path": "/studio/catalogue-series/",
         "root": "#catalogueSeriesRoot",
         "route": "catalogue-series",
-        "doc": "/docs/?scope=studio&doc=catalogue-series-editor&mode=manage",
+        "doc": "/docs/?scope=studio&doc=catalogue-series-editor",
     },
     {
         "id": "catalogue_work_editor",
         "path": "/studio/catalogue-work/",
         "root": "#catalogueWorkRoot",
         "route": "catalogue-work",
-        "doc": "/docs/?scope=studio&doc=catalogue-work-editor&mode=manage",
+        "doc": "/docs/?scope=studio&doc=catalogue-work-editor",
     },
 ]
 

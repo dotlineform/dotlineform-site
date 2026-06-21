@@ -23,7 +23,7 @@ Local Docs Viewer service host, port, base URL, and capability flags are host ru
 `docs-viewer/config/scopes/docs_scopes.json` is the source-side Docs Viewer config.
 It is checked in and is read by docs builds, docs search builds, Docs Import, the standalone Docs Viewer service, live rebuild watching, generated-data reads, and source-write validation.
 
-In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report&mode=manage) reads this source config through the Docs Viewer service and shows it alongside browser and generated projections.
+In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report) reads this source config through the Docs Viewer service and shows it alongside browser and generated projections.
 The report is read-only; source edits still go through source JSON edits or explicit manage-mode write controls.
 
 - The Docs Viewer service still exposes a source-config settings contract for guarded source config writes.

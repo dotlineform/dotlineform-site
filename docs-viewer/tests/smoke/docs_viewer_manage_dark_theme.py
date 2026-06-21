@@ -28,7 +28,7 @@ EXPECTED_DARK_STATE = {
 
 def collect_theme_state(page: Page, base_url: str, timeout_ms: int) -> dict[str, object]:
     page.add_init_script("window.localStorage.setItem('theme', 'dark')")
-    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=timeout_ms)
     page.wait_for_function(
         """() => document.querySelector("#docsViewerContent h1")?.textContent?.trim() === "Docs Viewer" """,

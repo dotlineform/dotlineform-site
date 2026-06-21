@@ -380,11 +380,11 @@ def validate_planned_storage_paths(scope_id: str, publishing_mode: str, config: 
         return
     if path_is_relative_to(docs_output, PUBLIC_DOCS_OUTPUT_ROOT):
         raise ValueError(
-            f"committed manage-mode scope {scope_id!r} must not write generated docs under site/assets/data/docs/scopes"
+            f"local tracked scope {scope_id!r} must not write generated docs under site/assets/data/docs/scopes"
         )
     if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
         raise ValueError(
-            f"committed manage-mode scope {scope_id!r} must not write generated search under site/assets/data/search"
+            f"local tracked scope {scope_id!r} must not write generated search under site/assets/data/search"
         )
 
 
@@ -438,14 +438,14 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
         public_static_assets = True
     elif publishing_mode == LOCAL_COMMITTED_MODE:
         summary = (
-            "Committed manage-mode scope: generated docs and search payloads are tracked non-public Docs Viewer "
+            "Local tracked scope: generated docs and search payloads are tracked non-public Docs Viewer "
             "runtime data under docs-viewer/generated/ and no public route is created."
         )
         access = "local_manage_only"
         public_static_assets = False
     else:
         summary = (
-            "Uncommitted manage-mode scope: generated docs and search payloads use the non-public "
+            "Local untracked scope: generated docs and search payloads use the non-public "
             "docs-viewer/generated/ path shape for local preview and no public route is created."
         )
         access = "local_manage_only"
@@ -963,7 +963,7 @@ def apply_delete_scope(
         "missing_files": preview["missing_files"],
         "build_commands": apply_delete_build_commands(repo_root, scope_id, dry_run=dry_run),
         "urls": {
-            "management": "/docs/?mode=manage",
+            "management": "/docs/",
             "public": "",
         },
         "rebuild": rebuild,
@@ -1074,7 +1074,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         if build_inline_search:
             commands.append({"command": f"./docs-viewer/build/build_search.py --scope {scope_id} --write", "status": "planned"})
 
-    management_url = f"/docs/?scope={scope_id}&mode=manage"
+    management_url = f"/docs/?scope={scope_id}"
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,

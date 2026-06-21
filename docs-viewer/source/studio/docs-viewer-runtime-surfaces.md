@@ -23,7 +23,7 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | Management controls | absent | absent | present when management is enabled |
 | Report runtime | absent unless explicitly public-promoted | absent unless explicitly public-promoted | available through manage-owned report mounting |
 | Scope query | ignored/normalized away | ignored/normalized away | allowed |
-| `mode=manage` | ignored/normalized away | ignored/normalized away | allowed |
+| Management query | ignored/normalized away | ignored/normalized away | normalized away; `/docs/` owns management |
 
 ## Entrypoint And Shell Surface
 

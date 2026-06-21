@@ -886,7 +886,7 @@ def run_import_workflow_module_check(page: Page) -> None:
                     }
                 },
                 managementBaseUrl: 'http://docs-management.test',
-                routePath: '/docs/?mode=manage&import=1',
+                routePath: '/docs/?import=1',
                 runButton: document.getElementById('docsHtmlImportRun'),
                 confirmButton: document.getElementById('docsHtmlImportConfirm'),
                 cancelButton: document.getElementById('docsHtmlImportCancel'),
@@ -989,7 +989,7 @@ def run_import_workflow_module_check(page: Page) -> None:
         raise AssertionError(f"workflow initial request flags changed: {state!r}")
     if second_body["overwrite_doc_id"] != "alpha" or second_body["confirm_overwrite"] is not True:
         raise AssertionError(f"workflow overwrite request changed: {state!r}")
-    if second_body["activity_context"]["route"] != "/docs/?mode=manage&import=1":
+    if second_body["activity_context"]["route"] != "/docs/?import=1":
         raise AssertionError(f"workflow activity context route changed: {state!r}")
     if not state["confirmVisible"]:
         raise AssertionError(f"workflow did not expose overwrite confirmation: {state!r}")
@@ -1147,7 +1147,7 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
                         changed_files: [],
                         build_commands: [],
                         urls: {
-                            management: `/docs/?scope=${body.scope_id}&mode=manage`,
+                            management: `/docs/?scope=${body.scope_id}`,
                             public: ''
                         }
                     })
@@ -1164,16 +1164,16 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
                         scopeCreatePreviewTitle: 'Preview new scope',
                         scopeCreatePreviewing: 'Previewing new scope...',
                         scopeCreateRequiredMessage: 'Enter the required scope fields.',
-                        scopeCreateRouteRequiredMessage: 'Enter a public route path for public read-only scopes.',
+                        scopeCreateRouteRequiredMessage: 'Enter a public route path for public scopes.',
                         scopeCreateTitle: 'New scope',
                         scopeDefaultDocIdLabel: 'default doc id',
                         scopeIdLabel: 'scope id',
-                        scopeLocalCommittedMode: 'local-only committed scope',
+                        scopeLocalCommittedMode: 'local tracked',
                         scopeLocalCommittedModeNote: 'Local committed note.',
-                        scopeLocalUncommittedMode: 'local-only uncommitted scope',
+                        scopeLocalUncommittedMode: 'local untracked',
                         scopeLocalUncommittedModeNote: 'Local uncommitted note.',
                         scopePreviewButton: 'Preview',
-                        scopePublicReadonlyMode: 'public read-only scope',
+                        scopePublicReadonlyMode: 'public',
                         scopePublicReadonlyModeNote: 'Public note.',
                         scopePublicRoutePathLabel: 'public route path',
                         scopePublishingModeLabel: 'publishing mode',

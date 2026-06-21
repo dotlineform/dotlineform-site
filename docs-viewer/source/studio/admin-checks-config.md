@@ -324,7 +324,7 @@ So:
 - **route ownership map** is pattern-based and reviewed
 - **shared dependencies** must be explicit
 
-Docs Viewer is different: `/docs/` is the route, while `?scope=studio&doc=...&mode=manage` is route state/query, not separate route ids. So keeping `/docs/` as the single route target is right.
+Docs Viewer is different: `/docs/` is the route, while `?scope=studio&doc=...` is route state/query, not separate route ids. So keeping `/docs/` as the single route target is right.
 
 The target-map audit is the current guardrail for comparing discovered and configured route ownership. It should report:
 

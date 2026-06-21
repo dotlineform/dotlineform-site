@@ -22,7 +22,7 @@ from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: 
 ROUTE_ID = "catalogue_status"
 ROUTE_PATH = "/studio/catalogue-status/"
 ROOT_SELECTOR = "#catalogueStatusRoot"
-DOC_HREF = "/docs/?scope=studio&doc=catalogue-status&mode=manage"
+DOC_HREF = "/docs/?scope=studio&doc=catalogue-status"
 
 
 def start_server() -> tuple[StudioAppServer, str]:

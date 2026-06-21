@@ -180,10 +180,10 @@ After changing the cascade:
 
 - build the site
 - smoke `/docs/?scope=studio`
-- smoke `/docs/?scope=library&mode=manage`
+- smoke `/docs/?scope=library`
 - smoke `/library/`
 - smoke `/analysis/`
-- open `/docs/?scope=studio&mode=manage&import=1` and verify the import modal still has usable form controls
+- open `/docs/?scope=studio&import=1` and verify the import modal still has usable form controls
 - confirm public routes do not load Studio CSS
 - confirm generated docs content still uses host prose and responsive image styling
 

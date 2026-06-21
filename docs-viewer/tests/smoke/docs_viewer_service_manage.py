@@ -172,7 +172,7 @@ def assert_manage_info_panel(page: Page, timeout_ms: int) -> None:
             text: panel.textContent || ""
         })"""
     )
-    expected_terms = ["Scope", "Summary", "Parent path", "Added", "Updated", "UI status", "Visibility", "Route"]
+    expected_terms = ["Scope", "Summary", "Parent path", "Date", "Added", "Updated", "UI status", "Visibility", "Route"]
     if info_state["terms"] != expected_terms:
         raise AssertionError(f"manage info panel did not render rich metadata terms: {info_state!r}")
     for expected in ["Doc ID", "docs-viewer", "studio"]:
@@ -212,7 +212,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         else None,
     )
 
-    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     assert_manage_route_contract(manage_route_state(page), base_url)
     assert_manage_info_panel(page, timeout_ms)
@@ -227,7 +227,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
     )
     exercise_search(page, timeout_ms)
 
-    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     page.locator("#docsViewerManageActionsButton").click()
     page.locator("#docsViewerManageDeleteButton").click()
@@ -266,11 +266,11 @@ def main(argv: list[str] | None = None) -> int:
         assert_generated_requests(generated_paths)
         if "/docs/delete-preview" not in management_post_paths:
             raise AssertionError(f"expected delete preview POST through Docs Viewer service: {sorted(management_post_paths)!r}")
-        if query_value(final_url, "mode") != "manage":
-            raise AssertionError(f"expected mode=manage in URL, got {final_url}")
+        if query_value(final_url, "mode"):
+            raise AssertionError(f"expected clean manage URL without mode query, got {final_url}")
         if errors:
             raise AssertionError(f"page errors during Docs Viewer service smoke: {errors!r}")
-        print(f"Docs Viewer service manage shell OK: {base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage")
+        print(f"Docs Viewer service manage shell OK: {base_url}/docs/?scope=studio&doc=docs-viewer")
         return 0
     finally:
         server.shutdown()

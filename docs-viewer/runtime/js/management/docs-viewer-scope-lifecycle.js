@@ -65,9 +65,9 @@ function publishingModes(capabilities) {
 
 function modeLabel(state, mode) {
   var labels = {
-    public_readonly: managementText(state, "scopePublicReadonlyMode", "public read-only scope"),
-    local_committed: managementText(state, "scopeLocalCommittedMode", "committed manage-mode scope"),
-    local_uncommitted: managementText(state, "scopeLocalUncommittedMode", "local-only uncommitted scope")
+    public_readonly: managementText(state, "scopePublicReadonlyMode", "public"),
+    local_committed: managementText(state, "scopeLocalCommittedMode", "local tracked"),
+    local_uncommitted: managementText(state, "scopeLocalUncommittedMode", "local untracked")
   };
   return labels[mode] || mode;
 }
@@ -237,7 +237,7 @@ function collectCreatePayload(api, state) {
     return null;
   }
   if (publishingMode === "public_readonly" && !publicRoutePath) {
-    api.setStatus(managementText(state, "scopeCreateRouteRequiredMessage", "Enter a public route path for public read-only scopes."));
+    api.setStatus(managementText(state, "scopeCreateRouteRequiredMessage", "Enter a public route path for public scopes."));
     return null;
   }
 

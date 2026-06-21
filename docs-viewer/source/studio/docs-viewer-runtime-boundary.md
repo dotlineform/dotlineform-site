@@ -95,18 +95,18 @@ Current route rules:
 
 | Route | Install type | Management | Scope query | Data authority |
 | --- | --- | --- | --- | --- |
-| `/docs/` | local/manage | enabled with `?mode=manage` | allowed | standalone Docs Viewer service and generated-read paths |
+| `/docs/` | local/manage | enabled by route | allowed | standalone Docs Viewer service and generated-read paths |
 | `/library/` | public read-only | disabled | ignored/normalized away | public static generated payloads |
 | `/analysis/` | public read-only | disabled | ignored/normalized away | public static generated payloads |
 
 Additional route rules:
 
-- `/docs/` is the only route that enables `?mode=manage`; it is served by the standalone Docs Viewer service.
+- `/docs/` is the only management route; it is served by the standalone Docs Viewer service.
 - `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`.
 - `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure write-capable management mode, or load management-only CSS.
 - public read-only viewer routes avoid publishing or loading management-only JS/CSS, the HTML import modules, the local manage-capable route registry, management base URLs, local generated-read service base URLs, and backend capability probes.
 - local `bin/local-studio` links to the configured Docs Viewer service but does not serve Docs Viewer management, generated reads, or Docs Viewer assets.
-- canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode.
+- canonical internal docs links stay read-only-safe and omit any management query; the `/docs/` shell is management-capable by route identity.
 
 Route surface details live in [Docs Viewer Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces).
 

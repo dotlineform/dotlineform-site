@@ -278,7 +278,7 @@ def assert_overwrite_preview_flow(page: Page) -> None:
                 files: [{ filename: 'existing.html', source_format: 'html' }],
                 scope: 'library',
                 includePromptMeta: true,
-                routePath: '/docs/?mode=manage',
+                routePath: '/docs/',
                 managementBaseUrl: state.managementBaseUrl,
                 config: state.config
             });
@@ -306,7 +306,7 @@ def assert_overwrite_preview_flow(page: Page) -> None:
         raise AssertionError(f"preview request shape changed: {requests!r}")
     if first.get("confirm_overwrite") is not False or first.get("overwrite_doc_id") != "":
         raise AssertionError(f"preview request should not confirm overwrite: {requests!r}")
-    if first.get("activity_context", {}).get("route") != "/docs/?mode=manage":
+    if first.get("activity_context", {}).get("route") != "/docs/":
         raise AssertionError(f"activity context route was not explicit: {requests!r}")
     if second.get("confirm_overwrite") is not True or second.get("overwrite_doc_id") != "existing-doc":
         raise AssertionError(f"confirmed overwrite request changed: {requests!r}")

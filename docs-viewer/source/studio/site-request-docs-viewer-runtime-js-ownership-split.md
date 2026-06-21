@@ -225,7 +225,7 @@ The local Docs Viewer service route map is now explicit:
 - Browser smoke: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root site`.
 - Result: public Docs Viewer read-only OK for `/library/` and `/analysis/`.
 - Browser smoke: `$HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`.
-- Result: Docs Viewer service manage shell OK for `/docs/?scope=studio&doc=docs-viewer&mode=manage`.
+- Result: Docs Viewer service manage shell OK for `/docs/?scope=studio&doc=docs-viewer`.
 - Syntax/workflow checks: `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_viewer_service.py site-tools/site_tools/config.py site-tools/site_tools/validation.py site-tools/site_validate.py`; `actionlint .github/workflows/public-site.yml`.
 
 ## Verification Expectations

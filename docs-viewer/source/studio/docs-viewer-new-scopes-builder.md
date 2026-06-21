@@ -13,7 +13,7 @@ It should be populated as the implementation progresses and reviewed fully befor
 
 ## Purpose
 
-The New Scopes Builder is the local-management workflow for creating and deleting Docs Viewer scopes from `/docs/?mode=manage`.
+The New Scopes Builder is the local-management workflow for creating and deleting Docs Viewer scopes from `/docs/`.
 
 It should:
 
@@ -49,12 +49,12 @@ and published snapshot outputs under:
 - `site/assets/data/docs/scopes/<scope>/`
 - `site/assets/data/search/<scope>/index.json`
 
-Committed manage-mode scopes use generated outputs under:
+Local tracked scopes use generated outputs under:
 
 - `docs-viewer/generated/docs/<scope>/`
 - `docs-viewer/generated/search/<scope>/index.json`
 
-Manage-mode scopes must not write generated docs/search runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`.
+Local scopes must not write generated docs/search runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`.
 Those `site/assets/` roots are public static-site payload roots and are reserved for scopes that are explicitly public read-only.
 
 The localhost Docs Viewer service may create or update those files.
@@ -62,7 +62,7 @@ The public browser runtime must not.
 
 Scope creation should run only through:
 
-- `/docs/?mode=manage`
+- `/docs/`
 - the loopback Docs Viewer service
 - explicit write allowlists in the server
 - normal rebuild commands after the write
@@ -92,7 +92,7 @@ Public scope creation updates source/config records, public route metadata, publ
 It renders `site/<route>/index.html` from `docs-viewer/templates/public-route/index.html`.
 It does not write Markdown route stubs or Python source.
 
-Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>&mode=manage` and publish through the explicit `Publish docs` action.
+Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>` and publish through the explicit `Publish docs` action.
 
 ### Committed Manage-Mode Scope
 
@@ -105,7 +105,7 @@ Create and commit:
 - generated docs tree, recently-added, by-id, rich manage index, and search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
 
 Do not create a public read-only route page.
-The scope remains available through `/docs/?scope=<scope>&mode=manage` when the local server is running.
+The scope remains available through `/docs/?scope=<scope>` when the local server is running.
 The generated JSON is tracked runtime data, but it is not a public static asset because it lives under the Docs Viewer-owned `docs-viewer/` boundary rather than under `site/assets/`.
 
 This is useful for private planning notes, local drafts, or internal review material that should move with the repo but not have a public URL.
@@ -137,7 +137,7 @@ The scope lifecycle workflow now has server-side preview/apply endpoints and a m
 - `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
 - `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
 - `POST /docs/scopes/delete-apply` deletes eligible user-created scopes after explicit confirmation
-- the `/docs/?mode=manage` Actions menu exposes capability-gated `New scope` and `Delete scope` commands
+- the `/docs/` Actions menu exposes capability-gated `New scope` and `Delete scope` commands
 - `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
 - `docs-viewer/runtime/js/management/docs-viewer-management.js` remains the management command coordinator
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
@@ -254,8 +254,8 @@ Validation rules currently implemented:
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
 - `publishing_mode` must be `public_readonly`, `local_uncommitted`, or `local_committed`
 - `public_readonly` requires a valid `public_route_path`
-- committed manage-mode generated docs output must not be under `site/assets/data/docs/scopes/`
-- committed manage-mode generated search output must not be under `site/assets/data/search/`
+- local tracked generated docs output must not be under `site/assets/data/docs/scopes/`
+- local tracked generated search output must not be under `site/assets/data/search/`
 - planned created paths must not already exist
 
 Preview response fields:
@@ -282,7 +282,7 @@ Preview response fields:
 The preview response uses file records with `kind`, `path`, `action`, and `exists`.
 It reports planned generated docs/search outputs only when generated output writes are requested.
 It does not report a public URL for currently enabled local scope modes.
-The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or manage-mode runtime data served by the local Docs Viewer service.
+The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or local runtime data served by the local Docs Viewer service.
 
 Expected preview storage paths:
 
@@ -473,10 +473,10 @@ Implementation ownership:
 ## Safety Rules
 
 - Scope creation is a local write action and must stay behind the loopback management server.
-- Public routes must remain read-only even if `mode=manage` or `scope=<other-scope>` appears in the URL.
+- Public routes must remain read-only even if a management query or `scope=<other-scope>` appears in the URL.
 - The write server should validate scope ids and route paths before writing.
 - The write server should refuse paths outside the configured repo allowlist.
-- Manage-mode scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a manage-mode scope points there.
+- Local scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a local scope points there.
 - Public read-only scopes are the only scopes that should use those public generated asset roots.
 - Public read-only scope creation and deletion use the route shell template and manifest-owned file records; deletion must not remove shared runtime, shared CSS, UI text, route registry files themselves, or unrelated route shells.
 - Delete Scope must block any scope referenced as `default_scope_id` by a management route, even when that scope is user-created.

@@ -64,7 +64,7 @@ Local Admin views declare the runtime config endpoint with `meta[name="dlf-admin
 - local output paths for activity, checks runs, and testing run summaries
 - sibling links to Studio, Analytics, and Docs Viewer
 
-Admin routes do not use `?mode=manage`.
+Admin routes do not use management query state.
 There is no public Admin mode.
 The `/admin/` home renders only Admin-owned route links; sibling app links can remain runtime config data without being surfaced in the top nav or home link groups.
 

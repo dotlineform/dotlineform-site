@@ -88,7 +88,7 @@ When a change touches generated outputs or generated contracts:
 When updating docs:
 
 - keep docs source flat under `docs-viewer/source/<scope>/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than source folders
-- use Docs Viewer links for published doc references, such as `/docs/?scope=studio&mode=manage&doc=<doc_id>`
+- use Docs Viewer links for published doc references, such as `/docs/?scope=studio&doc=<doc_id>`
 - keep raw repo paths for unpublished docs, literal output paths, scripts, JSON artifacts, `README.md`, `AGENTS.md`, and other non-doc files
 - update the owning runtime, UI, script, or data-model doc when behavior, dependencies, build/write responsibilities, or generated contracts change
 - document script-specific command usage, flags, outputs, and operational notes under the owning scope parent rather than spreading partial notes across unrelated docs

@@ -143,7 +143,7 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function currentMode() {
     if (!allowManagement()) return "";
-    return new URLSearchParams(window.location.search).get("mode") || "";
+    return managementModeValue;
   }
 
   function hasCanonicalScopeInUrl() {
@@ -152,7 +152,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function hasDisallowedModeInUrl() {
-    return !allowManagement() && new URLSearchParams(window.location.search).has("mode");
+    return new URLSearchParams(window.location.search).has("mode");
   }
 
   function hasDisallowedScopeInUrl() {

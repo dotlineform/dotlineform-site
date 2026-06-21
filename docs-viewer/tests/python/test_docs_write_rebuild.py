@@ -421,12 +421,11 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
     assert result["ok"] is True
-    assert calls == [
-        ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"],
-        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "studio", "--write"],
-        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "library", "--write"],
-        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "analysis", "--write"],
-        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", "tmp", "--write"],
+    assert calls[0] == ["/tmp/python", "docs-viewer/build/build_docs.py", "--write", "--diagnostics"]
+    assert calls[1:] == [
+        ["/tmp/python", "docs-viewer/build/build_search.py", "--scope", scope["scope"], "--write"]
+        for scope in result["diagnostics"]["search"]
+        if scope["mode"] == "full"
     ]
 
 
@@ -476,7 +475,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
     ]
 
 
-def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
+def test_rebuild_all_docs_outputs_rejects_local_assets_outputs() -> None:
     original_python = with_fake_python()
     original_run = write_rebuild.subprocess.run
     calls: list[list[str]] = []
@@ -513,10 +512,10 @@ def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
             try:
                 write_rebuild.rebuild_all_docs_outputs(repo_root)
             except ValueError as exc:
-                assert "manage-mode scope 'studio'" in str(exc)
+                assert "local scope 'studio'" in str(exc)
                 assert "site/assets/data/docs/scopes" in str(exc)
             else:
-                raise AssertionError("Expected docs rebuild to reject manage-mode public generated roots")
+                raise AssertionError("Expected docs rebuild to reject local public generated roots")
     finally:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
@@ -537,7 +536,7 @@ def main() -> None:
     test_perform_source_write_and_rebuild_clears_pending_on_exception()
     test_rebuild_all_docs_outputs_preserves_command_sequence()
     test_rebuild_all_docs_outputs_uses_current_scope_config()
-    test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs()
+    test_rebuild_all_docs_outputs_rejects_local_assets_outputs()
     print("Docs write/rebuild tests OK")
 
 

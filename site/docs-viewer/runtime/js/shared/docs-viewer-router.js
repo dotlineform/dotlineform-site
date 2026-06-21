@@ -4,9 +4,6 @@ export function buildViewerUrl(options) {
   if (settings.includeScopeParam && settings.viewerScope) {
     url.searchParams.set("scope", settings.viewerScope);
   }
-  if (settings.managementMode) {
-    url.searchParams.set("mode", settings.managementModeValue || "manage");
-  }
   url.searchParams.set("doc", settings.docId || "");
   if (typeof settings.query === "string" && settings.query.trim()) {
     url.searchParams.set("q", settings.query.trim());
@@ -26,7 +23,6 @@ export function buildViewerUrlForScope(options) {
   var url = new URL(baseUrl, settings.origin || window.location.origin);
   if (useManage) {
     url.searchParams.set("scope", targetScope);
-    url.searchParams.set("mode", settings.managementModeValue || "manage");
   } else if (targetConfig && targetConfig.includeScopeParam && targetScope) {
     url.searchParams.set("scope", targetScope);
   }
@@ -43,14 +39,13 @@ export function routeFromAnchorHref(href, options) {
 
   var scope = String(url.searchParams.get("scope") || "").trim();
   var linkMode = String(url.searchParams.get("mode") || "");
-  var currentMode = String(settings.currentMode || "");
   var managementModeValue = settings.managementModeValue || "manage";
-  if (settings.allowManagement && linkMode && linkMode !== currentMode) return null;
+  if (settings.allowManagement && linkMode && linkMode !== managementModeValue) return null;
   if (settings.includeScopeParam && scope && scope !== settings.viewerScope) {
-    if (!settings.allowScopeQuery || !settings.allowManagement || currentMode !== managementModeValue || linkMode) {
+    if (!settings.allowScopeQuery || !settings.allowManagement) {
       return null;
     }
-    url.searchParams.set("mode", managementModeValue);
+    url.searchParams.delete("mode");
     return {
       navigateUrl: url.pathname + url.search + url.hash
     };

@@ -106,7 +106,7 @@ inventory-only: 40
 ```
 
 Docs Viewer management uses one route path, `/docs/`.
-The query state such as `?scope=studio&doc=...&mode=manage` is route state, not separate route ids.
+The query state such as `?scope=studio&doc=...` is route state, not separate route ids.
 
 ## Responsibility Split
 

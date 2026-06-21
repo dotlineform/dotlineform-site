@@ -101,8 +101,13 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "schema_version": "data_sharing_adapters_v2",
             "dispatch": [
-                {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
             ],
+            "paths": {
+                "outbound_package_root": "var/analytics/data-sharing/exports",
+                "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
+                "review_output_root": "var/analytics/data-sharing/import-preview",
+            },
             "adapters": [
                 {
                     "id": "documents",
@@ -111,21 +116,22 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     "status": "active",
                     "portability": {"package": "docs-viewer-documents-data-sharing"},
                     "data_domains": {
-                        "library": {
-                            "label": "Library",
-                            "scope": "library",
+                        "documents": {
+                            "app": "docs-viewer",
+                            "label": "Documents",
                             "status": "active",
                             "selection_model": "documents",
-                            "paths": {
-                                "outbound_package_root": "var/analytics/data-sharing/library/exports",
-                                "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
-                                "review_output_root": "var/analytics/data-sharing/library/import-preview",
-                                "source_root": "docs-viewer/source/library",
+                            "record_selectors": {
+                                "docs_scope": {
+                                    "source": "docs_scope_config",
+                                    "required": True,
+                                },
                             },
                             "source_write_targets": {
                                 "documents": "docs-viewer/source/library",
                             },
                             "sources": {
+                                "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
                                 "docs_payload_root": "site/assets/data/docs/scopes/library/by-id",
                                 "source_root": "docs-viewer/source/library",
                             },
@@ -416,7 +422,7 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     assert "site/docs-viewer/config/routes/docs-viewer-public-routes.json" in changed_paths
 
 
-def test_scope_create_preview_reports_committed_manage_mode_outputs() -> None:
+def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -479,7 +485,7 @@ def test_docs_scope_config_requires_search_output() -> None:
             raise AssertionError("Expected docs scope config to require search_output")
 
 
-def test_docs_scope_config_rejects_manage_mode_assets_outputs() -> None:
+def test_docs_scope_config_rejects_local_assets_outputs() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_json(
@@ -503,10 +509,10 @@ def test_docs_scope_config_rejects_manage_mode_assets_outputs() -> None:
         try:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
-            assert "manage-mode scope 'studio'" in str(exc)
+            assert "local scope 'studio'" in str(exc)
             assert "site/assets/data/docs/scopes" in str(exc)
         else:
-            raise AssertionError("Expected manage-mode scope config to reject public generated asset roots")
+            raise AssertionError("Expected local scope config to reject public generated asset roots")
 
 
 def test_docs_scope_config_requires_public_readonly_publish_outputs() -> None:
@@ -540,7 +546,7 @@ def test_docs_scope_config_requires_public_readonly_publish_outputs() -> None:
     assert configs["research"].publish_search_output.as_posix() == "site/assets/data/search/research/index.json"
 
 
-def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -> None:
+def test_scope_create_preview_blocks_local_tracked_assets_regression() -> None:
     original_docs_output = docs_management_service.docs_scope_manifest.planned_docs_output
     original_search_output = docs_management_service.docs_scope_manifest.planned_search_output
     docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("site/assets/data/docs/scopes") / scope_id
@@ -565,13 +571,13 @@ def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -
             except ValueError as exc:
                 assert "must not write generated docs under site/assets/data/docs/scopes" in str(exc)
             else:
-                raise AssertionError("Expected committed manage-mode preview to reject assets output roots")
+                raise AssertionError("Expected local tracked preview to reject assets output roots")
     finally:
         docs_management_service.docs_scope_manifest.planned_docs_output = original_docs_output
         docs_management_service.docs_scope_manifest.planned_search_output = original_search_output
 
 
-def test_scope_create_apply_blocks_committed_manage_mode_assets_regression() -> None:
+def test_scope_create_apply_blocks_local_tracked_assets_regression() -> None:
     original_docs_output = docs_management_service.docs_scope_manifest.planned_docs_output
     original_search_output = docs_management_service.docs_scope_manifest.planned_search_output
     docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("site/assets/data/docs/scopes") / scope_id
@@ -598,7 +604,7 @@ def test_scope_create_apply_blocks_committed_manage_mode_assets_regression() -> 
             except ValueError as exc:
                 assert "must not write generated docs under site/assets/data/docs/scopes" in str(exc)
             else:
-                raise AssertionError("Expected committed manage-mode apply to reject assets output roots")
+                raise AssertionError("Expected local tracked apply to reject assets output roots")
     finally:
         docs_management_service.docs_scope_manifest.planned_docs_output = original_docs_output
         docs_management_service.docs_scope_manifest.planned_search_output = original_search_output
@@ -1308,7 +1314,7 @@ def test_docs_export_request_passes_target_format() -> None:
         return {
             "ok": True,
             "target_format": kwargs["target_format"],
-            "output_file": "var/analytics/data-sharing/library/exports/test.json",
+            "output_file": "var/analytics/data-sharing/exports/test.json",
             "output_written": False,
             "counts": {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0},
             "issue_counts": {"errors": 0, "warnings": 0},
@@ -1318,15 +1324,18 @@ def test_docs_export_request_passes_target_format() -> None:
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
-            adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(repo_root, "library", "prepare")
+            adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(repo_root, "documents", "prepare")
             result = analytics_data_sharing_api.documents_data_sharing_adapter.prepare_package(
                 repo_root,
                 {
-                    "data_domain": "library",
+                    "data_domain": "documents",
                     "config_id": "library-document-summaries",
-                    "doc_ids": ["library"],
-                    "select_all": False,
-                    "missing_summary_only": False,
+                    "selection": {
+                        "docs_scope": "studio",
+                        "doc_ids": ["child"],
+                        "select_all": False,
+                        "missing_summary_only": False,
+                    },
                     "target_format": "json",
                 },
                 dry_run=True,
@@ -1352,12 +1361,12 @@ def main() -> None:
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,
         test_scope_create_preview_blocks_public_readonly_until_routes_are_data_driven,
-        test_scope_create_preview_reports_committed_manage_mode_outputs,
+        test_scope_create_preview_reports_local_tracked_outputs,
         test_docs_scope_config_requires_search_output,
-        test_docs_scope_config_rejects_manage_mode_assets_outputs,
+        test_docs_scope_config_rejects_local_assets_outputs,
         test_docs_scope_config_requires_public_readonly_publish_outputs,
-        test_scope_create_preview_blocks_committed_manage_mode_assets_regression,
-        test_scope_create_apply_blocks_committed_manage_mode_assets_regression,
+        test_scope_create_preview_blocks_local_tracked_assets_regression,
+        test_scope_create_apply_blocks_local_tracked_assets_regression,
         test_scope_create_apply_requires_confirmation,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
         test_scope_create_apply_skips_public_route_for_local_scopes,

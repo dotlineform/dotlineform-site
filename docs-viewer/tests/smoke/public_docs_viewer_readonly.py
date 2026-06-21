@@ -8,7 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import Page, sync_playwright
 
@@ -35,6 +35,10 @@ def route_url(base_url: str, path: str) -> str:
 
 def request_paths(urls: list[str]) -> set[str]:
     return {urlparse(url).path for url in urls}
+
+
+def query_value(url: str, key: str) -> str:
+    return (parse_qs(urlparse(url).query).get(key) or [""])[0]
 
 
 def wait_for_rendered_doc(page: Page, doc_id: str, title: str, timeout_ms: int) -> None:
@@ -134,7 +138,7 @@ def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int
             text: panel.textContent || ""
         })"""
     )
-    if info_state["terms"] != ["Summary", "Updated"]:
+    if info_state["terms"] != ["Summary", "Date", "Updated"]:
         raise AssertionError(f"{route} public info panel did not render reader-only terms: {info_state!r}")
     blocked = ["Doc ID", "Scope", "Parent path", "Added", "UI status", "Visibility", "Route"]
     leaked = [item for item in blocked if item in str(info_state["text"])]
@@ -164,6 +168,8 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
     page.on("request", lambda request: request_urls.append(request.url))
     page.goto(route_url(base_url, route), wait_until="domcontentloaded")
     wait_for_rendered_doc(page, doc_id, title, timeout_ms)
+    if query_value(page.url, "mode"):
+        raise AssertionError(f"{route} should remove mode query state, got {page.url}")
     assert_public_route_contract(route, public_route_state(page))
     assert_public_info_panel(page, route, title, timeout_ms)
     page.locator("#docsViewerRecentButton").click()
@@ -199,7 +205,15 @@ def main() -> int:
                     "response",
                     lambda response: http_failures.append(f"{response.status}: {response.url}") if response.status >= 400 else None,
                 )
-                exercise_public_route(page, base_url, "/library/?doc=library", "library", "Library", args.timeout_ms)
+                legacy_mode = "manage"
+                exercise_public_route(
+                    page,
+                    base_url,
+                    f"/library/?doc=library&mode={legacy_mode}",
+                    "library",
+                    "Library",
+                    args.timeout_ms,
+                )
                 exercise_public_route(page, base_url, "/analysis/?doc=analysis", "analysis", "Analysis", args.timeout_ms)
             finally:
                 browser.close()
