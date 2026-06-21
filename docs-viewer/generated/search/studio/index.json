@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-902d15c0b9d6ba40542ca5b79fe7ad6a",
-    "generated_at_utc": "2026-06-21T21:58:58Z",
-    "count": 243
+    "version": "blake2b-3260e4c4a681857b53c1d2045be10d54",
+    "generated_at_utc": "2026-06-21T22:06:19Z",
+    "count": 242
   },
   "entries": [
     {
@@ -5782,32 +5782,6 @@
         "21"
       ],
       "search_text": "studio-runtime studio runtime studio runtime 2026-06-21 2026 06 21"
-    },
-    {
-      "id": "studio-static-route-template-migration",
-      "kind": "doc",
-      "title": "Studio Static Route Template Migration",
-      "href": "/docs/?scope=studio&doc=studio-static-route-template-migration",
-      "last_updated": "2026-06-21",
-      "parent_id": "studio-runtime",
-      "parent_title": "Studio Runtime",
-      "display_meta": "2026-06-21 • Studio Runtime",
-      "search_terms": [
-        "studio-static-route-template-migration",
-        "studio",
-        "static",
-        "route",
-        "template",
-        "migration",
-        "studio static route template migration",
-        "studio runtime",
-        "runtime",
-        "2026-06-21",
-        "2026",
-        "06",
-        "21"
-      ],
-      "search_text": "studio-static-route-template-migration studio static route template migration studio static route template migration studio runtime runtime 2026-06-21 2026 06 21"
     },
     {
       "id": "config-studio-ui-text-json",

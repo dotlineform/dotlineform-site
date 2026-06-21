@@ -1268,14 +1268,7 @@
         {
           "doc_id": "studio-runtime",
           "title": "Studio Runtime",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-          "children": [
-            {
-              "doc_id": "studio-static-route-template-migration",
-              "title": "Studio Static Route Template Migration",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-static-route-template-migration.json"
-            }
-          ]
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json"
         },
         {
           "doc_id": "config-studio-ui-text-json",
@@ -1334,5 +1327,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-21T21:35:26Z"
+  "generated_at": "2026-06-21T22:06:19Z"
 }

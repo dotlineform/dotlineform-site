@@ -178,25 +178,7 @@ It starts the local Studio app server and the docs live rebuild watcher.
 It does not start public-site preview, Local Analytics, UI Catalogue, or the standalone Docs Viewer service; use each runner directly or `bin/local-all` for all local services.
 
 The runner is sufficient for route-shell and Studio write-flow testing, but not a full content-generation pipeline.
-Detailed runner behavior lives in [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio).
-Local server ownership lives in [Local Studio App](/docs/?scope=studio&doc=local-studio-app).
-Endpoint ownership lives in [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis).
 
-## Current Catalogue UI Baseline
-
-After Phase 3, the current Catalogue shell conventions are:
-
-- Catalogue-domain pages no longer render a persistent page-link strip above the editor content
-- work and detail editors use the right-hand summary rail for readiness state as well as current-record context
-- the series editor uses its right-hand panel for the primary work image with a title/year caption
-- work and detail editors now place compact media previews at the top of that summary rail
-- work detail rows on the work editor now use thumbnail-led navigation rather than text-only rows
-- the Catalogue dashboard uses grouped directional link lists rather than card panels
-- metadata editors use a shared single-column row layout with labels on the left
-- Catalogue editor action/result messages use a shared route-root click handler to clear transient action copy after the route is no longer busy
-- Catalogue Drafts is a sortable draft-record list and links directly into work, series, detail, and moment editors
-- work-owned downloads and links are edited from the work editor rather than standalone child-record pages
-
-Current operational reporting conventions are:
-
-- `Studio Activity` is the unified surface for covered Studio save, create, delete, publication, import, report, audit, tag, docs, lookup, search, and build effects
+- Detailed runner behavior lives in [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio).
+- Local server ownership lives in [Local Studio App](/docs/?scope=studio&doc=local-studio-app).
+- Endpoint ownership lives in [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis).
