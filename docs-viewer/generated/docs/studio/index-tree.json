@@ -482,6 +482,11 @@
           "doc_id": "config-library-export-configs",
           "title": "Library Export Configs",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-library-export-configs.json"
+        },
+        {
+          "doc_id": "data-sharing-tags-adapter-structure",
+          "title": "Tags Data Sharing Adapter Structure",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-tags-adapter-structure.json"
         }
       ]
     },
@@ -1312,5 +1317,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-21T15:46:47Z"
+  "generated_at": "2026-06-21T18:20:42Z"
 }

@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "data-sharing-tags-adapter-structure",
+      "title": "Tags Data Sharing Adapter Structure",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-tags-adapter-structure.json",
+      "added_date": "2026-06-21 00:00",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing"
+    },
+    {
       "doc_id": "site-request-docs-viewer-view-mode-registry",
       "title": "Docs Viewer View And Mode Registry",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-13",
       "parent_id": "site-request-public-catalogue-runtime-module-architecture",
       "parent_title": "Public Catalogue Runtime Module Architecture Request"
-    },
-    {
-      "doc_id": "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
-      "title": "Public Catalogue Runtime Metadata Panel Component Slice",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-public-catalogue-runtime-module-architecture",
-      "parent_title": "Public Catalogue Runtime Module Architecture Request"
     }
   ],
-  "generated_at": "2026-06-21T15:46:47Z"
+  "generated_at": "2026-06-21T18:20:42Z"
 }

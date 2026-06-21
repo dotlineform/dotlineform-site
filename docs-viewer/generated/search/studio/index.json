@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ce8a4fc5aca4e20ae36c1678662f6f65",
-    "generated_at_utc": "2026-06-21T15:46:47Z",
-    "count": 239
+    "version": "blake2b-c651b4f205207cd7a8e11434d47458ce",
+    "generated_at_utc": "2026-06-21T18:20:42Z",
+    "count": 240
   },
   "entries": [
     {
@@ -2136,6 +2136,31 @@
         "05"
       ],
       "search_text": "config-library-export-configs config library export configs library export configs data sharing data sharing 2026-06-05 2026 06 05"
+    },
+    {
+      "id": "data-sharing-tags-adapter-structure",
+      "kind": "doc",
+      "title": "Tags Data Sharing Adapter Structure",
+      "href": "/docs/?scope=studio&doc=data-sharing-tags-adapter-structure",
+      "last_updated": "2026-06-21",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-06-21 • Data Sharing",
+      "search_terms": [
+        "data-sharing-tags-adapter-structure",
+        "data",
+        "sharing",
+        "tags",
+        "adapter",
+        "structure",
+        "tags data sharing adapter structure",
+        "data sharing",
+        "2026-06-21",
+        "2026",
+        "06",
+        "21"
+      ],
+      "search_text": "data-sharing-tags-adapter-structure data sharing tags adapter structure tags data sharing adapter structure data sharing 2026-06-21 2026 06 21"
     },
     {
       "id": "dev-home",

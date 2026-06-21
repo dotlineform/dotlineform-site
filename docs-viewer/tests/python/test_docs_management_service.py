@@ -13,11 +13,12 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
 DOCS_MANAGEMENT_SERVICE_PATH = DOCS_DIR / "docs_management_service.py"
+DATA_SHARING_DIR = REPO_ROOT / "data-sharing"
 ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
 ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+for path in (DATA_SHARING_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     text = str(path)
     if text not in sys.path:
         sys.path.insert(0, text)
@@ -40,6 +41,7 @@ docs_management_mutations = sys.modules["docs_management_mutations"]
 docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
 from docs_data_sharing import package as docs_data_sharing_package  # noqa: E402
+from adapters.documents import prepare as documents_prepare  # noqa: E402
 import analytics_data_sharing_api  # noqa: E402
 
 
@@ -1325,7 +1327,7 @@ def test_docs_export_request_passes_target_format() -> None:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(repo_root, "documents", "prepare")
-            result = analytics_data_sharing_api.documents_data_sharing_adapter.prepare_package(
+            result = documents_prepare.prepare_package(
                 repo_root,
                 {
                     "data_domain": "documents",

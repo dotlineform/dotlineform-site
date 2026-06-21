@@ -11,11 +11,12 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
+DATA_SHARING_DIR = REPO_ROOT / "data-sharing"
 ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
 ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-for path in (DOCS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+for path in (DOCS_DIR, DATA_SHARING_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     text = str(path)
     if text not in sys.path:
         sys.path.insert(0, text)
@@ -26,14 +27,14 @@ import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_import_service import import_source_dependencies  # noqa: E402
+from adapters.documents import prepare as documents_prepare  # noqa: E402
+from adapters.documents import returned as documents_returned  # noqa: E402
 import analytics_data_sharing_api  # noqa: E402
-
-documents_data_sharing_adapter = analytics_data_sharing_api.documents_data_sharing_adapter
 
 
 def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, object]:
     adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
-    return documents_data_sharing_adapter.list_returned_packages(
+    return documents_returned.list_returned_packages(
         root,
         data_domain,
         adapter=adapter,
@@ -43,7 +44,7 @@ def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, obj
 
 def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
     adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
-    return documents_data_sharing_adapter.review_returned_package(
+    return documents_returned.review_returned_package(
         root,
         body,
         dry_run,
@@ -54,7 +55,7 @@ def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run
 
 def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
     adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
-    return documents_data_sharing_adapter.apply_returned_changes(
+    return documents_returned.apply_returned_changes(
         root,
         body,
         dry_run,
@@ -65,7 +66,7 @@ def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: 
 
 def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
     adapter = analytics_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
-    return documents_data_sharing_adapter.prepare_package(
+    return documents_prepare.prepare_package(
         root,
         body,
         dry_run,
@@ -94,6 +95,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
                         "label": "Document summaries",
                         "description": "Exports summary metadata.",
                         "enabled": True,
+                        "data_domains": ["library"],
                         "scopes": ["library"],
                         "target": {
                             "format": "jsonl",
@@ -101,7 +103,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
                             "include_export_metadata": True,
                         },
                         "output": {
-                            "path_pattern": "var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
+                            "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
                             "timestamp_format": "%Y%m%d-%H%M%S",
                         },
                         "selection": {
@@ -142,6 +144,11 @@ def make_repo() -> tempfile.TemporaryDirectory:
         json.dumps(
             {
                 "schema_version": "data_sharing_adapters_v2",
+                "paths": {
+                    "outbound_package_root": "var/analytics/data-sharing/exports",
+                    "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
+                    "review_output_root": "var/analytics/data-sharing/import-preview",
+                },
                 "dispatch": [
                     {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
                     {"data_domain": "library", "operation": "list_returned", "adapter_id": "documents"},
@@ -157,16 +164,11 @@ def make_repo() -> tempfile.TemporaryDirectory:
                         "portability": {"package": "docs-viewer-documents-data-sharing"},
                         "data_domains": {
                             "library": {
+                                "app": "docs-viewer",
                                 "label": "Library",
                                 "scope": "library",
                                 "status": "active",
                                 "selection_model": "documents",
-                                "paths": {
-                                    "outbound_package_root": "var/analytics/data-sharing/library/exports",
-                                    "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
-                                    "review_output_root": "var/analytics/data-sharing/library/import-preview",
-                                    "source_root": "docs-viewer/source/library",
-                                },
                                 "source_write_targets": {
                                     "documents": "docs-viewer/source/library",
                                 },
@@ -288,7 +290,8 @@ def write_scope_config(root: Path) -> None:
 
 
 def write_staged(root: Path, filename: str, payload: object, scope: str = "library") -> None:
-    path = root / "var/analytics/data-sharing" / scope / "import-staging" / filename
+    del scope
+    path = root / "var/analytics/data-sharing/import-staging" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     if filename.endswith(".jsonl"):
         rows = payload if isinstance(payload, list) else [payload]
@@ -388,12 +391,12 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
         write_staged(root, "relationships.json", {"documents": []})
-        (root / "var/analytics/data-sharing/library/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
+        (root / "var/analytics/data-sharing/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
         payload = handle_documents_import_files(root, "library")
 
     assert payload["ok"] is True
     assert payload["scope"] == "library"
-    assert payload["staging_root"] == "var/analytics/data-sharing/library/import-staging"
+    assert payload["staging_root"] == "var/analytics/data-sharing/import-staging"
     assert [item["filename"] for item in payload["files"]] == ["relationships.json", "summaries.jsonl"]
     assert [item["format"] for item in payload["files"]] == ["json", "jsonl"]
 
@@ -411,15 +414,15 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=False,
         )
-        preview_paths = sorted((root / "var/analytics/data-sharing/library/import-preview").glob("alpha-*.md"))
-        tree_paths = sorted((root / "var/analytics/data-sharing/library/import-preview").glob("summaries-tree-*.md"))
+        preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("alpha-*.md"))
+        tree_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("summaries-tree-*.md"))
         preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["preview_written"] is True
     assert len(preview_paths) == 1
     assert len(tree_paths) == 1
-    assert f"var/analytics/data-sharing/library/import-preview/{preview_paths[0].name}" in [
+    assert f"var/analytics/data-sharing/import-preview/{preview_paths[0].name}" in [
         item["path"] for item in payload["preview_files"]
     ]
     assert payload["summary_text"] == "Generated 2 Library import preview files."
@@ -435,11 +438,11 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
             {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=True,
         )
-        preview_exists = list((root / "var/analytics/data-sharing/library/import-preview").glob("alpha-*.md"))
+        preview_exists = list((root / "var/analytics/data-sharing/import-preview").glob("alpha-*.md"))
 
     assert payload["ok"] is True
     assert payload["preview_written"] is False
-    assert payload["preview_files"][0]["path"].startswith("var/analytics/data-sharing/library/import-preview/alpha-")
+    assert payload["preview_files"][0]["path"].startswith("var/analytics/data-sharing/import-preview/alpha-")
     assert payload["preview_files"][0]["path"].endswith(".md")
     assert payload["summary_text"] == "Validated 1 Library import preview file without writing."
     assert preview_exists == []
@@ -471,9 +474,12 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             {
                 "data_domain": "library",
                 "config_id": "library-document-summaries",
-                "doc_ids": ["alpha"],
-                "select_all": False,
-                "missing_summary_only": None,
+                "selection": {
+                    "docs_scope": "library",
+                    "doc_ids": ["alpha"],
+                    "select_all": False,
+                    "missing_summary_only": None,
+                },
             },
             dry_run=True,
         )
@@ -482,9 +488,12 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             {
                 "data_domain": "library",
                 "config_id": "library-document-summaries",
-                "doc_ids": ["library", "alpha"],
-                "select_all": False,
-                "missing_summary_only": None,
+                "selection": {
+                    "docs_scope": "library",
+                    "doc_ids": ["library", "alpha"],
+                    "select_all": False,
+                    "missing_summary_only": None,
+                },
             },
             dry_run=True,
         )

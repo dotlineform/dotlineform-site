@@ -27,6 +27,7 @@ import script_logging  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 from adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
+from adapters.documents import context as documents_data_sharing_context  # noqa: E402
 from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
 try:
@@ -62,8 +63,8 @@ def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
         pass
 
 
-def documents_data_sharing_dependencies() -> documents_data_sharing_adapter.DocumentsDataSharingDependencies:
-    return documents_data_sharing_adapter.DocumentsDataSharingDependencies(
+def documents_data_sharing_dependencies() -> documents_data_sharing_context.DocumentsDataSharingDependencies:
+    return documents_data_sharing_context.DocumentsDataSharingDependencies(
         log_event=log_event,
         perform_source_write_and_rebuild=write_rebuild.perform_source_write_and_rebuild,
     )
