@@ -8,7 +8,7 @@ viewable: true
 ---
 # Analytics Static Route Template Migration
 
-Analytics should follow the same frontend-owned route model as Studio, but with static HTML route templates rather than large JavaScript string renderers.
+Analytics should follow the same frontend-owned route model as Studio, with static HTML route templates rather than large JavaScript string renderers.
 The goal is to remove route HTML from Python while keeping stable page structure in `.html` files.
 
 The target model is:
