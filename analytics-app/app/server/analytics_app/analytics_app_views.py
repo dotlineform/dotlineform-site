@@ -368,33 +368,47 @@ def data_sharing_prepare_view(version: str) -> str:
         >
           <div class="analytics__panel dataSharingPreparePage__panel">
             <div class="dataSharingPreparePage__controls">
-              <label class="analyticsField dataSharingPreparePage__appField" for="dataSharingPrepareAppSelect">
-                <span class="analyticsField__label" id="dataSharingPrepareAppLabel"></span>
+              <div class="dataSharingPreparePage__buttonGroup">
+                <button type="button" class="analytics__button analytics__button--defaultWidth" id="dataSharingPrepareRun"></button>
+              </div>
+              <div class="dataSharingPreparePage__dropdownGroup">
+                <label class="analyticsField dataSharingPreparePage__appField" for="dataSharingPrepareAppSelect">
+                  <span class="analyticsField__label" id="dataSharingPrepareAppLabel"></span>
+                  <span class="analyticsField__control">
+                    <select class="analytics__input" id="dataSharingPrepareAppSelect"></select>
+                  </span>
+                </label>
+                <label class="analyticsField dataSharingPreparePage__dataDomainField" for="dataSharingPrepareDataDomainSelect">
+                  <span class="analyticsField__label" id="dataSharingPrepareDataDomainLabel"></span>
+                  <span class="analyticsField__control">
+                    <select class="analytics__input" id="dataSharingPrepareDataDomainSelect"></select>
+                  </span>
+                </label>
+                <label class="analyticsField dataSharingPreparePage__field" for="dataSharingPrepareConfigSelect">
+                  <span class="analyticsField__label" id="dataSharingPrepareConfigLabel"></span>
+                  <span class="analyticsField__control">
+                    <select class="analytics__input" id="dataSharingPrepareConfigSelect"></select>
+                  </span>
+                </label>
+              </div>
+              <label class="analyticsField dataSharingPreparePage__format" id="dataSharingPrepareFormatWrap" for="dataSharingPrepareFormatSelect">
+                <span class="analyticsField__label dataSharingPreparePage__formatLabel" id="dataSharingPrepareFormatLabel"></span>
                 <span class="analyticsField__control">
-                  <select class="analytics__input" id="dataSharingPrepareAppSelect"></select>
+                  <select class="analytics__input" id="dataSharingPrepareFormatSelect"></select>
                 </span>
               </label>
-              <label class="analyticsField dataSharingPreparePage__dataDomainField" for="dataSharingPrepareDataDomainSelect">
-                <span class="analyticsField__label" id="dataSharingPrepareDataDomainLabel"></span>
-                <span class="analyticsField__control">
-                  <select class="analytics__input" id="dataSharingPrepareDataDomainSelect"></select>
-                </span>
-              </label>
-              <label class="analyticsField dataSharingPreparePage__field" for="dataSharingPrepareConfigSelect">
-                <span class="analyticsField__label" id="dataSharingPrepareConfigLabel"></span>
-                <span class="analyticsField__control">
-                  <select class="analytics__input" id="dataSharingPrepareConfigSelect"></select>
-                </span>
-              </label>
-              <button type="button" class="analytics__button analytics__button--defaultWidth" id="dataSharingPrepareRun"></button>
-              <fieldset class="dataSharingPreparePage__format" id="dataSharingPrepareFormatWrap" aria-labelledby="dataSharingPrepareFormatLabel">
-                <span class="dataSharingPreparePage__formatLabel" id="dataSharingPrepareFormatLabel"></span>
-                <span class="dataSharingPreparePage__formatOptions" id="dataSharingPrepareFormatOptions"></span>
-              </fieldset>
-              <label class="dataSharingPreparePage__toggle" id="dataSharingPrepareMissingSummaryWrap" hidden>
-                <input type="checkbox" id="dataSharingPrepareMissingSummaryOnly">
-                <span id="dataSharingPrepareMissingSummaryLabel"></span>
-              </label>
+              <div class="dataSharingPreparePage__optionsGroup" id="dataSharingPrepareOptionsGroup" hidden>
+                <label class="analyticsField dataSharingPreparePage__docsScopeField" for="dataSharingPrepareDocsScopeSelect">
+                  <span class="analyticsField__label" id="dataSharingPrepareDocsScopeLabel"></span>
+                  <span class="analyticsField__control">
+                    <select class="analytics__input" id="dataSharingPrepareDocsScopeSelect"></select>
+                  </span>
+                </label>
+                <label class="dataSharingPreparePage__toggle" id="dataSharingPrepareMissingSummaryWrap" hidden>
+                  <input type="checkbox" id="dataSharingPrepareMissingSummaryOnly">
+                  <span id="dataSharingPrepareMissingSummaryLabel"></span>
+                </label>
+              </div>
             </div>
 
             <p class="analytics__status" id="dataSharingPrepareStatus"></p>

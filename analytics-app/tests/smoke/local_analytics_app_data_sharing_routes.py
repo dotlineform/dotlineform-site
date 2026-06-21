@@ -65,18 +65,30 @@ def config_payload() -> dict[str, object]:
     return {
         "ok": True,
         "schema_version": "data_sharing_adapters_v2",
+        "docs_scopes": [
+            {
+                "id": "library",
+                "label": "Library",
+                "source": "docs-viewer/source/library",
+            }
+        ],
         "adapters": [
             {
                 "id": "documents",
                 "label": "Documents",
                 "status": "active",
                 "data_domains": {
-                    "library": {
+                    "documents": {
                         "app": "docs-viewer",
-                        "label": "Library",
-                        "docs_scope": "library",
+                        "label": "Documents",
                         "status": "active",
                         "selection_model": "documents",
+                        "record_selectors": {
+                            "docs_scope": {
+                                "source": "docs_scope_config",
+                                "required": True,
+                            }
+                        },
                     }
                 },
                 "capabilities": [
@@ -90,7 +102,7 @@ def config_payload() -> dict[str, object]:
                                 "id": "library-parent-child-relationships",
                                 "label": "Parent-child relationships",
                                 "enabled": True,
-                                "data_domains": ["library"],
+                                "data_domains": ["documents"],
                                 "target": {"format": "json", "supported_formats": ["json"]},
                                 "selection": {
                                     "mode": "explicit_doc_ids",
@@ -132,7 +144,7 @@ def prepare_payload() -> dict[str, object]:
             "truncated": 0,
         },
         "output_files": [
-            "var/analytics/data-sharing/library/exports/local-smoke.json",
+            "var/analytics/data-sharing/documents/exports/local-smoke.json",
         ],
         "warnings": [],
         "summary_text": "Package prepared.",
@@ -143,11 +155,11 @@ def returned_packages_payload() -> dict[str, object]:
     return {
         "ok": True,
         "scope": "library",
-        "staging_root": "var/analytics/data-sharing/library/import-staging",
+        "staging_root": "var/analytics/data-sharing/documents/import-staging",
         "files": [
             {
                 "filename": "summaries.jsonl",
-                "path": "var/analytics/data-sharing/library/import-staging/summaries.jsonl",
+                "path": "var/analytics/data-sharing/documents/import-staging/summaries.jsonl",
                 "format": "jsonl",
                 "size_bytes": 512,
                 "modified_utc": "2026-05-04T12:00:00Z",
@@ -270,7 +282,7 @@ def assert_data_sharing_api(base_url: str) -> None:
     health = read_json_url(f"{base_url}/analytics/api/data-sharing/health")
     if health.get("service") != "analytics_data_sharing":
         raise AssertionError(f"unexpected Data Sharing health payload: {health!r}")
-    records = read_json_url(f"{base_url}/analytics/api/data-sharing/selectable-records?data_domain=library")
+    records = read_json_url(f"{base_url}/analytics/api/data-sharing/selectable-records?data_domain=documents&docs_scope=library")
     if records.get("adapter_id") != "documents" or records.get("selection_model") != "documents":
         raise AssertionError(f"unexpected selectable-record payload: {records!r}")
     if not records.get("records"):
@@ -278,11 +290,20 @@ def assert_data_sharing_api(base_url: str) -> None:
 
 
 def assert_prepare(page, base_url: str) -> None:
-    page.goto(f"{base_url}/analytics/data-sharing/prepare/?mode=manage&data_domain=library", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/prepare/?mode=manage", wait_until="domcontentloaded")
     root = page.locator("#dataSharingPrepareRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
+    expect(root).to_have_attribute("data-analytics-record-loaded", "false", timeout=10_000)
+    if page.locator("#dataSharingPrepareAppSelect").evaluate("select => select.value") != "":
+        raise AssertionError("prepare app select should start blank")
+    page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
+    page.locator("#dataSharingPrepareDataDomainSelect").select_option("documents")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("library-parent-child-relationships")
+    if page.locator("#dataSharingPrepareDocsScopeSelect").evaluate("select => select.value") != "":
+        raise AssertionError("prepare docs scope select should start blank")
+    page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     expect(page.locator("[data-data-sharing-prepare-doc]").first).to_be_visible(timeout=10_000)
     page.locator("#dataSharingPrepareSelectAll").click()
@@ -294,7 +315,7 @@ def assert_prepare(page, base_url: str) -> None:
 
 
 def assert_review(page, base_url: str) -> None:
-    page.goto(f"{base_url}/analytics/data-sharing/review/?mode=manage&data_domain=library", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/review/?mode=manage&data_domain=documents", wait_until="domcontentloaded")
     root = page.locator("#dataSharingReviewRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)

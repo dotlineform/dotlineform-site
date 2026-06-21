@@ -69,6 +69,7 @@ SKIPPED_REASON_LABELS = {
 class ExportContext:
     repo_root: Path
     scope: str
+    data_domain: str
     config: dict[str, Any]
     source_context: source_metadata.DataSharingDocsSourceContext
     docs: list[dict[str, Any]]
@@ -837,7 +838,7 @@ def export_metadata(
         "export_id": config_id,
         "config_id": config_id,
         "config_checksum": config_checksum(context.config),
-        "data_domain": context.scope,
+        "data_domain": context.data_domain,
         "generated_at": generated_at,
         "selected_doc_ids": selected_doc_ids,
         "source_last_updated": source_last_updated,
@@ -849,7 +850,7 @@ def export_metadata(
 def resolve_output_path(
     repo_root: Path,
     config: dict[str, Any],
-    scope: str,
+    data_domain: str,
     timestamp: str,
     target_format: str,
     output_root: Path | str | None = None,
@@ -861,7 +862,7 @@ def resolve_output_path(
         raise ValueError(f"Export config {config_id} is missing output.path_pattern")
     relative = Path(
         pattern.format(
-            data_domain=scope,
+            data_domain=data_domain,
             timestamp=timestamp,
             export_id=config_id,
         )
@@ -939,6 +940,7 @@ def build_export(
     select_all: bool,
     missing_summary_only: bool | None,
     write: bool,
+    data_domain: str = "documents",
     config_path: str | None = None,
     target_format: str | None = None,
     output_root: Path | str | None = None,
@@ -988,8 +990,8 @@ def build_export(
     config_errors, config_warnings = validate_export_config(config)
     warnings: list[str] = [*payload_warnings, *config_warnings]
     errors: list[str] = [*config_errors]
-    if scope not in config.get("data_domains", []):
-        errors.append(f"config {config_id}: data_domain {scope} is not supported")
+    if data_domain not in config.get("data_domains", []):
+        errors.append(f"config {config_id}: data_domain {data_domain} is not supported")
     if not config.get("enabled", False):
         errors.append(f"config {config_id}: export config is disabled")
 
@@ -1008,7 +1010,7 @@ def build_export(
     output_path: Path | None = None
     relative_output = ""
     try:
-        output_path = resolve_output_path(repo_root, config, scope, timestamp, resolved_target_format, output_root)
+        output_path = resolve_output_path(repo_root, config, data_domain, timestamp, resolved_target_format, output_root)
         relative_output = str(output_path.relative_to(repo_root))
     except ValueError as exc:
         errors.append(f"config {config_id}: {exc}")
@@ -1058,6 +1060,7 @@ def build_export(
     context = ExportContext(
         repo_root=repo_root,
         scope=scope,
+        data_domain=data_domain,
         config=config,
         source_context=source_context,
         docs=docs,

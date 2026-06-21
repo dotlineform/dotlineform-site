@@ -35,7 +35,7 @@ def test_subsystem_root_and_core_modules_are_importable() -> None:
     assert list_returned.OPERATION == "list_returned"
     assert review.OPERATION == "review"
     assert apply.OPERATION == "apply"
-    assert paths.domain_artifact_root("Library").as_posix() == "var/analytics/data-sharing/library"
+    assert paths.domain_artifact_root("Documents").as_posix() == "var/analytics/data-sharing/documents"
     assert registry.ADAPTER_REGISTRY_REL_PATH.as_posix() == "data-sharing/config/adapters.json"
     assert registry.LIBRARY_EXPORT_CONFIG_SCHEMA_REL_PATH.as_posix() == "data-sharing/config/library-export-configs.schema.json"
 

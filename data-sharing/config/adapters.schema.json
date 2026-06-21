@@ -81,9 +81,24 @@
                   "type": "string",
                   "minLength": 1
                 },
-                "docs_scope": {
-                  "type": "string",
-                  "minLength": 1
+                "record_selectors": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "docs_scope": {
+                      "type": "object",
+                      "required": ["source", "required"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "source": {
+                          "const": "docs_scope_config"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
                 },
                 "status": {
                   "$ref": "#/$defs/status"

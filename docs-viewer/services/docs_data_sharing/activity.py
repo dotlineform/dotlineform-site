@@ -92,6 +92,7 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
     exported = int(counts.get("exported") or 0)
     failed = int(counts.get("failed") or 0)
     warnings = int(issue_counts.get("warnings") or 0)
+    selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
     attach_docs_activity(
         repo_root,
         body,
@@ -102,7 +103,7 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
             f"{payload.get('data_domain') or body.get('data_domain')}:"
             f"{payload.get('config_id') or body.get('config_id')}"
         ),
-        record_groups={"docs": compact_ids(body.get("doc_ids"))},
+        record_groups={"docs": compact_ids(selection.get("doc_ids"))},
         detail_items=[
             str(payload.get("summary_text") or f"Exported {exported} document(s).").strip(),
             f"Output file: {output_file}" if output_file else "",

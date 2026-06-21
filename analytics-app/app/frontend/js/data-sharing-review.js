@@ -225,7 +225,7 @@ async function init() {
     bootStatus,
     root,
     app: "docs-viewer",
-    dataDomain: "library",
+    dataDomain: "documents",
     apps: DATA_SHARING_REVIEW_APPS,
     dataDomains: DATA_SHARING_REVIEW_DOMAINS,
     adapterRegistry: null,
@@ -288,7 +288,7 @@ async function init() {
     state.app = dataSharingReviewAppFromUrl(state.apps, state.dataDomains, state.dataDomain);
     const appDomains = dataSharingDomainsForApp(state.dataDomains, state.app);
     if (!appDomains.some((item) => item.key === state.dataDomain)) {
-      state.dataDomain = appDomains[0] ? appDomains[0].key : "library";
+      state.dataDomain = appDomains[0] ? appDomains[0].key : "documents";
     }
     state.applyCapability = dataSharingCapabilityForOperation(adapterRegistry, "apply", state.dataDomain);
     state.applyActions = dataSharingReviewApplyActionsForCapability(state.applyCapability && state.applyCapability.capability)

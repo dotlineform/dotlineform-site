@@ -94,7 +94,7 @@ def selectable_records_payload() -> dict[str, object]:
     docs = source_metadata_records()
     return {
         "ok": True,
-        "data_domain": "library",
+        "data_domain": "documents",
         "adapter_id": "documents",
         "scope": "library",
         "selection_model": "documents",
@@ -122,7 +122,7 @@ def prepare_result_payload() -> dict[str, object]:
             "truncated": 0,
         },
         "output_files": [
-            "var/analytics/data-sharing/library/exports/modal-smoke.json",
+            "var/analytics/data-sharing/documents/exports/modal-smoke.json",
         ],
         "warnings": ["Skipped 1 non-viewable document."],
         "summary_text": "Package prepared.",
@@ -218,11 +218,36 @@ def assert_ready_contract(attrs: dict[str, str], expect_unavailable_service: boo
         raise AssertionError(f"unexpected route mode: {attrs['mode']!r}")
     if attrs["service"] not in {"available", "unavailable"}:
         raise AssertionError(f"unexpected service state: {attrs['service']!r}")
-    if not expect_unavailable_service and attrs["recordLoaded"] != "true":
-        raise AssertionError(f"Library docs did not load before ready: {attrs!r}")
+    if attrs["recordLoaded"] not in {"true", "false"}:
+        raise AssertionError(f"unexpected record-loaded state: {attrs!r}")
 
 
 def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, object]:
+    initial = page.evaluate(
+        """() => ({
+            app: document.querySelector("#dataSharingPrepareAppSelect")?.value || "",
+            dataDomain: document.querySelector("#dataSharingPrepareDataDomainSelect")?.value || "",
+            config: document.querySelector("#dataSharingPrepareConfigSelect")?.value || "",
+            formatHidden: document.querySelector("#dataSharingPrepareFormatWrap")?.hidden === true,
+            optionsHidden: document.querySelector("#dataSharingPrepareOptionsGroup")?.hidden === true,
+            runDisabled: document.querySelector("#dataSharingPrepareRun")?.disabled === true
+        })"""
+    )
+    if initial != {
+        "app": "",
+        "dataDomain": "",
+        "config": "",
+        "formatHidden": True,
+        "optionsHidden": True,
+        "runDisabled": True,
+    }:
+        raise AssertionError(f"prepare route should start with blank selections: {initial!r}")
+
+    page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
+    page.wait_for_function("""() => Array.from(document.querySelectorAll("#dataSharingPrepareDataDomainSelect option")).some((option) => option.value === "documents")""")
+    page.locator("#dataSharingPrepareDataDomainSelect").select_option("documents")
+    page.wait_for_function("""() => Array.from(document.querySelectorAll("#dataSharingPrepareConfigSelect option")).some((option) => option.value === "library-parent-child-relationships")""")
+
     config_ids = set(
         page.locator("#dataSharingPrepareConfigSelect option").evaluate_all(
             "options => options.map(option => option.value)"
@@ -232,21 +257,24 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if missing_config_ids:
         raise AssertionError(f"missing sharing profile ids: {sorted(missing_config_ids)!r}")
 
-    doc_ids = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
-        "rows => rows.map(row => row.getAttribute('data-data-sharing-prepare-doc'))"
-    )
-    if not doc_ids and not expect_unavailable_service:
-        raise AssertionError("Data Sharing prepare document list is empty")
-    run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("library-parent-child-relationships")
+    page.wait_for_selector("#dataSharingPrepareOptionsGroup:not([hidden])", timeout=5000)
+    scope_value = page.locator("#dataSharingPrepareDocsScopeSelect").evaluate("select => select.value")
+    missing_checked = page.locator("#dataSharingPrepareMissingSummaryOnly").evaluate("input => input.checked")
+    if scope_value != "" or missing_checked:
+        raise AssertionError(f"options should start unselected: scope={scope_value!r}, missing={missing_checked!r}")
+
     if expect_unavailable_service:
+        run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
         if not run_disabled:
             raise AssertionError("run button should be disabled when the Analytics Data Sharing API is unavailable")
         status_text = page.locator("#dataSharingPrepareStatus").inner_text(timeout=5000)
         if "Analytics Data Sharing API unavailable" not in status_text:
             raise AssertionError(f"unexpected unavailable status text: {status_text!r}")
         return {
+            "initial": initial,
             "config_ids": sorted(config_ids),
-            "doc_count": len(doc_ids),
+            "doc_count": 0,
             "filters": {},
             "formats": {},
             "run_disabled": bool(run_disabled),
@@ -254,9 +282,18 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
         }
 
     format_result = assert_format_controls(page)
+    page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
+    page.wait_for_selector("[data-data-sharing-prepare-doc]", timeout=5000)
+    doc_ids = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
+        "rows => rows.map(row => row.getAttribute('data-data-sharing-prepare-doc'))"
+    )
+    if not doc_ids:
+        raise AssertionError("Data Sharing prepare document list is empty")
+    run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
     filter_result = assert_filter_flow(page, len(doc_ids))
 
     return {
+        "initial": initial,
         "config_ids": sorted(config_ids),
         "doc_count": len(doc_ids),
         "formats": format_result,
@@ -266,11 +303,11 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
 
 
 def format_controls(page) -> list[dict[str, object]]:
-    return page.locator("input[name='dataSharingPrepareFormat']").evaluate_all(
-        """inputs => inputs.map(input => ({
-            value: input.value,
-            checked: input.checked,
-            disabled: input.disabled
+    return page.locator("#dataSharingPrepareFormatSelect option").evaluate_all(
+        """options => options.map(option => ({
+            value: option.value,
+            selected: option.selected,
+            disabled: option.disabled
         }))"""
     )
 
@@ -280,41 +317,32 @@ def assert_format_controls(page) -> dict[str, str]:
         return {str(item["value"]): item for item in format_controls(page)}
 
     initial = by_value()
-    if not initial["json"]["checked"] or initial["json"]["disabled"]:
+    if not initial["json"]["selected"] or initial["json"]["disabled"]:
         raise AssertionError(f"parent-child config should default to JSON: {initial!r}")
-    if not initial["jsonl"]["disabled"]:
-        raise AssertionError(f"parent-child config should disable JSONL: {initial!r}")
+    if "jsonl" in initial:
+        raise AssertionError(f"parent-child config should only offer JSON: {initial!r}")
 
     page.locator("#dataSharingPrepareConfigSelect").select_option("library-full-document-content")
     page.wait_for_function(
-        """() => {
-            const jsonl = document.querySelector("input[name='dataSharingPrepareFormat'][value='jsonl']");
-            const json = document.querySelector("input[name='dataSharingPrepareFormat'][value='json']");
-            return jsonl && json && jsonl.checked && !jsonl.disabled && !json.disabled;
-        }"""
+        """() => document.querySelector("#dataSharingPrepareFormatSelect")?.value === "json"
+            && Array.from(document.querySelectorAll("#dataSharingPrepareFormatSelect option")).some((option) => option.value === "jsonl")"""
     )
     full_content = by_value()
 
     page.locator("#dataSharingPrepareConfigSelect").select_option("library-document-summaries")
     page.wait_for_function(
-        """() => {
-            const jsonl = document.querySelector("input[name='dataSharingPrepareFormat'][value='jsonl']");
-            const json = document.querySelector("input[name='dataSharingPrepareFormat'][value='json']");
-            return jsonl && json && jsonl.checked && !jsonl.disabled && !json.disabled;
-        }"""
+        """() => document.querySelector("#dataSharingPrepareFormatSelect")?.value === "json"
+            && Array.from(document.querySelectorAll("#dataSharingPrepareFormatSelect option")).some((option) => option.value === "jsonl")"""
     )
 
     page.locator("#dataSharingPrepareConfigSelect").select_option("library-parent-child-relationships")
     page.wait_for_function(
-        """() => {
-            const jsonl = document.querySelector("input[name='dataSharingPrepareFormat'][value='jsonl']");
-            const json = document.querySelector("input[name='dataSharingPrepareFormat'][value='json']");
-            return jsonl && json && json.checked && !json.disabled && jsonl.disabled;
-        }"""
+        """() => document.querySelector("#dataSharingPrepareFormatSelect")?.value === "json"
+            && !Array.from(document.querySelectorAll("#dataSharingPrepareFormatSelect option")).some((option) => option.value === "jsonl")"""
     )
     return {
         "parent_default": "json",
-        "content_default": "jsonl" if full_content["jsonl"]["checked"] else "",
+        "content_default": "json" if full_content["json"]["selected"] else "",
     }
 
 
@@ -429,8 +457,11 @@ def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]],
         raise AssertionError(f"prepare result modal did not focus the close action: {modal_state!r}")
     if not prepare_requests:
         raise AssertionError("prepare result modal smoke did not call the prepare endpoint")
-    if prepare_requests[-1].get("data_domain") != "library" or prepare_requests[-1].get("config_id") != "library-parent-child-relationships":
+    if prepare_requests[-1].get("data_domain") != "documents" or prepare_requests[-1].get("config_id") != "library-parent-child-relationships":
         raise AssertionError(f"prepare request ownership changed unexpectedly: {prepare_requests[-1]!r}")
+    selection = prepare_requests[-1].get("selection") if isinstance(prepare_requests[-1].get("selection"), dict) else {}
+    if selection.get("docs_scope") != "library":
+        raise AssertionError(f"prepare request did not include the selected docs scope: {prepare_requests[-1]!r}")
 
     page.keyboard.press("Escape")
     page.wait_for_selector('[data-role="analytics-modal"]', state="detached", timeout=timeout_ms)

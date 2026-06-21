@@ -81,24 +81,26 @@ def capability(operation: str, status: str = "active") -> dict[str, object]:
     return payload
 
 
-def domain_payload(status: str = "active", data_domain: str = "library") -> dict[str, object]:
+def domain_payload(status: str = "active", data_domain: str = "documents") -> dict[str, object]:
     return {
         "app": "docs-viewer",
-        "label": "Library",
-        "docs_scope": data_domain,
+        "label": "Documents",
         "status": status,
         "selection_model": "documents",
+        "record_selectors": {
+            "docs_scope": {
+                "source": "docs_scope_config",
+                "required": True,
+            },
+        },
         "paths": {
             "outbound_package_root": f"var/analytics/data-sharing/{data_domain}/exports",
             "returned_package_staging_root": f"var/analytics/data-sharing/{data_domain}/import-staging",
             "review_output_root": f"var/analytics/data-sharing/{data_domain}/import-preview",
-            "source_root": f"docs-viewer/source/{data_domain}",
         },
-        "source_write_targets": {
-            "documents": f"docs-viewer/source/{data_domain}",
-        },
+        "source_write_targets": {},
         "sources": {
-            "source_root": f"docs-viewer/source/{data_domain}",
+            "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
         },
         "config": {
             "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
@@ -112,7 +114,7 @@ def adapter_payload(
     module: str = "documents",
     label: str = "Documents",
     status: str = "active",
-    data_domain: str = "library",
+    data_domain: str = "documents",
     domain: dict[str, object] | None = None,
     capabilities: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
@@ -135,10 +137,10 @@ def registry_payload() -> dict[str, object]:
     return {
         "schema_version": "data_sharing_adapters_v2",
         "dispatch": [
-            {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
-            {"data_domain": "library", "operation": "list_returned", "adapter_id": "documents"},
-            {"data_domain": "library", "operation": "review", "adapter_id": "documents"},
-            {"data_domain": "library", "operation": "apply", "adapter_id": "documents"},
+            {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
+            {"data_domain": "documents", "operation": "list_returned", "adapter_id": "documents"},
+            {"data_domain": "documents", "operation": "review", "adapter_id": "documents"},
+            {"data_domain": "documents", "operation": "apply", "adapter_id": "documents"},
             {"data_domain": "tags", "operation": "review", "adapter_id": "analytics-tags"},
         ],
         "adapters": [
@@ -160,7 +162,7 @@ def registry_payload() -> dict[str, object]:
                     **domain_payload(status="stub", data_domain="tags"),
                     "app": "analytics",
                     "label": "Tags",
-                    "docs_scope": None,
+                    "record_selectors": {},
                     "selection_model": "records",
                     "source_write_targets": {
                         "tag_registry": "analytics-app/data/canonical/tag-registry.json",
@@ -194,14 +196,14 @@ def expect_value_error(callback, expected: str) -> None:
 
 def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
     with registry_repo(registry_payload()) as repo_root:
-        resolution = adapters.resolve_adapter(repo_root, data_domain="library", operation="prepare")
+        resolution = adapters.resolve_adapter(repo_root, data_domain="documents", operation="prepare")
 
         assert resolution.adapter_id == "documents"
-        assert resolution.docs_scope == "library"
-        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/library/exports"
+        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/documents/exports"
         assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
         assert resolution.capability["selection_model"] == "documents"
         assert resolution.capability["output_formats"] == ["json"]
+        assert resolution.domain["record_selectors"]["docs_scope"]["source"] == "docs_scope_config"
 
 
 def test_tags_adapter_definition_resolves_for_inspection() -> None:
@@ -225,19 +227,19 @@ def test_stub_tags_adapter_fails_closed_for_service_resolution() -> None:
 def test_registry_rejects_duplicate_domain_operation_dispatch() -> None:
     payload = registry_payload()
     payload["dispatch"] = [
-        {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
-        {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
+        {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
+        {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
     ]
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
-            "multiple Data Sharing adapters configured for library/prepare",
+            "multiple Data Sharing adapters configured for documents/prepare",
         )
 
 
 def test_registry_rejects_unsafe_paths() -> None:
     payload = registry_payload()
-    payload["adapters"][0]["data_domains"]["library"]["paths"]["source_root"] = "../docs-viewer/source/library"
+    payload["adapters"][0]["data_domains"]["documents"]["sources"]["docs_scope_config"] = "../docs-viewer/config/scopes/docs_scopes.json"
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
@@ -247,31 +249,31 @@ def test_registry_rejects_unsafe_paths() -> None:
 
 def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
     payload = registry_payload()
-    payload["adapters"][0]["data_domains"]["library"]["paths"]["returned_package_staging_root"] = (
-        "var/studio/export-import/library/import-staging"
+    payload["adapters"][0]["data_domains"]["documents"]["paths"]["returned_package_staging_root"] = (
+        "var/studio/export-import/documents/import-staging"
     )
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
-            "must be var/analytics/data-sharing/library/import-staging",
+            "must be var/analytics/data-sharing/documents/import-staging",
         )
 
 
 def test_registry_distinguishes_non_active_capability_statuses() -> None:
     for status in ("planned", "stub", "disabled"):
         payload = registry_payload()
-        payload["dispatch"] = [{"data_domain": "library", "operation": "review", "adapter_id": "documents"}]
+        payload["dispatch"] = [{"data_domain": "documents", "operation": "review", "adapter_id": "documents"}]
         payload["adapters"][0]["capabilities"] = [capability("review", status=status)]
         with registry_repo(payload) as repo_root:
             expect_value_error(
-                lambda: adapters.resolve_adapter(repo_root, data_domain="library", operation="review"),
+                lambda: adapters.resolve_adapter(repo_root, data_domain="documents", operation="review"),
                 f"capability 'review' is {status}",
             )
 
 
 def test_registry_rejects_unknown_operation_names() -> None:
     payload = registry_payload()
-    payload["dispatch"] = [{"data_domain": "library", "operation": "archive", "adapter_id": "documents"}]
+    payload["dispatch"] = [{"data_domain": "documents", "operation": "archive", "adapter_id": "documents"}]
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
@@ -284,7 +286,7 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
 
     operations = {item["operation"] for item in payload["dispatch"]}
     assert operations == {"prepare", "list_returned", "review", "apply"}
-    document_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="library", operation="apply")
+    document_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="documents", operation="apply")
     tags_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="tags", operation="review", require_active=False)
     for resolution in (document_resolution, tags_resolution):
         domain_root = f"var/analytics/data-sharing/{resolution.data_domain}"
@@ -296,10 +298,13 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
 
 
 def test_repo_documents_adapter_declares_source_root_not_generated_docs_sources() -> None:
-    resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="library", operation="prepare")
+    resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="documents", operation="prepare")
     sources = resolution.domain.get("sources")
 
-    assert sources == {"source_root": "docs-viewer/source/library"}
+    assert sources == {"docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json"}
+    assert resolution.domain.get("record_selectors") == {
+        "docs_scope": {"source": "docs_scope_config", "required": True}
+    }
 
 
 def main() -> None:

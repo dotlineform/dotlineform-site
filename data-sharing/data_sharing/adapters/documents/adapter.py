@@ -69,17 +69,42 @@ def attach_adapter_context(report: Dict[str, Any], adapter: Any) -> Dict[str, An
     return report
 
 
+def default_docs_scope() -> str:
+    scopes = list(source_model.SCOPE_ROOTS.keys())
+    if not scopes:
+        raise ValueError("no Docs Viewer scopes are configured")
+    return scopes[0]
+
+
+def normalize_docs_scope(value: Any, *, required: bool = True) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        if required:
+            raise ValueError("selection.docs_scope is required")
+        raw = default_docs_scope()
+    return source_model.normalize_scope(raw)
+
+
+def request_selection(body: Dict[str, Any]) -> Dict[str, Any]:
+    selection = body.get("selection")
+    if not isinstance(selection, dict):
+        raise ValueError("selection is required")
+    return selection
+
+
 def selectable_records(
     repo_root: Path,
     data_domain: Any,
+    selectors: Optional[Dict[str, Any]] = None,
     adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     del dependencies
     adapter = require_documents_adapter(adapter)
+    docs_scope = normalize_docs_scope((selectors or {}).get("docs_scope"))
     report = selectable_document_records(
         repo_root,
-        scope=adapter.docs_scope,
+        scope=docs_scope,
         selection_model=selection_model(adapter),
     )
     return attach_adapter_context(report, adapter)
@@ -93,15 +118,18 @@ def prepare_package(
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     adapter = require_documents_adapter(adapter)
+    selection = request_selection(body)
+    docs_scope = normalize_docs_scope(selection.get("docs_scope"))
     config_id = str(body.get("config_id") or "").strip()
     target_format = str(body.get("target_format") or "").strip()
     report = build_document_package(
         repo_root,
-        scope=adapter.docs_scope,
+        scope=docs_scope,
+        data_domain=adapter.data_domain,
         config_id=config_id,
-        raw_doc_ids=body.get("doc_ids", []),
-        select_all=bool(body.get("select_all")),
-        missing_summary_only=body.get("missing_summary_only"),
+        raw_doc_ids=selection.get("doc_ids", []),
+        select_all=bool(selection.get("select_all")),
+        missing_summary_only=selection.get("missing_summary_only"),
         dry_run=dry_run,
         config_path=adapter.config_path("sharing_profiles_path").as_posix(),
         target_format=target_format,
@@ -115,7 +143,7 @@ def prepare_package(
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
-                "docs_scope": report.get("scope", source_model.normalize_scope(adapter.docs_scope)),
+                "docs_scope": report.get("scope", docs_scope),
                 "config_id": config_id,
                 "dry_run": dry_run,
                 "target_format": report.get("target_format", ""),
@@ -148,9 +176,10 @@ def list_returned_packages(
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     adapter = require_documents_adapter(adapter)
+    docs_scope = normalize_docs_scope(data_domain.get("docs_scope") if isinstance(data_domain, dict) else "", required=False)
     report = list_returned_document_packages(
         repo_root,
-        scope=adapter.docs_scope,
+        scope=docs_scope,
         staging_root=adapter.path("returned_package_staging_root"),
     )
     report = attach_adapter_context(report, adapter)
@@ -161,7 +190,7 @@ def list_returned_packages(
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
-                "docs_scope": report.get("scope", source_model.normalize_scope(adapter.docs_scope)),
+                "docs_scope": report.get("scope", docs_scope),
                 "count": len(report.get("files", [])),
             },
         )
@@ -179,17 +208,18 @@ def review_returned_package(
     if operation != "review":
         raise ValueError("operation must be review")
     adapter = require_documents_adapter(adapter)
+    selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
+    scope = normalize_docs_scope(selection.get("docs_scope"), required=False)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     report = review_returned_document_package(
         repo_root,
-        scope=adapter.docs_scope,
+        scope=scope,
         staged_filename=staged_filename,
         dry_run=dry_run,
         staging_root=adapter.path("returned_package_staging_root"),
         preview_root=adapter.path("review_output_root"),
     )
     report = attach_adapter_context(report, adapter)
-    scope = source_model.normalize_scope(adapter.docs_scope)
     if dependencies is not None:
         dependencies.log_event(
             repo_root,
@@ -241,7 +271,8 @@ def apply_returned_changes(
     if dependencies is None:
         raise ValueError("documents apply requires service dependencies")
     adapter = require_documents_adapter(adapter)
-    scope = source_model.normalize_scope(adapter.docs_scope)
+    selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
+    scope = normalize_docs_scope(selection.get("docs_scope"), required=False)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     confirmed = bool(body.get("confirm"))
     identity = DocumentsApplyIdentity(
@@ -299,8 +330,8 @@ def apply_returned_changes(
 def handlers_for(
     dependencies_factory: Callable[[], DocumentsDataSharingDependencies],
 ) -> DataSharingAdapterHandlers:
-    def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: Any) -> Dict[str, Any]:
-        return selectable_records(repo_root, data_domain, adapter, dependencies_factory())
+    def selectable_records_handler(repo_root: Path, data_domain: Any, selectors: Any, adapter: Any) -> Dict[str, Any]:
+        return selectable_records(repo_root, data_domain, selectors, adapter, dependencies_factory())
 
     def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return prepare_package(repo_root, body, dry_run, adapter, dependencies_factory())

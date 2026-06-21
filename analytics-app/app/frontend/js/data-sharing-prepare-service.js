@@ -35,6 +35,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
   }
   const request = buildPreparePackageRequest({
     dataDomain: state.dataDomain,
+    docsScope: state.docsScope,
     config,
     targetFormat,
     selectedIds: state.selectedIds,
@@ -42,7 +43,16 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
     missingSummaryOnlyAvailable: !state.missingSummaryOnlyWrap.hidden,
     missingSummaryOnly: state.missingSummaryOnly.checked
   });
-  if (usesDocumentSelection && !request.select_all && !request.doc_ids.length) {
+  const selection = request.selection && typeof request.selection === "object" ? request.selection : {};
+  if (usesDocumentSelection && !normalizeText(selection.docs_scope)) {
+    return prepareValidationError(
+      state,
+      "error",
+      "data_sharing_prepare.docs_scope_required",
+      "Select a Docs Viewer scope."
+    );
+  }
+  if (usesDocumentSelection && !selection.select_all && !selection.doc_ids.length) {
     return prepareValidationError(
       state,
       "error",

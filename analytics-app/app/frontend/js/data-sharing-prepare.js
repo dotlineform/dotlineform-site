@@ -21,12 +21,9 @@ import {
   showDataSharingPrepareResultModal
 } from "./data-sharing-prepare-modals.js";
 import {
-  dataSharingAppForDomain,
-  dataSharingAppFromUrl,
   dataSharingAppsForDomains,
   dataSharingCapabilityForOperation,
   dataSharingDomainForKey,
-  dataSharingDomainFromUrl,
   dataSharingDomainIsActive,
   dataSharingDomainsForApp,
   dataSharingDomainsForOperation
@@ -61,21 +58,16 @@ import {
   runDataSharingPreparePackage
 } from "./data-sharing-prepare-service.js";
 
-const DEFAULT_APP = "docs-viewer";
-const DEFAULT_DATA_DOMAIN = "library";
 const DATA_SHARING_APPS = [
   { key: "docs-viewer", labelKey: "app_docs_viewer", fallback: "Docs Viewer" },
   { key: "studio", labelKey: "app_studio", fallback: "Studio" },
   { key: "analytics", labelKey: "app_analytics", fallback: "Analytics" }
 ];
 const DATA_SHARING_DOMAINS = [
-  { key: "library", app: "docs-viewer", labelKey: "data_domain_library", fallback: "library" },
-  { key: "analysis", app: "docs-viewer", labelKey: "data_domain_analysis", fallback: "analysis" },
-  { key: "studio", app: "docs-viewer", labelKey: "data_domain_studio", fallback: "studio" },
+  { key: "documents", app: "docs-viewer", labelKey: "data_domain_documents", fallback: "documents" },
   { key: "series", app: "studio", labelKey: "data_domain_series", fallback: "series" },
   { key: "works", app: "studio", labelKey: "data_domain_works", fallback: "works" },
-  { key: "tags", app: "analytics", labelKey: "data_domain_tags", fallback: "tags" },
-  { key: "tag_assignments", app: "analytics", labelKey: "data_domain_tag_assignments", fallback: "tag assignments" }
+  { key: "tags", app: "analytics", labelKey: "data_domain_tags", fallback: "tags" }
 ];
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -105,8 +97,20 @@ function setStatus(node, state, message) {
   }
 }
 
-function dataDomainFromUrl(domains = DATA_SHARING_DOMAINS) {
-  return dataSharingDomainFromUrl(domains, DEFAULT_DATA_DOMAIN);
+function docsScopeOptionsFromRegistry(registry) {
+  const scopes = Array.isArray(registry && registry.docs_scopes) ? registry.docs_scopes : [];
+  return scopes.map((scope) => {
+    const key = normalizeText(scope && (scope.id || scope.scope_id)).toLowerCase();
+    if (!key) return null;
+    return {
+      key,
+      label: normalizeText(scope && scope.label) || key.replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
+    };
+  }).filter(Boolean);
+}
+
+function selectPlaceholder(state) {
+  return getAnalyticsText(state.config, "data_sharing_prepare.select_placeholder", "Select...");
 }
 
 function appLabel(state, app = state.app) {
@@ -127,7 +131,8 @@ function dataDomainTitle(state, dataDomain = state.dataDomain) {
 }
 
 function renderAppSelect(state) {
-  state.appSelect.innerHTML = state.apps.map((item) => {
+  const placeholder = selectPlaceholder(state);
+  state.appSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + state.apps.map((item) => {
     const label = item.labelKey
       ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback || item.key);
@@ -137,8 +142,15 @@ function renderAppSelect(state) {
 }
 
 function renderDataDomainSelect(state) {
+  const placeholder = selectPlaceholder(state);
+  if (!state.app) {
+    state.dataDomainSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>`;
+    state.dataDomainSelect.disabled = true;
+    return;
+  }
   const domains = dataSharingDomainsForApp(state.dataDomains, state.app);
-  state.dataDomainSelect.innerHTML = domains.map((item) => {
+  state.dataDomainSelect.disabled = false;
+  state.dataDomainSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + domains.map((item) => {
     const label = item.labelKey
       ? getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback);
@@ -147,23 +159,15 @@ function renderDataDomainSelect(state) {
   }).join("");
 }
 
-function updateDataSharingUrl(state, app, dataDomain) {
-  const nextApp = normalizeText(app).toLowerCase();
-  const nextDomain = normalizeText(dataDomain).toLowerCase();
-  if (!state.apps.some((item) => item.key === nextApp)) return;
-  if (!dataSharingDomainsForApp(state.dataDomains, nextApp).some((item) => item.key === nextDomain)) return;
-  const url = new URL(window.location.href);
-  if (nextApp === DEFAULT_APP) {
-    url.searchParams.delete("app");
-  } else {
-    url.searchParams.set("app", nextApp);
-  }
-  if (nextDomain === DEFAULT_DATA_DOMAIN) {
-    url.searchParams.delete("data_domain");
-  } else {
-    url.searchParams.set("data_domain", nextDomain);
-  }
-  window.location.href = url.toString();
+function renderDocsScopeSelect(state) {
+  const scopes = Array.isArray(state.docsScopes) ? state.docsScopes : [];
+  const placeholder = selectPlaceholder(state);
+  state.docsScopeSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + scopes.map((item) => {
+    const selected = item.key === state.docsScope ? " selected" : "";
+    return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(item.label || item.key)}</option>`;
+  }).join("");
+  state.docsScopeSelect.value = state.docsScope;
+  state.docsScopeField.hidden = !usesPrepareDocumentSelection(state.prepareCapability);
 }
 
 async function loadAdapterRegistry() {
@@ -210,7 +214,82 @@ async function loadJson(path) {
   return response.json();
 }
 
+function selectedDropdownsComplete(state) {
+  return Boolean(state.app && state.dataDomain && selectedDataSharingPrepareConfig(state));
+}
+
+function clearDocumentSelectionState(state) {
+  state.docsIndexError = false;
+  state.docs = [];
+  state.childrenByParent = new Map();
+  state.depthById = new Map();
+  state.docsById = new Map();
+  state.selectedIds.clear();
+  state.listNode.innerHTML = "";
+  state.selectionSummary.textContent = "";
+  const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
+  if (actions) actions.hidden = true;
+}
+
+function setProgressiveGroups(state) {
+  const complete = selectedDropdownsComplete(state);
+  state.formatWrap.hidden = !complete;
+  state.optionsGroup.hidden = !complete;
+  state.configSelect.disabled = !state.dataDomain || !state.exportConfigs.length;
+  state.formatOptionsNode.disabled = !complete;
+  state.docsScopeSelect.disabled = !complete || !usesPrepareDocumentSelection(state.prepareCapability);
+  renderDocsScopeSelect(state);
+}
+
+async function loadDocumentsForCurrentSelection(state) {
+  clearDocumentSelectionState(state);
+  if (!selectedDropdownsComplete(state)) return;
+  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
+    renderDataSharingPrepareListFilters(state);
+    renderDataSharingPrepareDocList(state);
+    return;
+  }
+  if (!state.docsScope) return;
+  const docsState = await loadDataSharingPrepareDocsState({
+    config: state.config,
+    dataDomain: state.dataDomain,
+    docsScope: state.docsScope,
+    serviceAvailable: state.serviceAvailable,
+    prepareCapability: state.prepareCapability,
+    workflowActive: dataSharingDomainIsActive(state.dataDomains, state.dataDomain),
+    exportConfigCount: state.exportConfigs.length,
+    loadJson,
+    onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.dataDomain, state.docsScope, error)
+  });
+  state.docsIndexError = docsState.docsIndexError;
+  state.docs = docsState.docs;
+  state.childrenByParent = docsState.childrenByParent;
+  state.depthById = docsState.depthById;
+  state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
+  renderDataSharingPrepareListFilters(state);
+  renderDataSharingPrepareDocList(state);
+}
+
+async function refreshPrepareSelection(state) {
+  markBusy(state, true);
+  setProgressiveGroups(state);
+  syncDataSharingPrepareConfigOptions(state);
+  setProgressiveGroups(state);
+  try {
+    await loadDocumentsForCurrentSelection(state);
+    updateStatus(state);
+    markReady(state, true);
+  } finally {
+    markBusy(state, false);
+  }
+}
+
 function updateStatus(state) {
+  if (!state.app || !state.dataDomain || !selectedDataSharingPrepareConfig(state)) {
+    setStatus(state.statusNode, "", getAnalyticsText(state.config, "data_sharing_prepare.idle_status", ""));
+    state.runButton.disabled = true;
+    return;
+  }
   if (!dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
     setStatus(state.statusNode, "warn", dataDomainUnavailableMessage(state));
     state.runButton.disabled = true;
@@ -258,6 +337,11 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
+  if (usesPrepareDocumentSelection(state.prepareCapability) && !state.docsScope) {
+    setStatus(state.statusNode, "", getAnalyticsText(state.config, "data_sharing_prepare.idle_status", ""));
+    state.runButton.disabled = true;
+    return;
+  }
   state.runButton.disabled = false;
   setStatus(
     state.statusNode,
@@ -276,6 +360,10 @@ function resetResult(state) {
 
 async function runPreparePackage(state) {
   if (!state.serviceAvailable || state.isRunning) return;
+  if (!selectedDropdownsComplete(state)) {
+    updateStatus(state);
+    return;
+  }
   if (!dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
     updateStatus(state);
     return;
@@ -320,21 +408,28 @@ async function init() {
   const state = {
     bootStatus,
     root,
-    app: DEFAULT_APP,
-    dataDomain: DEFAULT_DATA_DOMAIN,
+    app: "",
+    dataDomain: "",
+    docsScope: "",
     apps: DATA_SHARING_APPS,
     dataDomains: DATA_SHARING_DOMAINS,
+    docsScopes: [],
     appLabelNode: document.getElementById("dataSharingPrepareAppLabel"),
     appSelect: document.getElementById("dataSharingPrepareAppSelect"),
     dataDomainLabelNode: document.getElementById("dataSharingPrepareDataDomainLabel"),
     dataDomainSelect: document.getElementById("dataSharingPrepareDataDomainSelect"),
+    docsScopeField: document.querySelector(".dataSharingPreparePage__docsScopeField"),
+    docsScopeLabelNode: document.getElementById("dataSharingPrepareDocsScopeLabel"),
+    docsScopeSelect: document.getElementById("dataSharingPrepareDocsScopeSelect"),
     configLabelNode: document.getElementById("dataSharingPrepareConfigLabel"),
     configSelect: document.getElementById("dataSharingPrepareConfigSelect"),
     missingSummaryOnlyWrap: document.getElementById("dataSharingPrepareMissingSummaryWrap"),
     missingSummaryOnly: document.getElementById("dataSharingPrepareMissingSummaryOnly"),
     missingSummaryLabelNode: document.getElementById("dataSharingPrepareMissingSummaryLabel"),
+    optionsGroup: document.getElementById("dataSharingPrepareOptionsGroup"),
+    formatWrap: document.getElementById("dataSharingPrepareFormatWrap"),
     formatLabelNode: document.getElementById("dataSharingPrepareFormatLabel"),
-    formatOptionsNode: document.getElementById("dataSharingPrepareFormatOptions"),
+    formatOptionsNode: document.getElementById("dataSharingPrepareFormatSelect"),
     filterNode: document.getElementById("dataSharingPrepareListFilters"),
     selectAllButton: document.getElementById("dataSharingPrepareSelectAll"),
     clearButton: document.getElementById("dataSharingPrepareClear"),
@@ -363,11 +458,16 @@ async function init() {
     state.appSelect,
     state.dataDomainLabelNode,
     state.dataDomainSelect,
+    state.docsScopeField,
+    state.docsScopeLabelNode,
+    state.docsScopeSelect,
     state.configLabelNode,
     state.configSelect,
     state.missingSummaryOnlyWrap,
     state.missingSummaryOnly,
     state.missingSummaryLabelNode,
+    state.optionsGroup,
+    state.formatWrap,
     state.formatLabelNode,
     state.formatOptionsNode,
     state.filterNode,
@@ -387,41 +487,16 @@ async function init() {
     configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry();
     state.dataDomains = dataSharingDomainsForOperation(adapterRegistry, "prepare", DATA_SHARING_DOMAINS);
+    state.docsScopes = docsScopeOptionsFromRegistry(adapterRegistry);
     state.apps = dataSharingAppsForDomains(state.dataDomains, DATA_SHARING_APPS);
-    state.dataDomain = dataDomainFromUrl(state.dataDomains);
-    state.app = dataSharingAppFromUrl(state.apps, dataSharingAppForDomain(state.dataDomains, state.dataDomain, DEFAULT_APP));
-    const appDomains = dataSharingDomainsForApp(state.dataDomains, state.app);
-    if (!appDomains.some((item) => item.key === state.dataDomain)) {
-      state.dataDomain = appDomains[0] ? appDomains[0].key : DEFAULT_DATA_DOMAIN;
-    }
-    state.prepareCapability = dataSharingCapabilityForOperation(adapterRegistry, "prepare", state.dataDomain);
     renderAppSelect(state);
     renderDataDomainSelect(state);
+    renderDocsScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
-    if (dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
-      const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
-      const exportConfigPayload = { configs: capabilityProfiles };
-      state.exportConfigs = enabledPrepareConfigsForDataDomain(exportConfigPayload, state.dataDomain);
-    }
-
-    const docsState = await loadDataSharingPrepareDocsState({
-      config: state.config,
-      dataDomain: state.dataDomain,
-      serviceAvailable: state.serviceAvailable,
-      prepareCapability: state.prepareCapability,
-      workflowActive: dataSharingDomainIsActive(state.dataDomains, state.dataDomain),
-      exportConfigCount: state.exportConfigs.length,
-      loadJson,
-      onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.dataDomain, error)
-    });
-    state.docsIndexError = docsState.docsIndexError;
-    state.docs = docsState.docs;
-    state.childrenByParent = docsState.childrenByParent;
-    state.depthById = docsState.depthById;
-    state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
     setText(state.appLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.app_label", "app"));
     setText(state.dataDomainLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.data_domain_label", "data domain"));
+    setText(state.docsScopeLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.docs_scope_label", "Docs Viewer scope"));
     setText(state.configLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.config_label", "sharing profile"));
     setText(
       state.missingSummaryLabelNode,
@@ -438,24 +513,45 @@ async function init() {
     );
 
     renderDataSharingPrepareConfigSelect(state);
-    syncDataSharingPrepareConfigOptions(state);
+    setProgressiveGroups(state);
     updateStatus(state);
 
     state.appSelect.addEventListener("change", () => {
-      const appDomains = dataSharingDomainsForApp(state.dataDomains, state.appSelect.value);
-      const nextDomain = appDomains[0] ? appDomains[0].key : state.dataDomain;
-      updateDataSharingUrl(state, state.appSelect.value, nextDomain);
+      state.app = normalizeText(state.appSelect.value).toLowerCase();
+      state.dataDomain = "";
+      state.docsScope = "";
+      state.prepareCapability = null;
+      state.exportConfigs = [];
+      renderDataDomainSelect(state);
+      renderDataSharingPrepareConfigSelect(state);
+      refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: app change failed", error));
     });
-    state.dataDomainSelect.addEventListener("change", () => updateDataSharingUrl(state, state.app, state.dataDomainSelect.value));
+    state.dataDomainSelect.addEventListener("change", () => {
+      state.dataDomain = normalizeText(state.dataDomainSelect.value).toLowerCase();
+      state.docsScope = "";
+      state.prepareCapability = dataSharingCapabilityForOperation(adapterRegistry, "prepare", state.dataDomain);
+      if (state.dataDomain && dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
+        const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
+        const exportConfigPayload = { configs: capabilityProfiles };
+        state.exportConfigs = enabledPrepareConfigsForDataDomain(exportConfigPayload, state.dataDomain);
+      } else {
+        state.exportConfigs = [];
+      }
+      renderDataSharingPrepareConfigSelect(state);
+      refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: data domain change failed", error));
+    });
+    state.docsScopeSelect.addEventListener("change", () => {
+      state.docsScope = normalizeText(state.docsScopeSelect.value).toLowerCase();
+      refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: docs scope change failed", error));
+    });
     state.configSelect.addEventListener("change", () => {
-      syncDataSharingPrepareConfigOptions(state);
-      updateStatus(state);
+      state.docsScope = "";
+      refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: config change failed", error));
     });
     state.formatOptionsNode.addEventListener("change", (event) => {
       const target = event.target;
-      if (!(target instanceof HTMLInputElement) || target.name !== "dataSharingPrepareFormat") return;
+      if (!(target instanceof HTMLSelectElement)) return;
       state.targetFormat = normalizeText(target.value);
-      renderDataSharingPrepareFormatOptions(state);
       updateStatus(state);
     });
     state.missingSummaryOnly.addEventListener("change", () => {

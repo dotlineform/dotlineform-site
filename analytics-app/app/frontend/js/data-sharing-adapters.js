@@ -61,7 +61,9 @@ export function dataSharingDomainsForOperation(registry, operation, fallbackDoma
       const projected = {
         key: domainKey,
         app: normalizeId(domain.app),
-        docsScope: normalizeId(domain.docs_scope),
+        recordSelectors: domain.record_selectors && typeof domain.record_selectors === "object"
+          ? domain.record_selectors
+          : {},
         label: normalizeText(domain.label) || domainKey,
         fallback: normalizeText(domain.label) || domainKey,
         status: capabilityStatus(adapter, domain, capability),

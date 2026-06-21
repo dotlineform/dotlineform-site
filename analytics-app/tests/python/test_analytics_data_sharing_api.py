@@ -94,10 +94,10 @@ def write_adapter_registry(root: Path) -> None:
         {
             "schema_version": "data_sharing_adapters_v2",
             "dispatch": [
-                {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
-                {"data_domain": "library", "operation": "list_returned", "adapter_id": "documents"},
-                {"data_domain": "library", "operation": "review", "adapter_id": "documents"},
-                {"data_domain": "library", "operation": "apply", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "list_returned", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "review", "adapter_id": "documents"},
+                {"data_domain": "documents", "operation": "apply", "adapter_id": "documents"},
             ],
             "adapters": [
                 {
@@ -107,24 +107,26 @@ def write_adapter_registry(root: Path) -> None:
                     "status": "active",
                     "portability": {"package": "docs-viewer-documents-data-sharing"},
                     "data_domains": {
-                        "library": {
+                        "documents": {
                             "app": "docs-viewer",
-                            "label": "Library",
-                            "docs_scope": "library",
+                            "label": "Documents",
                             "status": "active",
                             "selection_model": "documents",
+                            "record_selectors": {
+                                "docs_scope": {
+                                    "source": "docs_scope_config",
+                                    "required": True,
+                                },
+                            },
                             "paths": {
-                                "outbound_package_root": "var/analytics/data-sharing/library/exports",
-                                "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
-                                "review_output_root": "var/analytics/data-sharing/library/import-preview",
-                                "source_root": "docs-viewer/source/library",
+                                "outbound_package_root": "var/analytics/data-sharing/documents/exports",
+                                "returned_package_staging_root": "var/analytics/data-sharing/documents/import-staging",
+                                "review_output_root": "var/analytics/data-sharing/documents/import-preview",
                                 "backup_root": "var/docs/backups",
                             },
-                            "source_write_targets": {
-                                "documents": "docs-viewer/source/library",
-                            },
+                            "source_write_targets": {},
                             "sources": {
-                                "source_root": "docs-viewer/source/library",
+                                "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
                             },
                             "config": {
                                 "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
@@ -200,7 +202,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                     "id": "library-smoke",
                     "label": "Library smoke",
                     "enabled": True,
-                    "data_domains": ["library"],
+                    "data_domains": ["documents"],
                     "target": {"format": "json", "supported_formats": ["json"]},
                     "output": {
                         "path_pattern": "var/analytics/data-sharing/{data_domain}/exports/{export_id}-{timestamp}.json",
@@ -273,18 +275,30 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert payload["schema_version"] == "data_sharing_adapters_v2"
     adapter = payload["adapters"][0]
     assert adapter["id"] == "documents"
-    assert adapter["data_domains"]["library"] == {
+    assert payload["docs_scopes"] == [
+        {
+            "id": "library",
+            "label": "Library",
+            "source": "docs-viewer/source/library",
+        }
+    ]
+    assert adapter["data_domains"]["documents"] == {
         "app": "docs-viewer",
-        "label": "Library",
-        "docs_scope": "library",
+        "label": "Documents",
         "status": "active",
         "selection_model": "documents",
+        "record_selectors": {
+            "docs_scope": {
+                "source": "docs_scope_config",
+                "required": True,
+            },
+        },
     }
     prepare = next(item for item in adapter["capabilities"] if item["operation"] == "prepare")
     profile = prepare["sharing_profiles"][0]
     assert profile["id"] == "library-smoke"
     assert profile["label"] == "Library smoke"
-    assert profile["data_domains"] == ["library"]
+    assert profile["data_domains"] == ["documents"]
     assert profile["target"] == {"format": "json", "supported_formats": ["json"]}
     assert profile["selection"] == {
         "mode": "explicit_doc_ids",
@@ -297,7 +311,7 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert "path_pattern" not in json.dumps(profile)
     assert "include_descendants" not in json.dumps(profile)
     assert "include_non_viewable" not in json.dumps(profile)
-    assert "paths" not in adapter["data_domains"]["library"]
+    assert "paths" not in adapter["data_domains"]["documents"]
     assert "path_contract" not in prepare
     apply = next(item for item in adapter["capabilities"] if item["operation"] == "apply")
     action = apply["apply_actions"][0]
@@ -312,7 +326,7 @@ def test_selectable_records_returns_documents_without_docs_viewer_http() -> None
         payload = analytics_data_sharing_api.data_sharing_get_payload(
             root,
             "/selectable-records",
-            {"data_domain": ["library"]},
+            {"data_domain": ["documents"], "docs_scope": ["library"]},
         )
 
     assert payload["ok"] is True
@@ -356,7 +370,7 @@ def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) ->
     status, payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/prepare",
-        {"data_domain": "library", "config_id": "library-document-summaries"},
+        {"data_domain": "documents", "config_id": "library-document-summaries"},
         dry_run=True,
     )
 
@@ -383,11 +397,11 @@ def test_returned_packages_endpoint_dispatches_through_registered_handlers(monke
     payload = analytics_data_sharing_api.data_sharing_get_payload(
         REPO_ROOT,
         "/returned-packages",
-        {"data_domain": ["library"]},
+            {"data_domain": ["documents"]},
     )
 
     assert payload == {"ok": True, "adapter_id": "documents", "operation": "list_returned", "files": []}
-    assert calls[0]["data_domain"] == "library"
+    assert calls[0]["data_domain"] == "documents"
 
 
 def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeypatch) -> None:
@@ -413,13 +427,13 @@ def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeyp
     review_status, review_payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/review",
-        {"data_domain": "library", "staged_filename": "summaries.jsonl"},
+        {"data_domain": "documents", "staged_filename": "summaries.jsonl"},
         dry_run=True,
     )
     apply_status, apply_payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/apply",
-        {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl"},
+        {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl"},
         dry_run=True,
     )
 

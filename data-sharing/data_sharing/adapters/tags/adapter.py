@@ -1224,8 +1224,8 @@ def list_returned_packages(
 def handlers_for(
     dependencies_factory: Callable[[], TagsDataSharingDependencies],
 ) -> DataSharingAdapterHandlers:
-    def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
-        del repo_root, data_domain
+    def selectable_records_handler(repo_root: Path, data_domain: Any, selectors: Any, adapter: AdapterResolution) -> Dict[str, Any]:
+        del repo_root, data_domain, selectors
         adapter = require_tags_adapter(adapter)
         return {
             "ok": True,

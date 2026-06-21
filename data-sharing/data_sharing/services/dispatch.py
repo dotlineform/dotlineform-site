@@ -10,7 +10,7 @@ from typing import Any, Callable
 CANONICAL_OPERATIONS = ("prepare", "list_returned", "review", "apply")
 
 AdapterResolver = Callable[[Path, Any, str], Any]
-SelectableRecordsHandler = Callable[[Path, Any, Any], dict[str, Any]]
+SelectableRecordsHandler = Callable[[Path, Any, Any, Any], dict[str, Any]]
 PrepareHandler = Callable[[Path, dict[str, Any], bool, Any], dict[str, Any]]
 ListReturnedHandler = Callable[[Path, Any, Any], dict[str, Any]]
 ReviewHandler = Callable[[Path, dict[str, Any], bool, Any], dict[str, Any]]
@@ -67,12 +67,13 @@ def resolve_for_workflow(
 def selectable_records(
     repo_root: Path,
     data_domain: Any,
+    selectors: Any,
     handlers: dict[str, DataSharingAdapterHandlers],
     resolve_adapter: AdapterResolver,
 ) -> dict[str, Any]:
     adapter = resolve_for_workflow(repo_root, data_domain, "prepare", resolve_adapter)
     handler = handler_for(handlers, adapter, "selectable_records")
-    return handler(repo_root, data_domain, adapter)
+    return handler(repo_root, data_domain, selectors, adapter)
 
 
 def prepare_package(

@@ -22,6 +22,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 
 import script_logging  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
+from docs_scope_config import load_docs_scope_configs  # noqa: E402
 from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from data_sharing.adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
@@ -102,18 +103,30 @@ def read_json_object(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def library_sharing_profiles(repo_root: Path, registry: dict[str, Any]) -> list[dict[str, Any]]:
+def docs_scope_options(repo_root: Path) -> list[dict[str, object]]:
+    configs = load_docs_scope_configs(repo_root)
+    return [
+        {
+            "id": scope_id,
+            "label": scope_id.replace("-", " ").replace("_", " ").title(),
+            "source": config.source.as_posix(),
+        }
+        for scope_id, config in configs.items()
+    ]
+
+
+def documents_sharing_profiles(repo_root: Path, registry: dict[str, Any]) -> list[dict[str, Any]]:
     for adapter in registry.get("adapters", []):
         if not isinstance(adapter, dict):
             continue
         domains = adapter.get("data_domains") if isinstance(adapter.get("data_domains"), dict) else {}
-        library_domain = domains.get("library") if isinstance(domains.get("library"), dict) else {}
-        config = library_domain.get("config") if isinstance(library_domain.get("config"), dict) else {}
+        documents_domain = domains.get("documents") if isinstance(domains.get("documents"), dict) else {}
+        config = documents_domain.get("config") if isinstance(documents_domain.get("config"), dict) else {}
         path_value = config.get("sharing_profiles_path")
         if not path_value:
             continue
         rel_path = data_sharing_adapters.safe_relative_path(path_value, field="config.sharing_profiles_path")
-        payload = read_json_object(repo_root / rel_path, "Library export config")
+        payload = read_json_object(repo_root / rel_path, "Documents export config")
         configs = payload.get("configs")
         return [public_sharing_profile(item) for item in configs if isinstance(item, dict)] if isinstance(configs, list) else []
     return []
@@ -173,7 +186,8 @@ def public_apply_action(action: dict[str, Any]) -> dict[str, object]:
 
 def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
     registry = data_sharing_adapters.load_registry(repo_root)
-    library_profiles = library_sharing_profiles(repo_root, registry)
+    documents_profiles = documents_sharing_profiles(repo_root, registry)
+    docs_scopes = docs_scope_options(repo_root)
     public_adapters: list[dict[str, object]] = []
 
     for adapter in registry.get("adapters", []):
@@ -197,9 +211,8 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
                 "status": str(domain.get("status") or adapter.get("status") or "active").strip(),
                 "selection_model": str(domain.get("selection_model") or "").strip(),
             }
-            docs_scope = str(domain.get("docs_scope") or "").strip()
-            if docs_scope:
-                public_domain["docs_scope"] = docs_scope
+            if isinstance(domain.get("record_selectors"), dict):
+                public_domain["record_selectors"] = dict(domain["record_selectors"])
             public_domains[str(key)] = public_domain
         public_adapter["data_domains"] = public_domains
 
@@ -218,7 +231,7 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
                     public_sharing_profile(item) for item in capability["sharing_profiles"] if isinstance(item, dict)
                 ]
             elif public_adapter["id"] == "documents" and public_capability["operation"] == "prepare":
-                public_capability["sharing_profiles"] = library_profiles
+                public_capability["sharing_profiles"] = documents_profiles
             if isinstance(capability.get("apply_actions"), list):
                 public_capability["apply_actions"] = [
                     public_apply_action(item) for item in capability["apply_actions"] if isinstance(item, dict)
@@ -230,6 +243,7 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
     return {
         "ok": True,
         "schema_version": registry.get("schema_version"),
+        "docs_scopes": docs_scopes,
         "adapters": public_adapters,
     }
 
@@ -254,6 +268,7 @@ def data_sharing_get_payload(
         return data_sharing_service.selectable_records(
             repo_root,
             query_value(query, "data_domain"),
+            {"docs_scope": query_value(query, "docs_scope")},
             DATA_SHARING_HANDLERS,
         )
     if api_path == RETURNED_PACKAGES_PATH:

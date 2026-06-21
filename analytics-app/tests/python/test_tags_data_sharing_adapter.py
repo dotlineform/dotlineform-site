@@ -326,7 +326,7 @@ def test_tags_handlers_dispatch_through_data_sharing_workflow() -> None:
         root = Path(temp)
         handlers = {"analytics.tags": adapter.handlers_for(dependencies)}
 
-        selectable = data_sharing_service.selectable_records(root, "tags", handlers)
+        selectable = data_sharing_service.selectable_records(root, "tags", {}, handlers)
         payload = data_sharing_service.prepare_package(
             root,
             {"data_domain": "tags", "config_id": "tag-registry", "target_format": "json"},

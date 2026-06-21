@@ -160,11 +160,11 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
             payload = {
                 "ok": True,
                 "scope": "library",
-                "staging_root": "var/analytics/data-sharing/library/import-staging",
+                "staging_root": "var/analytics/data-sharing/documents/import-staging",
                 "files": [
                     {
                         "filename": "summaries.jsonl",
-                        "path": "var/analytics/data-sharing/library/import-staging/summaries.jsonl",
+                        "path": "var/analytics/data-sharing/documents/import-staging/summaries.jsonl",
                         "format": "jsonl",
                         "size_bytes": 512,
                         "modified_utc": "2026-05-04T12:00:00Z",
@@ -220,18 +220,18 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
                 ],
                 "preview_files": [
                     {
-                        "path": "var/analytics/data-sharing/library/import-preview/relationships-tree.md",
+                        "path": "var/analytics/data-sharing/documents/import-preview/relationships-tree.md",
                         "record_count": 3,
                         "kind": "relationship_tree",
                     },
                     {
-                        "path": "var/analytics/data-sharing/library/import-preview/alpha-20260504-120500.md",
+                        "path": "var/analytics/data-sharing/documents/import-preview/alpha-20260504-120500.md",
                         "record_index": 1,
                         "doc_id": "alpha",
                         "kind": "document",
                     },
                     {
-                        "path": "var/analytics/data-sharing/library/import-preview/beta-20260504-120500.md",
+                        "path": "var/analytics/data-sharing/documents/import-preview/beta-20260504-120500.md",
                         "record_index": 2,
                         "doc_id": "beta",
                         "kind": "document",

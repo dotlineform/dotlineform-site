@@ -82,6 +82,7 @@ export function buildPrepareActivityContext({ dataDomain, configId } = {}) {
 
 export function buildPreparePackageRequest({
   dataDomain,
+  docsScope,
   config,
   targetFormat,
   selectedIds,
@@ -92,15 +93,21 @@ export function buildPreparePackageRequest({
   const configId = normalizeText(config && config.id);
   const selectAll = prepareSelectsAllMatching(config, usesDocumentSelection);
   const docIds = selectAll ? [] : Array.from(selectedIds || []);
-  return {
+  const request = {
     data_domain: normalizeText(dataDomain),
     config_id: configId,
     target_format: normalizeText(targetFormat),
-    doc_ids: docIds,
-    select_all: selectAll,
-    missing_summary_only: usesDocumentSelection && missingSummaryOnlyAvailable
-      ? Boolean(missingSummaryOnly)
-      : null,
     activity_context: buildPrepareActivityContext({ dataDomain, configId })
   };
+  if (usesDocumentSelection) {
+    request.selection = {
+      docs_scope: normalizeText(docsScope),
+      doc_ids: docIds,
+      select_all: selectAll,
+      missing_summary_only: missingSummaryOnlyAvailable ? Boolean(missingSummaryOnly) : null
+    };
+  } else {
+    request.selection = {};
+  }
+  return request;
 }

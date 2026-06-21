@@ -64,7 +64,7 @@ def install_fixture(page: Page) -> None:
                             id: 'library-documents',
                             enabled: true,
                             label: 'Library documents',
-                            data_domains: ['library'],
+                            data_domains: ['documents'],
                             target: {
                                 format: 'jsonl',
                                 supported_formats: ['json', 'jsonl']
@@ -77,7 +77,7 @@ def install_fixture(page: Page) -> None:
                         {
                             id: 'disabled-profile',
                             enabled: false,
-                            data_domains: ['library']
+                            data_domains: ['documents']
                         }
                     ]
                 }
@@ -103,7 +103,8 @@ def install_fixture(page: Page) -> None:
                         }
                     }
                 },
-                dataDomain: 'library',
+                dataDomain: 'documents',
+                docsScope: 'library',
                 prepareCapability: docCapability,
                 targetFormat: 'jsonl',
                 selectedIds: new Set(['alpha', 'beta']),
@@ -123,7 +124,7 @@ def install_fixture(page: Page) -> None:
                     {
                         id: 'library-documents',
                         enabled: true,
-                        data_domains: ['library'],
+                        data_domains: ['documents'],
                         target: {
                             format: 'jsonl',
                             supported_formats: ['json', 'jsonl']
@@ -139,9 +140,9 @@ def install_fixture(page: Page) -> None:
                         target: { format: 'json' }
                     },
                     {
-                        id: 'disabled-library',
+                        id: 'disabled-documents',
                         enabled: false,
-                        data_domains: ['library'],
+                        data_domains: ['documents'],
                         target: { format: 'json' }
                     }
                 ]
@@ -155,7 +156,7 @@ def assert_package_state_projection(page: Page) -> None:
         """() => {
             const smoke = window.__dataSharingPrepareModuleSmoke;
             const { workflow, service, state, configs } = smoke;
-            const enabledConfigs = workflow.enabledPrepareConfigsForDataDomain({ configs }, 'library');
+            const enabledConfigs = workflow.enabledPrepareConfigsForDataDomain({ configs }, 'documents');
             const config = enabledConfigs[0];
             const submission = service.buildDataSharingPrepareSubmission(state, {
                 config,
@@ -175,7 +176,8 @@ def assert_package_state_projection(page: Page) -> None:
                 missingSummaryOnly: true
             });
             const allMatchingRequest = workflow.buildPreparePackageRequest({
-                dataDomain: 'library',
+                dataDomain: 'documents',
+                docsScope: 'library',
                 config: {
                     id: 'library-all',
                     selection: { mode: 'all_matching' }
@@ -221,29 +223,30 @@ def assert_package_state_projection(page: Page) -> None:
         raise AssertionError(f"valid submission rejected: {result!r}")
     request = submission["request"]
     expected_request = {
-        "data_domain": "library",
+        "data_domain": "documents",
         "config_id": "library-documents",
         "target_format": "jsonl",
-        "doc_ids": ["alpha", "beta"],
-        "select_all": False,
-        "missing_summary_only": True,
+        "selection": {
+            "docs_scope": "library",
+            "doc_ids": ["alpha", "beta"],
+            "select_all": False,
+            "missing_summary_only": True,
+        },
     }
     for key, value in expected_request.items():
         if request.get(key) != value:
             raise AssertionError(f"prepare request {key} mismatch: {result!r}")
     activity = request.get("activity_context", {})
-    if activity.get("page_id") != "data-sharing-prepare" or activity.get("export_id") != "library:library-documents":
+    if activity.get("page_id") != "data-sharing-prepare" or activity.get("export_id") != "documents:library-documents":
         raise AssertionError(f"prepare activity context mismatch: {result!r}")
 
     if result["profileUsesDocuments"] is not False:
         raise AssertionError(f"profile-only selection capability changed: {result!r}")
     profile_request = result["profileRequest"]
-    if profile_request["doc_ids"] != ["ignored"] or profile_request["select_all"] is not False:
-        raise AssertionError(f"profile request should preserve explicit service shape: {result!r}")
-    if profile_request["missing_summary_only"] is not None:
+    if profile_request["selection"] != {}:
         raise AssertionError(f"profile request should not project missing-summary filtering: {result!r}")
     all_matching_request = result["allMatchingRequest"]
-    if all_matching_request["doc_ids"] != [] or all_matching_request["select_all"] is not True:
+    if all_matching_request["selection"]["doc_ids"] != [] or all_matching_request["selection"]["select_all"] is not True:
         raise AssertionError(f"all-matching document request changed: {result!r}")
 
     if result["invalidFormat"]["ok"] is not False or result["invalidFormat"]["statusState"] != "error":
@@ -260,7 +263,8 @@ def assert_selectable_records_loading(page: Page) -> None:
             const requested = [];
             const loaded = await docs.loadDataSharingPrepareDocsState({
                 config: state.config,
-                dataDomain: 'library',
+                dataDomain: 'documents',
+                docsScope: 'library',
                 serviceAvailable: true,
                 prepareCapability: state.prepareCapability,
                 workflowActive: true,
@@ -302,8 +306,10 @@ def assert_selectable_records_loading(page: Page) -> None:
         raise AssertionError(f"selectable-records loader should make one request: {result!r}")
     if "/analytics/api/data-sharing/selectable-records" not in result["requested"][0]:
         raise AssertionError(f"prepare docs loader did not use the Analytics selectable-records API: {result!r}")
-    if "data_domain=library" not in result["requested"][0]:
+    if "data_domain=documents" not in result["requested"][0]:
         raise AssertionError(f"selectable-records loader did not pass data_domain: {result!r}")
+    if "docs_scope=library" not in result["requested"][0]:
+        raise AssertionError(f"selectable-records loader did not pass docs_scope: {result!r}")
     if result["docIds"] != ["parent", "child"] or result["childDepth"] != 1 or result["childParentCount"] != 1:
         raise AssertionError(f"selectable records were not projected into document hierarchy state: {result!r}")
     if result["docsIndexError"] is not False:
@@ -390,7 +396,7 @@ def assert_fallback_write_behavior(page: Page) -> None:
                     "target_format": "jsonl",
                     "counts": {"selected": 2, "exported": 0, "failed": 2},
                     "errors": ["write unavailable"],
-                    "output_file": "var/analytics/data-sharing/library/exports/fallback.jsonl",
+                    "output_file": "var/analytics/data-sharing/documents/exports/fallback.jsonl",
                 }
             ),
         )
@@ -401,12 +407,15 @@ def assert_fallback_write_behavior(page: Page) -> None:
             const smoke = window.__dataSharingPrepareModuleSmoke;
             const { service, state } = smoke;
             const request = {
-                data_domain: 'library',
+                data_domain: 'documents',
                 config_id: 'library-documents',
                 target_format: 'jsonl',
-                doc_ids: ['alpha', 'beta'],
-                select_all: false,
-                missing_summary_only: true
+                selection: {
+                    docs_scope: 'library',
+                    doc_ids: ['alpha', 'beta'],
+                    select_all: false,
+                    missing_summary_only: true
+                }
             };
             const failure = await service.runDataSharingPreparePackage(state, request);
             const success = service.dataSharingPrepareSuccessResult(state, {
@@ -427,7 +436,7 @@ def assert_fallback_write_behavior(page: Page) -> None:
     )
     if len(prepare_requests) != 1:
         raise AssertionError(f"prepare write endpoint was not called once: {prepare_requests!r}")
-    if prepare_requests[0].get("doc_ids") != ["alpha", "beta"]:
+    if prepare_requests[0].get("selection", {}).get("doc_ids") != ["alpha", "beta"]:
         raise AssertionError(f"prepare write request changed: {prepare_requests!r}")
 
     failure = result["failure"]

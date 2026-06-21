@@ -1323,43 +1323,44 @@ textarea.analytics__input:disabled {
   --field-label-width: 8rem;
   --field-gap: 0.65rem;
   --half-control-width: calc((100% - var(--field-label-width) - var(--field-gap)) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.dataSharingPreparePage__buttonGroup,
+.dataSharingPreparePage__dropdownGroup,
+.dataSharingPreparePage__optionsGroup {
   display: grid;
-  grid-template-columns:
-    calc(var(--field-label-width) + var(--field-gap) + var(--half-control-width))
-    auto
-    minmax(0, 1fr);
-  gap: 0.5rem 0.65rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
   align-items: start;
+}
+
+.dataSharingPreparePage__buttonGroup[hidden],
+.dataSharingPreparePage__dropdownGroup[hidden],
+.dataSharingPreparePage__optionsGroup[hidden] {
+  display: none;
 }
 
 .dataSharingPreparePage__appField,
 .dataSharingPreparePage__dataDomainField,
-.dataSharingPreparePage__field {
+.dataSharingPreparePage__docsScopeField,
+.dataSharingPreparePage__field,
+.dataSharingPreparePage__format {
   display: grid;
   grid-template-columns: var(--field-label-width) minmax(0, 1fr);
   gap: var(--field-gap);
   align-items: center;
-  width: 100%;
+  width: calc(var(--field-label-width) + var(--field-gap) + var(--half-control-width));
+  max-width: 100%;
   min-inline-size: 0;
-}
-
-.dataSharingPreparePage__appField {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.dataSharingPreparePage__dataDomainField {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.dataSharingPreparePage__field {
-  grid-column: 1;
-  grid-row: 3;
 }
 
 .dataSharingPreparePage__appField .analyticsField__label,
 .dataSharingPreparePage__dataDomainField .analyticsField__label,
+.dataSharingPreparePage__docsScopeField .analyticsField__label,
 .dataSharingPreparePage__field .analyticsField__label,
 .dataSharingPreparePage__formatLabel {
   color: var(--text, var(--analytics-text));
@@ -1367,26 +1368,21 @@ textarea.analytics__input:disabled {
 
 .dataSharingPreparePage__appField .analyticsField__control,
 .dataSharingPreparePage__dataDomainField .analyticsField__control,
+.dataSharingPreparePage__docsScopeField .analyticsField__control,
 .dataSharingPreparePage__field .analyticsField__control,
+.dataSharingPreparePage__format .analyticsField__control,
 .dataSharingPreparePage__appField .analyticsField__control > .analytics__input,
 .dataSharingPreparePage__dataDomainField .analyticsField__control > .analytics__input,
-.dataSharingPreparePage__field .analyticsField__control > .analytics__input {
+.dataSharingPreparePage__docsScopeField .analyticsField__control > .analytics__input,
+.dataSharingPreparePage__field .analyticsField__control > .analytics__input,
+.dataSharingPreparePage__format .analyticsField__control > .analytics__input {
   flex: 1 1 auto;
   width: 100%;
 }
 
 .dataSharingPreparePage__format {
-  grid-column: 1 / -1;
-  grid-row: 4;
-  display: grid;
-  grid-template-columns: var(--field-label-width) minmax(0, 1fr);
-  gap: var(--field-gap);
-  align-items: center;
-  width: 100%;
-  min-inline-size: 0;
   margin: 0;
   padding: 0;
-  border: 0;
 }
 
 .dataSharingPreparePage__formatLabel {
@@ -1396,36 +1392,15 @@ textarea.analytics__input:disabled {
   text-transform: lowercase;
 }
 
-.dataSharingPreparePage__formatOptions {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  align-items: center;
-  align-self: center;
-  min-height: var(--analytics-control-height, 2rem);
-}
-
-.dataSharingPreparePage__formatOption input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.dataSharingPreparePage__formatOption input:disabled + span {
-  cursor: not-allowed;
-  opacity: 0.45;
+.dataSharingPreparePage__format[hidden] {
+  display: none;
 }
 
 #dataSharingPrepareRun {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: center;
   justify-self: start;
 }
 
 .dataSharingPreparePage__toggle {
-  grid-column: 1 / -1;
-  grid-row: 5;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -2325,6 +2300,7 @@ textarea.analytics__input:disabled {
 
   .dataSharingPreparePage__appField,
   .dataSharingPreparePage__dataDomainField,
+  .dataSharingPreparePage__docsScopeField,
   .dataSharingPreparePage__field,
   .dataSharingPreparePage__format {
     grid-column: auto;

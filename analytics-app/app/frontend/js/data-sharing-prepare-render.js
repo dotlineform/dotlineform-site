@@ -225,19 +225,15 @@ export function renderDataSharingPrepareFormatOptions(state) {
     return;
   }
   if (!supportedFormats.includes(state.targetFormat)) {
-    state.targetFormat = defaultUiFormatForDataSharingPrepareConfig(config);
+    state.targetFormat = supportedFormats.includes("json") ? "json" : defaultUiFormatForDataSharingPrepareConfig(config);
   }
-  state.formatOptionsNode.innerHTML = FORMAT_OPTIONS.map((format) => {
+  state.formatOptionsNode.innerHTML = FORMAT_OPTIONS.filter((format) => supportedFormats.includes(format.key)).map((format) => {
     const supported = supportedFormats.includes(format.key);
-    const checked = state.targetFormat === format.key;
+    const selected = state.targetFormat === format.key;
     const label = getAnalyticsText(state.config, `data_sharing_prepare.${format.labelKey}`, format.fallback);
-    return `
-      <label class="dataSharingPreparePage__formatOption">
-        <input type="radio" name="dataSharingPrepareFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
-        <span class="analytics__keyPill analyticsFilters__groupBtn" data-state="${checked ? "active" : ""}" aria-disabled="${supported ? "false" : "true"}">${escapeHtml(label)}</span>
-      </label>
-    `;
+    return `<option value="${escapeHtml(format.key)}"${selected ? " selected" : ""}${supported ? "" : " disabled"}>${escapeHtml(label)}</option>`;
   }).join("");
+  state.formatOptionsNode.value = state.targetFormat;
 }
 
 export function syncDataSharingPrepareConfigOptions(state) {
@@ -245,8 +241,10 @@ export function syncDataSharingPrepareConfigOptions(state) {
   const selection = prepareConfigSelection(config);
   const supportsMissing = Boolean(selection.supports_missing_summary_only);
   state.missingSummaryOnlyWrap.hidden = !usesPrepareDocumentSelection(state.prepareCapability) || !supportsMissing;
-  state.missingSummaryOnly.checked = supportsMissing && Boolean(selection.default_missing_summary_only);
-  state.targetFormat = defaultUiFormatForDataSharingPrepareConfig(config);
+  state.missingSummaryOnly.checked = false;
+  state.targetFormat = supportedUiFormatsForDataSharingPrepareConfig(config).includes("json")
+    ? "json"
+    : defaultUiFormatForDataSharingPrepareConfig(config);
   renderDataSharingPrepareFormatOptions(state);
   applyDataSharingPrepareSelectionFilter(state);
   renderDataSharingPrepareListFilters(state);
@@ -254,11 +252,13 @@ export function syncDataSharingPrepareConfigOptions(state) {
 }
 
 export function renderDataSharingPrepareConfigSelect(state) {
-  state.configSelect.innerHTML = state.exportConfigs.map((config) => {
+  const placeholder = getAnalyticsText(state.config, "data_sharing_prepare.select_placeholder", "Select...");
+  state.configSelect.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` + state.exportConfigs.map((config) => {
     const id = normalizeText(config.id);
     const label = normalizeText(config.label) || id;
     return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
   }).join("");
+  state.configSelect.value = "";
 }
 
 export function renderDataSharingPrepareDocList(state) {

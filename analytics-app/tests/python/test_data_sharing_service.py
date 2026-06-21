@@ -50,7 +50,7 @@ def test_gateway_dispatches_active_documents_adapter() -> None:
 
     payload = data_sharing_service.prepare_package(
         REPO_ROOT,
-        {"data_domain": "library", "config_id": "library-document-summaries"},
+        {"data_domain": "documents", "config_id": "library-document-summaries"},
         True,
         handlers,
     )
@@ -77,7 +77,7 @@ def test_headless_prepare_workflow_uses_injected_resolver_and_handlers() -> None
 
     payload = data_sharing_prepare_package(
         REPO_ROOT,
-        {"data_domain": "library", "config_id": "library-document-summaries"},
+        {"data_domain": "documents", "config_id": "library-document-summaries"},
         True,
         {"documents": DataSharingAdapterHandlers(module="documents", prepare=fake_prepare)},
         fake_resolver,
@@ -85,7 +85,7 @@ def test_headless_prepare_workflow_uses_injected_resolver_and_handlers() -> None
 
     assert payload == {"ok": True, "adapter_id": "documents", "operation": "prepare"}
     assert calls[0]["kind"] == "resolve"
-    assert calls[0]["data_domain"] == "library"
+    assert calls[0]["data_domain"] == "documents"
     assert calls[0]["operation"] == "prepare"
     assert calls[1]["kind"] == "prepare"
     assert calls[1]["dry_run"] is True
@@ -117,7 +117,7 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
                 {
                     "schema_version": "data_sharing_adapters_v2",
                     "dispatch": [
-                        {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
+                        {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
                     ],
                     "adapters": [
                         {
@@ -127,19 +127,26 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
                             "status": "active",
                             "portability": {"package": "documents-package"},
                             "data_domains": {
-                                "library": {
+                                "documents": {
                                     "app": "docs-viewer",
-                                    "label": "Library",
-                                    "docs_scope": "library",
+                                    "label": "Documents",
                                     "status": "active",
                                     "selection_model": "documents",
+                                    "record_selectors": {
+                                        "docs_scope": {
+                                            "source": "docs_scope_config",
+                                            "required": True,
+                                        },
+                                    },
                                     "paths": {
-                                        "outbound_package_root": "var/analytics/data-sharing/library/exports",
-                                        "returned_package_staging_root": "var/analytics/data-sharing/library/import-staging",
-                                        "review_output_root": "var/analytics/data-sharing/library/import-preview",
+                                        "outbound_package_root": "var/analytics/data-sharing/documents/exports",
+                                        "returned_package_staging_root": "var/analytics/data-sharing/documents/import-staging",
+                                        "review_output_root": "var/analytics/data-sharing/documents/import-preview",
                                     },
                                     "source_write_targets": {},
-                                    "sources": {},
+                                    "sources": {
+                                        "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
+                                    },
                                     "config": {},
                                 }
                             },
@@ -168,7 +175,7 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
         )
 
         try:
-            data_sharing_service.prepare_package(repo_root, {"data_domain": "library"}, True, {})
+            data_sharing_service.prepare_package(repo_root, {"data_domain": "documents"}, True, {})
         except ValueError as error:
             message = str(error)
         else:

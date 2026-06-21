@@ -43,9 +43,10 @@ def resolve_for_service(repo_root: Path, data_domain: Any, operation: str) -> Ad
 def selectable_records(
     repo_root: Path,
     data_domain: Any,
+    selectors: dict[str, Any] | None,
     handlers: dict[str, DataSharingAdapterHandlers],
 ) -> dict[str, Any]:
-    return dispatch_selectable_records(repo_root, data_domain, handlers, resolve_for_service)
+    return dispatch_selectable_records(repo_root, data_domain, selectors or {}, handlers, resolve_for_service)
 
 
 def prepare_package(

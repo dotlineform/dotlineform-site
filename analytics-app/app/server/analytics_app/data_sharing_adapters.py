@@ -120,10 +120,6 @@ class AdapterResolution:
     def app(self) -> str:
         return normalize_id(self.domain.get("app"))
 
-    @property
-    def docs_scope(self) -> str:
-        return normalize_id(self.domain.get("docs_scope") or self.data_domain)
-
     def path(self, key: str) -> Path:
         paths = self.domain.get("paths") if isinstance(self.domain.get("paths"), dict) else {}
         return safe_relative_path(paths.get(key), field=f"paths.{key}")
@@ -189,8 +185,6 @@ def validate_registry(payload: dict[str, Any]) -> None:
                     f"adapter config field adapters[{index}].data_domains.{domain_id}.app is unsupported"
                 )
             _require_id(domain.get("label"), field=f"adapters[{index}].data_domains.{domain_id}.label")
-            if app_id == "docs-viewer":
-                _require_id(domain.get("docs_scope"), field=f"adapters[{index}].data_domains.{domain_id}.docs_scope")
             _validate_status(domain.get("status"), field=f"adapters[{index}].data_domains.{domain_id}.status")
             selection_model = _require_id(
                 domain.get("selection_model"),
@@ -212,6 +206,28 @@ def validate_registry(payload: dict[str, Any]) -> None:
             )
             _validate_optional_path_object(domain.get("sources", {}), field=f"adapters[{index}].data_domains.{domain_id}.sources")
             _validate_optional_path_object(domain.get("config", {}), field=f"adapters[{index}].data_domains.{domain_id}.config")
+            record_selectors = domain.get("record_selectors", {})
+            if record_selectors is not None:
+                record_selectors = _require_object(
+                    record_selectors,
+                    field=f"adapters[{index}].data_domains.{domain_id}.record_selectors",
+                )
+                docs_scope_selector = record_selectors.get("docs_scope")
+                if docs_scope_selector is not None:
+                    selector = _require_object(
+                        docs_scope_selector,
+                        field=f"adapters[{index}].data_domains.{domain_id}.record_selectors.docs_scope",
+                    )
+                    source = _require_id(
+                        selector.get("source"),
+                        field=f"adapters[{index}].data_domains.{domain_id}.record_selectors.docs_scope.source",
+                    )
+                    if source != "docs_scope_config":
+                        raise ValueError(
+                            "adapter config field "
+                            f"adapters[{index}].data_domains.{domain_id}.record_selectors.docs_scope.source "
+                            "must be docs_scope_config"
+                        )
 
         capabilities = _require_array(adapter.get("capabilities"), field=f"adapters[{index}].capabilities")
         if not capabilities:

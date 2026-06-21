@@ -16,20 +16,17 @@ import {
 } from "./data-sharing-adapters.js";
 
 export const DEFAULT_DATA_SHARING_REVIEW_APP = "docs-viewer";
-export const DEFAULT_DATA_SHARING_REVIEW_DOMAIN = "library";
+export const DEFAULT_DATA_SHARING_REVIEW_DOMAIN = "documents";
 export const DATA_SHARING_REVIEW_APPS = [
   { key: "docs-viewer", labelKey: "app_docs_viewer", fallback: "Docs Viewer" },
   { key: "studio", labelKey: "app_studio", fallback: "Studio" },
   { key: "analytics", labelKey: "app_analytics", fallback: "Analytics" }
 ];
 export const DATA_SHARING_REVIEW_DOMAINS = [
-  { key: "library", app: "docs-viewer", labelKey: "data_domain_library", fallback: "library" },
-  { key: "analysis", app: "docs-viewer", labelKey: "data_domain_analysis", fallback: "analysis" },
-  { key: "studio", app: "docs-viewer", labelKey: "data_domain_studio", fallback: "studio" },
+  { key: "documents", app: "docs-viewer", labelKey: "data_domain_documents", fallback: "documents" },
   { key: "series", app: "studio", labelKey: "data_domain_series", fallback: "series" },
   { key: "works", app: "studio", labelKey: "data_domain_works", fallback: "works" },
-  { key: "tags", app: "analytics", labelKey: "data_domain_tags", fallback: "tags" },
-  { key: "tag_assignments", app: "analytics", labelKey: "data_domain_tag_assignments", fallback: "tag assignments" }
+  { key: "tags", app: "analytics", labelKey: "data_domain_tags", fallback: "tags" }
 ];
 
 export function normalizeDataSharingReviewText(value) {
