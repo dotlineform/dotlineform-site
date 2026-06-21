@@ -256,8 +256,8 @@ def assert_runtime_views(base_url: str) -> None:
     views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
     by_id = {view.get("id"): view for view in views if isinstance(view, dict)}
     expected = {
-        "data_sharing_prepare": "/analytics/data-sharing/prepare/?mode=manage",
-        "data_sharing_review": "/analytics/data-sharing/review/?mode=manage",
+        "data_sharing_prepare": "/analytics/data-sharing/prepare/",
+        "data_sharing_review": "/analytics/data-sharing/review/",
     }
     for view_id, path in expected.items():
         view = by_id.get(view_id)
@@ -290,7 +290,7 @@ def assert_data_sharing_api(base_url: str) -> None:
 
 
 def assert_prepare(page, base_url: str) -> None:
-    page.goto(f"{base_url}/analytics/data-sharing/prepare/?mode=manage", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/prepare/", wait_until="domcontentloaded")
     root = page.locator("#dataSharingPrepareRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
@@ -318,7 +318,7 @@ def assert_prepare(page, base_url: str) -> None:
 
 
 def assert_review(page, base_url: str) -> None:
-    page.goto(f"{base_url}/analytics/data-sharing/review/?mode=manage&data_domain=documents", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/analytics/data-sharing/review/?data_domain=documents", wait_until="domcontentloaded")
     root = page.locator("#dataSharingReviewRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
@@ -375,7 +375,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Analytics Data Sharing routes OK: {base_url}/analytics/data-sharing/prepare/?mode=manage")
+        print(f"local Analytics Data Sharing routes OK: {base_url}/analytics/data-sharing/prepare/")
         return 0
     finally:
         server.shutdown()

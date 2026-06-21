@@ -656,7 +656,7 @@ def main() -> int:
     host_group.add_argument("--local-app", action="store_true", help="Serve the local Analytics app on a temporary local HTTP server.")
     parser.add_argument("--block-data-sharing-api", action="store_true")
     parser.add_argument("--mock-data-sharing-api", action="store_true")
-    parser.add_argument("--route-path", default="/analytics/data-sharing/review/?mode=manage")
+    parser.add_argument("--route-path", default="/analytics/data-sharing/review/")
     parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()

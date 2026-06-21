@@ -16,8 +16,8 @@ bin/local-analytics
 
 Default local routes:
 
-- `http://127.0.0.1:8766/analytics/data-sharing/prepare/?mode=manage`
-- `http://127.0.0.1:8766/analytics/data-sharing/review/?mode=manage`
+- `http://127.0.0.1:8766/analytics/data-sharing/prepare/`
+- `http://127.0.0.1:8766/analytics/data-sharing/review/`
 
 Default local APIs:
 

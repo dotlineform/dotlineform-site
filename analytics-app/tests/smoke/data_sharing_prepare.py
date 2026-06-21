@@ -555,7 +555,7 @@ def main() -> int:
                     prepare_requests = install_mock_data_sharing_api(page)
                 elif block_api:
                     page.route("**/*", block_data_sharing_api)
-                page.goto(route_url(base_url, "/analytics/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
+                page.goto(route_url(base_url, "/analytics/data-sharing/prepare/"), wait_until="domcontentloaded")
                 attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
                 assert_ready_contract(attrs, block_api)
                 if block_api and attrs["service"] != "unavailable":

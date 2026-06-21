@@ -31,7 +31,7 @@ def write_activity_contract(repo_root: Path) -> None:
                 "pages": {
                     "data-sharing-prepare": {
                         "label": "data sharing prepare",
-                        "route": "/analytics/data-sharing/prepare/?mode=manage",
+                        "route": "/analytics/data-sharing/prepare/",
                         "actions": {
                             "prepare-share-package": {
                                 "label": "prepare share package",
@@ -57,7 +57,7 @@ def write_activity_contract(repo_root: Path) -> None:
                     },
                     "data-sharing-review": {
                         "label": "data sharing review",
-                        "route": "/analytics/data-sharing/review/?mode=manage",
+                        "route": "/analytics/data-sharing/review/",
                         "actions": {
                             "apply-returned-summaries": {
                                 "label": "apply returned summaries",
@@ -110,7 +110,7 @@ def export_body() -> dict[str, object]:
         "activity_context": {
             "page_id": "data-sharing-prepare",
             "action_id": "prepare-share-package",
-            "route": "/analytics/data-sharing/prepare/?mode=manage",
+            "route": "/analytics/data-sharing/prepare/",
             "control_id": "dataSharingPrepareRun",
             "control_selector": "#dataSharingPrepareRun",
             "correlation_id": "export:library",
@@ -203,7 +203,7 @@ def import_apply_body(confirm: bool) -> dict[str, object]:
         "activity_context": {
             "page_id": "data-sharing-review",
             "action_id": "apply-returned-summaries",
-            "route": "/analytics/data-sharing/review/?mode=manage",
+            "route": "/analytics/data-sharing/review/",
             "control_id": "dataSharingReviewUpdateSummary",
             "control_selector": "#dataSharingReviewUpdateSummary",
             "correlation_id": "import-apply:summaries",

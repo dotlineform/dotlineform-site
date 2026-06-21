@@ -178,12 +178,12 @@ def write_activity_contract(root: Path) -> None:
             "pages": {
                 "data-sharing-prepare": {
                     "label": "data sharing prepare",
-                    "route": "/analytics/data-sharing/prepare/?mode=manage",
+                    "route": "/analytics/data-sharing/prepare/",
                     "actions": {
                         "prepare-share-package": {
                             "label": "prepare share package",
                             "endpoint": "/data-sharing/prepare",
-                            "route": "/analytics/data-sharing/prepare/?mode=manage",
+                            "route": "/analytics/data-sharing/prepare/",
                             "control_id": "dataSharingPrepareRun",
                             "control_selector": "#dataSharingPrepareRun",
                             "record_id_field": "export_id",
@@ -192,12 +192,12 @@ def write_activity_contract(root: Path) -> None:
                 },
                 "data-sharing-review": {
                     "label": "data sharing review",
-                    "route": "/analytics/data-sharing/review/?mode=manage",
+                    "route": "/analytics/data-sharing/review/",
                     "actions": {
                         "apply-returned-tag-assignments": {
                             "label": "apply returned tag assignments",
                             "endpoint": "/data-sharing/apply",
-                            "route": "/analytics/data-sharing/review/?mode=manage",
+                            "route": "/analytics/data-sharing/review/",
                             "control_id": "dataSharingReviewApplyTagAssignments",
                             "control_selector": "#dataSharingReviewApplyTagAssignments",
                             "record_id_field": "staged_filename",
@@ -354,7 +354,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
                     "correlation_id": "test-tags-prepare",
                     "page_id": "data-sharing-prepare",
                     "action_id": "prepare-share-package",
-                    "route": "/analytics/data-sharing/prepare/?mode=manage",
+                    "route": "/analytics/data-sharing/prepare/",
                     "control_id": "dataSharingPrepareRun",
                     "control_selector": "#dataSharingPrepareRun",
                     "export_id": "tags:tags-bundle",
@@ -584,7 +584,7 @@ def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None
                     "correlation_id": "test-tags-assignments",
                     "page_id": "data-sharing-review",
                     "action_id": "apply-returned-tag-assignments",
-                    "route": "/analytics/data-sharing/review/?mode=manage",
+                    "route": "/analytics/data-sharing/review/",
                     "control_id": "dataSharingReviewApplyTagAssignments",
                     "control_selector": "#dataSharingReviewApplyTagAssignments",
                     "staged_filename": "assignments.json",

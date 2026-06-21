@@ -116,7 +116,7 @@ function actionActivityContext(state, action, stagedFilename) {
   return buildAnalyticsActivityContext({
     pageId: "data-sharing-review",
     actionId: action.activityActionId,
-    route: "/analytics/data-sharing/review/?mode=manage",
+    route: "/analytics/data-sharing/review/",
     controlId: action.controlId,
     controlSelector,
     recordIdField: "staged_filename",

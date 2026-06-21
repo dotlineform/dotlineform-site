@@ -41,14 +41,14 @@ const DEFAULT_ANALYTICS_CONFIG = {
       "data_sharing_prepare": {
         "label": "prepare share",
         "title": "Prepare Share Package",
-        "path": "/analytics/data-sharing/prepare/?mode=manage",
+        "path": "/analytics/data-sharing/prepare/",
         "script": "/analytics/app/frontend/js/data-sharing-prepare.js",
         "nav": false
       },
       "data_sharing_review": {
         "label": "review share",
         "title": "Review Returned Package",
-        "path": "/analytics/data-sharing/review/?mode=manage",
+        "path": "/analytics/data-sharing/review/",
         "script": "/analytics/app/frontend/js/data-sharing-review.js",
         "nav": false
       }

@@ -37,8 +37,8 @@ ANALYTICS_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
     {
         "label": "data sharing",
         "links": (
-            ("prepare package", "/analytics/data-sharing/prepare/?mode=manage"),
-            ("returned package", "/analytics/data-sharing/review/?mode=manage"),
+            ("prepare package", "/analytics/data-sharing/prepare/"),
+            ("returned package", "/analytics/data-sharing/review/"),
         ),
     },
 )

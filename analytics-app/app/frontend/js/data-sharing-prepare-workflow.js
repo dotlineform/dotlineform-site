@@ -72,7 +72,7 @@ export function buildPrepareActivityContext({ dataDomain, configId } = {}) {
   return buildAnalyticsActivityContext({
     pageId: "data-sharing-prepare",
     actionId: "prepare-share-package",
-    route: "/analytics/data-sharing/prepare/?mode=manage",
+    route: "/analytics/data-sharing/prepare/",
     controlId: "dataSharingPrepareRun",
     controlSelector: "#dataSharingPrepareRun",
     recordIdField: "export_id",

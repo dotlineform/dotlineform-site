@@ -16,8 +16,8 @@ Older import/export names remain only in historical change-log entries, and sepa
 
 ## Routes
 
-- `/analytics/data-sharing/prepare/?mode=manage`
-- `/analytics/data-sharing/review/?mode=manage`
+- `/analytics/data-sharing/prepare/`
+- `/analytics/data-sharing/review/`
 
 The page shells are Analytics-owned.
 They call a same-origin Analytics local API, render shared lifecycle states, and use adapter metadata to decide which domains, sharing profiles, selectable records, review rows, and apply actions are available.

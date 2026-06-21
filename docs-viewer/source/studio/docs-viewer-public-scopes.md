@@ -215,7 +215,7 @@ Current model:
 
 Current consumers:
 
-- `/analytics/data-sharing/prepare/?mode=manage`
+- `/analytics/data-sharing/prepare/`
 - `GET /analytics/api/data-sharing/selectable-records` on the Local Analytics app server
 - `POST /analytics/api/data-sharing/prepare` on the Local Analytics app server
 - `docs-viewer/services/docs_export.py`
@@ -259,7 +259,7 @@ Current consumers:
 - `GET /analytics/api/data-sharing/returned-packages`
 - `POST /analytics/api/data-sharing/review`
 - `POST /analytics/api/data-sharing/apply`
-- `/analytics/data-sharing/review/?mode=manage`
+- `/analytics/data-sharing/review/`
 
 ## Dependencies And Enforcement
 

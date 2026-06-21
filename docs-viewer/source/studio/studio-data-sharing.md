@@ -10,8 +10,8 @@ viewable: true
 
 Routes:
 
-- `/analytics/data-sharing/prepare/?mode=manage`
-- `/analytics/data-sharing/review/?mode=manage`
+- `/analytics/data-sharing/prepare/`
+- `/analytics/data-sharing/review/`
 
 Analytics Data Sharing is the local shell for preparing outbound share packages and reviewing returned packages from supported local data domains.
 It defaults to the Library data domain and exposes Tags as a named workflow scope for package preparation, returned-package listing, review, and confirmed apply.

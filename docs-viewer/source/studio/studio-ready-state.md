@@ -143,8 +143,8 @@ The legacy UI catalogue reference routes have been retired and do not expose the
 
 Analytics app route roots:
 
-- `/analytics/data-sharing/prepare/?mode=manage` with `#dataSharingPrepareRoot`
-- `/analytics/data-sharing/review/?mode=manage` with `#dataSharingReviewRoot`
+- `/analytics/data-sharing/prepare/` with `#dataSharingPrepareRoot`
+- `/analytics/data-sharing/review/` with `#dataSharingReviewRoot`
 - `/analytics/series-tag-editor/` with `#seriesTagEditorRoot`
 - `/analytics/series-tags/` with `#series-tags`
 - `/analytics/tag-aliases/` with `#tag-aliases`

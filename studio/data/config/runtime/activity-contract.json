@@ -469,7 +469,7 @@
     },
     "data-sharing-prepare": {
       "label": "data sharing prepare",
-      "route": "/analytics/data-sharing/prepare/?mode=manage",
+      "route": "/analytics/data-sharing/prepare/",
       "actions": {
         "prepare-share-package": {
           "label": "prepare share package",
@@ -495,7 +495,7 @@
     },
     "data-sharing-review": {
       "label": "data sharing review",
-      "route": "/analytics/data-sharing/review/?mode=manage",
+      "route": "/analytics/data-sharing/review/",
       "actions": {
         "apply-returned-summaries": {
           "label": "apply returned summaries",

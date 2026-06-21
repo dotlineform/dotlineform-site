@@ -37,13 +37,13 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert runtime["navigation"]["primary"] == []
     assert "routes" not in payload["paths"]
     assert payload["app"]["routes"]["tag_registry"]["path"] == "/analytics/tag-registry/"
-    assert payload["app"]["routes"]["data_sharing_prepare"]["path"] == "/analytics/data-sharing/prepare/?mode=manage"
+    assert payload["app"]["routes"]["data_sharing_prepare"]["path"] == "/analytics/data-sharing/prepare/"
     assert any(view["id"] == "tag_registry" and view["path"] == "/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/analytics/series-tags/" for view in runtime["views"])
     assert any(view["id"] == "series_tag_editor" and view["path"] == "/analytics/series-tag-editor/" for view in runtime["views"])
-    assert any(view["id"] == "data_sharing_prepare" and view["path"] == "/analytics/data-sharing/prepare/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "data_sharing_review" and view["path"] == "/analytics/data-sharing/review/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "data_sharing_prepare" and view["path"] == "/analytics/data-sharing/prepare/" for view in runtime["views"])
+    assert any(view["id"] == "data_sharing_review" and view["path"] == "/analytics/data-sharing/review/" for view in runtime["views"])
     assert "external_links" not in payload
 
     analytics = runtime["services"]["analytics"]
