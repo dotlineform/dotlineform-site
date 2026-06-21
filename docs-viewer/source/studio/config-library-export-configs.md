@@ -118,14 +118,16 @@ Document-row configs may support JSONL and JSON when both are declared in `targe
 
 ## Output
 
-`output.path_pattern` must stay under:
+`output.path_pattern` must stay under the shared Data Sharing export root:
 
 ```text
-var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.json
-var/analytics/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl
+var/analytics/data-sharing/exports/{export_id}-{timestamp}.json
+var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl
 ```
 
 The placeholders are resolved by the export engine.
+Current Library export configs use `{export_id}` and `{timestamp}`.
+Other placeholders, including `{data_domain}`, are only valid when supported by the export engine and still resolving under the shared export root.
 The path is intentionally constrained to keep generated export files out of source docs and public assets.
 When an operator chooses a non-default supported format, the export engine keeps the configured directory, export id, and timestamp, then switches the output file extension to the selected format.
 

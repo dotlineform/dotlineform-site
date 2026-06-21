@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c651b4f205207cd7a8e11434d47458ce",
-    "generated_at_utc": "2026-06-21T18:20:42Z",
-    "count": 240
+    "version": "blake2b-930ddb77edc0482a77a9536bbbbb04a0",
+    "generated_at_utc": "2026-06-21T18:46:56Z",
+    "count": 242
   },
   "entries": [
     {
@@ -2022,19 +2022,19 @@
       "kind": "doc",
       "title": "Data Sharing",
       "href": "/docs/?scope=studio&doc=data-sharing",
-      "last_updated": "2026-06-05",
-      "display_meta": "2026-06-05",
+      "last_updated": "2026-06-21",
+      "display_meta": "2026-06-21",
       "search_terms": [
         "data-sharing",
         "data",
         "sharing",
         "data sharing",
-        "2026-06-05",
+        "2026-06-21",
         "2026",
         "06",
-        "05"
+        "21"
       ],
-      "search_text": "data-sharing data sharing data sharing 2026-06-05 2026 06 05"
+      "search_text": "data-sharing data sharing data sharing 2026-06-21 2026 06 21"
     },
     {
       "id": "studio-data-sharing",
@@ -2088,9 +2088,33 @@
       "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec analytics data sharing technical spec analytics data sharing 2026-06-05 2026 06 05"
     },
     {
+      "id": "data-sharing-adapter-architecture",
+      "kind": "doc",
+      "title": "Data Sharing Adapter Architecture",
+      "href": "/docs/?scope=studio&doc=data-sharing-adapter-architecture",
+      "last_updated": "2026-06-21",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-06-21 • Data Sharing",
+      "search_terms": [
+        "data-sharing-adapter-architecture",
+        "data",
+        "sharing",
+        "adapter",
+        "architecture",
+        "data sharing adapter architecture",
+        "data sharing",
+        "2026-06-21",
+        "2026",
+        "06",
+        "21"
+      ],
+      "search_text": "data-sharing-adapter-architecture data sharing adapter architecture data sharing adapter architecture data sharing 2026-06-21 2026 06 21"
+    },
+    {
       "id": "config-data-sharing-adapters",
       "kind": "doc",
-      "title": "Data Sharing Adapters",
+      "title": "Data Sharing Adapter Registry",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "last_updated": "2026-06-21",
       "parent_id": "data-sharing",
@@ -2102,14 +2126,41 @@
         "data",
         "sharing",
         "adapters",
-        "data sharing adapters",
+        "data sharing adapter registry",
+        "adapter",
+        "registry",
         "data sharing",
         "2026-06-21",
         "2026",
         "06",
         "21"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-06-21 2026 06 21"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapter registry adapter registry data sharing 2026-06-21 2026 06 21"
+    },
+    {
+      "id": "data-sharing-documents-adapter-structure",
+      "kind": "doc",
+      "title": "Documents Data Sharing Adapter Structure",
+      "href": "/docs/?scope=studio&doc=data-sharing-documents-adapter-structure",
+      "last_updated": "2026-06-21",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-06-21 • Data Sharing",
+      "search_terms": [
+        "data-sharing-documents-adapter-structure",
+        "data",
+        "sharing",
+        "documents",
+        "adapter",
+        "structure",
+        "documents data sharing adapter structure",
+        "data sharing",
+        "2026-06-21",
+        "2026",
+        "06",
+        "21"
+      ],
+      "search_text": "data-sharing-documents-adapter-structure data sharing documents adapter structure documents data sharing adapter structure data sharing 2026-06-21 2026 06 21"
     },
     {
       "id": "config-library-export-configs",

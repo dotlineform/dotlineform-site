@@ -474,9 +474,19 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json"
         },
         {
+          "doc_id": "data-sharing-adapter-architecture",
+          "title": "Data Sharing Adapter Architecture",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-adapter-architecture.json"
+        },
+        {
           "doc_id": "config-data-sharing-adapters",
-          "title": "Data Sharing Adapters",
+          "title": "Data Sharing Adapter Registry",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json"
+        },
+        {
+          "doc_id": "data-sharing-documents-adapter-structure",
+          "title": "Documents Data Sharing Adapter Structure",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-adapter-structure.json"
         },
         {
           "doc_id": "config-library-export-configs",
@@ -1317,5 +1327,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-21T18:20:42Z"
+  "generated_at": "2026-06-21T18:46:19Z"
 }

@@ -2,7 +2,7 @@
 doc_id: data-sharing
 title: Data Sharing
 added_date: "2026-05-13 17:16"
-last_updated: 2026-06-05
+last_updated: 2026-06-21
 parent_id: ""
 ---
 # Data Sharing
@@ -45,4 +45,10 @@ Current responsibility split:
 - Data Sharing apply routes no longer create local backup artifacts; recover changed source through Git history, host/filesystem backups, or explicit manual copies.
 - Local Studio does not serve Data Sharing pages, APIs, config, aliases, proxy handlers, or static shims.
 
-See [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec) for the detailed adapter and endpoint contract.
+Key implementation references:
+
+- [Data Sharing Adapter Registry](/docs/?scope=studio&doc=config-data-sharing-adapters)
+- [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture)
+- [Documents Data Sharing Adapter Structure](/docs/?scope=studio&doc=data-sharing-documents-adapter-structure)
+- [Tags Data Sharing Adapter Structure](/docs/?scope=studio&doc=data-sharing-tags-adapter-structure)
+- [Analytics Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)

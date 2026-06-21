@@ -1,142 +1,132 @@
 ---
 doc_id: config-data-sharing-adapters
-title: Data Sharing Adapters
+title: Data Sharing Adapter Registry
 added_date: "2026-05-06 11:35"
 last_updated: 2026-06-21
 parent_id: data-sharing
 viewable: true
 ---
-# Data Sharing Adapters
+# Data Sharing Adapter Registry
 
 Config files:
 
 - `data-sharing/config/adapters.json`
 - `data-sharing/config/adapters.schema.json`
-- `data-sharing/config/library-export-configs.json`
-- `data-sharing/config/library-export-configs.schema.json`
 
-`adapters.json` is the source-controlled dispatch registry for Data Sharing workflows.
-Requests provide a `data_domain` and canonical `operation`.
-The registry maps that pair to exactly one adapter id.
-Each data domain also declares an `app` value for UI grouping: `docs-viewer`, `studio`, or `analytics`.
-Docs Viewer scope selection is record selection, not a Data Sharing data domain.
-Docs Viewer-backed document domains declare a `record_selectors.docs_scope` selector whose options come from the Docs Viewer scope config.
-Generic Data Sharing config must not use unqualified `scope`.
-The registry is owned by the headless `data-sharing/` subsystem, not by Analytics app route code, Studio route code, or Docs Viewer service code.
+`adapters.json` is the source-controlled registry for Data Sharing dispatch.
+It answers one question: for a given `data_domain` and canonical `operation`, which configured adapter handles the request?
+It also records the browser-safe metadata the Analytics Data Sharing UI needs to present domains, profiles, file formats, review rows, and apply actions.
 
-Analytics reads this config through its same-origin Data Sharing API.
-Browser modules must not infer endpoint ownership or selectable-record behavior from the config file path.
-Local Studio does not serve Data Sharing config to browser routes.
-The Analytics app may serve the config it needs directly through its static allowlist, but public builds should exclude the directory because the configs are Analytics/Data Sharing runtime inputs rather than public site assets.
+The registry is config, not implementation.
+It can enable an existing adapter, connect a data domain to an adapter, declare capabilities, expose UI metadata, and point adapters at source/config files.
+It cannot add a new package shape, selector type, review model, returned-package parser, or apply behavior without adapter code that implements that behavior.
 
-## Current Mapping
+See [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture) for the code structure used by adapters.
 
-The implemented adapters are `documents` and `analytics-tags`.
-The documents adapter maps `data_domain: "documents"` to `app: "docs-viewer"`.
-The selected Docs Viewer scope, such as `library`, `analysis`, or `studio`, is carried as `selection.docs_scope` and validated against the currently configured Docs Viewer scopes.
+## Registry Shape
 
-The first non-document adapter is:
+The root object contains:
 
-- `data_domain: "tags"`
-- `app: "analytics"`
-- `adapter_id: "analytics-tags"`
-- `module: "analytics.tags"`
+- `schema_version`: currently `data_sharing_adapters_v2`
+- `paths`: shared runtime artifact roots
+- `dispatch`: operation routing from data domain to adapter id
+- `adapters`: adapter declarations and their per-domain capability metadata
 
-The data domain stays `tags` so future Analytics workflows do not inherit tag-specific assumptions.
-The Analytics Data Sharing app selector presents Analytics as the app, while the data-domain selector presents `tags` and the sharing profile selector names the tag-specific package families.
+The active runtime artifact roots are shared by all adapters:
 
-The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
-Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.
+```text
+var/analytics/data-sharing/exports
+var/analytics/data-sharing/import-staging
+var/analytics/data-sharing/import-preview
+```
 
-Adapters are Data Sharing-owned modules under the target `data-sharing/adapters/` boundary.
-They can call domain helpers for reads, validation, writes, and rebuild follow-through.
-The documents adapter calls docs-domain helpers; the tags adapter calls Analytics tag helpers.
-Neither adapter should require Data Sharing browser modules to know those helper boundaries.
+The validator requires:
 
-## Operations
+- `paths.outbound_package_root`: `var/analytics/data-sharing/exports`
+- `paths.returned_package_staging_root`: `var/analytics/data-sharing/import-staging`
+- `paths.review_output_root`: `var/analytics/data-sharing/import-preview`
 
-The v2 registry uses only these shared operation names:
+Do not add per-domain runtime package roots or fallback reads for retired locations such as `var/studio/data-sharing/...` or `var/studio/export-import/...`.
+
+## Dispatch
+
+Each dispatch row binds one canonical operation:
 
 - `prepare`
 - `list_returned`
 - `review`
 - `apply`
 
-Adapter-specific apply variants live under the `apply` capability's `apply_actions` list.
-For the documents adapter, the current actions are `summary_apply` and `hierarchy_apply`.
-For the tags adapter, the current actions are `registry_apply`, `aliases_apply`, and `assignments_apply`.
-Do not add new registry-level operations such as `export`, `import_files`, `import_preview`, `summary_apply`, or `hierarchy_apply`.
+Adapter-specific apply choices belong inside the `apply` capability's `apply_actions` list.
+Do not add registry-level operations such as `export`, `import_files`, `import_preview`, `summary_apply`, or `hierarchy_apply`.
 
-## Capability Metadata
+Each `(data_domain, operation)` pair must resolve to exactly one adapter id.
+If the same domain and operation need different behavior, add a profile, family, selector, or adapter-owned implementation path rather than adding ambiguous dispatch rows.
+
+## Data Domains
+
+Each adapter declares one or more `data_domains`.
+A data domain entry defines:
+
+- `app`: UI grouping, one of `docs-viewer`, `studio`, or `analytics`
+- `label`
+- `status`
+- `selection_model`
+- optional `record_selectors`
+- `sources`
+- `source_write_targets`
+- `config`
+
+Docs Viewer scope selection is record selection, not a Data Sharing data domain.
+Document-backed domains carry selected scope through `selection.docs_scope` and may declare `record_selectors.docs_scope` so the UI can present scope options from Docs Viewer scope config.
+Generic Data Sharing config must not use an unqualified `scope` field.
+
+For document-backed domains, `sources.docs_scope_config` records the Docs Viewer scope config path.
+The registry must not declare generated docs indexes, generated by-id payload roots, public tree/search/recently-added payloads, or generated metadata JSON as document Data Sharing metadata sources.
+Those generated artifacts belong to Docs Viewer publication, preview, management, report, route, or search workflows.
+
+For Analytics tags, configured sources and write targets point at canonical tag registry, aliases, assignments, and supporting site indexes.
+
+## Capabilities
 
 Each capability declares:
 
-- `status`: `active`, `planned`, `stub`, or `disabled`
-- `selection_model`: `documents`, `records`, `file_only`, or `none`
+- `operation`
+- `status`
+- `selection_model`
 - supported `input_formats` and `output_formats`
-- `path_contract` keys that point into the domain path block
-- `activity` metadata with script purpose and record groups
+- `path_contract` keys that refer to shared `paths`
+- optional `sharing_profiles` for prepare
+- optional `review_rows` metadata for review
+- optional `apply_actions` for apply
+- `activity` metadata
 
-The `prepare` capability also declares the adapter selectable-record model.
-Selectable records are returned by the active adapter through the Analytics Data Sharing API.
-The Analytics shell must not treat the Library generated-docs index as the shared contract for all domains.
-For the documents adapter, selectable records and package metadata come from Docs Viewer source metadata, not generated Docs Viewer publication artifacts.
+The browser-facing Analytics API projects only UI-needed metadata from this config.
+Server-only details such as source paths, write targets, output path patterns, activity emit metadata, and package internals remain server-owned.
 
-The `review` capability also declares the shared review-row presentation fields.
-The `apply` capability declares confirmation requirements and per-action confirmation/activity metadata.
+## Current Registry
 
-## Path Ownership
+The current adapters are:
 
-The registry owns workflow paths that the shared Data Sharing shell needs for dispatch:
+| Data domain | App | Adapter id | Module |
+| --- | --- | --- | --- |
+| `documents` | `docs-viewer` | `documents` | `documents` |
+| `tags` | `analytics` | `analytics-tags` | `analytics.tags` |
 
-- `paths.outbound_package_root`
-- `paths.returned_package_staging_root`
-- `paths.review_output_root`
+The documents adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
+Its current apply actions are `summary_apply` and `hierarchy_apply`.
+Its prepare profiles are defined in `data-sharing/config/library-export-configs.json`, documented separately in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
-For the documents adapter, `sources.docs_scope_config` records the Docs Viewer scope config path used to populate and validate `selection.docs_scope`.
-The registry must not declare generated docs indexes, generated by-id payload roots, public tree/search/recently-added payloads, or generated metadata JSON as document Data Sharing metadata sources.
-Those generated artifacts belong to Docs Viewer publication, preview, management, report, route, or search workflows, not to Data Sharing metadata reads.
+The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
+Its current apply actions are `registry_apply`, `aliases_apply`, and `assignments_apply`.
+Its prepare profiles are declared in the adapter registry under the tags `prepare` capability.
 
-Data Sharing uses shared workflow roots for all adapters:
+## Runtime Owners
 
-```text
-var/analytics/data-sharing/
-```
+- `analytics-app/app/server/analytics_app/data_sharing_adapters.py` validates and resolves registry entries at the Analytics HTTP boundary.
+- `data-sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection.
+- `data-sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose headless workflow entry points.
+- `analytics-app/app/server/analytics_app/` owns same-origin `/analytics/api/data-sharing/...` endpoints.
+- Adapter implementation lives under `data-sharing/adapters/`.
 
-Under that root, package workflows currently use:
-
-- `exports/`
-- `import-staging/`
-- `import-preview/`
-
-The registry validator enforces these shared paths:
-
-- `paths.outbound_package_root`: `var/analytics/data-sharing/exports`
-- `paths.returned_package_staging_root`: `var/analytics/data-sharing/import-staging`
-- `paths.review_output_root`: `var/analytics/data-sharing/import-preview`
-
-Future folder changes should update the shared path contract deliberately instead of adding route-level folder decisions.
-
-Old disposable package roots under `var/studio/data-sharing/...` and `var/studio/export-import/...` are outside the target compatibility contract.
-Do not add registry paths or adapter fallback reads that preserve those roots.
-
-## Related Runtime
-
-- `data-sharing/services/registry.py` owns registry/config path constants for the moved config boundary.
-- `analytics-app/app/server/analytics_app/data_sharing_adapters.py` performs adapter validation and resolution for the Analytics HTTP boundary.
-- `data-sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection for prepare, list-returned, review, and apply workflows.
-- `data-sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Analytics app gateway.
-- `analytics-app/app/server/analytics_app/` owns the same-origin `/analytics/api/data-sharing/...` endpoints and local-origin enforcement.
-- `analytics-app/app/frontend/js/analytics-transport.js` uses Analytics-owned same-origin Data Sharing endpoints.
-- Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.
-- Local Studio must not reintroduce Data Sharing route/API aliases, proxy handlers, or static shims.
-
-## Architecture Status
-
-The active registry/config boundary is the top-level `data-sharing/config/` directory.
-Analytics API handlers resolve adapters through the Data Sharing workflow dispatcher, and the documents and tags adapters are both Data Sharing-owned modules.
-Docs-domain helpers and Analytics tag helpers remain reusable domain helpers; they are not Data Sharing API hosts.
-Documents helpers read source-derived metadata through Docs Viewer-owned helpers.
-
-Current runtime packages, returned-package staging, and review artifacts are expected under the shared `var/analytics/data-sharing/exports`, `import-staging`, and `import-preview` roots.
-Old `var/studio/data-sharing/...` and `var/studio/export-import/...` roots are disposable history and should not be restored through compatibility reads.
+Local Studio must not reintroduce Data Sharing route/API aliases, proxy handlers, config serving, or static shims.
