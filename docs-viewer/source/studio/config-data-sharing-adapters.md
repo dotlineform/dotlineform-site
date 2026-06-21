@@ -48,7 +48,7 @@ The Analytics Data Sharing app selector presents Analytics as the app, while the
 The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.
 
-Adapters are Data Sharing-owned modules under the target `data-sharing/data_sharing/adapters/` boundary.
+Adapters are Data Sharing-owned modules under the target `data-sharing/adapters/` boundary.
 They can call domain helpers for reads, validation, writes, and rebuild follow-through.
 The documents adapter calls docs-domain helpers; the tags adapter calls Analytics tag helpers.
 Neither adapter should require Data Sharing browser modules to know those helper boundaries.
@@ -122,10 +122,10 @@ Do not add registry paths or adapter fallback reads that preserve those roots.
 
 ## Related Runtime
 
-- `data-sharing/data_sharing/services/registry.py` owns registry/config path constants for the moved config boundary.
+- `data-sharing/services/registry.py` owns registry/config path constants for the moved config boundary.
 - `analytics-app/app/server/analytics_app/data_sharing_adapters.py` performs adapter validation and resolution for the Analytics HTTP boundary.
-- `data-sharing/data_sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection for prepare, list-returned, review, and apply workflows.
-- `data-sharing/data_sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Analytics app gateway.
+- `data-sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection for prepare, list-returned, review, and apply workflows.
+- `data-sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Analytics app gateway.
 - `analytics-app/app/server/analytics_app/` owns the same-origin `/analytics/api/data-sharing/...` endpoints and local-origin enforcement.
 - `analytics-app/app/frontend/js/analytics-transport.js` uses Analytics-owned same-origin Data Sharing endpoints.
 - Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.
@@ -138,5 +138,5 @@ Analytics API handlers resolve adapters through the Data Sharing workflow dispat
 Docs-domain helpers and Analytics tag helpers remain reusable domain helpers; they are not Data Sharing API hosts.
 Documents helpers read source-derived metadata through Docs Viewer-owned helpers.
 
-Current runtime packages, returned-package staging, and review artifacts are expected under `var/analytics/data-sharing/<data_domain>/...`.
+Current runtime packages, returned-package staging, and review artifacts are expected under the shared `var/analytics/data-sharing/exports`, `import-staging`, and `import-preview` roots.
 Old `var/studio/data-sharing/...` and `var/studio/export-import/...` roots are disposable history and should not be restored through compatibility reads.

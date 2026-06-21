@@ -19,12 +19,15 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
+DATA_SHARING_ROOT = REPO_ROOT / "data-sharing"
+if str(DATA_SHARING_ROOT) not in sys.path:
+    sys.path.insert(0, str(DATA_SHARING_ROOT))
 
 import script_logging  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
-from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
-from data_sharing.adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
+from adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
+from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402

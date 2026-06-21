@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from data_sharing.services.dispatch import AdapterResolver, DataSharingAdapterHandlers
-from data_sharing.services.dispatch import list_returned_packages as dispatch_list_returned_packages
+from services.dispatch import AdapterResolver, DataSharingAdapterHandlers
+from services.dispatch import list_returned_packages as dispatch_list_returned_packages
 
 OPERATION = "list_returned"
 

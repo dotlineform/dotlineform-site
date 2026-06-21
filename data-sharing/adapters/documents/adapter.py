@@ -34,7 +34,7 @@ from docs_data_sharing.write import (  # noqa: E402
     PerformSourceWriteAndRebuild,
 )
 import docs_source_model as source_model  # noqa: E402
-from data_sharing.services.dispatch import DataSharingAdapterHandlers  # noqa: E402
+from services.dispatch import DataSharingAdapterHandlers  # noqa: E402
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]

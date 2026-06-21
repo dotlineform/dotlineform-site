@@ -7,7 +7,7 @@ The subsystem owns shared Data Sharing concerns:
 - adapter registry and config loading
 - adapter implementations by data domain
 - workflow dispatch for `prepare`, `list_returned`, `review`, and `apply`
-- path contracts for `var/analytics/data-sharing/<domain>/...`
+- path contracts for `var/analytics/data-sharing/exports`, `import-staging`, and `import-preview`
 - package I/O and schema contracts
 
 It must not own:
@@ -22,11 +22,13 @@ Domain helpers, such as docs source read/write helpers, stay domain-aware and re
 
 ## Python Package
 
-The importable Python package lives under `data-sharing/data_sharing/`.
-When used directly, add `data-sharing/` to `PYTHONPATH` or `sys.path` and import `data_sharing`.
+When used directly, add `data-sharing/` to `PYTHONPATH` or `sys.path` and import the top-level ownership packages:
+
+- `adapters`
+- `services`
+- `workflows`
 
 The source-controlled registry, schemas, and Library sharing profiles live under
 `data-sharing/config/`.
-Current shared workflow dispatch and the implemented documents and tags adapters live under
-`data-sharing/data_sharing/`.
+Current shared workflow dispatch and the implemented documents and tags adapters live under `data-sharing/services/`, `data-sharing/workflows/`, and `data-sharing/adapters/`.
 Analytics owns the local API, browser routes, and adapter resolver gateway; Docs Viewer still supplies reusable docs-domain helpers for document workflows.

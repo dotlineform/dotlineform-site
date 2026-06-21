@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from data_sharing.services.dispatch import AdapterResolver, DataSharingAdapterHandlers
-from data_sharing.services.dispatch import apply_returned_changes as dispatch_apply_returned_changes
+from services.dispatch import AdapterResolver, DataSharingAdapterHandlers
+from services.dispatch import apply_returned_changes as dispatch_apply_returned_changes
 
 OPERATION = "apply"
 

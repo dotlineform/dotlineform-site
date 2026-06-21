@@ -24,8 +24,8 @@ The same engine is used by the documents adapter when `/analytics/data-sharing/r
 
 Current input path:
 
-- `var/analytics/data-sharing/library/import-staging/<filename>.json`
-- `var/analytics/data-sharing/library/import-staging/<filename>.jsonl`
+- `var/analytics/data-sharing/import-staging/<filename>.json`
+- `var/analytics/data-sharing/import-staging/<filename>.jsonl`
 
 Current lookup path:
 
@@ -34,13 +34,13 @@ Current lookup path:
 Current outputs:
 
 - a structured JSON report on stdout
-- optional Markdown review artifacts under `var/analytics/data-sharing/library/import-preview/`
+- optional Markdown review artifacts under `var/analytics/data-sharing/import-preview/`
 
 ## Current Capability
 
 Implemented now:
 
-- enforces that parsed files stay under `var/analytics/data-sharing/library/import-staging/`
+- enforces that parsed files stay under `var/analytics/data-sharing/import-staging/`
 - reads `.json` and `.jsonl`
 - parses JSON package envelopes with a `documents` array
 - parses JSON arrays of document-like records
@@ -53,7 +53,7 @@ Implemented now:
 - annotates each normalized record with current Library existence, viewability, source renderability, current summary, and parent source state
 - renders one Markdown-style review artifact per parsed document
 - renders one additional whole-tree Markdown review artifact whenever staged relationship metadata is available
-- writes review artifacts only under `var/analytics/data-sharing/library/import-preview/`
+- writes review artifacts only under `var/analytics/data-sharing/import-preview/`
 - supports timestamped document review filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
 - uses the staged-file timestamp suffix for review filenames when present, otherwise the current review-generation time
 - supports deterministic relationship-tree review filenames based on the staged filename plus timestamp suffix
@@ -148,11 +148,11 @@ It blocks only concerns that prevent useful parsing:
 - unsupported file extension
 - unreadable or missing staged file
 - invalid JSON or JSONL
-- staged path outside `var/analytics/data-sharing/library/import-staging/`
+- staged path outside `var/analytics/data-sharing/import-staging/`
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.
-Review writes are limited to `var/analytics/data-sharing/library/import-preview/`.
+Review writes are limited to `var/analytics/data-sharing/import-preview/`.
 Apply-time freshness checks belong to the documents adapter apply actions.
 
 ## Verification

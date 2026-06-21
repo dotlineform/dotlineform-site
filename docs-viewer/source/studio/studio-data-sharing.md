@@ -43,10 +43,10 @@ Recovery for changed source records relies on Git history, host/filesystem backu
 Runtime packages, returned-package staging, and review artifacts use:
 
 ```text
-var/analytics/data-sharing/<domain>/
+var/analytics/data-sharing/
 ```
 
-The adapter registry validates the domain-specific `exports/`, `import-staging/`, and `import-preview/` roots so active adapters cannot silently fall back to older package folders.
+The adapter registry validates the shared `exports/`, `import-staging/`, and `import-preview/` roots so active adapters cannot silently fall back to older package folders.
 Disposable packages under old `var/studio/export-import/...` roots are not part of the target compatibility contract.
 
 ## Current Scope
@@ -101,21 +101,21 @@ The page shells load:
 - `analytics-app/app/server/analytics_app/data_sharing_routes.py`
 - `analytics-app/app/server/analytics_app/data_sharing_service.py`
 - `analytics-app/app/server/analytics_app/analytics_data_sharing_api.py`
-- `data-sharing/data_sharing/services/dispatch.py`
-- `data-sharing/data_sharing/workflows/prepare.py`
-- `data-sharing/data_sharing/workflows/list_returned.py`
-- `data-sharing/data_sharing/workflows/review.py`
-- `data-sharing/data_sharing/workflows/apply.py`
+- `data-sharing/services/dispatch.py`
+- `data-sharing/workflows/prepare.py`
+- `data-sharing/workflows/list_returned.py`
+- `data-sharing/workflows/review.py`
+- `data-sharing/workflows/apply.py`
 - `data-sharing/config/adapters.json`
 - `data-sharing/config/library-export-configs.json`
-- `data-sharing/data_sharing/adapters/documents/`
-- `data-sharing/data_sharing/adapters/tags/`
+- `data-sharing/adapters/documents/`
+- `data-sharing/adapters/tags/`
 
 The dashboard, prepare, and review shells are hosted by the Local Analytics app server.
 The browser modules and CSS contracts are Analytics-owned assets under `analytics-app/`.
-The documents adapter implementation lives at `data-sharing/data_sharing/adapters/documents/adapter.py` and owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
+The documents adapter implementation lives at `data-sharing/adapters/documents/adapter.py` and owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
 Those helpers are split by responsibility under the `docs-viewer/services/docs_data_sharing/` package.
-The Analytics tags adapter implementation lives at `data-sharing/data_sharing/adapters/tags/adapter.py` and owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
+The Analytics tags adapter implementation lives at `data-sharing/adapters/tags/adapter.py` and owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 The headless `data-sharing/` workflow modules own shared operation dispatch; the Analytics server provides the local HTTP boundary, adapter resolver handoff, and activity timing.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
@@ -129,7 +129,7 @@ The 2026-05 split moved the durable Data Sharing boundary to:
 - Analytics-owned pages and `/analytics/api/data-sharing/...` endpoints
 - `data-sharing/` owned registry/config, path contracts, package I/O, workflow dispatch, and documents/tags adapters
 - Docs Viewer-owned docs-domain helpers under `docs-viewer/services/docs_data_sharing/`
-- runtime artifacts under `var/analytics/data-sharing/<domain>/exports/`, `import-staging/`, and `import-preview/`
+- runtime artifacts under `var/analytics/data-sharing/exports/`, `import-staging/`, and `import-preview/`
 
 The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config or Local Studio runtime config.
 Generated Docs Viewer payloads are not the source of this documentation slice; source docs are updated first.

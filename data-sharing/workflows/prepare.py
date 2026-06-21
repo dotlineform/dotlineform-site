@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from data_sharing.services.dispatch import AdapterResolver, DataSharingAdapterHandlers
-from data_sharing.services.dispatch import prepare_package as dispatch_prepare_package
+from services.dispatch import AdapterResolver, DataSharingAdapterHandlers
+from services.dispatch import prepare_package as dispatch_prepare_package
 
 OPERATION = "prepare"
 

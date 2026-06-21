@@ -1,6 +1,6 @@
 """Documents Data Sharing adapter package."""
 
-from data_sharing.adapters.documents.adapter import (  # noqa: F401
+from adapters.documents.adapter import (  # noqa: F401
     DocumentsDataSharingDependencies,
     apply_returned_changes,
     handlers_for,

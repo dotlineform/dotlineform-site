@@ -15,7 +15,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_data_sharing_root))
         break
 
-from data_sharing.services.dispatch import (  # noqa: E402
+from services.dispatch import (  # noqa: E402
     ApplyHandler,
     DataSharingAdapterHandlers,
     ListReturnedHandler,
@@ -25,11 +25,11 @@ from data_sharing.services.dispatch import (  # noqa: E402
     adapter_module,
     handler_for,
 )
-from data_sharing.services.dispatch import selectable_records as dispatch_selectable_records  # noqa: E402
-from data_sharing.workflows.apply import apply_returned_changes as dispatch_apply_returned_changes  # noqa: E402
-from data_sharing.workflows.list_returned import list_returned_packages as dispatch_list_returned_packages  # noqa: E402
-from data_sharing.workflows.prepare import prepare_package as dispatch_prepare_package  # noqa: E402
-from data_sharing.workflows.review import review_returned_package as dispatch_review_returned_package  # noqa: E402
+from services.dispatch import selectable_records as dispatch_selectable_records  # noqa: E402
+from workflows.apply import apply_returned_changes as dispatch_apply_returned_changes  # noqa: E402
+from workflows.list_returned import list_returned_packages as dispatch_list_returned_packages  # noqa: E402
+from workflows.prepare import prepare_package as dispatch_prepare_package  # noqa: E402
+from workflows.review import review_returned_package as dispatch_review_returned_package  # noqa: E402
 try:
     from analytics_app.data_sharing_adapters import AdapterResolution, resolve_adapter  # noqa: E402
 except ModuleNotFoundError:  # pragma: no cover - supports direct script imports.

@@ -14,8 +14,10 @@ from typing import Any, Callable, Dict, Iterable, Mapping, Optional
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
     if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
-        if str(_candidate) not in sys.path:
-            sys.path.insert(0, str(_candidate))
+        _data_sharing_root = _candidate / "data-sharing"
+        for _path in (_candidate, _data_sharing_root):
+            if str(_path) not in sys.path:
+                sys.path.insert(0, str(_path))
         break
 
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
@@ -28,7 +30,7 @@ if str(ANALYTICS_APP_SERVER_DIR) not in sys.path:
 
 from tag_services import tag_alias_mutations, tag_assignment_service, tag_registry_mutations, tag_source_model, tag_write_transactions
 from data_sharing_adapters import AdapterResolution, safe_relative_path
-from data_sharing.services.dispatch import DataSharingAdapterHandlers
+from services.dispatch import DataSharingAdapterHandlers
 from studio_activity import append_studio_activity, normalize_activity_context_from_contract, studio_activity_entry
 
 

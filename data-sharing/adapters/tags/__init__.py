@@ -1,6 +1,6 @@
 """Tags Data Sharing adapter package."""
 
-from data_sharing.adapters.tags.adapter import (  # noqa: F401
+from adapters.tags.adapter import (  # noqa: F401
     TagsDataSharingDependencies,
     apply_returned_changes,
     handlers_for,

@@ -18,7 +18,7 @@ for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from data_sharing.adapters.tags import adapter  # noqa: E402
+from adapters.tags import adapter  # noqa: E402
 import data_sharing_service  # noqa: E402
 
 

@@ -10,7 +10,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SUBSYSTEM_ROOT = REPO_ROOT / "data-sharing"
-PACKAGE_ROOT = SUBSYSTEM_ROOT / "data_sharing"
 
 
 def import_subsystem_module(name: str):
@@ -20,16 +19,16 @@ def import_subsystem_module(name: str):
 
 
 def test_subsystem_root_and_core_modules_are_importable() -> None:
-    package = import_subsystem_module("data_sharing")
-    dispatch = import_subsystem_module("data_sharing.services.dispatch")
-    paths = import_subsystem_module("data_sharing.services.paths")
-    registry = import_subsystem_module("data_sharing.services.registry")
-    prepare = import_subsystem_module("data_sharing.workflows.prepare")
-    list_returned = import_subsystem_module("data_sharing.workflows.list_returned")
-    review = import_subsystem_module("data_sharing.workflows.review")
-    apply = import_subsystem_module("data_sharing.workflows.apply")
+    adapters = import_subsystem_module("adapters")
+    dispatch = import_subsystem_module("services.dispatch")
+    paths = import_subsystem_module("services.paths")
+    registry = import_subsystem_module("services.registry")
+    prepare = import_subsystem_module("workflows.prepare")
+    list_returned = import_subsystem_module("workflows.list_returned")
+    review = import_subsystem_module("workflows.review")
+    apply = import_subsystem_module("workflows.apply")
 
-    assert package.SUBSYSTEM_ROOT == SUBSYSTEM_ROOT
+    assert Path(adapters.__file__).resolve().parents[1] == SUBSYSTEM_ROOT
     assert dispatch.CANONICAL_OPERATIONS == ("prepare", "list_returned", "review", "apply")
     assert prepare.OPERATION == "prepare"
     assert list_returned.OPERATION == "list_returned"
@@ -44,15 +43,12 @@ def test_subsystem_root_and_core_modules_are_importable() -> None:
 
 def test_subsystem_contains_expected_headless_ownership_roots() -> None:
     expected = [
-        PACKAGE_ROOT / "adapters" / "documents",
-        PACKAGE_ROOT / "adapters" / "tags",
-        PACKAGE_ROOT / "adapters" / "catalogue",
-        PACKAGE_ROOT / "config",
-        PACKAGE_ROOT / "schemas",
-        PACKAGE_ROOT / "services",
-        PACKAGE_ROOT / "workflows",
+        SUBSYSTEM_ROOT / "adapters" / "documents",
+        SUBSYSTEM_ROOT / "adapters" / "tags",
         SUBSYSTEM_ROOT / "config",
         SUBSYSTEM_ROOT / "schemas",
+        SUBSYSTEM_ROOT / "services",
+        SUBSYSTEM_ROOT / "workflows",
     ]
     missing = [path.relative_to(REPO_ROOT).as_posix() for path in expected if not path.exists()]
     assert missing == []

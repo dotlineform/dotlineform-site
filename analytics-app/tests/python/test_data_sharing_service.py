@@ -22,8 +22,8 @@ for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
 import data_sharing_adapters  # noqa: E402
 import data_sharing_routes  # noqa: E402
 import data_sharing_service  # noqa: E402
-from data_sharing.services.dispatch import DataSharingAdapterHandlers  # noqa: E402
-from data_sharing.workflows.prepare import prepare_package as data_sharing_prepare_package  # noqa: E402
+from services.dispatch import DataSharingAdapterHandlers  # noqa: E402
+from workflows.prepare import prepare_package as data_sharing_prepare_package  # noqa: E402
 
 
 def test_neutral_data_sharing_routes_use_data_sharing_namespace() -> None:
