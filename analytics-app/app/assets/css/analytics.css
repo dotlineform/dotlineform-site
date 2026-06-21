@@ -1314,6 +1314,7 @@ textarea.analytics__input:disabled {
 }
 
 .dataSharingPreparePage__selectionSummary {
+  flex: 1 1 12rem;
   margin: 0;
   color: var(--muted, var(--analytics-muted-body));
   font-size: var(--font-small);
@@ -1446,6 +1447,10 @@ select.analytics__input.dataSharingPreparePage__listbox {
 
 .dataSharingPreparePage__filterPills {
   display: contents;
+}
+
+.dataSharingPrepareList {
+  border-top: 1px solid var(--line, var(--analytics-line));
 }
 
 .dataSharingPrepareModal__details,

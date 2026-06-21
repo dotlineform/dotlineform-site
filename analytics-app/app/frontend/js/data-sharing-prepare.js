@@ -32,6 +32,7 @@ import {
   enabledPrepareConfigsForDataDomain,
   prepareProfilesForCapability,
   prepareSelectionModel,
+  prepareSelectsAllMatching,
   usesPrepareDocumentSelection,
   usesPrepareRecordSelection
 } from "./data-sharing-prepare-workflow.js";
@@ -223,6 +224,14 @@ function selectedDropdownsComplete(state) {
   return Boolean(state.app && state.dataDomain && selectedDataSharingPrepareConfig(state));
 }
 
+function prepareConfigRequiresSelectedRecords(state, config) {
+  return Boolean(
+    config
+    && usesPrepareRecordSelection(state.prepareCapability, config)
+    && !prepareSelectsAllMatching(config, usesPrepareDocumentSelection(state.prepareCapability))
+  );
+}
+
 function clearDocumentSelectionState(state) {
   state.docsIndexError = false;
   state.docs = [];
@@ -231,10 +240,10 @@ function clearDocumentSelectionState(state) {
   state.docsById = new Map();
   state.selectedIds.clear();
   state.listNode.innerHTML = "";
-  state.listNode.hidden = true;
+  state.listNode.hidden = false;
   state.selectionSummary.textContent = "";
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
-  if (actions) actions.hidden = true;
+  if (actions) actions.hidden = false;
 }
 
 function setProgressiveGroups(state) {
@@ -349,6 +358,11 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
+  if (prepareConfigRequiresSelectedRecords(state, config) && state.selectedIds.size === 0) {
+    setStatus(state.statusNode, "", getAnalyticsText(state.config, "data_sharing_prepare.idle_status", ""));
+    state.runButton.disabled = true;
+    return;
+  }
   state.runButton.disabled = false;
   setStatus(
     state.statusNode,
@@ -401,7 +415,9 @@ async function runPreparePackage(state) {
     setStatus(state.statusNode, result.statusState, result.statusMessage);
   } finally {
     state.isRunning = false;
-    state.runButton.disabled = !state.serviceAvailable;
+    state.runButton.disabled = !state.serviceAvailable
+      || !selectedDropdownsComplete(state)
+      || (prepareConfigRequiresSelectedRecords(state, config) && state.selectedIds.size === 0);
     markBusy(state, false);
   }
 }
@@ -569,16 +585,19 @@ async function init() {
       selectableDataSharingPrepareDocIds(state).forEach((docId) => state.selectedIds.add(docId));
       syncDataSharingPrepareCheckboxes(state);
       updateDataSharingPrepareSelectionSummary(state);
+      updateStatus(state);
     });
     state.clearButton.addEventListener("click", () => {
       state.selectedIds.clear();
       syncDataSharingPrepareCheckboxes(state);
       updateDataSharingPrepareSelectionSummary(state);
+      updateStatus(state);
     });
     state.listNode.addEventListener("change", (event) => {
       if (!updateDataSharingPrepareSelectionFromChange(state, event)) return;
       syncDataSharingPrepareCheckboxes(state);
       updateDataSharingPrepareSelectionSummary(state);
+      updateStatus(state);
     });
     state.runButton.addEventListener("click", () => {
       runPreparePackage(state).catch((error) => console.warn("data_sharing_prepare: unexpected run failure", error));

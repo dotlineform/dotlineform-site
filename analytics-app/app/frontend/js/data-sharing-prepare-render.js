@@ -166,10 +166,6 @@ export function updateDataSharingPrepareSelectionSummary(state) {
 export function syncDataSharingPrepareListActions(state) {
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
   state.filterNode.innerHTML = "";
-  if (!stateUsesPrepareRecordSelection(state)) {
-    if (actions) actions.hidden = true;
-    return;
-  }
   if (actions) actions.hidden = false;
 }
 
@@ -220,7 +216,7 @@ export function renderDataSharingPrepareConfigSelect(state) {
 export function renderDataSharingPrepareDocList(state) {
   if (!stateUsesPrepareRecordSelection(state)) {
     state.listNode.innerHTML = "";
-    state.listNode.hidden = true;
+    state.listNode.hidden = false;
     updateDataSharingPrepareSelectionSummary(state);
     return;
   }
@@ -228,7 +224,7 @@ export function renderDataSharingPrepareDocList(state) {
   const rows = state.docs
     .filter((doc) => visibleDocIds.has(prepareListRecordId(doc)))
     .map((doc) => renderRecordRow(state, doc));
-  state.listNode.hidden = !rows.length;
+  state.listNode.hidden = false;
   state.listNode.innerHTML = rows.length
     ? `<ul class="analyticsList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
     : "";

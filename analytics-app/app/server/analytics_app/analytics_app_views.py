@@ -412,12 +412,11 @@ def data_sharing_prepare_view(version: str) -> str:
               </div>
             </div>
 
-            <p class="analyticsForm__meta dataSharingPreparePage__selectionSummary" id="dataSharingPrepareSelectionSummary"></p>
-
             <div class="dataSharingPreparePage__listActions" aria-label="Share package document selection actions">
               <span class="dataSharingPreparePage__filterPills" id="dataSharingPrepareListFilters" aria-label="Data Sharing list filters"></span>
               <button type="button" class="analytics__keyPill analyticsFilters__groupBtn" id="dataSharingPrepareSelectAll"></button>
               <button type="button" class="analytics__keyPill analyticsFilters__groupBtn" id="dataSharingPrepareClear"></button>
+              <p class="analyticsForm__meta dataSharingPreparePage__selectionSummary" id="dataSharingPrepareSelectionSummary"></p>
             </div>
 
             <div class="analyticsList dataSharingPrepareList" id="dataSharingPrepareList"></div>

@@ -242,6 +242,10 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
             configSelectedIndex: document.querySelector("#dataSharingPrepareConfigSelect")?.selectedIndex ?? null,
             formatHidden: document.querySelector("#dataSharingPrepareFormatWrap")?.hidden === true,
             optionsHidden: document.querySelector("#dataSharingPrepareOptionsGroup")?.hidden === true,
+            listActionsHidden: document.querySelector(".dataSharingPreparePage__listActions")?.hidden === true,
+            listHidden: document.querySelector("#dataSharingPrepareList")?.hidden === true,
+            listBorderTopWidth: window.getComputedStyle(document.querySelector("#dataSharingPrepareList")).borderTopWidth,
+            selectionSummaryInActions: Boolean(document.querySelector(".dataSharingPreparePage__listActions #dataSharingPrepareSelectionSummary")),
             runDisabled: document.querySelector("#dataSharingPrepareRun")?.disabled === true
         })"""
     )
@@ -257,6 +261,10 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
         "configSelectedIndex": -1,
         "formatHidden": True,
         "optionsHidden": True,
+        "listActionsHidden": False,
+        "listHidden": False,
+        "listBorderTopWidth": "1px",
+        "selectionSummaryInActions": True,
         "runDisabled": True,
     }:
         raise AssertionError(f"prepare route should start with blank selections: {initial!r}")
@@ -333,6 +341,8 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if not doc_ids:
         raise AssertionError("Data Sharing prepare record list is empty")
     run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
+    if not run_disabled:
+        raise AssertionError("prepare button should stay disabled until a record is selected")
     selection_action_result = assert_selection_actions(page, len(doc_ids))
 
     return {
@@ -406,16 +416,24 @@ def assert_selection_actions(page, total_docs: int) -> dict[str, int]:
     checked_count = page.locator("[data-data-sharing-prepare-record] input[type='checkbox']:checked").count()
     if checked_count != total_docs:
         raise AssertionError(f"select all selected {checked_count} rows, expected {total_docs}")
+    run_disabled_after_select_all = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
+    if run_disabled_after_select_all:
+        raise AssertionError("prepare button should be enabled after records are selected")
 
     page.locator("#dataSharingPrepareClear").click()
     checked_after_clear = page.locator("[data-data-sharing-prepare-record] input[type='checkbox']:checked").count()
     if checked_after_clear != 0:
         raise AssertionError(f"clear left {checked_after_clear} selected rows")
+    run_disabled_after_clear = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
+    if not run_disabled_after_clear:
+        raise AssertionError("prepare button should be disabled after record selection is cleared")
 
     return {
         "records": visible_count,
         "selected_after_select_all": checked_count,
         "selected_after_clear": checked_after_clear,
+        "run_disabled_after_select_all": bool(run_disabled_after_select_all),
+        "run_disabled_after_clear": bool(run_disabled_after_clear),
     }
 
 
