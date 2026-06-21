@@ -97,7 +97,7 @@ def install_fixture(page: Page) -> None:
                             result_files_empty: 'No files created.',
                             result_format_label: 'format',
                             format_required: 'Select a supported package format.',
-                            selection_required: 'Select at least one document.',
+                            selection_required: 'Select at least one record.',
                             status_failed: 'Package preparation failed.',
                             status_success: 'Package prepared.'
                         }
@@ -251,7 +251,7 @@ def assert_package_state_projection(page: Page) -> None:
 
     if result["invalidFormat"]["ok"] is not False or result["invalidFormat"]["statusState"] != "error":
         raise AssertionError(f"invalid format validation changed: {result!r}")
-    if result["missingSelection"]["ok"] is not False or result["missingSelection"]["statusMessage"] != "Select at least one document.":
+    if result["missingSelection"]["ok"] is not False or result["missingSelection"]["statusMessage"] != "Select at least one record.":
         raise AssertionError(f"missing selection validation changed: {result!r}")
 
 
@@ -275,6 +275,8 @@ def assert_selectable_records_loading(page: Page) -> None:
                         ok: true,
                         records: [
                             {
+                                id: 'parent',
+                                name: 'Parent',
                                 doc_id: 'parent',
                                 title: 'Parent',
                                 viewable: true,
@@ -282,6 +284,8 @@ def assert_selectable_records_loading(page: Page) -> None:
                                 summary: 'Summary.'
                             },
                             {
+                                id: 'child',
+                                name: 'Child',
                                 doc_id: 'child',
                                 parent_id: 'parent',
                                 title: 'Child',
@@ -295,7 +299,7 @@ def assert_selectable_records_loading(page: Page) -> None:
             });
             return {
                 requested,
-                docIds: loaded.docs.map((doc) => doc.doc_id),
+                recordIds: loaded.docs.map((doc) => doc.id),
                 childDepth: loaded.depthById.get('child'),
                 childParentCount: loaded.childrenByParent.get('parent')?.length || 0,
                 docsIndexError: loaded.docsIndexError
@@ -310,7 +314,7 @@ def assert_selectable_records_loading(page: Page) -> None:
         raise AssertionError(f"selectable-records loader did not pass data_domain: {result!r}")
     if "docs_scope=library" not in result["requested"][0]:
         raise AssertionError(f"selectable-records loader did not pass docs_scope: {result!r}")
-    if result["docIds"] != ["parent", "child"] or result["childDepth"] != 1 or result["childParentCount"] != 1:
+    if result["recordIds"] != ["parent", "child"] or result["childDepth"] != 1 or result["childParentCount"] != 1:
         raise AssertionError(f"selectable records were not projected into document hierarchy state: {result!r}")
     if result["docsIndexError"] is not False:
         raise AssertionError(f"selectable-records loader reported an unexpected error: {result!r}")

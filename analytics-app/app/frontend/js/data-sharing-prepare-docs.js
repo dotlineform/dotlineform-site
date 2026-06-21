@@ -40,16 +40,14 @@ export async function loadDataSharingPrepareDocsState(options = {}) {
 }
 
 export function buildVisibleDocs(indexPayload) {
-  const sourceDocs = Array.isArray(indexPayload?.records)
-    ? indexPayload.records
-    : (Array.isArray(indexPayload?.docs) ? indexPayload.docs : []);
+  const sourceDocs = Array.isArray(indexPayload?.records) ? indexPayload.records : [];
   const docs = sourceDocs.filter((doc) => {
-    const docId = normalizeText(doc?.doc_id);
-    if (!docId) return false;
-    return doc.published !== false;
+    const docId = prepareRecordId(doc);
+    const name = normalizeText(doc && doc.name);
+    return Boolean(docId && name);
   });
 
-  const visibleIds = new Set(docs.map((doc) => normalizeText(doc.doc_id)));
+  const visibleIds = new Set(docs.map((doc) => prepareRecordId(doc)));
   const childrenByParent = new Map();
   docs.forEach((doc) => {
     const parentId = normalizeText(doc.parent_id);
@@ -63,7 +61,7 @@ export function buildVisibleDocs(indexPayload) {
   const visit = (parentId, depth) => {
     const children = childrenByParent.get(parentId) || [];
     children.forEach((doc) => {
-      const docId = normalizeText(doc.doc_id);
+      const docId = prepareRecordId(doc);
       orderedDocs.push(doc);
       depthById.set(docId, depth);
       visit(docId, depth + 1);
@@ -71,9 +69,9 @@ export function buildVisibleDocs(indexPayload) {
   };
   visit("", 0);
 
-  const orderedIds = new Set(orderedDocs.map((doc) => normalizeText(doc.doc_id)));
+  const orderedIds = new Set(orderedDocs.map((doc) => prepareRecordId(doc)));
   docs.forEach((doc) => {
-    const docId = normalizeText(doc.doc_id);
+    const docId = prepareRecordId(doc);
     if (!orderedIds.has(docId)) {
       orderedDocs.push(doc);
       depthById.set(docId, 0);
@@ -100,4 +98,8 @@ async function defaultLoadJson(path) {
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function prepareRecordId(record) {
+  return normalizeText(record && record.id);
 }

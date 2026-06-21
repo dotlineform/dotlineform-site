@@ -39,13 +39,12 @@ import {
 } from "./data-sharing-prepare-docs.js";
 import {
   applyDataSharingPrepareSelectionFilter,
-  dataSharingPrepareListFilters,
   renderDataSharingPrepareConfigSelect,
   renderDataSharingPrepareDocList,
   renderDataSharingPrepareFormatOptions,
-  renderDataSharingPrepareListFilters,
   selectableDataSharingPrepareDocIds,
   selectedDataSharingPrepareConfig,
+  syncDataSharingPrepareListActions,
   supportedUiFormatsForDataSharingPrepareConfig,
   syncDataSharingPrepareCheckboxes,
   syncDataSharingPrepareConfigOptions,
@@ -71,6 +70,10 @@ const DATA_SHARING_DOMAINS = [
 ];
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function prepareRecordId(record) {
+  return normalizeText(record && record.id);
 }
 
 function escapeHtml(value) {
@@ -247,7 +250,7 @@ async function loadDocumentsForCurrentSelection(state) {
   clearDocumentSelectionState(state);
   if (!selectedDropdownsComplete(state)) return;
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    renderDataSharingPrepareListFilters(state);
+    syncDataSharingPrepareListActions(state);
     renderDataSharingPrepareDocList(state);
     return;
   }
@@ -267,8 +270,8 @@ async function loadDocumentsForCurrentSelection(state) {
   state.docs = docsState.docs;
   state.childrenByParent = docsState.childrenByParent;
   state.depthById = docsState.depthById;
-  state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
-  renderDataSharingPrepareListFilters(state);
+  state.docsById = new Map(state.docs.map((doc) => [prepareRecordId(doc), doc]));
+  syncDataSharingPrepareListActions(state);
   renderDataSharingPrepareDocList(state);
 }
 
@@ -447,7 +450,6 @@ async function init() {
     childrenByParent: new Map(),
     depthById: new Map(),
     selectedIds: new Set(),
-    listFilter: "all",
     targetFormat: "",
     docsIndexError: false,
     serviceAvailable: false,
@@ -558,24 +560,11 @@ async function init() {
     });
     state.missingSummaryOnly.addEventListener("change", () => {
       applyDataSharingPrepareSelectionFilter(state);
-      renderDataSharingPrepareListFilters(state);
-      renderDataSharingPrepareDocList(state);
-      updateStatus(state);
-    });
-    state.filterNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest
-        ? event.target.closest("[data-data-sharing-prepare-filter]")
-        : null;
-      if (!button) return;
-      const filter = normalizeText(button.getAttribute("data-data-sharing-prepare-filter"));
-      if (!dataSharingPrepareListFilters().includes(filter)) return;
-      state.listFilter = filter;
-      renderDataSharingPrepareListFilters(state);
       renderDataSharingPrepareDocList(state);
       updateStatus(state);
     });
     state.selectAllButton.addEventListener("click", () => {
-      selectableDataSharingPrepareDocIds(state, { visibleOnly: true }).forEach((docId) => state.selectedIds.add(docId));
+      selectableDataSharingPrepareDocIds(state).forEach((docId) => state.selectedIds.add(docId));
       syncDataSharingPrepareCheckboxes(state);
       updateDataSharingPrepareSelectionSummary(state);
     });

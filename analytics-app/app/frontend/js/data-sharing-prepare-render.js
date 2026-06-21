@@ -7,11 +7,6 @@ import {
   usesPrepareDocumentSelection
 } from "./data-sharing-prepare-workflow.js";
 
-const LIST_FILTERS = [
-  { key: "all", labelKey: "filter_show_all", fallback: "show all [{count}]" },
-  { key: "no_content", labelKey: "filter_no_content", fallback: "no content [{count}]" },
-  { key: "not_viewable", labelKey: "filter_not_viewable", fallback: "not viewable [{count}]" }
-];
 const FORMAT_OPTIONS = [
   { key: "json", labelKey: "format_json", fallback: "JSON" },
   { key: "jsonl", labelKey: "format_jsonl", fallback: "JSONL" }
@@ -51,7 +46,7 @@ function descendantIds(state, docId) {
   const collect = (parentId) => {
     const children = state.childrenByParent.get(parentId) || [];
     children.forEach((child) => {
-      const childId = normalizeText(child.doc_id);
+      const childId = prepareListRecordId(child);
       if (!childId) return;
       ids.push(childId);
       collect(childId);
@@ -59,22 +54,6 @@ function descendantIds(state, docId) {
   };
   collect(docId);
   return ids;
-}
-
-function contentTextLength(doc) {
-  const value = Number(doc && doc.content_text_length);
-  return Number.isFinite(value) && value > 0 ? value : 0;
-}
-
-function docHasNoContent(doc) {
-  return contentTextLength(doc) === 0;
-}
-
-function docMatchesListFilter(state, doc) {
-  if (!doc) return false;
-  if (state.listFilter === "no_content") return docHasNoContent(doc);
-  if (state.listFilter === "not_viewable") return doc.published !== false && doc.viewable === false;
-  return true;
 }
 
 function docMatchesConfigFilter(state, docId) {
@@ -86,37 +65,29 @@ function docMatchesConfigFilter(state, docId) {
 
 function rowMatchesCurrentFilters(state, docId) {
   const doc = state.docsById.get(docId);
-  return Boolean(doc && docMatchesConfigFilter(state, docId) && docMatchesListFilter(state, doc));
+  return Boolean(doc && docMatchesConfigFilter(state, docId));
 }
 
-function listFilterCounts(state) {
-  const docs = state.docs.filter((doc) => docMatchesConfigFilter(state, normalizeText(doc.doc_id)));
-  return {
-    all: docs.length,
-    no_content: docs.filter((doc) => docHasNoContent(doc)).length,
-    not_viewable: docs.filter((doc) => doc.published !== false && doc.viewable === false).length
-  };
+function prepareListRecordId(record) {
+  return normalizeText(record && record.id);
 }
 
-function renderDocRow(state, doc) {
-  const docId = normalizeText(doc.doc_id);
-  const title = normalizeText(doc.title) || docId;
-  const depth = Math.max(0, Number(state.depthById.get(docId) || 0));
-  const viewable = doc.viewable === true;
-  const noContent = docHasNoContent(doc);
+function prepareListRecordName(record) {
+  return normalizeText(record && record.name);
+}
+
+function renderRecordRow(state, record) {
+  const recordId = prepareListRecordId(record);
+  const name = prepareListRecordName(record);
+  const depth = Math.max(0, Number(state.depthById.get(recordId) || 0));
   return `
-    <li class="analyticsList__row analyticsList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-doc="${escapeHtml(docId)}" data-data-sharing-prepare-viewable="${viewable ? "true" : "false"}" data-data-sharing-prepare-no-content="${noContent ? "true" : "false"}" style="--data-sharing-prepare-depth: ${depth};">
+    <li class="analyticsList__row analyticsList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-record="${escapeHtml(recordId)}" style="--data-sharing-prepare-depth: ${depth};">
       <label class="dataSharingPrepareList__label">
-        <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(docId)}">
-        <span class="dataSharingPrepareList__viewable${viewable ? " is-viewable" : ""}" aria-label="${viewable ? "viewable" : ""}"></span>
-        <span class="dataSharingPrepareList__title">${escapeHtml(title)}</span>
+        <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(recordId)}">
+        <span class="dataSharingPrepareList__title">${escapeHtml(name)}</span>
       </label>
     </li>
   `;
-}
-
-export function dataSharingPrepareListFilters() {
-  return LIST_FILTERS.map((filter) => filter.key);
 }
 
 export function selectedDataSharingPrepareConfig(state) {
@@ -132,23 +103,22 @@ export function defaultUiFormatForDataSharingPrepareConfig(config) {
   return defaultFormatForPrepareConfig(config, FORMAT_OPTIONS.map((item) => item.key));
 }
 
-export function selectableDataSharingPrepareDocIds(state, { visibleOnly = false } = {}) {
+export function selectableDataSharingPrepareDocIds(state) {
   return state.docs
     .filter((doc) => {
-      const docId = normalizeText(doc.doc_id);
-      if (!docMatchesConfigFilter(state, docId)) return false;
-      return !visibleOnly || docMatchesListFilter(state, doc);
+      const docId = prepareListRecordId(doc);
+      return docMatchesConfigFilter(state, docId);
     })
-    .map((doc) => normalizeText(doc.doc_id))
+    .map((doc) => prepareListRecordId(doc))
     .filter(Boolean);
 }
 
 export function syncDataSharingPrepareCheckboxes(state) {
   const visibleSelected = new Set(
-    selectableDataSharingPrepareDocIds(state, { visibleOnly: true }).filter((docId) => state.selectedIds.has(docId))
+    selectableDataSharingPrepareDocIds(state).filter((docId) => state.selectedIds.has(docId))
   );
-  state.listNode.querySelectorAll("[data-data-sharing-prepare-doc]").forEach((row) => {
-    const docId = normalizeText(row.getAttribute("data-data-sharing-prepare-doc"));
+  state.listNode.querySelectorAll("[data-data-sharing-prepare-record]").forEach((row) => {
+    const docId = normalizeText(row.getAttribute("data-data-sharing-prepare-record"));
     const checkbox = row.querySelector("input[type='checkbox']");
     if (!(checkbox instanceof HTMLInputElement)) return;
     const subtreeIds = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
@@ -182,31 +152,20 @@ export function updateDataSharingPrepareSelectionSummary(state) {
       count === 1
         ? "data_sharing_prepare.selection_summary_one"
         : "data_sharing_prepare.selection_summary",
-      count === 1 ? "1 document selected." : "{count} documents selected.",
+      count === 1 ? "1 record selected." : "{count} records selected.",
       { count }
     )
   );
 }
 
-export function renderDataSharingPrepareListFilters(state) {
+export function syncDataSharingPrepareListActions(state) {
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
+  state.filterNode.innerHTML = "";
   if (!usesPrepareDocumentSelection(state.prepareCapability)) {
     if (actions) actions.hidden = true;
-    state.filterNode.innerHTML = "";
     return;
   }
   if (actions) actions.hidden = false;
-  const counts = listFilterCounts(state);
-  state.filterNode.innerHTML = LIST_FILTERS.map((filter) => {
-    const count = Number(counts[filter.key] || 0);
-    const active = state.listFilter === filter.key;
-    const label = getAnalyticsText(state.config, `data_sharing_prepare.${filter.labelKey}`, filter.fallback, { count });
-    return `
-      <button type="button" class="analytics__keyPill analyticsFilters__groupBtn" data-data-sharing-prepare-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
-        ${escapeHtml(label)}
-      </button>
-    `;
-  }).join("");
 }
 
 export function renderDataSharingPrepareFormatOptions(state) {
@@ -240,7 +199,7 @@ export function syncDataSharingPrepareConfigOptions(state) {
     : defaultUiFormatForDataSharingPrepareConfig(config);
   renderDataSharingPrepareFormatOptions(state);
   applyDataSharingPrepareSelectionFilter(state);
-  renderDataSharingPrepareListFilters(state);
+  syncDataSharingPrepareListActions(state);
   renderDataSharingPrepareDocList(state);
 }
 
@@ -260,10 +219,10 @@ export function renderDataSharingPrepareDocList(state) {
     updateDataSharingPrepareSelectionSummary(state);
     return;
   }
-  const visibleDocIds = new Set(selectableDataSharingPrepareDocIds(state, { visibleOnly: true }));
+  const visibleDocIds = new Set(selectableDataSharingPrepareDocIds(state));
   const rows = state.docs
-    .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
-    .map((doc) => renderDocRow(state, doc));
+    .filter((doc) => visibleDocIds.has(prepareListRecordId(doc)))
+    .map((doc) => renderRecordRow(state, doc));
   state.listNode.hidden = !rows.length;
   state.listNode.innerHTML = rows.length
     ? `<ul class="analyticsList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
@@ -275,8 +234,8 @@ export function renderDataSharingPrepareDocList(state) {
 export function updateDataSharingPrepareSelectionFromChange(state, event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return false;
-  const row = target.closest("[data-data-sharing-prepare-doc]");
-  const docId = normalizeText(row ? row.getAttribute("data-data-sharing-prepare-doc") : "");
+  const row = target.closest("[data-data-sharing-prepare-record]");
+  const docId = normalizeText(row ? row.getAttribute("data-data-sharing-prepare-record") : "");
   if (!docId) return false;
   const ids = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
   ids.forEach((id) => {

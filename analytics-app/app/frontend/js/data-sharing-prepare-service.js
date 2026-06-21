@@ -57,7 +57,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
       state,
       "error",
       "data_sharing_prepare.selection_required",
-      "Select at least one document."
+      "Select at least one record."
     );
   }
   return {

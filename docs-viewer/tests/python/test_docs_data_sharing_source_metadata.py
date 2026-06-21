@@ -274,6 +274,7 @@ def test_selectable_document_records_use_source_metadata() -> None:
     assert payload["records"] == [
         {
             "id": "doc",
+            "name": "Source Title",
             "doc_id": "doc",
             "title": "Source Title",
             "type": "document",

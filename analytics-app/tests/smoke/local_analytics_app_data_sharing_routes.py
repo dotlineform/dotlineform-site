@@ -41,6 +41,8 @@ def selectable_records_payload() -> dict[str, object]:
         "selection_model": "documents",
         "records": [
             {
+                "id": "library",
+                "name": "Library",
                 "doc_id": "library",
                 "title": "Library",
                 "published": True,
@@ -49,6 +51,8 @@ def selectable_records_payload() -> dict[str, object]:
                 "summary": "Library root.",
             },
             {
+                "id": "alpha",
+                "name": "Alpha",
                 "doc_id": "alpha",
                 "parent_id": "library",
                 "title": "Alpha",
@@ -308,7 +312,7 @@ def assert_prepare(page, base_url: str) -> None:
         raise AssertionError("prepare docs scope select should start blank")
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
-    expect(page.locator("[data-data-sharing-prepare-doc]").first).to_be_visible(timeout=10_000)
+    expect(page.locator("[data-data-sharing-prepare-record]").first).to_be_visible(timeout=10_000)
     page.locator("#dataSharingPrepareSelectAll").click()
     page.locator("#dataSharingPrepareRun").click()
     expect(page.locator("[data-role='analytics-modal']")).to_be_visible(timeout=10_000)

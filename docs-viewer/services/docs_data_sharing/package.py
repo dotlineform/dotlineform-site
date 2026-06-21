@@ -25,6 +25,7 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
         issues.append({"level": "warning", "message": "Document is not viewable."})
     return {
         "id": doc_id,
+        "name": title,
         "doc_id": doc_id,
         "title": title,
         "type": "document",

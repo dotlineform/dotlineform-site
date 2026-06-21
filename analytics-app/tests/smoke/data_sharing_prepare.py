@@ -65,6 +65,8 @@ def route_url(base_url: str, path: str) -> str:
 def source_metadata_records() -> list[dict[str, object]]:
     return [
         {
+            "id": "modal-parent",
+            "name": "Modal parent",
             "doc_id": "modal-parent",
             "title": "Modal parent",
             "viewable": True,
@@ -72,6 +74,8 @@ def source_metadata_records() -> list[dict[str, object]]:
             "summary": "Parent summary.",
         },
         {
+            "id": "modal-empty-child",
+            "name": "Modal empty child",
             "doc_id": "modal-empty-child",
             "parent_id": "modal-parent",
             "title": "Modal empty child",
@@ -80,6 +84,8 @@ def source_metadata_records() -> list[dict[str, object]]:
             "summary": "",
         },
         {
+            "id": "modal-hidden-child",
+            "name": "Modal hidden child",
             "doc_id": "modal-hidden-child",
             "parent_id": "modal-parent",
             "title": "Modal hidden child",
@@ -312,7 +318,7 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
             "initial": initial,
             "config_ids": sorted(config_ids),
             "doc_count": 0,
-            "filters": {},
+            "selection_actions": {},
             "formats": {},
             "run_disabled": bool(run_disabled),
             "status": status_text,
@@ -320,21 +326,21 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
 
     format_result = assert_format_controls(page)
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
-    page.wait_for_selector("[data-data-sharing-prepare-doc]", timeout=5000)
-    doc_ids = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
-        "rows => rows.map(row => row.getAttribute('data-data-sharing-prepare-doc'))"
+    page.wait_for_selector("[data-data-sharing-prepare-record]", timeout=5000)
+    doc_ids = page.locator("[data-data-sharing-prepare-record]").evaluate_all(
+        "rows => rows.map(row => row.getAttribute('data-data-sharing-prepare-record'))"
     )
     if not doc_ids:
-        raise AssertionError("Data Sharing prepare document list is empty")
+        raise AssertionError("Data Sharing prepare record list is empty")
     run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
-    filter_result = assert_filter_flow(page, len(doc_ids))
+    selection_action_result = assert_selection_actions(page, len(doc_ids))
 
     return {
         "initial": initial,
         "config_ids": sorted(config_ids),
         "doc_count": len(doc_ids),
         "formats": format_result,
-        "filters": filter_result,
+        "selection_actions": selection_action_result,
         "run_disabled": bool(run_disabled),
     }
 
@@ -383,59 +389,34 @@ def assert_format_controls(page) -> dict[str, str]:
     }
 
 
-def assert_filter_flow(page, total_docs: int) -> dict[str, int]:
-    filter_keys = page.locator("[data-data-sharing-prepare-filter]").evaluate_all(
-        "buttons => buttons.map(button => button.getAttribute('data-data-sharing-prepare-filter'))"
-    )
-    expected_keys = ["all", "no_content", "not_viewable"]
-    if filter_keys != expected_keys:
-        raise AssertionError(f"unexpected data sharing prepare filters: {filter_keys!r}")
+def assert_selection_actions(page, total_docs: int) -> dict[str, int]:
+    filter_count = page.locator("[data-data-sharing-prepare-filter]").count()
+    if filter_count:
+        raise AssertionError(f"data sharing prepare filters should not render, found {filter_count}")
 
-    counts = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
-        """rows => ({
-            all: rows.length,
-            no_content: rows.filter(row => row.dataset.dataSharingPrepareNoContent === "true").length,
-            not_viewable: rows.filter(row => row.dataset.dataSharingPrepareViewable === "false").length
-        })"""
-    )
-    if counts["all"] != total_docs:
-        raise AssertionError(f"show all count mismatch: {counts!r}; total={total_docs!r}")
+    visible_count = page.locator("[data-data-sharing-prepare-record]").count()
+    if visible_count != total_docs:
+        raise AssertionError(f"record count mismatch: visible={visible_count!r}; total={total_docs!r}")
 
-    filter_labels = page.locator("[data-data-sharing-prepare-filter]").evaluate_all(
-        "buttons => buttons.map(button => button.textContent.trim())"
-    )
-    for key, label in zip(expected_keys, filter_labels):
-        if f"[{counts[key]}]" not in label:
-            raise AssertionError(f"filter {key!r} label lacks count {counts[key]!r}: {label!r}")
+    marker_count = page.locator(".dataSharingPrepareList__viewable").count()
+    if marker_count:
+        raise AssertionError(f"prepare record rows should not render viewable markers, found {marker_count}")
 
-    def assert_filter(key: str, row_attribute: str, row_value: str, expected_count: int) -> None:
-        page.locator(f"[data-data-sharing-prepare-filter='{key}']").click()
-        page.wait_for_function(
-            """([attr, expected]) => {
-                const expectedValue = attr[1];
-                const attrName = attr[0];
-                const rows = Array.from(document.querySelectorAll("[data-data-sharing-prepare-doc]"));
-                return rows.length === expected && rows.every(row => row.getAttribute(attrName) === expectedValue);
-            }""",
-            arg=[[row_attribute, row_value], expected_count],
-        )
-        page.locator("#dataSharingPrepareSelectAll").click()
-        checked_count = page.locator("[data-data-sharing-prepare-doc] input[type='checkbox']:checked").count()
-        if checked_count != expected_count:
-            raise AssertionError(f"select all selected {checked_count} rows for {key}, expected {expected_count}")
-        page.locator("#dataSharingPrepareClear").click()
-        checked_after_clear = page.locator("[data-data-sharing-prepare-doc] input[type='checkbox']:checked").count()
-        if checked_after_clear != 0:
-            raise AssertionError(f"clear left {checked_after_clear} selected rows for {key}")
+    page.locator("#dataSharingPrepareSelectAll").click()
+    checked_count = page.locator("[data-data-sharing-prepare-record] input[type='checkbox']:checked").count()
+    if checked_count != total_docs:
+        raise AssertionError(f"select all selected {checked_count} rows, expected {total_docs}")
 
-    assert_filter("no_content", "data-data-sharing-prepare-no-content", "true", counts["no_content"])
-    assert_filter("not_viewable", "data-data-sharing-prepare-viewable", "false", counts["not_viewable"])
-    page.locator("[data-data-sharing-prepare-filter='all']").click()
-    page.wait_for_function(
-        "expected => document.querySelectorAll('[data-data-sharing-prepare-doc]').length === expected",
-        arg=total_docs,
-    )
-    return counts
+    page.locator("#dataSharingPrepareClear").click()
+    checked_after_clear = page.locator("[data-data-sharing-prepare-record] input[type='checkbox']:checked").count()
+    if checked_after_clear != 0:
+        raise AssertionError(f"clear left {checked_after_clear} selected rows")
+
+    return {
+        "records": visible_count,
+        "selected_after_select_all": checked_count,
+        "selected_after_clear": checked_after_clear,
+    }
 
 
 def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]], timeout_ms: int) -> dict[str, object]:
