@@ -4,7 +4,8 @@ import {
   prepareConfigSelection,
   selectedPrepareConfig,
   supportedFormatsForPrepareConfig,
-  usesPrepareDocumentSelection
+  usesPrepareDocumentSelection,
+  usesPrepareRecordSelection
 } from "./data-sharing-prepare-workflow.js";
 
 const FORMAT_OPTIONS = [
@@ -94,6 +95,10 @@ export function selectedDataSharingPrepareConfig(state) {
   return selectedPrepareConfig(state.exportConfigs, state.configSelect.value);
 }
 
+function stateUsesPrepareRecordSelection(state) {
+  return usesPrepareRecordSelection(state.prepareCapability, selectedDataSharingPrepareConfig(state));
+}
+
 export function supportedUiFormatsForDataSharingPrepareConfig(config) {
   return supportedFormatsForPrepareConfig(config)
     .filter((format) => FORMAT_OPTIONS.some((item) => item.key === format));
@@ -129,7 +134,7 @@ export function syncDataSharingPrepareCheckboxes(state) {
 }
 
 export function applyDataSharingPrepareSelectionFilter(state) {
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
+  if (!stateUsesPrepareRecordSelection(state)) {
     state.selectedIds.clear();
     return;
   }
@@ -140,7 +145,7 @@ export function applyDataSharingPrepareSelectionFilter(state) {
 }
 
 export function updateDataSharingPrepareSelectionSummary(state) {
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
+  if (!stateUsesPrepareRecordSelection(state)) {
     setText(state.selectionSummary, "");
     return;
   }
@@ -161,7 +166,7 @@ export function updateDataSharingPrepareSelectionSummary(state) {
 export function syncDataSharingPrepareListActions(state) {
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
   state.filterNode.innerHTML = "";
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
+  if (!stateUsesPrepareRecordSelection(state)) {
     if (actions) actions.hidden = true;
     return;
   }
@@ -213,7 +218,7 @@ export function renderDataSharingPrepareConfigSelect(state) {
 }
 
 export function renderDataSharingPrepareDocList(state) {
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
+  if (!stateUsesPrepareRecordSelection(state)) {
     state.listNode.innerHTML = "";
     state.listNode.hidden = true;
     updateDataSharingPrepareSelectionSummary(state);

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import copy
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from data_sharing_adapters import AdapterResolution
 from tag_services import tag_registry_mutations, tag_source_model, tag_write_transactions
@@ -16,6 +16,7 @@ from ..context import (
     changed_from_stats,
     load_current_registry,
     package_metadata,
+    normalize_text,
     selected_record_indices,
     selection_required,
     source_files,
@@ -28,9 +29,69 @@ def tag_ids_from_registry(registry_payload: dict[str, Any]) -> list[str]:
     return sorted({str(item.get("tag_id") or "").strip() for item in tags if isinstance(item, dict) and str(item.get("tag_id") or "").strip()})
 
 
-def build_package(repo_root: Path, adapter: AdapterResolution, config_id: str, generated_at_utc: str) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
+def tag_record_name(tag: Dict[str, Any], tag_id: str) -> str:
+    return normalize_text(tag.get("label")) or tag_id
+
+
+def selectable_records(repo_root: Path, adapter: AdapterResolution) -> Dict[str, Any]:
     registry = load_current_registry(repo_root, adapter)
-    counts = {"tags": len(registry.get("tags", []) if isinstance(registry.get("tags"), list) else [])}
+    source_tags = registry.get("tags") if isinstance(registry.get("tags"), list) else []
+    records: list[Dict[str, Any]] = []
+    for tag in source_tags:
+        if not isinstance(tag, dict):
+            continue
+        tag_id = normalize_text(tag.get("tag_id"))
+        if not tag_id:
+            continue
+        records.append(
+            {
+                "id": tag_id,
+                "name": tag_record_name(tag, tag_id),
+                "tag_id": tag_id,
+                "group": normalize_text(tag.get("group")),
+                "status": normalize_text(tag.get("status")) or "active",
+                "selectable": True,
+            }
+        )
+    return {
+        "ok": True,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
+        "selection_model": str(adapter.capability.get("selection_model") or adapter.domain.get("selection_model") or "").strip(),
+        "records": records,
+        "docs": records,
+        "source": {
+            "kind": "adapter",
+            "module": "analytics.tags",
+            "source": "tag_registry",
+            "data_domain": adapter.data_domain,
+        },
+    }
+
+
+def selected_tags(source_tags: list[Any], selected_tag_ids: Optional[list[str]]) -> list[Dict[str, Any]]:
+    tags = [tag for tag in source_tags if isinstance(tag, dict)]
+    if selected_tag_ids is None:
+        return tags
+    by_id = {normalize_text(tag.get("tag_id")): tag for tag in tags if normalize_text(tag.get("tag_id"))}
+    unknown = [tag_id for tag_id in selected_tag_ids if tag_id not in by_id]
+    if unknown:
+        raise ValueError(f"record_ids contains unknown tag id: {unknown[0]}")
+    selected = set(selected_tag_ids)
+    return [tag for tag in tags if normalize_text(tag.get("tag_id")) in selected]
+
+
+def build_package(
+    repo_root: Path,
+    adapter: AdapterResolution,
+    config_id: str,
+    generated_at_utc: str,
+    selected_tag_ids: Optional[list[str]] = None,
+) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
+    registry = load_current_registry(repo_root, adapter)
+    source_tags = registry.get("tags") if isinstance(registry.get("tags"), list) else []
+    tags = selected_tags(source_tags, selected_tag_ids)
+    counts = {"tags": len(tags)}
     payload = {
         "package_metadata": package_metadata(
             adapter=adapter,
@@ -41,9 +102,9 @@ def build_package(repo_root: Path, adapter: AdapterResolution, config_id: str, g
             counts=counts,
         ),
         "policy": copy.deepcopy(registry.get("policy") if isinstance(registry.get("policy"), dict) else {}),
-        "tags": copy.deepcopy(registry.get("tags") if isinstance(registry.get("tags"), list) else []),
+        "tags": copy.deepcopy(tags),
     }
-    return payload, counts, {"tags": tag_ids_from_registry(registry)}
+    return payload, counts, {"tags": tag_ids_from_registry({"tags": tags})}
 
 
 def rows(existing_payload: Dict[str, Any], package: ReturnedPackage) -> tuple[list[Dict[str, Any]], list[Dict[str, Any]]]:

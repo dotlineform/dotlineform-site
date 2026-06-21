@@ -5,7 +5,8 @@ import {
 } from "./analytics-transport.js";
 import {
   buildPreparePackageRequest,
-  usesPrepareDocumentSelection
+  usesPrepareDocumentSelection,
+  usesPrepareRecordSelection
 } from "./data-sharing-prepare-workflow.js";
 
 function normalizeText(value) {
@@ -25,6 +26,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
   const targetFormat = normalizeText(state.targetFormat);
   const formats = Array.isArray(supportedFormats) ? supportedFormats : [];
   const usesDocumentSelection = usesPrepareDocumentSelection(state.prepareCapability);
+  const usesRecordSelection = usesPrepareRecordSelection(state.prepareCapability, config);
   if (!formats.includes(targetFormat)) {
     return prepareValidationError(
       state,
@@ -40,6 +42,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
     targetFormat,
     selectedIds: state.selectedIds,
     usesDocumentSelection,
+    usesRecordSelection,
     missingSummaryOnlyAvailable: !state.missingSummaryOnlyWrap.hidden,
     missingSummaryOnly: state.missingSummaryOnly.checked
   });
@@ -53,6 +56,14 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
     );
   }
   if (usesDocumentSelection && !selection.select_all && !selection.doc_ids.length) {
+    return prepareValidationError(
+      state,
+      "error",
+      "data_sharing_prepare.selection_required",
+      "Select at least one record."
+    );
+  }
+  if (!usesDocumentSelection && usesRecordSelection && !selection.select_all && !selection.record_ids.length) {
     return prepareValidationError(
       state,
       "error",

@@ -70,6 +70,7 @@ def install_fixture(page: Page) -> None:
                                 supported_formats: ['json', 'jsonl']
                             },
                             selection: {
+                                mode: 'explicit_doc_ids',
                                 supports_missing_summary_only: true,
                                 default_missing_summary_only: true
                             }
@@ -130,6 +131,7 @@ def install_fixture(page: Page) -> None:
                             supported_formats: ['json', 'jsonl']
                         },
                         selection: {
+                            mode: 'explicit_doc_ids',
                             supports_missing_summary_only: true
                         }
                     },
@@ -166,12 +168,25 @@ def assert_package_state_projection(page: Page) -> None:
             const profileRequest = workflow.buildPreparePackageRequest({
                 dataDomain: 'tags',
                 config: {
-                    id: 'tags-registry',
-                    selection: { mode: 'all_matching' }
+                    id: 'tags-bundle',
+                    selection: { mode: 'none' }
                 },
                 targetFormat: 'json',
                 selectedIds: new Set(['ignored']),
                 usesDocumentSelection: false,
+                missingSummaryOnlyAvailable: true,
+                missingSummaryOnly: true
+            });
+            const recordRequest = workflow.buildPreparePackageRequest({
+                dataDomain: 'tags',
+                config: {
+                    id: 'tag-registry',
+                    selection: { mode: 'explicit_record_ids' }
+                },
+                targetFormat: 'json',
+                selectedIds: new Set(['subject:trees', 'subject:water']),
+                usesDocumentSelection: false,
+                usesRecordSelection: true,
                 missingSummaryOnlyAvailable: true,
                 missingSummaryOnly: true
             });
@@ -206,7 +221,11 @@ def assert_package_state_projection(page: Page) -> None:
                 enabledConfigIds: enabledConfigs.map((item) => item.id),
                 submission,
                 profileUsesDocuments: workflow.usesPrepareDocumentSelection(profileOnlyCapability),
+                recordUsesSelection: workflow.usesPrepareRecordSelection({ capability: { selection_model: 'records' } }, {
+                    selection: { mode: 'explicit_record_ids' }
+                }),
                 profileRequest,
+                recordRequest,
                 allMatchingRequest,
                 invalidFormat,
                 missingSelection
@@ -242,9 +261,14 @@ def assert_package_state_projection(page: Page) -> None:
 
     if result["profileUsesDocuments"] is not False:
         raise AssertionError(f"profile-only selection capability changed: {result!r}")
+    if result["recordUsesSelection"] is not True:
+        raise AssertionError(f"record selection profile projection changed: {result!r}")
     profile_request = result["profileRequest"]
     if profile_request["selection"] != {}:
         raise AssertionError(f"profile request should not project missing-summary filtering: {result!r}")
+    record_request = result["recordRequest"]
+    if record_request["selection"] != {"record_ids": ["subject:trees", "subject:water"], "select_all": False}:
+        raise AssertionError(f"record request should project selected record ids: {result!r}")
     all_matching_request = result["allMatchingRequest"]
     if all_matching_request["selection"]["doc_ids"] != [] or all_matching_request["selection"]["select_all"] is not True:
         raise AssertionError(f"all-matching document request changed: {result!r}")
@@ -259,10 +283,10 @@ def assert_selectable_records_loading(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const smoke = window.__dataSharingPrepareModuleSmoke;
-            const { docs, state } = smoke;
+            const { docs, state, configs } = smoke;
             const requested = [];
             const loaded = await docs.loadDataSharingPrepareDocsState({
-                config: state.config,
+                config: configs[0],
                 dataDomain: 'documents',
                 docsScope: 'library',
                 serviceAvailable: true,
@@ -314,6 +338,8 @@ def assert_selectable_records_loading(page: Page) -> None:
         raise AssertionError(f"selectable-records loader did not pass data_domain: {result!r}")
     if "docs_scope=library" not in result["requested"][0]:
         raise AssertionError(f"selectable-records loader did not pass docs_scope: {result!r}")
+    if "config_id=library-documents" not in result["requested"][0]:
+        raise AssertionError(f"selectable-records loader did not pass config_id: {result!r}")
     if result["recordIds"] != ["parent", "child"] or result["childDepth"] != 1 or result["childParentCount"] != 1:
         raise AssertionError(f"selectable records were not projected into document hierarchy state: {result!r}")
     if result["docsIndexError"] is not False:

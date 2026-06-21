@@ -18,6 +18,14 @@ export function usesPrepareDocumentSelection(capabilityInfo) {
   return prepareSelectionModel(capabilityInfo) === "documents";
 }
 
+export function usesPrepareRecordSelection(capabilityInfo, config) {
+  const selectionMode = normalizeText(prepareConfigSelection(config).mode);
+  const model = prepareSelectionModel(capabilityInfo);
+  if (selectionMode === "explicit_record_ids") return model === "records";
+  if (selectionMode === "explicit_doc_ids" || selectionMode === "all_matching") return model === "documents";
+  return false;
+}
+
 export function prepareProfilesForCapability(capabilityInfo) {
   const profiles = Array.isArray(safeCapability(capabilityInfo).sharing_profiles)
     ? safeCapability(capabilityInfo).sharing_profiles
@@ -87,12 +95,13 @@ export function buildPreparePackageRequest({
   targetFormat,
   selectedIds,
   usesDocumentSelection,
+  usesRecordSelection,
   missingSummaryOnlyAvailable,
   missingSummaryOnly
 } = {}) {
   const configId = normalizeText(config && config.id);
   const selectAll = prepareSelectsAllMatching(config, usesDocumentSelection);
-  const docIds = selectAll ? [] : Array.from(selectedIds || []);
+  const recordIds = selectAll ? [] : Array.from(selectedIds || []);
   const request = {
     data_domain: normalizeText(dataDomain),
     config_id: configId,
@@ -102,9 +111,14 @@ export function buildPreparePackageRequest({
   if (usesDocumentSelection) {
     request.selection = {
       docs_scope: normalizeText(docsScope),
-      doc_ids: docIds,
+      doc_ids: recordIds,
       select_all: selectAll,
       missing_summary_only: missingSummaryOnlyAvailable ? Boolean(missingSummaryOnly) : null
+    };
+  } else if (usesRecordSelection) {
+    request.selection = {
+      record_ids: recordIds,
+      select_all: selectAll
     };
   } else {
     request.selection = {};

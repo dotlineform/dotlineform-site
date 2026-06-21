@@ -275,7 +275,7 @@
         {
           "operation": "prepare",
           "status": "active",
-          "selection_model": "none",
+          "selection_model": "records",
           "input_formats": [],
           "output_formats": ["json"],
           "sharing_profiles": [
@@ -290,7 +290,7 @@
                 "supported_formats": ["json"]
               },
               "selection": {
-                "mode": "none"
+                "mode": "explicit_record_ids"
               }
             },
             {

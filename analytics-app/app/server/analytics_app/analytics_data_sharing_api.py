@@ -273,7 +273,7 @@ def data_sharing_get_payload(
         return data_sharing_service.selectable_records(
             repo_root,
             query_value(query, "data_domain"),
-            {"docs_scope": query_value(query, "docs_scope")},
+            {"docs_scope": query_value(query, "docs_scope"), "config_id": query_value(query, "config_id")},
             DATA_SHARING_HANDLERS,
         )
     if api_path == RETURNED_PACKAGES_PATH:

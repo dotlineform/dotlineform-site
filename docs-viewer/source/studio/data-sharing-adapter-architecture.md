@@ -84,6 +84,37 @@ Selectors, such as `docs_scope` or a future tag-group filter, need both config a
 - API requests carry the selected value
 - adapter/family code implements filtering and validation
 
+## Example Change: Selectable Tags
+
+Suppose the tags prepare profile needs to show tag records in the prepare list so an export can use selected tags as the export records.
+That change crosses config, prepare dispatch, family behavior, and tests.
+
+The generic flow is:
+
+1. `prepare.selectable_records(...)` returns records for the active profile instead of an empty list.
+2. The relevant family module loads source records and normalizes them to `{id, name}` for the UI.
+3. `prepare.prepare_package(...)` reads selected record ids from the request selection.
+4. The family package builder receives those selected ids and exports only the selected records.
+5. Tests cover both direct adapter modules and Analytics API dispatch.
+
+For the current tags adapter, the likely files are:
+
+- `data-sharing/adapters/tags/prepare.py`
+  dispatch selectable-record requests by profile or family, read selected ids during package preparation, and pass them to the family builder
+- `data-sharing/adapters/tags/families/registry.py`
+  load tag registry rows, expose generic selectable tag records, and build a registry package from selected tag ids
+- `data-sharing/adapters/tags/context.py`
+  add shared selection normalization or validation helpers if more than one family needs them
+- `data-sharing/config/adapters.json`
+  declare the relevant profile or selector metadata that the UI needs
+- `analytics-app/tests/python/test_tags_data_sharing_adapter.py`
+  cover selectable tag records and selected-tag package output
+- `analytics-app/tests/python/test_analytics_data_sharing_api.py`
+  cover any browser-facing config projection or dispatch changes
+
+This is not a config-only change because the adapter must implement how source tags become selectable records and how selected ids constrain package output.
+Config can declare the profile or selector, but family code owns the source shape, filtering, and package behavior.
+
 ## No Compatibility Layers
 
 Do not keep adapter-level compatibility aliases for moved functions.

@@ -77,7 +77,7 @@ def make_registry_payload() -> dict[str, object]:
                     {
                         "operation": "prepare",
                         "status": "active",
-                        "selection_model": "none",
+                        "selection_model": "records",
                         "input_formats": [],
                         "output_formats": ["json"],
                         "sharing_profiles": [
@@ -88,7 +88,7 @@ def make_registry_payload() -> dict[str, object]:
                                 "data_domains": ["tags"],
                                 "family": "registry",
                                 "target": {"format": "json", "supported_formats": ["json"]},
-                                "selection": {"mode": "none"},
+                                "selection": {"mode": "explicit_record_ids"},
                             },
                             {
                                 "id": "tags-bundle",
@@ -319,12 +319,58 @@ def test_prepare_registry_package_dry_run_does_not_write() -> None:
     assert not output_path.exists()
 
 
+def test_selectable_records_returns_tag_registry_records() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+
+        payload = prepare.selectable_records(
+            root,
+            "tags",
+            {"config_id": "tag-registry"},
+            adapter=resolve_tags_adapter(root, "prepare"),
+            dependencies=dependencies(),
+        )
+
+    assert payload["ok"] is True
+    assert payload["selection_model"] == "records"
+    assert payload["source"]["source"] == "tag_registry"
+    assert [(record["id"], record["name"]) for record in payload["records"]] == [
+        ("subject:trees", "trees"),
+        ("subject:water", "water"),
+        ("subject:stone", "stone"),
+    ]
+
+
+def test_prepare_registry_package_uses_selected_tag_records() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+
+        payload = prepare.prepare_package(
+            root,
+            {
+                "data_domain": "tags",
+                "config_id": "tag-registry",
+                "target_format": "json",
+                "selection": {"record_ids": ["subject:water", "subject:trees"], "select_all": False},
+            },
+            dry_run=False,
+            adapter=resolve_tags_adapter(root, "prepare"),
+            dependencies=dependencies(),
+        )
+        package = read_json(root / payload["output_file"])
+
+    assert payload["ok"] is True
+    assert payload["counts"]["selected"] == 2
+    assert payload["counts"]["tags"] == 2
+    assert [tag["tag_id"] for tag in package["tags"]] == ["subject:trees", "subject:water"]
+
+
 def test_tags_handlers_dispatch_through_data_sharing_workflow() -> None:
     with make_repo() as temp:
         root = Path(temp)
         handlers = {"analytics.tags": adapter.handlers_for(dependencies)}
 
-        selectable = data_sharing_service.selectable_records(root, "tags", {}, handlers)
+        selectable = data_sharing_service.selectable_records(root, "tags", {"config_id": "tag-registry"}, handlers)
         payload = data_sharing_service.prepare_package(
             root,
             {"data_domain": "tags", "config_id": "tag-registry", "target_format": "json"},
@@ -334,7 +380,8 @@ def test_tags_handlers_dispatch_through_data_sharing_workflow() -> None:
 
     assert selectable["ok"] is True
     assert selectable["adapter_id"] == "analytics-tags"
-    assert selectable["source"]["source"] == "profile_only"
+    assert selectable["source"]["source"] == "tag_registry"
+    assert [record["id"] for record in selectable["records"]] == ["subject:trees", "subject:water", "subject:stone"]
     assert payload["ok"] is True
     assert payload["adapter_id"] == "analytics-tags"
     assert payload["tag_family"] == "registry"

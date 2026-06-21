@@ -16,6 +16,7 @@ from .context import (
     relative_path,
     require_tags_adapter,
     resolve_outbound_package_path,
+    selected_record_ids,
     utc_now,
     write_json_file,
 )
@@ -29,8 +30,15 @@ def selectable_records(
     adapter: Optional[AdapterResolution] = None,
     dependencies: Optional[TagsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    del repo_root, data_domain, selectors, dependencies
+    del data_domain, dependencies
     adapter = require_tags_adapter(adapter)
+    selector_payload = selectors if isinstance(selectors, dict) else {}
+    config_id = normalize_text(selector_payload.get("config_id"))
+    profile = prepare_profiles(adapter).get(config_id)
+    family = normalize_text(profile.get("family")) if profile else ""
+    selection = profile.get("selection") if isinstance(profile, dict) and isinstance(profile.get("selection"), dict) else {}
+    if family == "registry" and normalize_text(selection.get("mode")) == "explicit_record_ids":
+        return registry.selectable_records(repo_root, adapter)
     return {
         "ok": True,
         "data_domain": adapter.data_domain,
@@ -63,9 +71,10 @@ def build_family_package(
     family: str,
     config_id: str,
     generated_at_utc: str,
+    selected_ids: Optional[list[str]] = None,
 ) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
     if family == "registry":
-        return registry.build_package(repo_root, adapter, config_id, generated_at_utc)
+        return registry.build_package(repo_root, adapter, config_id, generated_at_utc, selected_tag_ids=selected_ids)
     if family == "aliases":
         return aliases.build_package(repo_root, adapter, config_id, generated_at_utc)
     if family == "assignments":
@@ -94,8 +103,12 @@ def prepare_package(
         target_format = "json"
     output_path = resolve_outbound_package_path(repo_root, adapter, config_id, target_format)
     now_utc = utc_now()
+    selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
+    explicit_selected_ids: Optional[list[str]] = None
+    if isinstance(selection, dict) and isinstance(selection.get("record_ids"), list) and not bool(selection.get("select_all")):
+        explicit_selected_ids = selected_record_ids(selection.get("record_ids"))
 
-    package_payload, family_counts, groups = build_family_package(repo_root, adapter, family, config_id, now_utc)
+    package_payload, family_counts, groups = build_family_package(repo_root, adapter, family, config_id, now_utc, explicit_selected_ids)
 
     record_total = count_record_total(family, family_counts)
     relative_output = relative_path(repo_root, output_path)

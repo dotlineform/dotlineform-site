@@ -32,7 +32,8 @@ import {
   enabledPrepareConfigsForDataDomain,
   prepareProfilesForCapability,
   prepareSelectionModel,
-  usesPrepareDocumentSelection
+  usesPrepareDocumentSelection,
+  usesPrepareRecordSelection
 } from "./data-sharing-prepare-workflow.js";
 import {
   loadDataSharingPrepareDocsState
@@ -249,16 +250,17 @@ function setProgressiveGroups(state) {
 async function loadDocumentsForCurrentSelection(state) {
   clearDocumentSelectionState(state);
   if (!selectedDropdownsComplete(state)) return;
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
+  const config = selectedDataSharingPrepareConfig(state);
+  if (!usesPrepareRecordSelection(state.prepareCapability, config)) {
     syncDataSharingPrepareListActions(state);
     renderDataSharingPrepareDocList(state);
     return;
   }
-  if (!state.docsScope) return;
+  if (usesPrepareDocumentSelection(state.prepareCapability) && !state.docsScope) return;
   const docsState = await loadDataSharingPrepareDocsState({
-    config: state.config,
     dataDomain: state.dataDomain,
     docsScope: state.docsScope,
+    config,
     serviceAvailable: state.serviceAvailable,
     prepareCapability: state.prepareCapability,
     workflowActive: dataSharingDomainIsActive(state.dataDomains, state.dataDomain),
@@ -328,7 +330,7 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
-  if (usesPrepareDocumentSelection(state.prepareCapability) && state.docsIndexError) {
+  if (usesPrepareRecordSelection(state.prepareCapability, config) && state.docsIndexError) {
     setStatus(
       state.statusNode,
       "error",

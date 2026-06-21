@@ -2,13 +2,15 @@ import {
   DATA_SHARING_ENDPOINTS
 } from "./analytics-transport.js";
 import {
-  usesPrepareDocumentSelection
+  usesPrepareDocumentSelection,
+  usesPrepareRecordSelection
 } from "./data-sharing-prepare-workflow.js";
 
 export async function loadDataSharingPrepareDocsState(options = {}) {
   const {
     dataDomain,
     docsScope,
+    config,
     prepareCapability,
     workflowActive,
     exportConfigCount,
@@ -20,16 +22,16 @@ export async function loadDataSharingPrepareDocsState(options = {}) {
   let docsIndexError = false;
 
   if (
-    usesPrepareDocumentSelection(prepareCapability)
+    usesPrepareRecordSelection(prepareCapability, config)
     && workflowActive
     && Number(exportConfigCount || 0) > 0
-    && docsScope
+    && (!usesPrepareDocumentSelection(prepareCapability) || docsScope)
   ) {
     try {
-      selectableRecordsPayload = await loadJson(selectableRecordsUrl(dataDomain, docsScope));
+      selectableRecordsPayload = await loadJson(selectableRecordsUrl(dataDomain, docsScope, config && config.id));
     } catch (error) {
       docsIndexError = true;
-      if (typeof onError === "function") onError(error, { dataDomain, docsScope, path: selectableRecordsUrl(dataDomain, docsScope) });
+      if (typeof onError === "function") onError(error, { dataDomain, docsScope, path: selectableRecordsUrl(dataDomain, docsScope, config && config.id) });
     }
   }
 
@@ -81,10 +83,11 @@ export function buildVisibleDocs(indexPayload) {
   return { docs: orderedDocs, childrenByParent, depthById };
 }
 
-function selectableRecordsUrl(dataDomain, docsScope) {
+function selectableRecordsUrl(dataDomain, docsScope, configId) {
   const url = new URL(DATA_SHARING_ENDPOINTS.selectableRecords, window.location.origin);
   url.searchParams.set("data_domain", dataDomain);
   if (docsScope) url.searchParams.set("docs_scope", docsScope);
+  if (configId) url.searchParams.set("config_id", configId);
   return url.href;
 }
 

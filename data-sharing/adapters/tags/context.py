@@ -196,6 +196,7 @@ def prepare_profiles(adapter: AdapterResolution) -> Dict[str, Dict[str, Any]]:
             out[profile_id] = {
                 "family": family,
                 "label": normalize_text(profile.get("label")) or TAG_PREPARE_PROFILES.get(profile_id, {}).get("label") or profile_id,
+                "selection": profile.get("selection") if isinstance(profile.get("selection"), dict) else {},
             }
     return out or dict(TAG_PREPARE_PROFILES)
 
@@ -260,6 +261,21 @@ def selected_record_indices(value: Any) -> list[int]:
         if index not in seen:
             selected.append(index)
             seen.add(index)
+    return selected
+
+
+def selected_record_ids(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        raise ValueError("record_ids must be a list")
+    selected: list[str] = []
+    seen: set[str] = set()
+    for item in value:
+        record_id = normalize_text(item)
+        if not record_id:
+            raise ValueError("record_ids must contain non-empty strings")
+        if record_id not in seen:
+            selected.append(record_id)
+            seen.add(record_id)
     return selected
 
 
