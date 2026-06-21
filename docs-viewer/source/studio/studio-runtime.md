@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-06-02
+last_updated: 2026-06-21
 parent_id: studio
 ---
 # Studio Runtime
@@ -14,28 +14,29 @@ Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the local s
 ## Route Shell
 
 The local Studio app server owns active Studio route URLs.
-For template-backed routes, Python serves a generic bootstrap and `studio/app/frontend/js/studio-app.js` renders the shared shell and route body.
+For template-backed routes, Python serves `studio/app/frontend/studio-shell.html` as the static outer document.
+That document mounts `studio/app/frontend/js/studio-app.js`, which loads runtime config, resolves the active route, renders shared Studio chrome, fetches the configured route template, and then imports the route script.
 `studio/app/server/studio/studio_app_config.py` validates the route registry and advertises the runtime view list, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
-The browser-rendered Studio shell provides the shared admin-facing navigation model:
+The browser-rendered Studio shell owns only stable app chrome:
 
-- `Catalogue`
-- `Docs`
-- `Admin`
+- the `dotlineform studio` home link
+- the light/dark theme control
+- the page title
+- the route content mount populated from the configured static route template
 
+The route template owns stable route DOM such as page roots, panels, forms, search inputs, loading nodes, and dynamic render targets.
+The route script owns behavior, route-ready state, data loading, event binding, dynamic repeated UI, modals, and local API calls.
+Dynamic values that depend on runtime config are applied by route scripts after config load rather than injected by Python or by JavaScript string shell factories.
+
+The shared top navigation currently has no primary route items; `/studio/` provides the catalogue entry-point link list inside the home route content.
 Search is no longer a standalone Studio navigation domain.
 Analytics and Data Sharing are served by the standalone Local Analytics app, not by Local Studio navigation.
-Catalogue search administration should be reached from the Catalogue dashboard, while document search administration should stay inside Docs Viewer manage mode.
+Catalogue search administration should be reached from the relevant Studio catalogue workflows, while document search administration should stay inside Docs Viewer manage mode.
 
-The Studio shell renders:
-
-- the page title
-- the route body from the configured static route template
-
-The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
-
-- the site title at top left, which returns to the public site
-- the footer `studio` link, which enters `/studio/`
+The public site uses the user-facing `Works` / `Library` header nav.
+The Studio shell does not mirror that public navigation; its top-left title returns to `/studio/`.
+The intended public-to-Studio crossover is the public footer `studio` link.
 
 Studio does not render page-level Docs Viewer links or carry Docs Viewer route metadata.
 Developer documentation is reached directly through the standalone Docs Viewer service.
@@ -50,7 +51,8 @@ Each registered route uses these fields:
 - `label`
 - `title`
 - `path`
-- `script` for shell-rendered routes
+- `template`
+- `script`
 - `nav`
 - `shell_type`
 - `ready_state_route_id`
@@ -60,22 +62,22 @@ Current shell type:
 - `html-template` for active Studio routes rendered by the browser shell from `studio/app/frontend/routes/*.html`
 
 `studio/app/server/studio/studio_app_config.py` validates the registry before exposing runtime config.
-Validation catches duplicate paths, missing required fields, missing scripts for shell-rendered routes, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route IDs/paths that do not match a current Local Studio route.
+Validation catches duplicate paths, missing required fields, missing templates or scripts for shell-rendered routes, unsupported shell types, Studio route metadata left in `paths.routes`, and shell-route paths outside `/studio/`.
 
 The runtime config exposes the same records as `app.runtime.views` for existing navigation helpers and smoke tests.
 
-`studio/app/frontend/js/studio-route-registry.js` is the browser-side shell contract helper for the migration.
-It resolves the active route from `window.location.pathname`, normalizes route fields for the future shell, and returns a shell contract without rendering or mounting any route.
+`studio/app/frontend/js/studio-route-registry.js` is the browser-side shell contract helper.
+It resolves the active route from `window.location.pathname`, normalizes route fields, and returns a shell contract without rendering or mounting any route.
 
 `studio/app/frontend/js/studio-app.js` is the browser-owned Studio app shell.
 For routes marked `shell_type: "html-template"`, Python serves a minimal bootstrap with `<div id="studioApp">`; the browser shell loads runtime config, resolves the active route, renders the shared Studio header/title shell, fetches the configured route template, and then imports the configured route script.
-Project State, Studio Audits, Studio Activity, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Studio Works, and the Catalogue editor family use this path.
+Studio Home, Project State, Bulk Add Work, Catalogue Drafts, Catalogue Field Registry, Studio Works, Catalogue Series, and Catalogue Work use this path.
 Their stable body markup lives in `studio/app/frontend/routes/*.html`, and their controllers stay in the configured route scripts.
 
 ## Studio Pages
 
 Operational Studio route shells are hosted by the local app.
-Active local shells include `/studio/`, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+Active local shells include `/studio/`, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, Catalogue Series, and Catalogue Work.
 The maintained mounted-route inventory lives in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes).
 Docs Viewer and Analytics/Data Sharing are sibling local apps with their own route shells.
 
