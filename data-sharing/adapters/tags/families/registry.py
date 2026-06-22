@@ -54,7 +54,6 @@ def selectable_records(repo_root: Path, adapter: AdapterResolution) -> Dict[str,
                 "name": tag_record_name(tag, tag_id),
                 "tag_id": tag_id,
                 "group": normalize_text(tag.get("group")),
-                "status": normalize_text(tag.get("status")) or "active",
                 "selectable": True,
             }
         )

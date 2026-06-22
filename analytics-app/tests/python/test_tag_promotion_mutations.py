@@ -28,7 +28,6 @@ def row(tag_id: str, description: str = "") -> dict[str, str]:
         "tag_id": tag_id,
         "group": group,
         "label": slug,
-        "status": "active",
         "description": description,
     }
 

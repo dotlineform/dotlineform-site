@@ -110,10 +110,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
       ]
     },
     "rag": {
-      "deprecated_statuses": [
-        "deprecated",
-        "candidate"
-      ],
       "completeness": {
         "group_coverage_denominator": 4,
         "tag_bonus_max": 0.25,
@@ -128,7 +124,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
         "amber": {
           "if_groups_present_lte": 1,
           "if_total_tags_lt": 3,
-          "if_deprecated_tags_gt": 0,
           "if_missing_all_groups": [
             "form",
             "theme"

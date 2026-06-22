@@ -87,7 +87,6 @@ export function buildManualPatchForAliasPromote(state, aliasKey, group) {
           tag_id: newTagId,
           group,
           label: aliasKey,
-          status: "active",
           description: "",
           updated_at_utc: utcTimestamp()
         }

@@ -42,7 +42,6 @@ export function applyTagRegistryCreateProjection(state, options = {}) {
       tagId: validation.tagId,
       label: validation.slug,
       description: validation.description,
-      status: "active",
       updatedAtUtc,
       updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
     }]);

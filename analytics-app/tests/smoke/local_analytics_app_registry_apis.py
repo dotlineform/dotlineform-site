@@ -43,7 +43,6 @@ def write_fixture_data(repo_root: Path) -> tuple[Path, Path, Path]:
       "tag_id": "subject:trees",
       "group": "subject",
       "label": "trees",
-      "status": "active",
       "description": "Trees"
     }
   ]
@@ -116,7 +115,6 @@ def run() -> None:
                                 "tag_id": "theme:growth",
                                 "group": "theme",
                                 "label": "growth",
-                                "status": "active",
                                 "description": "Growth",
                             }
                         ]

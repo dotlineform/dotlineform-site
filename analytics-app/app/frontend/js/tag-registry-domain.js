@@ -17,7 +17,6 @@ export function normalizeRegistryTags(data, fallbackUpdatedAt) {
     const tagId = normalize(raw.tag_id);
     const label = normalize(raw.label) || labelFromTagId(tagId);
     const description = String(raw.description || "").trim();
-    const status = normalize(raw.status || "active");
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
 
     if (!STUDIO_GROUPS.includes(group) || !tagId || !label) continue;
@@ -26,7 +25,6 @@ export function normalizeRegistryTags(data, fallbackUpdatedAt) {
       tagId,
       label,
       description,
-      status,
       updatedAtUtc,
       updatedAtMs: toTimestampMs(updatedAtUtc)
     });

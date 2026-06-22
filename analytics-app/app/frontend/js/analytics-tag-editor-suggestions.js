@@ -69,7 +69,7 @@ export function renderPopup(state) {
 
   const selectedTagIds = getEditableTagIdSet(state);
   const inheritedTagIds = getSeriesTagIdSet(state);
-  const tagMatches = state.activeTagsBySlug
+  const tagMatches = state.tagOptionsBySlug
     .filter((tag) => {
       if (!tag.slug.startsWith(query)) return false;
       if (selectedTagIds.has(tag.tag_id)) return false;

@@ -21,7 +21,6 @@ MAX_IMPORT_TAGS = 10000
 MAX_IMPORT_ALIASES = 10000
 MAX_ALIAS_TARGETS = 50
 MAX_ALIAS_TAGS_PER_ALIAS = 4
-TAG_STATUSES = {"active", "deprecated", "candidate"}
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
@@ -154,7 +153,6 @@ def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Di
 
     tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
     group = str(raw_tag.get("group") or "").strip().lower()
-    status = str(raw_tag.get("status") or "active").strip().lower()
     description = str(raw_tag.get("description") or "").strip()
 
     if not TAG_ID_RE.fullmatch(tag_id):
@@ -167,14 +165,10 @@ def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Di
         raise ValueError(f"import_registry.tags[{idx}] group must match tag_id prefix")
     if group not in allowed_groups:
         raise ValueError(f"import_registry.tags[{idx}].group is not allowed")
-    if status not in TAG_STATUSES:
-        raise ValueError(f"import_registry.tags[{idx}].status must be one of {sorted(TAG_STATUSES)}")
-
     return {
         "tag_id": tag_id,
         "group": group,
         "label": slug,
-        "status": status,
         "description": description,
     }
 

@@ -37,7 +37,7 @@ export function buildAnalyticsTagEditorState(options) {
   const tagsById = new Map();
   const slugMap = new Map();
   const labelMap = new Map();
-  const activeTags = [];
+  const tagOptions = [];
 
   for (const rawTag of tags) {
     const tag = sanitizeTag(rawTag);
@@ -47,13 +47,11 @@ export function buildAnalyticsTagEditorState(options) {
     pushMapList(slugMap, tag.slug, tag);
     pushMapList(labelMap, normalize(tag.label), tag);
 
-    if (tag.status === "active") {
-      activeTags.push(tag);
-    }
+    tagOptions.push(tag);
   }
 
-  activeTags.sort((a, b) => a.tag_id.localeCompare(b.tag_id));
-  const activeTagsBySlug = activeTags.slice().sort((a, b) => {
+  tagOptions.sort((a, b) => a.tag_id.localeCompare(b.tag_id));
+  const tagOptionsBySlug = tagOptions.slice().sort((a, b) => {
     const bySlug = a.slug.localeCompare(b.slug, undefined, { sensitivity: "base" });
     if (bySlug !== 0) return bySlug;
     return a.tag_id.localeCompare(b.tag_id);
@@ -117,7 +115,7 @@ export function buildAnalyticsTagEditorState(options) {
     slugMap,
     labelMap,
     aliases,
-    activeTagsBySlug,
+    tagOptionsBySlug,
     aliasOptions,
     seriesEntries,
     baselineSeriesRows: normalizeAssignmentRows(seriesAssignment && seriesAssignment.tags),

@@ -26,17 +26,12 @@ export function buildStudioTagScore(assignedTags, registry, config) {
 export function computeStudioTagMetrics(assignedTags, registry, config) {
   const groups = getAnalyticsGroups(config);
   const coverageGroups = getAnalyticsCoverageGroups(config);
-  const deprecatedStatuses = new Set(sanitizeStringArray(
-    pathValue(config, ["analysis", "rag", "deprecated_statuses"]),
-    DEFAULT_ANALYTICS_CONFIG.analysis.rag.deprecated_statuses
-  ));
   const completenessCfg = mergeConfig(
     DEFAULT_ANALYTICS_CONFIG.analysis.rag.completeness,
     pathValue(config, ["analysis", "rag", "completeness"])
   );
   const counts = Object.fromEntries(groups.map((group) => [group, 0]));
   let nUnknown = 0;
-  let nDeprecated = 0;
   let nTotal = 0;
 
   const uniqueTags = Array.from(
@@ -52,7 +47,6 @@ export function computeStudioTagMetrics(assignedTags, registry, config) {
     }
 
     if (reg.group in counts) counts[reg.group] += 1;
-    if (deprecatedStatuses.has(normalize(reg.status))) nDeprecated += 1;
   }
 
   const presentGroups = coverageGroups.filter((group) => Number(counts[group] || 0) > 0);
@@ -72,7 +66,6 @@ export function computeStudioTagMetrics(assignedTags, registry, config) {
   return {
     nTotal,
     nUnknown,
-    nDeprecated,
     counts,
     groupsPresent,
     presentGroups,
@@ -99,13 +92,11 @@ export function computeStudioRag(metrics, config) {
 
   const groupsPresentLte = Number(amberRule.if_groups_present_lte);
   const totalTagsLt = Number(amberRule.if_total_tags_lt);
-  const deprecatedTagsGt = Number(amberRule.if_deprecated_tags_gt);
   const missingAllGroups = sanitizeStringArray(amberRule.if_missing_all_groups, []);
   const isMissingAll = missingAllGroups.length > 0 && missingAllGroups.every((group) => metrics.missingGroups.includes(group));
   if (
     (Number.isFinite(groupsPresentLte) && metrics.groupsPresent <= groupsPresentLte) ||
     (Number.isFinite(totalTagsLt) && metrics.nTotal < totalTagsLt) ||
-    (Number.isFinite(deprecatedTagsGt) && metrics.nDeprecated > deprecatedTagsGt) ||
     isMissingAll
   ) {
     return "amber";
@@ -119,7 +110,7 @@ export function buildStudioRagTooltip(metrics) {
   const missingLabel = metrics.missingGroups.length ? metrics.missingGroups.join(", ") : "none";
   return (
     `tags: ${metrics.nTotal}; groups: ${groupsLabel}; missing: ${missingLabel}; ` +
-    `unknown: ${metrics.nUnknown}; deprecated: ${metrics.nDeprecated}; ` +
+    `unknown: ${metrics.nUnknown}; ` +
     `completeness: ${metrics.completeness.toFixed(2)}`
   );
 }

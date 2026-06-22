@@ -509,7 +509,6 @@ async function handleCreateTag(state) {
     tag_id: validation.tagId,
     group: validation.group,
     label: validation.slug,
-    status: "active",
     description: validation.description
   };
 

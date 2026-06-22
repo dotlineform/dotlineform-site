@@ -21,13 +21,12 @@ from tag_services import tag_registry_mutations as registry  # noqa: E402
 NOW = "2026-05-09T12:00:00Z"
 
 
-def row(tag_id: str, description: str = "", status: str = "active") -> dict[str, str]:
+def row(tag_id: str, description: str = "") -> dict[str, str]:
     group, slug = tag_id.split(":", 1)
     return {
         "tag_id": tag_id,
         "group": group,
         "label": slug,
-        "status": status,
         "description": description,
     }
 

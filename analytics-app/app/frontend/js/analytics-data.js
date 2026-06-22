@@ -65,14 +65,12 @@ export function buildAnalyticsRegistryLookup(registryJson, studioGroups = [], op
     const tagId = normalizeAnalyticsValue(rawTag.tag_id);
     const group = normalizeAnalyticsValue(rawTag.group);
     const label = String(rawTag.label || "").trim();
-    const status = normalizeAnalyticsValue(rawTag.status || "active");
     if (!tagId || !group) continue;
     if (allowedGroups && !allowedGroups.has(group)) continue;
     if (requireLabel && !label) continue;
     map.set(tagId, {
       group,
-      label,
-      status
+      label
     });
   }
 

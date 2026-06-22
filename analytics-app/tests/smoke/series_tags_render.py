@@ -67,7 +67,7 @@ def main() -> int:
                         ['domain:studio', { group: 'domain', label: 'studio', status: 'active' }],
                         ['form:line', { group: 'form', label: 'line', status: 'active' }],
                         ['theme:memory', { group: 'theme', label: 'memory', status: 'active' }],
-                        ['theme:old', { group: 'theme', label: 'old', status: 'candidate' }]
+                        ['theme:old', { group: 'theme', label: 'old' }]
                     ]);
                     const reportInput = {
                         mount: document.querySelector('#mount'),
@@ -160,7 +160,7 @@ def main() -> int:
         raise AssertionError(f"status sort order mismatch: {result!r}")
     if "rag--red" not in result["allRows"][0]["ragClass"] or "status RED:" not in result["allRows"][0]["ragLabel"]:
         raise AssertionError(f"red RAG output mismatch: {result!r}")
-    if "rag--amber" not in result["allRows"][1]["ragClass"] or "deprecated: 1" not in result["allRows"][1]["ragTitle"]:
+    if "rag--amber" not in result["allRows"][1]["ragClass"] or "deprecated:" in result["allRows"][1]["ragTitle"]:
         raise AssertionError(f"amber RAG output mismatch: {result!r}")
     if "old local" not in result["allRows"][1]["chips"]:
         raise AssertionError(f"local chip output mismatch: {result!r}")

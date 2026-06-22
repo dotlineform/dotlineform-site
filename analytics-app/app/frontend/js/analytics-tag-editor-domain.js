@@ -27,7 +27,6 @@ export function sanitizeTag(rawTag) {
   const tagId = normalize(rawTag.tag_id);
   const group = normalize(rawTag.group);
   const label = String(rawTag.label || "").trim();
-  const status = normalize(rawTag.status || "active");
 
   if (!tagId || !group || !label) return null;
   if (!GROUP_INDEX.has(group)) return null;
@@ -39,7 +38,6 @@ export function sanitizeTag(rawTag) {
     tag_id: tagId,
     group,
     label,
-    status,
     slug
   };
 }

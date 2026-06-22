@@ -74,7 +74,6 @@ export function normalizeImportTag(raw, idx, groups) {
 
   const tagId = normalize(raw.tag_id);
   const group = normalize(raw.group);
-  const status = normalize(raw.status || "active");
   const description = String(raw.description || "").trim();
 
   if (!tagId || tagId.indexOf(":") <= 0) {
@@ -83,10 +82,6 @@ export function normalizeImportTag(raw, idx, groups) {
   if (!Array.isArray(groups) || !groups.includes(group)) {
     throw new Error(registryText(null, "import_tag_invalid_group", "Import tag {index} has invalid group.", { index: idx }));
   }
-  if (!["active", "deprecated", "candidate"].includes(status)) {
-    throw new Error(registryText(null, "import_tag_invalid_status", "Import tag {index} has invalid status.", { index: idx }));
-  }
-
   const tagGroup = tagId.split(":", 1)[0];
   if (tagGroup !== group) {
     throw new Error(registryText(null, "import_tag_group_prefix_mismatch", "Import tag {index} group must match tag_id prefix.", { index: idx }));
@@ -98,7 +93,6 @@ export function normalizeImportTag(raw, idx, groups) {
     tag_id: tagId,
     group,
     label: labelFromSlug(slug),
-    status,
     description
   };
 }
@@ -111,7 +105,6 @@ export function buildManualPatchForCreateTag(tagRow) {
         tag_id: normalizedTagId,
         group: normalize(tagRow && tagRow.group),
         label: labelFromTagId(normalizedTagId),
-        status: normalize((tagRow && tagRow.status) || "active"),
         description: String((tagRow && tagRow.description) || "").trim(),
         updated_at_utc: utcTimestamp()
       }
@@ -141,7 +134,6 @@ export function buildManualPatchForNewTags(state, importRegistry) {
       tag_id: normalize(tag.tag_id),
       group: normalize(tag.group),
       label: labelFromTagId(normalize(tag.tag_id)),
-      status: normalize(tag.status || "active"),
       description: String(tag.description || "").trim(),
       updated_at_utc: nowUtc
     }));

@@ -224,9 +224,9 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "tag_registry_version": "tag_registry_v1",
             "policy": {"allowed_groups": ["subject", "domain", "form", "theme"]},
             "tags": [
-                {"tag_id": "subject:trees", "group": "subject", "label": "trees", "status": "active", "description": "Trees"},
-                {"tag_id": "subject:water", "group": "subject", "label": "water", "status": "active", "description": "Water"},
-                {"tag_id": "subject:stone", "group": "subject", "label": "stone", "status": "active", "description": "Stone"},
+                {"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"},
+                {"tag_id": "subject:water", "group": "subject", "label": "water", "description": "Water"},
+                {"tag_id": "subject:stone", "group": "subject", "label": "stone", "description": "Stone"},
             ],
         },
     )
@@ -434,8 +434,8 @@ def test_registry_review_and_confirmed_apply_writes_source() -> None:
                 "mode": "merge",
                 "import_registry": {
                     "tags": [
-                        {"tag_id": "subject:trees", "group": "subject", "status": "active", "description": "Forest"},
-                        {"tag_id": "subject:sky", "group": "subject", "status": "active", "description": "Sky"},
+                        {"tag_id": "subject:trees", "group": "subject", "description": "Forest"},
+                        {"tag_id": "subject:sky", "group": "subject", "description": "Sky"},
                     ]
                 },
             },

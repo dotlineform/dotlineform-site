@@ -87,8 +87,9 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert runtime["series_tag_editor"]["analytics_tag_editor_module_url"] == "/analytics/app/frontend/js/analytics-tag-editor.js"
     assert runtime["modals"]["event"] == "analytics:open-modal"
     assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]
-    assert payload["analysis"]["rag"]["deprecated_statuses"] == ["deprecated", "candidate"]
+    assert "deprecated_statuses" not in payload["analysis"]["rag"]
     assert payload["analysis"]["rag"]["completeness"]["group_coverage_denominator"] == 4
+    assert "if_deprecated_tags_gt" not in payload["analysis"]["rag"]["rules"]["amber"]
     assert payload["analysis"]["rag"]["rules"]["amber"]["if_missing_all_groups"] == ["form", "theme"]
 
 
@@ -278,7 +279,7 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
   "tag_registry_version": "tag_registry_v1",
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
-  "tags": [{"tag_id": "subject:trees", "group": "subject", "label": "trees", "status": "active", "description": "Old trees"}]
+  "tags": [{"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Old trees"}]
 }
 """,
             encoding="utf-8",
@@ -309,7 +310,7 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
                 "mode": "add",
                 "import_registry": {
                     "tags": [
-                        {"tag_id": "theme:growth", "group": "theme", "label": "growth", "status": "active", "description": "Growth"}
+                        {"tag_id": "theme:growth", "group": "theme", "label": "growth", "description": "Growth"}
                     ]
                 },
                 "import_filename": "registry.json",
@@ -358,8 +359,8 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "subject:trees", "group": "subject", "label": "trees", "status": "active", "description": "Trees"},
-    {"tag_id": "theme:growth", "group": "theme", "label": "growth", "status": "active", "description": "Growth"}
+    {"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"},
+    {"tag_id": "theme:growth", "group": "theme", "label": "growth", "description": "Growth"}
   ]
 }
 """,
@@ -425,8 +426,8 @@ def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() ->
   "updated_at_utc": "2026-05-01T00:00:00Z",
   "policy": {"allowed_groups": ["subject", "theme"]},
   "tags": [
-    {"tag_id": "subject:trees", "group": "subject", "label": "trees", "status": "active", "description": "Trees"},
-    {"tag_id": "theme:growth", "group": "theme", "label": "growth", "status": "active", "description": "Growth"}
+    {"tag_id": "subject:trees", "group": "subject", "label": "trees", "description": "Trees"},
+    {"tag_id": "theme:growth", "group": "theme", "label": "growth", "description": "Growth"}
   ]
 }
 """,

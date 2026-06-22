@@ -24,7 +24,6 @@ Current content families:
   - identity
   - group
   - label
-  - status
   - description
   - per-row update metadata
 
@@ -38,7 +37,7 @@ Current consumers:
 - Tag Editor
 - Tag Registry
 - Tag Aliases
-- Series Tags status and labeling logic
+- Series Tags labeling and coverage logic
 - Data Sharing tags adapter
 
 ### `tag-aliases.json`
@@ -87,13 +86,13 @@ Why it is designed around series-first ownership:
 
 - series is the main curation unit for Analytics tag assignment
 - per-work overrides are intentionally modeled as deltas under the owning series rather than as a separate flat table
-- Analytics status logic can derive effective work tags by combining series tags with work overrides
+- Analytics logic can derive effective work tags by combining series tags with work overrides
 
 Current consumers:
 
 - Tag Editor
 - Series Tags
-- Analytics RAG/status logic
+- Analytics RAG logic
 - Data Sharing tags adapter
 
 Important design choice:

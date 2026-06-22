@@ -78,7 +78,6 @@
   "import_tag_object_invalid": "Import tag at index {index} must be an object.",
   "import_tag_invalid_tag_id": "Import tag {index} has invalid tag_id.",
   "import_tag_invalid_group": "Import tag {index} has invalid group.",
-  "import_tag_invalid_status": "Import tag {index} has invalid status.",
   "import_tag_group_prefix_mismatch": "Import tag {index} group must match tag_id prefix.",
   "import_mode_template": "Import mode: {mode}",
   "import_mode_local_server": "Local server",
