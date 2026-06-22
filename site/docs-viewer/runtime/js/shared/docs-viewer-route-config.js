@@ -77,8 +77,25 @@ function normalizePanelDefaults(rawPanels) {
 
 function normalizeRouteUi(rawUi) {
   var ui = rawUi && typeof rawUi === "object" && !Array.isArray(rawUi) ? rawUi : {};
+  var routeShell = ui.route_shell && typeof ui.route_shell === "object" && !Array.isArray(ui.route_shell)
+    ? ui.route_shell
+    : {};
+  var viewerSearch = ui.viewer_search && typeof ui.viewer_search === "object" && !Array.isArray(ui.viewer_search)
+    ? ui.viewer_search
+    : {};
   return {
-    mainViewToolbar: ui.main_view_toolbar !== false
+    mainViewToolbar: ui.main_view_toolbar !== false,
+    routeShell: {
+      configured: Boolean(ui.route_shell),
+      pageTitle: cleanString(routeShell.page_title),
+      bodyClass: cleanString(routeShell.body_class)
+    },
+    viewerSearch: {
+      configured: Boolean(ui.viewer_search),
+      enabled: viewerSearch.enabled !== false,
+      placeholder: cleanString(viewerSearch.placeholder) || "search docs",
+      ariaLabel: cleanString(viewerSearch.aria_label) || "Search docs"
+    }
   };
 }
 
@@ -206,6 +223,10 @@ export function resolveDocsViewerRouteConfig(options) {
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
   var allowScopeQuery = normalizeBoolean(configuredValue(access.allow_scope_query, rawConfig.allow_scope_query));
   var docsManagementRoute = isDocsManagementRoutePath(routeConfigPath(rawConfig));
+  var managementBaseUrl = docsManagementRoute
+    ? cleanBaseUrl(access.management_base_url)
+    : "";
+  var allowManagement = docsManagementRoute && normalizeBoolean(configuredValue(access.allow_management, Boolean(managementBaseUrl)));
   var docsPaths = rawConfig.docs_paths && typeof rawConfig.docs_paths === "object" ? rawConfig.docs_paths : {};
   var configUrls = rawConfig.config_urls && typeof rawConfig.config_urls === "object" ? rawConfig.config_urls : {};
   var schemaVersion = cleanString(rawConfig.schema_version) || DOCS_VIEWER_ROUTE_CONFIG_SCHEMA;
@@ -230,11 +251,9 @@ export function resolveDocsViewerRouteConfig(options) {
     searchIndexUrl: normalizePath(requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")),
     access: {
       isDocsManagementRoute: docsManagementRoute,
-      allowManagement: docsManagementRoute,
+      allowManagement: allowManagement,
       allowScopeQuery: allowScopeQuery,
-      managementBaseUrl: docsManagementRoute
-        ? cleanBaseUrl(access.management_base_url)
-        : ""
+      managementBaseUrl: allowManagement ? managementBaseUrl : ""
     },
     panels: normalizePanelDefaults(rawConfig.panels),
     ui: normalizeRouteUi(rawConfig.ui),

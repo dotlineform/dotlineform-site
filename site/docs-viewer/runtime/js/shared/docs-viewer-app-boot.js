@@ -41,6 +41,55 @@ function reportBootFailure(root, message, isError) {
   status.classList.toggle("is-error", isError !== false);
 }
 
+function setDatasetBoolean(element, key, value) {
+  if (!element || !element.dataset) return;
+  element.dataset[key] = value ? "true" : "false";
+}
+
+function headerControlsMount(root) {
+  if (!root || typeof root.querySelector !== "function") return null;
+  return root.querySelector("[data-docs-viewer-header-controls-mount]");
+}
+
+function applyBodyClass(documentRef, bodyClass) {
+  var body = documentRef && documentRef.body ? documentRef.body : null;
+  var className = String(bodyClass || "").trim();
+  if (!body || !className) return;
+  className.split(/\s+/).filter(Boolean).forEach(function (value) {
+    body.classList.add(value);
+  });
+}
+
+function applyResolvedRouteDataset(root, documentRef, routeContext) {
+  var routeConfig = routeContext && routeContext.routeConfig ? routeContext.routeConfig : {};
+  var access = routeContext && routeContext.access ? routeContext.access : {};
+  var ui = routeConfig.ui && typeof routeConfig.ui === "object" ? routeConfig.ui : {};
+  var routeShell = ui.routeShell && typeof ui.routeShell === "object" ? ui.routeShell : {};
+  var viewerSearch = ui.viewerSearch && typeof ui.viewerSearch === "object" ? ui.viewerSearch : {};
+  var headerMount = headerControlsMount(root);
+
+  if (root && root.dataset) {
+    root.dataset.routeId = routeConfig.routeId || "";
+    setDatasetBoolean(root, "allowManagement", access.allowManagement);
+    setDatasetBoolean(root, "includeScopeParam", routeContext && routeContext.includeScopeParam);
+    root.dataset.viewerBaseUrl = routeContext && routeContext.viewerBaseUrl ? routeContext.viewerBaseUrl : "";
+    root.dataset.viewerScope = routeContext && routeContext.viewerScope ? routeContext.viewerScope : "";
+    if (routeShell.pageTitle) root.dataset.pageTitle = routeShell.pageTitle;
+    if (routeShell.bodyClass) root.dataset.bodyClass = routeShell.bodyClass;
+  }
+
+  if (headerMount && headerMount.dataset && viewerSearch.configured) {
+    setDatasetBoolean(headerMount, "enableSearch", viewerSearch.enabled !== false);
+    headerMount.dataset.searchPlaceholder = viewerSearch.placeholder || "search docs";
+    headerMount.dataset.searchAriaLabel = viewerSearch.ariaLabel || "Search docs";
+  }
+
+  if (routeShell.pageTitle && documentRef) {
+    documentRef.title = routeShell.pageTitle;
+  }
+  applyBodyClass(documentRef, routeShell.bodyClass);
+}
+
 export function resolveDocsViewerAppBootContext(options) {
   var settings = options || {};
   var windowRef = settings.window || defaultWindowRef();
@@ -66,6 +115,7 @@ export function resolveDocsViewerAppBootContext(options) {
       assetVersion: assetVersion,
       resolvedRouteConfig: resolvedRouteConfig
     });
+    applyResolvedRouteDataset(root, documentRef, routeContext);
     var appShellReady = initDocsViewerAppShell({
       root: root,
       document: documentRef,

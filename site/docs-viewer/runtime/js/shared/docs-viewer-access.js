@@ -11,7 +11,9 @@ export function createDocsViewerAccessProjection(options) {
       ? settings.isDocsManagementRoute
       : routeAccess.isDocsManagementRoute
   );
-  var allowManagement = isDocsManagementRoute;
+  var allowManagement = routeAccess.allowManagement != null
+    ? Boolean(routeAccess.allowManagement)
+    : isDocsManagementRoute;
   var allowScopeQuery = Boolean(
     settings.allowScopeQuery != null ? settings.allowScopeQuery : routeAccess.allowScopeQuery
   );

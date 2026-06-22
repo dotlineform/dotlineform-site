@@ -75,7 +75,7 @@ Public read-only route shells are checked-in static HTML under `site/`.
 New public scopes must not create Markdown route files or generated Python source.
 The public-scope lifecycle path renders `docs-viewer/templates/public-route/index.html` into `site/<route>/index.html` during the local write action and updates data/config route records.
 
-Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local management shell.
+Use `docs-viewer/shell/docs-viewer-manage.html` through the standalone Docs Viewer service for the local management shell.
 In this repo, that route is `/docs/`.
 Public builds use read-only route shells, while the standalone Docs Viewer service serves `/docs/` management locally.
 

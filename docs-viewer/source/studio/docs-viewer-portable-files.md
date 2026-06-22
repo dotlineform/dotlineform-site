@@ -18,7 +18,7 @@ viewable: true
 
 Copy:
 
-- `docs-viewer/shell/docs-viewer-shell.html`
+- `docs-viewer/shell/docs-viewer-manage.html`
 - `docs-viewer/templates/public-route/index.html`
 
 If management mode should include Docs Import, also copy:
@@ -34,9 +34,9 @@ Current public route shell examples in this repo are:
 Use `docs-viewer/templates/public-route/index.html` to create new public corpus routes such as `/research/`.
 In this repo, New Scope renders that template into `site/<route>/index.html` during the local lifecycle write action.
 
-Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
+Use `docs-viewer/shell/docs-viewer-manage.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
 
-The standalone service renders route context and app-shell mounts only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables the management shell in `var/local/site.env`; the browser app shell renders the header controls, index panel chrome, management shell hosts, and action controls into those mounts.
+The standalone service serves the static shell and dynamic route config separately; the browser app shell reads route state through `data-*` attributes and renders the header controls, index panel chrome, management shell hosts, and action controls into those mounts.
 
 ### Browser Runtime
 

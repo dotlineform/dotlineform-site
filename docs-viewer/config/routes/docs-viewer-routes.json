@@ -13,6 +13,7 @@
       "generated_base_url": "",
       "access": {
         "allow_scope_query": true,
+        "allow_management": true,
         "management_base_url": ""
       },
       "docs_paths": {

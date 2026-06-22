@@ -132,7 +132,7 @@ Current owner:
 - `site/library/index.html`
 - `site/analysis/index.html`
 - `site/moments/index.html`
-- `docs-viewer/shell/docs-viewer-shell.html`
+- `docs-viewer/shell/docs-viewer-manage.html`
 - `site/docs-viewer/config/views/docs-viewer-view-registry.json`
 - `site/docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `site/docs-viewer/config/routes/docs-viewer-public-routes.json`

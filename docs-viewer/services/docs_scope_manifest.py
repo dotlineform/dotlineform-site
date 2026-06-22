@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import datetime as dt
-import html
 import json
 import re
 import shutil
@@ -490,40 +489,13 @@ def default_source_doc_text(title: str, default_doc_id: str) -> str:
 
 
 def readonly_route_text(title: str, scope_id: str, public_route_path: str, *, enable_search: bool = True) -> str:
+    del title, scope_id, public_route_path, enable_search
+    return (default_repo_root() / PUBLIC_ROUTE_TEMPLATE_REL_PATH).read_text(encoding="utf-8")
+
+
+def public_route_body_class(scope_id: str, public_route_path: str) -> str:
     route_section = public_route_path.strip("/").split("/", 1)[0] or scope_id
-    search_label = f"search {title.lower()}"
-    return render_public_route_shell(
-        title=title,
-        body_class=route_section,
-        route_id=scope_id,
-        enable_search=enable_search,
-        search_placeholder=search_label,
-        search_aria_label=f"Search {title}",
-    )
-
-
-def render_public_route_shell(
-    *,
-    title: str,
-    body_class: str,
-    route_id: str,
-    enable_search: bool,
-    search_placeholder: str,
-    search_aria_label: str,
-) -> str:
-    template = (default_repo_root() / PUBLIC_ROUTE_TEMPLATE_REL_PATH).read_text(encoding="utf-8")
-    values = {
-        "__PAGE_TITLE__": html.escape(title, quote=True),
-        "__BODY_CLASS__": html.escape(body_class, quote=True),
-        "__ROUTE_ID__": html.escape(route_id, quote=True),
-        "__ENABLE_SEARCH__": "true" if enable_search else "false",
-        "__SEARCH_PLACEHOLDER__": html.escape(search_placeholder, quote=True),
-        "__SEARCH_ARIA_LABEL__": html.escape(search_aria_label, quote=True),
-    }
-    rendered = template
-    for token, value in values.items():
-        rendered = rendered.replace(token, value)
-    return rendered
+    return route_section
 
 
 def load_json_object(path: Path, label: str) -> dict[str, Any]:
@@ -575,7 +547,15 @@ def remove_scope_config(repo_root: Path, scope_id: str) -> None:
     write_text_atomic(config_path, render_json(payload))
 
 
-def public_route_record(scope_id: str, public_route_path: str, default_doc_id: str, *, build_inline_search: bool) -> dict[str, Any]:
+def public_route_record(
+    scope_id: str,
+    public_route_path: str,
+    default_doc_id: str,
+    *,
+    build_inline_search: bool,
+    title: str,
+) -> dict[str, Any]:
+    search_label = f"search {title.lower()}"
     return {
         "schema_version": "docs_viewer_route_config_v1",
         "route_id": scope_id,
@@ -603,6 +583,17 @@ def public_route_record(scope_id: str, public_route_path: str, default_doc_id: s
             "index": {"enabled": True, "default_state": "normal"},
             "main": {"enabled": True, "default_view": "rendered-document"},
             "info": {"enabled": True, "default_view": "metadata-info"},
+        },
+        "ui": {
+            "route_shell": {
+                "page_title": f"{title} | dotlineform",
+                "body_class": public_route_body_class(scope_id, public_route_path),
+            },
+            "viewer_search": {
+                "enabled": build_inline_search,
+                "placeholder": search_label,
+                "aria_label": f"Search {title}",
+            },
         },
         "hosted_views": {
             "records": [],
@@ -831,6 +822,7 @@ def apply_create_scope(
                     str(preview["urls"]["public"]),
                     str(preview["planned_scope_config"]["default_doc_id"]),
                     build_inline_search=bool(preview["build_inline_search"]),
+                    title=str(preview["title"]),
                 ),
             )
         append_scope_manifest_record(repo_root, preview, manifest)

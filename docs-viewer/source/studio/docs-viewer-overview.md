@@ -32,8 +32,8 @@ The current implementation is split into three layers.
 
 ### 1. Scope-owned route shells and service shell
 
-Public route pages identify the active Docs Viewer route through `data-route-id` and locate the browser-safe route-config registry through `data-route-config-url`.
-The local `/docs/` management route is rendered by the standalone Docs Viewer service from `docs-viewer/shell/docs-viewer-shell.html`.
+Public route pages identify the active Docs Viewer route through `data-route-id` or the current path and locate the browser-safe route-config registry through `data-route-config-url`.
+The local `/docs/` management route is served by the standalone Docs Viewer service from the static `docs-viewer/shell/docs-viewer-manage.html` route shell.
 
 The registry defines scope-specific values such as:
 
@@ -54,7 +54,7 @@ New public route shells are created from:
 
 Current management service shell:
 
-- `docs-viewer/shell/docs-viewer-shell.html`
+- `docs-viewer/shell/docs-viewer-manage.html`
 
 ### 2. Shared shell contract
 

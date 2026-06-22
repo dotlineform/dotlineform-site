@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
-import html
 import json
 import mimetypes
 import os
@@ -38,7 +37,7 @@ import docs_management_service as docs_service  # noqa: E402
 ENABLED_VALUES = {"1", "on", "true", "yes"}
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
 DEFAULT_SERVICE_CONFIG = REPO_ROOT / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json"
-SHELL_TEMPLATE = REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-shell.html"
+MANAGE_PAGE_TEMPLATE = REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-manage.html"
 MANAGE_ROUTE = "/docs/"
 STATIC_PREFIXES = (
     "/assets/data/",
@@ -211,7 +210,7 @@ def asset_version(repo_root: Path) -> str:
     runtime_candidates = list((repo_root / "site/docs-viewer/runtime/js").rglob("*.js"))
     runtime_candidates.extend((repo_root / "docs-viewer/runtime/js").rglob("*.js"))
     candidates = [
-        repo_root / "docs-viewer" / "shell" / "docs-viewer-shell.html",
+        repo_root / "docs-viewer" / "shell" / "docs-viewer-manage.html",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
@@ -226,31 +225,6 @@ def asset_version(repo_root: Path) -> str:
     return str(int(max(mtimes))) if mtimes else "1"
 
 
-def render_docs_viewer_shell(repo_root: Path, config: DocsViewerServiceConfig, version: str) -> str:
-    shell = (repo_root / SHELL_TEMPLATE.relative_to(REPO_ROOT)).read_text(encoding="utf-8")
-    escaped_version = html.escape(version, quote=True)
-    management_markup_enabled = "true" if config.management_enabled else "false"
-    management_stylesheet = (
-        f'<link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-manage.css?v={escaped_version}">'
-        if config.management_enabled
-        else ""
-    )
-    management_mount = (
-        '<div id="docsViewerManagementShellMount" data-docs-viewer-management-shell-mount></div>'
-        if config.management_enabled
-        else ""
-    )
-    replacements = {
-        "__DOCS_VIEWER_ASSET_VERSION__": escaped_version,
-        "__DOCS_VIEWER_ALLOW_MANAGEMENT__": management_markup_enabled,
-        "__DOCS_VIEWER_MANAGEMENT_STYLESHEET__": management_stylesheet,
-        "__DOCS_VIEWER_MANAGEMENT_MOUNT__": management_mount,
-    }
-    for token, value in replacements.items():
-        shell = shell.replace(token, value)
-    return shell
-
-
 def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfig) -> dict[str, object]:
     payload = json.loads((repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json").read_text(encoding="utf-8"))
     routes_payload = payload.get("routes")
@@ -263,37 +237,13 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
         if not isinstance(access, dict):
             access = {}
             route["access"] = access
+        access["allow_management"] = bool(config.management_enabled)
         access["management_base_url"] = config.base_url if config.management_enabled else ""
     return payload
 
 
-def render_manage_page(repo_root: Path, config: DocsViewerServiceConfig, version: str) -> str:
-    escaped_version = html.escape(version, quote=True)
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="dlf-asset-version" content="{escaped_version}">
-  <title>Docs Viewer</title>
-  <script>
-    (function () {{
-      try {{
-        var theme = localStorage.getItem("theme");
-        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
-      }} catch (error) {{
-        document.documentElement.setAttribute("data-theme", "light");
-      }}
-    }})();
-  </script>
-</head>
-<body class="docs-viewer-service">
-  <main class="docs-viewer-service__main">
-    {render_docs_viewer_shell(repo_root, config, version)}
-  </main>
-</body>
-</html>
-"""
+def manage_page_path(repo_root: Path) -> Path:
+    return repo_root / MANAGE_PAGE_TEMPLATE.relative_to(REPO_ROOT)
 
 
 def apply_capability_flags(payload: dict[str, object], config: DocsViewerServiceConfig) -> dict[str, object]:
@@ -354,7 +304,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         query = parse_qs(request.query)
 
         if path in {"/docs", MANAGE_ROUTE}:
-            self.send_html(render_manage_page(self.repo_root, self.config, self.version))
+            self.send_static_html(manage_page_path(self.repo_root))
             return
         if path == "/docs-viewer/config/routes/docs-viewer-routes.json":
             self.send_json(render_route_config_registry(self.repo_root, self.config))
@@ -502,8 +452,17 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def send_html(self, html_text: str, status: HTTPStatus = HTTPStatus.OK) -> None:
-        body = html_text.encode("utf-8")
+    def send_static_html(self, path: Path, status: HTTPStatus = HTTPStatus.OK) -> None:
+        try:
+            resolved_path = path.resolve()
+            resolved_path.relative_to(self.repo_root)
+        except ValueError:
+            self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+            return
+        if not resolved_path.is_file():
+            self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+            return
+        body = resolved_path.read_bytes()
         self.send_response(status)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Cache-Control", "no-store")

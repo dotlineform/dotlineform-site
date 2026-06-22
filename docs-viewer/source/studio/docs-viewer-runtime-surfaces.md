@@ -15,8 +15,8 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | Surface | Public `/library/` | Public `/analysis/` | Local/manage `/docs/` |
 | --- | --- | --- | --- |
 | Route owner | public page | public page | standalone Docs Viewer service |
-| Route file | `site/library/index.html` | `site/analysis/index.html` | `docs-viewer/shell/docs-viewer-shell.html` |
-| Shell source | tracked static route shell; new shells render from `docs-viewer/templates/public-route/index.html` | tracked static route shell; new shells render from `docs-viewer/templates/public-route/index.html` | service-rendered standalone shell |
+| Route file | `site/library/index.html` | `site/analysis/index.html` | `docs-viewer/shell/docs-viewer-manage.html` |
+| Shell source | tracked static route shell; new shells copy `docs-viewer/templates/public-route/index.html` and read per-route values from route config | tracked static route shell; new shells copy `docs-viewer/templates/public-route/index.html` and read per-route values from route config | service-served static shell with dynamic route config |
 | Entrypoint | `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | `docs-viewer/runtime/js/management/docs-viewer-manage.js` |
 | Route registry | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` served at `/docs-viewer/config/routes/docs-viewer-public-routes.json` | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` served at `/docs-viewer/config/routes/docs-viewer-public-routes.json` | `docs-viewer/config/routes/docs-viewer-routes.json` served with service-local URLs |
 | UI text | `site/docs-viewer/config/ui-text/public.json` served at `/docs-viewer/config/ui-text/public.json` | `site/docs-viewer/config/ui-text/public.json` served at `/docs-viewer/config/ui-text/public.json` | `docs-viewer/config/ui-text/manage.json` |

@@ -757,9 +757,12 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert payload["ok"] is True
     assert payload["publishing_mode"] == "public_readonly"
     assert calls == [(repo_root, "research", {"include_search": True})]
-    assert 'data-allow-management="false"' not in route_html
-    assert 'data-route-id="research"' in route_html
+    assert 'data-allow-management="false"' in route_html
+    assert 'data-include-scope-param="false"' in route_html
     assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in route_html
+    assert 'data-route-id="research"' not in route_html
+    assert "Research | dotlineform" not in route_html
+    assert "__ROUTE_ID__" not in route_html
     assert 'src="/docs-viewer/runtime/js/public/docs-viewer-public.js?v=' in route_html
     assert "docs_viewer_readonly_route.html" not in route_html
     assert scope_payload["scopes"][1]["scope_id"] == "research"
@@ -767,6 +770,9 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert scope_payload["scopes"][1]["include_scope_param"] is False
     assert public_routes["routes"][0]["route_id"] == "research"
     assert public_routes["routes"][0]["route_path"] == "/research/"
+    assert public_routes["routes"][0]["ui"]["route_shell"]["page_title"] == "Research | dotlineform"
+    assert public_routes["routes"][0]["ui"]["route_shell"]["body_class"] == "research"
+    assert public_routes["routes"][0]["ui"]["viewer_search"]["placeholder"] == "search research"
     assert public_routes["routes"][0]["docs_paths"]["index_tree_url"] == "/assets/data/docs/scopes/research/index-tree.json"
     assert any(route["route_id"] == "research" for route in all_routes["routes"])
     assert public_doc_exists is True
