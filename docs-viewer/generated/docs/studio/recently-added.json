@@ -11,12 +11,12 @@
       "parent_title": "Admin"
     },
     {
-      "doc_id": "site-request-catalogue-per-work-detail-source",
-      "title": "Catalogue Per-Work Detail Source Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-per-work-detail-source.json",
+      "doc_id": "catalogue-per-work-detail-source",
+      "title": "Catalogue Per-Work Detail Source",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-per-work-detail-source.json",
       "added_date": "2026-06-22",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
+      "parent_id": "studio",
+      "parent_title": "Studio"
     },
     {
       "doc_id": "data-sharing-adapter-architecture",
@@ -59,14 +59,6 @@
       "parent_title": "Change Requests"
     },
     {
-      "doc_id": "site-request-catalogue-canonical-work-detail-structure-review",
-      "title": "Catalogue Canonical Work Detail Structure Review Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-canonical-work-detail-structure-review.json",
-      "added_date": "2026-06-16",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
       "doc_id": "ui-pattern-file-picker",
       "title": "File Picker Pattern",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI"
+    },
+    {
+      "doc_id": "site-request-public-js-runtime-payload-review-audit",
+      "title": "Public JS Runtime and Payload Static Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-js-runtime-payload-review",
+      "parent_title": "Public JavaScript Runtime and Payload Review Request"
     }
   ],
-  "generated_at": "2026-06-22T14:09:34Z"
+  "generated_at": "2026-06-22T15:05:42Z"
 }

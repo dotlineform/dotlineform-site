@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3ff5ac5f12be4793233cf4689a41e220",
-    "generated_at_utc": "2026-06-22T14:42:50Z",
-    "count": 225
+    "version": "blake2b-5ee2062b79401be1db2368ea283e727c",
+    "generated_at_utc": "2026-06-22T15:05:42Z",
+    "count": 224
   },
   "entries": [
     {
@@ -1255,65 +1255,6 @@
         "09"
       ],
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
-    },
-    {
-      "id": "site-request-catalogue-canonical-work-detail-structure-review",
-      "kind": "doc",
-      "title": "Catalogue Canonical Work Detail Structure Review Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-canonical-work-detail-structure-review",
-      "last_updated": "2026-06-16",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-16 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-canonical-work-detail-structure-review",
-        "site",
-        "request",
-        "catalogue",
-        "canonical",
-        "work",
-        "detail",
-        "structure",
-        "review",
-        "catalogue canonical work detail structure review request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-16",
-        "2026",
-        "06",
-        "16"
-      ],
-      "search_text": "site-request-catalogue-canonical-work-detail-structure-review site request catalogue canonical work detail structure review catalogue canonical work detail structure review request change requests change requests 2026-06-16 2026 06 16"
-    },
-    {
-      "id": "site-request-catalogue-per-work-detail-source",
-      "kind": "doc",
-      "title": "Catalogue Per-Work Detail Source Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-per-work-detail-source",
-      "last_updated": "2026-06-22",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-22 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-per-work-detail-source",
-        "site",
-        "request",
-        "catalogue",
-        "per",
-        "work",
-        "detail",
-        "source",
-        "catalogue per-work detail source request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-22",
-        "2026",
-        "06",
-        "22"
-      ],
-      "search_text": "site-request-catalogue-per-work-detail-source site request catalogue per work detail source catalogue per-work detail source request change requests change requests 2026-06-22 2026 06 22"
     },
     {
       "id": "site-request-docs-semantic-references-v2",
@@ -4489,6 +4430,31 @@
       "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor studio 2026-05-22 2026 05 22"
     },
     {
+      "id": "catalogue-per-work-detail-source",
+      "kind": "doc",
+      "title": "Catalogue Per-Work Detail Source",
+      "href": "/docs/?scope=studio&doc=catalogue-per-work-detail-source",
+      "last_updated": "2026-06-22",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-22 • Studio",
+      "search_terms": [
+        "catalogue-per-work-detail-source",
+        "catalogue",
+        "per",
+        "work",
+        "detail",
+        "source",
+        "catalogue per-work detail source",
+        "studio",
+        "2026-06-22",
+        "2026",
+        "06",
+        "22"
+      ],
+      "search_text": "catalogue-per-work-detail-source catalogue per work detail source catalogue per-work detail source studio 2026-06-22 2026 06 22"
+    },
+    {
       "id": "data-models-catalogue",
       "kind": "doc",
       "title": "Catalogue Scope",
@@ -4589,7 +4555,7 @@
     {
       "id": "catalogue-work-detail-editor",
       "kind": "doc",
-      "title": "Catalogue Work Detail Editor",
+      "title": "Catalogue Work Detail Editing",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
       "last_updated": "2026-06-22",
       "parent_id": "studio",
@@ -4601,14 +4567,15 @@
         "work",
         "detail",
         "editor",
-        "catalogue work detail editor",
+        "catalogue work detail editing",
+        "editing",
         "studio",
         "2026-06-22",
         "2026",
         "06",
         "22"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-06-22 2026 06 22"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editing editing studio 2026-06-22 2026 06 22"
     },
     {
       "id": "catalogue-work-editor",

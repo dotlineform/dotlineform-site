@@ -301,18 +301,6 @@
           ]
         },
         {
-          "doc_id": "site-request-catalogue-canonical-work-detail-structure-review",
-          "title": "Catalogue Canonical Work Detail Structure Review Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-canonical-work-detail-structure-review.json",
-          "ui_status": "planned"
-        },
-        {
-          "doc_id": "site-request-catalogue-per-work-detail-source",
-          "title": "Catalogue Per-Work Detail Source Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-per-work-detail-source.json",
-          "ui_status": "implemented"
-        },
-        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
@@ -998,6 +986,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-moment-editor.json"
         },
         {
+          "doc_id": "catalogue-per-work-detail-source",
+          "title": "Catalogue Per-Work Detail Source",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-per-work-detail-source.json"
+        },
+        {
           "doc_id": "data-models-catalogue",
           "title": "Catalogue Scope",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue.json"
@@ -1019,7 +1012,7 @@
         },
         {
           "doc_id": "catalogue-work-detail-editor",
-          "title": "Catalogue Work Detail Editor",
+          "title": "Catalogue Work Detail Editing",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-work-detail-editor.json"
         },
         {
@@ -1221,5 +1214,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T14:42:14Z"
+  "generated_at": "2026-06-22T15:05:42Z"
 }
