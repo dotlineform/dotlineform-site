@@ -210,6 +210,9 @@ DOM / CSS:
 
 ### Edit tag modal
 
+The modal `*-status` roles are workflow feedback nodes for validation, save, delete, demote, and service-availability messages.
+They are not tag lifecycle state.
+
 User-facing name:
 
 - edit tag modal
@@ -220,7 +223,7 @@ DOM / CSS:
 - `[data-role="edit-tag-id"]`
 - `[data-role="edit-tag-name"]`
 - `[data-role="edit-description"]`
-- `[data-role="edit-status"]`
+- `[data-role="edit-status"]` for edit/save feedback messages
 
 ### New tag modal
 
@@ -235,7 +238,7 @@ DOM / CSS:
 - `[data-role="new-tag-slug"]`
 - `[data-role="new-tag-warning"]`
 - `[data-role="new-tag-description"]`
-- `[data-role="new-tag-status"]`
+- `[data-role="new-tag-status"]` for create/import fallback feedback messages
 
 ### Demote modal
 
@@ -250,7 +253,7 @@ DOM / CSS:
 - `[data-role="demote-tag-search"]`
 - `[data-role="demote-tag-popup-wrap"]`
 - `[data-role="demote-tag-list"]`
-- `[data-role="demote-status"]`
+- `[data-role="demote-status"]` for demotion validation and apply feedback messages
 
 ### Delete modal
 
@@ -263,7 +266,7 @@ DOM / CSS:
 - `[data-role="delete-modal"]`
 - `[data-role="delete-tag-meta"]`
 - `[data-role="delete-impact"]`
-- `[data-role="delete-status"]`
+- `[data-role="delete-status"]` for delete workflow feedback messages
 - `.tagRegistryDelete__metaTag`
 - `.tagRegistryDelete__metaId`
 - `.tagRegistryDelete__impactList`
