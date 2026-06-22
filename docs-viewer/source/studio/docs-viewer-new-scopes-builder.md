@@ -26,8 +26,6 @@ Current policy:
 - external local scope creation replaces the former local untracked mode
 - user-created public scope deletion is available when the scope manifest records owned files
 - public route shells are rendered from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template)
-- the completed retargeting work is recorded in [Public Scope Lifecycle Site Retarget Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
-- the external local storage contract is recorded in [Docs Viewer External Scope Data Roots Request](/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture)
 
 ## Scope Creation Boundary
 

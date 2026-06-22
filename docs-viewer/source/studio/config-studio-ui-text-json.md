@@ -54,8 +54,3 @@ For each bundle:
 - search for `getStudioText(..., "<group>.` and remove unused keys
 - remove bundle files for retired routes only after their route and UI-text path are gone
 - keep route names aligned with `app.routes` and route-local module names
-
-Current cleanup status:
-
-- `site-series-index.json` was removed after active call-site review found no Local Studio route consuming `paths.data.ui_text.site_series_index`
-- CFG-001 in [Config Cleanup Implementation Plan](/docs/?scope=studio&doc=config-cleanup-implementation-plan) audited active Local Studio UI-text bundles and removed five stale `catalogue-work-editor.json` keys that no active route module reads

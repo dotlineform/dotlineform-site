@@ -46,7 +46,3 @@ For each bundle:
 - remove unused keys by searching route modules for the scoped key prefix
 - keep Data Sharing operation copy separate from Data Sharing adapter capability config
 - remove retired-route bundles only after route config and server exposure are retired
-
-Current cleanup status:
-
-- CFG-006 in [Config Cleanup Implementation Plan](/docs/?scope=studio&doc=config-cleanup-implementation-plan) audited active Analytics UI-text bundles and removed stale route-surface keys that no active route module reads
