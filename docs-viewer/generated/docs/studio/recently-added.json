@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "admin-static-route-template-migration",
+      "title": "Admin Static Route Template Migration",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template-migration.json",
+      "added_date": "2026-06-22",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
       "doc_id": "data-sharing-adapter-architecture",
       "title": "Data Sharing Adapter Architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-adapter-architecture.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI"
-    },
-    {
-      "doc_id": "site-request-canonical-static-site-root-tasks",
-      "title": "Canonical Static Site Root Migration Tasks",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root-tasks.json",
-      "added_date": "2026-06-13",
-      "parent_id": "site-request-canonical-static-site-root",
-      "parent_title": "Canonical Static Site Root Request"
     }
   ],
-  "generated_at": "2026-06-21T22:06:19Z"
+  "generated_at": "2026-06-22T09:22:01Z"
 }

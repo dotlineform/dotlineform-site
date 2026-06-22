@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4bc772023d3e5ed864de4c033697e6c5",
-    "generated_at_utc": "2026-06-22T09:09:10Z",
+    "version": "blake2b-d2fa24ff91a837378e9814af548dadf2",
+    "generated_at_utc": "2026-06-22T09:22:02Z",
     "count": 242
   },
   "entries": [
@@ -42,6 +42,30 @@
         "06"
       ],
       "search_text": "activity activity report report admin 2026-06-06 2026 06"
+    },
+    {
+      "id": "admin-static-route-template-migration",
+      "kind": "doc",
+      "title": "Admin Static Route Template Migration",
+      "href": "/docs/?scope=studio&doc=admin-static-route-template-migration",
+      "last_updated": "2026-06-22",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-22 • Admin",
+      "search_terms": [
+        "admin-static-route-template-migration",
+        "admin",
+        "static",
+        "route",
+        "template",
+        "migration",
+        "admin static route template migration",
+        "2026-06-22",
+        "2026",
+        "06",
+        "22"
+      ],
+      "search_text": "admin-static-route-template-migration admin static route template migration admin static route template migration 2026-06-22 2026 06 22"
     },
     {
       "id": "audit-runner",
@@ -5295,30 +5319,6 @@
         "06"
       ],
       "search_text": "studio-config-and-save-flow studio config and save flow config and save flow 2026-06-06 2026 06"
-    },
-    {
-      "id": "config-cleanup-implementation-plan",
-      "kind": "doc",
-      "title": "Config Cleanup Implementation Plan",
-      "href": "/docs/?scope=studio&doc=config-cleanup-implementation-plan",
-      "last_updated": "2026-06-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-06-03 • Studio",
-      "search_terms": [
-        "config-cleanup-implementation-plan",
-        "config",
-        "cleanup",
-        "implementation",
-        "plan",
-        "config cleanup implementation plan",
-        "studio",
-        "2026-06-03",
-        "2026",
-        "06",
-        "03"
-      ],
-      "search_text": "config-cleanup-implementation-plan config cleanup implementation plan config cleanup implementation plan studio 2026-06-03 2026 06 03"
     },
     {
       "id": "config-files-inventory",

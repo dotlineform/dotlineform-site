@@ -17,6 +17,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/activity.json"
         },
         {
+          "doc_id": "admin-static-route-template-migration",
+          "title": "Admin Static Route Template Migration",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template-migration.json"
+        },
+        {
           "doc_id": "audit-runner",
           "title": "Audit Runner",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json"
@@ -1166,11 +1171,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-config-and-save-flow.json"
         },
         {
-          "doc_id": "config-cleanup-implementation-plan",
-          "title": "Config Cleanup Implementation Plan",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-cleanup-implementation-plan.json"
-        },
-        {
           "doc_id": "config-files-inventory",
           "title": "Config Files Inventory",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-files-inventory.json"
@@ -1327,5 +1327,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-21T22:06:19Z"
+  "generated_at": "2026-06-22T09:22:01Z"
 }
