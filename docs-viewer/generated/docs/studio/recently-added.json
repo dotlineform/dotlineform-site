@@ -75,13 +75,13 @@
       "parent_title": "UI"
     },
     {
-      "doc_id": "site-request-public-js-runtime-payload-review-audit",
-      "title": "Public JS Runtime and Payload Static Audit",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
+      "doc_id": "docs-viewer-public-route-shell-template",
+      "title": "Public Route Shell Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json",
       "added_date": "2026-06-13",
-      "parent_id": "site-request-public-js-runtime-payload-review",
-      "parent_title": "Public JavaScript Runtime and Payload Review Request"
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-06-22T15:05:42Z"
+  "generated_at": "2026-06-22T15:17:20Z"
 }

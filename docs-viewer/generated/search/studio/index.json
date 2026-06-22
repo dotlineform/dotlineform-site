@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5ee2062b79401be1db2368ea283e727c",
-    "generated_at_utc": "2026-06-22T15:05:42Z",
-    "count": 224
+    "version": "blake2b-46f598354002d37dd6dd1dafdf703fe8",
+    "generated_at_utc": "2026-06-22T15:34:35Z",
+    "count": 222
   },
   "entries": [
     {
@@ -1348,10 +1348,10 @@
       "kind": "doc",
       "title": "Docs Viewer Workspace Mount Architecture Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-06-22",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-25 • Change Requests",
+      "display_meta": "2026-06-22 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-workspace-mount-architecture",
         "site",
@@ -1365,12 +1365,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-25",
+        "2026-06-22",
         "2026",
-        "05",
-        "25"
+        "06",
+        "22"
       ],
-      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-05-25 2026 05 25"
+      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-06-22 2026 06 22"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -1402,68 +1402,6 @@
         "26"
       ],
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
-    },
-    {
-      "id": "site-request-public-js-runtime-payload-review",
-      "kind": "doc",
-      "title": "Public JavaScript Runtime and Payload Review Request",
-      "href": "/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review",
-      "last_updated": "2026-06-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-13 • Change Requests",
-      "search_terms": [
-        "site-request-public-js-runtime-payload-review",
-        "site",
-        "request",
-        "public",
-        "js",
-        "runtime",
-        "payload",
-        "review",
-        "public javascript runtime and payload review request",
-        "javascript",
-        "and",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-13",
-        "2026",
-        "06",
-        "13"
-      ],
-      "search_text": "site-request-public-js-runtime-payload-review site request public js runtime payload review public javascript runtime and payload review request javascript and change requests change requests 2026-06-13 2026 06 13"
-    },
-    {
-      "id": "site-request-public-js-runtime-payload-review-audit",
-      "kind": "doc",
-      "title": "Public JS Runtime and Payload Static Audit",
-      "href": "/docs/?scope=studio&doc=site-request-public-js-runtime-payload-review-audit",
-      "last_updated": "2026-06-13",
-      "parent_id": "site-request-public-js-runtime-payload-review",
-      "parent_title": "Public JavaScript Runtime and Payload Review Request",
-      "display_meta": "2026-06-13 • Public JavaScript Runtime and Payload Review Request",
-      "search_terms": [
-        "site-request-public-js-runtime-payload-review-audit",
-        "site",
-        "request",
-        "public",
-        "js",
-        "runtime",
-        "payload",
-        "review",
-        "audit",
-        "public js runtime and payload static audit",
-        "and",
-        "static",
-        "public javascript runtime and payload review request",
-        "javascript",
-        "2026-06-13",
-        "2026",
-        "06",
-        "13"
-      ],
-      "search_text": "site-request-public-js-runtime-payload-review-audit site request public js runtime payload review audit public js runtime and payload static audit and static public javascript runtime and payload review request javascript 2026-06-13 2026 06 13"
     },
     {
       "id": "site-request-r2-media-upload-automation",

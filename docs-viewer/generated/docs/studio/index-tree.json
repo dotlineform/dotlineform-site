@@ -330,19 +330,6 @@
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-public-js-runtime-payload-review",
-          "title": "Public JavaScript Runtime and Payload Review Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
-          "children": [
-            {
-              "doc_id": "site-request-public-js-runtime-payload-review-audit",
-              "title": "Public JS Runtime and Payload Static Audit",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-r2-media-upload-automation",
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
@@ -1214,5 +1201,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T15:05:42Z"
+  "generated_at": "2026-06-22T15:17:26Z"
 }
