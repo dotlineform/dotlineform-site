@@ -72,7 +72,9 @@ Current Admin-owned source homes:
 
 | Path | Owner / role |
 | --- | --- |
-| `admin-app/app/server/admin_app/` | Local Admin app server, Admin route views, runtime config projection, audit/checks/activity/testing API dispatch, and audit allowlist. |
+| `admin-app/app/server/admin_app/` | Local Admin app server, runtime config projection, audit/checks/activity/testing API dispatch, static serving, and audit allowlist. |
+| `admin-app/app/frontend/admin-shell.html` | Static Admin app document shell. |
+| `admin-app/app/frontend/routes/` | Static Admin route templates loaded by `admin-shell.html`. |
 | `admin-app/app/frontend/` | Admin browser modules, route modules, shell helpers, route state helpers, transport helpers, route registry, and Admin UI text config. |
 | `admin-app/app/assets/` | Admin-only CSS and static assets used by Local Admin routes. |
 | `admin-app/checks/` | Source-boundary, projection, public-surface, runtime, CSS, activity-contract, report producer, and other repo-scope verification checks. |

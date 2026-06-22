@@ -7,24 +7,19 @@ from pathlib import Path
 
 
 ADMIN_CONFIG_PATH = Path("admin-app/app/frontend/config/admin-config.json")
-ADMIN_HOME_UI_TEXT_PATH = Path("admin-app/app/frontend/config/ui-text/admin-home.json")
 
 ADMIN_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
     "path",
+    "template",
     "script",
+    "shell_type",
     "nav",
 )
 ADMIN_ROUTE_COPY_FIELDS: tuple[str, ...] = ADMIN_ROUTE_REQUIRED_FIELDS
 ADMIN_ROUTE_REGISTRY_PATH = ("app", "routes")
-ADMIN_SERVED_ROUTE_PATHS: dict[str, str] = {
-    "admin_home": "/admin/",
-    "admin_audits": "/admin/audits/",
-    "admin_checks": "/admin/checks/",
-    "admin_activity": "/admin/activity/",
-    "admin_testing": "/admin/testing/",
-}
+ADMIN_HTML_TEMPLATE_SHELL_TYPE = "html-template"
 
 ADMIN_SERVICE_ENDPOINTS: dict[str, object] = {
     "activity": {
@@ -61,17 +56,6 @@ def load_admin_config(repo_root: Path) -> dict[str, object]:
     if not isinstance(payload, dict):
         raise RuntimeError(f"Admin config must be a JSON object: {config_path}")
     validate_admin_route_registry(repo_root, payload)
-    return payload
-
-
-def load_admin_home_ui_text(repo_root: Path) -> dict[str, object]:
-    ui_text_path = repo_root / ADMIN_HOME_UI_TEXT_PATH
-    try:
-        payload = json.loads(ui_text_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
-        raise RuntimeError(f"Could not read Admin home UI text: {ui_text_path}") from error
-    if not isinstance(payload, dict):
-        raise RuntimeError(f"Admin home UI text must be a JSON object: {ui_text_path}")
     return payload
 
 
@@ -121,21 +105,24 @@ def validate_admin_route_registry(repo_root: Path, payload: dict[str, object]) -
         else:
             seen_paths[normalized_path] = route_id
 
+        template = route.get("template")
+        if not isinstance(template, str) or not template.strip():
+            errors.append(f"{route_id}: missing template")
+        elif not resolve_admin_static_path(repo_root, template.strip()).exists():
+            errors.append(f"{route_id}: template does not exist: {template}")
+
         script = route.get("script")
         if isinstance(script, str) and script.strip() and not resolve_admin_static_path(repo_root, script.strip()).exists():
             errors.append(f"{route_id}: script does not exist: {script}")
         elif not isinstance(script, str):
             errors.append(f"{route_id}: script must be a string")
 
-        served_path = ADMIN_SERVED_ROUTE_PATHS.get(route_id)
-        if served_path and normalize_route_path(served_path) != normalized_path:
-            errors.append(f"{route_id}: path {path} does not match served route {served_path}")
+        shell_type = route.get("shell_type")
+        if shell_type != ADMIN_HTML_TEMPLATE_SHELL_TYPE:
+            errors.append(f"{route_id}: shell_type must be {ADMIN_HTML_TEMPLATE_SHELL_TYPE}")
 
         if not isinstance(route.get("nav"), bool):
             errors.append(f"{route_id}: nav must be boolean")
-
-    for route_id in sorted(set(ADMIN_SERVED_ROUTE_PATHS) - set(raw_routes)):
-        errors.append(f"{route_id}: missing Admin route metadata")
 
     if errors:
         raise RuntimeError("Invalid Admin route registry: " + "; ".join(errors))
@@ -166,11 +153,22 @@ def admin_views(repo_root: Path, payload: dict[str, object] | None = None) -> di
     return admin_route_registry(repo_root, payload)
 
 
+def admin_shell_route_paths(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, str]:
+    return {
+        normalize_route_path(str(route["path"])): route_id
+        for route_id, route in admin_route_registry(repo_root, payload).items()
+        if route.get("shell_type") == ADMIN_HTML_TEMPLATE_SHELL_TYPE and isinstance(route.get("path"), str)
+    }
+
+
 def asset_version(repo_root: Path) -> str:
     candidates = [
+        repo_root / "admin-app" / "app" / "frontend" / "admin-shell.html",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-app.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-route-registry.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-route-templates.js",
         repo_root / "admin-app" / "app" / "assets" / "css" / "admin.css",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "admin-config.json",
-        repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-home.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-activity.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-audits.json",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-checks.json",
@@ -187,6 +185,9 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-testing.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-transport.js",
     ]
+    routes_dir = repo_root / "admin-app" / "app" / "frontend" / "routes"
+    if routes_dir.exists():
+        candidates.extend(sorted(routes_dir.glob("*.html")))
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"
 
@@ -215,7 +216,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
                 "admin_activity": "/admin/app/frontend/config/ui-text/admin-activity.json",
                 "admin_audits": "/admin/app/frontend/config/ui-text/admin-audits.json",
                 "admin_checks": "/admin/app/frontend/config/ui-text/admin-checks.json",
-                "admin_home": "/admin/app/frontend/config/ui-text/admin-home.json",
             },
             "activity": {
                 "feed": "var/admin/activity/activity_log.json",

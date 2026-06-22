@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="dlf-asset-version" content="__ADMIN_ASSET_VERSION__">
+  <meta name="dlf-admin-config-url" content="/admin/runtime-config.json">
+  <title>__ADMIN_PAGE_TITLE__ | dotlineform Admin</title>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/admin/app/assets/css/admin.css?v=__ADMIN_ASSET_VERSION__">
+</head>
+<body class="adminApp">
+  <div class="adminShell">
+    <header class="adminHeader">
+      <div class="adminHeader__inner">
+        <a class="adminHeader__brand" href="/admin/">dotlineform admin</a>
+        <div class="adminHeader__actions">
+          <button class="studioThemeToggle" type="button" data-admin-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
+            <svg class="studioThemeToggle__icon" data-admin-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="M4.93 4.93l1.41 1.41"></path>
+              <path d="M17.66 17.66l1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="M4.93 19.07l1.41-1.41"></path>
+              <path d="M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class="studioThemeToggle__icon" data-admin-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
+              <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="adminMain">
+      <section class="adminRoute" data-admin-page="__ADMIN_ROUTE_ID__" data-admin-route-section>
+        <div class="adminRoute__header" data-admin-route-heading>
+          <h1 class="adminRoute__title" data-admin-page-title>__ADMIN_PAGE_TITLE__</h1>
+        </div>
+        <div data-admin-route-outlet></div>
+      </section>
+    </main>
+  </div>
+  <p class="tagStudio__status" data-admin-shell-status>loading Admin...</p>
+  <script type="module" src="/admin/app/frontend/js/admin-app.js?v=__ADMIN_ASSET_VERSION__"></script>
+</body>
+</html>

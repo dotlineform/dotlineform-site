@@ -7,35 +7,45 @@
         "label": "home",
         "title": "Admin",
         "path": "/admin/",
+        "template": "/admin/app/frontend/routes/admin-home.html",
         "script": "/admin/app/frontend/js/admin-home.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "admin_audits": {
         "label": "audits",
         "title": "Audits",
         "path": "/admin/audits/",
+        "template": "/admin/app/frontend/routes/admin-audits.html",
         "script": "/admin/app/frontend/js/admin-audits.js",
+        "shell_type": "html-template",
         "nav": true
       },
       "admin_checks": {
         "label": "checks",
         "title": "Checks",
         "path": "/admin/checks/",
+        "template": "/admin/app/frontend/routes/admin-checks.html",
         "script": "/admin/app/frontend/js/admin-checks.js",
+        "shell_type": "html-template",
         "nav": true
       },
       "admin_activity": {
         "label": "activity",
         "title": "Activity",
         "path": "/admin/activity/",
+        "template": "/admin/app/frontend/routes/admin-activity.html",
         "script": "/admin/app/frontend/js/admin-activity.js",
+        "shell_type": "html-template",
         "nav": true
       },
       "admin_testing": {
         "label": "testing",
         "title": "Testing",
         "path": "/admin/testing/",
+        "template": "/admin/app/frontend/routes/admin-testing.html",
         "script": "/admin/app/frontend/js/admin-testing.js",
+        "shell_type": "html-template",
         "nav": true
       }
     }
@@ -52,8 +62,7 @@
       "ui_text": {
         "admin_activity": "/admin/app/frontend/config/ui-text/admin-activity.json",
         "admin_audits": "/admin/app/frontend/config/ui-text/admin-audits.json",
-        "admin_checks": "/admin/app/frontend/config/ui-text/admin-checks.json",
-        "admin_home": "/admin/app/frontend/config/ui-text/admin-home.json"
+        "admin_checks": "/admin/app/frontend/config/ui-text/admin-checks.json"
       }
     }
   }

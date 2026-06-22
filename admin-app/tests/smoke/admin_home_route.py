@@ -9,6 +9,8 @@ import sys
 from threading import Thread
 from urllib.request import urlopen
 
+from playwright.sync_api import expect, sync_playwright
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ADMIN_SERVER_DIR = REPO_ROOT / "admin-app" / "app" / "server" / "admin_app"
@@ -42,27 +44,54 @@ def main() -> int:
         runtime = json.loads(read_text(f"{base_url}/admin/runtime-config.json"))
         if runtime["app"]["runtime"]["routes"]["home"] != "/admin/":
             raise AssertionError("Admin runtime config did not expose /admin/ home route")
+        home_view = next(
+            (view for view in runtime["app"]["runtime"]["views"] if view.get("id") == "admin_home"),
+            None,
+        )
+        if not home_view or home_view.get("template") != "/admin/app/frontend/routes/admin-home.html":
+            raise AssertionError(f"Admin runtime config did not expose the home template: {home_view!r}")
+        if home_view.get("shell_type") != "html-template":
+            raise AssertionError(f"Admin runtime config did not expose the home shell type: {home_view!r}")
 
         html = read_text(f"{base_url}/admin/")
         expected = [
             "dotlineform admin",
-            'href="/admin/audits/"',
-            'href="/admin/checks/"',
-            'href="/admin/activity/"',
-            'href="/admin/testing/"',
-            'class="studioHomeLinks__pill"',
             "data-admin-theme-toggle",
             "/admin/app/assets/css/admin.css",
-            "/admin/app/frontend/js/admin-theme.js",
-            "/admin/app/frontend/js/admin-home.js",
+            "/admin/app/frontend/js/admin-app.js",
+            "data-admin-route-outlet",
         ]
         missing = [text for text in expected if text not in html]
         if missing:
-            raise AssertionError(f"Admin home missing expected content: {missing!r}")
+            raise AssertionError(f"Admin home shell missing expected content: {missing!r}")
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page()
+            console_errors: list[str] = []
+            page_errors: list[str] = []
+            page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
+            page.on("pageerror", lambda error: page_errors.append(str(error)))
+            page.goto(f"{base_url}/admin/", wait_until="domcontentloaded")
+            if page.locator("[data-admin-route-outlet]").count() != 1:
+                raise AssertionError("Admin home did not render the static Admin shell outlet")
+            root = page.locator("[data-admin-home]")
+            expect(root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
+            for href in ["/admin/audits/", "/admin/checks/", "/admin/activity/", "/admin/testing/"]:
+                expect(page.locator(f'a.studioHomeLinks__pill[href="{href}"]')).to_be_visible(timeout=10_000)
+            theme_toggle = page.locator("[data-admin-theme-toggle]")
+            if theme_toggle.count() != 1:
+                raise AssertionError("Admin home did not expose exactly one theme toggle")
+            browser.close()
+
+        if console_errors:
+            raise AssertionError(f"console errors: {console_errors}")
+        if page_errors:
+            raise AssertionError(f"page errors: {page_errors}")
 
         testing_html = read_text(f"{base_url}/admin/testing/")
-        if "Admin test runs" not in testing_html or "/admin/app/frontend/js/admin-testing.js" not in testing_html:
-            raise AssertionError("Admin testing route did not render the testing shell")
+        if "data-admin-route-outlet" not in testing_html or "/admin/app/frontend/js/admin-app.js" not in testing_html:
+            raise AssertionError("Admin testing route did not render the static Admin shell")
         testing_runs = json.loads(read_text(f"{base_url}/admin/api/testing/runs"))
         if testing_runs.get("runs_root") != "var/admin/test-runs":
             raise AssertionError(f"unexpected Admin testing runs payload: {testing_runs!r}")

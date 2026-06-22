@@ -42,7 +42,9 @@ Current Admin-owned source homes:
 
 | Path | Owner / role |
 | --- | --- |
-| `admin-app/app/server/admin_app/` | Admin app server, Admin route views, runtime config projection, API dispatch, static serving, and audit allowlist. |
+| `admin-app/app/server/admin_app/` | Admin app server, runtime config projection, API dispatch, static serving, and audit allowlist. |
+| `admin-app/app/frontend/admin-shell.html` | Static Admin app document shell. |
+| `admin-app/app/frontend/routes/` | Static Admin route templates loaded by `admin-shell.html`. |
 | `admin-app/app/frontend/` | Admin browser modules, route modules, route state helpers, transport helpers, route registry, and UI text config. |
 | `admin-app/app/assets/css/admin.css` | Admin shell, navigation, route layout, and Admin-owned page styling. |
 | `admin-app/checks/` | Repo-scope checks, report producers, source-boundary audits, public-surface audits, runtime audits, CSS/JS inventories, and projection contract checks. |
@@ -55,10 +57,10 @@ Current Admin-owned source homes:
 
 ## Runtime Config
 
-Local Admin views declare the runtime config endpoint with `meta[name="dlf-admin-config-url"]`.
+The static Local Admin shell declares the runtime config endpoint with `meta[name="dlf-admin-config-url"]`.
 `/admin/runtime-config.json` exposes:
 
-- Admin route ids, labels, titles, paths, scripts, and navigation visibility from `admin-app/app/frontend/config/admin-config.json`
+- Admin route ids, labels, titles, paths, templates, scripts, shell type, and navigation visibility from `admin-app/app/frontend/config/admin-config.json`
 - service endpoints for activity, audits, checks, and testing
 - UI text paths under `/admin/app/frontend/config/ui-text/...`
 - local output paths for activity, checks runs, and testing run summaries

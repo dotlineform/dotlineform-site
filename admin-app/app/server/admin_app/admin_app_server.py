@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import mimetypes
 import os
@@ -28,9 +29,14 @@ ADMIN_SERVER_DIR = Path(__file__).resolve().parent
 if str(ADMIN_SERVER_DIR) not in sys.path:
     sys.path.insert(0, str(ADMIN_SERVER_DIR))
 
-from admin_app_config import asset_version, runtime_config  # noqa: E402
+from admin_app_config import (  # noqa: E402
+    admin_shell_route_paths,
+    admin_views,
+    asset_version,
+    normalize_route_path,
+    runtime_config,
+)
 from admin_activity_api import activity_get_payload  # noqa: E402
-from admin_app_views import admin_activity_view, admin_audits_view, admin_checks_view, admin_home_view, admin_testing_view  # noqa: E402
 from admin_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from admin_checks_api import ChecksConfigError, checks_delete_response, checks_get_payload, checks_post_response  # noqa: E402
 from admin_testing_api import testing_get_payload  # noqa: E402
@@ -40,6 +46,7 @@ STATIC_PREFIXES = (
     "/admin/app/assets/",
     "/admin/app/frontend/config/",
     "/admin/app/frontend/js/",
+    "/admin/app/frontend/routes/",
 )
 STATIC_FILES = {
     "/favicon.ico",
@@ -98,20 +105,8 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/admin/api/testing/"):
             self.send_testing_api_json(path.removeprefix("/admin/api/testing"), query)
             return
-        if path in {"/admin", "/admin/"}:
-            self.send_html(admin_home_view(self.version, self.repo_root))
-            return
-        if path in {"/admin/audits", "/admin/audits/"}:
-            self.send_html(admin_audits_view(self.version))
-            return
-        if path in {"/admin/checks", "/admin/checks/"}:
-            self.send_html(admin_checks_view(self.version))
-            return
-        if path in {"/admin/activity", "/admin/activity/"}:
-            self.send_html(admin_activity_view(self.version))
-            return
-        if path in {"/admin/testing", "/admin/testing/"}:
-            self.send_html(admin_testing_view(self.version))
+        if normalize_route_path(path) in admin_shell_route_paths(self.repo_root):
+            self.send_html(self.admin_shell_html(path))
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)
@@ -303,6 +298,25 @@ class AdminAppRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def admin_shell_html(self, request_path: str) -> str:
+        route_paths = admin_shell_route_paths(self.repo_root)
+        route_id = route_paths.get(normalize_route_path(request_path), "admin_home")
+        route = admin_views(self.repo_root).get(route_id, {})
+        title = str(route.get("title") or "Admin")
+        shell_path = self.repo_root / "admin-app" / "app" / "frontend" / "admin-shell.html"
+        try:
+            shell = shell_path.read_text(encoding="utf-8")
+        except OSError as error:
+            raise RuntimeError(f"Could not read Admin shell: {shell_path}") from error
+        replacements = {
+            "__ADMIN_ASSET_VERSION__": html.escape(self.version, quote=True),
+            "__ADMIN_PAGE_TITLE__": html.escape(title, quote=False),
+            "__ADMIN_ROUTE_ID__": html.escape(route_id.replace("_", "-"), quote=True),
+        }
+        for token, value in replacements.items():
+            shell = shell.replace(token, value)
+        return shell
 
     def send_redirect(self, location: str) -> None:
         self.send_response(HTTPStatus.FOUND)

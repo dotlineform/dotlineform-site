@@ -67,6 +67,10 @@ def assert_runtime(base_url: str) -> None:
         runtime_view = runtime_by_id.get(route_id)
         if not runtime_view or runtime_view.get("path") != path:
             raise AssertionError(f"runtime config missing {route_id}: {runtime_views!r}")
+        if runtime_view.get("shell_type") != "html-template":
+            raise AssertionError(f"runtime config missing template shell type for {route_id}: {runtime_view!r}")
+        if not str(runtime_view.get("template") or "").startswith("/admin/app/frontend/routes/"):
+            raise AssertionError(f"runtime config missing route template for {route_id}: {runtime_view!r}")
     if runtime.get("services", {}).get("audits", {}).get("audits") != "/admin/api/audits/audits":
         raise AssertionError("runtime config missing Admin audit API")
     if runtime.get("services", {}).get("checks", {}).get("runs") != "/admin/api/checks/runs":
@@ -108,6 +112,8 @@ def run_browser_smoke(base_url: str) -> None:
         page.on("pageerror", lambda error: page_errors.append(str(error)))
 
         page.goto(f"{base_url}/admin/audits/", wait_until="domcontentloaded")
+        if page.locator("[data-admin-route-outlet]").count() != 1:
+            raise AssertionError("Admin audits did not render the static Admin shell outlet")
         audits_root = page.locator("#studioAuditsRoot")
         expect(audits_root).to_be_visible(timeout=10_000)
         expect(audits_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
@@ -115,6 +121,8 @@ def run_browser_smoke(base_url: str) -> None:
         expect(page.locator("[data-run-audit]").first).to_be_enabled(timeout=10_000)
 
         page.goto(f"{base_url}/admin/checks/", wait_until="domcontentloaded")
+        if page.locator("[data-admin-route-outlet]").count() != 1:
+            raise AssertionError("Admin checks did not render the static Admin shell outlet")
         checks_root = page.locator("#studioChecksRoot")
         expect(checks_root).to_be_visible(timeout=10_000)
         expect(checks_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
@@ -127,6 +135,8 @@ def run_browser_smoke(base_url: str) -> None:
             lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps(activity_feed())),
         )
         page.goto(f"{base_url}/admin/activity/", wait_until="domcontentloaded")
+        if page.locator("[data-admin-route-outlet]").count() != 1:
+            raise AssertionError("Admin activity did not render the static Admin shell outlet")
         activity_root = page.locator("#studioActivityRoot")
         expect(activity_root).to_be_visible(timeout=10_000)
         expect(activity_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
