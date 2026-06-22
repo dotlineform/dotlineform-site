@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bcfd844a45ad1da422afc94825843885",
-    "generated_at_utc": "2026-06-22T13:01:13Z",
+    "version": "blake2b-942c981cfac47cafeb22dfed1dbce847",
+    "generated_at_utc": "2026-06-22T14:09:34Z",
     "count": 225
   },
   "entries": [
@@ -44,28 +44,27 @@
       "search_text": "activity activity report report admin 2026-06-06 2026 06"
     },
     {
-      "id": "admin-static-route-template-migration",
+      "id": "admin-static-route-template",
       "kind": "doc",
-      "title": "Admin Static Route Template Migration",
-      "href": "/docs/?scope=studio&doc=admin-static-route-template-migration",
+      "title": "Admin Static Route Template",
+      "href": "/docs/?scope=studio&doc=admin-static-route-template",
       "last_updated": "2026-06-22",
       "parent_id": "admin",
       "parent_title": "Admin",
       "display_meta": "2026-06-22 • Admin",
       "search_terms": [
-        "admin-static-route-template-migration",
+        "admin-static-route-template",
         "admin",
         "static",
         "route",
         "template",
-        "migration",
-        "admin static route template migration",
+        "admin static route template",
         "2026-06-22",
         "2026",
         "06",
         "22"
       ],
-      "search_text": "admin-static-route-template-migration admin static route template migration admin static route template migration 2026-06-22 2026 06 22"
+      "search_text": "admin-static-route-template admin static route template admin static route template 2026-06-22 2026 06 22"
     },
     {
       "id": "audit-runner",

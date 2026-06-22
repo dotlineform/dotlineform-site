@@ -17,9 +17,9 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/activity.json"
         },
         {
-          "doc_id": "admin-static-route-template-migration",
-          "title": "Admin Static Route Template Migration",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template-migration.json"
+          "doc_id": "admin-static-route-template",
+          "title": "Admin Static Route Template",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template.json"
         },
         {
           "doc_id": "audit-runner",
@@ -1221,5 +1221,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T13:01:12Z"
+  "generated_at": "2026-06-22T14:09:34Z"
 }
