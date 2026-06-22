@@ -40,10 +40,8 @@ The current canonical work-detail model is flat:
 
 This is efficient for row-based imports and direct record lookup, but it can obscure the real ownership model:
 
-- work details belong to a work
-- sections belong to a work
+- details sections belong to a work
 - details belong to a section
-- the future editing surface is expected to be work-scoped modals, not a standalone work-detail page
 
 Generated lookup and public payloads are build-time products. They do not need the canonical source to optimize for browser lookup shape or historical spreadsheet row shape.
 
@@ -197,12 +195,10 @@ Current findings:
 - When the catalogue service is available, supported reads go through `/studio/api/catalogue/read?key=...`; otherwise the same helpers can fall back to static JSON paths from `studio/app/frontend/config/studio-config.json`.
 - `studio/app/frontend/js/catalogue-editor-service-client.js` centralizes write calls for works, work details, series, moments, imports, publication, build preview/apply, and delete preview/apply.
 - The main work, series, and work-detail editors generally read generated lookup payloads rather than reading canonical source files directly.
-- `studio/app/frontend/config/studio-config.json` still exposes canonical source-shaped paths including `catalogue_works`, `catalogue_work_details`, and `catalogue_moments`.
-- Some frontend routes still request canonical source-shaped payloads through the shared loader. For example, `studio/app/frontend/js/catalogue-status.js` reads `catalogue_works` and `catalogue_moments`, and `studio/app/frontend/js/catalogue-moment-editor.js` reads `catalogue_moments`.
+- `studio/app/frontend/config/studio-config.json` still exposes canonical source-shaped paths including `catalogue_works`, `catalogue_work_details`
+- Some frontend routes still request canonical source-shaped payloads through the shared loader. For example, `studio/app/frontend/js/catalogue-status.js` reads `catalogue_works`
 
 The practical risk is therefore not a large number of raw `fetch("work_details.json")` calls. The larger risk is that feature modules understand source and lookup shapes directly after the shared loader returns JSON. A canonical structure change should first identify these shape assumptions and either move them behind helper functions or deliberately leave them as lookup-only consumers.
-
-Moments are probably not part of this work-detail hierarchy review. They have no section/detail hierarchy, and the likely future direction is to move them toward Docs Viewer-managed documents rather than fold them into the work-detail canonical structure decision. Moment reads are still useful evidence for the broader Studio data-access pattern, but they should not expand the scope of this review unless a shared loader or write-service change affects them incidentally.
 
 ## Likely Blast Radius
 
@@ -219,8 +215,7 @@ High-level affected areas:
 - `studio/services/catalogue/catalogue_delete_plans.py`
 - `studio/services/catalogue/catalogue_build_media.py`
 - `studio/services/catalogue/project_state_report.py`
-- Studio work editor detail browser and future modal code
-- transitional work detail editor route
+- Studio work editor detail browser
 - source validation, field registry, focused Python tests, and browser smokes
 - stable source-model, lookup, write-service, and build documentation
 
@@ -246,13 +241,6 @@ This list is large, but much of the change should be mechanical if direct JSON a
    - regenerate public work JSON and search
 6. Decide whether the semantic clarity of nesting is worth the write/conflict/import changes.
 
-## Non-Goals
-
-- Do not change the current section data-model task scope.
-- Do not redesign public route UI as part of this review.
-- Do not remove generated lookup/search payloads; they remain build-time projections.
-- Do not preserve historical spreadsheet shape as a hard requirement unless it is still needed for active workflows.
-
 ## Decision Outputs
 
 The review should produce:
@@ -264,7 +252,6 @@ The review should produce:
 - migration sequence
 - compatibility policy for old source fields
 - affected docs/tests list
-- explicit recommendation about retiring or narrowing `/studio/catalogue-work-detail/`
 
 ## Open Questions
 
@@ -272,5 +259,4 @@ The review should produce:
 - If the normalized keyed source model remains, should section records stay inside `studio/data/canonical/catalogue/work_details.json`, or move to a separate `studio/data/canonical/catalogue/work_detail_sections.json` file?
 - Should canonical work source and generated public work payload intentionally look similar, or is that too easy to confuse?
 - Should detail `detail_uid` remain stored, or be derived from `work_id` and `detail_id` inside a nested work?
-- Should section ids remain generated strings like `00782-1`, or should nested section order allow simpler per-work section keys?
-- Should workbook import remain row-first and adapt through helpers, or should it stage a nested preview before apply?
+- Should workbook bulk import remain row-first and adapt through helpers, or should it stage a nested preview before apply?

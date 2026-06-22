@@ -123,9 +123,9 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json"
         },
         {
-          "doc_id": "analytics-static-route-template-migration",
-          "title": "Analytics Static Route Template Migration",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template-migration.json"
+          "doc_id": "analytics-static-route-template",
+          "title": "Analytics Static Route Template",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template.json"
         },
         {
           "doc_id": "config-analytics-ui-text-json",
@@ -301,20 +301,6 @@
           ]
         },
         {
-          "doc_id": "site-request-canonical-static-site-root",
-          "title": "Canonical Static Site Root Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-canonical-static-site-root-tasks",
-              "title": "Canonical Static Site Root Migration Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-canonical-static-site-root-tasks.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-catalogue-canonical-work-detail-structure-review",
           "title": "Catalogue Canonical Work Detail Structure Review Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-canonical-work-detail-structure-review.json",
@@ -325,12 +311,6 @@
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
           "ui_status": "draft"
-        },
-        {
-          "doc_id": "site-request-docs-viewer-runtime-js-ownership-split",
-          "title": "Docs Viewer Runtime JavaScript Ownership Split Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-runtime-js-ownership-split.json",
-          "ui_status": "done"
         },
         {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
@@ -356,86 +336,6 @@
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-public-catalogue-runtime-module-architecture",
-          "title": "Public Catalogue Runtime Module Architecture Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-image-caption-slice",
-              "title": "Public Catalogue Runtime Image And Caption Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-image-caption-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice",
-              "title": "Public Catalogue Runtime Metadata Panel Component Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-metadata-panel-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-slices",
-              "title": "Public Catalogue Runtime Module Architecture Slices",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-slices.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-moments-route-slice",
-              "title": "Public Catalogue Runtime Moments Route Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-moments-route-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-navigation-slice",
-              "title": "Public Catalogue Runtime Navigation Module Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-navigation-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-primary-media-slice",
-              "title": "Public Catalogue Runtime Primary Media Component Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-primary-media-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-prose-component-slice",
-              "title": "Public Catalogue Runtime Prose Component Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-prose-component-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-recent-index-slice",
-              "title": "Public Catalogue Runtime Recent Index Route Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-recent-index-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-selected-work-slice",
-              "title": "Public Catalogue Runtime Selected Work Route Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-selected-work-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice",
-              "title": "Public Catalogue Runtime Swipe Navigation Module Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-swipe-navigation-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-work-detail-slice",
-              "title": "Public Catalogue Runtime Work Detail Route Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-work-detail-slice.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-public-catalogue-runtime-module-architecture-works-index-slice",
-              "title": "Public Catalogue Runtime Works Index Route Slice",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-catalogue-runtime-module-architecture-works-index-slice.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-public-js-runtime-payload-review",
           "title": "Public JavaScript Runtime and Payload Review Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review.json",
@@ -449,22 +349,10 @@
           ]
         },
         {
-          "doc_id": "site-request-data-driven-public-docs-scope-routes",
-          "title": "Public Scope Lifecycle Site Retarget Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-driven-public-docs-scope-routes.json",
-          "ui_status": "done"
-        },
-        {
           "doc_id": "site-request-r2-media-upload-automation",
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
           "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-work-detail-section-data-model",
-          "title": "Work Detail Section Data Model Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-work-detail-section-data-model.json",
-          "ui_status": "done"
         }
       ]
     },
@@ -1327,5 +1215,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T09:22:01Z"
+  "generated_at": "2026-06-22T12:21:29Z"
 }

@@ -6,7 +6,7 @@ last_updated: 2026-05-26
 ui_status: draft
 ---
 
-please proceed with the tasks described in [Analytics Static Route Template Migration](/docs/?scope=studio&doc=analytics-static-route-template-migration)
+
 
 
 

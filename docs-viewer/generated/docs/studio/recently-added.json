@@ -35,9 +35,9 @@
       "parent_title": "Data Sharing"
     },
     {
-      "doc_id": "analytics-static-route-template-migration",
-      "title": "Analytics Static Route Template Migration",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template-migration.json",
+      "doc_id": "analytics-static-route-template",
+      "title": "Analytics Static Route Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template.json",
       "added_date": "2026-06-21",
       "parent_id": "analytics",
       "parent_title": "Analytics"
@@ -59,14 +59,6 @@
       "parent_title": "Change Requests"
     },
     {
-      "doc_id": "site-request-work-detail-section-data-model",
-      "title": "Work Detail Section Data Model Request",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-work-detail-section-data-model.json",
-      "added_date": "2026-06-16",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
       "doc_id": "ui-pattern-file-picker",
       "title": "File Picker Pattern",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI"
+    },
+    {
+      "doc_id": "site-request-public-js-runtime-payload-review-audit",
+      "title": "Public JS Runtime and Payload Static Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-public-js-runtime-payload-review-audit.json",
+      "added_date": "2026-06-13",
+      "parent_id": "site-request-public-js-runtime-payload-review",
+      "parent_title": "Public JavaScript Runtime and Payload Review Request"
     }
   ],
-  "generated_at": "2026-06-22T09:22:01Z"
+  "generated_at": "2026-06-22T12:21:29Z"
 }
