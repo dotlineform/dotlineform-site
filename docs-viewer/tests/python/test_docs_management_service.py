@@ -371,7 +371,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["publishing_modes"] == [
         "public_readonly",
-        "local_uncommitted",
+        "local_external",
         "local_committed",
     ]
 
@@ -651,15 +651,17 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
+            external_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
+            external_root.mkdir()
             write_docs_scope_config(repo_root)
             payload = docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "source_root": "docs-viewer/source/research",
+                    "external_data_root": external_root.as_posix(),
                     "default_doc_id": "research",
-                    "publishing_mode": "local_uncommitted",
+                    "publishing_mode": "local_external",
                     "build_inline_search": True,
                     "write_generated_outputs": True,
                     "confirm": True,
@@ -668,8 +670,9 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             )
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
-            default_doc_exists = (repo_root / "docs-viewer/source/research/research.md").exists()
-            default_doc_text = (repo_root / "docs-viewer/source/research/research.md").read_text(encoding="utf-8")
+            default_doc_path = external_root / "source/research/research.md"
+            default_doc_exists = default_doc_path.exists()
+            default_doc_text = default_doc_path.read_text(encoding="utf-8")
             route_exists = (repo_root / "research/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -685,20 +688,23 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "hidden:" not in default_doc_text
     assert route_exists is False
     assert source_payload["scopes"][1]["scope_id"] == "research"
+    assert source_payload["scopes"][1]["scope_type"] == "local_external"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
-    assert source_payload["scopes"][1]["output"] == "docs-viewer/generated/docs/research"
-    assert source_payload["scopes"][1]["search_output"] == "docs-viewer/generated/search/research/index.json"
-    assert source_payload["scopes"][1]["publish_output"] == "docs-viewer/generated/docs/research"
-    assert source_payload["scopes"][1]["publish_search_output"] == "docs-viewer/generated/search/research/index.json"
+    assert source_payload["scopes"][1]["source"] == (external_root / "source/research").as_posix()
+    assert source_payload["scopes"][1]["output"] == (external_root / "generated/docs/research").as_posix()
+    assert source_payload["scopes"][1]["search_output"] == (external_root / "generated/search/research/index.json").as_posix()
+    assert "publish_output" not in source_payload["scopes"][1]
+    assert "publish_search_output" not in source_payload["scopes"][1]
     assert source_payload["scopes"][1]["include_scope_param"] is True
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["user_created"] is True
     assert records["research"]["created_by_tool"] is True
     assert records["research"]["scope_type"] == "local"
-    assert records["research"]["repo_status_at_creation"] == "untracked"
+    assert records["research"]["repo_status_at_creation"] == "external"
+    assert records["research"]["metadata"]["external_data_root"] == external_root.as_posix()
     recorded_paths = {file["path"] for file in records["research"]["files"]}
-    assert "docs-viewer/generated/docs/research/index-tree.json" in recorded_paths
-    assert "docs-viewer/generated/docs/research/recently-added.json" in recorded_paths
+    assert (external_root / "generated/docs/research/index-tree.json").as_posix() in recorded_paths
+    assert (external_root / "generated/docs/research/recently-added.json").as_posix() in recorded_paths
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["research"]["files"])
     assert "docs-viewer/runtime/js/docs-viewer-public.js" not in recorded_paths

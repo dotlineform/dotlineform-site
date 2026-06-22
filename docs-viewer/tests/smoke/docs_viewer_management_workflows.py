@@ -449,6 +449,8 @@ def main(argv: list[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory(prefix="dlf-docs-workflow-") as tmp_dir:
         fixture_root = Path(tmp_dir) / "site"
+        external_root = Path(tmp_dir) / "external-docs-data"
+        external_root.mkdir()
         create_fixture_repo(fixture_root)
         server, base_url = start_server(fixture_root)
         try:
@@ -550,9 +552,9 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
-                    "source_root": "docs-viewer/source/apismoke",
+                    "external_data_root": external_root.as_posix(),
                     "default_doc_id": "apismoke",
-                    "publishing_mode": "local_uncommitted",
+                    "publishing_mode": "local_external",
                     "write_generated_outputs": True,
                     "build_inline_search": True,
                 },
@@ -568,16 +570,16 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
-                    "source_root": "docs-viewer/source/apismoke",
+                    "external_data_root": external_root.as_posix(),
                     "default_doc_id": "apismoke",
-                    "publishing_mode": "local_uncommitted",
+                    "publishing_mode": "local_external",
                     "write_generated_outputs": True,
                     "build_inline_search": True,
                     "confirm": True,
                 },
             )
             assert_ok(scope_created, "scope create apply")
-            if not (fixture_root / "docs-viewer/source/apismoke" / "apismoke.md").exists():
+            if not (external_root / "source/apismoke" / "apismoke.md").exists():
                 raise AssertionError(f"scope create did not write fixture source: {scope_created!r}")
 
             scope_delete_preview = request_json(
@@ -597,7 +599,7 @@ def main(argv: list[str] | None = None) -> int:
                 {"scope_id": "apismoke", "confirm": True},
             )
             assert_ok(scope_deleted, "scope delete apply")
-            if (fixture_root / "docs-viewer/source/apismoke").exists():
+            if (external_root / "source/apismoke").exists():
                 raise AssertionError(f"scope delete did not remove fixture source root: {scope_deleted!r}")
 
             docs_config = (fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")

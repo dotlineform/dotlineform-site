@@ -85,8 +85,8 @@
         "label": "Local",
         "emoji": "💻"
       },
-      "local_uncommitted": {
-        "label": "Local only",
+      "local_external": {
+        "label": "External local",
         "emoji": "🧪"
       }
     },

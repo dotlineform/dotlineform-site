@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs
+from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, path_label, resolve_scope_path
 
 
 BROWSER_CONFIG_REL_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
@@ -61,16 +61,16 @@ def _browser_docs_viewer_settings(repo_root: Path) -> dict[str, Any]:
     return docs_viewer if isinstance(docs_viewer, dict) else {}
 
 
-def generated_docs_index_tree_path(config: DocsScopeConfig) -> Path:
-    return config.output / "index-tree.json"
+def generated_docs_index_tree_path(repo_root: Path, config: DocsScopeConfig) -> Path:
+    return resolve_scope_path(repo_root, config.output) / "index-tree.json"
 
 
 def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict[str, Any], list[str]]:
-    index_tree_path = generated_docs_index_tree_path(config)
+    index_tree_path = generated_docs_index_tree_path(repo_root, config)
     warnings: list[str] = []
-    payload = _load_json(repo_root / index_tree_path, f"generated docs index tree for {config.scope_id}")
+    payload = _load_json(index_tree_path, f"generated docs index tree for {config.scope_id}")
     if not payload:
-        warnings.append(f"Generated docs index tree is missing: {index_tree_path.as_posix()}")
+        warnings.append(f"Generated docs index tree is missing: {path_label(repo_root, index_tree_path)}")
         return {}, warnings
     viewer_options = payload.get("viewer_options")
     if viewer_options is None:
@@ -135,16 +135,16 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                 "browser_config_path": BROWSER_CONFIG_REL_PATH.as_posix(),
                 "viewer_options": viewer_options,
                 "generated": {
-                    "docs_output": config.output.as_posix(),
-                    "docs_index_tree": generated_docs_index_tree_path(config).as_posix(),
-                    "recently_added": (config.output / "recently-added.json").as_posix(),
-                    "docs_payload_root": (config.output / "by-id").as_posix(),
-                    "search_index": config.search_output.as_posix(),
+                    "docs_output": path_label(repo_root, config.output),
+                    "docs_index_tree": path_label(repo_root, generated_docs_index_tree_path(repo_root, config)),
+                    "recently_added": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "recently-added.json"),
+                    "docs_payload_root": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "by-id"),
+                    "search_index": path_label(repo_root, config.search_output),
                     "publish_output": config.publish_output.as_posix(),
                     "publish_search_index": config.publish_search_output.as_posix(),
                 },
                 "paths": {
-                    "source_root": config.source.as_posix(),
+                    "source_root": path_label(repo_root, config.source),
                     "media_path_prefix": config.media_path_prefix.as_posix(),
                     "route_base": config.viewer_base_url,
                 },

@@ -9,7 +9,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import DocsScopeConfig, is_public_readonly_scope, load_docs_scope_configs
+from docs_scope_config import DocsScopeConfig, is_public_readonly_scope, load_docs_scope_configs, resolve_scope_path
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
@@ -40,8 +40,8 @@ def normalize_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeConfig]:
 
 def validate_publish_paths(repo_root: Path, config: DocsScopeConfig) -> dict[str, Path]:
     paths = {
-        "working_docs_root": (repo_root / config.output).resolve(),
-        "working_search_index": (repo_root / config.search_output).resolve(),
+        "working_docs_root": resolve_scope_path(repo_root, config.output),
+        "working_search_index": resolve_scope_path(repo_root, config.search_output),
         "published_docs_root": (repo_root / config.publish_output).resolve(),
         "published_search_index": (repo_root / config.publish_search_output).resolve(),
     }

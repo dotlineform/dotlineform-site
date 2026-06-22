@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs
+from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs, resolve_scope_path
 from docs_source_model import scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -69,7 +69,7 @@ def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_
     except (KeyError, FileNotFoundError, ValueError) as exc:
         return f"full-scope fallback: docs scope config unavailable: {exc}"
 
-    output_dir = repo_root / config.output
+    output_dir = resolve_scope_path(repo_root, config.output)
     index_tree_path = output_dir / "index-tree.json"
     references_index_path = output_dir / "references" / "index.json"
     if not index_tree_path.exists():

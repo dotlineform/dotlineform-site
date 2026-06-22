@@ -39,6 +39,20 @@ def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, ob
     }
 
 
+def external_scope_config(scope_id: str, external_root: Path) -> dict[str, object]:
+    return {
+        "scope_id": scope_id,
+        "scope_type": "local_external",
+        "source": (external_root / "source" / scope_id).as_posix(),
+        "media_path_prefix": f"docs/{scope_id}",
+        "output": (external_root / "generated/docs" / scope_id).as_posix(),
+        "search_output": (external_root / "generated/search" / scope_id / "index.json").as_posix(),
+        "viewer_base_url": "/docs/",
+        "include_scope_param": True,
+        "default_doc_id": scope_id,
+    }
+
+
 def write_scope_config(root: Path, extra_scopes: list[dict[str, object]] | None = None) -> None:
     scopes = [
         scope_config("studio", "docs-viewer/generated/docs/studio", "docs-viewer/generated/search/studio/index.json"),
@@ -348,6 +362,34 @@ def test_generated_search_path_uses_scope_config_search_output() -> None:
     assert payload["entries"][0]["doc_id"] == "research"
 
 
+def test_generated_reads_support_external_local_scope_payloads() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        external_root = (repo_root.parent / f"{repo_root.name}-external").resolve()
+        write_scope_config(repo_root, [external_scope_config("private", external_root)])
+        docs_root = external_root / "generated/docs/private"
+        write_json(
+            docs_root / "index-tree.json",
+            {
+                "schema": "docs_index_tree_v1",
+                "docs": [
+                    {
+                        "doc_id": "private",
+                        "content_url": "/docs/generated/payload?scope=private&doc_id=private",
+                    }
+                ],
+            },
+        )
+        write_json(docs_root / "by-id/private.json", {"doc_id": "private"})
+        write_json(external_root / "generated/search/private/index.json", {"entries": [{"id": "private"}]})
+
+        payload = generated_reads.read_generated_doc_payload(repo_root, "private", "private")
+        search = generated_reads.read_generated_search_index(repo_root, "private")
+
+    assert payload == {"doc_id": "private"}
+    assert search["entries"] == [{"id": "private"}]
+
+
 def test_read_generated_json_reports_invalid_json() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         path = Path(temp_path) / "index-tree.json"
@@ -373,6 +415,7 @@ def main() -> None:
     test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_scope_config_output()
     test_generated_search_path_uses_scope_config_search_output()
+    test_generated_reads_support_external_local_scope_payloads()
     test_read_generated_json_reports_invalid_json()
     print("Docs generated-read tests OK")
 

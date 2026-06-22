@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, NESTED_SOURCE_SCOPES, SCOPE_ROOTS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, NESTED_SOURCE_SCOPES, SCOPE_ROOTS, resolve_scope_path
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
@@ -173,7 +173,7 @@ def normalize_scope(scope: Any) -> str:
 
 
 def scope_root(repo_root: Path, scope: str) -> Path:
-    return repo_root / SCOPE_ROOTS[scope]
+    return resolve_scope_path(repo_root, SCOPE_ROOTS[scope])
 
 
 def scope_markdown_paths(root: Path, scope: str) -> list[Path]:

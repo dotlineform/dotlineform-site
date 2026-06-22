@@ -29,7 +29,7 @@ from build_docs import (  # noqa: E402
     humanize,
     parse_source,
 )
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs  # noqa: E402
+from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, resolve_scope_path  # noqa: E402
 
 
 DEFAULT_SCOPE = "studio"
@@ -178,7 +178,7 @@ class DocsViewerSearchDataBuilder:
     def resolve_path(self, path: Path | str | None) -> Path | None:
         if path is None:
             return None
-        return (self.repo_root / Path(path)).resolve()
+        return resolve_scope_path(self.repo_root, Path(path))
 
     def build_docs_payload(
         self,
@@ -193,7 +193,7 @@ class DocsViewerSearchDataBuilder:
         return self.build_targeted_docs_payload(entries, target_doc_ids, remove_missing)
 
     def load_source_docs(self) -> list[SearchDocRecord]:
-        source_dir = (self.repo_root / self.scope_config.source).resolve()
+        source_dir = resolve_scope_path(self.repo_root, self.scope_config.source)
         paths = sorted(source_dir.glob("**/*.md"))
         nested_paths = [path for path in paths if path.parent != source_dir]
         if nested_paths and not self.scope_config.allow_nested_source:

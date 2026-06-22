@@ -17,7 +17,7 @@ for path in (DOCS_BUILD_DIR, SHARED_PYTHON_DIR):
         sys.path.insert(0, str(path))
 
 from build_docs import DocsDataBuilder, DocRecord, parse_source  # noqa: E402
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs  # noqa: E402
+from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, path_label, resolve_scope_path  # noqa: E402
 from markdown_renderer import plain_text_from_html  # noqa: E402
 
 
@@ -96,10 +96,7 @@ def front_matter_bool(front_matter: dict[str, Any], key: str, default: bool) -> 
 
 def source_path_for_record(repo_root: Path, source_root: Path, doc: DocRecord) -> str:
     path = (source_root / doc.source_path).resolve()
-    try:
-        return path.relative_to(repo_root.resolve()).as_posix()
-    except ValueError as exc:
-        raise RuntimeError(f"docs source path escapes repo root: {path}") from exc
+    return path_label(repo_root, path)
 
 
 def source_file_path(context: DataSharingDocsSourceContext, doc: DocRecord) -> Path:
@@ -147,7 +144,7 @@ def load_data_sharing_docs_source_context(repo_root: Path, scope: str) -> DataSh
     if config is None:
         raise ValueError(f"unknown docs scope for Data Sharing source metadata: {scope}")
 
-    source_root = (root / config.source).resolve()
+    source_root = resolve_scope_path(root, config.source)
     if not source_root.exists() or not source_root.is_dir():
         raise RuntimeError(f"missing source root for scope {normalized_scope}: {config.source.as_posix()}")
 

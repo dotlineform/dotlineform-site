@@ -10,7 +10,8 @@ from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
-from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event, relative_path
+from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event
+from docs_scope_config import path_label
 from local_env import runtime_env
 
 STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
@@ -82,7 +83,7 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
         "doc_id": target.doc_id,
         "source_body": normalize_source_body(source_body),
         "source_revision": source_revision_for_text(source_text),
-        "path": relative_path(repo_root, target.path),
+        "path": path_label(repo_root, target.path),
     }
 
 
@@ -134,7 +135,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             {
                 "scope": scope,
                 "doc_id": target.doc_id,
-                "path": relative_path(repo_root, target.path),
+                "path": path_label(repo_root, target.path),
             },
         )
 
@@ -143,7 +144,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         "scope": scope,
         "doc_id": target.doc_id,
         "source_revision": next_revision,
-        "path": relative_path(repo_root, target.path),
+        "path": path_label(repo_root, target.path),
         "rebuild": rebuild,
         "summary_text": f"Rebuilt {target.doc_id}.",
         "dry_run": dry_run,
@@ -204,7 +205,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
                 "doc_id": target.doc_id,
                 "editor": editor,
                 "preferred_app": preferred_app if editor == "default" else "",
-                "path": relative_path(repo_root, target.path),
+                "path": path_label(repo_root, target.path),
             },
         )
 
@@ -214,7 +215,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
         "doc_id": target.doc_id,
         "editor": editor,
         "preferred_app": preferred_app if editor == "default" else "",
-        "path": relative_path(repo_root, target.path),
+        "path": path_label(repo_root, target.path),
         "summary_text": f"Opened {target.doc_id} source.",
         "dry_run": dry_run,
     }

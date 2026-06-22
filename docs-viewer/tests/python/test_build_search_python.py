@@ -62,6 +62,33 @@ def write_scope_config(root: Path) -> None:
     )
 
 
+def write_external_scope_config(root: Path, external_root: Path) -> None:
+    write_json(
+        root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "private",
+                    "scope_type": "local_external",
+                    "source": (external_root / "source/private").as_posix(),
+                    "media_path_prefix": "docs/private",
+                    "output": (external_root / "generated/docs/private").as_posix(),
+                    "search_output": (external_root / "generated/search/private/index.json").as_posix(),
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "private",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                }
+            ],
+        },
+    )
+
+
 def write_source_docs(root: Path, *, child_title: str = "Child", child_viewable: bool = True) -> None:
     rows = [
         ("parent", "Parent Page", "2026-06-01", "", True),
@@ -241,6 +268,33 @@ def test_python_docs_search_builder_rejects_catalogue_targeted_records_flag() ->
     assert error == "Docs Viewer search does not support --only-records"
 
 
+def test_python_docs_search_builder_writes_external_local_scope_index() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        external_root = (root.parent / f"{root.name}-external").resolve()
+        write_external_scope_config(root, external_root)
+        write_text(
+            external_root / "source/private/private.md",
+            """---
+doc_id: private
+title: Private Search
+last_updated: 2026-06-01
+---
+# Private Search
+
+External search body.
+""",
+        )
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
+        payload = read_json(external_root / "generated/search/private/index.json")
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "with 1 private search entries" in stdout
+    assert payload["header"]["scope"] == "private"
+    assert payload["entries"][0]["href"] == "/docs/?scope=private&doc=private"
+
+
 def main() -> None:
     test_python_docs_search_builder_writes_current_schema_and_hash()
     test_python_docs_search_builder_dry_run_does_not_write()
@@ -249,6 +303,7 @@ def main() -> None:
     test_python_docs_search_builder_targeted_remove_requires_remove_missing()
     test_python_docs_search_builder_targeted_without_existing_index_falls_back_full()
     test_python_docs_search_builder_rejects_catalogue_targeted_records_flag()
+    test_python_docs_search_builder_writes_external_local_scope_index()
     print("Python Docs Viewer search builder tests OK")
 
 

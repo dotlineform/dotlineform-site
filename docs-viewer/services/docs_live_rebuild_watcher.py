@@ -35,7 +35,7 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
         sys.path.insert(0, str(path))
 
 from docs_source_model import load_scope_docs, scope_doc_sort_key
-from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
+from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS, resolve_scope_path
 from docs_write_rebuild import targeted_docs_build_fallback_reason
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
 from local_env import runtime_env
@@ -146,7 +146,7 @@ def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
 
 def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]]:
     docs = load_scope_docs(repo_root, scope)
-    root = repo_root / SCOPE_ROOTS[scope]
+    root = resolve_scope_path(repo_root, SCOPE_ROOTS[scope])
     return {
         doc.path.relative_to(root).as_posix(): {
             "filename": doc.path.relative_to(root).as_posix(),
@@ -308,7 +308,7 @@ def main() -> int:
     repo_root = detect_repo_root(args.repo_root)
     states = {}
     for scope, rel_root in SCOPE_ROOTS.items():
-        root = repo_root / rel_root
+        root = resolve_scope_path(repo_root, rel_root)
         doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, scope)
         if snapshot_error:
             log(f"{scope} parsed docs snapshot unavailable at startup; watcher search will use full rebuilds: {snapshot_error}")

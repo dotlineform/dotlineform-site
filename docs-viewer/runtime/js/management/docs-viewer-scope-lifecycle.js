@@ -23,11 +23,11 @@ export {
 };
 
 var DEFAULT_PUBLISHING_MODES = [
-  "local_uncommitted",
+  "local_external",
   "local_committed"
 ];
 var PUBLISHING_MODE_ORDER = [
-  "local_uncommitted",
+  "local_external",
   "local_committed",
   "public_readonly"
 ];
@@ -67,7 +67,7 @@ function modeLabel(state, mode) {
   var labels = {
     public_readonly: managementText(state, "scopePublicReadonlyMode", "public"),
     local_committed: managementText(state, "scopeLocalCommittedMode", "local tracked"),
-    local_uncommitted: managementText(state, "scopeLocalUncommittedMode", "local untracked")
+    local_external: managementText(state, "scopeLocalExternalMode", "external local")
   };
   return labels[mode] || mode;
 }
@@ -76,7 +76,7 @@ function modeNote(state, mode) {
   var notes = {
     public_readonly: managementText(state, "scopePublicReadonlyModeNote", "Creates a source root, scope config, read-only route, manifest record, and generated outputs when requested."),
     local_committed: managementText(state, "scopeLocalCommittedModeNote", "Creates tracked source, config, manifest, and non-public generated outputs under docs-viewer/generated/ when requested. No public route is created."),
-    local_uncommitted: managementText(state, "scopeLocalUncommittedModeNote", "Creates local-only scope files and records the result as uncommitted local drift. No public route is created.")
+    local_external: managementText(state, "scopeLocalExternalModeNote", "Creates a repo-registered local scope whose source and generated JSON live under an external data root. No public route is created.")
   };
   return notes[mode] || "";
 }
@@ -112,7 +112,11 @@ function renderCreateFormHtml(state, capabilities) {
         '<select class="docsViewer__fieldInput" data-role="scope-publishing-mode">' + renderModeOptions(state, modes) + '</select>' +
       '</label>' +
       '<p class="docsViewer__modalNote muted small" data-role="scope-mode-note"></p>' +
-      '<label class="docsViewer__field">' +
+      '<label class="docsViewer__field" data-role="scope-external-root-field">' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeExternalDataRootLabel", "external data root")) + '</span>' +
+        '<input class="docsViewer__fieldInput" data-role="scope-external-data-root" type="text" autocomplete="off" spellcheck="false">' +
+      '</label>' +
+      '<label class="docsViewer__field" data-role="scope-source-root-field">' +
         '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeSourceRootLabel", "source root")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-source-root" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
@@ -142,6 +146,9 @@ function wireCreateForm(api, state) {
   var titleInput = host.querySelector('[data-role="scope-title"]');
   var modeInput = host.querySelector('[data-role="scope-publishing-mode"]');
   var modeNoteNode = host.querySelector('[data-role="scope-mode-note"]');
+  var externalRootField = host.querySelector('[data-role="scope-external-root-field"]');
+  var externalRootInput = host.querySelector('[data-role="scope-external-data-root"]');
+  var sourceField = host.querySelector('[data-role="scope-source-root-field"]');
   var sourceInput = host.querySelector('[data-role="scope-source-root"]');
   var defaultDocInput = host.querySelector('[data-role="scope-default-doc-id"]');
   var routeField = host.querySelector('[data-role="scope-route-field"]');
@@ -190,10 +197,23 @@ function wireCreateForm(api, state) {
   }
 
   function syncMode() {
-    var mode = normalizeText(modeInput && modeInput.value) || "local_uncommitted";
+    var mode = normalizeText(modeInput && modeInput.value) || "local_external";
     if (modeNoteNode) modeNoteNode.textContent = modeNote(state, mode);
     if (routeField) routeField.hidden = mode !== "public_readonly";
     if (routeInput) routeInput.required = mode === "public_readonly";
+    if (externalRootField) externalRootField.hidden = mode !== "local_external";
+    if (externalRootInput) externalRootInput.required = mode === "local_external";
+    if (sourceField) sourceField.hidden = mode === "local_external";
+    if (sourceInput) {
+      sourceInput.readOnly = mode === "local_external";
+      sourceInput.required = mode !== "local_external";
+      if (mode === "local_external") {
+        sourceInput.value = "";
+      } else if (!sourceInput.value || sourceInput.dataset.auto === "true") {
+        sourceInput.value = expectedSourceRoot();
+        sourceInput.dataset.auto = "true";
+      }
+    }
   }
 
   function syncGeneratedOutputs() {
@@ -225,15 +245,20 @@ function collectCreatePayload(api, state) {
   var host = api.host;
   var scopeId = normalizeText(host.querySelector('[data-role="scope-id"]')?.value).toLowerCase();
   var title = normalizeText(host.querySelector('[data-role="scope-title"]')?.value);
-  var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_uncommitted";
+  var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_external";
+  var externalDataRoot = normalizeText(host.querySelector('[data-role="scope-external-data-root"]')?.value);
   var sourceRoot = normalizeText(host.querySelector('[data-role="scope-source-root"]')?.value);
   var defaultDocId = normalizeText(host.querySelector('[data-role="scope-default-doc-id"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
   var writeGenerated = Boolean(host.querySelector('[data-role="scope-write-generated"]')?.checked);
   var buildSearch = writeGenerated && Boolean(host.querySelector('[data-role="scope-build-search"]')?.checked);
 
-  if (!scopeId || !title || !sourceRoot || !defaultDocId) {
+  if (!scopeId || !title || !defaultDocId || (publishingMode !== "local_external" && !sourceRoot)) {
     api.setStatus(managementText(state, "scopeCreateRequiredMessage", "Enter the required scope fields."));
+    return null;
+  }
+  if (publishingMode === "local_external" && !externalDataRoot) {
+    api.setStatus(managementText(state, "scopeCreateExternalRootRequiredMessage", "Enter an external data root for external local scopes."));
     return null;
   }
   if (publishingMode === "public_readonly" && !publicRoutePath) {
@@ -244,7 +269,8 @@ function collectCreatePayload(api, state) {
   return {
     scope_id: scopeId,
     title: title,
-    source_root: sourceRoot,
+    source_root: publishingMode === "local_external" ? "" : sourceRoot,
+    external_data_root: publishingMode === "local_external" ? externalDataRoot : "",
     default_doc_id: defaultDocId,
     publishing_mode: publishingMode,
     public_route_path: publishingMode === "public_readonly" ? publicRoutePath : "",
@@ -304,10 +330,14 @@ function renderStorageContract(contract) {
   if (!contract || typeof contract !== "object") return "";
   var rows = [];
   var summary = normalizeText(contract.summary);
+  var externalDataRoot = normalizeText(contract.external_data_root);
+  var sourceRoot = normalizeText(contract.source_root);
   var docsOutput = normalizeText(contract.docs_output);
   var searchOutput = normalizeText(contract.search_output);
   var publicAssets = contract.public_static_assets === true ? "yes" : "no";
   rows.push(["public static assets", publicAssets]);
+  if (externalDataRoot) rows.push(["external data root", externalDataRoot]);
+  if (sourceRoot) rows.push(["source root", sourceRoot]);
   if (docsOutput) rows.push(["docs output", docsOutput]);
   if (searchOutput) rows.push(["search output", searchOutput]);
   return (

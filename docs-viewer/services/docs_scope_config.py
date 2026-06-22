@@ -16,6 +16,7 @@ PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 WORKING_DOCS_OUTPUT_ROOT = Path("docs-viewer/generated/docs")
 WORKING_SEARCH_OUTPUT_ROOT = Path("docs-viewer/generated/search")
+LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
 
 
 @dataclass(frozen=True)
@@ -66,6 +67,45 @@ def safe_relative_path(value: Any, *, field: str) -> Path:
     if path.is_absolute() or ".." in path.parts:
         raise ValueError(f"docs scope config field {field} must be a safe relative path")
     return path
+
+
+def safe_scope_data_path(value: Any, *, field: str, allow_external: bool = False) -> Path:
+    text = str(value or "").strip()
+    if not text:
+        raise ValueError(f"docs scope config field {field} is required")
+    path = Path(text)
+    if path.is_absolute():
+        if not allow_external:
+            raise ValueError(f"docs scope config field {field} must be a safe relative path")
+        if ".." in path.parts:
+            raise ValueError(f"docs scope config field {field} must not contain parent path segments")
+        if path.parent == path:
+            raise ValueError(f"docs scope config field {field} must not be the filesystem root")
+        return path
+    if ".." in path.parts:
+        raise ValueError(f"docs scope config field {field} must be a safe relative path")
+    return path
+
+
+def resolve_scope_path(repo_root: Path, path: Path) -> Path:
+    return path.resolve() if path.is_absolute() else repo_root / path
+
+
+def path_label(repo_root: Path, path: Path) -> str:
+    if not path.is_absolute():
+        return path.as_posix()
+    resolved_root = repo_root.resolve()
+    resolved_path = resolve_scope_path(repo_root, path)
+    try:
+        return resolved_path.relative_to(resolved_root).as_posix()
+    except ValueError:
+        return resolved_path.as_posix()
+
+
+def scope_uses_external_data(config: "DocsScopeConfig") -> bool:
+    return config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE or any(
+        path.is_absolute() for path in (config.source, config.output, config.search_output)
+    )
 
 
 def string_tuple(value: Any, *, field: str) -> tuple[str, ...]:
@@ -191,6 +231,8 @@ def publish_output_paths_for(
     *,
     scope_id: str,
     public_readonly: bool,
+    output: Path,
+    search_output: Path,
     index: int,
 ) -> tuple[Path, Path]:
     if public_readonly:
@@ -215,10 +257,7 @@ def publish_output_paths_for(
                 f"must be under {expected_search_parent.as_posix()}"
             )
         return publish_output, publish_search_output
-    return (
-        safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
-        safe_relative_path(item.get("search_output"), field=f"scopes[{index}].search_output"),
-    )
+    return (output, search_output)
 
 
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
@@ -245,17 +284,38 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             raise ValueError(f"docs scope config scopes[{index}].scope_id is required")
         if scope_id in configs:
             raise ValueError(f"docs scope config scope_id {scope_id!r} is duplicated")
+        scope_type = str(item.get("scope_type") or "").strip().lower()
+        allow_external_data = scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
         media_path_prefix = safe_relative_path(
             item.get("media_path_prefix") or f"docs/{scope_id}",
             field=f"scopes[{index}].media_path_prefix",
         )
-        output = safe_relative_path(item.get("output"), field=f"scopes[{index}].output")
-        search_output = safe_relative_path(
+        output = safe_scope_data_path(
+            item.get("output"),
+            field=f"scopes[{index}].output",
+            allow_external=allow_external_data,
+        )
+        search_output = safe_scope_data_path(
             item.get("search_output"),
             field=f"scopes[{index}].search_output",
+            allow_external=allow_external_data,
         )
         viewer_base_url = normalize_viewer_base_url(item.get("viewer_base_url"))
         include_scope_param = item.get("include_scope_param") is True
+        if allow_external_data and is_public_readonly_scope(
+            viewer_base_url=viewer_base_url,
+            include_scope_param=include_scope_param,
+        ):
+            raise ValueError(f"docs scope config scopes[{index}] external local scopes must use the management route")
+        source = safe_scope_data_path(
+            item.get("source"),
+            field=f"scopes[{index}].source",
+            allow_external=allow_external_data,
+        )
+        if allow_external_data and not (source.is_absolute() and output.is_absolute() and search_output.is_absolute()):
+            raise ValueError(
+                f"docs scope config scopes[{index}] external local scopes must use absolute source, output, and search_output paths"
+            )
         public_readonly = is_public_readonly_scope(
             viewer_base_url=viewer_base_url,
             include_scope_param=include_scope_param,
@@ -272,12 +332,14 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             item,
             scope_id=scope_id,
             public_readonly=public_readonly,
+            output=output,
+            search_output=search_output,
             index=index,
         )
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
-            scope_type=str(item.get("scope_type") or "").strip().lower(),
-            source=safe_relative_path(item.get("source"), field=f"scopes[{index}].source"),
+            scope_type=scope_type,
+            source=source,
             media_path_prefix=media_path_prefix,
             output=output,
             search_output=search_output,

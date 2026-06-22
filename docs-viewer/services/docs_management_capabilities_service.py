@@ -8,8 +8,7 @@ from typing import Any, Dict
 import docs_scope_manifest
 import docs_source_config_settings
 import docs_source_model as source_model
-from docs_management_context import relative_path
-from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS, is_public_readonly_scope
+from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS, is_public_readonly_scope, path_label, resolve_scope_path
 
 
 def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
@@ -53,19 +52,19 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         scope_configs = DOCS_SCOPE_CONFIGS
     for scope in sorted(scope_configs):
         config = scope_configs[scope]
-        root = repo_root / config.source
+        root = resolve_scope_path(repo_root, config.source)
         scope_docs = capability_scope_docs(repo_root, scope, root)
         manifest_record = manifest_scopes.get(scope)
-        generated_data_path = repo_root / config.output / "index-tree.json"
+        generated_data_path = resolve_scope_path(repo_root, config.output) / "index-tree.json"
         publishable = is_public_readonly_scope(
             viewer_base_url=config.viewer_base_url,
             include_scope_param=config.include_scope_param,
         )
         scopes[scope] = {
             "available": root.exists(),
-            "root": relative_path(repo_root, root),
+            "root": path_label(repo_root, config.source),
             "generated_data_reads": generated_data_path.exists(),
-            "generated_search_reads": (repo_root / config.search_output).exists(),
+            "generated_search_reads": resolve_scope_path(repo_root, config.search_output).exists(),
             "publishable": publishable,
             "count": len(scope_docs),
             "scope_lifecycle": {

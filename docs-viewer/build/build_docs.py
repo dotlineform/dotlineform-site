@@ -28,6 +28,8 @@ from docs_scope_config import (  # noqa: E402
     is_public_readonly_scope,
     load_docs_scope_configs,
     normalize_viewer_base_url,
+    resolve_scope_path,
+    scope_uses_external_data,
 )
 from markdown_renderer import plain_text_from_html, render_markdown_to_html  # noqa: E402
 
@@ -258,8 +260,8 @@ class DocsDataBuilder:
         self.repo_root = repo_root.resolve()
         self.config = config
         self.scope_id = config.scope_id
-        self.source_dir = (self.repo_root / (source_dir or config.source)).resolve()
-        self.output_dir = (self.repo_root / (output_dir or config.output)).resolve()
+        self.source_dir = resolve_scope_path(self.repo_root, source_dir or config.source)
+        self.output_dir = resolve_scope_path(self.repo_root, output_dir or config.output)
         self.items_dir = self.output_dir / "by-id"
         self.viewer_base_url = normalize_viewer_base_url(viewer_base_url or config.viewer_base_url)
         self.include_scope_param = config.include_scope_param
@@ -444,6 +446,8 @@ class DocsDataBuilder:
         return f"{url}#{anchor}" if anchor else url
 
     def content_url_for(self, doc_id: str) -> str:
+        if scope_uses_external_data(self.config):
+            return f"/docs/generated/payload?scope={quote(self.scope_id)}&doc_id={quote(str(doc_id))}"
         return f"{self.output_url_base}/by-id/{quote(str(doc_id))}.json"
 
     def output_url_dir(self) -> Path:
@@ -452,6 +456,8 @@ class DocsDataBuilder:
         return self.output_dir
 
     def output_url_base_for(self, output_dir: Path) -> str:
+        if scope_uses_external_data(self.config):
+            return f"/docs/generated/external/{quote(self.scope_id)}"
         try:
             relative = output_dir.resolve().relative_to(self.repo_root)
         except ValueError as exc:
@@ -1185,6 +1191,11 @@ class DocsDataBuilder:
         return self.references_by_target_dir / str(target_kind) / f"{quote(str(target_id))}.json"
 
     def reference_target_url(self, target_kind: str, target_id: str) -> str:
+        if scope_uses_external_data(self.config):
+            return (
+                f"/docs/generated/reference-target?scope={quote(self.scope_id)}"
+                f"&target_kind={quote(str(target_kind))}&target_slug={quote(str(target_id))}"
+            )
         return f"{self.output_url_base}/references/by-target/{quote(str(target_kind))}/{quote(str(target_id))}.json"
 
     def build_reference_payloads(
@@ -1526,6 +1537,8 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 
 def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
+    if scope_uses_external_data(config):
+        return f"/docs/generated/index-tree?scope={quote(config.scope_id)}"
     output = config.publish_output if is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
@@ -1534,6 +1547,8 @@ def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
 
 
 def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
+    if scope_uses_external_data(config):
+        return f"/docs/generated/recently-added?scope={quote(config.scope_id)}"
     output = config.publish_output if is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
@@ -1542,6 +1557,8 @@ def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
 
 
 def browser_search_index_url(config: DocsScopeConfig) -> str:
+    if scope_uses_external_data(config):
+        return f"/docs/generated/search?scope={quote(config.scope_id)}"
     output = config.publish_search_output if is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,

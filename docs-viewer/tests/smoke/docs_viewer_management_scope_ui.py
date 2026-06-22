@@ -109,6 +109,8 @@ def main(argv: list[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory(prefix="dlf-docs-scope-ui-") as tmp_dir:
         fixture_root = Path(tmp_dir) / "site"
+        external_root = Path(tmp_dir) / "external-docs-data"
+        external_root.mkdir()
         create_fixture_repo(fixture_root)
         server, base_url = start_server(fixture_root)
         try:
@@ -137,7 +139,8 @@ def main(argv: list[str] | None = None) -> int:
                 wait_for_modal_title(page, "New scope", args.timeout_ms)
                 page.locator('[data-role="scope-id"]').fill("uiscope")
                 page.locator('[data-role="scope-title"]').fill("UI Scope")
-                page.locator('[data-role="scope-publishing-mode"]').select_option("local_uncommitted")
+                page.locator('[data-role="scope-publishing-mode"]').select_option("local_external")
+                page.locator('[data-role="scope-external-data-root"]').fill(external_root.as_posix())
                 page.locator('[data-role="scope-write-generated"]').check()
                 page.locator('[data-role="scope-build-search"]').check()
                 click_modal_primary(page, args.timeout_ms)

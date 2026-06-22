@@ -85,6 +85,34 @@ def write_scope_config(root: Path) -> None:
     )
 
 
+def write_external_scope_config(root: Path, external_root: Path) -> None:
+    write_json(
+        root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "private",
+                    "scope_type": "local_external",
+                    "meta": "external local",
+                    "source": (external_root / "source/private").as_posix(),
+                    "media_path_prefix": "docs/private",
+                    "output": (external_root / "generated/docs/private").as_posix(),
+                    "search_output": (external_root / "generated/search/private/index.json").as_posix(),
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "private",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                }
+            ],
+        },
+    )
+
+
 def write_public_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
@@ -585,6 +613,37 @@ invalid front matter
     assert "Traceback" not in completed.stderr
 
 
+def test_python_docs_builder_writes_external_local_scope_outputs() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        external_root = (root.parent / f"{root.name}-external").resolve()
+        write_site_tools_config(root)
+        write_catalogue_records(root)
+        write_external_scope_config(root, external_root)
+        write_text(
+            external_root / "source/private/private.md",
+            """---
+doc_id: private
+title: Private
+added_date: 2026-06-01
+last_updated: 2026-06-01
+---
+# Private
+
+External body.
+""",
+        )
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
+        index_tree = read_json(external_root / "generated/docs/private/index-tree.json")
+        payload = read_json(external_root / "generated/docs/private/by-id/private.json")
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "scope=private" in stdout
+    assert index_tree["docs"][0]["content_url"] == "/docs/generated/payload?scope=private&doc_id=private"
+    assert payload["doc_id"] == "private"
+
+
 def main() -> None:
     test_python_docs_builder_writes_docs_payloads_and_references()
     test_python_docs_builder_public_generated_payloads_include_manage_rows()
@@ -594,6 +653,7 @@ def main() -> None:
     test_python_docs_builder_cli_reports_unchanged_second_write()
     test_python_docs_builder_cli_targeted_write_updates_selected_doc_only()
     test_python_docs_builder_script_reports_front_matter_errors_without_traceback()
+    test_python_docs_builder_writes_external_local_scope_outputs()
     print("Python Docs Viewer builder tests OK")
 
 

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import urlparse
 
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs
+from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, resolve_scope_path, scope_uses_external_data
 
 
 SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
@@ -33,7 +33,7 @@ def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
 
 def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
-    return repo_root / config.output
+    return resolve_scope_path(repo_root, config.output)
 
 
 def generated_docs_index_tree_path(repo_root: Path, scope: str) -> Path:
@@ -52,7 +52,7 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
     config = generated_scope_config(repo_root, scope)
-    return repo_root / config.search_output
+    return resolve_scope_path(repo_root, config.search_output)
 
 
 def generated_references_index_path(repo_root: Path, scope: str) -> Path:
@@ -133,10 +133,14 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
         raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
 
     config = generated_scope_config(repo_root, scope)
-    expected_paths = {
-        browser_path_for_repo_relative(config.output / "by-id" / f"{doc_id}.json"),
-        browser_path_for_repo_relative(config.publish_output / "by-id" / f"{doc_id}.json"),
-    }
+    expected_paths = {f"docs/generated/payload"}
+    if not scope_uses_external_data(config):
+        expected_paths.update(
+            {
+                browser_path_for_repo_relative(config.output / "by-id" / f"{doc_id}.json"),
+                browser_path_for_repo_relative(config.publish_output / "by-id" / f"{doc_id}.json"),
+            }
+        )
     content_url = str(record.get("content_url") or "").strip()
     content_path = urlparse(content_url).path.lstrip("/") if content_url else ""
     if content_path and content_path not in expected_paths:
