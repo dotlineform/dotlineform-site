@@ -396,7 +396,6 @@ What this means:
 
 Request owners:
 
-- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2)
 - [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
 
 ### Panel Toolbars

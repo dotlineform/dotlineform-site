@@ -9,7 +9,6 @@ viewable: true
 # Semantic References Implementation
 
 This document records the current implementation of Docs Viewer semantic references.
-It describes what is implemented now, not the original v1 request or the planned v2 alignment work.
 
 ## Current Ownership
 
@@ -209,14 +208,10 @@ It reads:
 The report can show all configured docs scopes or one selected scope via `report_scope`.
 It does not edit source Markdown, validate catalogue data, run broken-link checks, or rebuild generated payloads.
 
-## Known Alignment Issue
+## Issues
 
-The planned v2 model says Docs Viewer should validate supported semantic types and actions, while target-object existence should be handled by host data, editor support, or link-health audits.
+Docs Viewer could validate supported semantic types and actions, while target-object existence should be handled by host data, editor support, or link-health audits.
 
 The current implementation does not fully match that model.
 It reads catalogue records, records target status, warns for missing/non-published targets, and renders those target states as inert spans.
 
-[Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2) owns the decision about whether to:
-
-- preserve this host-aware validation as intentional current behavior
-- or refactor semantic references so allowed type/action references render route-derived links and missing targets become separate link-health/editor-support findings.

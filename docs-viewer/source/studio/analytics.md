@@ -7,7 +7,7 @@ parent_id: ""
 ---
 # Analytics
 
-Analytics is a standalone local app boundary. [analysis](/analysis/) is the public-facing Docs Viewer for this data domain.
+Analytics is a standalone local app boundary.
 
 Run Analytics with:
 
@@ -26,10 +26,7 @@ Analytics owns:
 - tag aliases,
 - series tags,
 - series tag editing,
-- Data Sharing routes/APIs,
-- semantic-reference product direction and future Analytics-hosted maintenance modules,
-- document analysis,
-- future visualisation workflows.
+- Data Sharing routes/APIs
 
 Current source boundary:
 
@@ -42,9 +39,3 @@ Current source boundary:
 - `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.
 - `analytics-app/data/canonical/` owns canonical tag source data. Raw local browser access, where useful for diagnostics or smoke tests, is under `/analytics/data/canonical/...`.
 - `data-sharing/` owns the headless Data Sharing registry, config, workflow dispatch, package I/O, and domain adapters used by Analytics.
-
-Semantic-reference note:
-
-- current `[[ref:...]]` token parsing, generated relationship artifacts, and the management report are still implemented in Docs Viewer because the tokens are authored in Docs Viewer source documents
-- Analytics owns the direction for future semantic-reference target support, tag integration, editor support data, document analysis, and visualisation/reference modules
-- [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2) tracks the boundary alignment work before expanding the feature

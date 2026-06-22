@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-semantic-reference-editor
 title: Docs Viewer Semantic Reference Editor Request
 added_date: 2026-05-27
-last_updated: 2026-06-07
+last_updated: 2026-06-22
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -13,7 +13,7 @@ Status: proposed
 
 ## Summary
 
-Add semantic-reference token creation tools to the manage-mode Markdown editor.
+Add semantic-reference token creation tools as an optional child feature of the existing manage-mode Markdown editor.
 
 The goal is to let an author select text in the Markdown source buffer, choose a supported semantic target, and insert a valid semantic-reference token into the local editor buffer.
 The edited source is still written and rebuilt only through the Markdown editor's `Rebuild doc` action.
@@ -48,12 +48,13 @@ It is specific to this repo's semantic links (e.g. works, tags) and should be om
 - provide target picker/search controls where registry support data exists
 - allow a controlled manual target-id entry path where appropriate
 - rely on the existing builder for token parsing, rendered output, generated relationship artifacts, and warning behavior
-- keep semantic insertion logic in focused browser modules
-- avoid adding repo-specific semantic editing to portable Docs Viewer core or keep it modular
+- keep semantic insertion logic in focused child modules under the current source-editor owner
+- avoid adding repo-specific semantic editing to portable Docs Viewer core
 
 ## Product Model
 
 The semantic-reference editor is an optional tool inside the manage-mode Markdown source editor.
+The source editor is useful for viewing and small Markdown edits, but this request treats semantic-token authoring as the main product reason to extend it.
 
 It should expose:
 
@@ -136,7 +137,10 @@ The backend should not become a general read orchestrator for UI state when the 
 
 ## Relationship To Markdown Editor
 
-The Markdown editor request owns:
+The current Markdown editor implementation remains the owner of source editing lifecycle.
+It lives under `docs-viewer/runtime/js/management/source-editor/` and is registered as the manage-only `markdown-source` document display mode.
+
+The source editor owns:
 
 - source read endpoint
 - source write/rebuild endpoint
@@ -146,6 +150,8 @@ The Markdown editor request owns:
 - dirty state
 - `Rebuild doc`
 - rendered-view reload
+- document-display-mode lifecycle
+- textarea rendering, focus, selection, and leave prompts
 
 This request owns:
 
@@ -155,22 +161,27 @@ This request owns:
 - token construction and insertion into the local buffer
 - insertion-specific validation messages
 
+Semantic-token modules should receive a narrow source-editor adapter for operations such as reading the current selection, replacing selected text, focusing the textarea, and showing validation/status messages.
+They should not own source reads, source writes, rebuild submission, dirty-state truth, or rendered-view reload.
+
 Semantic-reference insertion should not block basic Markdown source editing.
 
 ## Infrastructure
 
-Candidate module folder:
+Use the existing live source-editor owner:
 
-- `docs-viewer/runtime/js/modules/source-editor/`
+- `docs-viewer/runtime/js/management/source-editor/`
 
-Candidate semantic files inside that folder:
+Candidate semantic files inside the current source-editor folder:
 
 - `semantic-token-editor.js` for token insertion helpers
+- `semantic-token-toolbar.js` for controls mounted inside the source editor UI
 - `semantic-target-picker.js` for target selection UI
 - `semantic-targets.js` for client-side support reads and option normalization
 - `semantic-reference-registry.js` for registry reads/normalization if not shared elsewhere
 
-The source editor module can register semantic tools when the registry and helper modules are available.
+`source-editor.js` should stay focused on display-mode lifecycle, textarea state, dirty/save/rebuild behavior, and rendered-view return.
+It can register semantic-token controls when the registry and helper modules are available, passing only a narrow editor adapter into those modules.
 
 If the semantic module is absent, disabled, or unsupported for the current install, the Markdown editor should continue to work without semantic-token controls.
 
@@ -222,6 +233,7 @@ Acceptance:
 - no insertion happens without selected text and target id
 - inserted syntax matches the current builder grammar
 - token insertion does not write source or trigger rebuild directly
+- token insertion is implemented through a narrow source-editor adapter rather than by reaching into source read/write/rebuild services
 
 ### 4. Focused Verification And Docs Follow-Through
 
@@ -234,21 +246,22 @@ Tasks:
 Acceptance:
 
 - tests cover success and unavailable-registry states
-- docs explain that semantic insertion is a repo-specific manage-mode helper layered on the Markdown editor
+- docs explain that semantic insertion is a repo-specific manage-mode helper layered into the existing source editor
 
 ## Open Questions
 
-- What is the exact semantic-reference registry file path and schema?
 - Should the initial editor expose only `work`, `series`, and `moment`, or include disabled/future `tag` metadata?
 - Should manual target-id entry always be available, or only when enabled by a registry field?
 - Should unsupported selected ranges be blocked in v1, or should token insertion operate only on textarea selection offsets?
 - How should unsupported semantic type warnings be displayed when rebuild succeeds?
 - Should token insertion expose actions beyond `link` once the registry exists, or keep only `link` for the first slice?
+- What is the exact semantic-reference registry file path and schema?
 
 ## Risks
 
 - token insertion can produce invalid syntax if escaping rules are incomplete
 - target lookup, modal copy, and config reads could drift into backend orchestration or inline route-controller logic
+- semantic-token behavior could take over source-editor lifecycle responsibilities if module boundaries are too broad
 - repo-specific semantic editing could be mistaken for portable Docs Viewer functionality
 - semantic insertion could become coupled to a single UI shape before the Analytics surfacing model is clear
 - registry and builder behavior could diverge if both define supported types independently
@@ -256,6 +269,7 @@ Acceptance:
 Mitigations:
 
 - derive type/action support from the registry
+- keep source read/write/rebuild, dirty state, and rendered reload owned by the existing source editor
 - keep token construction helpers small and tested
 - keep support reads, option shaping, modal/view config, and picker behavior in focused browser modules
 - document semantic editing as this repo's manage-mode integration, not portable Docs Viewer core
