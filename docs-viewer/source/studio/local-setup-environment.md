@@ -2,7 +2,7 @@
 doc_id: local-setup-environment
 title: Local Setup Environment
 added_date: 2026-05-19
-last_updated: 2026-06-01
+last_updated: 2026-06-22
 parent_id: local-setup
 ---
 # Local Setup Environment
@@ -36,6 +36,16 @@ What the shared variables mean:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
+
+Docs Viewer external local scopes also use `DOTLINEFORM_PROJECTS_BASE_DIR`.
+For those scopes, create the external Docs Viewer data root before using the New scope action:
+
+```bash
+mkdir -p "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+```
+
+Docs Viewer then derives external local source and generated JSON paths below that fixed directory.
+The New scope modal does not accept a custom external path.
 
 Common local app runner variables:
 

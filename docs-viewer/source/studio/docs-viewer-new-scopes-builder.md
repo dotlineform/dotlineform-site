@@ -2,14 +2,14 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-06-13
+last_updated: 2026-06-22
 parent_id: docs-viewer
 viewable: true
 ---
 # New Scopes Builder
 
 This document records the technical design and implementation notes for the Docs Viewer New Scopes Builder.
-It should be populated as the implementation progresses and reviewed fully before the feature is treated as complete.
+It describes the implemented local lifecycle flow for creating and deleting Docs Viewer scopes from the manage route.
 
 ## Purpose
 
@@ -25,11 +25,14 @@ It should:
 
 Current policy:
 
-- `New scope` defaults to a local-only uncommitted scope
+- `New scope` defaults to an external local scope
 - public read-only scope creation is available through the local management lifecycle action
+- local tracked scope creation is available through the same lifecycle action
+- external local scope creation replaces the former local untracked mode
 - user-created public scope deletion is available when the scope manifest records owned files
 - public route shells are rendered from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template)
 - the completed retargeting work is recorded in [Public Scope Lifecycle Site Retarget Request](/docs/?scope=studio&doc=site-request-data-driven-public-docs-scope-routes)
+- the external local storage contract is recorded in [Docs Viewer External Scope Data Roots Request](/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture)
 
 ## Scope Creation Boundary
 
@@ -53,6 +56,15 @@ Local tracked scopes use generated outputs under:
 
 - `docs-viewer/generated/docs/<scope>/`
 - `docs-viewer/generated/search/<scope>/index.json`
+
+External local scopes store source and working generated outputs outside the repo under:
+
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
+
+The checked-in scope config stores `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer` marker paths, not user-specific absolute paths.
+Create preview and apply fail before writing when `DOTLINEFORM_PROJECTS_BASE_DIR` is unset or when `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` does not already exist as a readable and writable directory.
 
 Local scopes must not write generated docs/search runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`.
 Those `site/assets/` roots are public static-site payload roots and are reserved for scopes that are explicitly public read-only.
@@ -94,7 +106,7 @@ It does not write Markdown route stubs or Python source.
 
 Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>` and publish through the explicit `Publish docs` action.
 
-### Committed Manage-Mode Scope
+### Local Tracked Scope
 
 Use this option when the scope should be available to local developers or Codex sessions, but not published as a public route.
 
@@ -102,7 +114,7 @@ Create and commit:
 
 - source root and Markdown files
 - `docs-viewer/config/scopes/docs_scopes.json` entry
-- generated docs tree, recently-added, by-id, rich manage index, and search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
+- generated docs tree, recently-added, by-id payloads, and search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
 
 Do not create a public read-only route page.
 The scope remains available through `/docs/?scope=<scope>` when the local server is running.
@@ -110,23 +122,27 @@ The generated JSON is tracked runtime data, but it is not a public static asset 
 
 This is useful for private planning notes, local drafts, or internal review material that should move with the repo but not have a public URL.
 
-### Local-Only Scope Not Committed
+### External Local Scope
 
-Use this option for private experiments or throwaway work.
+Use this option when the scope should be locally manageable but its source Markdown and generated JSON should not live in the repo.
 
-Create locally:
+Register in the repo:
 
-- source root and Markdown files
-- temporary scope config entry
-- generated outputs as needed for local preview
+- `docs-viewer/config/scopes/docs_scopes.json` entry
+- `docs-viewer/config/scopes/docs_scope_manifest.json` ownership record
 
-Do not commit the source root, config entry, generated outputs, or route file.
-The scope exists only in the local working tree.
+Create under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/`:
 
-This option needs clear cleanup expectations because generated files and config edits can otherwise look like accidental repo drift.
-The management UI should label this mode as local-only and make the write set visible before creating files.
+- source root and default Markdown file
+- generated docs tree, recently-added, by-id payloads, and search JSON when generated output writes are requested
 
-## Current Implementation State
+Do not create a public read-only route page or public publish outputs.
+The scope remains available through `/docs/?scope=<scope>` when the local Docs Viewer service is running.
+Browser reads use management generated-data endpoints, not static URLs derived from filesystem paths.
+
+This mode is useful for private planning notes, local drafts, or internal review material that should be registered in the central Docs Viewer config without storing source or generated payloads in the repo.
+
+## Implementation State
 
 The scope lifecycle workflow now has server-side preview/apply endpoints and a management UI entry point:
 
@@ -142,7 +158,7 @@ The scope lifecycle workflow now has server-side preview/apply endpoints and a m
 - `docs-viewer/runtime/js/management/docs-viewer-management.js` remains the management command coordinator
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
 
-The stable documentation still needs a final pass after hands-on use, but the core lifecycle UI and server contracts are implemented.
+The core lifecycle UI and server contracts are implemented.
 
 ## Manifest Design
 
@@ -164,21 +180,22 @@ Top-level fields:
 Scope record fields:
 
 - `scope_id`: configured Docs Viewer scope id
-- `scope_type`: `public`, `local`, or `local_uncommitted`
+- `scope_type`: `public` or `local`
 - `owner`: `system` or a future user/tool owner value
 - `user_created`: whether the scope was created by a local operator
 - `created_by_tool`: whether this lifecycle tool created the scope
 - `tool_id`: creating tool id when applicable
-- `repo_status_at_creation`: `tracked`, `untracked`, or `unknown`
+- `repo_status_at_creation`: `tracked`, `external`, or `unknown`
 - `created_at`: creation timestamp when known
 - `updated_at`: manifest-record timestamp
-- `files`: repo-relative file records owned by the scope
+- `files`: repo-relative or external file records owned by the scope
 - `metadata`: audit metadata such as `backfilled`, `viewer_base_url`, and `default_doc_id`
 
 File record fields:
 
-- `kind`: file role, such as `source_root`, `scope_config`, `default_source_doc`, `route_file`, `generated_docs_root`, `generated_docs_index`, `generated_docs_payload_root`, or `generated_search_index`
-- `path`: repo-relative path
+- `kind`: file role, such as `source_root`, `scope_config`, `scope_manifest`, `default_source_doc`, `route_file`, `generated_docs_root`, `generated_docs_index_tree`, `generated_docs_recently_added`, `generated_docs_payload_root`, `generated_search_index`, `published_docs_root`, or `published_search_index`
+- `path`: repo-relative path or resolved external path label
+- `location`: `repo` or `external`
 - `action`: current manifest action, usually `track`; preview responses use actions such as `create`, `change`, or `delete`
 - `exists`: whether the path existed when the record or preview was generated
 
@@ -198,7 +215,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
     "create_apply": true,
     "delete_preview": true,
     "delete_apply": true,
-    "publishing_modes": ["public_readonly", "local_uncommitted", "local_committed"],
+    "publishing_modes": ["public_readonly", "local_external", "local_committed"],
     "manifest_path": "docs-viewer/config/scopes/docs_scope_manifest.json"
   }
 }
@@ -235,13 +252,13 @@ Required payload fields:
 
 - `scope_id`
 - `title`
-- `source_root`
 - `default_doc_id`
 - `publishing_mode`
 
 Conditional and optional payload fields:
 
-- `public_route_path`: ignored for currently enabled local modes
+- `source_root`: required for `public_readonly` and `local_committed`; ignored for `local_external`
+- `public_route_path`: required for `public_readonly`; ignored for local modes
 - `build_inline_search`: boolean, defaults true
 - `write_generated_outputs`: boolean, defaults true
 
@@ -250,10 +267,11 @@ Validation rules currently implemented:
 - `scope_id` must use lowercase letters, numbers, and single hyphen separators
 - `scope_id` must not already exist in `docs-viewer/config/scopes/docs_scopes.json`
 - `scope_id` must not already exist in the scope manifest
-- `source_root` must be the single repo-relative `docs-viewer/source/<scope>` directory
+- repo-backed `source_root` must be the single repo-relative `docs-viewer/source/<scope>` directory
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
-- `publishing_mode` must be `public_readonly`, `local_uncommitted`, or `local_committed`
+- `publishing_mode` must be `public_readonly`, `local_external`, or `local_committed`
 - `public_readonly` requires a valid `public_route_path`
+- `local_external` requires `DOTLINEFORM_PROJECTS_BASE_DIR` and an existing readable/writable `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` directory
 - local tracked generated docs output must not be under `site/assets/data/docs/scopes/`
 - local tracked generated search output must not be under `site/assets/data/search/`
 - planned created paths must not already exist
@@ -273,6 +291,7 @@ Preview response fields:
 - `storage_contract`
 - `created_files`
 - `changed_files`
+- `publish_files`
 - `build_commands`
 - `urls`
 - `warnings`
@@ -281,18 +300,20 @@ Preview response fields:
 
 The preview response uses file records with `kind`, `path`, `action`, and `exists`.
 It reports planned generated docs/search outputs only when generated output writes are requested.
-It does not report a public URL for currently enabled local scope modes.
+It reports public route files only for `public_readonly`.
 The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or local runtime data served by the local Docs Viewer service.
 
 Expected preview storage paths:
 
 - `local_committed`: `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`
-- `local_uncommitted`: the same non-public generated path shape as `local_committed`, but the resulting local worktree changes should not be committed
+- `local_external`: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/` and `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
+- `public_readonly`: working generated output under `docs-viewer/generated/`, plus public publish snapshots under `site/assets/data/`
 
 The planned source-scope config also stores browser-facing `scope_type` and `meta` values:
 
 - `local_committed` -> `local`
-- `local_uncommitted` -> `local_uncommitted`
+- `local_external` -> `local_external`
+- `public_readonly` -> `public`
 
 The Docs Viewer scope dropdown maps these types through `docs_viewer.scope_type_badges` for emoji and shows the scope record `meta` beside the scope id.
 
@@ -313,7 +334,8 @@ Apply behavior:
 - re-runs create-preview validation before any write
 - creates the source root and default welcome Markdown document
 - appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
-- does not create public route files
+- creates public route files and route-registry records only for `public_readonly`
+- creates external local source and generated output under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` for `local_external`
 - writes local generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads when generated output is requested
 - writes a user-created, tool-created manifest record
 - runs the docs build and, when requested, the docs search build after the config and source files are written
@@ -327,7 +349,9 @@ Apply response fields:
 - `scope_id`
 - `title`
 - `publishing_mode`
+- `storage_contract`
 - `created_files`
+- `publish_files`
 - `changed_files`
 - `deleted_files`
 - `missing_files`
@@ -419,12 +443,15 @@ Minimum fields:
 
 - scope id
 - title
-- source root
+- source root for repo-backed modes
 - default doc id
+- publishing mode
 - whether to build inline search
 - whether generated outputs should be written immediately
 
-For local scopes, the server skips public route creation.
+For `local_external`, the modal does not collect a source root or external data root.
+The server derives the external source and generated-output paths from `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer`.
+For local modes, the server skips public route creation.
 
 The server response should list:
 
@@ -434,7 +461,7 @@ The server response should list:
 - resulting management URL
 
 Create preview reports this planned write set without writing files.
-Create apply writes the allowlisted source-root, config, generated-output, and manifest changes after confirmation.
+Create apply writes the allowlisted source-root, config, generated-output, route, publish, and manifest changes after confirmation.
 Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
 
 Scope lifecycle manifests record user-created route and generated-output paths such as scope-specific `index-tree.json`, `recently-added.json`, by-id payload directories, and search payloads.
@@ -446,9 +473,11 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 
 `New scope` opens a dedicated modal flow that:
 
-- collects scope id, title, source root, default doc id, publishing mode, generated-output choice, and inline-search choice
-- defaults publishing mode to `local_uncommitted`
-- includes `public_readonly` when the local service advertises it as a supported publishing mode
+- collects scope id, title, source root for repo-backed modes, default doc id, publishing mode, generated-output choice, and inline-search choice
+- hides the source root field for `local_external`
+- does not collect an external data root path
+- defaults publishing mode to `local_external`
+- includes `public_readonly`, `local_external`, and `local_committed` according to the server-advertised publishing modes
 - previews the server-planned write set before enabling the save step
 - sends `confirm: true` only from the final save action
 - reports created files, changed files, build commands, and resulting URLs from the server response
@@ -475,10 +504,12 @@ Implementation ownership:
 - Scope creation is a local write action and must stay behind the loopback management server.
 - Public routes must remain read-only even if a management query or `scope=<other-scope>` appears in the URL.
 - The write server should validate scope ids and route paths before writing.
-- The write server should refuse paths outside the configured repo allowlist.
+- The write server should refuse repo paths outside the configured repo allowlist.
+- External local writes must stay under the resolved `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` root.
+- The checked-in scope config must store marker-rooted external local paths instead of user-specific absolute paths.
 - Local scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a local scope points there.
 - Public read-only scopes are the only scopes that should use those public generated asset roots.
 - Public read-only scope creation and deletion use the route shell template and manifest-owned file records; deletion must not remove shared runtime, shared CSS, UI text, route registry files themselves, or unrelated route shells.
 - Delete Scope must block any scope referenced as `default_scope_id` by a management route, even when that scope is user-created.
-- Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
+- External local scopes should be easy to identify in responses and cleanup guidance.
 - Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

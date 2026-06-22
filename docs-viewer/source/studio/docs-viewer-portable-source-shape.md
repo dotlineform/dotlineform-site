@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-source-shape
 title: Portable Source Shape
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-22
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -10,7 +10,9 @@ viewable: true
 
 ## Source Docs Required Shape
 
-Each scope has a source root, currently configured in `docs-viewer/config/scopes/docs_scopes.json`.
+Each scope has a source root, configured in `docs-viewer/config/scopes/docs_scopes.json`.
+Repo-backed scopes use repo-relative source roots.
+External local scopes use `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`, with the central scope config storing the `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer` marker instead of a user-specific absolute path.
 
 Current roots:
 

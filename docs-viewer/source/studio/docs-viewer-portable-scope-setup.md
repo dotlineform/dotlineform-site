@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-06-13
+last_updated: 2026-06-22
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -89,6 +89,33 @@ For `publishing_mode: "public_readonly"`, it creates source/config records, work
 It renders the shell from `docs-viewer/templates/public-route/index.html`.
 
 See [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
+
+### External Local Scope Action
+
+Use the New Scope action's `external local` mode when a scope should be registered in the repo but keep its source Markdown and working generated JSON outside the repo.
+
+External local setup requires:
+
+- `DOTLINEFORM_PROJECTS_BASE_DIR` set in `var/local/site.env` or the process environment
+- an existing readable and writable `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` directory
+- the standalone Docs Viewer service for management and generated-data reads
+
+The modal does not ask for an external path.
+For every external local scope, Docs Viewer derives:
+
+- source root: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`
+- generated docs root: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/`
+- generated search output: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
+
+Create preview and apply fail before writing if `DOTLINEFORM_PROJECTS_BASE_DIR` is unset or if `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` does not exist.
+The lifecycle action creates the scope-specific child paths under that fixed root.
+
+The central config record remains in `docs-viewer/config/scopes/docs_scopes.json`.
+For external local scopes it stores `external_data_root: "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"` plus marker-rooted source, docs output, and search output paths.
+It does not store user-specific absolute paths in the repo.
+
+External local scopes do not configure public `publish_output`, public `publish_search_output`, or a public route.
+The browser reads their generated JSON through Docs Viewer service endpoints such as `/docs/generated/index-tree?scope=<scope>` and `/docs/generated/payload?scope=<scope>&doc_id=<doc>`, not through static filesystem URLs.
 
 ### 4. Add The Public Static Route
 

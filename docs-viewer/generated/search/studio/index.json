@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-338b3ee25b4a3c74b13274d453ba83b0",
-    "generated_at_utc": "2026-06-22T15:45:21Z",
+    "version": "blake2b-1307a5b6c3f0e353e20320fa356b5a4c",
+    "generated_at_utc": "2026-06-22T17:19:06Z",
     "count": 222
   },
   "entries": [
@@ -2808,10 +2808,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-22",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-13 • Docs Viewer",
+      "display_meta": "2026-06-22 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -2821,12 +2821,12 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-06-13",
+        "2026-06-22",
         "2026",
         "06",
-        "13"
+        "22"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-22 2026 06 22"
     },
     {
       "id": "docs-viewer-overview",
@@ -2879,10 +2879,10 @@
       "kind": "doc",
       "title": "Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-22",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 • Docs Viewer",
+      "display_meta": "2026-06-22 • Docs Viewer",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -2891,22 +2891,22 @@
         "setup",
         "portable setup",
         "docs viewer",
-        "2026-05-19",
+        "2026-06-22",
         "2026",
-        "05",
-        "19"
+        "06",
+        "22"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup portable setup docs viewer 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup portable setup docs viewer 2026-06-22 2026 06 22"
     },
     {
       "id": "docs-viewer-portable-files",
       "kind": "doc",
       "title": "Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-22",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-06-13 • Portable Setup",
+      "display_meta": "2026-06-22 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -2918,22 +2918,22 @@
         "manifest",
         "portable setup",
         "setup",
-        "2026-06-13",
+        "2026-06-22",
         "2026",
         "06",
-        "13"
+        "22"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-06-22 2026 06 22"
     },
     {
       "id": "docs-viewer-portable-scope-setup",
       "kind": "doc",
       "title": "Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-22",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-06-13 • Portable Setup",
+      "display_meta": "2026-06-22 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -2943,22 +2943,22 @@
         "setup",
         "portable scope setup",
         "portable setup",
-        "2026-06-13",
+        "2026-06-22",
         "2026",
         "06",
-        "13"
+        "22"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-22 2026 06 22"
     },
     {
       "id": "docs-viewer-portable-source-shape",
       "kind": "doc",
       "title": "Portable Source Shape",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-source-shape",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-22",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-05-19 • Portable Setup",
+      "display_meta": "2026-06-22 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-source-shape",
         "docs",
@@ -2969,12 +2969,12 @@
         "portable source shape",
         "portable setup",
         "setup",
-        "2026-05-19",
+        "2026-06-22",
         "2026",
-        "05",
-        "19"
+        "06",
+        "22"
       ],
-      "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape portable source shape portable setup setup 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape portable source shape portable setup setup 2026-06-22 2026 06 22"
     },
     {
       "id": "docs-viewer-public-route-shell-template",
@@ -3505,10 +3505,10 @@
       "kind": "doc",
       "title": "Local Setup Environment",
       "href": "/docs/?scope=studio&doc=local-setup-environment",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-06-22",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-01 • Local Setup",
+      "display_meta": "2026-06-22 • Local Setup",
       "search_terms": [
         "local-setup-environment",
         "local",
@@ -3516,12 +3516,12 @@
         "environment",
         "local setup environment",
         "local setup",
-        "2026-06-01",
+        "2026-06-22",
         "2026",
         "06",
-        "01"
+        "22"
       ],
-      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-06-01 2026 06 01"
+      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-06-22 2026 06 22"
     },
     {
       "id": "local-setup-github-codex",

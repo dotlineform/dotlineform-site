@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-06-13
+last_updated: 2026-06-22
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -166,16 +166,31 @@ The executable report module allowlist remains in `docs-viewer/runtime/js/report
 
 ### Generated Data Outputs
 
-Each docs scope needs generated viewer JSON:
+Each docs scope needs generated viewer JSON.
+The storage root depends on the scope mode.
 
-- `site/assets/data/docs/scopes/<scope>/index.json`
+Repo-backed local and public scopes use working generated output under:
+
+- `docs-viewer/generated/docs/<scope>/index-tree.json`
+- `docs-viewer/generated/docs/<scope>/recently-added.json`
+- `docs-viewer/generated/docs/<scope>/by-id/<doc_id>.json`
+- `docs-viewer/generated/search/<scope>/index.json`
+
+Public read-only scopes also publish reviewed snapshots under:
+
+- `site/assets/data/docs/scopes/<scope>/index-tree.json`
+- `site/assets/data/docs/scopes/<scope>/recently-added.json`
 - `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
-
-If inline docs search is enabled, each scope also needs:
-
 - `site/assets/data/search/<scope>/index.json`
 
+External local scopes keep working source and generated data outside the repo under:
+
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
+
 These files are generated outputs. Copy them only if you are copying existing built content; otherwise generate them from source docs.
+External local generated outputs are not public static-site files and should be read through the standalone Docs Viewer service.
 
 ### Build Scripts
 

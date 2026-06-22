@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Portable Setup
 added_date: 2026-05-11
-last_updated: 2026-05-19
+last_updated: 2026-06-22
 parent_id: docs-viewer
 viewable: true
 ---
@@ -31,8 +31,12 @@ They should not expose management query state, management CSS, management JS, lo
 The `/docs/` route is the local management page served by `docs-viewer/bin/docs-viewer`.
 It can switch the active scope with the `scope` query parameter.
 
+External local scopes are also registered in the central Docs Viewer scope config, but their source Markdown and working generated JSON live under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer`.
+Use this mode when the scope should be locally manageable without storing its source or generated payloads in the repo.
+The `docs-viewer/` child directory under `DOTLINEFORM_PROJECTS_BASE_DIR` must already exist before creating an external local scope.
+
 ## Child References
 
 - [File Manifest](/docs/?scope=studio&doc=docs-viewer-portable-files) lists the current include, runtime, CSS, config, generated-output, script, dependency, and management-server copy set.
 - [Source Shape](/docs/?scope=studio&doc=docs-viewer-portable-source-shape) defines the required Markdown/front-matter shape for portable scopes.
-- [Scope Setup](/docs/?scope=studio&doc=docs-viewer-portable-scope-setup) gives the current Library-style scope setup procedure.
+- [Scope Setup](/docs/?scope=studio&doc=docs-viewer-portable-scope-setup) gives the current Library-style scope setup procedure and the external local scope convention.
