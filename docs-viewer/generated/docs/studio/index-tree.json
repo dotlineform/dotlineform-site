@@ -301,12 +301,6 @@
           ]
         },
         {
-          "doc_id": "site-request-docs-semantic-references-v2",
-          "title": "Docs Semantic References v2 Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
-          "ui_status": "draft"
-        },
-        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1195,5 +1189,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T17:27:45Z"
+  "generated_at": "2026-06-22T18:12:32Z"
 }

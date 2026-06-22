@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8688bb2298474e201708cbe0e9378165",
-    "generated_at_utc": "2026-06-22T17:27:45Z",
-    "count": 221
+    "version": "blake2b-3e18430c4bb28b8b4048a29c1c696141",
+    "generated_at_utc": "2026-06-22T18:12:32Z",
+    "count": 220
   },
   "entries": [
     {
@@ -1255,34 +1255,6 @@
         "09"
       ],
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
-    },
-    {
-      "id": "site-request-docs-semantic-references-v2",
-      "kind": "doc",
-      "title": "Docs Semantic References v2 Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references-v2",
-      "last_updated": "2026-06-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-02 • Change Requests",
-      "search_terms": [
-        "site-request-docs-semantic-references-v2",
-        "site",
-        "request",
-        "docs",
-        "semantic",
-        "references",
-        "v2",
-        "docs semantic references v2 request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-02",
-        "2026",
-        "06",
-        "02"
-      ],
-      "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-06-02 2026 06 02"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

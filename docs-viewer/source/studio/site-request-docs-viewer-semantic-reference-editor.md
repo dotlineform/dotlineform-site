@@ -9,10 +9,7 @@ viewable: true
 ---
 # Docs Viewer Semantic Reference Editor Request
 
-Status:
-
-- proposed
-- depends on [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), especially the semantic-reference registry
+Status: proposed
 
 ## Summary
 
@@ -40,19 +37,19 @@ Docs Viewer can provide a constrained local helper:
 - leave the change in the local editor buffer until the user clicks `Rebuild doc`
 
 The helper should reduce token authoring errors without hiding the underlying Markdown source model.
-It is specific to this repo's dotlineform semantic links and should be omitted from portable installs unless a future host-extension contract provides equivalent registry metadata.
+It is specific to this repo's semantic links (e.g. works, tags) and should be omitted from portable installs unless a future host-extension contract provides equivalent registry metadata.
 
 ## Goals
 
 - add semantic-reference insertion controls to the Markdown source editor
-- use the semantic-reference registry as the source of truth for supported types, actions, ownership, target data, and surfacing
+- create a lightweight semantic-reference registry as the source of truth for supported types, actions, ownership, target data
 - allow selected text to be wrapped in a supported semantic-reference token
 - keep token insertion local in the editor buffer until `Rebuild doc`
 - provide target picker/search controls where registry support data exists
 - allow a controlled manual target-id entry path where appropriate
 - rely on the existing builder for token parsing, rendered output, generated relationship artifacts, and warning behavior
 - keep semantic insertion logic in focused browser modules
-- avoid adding repo-specific semantic editing to portable Docs Viewer core
+- avoid adding repo-specific semantic editing to portable Docs Viewer core or keep it modular
 
 ## Product Model
 
@@ -91,10 +88,9 @@ the editor inserts:
 
 The inserted syntax should match the current builder grammar documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
 
-Supported target kinds should come from the semantic-reference registry defined by [Docs Semantic References v2 Request](/docs/?scope=studio&doc=site-request-docs-semantic-references-v2), not from a route-local hard-coded list.
+Supported target kinds should come from a semantic-reference registry JSON file, not from a route-local hard-coded list.
 
 The insertion UI should leave room for future target kinds, such as `tag`, without changing the source-view model.
-Future kinds remain repo-specific integrations unless a separate portable host-extension contract is defined later.
 
 The helper should avoid inserting tokens when:
 
@@ -119,14 +115,9 @@ The registry should define, for each semantic-reference type:
 
 - type id and label
 - object owner
-- reference owner
-- allowed actions
 - id normalization policy
 - route helper or route pattern
-- target existence policy
 - target data source for picker/search support
-- eligible surfaces, including source editor controls
-- diagnostics policy
 
 The semantic-reference editor should read registry metadata through a focused browser helper.
 
