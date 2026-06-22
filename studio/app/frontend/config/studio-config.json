@@ -89,14 +89,12 @@
     "data": {
       "studio": {
         "catalogue_works": "/studio/data/canonical/catalogue/works.json",
-        "catalogue_work_details": "/studio/data/canonical/catalogue/work_details.json",
         "catalogue_series": "/studio/data/canonical/catalogue/series.json",
         "catalogue_lookup_work_search": "/studio/data/generated/catalogue-lookup/work_search.json",
         "catalogue_lookup_series_search": "/studio/data/generated/catalogue-lookup/series_search.json",
-        "catalogue_lookup_work_detail_search": "/studio/data/generated/catalogue-lookup/work_detail_search.json",
-        "catalogue_lookup_work_base": "/studio/data/generated/catalogue-lookup/works/",
-        "catalogue_lookup_work_detail_base": "/studio/data/generated/catalogue-lookup/work_details/",
         "catalogue_lookup_series_base": "/studio/data/generated/catalogue-lookup/series/",
+        "catalogue_work_record": "/studio/api/catalogue/read?key=catalogue_work_record",
+        "catalogue_work_detail_record": "/studio/api/catalogue/read?key=catalogue_work_detail_record",
         "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json"
       },
       "ui_text": {

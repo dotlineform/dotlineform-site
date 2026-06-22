@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue-source
 title: Catalogue Source Model
 added_date: 2026-05-19
-last_updated: 2026-06-16
+last_updated: 2026-06-22
 parent_id: studio
 viewable: true
 ---
@@ -13,10 +13,9 @@ viewable: true
 Current checked-in catalogue model families:
 
 - canonical source records:
-  - `site/assets/studio/data/catalogue/works.json`
-  - `site/assets/studio/data/catalogue/series.json`
-  - `site/assets/studio/data/catalogue/work_details.json`
-  - `site/assets/studio/data/catalogue/moments.json`
+  - `studio/data/canonical/catalogue/works.json`
+  - `studio/data/canonical/catalogue/series.json`
+  - `studio/data/canonical/catalogue/work_details/<work_id>.json`
 - canonical prose sources:
   - `_docs_catalogue/works/<work_id>.md`
   - `_docs_catalogue/series/<series_id>.md`
@@ -76,7 +75,7 @@ Source headers avoid volatile timestamps so ordinary source edits produce focuse
 
 ### Work Source Records
 
-Work records in `site/assets/studio/data/catalogue/works.json` own the primary work source-image path:
+Work records in `studio/data/canonical/catalogue/works.json` own the primary work source-image path:
 
 - `project_folder`
 - optional `project_subfolder`
@@ -95,33 +94,33 @@ Other work source-model notes:
 
 ### Work Detail Source Records
 
-Work-detail source in `studio/data/canonical/catalogue/work_details.json` is split into section records and detail records.
+Work-detail source lives in one nested file per detailed work under `studio/data/canonical/catalogue/work_details/<work_id>.json`.
+Works with no detail sections have no companion detail-source file.
 
-`work_detail_sections` owns section metadata:
+Each per-work file has a `detail_sections` array. Each section owns:
 
 - `section_id`: stable generated public-section key, such as `00001-1`
-- `work_id`: parent work id
 - `details_subfolder`: optional source-image folder under the parent work's `project_folder`
 - `section_title`: public section label
 - `section_order`: optional section ordering value
 - `detail_sort`: optional section-level detail ordering mode (`detail_id` or `title`)
+- `details`: nested detail records
 
-`work_details` owns individual detail metadata:
+Nested detail records own individual detail metadata:
 
 - `detail_uid`
-- `work_id`
 - `detail_id`
-- `section_id`
 - `project_filename`
 - `title`
 - generated/media-maintained dimensions such as `width_px` and `height_px`
 
+`work_id` is implied by the file name and top-level `work_id`; `section_id` is implied by the containing section.
 Detail records do not repeat `details_subfolder`, `section_title`, or section ordering metadata. Detail records no longer use legacy `project_subfolder`.
 Detail records do not own `status` or `published_date`; parent work publication controls whether detail records appear in public output.
 
 ### Series Source Records
 
-Series records in `site/assets/studio/data/catalogue/series.json` own series metadata and publication state.
+Series records in `studio/data/canonical/catalogue/series.json` own series metadata and publication state.
 
 Current source-model notes:
 

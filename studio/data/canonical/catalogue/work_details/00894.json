@@ -1,0 +1,50 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00894",
+    "section_count": 1,
+    "count": 4
+  },
+  "work_id": "00894",
+  "detail_sections": [
+    {
+      "section_id": "00894-1",
+      "details_subfolder": "versions (2022)",
+      "section_title": "versions (2022)",
+      "details": [
+        {
+          "detail_uid": "00894-001",
+          "detail_id": "001",
+          "project_filename": "doll moiré reduced (version 1).jpg",
+          "title": "doll moiré reduced (version 1)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00894-002",
+          "detail_id": "002",
+          "project_filename": "doll moiré reduced (version 2).jpg",
+          "title": "doll moiré reduced (version 2)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00894-003",
+          "detail_id": "003",
+          "project_filename": "doll moiré reduced (version 3).jpg",
+          "title": "doll moiré reduced (version 3)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00894-004",
+          "detail_id": "004",
+          "project_filename": "doll moiré reduced (version 4).jpg",
+          "title": "doll moiré reduced (version 4)",
+          "width_px": 3543,
+          "height_px": 3543
+        }
+      ]
+    }
+  ]
+}

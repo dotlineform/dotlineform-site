@@ -32,7 +32,6 @@ from catalogue.catalogue_lookup import (  # noqa: E402
     build_series_lookup_payload,
     build_series_search_payload,
     build_work_detail_lookup_payload,
-    build_work_detail_search_payload,
     build_work_lookup_payload,
     build_work_search_payload,
 )
@@ -45,6 +44,7 @@ from catalogue.catalogue_source import (  # noqa: E402
     payload_for_map,
     records_from_json_source,
     slug_id,
+    work_details_payload_for_maps,
 )
 from catalogue.catalogue_transactions import execute_source_json_write  # noqa: E402
 from catalogue.catalogue_workbook_import import (  # noqa: E402
@@ -75,14 +75,12 @@ LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 PROJECT_STATE_REPORT_API_PATH = "/studio/api/catalogue/project-state-report"
 CATALOGUE_READ_KEYS = {
     "catalogue_works",
-    "catalogue_work_details",
     "catalogue_series",
     "catalogue_lookup_work_search",
     "catalogue_lookup_series_search",
-    "catalogue_lookup_work_detail_search",
-    "catalogue_lookup_work_base",
-    "catalogue_lookup_work_detail_base",
     "catalogue_lookup_series_base",
+    "catalogue_work_record",
+    "catalogue_work_detail_record",
 }
 
 def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, list[str]] | None = None) -> dict[str, Any]:
@@ -146,8 +144,6 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
     paths = catalogue_paths(repo_root)
     if key == "catalogue_works":
         return load_source_payload(paths["works_path"], "works")
-    if key == "catalogue_work_details":
-        return load_source_payload(paths["work_details_path"], "work_details")
     if key == "catalogue_series":
         return load_source_payload(paths["series_path"], "series")
 
@@ -156,14 +152,12 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         return build_work_search_payload(source_records)
     if key == "catalogue_lookup_series_search":
         return build_series_search_payload(source_records)
-    if key == "catalogue_lookup_work_detail_search":
-        return build_work_detail_search_payload(source_records)
-    if key == "catalogue_lookup_work_base":
+    if key == "catalogue_work_record":
         work_id = slug_id(record_id)
         if not work_id:
             raise ValueError("record_id is required for work lookup reads")
         return build_work_lookup_payload(source_records, work_id)
-    if key == "catalogue_lookup_work_detail_base":
+    if key == "catalogue_work_detail_record":
         detail_uid = normalize_detail_uid_value(record_id)
         if not detail_uid:
             raise ValueError("record_id is required for work detail lookup reads")
@@ -312,12 +306,15 @@ def import_apply_response(repo_root: Path, body: Mapping[str, Any], *, dry_run: 
     if changed and not dry_run:
         updated_records = apply_workbook_import_plan(paths["source_dir"], plan)
         target_path = paths["works_path"] if target_kind == "works" else paths["work_details_path"]
-        payload_key = "works" if target_kind == "works" else "work_details"
-        payload_records = updated_records.works if target_kind == "works" else updated_records.work_details
+        payload = (
+            payload_for_map("works", updated_records.works)
+            if target_kind == "works"
+            else work_details_payload_for_maps(updated_records.work_detail_sections, updated_records.work_details)
+        )
         if target_path not in paths["allowed_write_paths"]:
             raise ValueError("write target not allowlisted")
         execute_source_json_write(
-            {target_path: payload_for_map(payload_key, payload_records)},
+            {target_path: payload},
             dry_run=dry_run,
             repo_root=repo_root,
         )

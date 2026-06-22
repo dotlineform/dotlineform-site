@@ -16,7 +16,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_build_field_plan as field_plan  # noqa: E402
-from catalogue.catalogue_source import payload_for_map  # noqa: E402
+from catalogue.catalogue_source import payload_for_map, write_work_detail_payloads  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -41,22 +41,26 @@ def write_source_fixture(source_dir: Path) -> None:
             },
         ),
     )
-    write_json(
-        source_dir / "work_details.json",
-        payload_for_map(
-            "work_details",
-            {
-                "00001-001": {
-                    "detail_uid": "00001-001",
-                    "work_id": "00001",
-                    "detail_id": "001",
-                    "section_id": "00001-1",
-                    "project_filename": "alpha-detail.jpg",
-                    "title": "Alpha detail",
-                    "status": "published",
-                }
-            },
-        ),
+    write_work_detail_payloads(
+        source_dir,
+        {
+            "00001-1": {
+                "section_id": "00001-1",
+                "work_id": "00001",
+                "details_subfolder": "details",
+                "section_title": "Details",
+            }
+        },
+        {
+            "00001-001": {
+                "detail_uid": "00001-001",
+                "work_id": "00001",
+                "detail_id": "001",
+                "section_id": "00001-1",
+                "project_filename": "alpha-detail.jpg",
+                "title": "Alpha detail",
+            }
+        },
     )
     write_json(
         source_dir / "series.json",

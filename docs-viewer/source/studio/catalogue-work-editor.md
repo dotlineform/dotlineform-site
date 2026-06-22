@@ -194,7 +194,7 @@ Current action labels:
 Current save/publication flow:
 
 1. page loads work search and series search lookup payloads through `GET /studio/api/catalogue/read`
-2. opening a work fetches one focused work lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_work_base&record_id=<work_id>`; that focused payload carries the editable record plus generated runtime context
+2. opening a work fetches one focused work editor record through `GET /studio/api/catalogue/read?key=catalogue_work_record&record_id=<work_id>`; that focused payload carries the editable record plus generated runtime context
 3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
 5. `POST /studio/api/catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`

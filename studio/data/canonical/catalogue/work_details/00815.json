@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00815",
+    "section_count": 1,
+    "count": 1
+  },
+  "work_id": "00815",
+  "detail_sections": [
+    {
+      "section_id": "00815-1",
+      "details_subfolder": "versions",
+      "section_title": "versions",
+      "details": [
+        {
+          "detail_uid": "00815-001",
+          "detail_id": "001",
+          "project_filename": "colours dachau.1.jpg",
+          "title": "colours dachau.1",
+          "width_px": 5906,
+          "height_px": 5906
+        }
+      ]
+    }
+  ]
+}

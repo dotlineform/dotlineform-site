@@ -1,0 +1,170 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00166",
+    "section_count": 1,
+    "count": 19
+  },
+  "work_id": "00166",
+  "detail_sections": [
+    {
+      "section_id": "00166-1",
+      "details_subfolder": "pages",
+      "section_title": "pages",
+      "details": [
+        {
+          "detail_uid": "00166-001",
+          "detail_id": "001",
+          "project_filename": "nerve (formaldehyde form) - front cover.jpg",
+          "title": "nerve (formaldehyde form) - front cover",
+          "width_px": 1859,
+          "height_px": 2676
+        },
+        {
+          "detail_uid": "00166-002",
+          "detail_id": "002",
+          "project_filename": "nerve (formaldehyde form) - 1.jpg",
+          "title": "nerve (formaldehyde form) - 1",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-003",
+          "detail_id": "003",
+          "project_filename": "nerve (formaldehyde form) - 2.jpg",
+          "title": "nerve (formaldehyde form) - 2",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-004",
+          "detail_id": "004",
+          "project_filename": "nerve (formaldehyde form) - 3.jpg",
+          "title": "nerve (formaldehyde form) - 3",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-005",
+          "detail_id": "005",
+          "project_filename": "nerve (formaldehyde form) - 4.jpg",
+          "title": "nerve (formaldehyde form) - 4",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-006",
+          "detail_id": "006",
+          "project_filename": "nerve (formaldehyde form) - 5.jpg",
+          "title": "nerve (formaldehyde form) - 5",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-007",
+          "detail_id": "007",
+          "project_filename": "nerve (formaldehyde form) - 6.jpg",
+          "title": "nerve (formaldehyde form) - 6",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-008",
+          "detail_id": "008",
+          "project_filename": "nerve (formaldehyde form) - 7.jpg",
+          "title": "nerve (formaldehyde form) - 7",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-009",
+          "detail_id": "009",
+          "project_filename": "nerve (formaldehyde form) - 8.jpg",
+          "title": "nerve (formaldehyde form) - 8",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-010",
+          "detail_id": "010",
+          "project_filename": "nerve (formaldehyde form) - 9.jpg",
+          "title": "nerve (formaldehyde form) - 9",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-011",
+          "detail_id": "011",
+          "project_filename": "nerve (formaldehyde form) - 10.jpg",
+          "title": "nerve (formaldehyde form) - 10",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-012",
+          "detail_id": "012",
+          "project_filename": "nerve (formaldehyde form) - 11.jpg",
+          "title": "nerve (formaldehyde form) - 11",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-013",
+          "detail_id": "013",
+          "project_filename": "nerve (formaldehyde form) - 12.jpg",
+          "title": "nerve (formaldehyde form) - 12",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-014",
+          "detail_id": "014",
+          "project_filename": "nerve (formaldehyde form) - 13.jpg",
+          "title": "nerve (formaldehyde form) - 13",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-015",
+          "detail_id": "015",
+          "project_filename": "nerve (formaldehyde form) - 14.jpg",
+          "title": "nerve (formaldehyde form) - 14",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-016",
+          "detail_id": "016",
+          "project_filename": "nerve (formaldehyde form) - 15.jpg",
+          "title": "nerve (formaldehyde form) - 15",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-017",
+          "detail_id": "017",
+          "project_filename": "nerve (formaldehyde form) - 16.jpg",
+          "title": "nerve (formaldehyde form) - 16",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-018",
+          "detail_id": "018",
+          "project_filename": "nerve (formaldehyde form) - 17.jpg",
+          "title": "nerve (formaldehyde form) - 17",
+          "width_px": 3566,
+          "height_px": 2594
+        },
+        {
+          "detail_uid": "00166-019",
+          "detail_id": "019",
+          "project_filename": "nerve (formaldehyde form) - back cover.jpg",
+          "title": "nerve (formaldehyde form) - back cover",
+          "width_px": 1828,
+          "height_px": 2624
+        }
+      ]
+    }
+  ]
+}

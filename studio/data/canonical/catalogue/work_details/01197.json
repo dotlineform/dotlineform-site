@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "01197",
+    "section_count": 1,
+    "count": 8
+  },
+  "work_id": "01197",
+  "detail_sections": [
+    {
+      "section_id": "01197-1",
+      "details_subfolder": "paths",
+      "section_title": "paths",
+      "details": [
+        {
+          "detail_uid": "01197-001",
+          "detail_id": "001",
+          "project_filename": "form paths 1-8.jpg",
+          "title": "form paths 1-8",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-002",
+          "detail_id": "002",
+          "project_filename": "form paths 9-16.jpg",
+          "title": "form paths 9-16",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-003",
+          "detail_id": "003",
+          "project_filename": "form paths 17-24.jpg",
+          "title": "form paths 17-24",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-004",
+          "detail_id": "004",
+          "project_filename": "form paths 25-32.jpg",
+          "title": "form paths 25-32",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-005",
+          "detail_id": "005",
+          "project_filename": "form paths 33-40.jpg",
+          "title": "form paths 33-40",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-006",
+          "detail_id": "006",
+          "project_filename": "form paths 41-48.jpg",
+          "title": "form paths 41-48",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-007",
+          "detail_id": "007",
+          "project_filename": "form paths 49-56.jpg",
+          "title": "form paths 49-56",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "01197-008",
+          "detail_id": "008",
+          "project_filename": "form paths 57-64.jpg",
+          "title": "form paths 57-64",
+          "width_px": 5906,
+          "height_px": 5906
+        }
+      ]
+    }
+  ]
+}

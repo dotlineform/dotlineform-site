@@ -117,10 +117,10 @@ def test_full_refresh_reports_all_lookup_artifacts() -> None:
 
     assert_equal(result["mode"], "full", "full mode")
     assert_equal(result["artifacts"], ["full_lookup_refresh"], "full artifacts")
-    assert_equal(result["written_count"], 7, "full written count")
+    assert_equal(result["written_count"], 3, "full written count")
     assert "studio/data/generated/catalogue-lookup/meta.json" not in result["written_paths"]
     assert "studio/data/generated/catalogue-lookup/work_search.json" in result["written_paths"]
-    assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/series/009.json" in result["written_paths"]
 
 
 def test_work_single_record_refresh_reports_work_record() -> None:
@@ -146,15 +146,11 @@ def test_work_single_record_refresh_reports_work_record() -> None:
             lookup_plan=lookup_plan,
         )
 
-    assert_equal(result["mode"], "single-record", "work single mode")
-    assert_equal(result["artifacts"], ["work_record"], "work single artifacts")
-    assert_equal(result["written_count"], 1, "work single written count")
-    assert_equal(
-        result["written_paths"],
-        ["studio/data/generated/catalogue-lookup/works/00001.json"],
-        "work single paths",
-    )
-    assert_equal(result["invalidation_class"], lookup_refresh.LOOKUP_REFRESH_SINGLE_RECORD, "work single class")
+    assert_equal(result["mode"], "none", "work single mode")
+    assert_equal(result["artifacts"], [], "work single artifacts")
+    assert_equal(result["written_count"], 0, "work single written count")
+    assert_equal(result["written_paths"], [], "work single paths")
+    assert_equal(result["invalidation_class"], lookup_refresh.LOOKUP_REFRESH_NONE, "work single class")
 
 
 def test_work_project_subfolder_refresh_is_single_record() -> None:
@@ -181,9 +177,9 @@ def test_work_project_subfolder_refresh_is_single_record() -> None:
         )
 
     assert_equal(lookup_plan["unknown_fields"], [], "project_subfolder unknown fields")
-    assert_equal(result["mode"], "single-record", "project_subfolder mode")
-    assert_equal(result["artifacts"], ["work_record"], "project_subfolder artifacts")
-    assert_equal(result["written_count"], 1, "project_subfolder written count")
+    assert_equal(result["mode"], "none", "project_subfolder mode")
+    assert_equal(result["artifacts"], [], "project_subfolder artifacts")
+    assert_equal(result["written_count"], 0, "project_subfolder written count")
 
 
 def test_unknown_registry_field_uses_full_lookup_fallback() -> None:
@@ -229,12 +225,11 @@ def test_work_targeted_refresh_reports_related_artifacts() -> None:
     assert_equal(result["mode"], "targeted-multi-record", "work targeted mode")
     assert_equal(
         result["artifacts"],
-        ["related_series_records", "related_work_detail_records", "work_record", "work_search"],
+        ["related_series_records", "work_search"],
         "work targeted artifacts",
     )
-    assert_equal(result["written_count"], 4, "work targeted written count")
+    assert_equal(result["written_count"], 2, "work targeted written count")
     assert "studio/data/generated/catalogue-lookup/series/009.json" in result["written_paths"]
-    assert "studio/data/generated/catalogue-lookup/work_details/00001-001.json" in result["written_paths"]
 
 
 def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
@@ -258,12 +253,10 @@ def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
             lookup_plan=lookup_plan,
         )
 
-    assert_equal(result["mode"], "targeted-multi-record", "detail targeted mode")
-    assert_equal(result["artifacts"], ["related_work_records", "work_detail_record", "work_detail_search"], "detail targeted artifacts")
-    assert_equal(result["written_count"], 3, "detail targeted written count")
-    assert "studio/data/generated/catalogue-lookup/work_details/00001-001.json" in result["written_paths"]
-    assert "studio/data/generated/catalogue-lookup/work_detail_search.json" in result["written_paths"]
-    assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
+    assert_equal(result["mode"], "none", "detail targeted mode")
+    assert_equal(result["artifacts"], [], "detail targeted artifacts")
+    assert_equal(result["written_count"], 0, "detail targeted written count")
+    assert_equal(result["written_paths"], [], "detail targeted paths")
 
 
 def test_series_targeted_refresh_reports_series_search_and_member_works() -> None:
@@ -288,13 +281,11 @@ def test_series_targeted_refresh_reports_series_search_and_member_works() -> Non
     assert_equal(result["mode"], "targeted-multi-record", "series targeted mode")
     assert_equal(
         result["artifacts"],
-        ["related_work_records", "series_record", "series_search"],
+        ["series_record", "series_search"],
         "series targeted artifacts",
     )
-    assert_equal(result["written_count"], 4, "series targeted written count")
+    assert_equal(result["written_count"], 2, "series targeted written count")
     assert "studio/data/generated/catalogue-lookup/series/009.json" in result["written_paths"]
-    assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
-    assert "studio/data/generated/catalogue-lookup/works/00002.json" in result["written_paths"]
 
 
 def main() -> None:

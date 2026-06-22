@@ -20,13 +20,13 @@ ACTIONABLE_STATUSES = {"draft", "published"}
 
 SCHEMAS = {
     "works": "catalogue_source_works_v1",
-    "work_details": "catalogue_source_work_details_v2",
+    "work_details": "catalogue_source_work_detail_record_v1",
     "series": "catalogue_source_series_v1",
 }
 
 SOURCE_FILES = {
     "works": "works.json",
-    "work_details": "work_details.json",
+    "work_details": "work_details",
     "series": "series.json",
 }
 
@@ -523,6 +523,149 @@ def work_details_payload_for_maps(
     }
 
 
+def work_detail_source_path(source_dir: Path, work_id: str) -> Path:
+    return source_dir / SOURCE_FILES["work_details"] / f"{slug_id(work_id)}.json"
+
+
+def work_detail_record_payload_for_work(
+    work_id: str,
+    section_records: Mapping[str, Dict[str, Any]],
+    detail_records: Mapping[str, Dict[str, Any]],
+) -> Dict[str, Any]:
+    normalized_work_id = slug_id(work_id)
+    sections: list[Dict[str, Any]] = []
+    detail_count = 0
+    for section_id, raw_section in sorted(section_records.items(), key=lambda item: section_sort_key(item[1])):
+        if normalize_text(raw_section.get("work_id")) != normalized_work_id:
+            continue
+        section = normalize_source_record(raw_section, DETAIL_SECTION_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
+        section_details = [
+            normalize_source_record(detail, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
+            for _detail_uid, detail in sorted(detail_records.items(), key=detail_record_sort_key)
+            if normalize_text(detail.get("work_id")) == normalized_work_id
+            and normalize_text(detail.get("section_id")) == normalize_text(section.get("section_id"))
+        ]
+        if not section_details:
+            raise ValueError(f"work_details {normalized_work_id}: section {section_id} has no details")
+        details_payload: list[Dict[str, Any]] = []
+        for detail in sorted(section_details, key=lambda item: detail_sort_key_for_section(section, item)):
+            detail_payload = {
+                field: value
+                for field, value in detail.items()
+                if field not in {"work_id", "section_id"} and value is not None
+            }
+            details_payload.append(detail_payload)
+        section_payload = {
+            field: value
+            for field, value in section.items()
+            if field != "work_id" and value is not None
+        }
+        section_payload["details"] = details_payload
+        sections.append(section_payload)
+        detail_count += len(details_payload)
+    return {
+        "header": {
+            "schema": SCHEMAS["work_details"],
+            "work_id": normalized_work_id,
+            "section_count": len(sections),
+            "count": detail_count,
+        },
+        "work_id": normalized_work_id,
+        "detail_sections": sections,
+    }
+
+
+def work_detail_payloads_for_maps(
+    source_dir: Path,
+    section_records: Mapping[str, Dict[str, Any]],
+    detail_records: Mapping[str, Dict[str, Any]],
+) -> Dict[Path, Dict[str, Any]]:
+    work_ids = sorted({
+        normalize_text(record.get("work_id"))
+        for record in section_records.values()
+        if normalize_text(record.get("work_id"))
+    })
+    return {
+        work_detail_source_path(source_dir, work_id): work_detail_record_payload_for_work(
+            work_id,
+            section_records,
+            detail_records,
+        )
+        for work_id in work_ids
+    }
+
+
+def flatten_work_detail_record_payload(path: Path, payload: Mapping[str, Any]) -> tuple[Dict[str, Dict[str, Any]], Dict[str, Dict[str, Any]]]:
+    raw_work_id = payload.get("work_id") or (payload.get("header") or {}).get("work_id") or path.stem
+    work_id = slug_id(raw_work_id)
+    if path.stem != work_id:
+        raise ValueError(f"Invalid source file name {path}: expected {work_id}.json")
+    if normalize_text((payload.get("header") or {}).get("work_id")) != work_id:
+        raise ValueError(f"Invalid source file {path}: header.work_id must match {work_id}")
+    if normalize_text(payload.get("work_id")) != work_id:
+        raise ValueError(f"Invalid source file {path}: work_id must match {work_id}")
+    raw_sections = payload.get("detail_sections")
+    if not isinstance(raw_sections, list):
+        raise ValueError(f"Invalid source file {path}: missing detail_sections array")
+
+    section_records: Dict[str, Dict[str, Any]] = {}
+    detail_records: Dict[str, Dict[str, Any]] = {}
+    for raw_section in raw_sections:
+        if not isinstance(raw_section, Mapping):
+            raise ValueError(f"Invalid source file {path}: detail section must be an object")
+        section = dict(raw_section)
+        raw_details = section.pop("details", None)
+        if not isinstance(raw_details, list) or not raw_details:
+            raise ValueError(f"Invalid source file {path}: section must include one or more details")
+        section["work_id"] = work_id
+        section_record = {
+            field: value
+            for field, value in normalize_source_record(section, DETAIL_SECTION_FIELDS, text_fields=DETAIL_TEXT_FIELDS).items()
+            if value is not None
+        }
+        section_id = normalize_text(section_record.get("section_id"))
+        if not section_id:
+            raise ValueError(f"Invalid source file {path}: section missing section_id")
+        if detail_section_id_number(work_id, section_id) is None:
+            raise ValueError(f"Invalid source file {path}: section_id {section_id!r} does not belong to {work_id}")
+        section_records[section_id] = section_record
+        for raw_detail in raw_details:
+            if not isinstance(raw_detail, Mapping):
+                raise ValueError(f"Invalid source file {path}: detail must be an object")
+            if "work_id" in raw_detail or "section_id" in raw_detail:
+                raise ValueError(f"Invalid source file {path}: detail records must not repeat work_id or section_id")
+            detail = dict(raw_detail)
+            detail["work_id"] = work_id
+            detail["section_id"] = section_id
+            detail_record = {
+                field: value
+                for field, value in normalize_source_record(detail, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS).items()
+                if value is not None
+            }
+            detail_uid = normalize_text(detail_record.get("detail_uid"))
+            if not detail_uid:
+                raise ValueError(f"Invalid source file {path}: detail missing detail_uid")
+            if normalize_detail_uid_value(detail_uid).split("-", 1)[0] != work_id:
+                raise ValueError(f"Invalid source file {path}: detail_uid {detail_uid!r} does not belong to {work_id}")
+            detail_records[detail_uid] = detail_record
+    return section_records, detail_records
+
+
+def load_work_details_flat_payload(path: Path) -> Dict[str, Any]:
+    if not path.is_dir():
+        raise ValueError(f"Missing source directory: {path}")
+    section_records: Dict[str, Dict[str, Any]] = {}
+    detail_records: Dict[str, Dict[str, Any]] = {}
+    for record_path in sorted(path.glob("*.json")):
+        if record_path.name == "index.json":
+            continue
+        payload = load_json_file(record_path)
+        sections, details = flatten_work_detail_record_payload(record_path, payload)
+        section_records.update(sections)
+        detail_records.update(details)
+    return work_details_payload_for_maps(section_records, detail_records)
+
+
 def payloads_from_records(records: CatalogueSourceRecords) -> Dict[str, Dict[str, Any]]:
     payloads = {
         kind: payload_for_map(kind, record_map)
@@ -539,10 +682,19 @@ def payloads_from_records(records: CatalogueSourceRecords) -> Dict[str, Dict[str
 def write_payloads(source_dir: Path, payloads: Mapping[str, Mapping[str, Any]]) -> list[Path]:
     source_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
-    for kind in ["works", "work_details", "series"]:
+    for kind in ["works", "series"]:
         path = source_dir / SOURCE_FILES[kind]
         path.write_text(json.dumps(payloads[kind], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         written.append(path)
+    details_payload = payloads.get("work_details")
+    if isinstance(details_payload, Mapping):
+        written.extend(
+            write_work_detail_payloads(
+                source_dir,
+                details_payload.get("work_detail_sections") if isinstance(details_payload.get("work_detail_sections"), Mapping) else {},
+                details_payload.get("work_details") if isinstance(details_payload.get("work_details"), Mapping) else {},
+            )
+        )
     return written
 
 
@@ -560,20 +712,46 @@ def write_source_record_payloads(
             kind = "work_details"
         if kind not in record_maps:
             raise ValueError(f"Unknown source record kind: {kind}")
-        path = source_dir / SOURCE_FILES[kind]
         if kind == "work_details":
-            payload = work_details_payload_for_maps(
-                records.work_detail_sections,
-                records.work_details,
+            written.extend(
+                write_work_detail_payloads(
+                    source_dir,
+                    records.work_detail_sections,
+                    records.work_details,
+                )
             )
-        else:
-            payload = payload_for_map(kind, record_maps[kind])
+            continue
+        path = source_dir / SOURCE_FILES[kind]
+        payload = payload_for_map(kind, record_maps[kind])
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+    return written
+
+
+def write_work_detail_payloads(
+    source_dir: Path,
+    section_records: Mapping[str, Dict[str, Any]],
+    detail_records: Mapping[str, Dict[str, Any]],
+) -> list[Path]:
+    detail_dir = source_dir / SOURCE_FILES["work_details"]
+    detail_dir.mkdir(parents=True, exist_ok=True)
+    payloads = work_detail_payloads_for_maps(source_dir, section_records, detail_records)
+    expected_paths = set(payloads)
+    for stale_path in sorted(detail_dir.glob("*.json")):
+        if stale_path.name == "index.json":
+            continue
+        if stale_path not in expected_paths:
+            stale_path.unlink()
+    written: list[Path] = []
+    for path, payload in payloads.items():
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         written.append(path)
     return written
 
 
 def load_json_file(path: Path) -> Dict[str, Any]:
+    if path.is_dir() and path.name == SOURCE_FILES["work_details"]:
+        return load_work_details_flat_payload(path)
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
@@ -586,6 +764,9 @@ def load_json_file(path: Path) -> Dict[str, Any]:
 
 
 def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
+    old_flat_path = source_dir / "work_details.json"
+    if old_flat_path.exists():
+        raise ValueError(f"Retired source file must not exist at runtime: {old_flat_path}")
     maps: Dict[str, Dict[str, Dict[str, Any]]] = {}
     section_maps: Dict[str, Dict[str, Any]] = {}
     for kind in ["works", "work_details", "series"]:

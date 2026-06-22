@@ -18,6 +18,7 @@ for candidate in (SERVICES_DIR, SHARED_PYTHON_DIR):
 from catalogue.catalogue_build_media import PROJECTS_BASE_DIR_ENV_NAME  # noqa: E402
 from catalogue import catalogue_detail_section_service as detail_section_service  # noqa: E402
 from catalogue.catalogue_service_context import build_catalogue_write_context  # noqa: E402
+from catalogue.catalogue_source import load_json_file, write_work_detail_payloads  # noqa: E402
 
 
 def write_json(path: Path, payload: dict) -> None:
@@ -27,6 +28,20 @@ def write_json(path: Path, payload: dict) -> None:
 
 def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_work_details_source(repo_root: Path, payload: dict) -> Path:
+    source_dir = repo_root / "studio/data/canonical/catalogue"
+    write_work_detail_payloads(
+        source_dir,
+        payload.get("work_detail_sections") or {},
+        payload.get("work_details") or {},
+    )
+    return source_dir / "work_details"
+
+
+def read_work_details_source(repo_root: Path) -> dict:
+    return load_json_file(repo_root / "studio/data/canonical/catalogue/work_details")
 
 
 def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
@@ -58,14 +73,7 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
             },
         },
     )
-    write_json(
-        source_dir / "work_details.json",
-        {
-            "header": {"schema": "catalogue_source_work_details_v2", "section_count": 0, "count": 0},
-            "work_detail_sections": {},
-            "work_details": {},
-        },
-    )
+    (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
     write_json(
         source_dir / "series.json",
         {
@@ -121,7 +129,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     assert payload["build"]["ok"] is True
     assert [call["detail_uid"] for call in build_calls] == ["00782-001", "00782-002"]
 
-    source = read_json(repo_root / "studio/data/canonical/catalogue/work_details.json")
+    source = read_work_details_source(repo_root)
     assert source["header"]["section_count"] == 1
     assert source["header"]["count"] == 2
     assert source["work_detail_sections"]["00782-1"] == {
@@ -180,9 +188,8 @@ def test_create_detail_section_rejects_missing_file(tmp_path: Path) -> None:
 
 def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
-    source_path = repo_root / "studio/data/canonical/catalogue/work_details.json"
-    write_json(
-        source_path,
+    write_work_details_source(
+        repo_root,
         {
             "header": {"schema": "catalogue_source_work_details_v2", "section_count": 3, "count": 3},
             "work_detail_sections": {
@@ -236,7 +243,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
             },
         },
     )
-    before_details = read_json(source_path)["work_details"]
+    before_details = read_work_details_source(repo_root)["work_details"]
     build_calls: list[dict[str, object]] = []
 
     def fake_build_operation(_context, **kwargs):
@@ -263,7 +270,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
     assert payload["build_requested"] is True
     assert [call["detail_uid"] for call in build_calls] == [""]
 
-    source = read_json(source_path)
+    source = read_work_details_source(repo_root)
     sections = source["work_detail_sections"]
     assert sections["00782-2"]["section_order"] == 1
     assert sections["00782-3"]["section_order"] == 2
@@ -275,9 +282,8 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
 
 def test_save_detail_section_single_section_omits_default_sort_and_keeps_details(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
-    source_path = repo_root / "studio/data/canonical/catalogue/work_details.json"
-    write_json(
-        source_path,
+    write_work_details_source(
+        repo_root,
         {
             "header": {"schema": "catalogue_source_work_details_v2", "section_count": 1, "count": 1},
             "work_detail_sections": {
@@ -301,7 +307,7 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
             },
         },
     )
-    before_details = read_json(source_path)["work_details"]
+    before_details = read_work_details_source(repo_root)["work_details"]
     build_calls: list[dict[str, object]] = []
 
     def fake_build_operation(_context, **kwargs):
@@ -325,7 +331,7 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
     assert payload["changed"] is True
     assert [call["detail_uid"] for call in build_calls] == [""]
 
-    source = read_json(source_path)
+    source = read_work_details_source(repo_root)
     section = source["work_detail_sections"]["00782-1"]
     assert section == {
         "details_subfolder": "details",
@@ -338,7 +344,6 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
 
 def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) -> None:
     repo_root, _projects_base = prepare_repo(tmp_path)
-    source_path = repo_root / "studio/data/canonical/catalogue/work_details.json"
     source_payload = {
         "header": {"schema": "catalogue_source_work_details_v2", "section_count": 1, "count": 1},
         "work_detail_sections": {
@@ -361,7 +366,7 @@ def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) 
             },
         },
     }
-    write_json(source_path, source_payload)
+    write_work_details_source(repo_root, source_payload)
     build_calls: list[dict[str, object]] = []
 
     def fake_build_operation(_context, **kwargs):
@@ -385,4 +390,5 @@ def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) 
     assert payload["changed"] is False
     assert "build_requested" not in payload
     assert build_calls == []
-    assert read_json(source_path) == source_payload
+    assert read_work_details_source(repo_root)["work_detail_sections"] == source_payload["work_detail_sections"]
+    assert read_work_details_source(repo_root)["work_details"] == source_payload["work_details"]

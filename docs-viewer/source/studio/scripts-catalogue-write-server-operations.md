@@ -40,7 +40,7 @@ The server validates the proposed update through the shared catalogue source loa
 - binds to `127.0.0.1` only
 - CORS allows loopback origins only
 - write targets are allowlisted to canonical catalogue source JSON files under `studio/data/canonical/catalogue/`
-- current JSON source-write endpoints write only canonical catalogue source JSON under `studio/data/canonical/catalogue/`, including `works.json`, `work_details.json`, `series.json`, and `moments.json`
+- current JSON source-write endpoints write only canonical catalogue source JSON under `studio/data/canonical/catalogue/`, including `works.json`, `work_details/<work_id>.json`, and `series.json`
 - standalone work-file and work-link write endpoints are retired; files and links are saved as work-owned metadata through `POST /catalogue/work/save`
 - source writes use atomic replacement and in-process rollback without writing backup bundles
 - event logs are written under `var/studio/catalogue/logs/`
@@ -57,16 +57,14 @@ It no longer starts or offers a fallback flag for a standalone catalogue write s
 Canonical source JSON:
 
 - `studio/data/canonical/catalogue/works.json`
-- `studio/data/canonical/catalogue/work_details.json`
+- `studio/data/canonical/catalogue/work_details/<work_id>.json`
 - `studio/data/canonical/catalogue/series.json`
-- `studio/data/canonical/catalogue/moments.json`
 
 Atomic write scope:
 
 - `studio/data/canonical/catalogue/works.json`
-- `studio/data/canonical/catalogue/work_details.json`
+- `studio/data/canonical/catalogue/work_details/<work_id>.json`
 - `studio/data/canonical/catalogue/series.json`
-- `studio/data/canonical/catalogue/moments.json`
 
 Create, save, bulk-save, workbook import, delete apply, publication apply, moment save, and moment import apply routes use atomic source replacement.
 Multi-file source writes and cleanup transactions keep in-process snapshots for rollback if a later replace/delete/rebuild step fails, but they do not write backup bundles under `var/`.

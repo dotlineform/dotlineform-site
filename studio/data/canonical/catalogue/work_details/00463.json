@@ -1,0 +1,81 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00463",
+    "section_count": 2,
+    "count": 7
+  },
+  "work_id": "00463",
+  "detail_sections": [
+    {
+      "section_id": "00463-1",
+      "details_subfolder": "original painting",
+      "section_title": "original painting",
+      "details": [
+        {
+          "detail_uid": "00463-001",
+          "detail_id": "001",
+          "project_filename": "living surface hand form (original painting, 1989).jpg",
+          "title": "living surface hand form (original painting, 1989)",
+          "width_px": 2169,
+          "height_px": 2830
+        }
+      ]
+    },
+    {
+      "section_id": "00463-2",
+      "details_subfolder": "versions",
+      "section_title": "versions",
+      "details": [
+        {
+          "detail_uid": "00463-002",
+          "detail_id": "002",
+          "project_filename": "living surface version 1.jpg",
+          "title": "living surface (version 1)",
+          "width_px": 5315,
+          "height_px": 5315
+        },
+        {
+          "detail_uid": "00463-003",
+          "detail_id": "003",
+          "project_filename": "living surface version 2.jpg",
+          "title": "living surface (version 2)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        {
+          "detail_uid": "00463-004",
+          "detail_id": "004",
+          "project_filename": "living surface version 3.jpg",
+          "title": "living surface (version 3)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        {
+          "detail_uid": "00463-005",
+          "detail_id": "005",
+          "project_filename": "living surface version 3 detail.jpg",
+          "title": "living surface (version 3) detail",
+          "width_px": 1400,
+          "height_px": 1400
+        },
+        {
+          "detail_uid": "00463-006",
+          "detail_id": "006",
+          "project_filename": "living surface version 4.jpg",
+          "title": "living surface (version 4)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        {
+          "detail_uid": "00463-007",
+          "detail_id": "007",
+          "project_filename": "living surface version 4 detail.jpg",
+          "title": "living surface (version 4) detail",
+          "width_px": 1400,
+          "height_px": 1400
+        }
+      ]
+    }
+  ]
+}

@@ -3,13 +3,31 @@ doc_id: site-request-catalogue-per-work-detail-source
 title: Catalogue Per-Work Detail Source Request
 added_date: 2026-06-22
 last_updated: 2026-06-22
-ui_status: planned
+ui_status: implemented
 parent_id: change-requests
 viewable: true
 ---
 # Catalogue Per-Work Detail Source Request
 
-Status: planned
+Status: implemented
+
+## Implementation Note
+
+Implemented on 2026-06-22.
+
+- Migrated `studio/data/canonical/catalogue/work_details.json` into per-work files under `studio/data/canonical/catalogue/work_details/`.
+- Moved the retired flat source to `studio/data/canonical/catalogue/retired/work_details.flat.v2.json`.
+- Moved retired generated Studio lookup artifacts under `studio/data/generated/catalogue-lookup/retired/`.
+- Kept retained generated lookup runtime files to `work_search.json`, `series_search.json`, and `series/{series_id}.json`.
+- Replaced work and work-detail focused generated lookup reads with service projections for `catalogue_work_record` and `catalogue_work_detail_record`.
+- Updated source loading, validation, write transactions, workbook import apply, delete plans, bulk/detail-section writes, frontend config, and tests for the per-work detail source model.
+
+Verification:
+
+- Migrated-directory flatten output matches the retired flat source.
+- `records_from_json_source()` validates the migrated source with zero errors.
+- Focused catalogue tests: `61 passed`.
+- `admin-app/commands/run_checks.py --profile catalogue`: passed.
 
 ## Summary
 

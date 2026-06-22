@@ -106,14 +106,12 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert set(runtime["data_paths"]) == {"studio", "ui_text"}
     assert set(runtime["data_paths"]["studio"]) == {
         "catalogue_works",
-        "catalogue_work_details",
         "catalogue_series",
         "catalogue_lookup_work_search",
         "catalogue_lookup_series_search",
-        "catalogue_lookup_work_detail_search",
-        "catalogue_lookup_work_base",
-        "catalogue_lookup_work_detail_base",
         "catalogue_lookup_series_base",
+        "catalogue_work_record",
+        "catalogue_work_detail_record",
         "catalogue_field_registry",
     }
     assert "docs_viewer" not in runtime["data_paths"].get("ui_text", {})
@@ -323,10 +321,7 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
             ),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
@@ -385,10 +380,7 @@ def test_catalogue_read_route_returns_source_payloads() -> None:
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00001": {"work_id": "00001", "title": "One", "status": "draft"}}}),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "draft"}}}),
             encoding="utf-8",
@@ -460,10 +452,7 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "published", "primary_work_id": "00042"}}}),
             encoding="utf-8",
@@ -516,10 +505,7 @@ def test_catalogue_delete_preview_uses_callable_service_route() -> None:
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00042": {"work_id": "00042", "title": "Draft", "status": "draft", "series_ids": []}}}),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
@@ -556,10 +542,7 @@ def test_catalogue_bulk_save_work_dry_run_uses_callable_service_route() -> None:
             ),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
@@ -597,10 +580,7 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
@@ -654,10 +634,7 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
             ),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
@@ -699,10 +676,7 @@ def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() ->
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
             encoding="utf-8",
@@ -742,10 +716,7 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
             json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
             encoding="utf-8",
         )
-        (source_dir / "work_details.json").write_text(
-            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
-            encoding="utf-8",
-        )
+        (source_dir / "work_details").mkdir(parents=True, exist_ok=True)
         (source_dir / "series.json").write_text(
             json.dumps(
                 {

@@ -318,7 +318,7 @@ def render_report_markdown(
         "",
         f"Scan mode: {scan_scope}.",
         "",
-        "Work details are intentionally out of scope. Known detail subfolders from `studio/data/canonical/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.",
+        "Work details are intentionally out of scope. Known detail subfolders from `studio/data/canonical/catalogue/work_details/` are skipped so detail images do not appear as unimported primary work images.",
         "",
         "## Summary",
         "",

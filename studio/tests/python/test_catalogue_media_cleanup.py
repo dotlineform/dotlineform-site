@@ -85,7 +85,6 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
         assert result["cleaned_staged_thumbs"] == {
             "work": ["var/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"],
             "work_details": [],
-            "moment": [],
         }
 
 

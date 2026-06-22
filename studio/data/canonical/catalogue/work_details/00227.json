@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00227",
+    "section_count": 1,
+    "count": 1
+  },
+  "work_id": "00227",
+  "detail_sections": [
+    {
+      "section_id": "00227-1",
+      "details_subfolder": "reverse",
+      "section_title": "reverse",
+      "details": [
+        {
+          "detail_uid": "00227-001",
+          "detail_id": "001",
+          "project_filename": "227-001.jpg",
+          "title": "untitled [227] reverse",
+          "width_px": 2480,
+          "height_px": 3508
+        }
+      ]
+    }
+  ]
+}

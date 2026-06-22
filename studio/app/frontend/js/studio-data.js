@@ -4,14 +4,12 @@ let studioConfigModulePromise = null;
 
 const CATALOGUE_SERVER_READ_KEYS = new Set([
   "catalogue_works",
-  "catalogue_work_details",
   "catalogue_series",
   "catalogue_lookup_work_search",
   "catalogue_lookup_series_search",
-  "catalogue_lookup_work_detail_search",
-  "catalogue_lookup_work_base",
-  "catalogue_lookup_work_detail_base",
-  "catalogue_lookup_series_base"
+  "catalogue_lookup_series_base",
+  "catalogue_work_record",
+  "catalogue_work_detail_record"
 ]);
 
 export async function fetchJson(url, options = {}) {

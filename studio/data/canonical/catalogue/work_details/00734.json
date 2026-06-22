@@ -1,0 +1,66 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00734",
+    "section_count": 1,
+    "count": 6
+  },
+  "work_id": "00734",
+  "detail_sections": [
+    {
+      "section_id": "00734-1",
+      "details_subfolder": "layers",
+      "section_title": "layers",
+      "details": [
+        {
+          "detail_uid": "00734-001",
+          "detail_id": "001",
+          "project_filename": "buddhism.jpg",
+          "title": "buddhism",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        {
+          "detail_uid": "00734-002",
+          "detail_id": "002",
+          "project_filename": "chemicals.jpg",
+          "title": "chemicals",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        {
+          "detail_uid": "00734-003",
+          "detail_id": "003",
+          "project_filename": "colour.jpg",
+          "title": "colour",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        {
+          "detail_uid": "00734-004",
+          "detail_id": "004",
+          "project_filename": "music.jpg",
+          "title": "music",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        {
+          "detail_uid": "00734-005",
+          "detail_id": "005",
+          "project_filename": "physics.jpg",
+          "title": "physics",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        {
+          "detail_uid": "00734-006",
+          "detail_id": "006",
+          "project_filename": "words.jpg",
+          "title": "words",
+          "width_px": 8753,
+          "height_px": 8850
+        }
+      ]
+    }
+  ]
+}

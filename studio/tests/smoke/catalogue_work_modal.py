@@ -288,7 +288,7 @@ def main() -> int:
             if key == "catalogue_lookup_series_search":
                 fulfil_json(route, {"items": [series_record]})
                 return
-            if key == "catalogue_lookup_work_base":
+            if key == "catalogue_work_record":
                 fulfil_json(route, {
                     "work": work_record,
                     "record_hash": "hash-work-current",

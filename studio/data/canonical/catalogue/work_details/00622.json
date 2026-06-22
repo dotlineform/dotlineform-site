@@ -1,0 +1,66 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00622",
+    "section_count": 1,
+    "count": 6
+  },
+  "work_id": "00622",
+  "detail_sections": [
+    {
+      "section_id": "00622-1",
+      "details_subfolder": "derivation",
+      "section_title": "derivation",
+      "details": [
+        {
+          "detail_uid": "00622-001",
+          "detail_id": "001",
+          "project_filename": "k source.jpg",
+          "title": "k source",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "00622-002",
+          "detail_id": "002",
+          "project_filename": "k crystals bits - detail.jpg",
+          "title": "k crystals bits - detail",
+          "width_px": 2893,
+          "height_px": 1808
+        },
+        {
+          "detail_uid": "00622-003",
+          "detail_id": "003",
+          "project_filename": "k crystals bits - screenshot - detail.jpg",
+          "title": "k crystals bits - screenshot - detail",
+          "width_px": 800,
+          "height_px": 500
+        },
+        {
+          "detail_uid": "00622-004",
+          "detail_id": "004",
+          "project_filename": "k crystals bits - screenshot.jpg",
+          "title": "k crystals bits - screenshot",
+          "width_px": 5802,
+          "height_px": 4148
+        },
+        {
+          "detail_uid": "00622-005",
+          "detail_id": "005",
+          "project_filename": "k crystals bits.jpg",
+          "title": "k crystals bits",
+          "width_px": 8681,
+          "height_px": 6300
+        },
+        {
+          "detail_uid": "00622-006",
+          "detail_id": "006",
+          "project_filename": "k crystals colours.jpg",
+          "title": "k crystals colours",
+          "width_px": 4341,
+          "height_px": 3150
+        }
+      ]
+    }
+  ]
+}

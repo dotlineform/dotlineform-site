@@ -1,0 +1,66 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00521",
+    "section_count": 1,
+    "count": 6
+  },
+  "work_id": "00521",
+  "detail_sections": [
+    {
+      "section_id": "00521-1",
+      "details_subfolder": "details",
+      "section_title": "details",
+      "details": [
+        {
+          "detail_uid": "00521-007",
+          "detail_id": "007",
+          "project_filename": "kylie structure 2.1.jpg",
+          "title": "kylie structure 2.1",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "detail_uid": "00521-008",
+          "detail_id": "008",
+          "project_filename": "kylie structure 2.2.jpg",
+          "title": "kylie structure 2.2",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "detail_uid": "00521-009",
+          "detail_id": "009",
+          "project_filename": "kylie structure 2.3.jpg",
+          "title": "kylie structure 2.3",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "detail_uid": "00521-010",
+          "detail_id": "010",
+          "project_filename": "kylie structure 2.4.jpg",
+          "title": "kylie structure 2.4",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "detail_uid": "00521-011",
+          "detail_id": "011",
+          "project_filename": "kylie structure 2.5.jpg",
+          "title": "kylie structure 2.5",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "detail_uid": "00521-012",
+          "detail_id": "012",
+          "project_filename": "kylie structure 2.6.jpg",
+          "title": "kylie structure 2.6",
+          "width_px": 2000,
+          "height_px": 2000
+        }
+      ]
+    }
+  ]
+}

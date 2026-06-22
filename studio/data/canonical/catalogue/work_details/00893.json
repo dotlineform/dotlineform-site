@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00893",
+    "section_count": 1,
+    "count": 8
+  },
+  "work_id": "00893",
+  "detail_sections": [
+    {
+      "section_id": "00893-1",
+      "details_subfolder": "versions (2022)",
+      "section_title": "versions (2022)",
+      "details": [
+        {
+          "detail_uid": "00893-001",
+          "detail_id": "001",
+          "project_filename": "doll moiré (version 1).jpg",
+          "title": "doll moiré (version 1)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00893-002",
+          "detail_id": "002",
+          "project_filename": "doll moiré (version 2).jpg",
+          "title": "doll moiré (version 2)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00893-003",
+          "detail_id": "003",
+          "project_filename": "doll moiré (version 3).jpg",
+          "title": "doll moiré (version 3)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00893-004",
+          "detail_id": "004",
+          "project_filename": "doll moiré (version 4).jpg",
+          "title": "doll moiré (version 4)",
+          "width_px": 2000,
+          "height_px": 2000
+        },
+        {
+          "detail_uid": "00893-005",
+          "detail_id": "005",
+          "project_filename": "doll moiré (version 4.1).jpg",
+          "title": "doll moiré (version 4.1)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00893-006",
+          "detail_id": "006",
+          "project_filename": "doll moiré (version 4.2).jpg",
+          "title": "doll moiré (version 4.2)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00893-007",
+          "detail_id": "007",
+          "project_filename": "doll moiré (version 4.3).jpg",
+          "title": "doll moiré (version 4.3)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        {
+          "detail_uid": "00893-008",
+          "detail_id": "008",
+          "project_filename": "doll moiré (version 4.4).jpg",
+          "title": "doll moiré (version 4.4)",
+          "width_px": 3543,
+          "height_px": 3543
+        }
+      ]
+    }
+  ]
+}

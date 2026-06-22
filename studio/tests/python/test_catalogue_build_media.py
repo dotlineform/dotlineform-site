@@ -17,7 +17,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_build_media as media  # noqa: E402
-from catalogue.catalogue_source import payload_for_map  # noqa: E402
+from catalogue.catalogue_source import payload_for_map, write_work_detail_payloads  # noqa: E402
 from pipeline_config import source_works_root_subdir  # noqa: E402
 
 
@@ -48,21 +48,25 @@ def write_source_fixture(source_dir: Path) -> None:
             },
         ),
     )
-    write_json(
-        source_dir / "work_details.json",
-        payload_for_map(
-            "work_details",
-            {
-                "00001-001": {
-                    "detail_uid": "00001-001",
-                    "work_id": "00001",
-                    "detail_id": "001",
-                    "project_subfolder": "details",
-                    "project_filename": "alpha-detail.jpg",
-                    "status": "published",
-                }
-            },
-        ),
+    write_work_detail_payloads(
+        source_dir,
+        {
+            "00001-1": {
+                "section_id": "00001-1",
+                "work_id": "00001",
+                "details_subfolder": "details",
+                "section_title": "Details",
+            }
+        },
+        {
+            "00001-001": {
+                "detail_uid": "00001-001",
+                "work_id": "00001",
+                "detail_id": "001",
+                "section_id": "00001-1",
+                "project_filename": "alpha-detail.jpg",
+            }
+        },
     )
     write_json(source_dir / "series.json", payload_for_map("series", {}))
 

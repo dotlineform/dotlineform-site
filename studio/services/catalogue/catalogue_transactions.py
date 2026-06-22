@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, Iterable, Mapping
 
 from catalogue import catalogue_cleanup
 from catalogue import catalogue_public_paths as public_paths
+from catalogue.catalogue_source import SOURCE_FILES, work_detail_payloads_for_maps
 
 
 @dataclass(frozen=True)
@@ -62,8 +63,34 @@ def execute_source_json_write(
     payloads = validate_json_payloads_by_path(payloads_by_path)
     written_paths: list[Path] = []
     if not dry_run:
-        written_paths = atomic_write_many(payloads)
+        expanded_payloads, delete_paths = expand_source_payloads(payloads)
+        written_paths = atomic_write_many(expanded_payloads, delete_paths=delete_paths)
     return SourceJsonWriteResult(written_paths=written_paths)
+
+
+def expand_source_payloads(payloads_by_path: Mapping[Path, Dict[str, Any]]) -> tuple[Dict[Path, Dict[str, Any]], list[Path]]:
+    expanded: Dict[Path, Dict[str, Any]] = {}
+    delete_paths: list[Path] = []
+    for path, payload in payloads_by_path.items():
+        if path.name == SOURCE_FILES["work_details"] and isinstance(payload.get("work_details"), Mapping):
+            detail_dir = path
+            source_dir = detail_dir.parent
+            details_payloads = work_detail_payloads_for_maps(
+                source_dir,
+                payload.get("work_detail_sections") if isinstance(payload.get("work_detail_sections"), Mapping) else {},
+                payload.get("work_details") if isinstance(payload.get("work_details"), Mapping) else {},
+            )
+            expanded.update(details_payloads)
+            expected_paths = {target.resolve() for target in details_payloads}
+            if detail_dir.exists():
+                for current_path in sorted(detail_dir.glob("*.json")):
+                    if current_path.name == "index.json":
+                        continue
+                    if current_path.resolve() not in expected_paths:
+                        delete_paths.append(current_path.resolve())
+            continue
+        expanded[path] = payload
+    return expanded, delete_paths
 
 
 def unique_paths(paths: Iterable[Path]) -> list[Path]:
@@ -101,13 +128,15 @@ def restore_transaction_paths(touched_paths: Iterable[Path], snapshots: Mapping[
             pass
 
 
-def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]]) -> list[Path]:
+def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], *, delete_paths: Iterable[Path] = ()) -> list[Path]:
     temp_paths: Dict[Path, Path] = {}
     replaced_paths: list[Path] = []
     originals: Dict[Path, bytes | None] = {}
+    deleted_originals: Dict[Path, bytes] = {}
 
     try:
         for path, payload in payloads_by_path.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
             originals[path] = path.read_bytes() if path.exists() else None
 
             fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
@@ -120,6 +149,10 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]]) -> list[Path
         for path, temp_path in temp_paths.items():
             os.replace(temp_path, path)
             replaced_paths.append(path)
+        for delete_path in unique_paths(delete_paths):
+            if delete_path.exists() and delete_path.is_file():
+                deleted_originals[delete_path] = delete_path.read_bytes()
+                delete_path.unlink()
     except Exception:
         for path in reversed(replaced_paths):
             try:
@@ -128,6 +161,12 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]]) -> list[Path
                     path.write_bytes(original)
                 elif path.exists():
                     path.unlink()
+            except Exception:
+                pass
+        for path, original in deleted_originals.items():
+            try:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(original)
             except Exception:
                 pass
         raise
@@ -139,7 +178,7 @@ def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]]) -> list[Path
                 except OSError:
                     pass
 
-    return list(payloads_by_path.keys())
+    return [*payloads_by_path.keys()]
 
 
 def ensure_catalogue_delete_payload_scope(
@@ -188,16 +227,18 @@ def execute_catalogue_cleanup_transaction(
     written_paths: list[Path] = []
 
     if not dry_run:
+        expanded_payloads, source_delete_paths = expand_source_payloads(payloads)
         touched_paths = unique_paths(
             [
-                *payloads.keys(),
+                *expanded_payloads.keys(),
+                *source_delete_paths,
                 *(cleanup.get("delete_paths") or []),
                 *([search_index_path] if rebuild_search else []),
             ]
         )
         transaction_snapshots = snapshot_transaction_paths(touched_paths)
         try:
-            written_paths = atomic_write_many(payloads)
+            written_paths = atomic_write_many(expanded_payloads, delete_paths=source_delete_paths)
             deleted_file_count = catalogue_cleanup.delete_existing_files(cleanup.get("delete_paths") or [])
             if rebuild_search:
                 search_rebuild = rebuild_catalogue_search(repo_root)

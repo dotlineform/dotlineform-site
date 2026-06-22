@@ -1,0 +1,129 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00629",
+    "section_count": 2,
+    "count": 13
+  },
+  "work_id": "00629",
+  "detail_sections": [
+    {
+      "section_id": "00629-1",
+      "details_subfolder": "versions",
+      "section_title": "versions",
+      "details": [
+        {
+          "detail_uid": "00629-001",
+          "detail_id": "001",
+          "project_filename": "quantum random number theory (10,000) 1.jpg",
+          "title": "quantum random number theory (10,000) 1",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-002",
+          "detail_id": "002",
+          "project_filename": "quantum random number theory (10,000) 2.jpg",
+          "title": "quantum random number theory (10,000) 2",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-003",
+          "detail_id": "003",
+          "project_filename": "quantum random number theory (10,000) 3.jpg",
+          "title": "quantum random number theory (10,000) 3",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-004",
+          "detail_id": "004",
+          "project_filename": "quantum random number theory (10,000) 4.jpg",
+          "title": "quantum random number theory (10,000) 4",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-005",
+          "detail_id": "005",
+          "project_filename": "quantum random number theory (10,000) 5.jpg",
+          "title": "quantum random number theory (10,000) 5",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-006",
+          "detail_id": "006",
+          "project_filename": "quantum random number theory (10,000) 6.jpg",
+          "title": "quantum random number theory (10,000) 6",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-007",
+          "detail_id": "007",
+          "project_filename": "quantum random number theory (10,000) 7.jpg",
+          "title": "quantum random number theory (10,000) 7",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-008",
+          "detail_id": "008",
+          "project_filename": "quantum random number theory (10,000) 8.jpg",
+          "title": "quantum random number theory (10,000) 8",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-009",
+          "detail_id": "009",
+          "project_filename": "quantum random number theory (10,000) 9.jpg",
+          "title": "quantum random number theory (10,000) 9",
+          "width_px": 4800,
+          "height_px": 4800
+        },
+        {
+          "detail_uid": "00629-010",
+          "detail_id": "010",
+          "project_filename": "quantum random number theory (10,000) 10.jpg",
+          "title": "quantum random number theory (10,000) 10",
+          "width_px": 4800,
+          "height_px": 4800
+        }
+      ]
+    },
+    {
+      "section_id": "00629-2",
+      "details_subfolder": "install",
+      "section_title": "install",
+      "details": [
+        {
+          "detail_uid": "00629-011",
+          "detail_id": "011",
+          "project_filename": "qrnt - Searching for God exhibition - install 1.jpg",
+          "title": "qrnt - Searching for God exhibition - install 1",
+          "width_px": 1600,
+          "height_px": 1200
+        },
+        {
+          "detail_uid": "00629-012",
+          "detail_id": "012",
+          "project_filename": "qrnt - Searching for God exhibition - install 2.jpg",
+          "title": "qrnt - Searching for God exhibition - install 2",
+          "width_px": 1600,
+          "height_px": 1200
+        },
+        {
+          "detail_uid": "00629-013",
+          "detail_id": "013",
+          "project_filename": "qrnt - Searching for God exhibition - install 3.jpg",
+          "title": "qrnt - Searching for God exhibition - install 3",
+          "width_px": 1296,
+          "height_px": 1304
+        }
+      ]
+    }
+  ]
+}

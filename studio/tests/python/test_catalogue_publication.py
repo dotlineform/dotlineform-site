@@ -15,7 +15,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_publication  # noqa: E402
-from catalogue.catalogue_source import payload_for_map, work_details_payload_for_maps  # noqa: E402
+from catalogue.catalogue_source import payload_for_map, work_details_payload_for_maps, write_work_detail_payloads  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -87,16 +87,17 @@ def write_source_fixture(source_dir: Path) -> None:
             },
         ),
     )
-    write_json(
-        source_dir / "work_details.json",
+    write_work_detail_payloads(
+        source_dir,
+        {
+            "00002-1": {
+                "section_id": "00002-1",
+                "work_id": "00002",
+                "section_title": "Details",
+            }
+        },
         work_details_payload_for_maps(
-            {
-                "00002-1": {
-                    "section_id": "00002-1",
-                    "work_id": "00002",
-                    "section_title": "Details",
-                }
-            },
+            {},
             {
                 "00002-001": {
                     "detail_uid": "00002-001",
@@ -107,7 +108,7 @@ def write_source_fixture(source_dir: Path) -> None:
                     "title": "Beta detail",
                 }
             },
-        ),
+        )["work_details"],
     )
     write_json(
         source_dir / "series.json",

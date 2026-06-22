@@ -2,7 +2,7 @@
 doc_id: scripts-project-state-report
 title: Project State Report
 added_date: 2026-04-27
-last_updated: 2026-05-26
+last_updated: 2026-06-22
 parent_id: studio
 viewable: true
 ---
@@ -23,7 +23,7 @@ It is meant to replace ad hoc catalogue/source-folder comparisons when deciding 
 ## Inputs
 
 - `studio/data/canonical/catalogue/works.json`
-- `studio/data/canonical/catalogue/work_details.json`, only to identify detail subfolder paths to skip
+- `studio/data/canonical/catalogue/work_details/`, only to identify detail subfolder paths to skip
 - `DOTLINEFORM_PROJECTS_BASE_DIR` from `var/local/site.env`, resolving to a folder that contains `projects/`
 
 Do not pass `--projects-base-dir` during normal local runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` in `var/local/site.env` instead.
@@ -65,7 +65,7 @@ The report compares only primary work image data:
 - `Works.project_folder`
 - `Works.project_filename`
 
-Work details are out of scope. Known `details_subfolder` paths from `work_details.json` and folders named `details` are skipped.
+Work details are out of scope. Known `details_subfolder` paths from per-work detail-source files and folders named `details` are skipped.
 
 By default, the report scans every direct `/projects/<project_folder>` folder. Image mismatch sections still inspect only direct image files inside those folders.
 

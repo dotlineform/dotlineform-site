@@ -1,0 +1,42 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_detail_record_v1",
+    "work_id": "00637",
+    "section_count": 1,
+    "count": 3
+  },
+  "work_id": "00637",
+  "detail_sections": [
+    {
+      "section_id": "00637-1",
+      "details_subfolder": "details",
+      "section_title": "details",
+      "details": [
+        {
+          "detail_uid": "00637-001",
+          "detail_id": "001",
+          "project_filename": "10000 (3.1).jpg",
+          "title": "10,000 (3.1)",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "00637-002",
+          "detail_id": "002",
+          "project_filename": "10000 (3.2).jpg",
+          "title": "10,000 (3.2)",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        {
+          "detail_uid": "00637-003",
+          "detail_id": "003",
+          "project_filename": "10000 (3.3).jpg",
+          "title": "10,000 (3.3)",
+          "width_px": 5906,
+          "height_px": 5906
+        }
+      ]
+    }
+  ]
+}

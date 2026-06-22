@@ -99,9 +99,10 @@ Validation catches:
 Studio data-path lookup.
 The current keys are active browser static fallback or config-file read inputs:
 
-- `catalogue_works`, `catalogue_work_details`, `catalogue_series`, and `catalogue_moments`: canonical catalogue source fallback reads used when the Local Studio catalogue API is unavailable
-- `catalogue_lookup_work_search`, `catalogue_lookup_series_search`, and `catalogue_lookup_work_detail_search`: generated lookup search fallback payloads for catalogue editor modals
-- `catalogue_lookup_work_base`, `catalogue_lookup_series_base`, and `catalogue_lookup_work_detail_base`: generated lookup record fallback bases for opening catalogue editor records
+- `catalogue_works` and `catalogue_series`: canonical catalogue source fallback reads used when the Local Studio catalogue API is unavailable
+- `catalogue_lookup_work_search` and `catalogue_lookup_series_search`: generated lookup search fallback payloads for catalogue editor modals
+- `catalogue_lookup_series_base`: generated lookup record fallback base for opening catalogue series records
+- `catalogue_work_record` and `catalogue_work_detail_record`: server-only read keys for focused work and detail editor projections
 - `catalogue_field_registry`: field-registry review UI input and the current service resolver path for catalogue field build planning
 
 Server-backed catalogue reads should prefer the Local Studio catalogue API when available.

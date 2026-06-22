@@ -138,7 +138,7 @@ function setOpenInputMode(state) {
 }
 
 async function loadWorkLookupRecord(state, workId) {
-  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_base", workId, {
+  return loadStudioLookupRecordJson(state.config, "catalogue_work_record", workId, {
     cache: "no-store",
     catalogueServerAvailable: state.serverAvailable
   });

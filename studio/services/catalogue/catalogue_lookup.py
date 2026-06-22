@@ -35,8 +35,8 @@ SCHEMAS = {
     "work_search": "studio_catalogue_lookup_work_search_v1",
     "series_search": "studio_catalogue_lookup_series_search_v1",
     "work_detail_search": "studio_catalogue_lookup_work_detail_search_v1",
-    "work_record": "studio_catalogue_lookup_work_record_v1",
-    "work_detail_record": "studio_catalogue_lookup_work_detail_record_v1",
+    "work_record": "studio_catalogue_work_record_v1",
+    "work_detail_record": "studio_catalogue_work_detail_record_v1",
     "series_record": "studio_catalogue_lookup_series_record_v1",
 }
 
@@ -288,40 +288,10 @@ def build_work_detail_search_payload(records: CatalogueSourceRecords) -> Dict[st
 def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str, Any]:
     work_search_items = []
     series_search_items = []
-    detail_search_items = []
-    works_by_id: Dict[str, Dict[str, Any]] = {}
-    work_details_by_uid: Dict[str, Dict[str, Any]] = {}
     series_by_id: Dict[str, Dict[str, Any]] = {}
-
-    series_title_by_id = {
-        series_id: normalize_text(record.get("title"))
-        for series_id, record in records.series.items()
-    }
-    section_resolution_by_uid = build_detail_section_resolution_by_uid(
-        records.work_details,
-        records.work_detail_sections,
-    )
-
-    for detail_uid, record in records.work_details.items():
-        work_id = normalize_text(record.get("work_id"))
-        section_resolution = section_resolution_by_uid.get(detail_uid, {})
-        detail_search_items.append(build_work_detail_search_item(detail_uid, record, section_resolution))
-
-        work_record = records.works.get(work_id) or {}
-        work_details_by_uid[detail_uid] = {
-            "header": {
-                "schema": SCHEMAS["work_detail_record"],
-            },
-            "work_detail": build_resolved_work_detail_record(record, section_resolution),
-            "work_summary": {
-                "work_id": work_id,
-                "title": normalize_text(work_record.get("title")),
-            },
-        }
 
     for work_id, record in records.works.items():
         work_search_items.append(build_work_search_item(work_id, record))
-        works_by_id[work_id] = build_work_lookup_payload(records, work_id)
 
     for series_id, record in records.series.items():
         series_search_items.append(build_series_search_item(series_id, record))
@@ -342,7 +312,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
 
     work_search_items.sort(key=lambda item: item["work_id"])
     series_search_items.sort(key=lambda item: item["series_id"])
-    detail_search_items.sort(key=lambda item: item["detail_uid"])
 
     return {
         "root": {
@@ -360,16 +329,7 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
                 },
                 "items": series_search_items,
             },
-            "work_detail_search.json": {
-                "header": {
-                    "schema": SCHEMAS["work_detail_search"],
-                    "count": len(detail_search_items),
-                },
-                "items": detail_search_items,
-            },
         },
-        "works": works_by_id,
-        "work_details": work_details_by_uid,
         "series": series_by_id,
     }
 
@@ -384,7 +344,7 @@ def write_catalogue_lookup_payloads(lookup_dir: Path, payloads: Mapping[str, Any
         _atomic_write_json(path, payload)
         written.append(path)
 
-    for folder in ["works", "work_details", "series"]:
+    for folder in ["series"]:
         target_dir = lookup_dir / folder
         target_dir.mkdir(parents=True, exist_ok=True)
         current_files = {

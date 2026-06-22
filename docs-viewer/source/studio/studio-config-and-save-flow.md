@@ -158,7 +158,7 @@ Catalogue work detail local save behavior:
 - the detail editor sends `POST /studio/api/catalogue/work-detail/save` to the same local app catalogue API
 - the request includes `detail_uid`, a browser-computed record hash, a normalized detail patch, and optional `apply_build: true`
 - the server validates the parent work reference before writing
-- the server writes `work_details.json` only after full-source validation succeeds
+- the server writes the affected per-work detail source file under `studio/data/canonical/catalogue/work_details/` only after full-source validation succeeds
 - bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, the touched field updates, and optional `apply_build: true`
 - bulk detail update still runs as a sequence of scoped parent-work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`

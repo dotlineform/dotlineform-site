@@ -15,7 +15,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_delete_plans  # noqa: E402
-from catalogue.catalogue_source import payload_for_map, work_details_payload_for_maps  # noqa: E402
+from catalogue.catalogue_source import load_json_file, payload_for_map, work_details_payload_for_maps, write_work_detail_payloads  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -31,6 +31,18 @@ def assert_true(value, label: str) -> None:
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def write_work_details_source(source_dir: Path, payload: dict) -> None:
+    write_work_detail_payloads(
+        source_dir,
+        payload.get("work_detail_sections") or {},
+        payload.get("work_details") or {},
+    )
+
+
+def read_work_details_source(source_dir: Path) -> dict:
+    return load_json_file(source_dir / "work_details")
 
 
 def write_source_fixture(source_dir: Path) -> None:
@@ -63,8 +75,8 @@ def write_source_fixture(source_dir: Path) -> None:
             },
         ),
     )
-    write_json(
-        source_dir / "work_details.json",
+    write_work_details_source(
+        source_dir,
         work_details_payload_for_maps(
             {
                 "00001-1": {
@@ -171,7 +183,7 @@ def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> Non
         preview = catalogue_delete_plans.build_delete_preview(source_dir, "work", "00002", repo_root=root)
         plan = catalogue_delete_plans.build_delete_apply_plan(source_dir, root, "work", "00002", preview)
 
-    assert_equal(sorted(path.name for path in plan.payloads), ["series.json", "work_details.json", "works.json"], "payload files")
+    assert_equal(sorted(path.name for path in plan.payloads), ["series.json", "work_details", "works.json"], "payload files")
     assert_equal(plan.payloads[(source_dir / "works.json").resolve()]["works"].get("00002"), None, "deleted work payload")
     assert_equal(plan.payloads[(source_dir / "series.json").resolve()]["series"]["010"].get("primary_work_id"), None, "draft primary cleared")
     assert_equal(plan.activity_affected["series"], ["010"], "activity affected series")
@@ -182,8 +194,7 @@ def test_section_delete_apply_plan_removes_section_and_details() -> None:
         root = Path(tmp)
         source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
-        details_path = source_dir / "work_details.json"
-        payload = json.loads(details_path.read_text(encoding="utf-8"))
+        payload = read_work_details_source(source_dir)
         payload["work_detail_sections"]["00001-2"] = {
             "section_id": "00001-2",
             "work_id": "00001",
@@ -198,12 +209,12 @@ def test_section_delete_apply_plan_removes_section_and_details() -> None:
             "project_filename": "alpha-version.jpg",
             "title": "Alpha version",
         }
-        write_json(details_path, payload)
+        write_work_details_source(source_dir, payload)
 
         preview = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail_section", "00001-1", repo_root=root)
         plan = catalogue_delete_plans.build_delete_apply_plan(source_dir, root, "work_detail_section", "00001-1", preview)
 
-    details_payload = plan.payloads[(source_dir / "work_details.json").resolve()]
+    details_payload = plan.payloads[(source_dir / "work_details").resolve()]
     assert_equal(sorted(details_payload["work_detail_sections"]), ["00001-2"], "remaining sections")
     assert_equal(sorted(details_payload["work_details"]), ["00001-002"], "remaining details")
     assert_equal(plan.activity_affected["work_details"], ["00001-001"], "section activity affected details")

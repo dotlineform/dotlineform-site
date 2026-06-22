@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-lookup
 title: Catalogue Lookup Export
 added_date: 2026-04-17
-last_updated: 2026-06-16
+last_updated: 2026-06-22
 parent_id: studio
 viewable: true
 ---
@@ -22,21 +22,21 @@ The lookup payloads are explicitly non-canonical. They exist to support:
 
 - lightweight work search
 - lightweight series search
-- lightweight detail search
-- focused per-record reads for work, transitional detail lookup consumers, and series routes
+- focused per-record reads for series routes
 
+Work and work-detail focused reads are service projections from canonical source, not generated lookup files.
 Lookup payloads do not include full-source `record_hash` values. Studio save endpoints apply submitted changes to the current source record and return the normalized saved record.
 
 Canonical write ownership remains with:
 
-- `site/assets/studio/data/catalogue/works.json`
-- `site/assets/studio/data/catalogue/work_details.json`
-- `site/assets/studio/data/catalogue/series.json`
+- `studio/data/canonical/catalogue/works.json`
+- `studio/data/canonical/catalogue/work_details/<work_id>.json`
+- `studio/data/canonical/catalogue/series.json`
 
 ## Optional Flags
 
-- `--source-dir assets/studio/data/catalogue`: canonical source input directory
-- `--lookup-dir assets/studio/data/catalogue_lookup`: derived lookup output directory
+- `--source-dir studio/data/canonical/catalogue`: canonical source input directory
+- `--lookup-dir studio/data/generated/catalogue-lookup`: derived lookup output directory
 - `--write`: write the lookup files
 
 Without `--write`, the script prints the export plan only.
@@ -47,19 +47,13 @@ Root lookup files:
 
 - `site/assets/studio/data/catalogue_lookup/work_search.json`
 - `site/assets/studio/data/catalogue_lookup/series_search.json`
-- `site/assets/studio/data/catalogue_lookup/work_detail_search.json`
 
 Focused record lookup files:
 
-- `site/assets/studio/data/catalogue_lookup/works/<work_id>.json`
-- `site/assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
 - `site/assets/studio/data/catalogue_lookup/series/<series_id>.json`
 
-Work lookup `detail_sections` joins `work_detail_sections` with detail records. Each section projects `section_id`, `details_subfolder`, `section_title`, `section_order`, `detail_sort`, `count`, and `details[]`.
-
-Nested work lookup detail summaries contain detail-owned fields only: `detail_uid`, `detail_id`, `title`, and `project_filename`. They do not repeat `section_id`, `section_title`, `details_subfolder`, `section_order`, or `detail_sort`.
-
-Lookup export expects the v2 work-detail source shape. Focused detail lookup records still join section metadata onto the detail record for transitional consumers, but the standalone Studio work-detail editor route is retired.
+Retired lookup outputs live under `studio/data/generated/catalogue-lookup/retired/` only for migration comparison.
+Runtime code must not read generated `works/<work_id>.json`, `work_details/<detail_uid>.json`, or `work_detail_search.json`.
 
 ## Runtime Use
 
@@ -67,10 +61,7 @@ The catalogue editors use these files as follows:
 
 - work editor:
   - search from `work_search.json`
-  - focused record load from `works/<work_id>.json`
-- transitional detail lookup consumers:
-  - search from `work_detail_search.json`
-  - focused record load from `work_details/<detail_uid>.json`
+  - focused record load from `GET /studio/api/catalogue/read?key=catalogue_work_record&record_id=<work_id>`
 - series editor:
   - search from `series_search.json`
   - focused record load from `series/<series_id>.json`

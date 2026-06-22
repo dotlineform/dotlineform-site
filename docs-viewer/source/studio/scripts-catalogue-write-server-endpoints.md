@@ -47,18 +47,15 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 `GET /catalogue/read` is the server-backed read path for mutable catalogue editor data. It accepts the same logical keys used by `studio_config.json`, including:
 
 - `catalogue_works`
-- `catalogue_work_details`
 - `catalogue_series`
-- `catalogue_moments`
 - `catalogue_lookup_work_search`
 - `catalogue_lookup_series_search`
-- `catalogue_lookup_work_detail_search`
-- `catalogue_lookup_work_base` with `record_id=<work_id>`
-- `catalogue_lookup_work_detail_base` with `record_id=<detail_uid>`
 - `catalogue_lookup_series_base` with `record_id=<series_id>`
+- `catalogue_work_record` with `record_id=<work_id>`
+- `catalogue_work_detail_record` with `record_id=<detail_uid>`
 - `activity_log`
 
-Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, lookup payloads are built from the current source records for the request, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data.
+Reads are allowlisted by key. They do not expose arbitrary repository paths. The source payloads come from canonical catalogue JSON, generated lookup payloads are built from the current source records for retained search/series requests, focused work/detail payloads are service projections, and activity payloads come from the capped Studio feed file. This lets Studio treat mutable catalogue and local activity data as service-backed workspace data.
 
 `GET /studio/api/catalogue/project-media` accepts:
 

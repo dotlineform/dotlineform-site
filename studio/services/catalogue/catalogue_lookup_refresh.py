@@ -8,28 +8,17 @@ from typing import Any, Mapping
 from catalogue.catalogue_lookup import (
     SERIES_MEMBER_WORK_FIELDS,
     SERIES_SEARCH_FIELDS,
-    WORK_DETAIL_PARENT_WORK_FIELDS,
-    WORK_DETAIL_SEARCH_FIELDS,
-    WORK_DETAIL_WORK_SUMMARY_FIELDS,
     WORK_SEARCH_FIELDS,
-    WORK_SERIES_SUMMARY_FIELDS,
     build_and_write_catalogue_lookup,
     build_series_lookup_payload,
     build_series_search_payload,
-    build_work_detail_lookup_payload,
-    build_work_detail_search_payload,
-    build_work_lookup_payload,
     build_work_search_payload,
-    write_detail_lookup_payload,
     write_lookup_root_payload,
     write_series_lookup_payload,
-    write_work_lookup_payload,
 )
 from catalogue.catalogue_source import (
     normalize_series_ids_value,
-    normalize_text,
     records_from_json_source,
-    slug_id,
 )
 
 
@@ -58,27 +47,18 @@ def _changed_field_set(changed_field_names: list[str]) -> set[str]:
 
 def _lookup_artifacts_for_fields(record_family: str, changed_fields: set[str]) -> set[str]:
     if record_family == "work":
-        artifacts = {"work_record"}
+        artifacts: set[str] = set()
         if changed_fields.intersection(WORK_SEARCH_FIELDS):
             artifacts.add("work_search")
         if changed_fields.intersection(SERIES_MEMBER_WORK_FIELDS):
             artifacts.add("related_series_records")
-        if changed_fields.intersection(WORK_DETAIL_WORK_SUMMARY_FIELDS):
-            artifacts.add("related_work_detail_records")
         return artifacts
     if record_family == "work_detail":
-        artifacts = {"work_detail_record"}
-        if changed_fields.intersection(WORK_DETAIL_SEARCH_FIELDS):
-            artifacts.add("work_detail_search")
-        if changed_fields.intersection(WORK_DETAIL_PARENT_WORK_FIELDS):
-            artifacts.add("related_work_records")
-        return artifacts
+        return set()
     if record_family == "series":
         artifacts = {"series_record"}
         if changed_fields.intersection(SERIES_SEARCH_FIELDS):
             artifacts.add("series_search")
-        if changed_fields.intersection(WORK_SERIES_SUMMARY_FIELDS):
-            artifacts.add("related_work_records")
         return artifacts
     return set()
 
@@ -259,7 +239,6 @@ def detail_change_lookup_refresh(
     updated_record: Mapping[str, Any],
     lookup_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
-    artifacts = list(lookup_plan["artifacts"])
     if lookup_plan["class"] == LOOKUP_REFRESH_NONE:
         return {
             "mode": "none",
@@ -269,66 +248,15 @@ def detail_change_lookup_refresh(
             "invalidation_class": lookup_plan["class"],
             "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
         }
-    if lookup_plan["class"] == LOOKUP_REFRESH_SINGLE_RECORD:
-        source_records = records_from_json_source(source_dir)
-        written_path = write_detail_lookup_payload(
-            lookup_dir,
-            detail_uid,
-            build_work_detail_lookup_payload(source_records, detail_uid),
-        )
-        return {
-            "mode": "single-record",
-            "artifacts": ["work_detail_record"],
-            "written_count": 1,
-            "written_paths": [rel_path(repo_root, written_path)],
-            "invalidation_class": lookup_plan["class"],
-            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
-        }
 
     if lookup_plan["class"] != LOOKUP_REFRESH_TARGETED_MULTI_RECORD:
         return _with_lookup_plan(full_lookup_refresh(source_dir, lookup_dir, repo_root), lookup_plan)
 
-    source_records = records_from_json_source(source_dir)
-    written_paths: list[str] = []
-    if "work_detail_record" in artifacts:
-        written_paths.append(
-            rel_path(
-                repo_root,
-                write_detail_lookup_payload(
-                    lookup_dir,
-                    detail_uid,
-                    build_work_detail_lookup_payload(source_records, detail_uid),
-                ),
-            )
-        )
-    if "work_detail_search" in artifacts:
-        written_paths.append(
-            rel_path(
-                repo_root,
-                write_lookup_root_payload(
-                    lookup_dir,
-                    "work_detail_search.json",
-                    build_work_detail_search_payload(source_records),
-                ),
-            )
-        )
-    if "related_work_records" in artifacts:
-        work_id = slug_id(updated_record.get("work_id"))
-        written_paths.append(
-            rel_path(
-                repo_root,
-                write_work_lookup_payload(
-                    lookup_dir,
-                    work_id,
-                    build_work_lookup_payload(source_records, work_id),
-                ),
-            )
-        )
     return {
-        "mode": "targeted-multi-record",
-        "artifacts": sorted(artifacts),
-        "written_count": len(written_paths),
-        "written_paths": written_paths,
+        "mode": "none",
+        "artifacts": [],
+        "written_count": 0,
+        "written_paths": [],
         "invalidation_class": lookup_plan["class"],
         "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
     }

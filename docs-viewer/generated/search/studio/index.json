@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-942c981cfac47cafeb22dfed1dbce847",
-    "generated_at_utc": "2026-06-22T14:09:34Z",
+    "version": "blake2b-3ff5ac5f12be4793233cf4689a41e220",
+    "generated_at_utc": "2026-06-22T14:42:50Z",
     "count": 225
   },
   "entries": [
@@ -823,10 +823,10 @@
       "kind": "doc",
       "title": "Projection Contract",
       "href": "/docs/?scope=studio&doc=data-models-projection-contract",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-22",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-12 • Architecture",
+      "display_meta": "2026-06-22 • Architecture",
       "search_terms": [
         "data-models-projection-contract",
         "data",
@@ -835,12 +835,12 @@
         "contract",
         "projection contract",
         "architecture",
-        "2026-06-12",
+        "2026-06-22",
         "2026",
         "06",
-        "12"
+        "22"
       ],
-      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-06-12 2026 06 12"
+      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-06-22 2026 06 22"
     },
     {
       "id": "scripts-audit-projection-contract",
@@ -4421,10 +4421,10 @@
       "kind": "doc",
       "title": "Catalogue Lookup Export",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
-      "last_updated": "2026-06-16",
+      "last_updated": "2026-06-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-16 • Studio",
+      "display_meta": "2026-06-22 • Studio",
       "search_terms": [
         "scripts-catalogue-lookup",
         "scripts",
@@ -4433,12 +4433,12 @@
         "catalogue lookup export",
         "export",
         "studio",
-        "2026-06-16",
+        "2026-06-22",
         "2026",
         "06",
-        "16"
+        "22"
       ],
-      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export studio 2026-06-16 2026 06 16"
+      "search_text": "scripts-catalogue-lookup scripts catalogue lookup catalogue lookup export export studio 2026-06-22 2026 06 22"
     },
     {
       "id": "data-models-catalogue-maintenance",
@@ -4540,10 +4540,10 @@
       "kind": "doc",
       "title": "Catalogue Source Model",
       "href": "/docs/?scope=studio&doc=data-models-catalogue-source",
-      "last_updated": "2026-06-16",
+      "last_updated": "2026-06-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-16 • Studio",
+      "display_meta": "2026-06-22 • Studio",
       "search_terms": [
         "data-models-catalogue-source",
         "data",
@@ -4553,12 +4553,12 @@
         "catalogue source model",
         "model",
         "studio",
-        "2026-06-16",
+        "2026-06-22",
         "2026",
         "06",
-        "16"
+        "22"
       ],
-      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model studio 2026-06-16 2026 06 16"
+      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model studio 2026-06-22 2026 06 22"
     },
     {
       "id": "scripts-catalogue-source",
@@ -4591,10 +4591,10 @@
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-06-16",
+      "last_updated": "2026-06-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-16 • Studio",
+      "display_meta": "2026-06-22 • Studio",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -4603,12 +4603,12 @@
         "editor",
         "catalogue work detail editor",
         "studio",
-        "2026-06-16",
+        "2026-06-22",
         "2026",
         "06",
-        "16"
+        "22"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-06-16 2026 06 16"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor studio 2026-06-22 2026 06 22"
     },
     {
       "id": "catalogue-work-editor",
@@ -5039,10 +5039,10 @@
       "kind": "doc",
       "title": "Project State Report",
       "href": "/docs/?scope=studio&doc=scripts-project-state-report",
-      "last_updated": "2026-05-26",
+      "last_updated": "2026-06-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-26 • Studio",
+      "display_meta": "2026-06-22 • Studio",
       "search_terms": [
         "scripts-project-state-report",
         "scripts",
@@ -5051,12 +5051,12 @@
         "report",
         "project state report",
         "studio",
-        "2026-05-26",
+        "2026-06-22",
         "2026",
-        "05",
-        "26"
+        "06",
+        "22"
       ],
-      "search_text": "scripts-project-state-report scripts project state report project state report studio 2026-05-26 2026 05 26"
+      "search_text": "scripts-project-state-report scripts project state report project state report studio 2026-06-22 2026 06 22"
     },
     {
       "id": "scripts-publish-media-to-r2",
