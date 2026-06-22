@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-46f598354002d37dd6dd1dafdf703fe8",
-    "generated_at_utc": "2026-06-22T15:34:35Z",
+    "version": "blake2b-338b3ee25b4a3c74b13274d453ba83b0",
+    "generated_at_utc": "2026-06-22T15:45:21Z",
     "count": 222
   },
   "entries": [
@@ -1285,6 +1285,39 @@
       "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-06-02 2026 06 02"
     },
     {
+      "id": "site-request-docs-viewer-workspace-mount-architecture",
+      "kind": "doc",
+      "title": "Docs Viewer External Scope Data Roots Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
+      "last_updated": "2026-06-22",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-22 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-workspace-mount-architecture",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "workspace",
+        "mount",
+        "architecture",
+        "docs viewer external scope data roots request",
+        "external",
+        "scope",
+        "data",
+        "roots",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-22",
+        "2026",
+        "06",
+        "22"
+      ],
+      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer external scope data roots request external scope data roots change requests change requests 2026-06-22 2026 06 22"
+    },
+    {
       "id": "site-request-docs-viewer-semantic-reference-editor",
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
@@ -1342,35 +1375,6 @@
         "18"
       ],
       "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view and mode registry and change requests change requests 2026-06-18 2026 06 18"
-    },
-    {
-      "id": "site-request-docs-viewer-workspace-mount-architecture",
-      "kind": "doc",
-      "title": "Docs Viewer Workspace Mount Architecture Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
-      "last_updated": "2026-06-22",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-22 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-workspace-mount-architecture",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "workspace",
-        "mount",
-        "architecture",
-        "docs viewer workspace mount architecture request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-22",
-        "2026",
-        "06",
-        "22"
-      ],
-      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-06-22 2026 06 22"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",

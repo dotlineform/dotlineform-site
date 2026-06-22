@@ -1,13 +1,13 @@
 ---
 doc_id: site-request-docs-viewer-workspace-mount-architecture
-title: Docs Viewer Workspace Mount Architecture Request
+title: Docs Viewer External Scope Data Roots Request
 added_date: 2026-05-25
 last_updated: 2026-06-22
 ui_status: draft
 parent_id: change-requests
 viewable: true
 ---
-# Docs Viewer Workspace Mount Architecture Request
+# Docs Viewer External Scope Data Roots Request
 
 Status:
 
@@ -15,59 +15,154 @@ Status:
 
 ## Summary
 
-Design a workspace mount architecture so Docs Viewer can read and write documentation data from either the current repo or an external application data workspace.
+Design external scope data roots so Docs Viewer can read and write a scope's source Markdown and generated JSON outside the current repo.
 
-If a user does not want generated JSON committed, they almost certainly do not want the source Markdown committed either. True local scopes should therefore keep source, generated docs payloads, and generated search payloads outside the repo.
+There is no current requirement for the scope definition itself to be private or external.
+Local scopes can still be registered in the central Docs Viewer scope config under `docs-viewer/config/scopes/docs_scopes.json`.
+The narrower requirement is only that selected local scopes can keep source Markdown, generated docs payloads, and generated search payloads outside the repo.
 
-This request defines the broader workspace abstraction that would subsume repo-backed and non-repo-backed scope storage under one resolver.
+This request replaces the earlier broader workspace-mount framing.
+A workspace abstraction may still become useful later, but it is not required to satisfy the current storage requirement.
 
 ## Goal
 
-Make Docs Viewer able to mount a workspace instead of assuming every scope is rooted in the site repo.
+Make Docs Viewer able to resolve configured source and generated-output paths that are not rooted in the site repo.
 
 The desired end state is:
 
-- Docs Viewer application code and Docs Viewer data can live in different places
-- the current repo-backed setup becomes one mounted workspace
-- true local scopes can live outside the repo
-- repo-backed workspaces and external workspaces use the same scope-resolution abstraction
-- browser reads for non-public data go through a Docs Viewer service URL contract, not static repo-relative files
+- Docs Viewer application code and local scope data can live in different places
+- central scope registration remains in the repo-owned Docs Viewer config
+- repo-backed scopes keep the current path behavior
+- selected local scopes can place source Markdown and working generated JSON under an external data root
+- the New scope modal's current `local untracked` option is replaced by this external local scope mode
+- browser reads for non-public generated data go through a Docs Viewer service URL contract, not static repo-relative files
 
-## Workspace Model
+## Scope Data Root Model
 
-A mounted workspace should define:
+A configured local scope should continue to define its normal scope metadata in `docs-viewer/config/scopes/docs_scopes.json`.
+For external local data, the scope config should be able to identify:
 
-- workspace id
-- workspace root
 - source root
 - generated docs root
 - generated search root
 - write policy, such as repo tracked, ignored local, or external application data
 
-For the current repo-backed workspace, the adapter should map to existing paths. For an external true-local workspace, the adapter could map to:
+For the current repo-backed scopes, these paths continue to map to existing repo-relative paths.
+For an external local scope, the paths could map to:
 
-- workspace root: configured user/app data directory
-- source root: `<workspace>/source/<scope>/`
-- generated docs root: `<workspace>/generated/docs/<scope>/`
-- generated search root: `<workspace>/generated/search/<scope>/index.json`
-- config/manifest: `<workspace>/config/...`
+- source root: `<external-data-root>/source/<scope>/`
+- generated docs root: `<external-data-root>/generated/docs/<scope>/`
+- generated search root: `<external-data-root>/generated/search/<scope>/index.json`
 
-## Why This Is More Than Config
+The scope config and scope manifest should remain repo-owned unless a separate future requirement says scope registration itself must be private, portable, or user-specific.
 
-A true non-repo local scope is more than a scope-config path change.
+## New Scope UI Contract
+
+The Docs Viewer `New scope` action currently offers three scope creation modes:
+
+- public
+- local tracked
+- local untracked
+
+This request replaces `local untracked` with an external local scope mode.
+The modal should remain the UI surface for creating the scope record, but it must also collect the external data root path used for that scope's source Markdown and generated JSON.
+
+The external local mode should make clear that:
+
+- the scope registration is still written to the central repo-owned Docs Viewer scope config
+- the scope manifest record remains repo-owned
+- the external root is where the scope's source Markdown and working generated docs/search payloads live
+- public publishing paths are not configured for this mode
+- delete previews and cleanup actions are constrained to the configured external scope roots
+
+## Why This Is More Than A Config Edit
+
+A true non-repo local scope is still more than changing three strings in the scope config.
 
 - The current Docs Viewer scope model assumes repo-relative source and generated paths.
 - browser runtime fetches generated payload URLs from the current web origin; it cannot fetch arbitrary local filesystem paths
 - local management, import, rebuild, watcher, manifest, and deletion helpers report or validate paths as repo-relative paths
 
-That means `in repo, untracked` and `not in repo` are different implementation tiers. `In repo, untracked` can mostly use the existing path model with better ignore rules and preview warnings. It remains visible to repo tooling and can still be accidentally staged if ignore coverage is incomplete. `Not in repo` needs an application data layer.
+That means `in repo, untracked` and `not in repo` are different implementation tiers.
+`In repo, untracked` can mostly use the existing path model with better ignore rules and preview warnings.
+It remains visible to repo tooling and can still be accidentally staged if ignore coverage is incomplete.
+`Not in repo` needs path resolution and service-backed generated-data reads.
 
-Workspace mounts should treat the current repo-backed setup as one adapter, not as legacy special-case behavior.
+The implementation should avoid making the current repo-backed setup a legacy special case, but it does not need to introduce externally stored scope config or a full mounted-workspace model.
 
 ## Required Architecture Work
 
 Required implementation work includes:
 
-- safe external-root configuration for source, generated docs, generated search, local config, and local manifest data
+- safe external-root configuration for source, generated docs, and generated search paths
+- clear validation that distinguishes repo-relative paths from approved external local paths
 - builder and search commands that can write to external roots
-- import, rebuild, watcher, capability, delete, and cleanup paths that understand external application data roots
+- Docs Viewer service endpoints that can serve non-public generated docs and search payloads from external roots
+- browser config or runtime routing that uses those service endpoints for external local scopes instead of static repo-relative URLs
+- import, rebuild, watcher, capability, delete, and cleanup paths that understand external source and generated data roots
+- status and preview reporting that presents external paths safely without implying they are repo-relative
+
+Not required for the current request:
+
+- storing `docs-viewer/config/scopes/docs_scopes.json` outside the repo
+- storing the scope manifest outside the repo
+- introducing a user workspace registry
+- moving public published payloads outside the public static-site roots
+- changing committed repo-backed scopes beyond the resolver support needed for shared path handling
+
+## Tasks
+
+1. Define the external path contract
+   - decide how scope config represents external local paths, such as explicit absolute paths or paths rooted under an approved local data root
+   - define which scope types may use external source and generated paths
+   - define the replacement behavior for the current `local untracked` New scope mode
+   - document the validation rules for repo-relative, ignored-local, and external-local paths
+
+2. Add shared path resolution
+   - replace direct `repo_root / config.source`, `repo_root / config.output`, and `repo_root / config.search_output` call sites with a shared resolver
+   - keep existing repo-relative scopes resolving to the same paths they use today
+   - return enough path metadata for reports to distinguish repo-relative paths from external paths
+
+3. Update scope config loading and validation
+   - allow approved external paths for `source`, `output`, and `search_output`
+   - keep `publish_output`, `publish_search_output`, media repo-asset paths, scope config, and manifest paths repo-relative
+   - fail closed when an external path is missing, unsafe, or configured on an unsupported scope type
+
+4. Update docs and search builders
+   - make `build_docs.py` read source Markdown from resolved source roots
+   - make `build_docs.py` write generated docs payloads to resolved output roots
+   - make `build_search.py` read generated docs and write search JSON through resolved paths
+   - avoid deriving browser URLs directly from external filesystem paths
+
+5. Add service-backed generated-data reads
+   - extend the Docs Viewer local service so index tree, recently added, by-id payloads, references, and search index can be served from resolved external roots
+   - keep public read-only routes using published static payloads
+   - ensure service responses preserve existing payload schemas and cache behavior where practical
+
+6. Route browser runtime fetches for external local scopes
+   - update generated browser config or runtime routing so external local scopes fetch generated data from Docs Viewer service endpoints
+   - keep repo-backed local scopes working with the current local generated-data behavior
+   - show clear load errors when the local service cannot access an external root
+
+7. Update management lifecycle helpers
+   - update source edit, import, rebuild, watcher, capabilities, delete, and cleanup paths to use resolved source and generated roots
+   - keep scope config and manifest create/delete operations repo-owned
+   - ensure delete previews do not remove files outside the configured external scope roots
+
+8. Update New scope modal
+   - replace the `local untracked` option with the external local scope mode
+   - add an external data root path input for that mode
+   - preview the derived source, generated docs, and generated search paths before creation
+   - validate the root path before apply and show clear errors for unsafe, missing, unreadable, or unwritable roots
+
+9. Update reports and UI status copy
+   - label external roots clearly in capability and source-config reports
+   - avoid presenting external paths as repo-relative paths
+   - add warnings for external roots that are unreadable, unwritable, or outside approved locations
+
+10. Add focused verification
+   - add unit coverage for path resolution and validation
+   - add builder tests for external source and generated output paths
+   - add service/read tests for external generated docs and search payloads
+   - add one management smoke path that opens an external local scope through `/docs/?scope=<scope>`
+   - add focused UI coverage for the New scope external-root input and preview
