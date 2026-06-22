@@ -117,7 +117,8 @@ def test_full_refresh_reports_all_lookup_artifacts() -> None:
 
     assert_equal(result["mode"], "full", "full mode")
     assert_equal(result["artifacts"], ["full_lookup_refresh"], "full artifacts")
-    assert_equal(result["written_count"], 8, "full written count")
+    assert_equal(result["written_count"], 7, "full written count")
+    assert "studio/data/generated/catalogue-lookup/meta.json" not in result["written_paths"]
     assert "studio/data/generated/catalogue-lookup/work_search.json" in result["written_paths"]
     assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
 

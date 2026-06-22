@@ -38,7 +38,6 @@ SCHEMAS = {
     "work_record": "studio_catalogue_lookup_work_record_v1",
     "work_detail_record": "studio_catalogue_lookup_work_detail_record_v1",
     "series_record": "studio_catalogue_lookup_series_record_v1",
-    "meta": "studio_catalogue_lookup_meta_v1",
 }
 
 WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year_display", "status", "series_ids"})
@@ -347,15 +346,6 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
 
     return {
         "root": {
-            "meta.json": {
-                "header": {
-                    "schema": SCHEMAS["meta"],
-                },
-                "derived_from": str(DEFAULT_SOURCE_DIR),
-                "work_count": len(records.works),
-                "detail_count": len(records.work_details),
-                "series_count": len(records.series),
-            },
             "work_search.json": {
                 "header": {
                     "schema": SCHEMAS["work_search"],

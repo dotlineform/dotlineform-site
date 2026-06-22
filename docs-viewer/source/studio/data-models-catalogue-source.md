@@ -17,7 +17,6 @@ Current checked-in catalogue model families:
   - `site/assets/studio/data/catalogue/series.json`
   - `site/assets/studio/data/catalogue/work_details.json`
   - `site/assets/studio/data/catalogue/moments.json`
-  - `site/assets/studio/data/catalogue/meta.json`
 - canonical prose sources:
   - `_docs_catalogue/works/<work_id>.md`
   - `_docs_catalogue/series/<series_id>.md`
@@ -130,29 +129,6 @@ Current source-model notes:
 - `primary_work_id` must reference a work whose `series_ids` includes the series before the series can be published; draft series may temporarily omit it.
 - `series_type` remains explicit because Studio distinguishes primary series from other holdings or curated groups.
 - series prose is ID-derived from `_docs_catalogue/series/<series_id>.md`; source records no longer carry a prose filename override field.
-
-### Catalogue Source Metadata
-
-`site/assets/studio/data/catalogue/meta.json` records source-level metadata that does not belong to a record family.
-
-Current shape:
-
-```json
-{
-  "header": {
-    "schema": "catalogue_source_meta_v1"
-  },
-  "source": {
-    "canonical": "json"
-  },
-  "id_policy": {
-    "work_id_width": 5,
-    "detail_id_width": 3
-  }
-}
-```
-
-Mutable counters are intentionally avoided. Work IDs, detail IDs, and suggested next IDs are derived from the current source records where practical, which is less fragile than storing counters in canonical metadata.
 
 ### Per-Work Runtime JSON
 

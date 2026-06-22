@@ -108,7 +108,6 @@ Server-backed catalogue reads should prefer the Local Studio catalogue API when 
 Static paths are fallback/runtime asset paths, not write contracts.
 The Studio activity route reads `activity_log` through the Local Studio catalogue API, so `paths.data.studio.activity_log` is not exposed as a browser fallback path.
 Do not add source-write targets, adapter contracts, generated metadata payloads, or inactive build outputs here.
-`catalogue_lookup_meta` is not exposed because no active Local Studio route consumes the generated lookup metadata payload.
 
 ### `paths.data.ui_text`
 
@@ -126,7 +125,7 @@ Completed cleanup:
 - focused tests assert that runtime `data_paths` exposes only `studio` and `ui_text`
 - focused tests assert the active `paths.data.studio` key set so this browser-facing surface does not widen silently
 - unused `paths.data.ui_text.site_series_index` and its orphaned `site-series-index.json` bundle have been removed
-- unused `paths.data.studio.catalogue_lookup_meta` has been removed
+- unused `paths.data.studio.catalogue_lookup_meta` and the generated lookup metadata payload have been removed
 - unused `paths.data.studio.activity_log` has been removed; `activity_log` remains an active catalogue API read key, not a Studio config path
 - `catalogue.series_type_options` has been removed from broad Studio bootstrap config; the Series editor owns its current option list in `catalogue-series-fields.js`
 - the 2026-06-03 `paths.data.studio` review retained the catalogue source fallback reads, generated lookup fallback reads, and `catalogue_field_registry` because active call sites still consume those browser read paths

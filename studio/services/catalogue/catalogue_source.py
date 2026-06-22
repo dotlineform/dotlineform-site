@@ -22,14 +22,12 @@ SCHEMAS = {
     "works": "catalogue_source_works_v1",
     "work_details": "catalogue_source_work_details_v2",
     "series": "catalogue_source_series_v1",
-    "meta": "catalogue_source_meta_v1",
 }
 
 SOURCE_FILES = {
     "works": "works.json",
     "work_details": "work_details.json",
     "series": "series.json",
-    "meta": "meta.json",
 }
 
 DETAIL_COMPAT_SUBFOLDER_FIELD = "project_subfolder"
@@ -535,25 +533,13 @@ def payloads_from_records(records: CatalogueSourceRecords) -> Dict[str, Dict[str
         records.work_detail_sections,
         records.work_details,
     )
-    payloads["meta"] = {
-        "header": {
-            "schema": SCHEMAS["meta"],
-        },
-        "source": {
-            "canonical": "json",
-        },
-        "id_policy": {
-            "work_id_width": 5,
-            "detail_id_width": 3,
-        },
-    }
     return payloads
 
 
 def write_payloads(source_dir: Path, payloads: Mapping[str, Mapping[str, Any]]) -> list[Path]:
     source_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
-    for kind in ["works", "work_details", "series", "meta"]:
+    for kind in ["works", "work_details", "series"]:
         path = source_dir / SOURCE_FILES[kind]
         path.write_text(json.dumps(payloads[kind], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         written.append(path)

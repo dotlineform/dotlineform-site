@@ -307,6 +307,12 @@
           "ui_status": "planned"
         },
         {
+          "doc_id": "site-request-catalogue-per-work-detail-source",
+          "title": "Catalogue Per-Work Detail Source Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-per-work-detail-source.json",
+          "ui_status": "planned"
+        },
+        {
           "doc_id": "site-request-docs-semantic-references-v2",
           "title": "Docs Semantic References v2 Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-semantic-references-v2.json",
@@ -1215,5 +1221,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T12:21:29Z"
+  "generated_at": "2026-06-22T13:01:12Z"
 }

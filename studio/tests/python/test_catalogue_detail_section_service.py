@@ -82,7 +82,6 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
             },
         },
     )
-    write_json(source_dir / "meta.json", {"header": {"schema": "catalogue_source_meta_v1"}, "meta": {}})
     env_path = repo_root / "var/local/site.env"
     env_path.parent.mkdir(parents=True)
     env_path.write_text(f"{PROJECTS_BASE_DIR_ENV_NAME}={projects_base}\n", encoding="utf-8")

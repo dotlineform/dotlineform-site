@@ -41,7 +41,6 @@ The server validates the proposed update through the shared catalogue source loa
 - CORS allows loopback origins only
 - write targets are allowlisted to canonical catalogue source JSON files under `studio/data/canonical/catalogue/`
 - current JSON source-write endpoints write only canonical catalogue source JSON under `studio/data/canonical/catalogue/`, including `works.json`, `work_details.json`, `series.json`, and `moments.json`
-- `meta.json` is canonical source metadata but is not an active Local Studio write target
 - standalone work-file and work-link write endpoints are retired; files and links are saved as work-owned metadata through `POST /catalogue/work/save`
 - source writes use atomic replacement and in-process rollback without writing backup bundles
 - event logs are written under `var/studio/catalogue/logs/`
@@ -61,7 +60,6 @@ Canonical source JSON:
 - `studio/data/canonical/catalogue/work_details.json`
 - `studio/data/canonical/catalogue/series.json`
 - `studio/data/canonical/catalogue/moments.json`
-- `studio/data/canonical/catalogue/meta.json`
 
 Atomic write scope:
 

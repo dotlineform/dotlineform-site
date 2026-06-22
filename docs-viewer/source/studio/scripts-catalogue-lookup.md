@@ -45,7 +45,6 @@ Without `--write`, the script prints the export plan only.
 
 Root lookup files:
 
-- `site/assets/studio/data/catalogue_lookup/meta.json`
 - `site/assets/studio/data/catalogue_lookup/work_search.json`
 - `site/assets/studio/data/catalogue_lookup/series_search.json`
 - `site/assets/studio/data/catalogue_lookup/work_detail_search.json`
