@@ -141,15 +141,9 @@ The frontend should still avoid direct canonical-file reads. It should request a
 
 ### Studio Lookup File Contract
 
-Generated lookup files:
+Generated lookup JSON shapes:
 
-| Runtime path | Schema | Decision |
-| --- | --- | --- |
-| `studio/data/generated/catalogue-lookup/work_search.json` | `studio_catalogue_lookup_work_search_v1` | Keep unchanged. Work search does not need detail records. |
-| `studio/data/generated/catalogue-lookup/series_search.json` | `studio_catalogue_lookup_series_search_v1` | Keep unchanged. |
-| `studio/data/generated/catalogue-lookup/series/{series_id}.json` | `studio_catalogue_lookup_series_record_v1` | Keep unchanged. |
-
-Lookup JSON shapes:
+`studio/data/generated/catalogue-lookup/work_search.json` - Work search does not need detail records.
 
 ```json
 {
@@ -171,6 +165,8 @@ Lookup JSON shapes:
 }
 ```
 
+`studio/data/generated/catalogue-lookup/series_search.json`
+
 ```json
 {
   "header": {
@@ -187,6 +183,8 @@ Lookup JSON shapes:
   ]
 }
 ```
+
+`studio/data/generated/catalogue-lookup/series/{series_id}.json`
 
 ```json
 {
