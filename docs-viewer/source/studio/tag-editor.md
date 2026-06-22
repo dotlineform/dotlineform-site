@@ -2,7 +2,7 @@
 doc_id: tag-editor
 title: Tag Editor
 added_date: 2026-03-31
-last_updated: 2026-05-30
+last_updated: 2026-06-22
 parent_id: analytics
 ---
 # Tag Editor
@@ -33,9 +33,13 @@ Multiple row writes from one Save click share the same initiating action context
 
 ## Page / Template Structure
 
-Primary shell:
+Static route template:
 
-- `analytics-app/app/server/analytics_app/analytics_app_views.py`
+- `analytics-app/app/frontend/routes/series-tag-editor.html`
+
+App shell:
+
+- `analytics-app/app/frontend/analytics-shell.html`
 
 Page boot module:
 

@@ -21,7 +21,7 @@ for path in (REPO_ROOT, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
-from analytics_app_config import load_analytics_config, runtime_config, validate_analytics_route_registry  # noqa: E402
+from analytics_app_config import analytics_shell_route_paths, load_analytics_config, runtime_config, validate_analytics_route_registry  # noqa: E402
 from analytics_app_server import AnalyticsAppRequestHandler  # noqa: E402
 
 
@@ -36,8 +36,15 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert runtime["navigation"]["primary"] == []
     assert "routes" not in payload["paths"]
+    assert payload["app"]["routes"]["analytics_home"]["path"] == "/analytics/"
+    assert payload["app"]["routes"]["analytics_home"]["template"] == "/analytics/app/frontend/routes/analytics-home.html"
+    assert payload["app"]["routes"]["analytics_home"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["tag_registry"]["path"] == "/analytics/tag-registry/"
+    assert payload["app"]["routes"]["tag_registry"]["template"] == "/analytics/app/frontend/routes/tag-registry.html"
+    assert payload["app"]["routes"]["tag_registry"]["shell_type"] == "html-template"
     assert payload["app"]["routes"]["data_sharing_prepare"]["path"] == "/analytics/data-sharing/prepare/"
+    assert payload["app"]["routes"]["data_sharing_prepare"]["template"] == "/analytics/app/frontend/routes/data-sharing-prepare.html"
+    assert any(view["id"] == "analytics_home" and view["path"] == "/analytics/" for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/analytics/series-tags/" for view in runtime["views"])
@@ -76,6 +83,8 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
     assert runtime["data_paths"]["site"]["series_index"] == "/assets/data/series_index.json"
     assert runtime["data_paths"]["site"]["works_index"] == "/assets/data/works_index.json"
     assert runtime["data_paths"]["ui_text"]["tag_registry"] == "/analytics/app/frontend/config/ui-text/tag-registry.json"
+    assert runtime["series_tag_editor"]["series_index_url"] == "/assets/data/series_index.json"
+    assert runtime["series_tag_editor"]["analytics_tag_editor_module_url"] == "/analytics/app/frontend/js/analytics-tag-editor.js"
     assert runtime["modals"]["event"] == "analytics:open-modal"
     assert payload["analysis"]["groups"]["ordered"] == ["subject", "domain", "form", "theme"]
     assert payload["analysis"]["rag"]["deprecated_statuses"] == ["deprecated", "candidate"]
@@ -91,6 +100,19 @@ def test_analytics_route_registry_rejects_paths_routes_duplicates() -> None:
 
     with pytest.raises(RuntimeError, match="Analytics route metadata must live in app.routes"):
         validate_analytics_route_registry(REPO_ROOT, payload)
+
+
+def test_analytics_shell_route_paths_are_config_driven() -> None:
+    paths = analytics_shell_route_paths(REPO_ROOT)
+
+    assert paths["/analytics/"] == "analytics_home"
+    assert paths["/analytics/tag-groups/"] == "tag_groups"
+    assert paths["/analytics/tag-registry/"] == "tag_registry"
+    assert paths["/analytics/tag-aliases/"] == "tag_aliases"
+    assert paths["/analytics/series-tags/"] == "series_tags"
+    assert paths["/analytics/series-tag-editor/"] == "series_tag_editor"
+    assert paths["/analytics/data-sharing/prepare/"] == "data_sharing_prepare"
+    assert paths["/analytics/data-sharing/review/"] == "data_sharing_review"
 
 
 def test_analytics_tag_groups_route_returns_existing_payload() -> None:
@@ -118,6 +140,7 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
         return AnalyticsAppRequestHandler.is_allowed_static_path(object(), path)
 
     assert allowed("/analytics/app/frontend/js/tag-registry.js") is True
+    assert allowed("/analytics/app/frontend/routes/tag-registry.html") is True
     assert allowed("/analytics/app/frontend/config/analytics-config.json") is True
     assert allowed("/analytics/app/assets/css/analytics.css") is True
     assert allowed("/data-sharing/config/adapters.json") is False

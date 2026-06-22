@@ -17,7 +17,9 @@ ANALYTICS_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
     "title",
     "path",
+    "template",
     "script",
+    "shell_type",
     "nav",
 )
 
@@ -25,21 +27,14 @@ ANALYTICS_ROUTE_COPY_FIELDS: tuple[str, ...] = (
     "label",
     "title",
     "path",
+    "template",
     "script",
+    "shell_type",
     "nav",
 )
 
 ANALYTICS_ROUTE_REGISTRY_PATH = ("app", "routes")
-
-ANALYTICS_SERVED_ROUTE_PATHS: dict[str, str] = {
-    "tag_groups": "/analytics/tag-groups/",
-    "tag_registry": "/analytics/tag-registry/",
-    "tag_aliases": "/analytics/tag-aliases/",
-    "series_tags": "/analytics/series-tags/",
-    "series_tag_editor": "/analytics/series-tag-editor/",
-    "data_sharing_prepare": "/analytics/data-sharing/prepare/",
-    "data_sharing_review": "/analytics/data-sharing/review/",
-}
+ANALYTICS_HTML_TEMPLATE_SHELL_TYPE = "html-template"
 
 ANALYTICS_TOP_NAV_VIEW_IDS: tuple[str, ...] = ()
 
@@ -147,23 +142,24 @@ def validate_analytics_route_registry(repo_root: Path, payload: dict[str, object
         else:
             seen_paths[normalized_path] = route_id
 
+        template = route.get("template")
+        if not isinstance(template, str) or not template.strip():
+            errors.append(f"{route_id}: missing template")
+        elif not resolve_analytics_static_path(repo_root, template.strip()).exists():
+            errors.append(f"{route_id}: template does not exist: {template}")
+
         script = route.get("script")
-        if not isinstance(script, str) or not script.strip():
-            errors.append(f"{route_id}: missing script")
-        elif not resolve_analytics_static_path(repo_root, script.strip()).exists():
+        if not isinstance(script, str):
+            errors.append(f"{route_id}: script must be a string")
+        elif script.strip() and not resolve_analytics_static_path(repo_root, script.strip()).exists():
             errors.append(f"{route_id}: script does not exist: {script}")
 
-        served_path = ANALYTICS_SERVED_ROUTE_PATHS.get(route_id)
-        if not served_path:
-            errors.append(f"{route_id}: no current Analytics route serves this view")
-        elif normalize_route_path(served_path) != normalized_path:
-            errors.append(f"{route_id}: path {path} does not match served route {served_path}")
+        shell_type = route.get("shell_type")
+        if shell_type != ANALYTICS_HTML_TEMPLATE_SHELL_TYPE:
+            errors.append(f"{route_id}: shell_type must be {ANALYTICS_HTML_TEMPLATE_SHELL_TYPE}")
 
         if not isinstance(route.get("nav"), bool):
             errors.append(f"{route_id}: nav must be boolean")
-
-    for route_id in sorted(set(ANALYTICS_SERVED_ROUTE_PATHS) - set(raw_routes)):
-        errors.append(f"{route_id}: missing Analytics route metadata")
 
     paths_routes = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
     paths_routes = paths_routes.get("routes") if isinstance(paths_routes.get("routes"), dict) else {}
@@ -198,6 +194,14 @@ def analytics_views(repo_root: Path, payload: dict[str, object] | None = None) -
     return analytics_route_registry(repo_root, payload)
 
 
+def analytics_shell_route_paths(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, str]:
+    return {
+        normalize_route_path(str(route["path"])): route_id
+        for route_id, route in analytics_route_registry(repo_root, payload).items()
+        if route.get("shell_type") == ANALYTICS_HTML_TEMPLATE_SHELL_TYPE and isinstance(route.get("path"), str)
+    }
+
+
 def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
     endpoints = {service: dict(values) for service, values in ANALYTICS_SERVICE_ENDPOINTS.items()}
     endpoints["data_sharing"] = data_sharing_service_endpoints()
@@ -206,6 +210,10 @@ def analytics_service_endpoints(_repo_root: Path) -> dict[str, object]:
 
 def asset_version(repo_root: Path) -> str:
     candidates = [
+        repo_root / "analytics-app" / "app" / "frontend" / "analytics-shell.html",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-app.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-route-registry.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-route-templates.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-theme.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-navigation.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "tag-groups.js",
@@ -220,6 +228,9 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "assets" / "css" / "analytics.css",
         repo_root / "analytics-app" / "app" / "frontend" / "config" / "analytics-config.json",
     ]
+    routes_dir = repo_root / "analytics-app" / "app" / "frontend" / "routes"
+    if routes_dir.exists():
+        candidates.extend(sorted(routes_dir.glob("*.html")))
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"
 
@@ -256,6 +267,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         "pipeline": {
             "variants": pipeline_variants,
         },
+        "series_tag_editor": series_tag_editor_runtime_settings(repo_root, payload, pipeline_payload),
         "views": [
             {"id": view_id, **view}
             for view_id, view in analytics_views(repo_root, payload).items()
@@ -292,3 +304,43 @@ def runtime_site_bases() -> dict[str, object]:
 def normalize_base_url(value: str) -> str:
     normalized = value.strip().rstrip("/")
     return normalized or "/"
+
+
+def series_tag_editor_runtime_settings(
+    _repo_root: Path,
+    payload: dict[str, object],
+    pipeline_payload: dict[str, object],
+) -> dict[str, object]:
+    variants = pipeline_payload.get("variants") if isinstance(pipeline_payload.get("variants"), dict) else {}
+    primary_variants = variants.get("primary") if isinstance(variants.get("primary"), dict) else {}
+    compatibility_variants = variants.get("compatibility") if isinstance(variants.get("compatibility"), dict) else {}
+    encoding = pipeline_payload.get("encoding") if isinstance(pipeline_payload.get("encoding"), dict) else {}
+    render_widths = compatibility_variants.get("render_widths") or primary_variants.get("widths") or [800, 1200, 1600]
+    if not isinstance(render_widths, list):
+        render_widths = [800, 1200, 1600]
+    render_widths = [
+        int(value)
+        for value in render_widths
+        if isinstance(value, int) or (isinstance(value, float) and value > 0 and value.is_integer())
+    ] or [800, 1200, 1600]
+    display_width = render_widths[-1]
+    preferred_width = primary_variants.get("preferred_width")
+    full_width = preferred_width if isinstance(preferred_width, int) and preferred_width > 0 else display_width
+    media_config = ANALYTICS_MEDIA.get("media") if isinstance(ANALYTICS_MEDIA.get("media"), dict) else {}
+    media_base = str(media_config.get("base") or "")
+    media_works = str(media_config.get("works_images") or "/works/img")
+    data_paths = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
+    data_paths = data_paths.get("data") if isinstance(data_paths.get("data"), dict) else {}
+    site_paths = data_paths.get("site") if isinstance(data_paths.get("site"), dict) else {}
+
+    return {
+        "baseurl": "",
+        "media_image_works_base": f"{media_base}{media_works}/",
+        "primary_render_widths": render_widths,
+        "primary_display_width": display_width,
+        "primary_full_width": full_width,
+        "primary_suffix": str(primary_variants.get("suffix") or "primary"),
+        "asset_format": str(encoding.get("format") or "webp"),
+        "series_index_url": str(site_paths.get("series_index") or "/assets/data/series_index.json"),
+        "analytics_tag_editor_module_url": "/analytics/app/frontend/js/analytics-tag-editor.js",
+    }

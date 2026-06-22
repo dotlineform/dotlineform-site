@@ -2,7 +2,7 @@
 doc_id: analytics-static-route-template-migration
 title: Analytics Static Route Template Migration
 added_date: 2026-06-21
-last_updated: 2026-06-21
+last_updated: 2026-06-22
 parent_id: analytics
 viewable: true
 ---
@@ -81,49 +81,61 @@ loadPrepareConfig();
 JavaScript should still render genuinely dynamic UI such as result lists, modal content, import previews, Data Sharing records, and validation output.
 Stable page skeletons should be HTML templates.
 
-## Current State
+## Completed State
+
+Completed on 2026-06-22:
+
+- `analytics_app_server.py` serves `analytics-shell.html` for configured Analytics route paths.
+- `analytics-config.json` owns each route path, static template, behavior module, and `shell_type`.
+- static route templates live under `analytics-app/app/frontend/routes/`.
+- browser boot is owned by `analytics-app/app/frontend/js/analytics-app.js`, `analytics-route-registry.js`, and `analytics-route-templates.js`.
+- `analytics_app_config.py` resolves shell routes from config and no longer uses `ANALYTICS_SERVED_ROUTE_PATHS`.
+- series tag editor media and pipeline settings are projected through runtime config.
+- `analytics_app_views.py` was deleted.
+
+## Previous State
 
 Analytics currently differs from Studio:
 
-- `analytics_app_server.py` has a hardcoded route dispatch list
-- `analytics_app_views.py` owns both the app document shell and route body HTML
-- `analytics_app_config.py` validates routes against `ANALYTICS_SERVED_ROUTE_PATHS`
+- `analytics_app_server.py` had a hardcoded route dispatch list
+- `analytics_app_views.py` owned both the app document shell and route body HTML
+- `analytics_app_config.py` validated routes against `ANALYTICS_SERVED_ROUTE_PATHS`
 - route scripts assume the server-rendered DOM already exists
 
-This causes frontend layout work to require Python view edits and server restarts.
-The migration should make route markup frontend-owned and config-driven.
+This caused frontend layout work to require Python view edits and server restarts.
+The migration made route markup frontend-owned and config-driven.
 
 ## Special Case: Series Tag Editor
 
-`series_tag_editor_view()` currently injects pipeline and media data into HTML attributes.
-Before that route can move to a static template, those values should be exposed through `runtime_config()` or loaded through an Analytics config helper.
+`series_tag_editor_view()` previously injected pipeline and media data into HTML attributes.
+Those values are now exposed through `runtime_config()` under `app.runtime.series_tag_editor`.
 
-The route script should then apply the data attributes or read the values directly from config during initialization.
+The route script applies those runtime values to the static template root during initialization.
 
 ## Task List
 
-- [ ] Add `analytics-app/app/frontend/analytics-shell.html`.
-- [ ] Add `analytics-app/app/frontend/js/analytics-app.js` as the browser app bootstrap.
-- [ ] Add `analytics-app/app/frontend/js/analytics-route-registry.js` to resolve route config from `analytics-config.json`.
-- [ ] Add `analytics-app/app/frontend/js/analytics-route-templates.js` to fetch and validate route templates.
-- [ ] Add `template` and `shell_type` fields to `analytics-app/app/frontend/config/analytics-config.json`.
-- [ ] Change `analytics_app_server.py` so configured Analytics routes return the static Analytics shell.
-- [ ] Remove the hardcoded per-route view calls from `analytics_app_server.py`.
-- [ ] Remove `ANALYTICS_SERVED_ROUTE_PATHS` from `analytics_app_config.py`.
-- [ ] Add `analytics_shell_route_paths()` based on `analytics-config.json`.
-- [ ] Move `analytics_home_view()` markup into `routes/analytics-home.html`.
-- [ ] Move `tag_groups_view()` markup into `routes/tag-groups.html`.
-- [ ] Move `tag_registry_view()` markup into `routes/tag-registry.html`.
-- [ ] Move `tag_aliases_view()` markup into `routes/tag-aliases.html`.
-- [ ] Move `series_tags_view()` markup into `routes/series-tags.html`.
-- [ ] Move `data_sharing_prepare_view()` markup into `routes/data-sharing-prepare.html`.
-- [ ] Move `data_sharing_review_view()` markup into `routes/data-sharing-review.html`.
-- [ ] Move series-tag-editor media and pipeline data into runtime config.
-- [ ] Move `series_tag_editor_view()` markup into `routes/series-tag-editor.html`.
-- [ ] Delete `analytics_app_views.py` after every route template is migrated.
-- [ ] Update Admin check inventories that reference `analytics_app_views.py`.
-- [ ] Update tests to assert static shell/template behavior instead of Python-rendered route HTML.
-- [ ] Run route smokes for tag routes, series routes, and Data Sharing prepare/review.
+- [x] Add `analytics-app/app/frontend/analytics-shell.html`.
+- [x] Add `analytics-app/app/frontend/js/analytics-app.js` as the browser app bootstrap.
+- [x] Add `analytics-app/app/frontend/js/analytics-route-registry.js` to resolve route config from `analytics-config.json`.
+- [x] Add `analytics-app/app/frontend/js/analytics-route-templates.js` to fetch and validate route templates.
+- [x] Add `template` and `shell_type` fields to `analytics-app/app/frontend/config/analytics-config.json`.
+- [x] Change `analytics_app_server.py` so configured Analytics routes return the static Analytics shell.
+- [x] Remove the hardcoded per-route view calls from `analytics_app_server.py`.
+- [x] Remove `ANALYTICS_SERVED_ROUTE_PATHS` from `analytics_app_config.py`.
+- [x] Add `analytics_shell_route_paths()` based on `analytics-config.json`.
+- [x] Move `analytics_home_view()` markup into `routes/analytics-home.html`.
+- [x] Move `tag_groups_view()` markup into `routes/tag-groups.html`.
+- [x] Move `tag_registry_view()` markup into `routes/tag-registry.html`.
+- [x] Move `tag_aliases_view()` markup into `routes/tag-aliases.html`.
+- [x] Move `series_tags_view()` markup into `routes/series-tags.html`.
+- [x] Move `data_sharing_prepare_view()` markup into `routes/data-sharing-prepare.html`.
+- [x] Move `data_sharing_review_view()` markup into `routes/data-sharing-review.html`.
+- [x] Move series-tag-editor media and pipeline data into runtime config.
+- [x] Move `series_tag_editor_view()` markup into `routes/series-tag-editor.html`.
+- [x] Delete `analytics_app_views.py` after every route template is migrated.
+- [x] Update Admin check inventories that reference `analytics_app_views.py`.
+- [x] Update tests to assert static shell/template behavior instead of Python-rendered route HTML.
+- [x] Run route smokes for tag routes, series routes, and Data Sharing prepare/review.
 
 ## Suggested Migration Order
 

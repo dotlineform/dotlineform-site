@@ -1,0 +1,25 @@
+<div class="tagRegistryPage">
+  <div id="tag-registry" data-role="tag-registry" data-analytics-ready="false" data-analytics-busy="false">
+    <div class="seriesTagsActions">
+      <button type="button" class="analytics__button" data-role="open-import-modal">Import</button>
+      <button type="button" class="analytics__button" data-role="open-new-tag">New tag</button>
+    </div>
+    <section class="analytics__panel">
+      <div class="analyticsFilters" data-role="filters">
+        <div class="analytics__key analyticsFilters__key" data-role="key"></div>
+        <label class="analyticsFilters__searchWrap">
+          <span class="visually-hidden" data-role="search-label">Search tags</span>
+          <input
+            type="text"
+            class="analytics__input analyticsFilters__searchInput"
+            data-role="search"
+            placeholder="search"
+            autocomplete="off"
+          >
+        </label>
+      </div>
+      <div data-role="list"></div>
+    </section>
+    <div data-role="modal-host"></div>
+  </div>
+</div>

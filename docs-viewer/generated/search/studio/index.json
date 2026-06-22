@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3260e4c4a681857b53c1d2045be10d54",
-    "generated_at_utc": "2026-06-21T22:06:19Z",
+    "version": "blake2b-4bc772023d3e5ed864de4c033697e6c5",
+    "generated_at_utc": "2026-06-22T09:09:10Z",
     "count": 242
   },
   "entries": [
@@ -438,16 +438,16 @@
       "kind": "doc",
       "title": "Analytics",
       "href": "/docs/?scope=studio&doc=analytics",
-      "last_updated": "2026-06-02",
-      "display_meta": "2026-06-02",
+      "last_updated": "2026-06-22",
+      "display_meta": "2026-06-22",
       "search_terms": [
         "analytics",
-        "2026-06-02",
+        "2026-06-22",
         "2026",
         "06",
-        "02"
+        "22"
       ],
-      "search_text": "analytics 2026-06-02 2026 06 02"
+      "search_text": "analytics 2026-06-22 2026 06 22"
     },
     {
       "id": "config-analytics-config-json",
@@ -476,10 +476,10 @@
       "kind": "doc",
       "title": "Analytics Static Route Template Migration",
       "href": "/docs/?scope=studio&doc=analytics-static-route-template-migration",
-      "last_updated": "2026-06-21",
+      "last_updated": "2026-06-22",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-06-21 • Analytics",
+      "display_meta": "2026-06-22 • Analytics",
       "search_terms": [
         "analytics-static-route-template-migration",
         "analytics",
@@ -488,12 +488,12 @@
         "template",
         "migration",
         "analytics static route template migration",
-        "2026-06-21",
+        "2026-06-22",
         "2026",
         "06",
-        "21"
+        "22"
       ],
-      "search_text": "analytics-static-route-template-migration analytics static route template migration analytics static route template migration 2026-06-21 2026 06 21"
+      "search_text": "analytics-static-route-template-migration analytics static route template migration analytics static route template migration 2026-06-22 2026 06 22"
     },
     {
       "id": "config-analytics-ui-text-json",
@@ -601,110 +601,110 @@
       "kind": "doc",
       "title": "Series Tags",
       "href": "/docs/?scope=studio&doc=series-tags",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-22",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-30 • Analytics",
+      "display_meta": "2026-06-22 • Analytics",
       "search_terms": [
         "series-tags",
         "series",
         "tags",
         "series tags",
         "analytics",
-        "2026-05-30",
+        "2026-06-22",
         "2026",
-        "05",
-        "30"
+        "06",
+        "22"
       ],
-      "search_text": "series-tags series tags series tags analytics 2026-05-30 2026 05 30"
+      "search_text": "series-tags series tags series tags analytics 2026-06-22 2026 06 22"
     },
     {
       "id": "tag-aliases",
       "kind": "doc",
       "title": "Tag Aliases",
       "href": "/docs/?scope=studio&doc=tag-aliases",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-22",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-30 • Analytics",
+      "display_meta": "2026-06-22 • Analytics",
       "search_terms": [
         "tag-aliases",
         "tag",
         "aliases",
         "tag aliases",
         "analytics",
-        "2026-05-30",
+        "2026-06-22",
         "2026",
-        "05",
-        "30"
+        "06",
+        "22"
       ],
-      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-30 2026 05 30"
+      "search_text": "tag-aliases tag aliases tag aliases analytics 2026-06-22 2026 06 22"
     },
     {
       "id": "tag-editor",
       "kind": "doc",
       "title": "Tag Editor",
       "href": "/docs/?scope=studio&doc=tag-editor",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-22",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-30 • Analytics",
+      "display_meta": "2026-06-22 • Analytics",
       "search_terms": [
         "tag-editor",
         "tag",
         "editor",
         "tag editor",
         "analytics",
-        "2026-05-30",
+        "2026-06-22",
         "2026",
-        "05",
-        "30"
+        "06",
+        "22"
       ],
-      "search_text": "tag-editor tag editor tag editor analytics 2026-05-30 2026 05 30"
+      "search_text": "tag-editor tag editor tag editor analytics 2026-06-22 2026 06 22"
     },
     {
       "id": "tag-groups",
       "kind": "doc",
       "title": "Tag Groups",
       "href": "/docs/?scope=studio&doc=tag-groups",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-22",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-30 • Analytics",
+      "display_meta": "2026-06-22 • Analytics",
       "search_terms": [
         "tag-groups",
         "tag",
         "groups",
         "tag groups",
         "analytics",
-        "2026-05-30",
+        "2026-06-22",
         "2026",
-        "05",
-        "30"
+        "06",
+        "22"
       ],
-      "search_text": "tag-groups tag groups tag groups analytics 2026-05-30 2026 05 30"
+      "search_text": "tag-groups tag groups tag groups analytics 2026-06-22 2026 06 22"
     },
     {
       "id": "tag-registry",
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=tag-registry",
-      "last_updated": "2026-05-30",
+      "last_updated": "2026-06-22",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-30 • Analytics",
+      "display_meta": "2026-06-22 • Analytics",
       "search_terms": [
         "tag-registry",
         "tag",
         "registry",
         "tag registry",
         "analytics",
-        "2026-05-30",
+        "2026-06-22",
         "2026",
-        "05",
-        "30"
+        "06",
+        "22"
       ],
-      "search_text": "tag-registry tag registry tag registry analytics 2026-05-30 2026 05 30"
+      "search_text": "tag-registry tag registry tag registry analytics 2026-06-22 2026 06 22"
     },
     {
       "id": "analytics-tag-services",

@@ -93,7 +93,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/app/server/studio/studio_app_server.py",
                 "analytics-app/app/server/analytics_app/analytics_api.py",
                 "analytics-app/app/server/analytics_app/analytics_app_config.py",
-                "analytics-app/app/server/analytics_app/analytics_app_views.py",
                 "analytics-app/app/server/analytics_app/analytics_app_server.py",
                 "analytics-app/app/server/analytics_app/analytics_data_sharing_api.py",
                 "analytics-app/app/server/analytics_app/data_sharing_adapters.py",

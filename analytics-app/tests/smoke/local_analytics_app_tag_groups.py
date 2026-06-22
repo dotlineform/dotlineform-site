@@ -49,9 +49,13 @@ def main(argv: list[str] | None = None) -> int:
         if runtime_routes.get("runtime_config") != "/analytics/runtime-config.json":
             raise AssertionError(f"unexpected runtime config route metadata: {runtime_routes!r}")
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
-        tag_groups_view = next((view for view in runtime_views if view.get("id") == "tag_groups"), None)
-        if not tag_groups_view or tag_groups_view.get("path") != "/analytics/tag-groups/":
+        tag_groups_route = next((view for view in runtime_views if view.get("id") == "tag_groups"), None)
+        if not tag_groups_route or tag_groups_route.get("path") != "/analytics/tag-groups/":
             raise AssertionError(f"runtime config did not include the Tag Groups view: {runtime_views!r}")
+        if tag_groups_route.get("shell_type") != "html-template":
+            raise AssertionError(f"runtime config missing template shell type for tag_groups: {tag_groups_route!r}")
+        if tag_groups_route.get("template") != "/analytics/app/frontend/routes/tag-groups.html":
+            raise AssertionError(f"runtime config missing tag_groups template: {tag_groups_route!r}")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
@@ -80,7 +84,9 @@ def main(argv: list[str] | None = None) -> int:
                 else None,
             )
             page.goto(f"{base_url}/analytics/tag-groups/", wait_until="domcontentloaded")
-            nav_script_count = page.locator('script[src*="analytics-navigation.js"]').count()
+            if page.locator("[data-analytics-route-outlet]").count() != 1:
+                raise AssertionError("tag groups route did not render the static Analytics shell outlet")
+            nav_script_count = page.locator('script[src*="analytics-app.js"]').count()
             page.wait_for_selector('#tag-groups[data-analytics-ready="true"]', timeout=10000)
             mode = page.locator("#tag-groups").get_attribute("data-analytics-mode")
             record_loaded = page.locator("#tag-groups").get_attribute("data-analytics-record-loaded")
@@ -91,7 +97,7 @@ def main(argv: list[str] | None = None) -> int:
 
         expected_groups = {"subject", "domain", "form", "theme"}
         if nav_script_count != 1:
-            raise AssertionError(f"expected one navigation script on Analytics route, got {nav_script_count}")
+            raise AssertionError(f"expected one app bootstrap script on Analytics route, got {nav_script_count}")
         if mode != "list":
             raise AssertionError(f"expected list mode, got {mode!r}")
         if record_loaded != "true":

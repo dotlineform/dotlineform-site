@@ -26,6 +26,7 @@ async function initSeriesTagEditorPage() {
   if (!root || !emptyEl || !mount) return;
   initializeAnalyticsRouteState(root, { route: "series-tag-editor", mode: "single" });
   const config = await loadAnalyticsConfig();
+  applySeriesTagEditorRuntimeConfig(root, config);
 
   const titleEl = document.getElementById("seriesTagEditorTitle");
   const catEl = document.getElementById("seriesTagEditorCat");
@@ -241,4 +242,56 @@ async function initSeriesTagEditorPage() {
       console.error("series_tag_editor: failed to load series index", err);
       showError("Failed to load series metadata.");
     });
+}
+
+function applySeriesTagEditorRuntimeConfig(root, config) {
+  const settings = pathValue(config, ["app", "runtime", "series_tag_editor"]) || {};
+  const dataPaths = pathValue(config, ["app", "runtime", "data_paths", "site"]) || pathValue(config, ["paths", "data", "site"]) || {};
+  const assetVersion = readAssetVersion();
+  setDatasetValue(root, "baseurl", settings.baseurl || "");
+  setDatasetValue(root, "mediaImageWorksBase", settings.media_image_works_base || "");
+  setDatasetValue(root, "primaryRenderWidths", JSON.stringify(arrayOrDefault(settings.primary_render_widths, [800, 1200, 1600])));
+  setDatasetValue(root, "primaryDisplayWidth", settings.primary_display_width || "");
+  setDatasetValue(root, "primaryFullWidth", settings.primary_full_width || settings.primary_display_width || "");
+  setDatasetValue(root, "primarySuffix", settings.primary_suffix || "primary");
+  setDatasetValue(root, "assetFormat", settings.asset_format || "webp");
+  setDatasetValue(root, "seriesIndexUrl", settings.series_index_url || dataPaths.series_index || "/assets/data/series_index.json");
+  setDatasetValue(
+    root,
+    "analyticsTagEditorModuleUrl",
+    appendAssetVersion(settings.analytics_tag_editor_module_url || "/analytics/app/frontend/js/analytics-tag-editor.js", assetVersion)
+  );
+}
+
+function pathValue(source, keys) {
+  let value = source;
+  for (const key of keys) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+    value = value[key];
+  }
+  return value;
+}
+
+function setDatasetValue(root, key, value) {
+  const normalized = String(value == null ? "" : value).trim();
+  if (normalized) {
+    root.dataset[key] = normalized;
+  } else {
+    delete root.dataset[key];
+  }
+}
+
+function arrayOrDefault(value, fallback) {
+  return Array.isArray(value) && value.length ? value : fallback;
+}
+
+function readAssetVersion() {
+  const meta = document.querySelector('meta[name="dlf-asset-version"]');
+  return meta ? String(meta.getAttribute("content") || "").trim() : "";
+}
+
+function appendAssetVersion(url, version) {
+  const value = String(url || "").trim();
+  if (!value || !version) return value;
+  return `${value}${value.includes("?") ? "&" : "?"}v=${encodeURIComponent(version)}`;
 }

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import mimetypes
 import os
@@ -29,16 +30,12 @@ if str(ANALYTICS_SERVER_DIR) not in sys.path:
     sys.path.insert(0, str(ANALYTICS_SERVER_DIR))
 
 from analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
-from analytics_app_config import asset_version, runtime_config  # noqa: E402
-from analytics_app_views import (  # noqa: E402
-    analytics_home_view,
-    data_sharing_prepare_view,
-    data_sharing_review_view,
-    series_tag_editor_view,
-    series_tags_view,
-    tag_aliases_view,
-    tag_groups_view,
-    tag_registry_view,
+from analytics_app_config import (  # noqa: E402
+    analytics_shell_route_paths,
+    analytics_views,
+    asset_version,
+    normalize_route_path,
+    runtime_config,
 )
 from analytics_data_sharing_api import data_sharing_get_payload, data_sharing_post_response  # noqa: E402
 
@@ -52,6 +49,7 @@ STATIC_PREFIXES = (
     "/analytics/app/assets/",
     "/analytics/app/frontend/js/",
     "/analytics/app/frontend/config/",
+    "/analytics/app/frontend/routes/",
 )
 STATIC_FILES = {
     "/favicon.ico",
@@ -104,29 +102,8 @@ class AnalyticsAppRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/analytics/api/"):
             self.send_analytics_api_json(path.removeprefix("/analytics/api"))
             return
-        if path in {"/analytics", "/analytics/"}:
-            self.send_html(analytics_home_view(self.version))
-            return
-        if path in {"/analytics/tag-groups", "/analytics/tag-groups/"}:
-            self.send_html(tag_groups_view(self.version))
-            return
-        if path in {"/analytics/tag-registry", "/analytics/tag-registry/"}:
-            self.send_html(tag_registry_view(self.version))
-            return
-        if path in {"/analytics/tag-aliases", "/analytics/tag-aliases/"}:
-            self.send_html(tag_aliases_view(self.version))
-            return
-        if path in {"/analytics/series-tags", "/analytics/series-tags/"}:
-            self.send_html(series_tags_view(self.version))
-            return
-        if path in {"/analytics/series-tag-editor", "/analytics/series-tag-editor/"}:
-            self.send_html(series_tag_editor_view(self.version, self.repo_root))
-            return
-        if path in {"/analytics/data-sharing/prepare", "/analytics/data-sharing/prepare/"}:
-            self.send_html(data_sharing_prepare_view(self.version))
-            return
-        if path in {"/analytics/data-sharing/review", "/analytics/data-sharing/review/"}:
-            self.send_html(data_sharing_review_view(self.version))
+        if normalize_route_path(path) in analytics_shell_route_paths(self.repo_root):
+            self.send_html(self.analytics_shell_html(path))
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)
@@ -279,6 +256,24 @@ class AnalyticsAppRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def analytics_shell_html(self, request_path: str) -> str:
+        route_paths = analytics_shell_route_paths(self.repo_root)
+        route_id = route_paths.get(normalize_route_path(request_path), "analytics_home")
+        route = analytics_views(self.repo_root).get(route_id, {})
+        title = str(route.get("title") or "Analytics")
+        shell_path = self.repo_root / "analytics-app" / "app" / "frontend" / "analytics-shell.html"
+        try:
+            shell = shell_path.read_text(encoding="utf-8")
+        except OSError as error:
+            raise RuntimeError(f"Could not read Analytics shell: {shell_path}") from error
+        replacements = {
+            "__ANALYTICS_ASSET_VERSION__": html.escape(self.version, quote=True),
+            "__ANALYTICS_PAGE_TITLE__": html.escape(title, quote=False),
+        }
+        for token, value in replacements.items():
+            shell = shell.replace(token, value)
+        return shell
 
     def send_static(self, request_path: str) -> None:
         if request_path.startswith("/analytics/app/"):

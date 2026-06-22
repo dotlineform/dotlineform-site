@@ -2,7 +2,7 @@
 doc_id: series-tags
 title: Series Tags
 added_date: 2026-03-31
-last_updated: 2026-05-30
+last_updated: 2026-06-22
 parent_id: analytics
 ---
 # Series Tags
@@ -28,9 +28,13 @@ The page root `#series-tags` exposes the Analytics route-ready contract:
 
 ## Page / Template Structure
 
-Primary shell:
+Static route template:
 
-- `analytics-app/app/server/analytics_app/analytics_app_views.py`
+- `analytics-app/app/frontend/routes/series-tags.html`
+
+App shell:
+
+- `analytics-app/app/frontend/analytics-shell.html`
 
 Page controller:
 

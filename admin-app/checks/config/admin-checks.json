@@ -374,6 +374,9 @@
       "path": "/analytics/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js",
+        "analytics-app/app/frontend/routes/analytics-home.html",
         "analytics-app/app/frontend/config/analytics-config.json"
       ],
       "shared": [
@@ -386,11 +389,13 @@
       "path": "/analytics/tag-groups/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/tag-groups.html",
         "analytics-app/app/frontend/js/tag-groups.js",
         "analytics-app/app/frontend/config/ui-text/tag-groups.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": []
     },
@@ -399,11 +404,13 @@
       "path": "/analytics/tag-registry/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/tag-registry.html",
         "analytics-app/app/frontend/js/tag-registry.js",
         "analytics-app/app/frontend/config/ui-text/tag-registry.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": []
     },
@@ -412,11 +419,13 @@
       "path": "/analytics/tag-aliases/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/tag-aliases.html",
         "analytics-app/app/frontend/js/tag-aliases.js",
         "analytics-app/app/frontend/config/ui-text/tag-aliases.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": []
     },
@@ -425,11 +434,13 @@
       "path": "/analytics/series-tags/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/series-tags.html",
         "analytics-app/app/frontend/js/series-tags.js",
         "analytics-app/app/frontend/config/ui-text/series-tags.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": []
     },
@@ -438,11 +449,13 @@
       "path": "/analytics/series-tag-editor/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/series-tag-editor.html",
         "analytics-app/app/frontend/js/series-tag-editor-page.js",
         "analytics-app/app/frontend/config/ui-text/series-tag-editor.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": []
     },
@@ -451,11 +464,13 @@
       "path": "/analytics/data-sharing/prepare/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/data-sharing-prepare.html",
         "analytics-app/app/frontend/js/data-sharing-prepare*",
         "analytics-app/app/frontend/config/ui-text/data-sharing-prepare.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": [
         "import-export"
@@ -466,11 +481,13 @@
       "path": "/analytics/data-sharing/review/",
       "status": "inventory-only",
       "include": [
+        "analytics-app/app/frontend/routes/data-sharing-review.html",
         "analytics-app/app/frontend/js/data-sharing-review*",
         "analytics-app/app/frontend/config/ui-text/data-sharing-review.json"
       ],
       "shared": [
-        "analytics-app/app/server/analytics_app/analytics_app_views.py"
+        "analytics-app/app/frontend/analytics-shell.html",
+        "analytics-app/app/frontend/js/analytics-app.js"
       ],
       "areas": [
         "import-export"

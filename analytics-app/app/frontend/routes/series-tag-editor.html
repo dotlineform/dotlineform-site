@@ -1,0 +1,99 @@
+<article
+  class="page analyticsPage"
+  id="seriesTagEditorRoot"
+  data-baseurl=""
+  data-media-image-works-base=""
+  data-primary-render-widths=""
+  data-primary-display-width=""
+  data-primary-full-width=""
+  data-primary-suffix=""
+  data-asset-format=""
+  data-series-index-url=""
+  data-analytics-tag-editor-module-url=""
+  hidden
+  data-analytics-ready="false"
+  data-analytics-busy="false"
+>
+  <header class="analyticsPage__header">
+    <figure class="analyticsPage__media" id="seriesTagEditorMedia" hidden>
+      <a
+        class="page__mediaLink"
+        id="seriesTagEditorMediaLink"
+        href="#"
+        target="_blank"
+        rel="noopener"
+        style="--work-ar: 4 / 3;"
+      >
+        <img
+          class="analyticsPage__mediaImg"
+          id="seriesTagEditorMediaImg"
+          src=""
+          srcset=""
+          sizes="(max-width: 900px) 100vw, 40vw"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
+      </a>
+      <figcaption class="analyticsPage__mediaCaption" id="seriesTagEditorMediaCaption"></figcaption>
+    </figure>
+
+    <section class="analyticsPage__context analyticsPage__context--meta">
+      <h1 class="analyticsPage__title" id="seriesTagEditorTitle">Series Tag Editor</h1>
+      <div class="page__caption page__metaList">
+        <div class="page__row"><span id="seriesTagEditorYearDisplay">-</span></div>
+        <div class="page__row">
+          <span id="seriesTagEditorCat">-</span>
+        </div>
+        <div class="page__row" style="display:none;"><span id="seriesTagEditorYear">-</span></div>
+        <div class="page__row" style="display:none;"><span id="seriesTagEditorSortFields">-</span></div>
+        <div class="page__row" style="display:none;"><span id="seriesTagEditorPrimaryWork">-</span></div>
+        <div class="page__row">/<span id="seriesTagEditorFolders">-</span></div>
+      </div>
+    </section>
+  </header>
+
+  <section class="analyticsPage__editor">
+    <div id="analytics-tag-editor" class="analyticsTagEditor" data-role="series-tag-editor">
+      <section class="analytics__panel analytics__panel--editor" data-role="editor-shell">
+        <section class="analyticsEditorSection analyticsEditorSection--work" data-role="work-section">
+          <div class="analytics__inputRow analytics__inputRow--work">
+            <input class="analytics__input" data-role="work-input" type="text" autocomplete="off" placeholder="work_id(s) in this series">
+            <div class="analytics__workSelection" data-role="selected-work"></div>
+          </div>
+          <div class="analytics__popup analytics__popup--work" data-role="work-popup" hidden>
+            <div class="analytics__popupInner analytics__popupInner--series" data-role="work-popup-list"></div>
+          </div>
+        </section>
+
+        <section class="analyticsEditorSection analyticsEditorSection--messages" data-role="message-section">
+          <p class="analytics__contextHint" data-role="context-hint"></p>
+        </section>
+
+        <section class="analyticsEditorSection analyticsEditorSection--groups" data-role="groups-section">
+          <div data-role="groups"></div>
+        </section>
+
+        <section class="analyticsEditorSection analyticsEditorSection--search" data-role="search-section">
+          <div class="analytics__inputRow analytics__editorActionGrid">
+            <input class="analytics__input" data-role="tag-input" type="text" autocomplete="off" placeholder="tag slug or alias">
+            <button type="button" class="analytics__button analytics__button--defaultWidth" data-role="add-tag">Add</button>
+            <button type="button" class="analytics__button analytics__button--defaultWidth" data-role="save">Save</button>
+            <span class="analytics__saveMode" data-role="save-mode"></span>
+            <div class="analytics__buttonFeedback analytics__buttonFeedback--editor">
+              <p class="analytics__status" data-role="status"></p>
+              <p class="analytics__saveWarning" data-role="save-warning"></p>
+              <p class="analytics__saveResult" data-role="save-result"></p>
+            </div>
+          </div>
+          <div class="analytics__popup analytics__popup--series" data-role="popup" hidden>
+            <div class="analytics__popupInner analytics__popupInner--series" data-role="popup-list"></div>
+          </div>
+        </section>
+      </section>
+      <div data-role="modal-host"></div>
+    </div>
+  </section>
+</article>
+<p id="seriesTagEditorEmpty" hidden></p>

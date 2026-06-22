@@ -3,53 +3,76 @@ const DEFAULT_ANALYTICS_CONFIG = {
   "updated_at_utc": "2026-05-30T00:00:00Z",
   "app": {
     "routes": {
+      "analytics_home": {
+        "label": "home",
+        "title": "Analytics",
+        "path": "/analytics/",
+        "template": "/analytics/app/frontend/routes/analytics-home.html",
+        "script": "",
+        "shell_type": "html-template",
+        "nav": false
+      },
       "tag_groups": {
         "label": "tag groups",
         "title": "Tag Groups",
         "path": "/analytics/tag-groups/",
+        "template": "/analytics/app/frontend/routes/tag-groups.html",
         "script": "/analytics/app/frontend/js/tag-groups.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "tag_registry": {
         "label": "registry",
         "title": "Tag Registry",
         "path": "/analytics/tag-registry/",
+        "template": "/analytics/app/frontend/routes/tag-registry.html",
         "script": "/analytics/app/frontend/js/tag-registry.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "tag_aliases": {
         "label": "aliases",
         "title": "Tag Aliases",
         "path": "/analytics/tag-aliases/",
+        "template": "/analytics/app/frontend/routes/tag-aliases.html",
         "script": "/analytics/app/frontend/js/tag-aliases.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "series_tags": {
         "label": "series tags",
         "title": "Series Tags",
         "path": "/analytics/series-tags/",
+        "template": "/analytics/app/frontend/routes/series-tags.html",
         "script": "/analytics/app/frontend/js/series-tags.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "series_tag_editor": {
         "label": "tag editor",
         "title": "Series Tag Editor",
         "path": "/analytics/series-tag-editor/",
+        "template": "/analytics/app/frontend/routes/series-tag-editor.html",
         "script": "/analytics/app/frontend/js/series-tag-editor-page.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "data_sharing_prepare": {
         "label": "prepare share",
         "title": "Prepare Share Package",
         "path": "/analytics/data-sharing/prepare/",
+        "template": "/analytics/app/frontend/routes/data-sharing-prepare.html",
         "script": "/analytics/app/frontend/js/data-sharing-prepare.js",
+        "shell_type": "html-template",
         "nav": false
       },
       "data_sharing_review": {
         "label": "review share",
         "title": "Review Returned Package",
         "path": "/analytics/data-sharing/review/",
+        "template": "/analytics/app/frontend/routes/data-sharing-review.html",
         "script": "/analytics/app/frontend/js/data-sharing-review.js",
+        "shell_type": "html-template",
         "nav": false
       }
     }

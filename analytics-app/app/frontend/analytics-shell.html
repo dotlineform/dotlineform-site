@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="dlf-asset-version" content="__ANALYTICS_ASSET_VERSION__">
+  <meta name="dlf-analytics-config-url" content="/analytics/runtime-config.json">
+  <title>__ANALYTICS_PAGE_TITLE__ | dotlineform Analytics</title>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/analytics/app/assets/css/analytics.css?v=__ANALYTICS_ASSET_VERSION__">
+</head>
+<body class="analytics-local-app">
+  <header class="site-header">
+    <div class="container">
+      <div class="site-title"><a href="/analytics/">dotlineform analytics</a></div>
+      <div class="analyticsHeader__actions">
+        <nav class="site-nav" aria-label="Analytics" data-analytics-nav></nav>
+        <button class="analyticsThemeToggle" type="button" data-analytics-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">
+          <svg class="analyticsThemeToggle__icon" data-analytics-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M4.93 19.07l1.41-1.41"></path>
+            <path d="M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <svg class="analyticsThemeToggle__icon" data-analytics-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="container">
+    <div class="analyticsShell" data-analytics-shell>
+      <div class="analyticsShell__headerRow" data-analytics-shell-heading hidden>
+        <h2 data-analytics-page-title>__ANALYTICS_PAGE_TITLE__</h2>
+      </div>
+      <div class="analyticsShell__content" data-analytics-route-outlet></div>
+    </div>
+  </main>
+  <p class="analytics__status" data-analytics-shell-status>loading Analytics...</p>
+  <script type="module" src="/analytics/app/frontend/js/analytics-app.js?v=__ANALYTICS_ASSET_VERSION__"></script>
+</body>
+</html>

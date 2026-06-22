@@ -105,6 +105,10 @@ def main(argv: list[str] | None = None) -> int:
             runtime_view = runtime_by_id.get(route["view_id"])
             if not runtime_view or runtime_view.get("path") != route["runtime_path"]:
                 raise AssertionError(f"runtime config missing {route['view_id']}: {runtime_views!r}")
+            if runtime_view.get("shell_type") != "html-template":
+                raise AssertionError(f"runtime config missing template shell type for {route['view_id']}: {runtime_view!r}")
+            if not str(runtime_view.get("template") or "").startswith("/analytics/app/frontend/routes/"):
+                raise AssertionError(f"runtime config missing route template for {route['view_id']}: {runtime_view!r}")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
@@ -127,6 +131,8 @@ def main(argv: list[str] | None = None) -> int:
 
             for route in ROUTES:
                 page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
+                if page.locator("[data-analytics-route-outlet]").count() != 1:
+                    raise AssertionError(f"{route['path']} did not render the static Analytics shell outlet")
                 page.wait_for_selector(f'{route["root"]}[data-analytics-ready="true"]', timeout=10_000)
                 root = page.locator(route["root"])
                 mode = root.get_attribute("data-analytics-mode")

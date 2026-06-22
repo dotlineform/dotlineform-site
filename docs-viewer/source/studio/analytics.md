@@ -2,7 +2,7 @@
 doc_id: analytics
 title: Analytics
 added_date: "2026-05-06 18:19"
-last_updated: 2026-06-02
+last_updated: 2026-06-22
 parent_id: ""
 ---
 # Analytics
@@ -33,8 +33,10 @@ Analytics owns:
 
 Current source boundary:
 
-- `analytics-app/app/server/analytics_app/` owns the Local Analytics HTTP server, route views, runtime config projection, static serving, tag APIs, and Data Sharing API dispatch.
+- `analytics-app/app/server/analytics_app/` owns the Local Analytics HTTP server, runtime config projection, static serving, tag APIs, and Data Sharing API dispatch.
 - `analytics-app/app/server/analytics_app/tag_services/` owns reusable tag-domain source path contracts, validation, planning, dry-run/write transactions, backups, route constants, and compact activity projection.
+- `analytics-app/app/frontend/analytics-shell.html` owns the static Analytics app document shell.
+- `analytics-app/app/frontend/routes/` owns static Analytics route templates.
 - `analytics-app/app/frontend/` owns Analytics browser modules, route modules, UI text, and runtime config.
 - `analytics-app/app/assets/` owns Analytics-only CSS and route assets.
 - `analytics-app/tests/` owns Analytics route/API smoke tests and focused Python endpoint tests.

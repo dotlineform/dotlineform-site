@@ -267,6 +267,10 @@ def assert_runtime_views(base_url: str) -> None:
         view = by_id.get(view_id)
         if not view or view.get("path") != path:
             raise AssertionError(f"runtime config missing {view_id}: {views!r}")
+        if view.get("shell_type") != "html-template":
+            raise AssertionError(f"runtime config missing template shell type for {view_id}: {view!r}")
+        if not str(view.get("template") or "").startswith("/analytics/app/frontend/routes/"):
+            raise AssertionError(f"runtime config missing route template for {view_id}: {view!r}")
     services = runtime_config.get("app", {}).get("runtime", {}).get("services", {})
     data_sharing = services.get("data_sharing", {}) if isinstance(services, dict) else {}
     if data_sharing.get("health") != "/analytics/api/data-sharing/health":
@@ -295,6 +299,8 @@ def assert_data_sharing_api(base_url: str) -> None:
 
 def assert_prepare(page, base_url: str) -> None:
     page.goto(f"{base_url}/analytics/data-sharing/prepare/", wait_until="domcontentloaded")
+    if page.locator("[data-analytics-route-outlet]").count() != 1:
+        raise AssertionError("prepare route did not render the static Analytics shell outlet")
     root = page.locator("#dataSharingPrepareRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
@@ -323,6 +329,8 @@ def assert_prepare(page, base_url: str) -> None:
 
 def assert_review(page, base_url: str) -> None:
     page.goto(f"{base_url}/analytics/data-sharing/review/?data_domain=documents", wait_until="domcontentloaded")
+    if page.locator("[data-analytics-route-outlet]").count() != 1:
+        raise AssertionError("review route did not render the static Analytics shell outlet")
     root = page.locator("#dataSharingReviewRoot")
     expect(root).to_be_visible(timeout=10_000)
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
