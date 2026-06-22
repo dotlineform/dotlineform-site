@@ -112,10 +112,6 @@ function renderCreateFormHtml(state, capabilities) {
         '<select class="docsViewer__fieldInput" data-role="scope-publishing-mode">' + renderModeOptions(state, modes) + '</select>' +
       '</label>' +
       '<p class="docsViewer__modalNote muted small" data-role="scope-mode-note"></p>' +
-      '<label class="docsViewer__field" data-role="scope-external-root-field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeExternalDataRootLabel", "external data root")) + '</span>' +
-        '<input class="docsViewer__fieldInput" data-role="scope-external-data-root" type="text" autocomplete="off" spellcheck="false">' +
-      '</label>' +
       '<label class="docsViewer__field" data-role="scope-source-root-field">' +
         '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeSourceRootLabel", "source root")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-source-root" type="text" autocomplete="off" spellcheck="false" required>' +
@@ -146,8 +142,6 @@ function wireCreateForm(api, state) {
   var titleInput = host.querySelector('[data-role="scope-title"]');
   var modeInput = host.querySelector('[data-role="scope-publishing-mode"]');
   var modeNoteNode = host.querySelector('[data-role="scope-mode-note"]');
-  var externalRootField = host.querySelector('[data-role="scope-external-root-field"]');
-  var externalRootInput = host.querySelector('[data-role="scope-external-data-root"]');
   var sourceField = host.querySelector('[data-role="scope-source-root-field"]');
   var sourceInput = host.querySelector('[data-role="scope-source-root"]');
   var defaultDocInput = host.querySelector('[data-role="scope-default-doc-id"]');
@@ -201,8 +195,6 @@ function wireCreateForm(api, state) {
     if (modeNoteNode) modeNoteNode.textContent = modeNote(state, mode);
     if (routeField) routeField.hidden = mode !== "public_readonly";
     if (routeInput) routeInput.required = mode === "public_readonly";
-    if (externalRootField) externalRootField.hidden = mode !== "local_external";
-    if (externalRootInput) externalRootInput.required = mode === "local_external";
     if (sourceField) sourceField.hidden = mode === "local_external";
     if (sourceInput) {
       sourceInput.readOnly = mode === "local_external";
@@ -246,7 +238,6 @@ function collectCreatePayload(api, state) {
   var scopeId = normalizeText(host.querySelector('[data-role="scope-id"]')?.value).toLowerCase();
   var title = normalizeText(host.querySelector('[data-role="scope-title"]')?.value);
   var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_external";
-  var externalDataRoot = normalizeText(host.querySelector('[data-role="scope-external-data-root"]')?.value);
   var sourceRoot = normalizeText(host.querySelector('[data-role="scope-source-root"]')?.value);
   var defaultDocId = normalizeText(host.querySelector('[data-role="scope-default-doc-id"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
@@ -255,10 +246,6 @@ function collectCreatePayload(api, state) {
 
   if (!scopeId || !title || !defaultDocId || (publishingMode !== "local_external" && !sourceRoot)) {
     api.setStatus(managementText(state, "scopeCreateRequiredMessage", "Enter the required scope fields."));
-    return null;
-  }
-  if (publishingMode === "local_external" && !externalDataRoot) {
-    api.setStatus(managementText(state, "scopeCreateExternalRootRequiredMessage", "Enter an external data root for external local scopes."));
     return null;
   }
   if (publishingMode === "public_readonly" && !publicRoutePath) {
@@ -270,7 +257,6 @@ function collectCreatePayload(api, state) {
     scope_id: scopeId,
     title: title,
     source_root: publishingMode === "local_external" ? "" : sourceRoot,
-    external_data_root: publishingMode === "local_external" ? externalDataRoot : "",
     default_doc_id: defaultDocId,
     publishing_mode: publishingMode,
     public_route_path: publishingMode === "public_readonly" ? publicRoutePath : "",
@@ -330,13 +316,11 @@ function renderStorageContract(contract) {
   if (!contract || typeof contract !== "object") return "";
   var rows = [];
   var summary = normalizeText(contract.summary);
-  var externalDataRoot = normalizeText(contract.external_data_root);
   var sourceRoot = normalizeText(contract.source_root);
   var docsOutput = normalizeText(contract.docs_output);
   var searchOutput = normalizeText(contract.search_output);
   var publicAssets = contract.public_static_assets === true ? "yes" : "no";
   rows.push(["public static assets", publicAssets]);
-  if (externalDataRoot) rows.push(["external data root", externalDataRoot]);
   if (sourceRoot) rows.push(["source root", sourceRoot]);
   if (docsOutput) rows.push(["docs output", docsOutput]);
   if (searchOutput) rows.push(["search output", searchOutput]);

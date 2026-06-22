@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import datetime as dt
 import json
-import os
 import re
 import shutil
 import subprocess
@@ -14,12 +13,15 @@ from typing import Any, Callable
 
 from docs_scope_config import (
     CONFIG_REL_PATH,
+    EXTERNAL_DATA_ROOT_MARKER,
     PUBLIC_DOCS_OUTPUT_ROOT,
     PUBLIC_SEARCH_OUTPUT_ROOT,
     DocsScopeConfig,
     default_repo_root,
     load_docs_scope_configs,
     path_label,
+    resolve_external_data_marker_path,
+    resolve_external_data_root,
     resolve_scope_path,
     safe_relative_path,
     safe_scope_data_path,
@@ -300,20 +302,6 @@ def normalize_source_root(value: Any, scope_id: str) -> Path:
     return source_root
 
 
-def normalize_external_data_root(value: Any) -> Path:
-    root = safe_scope_data_path(value, field="external_data_root", allow_external=True)
-    if not root.is_absolute():
-        raise ValueError("external_data_root must be an absolute path")
-    resolved = root.resolve()
-    if not resolved.exists():
-        raise ValueError(f"external_data_root does not exist: {resolved}")
-    if not resolved.is_dir():
-        raise ValueError(f"external_data_root must be a directory: {resolved}")
-    if not os.access(resolved, os.R_OK | os.W_OK):
-        raise ValueError(f"external_data_root must be readable and writable: {resolved}")
-    return resolved
-
-
 def normalize_route_path(value: Any) -> str:
     route = str(value or "").strip()
     if not route:
@@ -349,6 +337,18 @@ def require_confirmed(body: dict[str, Any]) -> None:
 
 def planned_external_source_root(scope_id: str, external_data_root: Path) -> Path:
     return external_data_root / "source" / scope_id
+
+
+def planned_external_source_root_marker(scope_id: str) -> Path:
+    return Path(EXTERNAL_DATA_ROOT_MARKER) / "source" / scope_id
+
+
+def planned_external_docs_output_marker(scope_id: str) -> Path:
+    return Path(EXTERNAL_DATA_ROOT_MARKER) / "generated" / "docs" / scope_id
+
+
+def planned_external_search_output_marker(scope_id: str) -> Path:
+    return Path(EXTERNAL_DATA_ROOT_MARKER) / "generated" / "search" / scope_id / "index.json"
 
 
 def planned_docs_output(scope_id: str, publishing_mode: str, external_data_root: Path | None = None) -> Path:
@@ -470,15 +470,19 @@ def planned_scope_config_record(
         "scope_id": scope_id,
         "scope_type": planned_scope_type(publishing_mode),
         "meta": planned_scope_meta(publishing_mode),
-        "source": source_root.as_posix(),
+        "source": (
+            planned_external_source_root_marker(scope_id)
+            if publishing_mode == LOCAL_EXTERNAL_MODE
+            else source_root
+        ).as_posix(),
         "media_path_prefix": f"docs/{scope_id}",
         "output": (
-            planned_docs_output(scope_id, publishing_mode, external_data_root)
+            planned_external_docs_output_marker(scope_id)
             if publishing_mode == LOCAL_EXTERNAL_MODE
             else planned_docs_output(scope_id, publishing_mode)
         ).as_posix(),
         "search_output": (
-            planned_search_output(scope_id, publishing_mode, external_data_root)
+            planned_external_search_output_marker(scope_id)
             if publishing_mode == LOCAL_EXTERNAL_MODE
             else planned_search_output(scope_id, publishing_mode)
         ).as_posix(),
@@ -496,6 +500,8 @@ def planned_scope_config_record(
             "repo_assets_public_path_prefix": f"/assets/docs/{scope_id}",
         },
     }
+    if publishing_mode == LOCAL_EXTERNAL_MODE:
+        record["external_data_root"] = EXTERNAL_DATA_ROOT_MARKER
     if publishing_mode != LOCAL_EXTERNAL_MODE:
         record["publish_output"] = planned_publish_output(scope_id, publishing_mode).as_posix()
         record["publish_search_output"] = planned_publish_search_output(scope_id, publishing_mode).as_posix()
@@ -524,10 +530,7 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
         access = "local_manage_only"
         public_static_assets = False
     else:
-        summary = (
-            "External local scope: source Markdown plus generated docs and search payloads live under "
-            "the configured external data root. Scope config and manifest records remain in the repo."
-        )
+        summary = ""
         access = "local_manage_only"
         public_static_assets = False
     return {
@@ -535,7 +538,6 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
         "public_static_assets": public_static_assets,
         "access": access,
         "source_root": str(config.get("source") or ""),
-        "external_data_root": str(preview.get("external_data_root") or ""),
         "docs_output": docs_output,
         "search_output": search_output,
         "publish_output": publish_output,
@@ -751,6 +753,11 @@ def manage_default_route_ids_for_scope(repo_root: Path, scope_id: str) -> list[s
 
 def manifest_file_records_for_created_scope(repo_root: Path, preview: dict[str, Any]) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
+    external_data_root = (
+        resolve_external_data_marker_path(preview.get("external_data_root"), field="external_data_root")
+        if preview.get("external_data_root")
+        else None
+    )
     for item in [*preview.get("created_files", []), *preview.get("publish_files", []), *preview.get("changed_files", [])]:
         if not isinstance(item, dict):
             continue
@@ -760,7 +767,12 @@ def manifest_file_records_for_created_scope(repo_root: Path, preview: dict[str, 
         path_text = str(item.get("path") or "").strip()
         if not kind or not path_text:
             continue
-        path = resolve_manifest_path(repo_root, path_text, field="created scope file path", external_data_root=Path(str(preview.get("external_data_root") or "")) if preview.get("external_data_root") else None)
+        path = resolve_manifest_path(
+            repo_root,
+            path_text,
+            field="created scope file path",
+            external_data_root=external_data_root,
+        )
         records.append(path_record(repo_root, kind, path, action="track"))
     return records
 
@@ -810,7 +822,7 @@ def created_scope_manifest_record(repo_root: Path, preview: dict[str, Any]) -> d
             "viewer_base_url": preview["planned_scope_config"]["viewer_base_url"],
             "default_doc_id": preview["planned_scope_config"]["default_doc_id"],
             "publishing_mode": publishing_mode,
-            "external_data_root": str(preview.get("external_data_root") or ""),
+            "external_data_root": EXTERNAL_DATA_ROOT_MARKER if publishing_mode == LOCAL_EXTERNAL_MODE else "",
             "build_inline_search": preview["build_inline_search"],
             "write_generated_outputs": preview["write_generated_outputs"],
         },
@@ -893,7 +905,14 @@ def apply_create_scope(
     preview = plan_create_scope_preview(repo_root, body)
     manifest = load_manifest(repo_root)
     scope_id = str(preview["scope_id"])
-    source_root = resolve_scope_path(repo_root, Path(str(preview["planned_scope_config"]["source"])))
+    source_root = resolve_scope_path(
+        repo_root,
+        safe_scope_data_path(
+            preview["planned_scope_config"]["source"],
+            field="planned_scope_config.source",
+            allow_external=preview["publishing_mode"] == LOCAL_EXTERNAL_MODE,
+        ),
+    )
     default_doc_path = source_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
     rebuild = None
 
@@ -970,7 +989,11 @@ def manifest_delete_path_records(repo_root: Path, record: dict[str, Any]) -> tup
     missing_files = []
     metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
     external_root_text = str(metadata.get("external_data_root") or "").strip()
-    external_data_root = Path(external_root_text).resolve() if external_root_text else None
+    external_data_root = (
+        resolve_external_data_marker_path(external_root_text, field="external_data_root")
+        if external_root_text
+        else None
+    )
     for file_record in record.get("files", []):
         if not isinstance(file_record, dict):
             continue
@@ -1089,7 +1112,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     title = normalize_title(body.get("title"))
     publishing_mode = normalize_publishing_mode(body.get("publishing_mode"))
     default_doc_id = normalize_doc_id(body.get("default_doc_id"))
-    external_data_root = normalize_external_data_root(body.get("external_data_root")) if publishing_mode == LOCAL_EXTERNAL_MODE else None
+    external_data_root = resolve_external_data_root() if publishing_mode == LOCAL_EXTERNAL_MODE else None
     source_root = (
         planned_external_source_root(scope_id, external_data_root)
         if external_data_root is not None
@@ -1116,9 +1139,10 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if scope_id in manifest_scopes_by_id(manifest):
         raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
 
+    created_source_root = resolve_scope_path(repo_root, source_root)
     created_files = [
-        path_record(repo_root, "source_root", repo_root / source_root, action="create"),
-        path_record(repo_root, "default_source_doc", repo_root / source_root / f"{default_doc_id}.md", action="create"),
+        path_record(repo_root, "source_root", created_source_root, action="create"),
+        path_record(repo_root, "default_source_doc", created_source_root / f"{default_doc_id}.md", action="create"),
     ]
     changed_files = [
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
@@ -1201,7 +1225,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "scope_id": scope_id,
         "title": title,
         "publishing_mode": publishing_mode,
-        "external_data_root": external_data_root.as_posix() if external_data_root else "",
+        "external_data_root": EXTERNAL_DATA_ROOT_MARKER if external_data_root else "",
         "build_inline_search": build_inline_search,
         "write_generated_outputs": write_generated_outputs,
         "planned_scope_config": planned_scope_config,
@@ -1209,7 +1233,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             {
                 "publishing_mode": publishing_mode,
                 "planned_scope_config": planned_scope_config,
-                "external_data_root": external_data_root.as_posix() if external_data_root else "",
+                "external_data_root": EXTERNAL_DATA_ROOT_MARKER if external_data_root else "",
             }
         ),
         "created_files": created_files,

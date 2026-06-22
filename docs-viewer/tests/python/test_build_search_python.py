@@ -20,6 +20,8 @@ if str(BUILD_DIR) not in sys.path:
 
 import build_search  # noqa: E402
 
+EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+
 
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -63,6 +65,7 @@ def write_scope_config(root: Path) -> None:
 
 
 def write_external_scope_config(root: Path, external_root: Path) -> None:
+    del external_root
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
@@ -71,10 +74,11 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
                 {
                     "scope_id": "private",
                     "scope_type": "local_external",
-                    "source": (external_root / "source/private").as_posix(),
+                    "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
+                    "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/private",
                     "media_path_prefix": "docs/private",
-                    "output": (external_root / "generated/docs/private").as_posix(),
-                    "search_output": (external_root / "generated/search/private/index.json").as_posix(),
+                    "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/private",
+                    "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/private/index.json",
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "private",
@@ -271,7 +275,11 @@ def test_python_docs_search_builder_rejects_catalogue_targeted_records_flag() ->
 def test_python_docs_search_builder_writes_external_local_scope_index() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
-        external_root = (root.parent / f"{root.name}-external").resolve()
+        projects_root = (root.parent / f"{root.name}-external").resolve()
+        external_root = projects_root / "docs-viewer"
+        external_root.mkdir(parents=True)
+        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
         write_external_scope_config(root, external_root)
         write_text(
             external_root / "source/private/private.md",
@@ -285,8 +293,14 @@ last_updated: 2026-06-01
 External search body.
 """,
         )
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
-        payload = read_json(external_root / "generated/search/private/index.json")
+        try:
+            exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
+            payload = read_json(external_root / "generated/search/private/index.json")
+        finally:
+            if old_projects_base is None:
+                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
 
     assert exit_code == 0
     assert stderr == ""

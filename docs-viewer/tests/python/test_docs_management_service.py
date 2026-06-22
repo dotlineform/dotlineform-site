@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -43,6 +44,8 @@ docs_source_model = sys.modules["docs_source_model"]
 from docs_data_sharing import package as docs_data_sharing_package  # noqa: E402
 from adapters.documents import prepare as documents_prepare  # noqa: E402
 import analytics_data_sharing_api  # noqa: E402
+
+EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "", scope: str = "studio") -> None:
@@ -635,6 +638,39 @@ def test_scope_create_apply_requires_confirmation() -> None:
             raise AssertionError("scope create apply should require explicit confirmation")
 
 
+def test_scope_create_preview_requires_existing_external_docs_viewer_root() -> None:
+    old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
+            projects_root.mkdir()
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            write_docs_scope_config(repo_root)
+            try:
+                docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+                    repo_root,
+                    {
+                        "scope_id": "research",
+                        "title": "Research",
+                        "default_doc_id": "research",
+                        "publishing_mode": "local_external",
+                    },
+                )
+            except ValueError as exc:
+                error = str(exc)
+            else:
+                raise AssertionError("external local preview should require an existing docs-viewer external root")
+    finally:
+        if old_projects_base is None:
+            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
+
+    assert "external_data_root does not exist" in error
+    assert not (projects_root / "docs-viewer").exists()
+
+
 def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     calls: list[tuple[Path, str, dict[str, object]]] = []
     original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
@@ -648,18 +684,20 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
         }
 
     docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild
+    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
-            external_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
-            external_root.mkdir()
+            projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
+            external_root = projects_root / "docs-viewer"
+            external_root.mkdir(parents=True)
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             payload = docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "external_data_root": external_root.as_posix(),
                     "default_doc_id": "research",
                     "publishing_mode": "local_external",
                     "build_inline_search": True,
@@ -676,6 +714,10 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             route_exists = (repo_root / "research/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
+        if original_projects_base is None:
+            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
@@ -690,9 +732,10 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert source_payload["scopes"][1]["scope_id"] == "research"
     assert source_payload["scopes"][1]["scope_type"] == "local_external"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
-    assert source_payload["scopes"][1]["source"] == (external_root / "source/research").as_posix()
-    assert source_payload["scopes"][1]["output"] == (external_root / "generated/docs/research").as_posix()
-    assert source_payload["scopes"][1]["search_output"] == (external_root / "generated/search/research/index.json").as_posix()
+    assert source_payload["scopes"][1]["external_data_root"] == EXTERNAL_DATA_ROOT_MARKER
+    assert source_payload["scopes"][1]["source"] == f"{EXTERNAL_DATA_ROOT_MARKER}/source/research"
+    assert source_payload["scopes"][1]["output"] == f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/research"
+    assert source_payload["scopes"][1]["search_output"] == f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/research/index.json"
     assert "publish_output" not in source_payload["scopes"][1]
     assert "publish_search_output" not in source_payload["scopes"][1]
     assert source_payload["scopes"][1]["include_scope_param"] is True
@@ -701,7 +744,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert records["research"]["created_by_tool"] is True
     assert records["research"]["scope_type"] == "local"
     assert records["research"]["repo_status_at_creation"] == "external"
-    assert records["research"]["metadata"]["external_data_root"] == external_root.as_posix()
+    assert records["research"]["metadata"]["external_data_root"] == EXTERNAL_DATA_ROOT_MARKER
     recorded_paths = {file["path"] for file in records["research"]["files"]}
     assert (external_root / "generated/docs/research/index-tree.json").as_posix() in recorded_paths
     assert (external_root / "generated/docs/research/recently-added.json").as_posix() in recorded_paths
@@ -1382,6 +1425,7 @@ def main() -> None:
         test_scope_create_preview_blocks_local_tracked_assets_regression,
         test_scope_create_apply_blocks_local_tracked_assets_regression,
         test_scope_create_apply_requires_confirmation,
+        test_scope_create_preview_requires_existing_external_docs_viewer_root,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
         test_scope_create_apply_skips_public_route_for_local_scopes,
         test_scope_delete_preview_blocks_system_scopes,

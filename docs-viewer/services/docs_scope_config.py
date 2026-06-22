@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,8 @@ PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 WORKING_DOCS_OUTPUT_ROOT = Path("docs-viewer/generated/docs")
 WORKING_SEARCH_OUTPUT_ROOT = Path("docs-viewer/generated/search")
 LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
+DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
+EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
 
 
 @dataclass(frozen=True)
@@ -73,6 +76,8 @@ def safe_scope_data_path(value: Any, *, field: str, allow_external: bool = False
     text = str(value or "").strip()
     if not text:
         raise ValueError(f"docs scope config field {field} is required")
+    if allow_external and (text == EXTERNAL_DATA_ROOT_MARKER or text.startswith(f"{EXTERNAL_DATA_ROOT_MARKER}/")):
+        return resolve_external_data_marker_path(text, field=field)
     path = Path(text)
     if path.is_absolute():
         if not allow_external:
@@ -85,6 +90,37 @@ def safe_scope_data_path(value: Any, *, field: str, allow_external: bool = False
     if ".." in path.parts:
         raise ValueError(f"docs scope config field {field} must be a safe relative path")
     return path
+
+
+def resolve_external_data_root() -> Path:
+    base_text = str(os.environ.get(DOTLINEFORM_PROJECTS_BASE_DIR_ENV) or "").strip()
+    if not base_text:
+        raise ValueError(f"{DOTLINEFORM_PROJECTS_BASE_DIR_ENV} is required for external local Docs Viewer scopes")
+    base_path = Path(base_text)
+    if not base_path.is_absolute() or ".." in base_path.parts:
+        raise ValueError(f"{DOTLINEFORM_PROJECTS_BASE_DIR_ENV} must be an absolute path without parent segments")
+    root = (base_path / "docs-viewer").resolve()
+    if not root.exists():
+        raise ValueError(f"external_data_root does not exist: {root}")
+    if not root.is_dir():
+        raise ValueError(f"external_data_root must be a directory: {root}")
+    if not os.access(root, os.R_OK | os.W_OK):
+        raise ValueError(f"external_data_root must be readable and writable: {root}")
+    return root
+
+
+def resolve_external_data_marker_path(value: Any, *, field: str) -> Path:
+    text = str(value or "").strip()
+    if text == EXTERNAL_DATA_ROOT_MARKER:
+        return resolve_external_data_root()
+    prefix = f"{EXTERNAL_DATA_ROOT_MARKER}/"
+    if not text.startswith(prefix):
+        raise ValueError(f"docs scope config field {field} must be under {EXTERNAL_DATA_ROOT_MARKER}")
+    relative_text = text[len(prefix):]
+    relative_path = Path(relative_text)
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        raise ValueError(f"docs scope config field {field} must be under {EXTERNAL_DATA_ROOT_MARKER}")
+    return resolve_external_data_root() / relative_path
 
 
 def resolve_scope_path(repo_root: Path, path: Path) -> Path:
@@ -286,6 +322,12 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             raise ValueError(f"docs scope config scope_id {scope_id!r} is duplicated")
         scope_type = str(item.get("scope_type") or "").strip().lower()
         allow_external_data = scope_type == LOCAL_EXTERNAL_SCOPE_TYPE
+        if allow_external_data:
+            external_data_root = str(item.get("external_data_root") or "").strip()
+            if external_data_root != EXTERNAL_DATA_ROOT_MARKER:
+                raise ValueError(
+                    f"docs scope config scopes[{index}].external_data_root must be {EXTERNAL_DATA_ROOT_MARKER}"
+                )
         media_path_prefix = safe_relative_path(
             item.get("media_path_prefix") or f"docs/{scope_id}",
             field=f"scopes[{index}].media_path_prefix",
@@ -312,10 +354,19 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             field=f"scopes[{index}].source",
             allow_external=allow_external_data,
         )
-        if allow_external_data and not (source.is_absolute() and output.is_absolute() and search_output.is_absolute()):
-            raise ValueError(
-                f"docs scope config scopes[{index}] external local scopes must use absolute source, output, and search_output paths"
-            )
+        if allow_external_data:
+            external_root = resolve_external_data_root()
+            if not (
+                source.is_absolute()
+                and output.is_absolute()
+                and search_output.is_absolute()
+                and path_is_relative_to(source, external_root)
+                and path_is_relative_to(output, external_root)
+                and path_is_relative_to(search_output, external_root)
+            ):
+                raise ValueError(
+                    f"docs scope config scopes[{index}] external local scopes must use paths under {EXTERNAL_DATA_ROOT_MARKER}"
+                )
         public_readonly = is_public_readonly_scope(
             viewer_base_url=viewer_base_url,
             include_scope_param=include_scope_param,

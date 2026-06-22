@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -16,6 +17,8 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 
 import docs_generated_reads as generated_reads  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
+
+EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -40,13 +43,15 @@ def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, ob
 
 
 def external_scope_config(scope_id: str, external_root: Path) -> dict[str, object]:
+    del external_root
     return {
         "scope_id": scope_id,
         "scope_type": "local_external",
-        "source": (external_root / "source" / scope_id).as_posix(),
+        "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
+        "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/{scope_id}",
         "media_path_prefix": f"docs/{scope_id}",
-        "output": (external_root / "generated/docs" / scope_id).as_posix(),
-        "search_output": (external_root / "generated/search" / scope_id / "index.json").as_posix(),
+        "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/{scope_id}",
+        "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/{scope_id}/index.json",
         "viewer_base_url": "/docs/",
         "include_scope_param": True,
         "default_doc_id": scope_id,
@@ -365,7 +370,11 @@ def test_generated_search_path_uses_scope_config_search_output() -> None:
 def test_generated_reads_support_external_local_scope_payloads() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        external_root = (repo_root.parent / f"{repo_root.name}-external").resolve()
+        projects_root = (repo_root.parent / f"{repo_root.name}-external").resolve()
+        external_root = projects_root / "docs-viewer"
+        external_root.mkdir(parents=True)
+        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
         write_scope_config(repo_root, [external_scope_config("private", external_root)])
         docs_root = external_root / "generated/docs/private"
         write_json(
@@ -383,8 +392,14 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
         write_json(docs_root / "by-id/private.json", {"doc_id": "private"})
         write_json(external_root / "generated/search/private/index.json", {"entries": [{"id": "private"}]})
 
-        payload = generated_reads.read_generated_doc_payload(repo_root, "private", "private")
-        search = generated_reads.read_generated_search_index(repo_root, "private")
+        try:
+            payload = generated_reads.read_generated_doc_payload(repo_root, "private", "private")
+            search = generated_reads.read_generated_search_index(repo_root, "private")
+        finally:
+            if old_projects_base is None:
+                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
 
     assert payload == {"doc_id": "private"}
     assert search["entries"] == [{"id": "private"}]

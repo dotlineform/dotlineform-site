@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -109,8 +110,11 @@ def main(argv: list[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory(prefix="dlf-docs-scope-ui-") as tmp_dir:
         fixture_root = Path(tmp_dir) / "site"
-        external_root = Path(tmp_dir) / "external-docs-data"
-        external_root.mkdir()
+        projects_root = Path(tmp_dir) / "external-docs-data"
+        external_root = projects_root / "docs-viewer"
+        external_root.mkdir(parents=True)
+        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
         create_fixture_repo(fixture_root)
         server, base_url = start_server(fixture_root)
         try:
@@ -140,7 +144,6 @@ def main(argv: list[str] | None = None) -> int:
                 page.locator('[data-role="scope-id"]').fill("uiscope")
                 page.locator('[data-role="scope-title"]').fill("UI Scope")
                 page.locator('[data-role="scope-publishing-mode"]').select_option("local_external")
-                page.locator('[data-role="scope-external-data-root"]').fill(external_root.as_posix())
                 page.locator('[data-role="scope-write-generated"]').check()
                 page.locator('[data-role="scope-build-search"]').check()
                 click_modal_primary(page, args.timeout_ms)
@@ -174,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
 
             docs_config = (fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
             manifest_path = fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scope_manifest.json"
-            if (fixture_root / "docs-viewer" / "source" / "uiscope").exists():
+            if (external_root / "source" / "uiscope").exists():
                 raise AssertionError("UI scope delete did not remove fixture source root")
             if "uiscope" in docs_config:
                 raise AssertionError("UI scope delete did not remove fixture scope config")
@@ -196,6 +199,10 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             server.shutdown()
             server.server_close()
+            if old_projects_base is None:
+                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
 
 
 if __name__ == "__main__":

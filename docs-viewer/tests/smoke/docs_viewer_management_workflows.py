@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import replace
 import json
+import os
 import shutil
 import sys
 import tempfile
@@ -60,6 +61,9 @@ def copy_scripts_fixture(target_root: Path) -> None:
         )
     else:
         scripts_target.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(REPO_ROOT / "site" / "docs-viewer" / "runtime", target_root / "site" / "docs-viewer" / "runtime")
+    shutil.copytree(REPO_ROOT / "site" / "docs-viewer" / "static", target_root / "site" / "docs-viewer" / "static")
+    shutil.copytree(REPO_ROOT / "site" / "docs-viewer" / "config", target_root / "site" / "docs-viewer" / "config")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "runtime", target_root / "docs-viewer" / "runtime")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "static", target_root / "docs-viewer" / "static")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "shell", target_root / "docs-viewer" / "shell")
@@ -107,8 +111,10 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "meta": "public scope",
                     "source": "docs-viewer/source/library",
                     "media_path_prefix": "docs/library",
-                    "output": "site/assets/data/docs/scopes/library",
-                    "search_output": "site/assets/data/search/library/index.json",
+                    "output": "docs-viewer/generated/docs/library",
+                    "search_output": "docs-viewer/generated/search/library/index.json",
+                    "publish_output": "site/assets/data/docs/scopes/library",
+                    "publish_search_output": "site/assets/data/search/library/index.json",
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
@@ -129,8 +135,10 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "meta": "public scope",
                     "source": "docs-viewer/source/analysis",
                     "media_path_prefix": "docs/analysis",
-                    "output": "site/assets/data/docs/scopes/analysis",
-                    "search_output": "site/assets/data/search/analysis/index.json",
+                    "output": "docs-viewer/generated/docs/analysis",
+                    "search_output": "docs-viewer/generated/search/analysis/index.json",
+                    "publish_output": "site/assets/data/docs/scopes/analysis",
+                    "publish_search_output": "site/assets/data/search/analysis/index.json",
                     "viewer_base_url": "/analysis/",
                     "include_scope_param": False,
                     "default_doc_id": "analysis",
@@ -223,6 +231,20 @@ def refresh_browser_config_from_scope_config(target_root: Path) -> None:
             }
     else:
         docs_viewer_settings = None
+    def scope_generated_urls(scope: dict[str, Any]) -> dict[str, str]:
+        scope_id = str(scope.get("scope_id") or "")
+        if str(scope.get("scope_type") or "") == "local_external":
+            return {
+                "index_tree_url": f"/docs/generated/index-tree?scope={scope_id}",
+                "recently_added_url": f"/docs/generated/recently-added?scope={scope_id}",
+                "search_index_url": f"/docs/generated/search?scope={scope_id}",
+            }
+        return {
+            "index_tree_url": f"/{str(scope.get('output') or '').strip('/')}/index-tree.json",
+            "recently_added_url": f"/{str(scope.get('output') or '').strip('/')}/recently-added.json",
+            "search_index_url": f"/{str(scope.get('search_output') or '').strip('/')}",
+        }
+
     payload: dict[str, Any] = {
         "schema_version": "docs_viewer_config_v1",
         "default_scope_id": str(scopes[0].get("scope_id") or "") if scopes else "",
@@ -235,13 +257,11 @@ def refresh_browser_config_from_scope_config(target_root: Path) -> None:
                 "include_scope_param": scope.get("include_scope_param") is True,
                 "default_doc_id": str(scope.get("default_doc_id") or ""),
                 "media_path_prefix": str(scope.get("media_path_prefix") or ""),
-                "index_tree_url": f"/{str(scope.get('output') or '').strip('/')}/index-tree.json",
-                "recently_added_url": f"/{str(scope.get('output') or '').strip('/')}/recently-added.json",
-                "search_index_url": f"/{str(scope.get('search_output') or '').strip('/')}",
+                **scope_generated_urls(scope),
                 "search": {
                     "domain": "docs_viewer",
                     "schema": f"search_index_{scope.get('scope_id')}_v1",
-                    "index_url": f"/{str(scope.get('search_output') or '').strip('/')}",
+                    "index_url": scope_generated_urls(scope)["search_index_url"],
                     "targeted_policy": "record_update",
                     "targeted_operations": ["create", "update", "delete"],
                 },
@@ -306,7 +326,11 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
     output_root = repo_root / config.output
     docs_payload = []
     for doc in docs:
-        content_url = f"/{(config.output / 'by-id' / f'{doc.doc_id}.json').as_posix()}"
+        content_url = (
+            f"/docs/generated/payload?scope={scope}&doc_id={doc.doc_id}"
+            if config.scope_type == "local_external"
+            else f"/{(config.output / 'by-id' / f'{doc.doc_id}.json').as_posix()}"
+        )
         docs_payload.append(
             {
                 "doc_id": doc.doc_id,
@@ -327,6 +351,28 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                 "content_html": f"<h1 id=\"{doc.doc_id}\">{doc.title}</h1>",
             },
         )
+    tree_nodes = {
+        row["doc_id"]: {
+            "doc_id": row["doc_id"],
+            "title": row["title"],
+            "content_url": row["content_url"],
+            **({"ui_status": row["ui_status"]} if row.get("ui_status") else {}),
+            **({"viewable": False} if row.get("viewable") is False else {}),
+            "children": [],
+        }
+        for row in docs_payload
+    }
+    tree_docs = []
+    for row in docs_payload:
+        node = tree_nodes[row["doc_id"]]
+        parent_id = str(row.get("parent_id") or "")
+        if parent_id and parent_id in tree_nodes:
+            tree_nodes[parent_id]["children"].append(node)
+        else:
+            tree_docs.append(node)
+    for node in tree_nodes.values():
+        if not node["children"]:
+            node.pop("children", None)
     write_json(
         output_root / "index.json",
         {
@@ -335,6 +381,30 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
                 "default_doc_id": config.default_doc_id,
             },
             "docs": docs_payload,
+        },
+    )
+    write_json(
+        output_root / "index-tree.json",
+        {
+            "schema": "docs_index_tree_v1",
+            "viewer_options": {
+                "show_updated_date": config.show_updated_date,
+                "default_doc_id": config.default_doc_id,
+            },
+            "docs": tree_docs,
+        },
+    )
+    write_json(
+        output_root / "recently-added.json",
+        {
+            "schema": "docs_recently_added_v1",
+            "docs": [
+                {
+                    **row,
+                    "added_date": "2026-05-22",
+                }
+                for row in docs_payload
+            ],
         },
     )
     write_json(output_root / "references" / "index.json", {"targets": []})
@@ -449,8 +519,11 @@ def main(argv: list[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory(prefix="dlf-docs-workflow-") as tmp_dir:
         fixture_root = Path(tmp_dir) / "site"
-        external_root = Path(tmp_dir) / "external-docs-data"
-        external_root.mkdir()
+        projects_root = Path(tmp_dir) / "external-docs-data"
+        external_root = projects_root / "docs-viewer"
+        external_root.mkdir(parents=True)
+        old_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+        os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
         create_fixture_repo(fixture_root)
         server, base_url = start_server(fixture_root)
         try:
@@ -552,7 +625,6 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
-                    "external_data_root": external_root.as_posix(),
                     "default_doc_id": "apismoke",
                     "publishing_mode": "local_external",
                     "write_generated_outputs": True,
@@ -570,7 +642,6 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
-                    "external_data_root": external_root.as_posix(),
                     "default_doc_id": "apismoke",
                     "publishing_mode": "local_external",
                     "write_generated_outputs": True,
@@ -612,6 +683,10 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             server.shutdown()
             server.server_close()
+            if old_projects_base is None:
+                os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+            else:
+                os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
 
 
 if __name__ == "__main__":

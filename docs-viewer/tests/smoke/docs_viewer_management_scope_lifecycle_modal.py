@@ -125,8 +125,8 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
         raise AssertionError(f"scope publishing mode did not default to the first local mode: {selected_mode!r}")
     if not page.locator('[data-role="scope-route-field"]').evaluate("node => node.hidden"):
         raise AssertionError("public route path field should be hidden for local scope modes")
-    if page.locator('[data-role="scope-external-root-field"]').evaluate("node => node.hidden"):
-        raise AssertionError("external root field should be visible for external local mode")
+    if page.locator('[data-role="scope-external-root-field"]').count() != 0:
+        raise AssertionError("external root field should not be rendered for external local mode")
     page.locator('[data-role="scope-publishing-mode"]').select_option("public_readonly")
     if page.locator('[data-role="scope-route-field"]').evaluate("node => node.hidden"):
         raise AssertionError("public route path field should be visible for public_readonly mode")
@@ -134,7 +134,6 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
     if auto_route != "/private-notes/":
         raise AssertionError(f"scope route path did not auto-fill from scope id: {auto_route!r}")
     page.locator('[data-role="scope-publishing-mode"]').select_option("local_external")
-    page.locator('[data-role="scope-external-data-root"]').fill("/tmp/docs-viewer-external")
     page.locator('[data-role="scope-write-generated"]').uncheck()
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function("() => window.__docsViewerScopeCreateRequests.length === 1")
@@ -143,7 +142,6 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
         "scope_id": "private-notes",
         "title": "Private Notes",
         "source_root": "",
-        "external_data_root": "/tmp/docs-viewer-external",
         "default_doc_id": "private-notes",
         "publishing_mode": "local_external",
         "public_route_path": "",
