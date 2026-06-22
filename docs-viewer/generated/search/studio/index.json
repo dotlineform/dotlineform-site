@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fb63424bdcc2c00a099ae34881742029",
-    "generated_at_utc": "2026-06-22T18:45:55Z",
+    "version": "blake2b-e6be341d0d9a0b25a6acb42aecaedd18",
+    "generated_at_utc": "2026-06-22T18:57:50Z",
     "count": 220
   },
   "entries": [
@@ -3134,10 +3134,10 @@
       "kind": "doc",
       "title": "Semantic References Implementation",
       "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-22",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-02 • Docs Viewer",
+      "display_meta": "2026-06-22 • Docs Viewer",
       "search_terms": [
         "docs-viewer-semantic-references-implementation",
         "docs",
@@ -3147,12 +3147,12 @@
         "implementation",
         "semantic references implementation",
         "docs viewer",
-        "2026-06-02",
+        "2026-06-22",
         "2026",
         "06",
-        "02"
+        "22"
       ],
-      "search_text": "docs-viewer-semantic-references-implementation docs viewer semantic references implementation semantic references implementation docs viewer 2026-06-02 2026 06 02"
+      "search_text": "docs-viewer-semantic-references-implementation docs viewer semantic references implementation semantic references implementation docs viewer 2026-06-22 2026 06 22"
     },
     {
       "id": "docs-viewer-source-config-report",

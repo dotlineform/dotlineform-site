@@ -18,6 +18,11 @@ Add semantic-reference token creation tools as an optional child feature of the 
 The goal is to let an author select text in the Markdown source buffer, choose a supported semantic target, and insert a valid semantic-reference token into the local editor buffer.
 The edited source is still written and rebuilt only through the Markdown editor's `Rebuild doc` action.
 
+Current model:
+
+- [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation)
+- [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references) report.
+
 ## Reason
 
 Docs semantic references are currently authored by typing tokens such as:
@@ -26,13 +31,13 @@ Docs semantic references are currently authored by typing tokens such as:
 [[ref:work:00638|3 symbols]]
 ```
 
-That syntax is compact and useful, but it is error-prone when authors have to type target kinds, ids, labels, and punctuation manually.
+That syntax is compact and useful, but it is error-prone when authors have to type target kinds, ids, visible text, and punctuation manually.
 
 Docs Viewer can provide a constrained local helper:
 
-- use the current text selection as the visible label
+- use the current text selection as the token's visible text
 - choose a supported semantic-reference type
-- choose or enter a target id through registry-driven controls
+- choose a target from registry-driven browser-side lookup controls
 - insert the valid token around the selected text
 - leave the change in the local editor buffer until the user clicks `Rebuild doc`
 
@@ -42,29 +47,121 @@ It is specific to this repo's semantic links (e.g. works, tags) and should be om
 ## Goals
 
 - add semantic-reference insertion controls to the Markdown source editor
-- create a lightweight semantic-reference registry as the source of truth for supported types, actions, ownership, target data
+- create a lightweight semantic-reference registry as the source of truth for supported types and target data
 - allow selected text to be wrapped in a supported semantic-reference token
 - keep token insertion local in the editor buffer until `Rebuild doc`
 - provide target picker/search controls where registry support data exists
-- allow a controlled manual target-id entry path where appropriate
-- rely on the existing builder for token parsing, rendered output, generated relationship artifacts, and warning behavior
+- support only the current semantic-reference token kinds in v1: `work`, `series`, and `moment`
+- use simple browser-side search on selected words for v1 target picking
+- rely on the existing builder for token parsing, rendered output, and generated relationship artifacts
 - keep semantic insertion logic in focused child modules under the current source-editor owner
 - avoid adding repo-specific semantic editing to portable Docs Viewer core
+
+## Anticipated Blast Radius
+
+This section is intended to keep implementation scope explicit before code work starts.
+
+### Initial V1 Implementation
+
+Runtime JavaScript and config should live in these areas:
+
+- `docs-viewer/runtime/js/management/source-editor/` for source-editor-owned semantic modules, including token construction, selected-text adapter usage, registry reads, target lookup reads, and picker support helpers
+- `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js` for registering the manage-only `semantic-token-picker` hosted view
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`, `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js`, and `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` only for narrow integration if the existing context/info panel host cannot already select the correct default view or pass the required hosted-view context
+- `docs-viewer/config/semantic-references/registry.json` for the checked-in semantic-reference registry
+- `docs-viewer/generated/semantic-references/target-lookup.json` for the generated browser-side lookup used by v1 selected-text search
+
+Existing Docs Viewer modules expected to need integration code:
+
+- `docs-viewer/runtime/js/management/source-editor/source-editor.js` should expose a narrow semantic-token adapter for reading selected text, replacing the selected range, returning focus, and reporting insertion status
+- the hosted-view registry should expose `semantic-token-picker` as a manage-only `info` panel view while the Markdown source editor is active
+- the context/info panel default-view selection should surface `metadata-info` for rendered documents and `semantic-token-picker` for the source editor
+- `docs-viewer/build/build_docs.py` may need to read the registry for supported token kinds and route construction so builder support does not drift from editor support, while still avoiding target-existence validation
+- the target lookup generator should read existing source/generated catalogue data for current v1 kinds and emit compact title-weighted rows for `work`, `series`, and `moment`
+
+Service changes expected for v1:
+
+- no new management service endpoint
+- no new target lookup API
+- no write-service changes
+- no source read/write/rebuild endpoint changes
+- only static browser-readable config/generated-data exposure should be needed, using existing local Docs Viewer/static route patterns where possible
+
+Implementation decisions to settle before v1 starts:
+
+- whether `build_docs.py` must switch to the registry in the same slice, or whether registry-backed rendering is a separate preparatory slice
+- where the target lookup generator lives and which existing build command invokes it when catalogue/source data changes
+- whether `docs-viewer/config/semantic-references/registry.json` and `docs-viewer/generated/semantic-references/target-lookup.json` are already browser-addressable through existing local route mapping, or whether a static route mapping change is needed
+- how the source editor exposes its semantic-token adapter to the context/info panel hosted view without broad global runtime state
+- whether the picker updates live on textarea selection changes or only when the picker opens and when selection changes inside the source editor
+- the exact v1 display and ranking fields for lookup rows, keeping search focused on selected title-like words rather than generic metadata
+- whether the context/info panel should auto-open when entering source editor or only switch its default view when the user opens it
+
+### Adding A New Token Kind Later
+
+Supporting a new token kind should have a smaller blast radius than v1.
+The expected change set should be:
+
+- add a new `kinds` record to `docs-viewer/config/semantic-references/registry.json`
+- add or reuse a named id normalizer in JavaScript and Python only if the new kind needs a new id shape
+- teach the target lookup generator how to emit compact browser-safe lookup rows for that kind, if the kind should participate in selected-text search
+- ensure `build_docs.py` can construct the rendered href from the registry route metadata
+- add focused tests for the new registry kind, normalizer if any, lookup rows if searchable, and rendered link output
+- update Semantic References documentation if the kind changes author-facing syntax or report interpretation
+
+Adding a new token kind should not require:
+
+- new source-editor panel code
+- new context/info panel host code
+- new source read/write/rebuild endpoints
+- new target lookup services
+- hard-coded supported-kind lists in route controllers or picker UI
+
+Open questions for future token kinds:
+
+- whether every new kind should be searchable in the picker, or whether some kinds should be supported only by later v2 direct-id flows
+- whether a new kind's source data is safe and compact enough for browser-side lookup
+- whether the semantic references report should audit the new kind differently from existing generated reference artifacts
 
 ## Product Model
 
 The semantic-reference editor is an optional tool inside the manage-mode Markdown source editor.
 The source editor is useful for viewing and small Markdown edits, but this request treats semantic-token authoring as the main product reason to extend it.
 
+The picker should not introduce another panel.
+In current panel language, it is a different hosted view inside the existing context/info panel shell, alongside the selected-document metadata view.
+The implementation may still use `infoPanel` names until a focused rename is worth the churn, but the product role is the broader context panel.
+
 It should expose:
 
-- semantic-reference type selection driven by the registry
-- target picker/search or manual target-id entry based on registry support data
-- selected-text label handling
+- semantic-reference target search driven by the current editor selection and the registry
+- selected-text handling for the token's visible text
 - token preview or clear insertion summary
-- validation messages for unsupported type/action, missing selected text, missing target id, or unavailable support data
+- validation messages for unsupported type, missing selected text, missing target id, or unavailable support data
 
 The commit point remains the Markdown editor's `Rebuild doc` action.
+
+## Picker Use Case
+
+The v1 UI should be centered on turning selected Markdown text into a semantic-reference token.
+
+Expected flow:
+
+1. The user selects text in the source editor, such as `3 symbols`.
+2. The semantic token picker view, hosted in the existing context/info panel, notices the selection and uses it as the search query.
+3. The picker searches browser-safe target data for every kind in the registry.
+4. Results are shown using the token kind and existing record metadata, similar to catalogue search results.
+5. The user chooses one result.
+6. The editor replaces the selected text with a token such as `[[ref:work:00638|3 symbols]]`.
+7. After `Rebuild doc`, the published document renders that token as a link such as `/works/?work=00638`.
+
+For `3 symbols`, the picker may show both a `series` result and a `work` result if both records match.
+For a broader selected query such as `symbols`, v1 should still use simple selected-word search across the current lookup records.
+
+The selected text remains the token's visible text.
+The selected target supplies only the token kind and id.
+V1 should require an explicit selected text range.
+Insertion-point detection, cursor expansion, direct id lookup, manual id entry, and additional token kinds are deferred to v2.
 
 ## Token Insertion Behavior
 
@@ -91,22 +188,21 @@ The inserted syntax should match the current builder grammar documented in [Sema
 
 Supported target kinds should come from a semantic-reference registry JSON file, not from a route-local hard-coded list.
 
-The insertion UI should leave room for future target kinds, such as `tag`, without changing the source-view model.
-
 The helper should avoid inserting tokens when:
 
 - no text is selected
 - the selected semantic-reference type is unsupported
 - no target id is selected or entered
 - required registry metadata is missing
-- the selected text spans an unsupported region if the source editor can detect that reliably
 
 Validation behaviour:
 
 - The backend does not need to validate every body token before writing.
-- Docs Viewer should validate allowed semantic types and actions through builder/registry behavior, not whether the submitted target id resolves to a real object.
-- Target picker assistance is not the same as target-existence validation.
-- The targeted rebuild should surface builder warnings or errors after the write/rebuild step.
+- The editor should offer targets from the browser-side lookup data, but that lookup is authoring assistance, not target-existence authority.
+- Target picker assistance should not require new server endpoints.
+- The builder should not validate semantic-reference support or link-target existence. If a typed sequence is not a recognized supported token, it should remain plain rendered text.
+- Link targets may be deleted or changed after a document build, so target existence is outside the builder's control.
+- The semantic references report can audit generated reference artifacts and surface possible issues separately from build success.
 
 ## Registry And Support Data
 
@@ -114,26 +210,260 @@ This request depends on a semantic-reference registry.
 
 The registry should define, for each semantic-reference type:
 
-- type id and label
-- object owner
+- type id
 - id normalization policy
 - route helper or route pattern
-- target data source for picker/search support
+
+The picker should use a generated semantic-target lookup JSON, not unrelated generic search indexes.
+The registry should point to that lookup once, and each target row in the lookup should carry its own `kind`.
 
 The semantic-reference editor should read registry metadata through a focused browser helper.
 
-- It should not duplicate supported type lists, route patterns, target-data paths, or ownership assumptions inline in route/controller code.
+- It should not duplicate supported type lists, route patterns, or target lookup paths inline in route/controller code.
 - Read-oriented support behavior should stay in browser modules wherever it can safely consume generated JSON or browser config.
 
 UI should include:
 
 - target lookup,
 - target picker option shaping,
-- modal/view copy,
-- view registration,
+- context-panel hosted-view copy,
+- context/info panel view registration,
 - supported token-kind metadata.
 
 The backend should not become a general read orchestrator for UI state when the same data can be supplied through generated artifacts or Docs Viewer config.
+
+## Proposed Registry File And Schema
+
+Proposed checked-in registry file:
+
+- `docs-viewer/config/semantic-references/registry.json`
+
+Browser URL in local/manage Docs Viewer:
+
+- `/docs-viewer/config/semantic-references/registry.json`
+
+Schema id:
+
+- `docs_semantic_reference_registry_v1`
+
+Use one small browser-readable registry that can be fetched directly by the source editor.
+Do not add a JSON Schema file in the first slice.
+The runtime helper can validate the few required fields it consumes.
+
+Top-level fields:
+
+- `schema_version`: registry schema id
+- `target_lookup_url`: generated semantic-target lookup JSON URL
+- `kinds`: ordered semantic-reference kind records
+
+Kind fields:
+
+- `kind`: token kind, such as `work`
+- `id`: id normalization and editor-matching metadata
+- `route`: browser route construction metadata
+- `source_editor`: source-editor availability and control hints
+
+Example v1 payload:
+
+```json
+{
+  "schema_version": "docs_semantic_reference_registry_v1",
+  "target_lookup_url": "/docs-viewer/generated/semantic-references/target-lookup.json",
+  "kinds": [
+    {
+      "kind": "work",
+      "id": {
+        "normalizer": "digits_left_pad",
+        "width": 5,
+        "input_pattern": "^\\d{1,5}$",
+        "canonical_pattern": "^\\d{5}$",
+        "example": "00638"
+      },
+      "route": {
+        "type": "query",
+        "path": "/works/",
+        "param": "work"
+      },
+      "source_editor": {
+        "selection_search": true,
+        "picker": true
+      }
+    },
+    {
+      "kind": "series",
+      "id": {
+        "normalizer": "series_id_or_slug",
+        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+        "example": "009"
+      },
+      "route": {
+        "type": "query",
+        "path": "/series/",
+        "param": "series"
+      },
+      "source_editor": {
+        "selection_search": true,
+        "picker": true
+      }
+    },
+    {
+      "kind": "moment",
+      "id": {
+        "normalizer": "slug",
+        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+        "example": "lotus-pond"
+      },
+      "route": {
+        "type": "query",
+        "path": "/moments/",
+        "param": "moment"
+      },
+      "source_editor": {
+        "selection_search": true,
+        "picker": true
+      }
+    }
+  ]
+}
+```
+
+Keep the registry declarative.
+It should tell the editor what kinds exist, how to normalize ids, where to load the semantic-target lookup, and how to build routes.
+Presence in `kinds` means the semantic-reference kind is supported.
+The only v1 action is `link`, so the registry should not model actions until a second action has a real use case.
+The source editor should represent semantic-reference kinds with their token ids, such as `work`, `series`, and `moment`, rather than separate UI labels.
+The actual normalizer implementations should live in JavaScript and Python by name, using a small shared vocabulary:
+
+- `digits_left_pad`
+- `series_id_or_slug`
+- `slug`
+
+The builder and editor should consume the same registry, but the builder remains the final parse/render authority during rebuild.
+The builder should use the registry to decide which token shapes it can render as links.
+It should not report unsupported kinds, missing targets, unpublished targets, or deleted targets as build warnings.
+
+## Generated Semantic Target Lookup
+
+The picker should use one generated semantic-target lookup JSON built specifically for token insertion.
+This lookup is not a generic search index.
+The selected editor text becomes the token's visible text, so the likely match is usually close to the target title rather than broad metadata such as year, medium, status, or ids.
+
+Proposed generated lookup file:
+
+- `docs-viewer/generated/semantic-references/target-lookup.json`
+
+Browser URL in local/manage Docs Viewer:
+
+- `/docs-viewer/generated/semantic-references/target-lookup.json`
+
+Schema id:
+
+- `docs_semantic_reference_target_lookup_v1`
+
+The lookup generator can run whenever source data changes, like the existing catalogue lookup modules.
+It should read canonical/generated source data for supported target kinds and write a compact browser-safe payload for the editor.
+
+Example lookup payload:
+
+```json
+{
+  "schema_version": "docs_semantic_reference_target_lookup_v1",
+  "targets": [
+    {
+      "kind": "series",
+      "id": "005",
+      "title": "3 symbols",
+      "title_normalized": "3 symbols",
+      "title_tokens": ["3", "symbols"],
+      "aliases": [],
+      "rank_hints": {
+        "title_exact": true
+      },
+      "display": {
+        "title": "3 symbols",
+        "meta": ["005", "2007", "primary"]
+      }
+    },
+    {
+      "kind": "work",
+      "id": "00638",
+      "title": "3 symbols",
+      "title_normalized": "3 symbols",
+      "title_tokens": ["3", "symbols"],
+      "aliases": [],
+      "rank_hints": {
+        "title_exact": true
+      },
+      "display": {
+        "title": "3 symbols",
+        "meta": ["00638", "2007", "mixed media", "3 symbols"]
+      }
+    }
+  ]
+}
+```
+
+Lookup field intent:
+
+- `kind`: token kind to insert
+- `id`: canonical target id to insert
+- `title`: primary title for matching and display
+- `title_normalized`: normalized title for browser-side comparison
+- `title_tokens`: title-derived tokens for browser-side matching
+- `aliases`: optional title-like aliases for current supported kinds
+- `rank_hints`: optional precomputed booleans or weights for simple browser ranking
+- `display`: fields used to render the picker row
+
+Search should be browser-side and title-weighted:
+
+- exact normalized title match first
+- title prefix or token match next
+- alias match next
+- ids and metadata can be available for display, but should not dominate selection-search ranking
+
+This keeps the picker aligned with the real interaction: selected text is likely intended to become link text.
+If the user selects `3 symbols`, matching title records should rank above incidental metadata matches.
+If the user selects `symbols`, title-token and alias matches can participate when their data exists in the lookup.
+
+## Context Panel Integration
+
+The semantic token picker is a view in the existing context/info panel, not another panel and not a second sidebar.
+It should use the same panel shell, close button, status area, and hosted-view lifecycle used by the current metadata/info view.
+
+Initial view identity:
+
+- panel: `info`
+- view id: `semantic-token-picker`
+- access: manage-only
+- availability: only when the Markdown source editor is active and has supplied a semantic-token adapter
+
+The picker view owns selected-text target search UI, result selection, and insertion-status copy.
+It does not own the textarea, dirty-state truth, source write/rebuild, document-display mode switching, or rendered-view reload.
+
+The source editor should provide the picker view with a narrow adapter for:
+
+- reading current selection text and offsets
+- replacing the selected range with a token
+- restoring focus to the textarea
+- receiving insertion validation/status messages
+
+Panel switching should behave like other hosted views.
+The metadata/info view remains available for selected-document context, and the semantic-token picker can be selected from the same context-panel toolbar when it is available.
+
+The default context-panel view should follow the active main view:
+
+- when the rendered document is active, opening the context/info panel should show `metadata-info`
+- when the Markdown source editor is active, opening the context/info panel should show `semantic-token-picker` if it is available
+- when the source editor exits back to the rendered document, the context/info panel should return to `metadata-info` or close according to the existing panel state rules
+
+This makes the semantic picker feel like source-editor context rather than a separate destination.
+The user can still switch hosted views through the context-panel toolbar when more than one view is available.
+
+This keeps panel ownership aligned with the current Docs Viewer model:
+
+- the context/info panel hosts selected-document and source-editor context views
+- the source editor owns Markdown source editing
+- semantic-reference modules own token-specific lookup, construction, and insertion behavior
 
 ## Relationship To Markdown Editor
 
@@ -156,7 +486,7 @@ The source editor owns:
 This request owns:
 
 - semantic-reference controls inside the source editor
-- registry-driven type/action metadata
+- registry-driven type metadata
 - target picker/search behavior
 - token construction and insertion into the local buffer
 - insertion-specific validation messages
@@ -176,9 +506,13 @@ Candidate semantic files inside the current source-editor folder:
 
 - `semantic-token-editor.js` for token insertion helpers
 - `semantic-token-toolbar.js` for controls mounted inside the source editor UI
-- `semantic-target-picker.js` for target selection UI
+- `semantic-token-picker-view.js` for the context/info panel hosted view
+- `semantic-target-picker.js` for reusable target selection rendering inside the hosted view
 - `semantic-targets.js` for client-side support reads and option normalization
 - `semantic-reference-registry.js` for registry reads/normalization if not shared elsewhere
+
+The hosted view should be registered through the existing hosted-view registry as an `info` panel view.
+It should not create a new panel host, sidebar, app-shell region, or route-level display mode.
 
 `source-editor.js` should stay focused on display-mode lifecycle, textarea state, dirty/save/rebuild behavior, and rendered-view return.
 It can register semantic-token controls when the registry and helper modules are available, passing only a narrow editor adapter into those modules.
@@ -192,7 +526,7 @@ If the semantic module is absent, disabled, or unsupported for the current insta
 Tasks:
 
 - add a browser helper that reads and normalizes the semantic-reference registry
-- expose supported types, actions, target-data source, and source-editor surface availability
+- expose supported types, target lookup URL, and source-editor surface availability
 - handle missing or malformed registry data with clear unavailable states
 
 Acceptance:
@@ -201,28 +535,52 @@ Acceptance:
 - missing registry data disables semantic controls without breaking the Markdown editor
 - diagnostics can explain why semantic insertion is unavailable
 
-### 2. Target Picker Support
+### 2. Context Panel Hosted View
 
 Tasks:
 
-- load target options from registry-defined browser-safe data sources where available
-- normalize ids, labels, and optional search fields for picker use
-- support manual id entry when the registry allows it
-- handle stale or missing target data without changing builder validity semantics
+- register `semantic-token-picker` as a manage-only `info` panel hosted view
+- make the view available only while the Markdown source editor can provide the semantic-token adapter
+- use the existing context/info panel shell, toolbar, status area, close behavior, and hosted-view lifecycle
+- make the context/info panel default to `semantic-token-picker` while the Markdown source editor is active
+- make the context/info panel default to `metadata-info` while the rendered document is active
+- keep metadata/info as a separate hosted view in the same panel
+- pass only the narrow source-editor adapter and registry-derived support data into the picker view
+
+Acceptance:
+
+- semantic token picking does not create a new panel, sidebar, or route display mode
+- the picker can be opened as a context/info panel view when source editing is active
+- the context/info panel surfaces metadata for rendered docs and the semantic picker for source editing
+- switching away from the picker does not lose source-editor dirty state or trigger source writes
+- the metadata/info hosted view remains available through the same panel model
+
+### 3. Target Picker Support
+
+Tasks:
+
+- load the generated semantic-target lookup from the registry-defined URL
+- search title-focused target records browser-side from the current editor selection
+- search the current v1 token kinds from the current editor selection: `work`, `series`, and `moment`
+- render candidate rows from lookup `display` fields
+- handle stale or missing target data without changing builder behavior
 
 Acceptance:
 
 - work, series, and moment target support follows the registry
+- selecting `3 symbols` can surface both matching work and series targets when both records exist
+- selected text search ranks title/alias matches ahead of incidental metadata matches
 - picker behavior can be traced to registry metadata
 - target ids remain opaque host ids
-- target picker assistance does not become target-existence validation
+- stale, missing, or deleted targets do not become builder or test-script validation failures
+- target picker assistance does not introduce server-side target lookup
 
-### 3. Token Construction And Insertion
+### 4. Token Construction And Insertion
 
 Tasks:
 
 - read selected text from the Markdown editor
-- build a semantic-reference token from selected type, target id, selected text, and action
+- build a semantic-reference token from selected type, target id, and selected text
 - insert the token at the current selection offsets
 - keep the inserted token in the local editor buffer until `Rebuild doc`
 - preserve browser-native undo behavior where practical
@@ -235,10 +593,11 @@ Acceptance:
 - token insertion does not write source or trigger rebuild directly
 - token insertion is implemented through a narrow source-editor adapter rather than by reaching into source read/write/rebuild services
 
-### 4. Focused Verification And Docs Follow-Through
+### 5. Focused Verification And Docs Follow-Through
 
 Tasks:
 
+- add focused tests for semantic-target lookup generation and browser ranking
 - add focused tests for registry normalization, target option shaping, and token construction
 - add browser smoke coverage for semantic insertion inside the Markdown editor
 - update semantic-reference implementation and editor docs after implementation
@@ -250,30 +609,42 @@ Acceptance:
 
 ## Open Questions
 
-- Should the initial editor expose only `work`, `series`, and `moment`, or include disabled/future `tag` metadata?
-- Should manual target-id entry always be available, or only when enabled by a registry field?
-- Should unsupported selected ranges be blocked in v1, or should token insertion operate only on textarea selection offsets?
-- How should unsupported semantic type warnings be displayed when rebuild succeeds?
-- Should token insertion expose actions beyond `link` once the registry exists, or keep only `link` for the first slice?
-- What is the exact semantic-reference registry file path and schema?
+- Should the semantic references report flag unsupported typed token-like text, or only audit recognized generated references?
+
+## Deferred To V2
+
+The following ideas are useful but out of scope for v1:
+
+- insertion-point refresh that detects the word or id around a collapsed cursor
+- cursor seed expansion and punctuation-boundary rules
+- direct id references, including exact matches such as `00001-001`
+- generated exact-target records for high-cardinality kinds
+- `work_detail` and other additional token kinds beyond current `work`, `series`, and `moment`
+- manual target-id entry
+- link-text replacement from a resolved id record title
+- tag or tag-alias search
 
 ## Risks
 
 - token insertion can produce invalid syntax if escaping rules are incomplete
 - target lookup, modal copy, and config reads could drift into backend orchestration or inline route-controller logic
 - semantic-token behavior could take over source-editor lifecycle responsibilities if module boundaries are too broad
+- semantic-token picking could accidentally be implemented as a new panel instead of a hosted context/info panel view
 - repo-specific semantic editing could be mistaken for portable Docs Viewer functionality
 - semantic insertion could become coupled to a single UI shape before the Analytics surfacing model is clear
 - registry and builder behavior could diverge if both define supported types independently
+- builder or test scripts could drift into semantic validation that should belong to editor assistance or reporting
 
 Mitigations:
 
-- derive type/action support from the registry
+- derive supported types from the registry
 - keep source read/write/rebuild, dirty state, and rendered reload owned by the existing source editor
 - keep token construction helpers small and tested
-- keep support reads, option shaping, modal/view config, and picker behavior in focused browser modules
+- keep support reads, option shaping, context-panel view config, and picker behavior in focused browser modules
+- register the picker as an existing context/info panel hosted view, not a new panel host
 - document semantic editing as this repo's manage-mode integration, not portable Docs Viewer core
-- rely on builder diagnostics for semantic-reference warnings after rebuild
+- keep the builder responsible for rendering recognized links, not validating semantic support or target existence
+- use the semantic references report, not build/test failure, for any future audit of possible semantic-reference issues
 - keep semantic insertion optional so the Markdown editor remains useful without it
 
 ## Verification
@@ -288,9 +659,10 @@ $HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_manage
 Add focused tests or smoke checks for:
 
 - semantic-reference registry read/normalization
+- semantic-target lookup generation
+- title-weighted target ranking
 - missing registry unavailable state
 - target option normalization
-- manual id entry if enabled
 - token construction
 - token insertion into selected source text
 - no source write before `Rebuild doc`
