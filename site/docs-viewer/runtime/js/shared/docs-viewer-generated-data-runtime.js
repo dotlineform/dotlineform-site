@@ -1,4 +1,7 @@
 import {
+  appendAssetVersion
+} from "./docs-viewer-asset-url.js";
+import {
   fetchIndexTreeWithRetry,
   fetchPreferredGeneratedJson,
   managementReloadPath
