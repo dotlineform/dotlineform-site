@@ -307,12 +307,6 @@
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-docs-viewer-workspace-mount-architecture",
-          "title": "Docs Viewer External Scope Data Roots Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-workspace-mount-architecture.json",
-          "ui_status": "draft"
-        },
-        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1201,5 +1195,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T15:45:21Z"
+  "generated_at": "2026-06-22T17:27:45Z"
 }

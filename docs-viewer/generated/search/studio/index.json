@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1307a5b6c3f0e353e20320fa356b5a4c",
-    "generated_at_utc": "2026-06-22T17:19:06Z",
-    "count": 222
+    "version": "blake2b-8688bb2298474e201708cbe0e9378165",
+    "generated_at_utc": "2026-06-22T17:27:45Z",
+    "count": 221
   },
   "entries": [
     {
@@ -1283,39 +1283,6 @@
         "02"
       ],
       "search_text": "site-request-docs-semantic-references-v2 site request docs semantic references v2 docs semantic references v2 request change requests change requests 2026-06-02 2026 06 02"
-    },
-    {
-      "id": "site-request-docs-viewer-workspace-mount-architecture",
-      "kind": "doc",
-      "title": "Docs Viewer External Scope Data Roots Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
-      "last_updated": "2026-06-22",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-22 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-workspace-mount-architecture",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "workspace",
-        "mount",
-        "architecture",
-        "docs viewer external scope data roots request",
-        "external",
-        "scope",
-        "data",
-        "roots",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-22",
-        "2026",
-        "06",
-        "22"
-      ],
-      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer external scope data roots request external scope data roots change requests change requests 2026-06-22 2026 06 22"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

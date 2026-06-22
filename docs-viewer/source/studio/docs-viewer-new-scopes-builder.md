@@ -8,11 +8,6 @@ viewable: true
 ---
 # New Scopes Builder
 
-This document records the technical design and implementation notes for the Docs Viewer New Scopes Builder.
-It describes the implemented local lifecycle flow for creating and deleting Docs Viewer scopes from the manage route.
-
-## Purpose
-
 The New Scopes Builder is the local-management workflow for creating and deleting Docs Viewer scopes from `/docs/`.
 
 It should:
@@ -144,7 +139,7 @@ This mode is useful for private planning notes, local drafts, or internal review
 
 ## Implementation State
 
-The scope lifecycle workflow now has server-side preview/apply endpoints and a management UI entry point:
+The scope lifecycle workflow has server-side preview/apply endpoints and a management UI entry point:
 
 - `docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
 - `docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
@@ -157,8 +152,6 @@ The scope lifecycle workflow now has server-side preview/apply endpoints and a m
 - `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
 - `docs-viewer/runtime/js/management/docs-viewer-management.js` remains the management command coordinator
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
-
-The core lifecycle UI and server contracts are implemented.
 
 ## Manifest Design
 
@@ -221,10 +214,10 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
 }
 ```
 
-Apply flags are authoritative.
-Create apply is advertised only after the allowlisted write implementation is available.
-Delete apply is advertised only after the manifest-backed deletion implementation is available.
-The UI should avoid showing save/delete apply controls before the server advertises the matching capability.
+- Apply flags are authoritative.
+- Create apply is advertised only after the allowlisted write implementation is available.
+- Delete apply is advertised only after the manifest-backed deletion implementation is available.
+- The UI should avoid showing save/delete apply controls before the server advertises the matching capability.
 
 Each scope capability record also includes lifecycle state:
 
