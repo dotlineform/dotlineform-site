@@ -57,7 +57,8 @@ Tokens inside fenced code blocks and inline code are left literal and do not pro
 
 ## Builder Path
 
-The implementation lives in `docs-viewer/build/build_docs.py`.
+The command entrypoint is `docs-viewer/build/build_docs.py`.
+Semantic-reference builder internals live in `docs-viewer/build/docs_builder/semantic_references.py`, with generated relationship payload assembly in `docs-viewer/build/docs_builder/reference_artifacts.py`.
 
 Relevant responsibilities:
 

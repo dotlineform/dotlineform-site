@@ -72,6 +72,9 @@ For public scopes only, `publish_output` and `publish_search_output` own the pub
 
 ## What The Builder Does
 
+The command entrypoint remains `docs-viewer/build/build_docs.py`.
+The implementation is split into focused modules under `docs-viewer/build/docs_builder/` so source loading, rendering, semantic references, reference artifacts, write planning, browser config, and CLI dispatch can evolve independently.
+
 - reads Markdown source docs from each configured scope source root
 - reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, and optional `viewable`
 - renders each Markdown body to HTML using the shared Python Markdown renderer at `studio/shared/python/markdown_renderer.py`
