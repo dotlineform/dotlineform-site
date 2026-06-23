@@ -13,6 +13,8 @@ Status: v2 backlog
 
 This request now tracks enhancements beyond the current Semantic References Editor.
 Related source-editing workflows for external exchange and returned text writeback are tracked separately in [Shareable Content Blocks Request](/docs/?scope=studio&doc=site-request-shareable-content-blocks).
+Embedded detail document routing for high-cardinality targets such as tags is tracked in [Docs Viewer Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents).
+That work should be settled before adding `tag` semantic token support, because tag references need to resolve to the indexed report/detail URL rather than a standalone non-indexed document route.
 
 Current implemented behavior is documented in:
 
@@ -110,6 +112,9 @@ Potential future kinds include:
 - tags
 - tag aliases
 - other repo-local semantic targets
+
+Before enabling `tag` as a semantic token kind, resolve the embedded-detail document route model in [Docs Viewer Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents).
+For example, `[[ref:tag:slow-looking]]` should target the indexed tag report with tag-detail state, not a standalone tag-doc route.
 
 Adding a kind should normally require:
 
