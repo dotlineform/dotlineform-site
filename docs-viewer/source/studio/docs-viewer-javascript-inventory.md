@@ -377,7 +377,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `docs-viewer/runtime/js/management/source-editor/source-editor.js`
 
 - the manage-only Markdown source body editor module for the `markdown-source` document display mode.
-- Keep this module limited to source-body view orchestration, native textarea/gutter rendering, dirty-state projection, dirty leave confirmation, `Rebuild doc` submission, diagnostics display, rendered-payload reload handoff, and back-to-rendered switching.
+- Keep this module limited to source-body view orchestration, native wrapping textarea rendering, dirty-state projection, dirty leave confirmation, `Rebuild doc` submission, diagnostics display, rendered-payload reload handoff, and back-to-rendered switching.
 - Do not add front matter editing, metadata writes, semantic-reference target picking, generated-data builder ownership, third-party editor dependencies, route URL state, or public-route source services to it.
 
 ### Docs Import And Management

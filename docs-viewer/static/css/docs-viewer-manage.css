@@ -745,9 +745,25 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewerSourceEditor{
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   gap: 0.75rem;
-  min-height: min(72vh, 56rem);
+  width: 100%;
+  min-height: max(32rem, calc(100dvh - 8rem));
+}
+
+.docsViewer[data-document-display-mode="markdown-source"],
+.docsViewer[data-document-display-mode="markdown-source"][data-index-panel-state],
+.docsViewer[data-document-display-mode="markdown-source"][data-info-panel-state]{
+  --docs-viewer-measure: 100%;
+}
+
+.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content{
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-height: max(32rem, calc(100dvh - 8rem));
 }
 
 .docsViewerSourceEditor__header{
@@ -825,41 +841,31 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewerSourceEditor__editor{
-  display: grid;
-  grid-template-columns: minmax(3rem, auto) minmax(0, 1fr);
-  min-height: 24rem;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
   border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
   border-radius: 8px;
   overflow: hidden;
   background: var(--docs-viewer-panel, var(--panel, #fff));
 }
 
-.docsViewerSourceEditor__gutter,
 .docsViewerSourceEditor__textarea{
   box-sizing: border-box;
-  min-height: 24rem;
-  max-height: 68vh;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  max-height: none;
   margin: 0;
   padding: 0.8rem 0.75rem;
-  font: 0.9rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  white-space: pre;
-}
-
-.docsViewerSourceEditor__gutter{
-  overflow: hidden;
-  color: var(--docs-viewer-muted, var(--muted, #555));
-  text-align: right;
-  user-select: none;
-  border-right: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
-}
-
-.docsViewerSourceEditor__textarea{
-  width: 100%;
   resize: none;
   overflow: auto;
   border: 0;
   outline: 0;
+  font: 0.9rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   color: inherit;
   background: transparent;
   tab-size: 2;
@@ -870,21 +876,9 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
   border-color: #3a3a3a;
 }
 
-html[data-theme="dark"] .docsViewerSourceEditor__gutter{
-  color: #aaa;
-  background: #202020;
-  border-color: #3a3a3a;
-}
-
 .docsViewerSemanticPicker{
   display: grid;
   gap: 0.75rem;
-}
-
-.docsViewerSemanticPicker__title{
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.25;
 }
 
 .docsViewerSemanticPicker__search{
@@ -983,7 +977,7 @@ html[data-theme="dark"] .docsViewerSourceEditor__gutter{
   }
 
   .docsViewerSourceEditor__editor{
-    grid-template-columns: minmax(2.6rem, auto) minmax(18rem, 1fr);
+    min-width: 0;
   }
 }
 

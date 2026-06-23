@@ -334,6 +334,7 @@ export function initDocsViewerManagement(context) {
       manageSourceButton.setAttribute("aria-pressed", markdownMode ? "true" : "false");
       manageSourceButton.setAttribute("aria-label", markdownMode ? "Show rendered document" : "Show Markdown source");
       manageSourceButton.title = markdownMode ? "Show rendered document" : "Show Markdown source";
+      manageSourceButton.textContent = markdownMode ? "📄" : "☰";
     }
     if (manageSourceSaveButton) {
       manageSourceSaveButton.hidden = actionsHidden || !markdownMode;

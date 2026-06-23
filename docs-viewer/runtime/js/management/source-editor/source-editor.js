@@ -18,20 +18,6 @@ function clearNode(node) {
   if (node) node.replaceChildren();
 }
 
-function lineCount(body) {
-  return normalizeBody(body).split("\n").length;
-}
-
-function renderLineNumbers(gutter, body) {
-  if (!gutter) return;
-  var count = Math.max(1, lineCount(body));
-  var lines = [];
-  for (var index = 1; index <= count; index += 1) {
-    lines.push(String(index));
-  }
-  gutter.textContent = lines.join("\n");
-}
-
 function diagnosticsText(payload) {
   var messages = [];
   var rebuild = payload && payload.rebuild ? payload.rebuild : null;
@@ -79,25 +65,19 @@ function renderEditorShell(context, state) {
   var editor = document.createElement("div");
   editor.className = "docsViewerSourceEditor__editor";
 
-  var gutter = document.createElement("pre");
-  gutter.className = "docsViewerSourceEditor__gutter";
-  gutter.setAttribute("aria-hidden", "true");
-  gutter.tabIndex = -1;
-
   var textarea = document.createElement("textarea");
   textarea.className = "docsViewerSourceEditor__textarea";
   textarea.spellcheck = false;
-  textarea.wrap = "off";
+  textarea.wrap = "soft";
   textarea.setAttribute("aria-label", "Markdown source body");
 
-  editor.append(gutter, textarea);
+  editor.append(textarea);
   root.append(dirty, status, editor);
   mount.appendChild(root);
 
   state.root = root;
   state.status = status;
   state.dirty = dirty;
-  state.gutter = gutter;
   state.textarea = textarea;
 }
 
@@ -196,7 +176,6 @@ function loadSource(context, state) {
         state.textarea.setSelectionRange(0, 0);
         state.textarea.focus();
       }
-      renderLineNumbers(state.gutter, state.lastCleanBody);
       setStatus(state, "", false);
       projectDirty(state);
       return payload;
@@ -291,12 +270,8 @@ function bindEvents(context, state) {
   var ownerDocument = context.mount && context.mount.ownerDocument ? context.mount.ownerDocument : document;
   state.toolbarSave = ownerDocument.getElementById("docsViewerManageSourceSaveButton");
   state.onInput = function () {
-    renderLineNumbers(state.gutter, state.textarea ? state.textarea.value : "");
     projectDirty(state);
     emitSelectionChange(state);
-  };
-  state.onScroll = function () {
-    if (state.gutter && state.textarea) state.gutter.scrollTop = state.textarea.scrollTop;
   };
   state.onSelectionChange = function () {
     emitSelectionChange(state);
@@ -319,7 +294,6 @@ function bindEvents(context, state) {
 
   if (state.textarea) {
     state.textarea.addEventListener("input", state.onInput);
-    state.textarea.addEventListener("scroll", state.onScroll);
     state.textarea.addEventListener("keyup", state.onSelectionChange);
     state.textarea.addEventListener("mouseup", state.onSelectionChange);
     state.textarea.addEventListener("select", state.onSelectionChange);
@@ -333,7 +307,6 @@ function bindEvents(context, state) {
 function unbindEvents(context, state) {
   var root = context && context.root ? context.root : document;
   if (state.textarea && state.onInput) state.textarea.removeEventListener("input", state.onInput);
-  if (state.textarea && state.onScroll) state.textarea.removeEventListener("scroll", state.onScroll);
   if (state.textarea && state.onSelectionChange) {
     state.textarea.removeEventListener("keyup", state.onSelectionChange);
     state.textarea.removeEventListener("mouseup", state.onSelectionChange);
@@ -350,7 +323,6 @@ export function createDocsViewerSourceEditorMode() {
     busy: false,
     dirtyValue: false,
     docId: "",
-    gutter: null,
     lastCleanBody: "",
     loaded: false,
     revision: "",

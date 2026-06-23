@@ -38,10 +38,6 @@ function renderShell(context, state) {
   var root = documentRef.createElement("section");
   root.className = "docsViewerSemanticPicker";
 
-  var title = documentRef.createElement("h3");
-  title.className = "docsViewerSemanticPicker__title";
-  title.textContent = "Semantic reference";
-
   var form = documentRef.createElement("div");
   form.className = "docsViewerSemanticPicker__search";
 
@@ -62,7 +58,7 @@ function renderShell(context, state) {
   results.setAttribute("aria-label", "Semantic reference targets");
 
   form.appendChild(input);
-  root.append(title, form, status, results);
+  root.append(form, status, results);
   clearNode(context.mount);
   context.mount.appendChild(root);
 

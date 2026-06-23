@@ -458,15 +458,40 @@ def test_info_panel_has_no_internal_view_switcher() -> None:
     assert [fragment for fragment in blocked_fragments if fragment in css] == []
 
 
+def test_source_editor_uses_wrapping_textarea_without_line_gutter() -> None:
+    source_editor = (
+        REPO_ROOT / "docs-viewer/runtime/js/management/source-editor/source-editor.js"
+    ).read_text(encoding="utf-8")
+    css = (
+        REPO_ROOT / "docs-viewer/static/css/docs-viewer-manage.css"
+    ).read_text(encoding="utf-8")
+
+    assert 'textarea.wrap = "soft"' in source_editor
+    assert "renderLineNumbers" not in source_editor
+    assert "docsViewerSourceEditor__gutter" not in source_editor
+    assert "docsViewerSourceEditor__gutter" not in css
+    assert "white-space: pre-wrap" in css
+    assert 'data-document-display-mode="markdown-source"' in css
+    assert "--docs-viewer-measure: 100%" in css
+    assert "flex: 1 1 auto" in css
+    assert "width: 100%" in css
+    assert "min-height: max(32rem, calc(100dvh - 8rem))" in css
+    assert "max-height: none" in css
+
+
 def test_manage_document_actions_renderer_owns_selected_document_controls() -> None:
     source = (
         REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js"
+    ).read_text(encoding="utf-8")
+    management = (
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management.js"
     ).read_text(encoding="utf-8")
 
     assert "docsViewerManageEditButton" in source
     assert "docsViewerManageSourceButton" in source
     assert "Markdown source" in source
     assert "markdown-source" in source
+    assert 'manageSourceButton.textContent = markdownMode ? "📄" : "☰";' in management
 
 
 @pytest.mark.parametrize(
