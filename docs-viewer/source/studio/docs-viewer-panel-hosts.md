@@ -156,7 +156,7 @@ Improvement needed:
 ### Info-Panel Lifecycle And Chrome
 
 `docs-viewer-info-panel-host.js` is the only implemented lifecycle host for actual load/mount/update/unmount/dispose view modules.
-`docs-viewer-info-panel-renderer.js` owns the info-panel chrome, toolbar, status, close button, and hosted-view body mount.
+`docs-viewer-info-panel-renderer.js` owns the info-panel chrome, status, close button, and hosted-view body mount.
 `docs-viewer-info-panel-controller.js` binds the document info toggle, close behavior, selected-document updates, and hosted-view context projection.
 
 Current implemented view:
@@ -263,7 +263,8 @@ The context currently contains the `mount` element plus selected-document and ro
 Current follow-up needs:
 
 - keep independently mounted main-view modules from breaking current rendered-document/search/recent route behavior
-- toolbar/view-switching projection for main and info panels when more than one view is available
+- toolbar/view-switching projection for main panels when more than one view is available
+- context-driven info-panel view selection for any future source or document contexts
 - a data/context contract for each new info or main-view hosted view before adding the view
 
 Do not interpret route-config hosted-view records as a completed generic extension system.

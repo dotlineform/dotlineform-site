@@ -435,8 +435,8 @@ The source editor should provide the picker view with a narrow adapter for:
 - restoring focus to the textarea
 - receiving insertion validation/status messages
 
-Panel switching should behave like other hosted views.
-The metadata/info view remains available for selected-document context, and the semantic-token picker can be selected from the same context-panel toolbar when it is available.
+Panel view selection should be driven by the active outside context, not by controls inside the info panel.
+The metadata/info view remains available for selected-document context, and the semantic-token picker becomes the active info-panel view while Markdown source editing is active.
 
 The default context-panel view should follow the active main view:
 
@@ -448,11 +448,12 @@ This default-view choice is a management entrypoint setting.
 Shared Docs Viewer runtime code may apply a generic document-mode-to-default-info-view mapping, but it should not hardcode `semantic-token-picker` or other semantic-reference feature details.
 
 This makes the semantic picker feel like source-editor context rather than a separate destination.
-The user can still switch hosted views through the context-panel toolbar when more than one view is available.
+The info panel should keep a simple `info` title, no `Document metadata` label, and no internal view-switching toolbar.
 
 This keeps panel ownership aligned with the current Docs Viewer model:
 
 - the context/info panel hosts selected-document and source-editor context views
+- document/source mode owns which info-panel view is active
 - the source editor owns Markdown source editing
 - semantic-reference modules own token-specific lookup, construction, and insertion behavior
 
@@ -567,9 +568,10 @@ Tasks:
 
 - [x] register `semantic-token-picker` as a manage-only `info` panel hosted view
 - [x] make the view available only while the Markdown source editor can provide the semantic-token adapter
-- [x] use the existing context/info panel shell, toolbar, status area, close behavior, and hosted-view lifecycle
+- [x] use the existing context/info panel shell, status area, close behavior, and hosted-view lifecycle
 - [x] make the context/info panel default to `semantic-token-picker` while the Markdown source editor is active
 - [x] make the context/info panel default to `metadata-info` while the rendered document is active
+- [x] remove the info-panel label and internal hosted-view toolbar; outside document/source context selects the active panel view
 - [x] keep the `semantic-token-picker` default mapping in the management entrypoint rather than hardcoding it in shared runtime
 - [x] keep semantic picker styles in the management stylesheet rather than the public/shared stylesheet
 - [x] keep metadata/info as a separate hosted view in the same panel
@@ -580,7 +582,7 @@ Acceptance:
 - semantic token picking does not create a new panel, sidebar, or route display mode
 - the picker can be opened as a context/info panel view when source editing is active
 - the context/info panel surfaces metadata for rendered docs and the semantic picker for source editing
-- switching away from the picker does not lose source-editor dirty state or trigger source writes
+- switching between document/source modes updates the active info-panel view without losing source-editor dirty state or triggering source writes
 - the metadata/info hosted view remains available through the same panel model
 
 ### 4. Target Picker Support

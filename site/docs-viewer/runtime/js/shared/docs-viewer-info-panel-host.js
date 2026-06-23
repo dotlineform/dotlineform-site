@@ -39,11 +39,8 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   function projectPanel(projection) {
     project(Object.assign({
       activeViewId: activeViewId,
-      label: "Document metadata",
-      showToolbar: false,
       statusHidden: true,
-      title: "Info",
-      viewOptions: viewOptions(),
+      title: "info",
       visible: open
     }, projection || {}));
   }

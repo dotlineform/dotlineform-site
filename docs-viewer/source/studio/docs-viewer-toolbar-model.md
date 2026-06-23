@@ -21,7 +21,7 @@ The model is:
 - viewer toolbar: read, navigation, search, and index-layout controls
 - manage toolbar: management, write, and admin controls
 - main-view toolbar: controls for the active central-panel view
-- context panel toolbar: view switching inside the context/info panel
+- context/info panel: no internal toolbar; the active outside context selects the panel view
 
 ## Top Bar
 
@@ -101,20 +101,15 @@ Current limitation:
 
 - rendered-document, search-results, and recent-results still use existing controllers for content rendering; Markdown source is now a document display mode within `rendered-document`, not a peer main view.
 
-## Context Panel Toolbar
+## Context Panel View Selection
 
-The context panel toolbar owns switching between hosted views inside the context/info panel.
+The context/info panel does not render its own hosted-view switcher.
+It keeps a simple `info` shell, and the active outside context chooses the hosted view:
 
-Examples:
+- rendered document context opens `metadata-info`
+- Markdown source context opens `semantic-token-picker` in manage mode
 
-- metadata
-- references
-- validation
-- change history
-- future selected-document context views
-
-This toolbar belongs inside the context panel.
-It should render available, unavailable, disabled, and access-blocked hosted views from the same hosted-view capability projection used by the panel host.
+Future context/info views should be selected by the owning outside context rather than by adding a toolbar inside the panel.
 
 Target owner:
 

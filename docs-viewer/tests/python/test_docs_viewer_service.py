@@ -421,6 +421,43 @@ def test_semantic_picker_default_is_management_owned() -> None:
     assert 'id: "semantic-token-picker"' in hosted_views
 
 
+def test_open_info_panel_follows_document_mode_default_generically() -> None:
+    shared_runtime = (
+        REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js"
+    ).read_text(encoding="utf-8")
+
+    assert "function syncInfoPanelDefaultForDocumentMode(modeId)" in shared_runtime
+    assert "infoPanelDefaultViewIdForMode(settings, modeId)" in shared_runtime
+    assert "infoPanelController.openView(defaultViewId)" in shared_runtime
+    assert "requestSettings.onAccepted = function (mode)" in shared_runtime
+    assert 'infoPanelController.openView("semantic-token-picker")' not in shared_runtime
+
+
+def test_info_panel_has_no_internal_view_switcher() -> None:
+    renderer = (
+        REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js"
+    ).read_text(encoding="utf-8")
+    controller = (
+        REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js"
+    ).read_text(encoding="utf-8")
+    css = (REPO_ROOT / "site/docs-viewer/static/css/docs-viewer.css").read_text(encoding="utf-8")
+
+    blocked_fragments = [
+        "docsViewerInfoPanelLabel",
+        "docsViewerInfoPanelToolbar",
+        "docsViewer__infoPanelLabel",
+        "docsViewer__infoPanelToolbar",
+        "docsViewer__infoPanelToolbarButton",
+        "data-info-panel-view",
+        "Info views",
+        "Document metadata",
+    ]
+
+    assert [fragment for fragment in blocked_fragments if fragment in renderer] == []
+    assert [fragment for fragment in blocked_fragments if fragment in controller] == []
+    assert [fragment for fragment in blocked_fragments if fragment in css] == []
+
+
 def test_manage_document_actions_renderer_owns_selected_document_controls() -> None:
     source = (
         REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js"

@@ -26,14 +26,9 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   const title = documentRef.createElement("h2");
   title.className = "docsViewer__infoPanelTitle";
   title.id = "docsViewerInfoPanelTitle";
-  title.textContent = "Info";
+  title.textContent = "info";
 
-  const label = documentRef.createElement("p");
-  label.className = "docsViewer__infoPanelLabel muted small";
-  label.id = "docsViewerInfoPanelLabel";
-  label.textContent = "Document metadata";
-
-  copy.append(title, label);
+  copy.append(title);
 
   const closeButton = documentRef.createElement("button");
   closeButton.className = "docsViewer__infoPanelClose";
@@ -45,13 +40,6 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
 
   header.append(copy, closeButton);
 
-  const toolbar = documentRef.createElement("div");
-  toolbar.className = "docsViewer__infoPanelToolbar";
-  toolbar.id = "docsViewerInfoPanelToolbar";
-  toolbar.hidden = true;
-  toolbar.setAttribute("role", "toolbar");
-  toolbar.setAttribute("aria-label", "Info views");
-
   const status = documentRef.createElement("p");
   status.className = "docsViewer__panelStatus muted small";
   status.id = "docsViewerInfoPanelStatus";
@@ -62,7 +50,7 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   body.id = "docsViewerInfoPanelBody";
   body.setAttribute("data-docs-viewer-hosted-view-mount", "metadata-info");
 
-  panel.append(header, toolbar, status, body);
+  panel.append(header, status, body);
   mount.replaceChildren(panel);
 
   return findDocsViewerInfoPanelRefs({ document: documentRef, root: mount });
@@ -74,46 +62,10 @@ export function findDocsViewerInfoPanelRefs(options = {}) {
   return {
     panel: root.querySelector("#docsViewerInfoPanel"),
     title: root.querySelector("#docsViewerInfoPanelTitle"),
-    label: root.querySelector("#docsViewerInfoPanelLabel"),
-    toolbar: root.querySelector("#docsViewerInfoPanelToolbar"),
     closeButton: root.querySelector("#docsViewerInfoPanelClose"),
     status: root.querySelector("#docsViewerInfoPanelStatus"),
     body: root.querySelector("#docsViewerInfoPanelBody")
   };
-}
-
-function viewUnavailableLabel(view) {
-  if (!view || view.available) return "";
-  if (view.unavailableReason === "access") return "Unavailable on this route";
-  if (view.unavailableReason === "disabled") return "Disabled";
-  if (view.unavailableReason === "unavailable") return "Unavailable";
-  return "Unavailable";
-}
-
-function renderToolbarButton(documentRef, view, activeViewId) {
-  const button = documentRef.createElement("button");
-  button.className = "docsViewer__infoPanelToolbarButton";
-  button.type = "button";
-  button.dataset.infoPanelView = view.id || "";
-  button.textContent = view.label || view.id || "View";
-  button.disabled = !view.available;
-  button.setAttribute("aria-pressed", view.id === activeViewId ? "true" : "false");
-  if (!view.available) {
-    button.title = viewUnavailableLabel(view);
-  }
-  return button;
-}
-
-function renderToolbar(refs, projection) {
-  if (!refs.toolbar) return;
-  const views = Array.isArray(projection.viewOptions) ? projection.viewOptions : [];
-  refs.toolbar.replaceChildren();
-  refs.toolbar.hidden = views.length <= 1 && !projection.showToolbar;
-  if (views.length === 0) return;
-  const documentRef = refs.toolbar.ownerDocument || document;
-  views.forEach(function (view) {
-    refs.toolbar.appendChild(renderToolbarButton(documentRef, view, projection.activeViewId || ""));
-  });
 }
 
 export function applyDocsViewerInfoPanelProjection(options = {}) {
@@ -134,13 +86,8 @@ export function applyDocsViewerInfoPanelProjection(options = {}) {
     refs.panel.dataset.activeViewId = projection.activeViewId || "";
   }
   if (refs.title && Object.prototype.hasOwnProperty.call(projection, "title")) {
-    refs.title.textContent = projection.title || "Info";
+    refs.title.textContent = projection.title || "info";
   }
-  if (refs.label && Object.prototype.hasOwnProperty.call(projection, "label")) {
-    refs.label.textContent = projection.label || "";
-    refs.label.hidden = !projection.label;
-  }
-  renderToolbar(refs, projection);
   if (refs.status) {
     if (Object.prototype.hasOwnProperty.call(projection, "statusText")) {
       refs.status.textContent = projection.statusText || "";

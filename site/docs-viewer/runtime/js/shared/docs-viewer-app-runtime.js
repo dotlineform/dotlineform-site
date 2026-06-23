@@ -433,7 +433,7 @@ export function startDocsViewerRuntime(options) {
       searchInput: searchInput,
       setStatus: setStatus,
       requestMainView: function (viewId) { return mainViewHost.requestView(viewId); },
-      requestDocumentMode: function (modeId, options) { return documentDisplayModeHost.requestMode(modeId, options); },
+      requestDocumentMode: requestDocumentMode,
       markdownDocLink: markdownDocLink,
       viewerScope: function () { return viewerScope; }
     },
@@ -726,6 +726,26 @@ export function startDocsViewerRuntime(options) {
   function canDragCurrentDoc(doc) {
     var controller = managementRuntime ? managementRuntime.controller() : null;
     return Boolean(controller && controller.canDragCurrentDoc(doc));
+  }
+
+  function syncInfoPanelDefaultForDocumentMode(modeId) {
+    if (!infoPanelController || !infoPanelController.isOpen()) return;
+    var defaultViewId = infoPanelDefaultViewIdForMode(settings, modeId) || "metadata-info";
+    if (infoPanelController.activeViewId() === defaultViewId) {
+      infoPanelController.update();
+      return;
+    }
+    infoPanelController.openView(defaultViewId);
+  }
+
+  function requestDocumentMode(modeId, options) {
+    var requestSettings = Object.assign({}, options || {});
+    var onAccepted = requestSettings.onAccepted;
+    requestSettings.onAccepted = function (mode) {
+      if (typeof onAccepted === "function") onAccepted(mode);
+      syncInfoPanelDefaultForDocumentMode(mode && mode.id ? mode.id : modeId);
+    };
+    return documentDisplayModeHost.requestMode(modeId, requestSettings);
   }
 
   function renderManagementUi() {

@@ -90,7 +90,7 @@ Current helper modules:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-data.js` owns low-level JSON fetch/retry primitives only behind the generated-data runtime and config service
 - `docs-viewer/runtime/js/reports/docs-viewer-report-service.js` owns local report endpoint access for source-config and broken-links audit reports in management-capable contexts
 - `site/docs-viewer/runtime/js/shared/docs-viewer-document-index-state.js` owns document visibility/loadability projection for public and manage contexts, including non-viewable/manage-only filtering, non-loadable fallbacks, default-doc resolution, and index status projection
-- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, toolbar view switching, close behavior, and update-on-document-change behavior
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns selected-document info-panel coordination, toggle projection, outside-context view selection, close behavior, and update-on-document-change behavior
 - `site/docs-viewer/runtime/js/shared/docs-viewer-runtime-lazy-controller.js` owns neutral lazy-controller loading; the private app runtime coordinator uses it to keep the management controller import gated behind management route access
 - `site/docs-viewer/runtime/js/shared/docs-viewer-router.js` owns low-level URL, route parsing, history, requested-doc resolution, and route/payload helper functions used by the workflow owner
 - `site/docs-viewer/runtime/js/shared/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization

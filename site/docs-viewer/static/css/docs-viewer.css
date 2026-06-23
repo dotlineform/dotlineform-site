@@ -641,48 +641,6 @@ body.docs-viewer-service{
   line-height: var(--docs-viewer-line-tight, 1.1);
 }
 
-.docsViewer__infoPanelLabel{
-  margin: 0.2rem 0 0;
-}
-
-.docsViewer__infoPanelToolbar{
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--docs-viewer-space-1);
-  margin: 0 0 var(--docs-viewer-space-3);
-}
-
-.docsViewer__infoPanelToolbarButton{
-  box-sizing: border-box;
-  min-height: 1.8rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: var(--docs-viewer-radius-sm, 4px);
-  background: var(--docs-viewer-panel);
-  color: var(--docs-viewer-text);
-  font: inherit;
-  line-height: 1.1;
-  cursor: pointer;
-}
-
-.docsViewer__infoPanelToolbarButton:hover{
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewer__infoPanelToolbarButton:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong);
-  outline-offset: 2px;
-}
-
-.docsViewer__infoPanelToolbarButton[aria-pressed="true"]{
-  border-color: var(--docs-viewer-border-strong);
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewer__infoPanelToolbarButton:disabled{
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
 .docsViewer__infoPanelClose{
   box-sizing: border-box;
   flex: 0 0 auto;

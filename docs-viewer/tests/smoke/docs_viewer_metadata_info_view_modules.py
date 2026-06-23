@@ -15,8 +15,9 @@ def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js');
+            const renderer = await import('/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js');
             const viewContext = await import('/docs-viewer/runtime/js/shared/docs-viewer-view-context.js');
-            window.__docsViewerMetadataInfoViewSmoke = { module, viewContext };
+            window.__docsViewerMetadataInfoViewSmoke = { module, renderer, viewContext };
         }"""
     )
 
@@ -96,6 +97,33 @@ def assert_context_hydrates_from_payload(page: Page) -> None:
         raise AssertionError(f"manage context did not preserve selected doc identity: {result!r}")
     if result["manageStatusLabel"] != "Done":
         raise AssertionError(f"manage context status label did not use payload status: {result!r}")
+
+
+def assert_info_panel_shell_is_simple(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const { renderer } = window.__docsViewerMetadataInfoViewSmoke;
+            const mount = document.createElement('div');
+            document.body.appendChild(mount);
+            const refs = renderer.renderDocsViewerInfoPanelShell({ mount, document });
+            return {
+                title: refs.title ? refs.title.textContent.trim() : '',
+                hasLabel: Boolean(mount.querySelector('#docsViewerInfoPanelLabel')),
+                hasToolbar: Boolean(mount.querySelector('#docsViewerInfoPanelToolbar')),
+                hasViewButton: Boolean(mount.querySelector('[data-info-panel-view]')),
+                bodyMount: refs.body ? refs.body.getAttribute('data-docs-viewer-hosted-view-mount') : ''
+            };
+        }"""
+    )
+    expected = {
+        "title": "info",
+        "hasLabel": False,
+        "hasToolbar": False,
+        "hasViewButton": False,
+        "bodyMount": "metadata-info",
+    }
+    if result != expected:
+        raise AssertionError(f"info panel shell did not stay simple: {result!r}")
 
 
 def assert_public_reader_metadata(page: Page) -> None:
@@ -184,6 +212,7 @@ def smoke_fixture_path(site_root: Path) -> str:
 def run_smoke(page: Page, base_url: str, fixture_path: str) -> None:
     page.goto(route_url(base_url, fixture_path), wait_until="domcontentloaded")
     install_fixture(page)
+    assert_info_panel_shell_is_simple(page)
     assert_context_hydrates_from_payload(page)
     assert_public_reader_metadata(page)
     assert_manage_metadata(page)

@@ -193,6 +193,7 @@ function loadSource(context, state) {
       state.loaded = true;
       if (state.textarea) {
         state.textarea.value = state.lastCleanBody;
+        state.textarea.setSelectionRange(0, 0);
         state.textarea.focus();
       }
       renderLineNumbers(state.gutter, state.lastCleanBody);

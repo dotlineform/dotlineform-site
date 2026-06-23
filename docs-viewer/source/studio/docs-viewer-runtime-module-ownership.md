@@ -52,7 +52,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Hosted-view registry | `docs-viewer-hosted-views.js`, `docs-viewer-management-hosted-views.js` | Minimal hosted-view registration, public-safe built-in records, access/availability checks, graceful absence, and manage-owned records for true panel views. |
 | Main-view host | `docs-viewer-main-view-host.js`, `docs-viewer-view-context.js` | Main-view availability checks, active view projection, switch-intent handling, toolbar handoff, and selected-document context projection. |
 | Document display modes | `docs-viewer-document-display-mode-host.js`, `docs-viewer-management-hosted-views.js`, `docs-viewer-view-context.js` | Rendered/source display-mode lifecycle inside the document main view, including capability-gated source-editor service slots. |
-| Info-panel host | `docs-viewer-info-panel-controller.js`, `docs-viewer-info-panel-renderer.js`, `docs-viewer-info-panel-host.js`, `docs-viewer-metadata-info-view.js` | Info toggle/toolbar binding, selected-document hosted-view context, open/close/update behavior, public-safe metadata rendering, and graceful absence. |
+| Info-panel host | `docs-viewer-info-panel-controller.js`, `docs-viewer-info-panel-renderer.js`, `docs-viewer-info-panel-host.js`, `docs-viewer-metadata-info-view.js` | Info toggle binding, selected-document hosted-view context, outside-context view selection, open/close/update behavior, public-safe metadata rendering, and graceful absence. |
 
 ## Document, Navigation, Search, And Bookmarks
 

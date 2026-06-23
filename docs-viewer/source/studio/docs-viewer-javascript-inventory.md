@@ -44,7 +44,7 @@ Risk themes:
 | docs-viewer-document-display-mode-host.js           | Document-view display-mode lifecycle owner for rendered/source modes inside the rendered-document main view.                                                                                                               |
 | docs-viewer-index-panel-renderer.js                 | App-shell-owned index panel chrome renderer and projection applier.                                                                                                                                                         |
 | docs-viewer-index-panel.js                          | index panel state, current-key persistence, toggle projection, and document-pane visibility helper.                                                                                                                         |
-| docs-viewer-info-panel-controller.js                | Focused info-panel coordination owner for selected-document context, toggle state, toolbar click handoff, open/update/close behavior, and public-safe availability.                                                         |
+| docs-viewer-info-panel-controller.js                | Focused info-panel coordination owner for selected-document context, toggle state, outside-context view selection, open/update/close behavior, and public-safe availability.                                                |
 | docs-viewer-info-panel-host.js                      | Info-panel hosted-view lifecycle owner for load, mount, update, unmount, close, and graceful absence.                                                                                                                       |
 | docs-viewer-info-panel-renderer.js                  | App-shell-owned info-panel chrome renderer and projection applier.                                                                                                                                                          |
 | docs-viewer-main-view-host.js                       | Main-view switch-intent and availability owner for rendered-document, search-results, and recent-results.                                                                                                                   |
@@ -163,7 +163,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`
 
 - This controller now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs instead of broad `state`.
-- Keep this module limited to selected-document hosted-view context, metadata-info default open behavior, toggle projection, toolbar click handoff, update-on-document-change, close behavior, view-state projection sync, and public-safe availability.
+- Keep this module limited to selected-document hosted-view context, configured default-view opening, toggle projection, update-on-document-change, close behavior, view-state projection sync, and public-safe availability.
 - Do not move info-panel chrome rendering, hosted-view registration, metadata presentation, document payload rendering, URL history, or management writes into it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-runtime-lazy-controller.js`
@@ -347,14 +347,13 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`
 
 - the focused renderer for info-panel shell chrome.
-- minimal info-panel toolbar rendering and projection moved here. It renders view buttons from projected hosted-view options and marks disabled/access-blocked views as unavailable without owning lifecycle or route state.
-- Keep this module limited to rendering the info-panel container, accessible title/label, close control, toolbar, hosted-view mount, status node, and projection attributes.
-- Do not move hosted-view lifecycle, metadata rendering, source editing, panel toolbar selection, or management actions into it.
+- Keep this module limited to rendering the info-panel container, accessible title, close control, hosted-view mount, status node, and projection attributes.
+- Do not move hosted-view lifecycle, metadata rendering, source editing, panel view selection, or management actions into it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js`
 
 - the focused lifecycle owner for info-panel hosted views.
-- info hosted-view option projection moved here. The host now exposes `viewOptions()` and includes info view options in panel projection so the renderer can show available, disabled, unavailable, and access-blocked states.
+- The host exposes `viewOptions()` only for controller-level availability checks; the info panel shell does not render an internal hosted-view toolbar.
 - this host is the concrete Docs Viewer hosted-view lifecycle model: resolve/list, load, mount, update, unmount, close, dispose, and graceful absence. It should not become a general plugin platform.
 - Keep this module limited to resolving/listing registered info views, loading them, mounting/updating/unmounting them in the assigned info-panel body, closing the panel, and reporting graceful absence.
 - Do not add route-state mutation, URL history behavior, metadata field rendering, backend writes, or plugin discovery to it.

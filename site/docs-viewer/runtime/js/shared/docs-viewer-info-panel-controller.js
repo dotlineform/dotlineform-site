@@ -117,14 +117,6 @@ export function createDocsViewerInfoPanelController(options) {
         close();
       });
     }
-
-    if (refs.toolbar) {
-      refs.toolbar.addEventListener("click", function (event) {
-        var button = event.target.closest("[data-info-panel-view]");
-        if (!button || button.disabled) return;
-        openView(button.dataset.infoPanelView);
-      });
-    }
   }
 
   return {

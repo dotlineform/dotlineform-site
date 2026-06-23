@@ -185,6 +185,7 @@ When rendered-document mode is active, the info toggle defaults back to `metadat
 If the semantic picker panel is open when the source editor unmounts, the panel switches back to metadata.
 The default view mapping is supplied by the management entrypoint.
 Shared Docs Viewer runtime code applies the generic mapping and adapter lifecycle, but does not hardcode semantic picker ids, modules, or CSS selectors.
+The info panel shell keeps a single `info` title and no internal view-switching toolbar; document/source mode changes select the active hosted view.
 
 The picker reads the registry and generated target lookup through static browser URLs.
 It searches target titles in the browser, renders compact target rows from `title`, `kind`, `id`, and `meta`, and inserts a token only when the source editor has selected text and a chosen target.
