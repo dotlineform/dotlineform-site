@@ -29,10 +29,12 @@ CATALOGUE_KIND_SOURCES = {
         "root_key": "series",
         "id_field": "series_id",
     },
+}
+
+DOCS_SCOPE_KIND_SOURCES = {
     "moment": {
-        "filename": "moments.json",
-        "root_key": "moments",
-        "id_field": "moment_id",
+        "index_tree": "docs-viewer/generated/docs/moments/index-tree.json",
+        "by_id": "docs-viewer/generated/docs/moments/by-id",
     },
 }
 
@@ -61,6 +63,23 @@ def json_rows(payload: Any, root_key: str) -> list[dict[str, Any]]:
     records = payload.get(root_key) if isinstance(payload, dict) else None
     rows = records.values() if isinstance(records, dict) else records if isinstance(records, list) else []
     return [dict(row) for row in rows if isinstance(row, dict)]
+
+
+def docs_index_rows(payload: Any) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+
+    def collect(records: Any) -> None:
+        if not isinstance(records, list):
+            return
+        for record in records:
+            if not isinstance(record, dict):
+                continue
+            rows.append(dict(record))
+            collect(record.get("children"))
+
+    if isinstance(payload, dict):
+        collect(payload.get("docs"))
+    return rows
 
 
 def load_json(path: Path) -> Any:
@@ -116,6 +135,14 @@ def target_meta(kind: str, record: dict[str, Any], *, series_titles: dict[str, s
     return meta
 
 
+def docs_scope_target_meta(payload: dict[str, Any]) -> list[str]:
+    meta: list[str] = []
+    date_value = display_date(payload)
+    if date_value:
+        meta.append(date_value)
+    return meta
+
+
 def target_row(
     kind: SemanticReferenceKind,
     record: dict[str, Any],
@@ -135,6 +162,30 @@ def target_row(
         "id": normalized_id,
         "title": title,
         "meta": target_meta(kind.kind, record, series_titles=series_titles),
+    }
+
+
+def docs_scope_target_row(
+    kind: SemanticReferenceKind,
+    index_row: dict[str, Any],
+    source: dict[str, Any],
+    *,
+    repo_root: Path,
+) -> dict[str, Any] | None:
+    non_loadable = source.get("non_loadable_doc_ids")
+    if isinstance(non_loadable, set) and index_row.get("doc_id") in non_loadable:
+        return None
+    doc_id = str(index_row.get("doc_id") or "").strip()
+    normalized_id = normalize_semantic_reference_id(doc_id, kind.id)
+    title = str(index_row.get("title") or "").strip()
+    if not normalized_id or not title:
+        return None
+    payload = load_json(repo_root / str(source["by_id"]) / f"{normalized_id}.json")
+    return {
+        "kind": kind.kind,
+        "id": normalized_id,
+        "title": title,
+        "meta": docs_scope_target_meta(payload if isinstance(payload, dict) else {}),
     }
 
 
@@ -171,14 +222,32 @@ class SemanticTargetLookupBuilder:
         series_titles = series_titles_by_id(json_rows(series_payload, str(series_source["root_key"])))
         for kind in registry.kinds:
             source = CATALOGUE_KIND_SOURCES.get(kind.kind)
-            if source is None:
+            if source is not None:
+                payload = load_json(source_root / str(source["filename"]))
+                for record in json_rows(payload, str(source["root_key"])):
+                    row = target_row(kind, record, source, series_titles=series_titles)
+                    if row is not None:
+                        targets.append(row)
                 continue
-            payload = load_json(source_root / str(source["filename"]))
-            for record in json_rows(payload, str(source["root_key"])):
-                row = target_row(kind, record, source, series_titles=series_titles)
+            docs_source = DOCS_SCOPE_KIND_SOURCES.get(kind.kind)
+            if docs_source is None:
+                continue
+            payload = load_json(self.repo_root / str(docs_source["index_tree"]))
+            source_with_options = dict(docs_source)
+            viewer_options = payload.get("viewer_options") if isinstance(payload, dict) else {}
+            non_loadable_doc_ids = viewer_options.get("non_loadable_doc_ids") if isinstance(viewer_options, dict) else []
+            source_with_options["non_loadable_doc_ids"] = set(non_loadable_doc_ids or [])
+            for record in docs_index_rows(payload):
+                row = docs_scope_target_row(kind, record, source_with_options, repo_root=self.repo_root)
                 if row is not None:
                     targets.append(row)
-        targets.sort(key=lambda row: (registry.kind(row["kind"]).order if registry.kind(row["kind"]) else 999, normalize_lookup_text(row["title"]), row["id"]))
+        targets.sort(
+            key=lambda row: (
+                registry.kind(row["kind"]).order if registry.kind(row["kind"]) else 999,
+                normalize_lookup_text(row["title"]),
+                row["id"],
+            )
+        )
         return {
             "schema_version": SEMANTIC_TARGET_LOOKUP_SCHEMA_VERSION,
             "targets": targets,

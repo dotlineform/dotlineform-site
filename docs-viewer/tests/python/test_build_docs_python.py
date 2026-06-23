@@ -72,7 +72,7 @@ def write_semantic_reference_registry(root: Path) -> None:
                         "input_pattern": "^[a-z0-9][a-z0-9-]*$",
                         "example": "lotus-pond",
                     },
-                    "route": {"type": "query", "path": "/moments/", "param": "moment"},
+                    "route": {"type": "query", "path": "/moments/", "param": "doc"},
                     "source_editor": {"selection_search": True, "picker": True},
                 },
             ],

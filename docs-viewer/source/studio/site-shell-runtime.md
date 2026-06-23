@@ -100,7 +100,7 @@ Current default-layout public nav:
 
 Current public active-state rules:
 
-- `/series/`, `/series/?series=<series_id>`, `/moments/`, and `/moments/?moment=<moment_id>` are treated as part of the `works` section
+- `/series/`, `/series/?series=<series_id>`, `/moments/`, and `/moments/?doc=<moment_doc_id>` are treated as part of the `works` section
 - there is no separate top-level `moments` nav item
 
 ## Docs Viewer Shell Boundary

@@ -2,7 +2,7 @@
 doc_id: data-models-catalogue-indexes
 title: Catalogue Indexes And Payloads
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-06-23
 parent_id: studio
 viewable: true
 ---
@@ -154,13 +154,13 @@ Why it is the most important catalogue record:
 - avoiding a separate global detail index reduces duplication and keeps detail ordering local to the work that owns it
 - work prose is optional, so the record still exists even when `_docs_catalogue/works/<work_id>.md` is missing
 
-### `site/assets/moments/index/<moment_id>.json`
+### Retired `site/assets/moments/index/<moment_id>.json`
 
 Purpose:
 
-- page-local payload for one moment
+- retired page-local payload for one moment
 
-Current content families:
+Former content families:
 
 - generated runtime moment metadata
 - rendered prose as `content_html`
@@ -168,11 +168,13 @@ Current content families:
 
 Current route mapping:
 
-- `/moments/?moment=<moment_id>`
+- selected moments render through the public Docs Viewer moments scope at `/moments/?doc=<moment_doc_id>`
+- current payloads live under `site/assets/data/docs/scopes/moments/index-tree.json` and `site/assets/data/docs/scopes/moments/by-id/<moment_doc_id>.json`
 
-Why it exists:
+Why it is retired:
 
-- the moment page needs prose and image metadata, but the merged catalogue list does not
+- the public moment page now uses Docs Viewer scope payloads for prose, metadata, and routing
+- the merged catalogue list still uses lightweight moment index data where needed
 
 ## Catalogue Search Model
 

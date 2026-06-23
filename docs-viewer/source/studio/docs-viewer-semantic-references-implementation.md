@@ -97,7 +97,7 @@ Current registry-backed route output:
 
 - `work`: `/works/?work=<work_id>`
 - `series`: `/series/?series=<series_id_or_slug>`
-- `moment`: `/moments/?moment=<moment_id>`
+- `moment`: `/moments/?doc=<moment_doc_id>`
 
 The builder and browser helpers consume the same registry so supported-kind and route definitions do not drift.
 Adding a new kind should normally start with a new registry kind record and only add code when the new kind needs a new id normalizer or target lookup source.
@@ -206,6 +206,8 @@ Field intent:
 
 The lookup includes only published targets because draft records do not have public link targets.
 Catalogue write/build follow-through refreshes the lookup after relevant catalogue source or canonical data changes.
+Moment targets are sourced from the generated public Docs Viewer `moments` scope, not from catalogue `works.json` or `series.json`.
+The generator reads `docs-viewer/generated/docs/moments/index-tree.json` and per-moment payloads under `docs-viewer/generated/docs/moments/by-id/`.
 
 The generated JSON is formatted with compact one-line target rows so records are easy to scan and cross-check.
 

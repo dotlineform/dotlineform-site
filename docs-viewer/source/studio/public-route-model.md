@@ -43,7 +43,7 @@ This document is the durable route contract for the public site.
 /work-details/?detail=00001-001    selected work detail view
 
 /moments/                          moments browse shell
-/moments/?moment=a-doll-story      selected moment view
+/moments/?doc=a-doll-story         selected moment doc view
 
 /catalogue/search/                 public catalogue search shell
 /library/                          public read-only Library Docs Viewer install
@@ -80,7 +80,7 @@ Query parameters are route state, not compatibility shims for old paths.
 - `work` on `/works/` selects a work in the works shell.
 - `series` on `/works/` preserves visible series navigation context for a selected work.
 - `detail` on `/work-details/` selects a work detail in the work-detail shell.
-- `moment` on `/moments/` selects a moment in the moments shell.
+- `doc` on `/moments/` selects a moment document in the Docs Viewer moments shell.
 
 Important return paths should be represented by explicit in-page links.
 Browser history is useful but should not be the primary mechanism for required navigation context.
@@ -88,7 +88,7 @@ Browser history is useful but should not be the primary mechanism for required n
 ## Moment Routes
 
 Moments use the same shell, query-state, and generated-payload model as works, series, and work details.
-Selected moments are rendered by the `/moments/` shell from generated moment JSON, with the selected record identified by the `moment` query parameter.
+Selected moments are rendered by the `/moments/` shell from generated Docs Viewer moments scope payloads, with the selected record identified by the `doc` query parameter.
 
 ## URL Ownership
 

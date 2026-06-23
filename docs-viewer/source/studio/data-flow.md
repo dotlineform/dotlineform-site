@@ -2,7 +2,7 @@
 doc_id: data-flow
 title: Data Flow
 added_date: 2026-03-31
-last_updated: 2026-06-11
+last_updated: 2026-06-23
 parent_id: studio
 viewable: true
 ---
@@ -23,7 +23,7 @@ Current public browsing routes covered here:
 - `/works/?work=<work_id>`
 - `/work-details/?detail=<detail_uid>`
 - `/moments/`
-- `/moments/?moment=<moment_id>`
+- `/moments/?doc=<moment_doc_id>`
 
 The main live rebuild path for these artifacts is the scoped JSON build flow described in [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json).
 
@@ -36,7 +36,8 @@ Current generated JSON files involved in this flow:
 - `site/assets/data/works_index.json`
 - `site/assets/series/index/<series_id>.json`
 - `site/assets/works/index/<work_id>.json`
-- `site/assets/moments/index/<moment_id>.json`
+- `site/assets/data/docs/scopes/moments/index-tree.json`
+- `site/assets/data/docs/scopes/moments/by-id/<moment_doc_id>.json`
 
 ## 1. Catalogue Index
 
@@ -60,7 +61,7 @@ How the page uses them:
 - `works` mode is built from `series_index.json`
 - `moments` mode is built from `moments_index.json`
 - selected-series state is restored from `?series=<series_id>` and uses `site/assets/data/works_index.json` for lightweight work-card metadata
-- moment card URLs are built with the shared public route helper as `/moments/?moment=<moment_id>`
+- moment card URLs point to the Docs Viewer moments route as `/moments/?doc=<moment_doc_id>`
 
 This route does not read per-series, per-work, or per-moment JSON records.
 
@@ -143,19 +144,23 @@ This route does not use a global detail index.
 
 User-facing step:
 
-- `/moments/?moment=<moment_id>`
-- shows one moment plus its prose body
+- `/moments/`
+- `/moments/?doc=<moment_doc_id>`
+- shows the moments Docs Viewer shell or one selected moment document
 
 Current JSON used:
 
-- `site/assets/moments/index/<moment_id>.json`
+- `site/assets/data/docs/scopes/moments/index-tree.json`
+- `site/assets/data/docs/scopes/moments/by-id/<moment_doc_id>.json`
+- `site/assets/data/search/moments/index.json`
 
 Template and runtime:
 
-- `moments/index.md`
-- `site/assets/js/moment.js`
+- `site/moments/index.html`
+- `site/docs-viewer/runtime/js/public/docs-viewer-public.js`
 
-The selected moment view is moment-local after route parsing. `/moments/` without a selected moment reads `moments_index.json` and renders a browse list.
+The selected moment view is now a public Docs Viewer scope route.
+The route parser uses the shared Docs Viewer `doc` query parameter, and `/moments/` without a selected document renders the moments scope index.
 
 ## Search Boundary
 
@@ -193,11 +198,11 @@ The implemented data flow is now:
    - uses `site/assets/works/index/<work_id>.json`
 
 5. `/moments/`
-   - uses `site/assets/data/moments_index.json`
-   - renders the moments browse list
+   - uses `site/assets/data/docs/scopes/moments/index-tree.json`
+   - renders the moments Docs Viewer index
 
-6. `/moments/?moment=<moment_id>`
-   - uses `site/assets/moments/index/<moment_id>.json`
+6. `/moments/?doc=<moment_doc_id>`
+   - uses `site/assets/data/docs/scopes/moments/by-id/<moment_doc_id>.json`
 
 7. `/catalogue/search/`
    - uses `site/assets/data/search/catalogue/index.json`

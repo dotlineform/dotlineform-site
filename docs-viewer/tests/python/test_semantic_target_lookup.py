@@ -48,6 +48,12 @@ def write_registry(root: Path) -> None:
                     "route": {"type": "query", "path": "/works/", "param": "work"},
                     "source_editor": {"selection_search": True, "picker": True},
                 },
+                {
+                    "kind": "moment",
+                    "id": {"normalizer": "slug", "input_pattern": "^[a-z0-9][a-z0-9-]*$", "example": "lotus-pond"},
+                    "route": {"type": "query", "path": "/moments/", "param": "doc"},
+                    "source_editor": {"selection_search": True, "picker": True},
+                },
             ],
         },
     )
@@ -79,6 +85,21 @@ def write_catalogue(root: Path) -> None:
             }
         },
     )
+    write_json(
+        root / "docs-viewer/generated/docs/moments/index-tree.json",
+        {
+            "schema": "docs_index_tree_v1",
+            "viewer_options": {"non_loadable_doc_ids": ["moments"]},
+            "docs": [
+                {"doc_id": "lotus-pond", "title": "lotus pond", "content_url": "/assets/data/docs/scopes/moments/by-id/lotus-pond.json"},
+                {"doc_id": "moments", "title": "Moments", "content_url": "/assets/data/docs/scopes/moments/by-id/moments.json"},
+            ],
+        },
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/moments/by-id/lotus-pond.json",
+        {"title": "lotus pond", "date": "2024-10-23", "date_display": "c. 2024"},
+    )
 
 
 def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
@@ -91,14 +112,16 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         output_text = output_path.read_text(encoding="utf-8")
         payload = read_json(output_path)
 
-    assert result["diagnostics"]["target_count"] == 2
+    assert result["diagnostics"]["target_count"] == 3
     assert payload["schema_version"] == "docs_semantic_reference_target_lookup_v1"
-    assert [(row["kind"], row["id"]) for row in payload["targets"]] == [("series", "005"), ("work", "00638")]
+    assert [(row["kind"], row["id"]) for row in payload["targets"]] == [("series", "005"), ("work", "00638"), ("moment", "lotus-pond")]
     assert payload["targets"][0] == {"kind": "series", "id": "005", "title": "3 symbols", "meta": ["2007"]}
     assert payload["targets"][1] == {"kind": "work", "id": "00638", "title": "3 symbols", "meta": ["2007", "3 symbols"]}
+    assert payload["targets"][2] == {"kind": "moment", "id": "lotus-pond", "title": "lotus pond", "meta": ["c. 2024"]}
     assert output_text.endswith("\n")
     assert '    {"kind":"series","id":"005","title":"3 symbols","meta":["2007"]},\n' in output_text
-    assert '    {"kind":"work","id":"00638","title":"3 symbols","meta":["2007","3 symbols"]}\n' in output_text
+    assert '    {"kind":"work","id":"00638","title":"3 symbols","meta":["2007","3 symbols"]},\n' in output_text
+    assert '    {"kind":"moment","id":"lotus-pond","title":"lotus pond","meta":["c. 2024"]}\n' in output_text
 
 
 def test_semantic_target_lookup_cli_writes_payload() -> None:
@@ -119,7 +142,7 @@ def test_semantic_target_lookup_cli_writes_payload() -> None:
 
     assert exit_code == 0
     assert "Semantic target lookup (write)" in stdout.getvalue()
-    assert len(payload["targets"]) == 2
+    assert len(payload["targets"]) == 3
 
 
 def main_test() -> None:

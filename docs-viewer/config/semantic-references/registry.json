@@ -48,7 +48,7 @@
       "route": {
         "type": "query",
         "path": "/moments/",
-        "param": "moment"
+        "param": "doc"
       },
       "source_editor": {
         "selection_search": true,

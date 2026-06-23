@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-63faeda551dc7c74d16c2163c8d3d02b",
-    "generated_at_utc": "2026-06-23T17:02:20Z",
+    "version": "blake2b-ed53201bb96fd4739b0240beb5a75c73",
+    "generated_at_utc": "2026-06-23T17:15:57Z",
     "count": 222
   },
   "entries": [
@@ -4266,10 +4266,10 @@
       "kind": "doc",
       "title": "Catalogue Indexes And Payloads",
       "href": "/docs/?scope=studio&doc=data-models-catalogue-indexes",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-06-23",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-19 • Studio",
+      "display_meta": "2026-06-23 • Studio",
       "search_terms": [
         "data-models-catalogue-indexes",
         "data",
@@ -4280,12 +4280,12 @@
         "and",
         "payloads",
         "studio",
-        "2026-05-19",
+        "2026-06-23",
         "2026",
-        "05",
-        "19"
+        "06",
+        "23"
       ],
-      "search_text": "data-models-catalogue-indexes data models catalogue indexes catalogue indexes and payloads and payloads studio 2026-05-19 2026 05 19"
+      "search_text": "data-models-catalogue-indexes data models catalogue indexes catalogue indexes and payloads and payloads studio 2026-06-23 2026 06 23"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -4756,22 +4756,22 @@
       "kind": "doc",
       "title": "Data Flow",
       "href": "/docs/?scope=studio&doc=data-flow",
-      "last_updated": "2026-06-11",
+      "last_updated": "2026-06-23",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-11 • Studio",
+      "display_meta": "2026-06-23 • Studio",
       "search_terms": [
         "data-flow",
         "data",
         "flow",
         "data flow",
         "studio",
-        "2026-06-11",
+        "2026-06-23",
         "2026",
         "06",
-        "11"
+        "23"
       ],
-      "search_text": "data-flow data flow data flow studio 2026-06-11 2026 06 11"
+      "search_text": "data-flow data flow data flow studio 2026-06-23 2026 06 23"
     },
     {
       "id": "config-data-sharing-files",
