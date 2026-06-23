@@ -67,15 +67,17 @@ Runtime JavaScript and config should live in these areas:
 
 - `docs-viewer/runtime/js/management/source-editor/` for source-editor-owned semantic modules, including token construction, selected-text adapter usage, registry reads, target lookup reads, and picker support helpers
 - `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js` for registering the manage-only `semantic-token-picker` hosted view
-- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`, `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js`, and `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` only for narrow integration if the existing context/info panel host cannot already select the correct default view or pass the required hosted-view context
+- `docs-viewer/runtime/js/management/docs-viewer-manage.js` for manage-owned mapping from document display mode to default info-panel view
+- `docs-viewer/static/css/docs-viewer-manage.css` for semantic picker styling; semantic picker CSS should not be added to the public/shared Docs Viewer stylesheet
+- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`, `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js`, `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`, `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js`, and `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` only for generic hosted-view plumbing, such as passing hosted-view context or applying a configured default info-panel view
 - `docs-viewer/config/semantic-references/registry.json` for the checked-in semantic-reference registry
 - `docs-viewer/generated/semantic-references/target-lookup.json` for the generated browser-side lookup used by v1 selected-text search
 
 Existing Docs Viewer modules expected to need integration code:
 
-- `docs-viewer/runtime/js/management/source-editor/source-editor.js` should expose a narrow semantic-token adapter for reading selected text, replacing the selected range, returning focus, and reporting insertion status
+- `docs-viewer/runtime/js/management/source-editor/source-editor.js` should expose a narrow source-editor context adapter for reading selected text, replacing the selected range, returning focus, and reporting insertion status
 - the hosted-view registry should expose `semantic-token-picker` as a manage-only `info` panel view while the Markdown source editor is active
-- the context/info panel default-view selection should surface `metadata-info` for rendered documents and `semantic-token-picker` for the source editor
+- the management entrypoint should configure context/info panel default-view selection so rendered documents use `metadata-info` and the source editor uses `semantic-token-picker`; shared runtime code should not hardcode the semantic picker id
 - `docs-viewer/build/build_docs.py` may need to read the registry for supported token kinds and route construction so builder support does not drift from editor support, while still avoiding target-existence validation
 - the target lookup generator should read existing source/generated catalogue data for current v1 kinds and emit compact title-weighted rows for `work`, `series`, and `moment`
 
@@ -95,7 +97,8 @@ Settled implementation decisions before v1 starts:
 - `build_docs.py` should not own target lookup generation; docs payload rebuilds and semantic target lookup freshness are related but separate build products
 - `docs-viewer/config/semantic-references/registry.json` and `docs-viewer/generated/semantic-references/target-lookup.json` are already browser-addressable in local manage mode through existing `/docs-viewer/config/` and `/docs-viewer/generated/` static route prefixes once the files exist
 - the source editor should expose its semantic-token adapter through hosted-view context during `markdown-source` activation, and clear it on teardown; avoid broad globals such as `window`-level editor handles
-- if a shared adapter holder is needed, make it an explicit scoped runtime service with `setActiveSourceEditorAdapter()` and `clearActiveSourceEditorAdapter()` lifecycle rather than route-global mutable state
+- if a shared adapter holder is needed, make it an explicit scoped runtime service with `setActiveSourceEditorContextAdapter()` and `clearActiveSourceEditorContextAdapter()` lifecycle rather than route-global mutable state
+- shared runtime may carry generic source-editor context adapter lifecycle and generic info-panel default-view mapping, but semantic picker ids, modules, CSS selectors, and row UI stay under management/source-editor ownership
 - picker search should read the current selection when the picker opens, then update while the picker is active on textarea selection/input events with a small debounce; it should not run background lookup work while the context/info panel is closed
 - v1 lookup rows should stay minimal: `kind`, `id`, `title`, and optional `meta`
 - v1 lookup generation should include only published targets because draft records do not have link targets
@@ -441,6 +444,9 @@ The default context-panel view should follow the active main view:
 - when the Markdown source editor is active, opening the context/info panel should show `semantic-token-picker` if it is available
 - when the source editor exits back to the rendered document, the context/info panel should return to `metadata-info` or close according to the existing panel state rules
 
+This default-view choice is a management entrypoint setting.
+Shared Docs Viewer runtime code may apply a generic document-mode-to-default-info-view mapping, but it should not hardcode `semantic-token-picker` or other semantic-reference feature details.
+
 This makes the semantic picker feel like source-editor context rather than a separate destination.
 The user can still switch hosted views through the context-panel toolbar when more than one view is available.
 
@@ -505,6 +511,7 @@ If another Docs Viewer management feature later needs the same interaction, prom
 
 The hosted view should be registered through the existing hosted-view registry as an `info` panel view.
 It should not create a new panel host, sidebar, app-shell region, or route-level display mode.
+Its CSS belongs in `docs-viewer/static/css/docs-viewer-manage.css`, not `site/docs-viewer/static/css/docs-viewer.css`, so the public Docs Viewer route does not load semantic picker selectors.
 
 `source-editor.js` should stay focused on display-mode lifecycle, textarea state, dirty/save/rebuild behavior, and rendered-view return.
 It can register semantic-token controls when the registry and helper modules are available, passing only a narrow editor adapter into those modules.
@@ -544,9 +551,9 @@ Acceptance:
 
 Tasks:
 
-- [ ] add a browser helper that reads and normalizes the semantic-reference registry
-- [ ] expose supported types, target lookup URL, and source-editor surface availability
-- [ ] handle missing or malformed registry data with clear unavailable states
+- [x] add a browser helper that reads and normalizes the semantic-reference registry
+- [x] expose supported types, target lookup URL, and source-editor surface availability
+- [x] handle missing or malformed registry data with clear unavailable states
 
 Acceptance:
 
@@ -558,13 +565,15 @@ Acceptance:
 
 Tasks:
 
-- [ ] register `semantic-token-picker` as a manage-only `info` panel hosted view
-- [ ] make the view available only while the Markdown source editor can provide the semantic-token adapter
-- [ ] use the existing context/info panel shell, toolbar, status area, close behavior, and hosted-view lifecycle
-- [ ] make the context/info panel default to `semantic-token-picker` while the Markdown source editor is active
-- [ ] make the context/info panel default to `metadata-info` while the rendered document is active
-- [ ] keep metadata/info as a separate hosted view in the same panel
-- [ ] pass only the narrow source-editor adapter and registry-derived support data into the picker view
+- [x] register `semantic-token-picker` as a manage-only `info` panel hosted view
+- [x] make the view available only while the Markdown source editor can provide the semantic-token adapter
+- [x] use the existing context/info panel shell, toolbar, status area, close behavior, and hosted-view lifecycle
+- [x] make the context/info panel default to `semantic-token-picker` while the Markdown source editor is active
+- [x] make the context/info panel default to `metadata-info` while the rendered document is active
+- [x] keep the `semantic-token-picker` default mapping in the management entrypoint rather than hardcoding it in shared runtime
+- [x] keep semantic picker styles in the management stylesheet rather than the public/shared stylesheet
+- [x] keep metadata/info as a separate hosted view in the same panel
+- [x] pass only the narrow source-editor adapter and registry-derived support data into the picker view
 
 Acceptance:
 
@@ -578,13 +587,13 @@ Acceptance:
 
 Tasks:
 
-- [ ] load the generated semantic-target lookup from the registry-defined URL
-- [ ] search title-focused target records browser-side from the current editor selection
-- [ ] search the current v1 token kinds from the current editor selection: `work`, `series`, and `moment`
-- [ ] render candidate rows from lookup `title`, `id`, `kind`, and `meta` fields
-- [ ] use a lightweight `semantic-target-picker.js` list component for row rendering, mouse selection, active row state, and keyboard selection behavior
-- [ ] keep `semantic-target-picker.js` local to the source-editor feature in v1, while structuring the selectable-list behavior so it can be promoted to a shared management helper after a second consumer appears
-- [ ] handle stale or missing target data without changing builder behavior
+- [x] load the generated semantic-target lookup from the registry-defined URL
+- [x] search title-focused target records browser-side from the current editor selection
+- [x] search the current v1 token kinds from the current editor selection: `work`, `series`, and `moment`
+- [x] render candidate rows from lookup `title`, `id`, `kind`, and `meta` fields
+- [x] use a lightweight `semantic-target-picker.js` list component for row rendering, mouse selection, active row state, and keyboard selection behavior
+- [x] keep `semantic-target-picker.js` local to the source-editor feature in v1, while structuring the selectable-list behavior so it can be promoted to a shared management helper after a second consumer appears
+- [x] handle stale or missing target data without changing builder behavior
 
 Acceptance:
 
@@ -602,11 +611,11 @@ Acceptance:
 
 Tasks:
 
-- [ ] read selected text from the Markdown editor
-- [ ] build a semantic-reference token from selected type, target id, and selected text
-- [ ] insert the token at the current selection offsets
-- [ ] keep the inserted token in the local editor buffer until `Rebuild doc`
-- [ ] preserve browser-native undo behavior where practical
+- [x] read selected text from the Markdown editor
+- [x] build a semantic-reference token from selected type, target id, and selected text
+- [x] insert the token at the current selection offsets
+- [x] keep the inserted token in the local editor buffer until `Rebuild doc`
+- [x] preserve browser-native undo behavior where practical
 
 Acceptance:
 
@@ -622,12 +631,12 @@ Tasks:
 
 - [x] add focused tests for registry-backed builder render output and generated reference artifacts
 - [x] add focused tests for semantic-target lookup generation
-- [ ] add focused tests for browser ranking
+- [x] add focused tests for browser ranking
 - [x] add focused tests for registry normalization
-- [ ] add focused tests for target option shaping
-- [ ] add focused tests for token construction
-- [ ] add browser smoke coverage for semantic insertion inside the Markdown editor
-- [ ] update semantic-reference implementation and editor docs after implementation
+- [x] add focused tests for target option shaping
+- [x] add focused tests for token construction
+- [x] add browser smoke coverage for semantic insertion inside the Markdown editor
+- [x] update semantic-reference implementation and editor docs after implementation
 
 Acceptance:
 
@@ -688,9 +697,9 @@ Add focused tests or smoke checks for:
 
 - [x] semantic-reference registry read/normalization
 - [x] semantic-target lookup generation
-- [ ] title-weighted target ranking
+- [x] title-weighted target ranking
 - [ ] missing registry unavailable state
-- [ ] target option normalization
-- [ ] token construction
-- [ ] token insertion into selected source text
-- [ ] no source write before `Rebuild doc`
+- [x] target option normalization
+- [x] token construction
+- [x] token insertion into selected source text
+- [x] no source write before `Rebuild doc`

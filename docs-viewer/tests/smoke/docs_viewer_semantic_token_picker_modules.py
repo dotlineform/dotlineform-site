@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""Smoke-check Docs Viewer semantic token picker modules."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from playwright.sync_api import Page, sync_playwright
+
+from docs_viewer_management_modal_support import route_url, start_static_server
+
+
+def install_fixture(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            const registry = await import('/docs-viewer/runtime/js/management/source-editor/semantic-reference-registry.js');
+            const targets = await import('/docs-viewer/runtime/js/management/source-editor/semantic-targets.js');
+            const tokenEditor = await import('/docs-viewer/runtime/js/management/source-editor/semantic-token-editor.js');
+            const picker = await import('/docs-viewer/runtime/js/management/source-editor/semantic-token-picker-view.js');
+            window.__docsViewerSemanticPickerSmoke = { registry, targets, tokenEditor, picker };
+        }"""
+    )
+
+
+def assert_helper_modules(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const smoke = window.__docsViewerSemanticPickerSmoke;
+            const registry = smoke.registry.normalizeSemanticReferenceRegistry({
+                schema_version: 'docs_semantic_reference_registry_v1',
+                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                kinds: [
+                    { kind: 'series', source_editor: { picker: true, selection_search: true } },
+                    { kind: 'work', source_editor: { picker: true, selection_search: true } }
+                ]
+            });
+            const rows = smoke.targets.normalizeSemanticTargets({
+                targets: [
+                    { kind: 'series', id: '005', title: '3 symbols', meta: ['2007'] },
+                    { kind: 'work', id: '00638', title: '3 symbols', meta: ['2007', '3 symbols'] },
+                    { kind: 'unknown', id: '1', title: 'Ignored' }
+                ]
+            }, registry);
+            const matches = smoke.targets.collectSemanticTargetMatches(rows, 'symbols', registry, 10);
+            return {
+                targetLookupUrl: registry.targetLookupUrl,
+                rows: rows.map((row) => `${row.kind}:${row.id}`),
+                matches: matches.map((row) => `${row.kind}:${row.id}`),
+                token: smoke.tokenEditor.buildSemanticReferenceToken(matches[0], '3 symbols')
+            };
+        }"""
+    )
+    if result != {
+        "targetLookupUrl": "/docs-viewer/generated/semantic-references/target-lookup.json",
+        "rows": ["series:005", "work:00638"],
+        "matches": ["series:005", "work:00638"],
+        "token": "[[ref:series:005|3 symbols]]",
+    }:
+        raise AssertionError(f"semantic picker helper contract changed: {result!r}")
+
+
+def assert_picker_inserts_token(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__docsViewerSemanticPickerSmoke;
+            const mount = document.createElement('div');
+            document.body.appendChild(mount);
+            const textarea = document.createElement('textarea');
+            textarea.value = 'Before 3 symbols after';
+            textarea.selectionStart = 7;
+            textarea.selectionEnd = 16;
+            document.body.appendChild(textarea);
+            const selectionListeners = new Set();
+            const adapter = {
+                focus() {
+                    textarea.focus();
+                },
+                getSelection() {
+                    return {
+                        start: textarea.selectionStart,
+                        end: textarea.selectionEnd,
+                        text: textarea.value.slice(textarea.selectionStart, textarea.selectionEnd)
+                    };
+                },
+                onSelectionChange(listener) {
+                    selectionListeners.add(listener);
+                    return () => selectionListeners.delete(listener);
+                },
+                replaceSelection(value) {
+                    textarea.setRangeText(value, textarea.selectionStart, textarea.selectionEnd, 'end');
+                    return true;
+                }
+            };
+            const registryPayload = {
+                schema_version: 'docs_semantic_reference_registry_v1',
+                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                kinds: [
+                    { kind: 'series', source_editor: { picker: true, selection_search: true } },
+                    { kind: 'work', source_editor: { picker: true, selection_search: true } }
+                ]
+            };
+            const targetPayload = {
+                schema_version: 'docs_semantic_reference_target_lookup_v1',
+                targets: [
+                    { kind: 'series', id: '005', title: '3 symbols', meta: ['2007'] },
+                    { kind: 'work', id: '00638', title: '3 symbols', meta: ['2007', '3 symbols'] }
+                ]
+            };
+            const fakeFetch = async (url) => ({
+                ok: true,
+                json: async () => String(url).includes('target-lookup') ? targetPayload : registryPayload
+            });
+            const view = smoke.picker.createSemanticTokenPickerView();
+            await view.mount({
+                mount,
+                fetch: fakeFetch,
+                sourceEditorServices: {
+                    getActiveSourceEditorContextAdapter() {
+                        return adapter;
+                    }
+                }
+            });
+            const rowTexts = Array.from(mount.querySelectorAll('[data-target-index]')).map((node) => node.textContent.trim());
+            mount.querySelector('[data-target-index="0"]').click();
+            return {
+                query: mount.querySelector('input').value,
+                rowTexts,
+                textareaValue: textarea.value,
+                status: mount.querySelector('.docsViewerSemanticPicker__status').textContent.trim()
+            };
+        }"""
+    )
+    if result["query"] != "3 symbols":
+        raise AssertionError(f"semantic picker did not seed query from selection: {result!r}")
+    if result["rowTexts"] != ["3 symbolsseries0052007", "3 symbolswork006382007 · 3 symbols"]:
+        raise AssertionError(f"semantic picker rendered unexpected rows: {result!r}")
+    if result["textareaValue"] != "Before [[ref:series:005|3 symbols]] after":
+        raise AssertionError(f"semantic picker did not insert token: {result!r}")
+    if result["status"] != "Inserted series:005.":
+        raise AssertionError(f"semantic picker status changed: {result!r}")
+
+
+def run_smoke(page: Page, base_url: str) -> None:
+    page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
+    install_fixture(page)
+    assert_helper_modules(page)
+    assert_picker_inserts_token(page)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--site-root", type=Path, default=Path("."))
+    parser.add_argument("--timeout-ms", type=int, default=10000)
+    args = parser.parse_args()
+
+    server, base_url = start_static_server(args.site_root)
+    errors: list[str] = []
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 900})
+                page.set_default_timeout(args.timeout_ms)
+                page.on("pageerror", lambda error: errors.append(str(error)))
+                page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
+                run_smoke(page, base_url)
+            finally:
+                browser.close()
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    if errors:
+        raise AssertionError(f"page errors during Docs Viewer semantic picker module smoke: {errors!r}")
+    print("Docs Viewer semantic token picker modules OK")
+
+
+if __name__ == "__main__":
+    main()

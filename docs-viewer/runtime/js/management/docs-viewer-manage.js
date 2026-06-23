@@ -15,6 +15,10 @@ import {
 startDocsViewerManageApp({
   documentDisplayModes: createDocsViewerManagementDocumentDisplayModes(),
   entrypointHostedViews: createDocsViewerManagementHostedViews(),
+  infoPanelDefaultViewByDocumentMode: {
+    "markdown-source": "semantic-token-picker",
+    "rendered-document": "metadata-info"
+  },
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageDocumentExtras
 });

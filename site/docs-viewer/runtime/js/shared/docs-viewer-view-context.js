@@ -80,6 +80,7 @@ export function createDocsViewerHostedViewContext(options = {}) {
     payload: payload,
     selectedDoc: selectedDoc,
     selectedMetadata: selectedMetadata,
+    sourceEditorServices: access.allowManagement ? options.sourceEditorServices || null : null,
     statusLabel: docsViewerStatusLabel(selectedMetadata && selectedMetadata.ui_status, options.uiStatusByValue),
     viewerScope: cleanString(options.viewerScope)
   };

@@ -123,6 +123,54 @@ function setBusy(state, busy) {
   projectDirty(state);
 }
 
+function emitSelectionChange(state) {
+  if (!state.selectionListeners) return;
+  state.selectionListeners.forEach(function (listener) {
+    listener();
+  });
+}
+
+function sourceSelection(state) {
+  if (!state.textarea) return { start: 0, end: 0, text: "" };
+  var start = state.textarea.selectionStart || 0;
+  var end = state.textarea.selectionEnd || 0;
+  return {
+    start: start,
+    end: end,
+    text: state.textarea.value.slice(start, end)
+  };
+}
+
+function createSemanticTokenAdapter(state) {
+  return {
+    focus: function () {
+      if (state.textarea) state.textarea.focus();
+    },
+    getSelection: function () {
+      return sourceSelection(state);
+    },
+    onSelectionChange: function (listener) {
+      if (typeof listener !== "function") return function () {};
+      state.selectionListeners.add(listener);
+      return function () {
+        state.selectionListeners.delete(listener);
+      };
+    },
+    replaceSelection: function (value) {
+      if (!state.textarea) return false;
+      var selection = sourceSelection(state);
+      if (selection.end <= selection.start) return false;
+      state.textarea.setRangeText(String(value || ""), selection.start, selection.end, "end");
+      state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      state.textarea.focus();
+      return true;
+    },
+    setStatus: function (message, isError) {
+      setStatus(state, message, isError);
+    }
+  };
+}
+
 function loadSource(context, state) {
   var services = context.sourceEditorServices || {};
   var doc = context.selectedDoc || null;
@@ -244,9 +292,13 @@ function bindEvents(context, state) {
   state.onInput = function () {
     renderLineNumbers(state.gutter, state.textarea ? state.textarea.value : "");
     projectDirty(state);
+    emitSelectionChange(state);
   };
   state.onScroll = function () {
     if (state.gutter && state.textarea) state.gutter.scrollTop = state.textarea.scrollTop;
+  };
+  state.onSelectionChange = function () {
+    emitSelectionChange(state);
   };
   state.onClick = function (event) {
     var action = event.target.closest("[data-source-editor-action]");
@@ -267,6 +319,9 @@ function bindEvents(context, state) {
   if (state.textarea) {
     state.textarea.addEventListener("input", state.onInput);
     state.textarea.addEventListener("scroll", state.onScroll);
+    state.textarea.addEventListener("keyup", state.onSelectionChange);
+    state.textarea.addEventListener("mouseup", state.onSelectionChange);
+    state.textarea.addEventListener("select", state.onSelectionChange);
   }
   if (state.root) state.root.addEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.addEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
@@ -278,6 +333,11 @@ function unbindEvents(context, state) {
   var root = context && context.root ? context.root : document;
   if (state.textarea && state.onInput) state.textarea.removeEventListener("input", state.onInput);
   if (state.textarea && state.onScroll) state.textarea.removeEventListener("scroll", state.onScroll);
+  if (state.textarea && state.onSelectionChange) {
+    state.textarea.removeEventListener("keyup", state.onSelectionChange);
+    state.textarea.removeEventListener("mouseup", state.onSelectionChange);
+    state.textarea.removeEventListener("select", state.onSelectionChange);
+  }
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
@@ -294,6 +354,7 @@ export function createDocsViewerSourceEditorMode() {
     loaded: false,
     revision: "",
     root: null,
+    selectionListeners: new Set(),
     status: null,
     textarea: null,
     toolbarSave: null
@@ -303,7 +364,7 @@ export function createDocsViewerSourceEditorMode() {
     mount: function (context) {
       context.documentView.projectToolbar({
         toolbarHidden: false,
-        infoToggleHidden: true,
+        infoToggleHidden: false,
         bookmarkToggleHidden: true,
         metaHidden: true,
         contentHidden: false,
@@ -313,6 +374,11 @@ export function createDocsViewerSourceEditorMode() {
       });
       renderEditorShell(context, state);
       bindEvents(context, state);
+      state.semanticTokenAdapter = createSemanticTokenAdapter(state);
+      var services = context.sourceEditorServices || {};
+      if (typeof services.setActiveSourceEditorContextAdapter === "function") {
+        services.setActiveSourceEditorContextAdapter(state.semanticTokenAdapter);
+      }
       return loadSource(context, state);
     },
     beforeLeave: function (context) {
@@ -325,10 +391,20 @@ export function createDocsViewerSourceEditorMode() {
       return loadSource(context, state);
     },
     unmount: function (context) {
+      var services = context.sourceEditorServices || {};
+      if (typeof services.clearActiveSourceEditorContextAdapter === "function") {
+        services.clearActiveSourceEditorContextAdapter(state.semanticTokenAdapter);
+      }
+      state.selectionListeners.clear();
       unbindEvents(context, state);
       if (context && context.mount) context.mount.replaceChildren();
     },
     dispose: function (context) {
+      var services = context.sourceEditorServices || {};
+      if (typeof services.clearActiveSourceEditorContextAdapter === "function") {
+        services.clearActiveSourceEditorContextAdapter(state.semanticTokenAdapter);
+      }
+      state.selectionListeners.clear();
       unbindEvents(context, state);
       if (context && context.mount) context.mount.replaceChildren();
     }

@@ -181,6 +181,7 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_runtime_specifier
         "./source-editor/source-editor.js",
         "/assets/data/docs/reports.json",
         "docsHtmlImportRoot",
+        "docsViewerSemanticPicker",
         "docsViewerSettingsModal",
         "docsViewerSourceEditor",
         "openCreateScopeFlow",
@@ -368,6 +369,7 @@ def test_basic_docs_viewer_css_excludes_manage_selectors() -> None:
         "docsViewer__statusPills",
         "docsViewer__statusMenu",
         "docsViewerImport",
+        "docsViewerSemanticPicker",
         "docsViewerSourceEditor",
         "docsViewerScopeLifecycle",
         "docsViewerReport",
@@ -392,11 +394,31 @@ def test_manage_docs_viewer_css_owns_manage_selectors() -> None:
         "data-docs-viewer-management-shell-mount",
         "docsViewer__manageToolbarMount",
         "docsViewerImport",
+        "docsViewerSemanticPicker",
         "docsViewerSourceEditor",
         "docsViewerScopeLifecycle",
     ]
 
     assert [fragment for fragment in required_fragments if fragment not in source] == []
+
+
+def test_semantic_picker_default_is_management_owned() -> None:
+    shared_runtime = (
+        REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js"
+    ).read_text(encoding="utf-8")
+    manage_entry = (
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-manage.js"
+    ).read_text(encoding="utf-8")
+    hosted_views = (
+        REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js"
+    ).read_text(encoding="utf-8")
+
+    assert "semantic-token-picker" not in shared_runtime
+    assert "activeSemanticTokenAdapter" not in shared_runtime
+    assert "setActiveSemanticTokenAdapter" not in shared_runtime
+    assert "infoPanelDefaultViewByDocumentMode" in shared_runtime
+    assert '"markdown-source": "semantic-token-picker"' in manage_entry
+    assert 'id: "semantic-token-picker"' in hosted_views
 
 
 def test_manage_document_actions_renderer_owns_selected_document_controls() -> None:

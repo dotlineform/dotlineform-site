@@ -131,6 +131,7 @@ export function resolveDocsViewerAppBootContext(options) {
         routeContext: routeContext,
         documentDisplayModes: settings.documentDisplayModes,
         entrypointHostedViews: settings.entrypointHostedViews,
+        infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
         mountDocumentExtras: settings.mountDocumentExtras,
         appShellReady: Promise.resolve(appShellResult),
         appShellResult: appShellResult,

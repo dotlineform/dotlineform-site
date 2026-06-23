@@ -47,6 +47,21 @@ import {
   createDocsViewerAppComposition,
   startDocsViewerStartupPhases
 } from "./docs-viewer-app-composition.js";
+
+function infoPanelDefaultViewIdForMode(settings, modeId) {
+  var map = settings && settings.infoPanelDefaultViewByDocumentMode;
+  if (!map || typeof map !== "object") return "";
+  return String(map[String(modeId || "").trim()] || "").trim();
+}
+
+function configuredInfoPanelDefaultViewIds(settings) {
+  var map = settings && settings.infoPanelDefaultViewByDocumentMode;
+  if (!map || typeof map !== "object") return [];
+  return Object.keys(map)
+    .map(function (modeId) { return String(map[modeId] || "").trim(); })
+    .filter(Boolean);
+}
+
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
   var root = settings.root;
@@ -127,6 +142,7 @@ export function startDocsViewerRuntime(options) {
   var infoPanelController = null;
   var documentDisplayModeHost = null;
   var mainViewHost = null;
+  var activeSourceEditorContextAdapter = null;
 
   var appSession = composition.appSession;
   var state = appSession.state;
@@ -210,6 +226,13 @@ export function startDocsViewerRuntime(options) {
     routeAccess: function () { return routeContext.access; },
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,
+    defaultViewId: function () {
+      var modeId = documentDisplayModeHost ? documentDisplayModeHost.activeModeId() : "";
+      return infoPanelDefaultViewIdForMode(settings, modeId) || "metadata-info";
+    },
+    sourceEditorServices: function () {
+      return allowManagement ? sourceEditorServices() : null;
+    },
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
@@ -559,6 +582,28 @@ export function startDocsViewerRuntime(options) {
       },
       reloadRenderedDoc: function (docId) {
         return reloadGeneratedDoc(docId);
+      },
+      clearActiveSourceEditorContextAdapter: function (adapter) {
+        if (!adapter || activeSourceEditorContextAdapter === adapter) {
+          activeSourceEditorContextAdapter = null;
+        }
+        var activeViewId = infoPanelController ? infoPanelController.activeViewId() : "";
+        var sourceEditorDefaultViewActive = configuredInfoPanelDefaultViewIds(settings)
+          .some(function (viewId) {
+            return viewId !== "metadata-info" && viewId === activeViewId;
+          });
+        if (infoPanelController && sourceEditorDefaultViewActive) {
+          infoPanelController.openView("metadata-info");
+        } else if (infoPanelController) {
+          infoPanelController.renderToggleState();
+        }
+      },
+      getActiveSourceEditorContextAdapter: function () {
+        return activeSourceEditorContextAdapter;
+      },
+      setActiveSourceEditorContextAdapter: function (adapter) {
+        activeSourceEditorContextAdapter = adapter || null;
+        if (infoPanelController) infoPanelController.renderToggleState();
       },
       setStatus: setStatus,
       startBusy: startBusy

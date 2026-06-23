@@ -164,6 +164,33 @@ The generated file is written as valid JSON with compact one-line target rows so
 It is not the source of truth for builder rendering and it is not a target-existence authority.
 Catalogue write/build follow-through refreshes this lookup after catalogue source or canonical data changes.
 
+## Source Editor Picker
+
+The manage-mode Markdown source editor registers a source-only info-panel hosted view:
+
+- hosted view id: `semantic-token-picker`
+- view module: `docs-viewer/runtime/js/management/source-editor/semantic-token-picker-view.js`
+- registry helper: `docs-viewer/runtime/js/management/source-editor/semantic-reference-registry.js`
+- target lookup/search helper: `docs-viewer/runtime/js/management/source-editor/semantic-targets.js`
+- selectable result list: `docs-viewer/runtime/js/management/source-editor/semantic-target-picker.js`
+- token construction helper: `docs-viewer/runtime/js/management/source-editor/semantic-token-editor.js`
+- stylesheet: `docs-viewer/static/css/docs-viewer-manage.css`
+
+`source-editor.js` owns the Markdown textarea and exposes a narrow active source-editor context adapter while source editing is mounted.
+The adapter supports reading the current selection, replacing the selected range, focusing the textarea, reporting source-editor status, and selection-change subscriptions.
+It does not expose source reads, rebuild submission, dirty-state ownership, or rendered-document reload behavior.
+
+When Markdown source mode is active, the info toggle defaults to `semantic-token-picker`.
+When rendered-document mode is active, the info toggle defaults back to `metadata-info`.
+If the semantic picker panel is open when the source editor unmounts, the panel switches back to metadata.
+The default view mapping is supplied by the management entrypoint.
+Shared Docs Viewer runtime code applies the generic mapping and adapter lifecycle, but does not hardcode semantic picker ids, modules, or CSS selectors.
+
+The picker reads the registry and generated target lookup through static browser URLs.
+It searches target titles in the browser, renders compact target rows from `title`, `kind`, `id`, and `meta`, and inserts a token only when the source editor has selected text and a chosen target.
+Choosing a result replaces the current selection with `[[ref:<kind>:<id>|<selected text>]]` in the local editor buffer.
+The change is not written until the existing Markdown source editor `Rebuild doc` action runs.
+
 ## Generated Artifacts
 
 Generated relationship artifacts are written under each docs scope output:

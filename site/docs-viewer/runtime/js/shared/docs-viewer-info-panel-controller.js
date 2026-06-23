@@ -49,6 +49,7 @@ export function createDocsViewerInfoPanelController(options) {
       payloadCache: selectedDocument.payloadCache,
       routeAccess: routeAccess(),
       selectedDocId: selectedDocument.selectedDocId,
+      sourceEditorServices: typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : settings.sourceEditorServices,
       uiStatusByValue: scopeConfig.uiStatusByValue,
       viewerScope: viewerScope(),
       viewerTargetDocId: settings.viewerTargetDocId,
@@ -83,7 +84,8 @@ export function createDocsViewerInfoPanelController(options) {
 
   function openView(viewId) {
     if (!currentSelectedDoc()) return;
-    var targetViewId = String(viewId || "").trim() || host.activeViewId() || "metadata-info";
+    var defaultViewId = typeof settings.defaultViewId === "function" ? settings.defaultViewId() : settings.defaultViewId;
+    var targetViewId = String(viewId || "").trim() || String(defaultViewId || "").trim() || host.activeViewId() || "metadata-info";
     host.open(targetViewId, context()).then(function () {
       renderToggleState();
     });
@@ -105,7 +107,7 @@ export function createDocsViewerInfoPanelController(options) {
     if (settings.infoToggle) {
       settings.infoToggle.addEventListener("click", function () {
         if (!closeIfOpen()) {
-          openView("metadata-info");
+          openView("");
         }
       });
     }
@@ -126,6 +128,7 @@ export function createDocsViewerInfoPanelController(options) {
   }
 
   return {
+    activeViewId: function () { return host.activeViewId(); },
     bind: bind,
     close: close,
     closeIfOpen: closeIfOpen,
