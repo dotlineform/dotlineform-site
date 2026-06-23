@@ -301,6 +301,12 @@
           ]
         },
         {
+          "doc_id": "site-request-docs-viewer-embedded-detail-documents",
+          "title": "Docs Viewer Embedded Detail Documents Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1205,5 +1211,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-23T19:33:43Z"
+  "generated_at": "2026-06-23T21:07:56Z"
 }

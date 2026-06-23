@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4c6fe79324f3b4b7a43db1b986c6de63",
-    "generated_at_utc": "2026-06-23T19:33:43Z",
-    "count": 223
+    "version": "blake2b-03255cd5671d8408f45c3c858e7be4f6",
+    "generated_at_utc": "2026-06-23T21:07:56Z",
+    "count": 224
   },
   "entries": [
     {
@@ -1255,6 +1255,35 @@
         "09"
       ],
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "site-request-docs-viewer-embedded-detail-documents",
+      "kind": "doc",
+      "title": "Docs Viewer Embedded Detail Documents Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents",
+      "last_updated": "2026-06-23",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-23 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-embedded-detail-documents",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "embedded",
+        "detail",
+        "documents",
+        "docs viewer embedded detail documents request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-23",
+        "2026",
+        "06",
+        "23"
+      ],
+      "search_text": "site-request-docs-viewer-embedded-detail-documents site request docs viewer embedded detail documents docs viewer embedded detail documents request change requests change requests 2026-06-23 2026 06 23"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

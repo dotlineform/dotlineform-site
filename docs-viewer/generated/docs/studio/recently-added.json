@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-docs-viewer-embedded-detail-documents",
+      "title": "Docs Viewer Embedded Detail Documents Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json",
+      "added_date": "2026-06-23",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "docs-viewer-info-panel",
       "title": "Info Panel",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-info-panel.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-21",
       "parent_id": "analytics",
       "parent_title": "Analytics"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-view-mode-registry",
-      "title": "Docs Viewer View And Mode Registry",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
-      "added_date": "2026-06-17",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-06-23T18:08:31Z"
+  "generated_at": "2026-06-23T21:07:56Z"
 }
