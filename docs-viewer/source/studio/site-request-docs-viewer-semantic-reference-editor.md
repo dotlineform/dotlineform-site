@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-semantic-reference-editor
 title: Docs Viewer Semantic Reference Editor Request
 added_date: 2026-05-27
-last_updated: 2026-06-22
+last_updated: 2026-06-23
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -87,15 +87,21 @@ Service changes expected for v1:
 - no source read/write/rebuild endpoint changes
 - only static browser-readable config/generated-data exposure should be needed, using existing local Docs Viewer/static route patterns where possible
 
-Implementation decisions to settle before v1 starts:
+Settled implementation decisions before v1 starts:
 
-- whether `build_docs.py` must switch to the registry in the same slice, or whether registry-backed rendering is a separate preparatory slice
-- where the target lookup generator lives and which existing build command invokes it when catalogue/source data changes
-- whether `docs-viewer/config/semantic-references/registry.json` and `docs-viewer/generated/semantic-references/target-lookup.json` are already browser-addressable through existing local route mapping, or whether a static route mapping change is needed
-- how the source editor exposes its semantic-token adapter to the context/info panel hosted view without broad global runtime state
-- whether the picker updates live on textarea selection changes or only when the picker opens and when selection changes inside the source editor
-- the exact v1 display and ranking fields for lookup rows, keeping search focused on selected title-like words rather than generic metadata
-- whether the context/info panel should auto-open when entering source editor or only switch its default view when the user opens it
+- `build_docs.py` must switch to registry-backed semantic rendering before source-editor picker work starts; the builder and editor should not temporarily carry separate supported-kind or route definitions.
+- the target lookup generator should live with Docs Viewer build internals, with a thin command entrypoint at `docs-viewer/build/build_semantic_target_lookup.py` and implementation under `docs-viewer/build/docs_builder/semantic_target_lookup.py`
+- the target lookup generator should write `docs-viewer/generated/semantic-references/target-lookup.json` and be runnable manually; catalogue write/build follow-through should invoke it after catalogue source or canonical data changes
+- `build_docs.py` should not own target lookup generation; docs payload rebuilds and semantic target lookup freshness are related but separate build products
+- `docs-viewer/config/semantic-references/registry.json` and `docs-viewer/generated/semantic-references/target-lookup.json` are already browser-addressable in local manage mode through existing `/docs-viewer/config/` and `/docs-viewer/generated/` static route prefixes once the files exist
+- the source editor should expose its semantic-token adapter through hosted-view context during `markdown-source` activation, and clear it on teardown; avoid broad globals such as `window`-level editor handles
+- if a shared adapter holder is needed, make it an explicit scoped runtime service with `setActiveSourceEditorAdapter()` and `clearActiveSourceEditorAdapter()` lifecycle rather than route-global mutable state
+- picker search should read the current selection when the picker opens, then update while the picker is active on textarea selection/input events with a small debounce; it should not run background lookup work while the context/info panel is closed
+- v1 lookup rows should use compact title-first fields: `kind`, `id`, `title`, `title_normalized`, `title_tokens`, `aliases`, `rank_hints`, `display.title`, and `display.meta`
+- v1 ranking should prefer exact normalized title match, title prefix match, all selected tokens present in title, partial title-token match, alias match, then tie-break by registry kind order, normalized title, and id
+- ids and generic metadata should be available for display and tie-breaks, but should not dominate selected-text search ranking
+- entering source edit mode should not auto-open the context/info panel; it should only switch the default info-panel view to `semantic-token-picker`
+- if the info panel is already open when the Markdown source editor becomes active, switching the visible hosted view to `semantic-token-picker` is acceptable because the active context changed
 
 ### Adding A New Token Kind Later
 
@@ -521,7 +527,34 @@ If the semantic module is absent, disabled, or unsupported for the current insta
 
 ## Proposed Implementation Steps
 
-### 1. Registry Read Helper
+### 1. Registry-Backed Builder And Target Lookup Preparation
+
+Tasks:
+
+- add `docs-viewer/config/semantic-references/registry.json` with v1 `work`, `series`, and `moment` kind records
+- add Python registry read/normalization helpers for builder use
+- update semantic-reference rendering so the builder derives supported kinds, id normalization, and route construction from the registry
+- keep builder behavior limited to rendering recognized semantic tokens and emitting generated reference artifacts
+- remove builder dependence on catalogue existence/status for semantic-reference render success
+- ensure missing, draft, unpublished, deleted, or stale targets do not create builder warnings or test-script failures
+- keep stale-target and suspicious-token auditing in focused report logic rather than build success logic
+- add `docs-viewer/build/docs_builder/semantic_target_lookup.py` for compact target lookup payload generation
+- add `docs-viewer/build/build_semantic_target_lookup.py` as the manual command entrypoint
+- generate `docs-viewer/generated/semantic-references/target-lookup.json` from browser-safe catalogue data for current v1 kinds
+- wire catalogue write/build follow-through to refresh the target lookup after relevant catalogue source or canonical data changes
+- verify the registry and lookup files are readable through existing local Docs Viewer static route prefixes
+
+Acceptance:
+
+- builder, editor, and target lookup support all derive v1 supported kinds from the registry
+- `work`, `series`, and `moment` tokens render through registry route metadata
+- generated semantic-reference artifacts continue to describe rendered recognized references
+- generated reference artifacts do not claim catalogue target existence as builder truth
+- missing or stale catalogue targets are report concerns, not build failures
+- target lookup generation is independent of docs payload rebuilds
+- no new management service endpoint or target lookup API is introduced
+
+### 2. Registry Read Helper
 
 Tasks:
 
@@ -535,7 +568,7 @@ Acceptance:
 - missing registry data disables semantic controls without breaking the Markdown editor
 - diagnostics can explain why semantic insertion is unavailable
 
-### 2. Context Panel Hosted View
+### 3. Context Panel Hosted View
 
 Tasks:
 
@@ -555,7 +588,7 @@ Acceptance:
 - switching away from the picker does not lose source-editor dirty state or trigger source writes
 - the metadata/info hosted view remains available through the same panel model
 
-### 3. Target Picker Support
+### 4. Target Picker Support
 
 Tasks:
 
@@ -575,7 +608,7 @@ Acceptance:
 - stale, missing, or deleted targets do not become builder or test-script validation failures
 - target picker assistance does not introduce server-side target lookup
 
-### 4. Token Construction And Insertion
+### 5. Token Construction And Insertion
 
 Tasks:
 
@@ -593,10 +626,11 @@ Acceptance:
 - token insertion does not write source or trigger rebuild directly
 - token insertion is implemented through a narrow source-editor adapter rather than by reaching into source read/write/rebuild services
 
-### 5. Focused Verification And Docs Follow-Through
+### 6. Focused Verification And Docs Follow-Through
 
 Tasks:
 
+- add focused tests for registry-backed builder render output and generated reference artifacts
 - add focused tests for semantic-target lookup generation and browser ranking
 - add focused tests for registry normalization, target option shaping, and token construction
 - add browser smoke coverage for semantic insertion inside the Markdown editor
@@ -605,6 +639,7 @@ Tasks:
 Acceptance:
 
 - tests cover success and unavailable-registry states
+- tests cover stale/missing target behavior without builder warnings or failures
 - docs explain that semantic insertion is a repo-specific manage-mode helper layered into the existing source editor
 
 ## Open Questions
