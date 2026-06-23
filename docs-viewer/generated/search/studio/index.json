@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-71f6c889f4efc4ad6345f7635c4b2466",
-    "generated_at_utc": "2026-06-23T09:49:14Z",
-    "count": 220
+    "version": "blake2b-5b42b8d03b92111e0bdfedb7cab28471",
+    "generated_at_utc": "2026-06-23T16:45:32Z",
+    "count": 221
   },
   "entries": [
     {
@@ -2126,6 +2126,30 @@
         "00"
       ],
       "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-05-18 00:00 2026 05 18 00"
+    },
+    {
+      "id": "docs-viewer-info-panel",
+      "kind": "doc",
+      "title": "Info Panel",
+      "href": "/docs/?scope=studio&doc=docs-viewer-info-panel",
+      "last_updated": "2026-06-23",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-23 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-info-panel",
+        "docs",
+        "viewer",
+        "info",
+        "panel",
+        "info panel",
+        "docs viewer",
+        "2026-06-23",
+        "2026",
+        "06",
+        "23"
+      ],
+      "search_text": "docs-viewer-info-panel docs viewer info panel info panel docs viewer 2026-06-23 2026 06 23"
     },
     {
       "id": "library-documents",

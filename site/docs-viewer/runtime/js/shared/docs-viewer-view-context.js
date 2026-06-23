@@ -15,10 +15,12 @@ function selectedPayloadMetadata(payload, access, docId) {
   if (!record) return null;
   if (access && access.publicReadOnly) {
     return {
+      doc_id: cleanString(record.doc_id) || cleanString(docId),
       title: cleanString(record.title),
       summary: cleanString(record.summary),
       date: cleanString(record.date),
       date_display: cleanString(record.date_display),
+      added_date: cleanString(record.added_date),
       last_updated: cleanString(record.last_updated)
     };
   }

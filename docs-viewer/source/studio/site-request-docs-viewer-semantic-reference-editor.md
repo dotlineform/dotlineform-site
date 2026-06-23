@@ -35,10 +35,10 @@ That syntax is compact and useful, but it is error-prone when authors have to ty
 
 Docs Viewer can provide a constrained local helper:
 
-- use the current text selection as the token's visible text
+- use the current text selection as a search seed and replacement range
 - choose a supported semantic-reference type
 - choose a target from registry-driven browser-side lookup controls
-- insert the valid token around the selected text
+- insert the valid token with the selected target's canonical title as the link label
 - leave the change in the local editor buffer until the user clicks `Rebuild doc`
 
 The helper should reduce token authoring errors without hiding the underlying Markdown source model.
@@ -48,7 +48,7 @@ It is specific to this repo's semantic links (e.g. works, tags) and should be om
 
 - add semantic-reference insertion controls to the Markdown source editor
 - create a lightweight semantic-reference registry as the source of truth for supported types and target data
-- allow selected text to be wrapped in a supported semantic-reference token
+- allow selected text to be replaced by a supported semantic-reference token
 - keep token insertion local in the editor buffer until `Rebuild doc`
 - provide target picker/search controls where registry support data exists
 - support only the current semantic-reference token kinds in v1: `work`, `series`, and `moment`
@@ -144,10 +144,10 @@ The implementation may still use `infoPanel` names until a focused rename is wor
 
 It should expose:
 
-- semantic-reference target search driven by the current editor selection and the registry
-- selected-text handling for the token's visible text
+- semantic-reference target search driven by the current editor selection or explicit picker search input and the registry
+- selected-text handling for replacement range and search seeding when a range is selected
 - token preview or clear insertion summary
-- validation messages for unsupported type, missing selected text, missing target id, or unavailable support data
+- validation messages for unsupported type, missing target id, invalid target title, or unavailable support data
 
 The commit point remains the Markdown editor's `Rebuild doc` action.
 
@@ -162,23 +162,23 @@ Expected flow:
 3. The picker searches browser-safe target data for every kind in the registry.
 4. Results are shown using the token kind and existing record metadata, similar to catalogue search results.
 5. The user chooses one result.
-6. The editor replaces the selected text with a token such as `[[ref:work:00638|3 symbols]]`.
+6. The editor replaces the selected text with a token such as `[[ref:work:00638|3 symbols]]`, using the selected target's canonical title as the label.
 7. After `Rebuild doc`, the published document renders that token as a link such as `/works/?work=00638`.
 
 For `3 symbols`, the picker may show both a `series` result and a `work` result if both records match.
-For a broader selected query such as `symbols`, v1 should still use simple selected-word search across the current lookup records.
+For a broader selected query or explicit picker search such as `symbols`, v1 should still use simple word search across the current lookup records.
 
-The selected text remains the token's visible text.
-The selected target supplies only the token kind and id.
-V1 should require an explicit selected text range.
-Insertion-point detection, cursor expansion, direct id lookup, manual id entry, and additional token kinds are deferred to v2.
+The selected target supplies the token kind, id, and canonical label.
+Selected text is not used as the inserted label because it may be abbreviated or misspelled.
+If there is only a caret/insertion point, choosing a target inserts a labeled token such as `[[ref:work:00638|3 symbols]]` at the caret.
+Cursor expansion, direct id lookup, manual id entry, and additional token kinds are deferred to v2.
 
 ## Token Insertion Behavior
 
 For selected text:
 
 ```text
-3 symbols
+3 symblos
 ```
 
 and target:
@@ -186,6 +186,7 @@ and target:
 ```text
 kind: work
 id: 00638
+title: 3 symbols
 ```
 
 the editor inserts:
@@ -200,9 +201,9 @@ Supported target kinds should come from a semantic-reference registry JSON file,
 
 The helper should avoid inserting tokens when:
 
-- no text is selected
 - the selected semantic-reference type is unsupported
 - no target id is selected or entered
+- the target title cannot be used as a token label
 - required registry metadata is missing
 
 Validation behaviour:
@@ -356,7 +357,7 @@ It should not report unsupported kinds, missing targets, unpublished targets, or
 
 The picker should use one generated semantic-target lookup JSON built specifically for token insertion.
 This lookup is not a generic search index.
-The selected editor text becomes the token's visible text, so the likely match is usually close to the target title rather than broad metadata such as year, medium, status, or ids.
+The selected editor text is only a search seed and replacement range, so likely matches should still be close to the target title rather than broad metadata such as year, medium, status, or ids.
 
 Proposed generated lookup file:
 
@@ -409,7 +410,7 @@ Search should be browser-side and title-weighted:
 - title prefix or token match next
 - ids and metadata can be available for display, but should not dominate selection-search ranking
 
-This keeps the picker aligned with the real interaction: selected text is likely intended to become link text.
+This keeps the picker aligned with the real interaction: selected text is likely a rough title query, while the inserted label should come from the selected target.
 If the user selects `3 symbols`, matching title records should rank above incidental metadata matches.
 If the user selects `symbols`, title-token matches can participate by deriving tokens from each row title in the browser.
 
@@ -425,7 +426,7 @@ Initial view identity:
 - access: manage-only
 - availability: only when the Markdown source editor is active and has supplied a semantic-token adapter
 
-The picker view owns selected-text target search UI, result selection, and insertion-status copy.
+The picker view owns target search UI, result selection, and insertion-status copy.
 It does not own the textarea, dirty-state truth, source write/rebuild, document-display mode switching, or rendered-view reload.
 
 The source editor should provide the picker view with a narrow adapter for:
@@ -614,15 +615,16 @@ Acceptance:
 Tasks:
 
 - [x] read selected text from the Markdown editor
-- [x] build a semantic-reference token from selected type, target id, and selected text
-- [x] insert the token at the current selection offsets
+- [x] build a semantic-reference token from selected type, target id, and target title
+- [x] insert the token at the current selection or caret offsets
 - [x] keep the inserted token in the local editor buffer until `Rebuild doc`
 - [x] preserve browser-native undo behavior where practical
 
 Acceptance:
 
-- selected text can be wrapped as a supported semantic-reference token
-- no insertion happens without selected text and target id
+- selected text can be replaced by a supported semantic-reference token using the target title as the label
+- an explicit picker search can insert a labeled semantic-reference token at the current caret when no text is selected
+- no insertion happens without a target id
 - inserted syntax matches the current builder grammar
 - token insertion does not write source or trigger rebuild directly
 - token insertion is implemented through a narrow source-editor adapter rather than by reaching into source read/write/rebuild services

@@ -7,14 +7,6 @@ function valueOrFallback(value, fallback) {
   return text || fallback || "Not set";
 }
 
-function appendText(parent, className, text) {
-  var node = document.createElement("span");
-  node.className = className;
-  node.textContent = text;
-  parent.appendChild(node);
-  return node;
-}
-
 function appendDefinition(list, label, value, options) {
   var settings = options || {};
   var row = document.createElement("div");
@@ -39,18 +31,46 @@ function appendDefinition(list, label, value, options) {
   list.appendChild(row);
 }
 
-function parentPathLabel(context) {
-  var trail = Array.isArray(context.parentTrail) ? context.parentTrail : [];
-  if (trail.length === 0) return "Top level";
-  return trail.map(function (entry) {
-    return cleanString(entry && entry.title) || cleanString(entry && entry.doc_id);
-  }).filter(Boolean).join(" / ") || "Top level";
-}
+var METADATA_FIELDS = {
+  added: function (metadata) {
+    return {
+      label: "Added",
+      value: valueOrFallback(metadata.added_date, "Not set")
+    };
+  },
+  date: function (metadata) {
+    return {
+      label: "Date",
+      value: valueOrFallback(metadata.date_display || metadata.date, "Not set")
+    };
+  },
+  doc_id: function (metadata) {
+    return {
+      label: "Doc ID",
+      value: valueOrFallback(metadata.doc_id, "Not set")
+    };
+  },
+  summary: function (metadata) {
+    return {
+      label: "Summary",
+      value: valueOrFallback(metadata.summary, "No summary")
+    };
+  },
+  updated: function (metadata) {
+    return {
+      label: "Updated",
+      value: valueOrFallback(metadata.last_updated, "Not set")
+    };
+  }
+};
 
-function visibilityLabel(doc) {
-  if (!doc) return "Not set";
-  if (doc.viewable === false) return "Non-viewable";
-  return "Visible";
+var MANAGE_METADATA_FIELD_ORDER = ["doc_id", "summary", "date", "added", "updated"];
+var PUBLIC_METADATA_FIELD_ORDER = ["summary", "updated"];
+
+function metadataFieldOrder(context) {
+  return context.access && context.access.publicReadOnly
+    ? PUBLIC_METADATA_FIELD_ORDER
+    : MANAGE_METADATA_FIELD_ORDER;
 }
 
 function renderLoading(mount) {
@@ -60,54 +80,25 @@ function renderLoading(mount) {
   mount.appendChild(empty);
 }
 
-function renderPublicMetadata(context, metadata) {
+function renderMetadataDetails(context, metadata) {
   var mount = context.mount;
   var article = document.createElement("article");
-  article.className = "docsViewer__metadataInfo docsViewer__metadataInfo--public";
-
-  var title = document.createElement("h3");
-  title.className = "docsViewer__metadataInfoTitle";
-  title.textContent = valueOrFallback(metadata.title, "Untitled document");
-
-  var list = document.createElement("dl");
-  list.className = "docsViewer__metadataInfoList";
-  appendDefinition(list, "Summary", valueOrFallback(metadata.summary, "No summary"));
-  appendDefinition(list, "Date", valueOrFallback(metadata.date_display || metadata.date, "Not set"));
-  appendDefinition(list, "Updated", valueOrFallback(metadata.last_updated, "Not set"));
-
-  article.append(title, list);
-  mount.appendChild(article);
-}
-
-function renderManageMetadata(context, metadata) {
-  var mount = context.mount;
-  var article = document.createElement("article");
-  article.className = "docsViewer__metadataInfo docsViewer__metadataInfo--manage";
+  article.className = "docsViewer__metadataInfo";
 
   var title = document.createElement("h3");
   title.className = "docsViewer__metadataInfoTitle";
   title.textContent = valueOrFallback(metadata.title, metadata.doc_id || "Untitled document");
 
-  var idLine = document.createElement("p");
-  idLine.className = "docsViewer__metadataInfoId muted small";
-  appendText(idLine, "docsViewer__metadataInfoIdLabel", "Doc ID ");
-  appendText(idLine, "docsViewer__metadataInfoIdValue", valueOrFallback(metadata.doc_id, "Not set"));
-
   var list = document.createElement("dl");
   list.className = "docsViewer__metadataInfoList";
-  appendDefinition(list, "Scope", valueOrFallback(context.viewerScope, "Not set"));
-  appendDefinition(list, "Summary", valueOrFallback(metadata.summary, "No summary"));
-  appendDefinition(list, "Parent path", parentPathLabel(context));
-  appendDefinition(list, "Date", valueOrFallback(metadata.date_display || metadata.date, "Not set"));
-  appendDefinition(list, "Added", valueOrFallback(metadata.added_date, "Not set"));
-  appendDefinition(list, "Updated", valueOrFallback(metadata.last_updated, "Not set"));
-  appendDefinition(list, "UI status", valueOrFallback(context.statusLabel || metadata.ui_status, "Not set"));
-  appendDefinition(list, "Visibility", visibilityLabel(metadata));
-  if (context.canonicalUrl) {
-    appendDefinition(list, "Route", context.canonicalUrl, { href: context.canonicalUrl });
-  }
+  metadataFieldOrder(context).forEach(function (fieldName) {
+    var field = METADATA_FIELDS[fieldName];
+    if (!field) return;
+    var definition = field(metadata);
+    appendDefinition(list, definition.label, definition.value);
+  });
 
-  article.append(title, idLine, list);
+  article.append(title, list);
   mount.appendChild(article);
 }
 
@@ -130,11 +121,7 @@ function renderMetadata(context) {
     renderLoading(mount);
     return;
   }
-  if (context.access && context.access.publicReadOnly) {
-    renderPublicMetadata(context, metadata);
-    return;
-  }
-  renderManageMetadata(context, metadata);
+  renderMetadataDetails(context, metadata);
 }
 
 export function createDocsViewerMetadataInfoView() {

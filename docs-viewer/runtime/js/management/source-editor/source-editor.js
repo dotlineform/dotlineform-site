@@ -139,7 +139,6 @@ function createSemanticTokenAdapter(state) {
     replaceSelection: function (value) {
       if (!state.textarea) return false;
       var selection = sourceSelection(state);
-      if (selection.end <= selection.start) return false;
       state.textarea.setRangeText(String(value || ""), selection.start, selection.end, "end");
       state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
       state.textarea.focus();

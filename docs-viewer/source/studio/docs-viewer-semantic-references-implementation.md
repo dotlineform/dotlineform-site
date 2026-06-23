@@ -188,8 +188,9 @@ Shared Docs Viewer runtime code applies the generic mapping and adapter lifecycl
 The info panel shell keeps a single `info` title and no internal view-switching toolbar; document/source mode changes select the active hosted view.
 
 The picker reads the registry and generated target lookup through static browser URLs.
-It searches target titles in the browser, renders compact target rows from `title`, `kind`, `id`, and `meta`, and inserts a token only when the source editor has selected text and a chosen target.
-Choosing a result replaces the current selection with `[[ref:<kind>:<id>|<selected text>]]` in the local editor buffer.
+It searches target titles in the browser, renders compact target rows from `title`, `kind`, `id`, and `meta`, and inserts a token when the source editor has a chosen target.
+Choosing a result replaces the current selection, or inserts at the current caret when no text is selected, with `[[ref:<kind>:<id>|<target title>]]`.
+The target title is used as the inserted label so the generated link text starts from the canonical displayed target title.
 The change is not written until the existing Markdown source editor `Rebuild doc` action runs.
 
 ## Generated Artifacts

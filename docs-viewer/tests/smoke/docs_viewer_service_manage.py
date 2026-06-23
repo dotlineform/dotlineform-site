@@ -172,10 +172,10 @@ def assert_manage_info_panel(page: Page, timeout_ms: int) -> None:
             text: panel.textContent || ""
         })"""
     )
-    expected_terms = ["Scope", "Summary", "Parent path", "Date", "Added", "Updated", "UI status", "Visibility", "Route"]
+    expected_terms = ["Doc ID", "Summary", "Date", "Added", "Updated"]
     if info_state["terms"] != expected_terms:
-        raise AssertionError(f"manage info panel did not render rich metadata terms: {info_state!r}")
-    for expected in ["Doc ID", "docs-viewer", "studio"]:
+        raise AssertionError(f"manage info panel did not render compact metadata terms: {info_state!r}")
+    for expected in ["docs-viewer"]:
         if expected not in str(info_state["text"]):
             raise AssertionError(f"manage info panel missed {expected!r}: {info_state!r}")
 

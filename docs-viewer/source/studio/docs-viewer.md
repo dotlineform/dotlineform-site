@@ -15,6 +15,7 @@ It currently serves these scopes:
 - Studio docs at `/docs/`
 - Library docs at `/library/`
 - Analysis docs at `/analysis/`
+- Moments docs as `/moments/`
 
 At a high level, the current implementation is split into:
 
@@ -61,6 +62,7 @@ Those boundaries are intentional:
 - [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template) explains how new public route shells are rendered from the canonical template into tracked `site/` HTML.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records how shared runtime behavior, scope differences, and forks are handled.
 - [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) is the current implementation map for browser runtime ownership.
+- [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel) explains the panel hosting model, context-driven view selection, and public/manage metadata separation.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) covers build mechanics, generated payloads, and command usage.
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) covers docs media paths, import staging, extraction, and media-copy behavior.
 - [Reports](/docs/?scope=studio&doc=docs-viewer-reports) covers report metadata, report modules, and access rules.

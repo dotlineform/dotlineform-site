@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "docs-viewer-info-panel",
+      "title": "Info Panel",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-info-panel.json",
+      "added_date": "2026-06-23",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "admin-static-route-template",
       "title": "Admin Static Route Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI"
-    },
-    {
-      "doc_id": "docs-viewer-public-route-shell-template",
-      "title": "Public Route Shell Template",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json",
-      "added_date": "2026-06-13",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-06-22T15:17:20Z"
+  "generated_at": "2026-06-23T16:45:32Z"
 }

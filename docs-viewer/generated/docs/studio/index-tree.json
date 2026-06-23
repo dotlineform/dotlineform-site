@@ -489,6 +489,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json"
         },
         {
+          "doc_id": "docs-viewer-info-panel",
+          "title": "Info Panel",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-info-panel.json"
+        },
+        {
           "doc_id": "library-documents",
           "title": "Library Documents",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/library-documents.json",
@@ -1189,5 +1194,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-22T18:12:32Z"
+  "generated_at": "2026-06-23T16:45:32Z"
 }

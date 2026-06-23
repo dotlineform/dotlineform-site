@@ -74,7 +74,7 @@ function updateMatches(state) {
   var matches = collectSemanticTargetMatches(state.targets, query, state.registry, 20);
   state.list.setTargets(matches);
   if (!query) {
-    setStatus(state, "No selected text.", true);
+    setStatus(state, "", false);
     return;
   }
   if (!matches.length) {
@@ -86,23 +86,28 @@ function updateMatches(state) {
 
 function syncQueryFromSelection(state) {
   var text = currentSelectionText(state.adapter);
-  if (!state.input || !text || state.input.value === text) return;
+  if (!state.input) return;
+  if (!text) {
+    if (state.querySource === "selection" && state.input.value === state.selectionQuery) {
+      state.input.value = "";
+      state.selectionQuery = "";
+      state.querySource = null;
+      updateMatches(state);
+    }
+    return;
+  }
+  state.selectionQuery = text;
+  state.querySource = "selection";
+  if (state.input.value === text) return;
   state.input.value = text;
   updateMatches(state);
 }
 
 function insertTarget(state, target) {
   if (!target || !state.adapter) return;
-  var selection = typeof state.adapter.getSelection === "function" ? state.adapter.getSelection() : null;
-  var selectedText = selectedTextForToken(selection && selection.text);
-  if (!selectedText) {
-    setStatus(state, "No selected text.", true);
-    if (typeof state.adapter.focus === "function") state.adapter.focus();
-    return;
-  }
-  var token = buildSemanticReferenceToken(target, selectedText);
+  var token = buildSemanticReferenceToken(target);
   if (!token) {
-    setStatus(state, "Selected text cannot be used as a token label.", true);
+    setStatus(state, "Target title cannot be used as a token label.", true);
     if (typeof state.adapter.focus === "function") state.adapter.focus();
     return;
   }
@@ -114,6 +119,8 @@ function insertTarget(state, target) {
 
 function bindEvents(state) {
   state.onInput = function () {
+    state.selectionQuery = "";
+    state.querySource = cleanString(state.input && state.input.value) ? "manual" : null;
     updateMatches(state);
   };
   state.onKeydown = function (event) {
@@ -173,6 +180,8 @@ export function createSemanticTokenPickerView() {
     registry: null,
     results: null,
     root: null,
+    querySource: null,
+    selectionQuery: "",
     status: null,
     targets: [],
     unsubscribeSelection: null

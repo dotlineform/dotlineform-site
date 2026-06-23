@@ -47,7 +47,7 @@ def assert_helper_modules(page: Page) -> None:
                 targetLookupUrl: registry.targetLookupUrl,
                 rows: rows.map((row) => `${row.kind}:${row.id}`),
                 matches: matches.map((row) => `${row.kind}:${row.id}`),
-                token: smoke.tokenEditor.buildSemanticReferenceToken(matches[0], '3 symbols')
+                token: smoke.tokenEditor.buildSemanticReferenceToken(matches[0])
             };
         }"""
     )
@@ -67,9 +67,9 @@ def assert_picker_inserts_token(page: Page) -> None:
             const mount = document.createElement('div');
             document.body.appendChild(mount);
             const textarea = document.createElement('textarea');
-            textarea.value = 'Before 3 symbols after';
+            textarea.value = 'Before symbols after';
             textarea.selectionStart = 7;
-            textarea.selectionEnd = 16;
+            textarea.selectionEnd = 14;
             document.body.appendChild(textarea);
             const selectionListeners = new Set();
             const adapter = {
@@ -131,7 +131,7 @@ def assert_picker_inserts_token(page: Page) -> None:
             };
         }"""
     )
-    if result["query"] != "3 symbols":
+    if result["query"] != "symbols":
         raise AssertionError(f"semantic picker did not seed query from selection: {result!r}")
     if result["rowTexts"] != ["3 symbolsseries0052007", "3 symbolswork006382007 · 3 symbols"]:
         raise AssertionError(f"semantic picker rendered unexpected rows: {result!r}")
@@ -141,11 +141,186 @@ def assert_picker_inserts_token(page: Page) -> None:
         raise AssertionError(f"semantic picker status changed: {result!r}")
 
 
+def assert_selection_seeded_query_clears_after_source_delete(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__docsViewerSemanticPickerSmoke;
+            const mount = document.createElement('div');
+            document.body.appendChild(mount);
+            const textarea = document.createElement('textarea');
+            textarea.value = 'Before symbols after';
+            textarea.selectionStart = 7;
+            textarea.selectionEnd = 14;
+            document.body.appendChild(textarea);
+            const selectionListeners = new Set();
+            const adapter = {
+                focus() {
+                    textarea.focus();
+                },
+                getSelection() {
+                    return {
+                        start: textarea.selectionStart,
+                        end: textarea.selectionEnd,
+                        text: textarea.value.slice(textarea.selectionStart, textarea.selectionEnd)
+                    };
+                },
+                onSelectionChange(listener) {
+                    selectionListeners.add(listener);
+                    return () => selectionListeners.delete(listener);
+                },
+                replaceSelection() {
+                    return true;
+                }
+            };
+            const registryPayload = {
+                schema_version: 'docs_semantic_reference_registry_v1',
+                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                kinds: [
+                    { kind: 'series', source_editor: { picker: true, selection_search: true } },
+                    { kind: 'work', source_editor: { picker: true, selection_search: true } }
+                ]
+            };
+            const targetPayload = {
+                schema_version: 'docs_semantic_reference_target_lookup_v1',
+                targets: [
+                    { kind: 'series', id: '005', title: '3 symbols', meta: ['2007'] },
+                    { kind: 'work', id: '00638', title: '3 symbols', meta: ['2007', '3 symbols'] }
+                ]
+            };
+            const fakeFetch = async (url) => ({
+                ok: true,
+                json: async () => String(url).includes('target-lookup') ? targetPayload : registryPayload
+            });
+            const view = smoke.picker.createSemanticTokenPickerView();
+            await view.mount({
+                mount,
+                fetch: fakeFetch,
+                sourceEditorServices: {
+                    getActiveSourceEditorContextAdapter() {
+                        return adapter;
+                    }
+                }
+            });
+            const input = mount.querySelector('input');
+            const seededQuery = input.value;
+            textarea.setRangeText('', 7, 14, 'start');
+            selectionListeners.forEach((listener) => listener());
+            const queryAfterDelete = input.value;
+            const rowsAfterDelete = mount.querySelectorAll('[data-target-index]').length;
+            const status = mount.querySelector('.docsViewerSemanticPicker__status');
+            const statusAfterDelete = status.textContent.trim();
+            const statusHiddenAfterDelete = status.hidden;
+            input.value = 'symbols';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            selectionListeners.forEach((listener) => listener());
+            return {
+                seededQuery,
+                queryAfterDelete,
+                rowsAfterDelete,
+                statusAfterDelete,
+                statusHiddenAfterDelete,
+                manualQueryAfterEmptySelection: input.value,
+                manualRowsAfterEmptySelection: mount.querySelectorAll('[data-target-index]').length
+            };
+        }"""
+    )
+    if result["seededQuery"] != "symbols":
+        raise AssertionError(f"semantic picker did not seed query before delete: {result!r}")
+    if result["queryAfterDelete"] != "":
+        raise AssertionError(f"semantic picker did not clear selection-seeded query after delete: {result!r}")
+    if result["rowsAfterDelete"] != 0:
+        raise AssertionError(f"semantic picker did not clear rows after selection delete: {result!r}")
+    if result["statusAfterDelete"] != "" or not result["statusHiddenAfterDelete"]:
+        raise AssertionError(f"semantic picker clear status changed: {result!r}")
+    if result["manualQueryAfterEmptySelection"] != "symbols" or result["manualRowsAfterEmptySelection"] != 2:
+        raise AssertionError(f"semantic picker cleared manual query after empty selection: {result!r}")
+
+
+def assert_picker_inserts_token_at_caret(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__docsViewerSemanticPickerSmoke;
+            const mount = document.createElement('div');
+            document.body.appendChild(mount);
+            const textarea = document.createElement('textarea');
+            textarea.value = 'Before  after';
+            textarea.selectionStart = 7;
+            textarea.selectionEnd = 7;
+            document.body.appendChild(textarea);
+            const adapter = {
+                focus() {
+                    textarea.focus();
+                },
+                getSelection() {
+                    return {
+                        start: textarea.selectionStart,
+                        end: textarea.selectionEnd,
+                        text: textarea.value.slice(textarea.selectionStart, textarea.selectionEnd)
+                    };
+                },
+                onSelectionChange() {
+                    return () => {};
+                },
+                replaceSelection(value) {
+                    textarea.setRangeText(value, textarea.selectionStart, textarea.selectionEnd, 'end');
+                    return true;
+                }
+            };
+            const registryPayload = {
+                schema_version: 'docs_semantic_reference_registry_v1',
+                target_lookup_url: '/docs-viewer/generated/semantic-references/target-lookup.json',
+                kinds: [
+                    { kind: 'series', source_editor: { picker: true, selection_search: true } },
+                    { kind: 'work', source_editor: { picker: true, selection_search: true } }
+                ]
+            };
+            const targetPayload = {
+                schema_version: 'docs_semantic_reference_target_lookup_v1',
+                targets: [
+                    { kind: 'series', id: '005', title: '3 symbols', meta: ['2007'] },
+                    { kind: 'work', id: '00638', title: '3 symbols', meta: ['2007', '3 symbols'] }
+                ]
+            };
+            const fakeFetch = async (url) => ({
+                ok: true,
+                json: async () => String(url).includes('target-lookup') ? targetPayload : registryPayload
+            });
+            const view = smoke.picker.createSemanticTokenPickerView();
+            await view.mount({
+                mount,
+                fetch: fakeFetch,
+                sourceEditorServices: {
+                    getActiveSourceEditorContextAdapter() {
+                        return adapter;
+                    }
+                }
+            });
+            const input = mount.querySelector('input');
+            input.value = 'symbols';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            mount.querySelector('[data-target-index="0"]').click();
+            return {
+                rowTexts: Array.from(mount.querySelectorAll('[data-target-index]')).map((node) => node.textContent.trim()),
+                textareaValue: textarea.value,
+                status: mount.querySelector('.docsViewerSemanticPicker__status').textContent.trim()
+            };
+        }"""
+    )
+    if result["rowTexts"] != ["3 symbolsseries0052007", "3 symbolswork006382007 · 3 symbols"]:
+        raise AssertionError(f"semantic picker rendered unexpected caret rows: {result!r}")
+    if result["textareaValue"] != "Before [[ref:series:005|3 symbols]] after":
+        raise AssertionError(f"semantic picker did not insert token at caret: {result!r}")
+    if result["status"] != "Inserted series:005.":
+        raise AssertionError(f"semantic picker caret status changed: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
     install_fixture(page)
     assert_helper_modules(page)
     assert_picker_inserts_token(page)
+    assert_selection_seeded_query_clears_after_source_delete(page)
+    assert_picker_inserts_token_at_caret(page)
 
 
 def main() -> None:

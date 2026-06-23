@@ -138,9 +138,9 @@ def assert_public_info_panel(page: Page, route: str, title: str, timeout_ms: int
             text: panel.textContent || ""
         })"""
     )
-    if info_state["terms"] != ["Summary", "Date", "Updated"]:
-        raise AssertionError(f"{route} public info panel did not render reader-only terms: {info_state!r}")
-    blocked = ["Doc ID", "Scope", "Parent path", "Added", "UI status", "Visibility", "Route"]
+    if info_state["terms"] != ["Summary", "Updated"]:
+        raise AssertionError(f"{route} public info panel did not render public metadata terms: {info_state!r}")
+    blocked = ["Doc ID", "Date", "Added", "Scope", "Parent path", "UI status", "Visibility", "Route"]
     leaked = [item for item in blocked if item in str(info_state["text"])]
     if leaked:
         raise AssertionError(f"{route} public info panel leaked management metadata {leaked!r}: {info_state!r}")
