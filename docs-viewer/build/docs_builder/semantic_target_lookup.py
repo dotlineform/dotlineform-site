@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .common import json_text, read_text, write_text
+from .common import read_text, write_text
 from .semantic_registry import (
     SemanticReferenceKind,
     load_semantic_reference_registry,
@@ -35,6 +35,22 @@ CATALOGUE_KIND_SOURCES = {
         "id_field": "moment_id",
     },
 }
+
+
+def compact_json_text(payload: Any) -> str:
+    targets = payload.get("targets") if isinstance(payload, dict) else None
+    if not isinstance(targets, list):
+        return json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n"
+    lines = [
+        "{",
+        f'  "schema_version": {json.dumps(payload.get("schema_version"), ensure_ascii=False)},',
+        '  "targets": [',
+    ]
+    for index, target in enumerate(targets):
+        suffix = "," if index < len(targets) - 1 else ""
+        lines.append(f"    {json.dumps(target, ensure_ascii=False, separators=(',', ':'))}{suffix}")
+    lines.extend(["  ]", "}"])
+    return "\n".join(lines) + "\n"
 
 
 def normalize_lookup_text(value: Any) -> str:
@@ -129,7 +145,7 @@ class SemanticTargetLookupBuilder:
 
     def run(self, *, write: bool) -> dict[str, Any]:
         payload = self.payload()
-        text = json_text(payload)
+        text = compact_json_text(payload)
         changed = read_text(self.output_path) != text
         if write and changed:
             write_text(self.output_path, text)

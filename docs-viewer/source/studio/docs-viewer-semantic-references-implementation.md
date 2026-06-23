@@ -160,6 +160,7 @@ The lookup is a compact title-weighted browser artifact for editor assistance.
 Rows use only `kind`, `id`, `title`, and optional `meta` fields.
 The lookup includes only published targets because draft records do not have link targets.
 The picker should derive normalized titles and title tokens in the browser for v1.
+The generated file is written as valid JSON with compact one-line target rows so records are easy to scan and cross-check.
 It is not the source of truth for builder rendering and it is not a target-existence authority.
 Catalogue write/build follow-through refreshes this lookup after catalogue source or canonical data changes.
 

@@ -87,13 +87,18 @@ def test_semantic_target_lookup_builder_writes_compact_published_rows() -> None:
         write_registry(root)
         write_catalogue(root)
         result = SemanticTargetLookupBuilder(repo_root=root).run(write=True)
-        payload = read_json(root / "docs-viewer/generated/semantic-references/target-lookup.json")
+        output_path = root / "docs-viewer/generated/semantic-references/target-lookup.json"
+        output_text = output_path.read_text(encoding="utf-8")
+        payload = read_json(output_path)
 
     assert result["diagnostics"]["target_count"] == 2
     assert payload["schema_version"] == "docs_semantic_reference_target_lookup_v1"
     assert [(row["kind"], row["id"]) for row in payload["targets"]] == [("series", "005"), ("work", "00638")]
     assert payload["targets"][0] == {"kind": "series", "id": "005", "title": "3 symbols", "meta": ["2007"]}
     assert payload["targets"][1] == {"kind": "work", "id": "00638", "title": "3 symbols", "meta": ["2007", "3 symbols"]}
+    assert output_text.endswith("\n")
+    assert '    {"kind":"series","id":"005","title":"3 symbols","meta":["2007"]},\n' in output_text
+    assert '    {"kind":"work","id":"00638","title":"3 symbols","meta":["2007","3 symbols"]}\n' in output_text
 
 
 def test_semantic_target_lookup_cli_writes_payload() -> None:
