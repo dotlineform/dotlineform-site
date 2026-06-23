@@ -2,7 +2,7 @@
 doc_id: docs-viewer-semantic-references-implementation
 title: Semantic References Implementation
 added_date: 2026-06-02
-last_updated: 2026-06-22
+last_updated: 2026-06-23
 parent_id: docs-viewer
 viewable: true
 ---
@@ -51,7 +51,7 @@ Current supported action:
 - `link`
 
 The label is optional.
-When the label is omitted, the builder uses the resolved catalogue title when available, then falls back to the `target_key`.
+When the label is omitted, the builder uses the `target_key`.
 
 Tokens inside fenced code blocks and inline code are left literal and do not produce reference records.
 
@@ -59,75 +59,51 @@ Tokens inside fenced code blocks and inline code are left literal and do not pro
 
 The command entrypoint is `docs-viewer/build/build_docs.py`.
 Semantic-reference builder internals live in `docs-viewer/build/docs_builder/semantic_references.py`, with generated relationship payload assembly in `docs-viewer/build/docs_builder/reference_artifacts.py`.
+Registry reads and normalization live in `docs-viewer/build/docs_builder/semantic_registry.py`.
+The generated target lookup builder lives in `docs-viewer/build/docs_builder/semantic_target_lookup.py`, with command entrypoint `docs-viewer/build/build_semantic_target_lookup.py`.
 
 Relevant responsibilities:
 
 - detect `[[ref:...]]` tokens before Markdown rendering
 - parse the kind, target id, optional label, and optional modifier
 - skip fenced-code and inline-code occurrences
-- validate the kind against the hard-coded supported-kind set
-- validate the action against the hard-coded action set
-- normalize target ids for current catalogue kinds
-- read catalogue records for title, status, and href resolution
-- render either a link or inert span
+- load the checked-in semantic-reference registry
+- derive supported kinds, id normalization, and route construction from the registry
+- render recognized supported token shapes as links
+- leave malformed, unsupported, unsupported-action, or invalid-id token-like text literal
 - collect semantic-reference records for generated artifacts
 - include reference-artifact writes in full and targeted docs payload builds
 
-Current constants:
+Current registry:
 
-- `SEMANTIC_REF_SUPPORTED_KINDS = {"work", "series", "moment"}`
-- `SEMANTIC_REF_ALLOWED_ACTIONS = {"link"}`
+- `docs-viewer/config/semantic-references/registry.json`
+- schema: `docs_semantic_reference_registry_v1`
+- browser URL in local manage mode: `/docs-viewer/config/semantic-references/registry.json`
+- generated target lookup URL: `/docs-viewer/generated/semantic-references/target-lookup.json`
 
-There is no semantic-reference registry in the current implementation.
-Allowed kinds, allowed actions, route construction, target-data reads, and ownership assumptions are hard-coded in the builder.
-That is the main structural limitation the semantic-reference editor request needs to address before adding picker UI.
-
-Target registry shape for the next slice:
-
-- checked-in, browser-readable data owned by Docs Viewer
-- small enough to be loaded directly by the source editor and other local browser modules
-- explicit fields for current kind ids, id normalization, target-data source, route construction, and source-editor availability
-- no backend read orchestration for data that is already safe to expose as static JSON or generated browser data
-
-The first registry-backed editor slice should support only the current token kinds, `work`, `series`, and `moment`, using simple browser-side search from selected source-editor text.
+The registry currently supports only `work`, `series`, and `moment`.
+It is browser-readable and small enough for the source editor, report code, and other local browser modules to consume directly.
 Insertion-point detection, direct id references, exact-target records, and additional token kinds belong in a later slice.
 
 ## Target Resolution
 
-The current resolver is catalogue-aware.
-It reads canonical catalogue records from:
+The current renderer is registry-aware, not catalogue-validation-aware.
+It does not read canonical catalogue records to decide whether a token should render.
 
-```text
-studio/data/canonical/catalogue/works.json
-studio/data/canonical/catalogue/series.json
-studio/data/canonical/catalogue/moments.json
-```
-
-Current id normalization:
+Current registry-backed id normalization:
 
 - `work`: strips non-digits and left-pads to 5 digits
 - `series`: accepts a numeric id left-padded to 3 digits, or a lowercase slug id
 - `moment`: accepts a lowercase slug id
 
-Current route output:
+Current registry-backed route output:
 
 - `work`: `/works/?work=<work_id>`
 - `series`: `/series/?series=<series_id_or_slug>`
 - `moment`: `/moments/?moment=<moment_id>`
 
-Current target-status behavior:
-
-- unsupported kind: `target_status` is `unsupported_kind`
-- invalid id shape: `target_status` is `invalid_id`
-- missing catalogue record: `target_status` is `missing`
-- existing catalogue record: `target_status` is the record status, such as `published` or `draft`
-
-This current behavior validates more than type/action support.
-It treats catalogue existence and publication status as build-time semantic-reference warning states.
-
-That should not be the long-term boundary.
-The builder's job should be to parse supported token shapes, render links for recognized semantic-reference tokens, and write generated reference artifacts.
-It should not validate semantic-reference support as a build concern, and it should not validate whether link targets currently exist.
+The builder's job is to parse supported token shapes, render links for recognized semantic-reference tokens, and write generated reference artifacts.
+It does not validate whether link targets currently exist.
 Targets can be deleted or changed after a document build, so target existence is outside the builder's control.
 
 The source-editor semantic-token helper can offer likely targets from browser-safe lookup data.
@@ -139,39 +115,53 @@ Do not add a server endpoint for picker data that can be supplied through static
 The builder renders a navigable link only when all of these are true:
 
 - the token parsed successfully
-- the action is allowed
-- the resolver produced no warning
-- the target is linkable
-- the target has an href
+- the token kind exists in the registry
+- the action is `link`
+- the id can be normalized by the registry-declared normalizer
+- the route can be constructed from the registry route metadata
 
-For a published work reference:
+For a work reference:
 
 ```html
 <a href="/works/?work=00638" target="_blank" rel="noopener noreferrer" data-ref-kind="work" data-ref-id="00638" data-ref-action="link">3 symbols</a>
 ```
 
-For a warning state, the builder renders an inert span with `data-ref-status`.
-Missing targets and non-published targets currently render this way:
+Unsupported, malformed, unsupported-action, or invalid-id token-like text remains literal rendered text and does not produce a generated reference record.
+The builder does not render catalogue-missing or catalogue-draft warning spans.
 
-```html
-<span data-ref-kind="work" data-ref-id="12345" data-ref-action="link" data-ref-status="missing">missing target</span>
-```
-
-Malformed tokens render as inert spans with `data-ref-status="malformed"` and do not produce a generated reference record.
-
-Parsed tokens with warnings still produce generated reference records.
-That includes unsupported kinds, unsupported actions, invalid ids, missing targets, and non-published targets.
-
-Target registry-backed behavior should be simpler:
-
-- recognized supported token shapes render as links using registry route construction
-- unsupported token-like text remains plain rendered text
-- missing, unpublished, deleted, or otherwise changed link targets do not block rendering and do not create build warnings
-- generated reference artifacts describe what the builder rendered, not whether the target is still semantically valid
+Generated reference artifacts describe what the builder rendered, not whether the target is still semantically valid.
+For registry-rendered links, `target_status` is `rendered`.
 
 If we want to identify possible unsupported token-like text or stale targets, that should be a report concern.
 The semantic references report can scan generated reference artifacts, and a future report pass could optionally scan source text for suspicious token-like strings.
 That audit should not change builder success, generated payload success, or test-script success.
+
+## Generated Target Lookup
+
+The source-editor picker uses a generated target lookup:
+
+```text
+docs-viewer/generated/semantic-references/target-lookup.json
+```
+
+Browser URL in local manage mode:
+
+```text
+/docs-viewer/generated/semantic-references/target-lookup.json
+```
+
+The command entrypoint is:
+
+```bash
+$HOME/miniconda3/bin/python3 docs-viewer/build/build_semantic_target_lookup.py --write
+```
+
+The lookup is a compact title-weighted browser artifact for editor assistance.
+Rows use only `kind`, `id`, `title`, and optional `meta` fields.
+The lookup includes only published targets because draft records do not have link targets.
+The picker should derive normalized titles and title tokens in the browser for v1.
+It is not the source of truth for builder rendering and it is not a target-existence authority.
+Catalogue write/build follow-through refreshes this lookup after catalogue source or canonical data changes.
 
 ## Generated Artifacts
 
@@ -227,7 +217,8 @@ For semantic references, the builder:
 - removes stale selected by-doc records when selected docs no longer have references
 - removes stale by-target buckets when the derived target set no longer contains them
 
-Resolver-data changes outside docs source, such as catalogue title, status, or route changes, need a full same-scope docs payload rebuild unless a future affected-id rule is added.
+Registry route or normalization changes need a full same-scope docs payload rebuild unless a future affected-id rule is added.
+Catalogue target title, status, deletion, or publication changes do not affect builder render output, but may affect the generated target lookup or future report audits.
 
 ## Report Runtime
 

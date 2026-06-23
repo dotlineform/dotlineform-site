@@ -16,6 +16,7 @@ from .common import (
 from .payloads import PayloadBuilderMixin
 from .reference_artifacts import ReferenceArtifactsMixin
 from .rendering import ContentRenderingMixin
+from .semantic_registry import load_semantic_reference_registry
 from .semantic_references import SemanticReferencesMixin
 from .source import SourceLoadingMixin
 from .write_plan import WritePlanMixin
@@ -55,9 +56,9 @@ class DocsDataBuilder(
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
+        self.semantic_reference_registry = load_semantic_reference_registry(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
-        self._catalogue_cache: dict[str, dict[str, dict[str, Any]]] = {}
         self._viewer_scope_for_path: dict[str, str] | None = None
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:

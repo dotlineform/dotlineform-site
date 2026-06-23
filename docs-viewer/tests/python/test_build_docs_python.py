@@ -36,6 +36,50 @@ def write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_semantic_reference_registry(root: Path) -> None:
+    write_json(
+        root / "docs-viewer/config/semantic-references/registry.json",
+        {
+            "schema_version": "docs_semantic_reference_registry_v1",
+            "target_lookup_url": "/docs-viewer/generated/semantic-references/target-lookup.json",
+            "kinds": [
+                {
+                    "kind": "work",
+                    "id": {
+                        "normalizer": "digits_left_pad",
+                        "width": 5,
+                        "input_pattern": "^\\d{1,5}$",
+                        "canonical_pattern": "^\\d{5}$",
+                        "example": "00638",
+                    },
+                    "route": {"type": "query", "path": "/works/", "param": "work"},
+                    "source_editor": {"selection_search": True, "picker": True},
+                },
+                {
+                    "kind": "series",
+                    "id": {
+                        "normalizer": "series_id_or_slug",
+                        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+                        "example": "009",
+                    },
+                    "route": {"type": "query", "path": "/series/", "param": "series"},
+                    "source_editor": {"selection_search": True, "picker": True},
+                },
+                {
+                    "kind": "moment",
+                    "id": {
+                        "normalizer": "slug",
+                        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+                        "example": "lotus-pond",
+                    },
+                    "route": {"type": "query", "path": "/moments/", "param": "moment"},
+                    "source_editor": {"selection_search": True, "picker": True},
+                },
+            ],
+        },
+    )
+
+
 def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -255,6 +299,7 @@ ui_status: done
 def prepare_repo(root: Path) -> None:
     write_site_tools_config(root)
     write_scope_config(root)
+    write_semantic_reference_registry(root)
     write_catalogue_records(root)
     write_text(root / "site/assets/docs/interactive/studio/chart.html", "<!doctype html><title>Chart</title>")
     write_source_docs(root)
@@ -475,6 +520,23 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
     assert result["diagnostics"]["build_mode"] == "targeted"
     assert result["diagnostics"]["only_doc_ids"] == ["child"]
     assert "parent" not in result["write_plan"]["changed_item_ids"]
+
+
+def test_python_docs_builder_registry_backed_references_do_not_validate_target_existence() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_source_docs(root, child_body_suffix="Missing target [[ref:work:99999|still links]].")
+        result = run_builder(root)
+        child = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
+        missing_target = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/99999.json")
+
+    assert result["diagnostics"]["warning_count"] == 0
+    assert 'href="/works/?work=99999"' in child["content_html"]
+    assert missing_target["target_kind"] == "work"
+    assert missing_target["target_id"] == "99999"
+    assert missing_target["target_status"] == "rendered"
+    assert missing_target["references"][0]["label"] == "still links"
 
 
 def test_python_docs_builder_writes_browser_configs_on_cli_write() -> None:

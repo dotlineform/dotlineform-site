@@ -1,19 +1,16 @@
 from __future__ import annotations
 
 import html
-import json
 import re
 import sys
 from dataclasses import dataclass
 from typing import Any
-from urllib.parse import quote
 
 from .common import (
     SAFE_REF_KIND_PATTERN,
-    SEMANTIC_REF_ALLOWED_ACTIONS,
-    SEMANTIC_REF_SUPPORTED_KINDS,
     SEMANTIC_REF_TOKEN_PATTERN,
 )
+from .semantic_registry import normalize_semantic_reference_id, semantic_reference_href
 from .source import DocRecord
 
 
@@ -46,14 +43,14 @@ class SemanticReferencesMixin:
             ordinal += 1
             token = self.parse_semantic_ref_token(raw_token, raw_body, raw_modifier)
             if token is None:
-                self.warn_semantic_ref(doc, f"malformed semantic reference token {raw_token!r}")
-                return f'<span data-ref-status="malformed">{html.escape(raw_token)}</span>'
+                return raw_token
+            if token.modifier_error or token.action != "link":
+                return raw_token
             resolution = self.resolve_semantic_ref(token)
-            warnings = self.semantic_ref_warnings(token, resolution)
-            for message in warnings:
-                self.warn_semantic_ref(doc, message)
+            if resolution is None:
+                return raw_token
             references.append(self.semantic_ref_record(doc, token, resolution, ordinal))
-            return self.render_semantic_ref_token(token, resolution, not warnings)
+            return self.render_semantic_ref_token(token, resolution)
 
         rendered = self.replace_semantic_ref_tokens_outside_code(markdown, replace_token)
         references_by_doc[doc.doc_id] = references
@@ -180,147 +177,27 @@ class SemanticReferencesMixin:
             return {"action": attrs.get("action", "link"), "error": f"unsupported modifier {unsupported[0]!r}"}
         return {"action": attrs.get("action", "link")}
 
-    def resolve_semantic_ref(self, token: SemanticRefToken) -> dict[str, Any]:
-        if token.kind not in SEMANTIC_REF_SUPPORTED_KINDS:
-            return {
-                "target_kind": token.kind,
-                "target_id": token.id,
-                "target_key": f"{token.kind}:{token.id}",
-                "target_href": "",
-                "target_title": "",
-                "target_status": "unsupported_kind",
-                "exists": False,
-                "linkable": False,
-                "warning": f"unsupported semantic reference kind {token.kind!r}",
-            }
-        if token.kind == "work":
-            return self.resolve_catalogue_ref(token, "works.json", "works", "work_id", 5, "/works")
-        if token.kind == "series":
-            return self.resolve_catalogue_ref(token, "series.json", "series", "series_id", 3, "/series", allow_slug_id=True)
-        return self.resolve_catalogue_ref(token, "moments.json", "moments", "moment_id", None, "/moments", moment_id=True)
-
-    def resolve_catalogue_ref(
-        self,
-        token: SemanticRefToken,
-        filename: str,
-        root_key: str,
-        id_field: str,
-        numeric_width: int | None,
-        route_base: str,
-        *,
-        allow_slug_id: bool = False,
-        moment_id: bool = False,
-    ) -> dict[str, Any]:
-        try:
-            if moment_id:
-                normalized_id = self.normalize_moment_id(token.id)
-            elif allow_slug_id:
-                normalized_id = self.normalize_semantic_series_id(token.id, numeric_width or 0)
-            else:
-                normalized_id = self.normalize_numeric_semantic_id(token.id, numeric_width or 0)
-        except ValueError:
-            return {
-                "target_kind": token.kind,
-                "target_id": token.id,
-                "target_key": f"{token.kind}:{token.id}",
-                "target_href": "",
-                "target_title": "",
-                "target_status": "invalid_id",
-                "exists": False,
-                "linkable": False,
-                "warning": f"invalid semantic reference id {token.kind}:{token.id}",
-            }
-        records = self.load_catalogue_records(filename, root_key, id_field)
-        record = records.get(normalized_id)
-        target_key = f"{token.kind}:{normalized_id}"
-        if not record:
-            return {
-                "target_kind": token.kind,
-                "target_id": normalized_id,
-                "target_key": target_key,
-                "target_href": "",
-                "target_title": "",
-                "target_status": "missing",
-                "exists": False,
-                "linkable": False,
-                "warning": f"unresolved semantic reference {target_key}",
-            }
-        status = str(record.get("status") or "").strip().lower() or "unknown"
+    def resolve_semantic_ref(self, token: SemanticRefToken) -> dict[str, Any] | None:
+        registry = getattr(self, "semantic_reference_registry", None)
+        kind = registry.kind(token.kind) if registry else None
+        if kind is None:
+            return None
+        normalized_id = normalize_semantic_reference_id(token.id, kind.id)
+        if normalized_id is None:
+            return None
+        target_key = f"{kind.kind}:{normalized_id}"
         return {
-            "target_kind": token.kind,
-            "target_id": str(record.get(id_field) or normalized_id),
+            "target_kind": kind.kind,
+            "target_id": normalized_id,
             "target_key": target_key,
-            "target_href": self.catalogue_ref_href(token.kind, normalized_id, route_base),
-            "target_title": str(record.get("title") or "").strip(),
-            "target_status": status,
-            "exists": True,
-            "linkable": status == "published",
-            "warning": "" if status == "published" else f"semantic reference {target_key} targets non-published catalogue record",
+            "target_href": semantic_reference_href(kind, normalized_id),
+            "target_title": "",
+            "target_status": "rendered",
+            "linkable": True,
         }
 
-    def catalogue_ref_href(self, kind: str, normalized_id: str, route_base: str) -> str:
-        encoded_id = quote(normalized_id)
-        if kind == "work":
-            return f"/works/?work={encoded_id}"
-        if kind == "series":
-            return f"/series/?series={encoded_id}"
-        if kind == "moment":
-            return f"/moments/?moment={encoded_id}"
-        return f"{route_base}/{encoded_id}/"
-
-    def normalize_numeric_semantic_id(self, value: str, width: int) -> str:
-        text = re.sub(r"\D", "", value.strip().removeprefix("'"))
-        text = re.sub(r"\.0+\Z", "", text)
-        if not text:
-            raise ValueError("invalid id")
-        return text.rjust(width, "0")
-
-    def normalize_semantic_series_id(self, value: str, width: int) -> str:
-        text = re.sub(r"\.0+\Z", "", value.strip().removeprefix("'"))
-        if not text:
-            raise ValueError("invalid series id")
-        if re.fullmatch(r"\d+", text):
-            return text.rjust(width, "0")
-        if re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", text):
-            return text
-        raise ValueError("invalid series id")
-
-    def normalize_moment_id(self, value: str) -> str:
-        text = value.strip().lower().removesuffix(".md")
-        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", text):
-            raise ValueError("invalid moment id")
-        return text
-
-    def load_catalogue_records(self, filename: str, root_key: str, id_field: str) -> dict[str, dict[str, Any]]:
-        cache_key = f"{filename}:{root_key}:{id_field}"
-        if cache_key in self._catalogue_cache:
-            return self._catalogue_cache[cache_key]
-        path = self.repo_root / "studio" / "data" / "canonical" / "catalogue" / filename
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            self._catalogue_cache[cache_key] = {}
-            return {}
-        records = payload.get(root_key)
-        rows = records.values() if isinstance(records, dict) else records if isinstance(records, list) else []
-        out: dict[str, dict[str, Any]] = {}
-        for row in rows:
-            if isinstance(row, dict):
-                target_id = str(row.get(id_field) or "").strip()
-                if target_id:
-                    out[target_id] = row
-        self._catalogue_cache[cache_key] = out
-        return out
-
     def semantic_ref_warnings(self, token: SemanticRefToken, resolution: dict[str, Any]) -> list[str]:
-        warnings: list[str] = []
-        if token.modifier_error:
-            warnings.append(token.modifier_error)
-        if token.action not in SEMANTIC_REF_ALLOWED_ACTIONS:
-            warnings.append(f"unsupported semantic reference action {token.action!r}")
-        if resolution.get("warning"):
-            warnings.append(str(resolution["warning"]))
-        return warnings
+        return []
 
     def warn_semantic_ref(self, doc: DocRecord, message: str) -> None:
         warning = f"Docs semantic reference warning [{self.scope_id}/{doc.doc_id}]: {message}"
@@ -354,14 +231,14 @@ class SemanticReferencesMixin:
             "ordinal": ordinal,
         }
 
-    def render_semantic_ref_token(self, token: SemanticRefToken, resolution: dict[str, Any], usable: bool) -> str:
+    def render_semantic_ref_token(self, token: SemanticRefToken, resolution: dict[str, Any]) -> str:
         label = html.escape(self.semantic_ref_label(token, resolution))
         attrs = {
             "data-ref-kind": resolution["target_kind"],
             "data-ref-id": resolution["target_id"],
             "data-ref-action": token.action,
         }
-        if usable and resolution.get("linkable") and resolution.get("target_href"):
+        if resolution.get("linkable") and resolution.get("target_href"):
             attrs["target"] = "_blank"
             attrs["rel"] = "noopener noreferrer"
             return f'<a href="{html.escape(str(resolution["target_href"]), quote=True)}" {self.html_attrs(attrs)}>{label}</a>'

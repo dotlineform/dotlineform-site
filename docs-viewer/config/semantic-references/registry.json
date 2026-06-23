@@ -1,0 +1,59 @@
+{
+  "schema_version": "docs_semantic_reference_registry_v1",
+  "target_lookup_url": "/docs-viewer/generated/semantic-references/target-lookup.json",
+  "kinds": [
+    {
+      "kind": "work",
+      "id": {
+        "normalizer": "digits_left_pad",
+        "width": 5,
+        "input_pattern": "^\\d{1,5}$",
+        "canonical_pattern": "^\\d{5}$",
+        "example": "00638"
+      },
+      "route": {
+        "type": "query",
+        "path": "/works/",
+        "param": "work"
+      },
+      "source_editor": {
+        "selection_search": true,
+        "picker": true
+      }
+    },
+    {
+      "kind": "series",
+      "id": {
+        "normalizer": "series_id_or_slug",
+        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+        "example": "009"
+      },
+      "route": {
+        "type": "query",
+        "path": "/series/",
+        "param": "series"
+      },
+      "source_editor": {
+        "selection_search": true,
+        "picker": true
+      }
+    },
+    {
+      "kind": "moment",
+      "id": {
+        "normalizer": "slug",
+        "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+        "example": "lotus-pond"
+      },
+      "route": {
+        "type": "query",
+        "path": "/moments/",
+        "param": "moment"
+      },
+      "source_editor": {
+        "selection_search": true,
+        "picker": true
+      }
+    }
+  ]
+}

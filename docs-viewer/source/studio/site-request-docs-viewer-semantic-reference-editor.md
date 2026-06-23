@@ -97,9 +97,10 @@ Settled implementation decisions before v1 starts:
 - the source editor should expose its semantic-token adapter through hosted-view context during `markdown-source` activation, and clear it on teardown; avoid broad globals such as `window`-level editor handles
 - if a shared adapter holder is needed, make it an explicit scoped runtime service with `setActiveSourceEditorAdapter()` and `clearActiveSourceEditorAdapter()` lifecycle rather than route-global mutable state
 - picker search should read the current selection when the picker opens, then update while the picker is active on textarea selection/input events with a small debounce; it should not run background lookup work while the context/info panel is closed
-- v1 lookup rows should use compact title-first fields: `kind`, `id`, `title`, `title_normalized`, `title_tokens`, `aliases`, `rank_hints`, `display.title`, and `display.meta`
-- v1 ranking should prefer exact normalized title match, title prefix match, all selected tokens present in title, partial title-token match, alias match, then tie-break by registry kind order, normalized title, and id
-- ids and generic metadata should be available for display and tie-breaks, but should not dominate selected-text search ranking
+- v1 lookup rows should stay minimal: `kind`, `id`, `title`, and optional `meta`
+- v1 lookup generation should include only published targets because draft records do not have link targets
+- v1 ranking should derive normalized titles and title tokens in the browser, then prefer exact normalized title match, title prefix match, all selected tokens present in title, partial title-token match, then tie-break by registry kind order, normalized title, and id
+- ids and compact metadata should be available for display and tie-breaks, but should not dominate selected-text search ranking
 - entering source edit mode should not auto-open the context/info panel; it should only switch the default info-panel view to `semantic-token-picker`
 - if the info panel is already open when the Markdown source editor becomes active, switching the visible hosted view to `semantic-token-picker` is acceptable because the active context changed
 
@@ -368,6 +369,7 @@ Schema id:
 
 The lookup generator can run whenever source data changes, like the existing catalogue lookup modules.
 It should read canonical/generated source data for supported target kinds and write a compact browser-safe payload for the editor.
+V1 should include only published targets because draft records do not have link targets.
 
 Example lookup payload:
 
@@ -379,31 +381,13 @@ Example lookup payload:
       "kind": "series",
       "id": "005",
       "title": "3 symbols",
-      "title_normalized": "3 symbols",
-      "title_tokens": ["3", "symbols"],
-      "aliases": [],
-      "rank_hints": {
-        "title_exact": true
-      },
-      "display": {
-        "title": "3 symbols",
-        "meta": ["005", "2007", "primary"]
-      }
+      "meta": ["2007"]
     },
     {
       "kind": "work",
       "id": "00638",
       "title": "3 symbols",
-      "title_normalized": "3 symbols",
-      "title_tokens": ["3", "symbols"],
-      "aliases": [],
-      "rank_hints": {
-        "title_exact": true
-      },
-      "display": {
-        "title": "3 symbols",
-        "meta": ["00638", "2007", "mixed media", "3 symbols"]
-      }
+      "meta": ["2007", "3 symbols"]
     }
   ]
 }
@@ -414,22 +398,17 @@ Lookup field intent:
 - `kind`: token kind to insert
 - `id`: canonical target id to insert
 - `title`: primary title for matching and display
-- `title_normalized`: normalized title for browser-side comparison
-- `title_tokens`: title-derived tokens for browser-side matching
-- `aliases`: optional title-like aliases for current supported kinds
-- `rank_hints`: optional precomputed booleans or weights for simple browser ranking
-- `display`: fields used to render the picker row
+- `meta`: optional compact secondary display fields, such as `year_display` or `date_display`; work rows can also include the first resolved series title
 
 Search should be browser-side and title-weighted:
 
 - exact normalized title match first
 - title prefix or token match next
-- alias match next
 - ids and metadata can be available for display, but should not dominate selection-search ranking
 
 This keeps the picker aligned with the real interaction: selected text is likely intended to become link text.
 If the user selects `3 symbols`, matching title records should rank above incidental metadata matches.
-If the user selects `symbols`, title-token and alias matches can participate when their data exists in the lookup.
+If the user selects `symbols`, title-token matches can participate by deriving tokens from each row title in the browser.
 
 ## Context Panel Integration
 
@@ -531,18 +510,18 @@ If the semantic module is absent, disabled, or unsupported for the current insta
 
 Tasks:
 
-- add `docs-viewer/config/semantic-references/registry.json` with v1 `work`, `series`, and `moment` kind records
-- add Python registry read/normalization helpers for builder use
-- update semantic-reference rendering so the builder derives supported kinds, id normalization, and route construction from the registry
-- keep builder behavior limited to rendering recognized semantic tokens and emitting generated reference artifacts
-- remove builder dependence on catalogue existence/status for semantic-reference render success
-- ensure missing, draft, unpublished, deleted, or stale targets do not create builder warnings or test-script failures
-- keep stale-target and suspicious-token auditing in focused report logic rather than build success logic
-- add `docs-viewer/build/docs_builder/semantic_target_lookup.py` for compact target lookup payload generation
-- add `docs-viewer/build/build_semantic_target_lookup.py` as the manual command entrypoint
-- generate `docs-viewer/generated/semantic-references/target-lookup.json` from browser-safe catalogue data for current v1 kinds
-- wire catalogue write/build follow-through to refresh the target lookup after relevant catalogue source or canonical data changes
-- verify the registry and lookup files are readable through existing local Docs Viewer static route prefixes
+- [x] add `docs-viewer/config/semantic-references/registry.json` with v1 `work`, `series`, and `moment` kind records
+- [x] add Python registry read/normalization helpers for builder use
+- [x] update semantic-reference rendering so the builder derives supported kinds, id normalization, and route construction from the registry
+- [x] keep builder behavior limited to rendering recognized semantic tokens and emitting generated reference artifacts
+- [x] remove builder dependence on catalogue existence/status for semantic-reference render success
+- [x] ensure missing, draft, unpublished, deleted, or stale targets do not create builder warnings or test-script failures
+- [x] keep stale-target and suspicious-token auditing in focused report logic rather than build success logic
+- [x] add `docs-viewer/build/docs_builder/semantic_target_lookup.py` for compact target lookup payload generation
+- [x] add `docs-viewer/build/build_semantic_target_lookup.py` as the manual command entrypoint
+- [x] generate `docs-viewer/generated/semantic-references/target-lookup.json` from browser-safe catalogue data for current v1 kinds
+- [x] wire catalogue write/build follow-through to refresh the target lookup after relevant catalogue source or canonical data changes
+- [x] verify the registry and lookup files are readable through existing local Docs Viewer static route prefixes
 
 Acceptance:
 
@@ -558,9 +537,9 @@ Acceptance:
 
 Tasks:
 
-- add a browser helper that reads and normalizes the semantic-reference registry
-- expose supported types, target lookup URL, and source-editor surface availability
-- handle missing or malformed registry data with clear unavailable states
+- [ ] add a browser helper that reads and normalizes the semantic-reference registry
+- [ ] expose supported types, target lookup URL, and source-editor surface availability
+- [ ] handle missing or malformed registry data with clear unavailable states
 
 Acceptance:
 
@@ -572,13 +551,13 @@ Acceptance:
 
 Tasks:
 
-- register `semantic-token-picker` as a manage-only `info` panel hosted view
-- make the view available only while the Markdown source editor can provide the semantic-token adapter
-- use the existing context/info panel shell, toolbar, status area, close behavior, and hosted-view lifecycle
-- make the context/info panel default to `semantic-token-picker` while the Markdown source editor is active
-- make the context/info panel default to `metadata-info` while the rendered document is active
-- keep metadata/info as a separate hosted view in the same panel
-- pass only the narrow source-editor adapter and registry-derived support data into the picker view
+- [ ] register `semantic-token-picker` as a manage-only `info` panel hosted view
+- [ ] make the view available only while the Markdown source editor can provide the semantic-token adapter
+- [ ] use the existing context/info panel shell, toolbar, status area, close behavior, and hosted-view lifecycle
+- [ ] make the context/info panel default to `semantic-token-picker` while the Markdown source editor is active
+- [ ] make the context/info panel default to `metadata-info` while the rendered document is active
+- [ ] keep metadata/info as a separate hosted view in the same panel
+- [ ] pass only the narrow source-editor adapter and registry-derived support data into the picker view
 
 Acceptance:
 
@@ -592,17 +571,17 @@ Acceptance:
 
 Tasks:
 
-- load the generated semantic-target lookup from the registry-defined URL
-- search title-focused target records browser-side from the current editor selection
-- search the current v1 token kinds from the current editor selection: `work`, `series`, and `moment`
-- render candidate rows from lookup `display` fields
-- handle stale or missing target data without changing builder behavior
+- [ ] load the generated semantic-target lookup from the registry-defined URL
+- [ ] search title-focused target records browser-side from the current editor selection
+- [ ] search the current v1 token kinds from the current editor selection: `work`, `series`, and `moment`
+- [ ] render candidate rows from lookup `display` fields
+- [ ] handle stale or missing target data without changing builder behavior
 
 Acceptance:
 
 - work, series, and moment target support follows the registry
 - selecting `3 symbols` can surface both matching work and series targets when both records exist
-- selected text search ranks title/alias matches ahead of incidental metadata matches
+- selected text search ranks title matches ahead of incidental metadata matches
 - picker behavior can be traced to registry metadata
 - target ids remain opaque host ids
 - stale, missing, or deleted targets do not become builder or test-script validation failures
@@ -612,11 +591,11 @@ Acceptance:
 
 Tasks:
 
-- read selected text from the Markdown editor
-- build a semantic-reference token from selected type, target id, and selected text
-- insert the token at the current selection offsets
-- keep the inserted token in the local editor buffer until `Rebuild doc`
-- preserve browser-native undo behavior where practical
+- [ ] read selected text from the Markdown editor
+- [ ] build a semantic-reference token from selected type, target id, and selected text
+- [ ] insert the token at the current selection offsets
+- [ ] keep the inserted token in the local editor buffer until `Rebuild doc`
+- [ ] preserve browser-native undo behavior where practical
 
 Acceptance:
 
@@ -630,11 +609,14 @@ Acceptance:
 
 Tasks:
 
-- add focused tests for registry-backed builder render output and generated reference artifacts
-- add focused tests for semantic-target lookup generation and browser ranking
-- add focused tests for registry normalization, target option shaping, and token construction
-- add browser smoke coverage for semantic insertion inside the Markdown editor
-- update semantic-reference implementation and editor docs after implementation
+- [x] add focused tests for registry-backed builder render output and generated reference artifacts
+- [x] add focused tests for semantic-target lookup generation
+- [ ] add focused tests for browser ranking
+- [x] add focused tests for registry normalization
+- [ ] add focused tests for target option shaping
+- [ ] add focused tests for token construction
+- [ ] add browser smoke coverage for semantic insertion inside the Markdown editor
+- [ ] update semantic-reference implementation and editor docs after implementation
 
 Acceptance:
 
@@ -693,11 +675,11 @@ $HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_manage
 
 Add focused tests or smoke checks for:
 
-- semantic-reference registry read/normalization
-- semantic-target lookup generation
-- title-weighted target ranking
-- missing registry unavailable state
-- target option normalization
-- token construction
-- token insertion into selected source text
-- no source write before `Rebuild doc`
+- [x] semantic-reference registry read/normalization
+- [x] semantic-target lookup generation
+- [ ] title-weighted target ranking
+- [ ] missing registry unavailable state
+- [ ] target option normalization
+- [ ] token construction
+- [ ] token insertion into selected source text
+- [ ] no source write before `Rebuild doc`

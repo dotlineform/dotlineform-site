@@ -87,6 +87,13 @@ def run_scoped_build_scope(
                 build_commands.build_search_command(repo_root, write=write, force=effective_force, env=env),
             )
         )
+    if not media_only:
+        commands.append(
+            (
+                "Build Semantic Target Lookup",
+                build_commands.build_semantic_target_lookup_command(repo_root, write=write),
+            )
+        )
     steps: list[Dict[str, Any]] = []
     status = "completed"
     failed_step = ""
@@ -208,6 +215,7 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
         )
     if bool(scope.get("rebuild_search")):
         commands.append(build_commands.build_search_command(repo_root, write=False, force=bool(force), env=runtime_env()))
+    commands.append(build_commands.build_semantic_target_lookup_command(repo_root, write=False))
     if commands:
         for cmd in commands:
             print("  + " + " ".join(cmd))

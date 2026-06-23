@@ -72,6 +72,16 @@ def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Mapp
     return cmd
 
 
+def build_semantic_target_lookup_command(repo_root: Path, *, write: bool) -> list[str]:
+    cmd = [
+        sys.executable,
+        str(repo_root / "docs-viewer" / "build" / "build_semantic_target_lookup.py"),
+    ]
+    if write:
+        cmd.append("--write")
+    return cmd
+
+
 def tail_output(value: str, *, limit: int = 8) -> str:
     if not value:
         return ""

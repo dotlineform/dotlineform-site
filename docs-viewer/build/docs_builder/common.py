@@ -46,8 +46,6 @@ IMG_PATTERN = re.compile(r"<img\b([^>]*)>", re.IGNORECASE)
 HTML_ATTR_PATTERN_TEMPLATE = r"\b{}\s*=\s*([\"'])(.*?)\1"
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SAFE_REF_KIND_PATTERN = re.compile(r"\A[a-z0-9_-]+\Z")
-SEMANTIC_REF_ALLOWED_ACTIONS = {"link"}
-SEMANTIC_REF_SUPPORTED_KINDS = {"work", "series", "moment"}
 MEDIA_TOKEN_ALLOWED_ATTRS = {"width", "height"}
 MEDIA_TOKEN_DIMENSION_PATTERN = re.compile(r"\A[1-9][0-9]{0,5}\Z")
 
