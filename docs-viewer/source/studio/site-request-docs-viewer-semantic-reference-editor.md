@@ -496,6 +496,13 @@ Candidate semantic files inside the current source-editor folder:
 - `semantic-targets.js` for client-side support reads and option normalization
 - `semantic-reference-registry.js` for registry reads/normalization if not shared elsewhere
 
+`semantic-target-picker.js` should be a lightweight Docs Viewer source-editor component, not a direct import of Studio catalogue picker code.
+It can reuse the interaction pattern from `docs-viewer/runtime/js/management/docs-viewer-management-parent-picker.js`: delegated mouse selection, active row state, ArrowUp/ArrowDown, Enter, Escape, and an `onSelect(target)` callback.
+It should own rendering selectable rows from `{ kind, id, title, meta }`, but it should not know about token construction, source-editor buffer changes, registry loading, or rebuild behavior.
+Design the component so the selectable-list behavior is easy to extract later, but do not create a generic shared component in v1.
+The first implementation has only one confirmed consumer and a domain-specific row shape, so premature extraction would force generic API decisions before a second use case proves them.
+If another Docs Viewer management feature later needs the same interaction, promote the generic core to a shared helper such as `docs-viewer/runtime/js/management/shared/selectable-list.js`, leaving `semantic-target-picker.js` as the source-editor adapter.
+
 The hosted view should be registered through the existing hosted-view registry as an `info` panel view.
 It should not create a new panel host, sidebar, app-shell region, or route-level display mode.
 
@@ -574,7 +581,9 @@ Tasks:
 - [ ] load the generated semantic-target lookup from the registry-defined URL
 - [ ] search title-focused target records browser-side from the current editor selection
 - [ ] search the current v1 token kinds from the current editor selection: `work`, `series`, and `moment`
-- [ ] render candidate rows from lookup `display` fields
+- [ ] render candidate rows from lookup `title`, `id`, `kind`, and `meta` fields
+- [ ] use a lightweight `semantic-target-picker.js` list component for row rendering, mouse selection, active row state, and keyboard selection behavior
+- [ ] keep `semantic-target-picker.js` local to the source-editor feature in v1, while structuring the selectable-list behavior so it can be promoted to a shared management helper after a second consumer appears
 - [ ] handle stale or missing target data without changing builder behavior
 
 Acceptance:
@@ -582,6 +591,8 @@ Acceptance:
 - work, series, and moment target support follows the registry
 - selecting `3 symbols` can surface both matching work and series targets when both records exist
 - selected text search ranks title matches ahead of incidental metadata matches
+- picker list behavior follows the existing Docs Viewer parent-picker interaction pattern without importing Studio catalogue picker code
+- picker list code is designed for future extraction but is not generalized before there is a second Docs Viewer management consumer
 - picker behavior can be traced to registry metadata
 - target ids remain opaque host ids
 - stale, missing, or deleted targets do not become builder or test-script validation failures
