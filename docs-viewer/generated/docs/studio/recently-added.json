@@ -19,6 +19,14 @@
       "parent_title": "Docs Viewer"
     },
     {
+      "doc_id": "site-request-shareable-content-blocks",
+      "title": "Shareable Content Blocks Request",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
+      "added_date": "2026-06-23",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "admin-static-route-template",
       "title": "Admin Static Route Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-17",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "ui-pattern-file-picker",
-      "title": "File Picker Pattern",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json",
-      "added_date": "2026-06-14",
-      "parent_id": "ui",
-      "parent_title": "UI"
     }
   ],
-  "generated_at": "2026-06-23T17:01:42Z"
+  "generated_at": "2026-06-23T18:08:31Z"
 }

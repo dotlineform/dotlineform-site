@@ -322,6 +322,12 @@
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
           "ui_status": "paused"
+        },
+        {
+          "doc_id": "site-request-shareable-content-blocks",
+          "title": "Shareable Content Blocks Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
+          "ui_status": "draft"
         }
       ]
     },
@@ -1199,5 +1205,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-23T17:01:42Z"
+  "generated_at": "2026-06-23T18:08:31Z"
 }

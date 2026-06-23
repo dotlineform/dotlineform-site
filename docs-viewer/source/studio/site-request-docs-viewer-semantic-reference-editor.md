@@ -12,6 +12,7 @@ viewable: true
 Status: v2 backlog
 
 This request now tracks enhancements beyond the current Semantic References Editor.
+Related source-editing workflows for external exchange and returned text writeback are tracked separately in [Shareable Content Blocks Request](/docs/?scope=studio&doc=site-request-shareable-content-blocks).
 
 Current implemented behavior is documented in:
 
@@ -47,6 +48,7 @@ Useful enhancement areas:
 - direct id entry
 - exact target lookup for high-cardinality kinds
 - additional token kinds
+- semantic directive actions beyond links
 - better audits for suspicious token-like text
 - optional label editing workflows after insertion
 
@@ -123,6 +125,53 @@ Adding a kind should not require:
 - new source read/write/rebuild endpoints
 - hardcoded supported-kind lists in route controllers
 
+### Semantic Directive Actions
+
+Future semantic tokens may need actions beyond linking to a target.
+For example, a `tag` target could support both:
+
+- `link`: link to the corresponding Analysis doc
+- `field`: insert a canonical field value such as the tag description
+
+This likely means reintroducing registry `actions`, with stricter ownership than the original exploratory schema.
+The useful rule is:
+
+```text
+kind + action = supported semantic directive
+```
+
+Example capability shape:
+
+- `tag + link`: render a link to the Analysis doc for the tag
+- `tag + field`: render a canonical value from `analytics-app/data/canonical/tag-registry.json`
+- `tag + related_works`: render links to works using the tag from `analytics-app/data/canonical/tag-assignments.json`
+- `work + link`: current semantic reference behavior
+- `series + link`: current semantic reference behavior
+
+Actions should not all be treated as route variants.
+A link action owns route construction and reference artifacts.
+A field action owns data-source resolution, allowed fields, escaping/rendering, missing-value behavior, and provenance.
+A related-list action owns relationship lookup, sorting, empty-state behavior, and link rendering.
+
+Possible readable source forms:
+
+```md
+[[ref:tag:slow-looking]]
+[[field:tag:slow-looking:description]]
+[[list:tag-related-works:slow-looking]]
+```
+
+The registry should say which kind/action pairs are allowed and which resolver owns them.
+Focused resolver modules should implement the behavior; the builder should not grow ad hoc per-token feature branches.
+
+Open decisions:
+
+- whether to use separate token families such as `ref`, `field`, and `list`, or one generic semantic token with action attributes
+- how to represent allowed field names and missing-value behavior in the registry
+- whether generated field/list output emits separate provenance artifacts
+- how much data can be safely shipped in browser-safe lookup artifacts for editor assistance
+- whether tag docs require one doc per tag in the Analysis scope before `tag + link` is enabled
+
 ### Label Editing
 
 The current editor inserts the target title as the label.
@@ -161,6 +210,7 @@ Future enhancements should preserve these constraints:
 - source editing remains owned by the Markdown source editor
 - token insertion remains local until `Rebuild doc`
 - supported kinds and route behavior come from the semantic-reference registry
+- semantic directive actions come from registry-declared kind/action pairs
 - browser-side target assistance uses generated browser-safe data where practical
 - the picker remains a manage-only info-panel hosted view
 - public Docs Viewer routes do not load semantic picker UI or CSS

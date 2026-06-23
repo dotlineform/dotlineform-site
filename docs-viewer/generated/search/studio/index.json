@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ed53201bb96fd4739b0240beb5a75c73",
-    "generated_at_utc": "2026-06-23T17:15:57Z",
-    "count": 222
+    "version": "blake2b-3f289733c85ed05c848dd5856acb8b34",
+    "generated_at_utc": "2026-06-23T18:08:31Z",
+    "count": 223
   },
   "entries": [
     {
@@ -1374,6 +1374,33 @@
         "00"
       ],
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
+    },
+    {
+      "id": "site-request-shareable-content-blocks",
+      "kind": "doc",
+      "title": "Shareable Content Blocks Request",
+      "href": "/docs/?scope=studio&doc=site-request-shareable-content-blocks",
+      "last_updated": "2026-06-23",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-23 • Change Requests",
+      "search_terms": [
+        "site-request-shareable-content-blocks",
+        "site",
+        "request",
+        "shareable",
+        "content",
+        "blocks",
+        "shareable content blocks request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-23",
+        "2026",
+        "06",
+        "23"
+      ],
+      "search_text": "site-request-shareable-content-blocks site request shareable content blocks shareable content blocks request change requests change requests 2026-06-23 2026 06 23"
     },
     {
       "id": "data-sharing",
