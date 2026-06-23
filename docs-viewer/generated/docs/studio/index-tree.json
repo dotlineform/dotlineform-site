@@ -744,9 +744,9 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-view-capability-contract.json"
         },
         {
-          "doc_id": "docs-viewer-draft-publishing-spec",
-          "title": "Viewability Workflow Spec",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-draft-publishing-spec.json"
+          "doc_id": "docs-viewer-viewable-field",
+          "title": "Viewable field",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-viewable-field.json"
         }
       ]
     },
@@ -1205,5 +1205,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-23T18:08:31Z"
+  "generated_at": "2026-06-23T19:33:43Z"
 }

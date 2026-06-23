@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3f289733c85ed05c848dd5856acb8b34",
-    "generated_at_utc": "2026-06-23T18:08:31Z",
+    "version": "blake2b-4c6fe79324f3b4b7a43db1b986c6de63",
+    "generated_at_utc": "2026-06-23T19:33:43Z",
     "count": 223
   },
   "entries": [
@@ -3355,32 +3355,28 @@
       "search_text": "docs-viewer-view-capability-contract docs viewer view capability contract view capability contract docs viewer 2026-05-29 2026 05 29"
     },
     {
-      "id": "docs-viewer-draft-publishing-spec",
+      "id": "docs-viewer-viewable-field",
       "kind": "doc",
-      "title": "Viewability Workflow Spec",
-      "href": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
-      "last_updated": "2026-05-13 20:20",
+      "title": "Viewable field",
+      "href": "/docs/?scope=studio&doc=docs-viewer-viewable-field",
+      "last_updated": "2026-06-23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-06-23 • Docs Viewer",
       "search_terms": [
-        "docs-viewer-draft-publishing-spec",
+        "docs-viewer-viewable-field",
         "docs",
         "viewer",
-        "draft",
-        "publishing",
-        "spec",
-        "viewability workflow spec",
-        "viewability",
-        "workflow",
+        "viewable",
+        "field",
+        "viewable field",
         "docs viewer",
-        "2026-05-13 20:20",
+        "2026-06-23",
         "2026",
-        "05",
-        "13",
-        "20"
+        "06",
+        "23"
       ],
-      "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "docs-viewer-viewable-field docs viewer viewable field viewable field docs viewer 2026-06-23 2026 06 23"
     },
     {
       "id": "llm",
