@@ -8,10 +8,6 @@ ui_status: draft
 
 
 
-
-
----
-
 [Docs Viewer View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry).
 
 The useful core was the original:

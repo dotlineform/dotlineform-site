@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5b42b8d03b92111e0bdfedb7cab28471",
-    "generated_at_utc": "2026-06-23T16:45:32Z",
-    "count": 221
+    "version": "blake2b-63faeda551dc7c74d16c2163c8d3d02b",
+    "generated_at_utc": "2026-06-23T17:02:20Z",
+    "count": 222
   },
   "entries": [
     {
@@ -3134,10 +3134,10 @@
       "kind": "doc",
       "title": "Semantic References",
       "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-02 • Docs Viewer",
+      "display_meta": "2026-06-23 • Docs Viewer",
       "search_terms": [
         "docs-viewer-semantic-references",
         "docs",
@@ -3146,12 +3146,37 @@
         "references",
         "semantic references",
         "docs viewer",
-        "2026-06-02",
+        "2026-06-23",
         "2026",
         "06",
-        "02"
+        "23"
       ],
-      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-06-02 2026 06 02"
+      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-06-23 2026 06 23"
+    },
+    {
+      "id": "docs-viewer-semantic-references-editor",
+      "kind": "doc",
+      "title": "Semantic References Editor",
+      "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references-editor",
+      "last_updated": "2026-06-23",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-23 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-semantic-references-editor",
+        "docs",
+        "viewer",
+        "semantic",
+        "references",
+        "editor",
+        "semantic references editor",
+        "docs viewer",
+        "2026-06-23",
+        "2026",
+        "06",
+        "23"
+      ],
+      "search_text": "docs-viewer-semantic-references-editor docs viewer semantic references editor semantic references editor docs viewer 2026-06-23 2026 06 23"
     },
     {
       "id": "docs-viewer-semantic-references-implementation",

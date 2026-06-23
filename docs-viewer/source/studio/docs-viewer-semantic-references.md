@@ -2,7 +2,7 @@
 doc_id: docs-viewer-semantic-references
 title: Semantic References
 added_date: 2026-05-18
-last_updated: 2026-06-02
+last_updated: 2026-06-23
 ui_status: report
 parent_id: docs-viewer
 viewable: true
@@ -26,4 +26,8 @@ The report reads generated semantic-reference artifacts from each selected docs 
 The report can show all configured docs scopes or one selected scope via `report_scope`.
 It is read-only and does not edit source Markdown, validate catalogue data, run broken-link checks, or rebuild generated payloads.
 
-The current builder, renderer, artifact schema, validation behavior, and ownership split are documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
+Current semantic-reference docs:
+
+- [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation) documents registry, lookup, builder, generated artifacts, browser helpers, and report inputs.
+- [Semantic References Editor](/docs/?scope=studio&doc=docs-viewer-semantic-references-editor) documents the manage-mode source-editor picker and token insertion workflow.
+- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) tracks v2 editor enhancements.

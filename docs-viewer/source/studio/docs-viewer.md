@@ -63,6 +63,7 @@ Those boundaries are intentional:
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records how shared runtime behavior, scope differences, and forks are handled.
 - [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) is the current implementation map for browser runtime ownership.
 - [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel) explains the panel hosting model, context-driven view selection, and public/manage metadata separation.
+- [Semantic References Editor](/docs/?scope=studio&doc=docs-viewer-semantic-references-editor) explains manage-mode semantic target search and token insertion in the Markdown source editor.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) covers build mechanics, generated payloads, and command usage.
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) covers docs media paths, import staging, extraction, and media-copy behavior.
 - [Reports](/docs/?scope=studio&doc=docs-viewer-reports) covers report metadata, report modules, and access rules.

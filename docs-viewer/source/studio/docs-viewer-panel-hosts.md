@@ -387,16 +387,19 @@ What this means:
 
 Current state:
 
-- no semantic-token insertion UI is implemented
-- no semantic-reference registry exists yet
+- the semantic-reference registry exists and is consumed by the builder and editor helpers
+- the manage-mode Markdown source editor can host `semantic-token-picker` in the info panel
+- selected source text can seed picker search and be replaced by a canonical-title semantic-reference token
+- explicit picker search can insert a token at the current caret
 
 What this means:
 
-- semantic insertion should be layered on the Markdown editor, not combined with source read/write/rebuild
-- the source editor should remain usable when semantic tools are absent
+- semantic insertion is layered on the Markdown editor, not combined with source read/write/rebuild
+- the source editor remains usable when semantic tools are unavailable
 
-Request owners:
+Related docs:
 
+- [Semantic References Editor](/docs/?scope=studio&doc=docs-viewer-semantic-references-editor)
 - [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor)
 
 ### Panel Toolbars
@@ -404,7 +407,7 @@ Request owners:
 Current state:
 
 - index-panel controls are projected through the app shell
-- info panel has close and view-option chrome
+- info panel keeps simple shell chrome; outside context selects the active hosted view
 - the shared main-view toolbar surface owns public-safe rendered-document breadcrumbs, bookmark controls, and the info-panel toggle, while manage-only edit/source controls are composed by the manage-owned document-actions renderer
 - search, recent, and reports still use their existing controls
 

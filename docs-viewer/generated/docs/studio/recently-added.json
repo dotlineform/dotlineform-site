@@ -11,6 +11,14 @@
       "parent_title": "Docs Viewer"
     },
     {
+      "doc_id": "docs-viewer-semantic-references-editor",
+      "title": "Semantic References Editor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references-editor.json",
+      "added_date": "2026-06-23",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "admin-static-route-template",
       "title": "Admin Static Route Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-14",
       "parent_id": "ui",
       "parent_title": "UI"
-    },
-    {
-      "doc_id": "ui-pattern-record-action-list",
-      "title": "Record List And Action Layer Implementation Note",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json",
-      "added_date": "2026-06-14",
-      "parent_id": "ui",
-      "parent_title": "UI"
     }
   ],
-  "generated_at": "2026-06-23T16:45:32Z"
+  "generated_at": "2026-06-23T17:01:42Z"
 }
