@@ -4,32 +4,11 @@
 from __future__ import annotations
 
 import argparse
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from threading import Thread
 
 from playwright.sync_api import Page, sync_playwright
 
-
-class QuietStaticHandler(SimpleHTTPRequestHandler):
-    def log_message(self, format, *args):  # noqa: A003
-        return
-
-
-def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
-    resolved_root = site_root.expanduser().resolve()
-    if not resolved_root.exists():
-        raise FileNotFoundError(f"site root does not exist: {resolved_root}")
-    handler = partial(QuietStaticHandler, directory=str(resolved_root))
-    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    return server, f"http://127.0.0.1:{server.server_address[1]}"
-
-
-def route_url(base_url: str, path: str) -> str:
-    return f"{base_url.rstrip('/')}{path}"
+from docs_viewer_management_modal_support import route_url, start_static_server
 
 
 def install_fixture(page: Page) -> None:
@@ -195,8 +174,15 @@ def assert_manage_metadata(page: Page) -> None:
         raise AssertionError(f"manage info used selected tree metadata: {result!r}")
 
 
-def run_smoke(page: Page, base_url: str) -> None:
-    page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
+def smoke_fixture_path(site_root: Path) -> str:
+    resolved_root = site_root.expanduser().resolve()
+    if (resolved_root / "404.html").exists():
+        return "/404.html"
+    return "/"
+
+
+def run_smoke(page: Page, base_url: str, fixture_path: str) -> None:
+    page.goto(route_url(base_url, fixture_path), wait_until="domcontentloaded")
     install_fixture(page)
     assert_context_hydrates_from_payload(page)
     assert_public_reader_metadata(page)
@@ -210,6 +196,7 @@ def main() -> None:
     args = parser.parse_args()
 
     server, base_url = start_static_server(args.site_root)
+    fixture_path = smoke_fixture_path(args.site_root)
     errors: list[str] = []
     try:
         with sync_playwright() as playwright:
@@ -219,7 +206,7 @@ def main() -> None:
                 page.set_default_timeout(args.timeout_ms)
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
-                run_smoke(page, base_url)
+                run_smoke(page, base_url, fixture_path)
             finally:
                 browser.close()
     finally:
