@@ -8,6 +8,91 @@ ui_status: draft
 
 
 
+---
+
+I’d bring back an `actions` concept, but not as a loose per-kind bag of behavior. I’d make the registry distinguish:
+
+- **target kind**: `tag`
+- **action/directive**: `link`, `field`, maybe later `list`
+- **resolver**: which module knows how to fulfill that action
+
+So `tag` can support more than one semantic operation without pretending they are the same thing.
+
+Example shape:
+
+```json
+{
+  "kind": "tag",
+  "id": {
+    "normalizer": "slug",
+    "input_pattern": "^[a-z0-9][a-z0-9-]*$",
+    "example": "slow-looking"
+  },
+  "source": {
+    "type": "json_map",
+    "path": "analytics-app/data/canonical/tag-registry.json",
+    "root_key": "tags",
+    "id_field": "tag_id"
+  },
+  "actions": {
+    "link": {
+      "route": {
+        "type": "docs_viewer_doc",
+        "scope": "analysis",
+        "doc_id_from": "id"
+      },
+      "source_editor": {
+        "picker": true,
+        "selection_search": true
+      }
+    },
+    "field": {
+      "allowed_fields": ["description", "title"],
+      "default_field": "description",
+      "source_editor": {
+        "picker": false
+      }
+    }
+  }
+}
+```
+
+Then the source syntax could stay explicit:
+
+```md
+[[ref:tag:slow-looking]]
+[[field:tag:slow-looking:description]]
+```
+
+Or, if we wanted one token family:
+
+```md
+[[semantic:tag:slow-looking|action=link]]
+[[semantic:tag:slow-looking|action=field field=description]]
+```
+
+I prefer separate token families for readability: `ref` links to a thing; `field` inserts a canonical value. They can still share the same registry kind.
+
+The important bit is that `link` and `field` should not be two route variants. A field insertion has no route. It has data-source, allowed-field, escaping/rendering, missing-value, and provenance concerns. A link has route construction and relationship-artifact concerns.
+
+So yes, the v1 removal of `actions` was right for simplicity, but for this next layer I’d reintroduce it with a stricter meaning:
+
+```text
+kind + action = supported semantic directive
+```
+
+That gives us:
+
+- `tag + link`: link to Analysis doc
+- `tag + field`: insert canonical tag description
+- `tag + related_works`: render a generated work list
+- `work + link`: current semantic reference behavior
+- `series + link`: current semantic reference behavior
+
+This also keeps the builder modular: the registry says what is allowed, but focused resolver modules implement each action family.
+
+---
+
 [Docs Viewer View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry).
 
 The useful core was the original:
