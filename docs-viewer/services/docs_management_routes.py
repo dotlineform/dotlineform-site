@@ -39,6 +39,10 @@ SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
 SCOPE_CREATE_APPLY_PATH = "/docs/scopes/create-apply"
 SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/delete-preview"
 SCOPE_DELETE_APPLY_PATH = "/docs/scopes/delete-apply"
+SUB_SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/sub-scopes/create-preview"
+SUB_SCOPE_CREATE_APPLY_PATH = "/docs/scopes/sub-scopes/create-apply"
+SUB_SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/sub-scopes/delete-preview"
+SUB_SCOPE_DELETE_APPLY_PATH = "/docs/scopes/sub-scopes/delete-apply"
 PUBLISH_STATUS_PATH = "/docs/publish/status"
 PUBLISH_CONFIRM_PATH = "/docs/publish/confirm"
 PUBLISH_APPLY_PATH = "/docs/publish/apply"
@@ -85,6 +89,10 @@ POST_PATHS = (
     SCOPE_CREATE_APPLY_PATH,
     SCOPE_DELETE_PREVIEW_PATH,
     SCOPE_DELETE_APPLY_PATH,
+    SUB_SCOPE_CREATE_PREVIEW_PATH,
+    SUB_SCOPE_CREATE_APPLY_PATH,
+    SUB_SCOPE_DELETE_PREVIEW_PATH,
+    SUB_SCOPE_DELETE_APPLY_PATH,
     PUBLISH_CONFIRM_PATH,
     PUBLISH_APPLY_PATH,
 )

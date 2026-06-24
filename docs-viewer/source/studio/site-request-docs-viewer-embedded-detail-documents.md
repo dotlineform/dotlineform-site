@@ -488,13 +488,13 @@ Main design point: sub-scope lifecycle should mutate the parent scope’s `sub_s
 
 ### 2. Sub-Scope Lifecycle Actions
 
-- [ ] Add management-service capability data for sub-scope create/delete availability per parent scope.
-- [ ] Add `New sub-scope` management UI that uses the active scope as the parent scope.
-- [ ] Make the `New sub-scope` modal ask only for sub-scope id and title confirmation/editing, with no default-doc input.
-- [ ] Add `New sub-scope` service actions that create the nested config entry and source/output folders.
-- [ ] Add `Delete sub-scope` preview and apply actions that cover source docs, working generated payloads, and published payloads.
-- [ ] Make lifecycle actions operate within the selected parent scope rather than creating top-level scopes.
-- [ ] Add focused lifecycle tests for new/delete sub-scope config and file effects.
+- [x] Add management-service capability data for sub-scope create/delete availability per parent scope.
+- [x] Add `New sub-scope` management UI that uses the active scope as the parent scope.
+- [x] Make the `New sub-scope` modal ask only for sub-scope id and title confirmation/editing, with no default-doc input.
+- [x] Add `New sub-scope` service actions that create the nested config entry and source/output folders.
+- [x] Add `Delete sub-scope` preview and apply actions that cover source docs, working generated payloads, and published payloads.
+- [x] Make lifecycle actions operate within the selected parent scope rather than creating top-level scopes.
+- [x] Add focused lifecycle tests for new/delete sub-scope config and file effects.
 
 ### 3. Manual Seed Content
 

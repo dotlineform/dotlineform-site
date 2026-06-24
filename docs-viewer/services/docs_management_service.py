@@ -52,6 +52,8 @@ from docs_management_mutation_service import (  # noqa: E402
     handle_move,
     handle_scope_create_apply,
     handle_scope_delete_apply,
+    handle_sub_scope_create_apply,
+    handle_sub_scope_delete_apply,
     handle_update_metadata,
     handle_update_viewability,
     handle_update_viewability_bulk,
@@ -143,6 +145,18 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.SCOPE_DELETE_APPLY_PATH:
         return HTTPStatus.OK, handle_scope_delete_apply(repo_root, body, dry_run)
+    if path == routes.SUB_SCOPE_CREATE_PREVIEW_PATH:
+        payload = docs_scope_manifest.plan_create_sub_scope_preview(repo_root, body)
+        payload["dry_run"] = True
+        return HTTPStatus.OK, payload
+    if path == routes.SUB_SCOPE_CREATE_APPLY_PATH:
+        return HTTPStatus.OK, handle_sub_scope_create_apply(repo_root, body, dry_run)
+    if path == routes.SUB_SCOPE_DELETE_PREVIEW_PATH:
+        payload = docs_scope_manifest.plan_delete_sub_scope_preview(repo_root, body)
+        payload["dry_run"] = True
+        return HTTPStatus.OK, payload
+    if path == routes.SUB_SCOPE_DELETE_APPLY_PATH:
+        return HTTPStatus.OK, handle_sub_scope_delete_apply(repo_root, body, dry_run)
     if path == routes.PUBLISH_CONFIRM_PATH:
         return HTTPStatus.OK, docs_publish_gate.publish_confirm(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:

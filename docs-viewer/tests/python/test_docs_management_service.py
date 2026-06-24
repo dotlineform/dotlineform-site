@@ -371,11 +371,17 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_preview"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["sub_scope_create_preview"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["sub_scope_create_apply"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["sub_scope_delete_preview"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["sub_scope_delete_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["publishing_modes"] == [
         "public_readonly",
         "local_external",
         "local_committed",
     ]
+    assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
+    assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
 
 
 def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
@@ -459,6 +465,115 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
+
+
+def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        payload = docs_management_service.handle_sub_scope_create_apply(
+            repo_root,
+            {
+                "parent_scope": "studio",
+                "sub_scope": "tags",
+                "title": "Tags",
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+        source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+        source_root_exists = (repo_root / "docs-viewer/source/studio/tags").is_dir()
+        generated_payload_root_exists = (repo_root / "docs-viewer/generated/docs/studio/tags/by-id").is_dir()
+        top_level_source_exists = (repo_root / "docs-viewer/source/tags").exists()
+        default_doc_exists = (repo_root / "docs-viewer/source/studio/tags/tags.md").exists()
+
+    assert payload["ok"] is True
+    assert payload["action"] == "create_sub_scope"
+    assert payload["parent_scope"] == "studio"
+    assert payload["sub_scope"] == "tags"
+    assert source_root_exists is True
+    assert generated_payload_root_exists is True
+    assert top_level_source_exists is False
+    assert default_doc_exists is False
+    assert [scope["scope_id"] for scope in source_payload["scopes"]] == ["studio"]
+    assert source_payload["scopes"][0]["sub_scopes"] == [
+        {
+            "sub_scope": "tags",
+            "title": "Tags",
+            "source": "docs-viewer/source/studio/tags",
+            "output": "docs-viewer/generated/docs/studio/tags",
+            "publish_output": "docs-viewer/generated/docs/studio/tags",
+        }
+    ]
+    assert any(file["path"] == "docs-viewer/source/studio/tags" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/studio/tags/by-id" for file in payload["created_files"])
+    assert payload["publish_files"] == []
+
+
+def test_sub_scope_delete_apply_removes_config_source_generated_and_published_payloads() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        source_payload = json.loads(config_path.read_text(encoding="utf-8"))
+        source_payload["scopes"][0].update(
+            {
+                "scope_type": "public",
+                "meta": "public scope",
+                "viewer_base_url": "/studio/",
+                "include_scope_param": False,
+                "publish_output": "site/assets/data/docs/scopes/studio",
+                "publish_search_output": "site/assets/data/search/studio/index.json",
+            }
+        )
+        write_json(config_path, source_payload)
+        docs_management_service.handle_sub_scope_create_apply(
+            repo_root,
+            {
+                "parent_scope": "studio",
+                "sub_scope": "tags",
+                "title": "Tags",
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+        (repo_root / "docs-viewer/source/studio/tags/scale.md").write_text("# Scale\n", encoding="utf-8")
+        write_json(repo_root / "docs-viewer/generated/docs/studio/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/generated/docs/studio/tags/by-id/scale.json", {"doc_id": "scale"})
+        write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/by-id/scale.json", {"doc_id": "scale"})
+        preview = docs_management_service.docs_scope_manifest.plan_delete_sub_scope_preview(
+            repo_root,
+            {
+                "parent_scope": "studio",
+                "sub_scope": "tags",
+            },
+        )
+        payload = docs_management_service.handle_sub_scope_delete_apply(
+            repo_root,
+            {
+                "parent_scope": "studio",
+                "sub_scope": "tags",
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+        final_config = json.loads(config_path.read_text(encoding="utf-8"))
+        source_root_exists = (repo_root / "docs-viewer/source/studio/tags").exists()
+        generated_root_exists = (repo_root / "docs-viewer/generated/docs/studio/tags").exists()
+        published_root_exists = (repo_root / "site/assets/data/docs/scopes/studio/tags").exists()
+
+    assert preview["ok"] is True
+    assert preview["allowed"] is True
+    assert any(file["path"] == "docs-viewer/source/studio/tags" for file in preview["delete_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/studio/tags" for file in preview["delete_files"])
+    assert any(file["path"] == "site/assets/data/docs/scopes/studio/tags" for file in preview["delete_files"])
+    assert payload["ok"] is True
+    assert payload["action"] == "delete_sub_scope"
+    assert source_root_exists is False
+    assert generated_root_exists is False
+    assert published_root_exists is False
+    assert "sub_scopes" not in final_config["scopes"][0]
 
 
 def test_docs_scope_config_requires_search_output() -> None:

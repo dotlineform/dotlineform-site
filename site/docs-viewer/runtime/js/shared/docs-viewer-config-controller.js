@@ -67,6 +67,7 @@ export function initDocsViewerConfigController(context) {
     if (!manifestUrl || !byIdUrlBase) return null;
     return {
       subScope: subScope,
+      title: String(rawSubScope.title || "").trim(),
       manifestUrl: manifestUrl,
       byIdUrlBase: byIdUrlBase
     };

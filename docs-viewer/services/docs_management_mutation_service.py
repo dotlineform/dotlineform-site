@@ -130,3 +130,47 @@ def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
             },
         )
     return payload
+
+
+def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
+    sub_scope = docs_scope_manifest.normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
+    docs_scope_manifest.require_confirmed(body)
+    docs_scope_manifest.plan_create_sub_scope_preview(repo_root, body)
+    payload = docs_scope_manifest.apply_create_sub_scope(repo_root, body, dry_run=dry_run)
+    if not dry_run:
+        log_event(
+            repo_root,
+            "docs_sub_scope_create_apply",
+            {
+                "scope": parent_scope,
+                "sub_scope": sub_scope,
+                "created_count": len(payload.get("created_files", [])),
+                "changed_count": len(payload.get("changed_files", [])),
+            },
+        )
+    return payload
+
+
+def handle_sub_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
+    sub_scope = docs_scope_manifest.normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
+    docs_scope_manifest.require_confirmed(body)
+    preview = docs_scope_manifest.plan_delete_sub_scope_preview(repo_root, body)
+    if not preview.get("allowed"):
+        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
+        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "sub-scope delete is not allowed")
+    payload = docs_scope_manifest.apply_delete_sub_scope(repo_root, body, dry_run=dry_run)
+    if not dry_run:
+        log_event(
+            repo_root,
+            "docs_sub_scope_delete_apply",
+            {
+                "scope": parent_scope,
+                "sub_scope": sub_scope,
+                "deleted_count": len(payload.get("deleted_files", [])),
+                "missing_count": len(payload.get("missing_files", [])),
+                "changed_count": len(payload.get("changed_files", [])),
+            },
+        )
+    return payload

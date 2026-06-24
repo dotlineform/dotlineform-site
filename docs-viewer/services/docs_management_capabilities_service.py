@@ -73,6 +73,20 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "created_by_tool": (manifest_record or {}).get("created_by_tool") is True,
                 "delete_eligible": docs_scope_manifest.scope_delete_eligible(manifest_record),
             },
+            "sub_scope_lifecycle": {
+                "create_eligible": True,
+                "delete_eligible": bool(config.sub_scopes),
+                "sub_scopes": [
+                    {
+                        "sub_scope": sub_scope.sub_scope,
+                        "title": sub_scope.title,
+                        "source": path_label(repo_root, sub_scope.source),
+                        "output": path_label(repo_root, sub_scope.output),
+                        "publish_output": path_label(repo_root, sub_scope.publish_output),
+                    }
+                    for sub_scope in config.sub_scopes
+                ],
+            },
             "publishing": {
                 "status": publishable,
                 "confirm": publishable,
@@ -99,6 +113,10 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "create_apply": True,
                 "delete_preview": True,
                 "delete_apply": True,
+                "sub_scope_create_preview": True,
+                "sub_scope_create_apply": True,
+                "sub_scope_delete_preview": True,
+                "sub_scope_delete_apply": True,
                 "publishing_modes": list(docs_scope_manifest.PUBLISHING_MODES),
                 "manifest_path": docs_scope_manifest.MANIFEST_REL_PATH.as_posix(),
             },

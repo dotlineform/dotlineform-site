@@ -29,6 +29,35 @@ export function scopeDeleteSupported(capabilities) {
   return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
 }
 
+export function subScopeCreateSupported(capabilities, scope) {
+  var lifecycle = scopeLifecycleCapabilities(capabilities);
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  var subScopeLifecycle = scopeCaps && scopeCaps.sub_scope_lifecycle && typeof scopeCaps.sub_scope_lifecycle === "object"
+    ? scopeCaps.sub_scope_lifecycle
+    : null;
+  return Boolean(
+    lifecycle &&
+    lifecycle.sub_scope_create_preview &&
+    lifecycle.sub_scope_create_apply &&
+    scopeCaps &&
+    scopeCaps.available &&
+    subScopeLifecycle &&
+    subScopeLifecycle.create_eligible
+  );
+}
+
+export function subScopeDeleteSupported(capabilities, scope) {
+  var lifecycle = scopeLifecycleCapabilities(capabilities);
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  return Boolean(
+    lifecycle &&
+    lifecycle.sub_scope_delete_preview &&
+    lifecycle.sub_scope_delete_apply &&
+    scopeCaps &&
+    scopeCaps.available
+  );
+}
+
 export function scopePublishSupported(capabilities, scope) {
   var scopeCaps = scopeManagementCapabilities(capabilities, scope);
   var publishing = capabilities && capabilities.publishing && typeof capabilities.publishing === "object"
@@ -64,6 +93,25 @@ export function scopeLifecycleDeleteTargets(capabilities) {
     };
   }).filter(function (record) {
     return record.deleteEligible;
+  });
+}
+
+export function subScopeLifecycleDeleteTargets(capabilities, scope) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  var lifecycle = scopeCaps && scopeCaps.sub_scope_lifecycle && typeof scopeCaps.sub_scope_lifecycle === "object"
+    ? scopeCaps.sub_scope_lifecycle
+    : null;
+  var records = lifecycle && Array.isArray(lifecycle.sub_scopes) ? lifecycle.sub_scopes : [];
+  return records.map(function (record) {
+    var subScope = String(record && record.sub_scope || "").trim();
+    return {
+      parentScope: normalizeScopeId(scope),
+      subScope: subScope,
+      title: String(record && record.title || "").trim(),
+      source: String(record && record.source || "").trim()
+    };
+  }).filter(function (record) {
+    return record.parentScope && record.subScope;
   });
 }
 

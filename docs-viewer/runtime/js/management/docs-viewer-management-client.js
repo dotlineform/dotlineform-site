@@ -152,6 +152,31 @@ export function applyScopeDelete(scopeId, options) {
   }, options);
 }
 
+export function previewSubScopeCreate(payload, options) {
+  return fetchManagementJson("/docs/scopes/sub-scopes/create-preview", "POST", payload || {}, options);
+}
+
+export function applySubScopeCreate(payload, options) {
+  return fetchManagementJson("/docs/scopes/sub-scopes/create-apply", "POST", Object.assign({}, payload || {}, {
+    confirm: true
+  }), options);
+}
+
+export function previewSubScopeDelete(parentScope, subScope, options) {
+  return fetchManagementJson("/docs/scopes/sub-scopes/delete-preview", "POST", {
+    parent_scope: parentScope,
+    sub_scope: subScope
+  }, options);
+}
+
+export function applySubScopeDelete(parentScope, subScope, options) {
+  return fetchManagementJson("/docs/scopes/sub-scopes/delete-apply", "POST", {
+    parent_scope: parentScope,
+    sub_scope: subScope,
+    confirm: true
+  }, options);
+}
+
 export function updateManagedDocsViewability(docIds, viewable, options) {
   return fetchManagementJson("/docs/update-viewability-bulk", "POST", scopedPayload({
     doc_ids: docIds,

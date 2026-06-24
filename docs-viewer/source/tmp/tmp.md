@@ -10,6 +10,9 @@ viewer_report: docs_index_table
 viewer_report_access: public
 
 
+we are working on request [Docs Viewer Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents), please proceed with implementation step 2. Sub-Scope Lifecycle Actions
+
+
 
 
 ---

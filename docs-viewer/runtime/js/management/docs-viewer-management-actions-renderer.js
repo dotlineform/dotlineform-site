@@ -32,6 +32,20 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     hidden: true
   },
   {
+    id: "docsViewerManageNewSubScopeButton",
+    action: "new-sub-scope",
+    emoji: "📁",
+    label: "New sub-scope",
+    hidden: true
+  },
+  {
+    id: "docsViewerManageDeleteSubScopeButton",
+    action: "delete-sub-scope",
+    emoji: "🗑️",
+    label: "Delete sub-scope",
+    hidden: true
+  },
+  {
     id: "docsViewerManagePublishButton",
     action: "publish-docs",
     emoji: "🌍",

@@ -55,6 +55,7 @@ class DocsScopeConfig:
 @dataclass(frozen=True)
 class DocsSubScopeConfig:
     sub_scope: str
+    title: str
     source: Path
     output: Path
     publish_output: Path
@@ -413,6 +414,7 @@ def normalize_sub_scope_configs(
         configs.append(
             DocsSubScopeConfig(
                 sub_scope=sub_scope,
+                title=str(raw_sub_scope.get("title") or "").strip(),
                 source=sub_source,
                 output=sub_output,
                 publish_output=sub_publish_output,

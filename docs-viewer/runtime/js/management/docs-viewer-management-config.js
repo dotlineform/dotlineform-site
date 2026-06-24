@@ -71,6 +71,30 @@ var MANAGEMENT_TEXT_KEYS = [
   ["scopeDeleteBlocked", "docs_viewer.scope_delete_blocked"],
   ["scopeDeleteBlockedTitle", "docs_viewer.scope_delete_blocked_title"],
   ["scopeDeleteResultTitle", "docs_viewer.scope_delete_result_title"],
+  ["subScopeCreateTitle", "docs_viewer.sub_scope_create_title"],
+  ["subScopeCreateIntro", "docs_viewer.sub_scope_create_intro"],
+  ["subScopeParentLabel", "docs_viewer.sub_scope_parent_label"],
+  ["subScopeIdLabel", "docs_viewer.sub_scope_id_label"],
+  ["subScopeTitleLabel", "docs_viewer.sub_scope_title_label"],
+  ["subScopeCreateRequiredMessage", "docs_viewer.sub_scope_create_required_message"],
+  ["subScopeCreateNoParent", "docs_viewer.sub_scope_create_no_parent"],
+  ["subScopeCreatePreviewing", "docs_viewer.sub_scope_create_previewing"],
+  ["subScopeCreatePreviewTitle", "docs_viewer.sub_scope_create_preview_title"],
+  ["subScopeCreateSaving", "docs_viewer.sub_scope_create_saving"],
+  ["subScopeCreateFailed", "docs_viewer.sub_scope_create_failed"],
+  ["subScopeCreateResultTitle", "docs_viewer.sub_scope_create_result_title"],
+  ["subScopeDeleteTitle", "docs_viewer.sub_scope_delete_title"],
+  ["subScopeDeleteIntro", "docs_viewer.sub_scope_delete_intro"],
+  ["subScopeDeleteTargetLabel", "docs_viewer.sub_scope_delete_target_label"],
+  ["subScopeDeleteRequiredMessage", "docs_viewer.sub_scope_delete_required_message"],
+  ["subScopeDeleteNoParent", "docs_viewer.sub_scope_delete_no_parent"],
+  ["subScopeDeleteNoTargets", "docs_viewer.sub_scope_delete_no_targets"],
+  ["subScopeDeletePreviewing", "docs_viewer.sub_scope_delete_previewing"],
+  ["subScopeDeletePreviewTitle", "docs_viewer.sub_scope_delete_preview_title"],
+  ["subScopeDeleteDeleting", "docs_viewer.sub_scope_delete_deleting"],
+  ["subScopeDeleteFailed", "docs_viewer.sub_scope_delete_failed"],
+  ["subScopeDeleteBlocked", "docs_viewer.sub_scope_delete_blocked"],
+  ["subScopeDeleteResultTitle", "docs_viewer.sub_scope_delete_result_title"],
   ["publishChecking", "docs_viewer.publish_checking"],
   ["publishConfirmTitle", "docs_viewer.publish_confirm_title"],
   ["publishConfirmButton", "docs_viewer.publish_confirm_button"],
@@ -150,6 +174,14 @@ export function applyDocsViewerManagementConfig(options) {
   state.managementText.scopeDeleteMenuButton = context.getConfigText(config, "docs_viewer.scope_delete_menu_button", state.managementText.scopeDeleteMenuButton);
   if (refs.manageDeleteScopeButton) {
     setActionMenuButtonLabel(refs.manageDeleteScopeButton, state.managementText.scopeDeleteMenuButton);
+  }
+  state.managementText.subScopeNewButton = context.getConfigText(config, "docs_viewer.sub_scope_new_button", state.managementText.subScopeNewButton || "New sub-scope");
+  if (refs.manageNewSubScopeButton) {
+    setActionMenuButtonLabel(refs.manageNewSubScopeButton, state.managementText.subScopeNewButton);
+  }
+  state.managementText.subScopeDeleteMenuButton = context.getConfigText(config, "docs_viewer.sub_scope_delete_menu_button", state.managementText.subScopeDeleteMenuButton || "Delete sub-scope");
+  if (refs.manageDeleteSubScopeButton) {
+    setActionMenuButtonLabel(refs.manageDeleteSubScopeButton, state.managementText.subScopeDeleteMenuButton);
   }
   state.managementText.publishButton = context.getConfigText(config, "docs_viewer.publish_confirm_button", state.managementText.publishButton || "Publish");
   if (refs.managePublishButton) {

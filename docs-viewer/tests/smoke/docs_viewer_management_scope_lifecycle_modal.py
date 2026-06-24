@@ -157,16 +157,207 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
     page.wait_for_function("() => window.__docsViewerScopeCreateResult === null")
 
 
+def run_sub_scope_lifecycle_payload_checks(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main id="docsViewerRoot" class="docsViewer"></main>
+            `;
+            window.__docsViewerSubScopeRequests = [];
+            window.fetch = async (url, options = {}) => {
+                const body = options.body ? JSON.parse(options.body) : null;
+                window.__docsViewerSubScopeRequests.push({
+                    url: String(url),
+                    body
+                });
+                if (String(url).endsWith('/create-preview')) {
+                    return {
+                        ok: true,
+                        status: 200,
+                        json: async () => ({
+                            ok: true,
+                            schema_version: 'docs_scope_lifecycle_preview_v1',
+                            action: 'create_sub_scope',
+                            operation: 'preview',
+                            scope_id: body.parent_scope,
+                            parent_scope: body.parent_scope,
+                            sub_scope: body.sub_scope,
+                            title: body.title,
+                            summary_text: 'Preview sub-scope create.',
+                            blockers: [],
+                            created_files: [],
+                            changed_files: [],
+                            build_commands: [],
+                            urls: {
+                                management: `/docs/?scope=${body.parent_scope}`,
+                                public: ''
+                            }
+                        })
+                    };
+                }
+                return {
+                    ok: true,
+                    status: 200,
+                    json: async () => ({
+                        ok: true,
+                        schema_version: 'docs_scope_lifecycle_preview_v1',
+                        action: 'delete_sub_scope',
+                        operation: 'preview',
+                        scope_id: body.parent_scope,
+                        parent_scope: body.parent_scope,
+                        sub_scope: body.sub_scope,
+                        allowed: true,
+                        blockers: [],
+                        delete_files: [],
+                        missing_files: [],
+                        changed_files: [],
+                        build_commands: [],
+                        summary_text: 'Preview sub-scope delete.'
+                    })
+                };
+            };
+            const lifecycle = await import('/docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js');
+            window.__docsViewerSubScopeCreatePromise = lifecycle.openCreateSubScopeFlow({
+                root: document.getElementById('docsViewerRoot'),
+                state: {
+                    managementText: {
+                        cancelButton: 'Cancel',
+                        scopePreviewButton: 'Preview',
+                        scopeSaveButton: 'Save',
+                        subScopeCreateIntro: 'Create sub-scope fixture.',
+                        subScopeCreatePreviewTitle: 'Preview new sub-scope',
+                        subScopeCreatePreviewing: 'Previewing new sub-scope...',
+                        subScopeCreateRequiredMessage: 'Enter the required sub-scope fields.',
+                        subScopeCreateTitle: 'New sub-scope',
+                        subScopeIdLabel: 'sub-scope id',
+                        subScopeParentLabel: 'parent scope',
+                        subScopeTitleLabel: 'title'
+                    }
+                },
+                parentScope: 'studio',
+                clientOptions: {
+                    baseUrl: 'http://docs-management.test'
+                },
+                callbacks: {
+                    render: () => {},
+                    setBusy: busy => { window.__docsViewerSubScopeBusy = busy; },
+                    setMessage: (message, isError) => {
+                        window.__docsViewerSubScopeMessage = { message, isError };
+                    }
+                }
+            }).then(value => {
+                window.__docsViewerSubScopeCreateResult = value;
+            });
+        }"""
+    )
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]')
+    assert_shell(
+        page,
+        '[data-role="docs-viewer-management-modal"]',
+        "New sub-scope",
+        ["Preview", "Cancel"],
+        size_class="docsViewer__modalCard--compact",
+    )
+    page.locator('[data-role="sub-scope-id"]').fill("tag-groups")
+    auto_title = page.locator('[data-role="sub-scope-title"]').input_value()
+    if auto_title != "Tag Groups":
+        raise AssertionError(f"sub-scope title did not auto-fill from sub-scope id: {auto_title!r}")
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_function("() => window.__docsViewerSubScopeRequests.length === 1")
+    request = page.evaluate("window.__docsViewerSubScopeRequests[0]")
+    expected_body = {
+        "parent_scope": "studio",
+        "sub_scope": "tag-groups",
+        "title": "Tag Groups",
+    }
+    if request["url"] != "http://docs-management.test/docs/scopes/sub-scopes/create-preview":
+        raise AssertionError(f"sub-scope create preview used the wrong endpoint: {request!r}")
+    if request["body"] != expected_body:
+        raise AssertionError(f"sub-scope create payload did not match expected fields: {request!r}")
+    page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"] .docsViewer__modalTitle')?.textContent.trim() === 'Preview new sub-scope'")
+    page.locator('button[data-role="modal-cancel"]').click()
+    page.wait_for_function("() => window.__docsViewerSubScopeCreateResult === null")
+
+    page.evaluate(
+        """async () => {
+            const lifecycle = await import('/docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js');
+            window.__docsViewerSubScopeDeletePromise = lifecycle.openDeleteSubScopeFlow({
+                root: document.getElementById('docsViewerRoot'),
+                state: {
+                    managementText: {
+                        cancelButton: 'Cancel',
+                        scopeDeleteButton: 'Delete',
+                        scopePreviewButton: 'Preview',
+                        scopeResultOkButton: 'OK',
+                        subScopeDeleteIntro: 'Delete sub-scope fixture.',
+                        subScopeDeletePreviewTitle: 'Preview delete sub-scope',
+                        subScopeDeletePreviewing: 'Previewing sub-scope deletion...',
+                        subScopeDeleteRequiredMessage: 'Select a sub-scope to delete.',
+                        subScopeDeleteTargetLabel: 'sub-scope',
+                        subScopeDeleteTitle: 'Delete sub-scope',
+                        subScopeParentLabel: 'parent scope'
+                    }
+                },
+                parentScope: 'studio',
+                capabilities: {
+                    scope_lifecycle: {
+                        sub_scope_delete_preview: true,
+                        sub_scope_delete_apply: true
+                    },
+                    scopes: {
+                        studio: {
+                            available: true,
+                            sub_scope_lifecycle: {
+                                sub_scopes: [
+                                    { sub_scope: 'tags', title: 'Tags' }
+                                ]
+                            }
+                        }
+                    }
+                },
+                clientOptions: {
+                    baseUrl: 'http://docs-management.test'
+                },
+                callbacks: {
+                    render: () => {},
+                    setBusy: busy => { window.__docsViewerSubScopeBusy = busy; },
+                    setMessage: (message, isError) => {
+                        window.__docsViewerSubScopeMessage = { message, isError };
+                    }
+                }
+            }).then(value => {
+                window.__docsViewerSubScopeDeleteResult = value;
+            });
+        }"""
+    )
+    page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"] .docsViewer__modalTitle')?.textContent.trim() === 'Delete sub-scope'")
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_function("() => window.__docsViewerSubScopeRequests.length === 2")
+    request = page.evaluate("window.__docsViewerSubScopeRequests[1]")
+    expected_body = {
+        "parent_scope": "studio",
+        "sub_scope": "tags",
+    }
+    if request["url"] != "http://docs-management.test/docs/scopes/sub-scopes/delete-preview":
+        raise AssertionError(f"sub-scope delete preview used the wrong endpoint: {request!r}")
+    if request["body"] != expected_body:
+        raise AssertionError(f"sub-scope delete payload did not match expected fields: {request!r}")
+    page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"] .docsViewer__modalTitle')?.textContent.trim() === 'Preview delete sub-scope'")
+    page.locator('button[data-role="modal-cancel"]').click()
+    page.wait_for_function("() => window.__docsViewerSubScopeDeleteResult === null")
+
+
 
 
 def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
     page.goto(route_url(base_url, "/__docs_viewer_scope_lifecycle_fixture__.html"), wait_until="domcontentloaded")
     run_scope_lifecycle_create_payload_check(page)
+    run_sub_scope_lifecycle_payload_checks(page)
     return {
         "width": viewport["width"],
         "height": viewport["height"],
-        "checked": ["scope-lifecycle-create-payload"],
+        "checked": ["scope-lifecycle-create-payload", "sub-scope-lifecycle-payloads"],
     }
 
 

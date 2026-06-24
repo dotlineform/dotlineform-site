@@ -7,7 +7,10 @@ import {
   scopeCreateSupported,
   scopeDeleteSupported,
   scopePublishSupported,
-  scopeLifecycleDeleteTargets
+  scopeLifecycleDeleteTargets,
+  subScopeCreateSupported,
+  subScopeDeleteSupported,
+  subScopeLifecycleDeleteTargets
 } from "./docs-viewer-management-capabilities.js";
 import {
   applyDocsViewerManagementConfig
@@ -107,6 +110,8 @@ export function initDocsViewerManagement(context) {
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var manageNewScopeButton = document.getElementById("docsViewerManageNewScopeButton");
   var manageDeleteScopeButton = document.getElementById("docsViewerManageDeleteScopeButton");
+  var manageNewSubScopeButton = document.getElementById("docsViewerManageNewSubScopeButton");
+  var manageDeleteSubScopeButton = document.getElementById("docsViewerManageDeleteSubScopeButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
@@ -414,6 +419,17 @@ export function initDocsViewerManagement(context) {
       manageDeleteScopeButton.hidden = !deleteScopeAvailable;
       manageDeleteScopeButton.disabled = state.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
     }
+    if (manageNewSubScopeButton) {
+      var newSubScopeAvailable = state.managementAvailable && subScopeCreateSupported(state.managementCapabilities, viewerScope());
+      manageNewSubScopeButton.hidden = !newSubScopeAvailable;
+      manageNewSubScopeButton.disabled = state.managementBusy || !newSubScopeAvailable;
+    }
+    if (manageDeleteSubScopeButton) {
+      var deleteSubScopeAvailable = state.managementAvailable && subScopeDeleteSupported(state.managementCapabilities, viewerScope());
+      var deleteSubScopeTargets = subScopeLifecycleDeleteTargets(state.managementCapabilities, viewerScope());
+      manageDeleteSubScopeButton.hidden = !deleteSubScopeAvailable;
+      manageDeleteSubScopeButton.disabled = state.managementBusy || !deleteSubScopeAvailable || deleteSubScopeTargets.length === 0;
+    }
     if (managePublishButton) {
       var publishAvailable = state.managementAvailable && scopePublishSupported(state.managementCapabilities, viewerScope());
       managePublishButton.disabled = state.managementBusy || !publishAvailable;
@@ -565,7 +581,9 @@ export function initDocsViewerManagement(context) {
         if (
           !module ||
           typeof module.openCreateScopeFlow !== "function" ||
-          typeof module.openDeleteScopeFlow !== "function"
+          typeof module.openDeleteScopeFlow !== "function" ||
+          typeof module.openCreateSubScopeFlow !== "function" ||
+          typeof module.openDeleteSubScopeFlow !== "function"
         ) {
           throw new Error("Docs Viewer scope lifecycle module is unavailable.");
         }
@@ -616,6 +634,46 @@ export function initDocsViewerManagement(context) {
       });
   }
 
+  function handleCreateSubScope() {
+    hideContextMenu();
+    hideManageActionsMenu();
+    return loadScopeLifecycleModule()
+      .then(function (module) {
+        return module.openCreateSubScopeFlow({
+          root: root,
+          state: state,
+          parentScope: viewerScope(),
+          capabilities: state.managementCapabilities,
+          clientOptions: managementClientOptions(),
+          callbacks: scopeLifecycleCallbacks()
+        });
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
+        return null;
+      });
+  }
+
+  function handleDeleteSubScope() {
+    hideContextMenu();
+    hideManageActionsMenu();
+    return loadScopeLifecycleModule()
+      .then(function (module) {
+        return module.openDeleteSubScopeFlow({
+          root: root,
+          state: state,
+          parentScope: viewerScope(),
+          capabilities: state.managementCapabilities,
+          clientOptions: managementClientOptions(),
+          callbacks: scopeLifecycleCallbacks()
+        });
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
+        return null;
+      });
+  }
+
   function handleDraftToggleChange() {
     if (!draftToggle) return;
     state.showNonViewable = Boolean(draftToggle.checked);
@@ -650,7 +708,9 @@ export function initDocsViewerManagement(context) {
         draftLabel: draftLabel,
         draftToggle: draftToggle,
         manageDeleteScopeButton: manageDeleteScopeButton,
+        manageDeleteSubScopeButton: manageDeleteSubScopeButton,
         manageNewScopeButton: manageNewScopeButton,
+        manageNewSubScopeButton: manageNewSubScopeButton,
         managePublishButton: managePublishButton,
         manageSettingsButton: manageSettingsButton,
         manageViewableButton: manageViewableButton,
@@ -719,6 +779,20 @@ export function initDocsViewerManagement(context) {
         hideContextMenu();
         hideManageActionsMenu();
         handleDeleteScope();
+      });
+    }
+    if (manageNewSubScopeButton) {
+      manageNewSubScopeButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        handleCreateSubScope();
+      });
+    }
+    if (manageDeleteSubScopeButton) {
+      manageDeleteSubScopeButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        handleDeleteSubScope();
       });
     }
     if (managePublishButton) {
