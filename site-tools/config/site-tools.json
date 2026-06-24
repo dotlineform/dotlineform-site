@@ -107,7 +107,9 @@
     "docs_viewer_runtime": {
       "root": "docs-viewer/runtime/js",
       "manifest": [
+        "public/docs-viewer-public-document-reports.js",
         "public/docs-viewer-public.js",
+        "reports/docs-viewer-public-reports.js",
         "shared/docs-viewer-access.js",
         "shared/docs-viewer-app-boot.js",
         "shared/docs-viewer-app-composition.js",
@@ -146,6 +148,7 @@
         "shared/docs-viewer-search.js",
         "shared/docs-viewer-service-context.js",
         "shared/docs-viewer-sidebar.js",
+        "shared/docs-subscope-report.js",
         "shared/docs-viewer-top-bar-renderer.js",
         "shared/docs-viewer-tree-payload-adapter.js",
         "shared/docs-viewer-tree.js",
