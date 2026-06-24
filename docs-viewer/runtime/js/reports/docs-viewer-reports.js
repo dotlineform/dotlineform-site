@@ -24,6 +24,13 @@ const REPORT_LOADERS = {
       });
     }
   },
+  docs_subscope: {
+    load: function () {
+      return import("../shared/docs-subscope-report.js").then(function (module) {
+        return module.mountDocsSubscopeReport;
+      });
+    }
+  },
   semantic_references: {
     load: function () {
       return import("./semantic-references-report.js").then(function (module) {

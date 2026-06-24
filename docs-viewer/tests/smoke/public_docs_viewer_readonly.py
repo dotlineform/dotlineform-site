@@ -184,7 +184,7 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
     assert_payload_requests(route, request_paths(request_urls), doc_id, doc_id)
 
 
-def exercise_unpromoted_public_report(page: Page, base_url: str, timeout_ms: int) -> None:
+def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) -> None:
     request_urls: list[str] = []
     page.on("request", lambda request: request_urls.append(request.url))
     page.goto(route_url(base_url, "/analysis/?doc=tags"), wait_until="domcontentloaded")
@@ -192,9 +192,11 @@ def exercise_unpromoted_public_report(page: Page, base_url: str, timeout_ms: int
     page.wait_for_function(
         """() => {
             const report = document.querySelector(".docsViewerReport");
+            const rows = Array.from(document.querySelectorAll(".docsViewerReport__row"));
             return report &&
                 report.dataset.reportId === "docs_subscope" &&
-                /not been promoted/.test(report.textContent || "");
+                report.dataset.reportSubscope === "tags" &&
+                rows.map((row) => row.dataset.reportSubdocId).join(",") === "bird,nerve,ordered";
         }""",
         timeout=timeout_ms,
     )
@@ -203,6 +205,8 @@ def exercise_unpromoted_public_report(page: Page, base_url: str, timeout_ms: int
     paths = request_paths(request_urls)
     if "/assets/data/docs/public-reports.json" not in paths:
         raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
+    if "/assets/data/docs/scopes/analysis/tags/manifest.json" not in paths:
+        raise AssertionError(f"public report did not read sub-scope manifest; saw {sorted(paths)!r}")
     blocked = [
         path for path in paths
         if path in {
@@ -245,7 +249,7 @@ def main() -> int:
                     args.timeout_ms,
                 )
                 exercise_public_route(page, base_url, "/analysis/?doc=analysis", "analysis", "Analysis", args.timeout_ms)
-                exercise_unpromoted_public_report(page, base_url, args.timeout_ms)
+                exercise_public_subscope_report(page, base_url, args.timeout_ms)
             finally:
                 browser.close()
 

@@ -36,6 +36,14 @@
       "presets": []
     },
     {
+      "report_id": "docs_subscope",
+      "title": "Docs Sub-Scope",
+      "description": "Displays a report-owned list over a configured Docs Viewer sub-scope.",
+      "default_access": "public",
+      "loader_id": "docs_subscope",
+      "presets": []
+    },
+    {
       "report_id": "source_config",
       "title": "Source Config",
       "description": "Displays Docs Viewer source config for all scopes in manage mode.",

@@ -1,4 +1,13 @@
 {
   "schema": "docs_viewer_reports_v1",
-  "reports": []
+  "reports": [
+    {
+      "report_id": "docs_subscope",
+      "title": "Docs Sub-Scope",
+      "description": "Displays a report-owned list over a configured Docs Viewer sub-scope.",
+      "default_access": "public",
+      "loader_id": "docs_subscope",
+      "presets": []
+    }
+  ]
 }

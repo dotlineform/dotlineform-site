@@ -128,7 +128,7 @@ def test_public_readonly_route_page_uses_public_entrypoint_contract() -> None:
     assert 'data-allow-management="false"' not in html
     assert "docs-viewer/static/css/docs-viewer.css" in html
     assert "docs-viewer/static/css/docs-viewer-management.css" not in html
-    assert "docs-viewer/static/css/docs-viewer-reports.css" not in html
+    assert "docs-viewer/static/css/docs-viewer-reports.css" in html
     assert 'src="/docs-viewer/runtime/js/public/docs-viewer-public.js' in html
 
 
@@ -675,6 +675,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/runtime/js/docs-viewer-manage.js") is False
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-reports.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
@@ -714,6 +715,9 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer.css"
     ) == Path("site/docs-viewer/static/css/docs-viewer.css")
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/docs-viewer-reports.css"
+    ) == Path("site/docs-viewer/static/css/docs-viewer-reports.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-manage.css"
     ) is None

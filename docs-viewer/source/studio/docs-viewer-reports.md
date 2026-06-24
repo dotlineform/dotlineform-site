@@ -67,6 +67,7 @@ The manage Docs Viewer entrypoint opts into local report mounting through `docs-
 The shared document controller renders the document payload and calls an optional document-extras hook; it does not import report runtime, report services, or report modules.
 Public entrypoints opt into report mounting through `site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js`.
 Public route config exposes only the public-safe report registry projection at `site/assets/data/docs/public-reports.json`.
+Public route shells load `site/docs-viewer/static/css/docs-viewer-reports.css` so promoted public reports can use the shared report list styles without loading manage-only styles.
 
 The entry runtime wires the document controller but does not own report filtering, sorting, row rendering, or report-specific data shaping.
 
@@ -138,6 +139,10 @@ It is used by [Library Documents](/docs/?scope=studio&doc=library-documents) to 
 `reports_list` renders the report metadata registry itself.
 This document uses it so the list of configured reports stays visible from the Docs Viewer.
 
+`docs_subscope` renders a manifest-ordered list for a configured Docs Viewer sub-scope.
+It reads `viewer_report_subscope` from the selected parent document payload, validates that sub-scope against the current scope's browser config, loads the configured `manifest.json`, and renders the manifest `doc_ids` as the report-owned list state.
+The current shell does not load embedded detail documents or mutate `subdoc` URL state; that belongs to the embedded detail and URL-state slices.
+
 `source_config` renders the Docs Viewer source config report in manage mode.
 It reads through the standalone Docs Viewer service and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
@@ -171,3 +176,4 @@ Poor report candidates are workflows with writes, long-running operations, broad
 - `site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js`
 - `docs-viewer/runtime/js/reports/`
 - `docs-viewer/static/css/docs-viewer-reports.css`
+- `site/docs-viewer/static/css/docs-viewer-reports.css`

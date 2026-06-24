@@ -2,7 +2,15 @@ import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
 
-const PUBLIC_REPORT_LOADERS = {};
+const PUBLIC_REPORT_LOADERS = {
+  docs_subscope: {
+    load: function () {
+      return import("../shared/docs-subscope-report.js").then(function (module) {
+        return module.mountDocsSubscopeReport;
+      });
+    }
+  }
+};
 
 function cleanString(value) {
   return String(value || "").trim();

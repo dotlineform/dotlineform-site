@@ -585,7 +585,7 @@ Next step:
 - [x] Add public route config for the promoted report registry or promoted report metadata needed by `docs_subscope`.
 - [x] Wire public `mountDocumentExtras` support so public report-backed docs can mount allowed report modules.
 - [x] Ensure the public runtime only loads allowlisted public reports and does not expose manage/local reports.
-- [ ] Add public-route smoke coverage proving a `viewer_report_access: public` parent doc mounts its promoted report. This remains coupled to Step 8 because no public report module is allowlisted until `docs_subscope` exists.
+- [x] Add public-route smoke coverage proving a `viewer_report_access: public` parent doc mounts its promoted report.
 
 Implemented step 7’s public report promotion infrastructure.
 
@@ -594,13 +594,13 @@ What changed:
 - Added a public-only report bridge/controller:
   - [docs-viewer-public-document-reports.js](/Users/dlf/Developer/dotlineform/dotlineform-site/site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js)
   - [docs-viewer-public-reports.js](/Users/dlf/Developer/dotlineform/dotlineform-site/site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js)
-- Added public report registry projection at [public-reports.json](/Users/dlf/Developer/dotlineform/dotlineform-site/site/assets/data/docs/public-reports.json). It is intentionally empty until step 8 promotes `docs_subscope`.
+- Added public report registry projection at [public-reports.json](/Users/dlf/Developer/dotlineform/dotlineform-site/site/assets/data/docs/public-reports.json).
 - Public route configs now point to `/assets/data/docs/public-reports.json`.
 - Migrated report access from `manage` to `local` in config/source docs and removed `manage` support from the report access check.
 - Public by-id payloads now include report metadata only for `viewer_report_access: public`; the compact public index tree stays slim.
 - Published [tags.json](/Users/dlf/Developer/dotlineform/dotlineform-site/site/assets/data/docs/scopes/analysis/by-id/tags.json) now carries `viewer_report`, `viewer_report_access`, and `viewer_report_subscope`.
 
-I updated the request checklist for step 7. One checkbox remains open by design: the smoke proving a promoted public report fully mounts depends on step 8 adding and allowlisting the actual `docs_subscope` module. The smoke now verifies the interim behavior: `/analysis/?doc=tags` keeps `doc=tags`, reads the public report registry, and shows a contained “not promoted” state without loading manage/local report runtime files.
+Step 8 promotes and allowlists the `docs_subscope` module, so the public smoke now verifies that `/analysis/?doc=tags` keeps `doc=tags`, reads the public report registry, loads the tags manifest, renders the manifest rows, and does not load manage/local report runtime files.
 
 Verification passed:
 - `node --check` on changed JS modules
@@ -612,11 +612,13 @@ Verification passed:
 
 ### 8. Generic Report Shell
 
-- [ ] Add the `docs_subscope` report registry entry and allowlisted report module.
-- [ ] Make the `docs_subscope` report read `viewer_report_subscope` from the selected parent document payload.
-- [ ] Make the `docs_subscope` report load the configured sub-scope manifest.
-- [ ] Make the `docs_subscope` report render the list state from manifest `doc_ids`.
-- [ ] Make the `docs_subscope` report derive list labels and filters from the explicit report list metadata sources.
+- [x] Add the `docs_subscope` report registry entry and allowlisted report module.
+- [x] Make the `docs_subscope` report read `viewer_report_subscope` from the selected parent document payload.
+- [x] Make the `docs_subscope` report load the configured sub-scope manifest.
+- [x] Make the `docs_subscope` report render the list state from manifest `doc_ids`.
+- [x] Make the `docs_subscope` report derive list labels and filters from the explicit report list metadata sources.
+
+Implemented step 8’s generic report shell. The `docs_subscope` report is registered, public-allowlisted, loads the configured sub-scope manifest, and renders the manifest `doc_ids` as a report-owned list. Public route shells now ship the shared report stylesheet so the promoted report renders with the same report list classes as local reports. The current shell does not load embedded detail payloads, mutate `subdoc` URL state, or expose the final search/filter/back toolbar; those remain in steps 9 and 10.
 
 ### 9. Embedded Detail View
 

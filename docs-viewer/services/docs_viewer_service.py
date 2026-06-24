@@ -56,6 +56,9 @@ RUNTIME_STATIC_ROUTES = (
 )
 SHARED_STATIC_ROUTES = {
     "/docs-viewer/static/css/docs-viewer.css": Path("site/docs-viewer/static/css/docs-viewer.css"),
+    "/docs-viewer/static/css/docs-viewer-reports.css": Path(
+        "site/docs-viewer/static/css/docs-viewer-reports.css"
+    ),
     "/docs-viewer/config/routes/docs-viewer-public-routes.json": Path(
         "site/docs-viewer/config/routes/docs-viewer-public-routes.json"
     ),
