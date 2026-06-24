@@ -7,8 +7,10 @@ from typing import Any, Dict
 
 import docs_management_mutations as mutations
 import docs_scope_manifest
+import docs_sub_scope_lifecycle
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
+from docs_scope_config import normalize_sub_scope_id
 from docs_management_context import log_event
 
 
@@ -134,10 +136,10 @@ def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
 
 def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
-    sub_scope = docs_scope_manifest.normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
+    sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
     docs_scope_manifest.require_confirmed(body)
-    docs_scope_manifest.plan_create_sub_scope_preview(repo_root, body)
-    payload = docs_scope_manifest.apply_create_sub_scope(repo_root, body, dry_run=dry_run)
+    docs_sub_scope_lifecycle.plan_create_sub_scope_preview(repo_root, body)
+    payload = docs_sub_scope_lifecycle.apply_create_sub_scope(repo_root, body, dry_run=dry_run)
     if not dry_run:
         log_event(
             repo_root,
@@ -154,13 +156,13 @@ def handle_sub_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run
 
 def handle_sub_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     parent_scope = docs_scope_manifest.normalize_scope_id(body.get("parent_scope") or body.get("scope"))
-    sub_scope = docs_scope_manifest.normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
+    sub_scope = normalize_sub_scope_id(body.get("sub_scope"), field="sub_scope")
     docs_scope_manifest.require_confirmed(body)
-    preview = docs_scope_manifest.plan_delete_sub_scope_preview(repo_root, body)
+    preview = docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(repo_root, body)
     if not preview.get("allowed"):
         blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "sub-scope delete is not allowed")
-    payload = docs_scope_manifest.apply_delete_sub_scope(repo_root, body, dry_run=dry_run)
+    payload = docs_sub_scope_lifecycle.apply_delete_sub_scope(repo_root, body, dry_run=dry_run)
     if not dry_run:
         log_event(
             repo_root,

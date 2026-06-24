@@ -28,6 +28,7 @@ import docs_publish_gate  # noqa: E402
 import docs_scope_manifest  # noqa: E402
 import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
+import docs_sub_scope_lifecycle  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
@@ -146,13 +147,13 @@ def docs_management_post_response(
     if path == routes.SCOPE_DELETE_APPLY_PATH:
         return HTTPStatus.OK, handle_scope_delete_apply(repo_root, body, dry_run)
     if path == routes.SUB_SCOPE_CREATE_PREVIEW_PATH:
-        payload = docs_scope_manifest.plan_create_sub_scope_preview(repo_root, body)
+        payload = docs_sub_scope_lifecycle.plan_create_sub_scope_preview(repo_root, body)
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
     if path == routes.SUB_SCOPE_CREATE_APPLY_PATH:
         return HTTPStatus.OK, handle_sub_scope_create_apply(repo_root, body, dry_run)
     if path == routes.SUB_SCOPE_DELETE_PREVIEW_PATH:
-        payload = docs_scope_manifest.plan_delete_sub_scope_preview(repo_root, body)
+        payload = docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(repo_root, body)
         payload["dry_run"] = True
         return HTTPStatus.OK, payload
     if path == routes.SUB_SCOPE_DELETE_APPLY_PATH:
