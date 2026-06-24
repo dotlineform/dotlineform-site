@@ -16,7 +16,7 @@ Support large Docs Viewer-owned detail document sets by loading detail documents
 The target pattern is a master/detail report inside a normal Docs Viewer document:
 
 - the indexed parent document remains the active Docs Viewer document
-- the parent renders a report or list over a large domain dataset
+- the parent renders a report or list over the sub-scope document set
 - selecting a row loads the corresponding detail document inside or below the report
 - the sidebar stays anchored to the indexed parent document
 - detail documents remain first-class Docs Viewer source docs built through the normal docs pipeline
@@ -24,18 +24,15 @@ The target pattern is a master/detail report inside a normal Docs Viewer documen
 
 ## Problem
 
-Some domains can produce hundreds of document-like records.
-For example, every tag in `analytics-app/data/canonical/tag-registry.json` may eventually need a corresponding document.
-Another expected use is one detail document per catalogue series from `studio/data/canonical/catalogue/series.json`.
+Some Docs Viewer use cases can produce hundreds of document-like records.
 
-Making every tag document a normal Docs Viewer index row creates two problems:
+Making every detail document a normal Docs Viewer index row creates two problems:
 
 - the index panel becomes too large to scan
 - moving those docs out of the index but into global docs search only moves the payload problem from `index-tree.json` to the search index
 
 The better discovery surface is the report, not the Docs Viewer sidebar or global docs search.
-For tag documents, the tag registry or Analytics app should own the source data, filters, grouping, aliases, status, and usage context exposed to the report through semantic targets or tokens.
-Docs Viewer should own the detail Markdown source, rendering pipeline, generated payload shape, sub-scope lifecycle, and embedded detail-document rendering surface.
+Docs Viewer should own the detail Markdown source, report list metadata, rendering pipeline, generated payload shape, sub-scope lifecycle, and embedded detail-document rendering surface.
 
 The ownership model treats these documents as a Docs Viewer sub-scope.
 A sub-scope is a detail-document grouping under a normal scope, not a full navigable scope.
@@ -56,14 +53,14 @@ The report has two main states.
 
 List state:
 
-- shows the domain list or table
+- shows the sub-scope list or table
 - provides search/filter controls
 - lets the user select a row
 
 Detail state:
 
-- keeps a compact search/back header visible
-- hides or collapses the full list
+- keeps only a single-row report toolbar visible, containing search/filter controls and the back action
+- completely hides the list and list header
 - renders the selected detail document inside the report surface
 - provides a back/close action that restores the list state
 
@@ -83,10 +80,7 @@ List:
 Selecting tag `Scale` changes the same indexed parent document into:
 
 ```text
-Tags
-
-[Search tags...] [Back to all tags]
-Selected: Scale
+[Search tags...] [Group filter] [Back to all tags]
 
 <embedded Scale tag document>
 ```
@@ -146,7 +140,7 @@ The `docs_subscope` report should follow this behavior:
 - load the sub-scope `manifest.json`
 - read the `subdoc` query parameter from the current URL
 - derive the detail payload URL from the selected scope, configured sub-scope, and selected detail `doc_id`
-- derive list labels and filter metadata from the parent report config, sub-scope config, or semantic target data
+- derive list labels and filter metadata from the explicit report list metadata sources below
 - when `subdoc` is absent, render the list from manifest `doc_ids`
 - when `subdoc` is present and matches a manifest `doc_ids` entry, load the derived by-id payload URL and render it in the embedded detail region
 - when `subdoc` is present but missing from the manifest, render a contained report error and keep the parent document selected
@@ -168,8 +162,11 @@ This can be ordinary HTML structure with explicit classes and labels:
 </section>
 ```
 
-The report loads the selected detail payload and renders its `content_html` into `docsReportDetail__body`.
-The embedded content should be styled through the detail-region class so headings, tables, images, and links do not fight the parent document layout.
+- The report loads the selected detail payload and renders its `content_html` into `docsReportDetail__body`.
+- The embedded detail body should reuse the normal Docs Viewer rendered-document styling. The report-specific detail wrapper should only provide containment, spacing, and the single-row report toolbar; it should not redefine document typography, table, image, or link styles.
+- The embedded document should not be placed inside a panel, card, or secondary document frame. It should use the available document content area just like a normal indexed document would.
+- The transition from report controls to embedded document should be minimal, such as a pale divider line. After that divider, the embedded document should look like a normal rendered document, including its title and content.
+- Any content before the report controls belongs in the authored parent report document and should render normally.
 
 ## Detail Document Payloads
 
@@ -177,7 +174,6 @@ Detail documents should be first-class Docs Viewer documents at the source/build
 They need the normal `build_docs.py` pipeline because detail docs may themselves use Docs Viewer features such as:
 
 - media tokens
-- semantic reference tokens
 - doc-to-doc links
 - rendered Markdown and raw HTML
 - report front matter such as `viewer_report`
@@ -226,14 +222,12 @@ For example, this URL:
 resolves `scale` through the `analytics-tags` report configuration.
 That report configuration identifies the sub-scope, so the raw detail `doc_id` does not have to be scope-global.
 
-Cross-report references, logs, caches, and semantic-reference outputs should not treat raw detail `doc_id` as globally unique.
+Cross-report references, logs, and caches should not treat raw detail `doc_id` as globally unique.
 They should preserve enough context to resolve through the parent report config, or use a composite identity such as `<scope>/<sub-scope>/<doc_id>`.
 
 ## Manifest JSON Contract
 
-Each sub-scope should publish a minimal manifest used by the generic report.
-The manifest is an existence and ordering contract; it is not an `index-tree.json`.
-For public scopes such as `/analysis/`, the manifest should avoid repeating data that can be derived from the parent report payload, sub-scope config, or semantic target data.
+- Each sub-scope should publish a minimal manifest used by the generic report. The manifest is an existence and ordering contract; it is not an `index-tree.json`.
 
 Required manifest fields:
 
@@ -253,10 +247,26 @@ The report derives all other information:
 - sub-scope: `viewer_report_subscope` from the parent document payload
 - selected detail id: value of `subdoc` from the current URL
 - by-id payload URL: sub-scope generated-data config plus selected detail id
-- list labels, grouping, filters, and search data: parent report config, sub-scope config, or semantic target data
+- list labels, grouping, filters, and search data: the explicit report list metadata sources below
 
 The comma-delimited format requires detail document ids to exclude commas.
 That should be enforced by the sub-scope builder.
+
+## Report List Metadata Sources
+
+The minimal manifest only lists `doc_ids`.
+The `docs_subscope` report should read labels, grouping, filters, and search data from explicit runtime sources:
+
+- generated parent by-id payload in `docs-viewer/generated/docs/<scope>/by-id/<parent_doc_id>.json`
+- published parent by-id payload in `site/assets/data/docs/scopes/<scope>/by-id/<parent_doc_id>.json`
+- parent/sub-scope config in `docs-viewer/config/scopes/docs_scopes.json`
+- browser-facing sub-scope projection generated from `docs-viewer/config/scopes/docs_scopes.json`
+- report implementation in `docs-viewer/runtime/js/reports/docs-subscope-report.js`
+- report loader allowlist in `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
+
+Public reports must read only browser-safe generated or published projections.
+Reports must not read source Markdown files directly.
+Parent page front matter is available to reports only after the Docs Viewer builder has normalized it into the generated parent by-id payload.
 
 ## By-Id JSON Contract
 
@@ -271,45 +281,41 @@ The by-id payload should keep the normal rendered content and metadata fields, i
 - `content_html`
 - front matter-derived fields exposed by the normal by-id payload contract
 
-Keeping the full by-id shape preserves the option to promote a sub-scope document into an indexed document later without changing its source Markdown model or generated payload semantics.
+Keeping the full by-id shape preserves the option to promote a sub-scope document into an indexed document later without changing its source Markdown model or generated payload contract.
 The generic `docs_subscope` report renders `content_html`, but it should pass through or make available the remaining by-id metadata for headings, detail-state labels, diagnostics, and future promotion workflows.
 
 ## Build Approach
 
-Prefer extending the modular Docs Viewer builder rather than creating a second renderer.
-`build_docs.py` should remain the orchestration entrypoint.
-
-The implementation can add a small sub-scope builder module under `docs-viewer/build/docs_builder/` that reuses the existing pipeline:
+`build_docs.py` remains the orchestration entrypoint. The implementation should add a small sub-scope builder module under `docs-viewer/build/docs_builder/` that reuses the existing pipeline:
 
 - source parsing and front matter normalization
 - Markdown and raw HTML rendering
 - media token resolution
-- semantic reference token resolution
 - doc-link rewriting policy
 - deterministic payload writing
 
 The sub-scope changes the output contract, not the rendering model.
-For local/manage tag docs, an output shape such as this is acceptable:
+The builder writes working generated JSON under `docs-viewer/...` for every scope, including public scopes:
 
 ```text
-docs-viewer/generated/docs/studio/tags/by-id/<tag-id>.json
-docs-viewer/generated/docs/studio/tags/manifest.json
+docs-viewer/generated/docs/<scope>/<sub-scope>/by-id/<doc_id>.json
+docs-viewer/generated/docs/<scope>/<sub-scope>/manifest.json
 ```
 
-For public scopes, the configured output may need to live under `site/...`, for example:
+For public scopes, the existing parent-scope `Publish` action copies the working generated sub-scope payloads to the public snapshot under `site/...`:
 
 ```text
-site/assets/data/docs/scopes/library/tags/by-id/<tag-id>.json
-site/assets/data/docs/scopes/library/tags/manifest.json
+site/assets/data/docs/scopes/<scope>/<sub-scope>/by-id/<doc_id>.json
+site/assets/data/docs/scopes/<scope>/<sub-scope>/manifest.json
 ```
 
-Do not hardcode `studio` or `tags` as the only sub-scope shape.
-The source, working output, and public output should derive from the parent scope and sub-scope config.
+The builder should not write public snapshots directly.
+The source, working output, and publish output should derive from the parent scope and sub-scope config.
 
 The manifest lists detail `doc_id` values so the report can validate and order detail payloads without loading a large tree or search index.
 The report derives by-id payload URLs from sub-scope config.
 
-The builder should not emit normal `index-tree.json`, recently-added, or global docs-search records for sub-scopes unless a separate discovery policy explicitly asks for them.
+The builder should not emit normal `index-tree.json`, recently-added, or global docs-search records for sub-scopes.
 
 ## Sub-Scope Config
 
@@ -317,13 +323,12 @@ This should be sub-scope-config driven, not hardcoded for tags.
 Sub-scopes should be declared in the same Docs Viewer scope config file as normal scopes, nested under their parent scope record.
 They should not be top-level scopes.
 
-A Docs Viewer sub-scope should declare at least:
+A Docs Viewer sub-scope should declare:
 
 - sub-scope id
-- source root, usually `docs-viewer/source/<scope>/<sub-scope>/`
-- working output root, usually `docs-viewer/generated/docs/<scope>/<sub-scope>/`
-- optional public output root for public scopes, usually `site/assets/data/docs/scopes/<scope>/<sub-scope>/`
-- optional semantic target kind
+- source root `docs-viewer/source/<scope>/<sub-scope>/`
+- working output root `docs-viewer/generated/docs/<scope>/<sub-scope>/`
+- public output root for public scopes `site/assets/data/docs/scopes/<scope>/<sub-scope>/`
 
 Example nested config shape:
 
@@ -338,8 +343,7 @@ Example nested config shape:
       "sub_scope": "tags",
       "source": "docs-viewer/source/analysis/tags",
       "output": "docs-viewer/generated/docs/analysis/tags",
-      "publish_output": "site/assets/data/docs/scopes/analysis/tags",
-      "semantic_kind": "tag"
+      "publish_output": "site/assets/data/docs/scopes/analysis/tags"
     }
   ]
 }
@@ -352,18 +356,11 @@ manifest: site/assets/data/docs/scopes/<scope>/<sub-scope>/manifest.json
 by-id: site/assets/data/docs/scopes/<scope>/<sub-scope>/by-id/<doc_id>.json
 ```
 
-Docs Viewer should own the source Markdown and generated payload contract for sub-scope documents.
-Domain apps should own source data that sub-scope documents and reports consume through semantic tokens or semantic target data.
-
-Ownership examples:
-
-- Analytics owns tag registry data and tag semantic target data
-- Studio/catalogue owns series source data and series semantic target data
-- Docs Viewer owns sub-scope source Markdown, rendering, generated detail payload shape, manifests, lifecycle actions, and report embedding mechanics
+Docs Viewer owns sub-scope source Markdown, rendering, generated detail payload shape, manifests, lifecycle actions, and report embedding mechanics
 
 ## Sub-Scope Lifecycle
 
-Sub-scopes should be managed in Docs Viewer, alongside normal scope management, with dedicated lifecycle actions:
+Sub-scopes should be managed in Docs Viewer, alongside normal scope management, with dedicated lifecycle actions in the UI 'Actions' button:
 
 - `New sub-scope`
 - `Delete sub-scope`
@@ -371,22 +368,25 @@ Sub-scopes should be managed in Docs Viewer, alongside normal scope management, 
 These actions should be scoped to the selected parent scope.
 They should not create a new public route, add the sub-scope to the main scope selector, or make sub-scope documents directly selectable from the main Docs Viewer sidebar.
 
+- The `New sub-scope` modal should use the active Docs Viewer scope as the parent scope.
+- The user should only need to provide the sub-scope id and confirm or edit the derived title.
+- Sub-scopes do not have a default document concept, so the modal should not ask for `default_doc_id`.
+
 Deleting a sub-scope can remove many source documents and generated payloads, so it should use the same preview and confirm pattern as deleting a normal scope.
 
-## Constraints To Examine
+## Constraints
 
-The revised model depends on these constraints:
+The model depends on these constraints:
 
 - A sub-scope should not behave like a full scope in the scope selector or route model.
 - Main scope builders must explicitly ignore `docs-viewer/source/<scope>/<sub-scope>/` for `index-tree.json`, recently-added, and search.
-- Sub-scope builders should still reuse the normal Docs Viewer Markdown, media-token, semantic-reference-token, link-rewriting, and payload-writing pipeline.
+- Sub-scope builders should still reuse the normal Docs Viewer Markdown, media-token, link-rewriting, and payload-writing pipeline.
 - Published sub-scope payloads should include a minimal manifest, for example `site/assets/data/docs/scopes/<scope>/<sub-scope>/manifest.json`, so the report can validate and order detail ids without loading a tree or search index.
-- Detail ids are unique within their owning `<scope>/<sub-scope>`; cross-report references, logs, caches, and semantic-reference outputs need parent report context or a composite identity.
+- Detail ids are unique within their owning `<scope>/<sub-scope>`; cross-report references, logs, and caches need parent report context or a composite identity.
 - `subdoc` should remain reserved as the standard detail-state URL parameter for `docs_subscope`; other reports should continue to use report-owned params.
 - `Delete sub-scope` needs preview and confirmation because it can remove source docs, working generated payloads, and published payloads.
-- Domain data should enter sub-scope documents and reports through semantic tokens or semantic target payloads, not by moving Docs Viewer rendering into Analytics or Studio app code.
 - Public sub-scope publishing should be handled by the existing parent-scope `Publish` action and should not introduce an implicit deploy-time copy step.
-- Public manifests should not repeat scope, sub-scope, title, payload URL, grouping, filter, or search data when those values can be derived from config or semantic target data.
+- Public manifests should not repeat scope, sub-scope, title, payload URL, grouping, filter, or search data because those values are derived from the explicit report list metadata sources.
 
 ## Build Entrypoint
 
@@ -398,62 +398,29 @@ Sub-scopes should be selected by config or CLI arguments, for example:
 ./docs-viewer/build/build_docs.py --scope studio --sub-scope series --write
 ```
 
-The sub-scope source root should normally live under the Docs Viewer source tree for the parent scope.
-The report and documents may consume app-owned data through semantic tokens or semantic target payloads.
+The sub-scope source root lives under the Docs Viewer source tree for the parent scope.
 
 The implementation delta should stay small:
 
 - keep `build_docs.py` as a CLI/orchestration layer
 - add config for sub-scope sources and outputs
 - reuse existing renderer and token modules
-- write by-id detail payloads and a minimal manifest
-- avoid adding sidebar/search behavior to the sub-scope by default
+- write by-id detail payloads and a minimal manifest as described above
+- do not add sidebar/search behavior to the sub-scope
 
-The main design risk is link semantics, not rendering.
-Detail docs may contain same-scope doc links, semantic references, or links to other detail docs.
-The implementation should decide whether those links resolve to:
+The main design risk is link resolution, not rendering.
+Detail docs may contain normal same-scope doc links or links to other sub-scope docs.
+Those links will need to resolve to:
 
-- ordinary Docs Viewer routes
+- ordinary Docs Viewer routes, or
 - embedded report-detail URLs such as `?doc=analytics-tags&subdoc=scale`
-- report-owned URLs supplied by the report
 
-For tag semantic references, the intended behavior is embedded report-detail navigation.
-A semantic token such as:
-
-```text
-[[ref:tag:slow-looking]]
-```
-
-should resolve to the indexed tag report document with tag detail state, for example:
+For sub-scope detail links, the intended behavior is embedded report-detail navigation.
+A link to a detail document should resolve to the indexed report document with detail state, for example:
 
 ```text
 /docs/?scope=studio&doc=analytics-tags&subdoc=slow-looking
 ```
-
-It should not resolve to a standalone non-indexed tag document route.
-
-That decision should be made before detail docs depend heavily on cross-detail navigation.
-It is especially important before enabling tag semantic tokens in [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor).
-
-## Discovery Model
-
-Report-owned discovery is required.
-
-For tag documents:
-
-- Analytics tag rows should link to the corresponding detail state
-- the tag registry report should list tag docs with tag-specific filters and metadata
-- the Docs Viewer index should include high-level entry points such as `Tags`, `Tag Groups`, or `Analytics Vocabulary`
-- global docs search should not automatically include every tag detail document
-- a separate tag-doc search mode or lazy-loaded tag search index can be added later if needed
-
-For series documents:
-
-- catalogue series UI or reports should link to the corresponding series detail state
-- a catalogue series report should list series docs with catalogue-specific filters and metadata
-- global docs search should not automatically include every series detail document
-
-This avoids treating hundreds of detail docs as first-class Docs Viewer route documents while still giving each domain record a real Docs Viewer-rendered document payload.
 
 ## Runtime Boundary
 
@@ -467,15 +434,14 @@ Docs Viewer owns:
 
 The report owns:
 
-- domain data loading
 - filters and search inside the report
 - selected detail id
 - embedded detail payload loading
 - detail-region rendering
 - report-owned URL parameters
 
-The report may use a generated-data helper to read a detail payload by id.
-That helper should not update Docs Viewer selected-document state.
+The report should fetch the derived sub-scope by-id payload URL as report data.
+Fetching a detail payload must not update Docs Viewer selected-document state.
 
 ## Public And Manage Behavior
 
@@ -491,8 +457,9 @@ Public behavior:
 Manage behavior:
 
 - parent/report doc behaves like any report-backed docs document
-- detail payload loading should work through the local generated-read service when available
-- source/edit workflows for sub-scope detail docs should use the Docs Viewer sub-scope source model
+- existing manage tools such as edit metadata apply to the indexed parent/report document, not to the embedded sub-scope detail document
+- this implementation does not make sub-scope detail documents visible as normal standalone manage-mode docs outside the report
+- source/edit workflows for sub-scope detail docs need a separate design
 
 ## Implementation Checklist
 
@@ -506,7 +473,9 @@ Manage behavior:
 ### 2. Sub-Scope Lifecycle Actions
 
 - [ ] Add management-service capability data for sub-scope create/delete availability per parent scope.
-- [ ] Add `New sub-scope` management UI and service actions that create the nested config entry and source/output folders.
+- [ ] Add `New sub-scope` management UI that uses the active scope as the parent scope.
+- [ ] Make the `New sub-scope` modal ask only for sub-scope id and title confirmation/editing, with no default-doc input.
+- [ ] Add `New sub-scope` service actions that create the nested config entry and source/output folders.
 - [ ] Add `Delete sub-scope` preview and apply actions that cover source docs, working generated payloads, and published payloads.
 - [ ] Make lifecycle actions operate within the selected parent scope rather than creating top-level scopes.
 - [ ] Add focused lifecycle tests for new/delete sub-scope config and file effects.
@@ -522,7 +491,7 @@ Manage behavior:
 
 - [ ] Update source discovery so parent scope builds ignore sub-scope source directories for `index-tree.json`, recently-added, and search.
 - [ ] Add a sub-scope build path to `build_docs.py`, selected by `--scope <scope> --sub-scope <sub-scope>`.
-- [ ] Reuse the normal Docs Viewer source parsing, front matter normalization, Markdown rendering, media token, semantic reference token, and link rewriting pipeline for sub-scope docs.
+- [ ] Reuse the normal Docs Viewer source parsing, front matter normalization, Markdown rendering, media token, and link rewriting pipeline for sub-scope docs.
 - [ ] Write normal by-id payloads for sub-scope docs under the configured sub-scope output root.
 - [ ] Write `manifest.json` with only the ordered comma-delimited `doc_ids` field.
 - [ ] Enforce that sub-scope detail `doc_id` values do not contain commas.
@@ -563,21 +532,22 @@ Manage behavior:
 - [ ] Make the `docs_subscope` report read `viewer_report_subscope` from the selected parent document payload.
 - [ ] Make the `docs_subscope` report load the configured sub-scope manifest.
 - [ ] Make the `docs_subscope` report render the list state from manifest `doc_ids`.
-- [ ] Make the `docs_subscope` report derive list labels and filters from parent report config, sub-scope config, or semantic target data.
+- [ ] Make the `docs_subscope` report derive list labels and filters from the explicit report list metadata sources.
 
 ### 9. Embedded Detail View
 
-- [ ] Add the embedded detail section markup and styling.
+- [ ] Add embedded detail markup that uses the normal document content area with only minimal report controls and a simple divider, not a panel or card.
 - [ ] Make the `docs_subscope` report derive by-id payload URLs from scope config, sub-scope config, and selected detail id.
+- [ ] Make the `docs_subscope` report hide the list and list header completely in detail state, leaving only a single-row toolbar with search/filter/back controls.
 - [ ] Make the `docs_subscope` report render selected detail payload `content_html` inside the embedded detail section.
-- [ ] Preserve or expose normal by-id metadata such as `title`, `last_updated`, and front matter-derived fields for detail-state labels and diagnostics.
+- [ ] Preserve normal by-id metadata such as `title`, `last_updated`, and front matter-derived fields for detail-state labels and diagnostics.
 - [ ] Ensure detail rendering does not change Docs Viewer selected-document state.
 - [ ] Add contained report error states for unknown sub-scopes, missing manifests, unknown detail ids, and failed detail payload loads.
 
 ### 10. URL State And Links
 
 - [ ] Add report URL-state handling for selecting a detail row, refreshing a detail URL, Back/Forward, and returning to the list.
-- [ ] Add semantic-reference link resolution for sub-scope details so tokens such as tags can resolve to the parent report document plus report detail state.
+- [ ] Add link resolution for sub-scope details so detail links resolve to the parent report document plus report detail state.
 - [ ] Add focused report-runtime tests for list state, detail state, URL refresh, Back/Forward, and missing-detail errors.
 
 ## Tests
@@ -595,7 +565,7 @@ Focused coverage should prove:
 - the generic report derives by-id payload URLs from sub-scope config and selected detail id
 - detail docs are built by `build_docs.py` into normal by-id payloads
 - sub-scope by-id payloads preserve normal by-id metadata such as `title`, `last_updated`, and front matter-derived fields
-- detail docs can use media tokens, semantic reference tokens, and report front matter through the normal pipeline
+- detail docs can use media tokens, doc links, and report front matter through the normal pipeline
 - detail docs are not accidentally added to global docs search
 - detail docs are not accidentally added to the index tree
 - public published payloads include the parent/report and any required detail payloads
