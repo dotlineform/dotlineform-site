@@ -105,12 +105,7 @@ function appendDocRow(state, docId) {
   titleText.className = "docsViewerReport__title";
   titleText.textContent = humanize(docId) || docId;
 
-  var idText = document.createElement("span");
-  idText.className = "docsViewerReport__subtext";
-  idText.textContent = docId;
-
   title.appendChild(titleText);
-  title.appendChild(idText);
   row.appendChild(title);
   state.rowsNode.appendChild(row);
 }

@@ -196,7 +196,8 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
             return report &&
                 report.dataset.reportId === "docs_subscope" &&
                 report.dataset.reportSubscope === "tags" &&
-                rows.map((row) => row.dataset.reportSubdocId).join(",") === "bird,nerve,ordered";
+                rows.map((row) => row.dataset.reportSubdocId).join(",") === "bird,nerve,ordered" &&
+                rows.map((row) => (row.textContent || "").trim()).join(",") === "Bird,Nerve,Ordered";
         }""",
         timeout=timeout_ms,
     )
