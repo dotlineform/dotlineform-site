@@ -470,6 +470,22 @@ Manage behavior:
 - [x] Add a browser-facing projection for configured sub-scopes so reports can derive manifest and by-id payload URLs.
 - [x] Define how parent scope source discovery recognizes configured sub-scope directories before builder changes are made.
 
+Useful handoff for step 2:
+
+- Step 1 is complete: config now supports nested `sub_scopes` under parent scopes, validates ids/paths/duplicates, projects browser-safe `manifest_url` and `by_id_url_base`, and excludes configured sub-scope roots from parent docs/search discovery.
+- `allow_nested_source` was fully removed. Normal scope source roots are flat-only. Any nested Markdown outside configured sub-scope roots should fail fast.
+- `analysis/series` and `analysis/works` legacy placeholder dirs were removed.
+- The source-config report now shows `sub_scopes` instead of the retired nested-source flag.
+- Tests already cover config validation, browser projection, parent docs/search exclusion, and nested-source rejection.
+
+For step 2, start from:
+- service/lifecycle ownership in `docs-viewer/services/docs_scope_manifest.py`
+- management capabilities in `docs-viewer/services/docs_management_capabilities_service.py`
+- management UI/actions around existing scope lifecycle
+- tests in `docs-viewer/tests/python/test_docs_management_service.py`
+
+Main design point: sub-scope lifecycle should mutate the parent scope’s `sub_scopes` array and create/delete nested source/output/publish roots. It must not create a top-level scope, route shell, default doc, or scope selector entry.
+
 ### 2. Sub-Scope Lifecycle Actions
 
 - [ ] Add management-service capability data for sub-scope create/delete availability per parent scope.
