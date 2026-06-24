@@ -44,7 +44,9 @@ def main(argv: list[str] | None = None) -> int:
         "Site validation passed: "
         f"{result.required_file_count} required files; "
         f"{result.required_directory_count} required directories; "
-        f"{result.docs_viewer_runtime_count} Docs Viewer runtime modules"
+        f"{result.docs_viewer_runtime_count} Docs Viewer runtime modules; "
+        f"{result.docs_viewer_route_count} Docs Viewer routes; "
+        f"{result.docs_viewer_route_file_count} Docs Viewer route files"
     )
     return 0
 
