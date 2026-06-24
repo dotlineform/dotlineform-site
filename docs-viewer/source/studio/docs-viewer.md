@@ -67,4 +67,5 @@ Those boundaries are intentional:
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) covers build mechanics, generated payloads, and command usage.
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) covers docs media paths, import staging, extraction, and media-copy behavior.
 - [Reports](/docs/?scope=studio&doc=docs-viewer-reports) covers report metadata, report modules, and access rules.
+- [Embedded Detail Documents](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents) covers sub-scope detail documents, the `docs_subscope` report, embedded detail URL state, and sub-scope build/publish contracts.
 - [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) records repo-level ownership boundaries for Docs Viewer source, runtime, config, services, and generated payloads.

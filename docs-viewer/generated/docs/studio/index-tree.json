@@ -301,12 +301,6 @@
           ]
         },
         {
-          "doc_id": "site-request-docs-viewer-embedded-detail-documents",
-          "title": "Docs Viewer Embedded Detail Documents Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json",
-          "ui_status": "draft"
-        },
-        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -494,6 +488,11 @@
           "doc_id": "scripts-docs-import",
           "title": "Documents Returned Package Script",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json"
+        },
+        {
+          "doc_id": "site-request-docs-viewer-embedded-detail-documents",
+          "title": "Embedded Detail Documents",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json"
         },
         {
           "doc_id": "docs-viewer-import-source-registry-spec",
@@ -1211,5 +1210,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-23T21:07:56Z"
+  "generated_at": "2026-06-24T21:57:15Z"
 }

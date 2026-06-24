@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-086d32cf1d1d69d3d7ec3f505567f25a",
-    "generated_at_utc": "2026-06-24T15:26:15Z",
+    "version": "blake2b-5874b669befce1efb119c18223d895e2",
+    "generated_at_utc": "2026-06-24T21:57:15Z",
     "count": 224
   },
   "entries": [
@@ -1257,35 +1257,6 @@
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
     },
     {
-      "id": "site-request-docs-viewer-embedded-detail-documents",
-      "kind": "doc",
-      "title": "Docs Viewer Embedded Detail Documents Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents",
-      "last_updated": "2026-06-24",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-24 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-embedded-detail-documents",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "embedded",
-        "detail",
-        "documents",
-        "docs viewer embedded detail documents request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-24",
-        "2026",
-        "06",
-        "24"
-      ],
-      "search_text": "site-request-docs-viewer-embedded-detail-documents site request docs viewer embedded detail documents docs viewer embedded detail documents request change requests change requests 2026-06-24 2026 06 24"
-    },
-    {
       "id": "site-request-docs-viewer-semantic-reference-editor",
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
@@ -2155,6 +2126,33 @@
         "06"
       ],
       "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-06-06 2026 06"
+    },
+    {
+      "id": "site-request-docs-viewer-embedded-detail-documents",
+      "kind": "doc",
+      "title": "Embedded Detail Documents",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents",
+      "last_updated": "2026-06-24",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-24 • Docs Viewer",
+      "search_terms": [
+        "site-request-docs-viewer-embedded-detail-documents",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "embedded",
+        "detail",
+        "documents",
+        "embedded detail documents",
+        "docs viewer",
+        "2026-06-24",
+        "2026",
+        "06",
+        "24"
+      ],
+      "search_text": "site-request-docs-viewer-embedded-detail-documents site request docs viewer embedded detail documents embedded detail documents docs viewer 2026-06-24 2026 06 24"
     },
     {
       "id": "docs-viewer-import-source-registry-spec",
