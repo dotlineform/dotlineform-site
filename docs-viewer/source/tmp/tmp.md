@@ -5,6 +5,9 @@ added_date: 2026-05-26
 last_updated: 2026-05-26
 ui_status: draft
 ---
+Docs Index Table
+viewer_report: docs_index_table
+viewer_report_access: public
 
 
 

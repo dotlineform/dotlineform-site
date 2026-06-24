@@ -13,9 +13,6 @@ viewable: true
 
 Support large Docs Viewer-owned detail document sets by loading detail documents inside an indexed parent or report document, rather than adding every detail document to the Docs Viewer index tree or global docs search.
 
-This request is a prerequisite for adding high-cardinality semantic reference kinds such as `tag`.
-The semantic-reference authoring work is tracked in [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor).
-
 The target pattern is a master/detail report inside a normal Docs Viewer document:
 
 - the indexed parent document remains the active Docs Viewer document
@@ -40,7 +37,7 @@ The better discovery surface is the report, not the Docs Viewer sidebar or globa
 For tag documents, the tag registry or Analytics app should own the source data, filters, grouping, aliases, status, and usage context exposed to the report through semantic targets or tokens.
 Docs Viewer should own the detail Markdown source, rendering pipeline, generated payload shape, sub-scope lifecycle, and embedded detail-document rendering surface.
 
-The revised ownership model treats these documents as a Docs Viewer sub-scope.
+The ownership model treats these documents as a Docs Viewer sub-scope.
 A sub-scope is a detail-document grouping under a normal scope, not a full navigable scope.
 For example:
 
@@ -83,7 +80,7 @@ List:
   Rhythm
 ```
 
-Selecting `Scale` changes the same indexed parent document into:
+Selecting tag `Scale` changes the same indexed parent document into:
 
 ```text
 Tags
@@ -96,33 +93,32 @@ Selected: Scale
 
 ## URL State
 
-The active Docs Viewer document should remain the indexed parent/report doc.
-The parent report document binds the generic report to a sub-scope.
-The URL only carries optional report detail state.
+- The active Docs Viewer document should remain the indexed parent/report doc.
+- The parent report document binds the generic report to a sub-scope.
+- The URL only carries optional report detail state.
 
 Generic shape:
 
 ```text
 /docs/?scope=<scope>&doc=<parent_doc_id>
-/docs/?scope=<scope>&doc=<parent_doc_id>&<detail_param>=<detail_doc_id>
+/docs/?scope=<scope>&doc=<parent_doc_id>&subdoc=<detail_doc_id>
 ```
 
-Example with the configured detail parameter `report_tag`:
+Example with the standard `subdoc` detail parameter:
 
 ```text
 /docs/?scope=studio&doc=analytics-tags
-/docs/?scope=studio&doc=analytics-tags&report_tag=scale
+/docs/?scope=studio&doc=analytics-tags&subdoc=scale
 ```
 
 In the second URL:
 
 - `doc=analytics-tags` is still the Docs Viewer selected document
-- `report_tag=scale` is report-owned state
+- `subdoc=scale` is report-owned state
 - refresh should reload the parent report and open the embedded tag detail
 - browser Back/Forward should move between report list/detail states without making the tag document a sidebar-selected doc
 
-Report state parameters should remain namespaced or clearly owned by the report.
-For a generic implementation, prefer report-prefixed state such as `report_tag=scale`.
+`subdoc` is the standard detail-state parameter for the generic `docs_subscope` report.
 
 ## Parent Report Config
 
@@ -131,14 +127,12 @@ A normal indexed document opts into the generic sub-scope report with front matt
 ```yaml
 viewer_report: docs_subscope
 viewer_report_subscope: tags
-viewer_report_detail_param: report_tag
 ```
 
 Required fields:
 
 - `viewer_report`: selects the generic `docs_subscope` report module
 - `viewer_report_subscope`: names the Docs Viewer sub-scope whose manifest the report loads
-- `viewer_report_detail_param`: names the report-owned URL query parameter containing the selected detail `doc_id`
 
 The sub-scope is configured by the parent document payload, not by a URL query parameter.
 This prevents a generic report from becoming an arbitrary sub-scope loader.
@@ -150,12 +144,12 @@ The `docs_subscope` report should follow this behavior:
 - receive normalized report config from the selected parent document payload
 - validate `viewer_report_subscope` against the selected scope's configured sub-scopes
 - load the sub-scope `manifest.json`
-- read the configured detail query parameter from the current URL
+- read the `subdoc` query parameter from the current URL
 - derive the detail payload URL from the selected scope, configured sub-scope, and selected detail `doc_id`
 - derive list labels and filter metadata from the parent report config, sub-scope config, or semantic target data
-- when the detail query parameter is absent, render the list from manifest `doc_ids`
-- when the detail query parameter is present and matches a manifest `doc_ids` entry, load the derived by-id payload URL and render it in the embedded detail region
-- when the detail query parameter is present but missing from the manifest, render a contained report error and keep the parent document selected
+- when `subdoc` is absent, render the list from manifest `doc_ids`
+- when `subdoc` is present and matches a manifest `doc_ids` entry, load the derived by-id payload URL and render it in the embedded detail region
+- when `subdoc` is present but missing from the manifest, render a contained report error and keep the parent document selected
 - update only report-owned URL state when list rows, back, or close actions are used
 - never update Docs Viewer selected-document state to the sub-scope detail document
 
@@ -219,14 +213,14 @@ They do not need to be unique across the whole parent scope.
 Runtime detail identity is resolved from:
 
 ```text
-<scope> + <parent_report_doc_id> + <detail_param_value>
+<scope> + <parent_report_doc_id> + <subdoc>
 ```
 
 The parent report document supplies the sub-scope through `viewer_report_subscope`.
 For example, this URL:
 
 ```text
-/docs/?scope=analysis&doc=analytics-tags&report_tag=scale
+/docs/?scope=analysis&doc=analytics-tags&subdoc=scale
 ```
 
 resolves `scale` through the `analytics-tags` report configuration.
@@ -257,7 +251,7 @@ The report derives all other information:
 
 - parent scope: current Docs Viewer scope
 - sub-scope: `viewer_report_subscope` from the parent document payload
-- selected detail id: value of `viewer_report_detail_param` from the current URL
+- selected detail id: value of `subdoc` from the current URL
 - by-id payload URL: sub-scope generated-data config plus selected detail id
 - list labels, grouping, filters, and search data: parent report config, sub-scope config, or semantic target data
 
@@ -388,7 +382,7 @@ The revised model depends on these constraints:
 - Sub-scope builders should still reuse the normal Docs Viewer Markdown, media-token, semantic-reference-token, link-rewriting, and payload-writing pipeline.
 - Published sub-scope payloads should include a minimal manifest, for example `site/assets/data/docs/scopes/<scope>/<sub-scope>/manifest.json`, so the report can validate and order detail ids without loading a tree or search index.
 - Detail ids are unique within their owning `<scope>/<sub-scope>`; cross-report references, logs, caches, and semantic-reference outputs need parent report context or a composite identity.
-- Report URL params should be report-owned and preferably prefixed, such as `report_tag=scale`, to avoid collisions with Docs Viewer route state.
+- `subdoc` should remain reserved as the standard detail-state URL parameter for `docs_subscope`; other reports should continue to use report-owned params.
 - `Delete sub-scope` needs preview and confirmation because it can remove source docs, working generated payloads, and published payloads.
 - Domain data should enter sub-scope documents and reports through semantic tokens or semantic target payloads, not by moving Docs Viewer rendering into Analytics or Studio app code.
 - Public sub-scope publishing should be handled by the existing parent-scope `Publish` action and should not introduce an implicit deploy-time copy step.
@@ -420,7 +414,7 @@ Detail docs may contain same-scope doc links, semantic references, or links to o
 The implementation should decide whether those links resolve to:
 
 - ordinary Docs Viewer routes
-- embedded report-detail URLs such as `?doc=analytics-tags&report_tag=scale`
+- embedded report-detail URLs such as `?doc=analytics-tags&subdoc=scale`
 - report-owned URLs supplied by the report
 
 For tag semantic references, the intended behavior is embedded report-detail navigation.
@@ -433,7 +427,7 @@ A semantic token such as:
 should resolve to the indexed tag report document with tag detail state, for example:
 
 ```text
-/docs/?scope=studio&doc=analytics-tags&report_tag=slow-looking
+/docs/?scope=studio&doc=analytics-tags&subdoc=slow-looking
 ```
 
 It should not resolve to a standalone non-indexed tag document route.
@@ -547,7 +541,6 @@ Manage behavior:
 - [ ] Add parent page front matter with `viewer_report: docs_subscope`.
 - [ ] Add parent page front matter with `viewer_report_access: public` when the report is intended for `/analysis/` or another public scope.
 - [ ] Add parent page front matter with `viewer_report_subscope`.
-- [ ] Add parent page front matter with `viewer_report_detail_param`.
 - [ ] Confirm the parent page remains the selected Docs Viewer document in list and detail URLs.
 
 ### 7. Public Report Promotion
@@ -567,7 +560,7 @@ Manage behavior:
 ### 8. Generic Report Shell
 
 - [ ] Add the `docs_subscope` report registry entry and allowlisted report module.
-- [ ] Make the `docs_subscope` report read `viewer_report_subscope` and `viewer_report_detail_param` from the selected parent document payload.
+- [ ] Make the `docs_subscope` report read `viewer_report_subscope` from the selected parent document payload.
 - [ ] Make the `docs_subscope` report load the configured sub-scope manifest.
 - [ ] Make the `docs_subscope` report render the list state from manifest `doc_ids`.
 - [ ] Make the `docs_subscope` report derive list labels and filters from parent report config, sub-scope config, or semantic target data.
@@ -596,7 +589,7 @@ Focused coverage should prove:
 - Back/close restores the list state
 - refresh with report-owned detail URL state reopens the same detail
 - the sidebar remains anchored to the parent/report doc
-- a parent document with `viewer_report: docs_subscope` passes `viewer_report_subscope` and `viewer_report_detail_param` into the report config
+- a parent document with `viewer_report: docs_subscope` passes `viewer_report_subscope` into the report config
 - the generic report loads the configured sub-scope manifest rather than reading a sub-scope from the URL
 - the manifest contains the required `doc_ids` field
 - the generic report derives by-id payload URLs from sub-scope config and selected detail id
