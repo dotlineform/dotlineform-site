@@ -54,22 +54,22 @@ The report has two main states.
 List state:
 
 - shows the sub-scope list or table
-- provides search/filter controls
 - lets the user select a row
 
 Detail state:
 
-- keeps only a single-row report toolbar visible, containing search/filter controls and the back action
+- keeps only a minimal report toolbar visible, containing the back/close action
 - completely hides the list and list header
 - renders the selected detail document inside the report surface
 - provides a back/close action that restores the list state
+
+Search and filter controls are intentionally out of scope for this request.
+They need a separate design for metadata, toolbar behavior, and URL state.
 
 Example flow:
 
 ```text
 Tags
-
-[Search tags...] [Group filter]
 
 List:
   Materiality
@@ -80,7 +80,7 @@ List:
 Selecting tag `Scale` changes the same indexed parent document into:
 
 ```text
-[Search tags...] [Group filter] [Back to all tags]
+[Back to all tags]
 
 <embedded Scale tag document>
 ```
@@ -140,7 +140,7 @@ The `docs_subscope` report should follow this behavior:
 - load the sub-scope `manifest.json`
 - read the `subdoc` query parameter from the current URL
 - derive the detail payload URL from the selected scope, configured sub-scope, and selected detail `doc_id`
-- derive list labels and filter metadata from the explicit report list metadata sources below
+- derive list labels from the explicit report list metadata sources below
 - when `subdoc` is absent, render the list from manifest `doc_ids`
 - when `subdoc` is present and matches a manifest `doc_ids` entry, load the derived by-id payload URL and render it in the embedded detail region
 - when `subdoc` is present but missing from the manifest, render a contained report error and keep the parent document selected
@@ -247,7 +247,7 @@ The report derives all other information:
 - sub-scope: `viewer_report_subscope` from the parent document payload
 - selected detail id: value of `subdoc` from the current URL
 - by-id payload URL: sub-scope generated-data config plus selected detail id
-- list labels, grouping, filters, and search data: the explicit report list metadata sources below
+- list labels: the explicit report list metadata sources below
 
 The comma-delimited format requires detail document ids to exclude commas.
 That should be enforced by the sub-scope builder.
@@ -259,7 +259,7 @@ If a report needs to render parent-child grouping or nested detail navigation la
 ## Report List Metadata Sources
 
 The minimal manifest only lists `doc_ids`.
-The `docs_subscope` report should read labels, grouping, filters, and search data from explicit runtime sources:
+The `docs_subscope` report should read labels from explicit runtime sources:
 
 - generated parent by-id payload in `docs-viewer/generated/docs/<scope>/by-id/<parent_doc_id>.json`
 - published parent by-id payload in `site/assets/data/docs/scopes/<scope>/by-id/<parent_doc_id>.json`
@@ -396,7 +396,7 @@ The model depends on these constraints:
 - `subdoc` should remain reserved as the standard detail-state URL parameter for `docs_subscope`; other reports should continue to use report-owned params.
 - `Delete sub-scope` needs preview and confirmation because it can remove source docs, working generated payloads, and published payloads.
 - Public sub-scope publishing should be handled by the existing parent-scope `Publish` action and should not introduce an implicit deploy-time copy step.
-- Public manifests should not repeat scope, sub-scope, title, payload URL, grouping, filter, or search data because those values are derived from the explicit report list metadata sources.
+- Public manifests should not repeat scope, sub-scope, title, payload URL, or label data because those values are derived from explicit report metadata sources.
 
 ## Build Entrypoint
 
@@ -444,11 +444,12 @@ Docs Viewer owns:
 
 The report owns:
 
-- filters and search inside the report
 - selected detail id
 - embedded detail payload loading
 - detail-region rendering
 - report-owned URL parameters
+
+Future search and filter controls, if added, should also remain report-owned and should not change the selected Docs Viewer document.
 
 The report should fetch the derived sub-scope by-id payload URL as report data.
 Fetching a detail payload must not update Docs Viewer selected-document state.
@@ -545,15 +546,15 @@ Manage behavior:
 - [x] Make the `docs_subscope` report read `viewer_report_subscope` from the selected parent document payload.
 - [x] Make the `docs_subscope` report load the configured sub-scope manifest.
 - [x] Make the `docs_subscope` report render the list state from manifest `doc_ids`.
-- [x] Make the `docs_subscope` report derive list labels and filters from the explicit report list metadata sources.
+- [x] Make the `docs_subscope` report derive list labels from explicit report metadata sources.
 
-Implemented step 8’s generic report shell. The `docs_subscope` report is registered, public-allowlisted, loads the configured sub-scope manifest, and renders the manifest `doc_ids` as a report-owned list. Public route shells now ship the shared report stylesheet so the promoted report renders with the same report list classes as local reports. The current shell does not load embedded detail payloads, mutate `subdoc` URL state, or expose the final search/filter/back toolbar; those remain in steps 9 and 10.
+Implemented step 8’s generic report shell. The `docs_subscope` report is registered, public-allowlisted, loads the configured sub-scope manifest, and renders the manifest `doc_ids` as a report-owned list. Public route shells now ship the shared report stylesheet so the promoted report renders with the same report list classes as local reports. The current shell does not load embedded detail payloads or mutate `subdoc` URL state; those remain in steps 9 and 10.
 
 ### 9. Embedded Detail View
 
 - [ ] Add embedded detail markup that uses the normal document content area with only minimal report controls and a simple divider, not a panel or card.
 - [ ] Make the `docs_subscope` report derive by-id payload URLs from scope config, sub-scope config, and selected detail id.
-- [ ] Make the `docs_subscope` report hide the list and list header completely in detail state, leaving only a single-row toolbar with search/filter/back controls.
+- [ ] Make the `docs_subscope` report hide the list and list header completely in detail state, leaving only a minimal back/close control.
 - [ ] Make the `docs_subscope` report render selected detail payload `content_html` inside the embedded detail section.
 - [ ] Preserve normal by-id metadata such as `title`, `last_updated`, and front matter-derived fields for detail-state labels and diagnostics.
 - [ ] Ensure detail rendering does not change Docs Viewer selected-document state.
