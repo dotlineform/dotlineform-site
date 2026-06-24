@@ -587,6 +587,29 @@ Next step:
 - [x] Ensure the public runtime only loads allowlisted public reports and does not expose manage/local reports.
 - [ ] Add public-route smoke coverage proving a `viewer_report_access: public` parent doc mounts its promoted report. This remains coupled to Step 8 because no public report module is allowlisted until `docs_subscope` exists.
 
+Implemented step 7’s public report promotion infrastructure.
+
+What changed:
+- Added public report mounting from [docs-viewer-public.js](/Users/dlf/Developer/dotlineform/dotlineform-site/site/docs-viewer/runtime/js/public/docs-viewer-public.js).
+- Added a public-only report bridge/controller:
+  - [docs-viewer-public-document-reports.js](/Users/dlf/Developer/dotlineform/dotlineform-site/site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js)
+  - [docs-viewer-public-reports.js](/Users/dlf/Developer/dotlineform/dotlineform-site/site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js)
+- Added public report registry projection at [public-reports.json](/Users/dlf/Developer/dotlineform/dotlineform-site/site/assets/data/docs/public-reports.json). It is intentionally empty until step 8 promotes `docs_subscope`.
+- Public route configs now point to `/assets/data/docs/public-reports.json`.
+- Migrated report access from `manage` to `local` in config/source docs and removed `manage` support from the report access check.
+- Public by-id payloads now include report metadata only for `viewer_report_access: public`; the compact public index tree stays slim.
+- Published [tags.json](/Users/dlf/Developer/dotlineform/dotlineform-site/site/assets/data/docs/scopes/analysis/by-id/tags.json) now carries `viewer_report`, `viewer_report_access`, and `viewer_report_subscope`.
+
+I updated the request checklist for step 7. One checkbox remains open by design: the smoke proving a promoted public report fully mounts depends on step 8 adding and allowlisting the actual `docs_subscope` module. The smoke now verifies the interim behavior: `/analysis/?doc=tags` keeps `doc=tags`, reads the public report registry, and shows a contained “not promoted” state without loading manage/local report runtime files.
+
+Verification passed:
+- `node --check` on changed JS modules
+- `py_compile` on changed Python modules and smoke
+- `pytest docs-viewer/tests/python/test_build_docs_python.py docs-viewer/tests/python/test_docs_viewer_service.py docs-viewer/tests/python/test_docs_publish_gate.py` → 58 passed
+- `pytest docs-viewer/tests/python/test_docs_management_service.py` → 41 passed
+- `docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root site` → passed
+- `git diff --check` → clean
+
 ### 8. Generic Report Shell
 
 - [ ] Add the `docs_subscope` report registry entry and allowlisted report module.
