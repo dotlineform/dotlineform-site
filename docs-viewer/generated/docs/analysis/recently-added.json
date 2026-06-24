@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "tags",
+      "title": "Tags",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/tags.json",
+      "added_date": "2026-06-24",
+      "parent_id": "analysis",
+      "parent_title": "Analysis"
+    },
+    {
       "doc_id": "3-symbols",
       "title": "3 symbols",
       "content_url": "/assets/data/docs/scopes/analysis/by-id/3-symbols.json",
@@ -15,5 +23,5 @@
       "added_date": "2026-04-26"
     }
   ],
-  "generated_at": "2026-06-10T15:13:56Z"
+  "generated_at": "2026-06-24T20:29:25Z"
 }

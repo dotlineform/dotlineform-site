@@ -567,11 +567,11 @@ Next step:
 
 ### 6. Parent Report Page
 
-- [ ] Manually create the indexed parent page that will host the sub-scope report.
-- [ ] Add parent page front matter with `viewer_report: docs_subscope`.
-- [ ] Add parent page front matter with `viewer_report_access: public` when the report is intended for `/analysis/` or another public scope.
-- [ ] Add parent page front matter with `viewer_report_subscope`.
-- [ ] Confirm the parent page remains the selected Docs Viewer document in list and detail URLs.
+- [x] Manually create the indexed parent page that will host the sub-scope report.
+- [x] Add parent page front matter with `viewer_report: docs_subscope`.
+- [x] Add parent page front matter with `viewer_report_access: public` when the report is intended for `/analysis/` or another public scope.
+- [x] Add parent page front matter with `viewer_report_subscope`.
+- [x] Confirm the parent page remains the selected Docs Viewer document in list and detail URLs.
 
 ### 7. Public Report Promotion
 

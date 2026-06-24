@@ -235,6 +235,7 @@ summary: Child summary
 ui_status: done
 parent_id: parent
 viewer_report: semantic_references
+viewer_report_subscope: tags
 ---
 # Child
 
@@ -390,6 +391,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert "[[ref:series:26]]" in content_html
     assert "[[ref:moment:dark-sky]]" in content_html
     assert child["viewer_report"] == "semantic_references"
+    assert child["viewer_report_subscope"] == "tags"
     assert child["date"] == "2026-06-02"
     assert child["date_display"] == "June 2026"
 
@@ -631,6 +633,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         "viewer_report_scope",
         "viewer_report_access",
         "viewer_report_preset",
+        "viewer_report_subscope",
     }
     public_recent_forbidden_keys = {
         "summary",
@@ -644,6 +647,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         "viewer_report_scope",
         "viewer_report_access",
         "viewer_report_preset",
+        "viewer_report_subscope",
         "viewable",
         "ui_status",
     }
@@ -660,6 +664,7 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         "viewer_report_scope",
         "viewer_report_access",
         "viewer_report_preset",
+        "viewer_report_subscope",
     }
 
     assert index_tree["schema"] == "docs_index_tree_v1"

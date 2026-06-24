@@ -44,6 +44,7 @@ class DocRecord:
     viewer_report_scope: str
     viewer_report_access: str
     viewer_report_preset: str
+    viewer_report_subscope: str
     body_markdown: str
 def parse_front_matter_value(raw_value: str) -> Any:
     value = raw_value.strip()
@@ -157,6 +158,7 @@ class SourceLoadingMixin:
                     viewer_report_scope=str(front_matter.get("viewer_report_scope") or "").strip(),
                     viewer_report_access=str(front_matter.get("viewer_report_access") or "").strip(),
                     viewer_report_preset=str(front_matter.get("viewer_report_preset") or "").strip(),
+                    viewer_report_subscope=str(front_matter.get("viewer_report_subscope") or "").strip(),
                     body_markdown=body_markdown,
                 )
             )
@@ -246,7 +248,13 @@ class SourceLoadingMixin:
             entry["summary"] = doc.summary
         if doc.ui_status:
             entry["ui_status"] = doc.ui_status
-        for key in ("viewer_report", "viewer_report_scope", "viewer_report_access", "viewer_report_preset"):
+        for key in (
+            "viewer_report",
+            "viewer_report_scope",
+            "viewer_report_access",
+            "viewer_report_preset",
+            "viewer_report_subscope",
+        ):
             value = getattr(doc, key)
             if value:
                 entry[key] = value
