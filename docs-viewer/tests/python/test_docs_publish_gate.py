@@ -178,6 +178,79 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
 
 
+def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["scopes"][1]["sub_scopes"] = [
+            {
+                "sub_scope": "tags",
+                "title": "Tags",
+                "source": "docs-viewer/source/library/tags",
+                "output": "docs-viewer/generated/docs/library/tags",
+                "publish_output": "site/assets/data/docs/scopes/library/tags",
+            }
+        ]
+        write_json(config_path, config)
+        write_json(repo_root / "docs-viewer/generated/docs/library/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/generated/docs/library/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
+        write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
+
+        preview = docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
+        applied = docs_publish_gate.publish_apply(repo_root, {"scope": "library", "confirm": True})
+
+        assert preview["operation"] == "confirm"
+        assert preview["sub_scopes"] == [
+            {
+                "sub_scope": "tags",
+                "changed": [
+                    "site/assets/data/docs/scopes/library/tags/by-id/scale.json",
+                    "site/assets/data/docs/scopes/library/tags/manifest.json",
+                ],
+                "removed": ["site/assets/data/docs/scopes/library/tags/by-id/old.json"],
+                "changed_count": 2,
+                "removed_count": 1,
+            }
+        ]
+        assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["removed"]
+        assert applied["operation"] == "apply"
+        public_manifest = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json").read_text(encoding="utf-8"))
+        public_scale = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json").read_text(encoding="utf-8"))
+
+        assert public_manifest == {"doc_ids": "scale"}
+        assert public_scale["title"] == "Scale"
+        assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").exists()
+
+
+def test_publish_rejects_configured_sub_scope_without_manifest() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        prepare_publish_repo(repo_root)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["scopes"][1]["sub_scopes"] = [
+            {
+                "sub_scope": "tags",
+                "title": "Tags",
+                "source": "docs-viewer/source/library/tags",
+                "output": "docs-viewer/generated/docs/library/tags",
+                "publish_output": "site/assets/data/docs/scopes/library/tags",
+            }
+        ]
+        write_json(config_path, config)
+        (repo_root / "docs-viewer/generated/docs/library/tags").mkdir(parents=True)
+
+        try:
+            docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})
+        except FileNotFoundError as exc:
+            assert "sub-scope tags manifest not found" in str(exc)
+        else:
+            raise AssertionError("publish should reject configured sub-scope output without manifest")
+
+
 def test_publish_apply_requires_confirmation() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)

@@ -528,10 +528,10 @@ Main design point: sub-scope lifecycle should mutate the parent scope’s `sub_s
 
 ### 5. Publish Flow
 
-- [ ] Add parent-scope publish preview support for configured sub-scope manifests and by-id payloads.
-- [ ] Add parent-scope publish apply support for copying configured sub-scope manifests and by-id payloads to the public publish root.
-- [ ] Ensure public sub-scope publishing remains part of the existing parent-scope `Publish` action.
-- [ ] Add focused publish tests for parent-scope publish preview/apply including configured sub-scope outputs.
+- [x] Add parent-scope publish preview support for configured sub-scope manifests and by-id payloads.
+- [x] Add parent-scope publish apply support for copying configured sub-scope manifests and by-id payloads to the public publish root.
+- [x] Ensure public sub-scope publishing remains part of the existing parent-scope `Publish` action.
+- [x] Add focused publish tests for parent-scope publish preview/apply including configured sub-scope outputs.
 
 ### 6. Parent Report Page
 

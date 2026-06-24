@@ -9,7 +9,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import DocsScopeConfig, is_public_readonly_scope, load_docs_scope_configs, resolve_scope_path
+from docs_scope_config import DocsScopeConfig, DocsSubScopeConfig, is_public_readonly_scope, load_docs_scope_configs, resolve_scope_path
 
 
 PUBLISH_SCHEMA_VERSION = "docs_publish_gate_v1"
@@ -58,6 +58,34 @@ def validate_publish_paths(repo_root: Path, config: DocsScopeConfig) -> dict[str
     if not paths["working_search_index"].is_file():
         raise FileNotFoundError(f"working search output not found: {repo_relative(repo_root, paths['working_search_index'])}")
     return paths
+
+
+def validate_sub_scope_publish_paths(repo_root: Path, config: DocsScopeConfig) -> dict[str, dict[str, Path]]:
+    paths_by_sub_scope: dict[str, dict[str, Path]] = {}
+    for sub_scope in config.sub_scopes:
+        paths = {
+            "working_docs_root": resolve_scope_path(repo_root, sub_scope.output),
+            "published_docs_root": (repo_root / sub_scope.publish_output).resolve(),
+        }
+        for label, path in paths.items():
+            repo_relative(repo_root, path)
+            if label.startswith("published_") and path.relative_to(repo_root.resolve()).parts[:2] == ("docs-viewer", "generated"):
+                raise ValueError(f"sub-scope {sub_scope.sub_scope} {label} must not publish under docs-viewer/generated")
+        if paths["working_docs_root"] == paths["published_docs_root"]:
+            raise ValueError(f"sub-scope {sub_scope.sub_scope} working docs root and published docs root must be separate")
+        if not paths["working_docs_root"].is_dir():
+            raise FileNotFoundError(
+                f"sub-scope {sub_scope.sub_scope} working docs output not found: "
+                f"{repo_relative(repo_root, paths['working_docs_root'])}"
+            )
+        manifest_path = paths["working_docs_root"] / "manifest.json"
+        if not manifest_path.is_file():
+            raise FileNotFoundError(
+                f"sub-scope {sub_scope.sub_scope} manifest not found: "
+                f"{repo_relative(repo_root, manifest_path)}"
+            )
+        paths_by_sub_scope[sub_scope.sub_scope] = paths
+    return paths_by_sub_scope
 
 
 def iter_files(root: Path) -> list[Path]:
@@ -272,8 +300,40 @@ def publishable_docs_files(working_root: Path, published_root: Path) -> dict[Pat
     return files
 
 
-def docs_diff(repo_root: Path, working_root: Path, published_root: Path) -> dict[str, list[str]]:
-    publishable_files = publishable_docs_files(working_root, published_root.relative_to(repo_root.resolve()))
+def publishable_parent_docs_files(config: DocsScopeConfig, working_root: Path, published_root: Path) -> dict[Path, bytes]:
+    files = publishable_docs_files(working_root, published_root)
+    sub_scope_prefixes = sub_scope_relative_prefixes(config)
+    if not sub_scope_prefixes:
+        return files
+    return {
+        rel: source_bytes
+        for rel, source_bytes in files.items()
+        if not any(path_is_relative_to(rel, prefix) for prefix in sub_scope_prefixes)
+    }
+
+
+def sub_scope_relative_prefixes(config: DocsScopeConfig) -> tuple[Path, ...]:
+    return tuple(Path(sub_scope.sub_scope) for sub_scope in config.sub_scopes)
+
+
+def path_is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+        return True
+    except ValueError:
+        return False
+
+
+def docs_diff(
+    repo_root: Path,
+    working_root: Path,
+    published_root: Path,
+    *,
+    publishable_files: dict[Path, bytes] | None = None,
+    ignored_existing_prefixes: tuple[Path, ...] = (),
+) -> dict[str, list[str]]:
+    if publishable_files is None:
+        publishable_files = publishable_docs_files(working_root, published_root.relative_to(repo_root.resolve()))
     changed: list[str] = []
     removed: list[str] = []
     for rel, source_bytes in publishable_files.items():
@@ -282,9 +342,36 @@ def docs_diff(repo_root: Path, working_root: Path, published_root: Path) -> dict
             changed.append(repo_relative(repo_root, target_path))
     for target_path in iter_files(published_root):
         rel = target_path.relative_to(published_root)
+        if any(path_is_relative_to(rel, prefix) for prefix in ignored_existing_prefixes):
+            continue
         if rel not in publishable_files:
             removed.append(repo_relative(repo_root, target_path))
     return {"changed": changed, "removed": removed}
+
+
+def parent_docs_diff(repo_root: Path, config: DocsScopeConfig, working_root: Path, published_root: Path) -> dict[str, list[str]]:
+    return docs_diff(
+        repo_root,
+        working_root,
+        published_root,
+        publishable_files=publishable_parent_docs_files(config, working_root, published_root.relative_to(repo_root.resolve())),
+        ignored_existing_prefixes=sub_scope_relative_prefixes(config),
+    )
+
+
+def sub_scope_docs_diff(
+    repo_root: Path,
+    sub_scope: DocsSubScopeConfig,
+    paths: dict[str, Path],
+) -> dict[str, Any]:
+    diff = docs_diff(repo_root, paths["working_docs_root"], paths["published_docs_root"])
+    return {
+        "sub_scope": sub_scope.sub_scope,
+        "changed": diff["changed"],
+        "removed": diff["removed"],
+        "changed_count": len(diff["changed"]),
+        "removed_count": len(diff["removed"]),
+    }
 
 
 def search_diff(repo_root: Path, working_index: Path, published_index: Path) -> dict[str, list[str]]:
@@ -296,10 +383,15 @@ def search_diff(repo_root: Path, working_index: Path, published_index: Path) -> 
 def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     scope, config = normalize_scope(repo_root, body.get("scope"))
     paths = validate_publish_paths(repo_root, config)
-    docs = docs_diff(repo_root, paths["working_docs_root"], paths["published_docs_root"])
+    sub_scope_paths = validate_sub_scope_publish_paths(repo_root, config)
+    docs = parent_docs_diff(repo_root, config, paths["working_docs_root"], paths["published_docs_root"])
+    sub_scopes = [
+        sub_scope_docs_diff(repo_root, sub_scope, sub_scope_paths[sub_scope.sub_scope])
+        for sub_scope in config.sub_scopes
+    ]
     search = search_diff(repo_root, paths["working_search_index"], paths["published_search_index"])
-    changed = len(docs["changed"]) + len(search["changed"])
-    removed = len(docs["removed"]) + len(search["removed"])
+    changed = len(docs["changed"]) + len(search["changed"]) + sum(item["changed_count"] for item in sub_scopes)
+    removed = len(docs["removed"]) + len(search["removed"]) + sum(item["removed_count"] for item in sub_scopes)
     return {
         "ok": True,
         "schema_version": PUBLISH_SCHEMA_VERSION,
@@ -311,6 +403,7 @@ def publish_status(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         "up_to_date": changed == 0 and removed == 0,
         "paths": {key: repo_relative(repo_root, value) for key, value in paths.items()},
         "docs": docs,
+        "sub_scopes": sub_scopes,
         "search": search,
         "summary_text": f"Publish status for {scope}: {changed} changed, {removed} stale.",
     }
@@ -326,15 +419,25 @@ def publish_confirm(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def copy_tree(repo_root: Path, source_root: Path, target_root: Path) -> None:
+def copy_tree(
+    repo_root: Path,
+    source_root: Path,
+    target_root: Path,
+    *,
+    publishable_files: dict[Path, bytes] | None = None,
+    ignored_existing_prefixes: tuple[Path, ...] = (),
+) -> None:
     target_root.mkdir(parents=True, exist_ok=True)
-    publishable_files = publishable_docs_files(source_root, target_root.relative_to(repo_root.resolve()))
+    if publishable_files is None:
+        publishable_files = publishable_docs_files(source_root, target_root.relative_to(repo_root.resolve()))
     for rel, source_bytes in publishable_files.items():
         target_path = target_root / rel
         target_path.parent.mkdir(parents=True, exist_ok=True)
         write_bytes_atomic(target_path, source_bytes)
     for target_path in reversed(iter_files(target_root)):
         rel = target_path.relative_to(target_root)
+        if any(path_is_relative_to(rel, prefix) for prefix in ignored_existing_prefixes):
+            continue
         if rel not in publishable_files:
             target_path.unlink()
     for directory in sorted((path for path in target_root.rglob("*") if path.is_dir()), key=lambda path: len(path.parts), reverse=True):
@@ -364,7 +467,21 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload = publish_confirm(repo_root, body)
     _scope, config = normalize_scope(repo_root, payload["scope"])
     paths = validate_publish_paths(repo_root, config)
-    copy_tree(repo_root, paths["working_docs_root"], paths["published_docs_root"])
+    sub_scope_paths = validate_sub_scope_publish_paths(repo_root, config)
+    copy_tree(
+        repo_root,
+        paths["working_docs_root"],
+        paths["published_docs_root"],
+        publishable_files=publishable_parent_docs_files(
+            config,
+            paths["working_docs_root"],
+            paths["published_docs_root"].relative_to(repo_root.resolve()),
+        ),
+        ignored_existing_prefixes=sub_scope_relative_prefixes(config),
+    )
+    for sub_scope in config.sub_scopes:
+        sub_paths = sub_scope_paths[sub_scope.sub_scope]
+        copy_tree(repo_root, sub_paths["working_docs_root"], sub_paths["published_docs_root"])
     copy_file_atomic(paths["working_search_index"], paths["published_search_index"])
     payload["operation"] = "apply"
     payload["applied"] = True
