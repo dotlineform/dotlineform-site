@@ -254,6 +254,16 @@
   text-underline-offset: 2px;
 }
 
+.docsViewerReport__subscopeButton{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+}
+
 .docsViewerReport__cellMeta{
   min-width: 0;
   color: var(--docs-viewer-muted);
@@ -404,6 +414,46 @@
   padding: 0.72rem 0;
   color: var(--docs-viewer-muted);
   border-bottom: 1px solid var(--docs-viewer-border);
+}
+
+.docsReportDetail{
+  display: grid;
+  gap: var(--docs-viewer-space-4);
+  max-width: 100%;
+}
+
+.docsViewerReport[data-report-state="detail"]{
+  max-width: var(--docs-viewer-measure);
+  font-size: 1rem;
+  line-height: var(--line-loose, 1.7);
+}
+
+.docsReportDetail__header{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+  padding-bottom: var(--docs-viewer-space-3);
+  border-bottom: 1px solid var(--docs-viewer-border);
+  font-size: var(--text-sm, var(--docs-viewer-font-small));
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsReportDetail__back{
+  min-width: 0;
+}
+
+.docsReportDetail__title{
+  margin: 0;
+  color: var(--docs-viewer-muted);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsReportDetail__body{
+  max-width: 100%;
+  margin: 0;
+  font-size: 1rem;
+  line-height: var(--line-loose, 1.7);
 }
 
 .docsViewerReport__changeTitle{

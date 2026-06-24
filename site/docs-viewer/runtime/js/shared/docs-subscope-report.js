@@ -81,6 +81,37 @@ function byIdUrlBase(record) {
   return cleanString(record && (record.byIdUrlBase || record.by_id_url_base)).replace(/\/+$/, "");
 }
 
+function currentSubdocId() {
+  if (typeof window === "undefined" || !window.location) return "";
+  return cleanString(new URLSearchParams(window.location.search).get("subdoc"));
+}
+
+function byIdPayloadUrl(state, docId) {
+  if (!state.byIdUrlBase) return "";
+  return state.byIdUrlBase + "/" + encodeURIComponent(docId) + ".json";
+}
+
+function writeSubdocUrl(state, docId, mode) {
+  if (typeof window === "undefined" || !window.history || !window.location) return;
+  var url = new URL(window.location.href);
+  if (state.parentDocId) url.searchParams.set("doc", state.parentDocId);
+  if (docId) {
+    url.searchParams.set("subdoc", docId);
+  } else {
+    url.searchParams.delete("subdoc");
+  }
+  var nextState = Object.assign({}, window.history.state || {}, {
+    docId: state.parentDocId || url.searchParams.get("doc") || "",
+    hash: url.hash ? url.hash.slice(1) : "",
+    reportParams: docId ? { subdoc: docId } : {}
+  });
+  if (mode === "replace") {
+    window.history.replaceState(nextState, "", url.pathname + url.search + url.hash);
+    return;
+  }
+  window.history.pushState(nextState, "", url.pathname + url.search + url.hash);
+}
+
 function renderStatus(state, count) {
   var scopeTitle = subScopeTitle(state.subScope, state.subScopeId);
   state.statusNode.textContent = count === 1 ? "1 " + scopeTitle + " document" : count + " " + scopeTitle + " documents";
@@ -98,14 +129,19 @@ function appendDocRow(state, docId) {
   row.className = "docsViewerReport__row";
   row.dataset.reportSubdocId = docId;
 
-  var title = document.createElement("span");
-  title.className = "docsViewerReport__cellMeta";
+  var title = document.createElement("button");
+  title.className = "docsViewerReport__cellLink docsViewerReport__subscopeButton";
+  title.type = "button";
 
   var titleText = document.createElement("span");
   titleText.className = "docsViewerReport__title";
   titleText.textContent = humanize(docId) || docId;
 
   title.appendChild(titleText);
+  title.addEventListener("click", function () {
+    writeSubdocUrl(state, docId, "push");
+    renderDetailById(state, docId);
+  });
   row.appendChild(title);
   state.rowsNode.appendChild(row);
 }
@@ -134,7 +170,7 @@ function renderShell(context, subScope) {
   root.appendChild(status);
   root.appendChild(table);
 
-  return { statusNode: status, rowsNode: rows };
+  return { statusNode: status, tableNode: table, rowsNode: rows };
 }
 
 function renderRows(state, docIds) {
@@ -152,8 +188,91 @@ function renderRows(state, docIds) {
   });
 }
 
+function renderListView(state) {
+  state.root.dataset.reportState = "list";
+  state.tableNode.hidden = false;
+  state.statusNode.hidden = false;
+  if (state.detailNode) state.detailNode.hidden = true;
+  renderRows(state, state.docIds);
+}
+
+function detailTitle(payload, fallback) {
+  return cleanString(payload && payload.title) || humanize(fallback) || fallback;
+}
+
+function renderDetailShell(state, docId) {
+  if (state.detailNode) state.detailNode.remove();
+
+  var titleId = "docs-report-detail-title-" + cleanId(state.subScopeId || "subscope");
+  var section = document.createElement("section");
+  section.className = "docsReportDetail";
+  section.setAttribute("aria-labelledby", titleId);
+
+  var header = document.createElement("div");
+  header.className = "docsReportDetail__header";
+
+  var back = document.createElement("button");
+  back.className = "docsViewerReport__button docsReportDetail__back";
+  back.type = "button";
+  back.textContent = "Back to all " + subScopeTitle(state.subScope, state.subScopeId).toLowerCase();
+  back.addEventListener("click", function () {
+    writeSubdocUrl(state, "", "push");
+    renderListView(state);
+  });
+
+  var title = document.createElement("p");
+  title.className = "docsReportDetail__title";
+  title.id = titleId;
+  title.textContent = "Loading " + (humanize(docId) || docId) + "...";
+
+  var body = document.createElement("article");
+  body.className = "docsReportDetail__body docsViewer__content content";
+
+  header.appendChild(back);
+  header.appendChild(title);
+  section.appendChild(header);
+  section.appendChild(body);
+  state.root.appendChild(section);
+  state.detailNode = section;
+  state.detailTitleNode = title;
+  state.detailBodyNode = body;
+}
+
+function renderDetailPayload(state, docId, payload) {
+  state.detailPayloads[docId] = payload;
+  state.detailNode.dataset.reportSubdocId = docId;
+  state.detailNode.dataset.reportSubdocTitle = detailTitle(payload, docId);
+  state.detailNode.dataset.reportSubdocUpdated = cleanString(payload && payload.last_updated);
+  state.detailTitleNode.textContent = detailTitle(payload, docId);
+  state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
+}
+
+function renderDetailById(state, docId) {
+  state.root.dataset.reportState = "detail";
+  state.tableNode.hidden = true;
+  state.statusNode.hidden = true;
+  renderDetailShell(state, docId);
+
+  var url = byIdPayloadUrl(state, docId);
+  if (!url) {
+    renderError(state.root, "Docs sub-scope by-id payload path is not configured: " + state.subScopeId);
+    return Promise.resolve(true);
+  }
+
+  return fetchJson(url, "Failed to load docs sub-scope detail payload")
+    .then(function (payload) {
+      renderDetailPayload(state, docId, payload);
+      return true;
+    })
+    .catch(function (error) {
+      renderError(state.root, error && error.message ? error.message : "Failed to render docs sub-scope detail.");
+      return true;
+    });
+}
+
 function renderError(root, message) {
   clearNode(root);
+  root.dataset.reportState = "error";
   var note = document.createElement("p");
   note.className = "docsViewerReport__status is-error";
   note.textContent = message;
@@ -185,16 +304,30 @@ export function mountDocsSubscopeReport(context) {
   var refs = renderShell(context, subScope);
   refs.statusNode.textContent = "Loading " + subScopeTitle(subScope, subScopeIdValue) + "...";
   var state = {
+    root: root,
+    parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     subScope: subScope,
     subScopeId: subScopeIdValue,
     byIdUrlBase: byIdUrlBase(subScope),
+    docIds: [],
+    detailPayloads: {},
     statusNode: refs.statusNode,
+    tableNode: refs.tableNode,
     rowsNode: refs.rowsNode
   };
 
   return fetchJson(url, "Failed to load docs sub-scope manifest")
     .then(function (payload) {
-      renderRows(state, manifestDocIds(payload));
+      state.docIds = manifestDocIds(payload);
+      var selectedDetailId = currentSubdocId();
+      if (selectedDetailId) {
+        if (state.docIds.indexOf(selectedDetailId) === -1) {
+          renderError(root, "Docs sub-scope detail is not listed: " + selectedDetailId);
+          return true;
+        }
+        return renderDetailById(state, selectedDetailId);
+      }
+      renderListView(state);
       return true;
     })
     .catch(function (error) {

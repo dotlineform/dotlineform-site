@@ -140,6 +140,13 @@ export function initDocsViewerRouteWorkflow(context) {
     return (new URLSearchParams(window.location.search).get("q") || "").trim();
   }
 
+  function currentReportRouteParams(docId) {
+    var params = new URLSearchParams(window.location.search);
+    if ((params.get("doc") || "") !== docId) return {};
+    var subdoc = (params.get("subdoc") || "").trim();
+    return subdoc ? { subdoc: subdoc } : {};
+  }
+
   function isManagementContext() {
     return allowManagement();
   }
@@ -183,7 +190,7 @@ export function initDocsViewerRouteWorkflow(context) {
     });
   }
 
-  function setHistory(docId, hash, query, mode) {
+  function setHistory(docId, hash, query, mode, reportParams) {
     setViewerHistory({
       docId: docId,
       hash: hash,
@@ -192,6 +199,7 @@ export function initDocsViewerRouteWorkflow(context) {
       mode: mode,
       origin: window.location.origin,
       query: query,
+      reportParams: reportParams || currentReportRouteParams(docId),
       viewerBaseUrl: viewerBaseUrl(),
       viewerScope: viewerScope()
     });
@@ -233,6 +241,7 @@ export function initDocsViewerRouteWorkflow(context) {
       handlePayloadError: context.handlePayloadError,
       hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
+      reportParams: options && options.reportParams ? options.reportParams : currentReportRouteParams(docId),
       renderBookmarkUi: context.renderBookmarkUi,
       renderLoadingState: context.renderDocLoadingState,
       renderPayload: context.renderPayload,
@@ -384,7 +393,8 @@ export function initDocsViewerRouteWorkflow(context) {
       }
       loadDoc(route.docId, {
         historyMode: "push",
-        hash: route.hash
+        hash: route.hash,
+        reportParams: route.reportParams || {}
       });
     });
   }

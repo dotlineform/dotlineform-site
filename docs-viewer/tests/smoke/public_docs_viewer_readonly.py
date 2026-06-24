@@ -208,6 +208,74 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
         raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
     if "/assets/data/docs/scopes/analysis/tags/manifest.json" not in paths:
         raise AssertionError(f"public report did not read sub-scope manifest; saw {sorted(paths)!r}")
+    page.locator(".docsViewerReport__row[data-report-subdoc-id='ordered'] .docsViewerReport__subscopeButton").click()
+    page.wait_for_function(
+        """() => {
+            const report = document.querySelector(".docsViewerReport");
+            const active = document.querySelector(".docsViewer__navLink.is-active");
+            const detail = document.querySelector(".docsReportDetail__body");
+            return report &&
+                report.dataset.reportState === "detail" &&
+                active &&
+                active.dataset.docId === "tags" &&
+                detail &&
+                /form:ordered/.test(detail.textContent || "") &&
+                new URL(location.href).searchParams.get("doc") === "tags" &&
+                new URL(location.href).searchParams.get("subdoc") === "ordered";
+        }""",
+        timeout=timeout_ms,
+    )
+    page.go_back(wait_until="domcontentloaded")
+    page.wait_for_function(
+        """() => {
+            const report = document.querySelector(".docsViewerReport");
+            return report &&
+                report.dataset.reportState === "list" &&
+                !new URL(location.href).searchParams.has("subdoc") &&
+                document.querySelectorAll(".docsViewerReport__row").length === 3;
+        }""",
+        timeout=timeout_ms,
+    )
+    page.go_forward(wait_until="domcontentloaded")
+    page.wait_for_function(
+        """() => {
+            const detail = document.querySelector(".docsReportDetail__body");
+            return document.querySelector(".docsViewerReport")?.dataset.reportState === "detail" &&
+                /form:ordered/.test(detail?.textContent || "") &&
+                new URL(location.href).searchParams.get("subdoc") === "ordered";
+        }""",
+        timeout=timeout_ms,
+    )
+    page.locator(".docsReportDetail__back").click()
+    page.wait_for_function(
+        """() => document.querySelector(".docsViewerReport")?.dataset.reportState === "list" &&
+            !new URL(location.href).searchParams.has("subdoc")""",
+        timeout=timeout_ms,
+    )
+    page.goto(route_url(base_url, "/analysis/?doc=tags&subdoc=bird"), wait_until="domcontentloaded")
+    wait_for_rendered_doc(page, "tags", "Tags", timeout_ms)
+    page.wait_for_function(
+        """() => {
+            const active = document.querySelector(".docsViewer__navLink.is-active");
+            const detail = document.querySelector(".docsReportDetail__body");
+            return active &&
+                active.dataset.docId === "tags" &&
+                document.querySelector(".docsViewerReport")?.dataset.reportState === "detail" &&
+                /subject:bird/.test(detail?.textContent || "") &&
+                new URL(location.href).searchParams.get("doc") === "tags" &&
+                new URL(location.href).searchParams.get("subdoc") === "bird";
+        }""",
+        timeout=timeout_ms,
+    )
+    page.goto(route_url(base_url, "/analysis/?doc=tags&subdoc=missing-detail"), wait_until="domcontentloaded")
+    wait_for_rendered_doc(page, "tags", "Tags", timeout_ms)
+    page.wait_for_function(
+        """() => document.querySelector(".docsViewerReport")?.dataset.reportState === "error" &&
+            /missing-detail/.test(document.querySelector(".docsViewerReport")?.textContent || "") &&
+            document.querySelector(".docsViewer__navLink.is-active")?.dataset.docId === "tags" """,
+        timeout=timeout_ms,
+    )
+    paths = request_paths(request_urls)
     blocked = [
         path for path in paths
         if path in {

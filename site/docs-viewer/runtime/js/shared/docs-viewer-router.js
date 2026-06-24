@@ -8,6 +8,11 @@ export function buildViewerUrl(options) {
   if (typeof settings.query === "string" && settings.query.trim()) {
     url.searchParams.set("q", settings.query.trim());
   }
+  Object.entries(settings.reportParams || {}).forEach(function (entry) {
+    var key = String(entry[0] || "").trim();
+    var value = String(entry[1] == null ? "" : entry[1]).trim();
+    if (key && value) url.searchParams.set(key, value);
+  });
   url.hash = settings.hash || "";
   return url.pathname + url.search + url.hash;
 }
@@ -51,16 +56,18 @@ export function routeFromAnchorHref(href, options) {
 
   var docId = url.searchParams.get("doc");
   if (!docId) return null;
+  var subdoc = String(url.searchParams.get("subdoc") || "").trim();
 
   return {
     docId: docId,
+    reportParams: subdoc ? { subdoc: subdoc } : {},
     hash: url.hash ? url.hash.slice(1) : ""
   };
 }
 
-export function writeViewerHistory(history, docId, url, hash, query, mode) {
+export function writeViewerHistory(history, docId, url, hash, query, mode, reportParams) {
   if (mode === "none") return;
-  var nextState = { docId: docId, hash: hash || "", q: query || "" };
+  var nextState = { docId: docId, hash: hash || "", q: query || "", reportParams: reportParams || {} };
   if (mode === "replace") {
     history.replaceState(nextState, "", url);
     return;
@@ -77,7 +84,8 @@ export function setViewerHistory(options) {
     nextUrl,
     settings.hash,
     settings.query,
-    settings.mode
+    settings.mode,
+    settings.reportParams
   );
   return nextUrl;
 }
@@ -263,7 +271,8 @@ export function loadViewerDoc(options) {
       docId: targetDocId,
       historyMode: mode === "none" ? "replace" : mode,
       hash: hash,
-      expandTrail: shouldExpandTrail
+      expandTrail: shouldExpandTrail,
+      reportParams: settings.reportParams
     }));
   }
 
@@ -288,7 +297,7 @@ export function loadViewerDoc(options) {
     settings.renderBookmarkUi();
   }
   if (typeof settings.setHistory === "function") {
-    settings.setHistory(docId, hash, "", mode);
+    settings.setHistory(docId, hash, "", mode, settings.reportParams || {});
   }
 
   if (state && state.payloadCache && state.payloadCache.has(docId)) {

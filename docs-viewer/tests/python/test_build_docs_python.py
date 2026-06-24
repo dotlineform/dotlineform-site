@@ -470,6 +470,20 @@ def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() ->
         ]
         write_json(config_path, payload)
         write_text(
+            root / "docs-viewer/source/studio/tags-report.md",
+            """---
+doc_id: tags-report
+title: Tags
+added_date: 2026-06-20
+last_updated: 2026-06-21
+parent_id: ""
+viewer_report: docs_subscope
+viewer_report_subscope: tags
+---
+# Tags
+""",
+        )
+        write_text(
             root / "docs-viewer/source/studio/tags/detail.md",
             """---
 doc_id: detail
@@ -516,7 +530,8 @@ Related body.
     assert detail["title"] == "Detail"
     assert detail["last_updated"] == "2026-06-21"
     assert detail["source_path"] == "detail.md"
-    assert 'href="/docs/?scope=studio&doc=related"' in detail["content_html"]
+    assert detail["viewer_url"] == "/docs/?scope=studio&doc=tags-report&subdoc=detail"
+    assert 'href="/docs/?scope=studio&doc=tags-report&subdoc=related"' in detail["content_html"]
     assert related["parent_id"] == "detail"
     assert not (root / "docs-viewer/generated/docs/studio/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/index-tree.json").exists()

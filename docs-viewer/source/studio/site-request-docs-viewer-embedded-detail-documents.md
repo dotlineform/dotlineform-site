@@ -552,19 +552,23 @@ Implemented step 8’s generic report shell. The `docs_subscope` report is regis
 
 ### 9. Embedded Detail View
 
-- [ ] Add embedded detail markup that uses the normal document content area with only minimal report controls and a simple divider, not a panel or card.
-- [ ] Make the `docs_subscope` report derive by-id payload URLs from scope config, sub-scope config, and selected detail id.
-- [ ] Make the `docs_subscope` report hide the list and list header completely in detail state, leaving only a minimal back/close control.
-- [ ] Make the `docs_subscope` report render selected detail payload `content_html` inside the embedded detail section.
-- [ ] Preserve normal by-id metadata such as `title`, `last_updated`, and front matter-derived fields for detail-state labels and diagnostics.
-- [ ] Ensure detail rendering does not change Docs Viewer selected-document state.
-- [ ] Add contained report error states for unknown sub-scopes, missing manifests, unknown detail ids, and failed detail payload loads.
+- [x] Add embedded detail markup that uses the normal document content area with only minimal report controls and a simple divider, not a panel or card.
+- [x] Make the `docs_subscope` report derive by-id payload URLs from scope config, sub-scope config, and selected detail id.
+- [x] Make the `docs_subscope` report hide the list and list header completely in detail state, leaving only a minimal back/close control.
+- [x] Make the `docs_subscope` report render selected detail payload `content_html` inside the embedded detail section.
+- [x] Preserve normal by-id metadata such as `title`, `last_updated`, and front matter-derived fields for detail-state labels and diagnostics.
+- [x] Ensure detail rendering does not change Docs Viewer selected-document state.
+- [x] Add contained report error states for unknown sub-scopes, missing manifests, unknown detail ids, and failed detail payload loads.
+
+Implemented step 9’s embedded detail view. The shared `docs_subscope` report now derives sub-scope by-id payload URLs from browser-facing scope config, supports report-owned detail rendering from in-report row selection, hides the manifest list while a detail is open, and renders the selected detail document’s normal `content_html` inside a contained detail section that reuses Docs Viewer document styling. Detail payload metadata remains available on the detail state for labels and diagnostics, and detail rendering does not update Docs Viewer selected-document state. URL/history mutation, direct `subdoc` refresh behavior, Back/Forward behavior, and sub-scope detail link rewriting remain in step 10.
 
 ### 10. URL State And Links
 
-- [ ] Add report URL-state handling for selecting a detail row, refreshing a detail URL, Back/Forward, and returning to the list.
-- [ ] Add link resolution for sub-scope details so detail links resolve to the parent report document plus report detail state.
-- [ ] Add focused report-runtime tests for list state, detail state, URL refresh, Back/Forward, and missing-detail errors.
+- [x] Add report URL-state handling for selecting a detail row, refreshing a detail URL, Back/Forward, and returning to the list.
+- [x] Add link resolution for sub-scope details so detail links resolve to the parent report document plus report detail state.
+- [x] Add focused report-runtime tests for list state, detail state, URL refresh, Back/Forward, and missing-detail errors.
+
+Implemented step 10’s report-owned URL state and detail-link routing. The shared route helpers now preserve the reserved `subdoc` parameter when the active route still points at the indexed parent document, while normal document navigation clears it. The `docs_subscope` report pushes `subdoc` when a row is selected, clears it from the report back control, and direct `subdoc` URLs reload the parent report into detail state without changing Docs Viewer selected-document state. Sub-scope builders now rewrite same-sub-scope Markdown detail links through the matching indexed parent `docs_subscope` report URL, using `doc=<parent_report_doc_id>&subdoc=<detail_doc_id>`. Focused public route smoke coverage now exercises list state, detail row selection, direct detail refresh, browser Back/Forward, report back, and missing-detail error state.
 
 ## Tests
 

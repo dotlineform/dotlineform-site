@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from .common import (
     DocsScopeConfig,
@@ -32,10 +33,42 @@ class SubScopeDocsBuilder(DocsDataBuilder):
         )
         self.sub_scope_id = sub_scope.sub_scope
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
+        self._parent_report_doc_id: str | None = None
 
     def output_url_dir(self) -> Path:
         output = self.sub_scope_config.publish_output if self.public_readonly_scope else self.sub_scope_config.output
         return resolve_scope_path(self.repo_root, output)
+
+    def parent_report_doc_id(self) -> str:
+        if self._parent_report_doc_id is not None:
+            return self._parent_report_doc_id
+        parent_docs = DocsDataBuilder(repo_root=self.repo_root, config=self.config).load_docs()
+        matching = [
+            doc.doc_id for doc in parent_docs
+            if doc.viewer_report == "docs_subscope" and doc.viewer_report_subscope == self.sub_scope_id
+        ]
+        if len(matching) == 1:
+            self._parent_report_doc_id = matching[0]
+        else:
+            if len(matching) > 1:
+                self.warnings.append(
+                    "Sub-scope detail links are ambiguous for "
+                    f"{self.scope_id}/{self.sub_scope_id}; matching parent reports: {', '.join(sorted(matching))}"
+                )
+            self._parent_report_doc_id = ""
+        return self._parent_report_doc_id
+
+    def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
+        parent_doc_id = self.parent_report_doc_id()
+        if not parent_doc_id:
+            return super().viewer_url_for(doc_id, anchor)
+        pairs: list[str] = []
+        if self.include_scope_param and self.scope_id:
+            pairs.append(f"scope={quote(self.scope_id)}")
+        pairs.append(f"doc={quote(parent_doc_id)}")
+        pairs.append(f"subdoc={quote(str(doc_id))}")
+        url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
+        return f"{url}#{anchor}" if anchor else url
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
         return self.metadata_entry(doc, docs)
