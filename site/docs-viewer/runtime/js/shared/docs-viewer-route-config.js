@@ -291,6 +291,7 @@ export function routeConfigScopeProjection(scopeConfig, options) {
   var fallbackPath = windowRef && windowRef.location ? windowRef.location.pathname : "";
   var viewerBaseUrl = allowScopeQuery ? (routeViewerBaseUrl || fallbackPath) : cleanString(config.viewerBaseUrl);
   var includeScopeParam = allowScopeQuery ? true : Boolean(config.includeScopeParam);
+  var subScopes = Array.isArray(config.subScopes) ? config.subScopes : [];
   return {
     defaultRouteDocId: cleanString(config.defaultDocId),
     includeScopeParam: includeScopeParam,
@@ -301,6 +302,12 @@ export function routeConfigScopeProjection(scopeConfig, options) {
     viewerPathname: windowRef && windowRef.location
       ? new URL(viewerBaseUrl || fallbackPath, windowRef.location.origin).pathname
       : viewerBaseUrl,
-    viewerScope: cleanString(config.scopeId)
+    viewerScope: cleanString(config.scopeId),
+    subScopes: subScopes,
+    subScopesById: config.subScopesById instanceof Map
+      ? config.subScopesById
+      : new Map(subScopes.map(function (subScopeConfig) {
+        return [cleanString(subScopeConfig.subScope), subScopeConfig];
+      }))
   };
 }

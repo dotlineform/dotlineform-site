@@ -12,7 +12,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS, NESTED_SOURCE_SCOPES, SCOPE_ROOTS, resolve_scope_path
+from docs_scope_config import (
+    DOCS_SCOPE_CONFIGS,
+    SCOPE_ROOTS,
+    path_is_under_configured_sub_scope_source,
+    resolve_scope_path,
+)
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
@@ -177,8 +182,18 @@ def scope_root(repo_root: Path, scope: str) -> Path:
 
 
 def scope_markdown_paths(root: Path, scope: str) -> list[Path]:
-    pattern = "**/*.md" if scope in NESTED_SOURCE_SCOPES else "*.md"
-    return sorted(root.glob(pattern))
+    paths = sorted(root.glob("**/*.md"))
+    config = DOCS_SCOPE_CONFIGS.get(scope)
+    if config:
+        paths = [
+            path for path in paths
+            if not path_is_under_configured_sub_scope_source(path, root, config)
+        ]
+    nested_paths = [path for path in paths if path.parent != root]
+    if nested_paths:
+        nested = ", ".join(path.relative_to(root).as_posix() for path in nested_paths)
+        raise ValueError(f"Nested markdown docs are not supported under {root}; move these files to the scope root: {nested}")
+    return paths
 
 
 def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:

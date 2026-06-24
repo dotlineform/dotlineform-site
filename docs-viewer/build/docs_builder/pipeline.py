@@ -48,7 +48,6 @@ class DocsDataBuilder(
         self.items_dir = self.output_dir / "by-id"
         self.viewer_base_url = normalize_viewer_base_url(viewer_base_url or config.viewer_base_url)
         self.include_scope_param = config.include_scope_param
-        self.allow_nested_source = config.allow_nested_source
         self.non_loadable_doc_ids = normalize_doc_ids(list(config.non_loadable_doc_ids))
         self.manage_only_tree_root_ids = normalize_doc_ids(list(config.manage_only_tree_root_ids))
         self.show_updated_date = config.show_updated_date is not False

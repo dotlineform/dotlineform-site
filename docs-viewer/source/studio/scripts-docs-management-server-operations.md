@@ -20,7 +20,7 @@ Configured source roots in this repo are:
 
 ```text
 docs-viewer/source/studio/*.md
-docs-viewer/source/analysis/**/*.md
+docs-viewer/source/analysis/*.md
 docs-viewer/source/library/*.md
 ```
 

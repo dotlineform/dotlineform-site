@@ -309,7 +309,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py -
 ```
 
 - watches `docs-viewer/source/studio/*.md` as `studio`
-- watches `docs-viewer/source/analysis/**/*.md` as `analysis`
+- watches `docs-viewer/source/analysis/*.md` as `analysis`
 - watches `docs-viewer/source/library/*.md` as `library`
 - rebuilds same-scope docs payloads plus same-scope docs search after source changes
 - can be disabled with `DOCS_WATCH_ENABLED=0`

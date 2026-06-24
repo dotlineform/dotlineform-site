@@ -58,6 +58,20 @@ export function initDocsViewerConfigController(context) {
   if (!scopeConfig.managementText) scopeConfig.managementText = {};
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
 
+  function normalizeSubScopeConfig(rawSubScope) {
+    if (!rawSubScope || typeof rawSubScope !== "object") return null;
+    var subScope = String(rawSubScope.sub_scope || "").trim().toLowerCase();
+    if (!subScope) return null;
+    var manifestUrl = String(rawSubScope.manifest_url || "").trim();
+    var byIdUrlBase = String(rawSubScope.by_id_url_base || "").trim().replace(/\/+$/, "");
+    if (!manifestUrl || !byIdUrlBase) return null;
+    return {
+      subScope: subScope,
+      manifestUrl: manifestUrl,
+      byIdUrlBase: byIdUrlBase
+    };
+  }
+
   function normalizeBrowserScopeConfig(rawScope) {
     if (!rawScope || typeof rawScope !== "object") return null;
     var scopeId = String(rawScope.scope_id || "").trim().toLowerCase();
@@ -67,6 +81,9 @@ export function initDocsViewerConfigController(context) {
     if (viewerBase.charAt(viewerBase.length - 1) !== "/") {
       viewerBase += "/";
     }
+    var subScopes = Array.isArray(rawScope.sub_scopes)
+      ? rawScope.sub_scopes.map(normalizeSubScopeConfig).filter(Boolean)
+      : [];
     return {
       scopeId: scopeId,
       scopeType: String(rawScope.scope_type || "").trim().toLowerCase(),
@@ -76,7 +93,11 @@ export function initDocsViewerConfigController(context) {
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
       indexTreeUrl: String(rawScope.index_tree_url || "").trim(),
       recentlyAddedUrl: String(rawScope.recently_added_url || "").trim(),
-      searchIndexUrl: String(rawScope.search_index_url || "").trim()
+      searchIndexUrl: String(rawScope.search_index_url || "").trim(),
+      subScopes: subScopes,
+      subScopesById: new Map(subScopes.map(function (config) {
+        return [config.subScope, config];
+      }))
     };
   }
 

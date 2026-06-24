@@ -25,7 +25,7 @@ It is intended as a local development helper for `bin/local-studio`, not as the 
 The watcher maps source roots directly onto docs scopes:
 
 - `docs-viewer/source/studio/*.md` -> `studio`
-- `docs-viewer/source/analysis/**/*.md` -> `analysis`
+- `docs-viewer/source/analysis/*.md` -> `analysis`
 - `docs-viewer/source/library/*.md` -> `library`
 
 The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./docs-viewer/build/build_docs.py` and the Docs Viewer service.

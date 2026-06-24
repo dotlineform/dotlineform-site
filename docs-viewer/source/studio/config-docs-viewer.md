@@ -40,7 +40,6 @@ Each scope entry owns:
 - `viewer_base_url`: public route base for the scope
 - `include_scope_param`: whether route links should include `?scope=<scope>`
 - `default_doc_id`: default document for the route
-- `allow_nested_source`: whether source Markdown may live below nested folders
 - `non_loadable_doc_ids`: tree nodes that should not load as documents
 - `manage_only_tree_root_ids`: tree roots excluded from public routes
 - `show_updated_date`: legacy generated viewer option retained in scope config; selected-document date display now belongs to the info panel metadata view

@@ -465,10 +465,10 @@ Manage behavior:
 
 ### 1. Config Foundation
 
-- [ ] Extend the Docs Viewer scope config schema to allow `sub_scopes` nested under a parent scope.
-- [ ] Add validation for sub-scope ids, source paths, output paths, publish paths, and duplicate ids within a parent scope.
-- [ ] Add a browser-facing projection for configured sub-scopes so reports can derive manifest and by-id payload URLs.
-- [ ] Define how parent scope source discovery recognizes configured sub-scope directories before builder changes are made.
+- [x] Extend the Docs Viewer scope config schema to allow `sub_scopes` nested under a parent scope.
+- [x] Add validation for sub-scope ids, source paths, output paths, publish paths, and duplicate ids within a parent scope.
+- [x] Add a browser-facing projection for configured sub-scopes so reports can derive manifest and by-id payload URLs.
+- [x] Define how parent scope source discovery recognizes configured sub-scope directories before builder changes are made.
 
 ### 2. Sub-Scope Lifecycle Actions
 

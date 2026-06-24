@@ -53,7 +53,6 @@ def write_scope_config(root: Path) -> None:
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "parent",
-                    "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": ["manage-root"],
                     "show_updated_date": True,
@@ -82,7 +81,6 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "private",
-                    "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
                     "show_updated_date": True,
@@ -170,6 +168,41 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
         "02",
     ]
     assert child["search_text"] == " ".join(child["search_terms"])
+
+
+def test_python_docs_search_builder_excludes_configured_sub_scope_sources() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            {
+                "sub_scope": "tags",
+                "source": "docs-viewer/source/studio/tags",
+                "output": "docs-viewer/generated/docs/studio/tags",
+            }
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root / "docs-viewer/source/studio/tags/detail.md",
+            """---
+doc_id: detail
+title: Detail
+---
+# Detail
+
+Sub-scope detail body.
+""",
+        )
+
+        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--write"])
+        payload = read_json(root / "docs-viewer/generated/search/studio/index.json")
+
+    assert exit_code == 0
+    assert stderr == ""
+    assert "Wrote docs-viewer/generated/search/studio/index.json with 2 studio search entries" in stdout
+    assert "detail" not in {entry["id"] for entry in payload["entries"]}
 
 
 def test_python_docs_search_builder_dry_run_does_not_write() -> None:

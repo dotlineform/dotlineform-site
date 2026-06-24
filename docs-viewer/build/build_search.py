@@ -29,7 +29,12 @@ from build_docs import (  # noqa: E402
     humanize,
     parse_source,
 )
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, resolve_scope_path  # noqa: E402
+from docs_scope_config import (  # noqa: E402
+    DocsScopeConfig,
+    load_docs_scope_configs,
+    path_is_under_configured_sub_scope_source,
+    resolve_scope_path,
+)
 
 
 DEFAULT_SCOPE = "studio"
@@ -194,9 +199,12 @@ class DocsViewerSearchDataBuilder:
 
     def load_source_docs(self) -> list[SearchDocRecord]:
         source_dir = resolve_scope_path(self.repo_root, self.scope_config.source)
-        paths = sorted(source_dir.glob("**/*.md"))
+        paths = [
+            path for path in sorted(source_dir.glob("**/*.md"))
+            if not path_is_under_configured_sub_scope_source(path, source_dir, self.scope_config)
+        ]
         nested_paths = [path for path in paths if path.parent != source_dir]
-        if nested_paths and not self.scope_config.allow_nested_source:
+        if nested_paths:
             nested = ", ".join(path.relative_to(source_dir).as_posix() for path in nested_paths)
             raise SystemExit(f"Nested markdown docs are not supported under {source_dir}; move these files to the scope root: {nested}")
 

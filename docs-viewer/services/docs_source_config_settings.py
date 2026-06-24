@@ -45,7 +45,6 @@ BLOCKED_SCOPE_FIELDS = {
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
     "include_scope_param": "Route parameter behavior is part of the portable route contract.",
     "default_doc_id": "Default documents affect route behavior and should be guarded separately.",
-    "allow_nested_source": "Nested source behavior affects source discovery and validation.",
     "non_loadable_doc_ids": "Tree loading behavior depends on generated docs structure.",
     "manage_only_tree_root_ids": "Manage-only tree behavior depends on generated docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",

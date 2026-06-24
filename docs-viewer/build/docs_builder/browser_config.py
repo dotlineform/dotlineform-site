@@ -73,6 +73,30 @@ def browser_search_policy_payload(config: DocsScopeConfig) -> dict[str, Any]:
     }
 
 
+def browser_sub_scope_output_url_base(config: DocsScopeConfig, sub_scope: Any) -> str:
+    if scope_uses_external_data(config):
+        return f"/docs/generated/external/{quote(config.scope_id)}/{quote(sub_scope.sub_scope)}"
+    output = sub_scope.publish_output if is_public_readonly_scope(
+        viewer_base_url=config.viewer_base_url,
+        include_scope_param=config.include_scope_param,
+    ) else sub_scope.output
+    return browser_path_for_repo_relative(output)
+
+
+def browser_sub_scope_records(config: DocsScopeConfig) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for sub_scope in config.sub_scopes:
+        output_base = browser_sub_scope_output_url_base(config, sub_scope)
+        records.append(
+            {
+                "sub_scope": sub_scope.sub_scope,
+                "manifest_url": f"{output_base}/manifest.json",
+                "by_id_url_base": f"{output_base}/by-id",
+            }
+        )
+    return records
+
+
 def docs_viewer_settings_payload(repo_root: Path, scope_ids: list[str]) -> dict[str, Any] | None:
     try:
         payload = json.loads((repo_root / CONFIG_REL_PATH).read_text(encoding="utf-8"))
@@ -104,6 +128,9 @@ def browser_scope_record(repo_root: Path, raw_by_scope: dict[str, dict[str, Any]
         "search_index_url": browser_search_index_url(config),
         "search": browser_search_policy_payload(config),
     }
+    sub_scopes = browser_sub_scope_records(config)
+    if sub_scopes:
+        record["sub_scopes"] = sub_scopes
     return record
 
 

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
+import re
 from typing import Any
 
 
@@ -43,15 +44,24 @@ class DocsScopeConfig:
     viewer_base_url: str
     include_scope_param: bool
     default_doc_id: str
-    allow_nested_source: bool
     non_loadable_doc_ids: tuple[str, ...]
     manage_only_tree_root_ids: tuple[str, ...]
     show_updated_date: bool
     allow_unresolved_parent_ids: bool
     import_media_storage: DocsImportMediaConfig
+    sub_scopes: tuple["DocsSubScopeConfig", ...]
+
+
+@dataclass(frozen=True)
+class DocsSubScopeConfig:
+    sub_scope: str
+    source: Path
+    output: Path
+    publish_output: Path
 
 
 SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {"repo_assets", "staging_manual", "r2_upload"}
+SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 
 
 def default_repo_root() -> Path:
@@ -165,6 +175,22 @@ def path_is_relative_to(path: Path, parent: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def path_is_strict_relative_to(path: Path, parent: Path) -> bool:
+    return path != parent and path_is_relative_to(path, parent)
+
+
+def normalize_sub_scope_id(value: Any, *, field: str) -> str:
+    text = str(value or "").strip().lower()
+    if not text:
+        raise ValueError(f"docs scope config field {field} is required")
+    if not SUB_SCOPE_ID_PATTERN.fullmatch(text):
+        raise ValueError(
+            f"docs scope config field {field} must start with a lowercase letter or digit "
+            "and contain only lowercase letters, digits, hyphens, or underscores"
+        )
+    return text
 
 
 def is_public_readonly_scope(*, viewer_base_url: str, include_scope_param: bool) -> bool:
@@ -296,6 +322,125 @@ def publish_output_paths_for(
     return (output, search_output)
 
 
+def validate_nested_sub_scope_path(
+    *,
+    scope_id: str,
+    sub_scope: str,
+    path: Path,
+    parent_path: Path,
+    field: str,
+    parent_field: str,
+) -> None:
+    if not path_is_strict_relative_to(path, parent_path):
+        raise ValueError(
+            f"docs scope config {field} for sub-scope {scope_id}/{sub_scope} "
+            f"must be under {parent_field}"
+        )
+
+
+def normalize_sub_scope_configs(
+    item: dict[str, Any],
+    *,
+    scope_id: str,
+    source: Path,
+    output: Path,
+    publish_output: Path,
+    public_readonly: bool,
+    allow_external_data: bool,
+    index: int,
+) -> tuple[DocsSubScopeConfig, ...]:
+    raw_sub_scopes = item.get("sub_scopes")
+    if raw_sub_scopes is None:
+        return ()
+    if not isinstance(raw_sub_scopes, list):
+        raise ValueError(f"docs scope config scopes[{index}].sub_scopes must be an array")
+
+    configs: list[DocsSubScopeConfig] = []
+    seen: set[str] = set()
+    for sub_index, raw_sub_scope in enumerate(raw_sub_scopes):
+        field_prefix = f"scopes[{index}].sub_scopes[{sub_index}]"
+        if not isinstance(raw_sub_scope, dict):
+            raise ValueError(f"docs scope config {field_prefix} must be an object")
+        sub_scope = normalize_sub_scope_id(raw_sub_scope.get("sub_scope"), field=f"{field_prefix}.sub_scope")
+        if sub_scope in seen:
+            raise ValueError(f"docs scope config sub_scope {sub_scope!r} is duplicated in scope {scope_id!r}")
+        seen.add(sub_scope)
+
+        sub_source = safe_scope_data_path(
+            raw_sub_scope.get("source"),
+            field=f"{field_prefix}.source",
+            allow_external=allow_external_data,
+        )
+        sub_output = safe_scope_data_path(
+            raw_sub_scope.get("output"),
+            field=f"{field_prefix}.output",
+            allow_external=allow_external_data,
+        )
+        if public_readonly:
+            sub_publish_output = safe_relative_path(
+                raw_sub_scope.get("publish_output"),
+                field=f"{field_prefix}.publish_output",
+            )
+        else:
+            sub_publish_output = sub_output
+
+        validate_nested_sub_scope_path(
+            scope_id=scope_id,
+            sub_scope=sub_scope,
+            path=sub_source,
+            parent_path=source,
+            field=f"{field_prefix}.source",
+            parent_field=f"scopes[{index}].source",
+        )
+        validate_nested_sub_scope_path(
+            scope_id=scope_id,
+            sub_scope=sub_scope,
+            path=sub_output,
+            parent_path=output,
+            field=f"{field_prefix}.output",
+            parent_field=f"scopes[{index}].output",
+        )
+        if public_readonly:
+            validate_nested_sub_scope_path(
+                scope_id=scope_id,
+                sub_scope=sub_scope,
+                path=sub_publish_output,
+                parent_path=publish_output,
+                field=f"{field_prefix}.publish_output",
+                parent_field=f"scopes[{index}].publish_output",
+            )
+
+        configs.append(
+            DocsSubScopeConfig(
+                sub_scope=sub_scope,
+                source=sub_source,
+                output=sub_output,
+                publish_output=sub_publish_output,
+            )
+        )
+    return tuple(configs)
+
+
+def configured_sub_scope_source_relpaths(config: DocsScopeConfig) -> tuple[Path, ...]:
+    relpaths: list[Path] = []
+    for sub_scope in config.sub_scopes:
+        try:
+            relpath = sub_scope.source.relative_to(config.source)
+        except ValueError:
+            continue
+        if relpath.parts:
+            relpaths.append(relpath)
+    return tuple(relpaths)
+
+
+def path_is_under_configured_sub_scope_source(path: Path, source_dir: Path, config: DocsScopeConfig) -> bool:
+    try:
+        relpath = path.relative_to(source_dir)
+    except ValueError:
+        return False
+    return any(path_is_relative_to(relpath, sub_scope_relpath) for sub_scope_relpath in configured_sub_scope_source_relpaths(config))
+
+
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
     root = repo_root or default_repo_root()
     config_path = root / CONFIG_REL_PATH
@@ -387,6 +532,22 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             search_output=search_output,
             index=index,
         )
+        import_media_storage = normalize_import_media_storage(
+            item,
+            scope_id=scope_id,
+            media_path_prefix=media_path_prefix,
+            index=index,
+        )
+        sub_scopes = normalize_sub_scope_configs(
+            item,
+            scope_id=scope_id,
+            source=source,
+            output=output,
+            publish_output=publish_output,
+            public_readonly=public_readonly,
+            allow_external_data=allow_external_data,
+            index=index,
+        )
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
             scope_type=scope_type,
@@ -402,7 +563,6 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
                 item.get("default_doc_id"),
                 field=f"scopes[{index}].default_doc_id",
             ),
-            allow_nested_source=item.get("allow_nested_source") is True,
             non_loadable_doc_ids=string_tuple(
                 item.get("non_loadable_doc_ids"),
                 field=f"scopes[{index}].non_loadable_doc_ids",
@@ -413,12 +573,8 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             ),
             show_updated_date=item.get("show_updated_date") is not False,
             allow_unresolved_parent_ids=item.get("allow_unresolved_parent_ids") is True,
-            import_media_storage=normalize_import_media_storage(
-                item,
-                scope_id=scope_id,
-                media_path_prefix=media_path_prefix,
-                index=index,
-            ),
+            import_media_storage=import_media_storage,
+            sub_scopes=sub_scopes,
         )
     return configs
 
@@ -430,7 +586,4 @@ MEDIA_PATH_PREFIXES = {
 }
 IMPORT_MEDIA_CONFIGS = {
     scope: config.import_media_storage for scope, config in DOCS_SCOPE_CONFIGS.items()
-}
-NESTED_SOURCE_SCOPES = {
-    scope for scope, config in DOCS_SCOPE_CONFIGS.items() if config.allow_nested_source
 }

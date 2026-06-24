@@ -42,16 +42,14 @@ Document Data Sharing reads this same source boundary through Docs Viewer-owned 
 Those helpers use scope config plus source Markdown front matter and body content, then render source content through shared Docs Viewer rendering code when export or review workflows need headings or plain text.
 Generated Docs Viewer payloads are publication/runtime outputs and are not the Data Sharing document metadata source.
 
-Studio and Library source roots are flat:
+Normal scope source roots are flat:
 
 - Studio docs: `docs-viewer/source/studio/*.md`
 - Library docs: `docs-viewer/source/library/*.md`
+- Analysis docs: `docs-viewer/source/analysis/*.md`
 
-Analysis allows nested source folders:
-
-- Analysis docs: `docs-viewer/source/analysis/**/*.md`
-
-Analysis folder names are source-organisation affordances for future helpers such as series/work analysis lookup. Viewer navigation still comes from `doc_id` and `parent_id`.
+Nested source Markdown is not supported for normal scope discovery.
+Large detail-document sets should use configured Docs Viewer sub-scopes, which keep nested detail docs out of the parent index tree and global docs search.
 
 ## Current Tree Model
 

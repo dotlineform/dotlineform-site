@@ -100,12 +100,12 @@ def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
         "viewer_base_url",
         "include_scope_param",
         "default_doc_id",
-        "allow_nested_source",
         "non_loadable_doc_ids",
         "manage_only_tree_root_ids",
         "show_updated_date",
         "allow_unresolved_parent_ids",
         "import_media_storage",
+        "sub_scopes",
     }
     return {key: raw[key] for key in sorted(allowed) if key in raw}
 

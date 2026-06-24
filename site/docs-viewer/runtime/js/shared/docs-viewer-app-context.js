@@ -80,6 +80,8 @@ export function createDocsViewerRouteContext(options) {
     defaultRouteDocId: routeConfig.defaultDocId,
     viewerPathname: resolvedViewerPathname,
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),
+    subScopes: [],
+    subScopesById: new Map(),
     uiTextUrl: routeConfig.uiTextUrl,
     reportRegistryUrl: routeConfig.reportRegistryUrl,
     managementBaseUrl: managementBaseUrl,
@@ -100,6 +102,8 @@ export function updateDocsViewerRouteContext(context, values, options) {
     indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
     recentlyAddedUrl: values && values.recentlyAddedUrl ? values.recentlyAddedUrl : "",
     searchIndexUrl: values && values.searchIndexUrl ? values.searchIndexUrl : "",
+    subScopes: Array.isArray(values && values.subScopes) ? values.subScopes : [],
+    subScopesById: values && values.subScopesById instanceof Map ? values.subScopesById : new Map(),
     defaultRouteDocId: cleanString(values && values.defaultRouteDocId),
     viewerBaseUrl: nextViewerBaseUrl,
     includeScopeParam: Boolean(values && values.includeScopeParam),
@@ -111,6 +115,7 @@ export function updateDocsViewerRouteContext(context, values, options) {
     indexTreeUrl: nextContext.indexTreeUrl,
     recentlyAddedUrl: nextContext.recentlyAddedUrl,
     searchIndexUrl: nextContext.searchIndexUrl,
+    subScopes: nextContext.subScopes,
     viewerBaseUrl: nextContext.viewerBaseUrl
   });
   nextContext.bookmarkScope = nextContext.viewerScope || nextContext.viewerPathname || "docs";

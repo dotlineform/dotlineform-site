@@ -102,7 +102,6 @@ def write_scope_config(root: Path) -> None:
                         "viewer_base_url": "/library/",
                         "include_scope_param": False,
                         "default_doc_id": "library",
-                        "allow_nested_source": False,
                         "allow_unresolved_parent_ids": True,
                     }
                 ],
@@ -335,7 +334,6 @@ def test_missing_source_metadata_adds_current_context_warning() -> None:
                             "viewer_base_url": "/library/",
                             "include_scope_param": False,
                             "default_doc_id": "library",
-                            "allow_nested_source": False,
                             "allow_unresolved_parent_ids": True,
                         }
                     ],

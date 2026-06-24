@@ -113,7 +113,6 @@ def write_scope_config(root: Path) -> None:
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "parent",
-                    "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
                     "show_updated_date": True,
@@ -150,7 +149,6 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "private",
-                    "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
                     "show_updated_date": True,
@@ -180,7 +178,6 @@ def write_public_scope_config(root: Path) -> None:
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "parent",
-                    "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": ["manage-root"],
                     "show_updated_date": True,
@@ -409,6 +406,49 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert result["diagnostics"]["docs_emitted"] == 2
     assert result["diagnostics"]["index_tree_changed"] == 1
     assert result["diagnostics"]["recently_added_changed"] == 1
+
+
+def test_python_docs_builder_excludes_configured_sub_scope_sources() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
+        payload = read_json(config_path)
+        payload["scopes"][0]["sub_scopes"] = [
+            {
+                "sub_scope": "tags",
+                "source": "docs-viewer/source/studio/tags",
+                "output": "docs-viewer/generated/docs/studio/tags",
+            }
+        ]
+        write_json(config_path, payload)
+        write_text(
+            root / "docs-viewer/source/studio/tags/detail.md",
+            """---
+doc_id: detail
+title: Detail
+---
+# Detail
+
+Sub-scope detail body.
+""",
+        )
+
+        config = load_docs_scope_configs(root)["studio"]
+        result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
+        browser_config = build_docs.browser_scope_config_payload(root, [config])
+
+        assert not (root / "docs-viewer/generated/docs/studio/by-id/detail.json").exists()
+
+    assert [doc["doc_id"] for doc in result["index_payload"]["docs"]] == ["parent", "child"]
+    assert result["diagnostics"]["source_files_scanned"] == 2
+    assert browser_config["scopes"][0]["sub_scopes"] == [
+        {
+            "sub_scope": "tags",
+            "manifest_url": "/docs-viewer/generated/docs/studio/tags/manifest.json",
+            "by_id_url_base": "/docs-viewer/generated/docs/studio/tags/by-id",
+        }
+    ]
 
 
 def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> None:

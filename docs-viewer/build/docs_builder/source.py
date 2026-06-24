@@ -16,6 +16,7 @@ from .common import (
     read_json,
     resolve_scope_path,
     scope_uses_external_data,
+    path_is_under_configured_sub_scope_source,
 )
 
 
@@ -111,10 +112,13 @@ def extract_title(markdown: str) -> str:
 
 class SourceLoadingMixin:
     def load_docs(self) -> list[DocRecord]:
-        paths = sorted(self.source_dir.glob("**/*.md"))
+        paths = [
+            path for path in sorted(self.source_dir.glob("**/*.md"))
+            if not path_is_under_configured_sub_scope_source(path, self.source_dir, self.config)
+        ]
         self.source_files_scanned = len(paths)
         nested_paths = [path for path in paths if path.parent != self.source_dir]
-        if nested_paths and not self.allow_nested_source:
+        if nested_paths:
             nested = ", ".join(path.relative_to(self.source_dir).as_posix() for path in nested_paths)
             raise RuntimeError(f"Nested markdown docs are not supported under {self.source_dir}; move these files to the scope root: {nested}")
 

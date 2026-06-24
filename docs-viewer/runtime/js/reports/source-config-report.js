@@ -95,12 +95,12 @@ function sourceRows(scope) {
     ["viewer_base_url", config.viewer_base_url],
     ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
-    ["allow_nested_source", config.allow_nested_source],
     ["allow_unresolved_parent_ids", config.allow_unresolved_parent_ids],
     ["show_updated_date", config.show_updated_date],
     ["non_loadable_doc_ids", config.non_loadable_doc_ids],
     ["manage_only_tree_root_ids", config.manage_only_tree_root_ids],
-    ["import_media_storage", config.import_media_storage]
+    ["import_media_storage", config.import_media_storage],
+    ["sub_scopes", config.sub_scopes]
   ];
 }
 

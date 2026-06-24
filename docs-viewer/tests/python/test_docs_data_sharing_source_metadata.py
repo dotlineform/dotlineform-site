@@ -37,7 +37,6 @@ def scope_config(
     output: str | None = None,
     viewer_base_url: str = "/docs/",
     include_scope_param: bool = True,
-    allow_nested_source: bool = False,
     allow_unresolved_parent_ids: bool = False,
 ) -> dict[str, object]:
     config = {
@@ -50,7 +49,6 @@ def scope_config(
         "viewer_base_url": viewer_base_url,
         "include_scope_param": include_scope_param,
         "default_doc_id": scope_id,
-        "allow_nested_source": allow_nested_source,
         "allow_unresolved_parent_ids": allow_unresolved_parent_ids,
     }
     if not include_scope_param:
@@ -305,14 +303,14 @@ def test_active_data_sharing_metadata_services_use_source_metadata_owner() -> No
     assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["import"]
 
 
-def test_nested_source_and_unknown_doc_path_safety() -> None:
+def test_unknown_doc_path_safety() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        write_scope_config(repo_root, [scope_config("nested", allow_nested_source=True)])
+        write_scope_config(repo_root, [scope_config("nested")])
         write_doc(
             repo_root,
             "nested",
-            "section/nested-doc.md",
+            "nested-doc.md",
             doc_id="nested-doc",
             title="Nested Doc",
         )
@@ -326,7 +324,28 @@ def test_nested_source_and_unknown_doc_path_safety() -> None:
         else:
             raise AssertionError("Expected unsafe unknown doc_id to be rejected")
 
-    assert context.records_by_id["nested-doc"].source_path == "docs-viewer/source/nested/section/nested-doc.md"
+    assert context.records_by_id["nested-doc"].source_path == "docs-viewer/source/nested/nested-doc.md"
+
+
+def test_nested_source_markdown_is_rejected() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_config(repo_root, [scope_config("nested")])
+        write_doc(
+            repo_root,
+            "nested",
+            "section/nested-doc.md",
+            doc_id="nested-doc",
+            title="Nested Doc",
+        )
+
+        try:
+            source_metadata.load_data_sharing_docs_source_context(repo_root, "nested")
+        except RuntimeError as exc:
+            assert "Nested markdown docs are not supported" in str(exc)
+            assert "section/nested-doc.md" in str(exc)
+        else:
+            raise AssertionError("Expected nested source Markdown to be rejected")
 
 
 def main() -> None:
@@ -338,7 +357,8 @@ def main() -> None:
         test_helper_loads_source_metadata_context,
         test_selectable_document_records_use_source_metadata,
         test_active_data_sharing_metadata_services_use_source_metadata_owner,
-        test_nested_source_and_unknown_doc_path_safety,
+        test_unknown_doc_path_safety,
+        test_nested_source_markdown_is_rejected,
     ]
     for test in tests:
         test()

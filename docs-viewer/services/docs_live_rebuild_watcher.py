@@ -35,7 +35,12 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
         sys.path.insert(0, str(path))
 
 from docs_source_model import load_scope_docs, scope_doc_sort_key
-from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS, resolve_scope_path
+from docs_scope_config import (
+    DOCS_SCOPE_CONFIGS,
+    SCOPE_ROOTS,
+    path_is_under_configured_sub_scope_source,
+    resolve_scope_path,
+)
 from docs_write_rebuild import targeted_docs_build_fallback_reason
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
 from local_env import runtime_env
@@ -82,8 +87,10 @@ def snapshot_scope(root: Path, scope: str) -> Dict[str, tuple[int, int]]:
         raise FileNotFoundError(f"Source root not found: {root}")
 
     snapshot: Dict[str, tuple[int, int]] = {}
-    pattern = "**/*.md" if scope in NESTED_SOURCE_SCOPES else "*.md"
-    for path in sorted(root.glob(pattern)):
+    for path in sorted(root.glob("**/*.md")):
+        config = DOCS_SCOPE_CONFIGS.get(scope)
+        if config and path_is_under_configured_sub_scope_source(path, root, config):
+            continue
         stat = path.stat()
         snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
     return snapshot

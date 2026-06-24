@@ -489,7 +489,6 @@ def planned_scope_config_record(
         "viewer_base_url": viewer_base_url,
         "include_scope_param": public_route_path == "",
         "default_doc_id": default_doc_id,
-        "allow_nested_source": False,
         "non_loadable_doc_ids": [],
         "manage_only_tree_root_ids": [],
         "show_updated_date": True,
