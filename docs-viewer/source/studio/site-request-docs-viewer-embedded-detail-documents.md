@@ -575,17 +575,17 @@ Next step:
 
 ### 7. Public Report Promotion
 
-- [ ] Revise supported `viewer_report_access` values to `public` and `local`.
-- [ ] Define `public` as public-static-route eligible only when the report is explicitly promoted and allowlisted.
-- [ ] Define `local` as local `/docs/` only, covering the current manage/local report use cases.
-- [ ] Migrate existing report registry defaults and source front matter from `manage` to `local`.
-- [ ] Remove `manage` as a long-term access value, or document it as a temporary migration alias with removal criteria.
-- [ ] Update report access checks and unavailable messages to use the `public`/`local` model.
-- [ ] Confirm the current public route does not mount reports merely because `viewer_report_access: public` is present.
-- [ ] Add public route config for the promoted report registry or promoted report metadata needed by `docs_subscope`.
-- [ ] Wire public `mountDocumentExtras` support so public report-backed docs can mount allowed report modules.
-- [ ] Ensure the public runtime only loads allowlisted public reports and does not expose manage/local reports.
-- [ ] Add public-route smoke coverage proving a `viewer_report_access: public` parent doc mounts its promoted report.
+- [x] Revise supported `viewer_report_access` values to `public` and `local`.
+- [x] Define `public` as public-static-route eligible only when the report is explicitly promoted and allowlisted.
+- [x] Define `local` as local `/docs/` only, covering the current manage/local report use cases.
+- [x] Migrate existing report registry defaults and source front matter from `manage` to `local`.
+- [x] Remove `manage` as a long-term access value, or document it as a temporary migration alias with removal criteria.
+- [x] Update report access checks and unavailable messages to use the `public`/`local` model.
+- [x] Confirm the current public route does not mount reports merely because `viewer_report_access: public` is present.
+- [x] Add public route config for the promoted report registry or promoted report metadata needed by `docs_subscope`.
+- [x] Wire public `mountDocumentExtras` support so public report-backed docs can mount allowed report modules.
+- [x] Ensure the public runtime only loads allowlisted public reports and does not expose manage/local reports.
+- [ ] Add public-route smoke coverage proving a `viewer_report_access: public` parent doc mounts its promoted report. This remains coupled to Step 8 because no public report module is allowlisted until `docs_subscope` exists.
 
 ### 8. Generic Report Shell
 

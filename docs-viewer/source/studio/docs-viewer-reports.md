@@ -58,20 +58,21 @@ Public execution also requires a code/config promotion slice:
 Treat `public` as a design-time requirement or a change request for an existing report until those promotion conditions are satisfied.
 If the public route sees a report with `viewer_report_access: public` that has not been promoted, it should render a contained unavailable state rather than importing arbitrary report code.
 
-`manage` is the legacy name for local-only report access.
-The intended end state is to migrate existing `manage` report defaults and source front matter to `local`, avoiding a permanent compatibility alias unless a migration requires one with explicit removal criteria.
+`manage` is not a supported report access value.
+Use `local` for local-only reports.
 
 ## Runtime Design
 
-The manage Docs Viewer entrypoint opts into report mounting through `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`.
+The manage Docs Viewer entrypoint opts into local report mounting through `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`.
 The shared document controller renders the document payload and calls an optional document-extras hook; it does not import report runtime, report services, or report modules.
-Public entrypoints do not provide that hook, and public route config does not expose the report registry until a specific public report is promoted.
+Public entrypoints opt into report mounting through `site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js`.
+Public route config exposes only the public-safe report registry projection at `site/assets/data/docs/public-reports.json`.
 
 The entry runtime wires the document controller but does not own report filtering, sorting, row rendering, or report-specific data shaping.
 
 The report controller:
 
-- loads the report metadata registry supplied by the manage route config
+- loads the report metadata registry supplied by the route config
 - normalizes report and preset metadata
 - checks the requested report id against the executable module allowlist
 - applies the report access policy
@@ -86,17 +87,19 @@ Report metadata lives in:
 
 - `docs-viewer/config/reports/reports.json`
 
-The browser-visible projection used by the manage route is:
+The browser-visible public projection is:
 
-- `site/assets/data/docs/reports.json`
+- `site/assets/data/docs/public-reports.json`
 
 The source registry describes report ids, titles, descriptions, default access policy, loader ids, and presets.
-The generated browser JSON is browser-visible when the manage route loads it and can be used by documentation and by the `reports_list` report without inspecting JavaScript source.
-Public `/library/` and `/analysis/` route configs do not reference this registry.
+The public projection includes only report metadata that has been explicitly promoted for public static routes.
+The local manage route reads the source registry directly.
+Public `/library/`, `/analysis/`, and other public route configs reference only the public projection.
 
 Executable module loading remains allowlisted in:
 
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
+- `site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js`
 
 The JSON registry does not define arbitrary import paths.
 Adding a JSON entry without a matching allowlisted loader does not make a new report executable.
@@ -160,9 +163,11 @@ Poor report candidates are workflows with writes, long-running operations, broad
 
 ## Files
 
-- `site/assets/data/docs/reports.json`
+- `site/assets/data/docs/public-reports.json`
 - `docs-viewer/config/reports/reports.json`
 - `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
+- `site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js`
+- `site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js`
 - `docs-viewer/runtime/js/reports/`
 - `docs-viewer/static/css/docs-viewer-reports.css`

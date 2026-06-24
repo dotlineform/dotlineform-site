@@ -2,43 +2,7 @@ import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
 
-const REPORT_LOADERS = {
-  docs_index_table: {
-    load: function () {
-      return import("./docs-index-table-report.js").then(function (module) {
-        return module.mountDocsIndexTableReport;
-      });
-    }
-  },
-  reports_list: {
-    load: function () {
-      return import("./reports-list-report.js").then(function (module) {
-        return module.mountReportsListReport;
-      });
-    }
-  },
-  source_config: {
-    load: function () {
-      return import("./source-config-report.js").then(function (module) {
-        return module.mountSourceConfigReport;
-      });
-    }
-  },
-  semantic_references: {
-    load: function () {
-      return import("./semantic-references-report.js").then(function (module) {
-        return module.mountSemanticReferencesReport;
-      });
-    }
-  },
-  docs_broken_links: {
-    load: function () {
-      return import("./docs-broken-links-report.js").then(function (module) {
-        return module.mountDocsBrokenLinksReport;
-      });
-    }
-  }
-};
+const PUBLIC_REPORT_LOADERS = {};
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -82,7 +46,7 @@ function normalizeReportRegistry(payload) {
     : [];
   const reportsById = new Map();
   reports.forEach(function (report) {
-    reportsById.set(report.reportId, report);
+    if (report.defaultAccess === "public") reportsById.set(report.reportId, report);
   });
   return {
     schema: cleanString(payload && payload.schema),
@@ -91,21 +55,17 @@ function normalizeReportRegistry(payload) {
   };
 }
 
-function reportRegistryUrl(context) {
-  return cleanString(context && context.reportRegistryUrl);
-}
-
 function loadReportRegistry(context) {
-  const registryUrl = reportRegistryUrl(context);
+  const registryUrl = cleanString(context && context.reportRegistryUrl);
   if (!registryUrl) {
-    return Promise.reject(new Error("Report registry is not configured."));
+    return Promise.reject(new Error("Public report registry is not configured."));
   }
   return fetch(appendAssetVersion(registryUrl), {
     headers: { Accept: "application/json" },
     cache: "default"
   })
     .then(function (response) {
-      if (!response.ok) throw new Error("Failed to load report registry.");
+      if (!response.ok) throw new Error("Failed to load public report registry.");
       return response.json();
     })
     .then(normalizeReportRegistry);
@@ -126,30 +86,26 @@ function normalizeReportMetadata(payload) {
 function unavailable(root, message) {
   root.innerHTML = "";
   const note = document.createElement("p");
-  note.className = "docsViewerReport__status";
+  note.className = "docsViewer__panelStatus muted small";
   note.textContent = message;
   root.appendChild(note);
 }
 
-function accessMessage(access) {
-  if (access === "local") {
-    return "This report is available in local Docs Viewer mode.";
-  }
-  return "This report is unavailable in the current viewer context.";
-}
-
-function canMountReport(meta, reportMeta, context) {
+function canMountPublicReport(meta, reportMeta) {
   const access = meta.access || reportMeta.defaultAccess || "public";
-  if (access === "public") {
-    return Promise.resolve({ ok: true, access });
+  if (access !== "public") {
+    return { ok: false, message: "This report is local-only." };
   }
-  if (access === "local") {
-    return Promise.resolve({ ok: Boolean(context.managementContext || context.allowManagement), access });
+  if (reportMeta.defaultAccess !== "public") {
+    return { ok: false, message: "This report has not been promoted for public routes." };
   }
-  return Promise.resolve({ ok: false, access });
+  if (!PUBLIC_REPORT_LOADERS[reportMeta.loaderId]) {
+    return { ok: false, message: "This report type is not available on public routes yet." };
+  }
+  return { ok: true };
 }
 
-export function mountDocsViewerReport(context) {
+export function mountDocsViewerPublicReport(context) {
   const meta = normalizeReportMetadata(context && context.payload);
   if (!meta) return Promise.resolve(false);
 
@@ -161,27 +117,25 @@ export function mountDocsViewerReport(context) {
 
   return loadReportRegistry(context).then(function (registry) {
     const reportMeta = registry.reportsById.get(meta.reportId);
-    const loader = reportMeta ? REPORT_LOADERS[reportMeta.loaderId] : null;
-
-    if (!reportMeta || !loader) {
-      unavailable(root, "This report type is not available.");
+    if (!reportMeta) {
+      unavailable(root, "This report has not been promoted for public routes.");
       return true;
     }
 
-    return canMountReport(meta, reportMeta, context).then((result) => {
-      if (!result.ok) {
-        unavailable(root, accessMessage(result.access));
+    const availability = canMountPublicReport(meta, reportMeta);
+    if (!availability.ok) {
+      unavailable(root, availability.message);
+      return true;
+    }
+
+    root.innerHTML = '<p class="docsViewer__panelStatus muted small">Loading report...</p>';
+    return PUBLIC_REPORT_LOADERS[reportMeta.loaderId].load().then(function (mount) {
+      return Promise.resolve(mount(Object.assign({}, context, {
+        reportRoot: root,
+        reportMeta: Object.assign({}, meta, { registryEntry: reportMeta }),
+        reportRegistry: registry
+      }))).then(function () {
         return true;
-      }
-      root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
-      return loader.load().then(function (mount) {
-        return Promise.resolve(mount(Object.assign({}, context, {
-          reportRoot: root,
-          reportMeta: Object.assign({}, meta, { registryEntry: reportMeta }),
-          reportRegistry: registry
-        }))).then(function () {
-          return true;
-        });
       });
     });
   }).catch((error) => {

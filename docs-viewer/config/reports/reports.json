@@ -39,7 +39,7 @@
       "report_id": "source_config",
       "title": "Source Config",
       "description": "Displays Docs Viewer source config for all scopes in manage mode.",
-      "default_access": "manage",
+      "default_access": "local",
       "loader_id": "source_config",
       "presets": []
     },
@@ -47,7 +47,7 @@
       "report_id": "semantic_references",
       "title": "Semantic References",
       "description": "Displays generated semantic-reference targets and source docs.",
-      "default_access": "manage",
+      "default_access": "local",
       "loader_id": "semantic_references",
       "presets": []
     },
@@ -55,7 +55,7 @@
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
       "description": "Runs the Docs Viewer broken-links audit for a selected scope.",
-      "default_access": "manage",
+      "default_access": "local",
       "loader_id": "docs_broken_links",
       "presets": []
     }

@@ -158,6 +158,8 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
     assert "docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-report-service.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-reports.js" not in graph_paths
+    assert "site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js" in graph_paths
+    assert "site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js" in graph_paths
     assert not [
         path
         for path in graph_paths
@@ -338,7 +340,7 @@ def test_report_runtime_has_no_fallback_registry() -> None:
     assert "Report registry is not configured." in source
 
 
-def test_public_route_config_excludes_report_registry() -> None:
+def test_public_route_config_uses_public_report_registry_projection() -> None:
     public_payload = json.loads(
         (REPO_ROOT / "site/docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8")
     )
@@ -349,7 +351,7 @@ def test_public_route_config_excludes_report_registry() -> None:
     for payload in (public_payload, manage_payload):
         for route in payload["routes"]:
             if route["route_id"] in {"library", "analysis"}:
-                assert "report_registry" not in route["config_urls"]
+                assert route["config_urls"]["report_registry"] == "/assets/data/docs/public-reports.json"
 
 
 def test_manage_route_config_uses_source_report_registry() -> None:

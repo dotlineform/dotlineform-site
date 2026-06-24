@@ -184,6 +184,36 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
     assert_payload_requests(route, request_paths(request_urls), doc_id, doc_id)
 
 
+def exercise_unpromoted_public_report(page: Page, base_url: str, timeout_ms: int) -> None:
+    request_urls: list[str] = []
+    page.on("request", lambda request: request_urls.append(request.url))
+    page.goto(route_url(base_url, "/analysis/?doc=tags"), wait_until="domcontentloaded")
+    wait_for_rendered_doc(page, "tags", "Tags", timeout_ms)
+    page.wait_for_function(
+        """() => {
+            const report = document.querySelector(".docsViewerReport");
+            return report &&
+                report.dataset.reportId === "docs_subscope" &&
+                /not been promoted/.test(report.textContent || "");
+        }""",
+        timeout=timeout_ms,
+    )
+    if query_value(page.url, "doc") != "tags":
+        raise AssertionError(f"public report parent doc should remain selected, got {page.url}")
+    paths = request_paths(request_urls)
+    if "/assets/data/docs/public-reports.json" not in paths:
+        raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
+    blocked = [
+        path for path in paths
+        if path in {
+            "/docs-viewer/runtime/js/reports/docs-viewer-reports.js",
+            "/docs-viewer/runtime/js/reports/docs-viewer-report-service.js",
+        }
+    ]
+    if blocked:
+        raise AssertionError(f"public report loaded manage/local report runtime paths: {blocked!r}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-root", required=True, help="Built public site root to serve.")
@@ -215,6 +245,7 @@ def main() -> int:
                     args.timeout_ms,
                 )
                 exercise_public_route(page, base_url, "/analysis/?doc=analysis", "analysis", "Analysis", args.timeout_ms)
+                exercise_unpromoted_public_report(page, base_url, args.timeout_ms)
             finally:
                 browser.close()
 

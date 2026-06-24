@@ -6,7 +6,7 @@ last_updated: 2026-06-06
 ui_status: report
 parent_id: docs-viewer
 viewer_report: docs_index_table
-viewer_report_access: manage
+viewer_report_access: local
 viewer_report_preset: library_documents_admin
 viewer_report_scope: library
 ---
@@ -58,11 +58,11 @@ The page exposes one filter pill:
 
 ## Availability
 
-The report is manage-only:
+The report is local-only:
 
-- `viewer_report_access: manage`
+- `viewer_report_access: local`
 
-If this document is opened in a public read-only Docs Viewer route, the document pane should show an unavailable state rather than rendering the management report.
+If this document is opened in a public read-only Docs Viewer route, the document pane should show an unavailable state rather than rendering the local report.
 
 ## Files
 

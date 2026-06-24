@@ -7,7 +7,7 @@ ui_status: report
 parent_id: docs-viewer
 viewable: true
 viewer_report: semantic_references
-viewer_report_access: manage
+viewer_report_access: local
 ---
 # Semantic References
 

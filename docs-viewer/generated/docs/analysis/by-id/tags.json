@@ -1,5 +1,8 @@
 {
   "title": "Tags",
   "last_updated": "2026-06-24",
+  "viewer_report": "docs_subscope",
+  "viewer_report_access": "public",
+  "viewer_report_subscope": "tags",
   "content_html": "<h1>Tags</h1>\n<p>Tags collect recurring subject, form, domain, and theme language used across the analysis scope.</p>\n"
 }

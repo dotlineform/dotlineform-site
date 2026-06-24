@@ -8,6 +8,6 @@
   "parent_id": "docs-viewer",
   "ui_status": "report",
   "viewer_report": "source_config",
-  "viewer_report_access": "manage",
+  "viewer_report_access": "local",
   "content_html": "<h1>Docs Viewer Source Config Report</h1>\n<p>This manage-mode report shows the Docs Viewer source config, browser projection, and generated artifact projection for every configured scope.</p>\n<p>The generated projection reads viewer options from each scope's configured <code>index-tree.json</code> output, not from the retired flat docs <code>index.json</code>.</p>\n"
 }

@@ -7,7 +7,7 @@ ui_status: report
 parent_id: docs-viewer
 viewable: true
 viewer_report: source_config
-viewer_report_access: manage
+viewer_report_access: local
 ---
 # Docs Viewer Source Config Report
 

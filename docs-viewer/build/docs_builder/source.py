@@ -271,6 +271,15 @@ class SourceLoadingMixin:
             entry["date_display"] = doc.date_display
         if doc.summary:
             entry["summary"] = doc.summary
+        if doc.viewer_report and doc.viewer_report_access == "public":
+            entry["viewer_report"] = doc.viewer_report
+            entry["viewer_report_access"] = doc.viewer_report_access
+            if doc.viewer_report_scope:
+                entry["viewer_report_scope"] = doc.viewer_report_scope
+            if doc.viewer_report_preset:
+                entry["viewer_report_preset"] = doc.viewer_report_preset
+            if doc.viewer_report_subscope:
+                entry["viewer_report_subscope"] = doc.viewer_report_subscope
         return entry
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:

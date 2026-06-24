@@ -701,6 +701,43 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert index_tree["docs"][1]["content_url"] == "/assets/data/docs/scopes/library/by-id/parent.json"
 
 
+def test_python_docs_builder_public_payloads_include_promoted_report_metadata() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        write_site_tools_config(root, media_base="")
+        write_public_scope_config(root)
+        write_public_source_docs(root)
+        write_text(
+            root / "docs-viewer/source/library/report.md",
+            """---
+doc_id: report
+title: Report
+added_date: 2026-06-24
+last_updated: 2026-06-24
+parent_id: parent
+viewer_report: docs_subscope
+viewer_report_access: public
+viewer_report_subscope: tags
+---
+# Report
+""",
+        )
+        config = load_docs_scope_configs(root)["library"]
+
+        build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
+        report_payload = read_json(root / "docs-viewer/generated/docs/library/by-id/report.json")
+        index_tree = read_json(root / "docs-viewer/generated/docs/library/index-tree.json")
+
+    assert report_payload["viewer_report"] == "docs_subscope"
+    assert report_payload["viewer_report_access"] == "public"
+    assert report_payload["viewer_report_subscope"] == "tags"
+    report_row = index_tree["docs"][1]["children"][2]
+    assert report_row["doc_id"] == "report"
+    assert "viewer_report" not in report_row
+    assert "viewer_report_access" not in report_row
+    assert "viewer_report_subscope" not in report_row
+
+
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

@@ -136,7 +136,7 @@ Copy:
 - `site/docs-viewer/config/ui-text/public.json`
 - `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
-- `site/assets/data/docs/reports.json`
+- `site/assets/data/docs/public-reports.json`
 
 `docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe manage/local route-config registry.
 `site/docs-viewer/config/routes/docs-viewer-public-routes.json` is the browser-safe public route-config registry served at `/docs-viewer/config/routes/docs-viewer-public-routes.json`.
@@ -159,10 +159,10 @@ Settings-modal copy is also owned by `docs-viewer/config/ui-text/manage.json`.
 
 `docs-viewer/config/reports/reports.json` is the source report metadata registry.
 
-`site/assets/data/docs/reports.json` is the browser-visible report metadata projection.
+`site/assets/data/docs/public-reports.json` is the public browser-visible report metadata projection.
 
-It lists report ids, titles, descriptions, access defaults, and presets.
-The executable report module allowlist remains in `docs-viewer/runtime/js/reports/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
+It lists only report ids, titles, descriptions, access defaults, and presets that have been explicitly promoted for public routes.
+Executable report module allowlists remain in `docs-viewer/runtime/js/reports/docs-viewer-reports.js` and `site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js`, so changing JSON alone cannot make the viewer import an arbitrary module.
 
 ### Generated Data Outputs
 
