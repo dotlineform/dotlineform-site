@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-06-20T19:02:24Z",
+  "updated_at_utc": "2026-06-24T19:19:09Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -1932,8 +1932,8 @@
       "tag_id": "domain:nerve",
       "group": "domain",
       "label": "nerve",
-      "description": "",
-      "updated_at_utc": "2026-03-09T16:04:47Z"
+      "description": "Nerve as a discourse frame: bodily sensitivity, pain, transmission, vulnerability, shock, and the boundary between physical sensation and psychological disturbance. Use where the work invokes nervous-system language, exposed sensitivity, electric/impulsive feeling, trauma registered in the body, or the body as a conduit for affect.",
+      "updated_at_utc": "2026-06-24T19:19:09Z"
     }
   ]
 }

@@ -69,7 +69,15 @@
           "update",
           "delete"
         ]
-      }
+      },
+      "sub_scopes": [
+        {
+          "sub_scope": "tags",
+          "title": "Tags",
+          "manifest_url": "/assets/data/docs/scopes/analysis/tags/manifest.json",
+          "by_id_url_base": "/assets/data/docs/scopes/analysis/tags/by-id"
+        }
+      ]
     },
     {
       "scope_id": "tmp",

@@ -252,6 +252,10 @@ The report derives all other information:
 The comma-delimited format requires detail document ids to exclude commas.
 That should be enforced by the sub-scope builder.
 
+Sub-scope detail documents may still carry normal Docs Viewer metadata such as `parent_id` because the builder reuses the normal document pipeline.
+The initial `docs_subscope` report should not treat that metadata as list hierarchy.
+If a report needs to render parent-child grouping or nested detail navigation later, that should be a subsequent report modification that reads explicit report/list metadata or by-id metadata and keeps the manifest contract as the minimal ordered `doc_ids` list.
+
 ## Report List Metadata Sources
 
 The minimal manifest only lists `doc_ids`.
@@ -316,6 +320,12 @@ The manifest lists detail `doc_id` values so the report can validate and order d
 The report derives by-id payload URLs from sub-scope config.
 
 The builder should not emit normal `index-tree.json`, recently-added, or global docs-search records for sub-scopes.
+
+The Docs Live Rebuild Watcher should be updated with the same sub-scope boundary.
+When a configured sub-scope source file changes, the watcher should trigger the sub-scope build path for that parent scope and sub-scope.
+It should not run parent-scope docs/search rebuilds for sub-scope-only changes, and it should not treat configured sub-scope Markdown as invalid nested source.
+If scope config changes add or remove sub-scopes while the watcher is running, the watcher needs a safe refresh path or a clear restart requirement so stale config cannot misclassify sub-scope files.
+Publishing remains separate: watcher rebuilds working generated payloads only, while public sub-scope snapshots are copied by the existing parent-scope `Publish` action.
 
 ## Sub-Scope Config
 
@@ -511,7 +521,10 @@ Main design point: sub-scope lifecycle should mutate the parent scope’s `sub_s
 - [ ] Write normal by-id payloads for sub-scope docs under the configured sub-scope output root.
 - [ ] Write `manifest.json` with only the ordered comma-delimited `doc_ids` field.
 - [ ] Enforce that sub-scope detail `doc_id` values do not contain commas.
+- [ ] Update the Docs Live Rebuild Watcher so configured sub-scope source changes run the sub-scope build path and do not trigger parent index/search rebuilds.
+- [ ] Ensure watcher config refresh or restart behavior is explicit so newly configured sub-scope roots are not reported as unsupported nested Markdown.
 - [ ] Add focused builder tests for sub-scope by-id payloads, minimal manifest output, and parent-scope exclusion from tree/search/recently-added.
+- [ ] Add focused watcher tests for sub-scope source changes, parent-scope exclusion, and config-refresh or restart behavior.
 
 ### 5. Publish Flow
 
