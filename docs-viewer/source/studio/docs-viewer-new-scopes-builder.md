@@ -2,7 +2,7 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-06-22
+last_updated: 2026-06-24
 parent_id: docs-viewer
 viewable: true
 ---
@@ -97,7 +97,8 @@ Public scope creation updates source/config records, public route metadata, publ
 It renders `site/<route>/index.html` from `docs-viewer/templates/public-route/index.html`.
 It does not write Markdown route stubs or Python source.
 
-Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>` and publish through the explicit `Publish docs` action.
+Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>`.
+Their `/docs/` Actions menu `Publish` command copies reviewed working JSON from `docs-viewer/generated/` into the tracked `site/assets/data/` files that public routes read.
 
 ### Local Tracked Scope
 

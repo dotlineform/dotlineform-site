@@ -261,7 +261,7 @@ export function createDocsViewerManagementActionController(options) {
     var removed = Number(preview && preview.removed_count || 0);
     var paths = preview && preview.paths ? preview.paths : {};
     return [
-      "Publish working generated docs to public snapshots?",
+      "Copy reviewed working docs to the site assets for this public route?",
       "",
       "Changed files: " + changed,
       "Stale files to remove: " + removed,
@@ -286,7 +286,7 @@ export function createDocsViewerManagementActionController(options) {
         setManagementBusy(false);
         return openDocsViewerConfirmModal({
           root: root,
-          title: state.managementText.publishConfirmTitle || "Publish docs",
+          title: state.managementText.publishConfirmTitle || "Publish to site assets",
           body: publishConfirmBody(preview),
           primaryLabel: state.managementText.publishConfirmButton || "Publish",
           cancelLabel: state.managementText.cancelButton,
@@ -299,12 +299,12 @@ export function createDocsViewerManagementActionController(options) {
           return null;
         }
         setManagementBusy(true);
-        setManagementMessage(state.managementText.publishApplying || "Publishing docs...", false);
+        setManagementMessage(state.managementText.publishApplying || "Copying docs to site assets...", false);
         return applyManagedDocsPublish(managementClientOptions());
       })
       .then(function (payload) {
         if (!payload) return;
-        setManagementMessage(payload.summary_text || state.managementText.publishApplied || "Docs published.", false);
+        setManagementMessage(payload.summary_text || state.managementText.publishApplied || "Docs copied to site assets.", false);
         if (callbacks.refreshManagementCapabilities) callbacks.refreshManagementCapabilities();
       })
       .catch(function (error) {

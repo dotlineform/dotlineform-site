@@ -2,7 +2,7 @@
 doc_id: docs-viewer-public-scopes
 title: Public Scopes
 added_date: 2026-03-31
-last_updated: 2026-06-13
+last_updated: 2026-06-24
 parent_id: docs-viewer
 ---
 # Public Scopes
@@ -13,7 +13,7 @@ Current public routes:
 - `/analysis/`
 
 New public scopes can be created through the Docs Viewer New Scope lifecycle action with `publishing_mode: "public_readonly"`.
-The action renders the route shell from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template), updates public route config, creates source/generated payloads, and syncs the initial public snapshot under `site/assets/data/`.
+The action renders the route shell from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template), updates public route config, creates source/generated payloads, and syncs the initial public route asset copy under `site/assets/data/`.
 
 ## Dependencies
 
@@ -101,18 +101,23 @@ Design:
 
 ## Generated Docs Data
 
-### Working And Published Roots
+### Working Roots And Publish-To-Site Assets
 
 Public scope source edits, live watcher rebuilds, and docs-management write follow-through rebuild working generated output under `docs-viewer/generated/`.
-Public routes read only the published snapshots under `site/assets/data/`.
-New Scope public-readonly creation writes the initial working generated output and syncs that initial output to the public snapshot roots so the new route can load.
+Public routes read only the site asset copies under `site/assets/data/`.
+New Scope public-readonly creation writes the initial working generated output and syncs that initial output to the public route asset roots so the new route can load.
 After the scope exists, normal source edits rebuild the working output first.
 
-Publishing is a local management action:
+Publishing is the local `/docs/` Actions menu `Publish` command for public scopes.
+In this Docs Viewer context, publish means copy reviewed working docs/search JSON into tracked site assets.
+It does not deploy the site, upload data, or run a remote release.
+When viewing a local scope such as Studio in `/docs/`, the Publish menu item is visible but disabled because that scope has no public route asset target.
 
-- `GET /docs/publish/status?scope=<scope>` reports pending working-to-published changes
+The Publish command uses these local endpoints:
+
+- `GET /docs/publish/status?scope=<scope>` reports pending working-to-site-asset changes
 - `POST /docs/publish/confirm` reports the confirmation diff without writing
-- `POST /docs/publish/apply` requires `confirm: true` and syncs working docs/search to the published snapshot roots, removing stale published files
+- `POST /docs/publish/apply` requires `confirm: true` and syncs working docs/search to the site asset roots, removing stale copied files
 
 The v1 publish gate is local and file-based.
 It does not add persistent confirmation ids, rollback, unpublish, publish manifests, or durable publish summary artifacts.
@@ -267,7 +272,7 @@ Current dependencies:
 
 - working docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - working docs search is derived from Library source front matter as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
-- public snapshots are updated only through the Docs Viewer `Publish docs` management action
+- public route asset copies are updated only through the Docs Viewer `/docs/` Actions menu `Publish` management action
 
 Current enforcement:
 

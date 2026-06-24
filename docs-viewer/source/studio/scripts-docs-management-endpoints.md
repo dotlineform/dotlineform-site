@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints
 title: Endpoint Overview
 added_date: 2026-06-07
-last_updated: 2026-06-10
+last_updated: 2026-06-24
 parent_id: scripts-docs-management-server
 ---
 # Docs Viewer Management Endpoint Overview
@@ -56,7 +56,7 @@ Docs Viewer management endpoints are local-only JSON APIs served by the standalo
 | `POST /docs/scopes/create-apply` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Create a new manifest-owned scope after confirmation. |
 | `POST /docs/scopes/delete-preview` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Preview deletion of a manifest-owned scope. |
 | `POST /docs/scopes/delete-apply` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Delete a manifest-owned scope after confirmation. |
-| `POST /docs/publish/confirm` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Confirm the working-to-published diff for one public scope without writing. |
-| `POST /docs/publish/apply` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Sync working docs/search to public snapshots after `confirm: true`. |
+| `POST /docs/publish/confirm` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Confirm the working-to-site-asset diff for one public scope without writing. |
+| `POST /docs/publish/apply` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Copy working docs/search to public route site assets after `confirm: true`. |
 
 All JSON responses are sent with `Cache-Control: no-store`.

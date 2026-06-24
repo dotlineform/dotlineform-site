@@ -416,7 +416,6 @@ export function initDocsViewerManagement(context) {
     }
     if (managePublishButton) {
       var publishAvailable = state.managementAvailable && scopePublishSupported(state.managementCapabilities, viewerScope());
-      managePublishButton.hidden = !publishAvailable;
       managePublishButton.disabled = state.managementBusy || !publishAvailable;
     }
     if (manageImportButton) {

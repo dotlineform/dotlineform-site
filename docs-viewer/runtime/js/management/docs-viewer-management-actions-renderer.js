@@ -35,8 +35,7 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     id: "docsViewerManagePublishButton",
     action: "publish-docs",
     emoji: "🌍",
-    label: "Publish",
-    hidden: true
+    label: "Publish"
   },
   {
     id: "docsViewerManageSettingsButton",

@@ -8,5 +8,5 @@ parent_id: ""
 
 # Library
 
-Library is a document space for research and reference.
+Library contains research and reference documents.
 

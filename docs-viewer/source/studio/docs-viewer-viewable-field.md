@@ -2,14 +2,14 @@
 doc_id: docs-viewer-viewable-field
 title: Viewable field
 added_date: 2026-04-24
-last_updated: 2026-06-23
+last_updated: 2026-06-24
 parent_id: docs-viewer
 ---
 # Viewable field
 
 ## Purpose
 
-This document records the current `viewable` contract for Docs Viewer source docs, generated docs payloads, public snapshots, runtime navigation, and docs search.
+This document records the current `viewable` contract for Docs Viewer source docs, generated docs payloads, public route site asset copies, runtime navigation, and docs search.
 
 The field is a visibility and discovery control.
 It is not a security boundary and it is not a build-inclusion switch.
@@ -57,14 +57,14 @@ The builder generates per-doc payloads for non-viewable docs so manage mode can 
 For public read-only scopes such as Library and Analysis, by-id payloads are compact reader payloads and do not carry management metadata such as `doc_id`, `source_path`, `parent_id`, `ui_status`, or `viewable`.
 
 The working `recently-added.json` payload is also generated from the configured docs set.
-It should not be treated as the public visibility boundary; public filtering happens at runtime for navigation and at publish time for public snapshots.
+It should not be treated as the public visibility boundary; public filtering happens at runtime for navigation and when the `/docs/` Publish action copies public-scope payloads to site assets.
 
-## Public Snapshots
+## Public Route Site Assets
 
-Public read-only routes read published snapshots under `site/assets/data/`, not the working generated root.
-The docs publish gate filters the working payloads before writing those public snapshots.
+Public read-only routes read copied site assets under `site/assets/data/`, not the working generated root.
+The docs publish gate filters the working payloads before the `/docs/` Publish action writes those site asset copies.
 
-For public snapshots, hidden doc ids are:
+For public route site assets, hidden doc ids are:
 
 - every row with `viewable: false`
 - every descendant of a row with `viewable: false`
@@ -78,7 +78,7 @@ The publish gate:
 - skips hidden `by-id/<doc_id>.json` payloads
 - skips hidden `references/by-doc/<doc_id>.json` payloads
 - removes hidden source references from `references/by-target/...`
-- removes stale public files that no longer belong in the published snapshot
+- removes stale public files that no longer belong in the site asset copy
 
 This means a non-viewable Library or Analysis doc can exist in the working generated data for local review while being absent from the public static payloads after publish.
 
@@ -125,10 +125,10 @@ There is no separate manage-mode search path for non-viewable docs.
 Recently-added behavior differs by payload source:
 
 - the working generated `recently-added.json` can include non-viewable docs because the builder emits from the generated docs set
-- public snapshots filter hidden docs during publish
+- public route site assets filter hidden docs during the `/docs/` Publish copy step
 - the browser recently-added controller displays the entries provided by the payload it loads and then sorts/caps them
 
-For public Library and Analysis routes, the loaded payload is the filtered public snapshot.
+For public Library and Analysis routes, the loaded payload is the filtered site asset copy.
 For local manage-mode generated reads, the loaded payload is the working generated payload.
 
 ## Create And Import Defaults
@@ -164,7 +164,7 @@ Visibility consumers are responsible for descendant hiding:
 
 - public/default runtime hides a viewable child if any ancestor is non-viewable
 - docs search hides descendants of non-viewable docs
-- the public publish gate removes descendants of non-viewable docs from public snapshots
+- the public publish gate removes descendants of non-viewable docs from public route site assets
 - manage mode can still show the original hierarchy for review
 
 Changing a parent to viewable does not automatically change descendants.
@@ -172,7 +172,7 @@ Changing a parent to non-viewable does not rewrite descendants either; their eff
 
 ## Risk Notes
 
-`viewable: false` is suitable for keeping drafts and review material out of normal navigation, public snapshots, and docs search.
+`viewable: false` is suitable for keeping drafts and review material out of normal navigation, public route site assets, and docs search.
 It is not suitable for private or sensitive material by itself.
 
 Risk boundaries:

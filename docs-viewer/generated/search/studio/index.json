@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-03255cd5671d8408f45c3c858e7be4f6",
-    "generated_at_utc": "2026-06-23T21:07:56Z",
+    "version": "blake2b-dff19e0e46c45009ef63b68888f96a39",
+    "generated_at_utc": "2026-06-24T12:37:52Z",
     "count": 224
   },
   "entries": [
@@ -1937,10 +1937,10 @@
       "kind": "doc",
       "title": "Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-06-24",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-10 • Docs Viewer",
+      "display_meta": "2026-06-24 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -1948,12 +1948,12 @@
         "builder",
         "docs viewer",
         "viewer",
-        "2026-06-10",
+        "2026-06-24",
         "2026",
         "06",
-        "10"
+        "24"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer viewer 2026-06-10 2026 06 10"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer viewer 2026-06-24 2026 06 24"
     },
     {
       "id": "config-docs-viewer",
@@ -2287,10 +2287,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-06-24",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Services",
-      "display_meta": "2026-06-10 • Management Services",
+      "display_meta": "2026-06-24 • Management Services",
       "search_terms": [
         "scripts-docs-management-endpoints",
         "scripts",
@@ -2302,12 +2302,12 @@
         "overview",
         "management services",
         "services",
-        "2026-06-10",
+        "2026-06-24",
         "2026",
         "06",
-        "10"
+        "24"
       ],
-      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-06-10 2026 06 10"
+      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-06-24 2026 06 24"
     },
     {
       "id": "scripts-docs-management-endpoints-create-import",
@@ -2827,10 +2827,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-06-24",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-22 • Docs Viewer",
+      "display_meta": "2026-06-24 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -2840,12 +2840,12 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-06-22",
+        "2026-06-24",
         "2026",
         "06",
-        "22"
+        "24"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-22 2026 06 22"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-24 2026 06 24"
     },
     {
       "id": "docs-viewer-overview",
@@ -2949,10 +2949,10 @@
       "kind": "doc",
       "title": "Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-06-24",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-06-22 • Portable Setup",
+      "display_meta": "2026-06-24 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -2962,12 +2962,12 @@
         "setup",
         "portable scope setup",
         "portable setup",
-        "2026-06-22",
+        "2026-06-24",
         "2026",
         "06",
-        "22"
+        "24"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-22 2026 06 22"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-24 2026 06 24"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -3026,10 +3026,10 @@
       "kind": "doc",
       "title": "Public Scopes",
       "href": "/docs/?scope=studio&doc=docs-viewer-public-scopes",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-24",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-13 • Docs Viewer",
+      "display_meta": "2026-06-24 • Docs Viewer",
       "search_terms": [
         "docs-viewer-public-scopes",
         "docs",
@@ -3038,12 +3038,12 @@
         "scopes",
         "public scopes",
         "docs viewer",
-        "2026-06-13",
+        "2026-06-24",
         "2026",
         "06",
-        "13"
+        "24"
       ],
-      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-24 2026 06 24"
     },
     {
       "id": "docs-viewer-reports",
@@ -3388,10 +3388,10 @@
       "kind": "doc",
       "title": "Viewable field",
       "href": "/docs/?scope=studio&doc=docs-viewer-viewable-field",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-06-24",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-23 • Docs Viewer",
+      "display_meta": "2026-06-24 • Docs Viewer",
       "search_terms": [
         "docs-viewer-viewable-field",
         "docs",
@@ -3400,12 +3400,12 @@
         "field",
         "viewable field",
         "docs viewer",
-        "2026-06-23",
+        "2026-06-24",
         "2026",
         "06",
-        "23"
+        "24"
       ],
-      "search_text": "docs-viewer-viewable-field docs viewer viewable field viewable field docs viewer 2026-06-23 2026 06 23"
+      "search_text": "docs-viewer-viewable-field docs viewer viewable field viewable field docs viewer 2026-06-24 2026 06 24"
     },
     {
       "id": "llm",

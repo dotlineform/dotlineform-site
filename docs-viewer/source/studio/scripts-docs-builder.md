@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Builder
 added_date: 2026-04-23
-last_updated: 2026-06-10
+last_updated: 2026-06-24
 parent_id: docs-viewer
 viewable: true
 ---
@@ -31,7 +31,7 @@ Viewer route:
 - Analysis docs: `/analysis/`
 - Library docs: `/library/`
 
-Generated outputs:
+Working generated outputs:
 
 - `docs-viewer/generated/docs/studio/index-tree.json`
 - `docs-viewer/generated/docs/studio/recently-added.json`
@@ -46,7 +46,7 @@ Generated outputs:
 - `docs-viewer/generated/docs/library/recently-added.json`
 - `docs-viewer/generated/docs/library/by-id/<doc_id>.json`
 
-Published public snapshots:
+Public route asset outputs after the `/docs/` Publish action:
 
 - `site/assets/data/docs/scopes/analysis/index-tree.json`
 - `site/assets/data/docs/scopes/analysis/recently-added.json`
@@ -58,7 +58,10 @@ Published public snapshots:
 - `site/assets/data/search/library/index.json`
 
 The builder writes the working generated outputs only.
-For public scopes, `publish_output` and `publish_search_output` in `docs-viewer/config/scopes/docs_scopes.json` name the published snapshot roots that public routes read after an explicit `Publish docs` action.
+For public scopes, the `/docs/` Actions menu exposes `Publish` while viewing that public scope.
+That button is a local copy/promote step: it copies the reviewed working docs/search JSON from `docs-viewer/generated/` into the `site/assets/data/` roots that `/library/`, `/analysis/`, and other public routes read.
+It does not deploy the site or upload data anywhere.
+For local scopes such as Studio, the same menu item is visible but disabled because there is no public route asset target to copy into.
 
 Scope configuration:
 
@@ -68,7 +71,8 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 `./docs-viewer/build/build_docs.py`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
 The `output` field owns the working generated docs payload root.
 The `search_output` field owns the working generated docs-search index path.
-For public scopes only, `publish_output` and `publish_search_output` own the public snapshot roots under `site/assets/data/`.
+For public scopes only, `publish_output` and `publish_search_output` own the public route asset roots under `site/assets/data/`.
+Those paths are written by the `/docs/` Publish action, not by the docs builder itself.
 
 ## What The Builder Does
 

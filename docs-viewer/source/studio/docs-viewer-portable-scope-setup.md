@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-06-22
+last_updated: 2026-06-24
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -208,7 +208,7 @@ Then build search with:
 ./docs-viewer/build/build_search.py --scope research --write
 ```
 
-### 7. Build Working Docs Data And Publish The Public Snapshot
+### 7. Build Working Docs Data And Publish To Site Assets
 
 Build the working viewer JSON:
 
@@ -222,8 +222,8 @@ Build the working search JSON if search is enabled:
 ./docs-viewer/build/build_search.py --scope research --write
 ```
 
-Use the Docs Viewer `Publish docs` management action to copy the reviewed working outputs to the public snapshot roots.
-After publishing, the public route should be able to fetch:
+Use the `/docs/` Actions menu `Publish` command while viewing this public scope to copy the reviewed working outputs to the public route asset roots under `site/assets/data/`.
+After that local copy step, the public route should be able to fetch:
 
 - `/assets/data/docs/scopes/research/index-tree.json`
 - `/assets/data/docs/scopes/research/recently-added.json`
