@@ -7,6 +7,13 @@ ui_status: draft
 ---
 
 
+
+
+I am reviewing [Docs Viewer Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents). I think the solution to how to make 100s of documents discoverable and viewable using a report + embedded detail section is correct, it is the ownership and storage of these documents that is over-complicated. what these documents actually represent is a docs-viewer <sub-scope>. Docs Viewer owns the source markdown and publishes to a sub-folder of the scope's folder, for example:
+- source: `docs-viewer/source/<scope>/<sub-scope>/`
+- generated (public): `site/assets/data/docs/scopes/<scope>/<sub-scope>/`
+
+
 ---
 
 possible frontmatter fields:

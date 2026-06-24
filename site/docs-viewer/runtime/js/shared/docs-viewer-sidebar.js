@@ -9,6 +9,14 @@ export function initDocsViewerSidebarRenderer(context) {
   var toolbar = context.toolbar;
   var pathEl = context.pathEl;
 
+  function managementTextValue(key, fallback) {
+    var text = context.scopeConfig && context.scopeConfig.managementText;
+    if (text && Object.prototype.hasOwnProperty.call(text, key)) {
+      return String(text[key] == null ? fallback || "" : text[key]);
+    }
+    return String(fallback || "");
+  }
+
   function docChildren(docId) {
     return documentIndex.childrenByParent.get(docId) || [];
   }
@@ -83,7 +91,7 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       if (isDocNonViewable(doc)) {
         link.setAttribute("data-draft-doc", "true");
-        link.title = managementTextValue("metadataNonViewableLabel");
+        link.title = managementTextValue("metadataNonViewableLabel", "non-viewable");
       }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
@@ -104,7 +112,7 @@ export function initDocsViewerSidebarRenderer(context) {
         var draftIcon = document.createElement("span");
         draftIcon.className = "docsViewer__draftPrefix";
         draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = managementTextValue("docNonViewableEmoji");
+        draftIcon.textContent = managementTextValue("docNonViewableEmoji", "\uD83D\uDEAB");
         link.appendChild(draftIcon);
       }
       link.appendChild(document.createTextNode(doc.title));
