@@ -545,11 +545,26 @@ Manage behavior:
 
 - [ ] Manually create the indexed parent page that will host the sub-scope report.
 - [ ] Add parent page front matter with `viewer_report: docs_subscope`.
+- [ ] Add parent page front matter with `viewer_report_access: public` when the report is intended for `/analysis/` or another public scope.
 - [ ] Add parent page front matter with `viewer_report_subscope`.
 - [ ] Add parent page front matter with `viewer_report_detail_param`.
 - [ ] Confirm the parent page remains the selected Docs Viewer document in list and detail URLs.
 
-### 7. Generic Report Shell
+### 7. Public Report Promotion
+
+- [ ] Revise supported `viewer_report_access` values to `public` and `local`.
+- [ ] Define `public` as public-static-route eligible only when the report is explicitly promoted and allowlisted.
+- [ ] Define `local` as local `/docs/` only, covering the current manage/local report use cases.
+- [ ] Migrate existing report registry defaults and source front matter from `manage` to `local`.
+- [ ] Remove `manage` as a long-term access value, or document it as a temporary migration alias with removal criteria.
+- [ ] Update report access checks and unavailable messages to use the `public`/`local` model.
+- [ ] Confirm the current public route does not mount reports merely because `viewer_report_access: public` is present.
+- [ ] Add public route config for the promoted report registry or promoted report metadata needed by `docs_subscope`.
+- [ ] Wire public `mountDocumentExtras` support so public report-backed docs can mount allowed report modules.
+- [ ] Ensure the public runtime only loads allowlisted public reports and does not expose manage/local reports.
+- [ ] Add public-route smoke coverage proving a `viewer_report_access: public` parent doc mounts its promoted report.
+
+### 8. Generic Report Shell
 
 - [ ] Add the `docs_subscope` report registry entry and allowlisted report module.
 - [ ] Make the `docs_subscope` report read `viewer_report_subscope` and `viewer_report_detail_param` from the selected parent document payload.
@@ -557,7 +572,7 @@ Manage behavior:
 - [ ] Make the `docs_subscope` report render the list state from manifest `doc_ids`.
 - [ ] Make the `docs_subscope` report derive list labels and filters from parent report config, sub-scope config, or semantic target data.
 
-### 8. Embedded Detail View
+### 9. Embedded Detail View
 
 - [ ] Add the embedded detail section markup and styling.
 - [ ] Make the `docs_subscope` report derive by-id payload URLs from scope config, sub-scope config, and selected detail id.
@@ -566,7 +581,7 @@ Manage behavior:
 - [ ] Ensure detail rendering does not change Docs Viewer selected-document state.
 - [ ] Add contained report error states for unknown sub-scopes, missing manifests, unknown detail ids, and failed detail payload loads.
 
-### 9. URL State And Links
+### 10. URL State And Links
 
 - [ ] Add report URL-state handling for selecting a detail row, refreshing a detail URL, Back/Forward, and returning to the list.
 - [ ] Add semantic-reference link resolution for sub-scope details so tokens such as tags can resolve to the parent report document plus report detail state.

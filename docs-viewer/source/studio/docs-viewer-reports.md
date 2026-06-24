@@ -2,11 +2,11 @@
 doc_id: docs-viewer-reports
 title: Reports
 added_date: 2026-05-13
-last_updated: 2026-06-06
+last_updated: 2026-06-24
 parent_id: docs-viewer
 viewable: true
 viewer_report: reports_list
-viewer_report_access: manage
+viewer_report_access: local
 ---
 # Docs Viewer Reports
 
@@ -25,7 +25,7 @@ A source doc opts into a report with front matter:
 ```yaml
 viewer_report: docs_index_table
 viewer_report_scope: library
-viewer_report_access: manage
+viewer_report_access: local
 viewer_report_preset: library_documents_admin
 ```
 
@@ -33,10 +33,33 @@ Fields:
 
 - `viewer_report`: report id from the report metadata registry
 - `viewer_report_scope`: optional generated docs scope the report reads; defaults to the current viewer scope when omitted
-- `viewer_report_access`: optional access gate; supported values are `public`, `manage`, and `local`; `public` requires a named public-promotion slice before a public route loads report assets
+- `viewer_report_access`: optional access intent; target supported values are `public` and `local`
 - `viewer_report_preset`: optional report-specific preset id
 
 If a report is not available in the current context, the document pane shows a small unavailable state instead of failing silently.
+
+## Access Intent
+
+`viewer_report_access` is an access intent on the parent document, not a promotion mechanism by itself.
+
+Target values:
+
+- `public`: the report is intended to be allowed on public static routes when the report has also been explicitly promoted and allowlisted
+- `local`: the report is intended only for local `/docs/`, covering the current manage/local report use cases
+
+Changing a source document to `viewer_report_access: public` does not automatically make the report executable on `/library/`, `/analysis/`, or another public route.
+Public execution also requires a code/config promotion slice:
+
+- the report id must be included in a public-safe report metadata projection
+- the executable report loader must be included in the public runtime allowlist
+- the public route must expose the browser-safe config and generated data roots the report needs
+- the report implementation must avoid local services, management actions, source paths, credentials, and manage-only data
+
+Treat `public` as a design-time requirement or a change request for an existing report until those promotion conditions are satisfied.
+If the public route sees a report with `viewer_report_access: public` that has not been promoted, it should render a contained unavailable state rather than importing arbitrary report code.
+
+`manage` is the legacy name for local-only report access.
+The intended end state is to migrate existing `manage` report defaults and source front matter to `local`, avoiding a permanent compatibility alias unless a migration requires one with explicit removal criteria.
 
 ## Runtime Design
 
