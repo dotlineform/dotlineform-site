@@ -1,0 +1,9 @@
+{
+  "doc_id": "ordered",
+  "title": "ordered",
+  "added_date": "2026-06-24",
+  "last_updated": "2026-06-24",
+  "source_path": "ordered.md",
+  "viewer_url": "/analysis/?doc=ordered",
+  "content_html": "<h1>ordered</h1>\n<p>form:ordered relates to compositional structure: marks, elements, figures, or image-fields are arranged with a discernible organising logic. This may appear as directionality, alignment, clustering, repetition, rhythm, sequencing, containment, symmetry, spacing, grid-like behaviour, or a controlled distribution of visual parts.</p>\n<p>Use where the work feels structured, deliberate, patterned, or governed by an internal rule, even if the depicted subject matter is different. Supports similarity matching based on compositional behaviour rather than subject, theme, or domain.</p>\n<h2>related tags</h2>\n<ul>\n<li>form:ordered      = structured, rule-governed, patterned, composed</li>\n<li>form:chaotic      = unstable, dispersed, noisy, turbulent, disordered</li>\n<li>form:organic      = grown, irregular, flowing, non-geometric but coherent</li>\n<li>form:fragmented   = broken into parts; may be ordered or chaotic</li>\n<li>form:repetitive   = repeated units; more specific than ordered</li>\n<li>form:grid         = explicitly grid-based; more specific than ordered</li>\n</ul>\n<h2>possible aliases</h2>\n<ul>\n<li>order</li>\n<li>structured</li>\n<li>organised</li>\n<li>organized</li>\n<li>composed</li>\n<li>controlled composition</li>\n<li>rule-governed</li>\n<li>patterned</li>\n<li>systematic</li>\n<li>arranged</li>\n<li>sequenced</li>\n<li>rhythmic structure</li>\n<li>visual order</li>\n</ul>\n"
+}
