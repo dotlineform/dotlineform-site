@@ -96,6 +96,24 @@ def snapshot_scope(root: Path, scope: str) -> Dict[str, tuple[int, int]]:
     return snapshot
 
 
+def snapshot_markdown_root(root: Path) -> Dict[str, tuple[int, int]]:
+    if not root.exists():
+        raise FileNotFoundError(f"Source root not found: {root}")
+
+    snapshot: Dict[str, tuple[int, int]] = {}
+    for path in sorted(root.glob("**/*.md")):
+        stat = path.stat()
+        snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
+    return snapshot
+
+
+def state_snapshot(state: dict[str, Any]) -> Dict[str, tuple[int, int]]:
+    root = state["root"]
+    if state.get("sub_scope"):
+        return snapshot_markdown_root(root)
+    return snapshot_scope(root, state["scope"])
+
+
 def summarize_output(output: str, fallback: str) -> str:
     lines = [line.strip() for line in output.splitlines() if line.strip()]
     return lines[-1] if lines else fallback
@@ -280,6 +298,41 @@ def rebuild_scope(
     return True
 
 
+def rebuild_sub_scope(repo_root: Path, scope: str, sub_scope: str) -> bool:
+    command = python_builder_command(
+        DOCS_BUILDER_SCRIPT,
+        "--scope",
+        scope,
+        "--sub-scope",
+        sub_scope,
+        "--write",
+        "--diagnostics",
+    )
+    label = f"{scope}/{sub_scope}"
+    log(f"Rebuilding {label} sub-scope docs.")
+    completed = subprocess.run(
+        command,
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    stdout = completed.stdout.strip()
+    stderr = completed.stderr.strip()
+    if completed.returncode != 0:
+        detail = stderr or stdout or f"exit {completed.returncode}"
+        log(f"{label} sub-scope rebuild failed: {detail}")
+        return False
+    diagnostics = formatted_docs_builder_diagnostics(stdout)
+    if diagnostics:
+        log(f"{label} sub-scope diagnostics:")
+        for line in diagnostics:
+            log(f"  {line}")
+    else:
+        log(f"{label} sub-scope docs: {summarize_output(stdout, 'done')}")
+    return True
+
+
 def parse_args() -> argparse.Namespace:
     env = runtime_env()
     parser = argparse.ArgumentParser(description="Watch docs source roots and rebuild same-scope outputs.")
@@ -320,24 +373,42 @@ def main() -> int:
         if snapshot_error:
             log(f"{scope} parsed docs snapshot unavailable at startup; watcher search will use full rebuilds: {snapshot_error}")
         states[scope] = {
+            "scope": scope,
+            "sub_scope": "",
+            "label": scope,
             "root": root,
             "snapshot": snapshot_scope(root, scope),
             "doc_snapshot": doc_snapshot,
             "dirty_at": None,
             "changed_files": [],
         }
-    scope_ids = list(SCOPE_ROOTS.keys())
+        config = DOCS_SCOPE_CONFIGS.get(scope)
+        for sub_scope in config.sub_scopes if config else ():
+            label = f"{scope}/{sub_scope.sub_scope}"
+            sub_scope_root = resolve_scope_path(repo_root, sub_scope.source)
+            states[label] = {
+                "scope": scope,
+                "sub_scope": sub_scope.sub_scope,
+                "label": label,
+                "root": sub_scope_root,
+                "snapshot": snapshot_markdown_root(sub_scope_root),
+                "doc_snapshot": None,
+                "dirty_at": None,
+                "changed_files": [],
+            }
+    state_keys = list(states.keys())
 
-    watched_roots = ", ".join(f"{states[scope]['root']} -> {scope}" for scope in scope_ids)
+    watched_roots = ", ".join(f"{states[key]['root']} -> {states[key]['label']}" for key in state_keys)
     log(f"Watching {watched_roots} (poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s).")
+    log("Docs scope config is loaded at watcher startup; restart the watcher after adding or removing sub-scopes.")
 
     try:
         while True:
             now = time.monotonic()
-            for scope in scope_ids:
-                state = states[scope]
+            for key in state_keys:
+                state = states[key]
                 previous_snapshot = state["snapshot"]
-                current_snapshot = snapshot_scope(state["root"], scope)
+                current_snapshot = state_snapshot(state)
                 if current_snapshot != previous_snapshot:
                     state["snapshot"] = current_snapshot
                     state["changed_files"] = merge_changed_filenames(
@@ -346,30 +417,33 @@ def main() -> int:
                     )
                     state["dirty_at"] = now
                     changed_text = ", ".join(state["changed_files"]) or "unknown files"
-                    log(f"Detected source changes for {scope}: {changed_text}.")
+                    log(f"Detected source changes for {state['label']}: {changed_text}.")
 
-            ready_scope = None
-            for scope in scope_ids:
-                dirty_at = states[scope]["dirty_at"]
+            ready_key = None
+            for key in state_keys:
+                dirty_at = states[key]["dirty_at"]
                 if dirty_at is not None and (now - dirty_at) >= args.debounce_seconds:
-                    ready_scope = scope
+                    ready_key = key
                     break
 
-            if ready_scope:
-                changed_files = list(states[ready_scope]["changed_files"])
+            if ready_key:
+                state = states[ready_key]
+                ready_scope = state["scope"]
+                ready_label = state["label"]
+                changed_files = list(state["changed_files"])
                 active_suppressions = load_active_watch_suppressions(repo_root, ready_scope)
                 if changed_files:
                     matching = [active_suppressions.get(filename) for filename in changed_files]
-                    if all(record is not None for record in matching):
+                    if not state.get("sub_scope") and all(record is not None for record in matching):
                         if all(str(record.get("status") or "").strip() == SUPPRESSION_COMPLETE for record in matching):
                             clear_watch_suppressions(repo_root, ready_scope, changed_files)
                             current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
                             if snapshot_error:
                                 log(f"{ready_scope} parsed docs snapshot not refreshed after suppressed write: {snapshot_error}")
                             else:
-                                states[ready_scope]["doc_snapshot"] = current_doc_snapshot
-                            states[ready_scope]["dirty_at"] = None
-                            states[ready_scope]["changed_files"] = []
+                                state["doc_snapshot"] = current_doc_snapshot
+                            state["dirty_at"] = None
+                            state["changed_files"] = []
                             log(
                                 f"Skipped duplicate {ready_scope} rebuild for docs-management write: "
                                 f"{', '.join(changed_files)}."
@@ -377,45 +451,50 @@ def main() -> int:
                             continue
                         continue
 
-                current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
-                search_doc_ids = None
-                docs_doc_ids = None
-                if snapshot_error:
-                    log(f"{ready_scope} targeted search fallback; affected ids unavailable: {snapshot_error}")
+                if state.get("sub_scope"):
+                    rebuild_succeeded = rebuild_sub_scope(repo_root, ready_scope, state["sub_scope"])
+                    current_doc_snapshot = None
                 else:
-                    search_doc_ids, fallback_reason = affected_search_doc_ids(
-                        states[ready_scope]["doc_snapshot"],
-                        current_doc_snapshot,
-                        changed_files,
-                        args.targeted_search_threshold,
-                    )
-                    if fallback_reason:
-                        log(f"{ready_scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
+                    current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
+                    search_doc_ids = None
+                    docs_doc_ids = None
+                    if snapshot_error:
+                        log(f"{ready_scope} targeted search fallback; affected ids unavailable: {snapshot_error}")
                     else:
-                        docs_doc_ids = search_doc_ids
-                        log(
-                            f"{ready_scope} affected docs for targeted search: "
-                            f"{affected_doc_ids_log_text(search_doc_ids)}."
+                        search_doc_ids, fallback_reason = affected_search_doc_ids(
+                            state["doc_snapshot"],
+                            current_doc_snapshot,
+                            changed_files,
+                            args.targeted_search_threshold,
                         )
+                        if fallback_reason:
+                            log(f"{ready_scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
+                        else:
+                            docs_doc_ids = search_doc_ids
+                            log(
+                                f"{ready_scope} affected docs for targeted search: "
+                                f"{affected_doc_ids_log_text(search_doc_ids)}."
+                            )
 
-                rebuild_succeeded = rebuild_scope(
-                    repo_root,
-                    ready_scope,
-                    docs_doc_ids=docs_doc_ids,
-                    search_doc_ids=search_doc_ids,
-                )
-                post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"], ready_scope)
-                if post_rebuild_snapshot != states[ready_scope]["snapshot"]:
-                    previous_snapshot = states[ready_scope]["snapshot"]
-                    states[ready_scope]["snapshot"] = post_rebuild_snapshot
-                    states[ready_scope]["changed_files"] = changed_filenames(previous_snapshot, post_rebuild_snapshot)
-                    states[ready_scope]["dirty_at"] = time.monotonic()
-                    log(f"Additional source changes arrived during the {ready_scope} rebuild; scheduling another pass.")
+                    rebuild_succeeded = rebuild_scope(
+                        repo_root,
+                        ready_scope,
+                        docs_doc_ids=docs_doc_ids,
+                        search_doc_ids=search_doc_ids,
+                    )
+
+                post_rebuild_snapshot = state_snapshot(state)
+                if post_rebuild_snapshot != state["snapshot"]:
+                    previous_snapshot = state["snapshot"]
+                    state["snapshot"] = post_rebuild_snapshot
+                    state["changed_files"] = changed_filenames(previous_snapshot, post_rebuild_snapshot)
+                    state["dirty_at"] = time.monotonic()
+                    log(f"Additional source changes arrived during the {ready_label} rebuild; scheduling another pass.")
                 else:
                     if rebuild_succeeded and current_doc_snapshot is not None:
-                        states[ready_scope]["doc_snapshot"] = current_doc_snapshot
-                    states[ready_scope]["dirty_at"] = None
-                    states[ready_scope]["changed_files"] = []
+                        state["doc_snapshot"] = current_doc_snapshot
+                    state["dirty_at"] = None
+                    state["changed_files"] = []
                 continue
 
             time.sleep(args.poll_seconds)

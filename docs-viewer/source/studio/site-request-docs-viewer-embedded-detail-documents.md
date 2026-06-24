@@ -515,15 +515,15 @@ Main design point: sub-scope lifecycle should mutate the parent scope’s `sub_s
 
 ### 4. Sub-Scope Builder
 
-- [ ] Update source discovery so parent scope builds ignore sub-scope source directories for `index-tree.json`, recently-added, and search.
-- [ ] Add a sub-scope build path to `build_docs.py`, selected by `--scope <scope> --sub-scope <sub-scope>`.
-- [ ] Reuse the normal Docs Viewer source parsing, front matter normalization, Markdown rendering, media token, and link rewriting pipeline for sub-scope docs.
-- [ ] Write normal by-id payloads for sub-scope docs under the configured sub-scope output root.
-- [ ] Write `manifest.json` with only the ordered comma-delimited `doc_ids` field.
-- [ ] Enforce that sub-scope detail `doc_id` values do not contain commas.
-- [ ] Update the Docs Live Rebuild Watcher so configured sub-scope source changes run the sub-scope build path and do not trigger parent index/search rebuilds.
-- [ ] Ensure watcher config refresh or restart behavior is explicit so newly configured sub-scope roots are not reported as unsupported nested Markdown.
-- [ ] Add focused builder tests for sub-scope by-id payloads, minimal manifest output, and parent-scope exclusion from tree/search/recently-added.
+- [x] Update source discovery so parent scope builds ignore sub-scope source directories for `index-tree.json`, recently-added, and search.
+- [x] Add a sub-scope build path to `build_docs.py`, selected by `--scope <scope> --sub-scope <sub-scope>`.
+- [x] Reuse the normal Docs Viewer source parsing, front matter normalization, Markdown rendering, media token, and link rewriting pipeline for sub-scope docs.
+- [x] Write normal by-id payloads for sub-scope docs under the configured sub-scope output root.
+- [x] Write `manifest.json` with only the ordered comma-delimited `doc_ids` field.
+- [x] Enforce that sub-scope detail `doc_id` values do not contain commas.
+- [x] Update the Docs Live Rebuild Watcher so configured sub-scope source changes run the sub-scope build path and do not trigger parent index/search rebuilds.
+- [x] Ensure watcher config refresh or restart behavior is explicit so newly configured sub-scope roots are not reported as unsupported nested Markdown.
+- [x] Add focused builder tests for sub-scope by-id payloads, minimal manifest output, and parent-scope exclusion from tree/search/recently-added.
 - [ ] Add focused watcher tests for sub-scope source changes, parent-scope exclusion, and config-refresh or restart behavior.
 
 ### 5. Publish Flow
