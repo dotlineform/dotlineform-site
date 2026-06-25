@@ -222,6 +222,16 @@ Deleted smoke scripts:
 
    Keep them data-oriented, not UI-oriented.
 
+done: Added the first shared, data-oriented fixture factories and routed representative tests through them.
+
+Added fixture modules:
+- `docs-viewer/tests/fixtures/repo_factory.py`
+- `studio/tests/fixtures/catalogue_factory.py`
+- `analytics-app/tests/fixtures/tag_factory.py`
+- `admin-app/tests/fixtures/admin_factory.py`
+
+The app test `conftest.py` files now add each app's `tests/fixtures/` directory to `sys.path`, and `admin-app/tests/conftest.py` was added for the same fixture-import convention. The first migration centralized repeated JSON/file helpers, Analytics tags Data Sharing repo setup, Admin fake repo setup, Studio catalogue JSON helpers, and Docs Management front-matter document writing. Larger repo factories remain a future cleanup target; this batch establishes the ownership location and import pattern without reshaping every test in one pass.
+
 7. Add a review gate
    During future changes, ask:
    - Can this be tested as pure function/service behavior?

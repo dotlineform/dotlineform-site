@@ -9,6 +9,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from admin_factory import make_admin_repo, write_file, write_json
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TARGET_MAP_REPORT_PATH = REPO_ROOT / "admin-app" / "checks" / "reports" / "target_map.py"
@@ -35,16 +37,6 @@ def load_run_reports_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
-
-
-def write_file(path: Path, text: str = "x\n") -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
-
-
-def write_json(path: Path, payload: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def fake_config() -> dict[str, object]:
@@ -151,7 +143,7 @@ def fake_manifest(*, limit: int = 20, pattern_limit: int = 20, families: list[st
 
 
 def make_fake_repo(tmp_path: Path) -> Path:
-    repo = tmp_path / "repo"
+    repo = make_admin_repo(tmp_path)
     write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js")
     write_file(repo / "docs-viewer" / "runtime" / "js" / "management" / "docs-viewer-management.js")
     write_file(repo / "docs-viewer" / "runtime" / "js" / "management" / "docs-viewer-management-search.js")

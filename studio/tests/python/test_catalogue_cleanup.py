@@ -3,10 +3,11 @@
 
 from __future__ import annotations
 
-import json
 import sys
 import tempfile
 from pathlib import Path
+
+from catalogue_factory import write_json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -21,11 +22,6 @@ from tag_services import tag_source_paths  # noqa: E402
 
 
 TAG_ASSIGNMENTS_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
-
-
-def write_json(path: Path, payload: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
 def touch(path: Path) -> None:

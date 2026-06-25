@@ -10,6 +10,7 @@ from http import HTTPStatus
 from pathlib import Path
 
 import pytest
+from admin_factory import write_json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -21,11 +22,6 @@ for path in (REPO_ROOT, ADMIN_SERVER_DIR, ADMIN_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from admin_checks_api import checks_delete_response, checks_get_payload, checks_post_response  # noqa: E402
-
-
-def write_json(path: Path, payload: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def write_minimal_config(repo_root: Path) -> None:

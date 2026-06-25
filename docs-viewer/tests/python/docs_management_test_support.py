@@ -9,6 +9,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from repo_factory import write_doc as write_fixture_doc
+from repo_factory import write_json
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
@@ -48,13 +50,14 @@ EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "", scope: str = "studio") -> None:
-    lines = ["---"]
-    for key, value in front_matter.items():
-        lines.append(f"{key}: {docs_source_model.format_front_matter_value(value)}")
-    lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "docs-viewer/source" / scope / filename
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(lines), encoding="utf-8")
+    write_fixture_doc(
+        root,
+        filename,
+        front_matter,
+        body=body,
+        scope=scope,
+        format_value=docs_source_model.format_front_matter_value,
+    )
 
 
 def make_repo() -> tempfile.TemporaryDirectory[str]:
@@ -160,11 +163,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     return temp_dir
-
-
-def write_json(path: Path, payload: dict[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload), encoding="utf-8")
 
 
 def write_docs_route_configs(root: Path) -> None:

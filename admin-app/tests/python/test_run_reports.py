@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from admin_factory import make_admin_repo, write_json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -25,11 +26,6 @@ def load_run_reports_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
-
-
-def write_json(path: Path, payload: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def write_fake_report(path: Path, *, exit_code: int = 0, write_artifacts: bool = True) -> None:
@@ -61,7 +57,7 @@ raise SystemExit({exit_code})
 
 
 def make_fake_repo(tmp_path: Path) -> Path:
-    repo = tmp_path / "repo"
+    repo = make_admin_repo(tmp_path)
     runtime_file = repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js"
     runtime_file.parent.mkdir(parents=True)
     runtime_file.write_text("const search = true;\n", encoding="utf-8")

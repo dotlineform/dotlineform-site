@@ -9,6 +9,8 @@ import json
 import sys
 from pathlib import Path
 
+from admin_factory import make_admin_repo, write_file
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 FILES_REPORT_PATH = REPO_ROOT / "admin-app" / "checks" / "reports" / "files.py"
@@ -24,11 +26,6 @@ def load_files_report_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
-
-
-def write_file(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
 
 
 def fake_config() -> dict[str, object]:
@@ -104,7 +101,7 @@ def fake_manifest(*, limit: int = 20, sort: str = "lines_desc") -> dict[str, obj
 
 
 def make_fake_repo(tmp_path: Path) -> Path:
-    repo = tmp_path / "repo"
+    repo = make_admin_repo(tmp_path)
     write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-search.js", "alpha\nbeta\ngamma\n")
     write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-shared.js", "shared\n")
     write_file(repo / "site" / "docs-viewer" / "runtime" / "js" / "shared" / "docs-viewer-other.js", "ignored\nignored\nignored\nignored\n")
