@@ -71,11 +71,19 @@ BASE_CONFIG = {
             "metadata": {
                 "include": ["export_id", "config_id", "scope", "generated_at", "selected_doc_ids", "counts"],
             },
+            "external_context": {
+                "task": "suggest_document_summaries",
+                "response_guidance": "Return proposed summary changes keyed by doc_id.",
+                "field_descriptions": {
+                    "doc_id": "Stable document identifier. Preserve exactly in responses.",
+                    "title": "Document title.",
+                    "current_summary": "Existing document summary.",
+                },
+            },
             "document_fields": [
                 {"source": "doc_id", "output_path": "doc_id", "required": True},
                 {"source": "title", "output_path": "title", "required": True},
                 {"source": "current_summary", "output_path": "current_summary", "default": ""},
-                {"source": "last_updated", "output_path": "last_updated", "required": True},
             ],
         }
     ],
@@ -221,6 +229,18 @@ def test_config_validation_blocks_duplicate_output_paths() -> None:
     assert "config library-document-summaries: duplicate document output_path title" in report["errors"]
 
 
+def test_config_validation_requires_external_context_descriptions() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    del config["configs"][0]["external_context"]["field_descriptions"]["current_summary"]
+    config["configs"][0]["external_context"]["field_descriptions"]["retired_field"] = "Stale field."
+    with make_repo(config) as temp:
+        report = run_export(Path(temp))
+
+    assert report["ok"] is False
+    assert "config library-document-summaries: external_context.field_descriptions.current_summary is required" in report["errors"]
+    assert "config library-document-summaries: external_context.field_descriptions.retired_field does not match a document output_path" in report["errors"]
+
+
 def test_unknown_config_returns_structured_validation_report() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp), config_id="missing-config")
@@ -250,12 +270,15 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             first_report = run_export(root, missing_summary_only=False, write=True)
             first_output = root / first_report["output_file"]
             first_metadata_output = root / first_report["metadata_file"]
+            first_context_output = root / first_report["context_file"]
             first_text = first_output.read_text(encoding="utf-8")
             first_metadata_text = first_metadata_output.read_text(encoding="utf-8")
+            first_context_text = first_context_output.read_text(encoding="utf-8")
 
             second_report = run_export(root, missing_summary_only=False, write=True)
             second_text = (root / second_report["output_file"]).read_text(encoding="utf-8")
             second_metadata_text = (root / second_report["metadata_file"]).read_text(encoding="utf-8")
+            second_context_text = (root / second_report["context_file"]).read_text(encoding="utf-8")
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -266,14 +289,29 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_report["metadata_file"] == (
         "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.meta.json"
     )
+    assert first_report["context_file"] == (
+        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.context.json"
+    )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
+    assert first_context_text == second_context_text
     rows = [json.loads(line) for line in first_text.splitlines()]
     metadata = json.loads(first_metadata_text)
+    context = json.loads(first_context_text)
     assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
     assert "_export" not in rows[0]
+    assert "last_updated" not in rows[0]
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
+    assert context["task"] == "suggest_document_summaries"
+    assert context["response_guidance"] == "Return proposed summary changes keyed by doc_id."
+    assert context["record_format"] == "jsonl"
+    assert {field["field"] for field in context["record_schema"]} >= {"doc_id", "title", "current_summary"}
+    description_by_field = {field["field"]: field["description"] for field in context["record_schema"]}
+    assert description_by_field["current_summary"] == "Existing document summary."
+    assert "last_updated" not in {field["field"] for field in context["record_schema"]}
+    assert "generated_at" not in context
+    assert "counts" not in context
 
 
 def test_document_rows_json_format_override_writes_json_array() -> None:
@@ -286,6 +324,8 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
             root = Path(temp)
             report = run_export(root, missing_summary_only=False, write=True, target_format="json")
             payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
+            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+            context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -296,7 +336,10 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     )
     assert isinstance(payload, list)
     assert [row["doc_id"] for row in payload] == ["library", "child-with-summary"]
-    assert payload[0]["_export"]["generated_at"] == fixed_generated_at
+    assert "_export" not in payload[0]
+    assert "last_updated" not in payload[0]
+    assert metadata["generated_at"] == fixed_generated_at
+    assert context["record_container"] == "JSON array of document objects"
 
 
 def test_unsupported_format_override_blocks_export() -> None:
@@ -395,6 +438,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert report["output_written"] is True
     assert report["metadata_file"].endswith(".meta.json")
     assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
+    assert "last_updated" not in rows[0]
     library_row = rows[0]
     child_row = rows[1]
     assert library_row["parent_id"] == ""
@@ -484,6 +528,41 @@ def test_repo_parent_child_relationships_respects_selected_docs() -> None:
     assert report["counts"]["exported"] == 1
 
 
+def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
+    config = docs_export.load_config_file(REPO_ROOT)
+    fixed_generated_at = "2026-05-04T12:00:00Z"
+    fixed_filename_dt = dt.datetime(2026, 5, 4, 13, 0, 0, tzinfo=dt.timezone(dt.timedelta(hours=1)))
+    original_export_run_times = docs_export.export_run_times
+    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
+    try:
+        with make_repo(copy.deepcopy(config)) as temp:
+            root = Path(temp)
+            report = docs_export.build_export(
+                repo_root=root,
+                config_id="library-parent-child-relationships",
+                scope="library",
+                selected_doc_ids=["library"],
+                select_all=False,
+                missing_summary_only=None,
+                write=True,
+            )
+            payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
+            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+            context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
+    finally:
+        docs_export.export_run_times = original_export_run_times
+
+    assert report["ok"] is True, report
+    assert sorted(payload.keys()) == ["documents"]
+    assert [row["doc_id"] for row in payload["documents"]] == ["library", "child-with-summary"]
+    assert "last_updated" not in payload["documents"][0]
+    assert metadata["generated_at"] == fixed_generated_at
+    assert metadata["counts"]["exported"] == 2
+    assert context["task"] == "review_parent_child_relationships"
+    assert context["records_path"] == "documents"
+    assert "counts" not in context
+
+
 def test_repo_representative_library_exports_dry_run_successfully() -> None:
     cases = [
         {
@@ -526,6 +605,8 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["output_written"] is False
         assert report["output_file"].startswith(f"var/analytics/data-sharing/exports/documents-{case['config_id']}-")
         assert report["output_file"].endswith(f".{case['target_format']}")
+        assert report["metadata_file"].endswith(".meta.json")
+        assert report["context_file"].endswith(".context.json")
 
 
 def main() -> None:
@@ -534,6 +615,7 @@ def main() -> None:
         test_selected_doc_resolution_expands_descendants_in_index_order,
         test_unknown_selected_doc_blocks_export,
         test_config_validation_blocks_duplicate_output_paths,
+        test_config_validation_requires_external_context_descriptions,
         test_unknown_config_returns_structured_validation_report,
         test_jsonl_config_requires_jsonl_output_extension,
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
@@ -545,6 +627,7 @@ def main() -> None:
         test_export_uses_source_metadata_for_document_content,
         test_missing_source_metadata_returns_structured_export_error,
         test_repo_parent_child_relationships_respects_selected_docs,
+        test_envelope_json_export_writes_clean_payload_and_sidecars,
         test_repo_representative_library_exports_dry_run_successfully,
     ]
     for test in tests:

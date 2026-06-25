@@ -47,6 +47,23 @@
           "counts"
         ]
       },
+      "external_context": {
+        "task": "review_parent_child_relationships",
+        "response_guidance": "Review the current document hierarchy and return proposed parent-child relationship changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
+        "field_descriptions": {
+          "doc_id": "Stable document identifier. Preserve exactly in responses.",
+          "title": "Document title.",
+          "parent_id": "Current parent document id, if present.",
+          "parent_title": "Current parent document title, if present.",
+          "ancestor_ids": "Current ancestor document ids, nearest parent first.",
+          "ancestor_titles": "Current ancestor document titles, nearest parent first.",
+          "child_ids": "Current child document ids.",
+          "child_titles": "Current child document titles.",
+          "summary": "Existing document summary.",
+          "headings": "Headings extracted from the document.",
+          "viewable": "Whether the source document is currently marked viewable."
+        }
+      },
       "document_fields": [
         {
           "source": "doc_id",
@@ -98,11 +115,6 @@
           "output_path": "headings",
           "default": [],
           "transforms": ["headings_from_rendered_html"]
-        },
-        {
-          "source": "last_updated",
-          "output_path": "last_updated",
-          "required": true
         },
         {
           "source": "viewable",
@@ -157,6 +169,18 @@
           "counts"
         ]
       },
+      "external_context": {
+        "task": "suggest_document_summaries",
+        "response_guidance": "Return proposed summary changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
+        "field_descriptions": {
+          "doc_id": "Stable document identifier. Preserve exactly in responses.",
+          "title": "Document title.",
+          "parent_id": "Current parent document id, if present.",
+          "headings": "Headings extracted from the document.",
+          "current_summary": "Existing document summary. Empty means a new summary may be needed.",
+          "viewable": "Whether the source document is currently marked viewable."
+        }
+      },
       "document_fields": [
         {
           "source": "doc_id",
@@ -183,11 +207,6 @@
           "source": "current_summary",
           "output_path": "current_summary",
           "default": ""
-        },
-        {
-          "source": "last_updated",
-          "output_path": "last_updated",
-          "required": true
         },
         {
           "source": "viewable",
@@ -241,6 +260,24 @@
           "source_last_updated",
           "counts"
         ]
+      },
+      "external_context": {
+        "task": "suggest_document_content_changes",
+        "response_guidance": "Return proposed content changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
+        "field_descriptions": {
+          "doc_id": "Stable document identifier. Preserve exactly in responses.",
+          "title": "Document title.",
+          "parent_id": "Current parent document id, if present.",
+          "parent_title": "Current parent document title, if present.",
+          "ancestor_ids": "Current ancestor document ids, nearest parent first.",
+          "ancestor_titles": "Current ancestor document titles, nearest parent first.",
+          "child_ids": "Current child document ids.",
+          "child_titles": "Current child document titles.",
+          "summary": "Existing document summary.",
+          "headings": "Headings extracted from the document.",
+          "source_text": "Plain-text document body extracted from source content.",
+          "viewable": "Whether the source document is currently marked viewable."
+        }
       },
       "document_fields": [
         {
@@ -308,11 +345,6 @@
             "empty_image_mode": "marker"
           },
           "limit_key": "max_chars_per_document"
-        },
-        {
-          "source": "last_updated",
-          "output_path": "last_updated",
-          "required": true
         },
         {
           "source": "viewable",

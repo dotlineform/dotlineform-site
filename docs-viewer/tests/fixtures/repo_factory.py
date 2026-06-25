@@ -169,6 +169,14 @@ def write_documents_prepare_profiles(root: Path) -> None:
                     "metadata": {
                         "include": ["export_id", "config_id", "scope", "generated_at", "selected_doc_ids", "counts"],
                     },
+                    "external_context": {
+                        "task": "suggest_document_summaries",
+                        "response_guidance": "Return proposed summary changes keyed by doc_id.",
+                        "field_descriptions": {
+                            "doc_id": "Stable document identifier. Preserve exactly in responses.",
+                            "title": "Document title.",
+                        },
+                    },
                     "document_fields": [
                         {"source": "doc_id", "output_path": "doc_id", "required": True},
                         {"source": "title", "output_path": "title", "required": True},

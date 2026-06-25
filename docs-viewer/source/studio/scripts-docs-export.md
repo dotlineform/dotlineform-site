@@ -30,10 +30,11 @@ Current output pattern:
 
 - `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
 - `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.meta.json` for JSONL export metadata
+- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.meta.json` for internal export provenance
+- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.context.json` for external task and schema context
 
 The filename timestamp is formatted in the local runtime timezone.
-Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
+Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance and is written only to the internal `.meta.json` sidecar.
 
 ## Runtime Contract
 
@@ -52,8 +53,9 @@ Outputs:
 
 - a structured JSON report on stdout
 - no file in dry-run mode
-- one JSON or JSONL share package in write mode
-- one sibling `.meta.json` metadata sidecar for JSONL packages when export metadata is enabled
+- one JSON or JSONL external share package in write mode
+- one sibling `.meta.json` internal metadata sidecar when export metadata is enabled
+- one sibling `.context.json` external task/schema sidecar
 
 Export preparation is read-only with respect to docs source and generated docs/search payloads.
 It does not run `build_docs.py`, does not run `build_search.py`, and does not include rebuild diagnostics in its report.
@@ -81,9 +83,12 @@ Implemented now:
 - omits code blocks when the selected field mapping includes `omit_code_blocks`
 - truncates `source_text` when the selected field mapping includes `truncate_chars`
 - handles image/SVG text according to field-level extraction options
-- writes JSON envelope exports
-- writes JSONL document-row exports with sibling metadata sidecars
-- writes JSON arrays for document-row configs when `json` is selected
+- writes JSON envelope exports without run metadata in the payload
+- writes JSONL document-row exports without run metadata in the rows
+- writes JSON arrays for document-row configs without run metadata when `json` is selected
+- writes internal `.meta.json` sidecars and external `.context.json` sidecars
+- derives external task wording and field descriptions from profile `external_context`
+- keeps source timestamp provenance in `.meta.json` rather than in external records
 - returns a structured JSON report
 
 The `library-full-document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
@@ -154,7 +159,7 @@ Focused package-preparation checks live in:
 docs-viewer/tests/python/test_docs_export.py
 ```
 
-They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output and metadata sidecars for a fixed run time, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
+They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output, metadata/context sidecars, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
 The same check runs in the `docs` profile:
 
 ```bash
@@ -173,6 +178,7 @@ The script prints a JSON report with:
 - `supported_target_formats`
 - `output_file`
 - `metadata_file`
+- `context_file`
 - `counts`
 - `selected_doc_ids`
 - `exported_doc_ids`

@@ -10,8 +10,6 @@ viewer_report: docs_index_table
 viewer_report_access: public
 
 
-
-
 ---
 
 possible frontmatter fields:

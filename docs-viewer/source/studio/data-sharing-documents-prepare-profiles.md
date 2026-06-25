@@ -81,6 +81,7 @@ Each profile requires:
 - `selection`: default document selection and filtering behavior
 - `limits`: document and character limits
 - `metadata`: export-run metadata fields to include
+- `external_context`: external task wording, response guidance, and field descriptions
 - `document_fields`: mappings from Docs Viewer source metadata into the output record
 
 ## Target
@@ -96,13 +97,30 @@ When omitted, the default `target.format` is the only supported format.
 
 `target.record_shape` supports:
 
-- `envelope`: one JSON object containing run metadata plus a document array
+- `envelope`: one JSON object containing a document array
 - `document_rows`: one complete document record per JSONL row, or one JSON array when `json` is selected
 
 When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `documents`.
 Envelope profiles support JSON only.
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
-For JSONL document-row exports, export-run metadata is written once to a sibling `.meta.json` sidecar instead of being repeated in every row.
+Export-run metadata is written once to a sibling `.meta.json` sidecar instead of being included in the external JSON or JSONL payload.
+A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
+External payload records should not include internal run details, row counts, checksums, or source timestamps; source-date provenance belongs in `.meta.json`.
+
+## External Context
+
+`external_context` owns the operator-facing wording sent beside an external package.
+It is intentionally config-driven so task labels, response guidance, and field descriptions can iterate without changing exporter code.
+
+Each profile must define:
+
+- `task`: short machine-readable task label for the external service
+- `response_guidance`: concise instruction text for the expected response shape
+- `field_descriptions`: one description for every `document_fields[].output_path`
+
+The exporter derives `.context.json` from `external_context`, `target`, and `document_fields`.
+It infers simple field types from the field mapping/defaults and preserves the configured descriptions verbatim.
+Validation fails when a document output field has no description or when `field_descriptions` contains a stale field that no longer exists in `document_fields`.
 
 ## Output
 
@@ -112,13 +130,14 @@ For JSONL document-row exports, export-run metadata is written once to a sibling
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.json
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.meta.json
+var/analytics/data-sharing/exports/{export_id}-{timestamp}.context.json
 ```
 
 The placeholders are resolved by the export engine.
 Current profiles use `{export_id}` and `{timestamp}`.
 Other placeholders, including `{data_domain}`, are only valid when supported by the export engine and still resolve under the shared export root.
 When an operator chooses a non-default supported format, the export engine keeps the configured directory, export id, and timestamp, then switches the output file extension to the selected format.
-The `.meta.json` pattern is derived from a JSONL output filename when export metadata is enabled; it is not configured as a separate profile path.
+The `.meta.json` and `.context.json` patterns are derived from the output filename; they are not configured as separate profile paths.
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
 It formats the filename timestamp in the local runtime timezone.

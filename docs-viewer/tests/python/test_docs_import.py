@@ -178,11 +178,12 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
     assert report["records"][0]["unknown_metadata"] == {"review_note": "Keep this unknown field."}
 
 
-def test_staged_import_listing_skips_jsonl_metadata_sidecars() -> None:
+def test_staged_import_listing_skips_package_sidecars() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", '{"doc_id": "alpha", "title": "Alpha"}\n')
         write_staged(root, "summaries.meta.json", '{"export_id": "library-document-summaries"}\n')
+        write_staged(root, "summaries.context.json", '{"task": "suggest_document_summaries"}\n')
         files = docs_import.list_staged_import_files(root, "library")
 
     assert [item["filename"] for item in files] == ["summaries.jsonl"]
@@ -192,9 +193,6 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
     with make_repo() as temp:
         root = Path(temp)
         payload = {
-            "export_id": "library-parent-child-relationships",
-            "scope": "library",
-            "generated_at": "2026-05-03T20:10:00Z",
             "review_batch": "tree-a",
             "documents": [
                 {
@@ -214,10 +212,23 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
             ],
         }
         write_staged(root, "relationships.json", json.dumps(payload))
+        write_staged(
+            root,
+            "relationships.meta.json",
+            json.dumps(
+                {
+                    "export_id": "library-parent-child-relationships",
+                    "scope": "library",
+                    "generated_at": "2026-05-03T20:10:00Z",
+                }
+            ),
+        )
         report = parse(root, "relationships.json")
 
     assert report["ok"] is True
     assert report["detected_import_type"] == "parent_child_relationships"
+    assert report["source_metadata_file"].endswith("relationships.meta.json")
+    assert report["source_export_id"] == "library-parent-child-relationships"
     assert report["unknown_file_metadata"] == {"review_batch": "tree-a"}
     assert report["records"][0]["relationships"]["child_ids"] == ["alpha"]
     assert report["records"][1]["relationships"]["ancestor_ids"] == ["library"]
@@ -440,8 +451,6 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
     with make_repo() as temp:
         root = Path(temp)
         payload = {
-            "export_id": "library-parent-child-relationships",
-            "scope": "library",
             "documents": [
                 {"doc_id": "library", "title": "Library", "parent_id": ""},
                 {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Alpha summary."},
@@ -449,6 +458,11 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
             ],
         }
         write_staged(root, "relationships.json", json.dumps(payload))
+        write_staged(
+            root,
+            "relationships.meta.json",
+            json.dumps({"export_id": "library-parent-child-relationships", "scope": "library"}),
+        )
         report = render(root, parse(root, "relationships.json"))
         preview = (root / "var/analytics/data-sharing/library/import-preview/relationships-tree-20260503-204000.md").read_text(encoding="utf-8")
 
@@ -519,7 +533,7 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
 def main() -> None:
     tests = [
         test_jsonl_summary_export_rows_are_detected_and_normalized,
-        test_staged_import_listing_skips_jsonl_metadata_sidecars,
+        test_staged_import_listing_skips_package_sidecars,
         test_json_envelope_relationship_export_preserves_tree_metadata,
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,

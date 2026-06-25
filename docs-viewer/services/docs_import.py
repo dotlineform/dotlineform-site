@@ -275,7 +275,7 @@ def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | s
         return []
     files: list[dict[str, Any]] = []
     for path in sorted(resolved_staging_root.iterdir()):
-        if path.name.endswith(".meta.json"):
+        if path.name.endswith(".meta.json") or path.name.endswith(".context.json"):
             continue
         if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
             continue
@@ -314,12 +314,12 @@ def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
         return None, [issue("error", "invalid_json", f"invalid JSON: {exc.msg}", line=exc.lineno)]
 
 
-def jsonl_metadata_sidecar_path(path: Path) -> Path:
+def package_metadata_sidecar_path(path: Path) -> Path:
     return path.with_suffix(".meta.json")
 
 
-def metadata_from_jsonl_sidecar(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
-    metadata_path = jsonl_metadata_sidecar_path(path)
+def metadata_from_package_sidecar(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
+    metadata_path = package_metadata_sidecar_path(path)
     if not metadata_path.exists():
         return {}, {}, [], None
     payload, issues = parse_json_file(metadata_path)
@@ -375,11 +375,14 @@ def rows_from_payload(payload: Any) -> tuple[list[Any], dict[str, Any], dict[str
         return payload, {}, {}, issues
     if isinstance(payload, dict):
         if isinstance(payload.get("documents"), list):
-            metadata, unknown = file_metadata_from_envelope(payload)
-            return payload["documents"], metadata, unknown, issues
+            unknown = {
+                key: copy.deepcopy(value)
+                for key, value in payload.items()
+                if key != "documents"
+            }
+            return payload["documents"], {}, unknown, issues
         if is_document_like_record(payload):
             return [payload], {}, {}, issues
-        metadata, unknown = file_metadata_from_envelope(payload)
         issues.append(
             issue(
                 "warning",
@@ -387,7 +390,7 @@ def rows_from_payload(payload: Any) -> tuple[list[Any], dict[str, Any], dict[str
                 "JSON object does not contain a documents array or document-like fields",
             )
         )
-        return [], metadata, unknown, issues
+        return [], {}, copy.deepcopy(payload), issues
     issues.append(issue("warning", "unsupported_import_shape", "JSON payload is not an object or array"))
     return [], {}, {}, issues
 
@@ -1001,20 +1004,20 @@ def parse_staged_import(
         return report
 
     try:
+        file_metadata, unknown_file_metadata, metadata_issues, metadata_path = metadata_from_package_sidecar(path)
+        if metadata_path is not None:
+            report["source_metadata_file"] = relative_path(repo_root, metadata_path)
         if extension == ".jsonl":
             raw_rows, parse_issues = parse_jsonl_file(path)
-            file_metadata, unknown_file_metadata, metadata_issues, metadata_path = metadata_from_jsonl_sidecar(path)
             parse_issues.extend(metadata_issues)
-            if metadata_path is not None:
-                report["source_metadata_file"] = relative_path(repo_root, metadata_path)
         else:
             payload, parse_issues = parse_json_file(path)
+            parse_issues.extend(metadata_issues)
             if any(item["level"] == "error" for item in parse_issues):
                 raw_rows = []
-                file_metadata = {}
-                unknown_file_metadata = {}
             else:
-                raw_rows, file_metadata, unknown_file_metadata, shape_issues = rows_from_payload(payload)
+                raw_rows, _payload_metadata, payload_unknown_metadata, shape_issues = rows_from_payload(payload)
+                unknown_file_metadata.update(payload_unknown_metadata)
                 parse_issues.extend(shape_issues)
     except OSError as exc:
         report["issues"].append(issue("error", "unreadable_file", f"unreadable file: {exc}"))
