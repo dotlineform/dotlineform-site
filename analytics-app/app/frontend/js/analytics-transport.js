@@ -21,6 +21,7 @@ const DATA_SHARING_ENDPOINTS = {
   config: "/analytics/api/data-sharing/config",
   selectableRecords: "/analytics/api/data-sharing/selectable-records",
   prepare: "/analytics/api/data-sharing/prepare",
+  context: "/analytics/api/data-sharing/context",
   returnedPackages: "/analytics/api/data-sharing/returned-packages",
   review: "/analytics/api/data-sharing/review",
   apply: "/analytics/api/data-sharing/apply"
@@ -42,6 +43,7 @@ export function configureAnalyticsTransport(config) {
       config: configuredDataSharing.config || DATA_SHARING_ENDPOINTS.config,
       selectableRecords: configuredDataSharing.selectable_records || DATA_SHARING_ENDPOINTS.selectableRecords,
       prepare: configuredDataSharing.prepare || DATA_SHARING_ENDPOINTS.prepare,
+      context: configuredDataSharing.context || DATA_SHARING_ENDPOINTS.context,
       returnedPackages: configuredDataSharing.returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
       review: configuredDataSharing.review || DATA_SHARING_ENDPOINTS.review,
       apply: configuredDataSharing.apply || DATA_SHARING_ENDPOINTS.apply

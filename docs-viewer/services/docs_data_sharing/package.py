@@ -6,7 +6,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
-from docs_export import build_export, parse_doc_ids as parse_export_doc_ids
+from docs_export import (
+    build_export,
+    parse_doc_ids as parse_export_doc_ids,
+    update_external_context_config,
+)
 from docs_data_sharing import source_metadata
 from docs_import import list_staged_import_files
 import docs_source_model as source_model
@@ -111,6 +115,27 @@ def build_document_package(
         target_format=target_format or None,
         output_root=output_root,
     )
+
+
+def update_document_prepare_context(
+    repo_root: Path,
+    *,
+    config_id: str,
+    external_context: Any,
+    config_path: str,
+    dry_run: bool = False,
+) -> Dict[str, Any]:
+    if not config_id:
+        raise ValueError("config_id is required")
+    report = update_external_context_config(
+        repo_root,
+        config_id=config_id,
+        external_context=external_context,
+        config_path=config_path,
+        write=not dry_run,
+    )
+    report["summary_text"] = "Validated context." if dry_run else "Saved context."
+    return report
 
 
 def list_returned_document_packages(repo_root: Path, *, scope: str, staging_root: Path) -> Dict[str, Any]:

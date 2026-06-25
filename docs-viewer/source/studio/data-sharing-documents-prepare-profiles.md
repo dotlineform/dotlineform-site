@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-prepare-profiles
 title: Documents Prepare Profiles
 added_date: "2026-05-03 14:15"
-last_updated: 2026-06-21
+last_updated: 2026-06-25
 parent_id: data-sharing
 viewable: true
 ---
@@ -31,6 +31,7 @@ Browser routes must not fetch this config file directly.
 
 To add or change a document package pattern, edit `data-sharing/adapters/documents/config/prepare-profiles.json`.
 Profile changes should be checked with the documents package/export tests because there is no standalone schema file.
+The Analytics prepare page can edit the selected profile's `external_context` fields through its Edit context modal; structural profile changes such as field mappings, target shape, and output paths remain source-file edits.
 
 Each profile controls:
 
@@ -121,6 +122,9 @@ Each profile must define:
 The exporter derives `.context.json` from `external_context`, `target`, and `document_fields`.
 It infers simple field types from the field mapping/defaults and preserves the configured descriptions verbatim.
 Validation fails when a document output field has no description or when `field_descriptions` contains a stale field that no longer exists in `document_fields`.
+
+The prepare UI exposes only `external_context.task`, `external_context.response_guidance`, and `external_context.field_descriptions`.
+Saving from the modal rewrites the profile config after validating the full prepare-profile payload.
 
 ## Output
 

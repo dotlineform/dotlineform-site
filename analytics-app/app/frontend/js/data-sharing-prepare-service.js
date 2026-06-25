@@ -89,6 +89,14 @@ export async function submitDataSharingPreparePackage(request) {
   return postJson(DATA_SHARING_ENDPOINTS.prepare, request);
 }
 
+export async function saveDataSharingPrepareContext(state, { config, externalContext } = {}) {
+  return postJson(DATA_SHARING_ENDPOINTS.context, {
+    data_domain: state.dataDomain,
+    config_id: config && config.id,
+    external_context: externalContext
+  });
+}
+
 export function dataSharingPrepareSuccessResult(state, payload) {
   return {
     failed: false,

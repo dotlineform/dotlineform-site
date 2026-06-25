@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6c7f876814a48b01c6636aecbb721ea4",
-    "generated_at_utc": "2026-06-25T19:25:29Z",
+    "version": "blake2b-c7c9980362d21f9bf5f334aaca72faee",
+    "generated_at_utc": "2026-06-25T20:52:13Z",
     "count": 227
   },
   "entries": [
@@ -1555,10 +1555,10 @@
       "kind": "doc",
       "title": "Documents Prepare Profiles",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles",
-      "last_updated": "2026-06-21",
+      "last_updated": "2026-06-25",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-21 • Data Sharing",
+      "display_meta": "2026-06-25 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-prepare-profiles",
         "data",
@@ -1568,12 +1568,12 @@
         "profiles",
         "documents prepare profiles",
         "data sharing",
-        "2026-06-21",
+        "2026-06-25",
         "2026",
         "06",
-        "21"
+        "25"
       ],
-      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-21 2026 06 21"
+      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-25 2026 06 25"
     },
     {
       "id": "data-sharing-tags-adapter-structure",

@@ -38,3 +38,13 @@ def handlers_for(
         review=review_handler,
         apply=apply_handler,
     )
+
+
+def update_prepare_context(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Any,
+    dependencies: context.DocumentsDataSharingDependencies | None = None,
+) -> Dict[str, Any]:
+    return documents.update_prepare_context(repo_root, body, dry_run, adapter, dependencies)

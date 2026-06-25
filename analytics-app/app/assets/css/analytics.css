@@ -1553,6 +1553,41 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
   padding-left: 1.1rem;
 }
 
+.dataSharingPrepareContextModal__field {
+  grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: start;
+}
+
+.dataSharingPrepareContextModal__fieldLabel {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.dataSharingPrepareContextModal__fieldLabel code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.dataSharingPrepareContextModal__fieldLabel small {
+  color: var(--muted, var(--analytics-muted));
+  font-size: var(--font-caption);
+}
+
+.dataSharingPrepareContextModal__textarea {
+  min-height: 4.5rem;
+  resize: vertical;
+}
+
+.dataSharingPrepareContextModal__textarea--guidance {
+  min-height: 7rem;
+}
+
+.dataSharingPrepareContextModal__fields {
+  display: grid;
+  gap: 0.6rem;
+}
+
 .dataSharingPrepareList__row {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -2374,10 +2409,16 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
   }
 
   #dataSharingPrepareRun,
+  #dataSharingPrepareEditContext,
   .dataSharingPreparePage__toggle {
     grid-column: auto;
     grid-row: auto;
     margin-inline-start: 0;
+  }
+
+  .dataSharingPrepareContextModal__field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
   }
 
   .dataSharingReviewList__label {

@@ -45,6 +45,7 @@ CONFIG_PATH = "/config"
 SELECTABLE_RECORDS_PATH = "/selectable-records"
 RETURNED_PACKAGES_PATH = "/returned-packages"
 PREPARE_PATH = "/prepare"
+CONTEXT_PATH = "/context"
 REVIEW_PATH = "/review"
 APPLY_PATH = "/apply"
 LOGS_REL_DIR = Path("var/analytics/logs")
@@ -89,6 +90,7 @@ def service_endpoints() -> dict[str, str]:
         "selectable_records": f"{API_BASE}{SELECTABLE_RECORDS_PATH}",
         "returned_packages": f"{API_BASE}{RETURNED_PACKAGES_PATH}",
         "prepare": f"{API_BASE}{PREPARE_PATH}",
+        "context": f"{API_BASE}{CONTEXT_PATH}",
         "review": f"{API_BASE}{REVIEW_PATH}",
         "apply": f"{API_BASE}{APPLY_PATH}",
     }
@@ -153,7 +155,44 @@ def public_sharing_profile(profile: dict[str, Any]) -> dict[str, object]:
         payload["target"] = public_profile_target(profile["target"])
     if isinstance(profile.get("selection"), dict):
         payload["selection"] = public_profile_selection(profile["selection"])
+    if isinstance(profile.get("external_context"), dict):
+        payload["external_context"] = public_profile_external_context(profile["external_context"])
+    if isinstance(profile.get("document_fields"), list):
+        payload["document_fields"] = public_profile_document_fields(profile["document_fields"])
     return payload
+
+
+def public_profile_external_context(external_context: dict[str, Any]) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "task": str(external_context.get("task") or ""),
+        "response_guidance": str(external_context.get("response_guidance") or ""),
+        "field_descriptions": {},
+    }
+    field_descriptions = external_context.get("field_descriptions")
+    if isinstance(field_descriptions, dict):
+        payload["field_descriptions"] = {
+            str(key): str(value or "")
+            for key, value in field_descriptions.items()
+            if str(key).strip()
+        }
+    return payload
+
+
+def public_profile_document_fields(document_fields: list[Any]) -> list[dict[str, str]]:
+    fields: list[dict[str, str]] = []
+    for field in document_fields:
+        if not isinstance(field, dict):
+            continue
+        output_path = str(field.get("output_path") or "").strip()
+        if not output_path:
+            continue
+        fields.append(
+            {
+                "source": str(field.get("source") or "").strip(),
+                "output_path": output_path,
+            }
+        )
+    return fields
 
 
 def public_profile_target(target: dict[str, Any]) -> dict[str, object]:
@@ -295,6 +334,19 @@ def data_sharing_post_response(
     if api_path == PREPARE_PATH:
         payload = data_sharing_service.prepare_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
         documents_data_sharing_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
+        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
+    if api_path == CONTEXT_PATH:
+        data_domain = str(body.get("data_domain") or "").strip()
+        if data_domain != "documents":
+            raise ValueError("context editing is only available for documents prepare profiles")
+        adapter = data_sharing_service.resolve_for_service(repo_root, data_domain, "prepare")
+        payload = documents_data_sharing_adapter.update_prepare_context(
+            repo_root,
+            body,
+            dry_run,
+            adapter,
+            documents_data_sharing_dependencies(),
+        )
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == REVIEW_PATH:
         payload = data_sharing_service.review_returned_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)

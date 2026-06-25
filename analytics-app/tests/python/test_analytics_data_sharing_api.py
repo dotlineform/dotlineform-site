@@ -36,6 +36,7 @@ def test_runtime_config_publishes_analytics_owned_data_sharing_endpoints() -> No
         "selectable_records": "/analytics/api/data-sharing/selectable-records",
         "returned_packages": "/analytics/api/data-sharing/returned-packages",
         "prepare": "/analytics/api/data-sharing/prepare",
+        "context": "/analytics/api/data-sharing/context",
         "review": "/analytics/api/data-sharing/review",
         "apply": "/analytics/api/data-sharing/apply",
     }
@@ -47,6 +48,7 @@ def test_health_payload_identifies_analytics_data_sharing_service() -> None:
     assert payload["ok"] is True
     assert payload["service"] == "analytics_data_sharing"
     assert payload["endpoints"]["prepare"] == "/analytics/api/data-sharing/prepare"
+    assert payload["endpoints"]["context"] == "/analytics/api/data-sharing/context"
     assert payload["endpoints"]["config"] == "/analytics/api/data-sharing/config"
 
 
@@ -89,9 +91,16 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
         "supports_missing_summary_only": True,
         "default_missing_summary_only": False,
     }
+    assert profile["external_context"] == {
+        "task": "review_documents",
+        "response_guidance": "Return proposed changes keyed by doc_id.",
+        "field_descriptions": {
+            "doc_id": "Stable document identifier.",
+        },
+    }
+    assert profile["document_fields"] == [{"source": "doc_id", "output_path": "doc_id"}]
     assert "output" not in profile
     assert "metadata" not in profile
-    assert "document_fields" not in profile
     assert "path_pattern" not in json.dumps(profile)
     assert "include_descendants" not in json.dumps(profile)
     assert "include_non_viewable" not in json.dumps(profile)
@@ -161,6 +170,63 @@ def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) ->
     assert status == HTTPStatus.OK
     assert payload == {"ok": True, "adapter_id": "documents", "operation": "prepare"}
     assert calls[0]["dry_run"] is True
+
+
+def test_context_endpoint_updates_documents_prepare_profile_context() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        status, payload = analytics_data_sharing_api.data_sharing_post_response(
+            root,
+            "/context",
+            {
+                "data_domain": "documents",
+                "config_id": "library-smoke",
+                "external_context": {
+                    "task": "suggest_updates",
+                    "response_guidance": "Return changed fields keyed by doc_id.",
+                    "field_descriptions": {
+                        "doc_id": "Document id to preserve exactly.",
+                    },
+                },
+            },
+            dry_run=False,
+        )
+        profile_payload = json.loads(
+            (root / "data-sharing/adapters/documents/config/prepare-profiles.json").read_text(encoding="utf-8")
+        )
+
+    assert status == HTTPStatus.OK
+    assert payload["ok"] is True
+    assert payload["external_context"]["task"] == "suggest_updates"
+    assert profile_payload["configs"][0]["external_context"] == {
+        "task": "suggest_updates",
+        "response_guidance": "Return changed fields keyed by doc_id.",
+        "field_descriptions": {
+            "doc_id": "Document id to preserve exactly.",
+        },
+    }
+
+
+def test_context_endpoint_rejects_stale_field_descriptions() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        with pytest.raises(ValueError, match="unknown field"):
+            analytics_data_sharing_api.data_sharing_post_response(
+                root,
+                "/context",
+                {
+                    "data_domain": "documents",
+                    "config_id": "library-smoke",
+                    "external_context": {
+                        "task": "suggest_updates",
+                        "response_guidance": "Return changed fields keyed by doc_id.",
+                        "field_descriptions": {
+                            "doc_id": "Document id.",
+                            "stale": "No longer exported.",
+                        },
+                    },
+                },
+            )
 
 
 def test_returned_packages_endpoint_dispatches_through_registered_handlers(monkeypatch) -> None:

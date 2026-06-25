@@ -18,6 +18,7 @@ import {
 } from "./analytics-modal.js";
 import {
   clearDataSharingPrepareResultModal,
+  showDataSharingPrepareContextModal,
   showDataSharingPrepareResultModal
 } from "./data-sharing-prepare-modals.js";
 import {
@@ -56,7 +57,8 @@ import {
 import {
   buildDataSharingPrepareSubmission,
   dataSharingPrepareRunningMessage,
-  runDataSharingPreparePackage
+  runDataSharingPreparePackage,
+  saveDataSharingPrepareContext
 } from "./data-sharing-prepare-service.js";
 
 const DATA_SHARING_APPS = [
@@ -301,6 +303,7 @@ async function refreshPrepareSelection(state) {
 }
 
 function updateStatus(state) {
+  updateContextButton(state);
   if (!state.app || !state.dataDomain || !selectedDataSharingPrepareConfig(state)) {
     setStatus(state.statusNode, "", getAnalyticsText(state.config, "data_sharing_prepare.idle_status", ""));
     state.runButton.disabled = true;
@@ -375,6 +378,31 @@ function updateStatus(state) {
   );
 }
 
+function selectedProfileSupportsContext(state) {
+  const config = selectedDataSharingPrepareConfig(state);
+  return Boolean(
+    config
+    && state.dataDomain === "documents"
+    && config.external_context
+    && typeof config.external_context === "object"
+    && Array.isArray(config.document_fields)
+    && config.document_fields.length
+  );
+}
+
+function updateContextButton(state) {
+  if (!state.editContextButton) return;
+  const enabled = selectedProfileSupportsContext(state) && !state.isRunning;
+  state.editContextButton.disabled = !enabled;
+  state.editContextButton.title = enabled
+    ? ""
+    : getAnalyticsText(
+      state.config,
+      "data_sharing_prepare.context_disabled_title",
+      "Select a documents sharing profile."
+    );
+}
+
 function resetResult(state) {
   clearDataSharingPrepareResultModal(state);
 }
@@ -406,6 +434,7 @@ async function runPreparePackage(state) {
   resetResult(state);
   state.isRunning = true;
   state.runButton.disabled = true;
+  updateContextButton(state);
   markBusy(state, true);
   setStatus(state.statusNode, "", dataSharingPrepareRunningMessage(state));
 
@@ -418,8 +447,32 @@ async function runPreparePackage(state) {
     state.runButton.disabled = !state.serviceAvailable
       || !selectedDropdownsComplete(state)
       || (prepareConfigRequiresSelectedRecords(state, config) && state.selectedIds.size === 0);
+    updateContextButton(state);
     markBusy(state, false);
   }
+}
+
+async function openPrepareContextEditor(state) {
+  if (state.isRunning || !selectedProfileSupportsContext(state)) {
+    updateStatus(state);
+    return;
+  }
+  const config = selectedDataSharingPrepareConfig(state);
+  const result = await showDataSharingPrepareContextModal(state, config, async (externalContext) => {
+    const payload = await saveDataSharingPrepareContext(state, { config, externalContext });
+    if (payload && payload.external_context) {
+      config.external_context = payload.external_context;
+    }
+    return payload;
+  });
+  if (result && result.confirmed) {
+    setStatus(
+      state.statusNode,
+      "success",
+      getAnalyticsText(state.config, "data_sharing_prepare.context_saved", "Context saved.")
+    );
+  }
+  updateContextButton(state);
 }
 
 async function init() {
@@ -460,6 +513,7 @@ async function init() {
     selectionSummary: document.getElementById("dataSharingPrepareSelectionSummary"),
     listNode: document.getElementById("dataSharingPrepareList"),
     runButton: document.getElementById("dataSharingPrepareRun"),
+    editContextButton: document.getElementById("dataSharingPrepareEditContext"),
     modalHost: null,
     config: null,
     exportConfigs: [],
@@ -498,7 +552,8 @@ async function init() {
     state.statusNode,
     state.selectionSummary,
     state.listNode,
-    state.runButton
+    state.runButton,
+    state.editContextButton
   ];
   if (requiredNodes.some((node) => !node)) return;
   state.modalHost = createAnalyticsModalHost({ root });
@@ -528,10 +583,16 @@ async function init() {
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_prepare.select_all", "Select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_prepare.clear", "Clear"));
     setText(state.runButton, getAnalyticsText(state.config, "data_sharing_prepare.run_button", "Prepare package"));
+    setText(state.editContextButton, getAnalyticsText(state.config, "data_sharing_prepare.context_button", "Edit context"));
     state.runButton.title = getAnalyticsText(
       state.config,
       "data_sharing_prepare.run_disabled_title",
       "Requires the Studio Data Sharing API."
+    );
+    state.editContextButton.title = getAnalyticsText(
+      state.config,
+      "data_sharing_prepare.context_disabled_title",
+      "Select a documents sharing profile."
     );
 
     renderDataSharingPrepareConfigSelect(state);
@@ -601,6 +662,9 @@ async function init() {
     });
     state.runButton.addEventListener("click", () => {
       runPreparePackage(state).catch((error) => console.warn("data_sharing_prepare: unexpected run failure", error));
+    });
+    state.editContextButton.addEventListener("click", () => {
+      openPrepareContextEditor(state).catch((error) => console.warn("data_sharing_prepare: context editor failed", error));
     });
 
     root.hidden = false;

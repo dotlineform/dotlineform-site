@@ -287,9 +287,14 @@ def write_prepare_profiles(root: Path) -> None:
                     "label": "Library smoke",
                     "enabled": True,
                     "data_domains": ["documents"],
-                    "target": {"format": "json", "supported_formats": ["json"]},
+                    "target": {
+                        "format": "json",
+                        "supported_formats": ["json"],
+                        "record_shape": "envelope",
+                        "document_array_path": "documents",
+                    },
                     "output": {
-                        "path_pattern": "var/analytics/data-sharing/exports/{export_id}-{timestamp}.json",
+                        "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.json",
                     },
                     "selection": {
                         "mode": "explicit_doc_ids",
@@ -299,6 +304,13 @@ def write_prepare_profiles(root: Path) -> None:
                         "default_missing_summary_only": False,
                     },
                     "metadata": {"include": ["export_id", "data_domain"]},
+                    "external_context": {
+                        "task": "review_documents",
+                        "response_guidance": "Return proposed changes keyed by doc_id.",
+                        "field_descriptions": {
+                            "doc_id": "Stable document identifier.",
+                        },
+                    },
                     "document_fields": [
                         {"source": "doc_id", "output_path": "doc_id"},
                     ],

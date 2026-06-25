@@ -308,6 +308,13 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_json_atomic(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f".{path.name}.tmp")
+    temp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temp_path.replace(path)
+
+
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows)
@@ -345,6 +352,24 @@ def find_export_config(config_payload: dict[str, Any], config_id: str) -> dict[s
     return matches[0]
 
 
+def config_file_path(repo_root: Path, config_path: str | None = None) -> Path:
+    path = Path(config_path) if config_path else DEFAULT_CONFIG_PATH
+    if not path.is_absolute():
+        path = repo_root / path
+    return path
+
+
+def document_output_paths(config: dict[str, Any]) -> list[str]:
+    paths: list[str] = []
+    for field in config.get("document_fields", []):
+        if not isinstance(field, dict):
+            continue
+        output_path = normalize_text(field.get("output_path"))
+        if output_path:
+            paths.append(output_path)
+    return paths
+
+
 def supported_target_formats(config: dict[str, Any]) -> list[str]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     raw_formats = target.get("supported_formats")
@@ -358,6 +383,84 @@ def supported_target_formats(config: dict[str, Any]) -> list[str]:
     if not formats and default_format:
         formats.append(default_format)
     return formats
+
+
+def clean_context_text(value: Any) -> str:
+    return str(value or "").replace("\r\n", "\n").replace("\r", "\n").strip()
+
+
+def normalize_external_context_for_config(config: dict[str, Any], external_context: Any) -> dict[str, Any]:
+    config_id = normalize_text(config.get("id")) or "<unknown>"
+    if not isinstance(external_context, dict):
+        raise ValueError("external_context must be an object")
+    field_descriptions = external_context.get("field_descriptions")
+    if not isinstance(field_descriptions, dict):
+        raise ValueError("external_context.field_descriptions must be an object")
+
+    output_paths = document_output_paths(config)
+    output_path_set = set(output_paths)
+    stale_fields = sorted({normalize_text(key) for key in field_descriptions.keys()} - output_path_set)
+    if stale_fields:
+        raise ValueError(
+            f"config {config_id}: external_context.field_descriptions has unknown field(s): {', '.join(stale_fields)}"
+        )
+
+    normalized_descriptions = {
+        output_path: clean_context_text(field_descriptions.get(output_path))
+        for output_path in output_paths
+    }
+    return {
+        "task": clean_context_text(external_context.get("task")),
+        "response_guidance": clean_context_text(external_context.get("response_guidance")),
+        "field_descriptions": normalized_descriptions,
+    }
+
+
+def validate_full_config_payload(config_payload: dict[str, Any]) -> tuple[list[str], list[str]]:
+    errors, warnings = validate_config_payload(config_payload)
+    configs = config_payload.get("configs")
+    if isinstance(configs, list):
+        for config in configs:
+            if not isinstance(config, dict):
+                continue
+            config_errors, config_warnings = validate_export_config(config)
+            errors.extend(config_errors)
+            warnings.extend(config_warnings)
+    return errors, warnings
+
+
+def update_external_context_config(
+    repo_root: Path,
+    *,
+    config_id: str,
+    external_context: Any,
+    config_path: str | None = None,
+    write: bool = True,
+) -> dict[str, Any]:
+    normalized_config_id = normalize_text(config_id)
+    if not normalized_config_id:
+        raise ValueError("config_id is required")
+    path = config_file_path(repo_root, config_path)
+    config_payload = read_json(path, "export config")
+    config = find_export_config(config_payload, normalized_config_id)
+    normalized_context = normalize_external_context_for_config(config, external_context)
+
+    updated_payload = copy.deepcopy(config_payload)
+    updated_config = find_export_config(updated_payload, normalized_config_id)
+    updated_config["external_context"] = normalized_context
+    errors, warnings = validate_full_config_payload(updated_payload)
+    if errors:
+        raise ValueError("; ".join(errors))
+    if write:
+        write_json_atomic(path, updated_payload)
+    return {
+        "ok": True,
+        "config_id": normalized_config_id,
+        "config_path": path.relative_to(repo_root).as_posix() if path.is_relative_to(repo_root) else path.as_posix(),
+        "external_context": normalized_context,
+        "warnings": warnings,
+        "output_written": bool(write),
+    }
 
 
 def validate_config_payload(config_payload: dict[str, Any]) -> tuple[list[str], list[str]]:

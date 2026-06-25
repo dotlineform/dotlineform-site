@@ -15,6 +15,7 @@ from docs_data_sharing.package import (
     build_document_package,
     list_returned_document_packages,
     selectable_document_records,
+    update_document_prepare_context,
 )
 from docs_data_sharing.review import review_returned_document_package
 
@@ -101,6 +102,38 @@ def prepare_package(
         report["summary_text"] = (
             f"{action} {exported_count} {document_word} "
             f"to {report.get('output_file', '')}{suffix}"
+        )
+    return report
+
+
+def update_prepare_context(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[Any] = None,
+    dependencies: Optional[DocumentsDataSharingDependencies] = None,
+) -> Dict[str, Any]:
+    adapter = require_documents_adapter(adapter)
+    config_id = str(body.get("config_id") or "").strip()
+    report = update_document_prepare_context(
+        repo_root,
+        config_id=config_id,
+        external_context=body.get("external_context"),
+        config_path=adapter.config_path("sharing_profiles_path").as_posix(),
+        dry_run=dry_run,
+    )
+    report = attach_adapter_context(report, adapter)
+    if dependencies is not None:
+        dependencies.log_event(
+            repo_root,
+            "docs-export-context",
+            {
+                "data_domain": adapter.data_domain,
+                "adapter_id": adapter.adapter_id,
+                "config_id": config_id,
+                "dry_run": dry_run,
+                "output_written": bool(report.get("output_written")),
+            },
         )
     return report
 
