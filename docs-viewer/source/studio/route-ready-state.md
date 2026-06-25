@@ -114,9 +114,6 @@ Their route roots declare:
 Use this only for static or reference shells.
 If a static page gains async data, local-service checks, route commands, or another route module, replace the static initializer with a route-specific ready/busy implementation and run the ready-state audit in strict mode.
 
-Studio no longer has standalone dashboard route shells.
-The former Catalogue, Analytics, and Data Sharing dashboards were retired in favor of grouped `/studio/` home links and page-local metrics.
-
 ## Current Route Roots
 
 Studio route roots:
@@ -164,9 +161,6 @@ Docs Viewer route roots:
 | `/docs/?import=1` | `#docsHtmlImportRoot` | `data-studio-*` currently, because the import modal mirrors the Studio helper behavior inside the Docs Viewer bundle |
 
 Docs Viewer public and manage shells still need a route-level ready/busy decision outside the import modal.
-
-Retired Studio Analytics, Data Sharing, UI Catalogue, and thumbnail-quality routes do not expose active ready-state roots.
-The legacy UI catalogue reference routes have also been retired and do not expose the production `data-studio-ready` contract.
 
 ## Smoke Wait Pattern
 
