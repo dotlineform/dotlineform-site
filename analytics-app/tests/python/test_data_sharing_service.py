@@ -3,18 +3,17 @@
 
 from __future__ import annotations
 
-import json
 import sys
-import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+FIXTURES_DIR = REPO_ROOT / "analytics-app" / "tests" / "fixtures"
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 ANALYTICS_SERVER_DIR = REPO_ROOT / "analytics-app" / "app" / "server"
 ANALYTICS_PACKAGE_DIR = ANALYTICS_SERVER_DIR / "analytics_app"
-for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
+for path in (FIXTURES_DIR, SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
     text = str(path)
     if text not in sys.path:
         sys.path.insert(0, text)
@@ -22,6 +21,7 @@ for path in (SCRIPTS_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
 import data_sharing_adapters  # noqa: E402
 import data_sharing_routes  # noqa: E402
 import data_sharing_service  # noqa: E402
+from data_sharing_factory import registry_payload, registry_repo  # noqa: E402
 from services.dispatch import DataSharingAdapterHandlers  # noqa: E402
 from workflows.prepare import prepare_package as data_sharing_prepare_package  # noqa: E402
 
@@ -108,72 +108,13 @@ def test_gateway_fails_active_adapter_without_registered_handler() -> None:
 
 
 def test_gateway_fails_active_unregistered_adapter_module() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        repo_root = Path(tmp)
-        registry_path = repo_root / data_sharing_adapters.REGISTRY_REL_PATH
-        registry_path.parent.mkdir(parents=True, exist_ok=True)
-        registry_path.write_text(
-            json.dumps(
-                {
-                    "schema_version": "data_sharing_adapters_v2",
-                    "paths": {
-                        "outbound_package_root": "var/analytics/data-sharing/exports",
-                        "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-                        "review_output_root": "var/analytics/data-sharing/import-preview",
-                    },
-                    "dispatch": [
-                        {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
-                    ],
-                    "adapters": [
-                        {
-                            "id": "documents",
-                            "module": "documents.future",
-                            "label": "Documents",
-                            "status": "active",
-                            "portability": {"package": "documents-package"},
-                            "data_domains": {
-                                "documents": {
-                                    "app": "docs-viewer",
-                                    "label": "Documents",
-                                    "status": "active",
-                                    "selection_model": "documents",
-                                    "record_selectors": {
-                                        "docs_scope": {
-                                            "source": "docs_scope_config",
-                                            "required": True,
-                                        },
-                                    },
-                                    "source_write_targets": {},
-                                    "sources": {
-                                        "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
-                                    },
-                                    "config": {},
-                                }
-                            },
-                            "capabilities": [
-                                {
-                                    "operation": "prepare",
-                                    "status": "active",
-                                    "selection_model": "documents",
-                                    "input_formats": [],
-                                    "output_formats": ["json"],
-                                    "path_contract": {"output_root": "outbound_package_root"},
-                                    "activity": {
-                                        "script_purpose": "data-sharing-prepare",
-                                        "record_groups": ["documents"],
-                                    },
-                                }
-                            ],
-                        }
-                    ],
-                },
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
+    payload = registry_payload()
+    payload["dispatch"] = [
+        {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
+    ]
+    payload["adapters"][0]["module"] = "documents.future"
 
+    with registry_repo(payload, data_sharing_adapters.REGISTRY_REL_PATH) as repo_root:
         try:
             data_sharing_service.prepare_package(repo_root, {"data_domain": "documents"}, True, {})
         except ValueError as error:

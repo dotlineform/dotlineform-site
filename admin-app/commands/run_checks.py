@@ -134,6 +134,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/tests/conftest.py",
                 "admin-app/tests/fixtures/admin_factory.py",
                 "analytics-app/tests/conftest.py",
+                "analytics-app/tests/fixtures/data_sharing_factory.py",
                 "analytics-app/tests/fixtures/tag_factory.py",
                 "docs-viewer/tests/conftest.py",
                 "docs-viewer/tests/fixtures/repo_factory.py",

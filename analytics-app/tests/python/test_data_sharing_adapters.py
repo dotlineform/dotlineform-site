@@ -3,17 +3,18 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-from contextlib import contextmanager
 import importlib.util
-import json
 import sys
-import tempfile
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+FIXTURES_DIR = REPO_ROOT / "analytics-app" / "tests" / "fixtures"
 ADAPTERS_PATH = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app" / "data_sharing_adapters.py"
+if str(FIXTURES_DIR) not in sys.path:
+    sys.path.insert(0, str(FIXTURES_DIR))
+
+from data_sharing_factory import adapter_payload, capability, domain_payload, registry_payload, registry_repo  # noqa: E402
 
 
 def load_adapters_module():
@@ -30,158 +31,6 @@ def load_adapters_module():
 
 
 adapters = load_adapters_module()
-
-
-def write_json(path: Path, payload: dict[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def capability(operation: str, status: str = "active") -> dict[str, object]:
-    payload: dict[str, object] = {
-        "operation": operation,
-        "status": status,
-        "selection_model": {
-            "prepare": "documents",
-            "list_returned": "none",
-            "review": "file_only",
-            "apply": "records",
-        }[operation],
-        "input_formats": [] if operation == "prepare" else ["json", "jsonl"],
-        "output_formats": ["json"] if operation in {"prepare", "review"} else [],
-        "path_contract": {},
-        "activity": {
-            "script_purpose": f"data-sharing-{operation}",
-            "record_groups": ["documents"],
-        },
-    }
-    if status != "active":
-        payload["message"] = f"{operation} is {status}"
-    if operation == "review":
-        payload["review_rows"] = {
-            "fields": ["id", "type", "title", "meta", "record_index", "selectable", "record_groups", "issues"]
-        }
-    if operation == "apply":
-        payload["requires_confirmation"] = True
-        payload["apply_actions"] = [
-            {
-                "id": "summary_apply",
-                "label": "Update summaries",
-                "status": status,
-                "confirmation": {
-                    "title": "Update summaries?",
-                    "body": "Back up and update selected source files.",
-                },
-                "activity": {
-                    "script_purpose": "data-sharing-apply",
-                    "record_groups": ["documents"],
-                },
-            }
-        ]
-    return payload
-
-
-def domain_payload(status: str = "active", data_domain: str = "documents") -> dict[str, object]:
-    return {
-        "app": "docs-viewer",
-        "label": "Documents",
-        "status": status,
-        "selection_model": "documents",
-        "record_selectors": {
-            "docs_scope": {
-                "source": "docs_scope_config",
-                "required": True,
-            },
-        },
-        "source_write_targets": {},
-        "sources": {
-            "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
-        },
-        "config": {
-            "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",
-        },
-    }
-
-
-def adapter_payload(
-    *,
-    adapter_id: str = "documents",
-    module: str = "documents",
-    label: str = "Documents",
-    status: str = "active",
-    data_domain: str = "documents",
-    domain: dict[str, object] | None = None,
-    capabilities: list[dict[str, object]] | None = None,
-) -> dict[str, object]:
-    return {
-        "id": adapter_id,
-        "module": module,
-        "label": label,
-        "status": status,
-        "portability": {
-            "package": f"{adapter_id}-package",
-        },
-        "data_domains": {
-            data_domain: domain or domain_payload(status="active", data_domain=data_domain),
-        },
-        "capabilities": capabilities or [capability("prepare")],
-    }
-
-
-def registry_payload() -> dict[str, object]:
-    return {
-        "schema_version": "data_sharing_adapters_v2",
-        "paths": {
-            "outbound_package_root": "var/analytics/data-sharing/exports",
-            "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-            "review_output_root": "var/analytics/data-sharing/import-preview",
-        },
-        "dispatch": [
-            {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
-            {"data_domain": "documents", "operation": "list_returned", "adapter_id": "documents"},
-            {"data_domain": "documents", "operation": "review", "adapter_id": "documents"},
-            {"data_domain": "documents", "operation": "apply", "adapter_id": "documents"},
-            {"data_domain": "tags", "operation": "review", "adapter_id": "analytics-tags"},
-        ],
-        "adapters": [
-            adapter_payload(
-                capabilities=[
-                    capability("prepare"),
-                    capability("list_returned"),
-                    capability("review"),
-                    capability("apply"),
-                ],
-            ),
-            adapter_payload(
-                adapter_id="analytics-tags",
-                module="analytics.tags",
-                label="Tags",
-                status="stub",
-                data_domain="tags",
-                domain={
-                    **domain_payload(status="stub", data_domain="tags"),
-                    "app": "analytics",
-                    "label": "Tags",
-                    "record_selectors": {},
-                    "selection_model": "records",
-                    "source_write_targets": {
-                        "tag_registry": "analytics-app/data/canonical/tag-registry.json",
-                        "tag_aliases": "analytics-app/data/canonical/tag-aliases.json",
-                        "tag_assignments": "analytics-app/data/canonical/tag-assignments.json",
-                    },
-                },
-                capabilities=[capability("review", status="planned")],
-            ),
-        ],
-    }
-
-
-@contextmanager
-def registry_repo(payload: dict[str, object]) -> Iterator[Path]:
-    with tempfile.TemporaryDirectory() as temp:
-        repo_root = Path(temp)
-        write_json(repo_root / adapters.REGISTRY_REL_PATH, payload)
-        yield repo_root
 
 
 def expect_value_error(callback, expected: str) -> None:

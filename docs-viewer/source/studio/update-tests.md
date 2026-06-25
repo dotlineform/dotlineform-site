@@ -234,6 +234,8 @@ The app test `conftest.py` files now add each app's `tests/fixtures/` directory 
 
 Follow-up Docs Viewer fixture consolidation moved common Docs Viewer text/JSON, site-tools, scope-config, library-doc, staged-file, documents Data Sharing registry/profile, and Docs import repo setup into `docs-viewer/tests/fixtures/repo_factory.py`. The Docs import, Docs builder, Docs Viewer service, and Docs Management support modules now delegate their shared data setup there while keeping service-specific handlers local to the support modules.
 
+Follow-up Analytics fixture consolidation added `analytics-app/tests/fixtures/data_sharing_factory.py` for documents Data Sharing registry payloads, scope/source-doc setup, prepare profiles, and temporary registry repos. The Analytics Data Sharing API, adapter registry, and service gateway tests now use those factories instead of hand-writing miniature registry and repo worlds inline.
+
 7. Add a review gate
    During future changes, ask:
    - Can this be tested as pure function/service behavior?
