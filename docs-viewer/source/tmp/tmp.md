@@ -10,7 +10,10 @@ viewer_report: docs_index_table
 viewer_report_access: public
 
 
-we are working on request [Docs Viewer Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents), please proceed with implementation step 9. Embedded Detail View
+we are working on refactorung tests to apply the test policy, see [Tests policy and refactoring](/docs/?scope=studio&doc=update-tests)
+please proceed with step 4
+
+
 
 
 

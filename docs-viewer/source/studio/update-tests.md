@@ -167,7 +167,7 @@ Changed areas:
    - public/private boundary checks
    - one minimal “can submit to endpoint” path where no lower-level test can cover wiring
 
-   Delete or retire modal-shell/focus/button-choreography tests unless they cover a reusable modal primitive with a stable contract.
+   Delete or retire modal-shell/focus/button-choreography tests.
 
 5. Move browser workflow coverage down to server/API tests
    For workflows like Docs Viewer settings, import, publish, catalogue save, tag edits:
