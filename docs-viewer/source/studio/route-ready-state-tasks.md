@@ -28,7 +28,7 @@ The practical work is:
 
    I would keep app-prefixed attributes for now and standardize the semantics. Adding generic aliases like `data-route-ready` would create duplicate contracts unless we deliberately migrate everything.
 
-3. **Inventory every app route**
+3. **Inventory every app route** — done for active route roots
    For each route template, identify:
    - root selector
    - owning app
@@ -38,14 +38,16 @@ The practical work is:
    - write/import/run actions that should set busy
    - stable error/unavailable state
 
-4. **Patch missing templates**
+4. **Patch missing templates** — done for Docs Viewer public/manage shells
    Every route root should start with:
    - `ready="false"`
    - `busy="false"`
 
    Static/home routes can become ready immediately, but the initial template should still expose the baseline consistently unless there is a specific reason not to.
 
-5. **Patch controllers to drive state**
+   Docs Viewer public/manage shells now expose `data-docs-viewer-ready="false"` and `data-docs-viewer-busy="false"` on `#docsViewerRoot`.
+
+5. **Patch controllers to drive state** — partly done for Docs Viewer shell startup
    Each route script needs to:
    - initialize route state after mount
    - set `busy=true` before blocking async work
@@ -53,13 +55,16 @@ The practical work is:
    - set `ready=true` after successful render or stable unavailable/error render
    - avoid leaving `ready=false` forever on fetch/config/service failure
 
+   Docs Viewer shell boot now sets `data-docs-viewer-busy` during initial startup and marks `data-docs-viewer-ready="true"` after startup reaches a stable success or error state.
+   Remaining work: review route-level command busy projection across app controllers and Docs Viewer management actions.
+
 6. **Validate templates during route loading**
-   Studio already does this in [studio-route-templates.js](/Users/dlf/Developer/dotlineform/dotlineform-site/studio/app/frontend/js/studio-route-templates.js). Admin and Analytics loaders currently parse templates but do not enforce ready/busy roots. They should get equivalent validation in:
-   - [admin-route-templates.js](/Users/dlf/Developer/dotlineform/dotlineform-site/admin-app/app/frontend/js/admin-route-templates.js)
-   - [analytics-route-templates.js](/Users/dlf/Developer/dotlineform/dotlineform-site/analytics-app/app/frontend/js/analytics-route-templates.js)
+   Studio already does this in `studio/app/frontend/js/studio-route-templates.js`. Admin and Analytics loaders currently parse templates but do not enforce ready/busy roots. They should get equivalent validation in:
+   - `admin-app/app/frontend/js/admin-route-templates.js`
+   - `analytics-app/app/frontend/js/analytics-route-templates.js`
 
 7. **Expand the audit**
-   The current audit is Studio-only: [audit_studio_ready_state.py](/Users/dlf/Developer/dotlineform/dotlineform-site/admin-app/checks/audit_studio_ready_state.py). To close the gap, add cross-app audits for Admin, Analytics, and Docs Viewer route templates, or replace it with a general `audit_route_ready_state.py` that uses per-app config.
+   The current audit is Studio-only: `admin-app/checks/audit_studio_ready_state.py`. To close the gap, add cross-app audits for Admin, Analytics, and Docs Viewer route templates, or replace it with a general `audit_route_ready_state.py` that uses per-app config.
 
 8. **Normalize smoke helpers**
    Smoke tests should use a shared helper shape:
@@ -74,6 +79,6 @@ The practical work is:
    The goal is not a huge UI test suite. Add narrow smokes for routes where the contract protects real integration risk: route boot, module load, API reachability, and stable unavailable states.
 
 10. **Update docs and remove the gap**
-   Once all owned routes are audited and smoke helpers use the contract, update [smoke-testing.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/smoke-testing.md) to replace the current gap with the maintained rule and audit command.
+   Once all owned routes are audited and smoke helpers use the contract, update [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) to replace the current gap with the maintained rule and audit command.
 
 Definition of done: every app route has a documented root, starts with ready/busy attributes, reaches `ready=true` on success or stable failure, clears busy reliably, is covered by a template audit, and browser smokes wait on the shared contract instead of timing or ad hoc loaded text.

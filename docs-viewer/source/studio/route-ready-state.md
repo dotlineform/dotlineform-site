@@ -45,7 +45,7 @@ Keep these names until a deliberate migration replaces them; adding generic alia
 | Studio | `data-studio-ready` | `data-studio-busy` | `studio:ready` |
 | Admin | `data-admin-ready` | `data-admin-busy` | `admin:ready` |
 | Analytics | `data-analytics-ready` | `data-analytics-busy` | `analytics:ready` |
-| Docs Viewer | route-specific today | route-specific today | route-specific today |
+| Docs Viewer | `data-docs-viewer-ready` | `data-docs-viewer-busy` | `docs-viewer:ready` |
 
 Optional detail attributes follow the same prefix:
 
@@ -63,6 +63,7 @@ Current helper modules:
 - Studio: `studio/app/frontend/js/studio-route-state.js`
 - Admin: `admin-app/app/frontend/js/admin-route-state.js`
 - Analytics: `analytics-app/app/frontend/js/analytics-route-state.js`
+- Docs Viewer shell boot: `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js`
 - Docs Viewer import modal: `docs-viewer/runtime/js/import/docs-html-import.js`
 
 Each app helper should provide the same behavior:
@@ -158,9 +159,13 @@ Docs Viewer route roots:
 
 | route | root | attributes |
 | --- | --- | --- |
+| `/library/` | `#docsViewerRoot` | `data-docs-viewer-*` |
+| `/analysis/` | `#docsViewerRoot` | `data-docs-viewer-*` |
+| `/docs/` | `#docsViewerRoot` | `data-docs-viewer-*` |
 | `/docs/?import=1` | `#docsHtmlImportRoot` | `data-studio-*` currently, because the import modal mirrors the Studio helper behavior inside the Docs Viewer bundle |
 
-Docs Viewer public and manage shells still need a route-level ready/busy decision outside the import modal.
+Docs Viewer public and manage shells now expose route-level ready/busy state on `#docsViewerRoot`.
+The Docs Import modal keeps its nested import-specific ready state on `#docsHtmlImportRoot`.
 
 ## Smoke Wait Pattern
 

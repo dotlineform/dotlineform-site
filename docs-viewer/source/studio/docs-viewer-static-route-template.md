@@ -102,14 +102,16 @@ That document covers the lifecycle renderer, render inputs, New Scope flow, Dele
 
 ## Ready State
 
-Docs Viewer is part of the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract work, but its public and manage shells do not yet expose a single route-level ready/busy root.
+Docs Viewer public and manage shells participate in the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract with Docs Viewer attributes on `#docsViewerRoot`.
 
 Current state:
 
+- `#docsViewerRoot` uses `data-docs-viewer-ready` and `data-docs-viewer-busy`
+- boot writes `data-docs-viewer-busy="true"` while initial route config, app shell, config, index, and startup work are in flight
+- boot writes `data-docs-viewer-ready="true"` after initial startup reaches a stable success or error state
 - `/docs/?import=1` uses `#docsHtmlImportRoot` with Studio-style ready/busy attributes inside the Docs Viewer bundle
-- public and manage viewer shells expose stable runtime mount points, but still need a route-level ready/busy decision for `#docsViewerRoot`
 
-Until that gap is closed, Docs Viewer smokes should wait on route-specific loaded markers or stable rendered content as described in [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing).
+Docs Viewer smokes should prefer `#docsViewerRoot[data-docs-viewer-ready="true"]` and `data-docs-viewer-busy!="true"` before asserting route-specific loaded markers or stable rendered content.
 
 ## Public And Manage Split
 

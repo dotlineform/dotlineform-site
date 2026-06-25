@@ -41,6 +41,41 @@ function reportBootFailure(root, message, isError) {
   status.classList.toggle("is-error", isError !== false);
 }
 
+function routeStateDetail(root, ready) {
+  return {
+    ready: Boolean(ready),
+    busy: root && root.dataset ? root.dataset.docsViewerBusy === "true" : false,
+    route: root && root.dataset ? root.dataset.docsViewerRoute || root.dataset.routeId || "" : "",
+    mode: root && root.dataset ? root.dataset.docsViewerMode || "" : "",
+    service: root && root.dataset ? root.dataset.docsViewerService || "" : "",
+    recordLoaded: root && root.dataset ? root.dataset.docsViewerRecordLoaded === "true" : false
+  };
+}
+
+function setDocsViewerRouteBusy(root, busy) {
+  if (!root || !root.dataset) return;
+  root.dataset.docsViewerBusy = busy ? "true" : "false";
+  root.setAttribute("aria-busy", busy ? "true" : "false");
+}
+
+function setDocsViewerRouteReady(root, ready) {
+  if (!root || !root.dataset) return;
+  var nextReady = Boolean(ready);
+  root.dataset.docsViewerReady = nextReady ? "true" : "false";
+  if (typeof CustomEvent === "function") {
+    root.dispatchEvent(new CustomEvent("docs-viewer:ready", {
+      bubbles: true,
+      detail: routeStateDetail(root, nextReady)
+    }));
+  }
+}
+
+function initializeDocsViewerRouteState(root) {
+  if (!root || !root.dataset) return;
+  root.dataset.docsViewerReady = "false";
+  setDocsViewerRouteBusy(root, true);
+}
+
 function setDatasetBoolean(element, key, value) {
   if (!element || !element.dataset) return;
   element.dataset[key] = value ? "true" : "false";
@@ -70,6 +105,9 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
 
   if (root && root.dataset) {
     root.dataset.routeId = routeConfig.routeId || "";
+    root.dataset.docsViewerRoute = routeConfig.routeId || "";
+    root.dataset.docsViewerMode = access.allowManagement ? "manage" : "public";
+    root.dataset.docsViewerService = access.allowManagement ? "available" : "static";
     setDatasetBoolean(root, "allowManagement", access.allowManagement);
     setDatasetBoolean(root, "includeScopeParam", routeContext && routeContext.includeScopeParam);
     root.dataset.viewerBaseUrl = routeContext && routeContext.viewerBaseUrl ? routeContext.viewerBaseUrl : "";
@@ -177,6 +215,7 @@ export function startDocsViewerApp(options) {
   if (!root || !windowRef || !documentRef) return Promise.resolve(null);
 
   if (root.__docsViewerAppBootPromise) return root.__docsViewerAppBootPromise;
+  initializeDocsViewerRouteState(root);
   root.__docsViewerAppBootPromise = resolveDocsViewerAppBootContext(Object.assign({}, settings, {
     root: root,
     document: documentRef,
@@ -184,9 +223,24 @@ export function startDocsViewerApp(options) {
   })).then(function (bootContext) {
     if (!bootContext) return null;
     initDocsViewerBootThemeToggle(bootContext);
-    return startDocsViewerRuntime(bootContext);
+    var runtime = startDocsViewerRuntime(bootContext);
+    if (runtime && runtime.initialLoadPromise && typeof runtime.initialLoadPromise.then === "function") {
+      runtime.initialLoadPromise.then(function () {
+        setDocsViewerRouteBusy(root, false);
+        setDocsViewerRouteReady(root, true);
+      }, function () {
+        setDocsViewerRouteBusy(root, false);
+        setDocsViewerRouteReady(root, true);
+      });
+    } else {
+      setDocsViewerRouteBusy(root, false);
+      setDocsViewerRouteReady(root, true);
+    }
+    return runtime;
   }).catch(function (error) {
     reportBootFailure(root, error && error.message ? error.message : "Failed to initialize Docs Viewer.", true);
+    setDocsViewerRouteBusy(root, false);
+    setDocsViewerRouteReady(root, true);
     throw error;
   });
   return root.__docsViewerAppBootPromise;

@@ -88,6 +88,12 @@ def assert_origin_rejection(base_url: str) -> None:
 
 def wait_for_manage_doc(page: Page, title: str, timeout_ms: int) -> None:
     page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=timeout_ms)
+    page.wait_for_selector("#docsViewerRoot[data-docs-viewer-ready='true']", timeout=timeout_ms)
+    page.wait_for_function(
+        "selector => document.querySelector(selector)?.dataset.docsViewerBusy !== 'true'",
+        arg="#docsViewerRoot",
+        timeout=timeout_ms,
+    )
     page.wait_for_function(
         """expectedTitle => {
             const heading = document.querySelector("#docsViewerContent h1");
@@ -113,6 +119,8 @@ def manage_route_state(page: Page) -> dict[str, object]:
             const routeConfig = (payload.routes || []).find(record => record.route_id === root.dataset.routeId) || {};
             return {
                 allowManagement: root.dataset.allowManagement || "",
+                ready: root.dataset.docsViewerReady || "",
+                busy: root.dataset.docsViewerBusy || "",
                 includeScopeParam: root.dataset.includeScopeParam || "",
                 routeId: root.dataset.routeId || "",
                 routeConfigUrl,
@@ -129,6 +137,8 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
     docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
     if state["allowManagement"] != "true" or state["viewerBaseUrl"] != "/docs/":
         raise AssertionError(f"manage route did not expose management access: {state!r}")
+    if state["ready"] != "true" or state["busy"] == "true":
+        raise AssertionError(f"manage route did not expose ready route state: {state!r}")
     if state["includeScopeParam"] != "true":
         raise AssertionError(f"manage route did not include scope param: {state!r}")
     if state["routeId"] != "docs-manage":

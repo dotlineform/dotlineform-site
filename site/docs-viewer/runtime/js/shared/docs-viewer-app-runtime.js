@@ -695,6 +695,7 @@ export function startDocsViewerRuntime(options) {
     var isBusy = state.pendingBusyCount > 0;
     root.classList.toggle("is-busy", isBusy);
     root.setAttribute("aria-busy", isBusy ? "true" : "false");
+    if (root.dataset) root.dataset.docsViewerBusy = isBusy ? "true" : "false";
   }
 
   function startBusy() {

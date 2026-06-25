@@ -39,12 +39,22 @@ def route_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}{path}"
 
 
+def wait_for_docs_viewer_ready(page: Page, timeout_ms: int) -> None:
+    page.wait_for_selector(f"{ROOT_SELECTOR}:not([hidden])", timeout=timeout_ms)
+    page.wait_for_selector(f"{ROOT_SELECTOR}[data-docs-viewer-ready='true']", timeout=timeout_ms)
+    page.wait_for_function(
+        "selector => document.querySelector(selector)?.dataset.docsViewerBusy !== 'true'",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+
+
 def query_value(url: str, key: str) -> str:
     return (parse_qs(urlparse(url).query).get(key) or [""])[0]
 
 
 def wait_for_doc(page: Page, doc_id: str, timeout_ms: int) -> str:
-    page.wait_for_selector(f"{ROOT_SELECTOR}:not([hidden])", timeout=timeout_ms)
+    wait_for_docs_viewer_ready(page, timeout_ms)
     page.wait_for_selector(f"{CONTENT_SELECTOR}:not([hidden])", timeout=timeout_ms)
     page.wait_for_function(
         """([selector, docId]) => {
@@ -61,7 +71,7 @@ def wait_for_doc(page: Page, doc_id: str, timeout_ms: int) -> str:
 
 
 def wait_for_search_route(page: Page, query: str, timeout_ms: int) -> dict[str, object]:
-    page.wait_for_selector(f"{ROOT_SELECTOR}:not([hidden])", timeout=timeout_ms)
+    wait_for_docs_viewer_ready(page, timeout_ms)
     page.wait_for_selector(f"{RESULTS_SELECTOR}:not([hidden])", timeout=timeout_ms)
     page.wait_for_function(
         """([selector, expected]) => document.querySelector(selector)?.value === expected""",

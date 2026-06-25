@@ -43,6 +43,12 @@ def query_value(url: str, key: str) -> str:
 
 def wait_for_rendered_doc(page: Page, doc_id: str, title: str, timeout_ms: int) -> None:
     page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=timeout_ms)
+    page.wait_for_selector("#docsViewerRoot[data-docs-viewer-ready='true']", timeout=timeout_ms)
+    page.wait_for_function(
+        "selector => document.querySelector(selector)?.dataset.docsViewerBusy !== 'true'",
+        arg="#docsViewerRoot",
+        timeout=timeout_ms,
+    )
     page.wait_for_function(
         """([docId, expectedTitle]) => {
             const heading = document.querySelector("#docsViewerContent h1");
@@ -70,6 +76,8 @@ def public_route_state(page: Page) -> dict[str, object]:
             const scopeConfig = (docsViewerConfig.scopes || []).find(record => record.scope_id === root.dataset.viewerScope) || {};
             return {
                 allowManagement: root.dataset.allowManagement || "",
+                ready: root.dataset.docsViewerReady || "",
+                busy: root.dataset.docsViewerBusy || "",
                 managementBaseUrl: root.dataset.managementBaseUrl || "",
                 routeId: root.dataset.routeId || "",
                 routeConfigUrl,
@@ -90,6 +98,8 @@ def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
     scope_config = state.get("scopeConfig") if isinstance(state.get("scopeConfig"), dict) else {}
     if state["allowManagement"] == "true" or state["managementBaseUrl"]:
         raise AssertionError(f"{route} exposed management access: {state!r}")
+    if state["ready"] != "true" or state["busy"] == "true":
+        raise AssertionError(f"{route} did not expose ready route state: {state!r}")
     if state["viewerBaseUrl"] == "/docs/":
         raise AssertionError(f"{route} used management route base: {state!r}")
     if state["managementControls"]:
