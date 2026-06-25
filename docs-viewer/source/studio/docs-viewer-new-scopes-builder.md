@@ -251,8 +251,6 @@ Conditional and optional payload fields:
 
 - `source_root`: required for `public_readonly` and `local_committed`; ignored for `local_external`
 - `public_route_path`: required for `public_readonly`; ignored for local modes
-- `build_inline_search`: boolean, defaults true
-- `write_generated_outputs`: boolean, defaults true
 
 Validation rules currently implemented:
 
@@ -277,8 +275,6 @@ Preview response fields:
 - `scope_id`
 - `title`
 - `publishing_mode`
-- `build_inline_search`
-- `write_generated_outputs`
 - `planned_scope_config`
 - `storage_contract`
 - `created_files`
@@ -291,7 +287,7 @@ Preview response fields:
 - `dry_run`
 
 The preview response uses file records with `kind`, `path`, `action`, and `exists`.
-It reports planned generated docs/search outputs only when generated output writes are requested.
+It always reports planned generated docs/search outputs.
 It reports public route files only for `public_readonly`.
 The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or local runtime data served by the local Docs Viewer service.
 
@@ -328,9 +324,9 @@ Apply behavior:
 - appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
 - creates public route files and route-registry records only for `public_readonly`
 - creates external local source and generated output under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` for `local_external`
-- writes local generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads when generated output is requested
+- writes local generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads
 - writes a user-created, tool-created manifest record
-- runs the docs build and, when requested, the docs search build after the config and source files are written
+- runs the docs build and docs search build after the config and source files are written
 
 Apply response fields:
 
@@ -438,8 +434,6 @@ Minimum fields:
 - source root for repo-backed modes
 - default doc id
 - publishing mode
-- whether to build inline search
-- whether generated outputs should be written immediately
 
 For `local_external`, the modal does not collect a source root or external data root.
 The server derives the external source and generated-output paths from `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer`.
@@ -465,7 +459,7 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 
 `New scope` opens a dedicated modal flow that:
 
-- collects scope id, title, source root for repo-backed modes, default doc id, publishing mode, generated-output choice, and inline-search choice
+- collects scope id, title, source root for repo-backed modes, default doc id, and publishing mode
 - hides the source root field for `local_external`
 - does not collect an external data root path
 - defaults publishing mode to `local_external`

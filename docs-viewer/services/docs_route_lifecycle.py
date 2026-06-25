@@ -59,8 +59,8 @@ def route_file_for_public_path(repo_root: Path, public_route_path: str) -> Path:
     return repo_root / "site" / route_rel
 
 
-def readonly_route_text(title: str, scope_id: str, public_route_path: str, *, enable_search: bool = True) -> str:
-    del title, scope_id, public_route_path, enable_search
+def readonly_route_text(title: str, scope_id: str, public_route_path: str) -> str:
+    del title, scope_id, public_route_path
     return (default_repo_root() / PUBLIC_ROUTE_TEMPLATE_REL_PATH).read_text(encoding="utf-8")
 
 
@@ -74,7 +74,6 @@ def public_route_record(
     public_route_path: str,
     default_doc_id: str,
     *,
-    build_inline_search: bool,
     title: str,
 ) -> dict[str, Any]:
     search_label = f"search {title.lower()}"
@@ -95,7 +94,7 @@ def public_route_record(
         "docs_paths": {
             "index_tree_url": f"/assets/data/docs/scopes/{scope_id}/index-tree.json",
             "recently_added_url": f"/assets/data/docs/scopes/{scope_id}/recently-added.json",
-            "search_index_url": f"/assets/data/search/{scope_id}/index.json" if build_inline_search else "",
+            "search_index_url": f"/assets/data/search/{scope_id}/index.json",
         },
         "config_urls": {
             "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
@@ -113,7 +112,7 @@ def public_route_record(
                 "body_class": public_route_body_class(scope_id, public_route_path),
             },
             "viewer_search": {
-                "enabled": build_inline_search,
+                "enabled": True,
                 "placeholder": search_label,
                 "aria_label": f"Search {title}",
             },

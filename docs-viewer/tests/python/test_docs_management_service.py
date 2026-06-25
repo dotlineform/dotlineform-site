@@ -412,8 +412,6 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
                 "default_doc_id": "research",
                 "publishing_mode": "public_readonly",
                 "public_route_path": "/research/",
-                "build_inline_search": True,
-                "write_generated_outputs": True,
             },
         )
 
@@ -445,8 +443,6 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
                 "default_doc_id": "notes",
                 "publishing_mode": "local_committed",
                 "public_route_path": "/notes/",
-                "build_inline_search": True,
-                "write_generated_outputs": True,
             },
         )
 
@@ -945,8 +941,6 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
                     "title": "Research",
                     "default_doc_id": "research",
                     "publishing_mode": "local_external",
-                    "build_inline_search": True,
-                    "write_generated_outputs": True,
                     "confirm": True,
                 },
                 dry_run=False,
@@ -1032,8 +1026,6 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
-                    "build_inline_search": True,
-                    "write_generated_outputs": True,
                     "confirm": True,
                 },
                 dry_run=False,

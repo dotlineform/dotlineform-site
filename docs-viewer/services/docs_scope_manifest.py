@@ -578,8 +578,6 @@ def created_scope_manifest_record(repo_root: Path, preview: dict[str, Any]) -> d
             "default_doc_id": preview["planned_scope_config"]["default_doc_id"],
             "publishing_mode": publishing_mode,
             "external_data_root": EXTERNAL_DATA_ROOT_MARKER if publishing_mode == LOCAL_EXTERNAL_MODE else "",
-            "build_inline_search": preview["build_inline_search"],
-            "write_generated_outputs": preview["write_generated_outputs"],
         },
     }
 
@@ -686,7 +684,6 @@ def apply_create_scope(
                     str(preview["title"]),
                     scope_id,
                     str(preview["urls"]["public"]),
-                    enable_search=bool(preview["build_inline_search"]),
                 ),
             )
             append_public_route_record(
@@ -695,23 +692,21 @@ def apply_create_scope(
                     scope_id,
                     str(preview["urls"]["public"]),
                     str(preview["planned_scope_config"]["default_doc_id"]),
-                    build_inline_search=bool(preview["build_inline_search"]),
                     title=str(preview["title"]),
                 ),
             )
         append_scope_manifest_record(repo_root, preview, manifest)
-        if preview["write_generated_outputs"]:
-            rebuild = rebuild_scope_outputs(
+        rebuild = rebuild_scope_outputs(
+            repo_root,
+            scope_id,
+            include_search=True,
+        )
+        if preview["publishing_mode"] == PUBLIC_MODE:
+            sync_public_publish_outputs(
                 repo_root,
-                scope_id,
-                include_search=preview["build_inline_search"],
+                preview["planned_scope_config"],
+                include_search=True,
             )
-            if preview["publishing_mode"] == PUBLIC_MODE:
-                sync_public_publish_outputs(
-                    repo_root,
-                    preview["planned_scope_config"],
-                    include_search=bool(preview["build_inline_search"]),
-                )
 
     return {
         "ok": True,
@@ -855,8 +850,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         if external_data_root is not None
         else normalize_source_root(body.get("source_root"), scope_id)
     )
-    build_inline_search = bool_value(body, "build_inline_search", True)
-    write_generated_outputs = bool_value(body, "write_generated_outputs", True)
     public_route_path = normalize_route_path(body.get("public_route_path")) if publishing_mode == PUBLIC_MODE else ""
     planned_scope_config = planned_scope_config_record(
         scope_id,
@@ -888,32 +881,28 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if public_route_path:
         created_files.append(path_record(repo_root, "route_file", route_file_for_public_path(repo_root, public_route_path), action="create"))
         changed_files.extend(route_registry_path_records(repo_root, action="change"))
-    if write_generated_outputs:
-        docs_output = resolve_scope_path(
-            repo_root,
-            safe_scope_data_path(
-                planned_scope_config["output"],
-                field="planned_scope_config.output",
-                allow_external=publishing_mode == LOCAL_EXTERNAL_MODE,
+    docs_output = resolve_scope_path(
+        repo_root,
+        safe_scope_data_path(
+            planned_scope_config["output"],
+            field="planned_scope_config.output",
+            allow_external=publishing_mode == LOCAL_EXTERNAL_MODE,
+        )
+    )
+    created_files.append(path_record(repo_root, "generated_docs_root", docs_output, action="create"))
+    created_files.extend(
+        [
+            path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json", action="create"),
+            path_record(repo_root, "generated_docs_recently_added", docs_output / "recently-added.json", action="create"),
+            path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id", action="create"),
+            path_record(
+                repo_root,
+                "generated_search_index",
+                generated_search_index_path(repo_root, planned_scope_config),
+                action="create",
             ),
-        )
-        created_files.append(path_record(repo_root, "generated_docs_root", docs_output, action="create"))
-        created_files.extend(
-            [
-                path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json", action="create"),
-                path_record(repo_root, "generated_docs_recently_added", docs_output / "recently-added.json", action="create"),
-                path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id", action="create"),
-            ]
-        )
-        if build_inline_search:
-            created_files.append(
-                path_record(
-                    repo_root,
-                    "generated_search_index",
-                    generated_search_index_path(repo_root, planned_scope_config),
-                    action="create",
-                )
-            )
+        ]
+    )
 
     publish_files: list[dict[str, Any]] = []
     if publishing_mode == PUBLIC_MODE:
@@ -929,15 +918,14 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
                 path_record(repo_root, "published_docs_payload_root", published_output / "by-id", action="publish"),
             ]
         )
-        if build_inline_search:
-            publish_files.append(
-                path_record(
-                    repo_root,
-                    "published_search_index",
-                    published_search_index_path(repo_root, planned_scope_config),
-                    action="publish",
-                )
+        publish_files.append(
+            path_record(
+                repo_root,
+                "published_search_index",
+                published_search_index_path(repo_root, planned_scope_config),
+                action="publish",
             )
+        )
 
     conflicts = [
         record["path"]
@@ -948,10 +936,8 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         raise ValueError(f"scope creation would overwrite existing paths: {', '.join(conflicts)}")
 
     commands = []
-    if write_generated_outputs:
-        commands.append({"command": f"./docs-viewer/build/build_docs.py --scope {scope_id} --write", "status": "planned"})
-        if build_inline_search:
-            commands.append({"command": f"./docs-viewer/build/build_search.py --scope {scope_id} --write", "status": "planned"})
+    commands.append({"command": f"./docs-viewer/build/build_docs.py --scope {scope_id} --write", "status": "planned"})
+    commands.append({"command": f"./docs-viewer/build/build_search.py --scope {scope_id} --write", "status": "planned"})
 
     management_url = f"/docs/?scope={scope_id}"
     return {
@@ -963,8 +949,6 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "title": title,
         "publishing_mode": publishing_mode,
         "external_data_root": EXTERNAL_DATA_ROOT_MARKER if external_data_root else "",
-        "build_inline_search": build_inline_search,
-        "write_generated_outputs": write_generated_outputs,
         "planned_scope_config": planned_scope_config,
         "storage_contract": planned_storage_contract(
             {

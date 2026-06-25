@@ -57,9 +57,8 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
             window.__docsViewerScopeCreatePromise = lifecycle.openCreateScopeFlow({
                 root: document.getElementById('docsViewerRoot'),
                 state: {
-                    managementText: {
-                        cancelButton: 'Cancel',
-                        scopeBuildSearchLabel: 'build inline search',
+                        managementText: {
+                            cancelButton: 'Cancel',
                         scopeCreateIntro: 'Create scope fixture.',
                         scopeCreatePreviewTitle: 'Preview new scope',
                         scopeCreatePreviewing: 'Previewing new scope...',
@@ -79,8 +78,7 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
                         scopePublishingModeLabel: 'publishing mode',
                         scopeSaveButton: 'Save',
                         scopeSourceRootLabel: 'source root',
-                        scopeTitleLabel: 'title',
-                        scopeWriteGeneratedLabel: 'write generated outputs immediately'
+                        scopeTitleLabel: 'title'
                     }
                 },
                 capabilities: {
@@ -134,7 +132,6 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
     if auto_route != "/private-notes/":
         raise AssertionError(f"scope route path did not auto-fill from scope id: {auto_route!r}")
     page.locator('[data-role="scope-publishing-mode"]').select_option("local_external")
-    page.locator('[data-role="scope-write-generated"]').uncheck()
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function("() => window.__docsViewerScopeCreateRequests.length === 1")
     request = page.evaluate("window.__docsViewerScopeCreateRequests[0]")
@@ -145,13 +142,11 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
         "default_doc_id": "private-notes",
         "publishing_mode": "local_external",
         "public_route_path": "",
-        "build_inline_search": False,
-        "write_generated_outputs": False,
     }
     if request["url"] != "http://docs-management.test/docs/scopes/create-preview":
         raise AssertionError(f"scope create preview used the wrong endpoint: {request!r}")
     if request["body"] != expected_body:
-        raise AssertionError(f"scope create payload did not match disabled generated-output state: {request!r}")
+        raise AssertionError(f"scope create payload did not match the new-scope form state: {request!r}")
     page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"] .docsViewer__modalTitle')?.textContent.trim() === 'Preview new scope'")
     page.locator('button[data-role="modal-cancel"]').click()
     page.wait_for_function("() => window.__docsViewerScopeCreateResult === null")

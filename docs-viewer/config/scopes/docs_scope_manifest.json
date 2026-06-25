@@ -265,9 +265,7 @@
         "backfilled": false,
         "viewer_base_url": "/docs/",
         "default_doc_id": "tmp",
-        "publishing_mode": "local_committed",
-        "build_inline_search": true,
-        "write_generated_outputs": true
+        "publishing_mode": "local_committed"
       }
     },
     {
@@ -382,9 +380,7 @@
         "backfilled": false,
         "viewer_base_url": "/moments/",
         "default_doc_id": "",
-        "publishing_mode": "public_readonly",
-        "build_inline_search": true,
-        "write_generated_outputs": true
+        "publishing_mode": "public_readonly"
       }
     }
   ]

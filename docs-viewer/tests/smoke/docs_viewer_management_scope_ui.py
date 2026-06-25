@@ -144,8 +144,6 @@ def main(argv: list[str] | None = None) -> int:
                 page.locator('[data-role="scope-id"]').fill("uiscope")
                 page.locator('[data-role="scope-title"]').fill("UI Scope")
                 page.locator('[data-role="scope-publishing-mode"]').select_option("local_external")
-                page.locator('[data-role="scope-write-generated"]').check()
-                page.locator('[data-role="scope-build-search"]').check()
                 click_modal_primary(page, args.timeout_ms)
                 wait_for_modal_title(page, "Preview new scope", args.timeout_ms)
                 click_modal_primary(page, args.timeout_ms)

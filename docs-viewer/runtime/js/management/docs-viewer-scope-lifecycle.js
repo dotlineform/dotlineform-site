@@ -84,8 +84,8 @@ function modeLabel(state, mode) {
 
 function modeNote(state, mode) {
   var notes = {
-    public_readonly: managementText(state, "scopePublicReadonlyModeNote", "Creates a source root, scope config, read-only route, manifest record, and generated outputs when requested."),
-    local_committed: managementText(state, "scopeLocalCommittedModeNote", "Creates tracked source, config, manifest, and non-public generated outputs under docs-viewer/generated/ when requested. No public route is created."),
+    public_readonly: managementText(state, "scopePublicReadonlyModeNote", "Creates a source root, scope config, read-only route, manifest record, and generated outputs."),
+    local_committed: managementText(state, "scopeLocalCommittedModeNote", "Creates tracked source, config, manifest, and non-public generated outputs under docs-viewer/generated/. No public route is created."),
     local_external: managementText(state, "scopeLocalExternalModeNote", "Creates a repo-registered local scope whose source and generated JSON live under an external data root. No public route is created.")
   };
   return notes[mode] || "";
@@ -140,14 +140,6 @@ function renderCreateFormHtml(state, capabilities) {
         '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopePublicRoutePathLabel", "public route path")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-public-route-path" type="text" autocomplete="off" spellcheck="false">' +
       '</label>' +
-      '<label class="docsViewer__field docsViewer__field--checkbox">' +
-        '<input class="docsViewer__checkboxInput" data-role="scope-write-generated" type="checkbox" checked>' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeWriteGeneratedLabel", "write generated outputs immediately")) + '</span>' +
-      '</label>' +
-      '<label class="docsViewer__field docsViewer__field--checkbox">' +
-        '<input class="docsViewer__checkboxInput" data-role="scope-build-search" type="checkbox" checked>' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeBuildSearchLabel", "build inline search")) + '</span>' +
-      '</label>' +
     '</div>'
   );
 }
@@ -163,8 +155,6 @@ function wireCreateForm(api, state) {
   var defaultDocInput = host.querySelector('[data-role="scope-default-doc-id"]');
   var routeField = host.querySelector('[data-role="scope-route-field"]');
   var routeInput = host.querySelector('[data-role="scope-public-route-path"]');
-  var writeGeneratedInput = host.querySelector('[data-role="scope-write-generated"]');
-  var buildSearchInput = host.querySelector('[data-role="scope-build-search"]');
 
   function expectedTitle() {
     return humanTitleFromSlug(scopeInput && scopeInput.value);
@@ -221,11 +211,6 @@ function wireCreateForm(api, state) {
     }
   }
 
-  function syncGeneratedOutputs() {
-    if (!buildSearchInput || !writeGeneratedInput) return;
-    buildSearchInput.disabled = !writeGeneratedInput.checked;
-  }
-
   if (scopeInput) {
     scopeInput.addEventListener("input", applyScopeDefaults);
   }
@@ -239,11 +224,7 @@ function wireCreateForm(api, state) {
   if (modeInput) {
     modeInput.addEventListener("change", syncMode);
   }
-  if (writeGeneratedInput) {
-    writeGeneratedInput.addEventListener("change", syncGeneratedOutputs);
-  }
   syncMode();
-  syncGeneratedOutputs();
 }
 
 function collectCreatePayload(api, state) {
@@ -254,8 +235,6 @@ function collectCreatePayload(api, state) {
   var sourceRoot = normalizeText(host.querySelector('[data-role="scope-source-root"]')?.value);
   var defaultDocId = normalizeText(host.querySelector('[data-role="scope-default-doc-id"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
-  var writeGenerated = Boolean(host.querySelector('[data-role="scope-write-generated"]')?.checked);
-  var buildSearch = writeGenerated && Boolean(host.querySelector('[data-role="scope-build-search"]')?.checked);
 
   if (!scopeId || !title || !defaultDocId || (publishingMode !== "local_external" && !sourceRoot)) {
     api.setStatus(managementText(state, "scopeCreateRequiredMessage", "Enter the required scope fields."));
@@ -272,9 +251,7 @@ function collectCreatePayload(api, state) {
     source_root: publishingMode === "local_external" ? "" : sourceRoot,
     default_doc_id: defaultDocId,
     publishing_mode: publishingMode,
-    public_route_path: publishingMode === "public_readonly" ? publicRoutePath : "",
-    build_inline_search: buildSearch,
-    write_generated_outputs: writeGenerated
+    public_route_path: publishingMode === "public_readonly" ? publicRoutePath : ""
   };
 }
 

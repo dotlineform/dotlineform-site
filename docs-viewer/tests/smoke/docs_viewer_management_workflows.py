@@ -624,8 +624,6 @@ def main(argv: list[str] | None = None) -> int:
                     "title": "API Smoke Scope",
                     "default_doc_id": "apismoke",
                     "publishing_mode": "local_external",
-                    "write_generated_outputs": True,
-                    "build_inline_search": True,
                 },
             )
             assert_ok(scope_create_preview, "scope create preview")
@@ -641,8 +639,6 @@ def main(argv: list[str] | None = None) -> int:
                     "title": "API Smoke Scope",
                     "default_doc_id": "apismoke",
                     "publishing_mode": "local_external",
-                    "write_generated_outputs": True,
-                    "build_inline_search": True,
                     "confirm": True,
                 },
             )

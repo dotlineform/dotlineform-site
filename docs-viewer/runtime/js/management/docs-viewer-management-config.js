@@ -46,8 +46,6 @@ var MANAGEMENT_TEXT_KEYS = [
   ["scopeSourceRootLabel", "docs_viewer.scope_source_root_label"],
   ["scopeDefaultDocIdLabel", "docs_viewer.scope_default_doc_id_label"],
   ["scopePublicRoutePathLabel", "docs_viewer.scope_public_route_path_label"],
-  ["scopeWriteGeneratedLabel", "docs_viewer.scope_write_generated_label"],
-  ["scopeBuildSearchLabel", "docs_viewer.scope_build_search_label"],
   ["scopePreviewButton", "docs_viewer.scope_preview_button"],
   ["scopeSaveButton", "docs_viewer.scope_save_button"],
   ["scopeDeleteButton", "docs_viewer.scope_delete_button"],

@@ -30,9 +30,7 @@ Expected data:
   "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
   "publishing_mode": "local_uncommitted",
-  "public_route_path": "/notes/",
-  "build_inline_search": true,
-  "write_generated_outputs": true
+  "public_route_path": "/notes/"
 }
 ```
 
@@ -58,8 +56,6 @@ Expected data:
   "default_doc_id": "notes",
   "publishing_mode": "local_uncommitted",
   "public_route_path": "/notes/",
-  "build_inline_search": true,
-  "write_generated_outputs": true,
   "confirm": true
 }
 ```
