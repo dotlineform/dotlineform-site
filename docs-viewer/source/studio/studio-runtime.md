@@ -10,6 +10,7 @@ parent_id: studio
 This document describes the current Studio route shell, shared runtime modules, and sibling-app boundaries.
 Studio route hosting now runs through the local Python Studio app server for active operational routes.
 Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the local server boundary, [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the route inventory, and [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint ownership.
+Use [Studio Static Route Template](/docs/?scope=studio&doc=studio-static-route-template) for route template ownership and route script boundaries.
 
 ## Route Shell
 
@@ -100,7 +101,7 @@ Shared Studio runtime and wiring currently live in:
 - `studio/app/frontend/js/studio-route-state.js`
   provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
 - `studio/app/frontend/routes/*.html`
-  own stable route body markup for template-backed Studio routes before the route controllers boot
+  own stable route body markup for template-backed Studio routes before the route controllers boot; see [Studio Static Route Template](/docs/?scope=studio&doc=studio-static-route-template)
 - `studio/app/frontend/js/catalogue-*-editor.js` and focused sibling modules
   own catalogue editor route orchestration, forms, selection flows, modals, actions, and section rendering
 

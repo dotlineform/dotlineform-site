@@ -38,6 +38,7 @@ The same page owns Studio helper, route inventory, and audit guidance so the con
 - **[UI](/docs/?scope=studio&doc=ui)** for UI framework and maintenance
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** for the shared `/docs/` implementation that hosts Studio documentation
 - **[Route Ready State](/docs/?scope=studio&doc=route-ready-state)** for the shared ready/busy contract across local app route shells
+- **[Studio Static Route Template](/docs/?scope=studio&doc=studio-static-route-template)** for Studio route template ownership and route script boundaries
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell architecture, route registry, shared browser modules, and Docs Viewer integration
 - **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the app server boundary, sibling-service split, runtime config shape, and server module ownership
 - **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for mounted local routes, route template ownership, retired route notes, page-level doc links, and route checks

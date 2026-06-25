@@ -11,6 +11,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "studio-static-route-template",
+      "title": "Studio Static Route Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-static-route-template.json",
+      "added_date": "2026-06-25",
+      "parent_id": "studio",
+      "parent_title": "Studio"
+    },
+    {
       "doc_id": "site-request-docs-viewer-embedded-detail-documents",
       "title": "Embedded Detail Documents",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-21 00:00",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "data-sharing-tags-adapter-structure",
-      "title": "Tags Data Sharing Adapter Structure",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-tags-adapter-structure.json",
-      "added_date": "2026-06-21 00:00",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-06-25T15:22:13Z"
+  "generated_at": "2026-06-25T15:43:06Z"
 }

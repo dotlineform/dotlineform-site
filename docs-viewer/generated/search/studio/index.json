@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-212a534ac73996422e85d924632c7d7e",
-    "generated_at_utc": "2026-06-25T15:37:17Z",
-    "count": 224
+    "version": "blake2b-a9f77a26cff09569d9918f86ca9dc6dc",
+    "generated_at_utc": "2026-06-25T15:43:06Z",
+    "count": 225
   },
   "entries": [
     {
@@ -5220,6 +5220,29 @@
         "21"
       ],
       "search_text": "studio-runtime studio runtime studio runtime 2026-06-21 2026 06 21"
+    },
+    {
+      "id": "studio-static-route-template",
+      "kind": "doc",
+      "title": "Studio Static Route Template",
+      "href": "/docs/?scope=studio&doc=studio-static-route-template",
+      "last_updated": "2026-06-25",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-06-25 • Studio",
+      "search_terms": [
+        "studio-static-route-template",
+        "studio",
+        "static",
+        "route",
+        "template",
+        "studio static route template",
+        "2026-06-25",
+        "2026",
+        "06",
+        "25"
+      ],
+      "search_text": "studio-static-route-template studio static route template studio static route template 2026-06-25 2026 06 25"
     },
     {
       "id": "config-studio-ui-text-json",

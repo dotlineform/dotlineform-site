@@ -10,6 +10,7 @@ viewable: true
 
 This document is the active route inventory for the Local Studio app server.
 Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the route-shell architecture and route registry contract.
+Use [Studio Static Route Template](/docs/?scope=studio&doc=studio-static-route-template) for route template ownership and route script boundaries.
 Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the app server boundary.
 Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint ownership.
 
