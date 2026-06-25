@@ -46,7 +46,6 @@ class DocsScopeConfig:
     default_doc_id: str
     non_loadable_doc_ids: tuple[str, ...]
     manage_only_tree_root_ids: tuple[str, ...]
-    show_updated_date: bool
     allow_unresolved_parent_ids: bool
     import_media_storage: DocsImportMediaConfig
     sub_scopes: tuple["DocsSubScopeConfig", ...]
@@ -573,7 +572,6 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
                 item.get("manage_only_tree_root_ids"),
                 field=f"scopes[{index}].manage_only_tree_root_ids",
             ),
-            show_updated_date=item.get("show_updated_date") is not False,
             allow_unresolved_parent_ids=item.get("allow_unresolved_parent_ids") is True,
             import_media_storage=import_media_storage,
             sub_scopes=sub_scopes,

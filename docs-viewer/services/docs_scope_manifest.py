@@ -418,7 +418,6 @@ def planned_scope_config_record(
         "default_doc_id": default_doc_id,
         "non_loadable_doc_ids": [],
         "manage_only_tree_root_ids": [],
-        "show_updated_date": True,
         "allow_unresolved_parent_ids": False,
         "import_media_storage": {
             "storage_mode": "staging_manual",

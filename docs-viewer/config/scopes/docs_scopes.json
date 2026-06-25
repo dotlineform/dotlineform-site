@@ -14,7 +14,6 @@
       "default_doc_id": "dev-home",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
-      "show_updated_date": true,
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",
@@ -37,7 +36,6 @@
       "default_doc_id": "library",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
-      "show_updated_date": false,
       "allow_unresolved_parent_ids": true,
       "import_media_storage": {
         "storage_mode": "staging_manual",
@@ -60,7 +58,6 @@
       "default_doc_id": "analysis",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
-      "show_updated_date": true,
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",
@@ -90,7 +87,6 @@
       "default_doc_id": "tmp",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
-      "show_updated_date": true,
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",
@@ -113,7 +109,6 @@
       "default_doc_id": "",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
-      "show_updated_date": true,
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
         "storage_mode": "staging_manual",

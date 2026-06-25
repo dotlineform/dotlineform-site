@@ -29,8 +29,7 @@ Payload shape:
   "schema": "docs_index_tree_v1",
   "viewer_options": {
     "non_loadable_doc_ids": [],
-    "manage_only_tree_root_ids": [],
-    "show_updated_date": true
+    "manage_only_tree_root_ids": []
   },
   "docs": [
     {

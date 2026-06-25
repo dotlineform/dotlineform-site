@@ -50,7 +50,6 @@ class DocsDataBuilder(
         self.include_scope_param = config.include_scope_param
         self.non_loadable_doc_ids = normalize_doc_ids(list(config.non_loadable_doc_ids))
         self.manage_only_tree_root_ids = normalize_doc_ids(list(config.manage_only_tree_root_ids))
-        self.show_updated_date = config.show_updated_date is not False
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
@@ -133,7 +132,6 @@ class DocsDataBuilder(
         return {
             "non_loadable_doc_ids": self.non_loadable_doc_ids,
             "manage_only_tree_root_ids": self.manage_only_tree_root_ids,
-            "show_updated_date": self.show_updated_date,
         }
 
     @property

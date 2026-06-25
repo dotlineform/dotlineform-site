@@ -43,16 +43,7 @@ Returned data:
   "ok": true,
   "schema_version": "docs_source_config_settings_v1",
   "source_config_path": "docs-viewer/config/scopes/docs_scopes.json",
-  "editable_scope_fields": [
-    {
-      "field": "show_updated_date",
-      "type": "boolean",
-      "source_path": "scopes[].show_updated_date",
-      "generated_path": "viewer_options.show_updated_date",
-      "requires_rebuild": true,
-      "description": "Legacy updated-date display option retained in scope config."
-    }
-  ],
+  "editable_scope_fields": [],
   "blocked_scope_fields": [],
   "deferred_global_fields": [],
   "scopes": []
@@ -63,18 +54,16 @@ Used for:
 
 - rendering settings controls that are safe to expose in manage mode
 - explaining why install-time fields such as roots, route bases, output paths, and media prefixes are blocked
-- warning when generated viewer options are stale relative to source config
+- returning an empty editable-field list when no scope settings are currently exposed
 
 ## `POST /docs/source-config-settings`
 
-Expected data:
+No scope fields are currently editable through this endpoint. When a future field is allowlisted, expected data will use this shape:
 
 ```json
 {
   "scope": "studio",
-  "changes": {
-    "show_updated_date": false
-  }
+  "changes": {}
 }
 ```
 
@@ -84,13 +73,13 @@ Actions:
 - validates every submitted field against the settings allowlist
 - writes only allowlisted values to `docs-viewer/config/scopes/docs_scopes.json`
 - rebuilds generated docs output for the affected scope when a saved setting requires it
-- skips docs search rebuilds for `show_updated_date` because search output is unaffected
 - logs a `docs_source_config_settings` event when a real write occurs
 
 Returned data includes validation results, rejected fields, warnings, `changed`, `requires_rebuild`, changed field values, the source config path, rebuild diagnostics when a rebuild ran, and `dry_run`.
 
 Rejected data:
 
+- empty changes
 - unsupported fields
 - blocked install-time fields
 - deferred global fields

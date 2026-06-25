@@ -137,16 +137,10 @@ def main(argv: list[str] | None = None) -> int:
                 page.locator("#docsViewerManageSettingsButton").click()
                 page.wait_for_selector("#docsViewerSettingsModal:not([hidden])", timeout=args.timeout_ms)
                 page.wait_for_function(
-                    """() => {
-                        const input = document.querySelector("#docsViewerSettingsUpdatedInput");
-                        const field = document.querySelector("#docsViewerSettingsUpdatedField");
-                        const save = document.querySelector("#docsViewerSettingsSaveButton");
-                        return input && field && save && !field.hidden && !input.disabled && !save.disabled;
-                    }""",
+                    """() => document.querySelector("#docsViewerSettingsStatus")?.textContent.includes("No editable settings")""",
                     timeout=args.timeout_ms,
                 )
-                page.locator("#docsViewerSettingsUpdatedInput").uncheck()
-                page.locator("#docsViewerSettingsSaveButton").click()
+                page.locator("#docsViewerSettingsCancelButton").click()
                 page.wait_for_function(
                     """() => document.querySelector("#docsViewerSettingsModal")?.hidden === true""",
                     timeout=args.timeout_ms,
@@ -161,15 +155,11 @@ def main(argv: list[str] | None = None) -> int:
                 browser.close()
 
             source_path = fixture_root / "docs-viewer/source/studio" / "ui-smoke-created.md"
-            config_path = fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json"
             if source_path.exists():
                 raise AssertionError(f"UI delete did not remove fixture source: {source_path}")
-            if '"show_updated_date": false' not in config_path.read_text(encoding="utf-8"):
-                raise AssertionError("UI settings save did not update fixture docs_scopes.json")
             expected_posts = [
                 "/docs/create",
                 "/docs/update-metadata",
-                "/docs/source-config-settings",
                 "/docs/delete-preview",
                 "/docs/delete-apply",
             ]

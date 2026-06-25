@@ -42,7 +42,6 @@ Each scope entry owns:
 - `default_doc_id`: default document for the scope
 - `non_loadable_doc_ids`: tree nodes that should not load as documents
 - `manage_only_tree_root_ids`: tree roots excluded from public routes
-- `show_updated_date`: legacy generated viewer option retained in scope config; selected-document date display now belongs to the info panel metadata view
 - `allow_unresolved_parent_ids`: whether unknown parent ids are tolerated
 - `import_media_storage`: Docs Import media save behavior for that scope
 

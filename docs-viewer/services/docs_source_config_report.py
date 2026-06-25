@@ -102,7 +102,6 @@ def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
         "default_doc_id",
         "non_loadable_doc_ids",
         "manage_only_tree_root_ids",
-        "show_updated_date",
         "allow_unresolved_parent_ids",
         "import_media_storage",
         "sub_scopes",

@@ -249,25 +249,25 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function renderSettingsField(field) {
-    if (!refs.settingsUpdatedField || !refs.settingsUpdatedInput) return;
+    if (!refs.settingsBooleanField || !refs.settingsBooleanInput) return;
     if (!field) {
-      refs.settingsUpdatedField.hidden = true;
-      refs.settingsUpdatedInput.disabled = true;
-      refs.settingsUpdatedInput.checked = false;
-      refs.settingsUpdatedInput.name = "";
+      refs.settingsBooleanField.hidden = true;
+      refs.settingsBooleanInput.disabled = true;
+      refs.settingsBooleanInput.checked = false;
+      refs.settingsBooleanInput.name = "";
       if (refs.settingsDescription) {
         refs.settingsDescription.hidden = true;
         refs.settingsDescription.textContent = "";
       }
       return;
     }
-    refs.settingsUpdatedInput.disabled = false;
-    refs.settingsUpdatedInput.name = normalizeText(field.field);
-    refs.settingsUpdatedInput.checked = field.current_value === true;
-    if (refs.settingsUpdatedLabel) {
-      refs.settingsUpdatedLabel.textContent = settingsFieldLabel(field.field);
+    refs.settingsBooleanInput.disabled = false;
+    refs.settingsBooleanInput.name = normalizeText(field.field);
+    refs.settingsBooleanInput.checked = field.current_value === true;
+    if (refs.settingsBooleanLabel) {
+      refs.settingsBooleanLabel.textContent = settingsFieldLabel(field.field);
     }
-    refs.settingsUpdatedField.hidden = false;
+    refs.settingsBooleanField.hidden = false;
     if (refs.settingsDescription) {
       refs.settingsDescription.textContent = normalizeText(field.description);
       refs.settingsDescription.hidden = !refs.settingsDescription.textContent;
@@ -312,16 +312,16 @@ export function createDocsViewerManagementModalController(options = {}) {
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
     window.requestAnimationFrame(function () {
-      focusWithoutScroll(refs.settingsUpdatedInput || refs.settingsSaveButton || refs.settingsModal);
+      focusWithoutScroll(refs.settingsBooleanInput || refs.settingsSaveButton || refs.settingsModal);
     });
   }
 
   function getSettingsChanges() {
-    if (!settingsFieldState || !refs.settingsUpdatedInput) return null;
+    if (!settingsFieldState || !refs.settingsBooleanInput) return null;
     var fieldName = normalizeText(settingsFieldState.field);
     if (!fieldName) return null;
     return {
-      [fieldName]: refs.settingsUpdatedInput.checked === true
+      [fieldName]: refs.settingsBooleanInput.checked === true
     };
   }
 

@@ -3,37 +3,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs
+from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs
 
 
 SCHEMA_VERSION = "docs_source_config_settings_v1"
 
 
-@dataclass(frozen=True)
-class ScopeSettingField:
-    field: str
-    value_type: str
-    source_path: str
-    generated_path: str
-    requires_rebuild: bool
-    description: str
-
-
-EDITABLE_SCOPE_FIELDS = {
-    "show_updated_date": ScopeSettingField(
-        field="show_updated_date",
-        value_type="boolean",
-        source_path="scopes[].show_updated_date",
-        generated_path="viewer_options.show_updated_date",
-        requires_rebuild=True,
-        description="Show updated-date metadata in the Docs Viewer for this scope.",
-    ),
-}
+EDITABLE_SCOPE_FIELDS: dict[str, Any] = {}
 
 BLOCKED_SCOPE_FIELDS = {
     "scope_id": "Scope identity controls route and generated-data ownership.",
@@ -68,25 +48,6 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def _read_viewer_options(repo_root: Path, config: DocsScopeConfig) -> tuple[dict[str, Any], list[str]]:
-    index_tree_path = config.output / "index-tree.json"
-    payload = _load_json(repo_root / index_tree_path, f"generated docs index tree for {config.scope_id}")
-    if not payload:
-        return {}, [f"Generated docs index tree is missing: {index_tree_path.as_posix()}"]
-    viewer_options = payload.get("viewer_options")
-    if viewer_options is None:
-        return {}, ["Generated docs index tree has no viewer_options object."]
-    if not isinstance(viewer_options, dict):
-        return {}, ["Generated docs index tree viewer_options is not an object."]
-    return viewer_options, []
-
-
-def _current_scope_value(config: DocsScopeConfig, field: str) -> Any:
-    if field == "show_updated_date":
-        return config.show_updated_date
-    raise ValueError(f"Unsupported editable source config field: {field}")
-
-
 def _validate_field_value(field: str, value: Any) -> Any:
     contract = EDITABLE_SCOPE_FIELDS.get(field)
     if contract is None:
@@ -98,68 +59,11 @@ def _validate_field_value(field: str, value: Any) -> Any:
     raise ValueError(f"Source config field {field} has unsupported value type: {contract.value_type}")
 
 
-def _field_warnings(
-    *,
-    field: str,
-    current_value: Any,
-    proposed_value: Any,
-    viewer_options: dict[str, Any],
-    viewer_option_warnings: list[str],
-) -> list[str]:
-    warnings = list(viewer_option_warnings)
-    generated_value = viewer_options.get(EDITABLE_SCOPE_FIELDS[field].generated_path.split(".")[-1])
-    if type(generated_value) is bool:
-        if generated_value != current_value:
-            warnings.append(
-                f"Generated {EDITABLE_SCOPE_FIELDS[field].generated_path} does not match source config; rebuild is needed."
-            )
-        if generated_value != proposed_value:
-            warnings.append(
-                f"Saving {field} requires rebuilding the generated docs index tree before the browser reflects the change."
-            )
-    elif not viewer_option_warnings:
-        warnings.append(f"Generated {EDITABLE_SCOPE_FIELDS[field].generated_path} is missing or invalid.")
-    return warnings
-
-
-def _affected_artifacts(config: DocsScopeConfig, field: str) -> list[str]:
-    if field == "show_updated_date":
-        return [(config.output / "index-tree.json").as_posix()]
-    return []
-
-
-def _scope_payload(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any]:
-    viewer_options, viewer_option_warnings = _read_viewer_options(repo_root, config)
-    fields: list[dict[str, Any]] = []
-    for field_name, contract in sorted(EDITABLE_SCOPE_FIELDS.items()):
-        current_value = _current_scope_value(config, field_name)
-        generated_value = viewer_options.get(contract.generated_path.split(".")[-1])
-        fields.append(
-            {
-                "field": field_name,
-                "editable": True,
-                "type": contract.value_type,
-                "current_value": current_value,
-                "generated_value": generated_value if type(generated_value) is bool else None,
-                "source_path": contract.source_path,
-                "generated_path": contract.generated_path,
-                "requires_rebuild": contract.requires_rebuild,
-                "affected_artifacts": _affected_artifacts(config, field_name),
-                "description": contract.description,
-                "warnings": _field_warnings(
-                    field=field_name,
-                    current_value=current_value,
-                    proposed_value=current_value,
-                    viewer_options=viewer_options,
-                    viewer_option_warnings=viewer_option_warnings,
-                ),
-            }
-        )
-
+def _scope_payload(config: Any) -> dict[str, Any]:
     return {
         "scope_id": config.scope_id,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
-        "fields": fields,
+        "fields": [],
     }
 
 
@@ -193,7 +97,7 @@ def build_settings_contract(repo_root: Path, scope_id: str = "") -> dict[str, An
             {"field": field, "reason": reason}
             for field, reason in sorted(DEFERRED_GLOBAL_FIELDS.items())
         ],
-        "scopes": [_scope_payload(repo_root, configs[item]) for item in scope_ids],
+        "scopes": [_scope_payload(configs[item]) for item in scope_ids],
     }
 
 
@@ -209,12 +113,8 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
     if not changes:
         raise ValueError("At least one source config setting is required")
 
-    config = configs[normalized_scope]
-    viewer_options, viewer_option_warnings = _read_viewer_options(repo_root, config)
     validated_changes: dict[str, Any] = {}
     rejected_fields: list[dict[str, str]] = []
-    warnings: list[str] = []
-    affected_artifacts: list[str] = []
 
     for field, raw_value in sorted(changes.items()):
         if field in BLOCKED_SCOPE_FIELDS:
@@ -224,22 +124,11 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
             rejected_fields.append({"field": field, "reason": DEFERRED_GLOBAL_FIELDS[field]})
             continue
         value = _validate_field_value(field, raw_value)
-        current_value = _current_scope_value(config, field)
         validated_changes[field] = {
-            "current_value": current_value,
+            "current_value": value,
             "proposed_value": value,
-            "changed": value != current_value,
+            "changed": False,
         }
-        warnings.extend(
-            _field_warnings(
-                field=field,
-                current_value=current_value,
-                proposed_value=value,
-                viewer_options=viewer_options,
-                viewer_option_warnings=viewer_option_warnings,
-            )
-        )
-        affected_artifacts.extend(_affected_artifacts(config, field))
 
     if rejected_fields:
         rejected = ", ".join(item["field"] for item in rejected_fields)
@@ -251,9 +140,9 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
         "scope_id": normalized_scope,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "changes": validated_changes,
-        "warnings": sorted(set(warnings)),
+        "warnings": [],
         "requires_rebuild": any(item["changed"] for item in validated_changes.values()),
-        "affected_artifacts": sorted(set(affected_artifacts)),
+        "affected_artifacts": [],
     }
 
 

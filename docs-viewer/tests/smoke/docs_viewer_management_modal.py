@@ -61,23 +61,24 @@ def run_settings_modal_check(page: Page) -> None:
             const smoke = window.__docsViewerManagementModalSmoke;
             smoke.controller.openSettingsModalShell();
             smoke.controller.setSettingsField({
+                field: 'example_setting',
                 current_value: true,
                 warnings: ['Scope setting comes from the smoke fixture.']
             });
         }"""
     )
-    wait_for_focus(page, "docsViewerSettingsUpdatedInput")
+    wait_for_focus(page, "docsViewerSettingsBooleanInput")
     state = assert_shell(
         page,
         "#docsViewerSettingsModal",
         "Settings",
         ["Cancel", "OK"],
-        active_id="docsViewerSettingsUpdatedInput",
+        active_id="docsViewerSettingsBooleanInput",
         size_class="docsViewer__modalCard--compact",
     )
     if "Scope setting comes from the smoke fixture." not in state["bodyText"]:
         raise AssertionError(f"settings warnings were not rendered: {state!r}")
-    if focus_wrap_id(page, "#docsViewerSettingsUpdatedInput", "Shift+Tab") != "docsViewerSettingsSaveButton":
+    if focus_wrap_id(page, "#docsViewerSettingsBooleanInput", "Shift+Tab") != "docsViewerSettingsSaveButton":
         raise AssertionError("settings modal did not wrap focus backward to OK")
     page.locator("#docsViewerSettingsCancelButton").click()
     assert_hidden_with_focus(page, "#docsViewerSettingsModal", "docsViewerManageSettingsButton")
@@ -513,7 +514,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
                   <div class="docsViewer__modalBackdrop" data-settings-close="true"></div>
                   <form id="docsViewerSettingsForm">
                     <p id="docsViewerSettingsScope"></p>
-                    <input id="docsViewerSettingsUpdatedInput" type="checkbox">
+                    <input id="docsViewerSettingsBooleanInput" type="checkbox">
                     <div id="docsViewerSettingsWarnings"></div>
                     <p id="docsViewerSettingsStatus"></p>
                     <button id="docsViewerSettingsCancelButton" type="button">Cancel</button>

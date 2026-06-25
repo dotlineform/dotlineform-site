@@ -172,8 +172,8 @@ def install_modal_fixture(page: Page) -> None:
                     </div>
                     <form class="docsViewer__modalForm" id="docsViewerSettingsForm">
                       <label class="docsViewer__field docsViewer__field--checkbox">
-                        <input class="docsViewer__checkboxInput" id="docsViewerSettingsUpdatedInput" name="show_updated_date" type="checkbox">
-                        <span class="docsViewer__fieldLabel" id="docsViewerSettingsUpdatedLabel">show updated dates</span>
+                        <input class="docsViewer__checkboxInput" id="docsViewerSettingsBooleanInput" type="checkbox">
+                        <span class="docsViewer__fieldLabel" id="docsViewerSettingsBooleanLabel"></span>
                       </label>
                       <div class="docsViewer__settingsWarnings muted small" id="docsViewerSettingsWarnings" hidden></div>
                       <p class="docsViewer__modalNote muted small" id="docsViewerSettingsStatus" hidden></p>
@@ -247,7 +247,7 @@ def install_modal_fixture(page: Page) -> None:
                 settingsSaveButton: document.getElementById('docsViewerSettingsSaveButton'),
                 settingsScope: document.getElementById('docsViewerSettingsScope'),
                 settingsStatus: document.getElementById('docsViewerSettingsStatus'),
-                settingsUpdatedInput: document.getElementById('docsViewerSettingsUpdatedInput'),
+                settingsBooleanInput: document.getElementById('docsViewerSettingsBooleanInput'),
                 settingsWarnings: document.getElementById('docsViewerSettingsWarnings')
             };
             const controller = managementModals.createDocsViewerManagementModalController({
@@ -398,5 +398,4 @@ def assert_hidden_with_focus(page: Page, selector: str, expected_focus_id: str) 
     )
     if state != {"hidden": True, "focusedId": expected_focus_id, "expected": expected_focus_id}:
         raise AssertionError(f"modal did not close and return focus: {state!r}")
-
 

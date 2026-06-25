@@ -267,7 +267,7 @@ def test_shared_app_shell_excludes_manage_shell_modal_refs() -> None:
         "docsViewerImportModal",
         "docsHtmlImportRoot",
         "docsViewerSettingsModal",
-        "docsViewerSettingsUpdatedInput",
+        "docsViewerSettingsBooleanInput",
     ]
 
     assert [fragment for fragment in blocked_fragments if fragment in source] == []

@@ -96,7 +96,6 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "default_doc_id": "root-doc",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
@@ -119,7 +118,6 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "default_doc_id": "library",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
@@ -142,7 +140,6 @@ def write_docs_scope_config(target_root: Path) -> None:
                     "default_doc_id": "analysis",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
@@ -374,7 +371,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
         output_root / "index.json",
         {
             "viewer_options": {
-                "show_updated_date": config.show_updated_date,
                 "default_doc_id": config.default_doc_id,
             },
             "docs": docs_payload,
@@ -385,7 +381,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {
-                "show_updated_date": config.show_updated_date,
                 "default_doc_id": config.default_doc_id,
             },
             "docs": tree_docs,
@@ -528,16 +523,8 @@ def main(argv: list[str] | None = None) -> int:
             assert_ok(settings, "source config settings")
             if settings["scopes"][0]["scope_id"] != "studio":
                 raise AssertionError(f"unexpected settings payload: {settings!r}")
-
-            settings_apply = request_json(
-                base_url,
-                "POST",
-                "/docs/source-config-settings",
-                {"scope": "studio", "changes": {"show_updated_date": False}},
-            )
-            assert_ok(settings_apply, "source config settings apply")
-            if settings_apply.get("rebuild", {}).get("fixture_rebuild") is not True:
-                raise AssertionError(f"settings apply did not rebuild through fixture patch: {settings_apply!r}")
+            if settings["editable_scope_fields"] or settings["scopes"][0]["fields"]:
+                raise AssertionError(f"settings payload should not expose editable fields: {settings!r}")
 
             import_listing = request_json(base_url, "GET", "/docs/import-source-files")
             assert_ok(import_listing, "import source files")
@@ -667,8 +654,6 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"scope delete did not remove fixture source root: {scope_deleted!r}")
 
             docs_config = (fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
-            if '"show_updated_date": false' not in docs_config:
-                raise AssertionError("settings apply did not update fixture docs_scopes.json")
             if "apismoke" in docs_config:
                 raise AssertionError("scope delete did not remove fixture scope config")
             print(f"Docs Viewer service management workflows OK: {base_url}")

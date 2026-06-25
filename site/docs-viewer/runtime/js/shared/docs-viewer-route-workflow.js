@@ -38,8 +38,6 @@ function createRouteWorkflowStateBridge(inputs) {
     set nonLoadableDocIds(value) { documentIndex.nonLoadableDocIds = value; },
     get manageOnlyTreeRootIds() { return documentIndex.manageOnlyTreeRootIds || new Set(); },
     set manageOnlyTreeRootIds(value) { documentIndex.manageOnlyTreeRootIds = value; },
-    get showUpdatedDate() { return documentIndex.showUpdatedDate; },
-    set showUpdatedDate(value) { documentIndex.showUpdatedDate = value; },
     get selectedDocId() { return selectedDocument.selectedDocId || ""; },
     set selectedDocId(value) { selectedDocument.selectedDocId = value; },
     get payloadCache() { return selectedDocument.payloadCache || new Map(); },
@@ -299,7 +297,6 @@ export function initDocsViewerRouteWorkflow(context) {
       : {};
     state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
-    state.showUpdatedDate = viewerOptions.show_updated_date !== false;
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
     context.syncNonViewableVisibilityForRequestedDoc();
     context.applyDocVisibility();

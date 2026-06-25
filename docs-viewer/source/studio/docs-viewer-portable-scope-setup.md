@@ -61,7 +61,6 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
   "default_doc_id": "research",
   "non_loadable_doc_ids": [],
   "manage_only_tree_root_ids": [],
-  "show_updated_date": false,
   "allow_unresolved_parent_ids": true,
   "import_media_storage": {
     "storage_mode": "repo_assets",
@@ -291,7 +290,6 @@ Scope config example:
   "default_doc_id": "notes",
   "non_loadable_doc_ids": [],
   "manage_only_tree_root_ids": [],
-  "show_updated_date": true,
   "allow_unresolved_parent_ids": false,
   "import_media_storage": {
     "storage_mode": "staging_manual",

@@ -147,9 +147,9 @@ export function initDocsViewerManagement(context) {
   var settingsForm = shellRef("settingsForm", "docsViewerSettingsForm");
   var settingsHeading = shellRef("settingsHeading", "docsViewerSettingsHeading");
   var settingsScope = shellRef("settingsScope", "docsViewerSettingsScope");
-  var settingsUpdatedField = shellRef("settingsUpdatedField", "docsViewerSettingsUpdatedField");
-  var settingsUpdatedInput = shellRef("settingsUpdatedInput", "docsViewerSettingsUpdatedInput");
-  var settingsUpdatedLabel = shellRef("settingsUpdatedLabel", "docsViewerSettingsUpdatedLabel");
+  var settingsBooleanField = shellRef("settingsBooleanField", "docsViewerSettingsBooleanField");
+  var settingsBooleanInput = shellRef("settingsBooleanInput", "docsViewerSettingsBooleanInput");
+  var settingsBooleanLabel = shellRef("settingsBooleanLabel", "docsViewerSettingsBooleanLabel");
   var settingsDescription = shellRef("settingsDescription", "docsViewerSettingsDescription");
   var settingsWarnings = shellRef("settingsWarnings", "docsViewerSettingsWarnings");
   var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
@@ -973,9 +973,9 @@ export function initDocsViewerManagement(context) {
       settingsModal: settingsModal,
       settingsSaveButton: settingsSaveButton,
       settingsScope: settingsScope,
-      settingsUpdatedField: settingsUpdatedField,
-      settingsUpdatedInput: settingsUpdatedInput,
-      settingsUpdatedLabel: settingsUpdatedLabel,
+      settingsBooleanField: settingsBooleanField,
+      settingsBooleanInput: settingsBooleanInput,
+      settingsBooleanLabel: settingsBooleanLabel,
       settingsDescription: settingsDescription,
       settingsStatus: settingsStatus,
       settingsWarnings: settingsWarnings,

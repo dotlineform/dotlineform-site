@@ -186,7 +186,6 @@ function createStateDefaults(settings) {
     metadataRestoreFocusId: "",
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
-    showUpdatedDate: true,
     hostedViews: options.hostedViewRegistry || null,
     indexPanelState: panelLayout && typeof panelLayout.indexPanelState === "function"
       ? panelLayout.indexPanelState()
@@ -235,7 +234,6 @@ function createStateDomains(state, settings) {
       "uiStatuses",
       "uiStatusByValue",
       "recentLimit",
-      "showUpdatedDate",
       "managementText"
     ]),
     documentIndex: stateDomain("documentIndex", "generated static data or local generated-read service", state, [
@@ -248,7 +246,6 @@ function createStateDomains(state, settings) {
       "nonLoadableDocIds",
       "manageOnlyTreeRootIds",
       "showNonViewable",
-      "showUpdatedDate",
       "uiStatusByValue"
     ]),
     selectedDocument: stateDomain("selectedDocument", "generated static data or local generated-read service", state, [

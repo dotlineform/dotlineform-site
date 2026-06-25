@@ -196,7 +196,6 @@ def write_generated_docs(root: Path) -> None:
         {
             "schema": "docs_index_tree_v1",
             "viewer_options": {
-                "show_updated_date": True,
                 "non_loadable_doc_ids": [],
                 "manage_only_tree_root_ids": [],
             },
@@ -233,7 +232,6 @@ def write_docs_scope_config(root: Path) -> None:
                     "default_doc_id": "child",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                     "import_media_storage": {
                         "storage_mode": "staging_manual",
@@ -1455,11 +1453,10 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["generated"]["docs_index_tree"] == "docs-viewer/generated/docs/studio/index-tree.json"
     assert payload["scopes"][0]["generated"]["recently_added"] == "docs-viewer/generated/docs/studio/recently-added.json"
     assert payload["scopes"][0]["generated"]["search_index"] == "docs-viewer/generated/search/studio/index.json"
-    assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
     assert payload["scopes"][0]["warnings"] == []
 
 
-def test_source_config_settings_contract_allows_updated_date_only() -> None:
+def test_source_config_settings_contract_has_no_editable_fields() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -1468,34 +1465,12 @@ def test_source_config_settings_contract_allows_updated_date_only() -> None:
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_source_config_settings_v1"
-    assert [field["field"] for field in payload["editable_scope_fields"]] == ["show_updated_date"]
+    assert payload["editable_scope_fields"] == []
     assert payload["deferred_global_fields"][0]["field"] == "recently_added_limit"
     assert any(field["field"] == "source" for field in payload["blocked_scope_fields"])
     scope = payload["scopes"][0]
     assert scope["scope_id"] == "studio"
-    assert scope["fields"][0]["field"] == "show_updated_date"
-    assert scope["fields"][0]["current_value"] is True
-    assert scope["fields"][0]["generated_value"] is True
-    assert scope["fields"][0]["warnings"] == []
-
-
-def test_source_config_settings_validation_reports_rebuild_artifact() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        write_generated_docs(repo_root)
-        payload = docs_management_service.docs_source_config_settings.validate_scope_settings_change(
-            repo_root,
-            "studio",
-            {"show_updated_date": False},
-        )
-
-    assert payload["ok"] is True
-    assert payload["requires_rebuild"] is True
-    assert payload["changes"]["show_updated_date"]["current_value"] is True
-    assert payload["changes"]["show_updated_date"]["proposed_value"] is False
-    assert payload["affected_artifacts"] == ["docs-viewer/generated/docs/studio/index-tree.json"]
-    assert any("requires rebuilding" in warning for warning in payload["warnings"])
+    assert scope["fields"] == []
 
 
 def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
@@ -1525,78 +1500,6 @@ def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
             assert "recently_added_limit" in str(exc)
         else:
             raise AssertionError("deferred global field should be rejected")
-
-
-def test_source_config_settings_rejects_invalid_updated_date_value() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        write_generated_docs(repo_root)
-
-        try:
-            docs_management_service.docs_source_config_settings.validate_scope_settings_change(
-                repo_root,
-                "studio",
-                {"show_updated_date": "false"},
-            )
-        except ValueError as exc:
-            assert "must be a boolean" in str(exc)
-        else:
-            raise AssertionError("non-boolean show_updated_date should be rejected")
-
-
-def test_source_config_settings_apply_writes_allowed_field() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        write_generated_docs(repo_root)
-
-        result = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
-            repo_root,
-            "studio",
-            {"show_updated_date": False},
-        )
-        source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
-
-    assert result["ok"] is True
-    assert result["changed"] is True
-    assert result["requires_rebuild"] is True
-    assert source_payload["scopes"][0]["show_updated_date"] is False
-
-
-def test_source_config_settings_apply_dry_run_does_not_write() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        write_generated_docs(repo_root)
-
-        result = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
-            repo_root,
-            "studio",
-            {"show_updated_date": False},
-            dry_run=True,
-        )
-        source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
-
-    assert result["ok"] is True
-    assert result["changed"] is True
-    assert source_payload["scopes"][0]["show_updated_date"] is True
-
-
-def test_source_config_settings_warns_when_generated_projection_is_stale() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        write_docs_scope_config(repo_root)
-        write_generated_docs(repo_root)
-        index_path = repo_root / "docs-viewer/generated/docs/studio/index-tree.json"
-        payload = json.loads(index_path.read_text(encoding="utf-8"))
-        payload["viewer_options"]["show_updated_date"] = False
-        write_json(index_path, payload)
-
-        result = docs_management_service.docs_source_config_settings.build_settings_contract(repo_root, "studio")
-
-    warnings = result["scopes"][0]["fields"][0]["warnings"]
-    assert any("does not match source config" in warning for warning in warnings)
 
 
 def test_docs_export_request_passes_target_format() -> None:

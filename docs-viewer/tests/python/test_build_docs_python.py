@@ -115,7 +115,6 @@ def write_scope_config(root: Path) -> None:
                     "default_doc_id": "parent",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                 }
             ],
@@ -151,7 +150,6 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
                     "default_doc_id": "private",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                 }
             ],
@@ -180,7 +178,6 @@ def write_public_scope_config(root: Path) -> None:
                     "default_doc_id": "parent",
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": ["manage-root"],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
                 }
             ],

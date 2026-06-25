@@ -96,7 +96,6 @@ function sourceRows(scope) {
     ["include_scope_param", config.include_scope_param],
     ["default_doc_id", config.default_doc_id],
     ["allow_unresolved_parent_ids", config.allow_unresolved_parent_ids],
-    ["show_updated_date", config.show_updated_date],
     ["non_loadable_doc_ids", config.non_loadable_doc_ids],
     ["manage_only_tree_root_ids", config.manage_only_tree_root_ids],
     ["import_media_storage", config.import_media_storage],

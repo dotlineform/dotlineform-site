@@ -93,7 +93,7 @@ Ownership: owns which source-config fields are editable through manage mode.
 Responsibilities:
 
 - exposes editable scope fields, blocked scope fields, and deferred global fields
-- currently allows scoped `show_updated_date`
+- currently exposes no editable scope fields
 - validates proposed setting changes and value types
 - writes allowlisted changes to `docs-viewer/config/scopes/docs_scopes.json`
 - reports whether a rebuild is required

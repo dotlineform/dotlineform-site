@@ -98,7 +98,6 @@ def test_docs_viewer_index_contract_fixture() -> None:
     assert_equal(fixture["required_top_level_keys"], ["docs", "generated_at", "viewer_options"], "docs index keys")
     assert_true(isinstance(fixture["viewer_options"]["non_loadable_doc_ids"], list), "non-loadable ids")
     assert_true(isinstance(fixture["viewer_options"]["manage_only_tree_root_ids"], list), "manage-only roots")
-    assert_equal(fixture["viewer_options"]["show_updated_date"], True, "show updated date")
     assert_required_keys(
         doc_entry,
         [
