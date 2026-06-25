@@ -2,12 +2,17 @@ import {
   renderMetadataParentPopupMarkup
 } from "./docs-viewer-management-render.js";
 
+var PARENT_PICKER_TEXT = {
+  rootOption: "Root",
+  noMatches: "No matching parent docs."
+};
+
 function parentOptions(callbacks, doc) {
   return typeof callbacks.metadataParentOptions === "function" ? callbacks.metadataParentOptions(doc) : [];
 }
 
 function parentOptionTitle(state, option) {
-  if (!option || !option.value) return state.managementText.metadataParentRootOption;
+  if (!option || !option.value) return PARENT_PICKER_TEXT.rootOption;
   return String(option.label || "").replace(/^(-\s*)+/, "");
 }
 
@@ -93,7 +98,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     }
     if (!records.length) {
       refs.metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(records, {
-        emptyText: state.managementText.metadataParentNoMatches
+        emptyText: PARENT_PICKER_TEXT.noMatches
       });
       refs.metadataParentPopup.hidden = false;
       refs.metadataParentInput.setAttribute("aria-expanded", "true");
@@ -133,7 +138,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
   function resolveParentId(doc) {
     if (!refs.metadataParentInput) return "";
     var inputValue = String(refs.metadataParentInput.value || "").trim();
-    var rootLabel = state.managementText.metadataParentRootOption;
+    var rootLabel = PARENT_PICKER_TEXT.rootOption;
     if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
     var records = parentOptions(callbacks, doc);
     var exactDocId = records.find(function (option) {

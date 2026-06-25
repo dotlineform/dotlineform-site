@@ -21,14 +21,14 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     id: "docsViewerManageNewScopeButton",
     action: "new-scope",
     emoji: "🗂️",
-    label: "New Scope",
+    label: "New scope",
     hidden: true
   },
   {
     id: "docsViewerManageDeleteScopeButton",
     action: "delete-scope",
     emoji: "🗑️",
-    label: "Delete Scope",
+    label: "Delete scope",
     hidden: true
   },
   {
@@ -76,10 +76,11 @@ function escapeHtml(value) {
 function renderActionMenuItem(item) {
   var hidden = item.hidden ? " hidden" : "";
   var action = item.action ? ' data-docs-viewer-action="' + escapeHtml(item.action) + '"' : "";
+  var label = escapeHtml(item.label);
   return [
-    '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="' + escapeHtml(item.id) + '"' + action + hidden + ">",
+    '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="' + escapeHtml(item.id) + '"' + action + ' aria-label="' + label + '" title="' + label + '"' + hidden + ">",
     '          <span class="docsViewer__actionMenuEmoji" aria-hidden="true">' + escapeHtml(item.emoji || "") + "</span>",
-    '          <span class="docsViewer__actionMenuLabel">' + escapeHtml(item.label) + "</span>",
+    '          <span class="docsViewer__actionMenuLabel">' + label + "</span>",
     "        </button>"
   ].join("");
 }
@@ -108,10 +109,10 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
   '      </div>',
   '    </div>',
-  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>',
+  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton" aria-label="Show" title="Show">Show</button>',
   '    <label class="docsViewer__draftToggle">',
-  '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">',
-  '      <span class="docsViewer__draftLabel">non-viewable</span>',
+  '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox" aria-label="Show non-viewable docs">',
+  '      <span class="docsViewer__draftLabel">Show non-viewable</span>',
   '    </label>',
   renderScopeSelect(),
   '  </div>',

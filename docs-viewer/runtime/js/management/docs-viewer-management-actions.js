@@ -25,6 +25,36 @@ import {
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
 
+var ACTION_TEXT = {
+  cancelButton: "Cancel",
+  confirmContinueButton: "Continue",
+  viewableAncestorPrompt: "Showing this doc also requires showing these parent docs:\n\n{titles}\n\nContinue?",
+  viewableAncestorTitle: "Show parent docs",
+  viewableDescendantPrompt: "Choose whether to show only this doc or include its descendant docs.",
+  viewableDescendantTitle: "Show descendants",
+  viewableDescendantSelectedLabel: "Selected doc only",
+  viewableDescendantAllLabel: "Selected doc and descendants",
+  viewableInvalidChoice: "Show update cancelled: expected `all` or `selected`.",
+  createDocTitle: "New doc title",
+  createChildDocTitle: "New child title",
+  createSiblingDocTitle: "New sibling title",
+  createDocLabel: "title",
+  createDocDefaultTitle: "New Doc",
+  createDocButton: "Create",
+  deleteConfirmTitle: "Confirm delete",
+  deleteConfirmButton: "Delete",
+  settingsSaving: "Saving settings...",
+  settingsSaved: "Settings saved.",
+  settingsSaveFailed: "Settings save failed.",
+  publishChecking: "Checking publish changes...",
+  publishConfirmTitle: "Publish to site assets",
+  publishConfirmButton: "Publish",
+  publishApplying: "Copying docs to site assets...",
+  publishApplied: "Docs copied to site assets.",
+  publishFailed: "Publish failed.",
+  copyLinkFailed: "Copy link failed."
+};
+
 export function createDocsViewerManagementActionController(options) {
   var root = options.root;
   var state = options.state;
@@ -82,33 +112,33 @@ export function createDocsViewerManagementActionController(options) {
       allDocs: state.allDocs,
       findDocById: context.findAllDocById,
       confirmAncestors: function (detail) {
-        var ancestorMessage = context.formatText(state.managementText.viewableAncestorPrompt, {
+        var ancestorMessage = context.formatText(ACTION_TEXT.viewableAncestorPrompt, {
           titles: detail.titles
         });
         return openDocsViewerConfirmModal({
           root: root,
-          title: state.managementText.viewableAncestorTitle,
+          title: ACTION_TEXT.viewableAncestorTitle,
           body: ancestorMessage,
-          primaryLabel: state.managementText.confirmContinueButton,
-          cancelLabel: state.managementText.cancelButton
+          primaryLabel: ACTION_TEXT.confirmContinueButton,
+          cancelLabel: ACTION_TEXT.cancelButton
         });
       },
       chooseDescendants: function () {
         return openDocsViewerChoiceModal({
           root: root,
-          title: state.managementText.viewableDescendantTitle,
-          body: state.managementText.viewableDescendantPrompt,
+          title: ACTION_TEXT.viewableDescendantTitle,
+          body: ACTION_TEXT.viewableDescendantPrompt,
           value: "selected",
           choices: [
-            { value: "selected", label: state.managementText.viewableDescendantSelectedLabel },
-            { value: "all", label: state.managementText.viewableDescendantAllLabel }
+            { value: "selected", label: ACTION_TEXT.viewableDescendantSelectedLabel },
+            { value: "all", label: ACTION_TEXT.viewableDescendantAllLabel }
           ],
-          primaryLabel: state.managementText.confirmContinueButton,
-          cancelLabel: state.managementText.cancelButton
+          primaryLabel: ACTION_TEXT.confirmContinueButton,
+          cancelLabel: ACTION_TEXT.cancelButton
         });
       },
       onInvalidChoice: function () {
-        setManagementMessage(state.managementText.viewableInvalidChoice, true);
+        setManagementMessage(ACTION_TEXT.viewableInvalidChoice, true);
       }
     });
   }
@@ -130,7 +160,7 @@ export function createDocsViewerManagementActionController(options) {
       textarea.select();
       try {
         if (!document.execCommand("copy")) {
-          throw new Error(state.managementText.copyLinkFailed);
+          throw new Error(ACTION_TEXT.copyLinkFailed);
         }
         resolve();
       } catch (error) {
@@ -144,16 +174,16 @@ export function createDocsViewerManagementActionController(options) {
   async function handleCreateDoc() {
     var titleResult = await openDocsViewerTextInputModal({
       root: root,
-      title: state.managementText.createDocTitle,
-      label: state.managementText.createDocLabel,
-      initialValue: state.managementText.createDocDefaultTitle,
-      defaultValue: state.managementText.createDocDefaultTitle,
-      primaryLabel: state.managementText.createDocButton,
-      cancelLabel: state.managementText.cancelButton
+      title: ACTION_TEXT.createDocTitle,
+      label: ACTION_TEXT.createDocLabel,
+      initialValue: ACTION_TEXT.createDocDefaultTitle,
+      defaultValue: ACTION_TEXT.createDocDefaultTitle,
+      primaryLabel: ACTION_TEXT.createDocButton,
+      cancelLabel: ACTION_TEXT.cancelButton
     });
     if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleResult.value || "").trim() || state.managementText.createDocDefaultTitle;
+    var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
     var currentDoc = currentSelectedDoc();
 
     setManagementBusy(true);
@@ -182,16 +212,16 @@ export function createDocsViewerManagementActionController(options) {
 
     var titleResult = await openDocsViewerTextInputModal({
       root: root,
-      title: kind === "child" ? state.managementText.createChildDocTitle : state.managementText.createSiblingDocTitle,
-      label: state.managementText.createDocLabel,
-      initialValue: state.managementText.createDocDefaultTitle,
-      defaultValue: state.managementText.createDocDefaultTitle,
-      primaryLabel: state.managementText.createDocButton,
-      cancelLabel: state.managementText.cancelButton
+      title: kind === "child" ? ACTION_TEXT.createChildDocTitle : ACTION_TEXT.createSiblingDocTitle,
+      label: ACTION_TEXT.createDocLabel,
+      initialValue: ACTION_TEXT.createDocDefaultTitle,
+      defaultValue: ACTION_TEXT.createDocDefaultTitle,
+      primaryLabel: ACTION_TEXT.createDocButton,
+      cancelLabel: ACTION_TEXT.cancelButton
     });
     if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleResult.value || "").trim() || state.managementText.createDocDefaultTitle;
+    var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
     var payload = {
       title: title
     };
@@ -284,17 +314,17 @@ export function createDocsViewerManagementActionController(options) {
 
   function handlePublishDocs() {
     setManagementBusy(true);
-    setManagementMessage(state.managementText.publishChecking || "Checking publish changes...", false);
+    setManagementMessage(ACTION_TEXT.publishChecking, false);
 
     confirmManagedDocsPublish(managementClientOptions())
       .then(function (preview) {
         setManagementBusy(false);
         return openDocsViewerConfirmModal({
           root: root,
-          title: state.managementText.publishConfirmTitle || "Publish to site assets",
+          title: ACTION_TEXT.publishConfirmTitle,
           body: publishConfirmBody(preview),
-          primaryLabel: state.managementText.publishConfirmButton || "Publish",
-          cancelLabel: state.managementText.cancelButton,
+          primaryLabel: ACTION_TEXT.publishConfirmButton,
+          cancelLabel: ACTION_TEXT.cancelButton,
           primaryDisabled: !publishHasChanges(preview)
         });
       })
@@ -304,16 +334,16 @@ export function createDocsViewerManagementActionController(options) {
           return null;
         }
         setManagementBusy(true);
-        setManagementMessage(state.managementText.publishApplying || "Copying docs to site assets...", false);
+        setManagementMessage(ACTION_TEXT.publishApplying, false);
         return applyManagedDocsPublish(managementClientOptions());
       })
       .then(function (payload) {
         if (!payload) return;
-        setManagementMessage(payload.summary_text || state.managementText.publishApplied || "Docs copied to site assets.", false);
+        setManagementMessage(payload.summary_text || ACTION_TEXT.publishApplied, false);
         if (callbacks.refreshManagementCapabilities) callbacks.refreshManagementCapabilities();
       })
       .catch(function (error) {
-        setManagementMessage(error.message || state.managementText.publishFailed || "Publish failed.", true);
+        setManagementMessage(error.message || ACTION_TEXT.publishFailed, true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -350,10 +380,10 @@ export function createDocsViewerManagementActionController(options) {
     }
     modalController.closeSettingsModal();
     setManagementBusy(true);
-    setManagementMessage(state.managementText.settingsSaving, false);
+    setManagementMessage(ACTION_TEXT.settingsSaving, false);
     updateSourceConfigSettings(changes, managementClientOptions())
       .then(function (payload) {
-        setManagementMessage(state.managementText.settingsSaved, false);
+        setManagementMessage(ACTION_TEXT.settingsSaved, false);
         var defaultDocChange = payload && payload.changes ? payload.changes.default_doc_id : null;
         var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
         var targetDocId = state.selectedDocId || proposedDefaultDocId || context.defaultDocId();
@@ -366,7 +396,7 @@ export function createDocsViewerManagementActionController(options) {
         return null;
       })
       .catch(function (error) {
-        setManagementMessage(error && error.message ? error.message : state.managementText.settingsSaveFailed, true);
+        setManagementMessage(error && error.message ? error.message : ACTION_TEXT.settingsSaveFailed, true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -397,10 +427,10 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage("", false);
         return openDocsViewerConfirmModal({
           root: root,
-          title: state.managementText.deleteConfirmTitle,
+          title: ACTION_TEXT.deleteConfirmTitle,
           body: buildDocsViewerDeletePreviewBody(preview),
-          primaryLabel: state.managementText.deleteConfirmButton,
-          cancelLabel: state.managementText.cancelButton
+          primaryLabel: ACTION_TEXT.deleteConfirmButton,
+          cancelLabel: ACTION_TEXT.cancelButton
         }).then(function (confirmed) {
           if (!confirmed) {
             setManagementMessage("", false);
@@ -509,7 +539,7 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage(message, false);
       })
       .catch(function (error) {
-        var message = error && error.message ? error.message : state.managementText.copyLinkFailed;
+        var message = error && error.message ? error.message : ACTION_TEXT.copyLinkFailed;
         setManagementMessage(message, true);
       });
   }

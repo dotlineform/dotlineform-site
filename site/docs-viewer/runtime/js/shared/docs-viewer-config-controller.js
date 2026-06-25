@@ -55,7 +55,6 @@ export function initDocsViewerConfigController(context) {
   var recentButton = context.recentButton;
   if (!Array.isArray(scopeConfig.scopeConfigs)) scopeConfig.scopeConfigs = [];
   if (!scopeConfig.scopeConfigsById) scopeConfig.scopeConfigsById = new Map();
-  if (!scopeConfig.managementText) scopeConfig.managementText = {};
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
 
   function normalizeSubScopeConfig(rawSubScope) {

@@ -18,6 +18,17 @@ export {
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modal-shell.js";
 
+var MODAL_TEXT = {
+  metadataStatusNoneOption: "<none>",
+  metadataStatusSelectedSuffix: " (selected)",
+  importCancelButton: "Cancel",
+  settingsLoading: "Loading settings...",
+  settingsEmpty: "No editable settings are available for this scope.",
+  settingsLoadFailed: "Settings unavailable.",
+  settingsSaving: "Saving settings...",
+  settingsSaveFailed: "Settings save failed."
+};
+
 export function buildDocsViewerDeletePreviewBody(preview) {
   var lines = ["Delete " + normalizeText(preview && preview.title) + "?"];
   if (Array.isArray(preview && preview.warnings) && preview.warnings.length) {
@@ -75,7 +86,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   function metadataStatusOptions() {
     var optionRecords = [{
       value: "",
-      label: state.managementText.metadataStatusNoneOption
+      label: MODAL_TEXT.metadataStatusNoneOption
     }];
     (state.uiStatuses || []).forEach(function (status) {
       optionRecords.push({
@@ -97,7 +108,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.metadataStatusInput.innerHTML = renderMetadataStatusOptionsMarkup(
       metadataStatusOptions(),
       selectedValue,
-      state.managementText.metadataStatusSelectedSuffix
+      MODAL_TEXT.metadataStatusSelectedSuffix
     );
     refs.metadataStatusInput.size = Math.max(1, refs.metadataStatusInput.options.length);
   }
@@ -195,14 +206,10 @@ export function createDocsViewerManagementModalController(options = {}) {
     importModalCancelButton.type = "button";
     importModalCancelButton.className = "docsViewerImport__button docsViewerImport__button--defaultWidth docsViewerImport__modalCancel";
     importModalCancelButton.id = "docsViewerImportCancelButton";
-    importModalCancelButton.textContent = state.managementText.importCancelButton;
+    importModalCancelButton.textContent = MODAL_TEXT.importCancelButton;
     importModalCancelButton.addEventListener("click", closeImportModal);
     actions.insertBefore(importModalCancelButton, runButton);
     return importModalCancelButton;
-  }
-
-  function updateImportCancelLabel() {
-    if (importModalCancelButton) importModalCancelButton.textContent = state.managementText.importCancelButton;
   }
 
   function focusImportModalEntry() {
@@ -312,7 +319,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     if (refs.settingsScope) refs.settingsScope.textContent = "scope: " + viewerScope();
     renderSettingsField(null);
-    setSettingsStatus(state.managementText.settingsLoading, "");
+    setSettingsStatus(MODAL_TEXT.settingsLoading, "");
     renderSettingsWarnings([]);
     refs.settingsModal.hidden = false;
     return true;
@@ -324,7 +331,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
       renderSettingsField(null);
       renderSettingsWarnings([]);
-      setSettingsStatus(state.managementText.settingsEmpty, "");
+      setSettingsStatus(MODAL_TEXT.settingsEmpty, "");
       window.requestAnimationFrame(function () {
         focusWithoutScroll(refs.settingsCancelButton || refs.settingsModal);
       });
@@ -359,16 +366,16 @@ export function createDocsViewerManagementModalController(options = {}) {
   function setSettingsLoadError(message) {
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     renderSettingsWarnings([]);
-    setSettingsStatus(message || state.managementText.settingsLoadFailed, "error");
+    setSettingsStatus(message || MODAL_TEXT.settingsLoadFailed, "error");
   }
 
   function setSettingsSaving() {
-    setSettingsStatus(state.managementText.settingsSaving, "");
+    setSettingsStatus(MODAL_TEXT.settingsSaving, "");
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
   }
 
   function setSettingsSaveError(message) {
-    setSettingsStatus(message || state.managementText.settingsSaveFailed, "error");
+    setSettingsStatus(message || MODAL_TEXT.settingsSaveFailed, "error");
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = false;
   }
 
@@ -523,7 +530,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     setSettingsSaving: setSettingsSaving,
     setSettingsStatus: setSettingsStatus,
     settingsModalOpen: settingsModalOpen,
-    updateImportCancelLabel: updateImportCancelLabel,
     wireEvents: wireEvents
   };
 }

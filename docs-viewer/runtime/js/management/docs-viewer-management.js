@@ -31,11 +31,21 @@ import {
   readSourceConfigSettings
 } from "./docs-viewer-management-client.js";
 
+var MANAGEMENT_TEXT = {
+  checkingNote: "Checking manage mode...",
+  clearSearchNote: "Clear search to manage the current doc.",
+  unavailableNote: "Docs management service unavailable.",
+  metadataParentRootOption: "Root",
+  metadataParentInvalid: "Select a parent from the search field suggestions or enter Root.",
+  settingsLoadFailed: "Settings unavailable."
+};
+
 function createDocsViewerManagementStateFacade(domains) {
   var sources = domains || {};
   var fieldSources = {
     allDocs: sources.documentIndex,
     childrenByParent: sources.documentIndex,
+    docNonViewableEmoji: sources.scopeConfig,
     docsById: sources.documentIndex,
     generatedDataReadAvailable: sources.generatedData,
     generatedDataReadChecked: sources.generatedData,
@@ -49,7 +59,6 @@ function createDocsViewerManagementStateFacade(domains) {
     managementMessageIsError: sources.management,
     managementContext: sources.routeSession || sources.management,
     managementStatusOwnsViewerStatus: sources.management,
-    managementText: sources.scopeConfig || sources.management,
     metadataEditingDocId: sources.management,
     metadataRestoreFocusId: sources.management,
     payloadCache: sources.selectedDocument,
@@ -123,7 +132,6 @@ export function initDocsViewerManagement(context) {
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
-  var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var metadataModal = shellRef("metadataModal", "docsViewerMetadataModal");
   var metadataForm = shellRef("metadataForm", "docsViewerMetadataForm");
   var metadataDocId = shellRef("metadataDocId", "docsViewerMetadataDocId");
@@ -131,10 +139,8 @@ export function initDocsViewerManagement(context) {
   var metadataSummaryInput = shellRef("metadataSummaryInput", "docsViewerMetadataSummaryInput");
   var metadataDateInput = shellRef("metadataDateInput", "docsViewerMetadataDateInput");
   var metadataDateDisplayInput = shellRef("metadataDateDisplayInput", "docsViewerMetadataDateDisplayInput");
-  var metadataStatusLabel = shellRef("metadataStatusLabel", "docsViewerMetadataStatusLabel");
   var metadataStatusInput = shellRef("metadataStatusInput", "docsViewerMetadataStatusInput");
   var metadataNonViewableInput = shellRef("metadataNonViewableInput", "docsViewerMetadataNonViewableInput");
-  var metadataNonViewableLabel = shellRef("metadataNonViewableLabel", "docsViewerMetadataNonViewableLabel");
   var metadataParentInput = shellRef("metadataParentInput", "docsViewerMetadataParentInput");
   var metadataParentPopup = shellRef("metadataParentPopup", "docsViewerMetadataParentPopup");
   var metadataCancelButton = shellRef("metadataCancelButton", "docsViewerMetadataCancelButton");
@@ -144,7 +150,6 @@ export function initDocsViewerManagement(context) {
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var settingsModal = shellRef("settingsModal", "docsViewerSettingsModal");
   var settingsForm = shellRef("settingsForm", "docsViewerSettingsForm");
-  var settingsHeading = shellRef("settingsHeading", "docsViewerSettingsHeading");
   var settingsScope = shellRef("settingsScope", "docsViewerSettingsScope");
   var settingsBooleanField = shellRef("settingsBooleanField", "docsViewerSettingsBooleanField");
   var settingsBooleanInput = shellRef("settingsBooleanInput", "docsViewerSettingsBooleanInput");
@@ -228,7 +233,7 @@ export function initDocsViewerManagement(context) {
 
   function metadataParentOptions(doc) {
     var blockedIds = collectDescendantDocIds(state.allDocs, doc.doc_id, new Set([doc.doc_id]));
-    var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
+    var options = [{ value: "", label: MANAGEMENT_TEXT.metadataParentRootOption }];
     var docsByParent = buildChildrenMap(state.allDocs, {
       managementContext: state.managementContext,
       showNonViewable: state.showNonViewable
@@ -303,7 +308,7 @@ export function initDocsViewerManagement(context) {
         }) || null);
       })
       .catch(function (error) {
-        modalController.setSettingsLoadError(error && error.message ? error.message : state.managementText.settingsLoadFailed);
+        modalController.setSettingsLoadError(error && error.message ? error.message : MANAGEMENT_TEXT.settingsLoadFailed);
       });
   }
 
@@ -326,7 +331,7 @@ export function initDocsViewerManagement(context) {
   function managementNoteText() {
     if (state.managementMessage) return state.managementMessage;
     if (state.searchRouteActive) {
-      return state.managementText.clearSearchNote;
+      return MANAGEMENT_TEXT.clearSearchNote;
     }
     return "";
   }
@@ -386,9 +391,9 @@ export function initDocsViewerManagement(context) {
     var noteText = "";
     var noteIsError = false;
     if (!state.managementChecked) {
-      noteText = state.managementText.checkingNote;
+      noteText = MANAGEMENT_TEXT.checkingNote;
     } else if (!state.managementAvailable) {
-      noteText = state.managementCapabilityError || state.managementText.unavailableNote;
+      noteText = state.managementCapabilityError || MANAGEMENT_TEXT.unavailableNote;
       noteIsError = true;
     } else {
       noteText = managementNoteText();
@@ -556,7 +561,7 @@ export function initDocsViewerManagement(context) {
 
     var parentId = modalController.resolveMetadataParentId(doc);
     if (parentId === null) {
-      setManagementMessage(state.managementText.metadataParentInvalid, true);
+      setManagementMessage(MANAGEMENT_TEXT.metadataParentInvalid, true);
       metadataParentInput.focus();
       return null;
     }
@@ -726,20 +731,7 @@ export function initDocsViewerManagement(context) {
       context: context,
       state: state,
       refs: {
-        contextCopyLinkButton: interactionController ? interactionController.refs.contextCopyLinkButton : null,
-        draftLabel: draftLabel,
-        draftToggle: draftToggle,
-        manageDeleteScopeButton: manageDeleteScopeButton,
-        manageDeleteSubScopeButton: manageDeleteSubScopeButton,
-        manageNewScopeButton: manageNewScopeButton,
-        manageNewSubScopeButton: manageNewSubScopeButton,
-        managePublishButton: managePublishButton,
-        manageSettingsButton: manageSettingsButton,
-        manageViewableButton: manageViewableButton,
-        metadataNonViewableLabel: metadataNonViewableLabel,
-        metadataStatusInput: metadataStatusInput,
-        metadataStatusLabel: metadataStatusLabel,
-        settingsHeading: settingsHeading
+        metadataStatusInput: metadataStatusInput
       },
       modalController: modalController
     });
