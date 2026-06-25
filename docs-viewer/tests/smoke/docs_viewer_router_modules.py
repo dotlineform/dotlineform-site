@@ -36,7 +36,8 @@ def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
             const router = await import('/docs-viewer/runtime/js/shared/docs-viewer-router.js');
-            window.__docsViewerRouterModuleSmoke = { router };
+            const routeConfig = await import('/docs-viewer/runtime/js/shared/docs-viewer-route-config.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig };
         }"""
     )
 
@@ -111,10 +112,59 @@ def assert_missing_doc_history(page: Page) -> None:
         raise AssertionError(f"stale scope default fallback changed: {result!r}")
 
 
+def assert_route_config_scope_default(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const { routeConfig } = window.__docsViewerRouterModuleSmoke;
+            const resolved = routeConfig.resolveDocsViewerRouteConfig({
+                routeConfig: {
+                    schema_version: 'docs_viewer_route_config_v1',
+                    route_id: 'library',
+                    route_path: '/library/',
+                    default_scope_id: 'library',
+                    include_scope_param: false,
+                    allow_scope_query: false,
+                    viewer_base_url: '/library/',
+                    docs_paths: {
+                        index_tree_url: '/assets/data/docs/scopes/library/index-tree.json',
+                        recently_added_url: '/assets/data/docs/scopes/library/recently-added.json',
+                        search_index_url: '/assets/data/search/library/index.json'
+                    },
+                    config_urls: {
+                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                        ui_text: '/docs-viewer/config/ui-text/public.json'
+                    }
+                }
+            });
+            const projection = routeConfig.routeConfigScopeProjection({
+                scopeId: 'library',
+                defaultDocId: 'library-root',
+                includeScopeParam: false,
+                viewerBaseUrl: '/library/',
+                indexTreeUrl: '/assets/data/docs/scopes/library/index-tree.json',
+                recentlyAddedUrl: '/assets/data/docs/scopes/library/recently-added.json',
+                searchIndexUrl: '/assets/data/search/library/index.json'
+            }, { allowScopeQuery: false });
+            return {
+                defaultScopeId: resolved.defaultScopeId,
+                viewerBaseUrl: resolved.viewerBaseUrl,
+                defaultRouteDocId: projection.defaultRouteDocId
+            };
+        }"""
+    )
+    if result != {
+        "defaultScopeId": "library",
+        "viewerBaseUrl": "/library/",
+        "defaultRouteDocId": "library-root",
+    }:
+        raise AssertionError(f"route config scope-default projection changed: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/404.html"), wait_until="domcontentloaded")
     install_fixture(page)
     assert_missing_doc_history(page)
+    assert_route_config_scope_default(page)
 
 
 def main() -> None:

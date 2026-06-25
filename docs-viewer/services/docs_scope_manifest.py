@@ -691,7 +691,6 @@ def apply_create_scope(
                 public_route_record(
                     scope_id,
                     str(preview["urls"]["public"]),
-                    str(preview["planned_scope_config"]["default_doc_id"]),
                     title=str(preview["title"]),
                 ),
             )

@@ -72,7 +72,6 @@ def public_route_body_class(scope_id: str, public_route_path: str) -> str:
 def public_route_record(
     scope_id: str,
     public_route_path: str,
-    default_doc_id: str,
     *,
     title: str,
 ) -> dict[str, Any]:
@@ -82,7 +81,6 @@ def public_route_record(
         "route_id": scope_id,
         "route_path": public_route_path,
         "default_scope_id": scope_id,
-        "default_doc_id": default_doc_id,
         "include_scope_param": False,
         "allow_scope_query": False,
         "viewer_base_url": public_route_path,

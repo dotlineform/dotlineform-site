@@ -77,7 +77,7 @@ export function createDocsViewerRouteContext(options) {
     viewerBaseUrl: viewerBaseUrl,
     viewerScope: routeConfig.defaultScopeId,
     includeScopeParam: Boolean(routeConfig.includeScopeParam),
-    defaultRouteDocId: routeConfig.defaultDocId,
+    defaultRouteDocId: "",
     viewerPathname: resolvedViewerPathname,
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),
     subScopes: [],
@@ -110,7 +110,6 @@ export function updateDocsViewerRouteContext(context, values, options) {
     viewerPathname: values && values.viewerPathname ? values.viewerPathname : viewerPathname(nextViewerBaseUrl, windowRef)
   });
   nextContext.routeConfig = Object.assign({}, current.routeConfig || {}, {
-    defaultDocId: nextContext.defaultRouteDocId,
     defaultScopeId: nextContext.viewerScope,
     indexTreeUrl: nextContext.indexTreeUrl,
     recentlyAddedUrl: nextContext.recentlyAddedUrl,

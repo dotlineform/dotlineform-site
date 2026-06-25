@@ -39,7 +39,7 @@ Each scope entry owns:
 - `output`: generated docs JSON output root
 - `viewer_base_url`: public route base for the scope
 - `include_scope_param`: whether route links should include `?scope=<scope>`
-- `default_doc_id`: default document for the route
+- `default_doc_id`: default document for the scope
 - `non_loadable_doc_ids`: tree nodes that should not load as documents
 - `manage_only_tree_root_ids`: tree roots excluded from public routes
 - `show_updated_date`: legacy generated viewer option retained in scope config; selected-document date display now belongs to the info panel metadata view
@@ -120,7 +120,7 @@ Each route record owns:
 
 - route id and route path
 - route type, such as `public` or `manage`
-- default scope and default doc
+- default scope
 - viewer base URL and scope-query policy
 - generated docs/search URL defaults
 - Docs Viewer config, route-owned UI text, and report registry URLs
@@ -139,7 +139,7 @@ It exposes browser-safe settings only:
 - each scope's viewer base URL
 - each scope's type, used with `docs_viewer.scope_type_badges` for scope selector prefixes
 - scope route policy such as `include_scope_param`
-- default document id
+- default document id, sourced from scope config rather than route config
 - generated docs index URL
 - docs search index URL and search policy
 - viewer display settings under `docs_viewer`

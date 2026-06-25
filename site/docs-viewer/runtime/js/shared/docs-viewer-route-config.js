@@ -238,7 +238,6 @@ export function resolveDocsViewerRouteConfig(options) {
     source: resolvedSource.source,
     routeId: requireRouteConfigField(rawConfig.route_id, "route_id"),
     defaultScopeId: requireRouteConfigField(rawConfig.default_scope_id, "default_scope_id"),
-    defaultDocId: cleanString(rawConfig.default_doc_id),
     includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
     allowScopeQuery: allowScopeQuery,
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
