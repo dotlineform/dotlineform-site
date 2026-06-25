@@ -169,6 +169,30 @@ Changed areas:
 
    Delete or retire modal-shell/focus/button-choreography tests.
 
+done: Shrunk the smoke layer by removing the clearest UI-choreography scripts and runner entries.
+
+Deleted smoke scripts:
+- `studio/tests/smoke/catalogue_work_modal.py`
+- `studio/tests/smoke/catalogue_series_modal.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_modal.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_import_modal.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_scope_lifecycle_modal.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_import_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_move_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
+- `analytics-app/tests/smoke/data_sharing_prepare.py`
+- `analytics-app/tests/smoke/data_sharing_review.py`
+- `analytics-app/tests/smoke/tag_registry_modal.py`
+- `analytics-app/tests/smoke/tag_aliases_modal.py`
+- `analytics-app/tests/smoke/series_tags_modal.py`
+- `analytics-app/tests/smoke/series_tag_editor_modal.py`
+
+`analytics-app/tests/smoke/tag_route_shell_modules.py` was trimmed so the retained profile no longer runs embedded tag registry or tag aliases modal-workflow assertions. `admin-app/commands/run_checks.py` no longer lists or runs the retired modal and mocked browser-workflow smokes.
+
+The smoke tree dropped from 18,163 lines to 11,235 lines. Remaining large smoke files are mostly route, API, public/private boundary, or JavaScript module contract checks; the next cleanup should move any retained workflow-module assertions that still prove browser behavior rather than contracts into direct API or lower-level module tests.
+
 5. Move browser workflow coverage down to server/API tests
    For workflows like Docs Viewer settings, import, publish, catalogue save, tag edits:
    - test the endpoint directly

@@ -161,12 +161,12 @@ Selection changes, filter changes, review-only previews, and unavailable-service
 The retained smoke entry points are:
 
 - `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
-- `analytics-app/tests/smoke/data_sharing_prepare.py`
 - `analytics-app/tests/smoke/data_sharing_prepare_modules.py`
-- `analytics-app/tests/smoke/data_sharing_review.py`
 - `analytics-app/tests/python/test_analytics_data_sharing_api.py`
-- `analytics-app/tests/python/test_tags_data_sharing_adapter.py`
+- `analytics-app/tests/python/test_tags_data_sharing_prepare.py`
+- `analytics-app/tests/python/test_tags_data_sharing_returned_registry_aliases.py`
+- `analytics-app/tests/python/test_tags_data_sharing_returned_assignments.py`
 - `docs-viewer/tests/python/test_docs_import_service.py`
 
-The architecture request tracker records the latest focused evidence for Analytics API dispatch, Docs Management and Local Studio non-publication of Data Sharing endpoints, mock/block prepare and review smokes, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.
+The architecture request tracker records the latest focused evidence for Analytics API dispatch, Docs Management and Local Studio non-publication of Data Sharing endpoints, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.
 Retired Studio routes and endpoints must remain absent rather than being restored as compatibility layers.
