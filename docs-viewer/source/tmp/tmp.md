@@ -10,8 +10,6 @@ viewer_report: docs_index_table
 viewer_report_access: public
 
 
-we are working on refactorung tests to apply the test policy, see [Tests policy and refactoring](/docs/?scope=studio&doc=update-tests)
-please proceed with step 4
 
 
 

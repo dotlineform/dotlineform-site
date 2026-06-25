@@ -32,17 +32,29 @@
 - Env vars are saved in `var/local/site.env`.
 - In repo docs and command examples, prefer the shortest project-local script form unless a pinned interpreter or non-default path is required.
 
-## Verification
+## Checks And Test Policy
 
-- Define proportional targeted verification for implementation changes, including Codex-run checks and any manual checks that remain.
-- Browser smoke tests are only needed for non-trivial operational site or frontend changes, not for routine docs-only edits.
-- Default verification for UI component styling/layout: node --check, git diff --check, focused DOM/module smoke if available, optional in-app Browser snapshot.
-- Full browser smoke only when: navigation, modal lifecycle, save/delete/publication, server calls, route boot, or keyboard/focus behavior is the actual change.
-- No new or broadened browser smoke assertions unless the user asked for test coverage or the acceptance contract changed materially.
-- For non-trivial UI changes, verify desktop behavior where practical. Only verify mobile behavior where public pages on the site (dotlineform.com) will be affected.
-- After changing scripts, run a syntax check with the configured interpreter.
-- For commands that clearly bind loopback ports or launch browser smokes, run them with elevated localhost permissions immediately in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
+- Use `docs-viewer/source/studio/testing.md`, `testing-pytest.md`, and `smoke-testing.md` as the maintained test policy.
+- Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
+- Before adding or expanding a permanent test, apply the review gate:
+  - Can this be tested as pure function or service behavior?
+  - Can this be tested by direct HTTP/API request?
+  - Is a browser required to verify a product contract, or only to mimic user clicks?
+  - Will this fail because copy, layout, focus, hover state, or modal timing changed?
+- Permanent tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration. They should not police ordinary UI choreography, modal lifecycle feel, focus timing, copy, hover styling, or layout.
+- Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state. Use manual or temporary browser checks for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
+- Default focused checks:
+  - Python/service changes: `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
+  - Script changes: syntax check with `$HOME/miniconda3/bin/python3 -m py_compile <files>`
+  - Repo whitespace: `git diff --check`
+  - Broader blast radius: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile <profile>`
+- Use the smallest relevant `run_checks.py` profile, such as `quick`, `catalogue`, `docs`, `admin-smoke`, `analytics-smoke`, `docs-viewer-smoke`, or `studio-smoke`.
+- When `admin-app/commands/run_checks.py` is used, report the profile, pass/fail result, and `var/admin/test-runs/.../summary.md` path.
+- For commands that bind loopback ports or launch browser smokes, run them with elevated localhost/browser permissions in the Codex sandbox. Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
 - If a local route is expected to be running but the sandbox cannot reach localhost, say that the sandbox cannot reach it and use an isolated temporary build/server only if automated verification needs it.
+- For Codex-run browser checks, use Playwright from the Miniconda environment when needed:
+  - Playwright CLI: `$HOME/miniconda3/bin/playwright`
+  - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
 
 ## Public Static Site Toolchain
 
@@ -51,20 +63,6 @@
 - Use `bin/site-validate` to validate the deploy root.
 - Use `bin/site-preview` for local public-site preview; it serves `site/` directly with Python's HTTP server.
 - Local Studio is served by `bin/local-studio`, not by the public-site preview server.
-
-## Tests
-
-- Use `docs-viewer/source/studio/testing.md` and `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` for broader verification when a change has enough blast radius.
-- Follow `docs-viewer/source/studio/smoke-testing.md`.
-- Do not run broad profiles by default; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
-- Python tests in `studio/commands/run_checks.py` must run through `$HOME/miniconda3/bin/python3`.
-- For focused checks, use `$HOME/miniconda3/bin/python3 -m pytest <test-path>`.
-- When `studio/commands/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path.
-- For Codex-run browser smokes, prefer local Playwright Chromium via the Miniconda environment:
-  - Playwright CLI: `$HOME/miniconda3/bin/playwright`
-  - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
-- For browser-smoke validation that may need escalation, prefer the central `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile <profile>` runner over ad hoc direct smoke-script execution when an appropriate profile exists. This keeps Codex approval scope stable across sessions.
-- When requesting escalated browser-smoke runs, use the same command shape that was first attempted, avoid shell-wrapper/path ambiguity where practical, and do not retry rejected escalation requests with alternate command shapes. Report the approval rejection and use the safest narrower verification available.
 
 ## Security And Sanitization
 
