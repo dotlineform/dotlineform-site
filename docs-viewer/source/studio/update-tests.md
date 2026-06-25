@@ -230,7 +230,9 @@ Added fixture modules:
 - `analytics-app/tests/fixtures/tag_factory.py`
 - `admin-app/tests/fixtures/admin_factory.py`
 
-The app test `conftest.py` files now add each app's `tests/fixtures/` directory to `sys.path`, and `admin-app/tests/conftest.py` was added for the same fixture-import convention. The first migration centralized repeated JSON/file helpers, Analytics tags Data Sharing repo setup, Admin fake repo setup, Studio catalogue JSON helpers, and Docs Management front-matter document writing. Larger repo factories remain a future cleanup target; this batch establishes the ownership location and import pattern without reshaping every test in one pass.
+The app test `conftest.py` files now add each app's `tests/fixtures/` directory to `sys.path`, and `admin-app/tests/conftest.py` was added for the same fixture-import convention. The first migration centralized repeated JSON/file helpers, Analytics tags Data Sharing repo setup, Admin fake repo setup, Studio catalogue JSON helpers, and Docs Management front-matter document writing.
+
+Follow-up Docs Viewer fixture consolidation moved common Docs Viewer text/JSON, site-tools, scope-config, library-doc, staged-file, documents Data Sharing registry/profile, and Docs import repo setup into `docs-viewer/tests/fixtures/repo_factory.py`. The Docs import, Docs builder, Docs Viewer service, and Docs Management support modules now delegate their shared data setup there while keeping service-specific handlers local to the support modules.
 
 7. Add a review gate
    During future changes, ask:

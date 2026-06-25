@@ -11,6 +11,14 @@ from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
 
+from repo_factory import (
+    read_json,
+    write_docs_scope_config,
+    write_json,
+    write_site_tools_config as write_fixture_site_tools_config,
+    write_text,
+)
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
@@ -23,16 +31,6 @@ import build_docs  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
-
-
-def write_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
-
-
-def write_json(path: Path, payload: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def write_semantic_reference_registry(root: Path) -> None:
@@ -79,50 +77,35 @@ def write_semantic_reference_registry(root: Path) -> None:
     )
 
 
-def read_json(path: Path) -> dict[str, object]:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
 def write_site_tools_config(root: Path, *, media_base: str = "https://media.example.test") -> None:
-    write_json(
-        root / "site-tools/config/site-tools.json",
-        {
-            "schema_version": "site_tools_config_v1",
-            "media": {
-                "base": media_base,
-            },
-        },
-    )
+    write_fixture_site_tools_config(root, media_base=media_base)
 
 
 def write_scope_config(root: Path) -> None:
-    write_json(
-        root / "docs-viewer/config/scopes/docs_scopes.json",
+    write_docs_scope_config(
+        root,
+        [
+            {
+                "scope_id": "studio",
+                "scope_type": "local",
+                "meta": "local management",
+                "source": "docs-viewer/source/studio",
+                "media_path_prefix": "docs/studio",
+                "output": "docs-viewer/generated/docs/studio",
+                "search_output": "docs-viewer/generated/search/studio/index.json",
+                "viewer_base_url": "/docs/",
+                "include_scope_param": True,
+                "default_doc_id": "parent",
+                "non_loadable_doc_ids": [],
+                "manage_only_tree_root_ids": [],
+                "allow_unresolved_parent_ids": False,
+            }
+        ],
         {
-            "schema_version": "docs_scopes_v1",
-            "scopes": [
-                {
-                    "scope_id": "studio",
-                    "scope_type": "local",
-                    "meta": "local management",
-                    "source": "docs-viewer/source/studio",
-                    "media_path_prefix": "docs/studio",
-                    "output": "docs-viewer/generated/docs/studio",
-                    "search_output": "docs-viewer/generated/search/studio/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "parent",
-                    "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": [],
-                    "allow_unresolved_parent_ids": False,
-                }
-            ],
-            "docs_viewer": {
-                "recently_added_limit": 10,
-                "ui_statuses_by_scope": {
-                    "studio": [{"ui_status": "done", "label": "Done"}],
-                    "library": [{"ui_status": "draft", "label": "Draft"}],
-                },
+            "recently_added_limit": 10,
+            "ui_statuses_by_scope": {
+                "studio": [{"ui_status": "done", "label": "Done"}],
+                "library": [{"ui_status": "draft", "label": "Draft"}],
             },
         },
     )
@@ -130,60 +113,52 @@ def write_scope_config(root: Path) -> None:
 
 def write_external_scope_config(root: Path, external_root: Path) -> None:
     del external_root
-    write_json(
-        root / "docs-viewer/config/scopes/docs_scopes.json",
-        {
-            "schema_version": "docs_scopes_v1",
-            "scopes": [
-                {
-                    "scope_id": "private",
-                    "scope_type": "local_external",
-                    "meta": "external local",
-                    "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
-                    "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/private",
-                    "media_path_prefix": "docs/private",
-                    "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/private",
-                    "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/private/index.json",
-                    "viewer_base_url": "/docs/",
-                    "include_scope_param": True,
-                    "default_doc_id": "private",
-                    "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": [],
-                    "allow_unresolved_parent_ids": False,
-                }
-            ],
-        },
+    write_docs_scope_config(
+        root,
+        [
+            {
+                "scope_id": "private",
+                "scope_type": "local_external",
+                "meta": "external local",
+                "external_data_root": EXTERNAL_DATA_ROOT_MARKER,
+                "source": f"{EXTERNAL_DATA_ROOT_MARKER}/source/private",
+                "media_path_prefix": "docs/private",
+                "output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/private",
+                "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/private/index.json",
+                "viewer_base_url": "/docs/",
+                "include_scope_param": True,
+                "default_doc_id": "private",
+                "non_loadable_doc_ids": [],
+                "manage_only_tree_root_ids": [],
+                "allow_unresolved_parent_ids": False,
+            }
+        ],
     )
 
 
 def write_public_scope_config(root: Path) -> None:
-    write_json(
-        root / "docs-viewer/config/scopes/docs_scopes.json",
-        {
-            "schema_version": "docs_scopes_v1",
-            "scopes": [
-                {
-                    "scope_id": "library",
-                    "scope_type": "public",
-                    "meta": "public scope",
-                    "source": "docs-viewer/source/library",
-                    "media_path_prefix": "docs/library",
-                    "output": "docs-viewer/generated/docs/library",
-                    "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "site/assets/data/docs/scopes/library",
-                    "publish_search_output": "site/assets/data/search/library/index.json",
-                    "viewer_base_url": "/library/",
-                    "include_scope_param": False,
-                    "default_doc_id": "parent",
-                    "non_loadable_doc_ids": [],
-                    "manage_only_tree_root_ids": ["manage-root"],
-                    "allow_unresolved_parent_ids": False,
-                }
-            ],
-            "docs_viewer": {
-                "recently_added_limit": 2,
-            },
-        },
+    write_docs_scope_config(
+        root,
+        [
+            {
+                "scope_id": "library",
+                "scope_type": "public",
+                "meta": "public scope",
+                "source": "docs-viewer/source/library",
+                "media_path_prefix": "docs/library",
+                "output": "docs-viewer/generated/docs/library",
+                "search_output": "docs-viewer/generated/search/library/index.json",
+                "publish_output": "site/assets/data/docs/scopes/library",
+                "publish_search_output": "site/assets/data/search/library/index.json",
+                "viewer_base_url": "/library/",
+                "include_scope_param": False,
+                "default_doc_id": "parent",
+                "non_loadable_doc_ids": [],
+                "manage_only_tree_root_ids": ["manage-root"],
+                "allow_unresolved_parent_ids": False,
+            }
+        ],
+        {"recently_added_limit": 2},
     )
 
 
