@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a29cfaf989f47808b31c4b7b9f4c89fc",
-    "generated_at_utc": "2026-06-25T15:50:14Z",
-    "count": 226
+    "version": "blake2b-aa2b1b3e7b7fa2c7220e349de4dd57fb",
+    "generated_at_utc": "2026-06-25T15:59:15Z",
+    "count": 227
   },
   "entries": [
     {
@@ -1399,6 +1399,30 @@
         "25"
       ],
       "search_text": "route-ready-state route ready state route ready state change requests change requests 2026-06-25 2026 06 25"
+    },
+    {
+      "id": "route-ready-state-tasks",
+      "kind": "doc",
+      "title": "Route Ready State Tasks",
+      "href": "/docs/?scope=studio&doc=route-ready-state-tasks",
+      "last_updated": "2026-06-09",
+      "parent_id": "route-ready-state",
+      "parent_title": "Route Ready State",
+      "display_meta": "2026-06-09 • Route Ready State",
+      "search_terms": [
+        "route-ready-state-tasks",
+        "route",
+        "ready",
+        "state",
+        "tasks",
+        "route ready state tasks",
+        "route ready state",
+        "2026-06-09",
+        "2026",
+        "06",
+        "09"
+      ],
+      "search_text": "route-ready-state-tasks route ready state tasks route ready state tasks route ready state 2026-06-09 2026 06 09"
     },
     {
       "id": "site-request-shareable-content-blocks",

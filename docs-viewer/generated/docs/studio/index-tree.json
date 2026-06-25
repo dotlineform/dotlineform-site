@@ -325,7 +325,14 @@
         {
           "doc_id": "route-ready-state",
           "title": "Route Ready State",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
+          "children": [
+            {
+              "doc_id": "route-ready-state-tasks",
+              "title": "Route Ready State Tasks",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state-tasks.json"
+            }
+          ]
         },
         {
           "doc_id": "site-request-shareable-content-blocks",
@@ -1219,5 +1226,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-25T15:50:14Z"
+  "generated_at": "2026-06-25T15:59:15Z"
 }
