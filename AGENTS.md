@@ -55,6 +55,7 @@
 ## Tests
 
 - Use `docs-viewer/source/studio/testing.md` and `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` for broader verification when a change has enough blast radius.
+- Follow `docs-viewer/source/studio/smoke-testing.md`.
 - Do not run broad profiles by default; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
 - Python tests in `studio/commands/run_checks.py` must run through `$HOME/miniconda3/bin/python3`.
 - For focused checks, use `$HOME/miniconda3/bin/python3 -m pytest <test-path>`.
@@ -64,9 +65,6 @@
   - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
 - For browser-smoke validation that may need escalation, prefer the central `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile <profile>` runner over ad hoc direct smoke-script execution when an appropriate profile exists. This keeps Codex approval scope stable across sessions.
 - When requesting escalated browser-smoke runs, use the same command shape that was first attempted, avoid shell-wrapper/path ambiguity where practical, and do not retry rejected escalation requests with alternate command shapes. Report the approval rejection and use the safest narrower verification available.
-- If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product/runtime issue.
-- Avoid the raw Edge headless fallback unless Playwright is unavailable.
-- For Playwright smoke tests, follow `docs-viewer/source/studio/smoke-testing.md`.
 
 ## Security And Sanitization
 
