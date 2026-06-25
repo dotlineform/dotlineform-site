@@ -171,10 +171,15 @@ def install_modal_fixture(page: Page) -> None:
                       </div>
                     </div>
                     <form class="docsViewer__modalForm" id="docsViewerSettingsForm">
-                      <label class="docsViewer__field docsViewer__field--checkbox">
+                      <label class="docsViewer__field docsViewer__field--checkbox" id="docsViewerSettingsBooleanField" hidden>
                         <input class="docsViewer__checkboxInput" id="docsViewerSettingsBooleanInput" type="checkbox">
                         <span class="docsViewer__fieldLabel" id="docsViewerSettingsBooleanLabel"></span>
                       </label>
+                      <label class="docsViewer__field" id="docsViewerSettingsTextField" hidden>
+                        <span class="docsViewer__fieldLabel" id="docsViewerSettingsTextLabel"></span>
+                        <input class="docsViewer__fieldInput" id="docsViewerSettingsTextInput" type="text" autocomplete="off" spellcheck="false">
+                      </label>
+                      <p class="docsViewer__modalNote muted small" id="docsViewerSettingsDescription" hidden></p>
                       <div class="docsViewer__settingsWarnings muted small" id="docsViewerSettingsWarnings" hidden></div>
                       <p class="docsViewer__modalNote muted small" id="docsViewerSettingsStatus" hidden></p>
                       <div class="docsViewer__modalActions">
@@ -247,7 +252,13 @@ def install_modal_fixture(page: Page) -> None:
                 settingsSaveButton: document.getElementById('docsViewerSettingsSaveButton'),
                 settingsScope: document.getElementById('docsViewerSettingsScope'),
                 settingsStatus: document.getElementById('docsViewerSettingsStatus'),
+                settingsBooleanField: document.getElementById('docsViewerSettingsBooleanField'),
                 settingsBooleanInput: document.getElementById('docsViewerSettingsBooleanInput'),
+                settingsBooleanLabel: document.getElementById('docsViewerSettingsBooleanLabel'),
+                settingsTextField: document.getElementById('docsViewerSettingsTextField'),
+                settingsTextInput: document.getElementById('docsViewerSettingsTextInput'),
+                settingsTextLabel: document.getElementById('docsViewerSettingsTextLabel'),
+                settingsDescription: document.getElementById('docsViewerSettingsDescription'),
                 settingsWarnings: document.getElementById('docsViewerSettingsWarnings')
             };
             const controller = managementModals.createDocsViewerManagementModalController({
@@ -398,4 +409,3 @@ def assert_hidden_with_focus(page: Page, selector: str, expected_focus_id: str) 
     )
     if state != {"hidden": True, "focusedId": expected_focus_id, "expected": expected_focus_id}:
         raise AssertionError(f"modal did not close and return focus: {state!r}")
-

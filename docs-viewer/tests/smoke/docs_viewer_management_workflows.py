@@ -523,8 +523,11 @@ def main(argv: list[str] | None = None) -> int:
             assert_ok(settings, "source config settings")
             if settings["scopes"][0]["scope_id"] != "studio":
                 raise AssertionError(f"unexpected settings payload: {settings!r}")
-            if settings["editable_scope_fields"] or settings["scopes"][0]["fields"]:
-                raise AssertionError(f"settings payload should not expose editable fields: {settings!r}")
+            fields = settings["scopes"][0]["fields"]
+            if [field.get("field") for field in settings["editable_scope_fields"]] != ["default_doc_id"]:
+                raise AssertionError(f"settings payload should expose default_doc_id: {settings!r}")
+            if len(fields) != 1 or fields[0].get("field") != "default_doc_id" or fields[0].get("current_value") != "root-doc":
+                raise AssertionError(f"settings payload did not expose the active scope default doc id: {settings!r}")
 
             import_listing = request_json(base_url, "GET", "/docs/import-source-files")
             assert_ok(import_listing, "import source files")

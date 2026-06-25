@@ -72,6 +72,10 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId, summaryText) : Promise.resolve();
   }
 
+  function reloadDocsViewerConfig() {
+    return callbacks.reloadDocsViewerConfig ? callbacks.reloadDocsViewerConfig() : Promise.resolve(null);
+  }
+
   async function viewabilityTargetDocIds(doc) {
     return resolveViewabilityTargetDocIds({
       doc: doc,
@@ -344,24 +348,29 @@ export function createDocsViewerManagementActionController(options) {
       modalController.closeSettingsModal();
       return;
     }
-    modalController.setSettingsSaving();
+    modalController.closeSettingsModal();
     setManagementBusy(true);
+    setManagementMessage(state.managementText.settingsSaving, false);
     updateSourceConfigSettings(changes, managementClientOptions())
       .then(function (payload) {
-        modalController.closeSettingsModal();
         setManagementMessage(state.managementText.settingsSaved, false);
-        var targetDocId = state.selectedDocId || context.defaultDocId();
-        if (payload && payload.changed && callbacks.reloadDocsIndex) {
-          return callbacks.reloadDocsIndex(targetDocId);
+        var defaultDocChange = payload && payload.changes ? payload.changes.default_doc_id : null;
+        var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
+        var targetDocId = state.selectedDocId || proposedDefaultDocId || context.defaultDocId();
+        if (payload && payload.changed) {
+          return reloadDocsViewerConfig().then(function () {
+            return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId) : null;
+          });
         }
         if (callbacks.renderManagementUi) callbacks.renderManagementUi();
         return null;
       })
       .catch(function (error) {
-        modalController.setSettingsSaveError(error && error.message ? error.message : state.managementText.settingsSaveFailed);
+        setManagementMessage(error && error.message ? error.message : state.managementText.settingsSaveFailed, true);
       })
       .finally(function () {
         setManagementBusy(false);
+        if (callbacks.renderManagementUi) callbacks.renderManagementUi();
       });
   }
 

@@ -514,7 +514,15 @@ def run_index_double_click_edit_check(page: Page) -> None:
                   <div class="docsViewer__modalBackdrop" data-settings-close="true"></div>
                   <form id="docsViewerSettingsForm">
                     <p id="docsViewerSettingsScope"></p>
-                    <input id="docsViewerSettingsBooleanInput" type="checkbox">
+                    <label id="docsViewerSettingsBooleanField" hidden>
+                      <input id="docsViewerSettingsBooleanInput" type="checkbox">
+                      <span id="docsViewerSettingsBooleanLabel"></span>
+                    </label>
+                    <label id="docsViewerSettingsTextField" hidden>
+                      <span id="docsViewerSettingsTextLabel"></span>
+                      <input id="docsViewerSettingsTextInput" type="text">
+                    </label>
+                    <p id="docsViewerSettingsDescription"></p>
                     <div id="docsViewerSettingsWarnings"></div>
                     <p id="docsViewerSettingsStatus"></p>
                     <button id="docsViewerSettingsCancelButton" type="button">Cancel</button>

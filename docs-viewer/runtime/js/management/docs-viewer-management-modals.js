@@ -248,19 +248,45 @@ export function createDocsViewerManagementModalController(options = {}) {
     return normalizeText(field).replace(/_/g, " ");
   }
 
-  function renderSettingsField(field) {
-    if (!refs.settingsBooleanField || !refs.settingsBooleanInput) return;
-    if (!field) {
-      refs.settingsBooleanField.hidden = true;
+  function hideSettingsFields() {
+    if (refs.settingsBooleanField) refs.settingsBooleanField.hidden = true;
+    if (refs.settingsBooleanInput) {
       refs.settingsBooleanInput.disabled = true;
       refs.settingsBooleanInput.checked = false;
       refs.settingsBooleanInput.name = "";
-      if (refs.settingsDescription) {
-        refs.settingsDescription.hidden = true;
-        refs.settingsDescription.textContent = "";
-      }
+    }
+    if (refs.settingsTextField) refs.settingsTextField.hidden = true;
+    if (refs.settingsTextInput) {
+      refs.settingsTextInput.disabled = true;
+      refs.settingsTextInput.value = "";
+      refs.settingsTextInput.name = "";
+    }
+  }
+
+  function renderSettingsDescription(field) {
+    if (!refs.settingsDescription) return;
+    refs.settingsDescription.textContent = normalizeText(field && field.description);
+    refs.settingsDescription.hidden = !refs.settingsDescription.textContent;
+  }
+
+  function renderSettingsField(field) {
+    hideSettingsFields();
+    if (!field) {
+      renderSettingsDescription(null);
       return;
     }
+    if (field.type === "string" && refs.settingsTextField && refs.settingsTextInput) {
+      refs.settingsTextInput.disabled = false;
+      refs.settingsTextInput.name = normalizeText(field.field);
+      refs.settingsTextInput.value = normalizeText(field.current_value);
+      if (refs.settingsTextLabel) {
+        refs.settingsTextLabel.textContent = settingsFieldLabel(field.field);
+      }
+      refs.settingsTextField.hidden = false;
+      renderSettingsDescription(field);
+      return;
+    }
+    if (!refs.settingsBooleanField || !refs.settingsBooleanInput) return;
     refs.settingsBooleanInput.disabled = false;
     refs.settingsBooleanInput.name = normalizeText(field.field);
     refs.settingsBooleanInput.checked = field.current_value === true;
@@ -268,10 +294,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       refs.settingsBooleanLabel.textContent = settingsFieldLabel(field.field);
     }
     refs.settingsBooleanField.hidden = false;
-    if (refs.settingsDescription) {
-      refs.settingsDescription.textContent = normalizeText(field.description);
-      refs.settingsDescription.hidden = !refs.settingsDescription.textContent;
-    }
+    renderSettingsDescription(field);
   }
 
   function renderSettingsWarnings(warnings) {
@@ -312,14 +335,22 @@ export function createDocsViewerManagementModalController(options = {}) {
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
     window.requestAnimationFrame(function () {
-      focusWithoutScroll(refs.settingsBooleanInput || refs.settingsSaveButton || refs.settingsModal);
+      var primaryInput = settingsFieldState.type === "string" ? refs.settingsTextInput : refs.settingsBooleanInput;
+      focusWithoutScroll(primaryInput || refs.settingsSaveButton || refs.settingsModal);
     });
   }
 
   function getSettingsChanges() {
-    if (!settingsFieldState || !refs.settingsBooleanInput) return null;
+    if (!settingsFieldState) return null;
     var fieldName = normalizeText(settingsFieldState.field);
     if (!fieldName) return null;
+    if (settingsFieldState.type === "string") {
+      if (!refs.settingsTextInput) return null;
+      return {
+        [fieldName]: normalizeText(refs.settingsTextInput.value)
+      };
+    }
+    if (!refs.settingsBooleanInput) return null;
     return {
       [fieldName]: refs.settingsBooleanInput.checked === true
     };

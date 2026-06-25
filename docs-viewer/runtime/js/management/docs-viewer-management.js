@@ -150,6 +150,9 @@ export function initDocsViewerManagement(context) {
   var settingsBooleanField = shellRef("settingsBooleanField", "docsViewerSettingsBooleanField");
   var settingsBooleanInput = shellRef("settingsBooleanInput", "docsViewerSettingsBooleanInput");
   var settingsBooleanLabel = shellRef("settingsBooleanLabel", "docsViewerSettingsBooleanLabel");
+  var settingsTextField = shellRef("settingsTextField", "docsViewerSettingsTextField");
+  var settingsTextInput = shellRef("settingsTextInput", "docsViewerSettingsTextInput");
+  var settingsTextLabel = shellRef("settingsTextLabel", "docsViewerSettingsTextLabel");
   var settingsDescription = shellRef("settingsDescription", "docsViewerSettingsDescription");
   var settingsWarnings = shellRef("settingsWarnings", "docsViewerSettingsWarnings");
   var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
@@ -481,6 +484,16 @@ export function initDocsViewerManagement(context) {
     if (capabilityController) capabilityController.refresh();
   }
 
+  function reloadDocsViewerConfig() {
+    if (typeof routeReload.reloadDocsViewerConfig === "function") {
+      return routeReload.reloadDocsViewerConfig();
+    }
+    if (typeof context.reloadDocsViewerConfig === "function") {
+      return context.reloadDocsViewerConfig();
+    }
+    return Promise.resolve(null);
+  }
+
   function routeCommand(name) {
     var routeCommands = routeReload.routeCommands || context.routeCommands || {};
     return typeof routeCommands[name] === "function" ? routeCommands[name] : null;
@@ -573,11 +586,7 @@ export function initDocsViewerManagement(context) {
   function scopeLifecycleCallbacks() {
     return {
       onApplied: function () {
-        var reloadConfig = typeof routeReload.reloadDocsViewerConfig === "function"
-          ? routeReload.reloadDocsViewerConfig()
-          : typeof context.reloadDocsViewerConfig === "function"
-            ? context.reloadDocsViewerConfig()
-          : Promise.resolve(null);
+        var reloadConfig = reloadDocsViewerConfig();
         refreshManagementCapabilities();
         Promise.resolve(reloadConfig)
           .then(refreshManagementCapabilities)
@@ -940,6 +949,7 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
       reloadDocsIndex: reloadDocsIndex,
+      reloadDocsViewerConfig: reloadDocsViewerConfig,
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       setManagementBusy: setManagementBusy,
@@ -976,6 +986,9 @@ export function initDocsViewerManagement(context) {
       settingsBooleanField: settingsBooleanField,
       settingsBooleanInput: settingsBooleanInput,
       settingsBooleanLabel: settingsBooleanLabel,
+      settingsTextField: settingsTextField,
+      settingsTextInput: settingsTextInput,
+      settingsTextLabel: settingsTextLabel,
       settingsDescription: settingsDescription,
       settingsStatus: settingsStatus,
       settingsWarnings: settingsWarnings,

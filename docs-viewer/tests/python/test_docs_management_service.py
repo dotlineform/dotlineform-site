@@ -1456,7 +1456,7 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["warnings"] == []
 
 
-def test_source_config_settings_contract_has_no_editable_fields() -> None:
+def test_source_config_settings_contract_exposes_default_doc_id() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
@@ -1465,12 +1465,80 @@ def test_source_config_settings_contract_has_no_editable_fields() -> None:
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_source_config_settings_v1"
-    assert payload["editable_scope_fields"] == []
+    assert payload["editable_scope_fields"] == [
+        {
+            "field": "default_doc_id",
+            "type": "string",
+            "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
+            "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+            "requires_rebuild": True,
+            "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
+        }
+    ]
     assert payload["deferred_global_fields"][0]["field"] == "recently_added_limit"
     assert any(field["field"] == "source" for field in payload["blocked_scope_fields"])
+    assert not any(field["field"] == "default_doc_id" for field in payload["blocked_scope_fields"])
     scope = payload["scopes"][0]
     assert scope["scope_id"] == "studio"
-    assert scope["fields"] == []
+    assert scope["fields"][0]["field"] == "default_doc_id"
+    assert scope["fields"][0]["type"] == "string"
+    assert scope["fields"][0]["current_value"] == "child"
+    assert scope["fields"][0]["editable"] is True
+
+
+def test_source_config_settings_validates_and_writes_default_doc_id() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+
+        validation = docs_management_service.docs_source_config_settings.validate_scope_settings_change(
+            repo_root,
+            "studio",
+            {"default_doc_id": "other"},
+        )
+        dry_run = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
+            repo_root,
+            "studio",
+            {"default_doc_id": "other"},
+            dry_run=True,
+        )
+        applied = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
+            repo_root,
+            "studio",
+            {"default_doc_id": "other"},
+        )
+        config_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+
+    assert validation["changes"]["default_doc_id"]["current_value"] == "child"
+    assert validation["changes"]["default_doc_id"]["proposed_value"] == "other"
+    assert validation["changes"]["default_doc_id"]["changed"] is True
+    assert validation["requires_rebuild"] is True
+    assert validation["affected_artifacts"] == [
+        "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id"
+    ]
+    assert dry_run["changed"] is True
+    assert applied["changed"] is True
+    assert config_payload["scopes"][0]["default_doc_id"] == "other"
+
+
+def test_source_config_settings_rejects_unknown_default_doc_id() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+
+        try:
+            docs_management_service.docs_source_config_settings.validate_scope_settings_change(
+                repo_root,
+                "studio",
+                {"default_doc_id": "missing-doc"},
+            )
+        except ValueError as exc:
+            assert "default_doc_id" in str(exc)
+            assert "missing-doc" in str(exc)
+        else:
+            raise AssertionError("unknown default_doc_id should be rejected")
 
 
 def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
@@ -1574,13 +1642,10 @@ def main() -> None:
         test_scope_delete_apply_requires_confirmation,
         test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild,
         test_source_config_report_reads_known_config_files,
-        test_source_config_settings_contract_allows_updated_date_only,
-        test_source_config_settings_validation_reports_rebuild_artifact,
+        test_source_config_settings_contract_exposes_default_doc_id,
+        test_source_config_settings_validates_and_writes_default_doc_id,
+        test_source_config_settings_rejects_unknown_default_doc_id,
         test_source_config_settings_rejects_blocked_and_deferred_fields,
-        test_source_config_settings_rejects_invalid_updated_date_value,
-        test_source_config_settings_apply_writes_allowed_field,
-        test_source_config_settings_apply_dry_run_does_not_write,
-        test_source_config_settings_warns_when_generated_projection_is_stale,
         test_docs_export_request_passes_target_format,
     ]
     for test in tests:

@@ -43,10 +43,37 @@ Returned data:
   "ok": true,
   "schema_version": "docs_source_config_settings_v1",
   "source_config_path": "docs-viewer/config/scopes/docs_scopes.json",
-  "editable_scope_fields": [],
+  "editable_scope_fields": [
+    {
+      "field": "default_doc_id",
+      "type": "string",
+      "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
+      "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+      "requires_rebuild": true,
+      "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document."
+    }
+  ],
   "blocked_scope_fields": [],
   "deferred_global_fields": [],
-  "scopes": []
+  "scopes": [
+    {
+      "scope_id": "studio",
+      "source_config_path": "docs-viewer/config/scopes/docs_scopes.json",
+      "fields": [
+        {
+          "field": "default_doc_id",
+          "type": "string",
+          "current_value": "dev-home",
+          "editable": true,
+          "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
+          "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+          "requires_rebuild": true,
+          "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
+          "warnings": []
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -54,16 +81,18 @@ Used for:
 
 - rendering settings controls that are safe to expose in manage mode
 - explaining why install-time fields such as roots, route bases, output paths, and media prefixes are blocked
-- returning an empty editable-field list when no scope settings are currently exposed
+- exposing the active scope's guarded default document setting
 
 ## `POST /docs/source-config-settings`
 
-No scope fields are currently editable through this endpoint. When a future field is allowlisted, expected data will use this shape:
+Expected data:
 
 ```json
 {
   "scope": "studio",
-  "changes": {}
+  "changes": {
+    "default_doc_id": "dev-home"
+  }
 }
 ```
 
@@ -71,6 +100,7 @@ Actions:
 
 - validates `scope` against configured docs scopes
 - validates every submitted field against the settings allowlist
+- validates nonblank `default_doc_id` values against documents in the active scope and rejects non-loadable ids
 - writes only allowlisted values to `docs-viewer/config/scopes/docs_scopes.json`
 - rebuilds generated docs output for the affected scope when a saved setting requires it
 - logs a `docs_source_config_settings` event when a real write occurs
@@ -83,5 +113,6 @@ Rejected data:
 - unsupported fields
 - blocked install-time fields
 - deferred global fields
+- unknown or non-loadable default document ids
 - wrong JSON types
 - missing or unsupported scopes

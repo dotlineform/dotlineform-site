@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import tempfile
 from pathlib import Path
@@ -137,29 +138,41 @@ def main(argv: list[str] | None = None) -> int:
                 page.locator("#docsViewerManageSettingsButton").click()
                 page.wait_for_selector("#docsViewerSettingsModal:not([hidden])", timeout=args.timeout_ms)
                 page.wait_for_function(
-                    """() => document.querySelector("#docsViewerSettingsStatus")?.textContent.includes("No editable settings")""",
+                    """() => document.querySelector("#docsViewerSettingsTextInput")?.value === "root-doc" """,
                     timeout=args.timeout_ms,
                 )
-                page.locator("#docsViewerSettingsCancelButton").click()
+                label_text = page.locator("#docsViewerSettingsTextLabel").inner_text()
+                if label_text != "default doc id":
+                    raise AssertionError(f"settings modal did not expose default doc id: {label_text!r}")
+                page.locator("#docsViewerSettingsTextInput").fill("sibling-doc")
+                page.locator("#docsViewerSettingsSaveButton").click()
+                modal_hidden_immediately = page.locator("#docsViewerSettingsModal").evaluate("modal => modal.hidden === true")
+                if not modal_hidden_immediately:
+                    raise AssertionError("settings modal stayed open while save work was running")
                 page.wait_for_function(
                     """() => document.querySelector("#docsViewerSettingsModal")?.hidden === true""",
                     timeout=args.timeout_ms,
                 )
+                wait_for_management_idle(page, args.timeout_ms)
                 wait_for_doc(page, "ui-smoke-created", args.timeout_ms)
 
                 open_actions_menu(page, args.timeout_ms)
                 page.locator("#docsViewerManageDeleteButton").click()
                 page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=args.timeout_ms)
                 click_modal_primary(page, args.timeout_ms)
-                wait_for_doc(page, "root-doc", args.timeout_ms)
+                wait_for_doc(page, "sibling-doc", args.timeout_ms)
                 browser.close()
 
             source_path = fixture_root / "docs-viewer/source/studio" / "ui-smoke-created.md"
             if source_path.exists():
                 raise AssertionError(f"UI delete did not remove fixture source: {source_path}")
+            config_payload = json.loads((fixture_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+            if config_payload["scopes"][0]["default_doc_id"] != "sibling-doc":
+                raise AssertionError(f"settings save did not update default_doc_id: {config_payload!r}")
             expected_posts = [
                 "/docs/create",
                 "/docs/update-metadata",
+                "/docs/source-config-settings",
                 "/docs/delete-preview",
                 "/docs/delete-apply",
             ]

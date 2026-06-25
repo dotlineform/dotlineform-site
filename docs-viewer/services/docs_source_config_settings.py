@@ -3,17 +3,38 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import json
 from pathlib import Path
 from typing import Any
 
-from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs
+from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs, resolve_scope_path
+import docs_source_model as source_model
 
 
 SCHEMA_VERSION = "docs_source_config_settings_v1"
 
 
-EDITABLE_SCOPE_FIELDS: dict[str, Any] = {}
+@dataclass(frozen=True)
+class EditableScopeField:
+    field: str
+    value_type: str
+    source_path: str
+    generated_path: str
+    requires_rebuild: bool
+    description: str
+
+
+EDITABLE_SCOPE_FIELDS: dict[str, EditableScopeField] = {
+    "default_doc_id": EditableScopeField(
+        field="default_doc_id",
+        value_type="string",
+        source_path=f"{CONFIG_REL_PATH.as_posix()} scopes[].default_doc_id",
+        generated_path="docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
+        requires_rebuild=True,
+        description="Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
+    ),
+}
 
 BLOCKED_SCOPE_FIELDS = {
     "scope_id": "Scope identity controls route and generated-data ownership.",
@@ -24,7 +45,6 @@ BLOCKED_SCOPE_FIELDS = {
     "search_output": "Generated search output paths are install-time config and affect build artifacts.",
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
     "include_scope_param": "Route parameter behavior is part of the portable route contract.",
-    "default_doc_id": "Default documents affect route behavior and should be guarded separately.",
     "non_loadable_doc_ids": "Tree loading behavior depends on generated docs structure.",
     "manage_only_tree_root_ids": "Manage-only tree behavior depends on generated docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",
@@ -56,15 +76,74 @@ def _validate_field_value(field: str, value: Any) -> Any:
         if type(value) is not bool:
             raise ValueError(f"Source config field {field} must be a boolean")
         return value
+    if contract.value_type == "string":
+        if not isinstance(value, str):
+            raise ValueError(f"Source config field {field} must be a string")
+        return value.strip()
     raise ValueError(f"Source config field {field} has unsupported value type: {contract.value_type}")
+
+
+def _field_current_value(config: Any, contract: EditableScopeField) -> Any:
+    return getattr(config, contract.field)
+
+
+def _scope_field_payload(config: Any, contract: EditableScopeField) -> dict[str, Any]:
+    return {
+        "field": contract.field,
+        "type": contract.value_type,
+        "current_value": _field_current_value(config, contract),
+        "editable": True,
+        "source_path": contract.source_path,
+        "generated_path": contract.generated_path,
+        "requires_rebuild": contract.requires_rebuild,
+        "description": contract.description,
+        "warnings": [],
+    }
 
 
 def _scope_payload(config: Any) -> dict[str, Any]:
     return {
         "scope_id": config.scope_id,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
-        "fields": [],
+        "fields": [
+            _scope_field_payload(config, contract)
+            for contract in sorted(EDITABLE_SCOPE_FIELDS.values(), key=lambda item: item.field)
+        ],
     }
+
+
+def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[str]:
+    if not value:
+        return []
+    root = resolve_scope_path(repo_root, config.source)
+    if not root.exists():
+        raise ValueError(f"missing source root for scope {config.scope_id}: {config.source.as_posix()}")
+    docs = []
+    for path in sorted(root.glob("*.md")):
+        front_matter, _body = source_model.parse_source(path)
+        docs.append(
+            source_model.ScopeDoc(
+                scope=config.scope_id,
+                path=path,
+                source_text=path.read_text(encoding="utf-8"),
+                front_matter=dict(front_matter),
+                body="",
+                doc_id=str(front_matter.get("doc_id") or path.stem).strip(),
+                title=str(front_matter.get("title") or path.stem).strip(),
+                ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
+                parent_id=str(front_matter.get("parent_id") or "").strip(),
+                viewable=source_model.doc_is_viewable(front_matter),
+            )
+        )
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    doc = docs_by_id.get(value)
+    if doc is None:
+        raise ValueError(f"default_doc_id must match a document in scope {config.scope_id}: {value}")
+    if value in set(config.non_loadable_doc_ids):
+        raise ValueError(f"default_doc_id must be loadable in scope {config.scope_id}: {value}")
+    if doc.viewable is False:
+        return ["Default doc id points at a non-viewable document; public routes may hide it."]
+    return []
 
 
 def build_settings_contract(repo_root: Path, scope_id: str = "") -> dict[str, Any]:
@@ -113,8 +192,11 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
     if not changes:
         raise ValueError("At least one source config setting is required")
 
+    config = configs[normalized_scope]
     validated_changes: dict[str, Any] = {}
     rejected_fields: list[dict[str, str]] = []
+    warnings: list[str] = []
+    affected_artifacts: set[str] = set()
 
     for field, raw_value in sorted(changes.items()):
         if field in BLOCKED_SCOPE_FIELDS:
@@ -123,11 +205,24 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
         if field in DEFERRED_GLOBAL_FIELDS:
             rejected_fields.append({"field": field, "reason": DEFERRED_GLOBAL_FIELDS[field]})
             continue
+        contract = EDITABLE_SCOPE_FIELDS.get(field)
         value = _validate_field_value(field, raw_value)
+        field_warnings: list[str] = []
+        if field == "default_doc_id":
+            field_warnings = _validate_default_doc_id(repo_root, config, value)
+        current_value = _field_current_value(config, contract)
+        changed = current_value != value
+        if changed and contract.requires_rebuild:
+            affected_artifacts.add(contract.generated_path)
+        warnings.extend(field_warnings)
         validated_changes[field] = {
-            "current_value": value,
+            "current_value": current_value,
             "proposed_value": value,
-            "changed": False,
+            "changed": changed,
+            "requires_rebuild": changed and contract.requires_rebuild,
+            "source_path": contract.source_path,
+            "generated_path": contract.generated_path,
+            "warnings": field_warnings,
         }
 
     if rejected_fields:
@@ -140,9 +235,9 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
         "scope_id": normalized_scope,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "changes": validated_changes,
-        "warnings": [],
-        "requires_rebuild": any(item["changed"] for item in validated_changes.values()),
-        "affected_artifacts": [],
+        "warnings": warnings,
+        "requires_rebuild": any(item["requires_rebuild"] for item in validated_changes.values()),
+        "affected_artifacts": sorted(affected_artifacts),
     }
 
 

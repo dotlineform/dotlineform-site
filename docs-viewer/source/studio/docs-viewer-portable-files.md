@@ -268,6 +268,6 @@ Generated-data reads, source writes, import targets, and rebuild commands use `d
 
 The local management package also includes the read-only source config report and the Settings modal. The report inspects configured source, browser, and generated projections.
 
-The Settings modal currently has no active editable fields. Future scope-level display controls should write only allowlisted source config fields and rebuild affected generated docs scopes when browser payloads need to stay in sync.
+The Settings modal exposes the active scope's `default_doc_id`. Scope-level display controls should write only allowlisted source config fields and rebuild affected generated docs scopes when browser payloads need to stay in sync.
 
 For the full config split and media-storage choices, see [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer).

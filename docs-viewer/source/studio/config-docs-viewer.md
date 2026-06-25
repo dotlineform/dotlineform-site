@@ -27,7 +27,7 @@ In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc
 The report is read-only; source edits still go through source JSON edits or explicit manage-mode write controls.
 
 - The Docs Viewer service still exposes a source-config settings contract for guarded source config writes.
-- The current `/docs/` manage-mode Settings modal has no active editable fields; future scope-level toolbar/display controls should use an explicit settings contract rather than ad hoc route-local state.
+- The `/docs/` manage-mode Settings modal exposes the active scope's `default_doc_id` through that contract.
 - The settings contract does not create a new settings layer; it describes guarded edits to the existing source config.
 
 Each scope entry owns:
