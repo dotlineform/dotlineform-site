@@ -10,69 +10,23 @@ from typing import Any, Callable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+FIXTURES_DIR = REPO_ROOT / "analytics-app" / "tests" / "fixtures"
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 ANALYTICS_PACKAGE_DIR = REPO_ROOT / "analytics-app" / "app" / "server" / "analytics_app"
-for path in (SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
+for path in (FIXTURES_DIR, SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
+from tag_factory import (  # noqa: E402
+    promotion_aliases_payload as aliases_payload,
+    promotion_assignments_payload as assignments_payload,
+    promotion_registry_payload as registry_payload,
+    tag_row as row,
+)
 from tag_services import tag_promotion_mutations as promotions  # noqa: E402
 
 
 NOW = "2026-05-09T12:00:00Z"
-
-
-def row(tag_id: str, description: str = "") -> dict[str, str]:
-    group, slug = tag_id.split(":", 1)
-    return {
-        "tag_id": tag_id,
-        "group": group,
-        "label": slug,
-        "description": description,
-    }
-
-
-def registry_payload() -> dict[str, Any]:
-    return {
-        "policy": {"allowed_groups": ["subject", "theme", "domain"]},
-        "tags": [
-            row("subject:trees"),
-            row("subject:canopy"),
-            row("theme:growth"),
-            row("domain:studio"),
-        ],
-    }
-
-
-def aliases_payload() -> dict[str, Any]:
-    return {
-        "aliases": {
-            "foliage": {"description": "Leaf forms", "tags": ["subject:trees"]},
-            "combo": {"description": "", "tags": ["subject:trees", "theme:growth"]},
-            "studio": {"description": "", "tags": ["domain:studio"]},
-        }
-    }
-
-
-def assignments_payload() -> dict[str, Any]:
-    return {
-        "series": {
-            "001": {
-                "tags": [
-                    {"tag_id": "subject:trees", "w_manual": 0.9},
-                    {"tag_id": "domain:studio", "w_manual": 0.3},
-                ],
-                "works": {
-                    "00001": {
-                        "tags": [
-                            {"tag_id": "subject:trees", "w_manual": 0.6},
-                            {"tag_id": "theme:growth", "w_manual": 0.3},
-                        ]
-                    }
-                },
-            }
-        }
-    }
 
 
 def assert_equal(actual: Any, expected: Any, label: str) -> None:

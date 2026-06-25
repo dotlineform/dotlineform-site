@@ -39,6 +39,8 @@ Poor candidates for permanent browser smokes:
 
 Existing UI-heavy smoke scripts may stay until their owners prune them, but new work should not deepen that coverage.
 
+Before adding or expanding a smoke, ask whether a pure function, service, or direct HTTP/API test would prove the same contract. Use a browser only when the behavior depends on route boot, module loading, public/private asset boundaries, ready-state wiring, or the route shell's request/response integration.
+
 ## Where Smokes Live
 
 Keep each smoke with the app that owns the route or browser module.

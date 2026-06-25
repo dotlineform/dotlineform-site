@@ -121,6 +121,15 @@ Browser smokes:
 
 Permanent smoke tests should focus on request payloads, server responses, generated data, route boot, module wiring, and ownership boundaries. Do not add permanent smoke coverage for modal timing, cursor state, button copy, focus movement, or layout.
 
+Before adding or expanding any permanent test, apply the review gate:
+
+- Can this be tested as pure function or service behavior?
+- Can this be tested by a direct HTTP/API request?
+- Is a browser required to verify a contract, or only to mimic user clicks?
+- Will this fail because copy, layout, focus, hover state, or modal timing changed?
+
+Choose the lowest layer that proves the durable contract. Skip tests that mostly mimic a user path unless browser acceptance coverage was explicitly requested.
+
 1. **Do not default to full browser smokes for small UI/component amendments.**
    For changes like button placement, labels, CSS class ownership, or toolbar composition, use syntax checks plus a narrow DOM/component check.
 

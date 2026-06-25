@@ -25,6 +25,17 @@ Do not add or expand permanent tests just to prove UI choreography: modal timing
 
 Browser smoke checks are allowed when the durable risk is route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or a shared ready/busy contract. Existing UI-heavy smoke scripts are legacy cleanup targets; do not extend them for routine UI work.
 
+## Review Gate
+
+Before adding or expanding a permanent test, answer these questions:
+
+- Can this be tested as pure function or service behavior?
+- Can this be tested by a direct HTTP/API request?
+- Is a browser required to verify a product contract, or only to mimic user clicks?
+- Will this test fail because copy, layout, focus, hover state, or modal timing changed?
+
+Choose the lowest layer that proves the durable contract. If the test mostly mimics a user path, skip it unless the change request explicitly asks for browser acceptance coverage or the browser is the only place the contract exists.
+
 ## What To Run
 
 Use this as the first-pass decision table.

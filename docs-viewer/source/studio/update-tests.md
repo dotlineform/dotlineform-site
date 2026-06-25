@@ -236,6 +236,8 @@ Follow-up Docs Viewer fixture consolidation moved common Docs Viewer text/JSON, 
 
 Follow-up Analytics fixture consolidation added `analytics-app/tests/fixtures/data_sharing_factory.py` for documents Data Sharing registry payloads, scope/source-doc setup, prepare profiles, and temporary registry repos. The Analytics Data Sharing API, adapter registry, and service gateway tests now use those factories instead of hand-writing miniature registry and repo worlds inline.
 
+Follow-up Analytics tag fixture consolidation moved tag mutation registry, alias, assignment, and row payload helpers into `analytics-app/tests/fixtures/tag_factory.py`. The alias and promotion mutation tests now import those helpers instead of maintaining local copies.
+
 7. Add a review gate
    During future changes, ask:
    - Can this be tested as pure function/service behavior?
@@ -244,3 +246,13 @@ Follow-up Analytics fixture consolidation added `analytics-app/tests/fixtures/da
    - Will this test fail because copy/layout/focus changed?
 
    If the answer is “it mimics a user,” skip it unless the request explicitly asks for browser acceptance coverage.
+
+done: Added the review gate to the testing policy.
+
+The gate now appears in:
+- `docs-viewer/source/studio/testing.md`
+- `docs-viewer/source/studio/testing-pytest.md`
+- `docs-viewer/source/studio/smoke-testing.md`
+- `docs-viewer/source/studio/development-checklist.md`
+
+`admin-app/commands/run_checks.py` smoke command descriptions were tightened so route/browser smokes are described as boundary checks rather than broad UI workflow coverage.

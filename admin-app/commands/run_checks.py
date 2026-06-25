@@ -375,7 +375,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
             ),
-            "Smoke-check the standalone Docs Viewer service manage shell and API base.",
+            "Smoke-check the standalone Docs Viewer service manage route boundary and API base.",
         ),
         CheckCommand(
             "public-docs-viewer-readonly-smoke",
@@ -395,7 +395,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "admin-app/tests/smoke/admin_home_route.py",
             ),
-            "Smoke-check the local Admin home route and runtime config.",
+            "Smoke-check the local Admin home route boundary and runtime config.",
         ),
         CheckCommand(
             "admin-operations-routes-smoke",
@@ -403,7 +403,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "admin-app/tests/smoke/admin_operations_routes.py",
             ),
-            "Smoke-check Admin audits, risk, and activity routes.",
+            "Smoke-check Admin audits, risk, and activity route boundaries.",
         ),
     ),
     "studio-smoke": (
@@ -440,7 +440,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(SOURCE_MODULE_SITE_ROOT),
             ),
-            "Smoke-check shared Catalogue editor route boot, readiness, and lookup helpers.",
+            "Smoke-check shared Catalogue editor route boot, readiness boundary, and lookup helpers.",
         ),
     ),
     "analytics-smoke": (
@@ -482,7 +482,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "analytics-app/tests/smoke/local_analytics_app_tag_routes.py",
             ),
-            "Smoke-check the local Analytics tag route shells and API reads.",
+            "Smoke-check the local Analytics tag route boundaries and API reads.",
         ),
         CheckCommand(
             "local-analytics-tag-groups-smoke",
@@ -490,7 +490,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "analytics-app/tests/smoke/local_analytics_app_tag_groups.py",
             ),
-            "Smoke-check the local Analytics Tag Groups shell and API read path.",
+            "Smoke-check the local Analytics Tag Groups route boundary and API read path.",
         ),
         CheckCommand(
             "analytics-series-tags-render-smoke",
@@ -500,7 +500,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(SOURCE_MODULE_SITE_ROOT),
             ),
-            "Smoke-check Analytics series tags render contracts.",
+            "Smoke-check Analytics series tags render boundary contracts.",
         ),
         CheckCommand(
             "analytics-tag-route-shell-module-smoke",
@@ -510,7 +510,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--site-root",
                 str(SOURCE_MODULE_SITE_ROOT),
             ),
-            "Smoke-check Analytics shared tag route shell modules.",
+            "Smoke-check Analytics shared tag route shell module boundaries.",
         ),
         CheckCommand(
             "analytics-tag-aliases-ready-state-smoke",
@@ -518,7 +518,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "analytics-app/tests/smoke/tag_aliases_ready_state.py",
             ),
-            "Smoke-check Analytics tag aliases route readiness.",
+            "Smoke-check Analytics tag aliases route readiness boundary.",
         ),
         CheckCommand(
             "analytics-series-tag-editor-ready-state-smoke",
@@ -526,7 +526,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "analytics-app/tests/smoke/series_tag_editor_ready_state.py",
             ),
-            "Smoke-check Analytics series tag editor route readiness.",
+            "Smoke-check Analytics series tag editor route readiness boundary.",
         ),
         CheckCommand(
             "local-analytics-data-sharing-routes-smoke",
@@ -534,7 +534,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py",
             ),
-            "Smoke-check the local Analytics Data Sharing prepare and review route shells.",
+            "Smoke-check the local Analytics Data Sharing prepare and review route boundaries.",
         ),
     ),
 }

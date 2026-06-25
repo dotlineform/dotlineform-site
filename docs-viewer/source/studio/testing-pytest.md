@@ -58,6 +58,8 @@ Python tests should be the default home for durable product checks. They should 
 
 Do not use Python tests to preserve incidental UI behavior from a browser workflow. If a UI change matters because it sends a different payload or depends on a different server response, test that payload or response directly. Modal timing, cursor state, button copy, focus movement, and layout are not good permanent pytest assertions.
 
+Before adding a Python test, use the review gate from [Testing](/docs/?scope=studio&doc=testing): prefer pure functions, service calls, and direct HTTP/API request checks before browser-level coverage. If the intended assertion is really about copy, layout, focus, hover, or ordinary click order, keep it out of permanent pytest coverage.
+
 ## Test File Compatibility
 
 Most existing Python tests already use pytest-compatible shapes:
