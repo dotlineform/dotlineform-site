@@ -163,9 +163,10 @@ Use per-scope `meta` for compact operational context such as `public scope` or `
 `site/docs-viewer/config/ui-text/public.json` owns public read-only Docs Viewer copy and is served at `/docs-viewer/config/ui-text/public.json`.
 It currently includes only reader-facing public-entrypoint text consumed during public route execution.
 
-`docs-viewer/config/ui-text/manage.json` owns local/manage Docs Viewer copy, including management actions, settings, import workflow, scope lifecycle, status mutation, source-management, and manage-only modal text.
+Local/manage Docs Viewer copy is hardcoded as design-time runtime text in the management and import JavaScript modules.
 
-Route records choose the bundle through `config_urls.ui_text`.
+Public route records choose the bundle through `config_urls.ui_text`.
+The local management route omits `config_urls.ui_text`.
 
-- Do not point public route records at the manage bundle, and do not keep shared compatibility UI-text paths for retired bundles.
+- Do not add shared compatibility UI-text paths for retired bundles.
 - Do not put Studio-only copy or workflow-specific service contracts in either UI text bundle.

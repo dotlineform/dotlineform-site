@@ -11,29 +11,12 @@ import {
   renderDocsHtmlImportWarnings,
   resetDocsHtmlImportWarning
 } from "./docs-html-import-render.js";
+import {
+  importText
+} from "./docs-html-import-text.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
-}
-
-function formatText(template, tokens = {}) {
-  let text = String(template || "");
-  Object.keys(tokens).forEach((key) => {
-    text = text.replace(new RegExp(`\\{${key}\\}`, "g"), tokens[key]);
-  });
-  return text;
-}
-
-function configText(config, path, fallback, tokens = {}) {
-  let current = config;
-  String(path || "").split(".").filter(Boolean).forEach((key) => {
-    if (current && Object.prototype.hasOwnProperty.call(current, key)) {
-      current = current[key];
-    } else {
-      current = undefined;
-    }
-  });
-  return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
 }
 
 function setStatus(node, state, message) {
@@ -78,16 +61,10 @@ function collisionDocId(payload) {
 }
 
 export function docsHtmlImportManagementOptions({
-  managementBaseUrl = "",
-  config = {}
+  managementBaseUrl = ""
 } = {}) {
   return {
     baseUrl: managementBaseUrl,
-    serverNotConfiguredError: configText(
-      config || {},
-      "docs_html_import.server_not_configured",
-      "Local docs-management server is not configured."
-    ),
     fetch: (url, options) => window.fetch(url, options)
   };
 }
@@ -105,14 +82,13 @@ function resetImportView(state, statusMessage) {
 async function handleReplacementDocIdModal(state, payload) {
   const result = await openReplacementDocIdModal({
     root: state.root,
-    config: state.config,
     payload
   });
   if (!result || result.action === "cancel") {
     setStatus(
       state.statusNode,
       "",
-      configText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
+      importText("filenameConflictCancelled")
     );
     return { action: "cancel" };
   }
@@ -138,7 +114,7 @@ function awaitOverwriteConfirmation(state, payload) {
   setStatus(
     state.statusNode,
     "warn",
-    payload.summary_text || configText(state.config, "docs_html_import.overwrite_required", "Overwrite required.")
+    payload.summary_text || importText("overwriteRequired")
   );
   state.confirmButton.disabled = false;
   state.cancelButton.disabled = false;
@@ -191,24 +167,18 @@ async function importFileWithPrompts(state, file, context = {}) {
       setStatus(
         state.statusNode,
         "",
-        configText(
-          state.config,
-          "docs_html_import.running_status_all",
-          "Importing {index} of {total}: {filename}",
-          {
-            index: Number(context.index || 0) + 1,
-            total,
-            filename: stagedFilename
-          }
-        )
+        importText("runningStatusAll", {
+          index: Number(context.index || 0) + 1,
+          total,
+          filename: stagedFilename
+        })
       );
     }
     const payload = await requestImport(file, {
       scope: context.scope,
       includePromptMeta: context.includePromptMeta,
       routePath: context.routePath,
-      managementBaseUrl: context.managementBaseUrl,
-      config: context.config
+      managementBaseUrl: context.managementBaseUrl
     }, nextOptions);
 
     if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
@@ -216,12 +186,12 @@ async function importFileWithPrompts(state, file, context = {}) {
       setStatus(
         state.statusNode,
         "warn",
-        payload.summary_text || configText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
+        payload.summary_text || importText("replacementDocIdRequired")
       );
       if (state.replaceAllOverwrites) {
         const overwriteDocId = collisionDocId(payload);
         if (!overwriteDocId) {
-          throw new Error(configText(state.config, "docs_html_import.overwrite_required", "Overwrite required."));
+          throw new Error(importText("overwriteRequired"));
         }
         nextOptions = { overwriteDocId, confirmOverwrite: true };
         continue;
@@ -270,7 +240,6 @@ export async function runDocsHtmlImportWorkflow(
     includePromptMeta = false,
     routePath = "/docs/",
     managementBaseUrl = "",
-    config = {},
     onRunningChange = () => {}
   } = {}
 ) {
@@ -278,8 +247,7 @@ export async function runDocsHtmlImportWorkflow(
     scope: normalizeText(scope),
     includePromptMeta: Boolean(includePromptMeta),
     routePath: normalizeText(routePath) || "/docs/",
-    managementBaseUrl: normalizeText(managementBaseUrl),
-    config: config && typeof config === "object" ? config : {}
+    managementBaseUrl: normalizeText(managementBaseUrl)
   };
   state.replaceAllOverwrites = false;
   state.runButton.disabled = true;
@@ -287,7 +255,7 @@ export async function runDocsHtmlImportWorkflow(
   state.cancelButton.disabled = true;
   resetImportView(
     state,
-    configText(state.config, "docs_html_import.running_status", "Converting and validating staged source...")
+    importText("runningStatus")
   );
   state.isRunning = true;
   onRunningChange(true);
@@ -306,13 +274,8 @@ export async function runDocsHtmlImportWorkflow(
           state.statusNode,
           "",
           files.length > 1
-            ? configText(
-              state.config,
-              "docs_html_import.import_cancelled_partial",
-              "Import cancelled after {count} of {total} files.",
-              { count: results.length, total: files.length }
-            )
-            : configText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
+            ? importText("importCancelledPartial", { count: results.length, total: files.length })
+            : importText("filenameConflictCancelled")
         );
         return;
       }
@@ -324,7 +287,7 @@ export async function runDocsHtmlImportWorkflow(
       state.statusNode,
       "success",
       results.length > 1
-        ? configText(state.config, "docs_html_import.import_all_success", "Imported {count} staged files.", { count: results.length })
+        ? importText("importAllSuccess", { count: results.length })
         : normalizeText(results[0] && results[0].summary_text)
     );
   } catch (error) {
@@ -333,7 +296,7 @@ export async function runDocsHtmlImportWorkflow(
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || configText(state.config, "docs_html_import.import_failed", "Import failed.")
+      normalizeText(error && error.message) || importText("importFailed")
     );
   } finally {
     state.isRunning = false;

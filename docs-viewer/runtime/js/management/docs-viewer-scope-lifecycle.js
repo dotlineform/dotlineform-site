@@ -46,12 +46,12 @@ function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function managementText(state, key, fallback) {
+function managementText(state, key) {
   if (state && state.managementText && Object.prototype.hasOwnProperty.call(state.managementText, key)) {
     var value = state.managementText[key];
-    return value == null ? fallback : normalizeText(value);
+    return normalizeText(value);
   }
-  return fallback;
+  return "";
 }
 
 function publishingModes(capabilities) {
@@ -75,20 +75,11 @@ function publishingModes(capabilities) {
 
 function modeLabel(state, mode) {
   var labels = {
-    public_readonly: managementText(state, "scopePublicReadonlyMode", "public"),
-    local_committed: managementText(state, "scopeLocalCommittedMode", "local tracked"),
-    local_external: managementText(state, "scopeLocalExternalMode", "external local")
+    public_readonly: managementText(state, "scopePublicReadonlyMode"),
+    local_committed: managementText(state, "scopeLocalCommittedMode"),
+    local_external: managementText(state, "scopeLocalExternalMode")
   };
   return labels[mode] || mode;
-}
-
-function modeNote(state, mode) {
-  var notes = {
-    public_readonly: managementText(state, "scopePublicReadonlyModeNote", "Creates a source root, scope config, read-only route, manifest record, and generated outputs."),
-    local_committed: managementText(state, "scopeLocalCommittedModeNote", "Creates tracked source, config, manifest, and non-public generated outputs under docs-viewer/generated/. No public route is created."),
-    local_external: managementText(state, "scopeLocalExternalModeNote", "Creates a repo-registered local scope whose source and generated JSON live under an external data root. No public route is created.")
-  };
-  return notes[mode] || "";
 }
 
 function slugFromScopeInput(value) {
@@ -114,30 +105,28 @@ function renderCreateFormHtml(state, capabilities) {
   var modes = publishingModes(capabilities);
   return (
     '<div class="docsViewerScopeLifecycle">' +
-      '<p class="docsViewer__modalNote muted small">' + escapeHtml(managementText(state, "scopeCreateIntro", "Create a Docs Viewer scope through the local management server.")) + '</p>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeIdLabel", "scope id")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeIdLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-id" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeTitleLabel", "title")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeTitleLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-title" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopePublishingModeLabel", "publishing mode")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopePublishingModeLabel")) + '</span>' +
         '<select class="docsViewer__fieldInput" data-role="scope-publishing-mode">' + renderModeOptions(state, modes) + '</select>' +
       '</label>' +
-      '<p class="docsViewer__modalNote muted small" data-role="scope-mode-note"></p>' +
       '<label class="docsViewer__field" data-role="scope-source-root-field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeSourceRootLabel", "source root")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeSourceRootLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-source-root" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeDefaultDocIdLabel", "default doc id")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeDefaultDocIdLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-default-doc-id" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
       '<label class="docsViewer__field" data-role="scope-route-field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopePublicRoutePathLabel", "public route path")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopePublicRoutePathLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-public-route-path" type="text" autocomplete="off" spellcheck="false">' +
       '</label>' +
     '</div>'
@@ -149,7 +138,6 @@ function wireCreateForm(api, state) {
   var scopeInput = host.querySelector('[data-role="scope-id"]');
   var titleInput = host.querySelector('[data-role="scope-title"]');
   var modeInput = host.querySelector('[data-role="scope-publishing-mode"]');
-  var modeNoteNode = host.querySelector('[data-role="scope-mode-note"]');
   var sourceField = host.querySelector('[data-role="scope-source-root-field"]');
   var sourceInput = host.querySelector('[data-role="scope-source-root"]');
   var defaultDocInput = host.querySelector('[data-role="scope-default-doc-id"]');
@@ -195,7 +183,6 @@ function wireCreateForm(api, state) {
 
   function syncMode() {
     var mode = normalizeText(modeInput && modeInput.value) || "local_external";
-    if (modeNoteNode) modeNoteNode.textContent = modeNote(state, mode);
     if (routeField) routeField.hidden = mode !== "public_readonly";
     if (routeInput) routeInput.required = mode === "public_readonly";
     if (sourceField) sourceField.hidden = mode === "local_external";
@@ -237,11 +224,11 @@ function collectCreatePayload(api, state) {
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
 
   if (!scopeId || !title || !defaultDocId || (publishingMode !== "local_external" && !sourceRoot)) {
-    api.setStatus(managementText(state, "scopeCreateRequiredMessage", "Enter the required scope fields."));
+    api.setStatus(managementText(state, "scopeCreateRequiredMessage"));
     return null;
   }
   if (publishingMode === "public_readonly" && !publicRoutePath) {
-    api.setStatus(managementText(state, "scopeCreateRouteRequiredMessage", "Enter a public route path for public scopes."));
+    api.setStatus(managementText(state, "scopeCreateRouteRequiredMessage"));
     return null;
   }
 
@@ -258,14 +245,12 @@ function collectCreatePayload(api, state) {
 function renderCreateSubScopeFormHtml(state, parentScope) {
   return (
     '<div class="docsViewerScopeLifecycle">' +
-      '<p class="docsViewer__modalNote muted small">' + escapeHtml(managementText(state, "subScopeCreateIntro", "Create a Docs Viewer sub-scope under the active scope.")) + '</p>' +
-      '<dl class="docsViewerScopeLifecycle__summaryGrid"><div><dt>' + escapeHtml(managementText(state, "subScopeParentLabel", "parent scope")) + '</dt><dd>' + escapeHtml(parentScope) + '</dd></div></dl>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "subScopeIdLabel", "sub-scope id")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "subScopeIdLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="sub-scope-id" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "subScopeTitleLabel", "title")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "subScopeTitleLabel")) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="sub-scope-title" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
     '</div>'
@@ -300,7 +285,7 @@ function collectCreateSubScopePayload(api, state, parentScope) {
   var subScope = slugFromScopeInput(host.querySelector('[data-role="sub-scope-id"]')?.value);
   var title = normalizeText(host.querySelector('[data-role="sub-scope-title"]')?.value);
   if (!parentScope || !subScope || !title) {
-    api.setStatus(managementText(state, "subScopeCreateRequiredMessage", "Enter the required sub-scope fields."));
+    api.setStatus(managementText(state, "subScopeCreateRequiredMessage"));
     return null;
   }
   return {
@@ -457,13 +442,12 @@ export async function openCreateScopeFlow(options = {}) {
   var callbacks = options.callbacks || {};
   var result = await openDocsViewerManagementModal({
     root: options.root,
-    title: managementText(state, "scopeCreateTitle", "New scope"),
-    size: "narrow",
+    title: managementText(state, "scopeCreateTitle"),
     bodyHtml: renderCreateFormHtml(state, options.capabilities),
     focusSelector: '[data-role="scope-id"]',
     actions: [
-      { role: "modal-primary", label: managementText(state, "scopePreviewButton", "Preview") },
-      { role: "modal-cancel", label: managementText(state, "cancelButton", "Cancel") }
+      { role: "modal-primary", label: managementText(state, "scopePreviewButton") },
+      { role: "modal-cancel", label: managementText(state, "cancelButton") }
     ],
     onOpen: function (api) {
       wireCreateForm(api, state);
@@ -478,11 +462,11 @@ export async function openCreateScopeFlow(options = {}) {
   var preview;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "scopeCreatePreviewing", "Previewing new scope..."), false);
+    setMessage(callbacks, managementText(state, "scopeCreatePreviewing"), false);
     render(callbacks);
     preview = await previewScopeCreate(result.payload, options.clientOptions);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeCreateFailed", "New scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeCreateFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -491,10 +475,10 @@ export async function openCreateScopeFlow(options = {}) {
 
   var confirmed = await openPreviewModal({
     root: options.root,
-    title: managementText(state, "scopeCreatePreviewTitle", "Preview new scope"),
+    title: managementText(state, "scopeCreatePreviewTitle"),
     payload: preview,
-    primaryLabel: managementText(state, "scopeSaveButton", "Save"),
-    cancelLabel: managementText(state, "cancelButton", "Cancel")
+    primaryLabel: managementText(state, "scopeSaveButton"),
+    cancelLabel: managementText(state, "cancelButton")
   });
   if (!confirmed) {
     setMessage(callbacks, "", false);
@@ -504,13 +488,13 @@ export async function openCreateScopeFlow(options = {}) {
   var appliedPayload;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "scopeCreateSaving", "Saving new scope..."), false);
+    setMessage(callbacks, managementText(state, "scopeCreateSaving"), false);
     render(callbacks);
     appliedPayload = await applyScopeCreate(result.payload, options.clientOptions);
     setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
     applied(callbacks, appliedPayload);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeCreateFailed", "New scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeCreateFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -519,9 +503,9 @@ export async function openCreateScopeFlow(options = {}) {
 
   await openResultModal({
     root: options.root,
-    title: managementText(state, "scopeCreateResultTitle", "Scope created"),
+    title: managementText(state, "scopeCreateResultTitle"),
     payload: appliedPayload,
-    primaryLabel: managementText(state, "scopeResultOkButton", "OK")
+    primaryLabel: managementText(state, "scopeResultOkButton")
   });
   return appliedPayload;
 }
@@ -531,18 +515,17 @@ export async function openCreateSubScopeFlow(options = {}) {
   var callbacks = options.callbacks || {};
   var parentScope = normalizeText(options.parentScope);
   if (!parentScope) {
-    setMessage(callbacks, managementText(state, "subScopeCreateNoParent", "Select a parent scope before creating a sub-scope."), true);
     return null;
   }
   var result = await openDocsViewerManagementModal({
     root: options.root,
-    title: managementText(state, "subScopeCreateTitle", "New sub-scope"),
+    title: managementText(state, "subScopeCreateTitle"),
     size: "compact",
     bodyHtml: renderCreateSubScopeFormHtml(state, parentScope),
     focusSelector: '[data-role="sub-scope-id"]',
     actions: [
-      { role: "modal-primary", label: managementText(state, "scopePreviewButton", "Preview") },
-      { role: "modal-cancel", label: managementText(state, "cancelButton", "Cancel") }
+      { role: "modal-primary", label: managementText(state, "scopePreviewButton") },
+      { role: "modal-cancel", label: managementText(state, "cancelButton") }
     ],
     onOpen: function (api) {
       wireCreateSubScopeForm(api);
@@ -557,11 +540,11 @@ export async function openCreateSubScopeFlow(options = {}) {
   var preview;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "subScopeCreatePreviewing", "Previewing new sub-scope..."), false);
+    setMessage(callbacks, managementText(state, "subScopeCreatePreviewing"), false);
     render(callbacks);
     preview = await previewSubScopeCreate(result.payload, options.clientOptions);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeCreateFailed", "New sub-scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeCreateFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -570,10 +553,10 @@ export async function openCreateSubScopeFlow(options = {}) {
 
   var confirmed = await openPreviewModal({
     root: options.root,
-    title: managementText(state, "subScopeCreatePreviewTitle", "Preview new sub-scope"),
+    title: managementText(state, "subScopeCreatePreviewTitle"),
     payload: preview,
-    primaryLabel: managementText(state, "scopeSaveButton", "Save"),
-    cancelLabel: managementText(state, "cancelButton", "Cancel")
+    primaryLabel: managementText(state, "scopeSaveButton"),
+    cancelLabel: managementText(state, "cancelButton")
   });
   if (!confirmed) {
     setMessage(callbacks, "", false);
@@ -583,13 +566,13 @@ export async function openCreateSubScopeFlow(options = {}) {
   var appliedPayload;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "subScopeCreateSaving", "Saving new sub-scope..."), false);
+    setMessage(callbacks, managementText(state, "subScopeCreateSaving"), false);
     render(callbacks);
     appliedPayload = await applySubScopeCreate(result.payload, options.clientOptions);
     setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
     applied(callbacks, appliedPayload);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeCreateFailed", "New sub-scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeCreateFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -598,9 +581,9 @@ export async function openCreateSubScopeFlow(options = {}) {
 
   await openResultModal({
     root: options.root,
-    title: managementText(state, "subScopeCreateResultTitle", "Sub-scope created"),
+    title: managementText(state, "subScopeCreateResultTitle"),
     payload: appliedPayload,
-    primaryLabel: managementText(state, "scopeResultOkButton", "OK")
+    primaryLabel: managementText(state, "scopeResultOkButton")
   });
   return appliedPayload;
 }
@@ -608,9 +591,9 @@ export async function openCreateSubScopeFlow(options = {}) {
 function renderDeleteSelectHtml(state, targets) {
   return (
     '<div class="docsViewerScopeLifecycle">' +
-      '<p class="docsViewer__modalNote muted small">' + escapeHtml(managementText(state, "scopeDeleteIntro", "Select the user-created scope to delete.")) + '</p>' +
+      '<p class="docsViewer__modalNote muted small">' + escapeHtml(managementText(state, "scopeDeleteIntro")) + '</p>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeDeleteTargetLabel", "scope")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "scopeDeleteTargetLabel")) + '</span>' +
         '<select class="docsViewer__fieldInput" data-role="scope-delete-target">' + targets.map(function (target) {
           var label = target.scopeId + (target.root ? " - " + target.root : "");
           return '<option value="' + escapeHtml(target.scopeId) + '">' + escapeHtml(label) + '</option>';
@@ -623,10 +606,9 @@ function renderDeleteSelectHtml(state, targets) {
 function renderDeleteSubScopeSelectHtml(state, parentScope, targets) {
   return (
     '<div class="docsViewerScopeLifecycle">' +
-      '<p class="docsViewer__modalNote muted small">' + escapeHtml(managementText(state, "subScopeDeleteIntro", "Select the sub-scope to delete from the active parent scope.")) + '</p>' +
-      '<dl class="docsViewerScopeLifecycle__summaryGrid"><div><dt>' + escapeHtml(managementText(state, "subScopeParentLabel", "parent scope")) + '</dt><dd>' + escapeHtml(parentScope) + '</dd></div></dl>' +
+      '<p class="docsViewer__modalNote muted small">' + escapeHtml(managementText(state, "subScopeDeleteIntro")) + '</p>' +
       '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "subScopeDeleteTargetLabel", "sub-scope")) + '</span>' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(managementText(state, "subScopeDeleteTargetLabel")) + '</span>' +
         '<select class="docsViewer__fieldInput" data-role="sub-scope-delete-target">' + targets.map(function (target) {
           var label = target.subScope + (target.title ? " - " + target.title : "");
           return '<option value="' + escapeHtml(target.subScope) + '">' + escapeHtml(label) + '</option>';
@@ -641,24 +623,24 @@ export async function openDeleteScopeFlow(options = {}) {
   var callbacks = options.callbacks || {};
   var targets = scopeLifecycleDeleteTargets(options.capabilities);
   if (!targets.length) {
-    setMessage(callbacks, managementText(state, "scopeDeleteNoTargets", "No user-created scopes are eligible for deletion."), true);
+    setMessage(callbacks, managementText(state, "scopeDeleteNoTargets"), true);
     return null;
   }
 
   var selection = await openDocsViewerManagementModal({
     root: options.root,
-    title: managementText(state, "scopeDeleteTitle", "Delete scope"),
+    title: managementText(state, "scopeDeleteTitle"),
     size: "compact",
     bodyHtml: renderDeleteSelectHtml(state, targets),
     focusSelector: '[data-role="scope-delete-target"]',
     actions: [
-      { role: "modal-primary", label: managementText(state, "scopePreviewButton", "Preview") },
-      { role: "modal-cancel", label: managementText(state, "cancelButton", "Cancel") }
+      { role: "modal-primary", label: managementText(state, "scopePreviewButton") },
+      { role: "modal-cancel", label: managementText(state, "cancelButton") }
     ],
     onSubmit: function (api) {
       var scopeId = normalizeText(api.host.querySelector('[data-role="scope-delete-target"]')?.value);
       if (!scopeId) {
-        api.setStatus(managementText(state, "scopeDeleteRequiredMessage", "Select a scope to delete."));
+        api.setStatus(managementText(state, "scopeDeleteRequiredMessage"));
         return false;
       }
       return { confirmed: true, scopeId: scopeId };
@@ -669,11 +651,11 @@ export async function openDeleteScopeFlow(options = {}) {
   var preview;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "scopeDeletePreviewing", "Previewing scope deletion..."), false);
+    setMessage(callbacks, managementText(state, "scopeDeletePreviewing"), false);
     render(callbacks);
     preview = await previewScopeDelete(selection.scopeId, options.clientOptions);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeDeleteFailed", "Delete scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeDeleteFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -681,24 +663,24 @@ export async function openDeleteScopeFlow(options = {}) {
   }
 
   if (!preview.allowed) {
-    setMessage(callbacks, (preview.blockers || []).join("; ") || managementText(state, "scopeDeleteBlocked", "Delete scope is blocked."), true);
+    setMessage(callbacks, (preview.blockers || []).join("; ") || managementText(state, "scopeDeleteBlocked"), true);
     await openResultModal({
       root: options.root,
-      title: managementText(state, "scopeDeleteBlockedTitle", "Delete blocked"),
+      title: managementText(state, "scopeDeleteBlockedTitle"),
       payload: preview,
-      primaryLabel: managementText(state, "scopeResultOkButton", "OK")
+      primaryLabel: managementText(state, "scopeResultOkButton")
     });
     return null;
   }
 
   var confirmed = await openPreviewModal({
     root: options.root,
-    title: managementText(state, "scopeDeletePreviewTitle", "Preview delete scope"),
+    title: managementText(state, "scopeDeletePreviewTitle"),
     payload: preview,
     createdHeading: "Created files",
     changedHeading: "Changed files",
-    primaryLabel: managementText(state, "scopeDeleteButton", "Delete"),
-    cancelLabel: managementText(state, "cancelButton", "Cancel")
+    primaryLabel: managementText(state, "scopeDeleteButton"),
+    cancelLabel: managementText(state, "cancelButton")
   });
   if (!confirmed) {
     setMessage(callbacks, "", false);
@@ -708,13 +690,13 @@ export async function openDeleteScopeFlow(options = {}) {
   var appliedPayload;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "scopeDeleteDeleting", "Deleting scope..."), false);
+    setMessage(callbacks, managementText(state, "scopeDeleteDeleting"), false);
     render(callbacks);
     appliedPayload = await applyScopeDelete(selection.scopeId, options.clientOptions);
     setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
     applied(callbacks, appliedPayload);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeDeleteFailed", "Delete scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "scopeDeleteFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -723,9 +705,9 @@ export async function openDeleteScopeFlow(options = {}) {
 
   await openResultModal({
     root: options.root,
-    title: managementText(state, "scopeDeleteResultTitle", "Scope deleted"),
+    title: managementText(state, "scopeDeleteResultTitle"),
     payload: appliedPayload,
-    primaryLabel: managementText(state, "scopeResultOkButton", "OK")
+    primaryLabel: managementText(state, "scopeResultOkButton")
   });
   return appliedPayload;
 }
@@ -736,28 +718,28 @@ export async function openDeleteSubScopeFlow(options = {}) {
   var parentScope = normalizeText(options.parentScope);
   var targets = subScopeLifecycleDeleteTargets(options.capabilities, parentScope);
   if (!parentScope) {
-    setMessage(callbacks, managementText(state, "subScopeDeleteNoParent", "Select a parent scope before deleting a sub-scope."), true);
+    setMessage(callbacks, managementText(state, "subScopeDeleteNoParent"), true);
     return null;
   }
   if (!targets.length) {
-    setMessage(callbacks, managementText(state, "subScopeDeleteNoTargets", "No sub-scopes are configured for the active scope."), true);
+    setMessage(callbacks, managementText(state, "subScopeDeleteNoTargets"), true);
     return null;
   }
 
   var selection = await openDocsViewerManagementModal({
     root: options.root,
-    title: managementText(state, "subScopeDeleteTitle", "Delete sub-scope"),
+    title: managementText(state, "subScopeDeleteTitle"),
     size: "compact",
     bodyHtml: renderDeleteSubScopeSelectHtml(state, parentScope, targets),
     focusSelector: '[data-role="sub-scope-delete-target"]',
     actions: [
-      { role: "modal-primary", label: managementText(state, "scopePreviewButton", "Preview") },
-      { role: "modal-cancel", label: managementText(state, "cancelButton", "Cancel") }
+      { role: "modal-primary", label: managementText(state, "scopePreviewButton") },
+      { role: "modal-cancel", label: managementText(state, "cancelButton") }
     ],
     onSubmit: function (api) {
       var subScope = normalizeText(api.host.querySelector('[data-role="sub-scope-delete-target"]')?.value);
       if (!subScope) {
-        api.setStatus(managementText(state, "subScopeDeleteRequiredMessage", "Select a sub-scope to delete."));
+        api.setStatus(managementText(state, "subScopeDeleteRequiredMessage"));
         return false;
       }
       return { confirmed: true, subScope: subScope };
@@ -768,11 +750,11 @@ export async function openDeleteSubScopeFlow(options = {}) {
   var preview;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "subScopeDeletePreviewing", "Previewing sub-scope deletion..."), false);
+    setMessage(callbacks, managementText(state, "subScopeDeletePreviewing"), false);
     render(callbacks);
     preview = await previewSubScopeDelete(parentScope, selection.subScope, options.clientOptions);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeDeleteFailed", "Delete sub-scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeDeleteFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -780,23 +762,23 @@ export async function openDeleteSubScopeFlow(options = {}) {
   }
 
   if (!preview.allowed) {
-    setMessage(callbacks, (preview.blockers || []).join("; ") || managementText(state, "subScopeDeleteBlocked", "Delete sub-scope is blocked."), true);
+    setMessage(callbacks, (preview.blockers || []).join("; ") || managementText(state, "subScopeDeleteBlocked"), true);
     await openResultModal({
       root: options.root,
-      title: managementText(state, "scopeDeleteBlockedTitle", "Delete blocked"),
+      title: managementText(state, "scopeDeleteBlockedTitle"),
       payload: preview,
-      primaryLabel: managementText(state, "scopeResultOkButton", "OK")
+      primaryLabel: managementText(state, "scopeResultOkButton")
     });
     return null;
   }
 
   var confirmed = await openPreviewModal({
     root: options.root,
-    title: managementText(state, "subScopeDeletePreviewTitle", "Preview delete sub-scope"),
+    title: managementText(state, "subScopeDeletePreviewTitle"),
     payload: preview,
     changedHeading: "Changed files",
-    primaryLabel: managementText(state, "scopeDeleteButton", "Delete"),
-    cancelLabel: managementText(state, "cancelButton", "Cancel")
+    primaryLabel: managementText(state, "scopeDeleteButton"),
+    cancelLabel: managementText(state, "cancelButton")
   });
   if (!confirmed) {
     setMessage(callbacks, "", false);
@@ -806,13 +788,13 @@ export async function openDeleteSubScopeFlow(options = {}) {
   var appliedPayload;
   try {
     setBusy(callbacks, true);
-    setMessage(callbacks, managementText(state, "subScopeDeleteDeleting", "Deleting sub-scope..."), false);
+    setMessage(callbacks, managementText(state, "subScopeDeleteDeleting"), false);
     render(callbacks);
     appliedPayload = await applySubScopeDelete(parentScope, selection.subScope, options.clientOptions);
     setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
     applied(callbacks, appliedPayload);
   } catch (error) {
-    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeDeleteFailed", "Delete sub-scope failed."), true);
+    setMessage(callbacks, error && error.message ? error.message : managementText(state, "subScopeDeleteFailed"), true);
     return null;
   } finally {
     setBusy(callbacks, false);
@@ -821,9 +803,9 @@ export async function openDeleteSubScopeFlow(options = {}) {
 
   await openResultModal({
     root: options.root,
-    title: managementText(state, "subScopeDeleteResultTitle", "Sub-scope deleted"),
+    title: managementText(state, "subScopeDeleteResultTitle"),
     payload: appliedPayload,
-    primaryLabel: managementText(state, "scopeResultOkButton", "OK")
+    primaryLabel: managementText(state, "scopeResultOkButton")
   });
   return appliedPayload;
 }

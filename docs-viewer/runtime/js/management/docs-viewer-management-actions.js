@@ -505,9 +505,7 @@ export function createDocsViewerManagementActionController(options) {
     hideContextMenu();
     writeClipboardText(markdownLink)
       .then(function () {
-        var message = context.formatText(state.managementText.copyLinkStatus, {
-          title: doc.title || doc.doc_id
-        });
+        var message = "Copied link for " + (doc.title || doc.doc_id) + ".";
         setManagementMessage(message, false);
       })
       .catch(function (error) {

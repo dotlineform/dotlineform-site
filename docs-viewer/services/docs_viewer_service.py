@@ -220,7 +220,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "docs-viewer" / "config" / "routes" / "docs-viewer-routes.json",
         repo_root / "site" / "docs-viewer" / "config" / "routes" / "docs-viewer-public-routes.json",
-        repo_root / "docs-viewer" / "config" / "ui-text" / "manage.json",
         repo_root / "site" / "docs-viewer" / "config" / "ui-text" / "public.json",
     ]
     candidates.extend(runtime_candidates)

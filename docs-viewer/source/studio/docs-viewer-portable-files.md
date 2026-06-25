@@ -134,7 +134,6 @@ Copy:
 - `docs-viewer/config/defaults/docs-viewer-service.json`
 - `docs-viewer/config/routes/docs-viewer-routes.json`
 - `site/docs-viewer/config/ui-text/public.json`
-- `docs-viewer/config/ui-text/manage.json`
 - `docs-viewer/config/reports/reports.json`
 - `site/assets/data/docs/public-reports.json`
 
@@ -153,9 +152,7 @@ Each configured scope also carries its Docs Viewer search policy and search inde
 
 The viewer does not keep a hardcoded fallback scope list.
 
-Docs Import copy is nested in `docs-viewer/config/ui-text/manage.json` under `docs_html_import`.
-
-Settings-modal copy is also owned by `docs-viewer/config/ui-text/manage.json`.
+Local/manage copy is design-time runtime text owned by the management and import JavaScript modules.
 
 `docs-viewer/config/reports/reports.json` is the source report metadata registry.
 

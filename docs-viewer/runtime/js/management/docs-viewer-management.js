@@ -98,8 +98,7 @@ export function initDocsViewerManagement(context) {
     docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
     managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
     reloadDocsViewerConfig: routeReload.reloadDocsViewerConfig || context.reloadDocsViewerConfig,
-    routeCommands: routeReload.routeCommands || context.routeCommands,
-    uiTextUrl: serviceClient.uiTextUrl || context.uiTextUrl
+    routeCommands: routeReload.routeCommands || context.routeCommands
   });
   var shellRefs = context.managementShellRefs || {};
   function shellRef(name, id) {
@@ -174,7 +173,6 @@ export function initDocsViewerManagement(context) {
     return {
       baseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
       scope: viewerScope(),
-      serverNotConfiguredError: state.managementText.serverNotConfiguredError,
       fetch: function (url, options) {
         return window.fetch(url, options);
       }
@@ -264,10 +262,8 @@ export function initDocsViewerManagement(context) {
           bootStatus: importBootStatus,
           initialScope: scope || viewerScope(),
           docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl || root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
-          uiTextUrl: serviceClient.uiTextUrl || context.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/manage.json",
           managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
-          routePath: "/docs/",
-          hideIntro: true
+          routePath: "/docs/"
         });
       })
       .then(function () {

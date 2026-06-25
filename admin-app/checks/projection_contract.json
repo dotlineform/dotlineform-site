@@ -282,8 +282,7 @@
         "docs-viewer/runtime/js/management/docs-viewer-management*.js",
         "docs-viewer/runtime/js/import/docs-html-import*.js",
         "docs-viewer/static/css/docs-viewer-management.css",
-        "docs-viewer/config/defaults/docs-viewer-config.json",
-        "docs-viewer/config/ui-text/manage.json"
+        "docs-viewer/config/defaults/docs-viewer-config.json"
       ],
       "public_output": {
         "policy": "allowed",
@@ -291,8 +290,7 @@
           "docs-viewer/runtime/js/management/docs-viewer-management*.js",
           "docs-viewer/runtime/js/import/docs-html-import*.js",
           "docs-viewer/static/css/docs-viewer-management.css",
-          "docs-viewer/config/defaults/docs-viewer-config.json",
-          "docs-viewer/config/ui-text/manage.json"
+          "docs-viewer/config/defaults/docs-viewer-config.json"
         ]
       },
       "owner_doc": "docs-viewer-management"

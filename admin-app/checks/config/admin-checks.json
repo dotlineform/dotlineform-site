@@ -697,7 +697,6 @@
         "docs-viewer/services/docs_publish_gate.py",
         "docs-viewer/services/docs_viewer_service.py",
         "docs-viewer/config/routes/docs-viewer-routes.json",
-        "docs-viewer/config/ui-text/manage.json",
         "docs-viewer/tests/**/*management*",
         "docs-viewer/tests/python/test_docs_publish_gate.py",
         "docs-viewer/tests/smoke/docs_viewer_service_manage.py"

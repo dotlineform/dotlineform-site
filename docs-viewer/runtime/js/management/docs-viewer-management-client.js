@@ -2,6 +2,8 @@ function defaultFetch(url, options) {
   return window.fetch(url, options);
 }
 
+export var DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE = "Docs management service unavailable.";
+
 function scopedPayload(payload, options) {
   var settings = options || {};
   return Object.assign({ scope: settings.scope || "" }, payload || {});
@@ -11,7 +13,7 @@ export function fetchManagementJson(path, method, payload, options) {
   var settings = options || {};
   var baseUrl = String(settings.baseUrl || "").trim().replace(/\/+$/, "");
   if (!baseUrl) {
-    return Promise.reject(new Error(settings.serverNotConfiguredError || "Local docs-management server is not configured."));
+    return Promise.reject(new Error(DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE));
   }
 
   var requestOptions = {

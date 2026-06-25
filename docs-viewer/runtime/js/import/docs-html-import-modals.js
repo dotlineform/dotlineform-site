@@ -1,3 +1,7 @@
+import {
+  importText
+} from "./docs-html-import-text.js";
+
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -9,26 +13,6 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function formatText(template, tokens = {}) {
-  let text = String(template || "");
-  Object.keys(tokens).forEach((key) => {
-    text = text.replace(new RegExp(`\\{${key}\\}`, "g"), tokens[key]);
-  });
-  return text;
-}
-
-function modalText(config, path, fallback, tokens = {}) {
-  let current = config;
-  String(path || "").split(".").filter(Boolean).forEach((key) => {
-    if (current && Object.prototype.hasOwnProperty.call(current, key)) {
-      current = current[key];
-    } else {
-      current = undefined;
-    }
-  });
-  return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
 }
 
 function createModalHost(options = {}) {
@@ -121,7 +105,6 @@ function trapModalFocus(event, modal) {
 }
 
 export function openReplacementDocIdModal(options = {}) {
-  const config = options.config || {};
   const collision = options.payload && options.payload.collision && typeof options.payload.collision === "object"
     ? options.payload.collision
     : {};
@@ -134,29 +117,27 @@ export function openReplacementDocIdModal(options = {}) {
   const host = createModalHost({ root: options.root });
 
   const actions = [
-    { role: "filename-conflict-cancel", label: modalText(config, "docs_html_import.filename_conflict_cancel_button", "Cancel") },
-    { role: "filename-conflict-replace", label: modalText(config, "docs_html_import.filename_conflict_replace_button", "Replace") },
+    { role: "filename-conflict-cancel", label: importText("filenameConflictCancelButton") },
+    { role: "filename-conflict-replace", label: importText("filenameConflictReplaceButton") },
     {
       role: "filename-conflict-replace-all",
-      label: modalText(config, "docs_html_import.filename_conflict_replace_all_button", "Replace all")
+      label: importText("filenameConflictReplaceAllButton")
     }
   ];
-  actions.push({ role: "filename-conflict-ok", label: modalText(config, "docs_html_import.filename_conflict_ok_button", "OK") });
+  actions.push({ role: "filename-conflict-ok", label: importText("filenameConflictOkButton") });
 
   host.innerHTML = renderModalFrame({
     hidden: false,
-    title: modalText(config, "docs_html_import.filename_conflict_heading", "File already exists"),
+    title: importText("filenameConflictHeading"),
     modalRole: "docs-import-filename-conflict-modal",
     backdropRole: "filename-conflict-cancel",
     bodyHtml: `
-      <p class="docsViewer__modalNote muted small">${escapeHtml(modalText(
-        config,
-        "docs_html_import.filename_conflict_body",
-        "A source file named {doc_id}.md already exists. Edit the doc_id to choose a new filename.",
+      <p class="docsViewer__modalNote muted small">${escapeHtml(importText(
+        "filenameConflictBody",
         { doc_id: currentDocId }
       ))}</p>
       <label class="docsViewer__field" for="${inputId}">
-        <span class="docsViewer__fieldLabel">${escapeHtml(modalText(config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
+        <span class="docsViewer__fieldLabel">${escapeHtml(importText("replacementDocIdLabel"))}</span>
         <input class="docsViewer__fieldInput" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(currentDocId)}">
       </label>
       <p class="docsViewer__modalNote muted small" data-role="${statusRole}" hidden></p>
@@ -204,7 +185,7 @@ export function openReplacementDocIdModal(options = {}) {
     const submitReplacement = () => {
       const value = normalizeText(input && input.value);
       if (!value) {
-        setModalStatus(modalText(config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first."));
+        setModalStatus(importText("replacementDocIdRequired"));
         if (input) input.focus();
         return;
       }

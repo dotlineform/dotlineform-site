@@ -1,4 +1,5 @@
 import {
+  DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE,
   fetchManagementJson
 } from "../management/docs-viewer-management-client.js";
 import {
@@ -10,6 +11,9 @@ import {
   docsHtmlImportSourceFormatForRecord,
   runDocsHtmlImportWorkflow
 } from "./docs-html-import-workflow.js";
+import {
+  importText
+} from "./docs-html-import-text.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -37,38 +41,6 @@ function setStatus(node, state, message) {
   } else {
     node.removeAttribute("data-state");
   }
-}
-
-function formatText(template, tokens = {}) {
-  let text = String(template || "");
-  Object.keys(tokens).forEach((key) => {
-    text = text.replace(new RegExp(`\\{${key}\\}`, "g"), tokens[key]);
-  });
-  return text;
-}
-
-function configText(config, path, fallback, tokens = {}) {
-  let current = config;
-  String(path || "").split(".").filter(Boolean).forEach((key) => {
-    if (current && Object.prototype.hasOwnProperty.call(current, key)) {
-      current = current[key];
-    } else {
-      current = undefined;
-    }
-  });
-  return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
-}
-
-async function loadDocsViewerText(textUrl = "/docs-viewer/config/ui-text/manage.json") {
-  const response = await fetch(textUrl, {
-    headers: { Accept: "application/json" },
-    cache: "default"
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to load Docs Viewer UI text (${response.status})`);
-  }
-  const payload = await response.json();
-  return payload && typeof payload === "object" && !Array.isArray(payload) ? payload : {};
 }
 
 function applyRouteDetail(root, detail = {}) {
@@ -188,8 +160,7 @@ const ALL_STAGED_FILES_VALUE = "__all_staged_import_files__";
 
 function managementOptionsForState(state) {
   return docsHtmlImportManagementOptions({
-    managementBaseUrl: state.managementBaseUrl,
-    config: state.config
+    managementBaseUrl: state.managementBaseUrl
   });
 }
 
@@ -219,7 +190,6 @@ function syncSourceFormatControls(state) {
   state.includePromptMeta.checked = supportsPromptMeta ? state.includePromptMeta.checked : false;
   state.includePromptMeta.disabled = !supportsPromptMeta || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
-  state.includePromptMetaHintNode.hidden = !supportsPromptMeta || !normalizeText(state.includePromptMetaHintNode.textContent);
 }
 
 function resetImportView(state, statusMessage) {
@@ -244,7 +214,7 @@ async function openResultSource(state, link) {
       state.statusNode,
       "error",
       normalizeText(error && error.message)
-        || configText(state.config, "docs_html_import.result_open_source_failed", "Failed to open source doc.")
+        || importText("resultOpenSourceFailed")
     );
   }
 }
@@ -260,7 +230,7 @@ async function runImport(state) {
     setStatus(
       state.statusNode,
       "error",
-      configText(state.config, "docs_html_import.file_required", "Select a staged file first.")
+      importText("fileRequired")
     );
     return;
   }
@@ -277,7 +247,6 @@ async function runImport(state) {
     includePromptMeta: Boolean(state.includePromptMeta.checked),
     routePath: state.routePath,
     managementBaseUrl: state.managementBaseUrl,
-    config: state.config,
     onRunningChange: () => syncRouteBusyState(state)
   });
 }
@@ -293,7 +262,6 @@ export async function initDocsHtmlImport(options = {}) {
   const state = {
     bootStatus,
     root,
-    introNode: document.getElementById("docsHtmlImportIntro"),
     fileLabelNode: document.getElementById("docsHtmlImportFileLabel"),
     fileSelect: document.getElementById("docsHtmlImportFileSelect"),
     scopeLabelNode: document.getElementById("docsHtmlImportScopeLabel"),
@@ -301,7 +269,6 @@ export async function initDocsHtmlImport(options = {}) {
     includePromptMeta: document.getElementById("docsHtmlImportIncludePromptMeta"),
     includePromptMetaWrap: document.getElementById("docsHtmlImportIncludePromptMetaWrap"),
     includePromptMetaLabelNode: document.getElementById("docsHtmlImportIncludePromptMetaLabel"),
-    includePromptMetaHintNode: document.getElementById("docsHtmlImportIncludePromptMetaHint"),
     runButton: document.getElementById("docsHtmlImportRun"),
     confirmButton: document.getElementById("docsHtmlImportConfirm"),
     cancelButton: document.getElementById("docsHtmlImportCancel"),
@@ -327,12 +294,10 @@ export async function initDocsHtmlImport(options = {}) {
     serviceAvailable: false,
     isRunning: false,
     files: [],
-    config: null,
     docsScopeIds: []
   };
 
   const requiredNodes = [
-    state.introNode,
     state.fileLabelNode,
     state.fileSelect,
     state.scopeLabelNode,
@@ -340,7 +305,6 @@ export async function initDocsHtmlImport(options = {}) {
     state.includePromptMeta,
     state.includePromptMetaWrap,
     state.includePromptMetaLabelNode,
-    state.includePromptMetaHintNode,
     state.runButton,
     state.confirmButton,
     state.cancelButton,
@@ -361,7 +325,6 @@ export async function initDocsHtmlImport(options = {}) {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/docs-viewer/config/ui-text/manage.json");
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
     state.managementBaseUrl = normalizeText(options.managementBaseUrl);
     const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, managementOptionsForState(state))
@@ -369,40 +332,12 @@ export async function initDocsHtmlImport(options = {}) {
       .catch(() => false);
     state.serviceAvailable = Boolean(serviceAvailable);
 
-    if (options.hideIntro) {
-      setText(state.introNode, "");
-      state.introNode.hidden = true;
-    } else {
-      setText(
-        state.introNode,
-        configText(
-          state.config,
-          "docs_html_import.intro",
-          "Import staged source files into the Studio, Analysis, or Library docs source."
-        )
-      );
-      state.introNode.hidden = false;
-    }
-    setText(state.fileLabelNode, configText(state.config, "docs_html_import.file_label", "staged file"));
-    setText(state.scopeLabelNode, configText(state.config, "docs_html_import.scope_label", "publish into"));
-    setText(
-      state.includePromptMetaLabelNode,
-      configText(
-        state.config,
-        "docs_html_import.include_prompt_meta_label",
-        "Include obvious prompt/meta blocks"
-      )
-    );
-    setText(state.includePromptMetaHintNode, configText(state.config, "docs_html_import.include_prompt_meta_hint", ""));
-    setText(state.runButton, configText(state.config, "docs_html_import.import_button", "Import"));
-    setText(
-      state.confirmButton,
-      configText(state.config, "docs_html_import.confirm_overwrite_button", "Confirm overwrite")
-    );
-    setText(
-      state.cancelButton,
-      configText(state.config, "docs_html_import.cancel_overwrite_button", "Cancel")
-    );
+    setText(state.fileLabelNode, importText("fileLabel"));
+    setText(state.scopeLabelNode, importText("scopeLabel"));
+    setText(state.includePromptMetaLabelNode, importText("includePromptMetaLabel"));
+    setText(state.runButton, importText("importButton"));
+    setText(state.confirmButton, importText("confirmOverwriteButton"));
+    setText(state.cancelButton, importText("cancelOverwriteButton"));
     state.scopeSelect.innerHTML = state.docsScopeIds
       .map((scope) => `<option value="${escapeHtml(scope)}">${escapeHtml(scope)}</option>`)
       .join("");
@@ -425,11 +360,7 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "error",
-        configText(
-          state.config,
-          "docs_html_import.service_unavailable",
-          "Docs management service unavailable. Start bin/local-studio to run imports."
-        )
+        DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE
       );
       markRouteReady(state, true);
       return;
@@ -443,18 +374,14 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "warn",
-        configText(
-          state.config,
-          "docs_html_import.no_files",
-          "No supported staged import files found under var/docs/import-staging/."
-        )
+        importText("noFiles")
       );
       markRouteReady(state, true);
       return;
     }
 
     state.fileSelect.innerHTML = [
-      `<option value="${escapeHtml(ALL_STAGED_FILES_VALUE)}">${escapeHtml(configText(state.config, "docs_html_import.all_files_option", "< all >"))}</option>`
+      `<option value="${escapeHtml(ALL_STAGED_FILES_VALUE)}">${escapeHtml(importText("allFilesOption"))}</option>`
     ].concat(files.map((file) => {
       const filename = normalizeText(file.filename);
       const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
@@ -466,11 +393,7 @@ export async function initDocsHtmlImport(options = {}) {
     setStatus(
       state.statusNode,
       "",
-      configText(
-        state.config,
-        "docs_html_import.idle_status",
-        "Select a staged source file and import it into Studio, Analysis, or Library docs."
-      )
+      importText("idleStatus")
     );
     markRouteReady(state, true);
 
@@ -478,11 +401,7 @@ export async function initDocsHtmlImport(options = {}) {
       syncSourceFormatControls(state);
       resetImportView(
         state,
-        configText(
-          state.config,
-          "docs_html_import.idle_status",
-          "Select a staged source file and import it into Studio, Analysis, or Library docs."
-        )
+        importText("idleStatus")
       );
     });
 
@@ -518,7 +437,7 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "",
-        configText(state.config, "docs_html_import.overwrite_cancelled", "Overwrite cancelled.")
+        importText("overwriteCancelled")
       );
     });
   } catch (error) {
@@ -527,7 +446,7 @@ export async function initDocsHtmlImport(options = {}) {
     setStatus(
       bootStatus,
       "error",
-      configText(state.config || {}, "docs_html_import.load_files_failed", "Failed to load staged import files.")
+      importText("loadFilesFailed")
     );
     root.hidden = false;
     state.serviceAvailable = false;

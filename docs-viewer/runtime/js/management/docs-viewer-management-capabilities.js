@@ -1,4 +1,5 @@
 import {
+  DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE,
   readManagementCapabilities,
   scopeSupportsGeneratedDataReads
 } from "./docs-viewer-management-client.js";
@@ -197,7 +198,7 @@ export function createDocsViewerManagementCapabilityController(options) {
     if (!state.managementContext) return;
 
     if (!context.managementBaseUrl) {
-      markUnavailable(new Error(state.managementText.serverNotConfiguredError));
+      markUnavailable(new Error(DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE));
       return;
     }
 

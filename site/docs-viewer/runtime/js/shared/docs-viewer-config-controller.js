@@ -313,7 +313,7 @@ export function initDocsViewerConfigController(context) {
       root.style.setProperty("--docs-viewer-draft-color", nonViewableColor);
     }
     if (recentButton) {
-      var label = getConfigText(config, "docs_viewer.recently_added_button", "recently added");
+      var label = "recent";
       recentButton.textContent = label;
       recentButton.setAttribute("aria-label", label);
       recentButton.title = label;

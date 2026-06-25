@@ -531,11 +531,6 @@ export function startDocsViewerRuntime(options) {
     return {
       baseUrl: managementBaseUrl,
       scope: viewerScope,
-      serverNotConfiguredError: getConfigText(
-        appSession.domains.scopeConfig.viewerConfig || {},
-        "docs_viewer.manage_server_not_configured_error",
-        "Local docs-management server is not configured."
-      ),
       fetch: function (url, options) {
         return window.fetch(url, options);
       }
