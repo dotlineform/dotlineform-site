@@ -445,6 +445,7 @@ html[data-theme="dark"] body.docs-viewer-service{
 }
 
 .docsViewer__modal{
+  --docs-viewer-modal-width-narrow: 26rem;
   --docs-viewer-modal-width-compact: 38rem;
   --docs-viewer-modal-width-default: 52rem;
   --docs-viewer-modal-width-wide: 68rem;
@@ -478,6 +479,10 @@ html[data-theme="dark"] body.docs-viewer-service{
 
 .docsViewer__modalCard--compact{
   width: min(var(--docs-viewer-modal-width-compact), calc(100vw - 2rem));
+}
+
+.docsViewer__modalCard--narrow{
+  width: min(var(--docs-viewer-modal-width-narrow), calc(100vw - 2rem));
 }
 
 .docsViewer__modalCard--default{
@@ -529,6 +534,12 @@ html[data-theme="dark"] body.docs-viewer-service{
   gap: 0.28rem;
 }
 
+.docsViewer__field:not(.docsViewer__field--checkbox){
+  grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .docsViewer__field--checkbox{
   display: flex;
   align-items: center;
@@ -536,6 +547,7 @@ html[data-theme="dark"] body.docs-viewer-service{
 }
 
 .docsViewer__fieldLabel{
+  min-width: 0;
   font-size: 1rem;
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
   color: var(--docs-viewer-text, var(--text, #111));
@@ -742,6 +754,13 @@ select.docsViewer__fieldInput--listbox{
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.6rem;
+}
+
+@media (max-width: 34rem){
+  .docsViewer__field:not(.docsViewer__field--checkbox){
+    grid-template-columns: 1fr;
+    gap: 0.28rem;
+  }
 }
 
 .docsViewerSourceEditor{

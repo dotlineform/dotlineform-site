@@ -458,7 +458,7 @@ export async function openCreateScopeFlow(options = {}) {
   var result = await openDocsViewerManagementModal({
     root: options.root,
     title: managementText(state, "scopeCreateTitle", "New scope"),
-    size: "wide",
+    size: "narrow",
     bodyHtml: renderCreateFormHtml(state, options.capabilities),
     focusSelector: '[data-role="scope-id"]',
     actions: [

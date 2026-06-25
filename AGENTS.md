@@ -36,6 +36,7 @@
 
 - Use `docs-viewer/source/studio/testing.md`, `testing-pytest.md`, and `smoke-testing.md` as the maintained test policy.
 - Choose the smallest check that proves the changed contract. Do not run broad profiles just to produce more evidence.
+- Leave UI design testing to the user unless specifically requested; browser probes are brittle.
 - Before adding or expanding a permanent test, apply the review gate:
   - Can this be tested as pure function or service behavior?
   - Can this be tested by direct HTTP/API request?
