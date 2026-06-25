@@ -314,6 +314,10 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def jsonl_metadata_sidecar_path(path: Path) -> Path:
+    return path.with_suffix(".meta.json")
+
+
 def load_config_file(repo_root: Path, config_path: str | None = None) -> dict[str, Any]:
     path = Path(config_path) if config_path else DEFAULT_CONFIG_PATH
     if not path.is_absolute():
@@ -880,12 +884,10 @@ def resolve_output_path(
 def build_export_payload(
     context: ExportContext,
     *,
-    selected: list[dict[str, Any]],
+    metadata: dict[str, Any],
     records: list[dict[str, Any]],
-    generated_at: str,
-    counts: dict[str, int],
+    target_format: str,
 ) -> dict[str, Any] | list[dict[str, Any]]:
-    metadata = export_metadata(context, generated_at=generated_at, selected=selected, counts=counts)
     target = context.config.get("target", {})
     record_shape = normalize_text(target.get("record_shape"))
     include_metadata = bool(target.get("include_export_metadata", True))
@@ -898,6 +900,8 @@ def build_export_payload(
         return payload
     if record_shape == "document_rows":
         if not include_metadata:
+            return records
+        if target_format == "jsonl":
             return records
         rows: list[dict[str, Any]] = []
         for record in records:
@@ -956,6 +960,7 @@ def build_export(
             "scope": scope,
             "target_format": "",
             "output_file": "",
+            "metadata_file": "",
             "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
             "selected_doc_ids": [],
             "exported_doc_ids": [],
@@ -977,6 +982,7 @@ def build_export(
             "scope": scope,
             "target_format": "",
             "output_file": "",
+            "metadata_file": "",
             "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
             "selected_doc_ids": [],
             "exported_doc_ids": [],
@@ -1009,9 +1015,14 @@ def build_export(
     timestamp = filename_timestamp_dt.strftime(timestamp_format)
     output_path: Path | None = None
     relative_output = ""
+    metadata_output_path: Path | None = None
+    relative_metadata_output = ""
     try:
         output_path = resolve_output_path(repo_root, config, data_domain, timestamp, resolved_target_format, output_root)
         relative_output = str(output_path.relative_to(repo_root))
+        if resolved_target_format == "jsonl" and bool(target_config.get("include_export_metadata", True)):
+            metadata_output_path = jsonl_metadata_sidecar_path(output_path)
+            relative_metadata_output = str(metadata_output_path.relative_to(repo_root))
     except ValueError as exc:
         errors.append(f"config {config_id}: {exc}")
 
@@ -1023,6 +1034,7 @@ def build_export(
             "scope": scope,
             "target_format": resolved_target_format,
             "output_file": relative_output,
+            "metadata_file": relative_metadata_output,
             "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
             "selected_doc_ids": [],
             "exported_doc_ids": [],
@@ -1046,6 +1058,7 @@ def build_export(
             "target_format": resolved_target_format,
             "supported_target_formats": supported_formats,
             "output_file": relative_output,
+            "metadata_file": relative_metadata_output,
             "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
             "selected_doc_ids": [],
             "exported_doc_ids": [],
@@ -1108,6 +1121,7 @@ def build_export(
         "target_format": resolved_target_format,
         "supported_target_formats": supported_formats,
         "output_file": relative_output,
+        "metadata_file": relative_metadata_output,
         "counts": counts,
         "selected_doc_ids": [normalize_text(doc.get("doc_id")) for doc in selected],
         "exported_doc_ids": [normalize_text(record.get("doc_id")) for record in records if isinstance(record, dict)],
@@ -1122,12 +1136,12 @@ def build_export(
         report["output_written"] = False
         return report
 
+    metadata = export_metadata(context, generated_at=generated_at, selected=selected, counts=counts)
     payload = build_export_payload(
         context,
-        selected=selected,
+        metadata=metadata,
         records=records,
-        generated_at=generated_at,
-        counts=counts,
+        target_format=resolved_target_format,
     )
     if write:
         if output_path is None:
@@ -1138,6 +1152,8 @@ def build_export(
             if not isinstance(payload, list):
                 raise ValueError("JSONL document_rows payload must be an array")
             write_jsonl(output_path, payload)
+            if metadata_output_path is not None:
+                write_json(metadata_output_path, metadata)
         else:
             raise ValueError(f"Unsupported target.format: {resolved_target_format}")
         report["output_written"] = True

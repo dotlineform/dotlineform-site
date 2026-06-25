@@ -102,6 +102,7 @@ When omitted, the default `target.format` is the only supported format.
 When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `documents`.
 Envelope profiles support JSON only.
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
+For JSONL document-row exports, export-run metadata is written once to a sibling `.meta.json` sidecar instead of being repeated in every row.
 
 ## Output
 
@@ -110,12 +111,14 @@ Document-row profiles may support JSONL and JSON when both are declared in `targ
 ```text
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.json
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl
+var/analytics/data-sharing/exports/{export_id}-{timestamp}.meta.json
 ```
 
 The placeholders are resolved by the export engine.
 Current profiles use `{export_id}` and `{timestamp}`.
 Other placeholders, including `{data_domain}`, are only valid when supported by the export engine and still resolve under the shared export root.
 When an operator chooses a non-default supported format, the export engine keeps the configured directory, export id, and timestamp, then switches the output file extension to the selected format.
+The `.meta.json` pattern is derived from a JSONL output filename when export metadata is enabled; it is not configured as a separate profile path.
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
 It formats the filename timestamp in the local runtime timezone.

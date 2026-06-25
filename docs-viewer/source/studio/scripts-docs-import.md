@@ -26,6 +26,7 @@ Current input path:
 
 - `var/analytics/data-sharing/import-staging/<filename>.json`
 - `var/analytics/data-sharing/import-staging/<filename>.jsonl`
+- optional `var/analytics/data-sharing/import-staging/<stem>.meta.json` sidecar for JSONL package metadata
 
 Current lookup path:
 
@@ -45,6 +46,7 @@ Implemented now:
 - parses JSON package envelopes with a `documents` array
 - parses JSON arrays of document-like records
 - parses JSONL document-row packages
+- reads sibling `.meta.json` sidecars for JSONL package metadata
 - detects the three v1 Library package families when package metadata is present
 - falls back to structural detection for relationship, summary, full-content, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
@@ -99,6 +101,7 @@ The script prints a JSON report with:
 - `issues`
 - `records`
 - `source_metadata`
+- `source_metadata_file`
 - `unknown_file_metadata`
 - `current_library`
 - `preview_files`
@@ -163,7 +166,7 @@ Focused parser checks live in:
 docs-viewer/tests/python/test_docs_import.py
 ```
 
-They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, relationship whole-tree review output for relationship and non-relationship packages, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
+They cover JSONL rows and metadata sidecars, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, relationship whole-tree review output for relationship and non-relationship packages, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
 Service handler checks live in:
 
 ```bash

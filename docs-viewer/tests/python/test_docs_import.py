@@ -139,11 +139,6 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
         root = Path(temp)
         rows = [
             {
-                "_export": {
-                    "export_id": "library-document-summaries",
-                    "scope": "library",
-                    "generated_at": "2026-05-03T20:00:00Z",
-                },
                 "doc_id": "alpha",
                 "title": "Alpha",
                 "parent_id": "library",
@@ -151,11 +146,6 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
                 "review_note": "Keep this unknown field.",
             },
             {
-                "_export": {
-                    "export_id": "library-document-summaries",
-                    "scope": "library",
-                    "generated_at": "2026-05-03T20:00:00Z",
-                },
                 "doc_id": "beta",
                 "title": "Beta",
                 "parent_id": "library",
@@ -163,10 +153,22 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
             },
         ]
         write_staged(root, "summaries.jsonl", "".join(json.dumps(row) + "\n" for row in rows))
+        write_staged(
+            root,
+            "summaries.meta.json",
+            json.dumps(
+                {
+                    "export_id": "library-document-summaries",
+                    "scope": "library",
+                    "generated_at": "2026-05-03T20:00:00Z",
+                }
+            ),
+        )
         report = parse(root, "summaries.jsonl")
 
     assert report["ok"] is True
     assert report["input_format"] == "jsonl"
+    assert report["source_metadata_file"].endswith("summaries.meta.json")
     assert report["detected_import_type"] == "document_summaries"
     assert report["source_export_id"] == "library-document-summaries"
     assert report["source_scope"] == "library"
@@ -174,6 +176,16 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
     assert report["counts"] == {"records": 2, "parsed_records": 2, "malformed_records": 0, "warnings": 0, "errors": 0}
     assert report["records"][0]["metadata"]["current_summary"] == "Existing summary."
     assert report["records"][0]["unknown_metadata"] == {"review_note": "Keep this unknown field."}
+
+
+def test_staged_import_listing_skips_jsonl_metadata_sidecars() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged(root, "summaries.jsonl", '{"doc_id": "alpha", "title": "Alpha"}\n')
+        write_staged(root, "summaries.meta.json", '{"export_id": "library-document-summaries"}\n')
+        files = docs_import.list_staged_import_files(root, "library")
+
+    assert [item["filename"] for item in files] == ["summaries.jsonl"]
 
 
 def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
@@ -507,6 +519,7 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
 def main() -> None:
     tests = [
         test_jsonl_summary_export_rows_are_detected_and_normalized,
+        test_staged_import_listing_skips_jsonl_metadata_sidecars,
         test_json_envelope_relationship_export_preserves_tree_metadata,
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,

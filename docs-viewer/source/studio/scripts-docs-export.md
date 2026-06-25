@@ -30,6 +30,7 @@ Current output pattern:
 
 - `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
 - `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
+- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.meta.json` for JSONL export metadata
 
 The filename timestamp is formatted in the local runtime timezone.
 Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
@@ -37,7 +38,7 @@ Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable 
 ## Runtime Contract
 
 The script is the documents-adapter package engine for both CLI runs and the Analytics Data Sharing `prepare` endpoint.
-It is intentionally source-read-only: the only write it performs is the generated package artifact when `--write` is passed or when the local service calls it in write mode.
+It is intentionally source-read-only: the only writes it performs are generated package artifacts when `--write` is passed or when the local service calls it in write mode.
 
 Inputs:
 
@@ -52,6 +53,7 @@ Outputs:
 - a structured JSON report on stdout
 - no file in dry-run mode
 - one JSON or JSONL share package in write mode
+- one sibling `.meta.json` metadata sidecar for JSONL packages when export metadata is enabled
 
 Export preparation is read-only with respect to docs source and generated docs/search payloads.
 It does not run `build_docs.py`, does not run `build_search.py`, and does not include rebuild diagnostics in its report.
@@ -80,7 +82,7 @@ Implemented now:
 - truncates `source_text` when the selected field mapping includes `truncate_chars`
 - handles image/SVG text according to field-level extraction options
 - writes JSON envelope exports
-- writes JSONL document-row exports
+- writes JSONL document-row exports with sibling metadata sidecars
 - writes JSON arrays for document-row configs when `json` is selected
 - returns a structured JSON report
 
@@ -152,7 +154,7 @@ Focused package-preparation checks live in:
 docs-viewer/tests/python/test_docs_export.py
 ```
 
-They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
+They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output and metadata sidecars for a fixed run time, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
 The same check runs in the `docs` profile:
 
 ```bash
@@ -170,6 +172,7 @@ The script prints a JSON report with:
 - `target_format`
 - `supported_target_formats`
 - `output_file`
+- `metadata_file`
 - `counts`
 - `selected_doc_ids`
 - `exported_doc_ids`

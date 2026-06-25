@@ -249,10 +249,13 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             root = Path(temp)
             first_report = run_export(root, missing_summary_only=False, write=True)
             first_output = root / first_report["output_file"]
+            first_metadata_output = root / first_report["metadata_file"]
             first_text = first_output.read_text(encoding="utf-8")
+            first_metadata_text = first_metadata_output.read_text(encoding="utf-8")
 
             second_report = run_export(root, missing_summary_only=False, write=True)
             second_text = (root / second_report["output_file"]).read_text(encoding="utf-8")
+            second_metadata_text = (root / second_report["metadata_file"]).read_text(encoding="utf-8")
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -260,11 +263,17 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_report["output_file"] == (
         "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.jsonl"
     )
+    assert first_report["metadata_file"] == (
+        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.meta.json"
+    )
     assert first_text == second_text
+    assert first_metadata_text == second_metadata_text
     rows = [json.loads(line) for line in first_text.splitlines()]
+    metadata = json.loads(first_metadata_text)
     assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
-    assert rows[0]["_export"]["generated_at"] == fixed_generated_at
-    assert rows[0]["_export"]["selected_doc_ids"] == ["library", "child-with-summary"]
+    assert "_export" not in rows[0]
+    assert metadata["generated_at"] == fixed_generated_at
+    assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
 
 
 def test_document_rows_json_format_override_writes_json_array() -> None:
@@ -384,6 +393,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
 
     assert report["ok"] is True, report
     assert report["output_written"] is True
+    assert report["metadata_file"].endswith(".meta.json")
     assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
     library_row = rows[0]
     child_row = rows[1]

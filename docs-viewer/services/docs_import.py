@@ -76,7 +76,6 @@ IMPORT_TYPE_CONFIG_FIELDS = {
     ],
 }
 EXPORT_METADATA_FIELDS = {
-    "_export",
     "export_id",
     "config_id",
     "config_checksum",
@@ -87,7 +86,6 @@ EXPORT_METADATA_FIELDS = {
     "counts",
 }
 KNOWN_RECORD_FIELDS = {
-    "_export",
     "doc_id",
     "title",
     "parent_id",
@@ -248,6 +246,7 @@ def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any
         "issues": [],
         "records": [],
         "source_metadata": {},
+        "source_metadata_file": "",
         "unknown_file_metadata": {},
     }
 
@@ -276,6 +275,8 @@ def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | s
         return []
     files: list[dict[str, Any]] = []
     for path in sorted(resolved_staging_root.iterdir()):
+        if path.name.endswith(".meta.json"):
+            continue
         if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
             continue
         stat = path.stat()
@@ -313,6 +314,23 @@ def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
         return None, [issue("error", "invalid_json", f"invalid JSON: {exc.msg}", line=exc.lineno)]
 
 
+def jsonl_metadata_sidecar_path(path: Path) -> Path:
+    return path.with_suffix(".meta.json")
+
+
+def metadata_from_jsonl_sidecar(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
+    metadata_path = jsonl_metadata_sidecar_path(path)
+    if not metadata_path.exists():
+        return {}, {}, [], None
+    payload, issues = parse_json_file(metadata_path)
+    if any(item["level"] == "error" for item in issues):
+        return {}, {}, issues, metadata_path
+    if not isinstance(payload, dict):
+        return {}, {}, [issue("error", "invalid_metadata_sidecar", "JSONL metadata sidecar is not a JSON object")], metadata_path
+    metadata, unknown = file_metadata_from_envelope(payload)
+    return metadata, unknown, [], metadata_path
+
+
 def parse_jsonl_file(path: Path) -> tuple[list[Any], list[dict[str, Any]]]:
     records: list[Any] = []
     issues: list[dict[str, Any]] = []
@@ -338,7 +356,7 @@ def parse_jsonl_file(path: Path) -> tuple[list[Any], list[dict[str, Any]]]:
 
 
 def is_document_like_record(value: dict[str, Any]) -> bool:
-    return any(key in value for key in KNOWN_RECORD_FIELDS - {"_export"})
+    return any(key in value for key in KNOWN_RECORD_FIELDS)
 
 
 def file_metadata_from_envelope(payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -416,11 +434,6 @@ def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, An
     return context, issues
 
 
-def row_export_metadata(row: dict[str, Any]) -> dict[str, Any]:
-    metadata = row.get("_export")
-    return copy.deepcopy(metadata) if isinstance(metadata, dict) else {}
-
-
 def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     doc_id = normalize_text(row.get("doc_id"))
     title = normalize_text(row.get("title"))
@@ -484,18 +497,6 @@ def detect_import_type(source_export_id: str, records: list[dict[str, Any]]) -> 
     if records:
         return "minimal_document_records"
     return "unknown"
-
-
-def merge_source_metadata(file_metadata: dict[str, Any], row_metadata: list[dict[str, Any]]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    issues: list[dict[str, Any]] = []
-    metadata = copy.deepcopy(file_metadata)
-    for row in row_metadata:
-        for key, value in row.items():
-            if key not in metadata:
-                metadata[key] = copy.deepcopy(value)
-            elif metadata[key] != value:
-                issues.append(issue("warning", "inconsistent_export_metadata", f"inconsistent export metadata field: {key}"))
-    return metadata, issues
 
 
 def current_report_context(current: dict[str, Any]) -> dict[str, Any]:
@@ -1002,8 +1003,10 @@ def parse_staged_import(
     try:
         if extension == ".jsonl":
             raw_rows, parse_issues = parse_jsonl_file(path)
-            file_metadata: dict[str, Any] = {}
-            unknown_file_metadata: dict[str, Any] = {}
+            file_metadata, unknown_file_metadata, metadata_issues, metadata_path = metadata_from_jsonl_sidecar(path)
+            parse_issues.extend(metadata_issues)
+            if metadata_path is not None:
+                report["source_metadata_file"] = relative_path(repo_root, metadata_path)
         else:
             payload, parse_issues = parse_json_file(path)
             if any(item["level"] == "error" for item in parse_issues):
@@ -1025,7 +1028,6 @@ def parse_staged_import(
         return report
 
     records: list[dict[str, Any]] = []
-    row_metadata: list[dict[str, Any]] = []
     malformed = 0
     seen_doc_ids: dict[str, int] = {}
     for index, row in enumerate(raw_rows):
@@ -1036,7 +1038,6 @@ def parse_staged_import(
             )
             malformed += 1
             continue
-        row_metadata.append(row_export_metadata(row))
         normalized, record_issues = normalize_record(row, index, line)
         if any(item["code"] in {"missing_doc_id", "missing_title"} for item in record_issues):
             malformed += 1
@@ -1059,8 +1060,7 @@ def parse_staged_import(
             else:
                 seen_doc_ids[doc_id] = index
 
-    source_metadata, metadata_issues = merge_source_metadata(file_metadata, [item for item in row_metadata if item])
-    report["issues"].extend(metadata_issues)
+    source_metadata = copy.deepcopy(file_metadata)
     current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
     report["issues"].extend(current_issues)
     source_export_id = normalize_text(source_metadata.get("export_id") or source_metadata.get("config_id"))
