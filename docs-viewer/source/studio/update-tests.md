@@ -200,6 +200,19 @@ The smoke tree dropped from 18,163 lines to 11,235 lines. Remaining large smoke 
    - assert failure responses
    - do not drive the UI to prove the same thing
 
+done: Retired duplicate browser workflow-module smokes where Python/API coverage already owns the durable contract.
+
+Deleted smoke scripts:
+- `docs-viewer/tests/smoke/docs_html_import_modules.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_action_workflow_modules.py`
+- `analytics-app/tests/smoke/data_sharing_prepare_modules.py`
+- `analytics-app/tests/smoke/tag_registry_modules.py`
+- `studio/tests/smoke/catalogue_editor_action_workflow_modules.py`
+- `studio/tests/smoke/bulk_add_work_workflow_modules.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_modal_support.py`
+
+`admin-app/commands/run_checks.py` no longer compiles or runs those browser workflow scripts. The retained coverage is now direct Python/API coverage for Docs import, Docs management mutations, Analytics Data Sharing prepare, Analytics tag registry/mutation behavior, and Studio catalogue write routes. The obsolete Docs Viewer modal support helper was deleted after replacing its remaining generic helper imports locally. The smoke tree dropped from 11,235 lines after step 4 to 8,698 lines after step 5.
+
 6. Centralize fixtures
    A lot of maintenance cost comes from each test building its own miniature repo/app world. Extract shared fixture builders per domain:
    - `docs-viewer/tests/fixtures/repo_factory.py`

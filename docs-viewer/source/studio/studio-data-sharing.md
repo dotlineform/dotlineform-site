@@ -161,7 +161,6 @@ Selection changes, filter changes, review-only previews, and unavailable-service
 The retained smoke entry points are:
 
 - `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
-- `analytics-app/tests/smoke/data_sharing_prepare_modules.py`
 - `analytics-app/tests/python/test_analytics_data_sharing_api.py`
 - `analytics-app/tests/python/test_tags_data_sharing_prepare.py`
 - `analytics-app/tests/python/test_tags_data_sharing_returned_registry_aliases.py`

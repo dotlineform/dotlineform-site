@@ -4,11 +4,50 @@
 from __future__ import annotations
 
 import argparse
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from threading import Thread
 
 from playwright.sync_api import Page, sync_playwright
 
-from docs_viewer_management_modal_support import route_url, start_static_server
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DOCS_VIEWER_SHARED_RUNTIME_PREFIX = "/docs-viewer/runtime/js/shared/"
+DOCS_VIEWER_REPO_RUNTIME_PREFIX = "/docs-viewer/runtime/js/"
+DOCS_VIEWER_REPO_CSS_PREFIX = "/docs-viewer/static/css/"
+
+
+class QuietStaticHandler(SimpleHTTPRequestHandler):
+    def log_message(self, format, *args):  # noqa: A003
+        return
+
+    def translate_path(self, path: str) -> str:
+        if path.startswith(DOCS_VIEWER_SHARED_RUNTIME_PREFIX):
+            relative_path = path.removeprefix(DOCS_VIEWER_SHARED_RUNTIME_PREFIX).split("?", 1)[0].split("#", 1)[0]
+            return str(REPO_ROOT / "site/docs-viewer/runtime/js/shared" / relative_path)
+        if path.startswith(DOCS_VIEWER_REPO_RUNTIME_PREFIX):
+            relative_path = path.removeprefix(DOCS_VIEWER_REPO_RUNTIME_PREFIX).split("?", 1)[0].split("#", 1)[0]
+            return str(REPO_ROOT / "docs-viewer/runtime/js" / relative_path)
+        if path.startswith(DOCS_VIEWER_REPO_CSS_PREFIX):
+            relative_path = path.removeprefix(DOCS_VIEWER_REPO_CSS_PREFIX).split("?", 1)[0].split("#", 1)[0]
+            return str(REPO_ROOT / "docs-viewer/static/css" / relative_path)
+        return super().translate_path(path)
+
+
+def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
+    resolved_root = site_root.expanduser().resolve()
+    if not resolved_root.exists():
+        raise FileNotFoundError(f"site root does not exist: {resolved_root}")
+    handler = partial(QuietStaticHandler, directory=str(resolved_root))
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
+
+
+def route_url(base_url: str, path: str) -> str:
+    return f"{base_url.rstrip('/')}{path}"
 
 
 def install_fixture(page: Page) -> None:
