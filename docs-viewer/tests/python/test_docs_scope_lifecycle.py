@@ -432,7 +432,6 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
                 },
                 dry_run=False,
             )
-            route_html = (repo_root / "site/research/index.html").read_text(encoding="utf-8")
             scope_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             public_routes = json.loads((repo_root / "site/docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8"))
             all_routes = json.loads((repo_root / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8"))
@@ -445,14 +444,6 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert payload["ok"] is True
     assert payload["publishing_mode"] == "public_readonly"
     assert calls == [(repo_root, "research", {"include_search": True})]
-    assert 'data-allow-management="false"' in route_html
-    assert 'data-include-scope-param="false"' in route_html
-    assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-public-routes.json"' in route_html
-    assert 'data-route-id="research"' not in route_html
-    assert "Research | dotlineform" not in route_html
-    assert "__ROUTE_ID__" not in route_html
-    assert 'src="/docs-viewer/runtime/js/public/docs-viewer-public.js?v=' in route_html
-    assert "docs_viewer_readonly_route.html" not in route_html
     assert scope_payload["scopes"][1]["scope_id"] == "research"
     assert scope_payload["scopes"][1]["viewer_base_url"] == "/research/"
     assert scope_payload["scopes"][1]["include_scope_param"] is False

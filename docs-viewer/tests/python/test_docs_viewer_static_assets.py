@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Docs Viewer static asset route and CSS tests."""
+"""Docs Viewer static asset route tests."""
 
 from __future__ import annotations
 
@@ -7,22 +7,6 @@ import tempfile
 from pathlib import Path
 
 from docs_viewer_service_test_support import REPO_ROOT, docs_viewer_service
-
-def test_basic_docs_viewer_css_excludes_manage_selectors() -> None:
-    source = (REPO_ROOT / "site/docs-viewer/static/css/docs-viewer.css").read_text(encoding="utf-8")
-    blocked_fragments = [
-        "data-docs-viewer-management-shell-mount",
-        "docsViewer__manageToolbarMount",
-        "docsViewer__statusPills",
-        "docsViewer__statusMenu",
-        "docsViewerImport",
-        "docsViewerSemanticPicker",
-        "docsViewerSourceEditor",
-        "docsViewerScopeLifecycle",
-        "docsViewerReport",
-    ]
-
-    assert [fragment for fragment in blocked_fragments if fragment in source] == []
 
 def test_asset_version_uses_canonical_shared_css() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -32,19 +16,6 @@ def test_asset_version_uses_canonical_shared_css() -> None:
         shared_css.write_text("/* shared css */\n", encoding="utf-8")
 
         assert docs_viewer_service.asset_version(repo_root) != "1"
-
-def test_manage_docs_viewer_css_owns_manage_selectors() -> None:
-    source = (REPO_ROOT / "docs-viewer/static/css/docs-viewer-manage.css").read_text(encoding="utf-8")
-    required_fragments = [
-        "data-docs-viewer-management-shell-mount",
-        "docsViewer__manageToolbarMount",
-        "docsViewerImport",
-        "docsViewerSemanticPicker",
-        "docsViewerSourceEditor",
-        "docsViewerScopeLifecycle",
-    ]
-
-    assert [fragment for fragment in required_fragments if fragment not in source] == []
 
 def test_static_path_policy_is_docs_viewer_scoped() -> None:
     def allowed(path: str) -> bool:

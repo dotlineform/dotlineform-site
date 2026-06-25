@@ -104,38 +104,6 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is False
 
 
-def test_admin_home_template_renders_visible_navigation() -> None:
-    html = (REPO_ROOT / "admin-app" / "app" / "frontend" / "routes" / "admin-home.html").read_text(encoding="utf-8")
-
-    assert 'href="/admin/audits/"' in html
-    assert 'href="/admin/checks/"' in html
-    assert 'href="/admin/activity/"' in html
-    assert 'href="/admin/testing/"' in html
-    assert 'class="studioHomeLinks__pill"' in html
-    assert "Admin home links" in html
-    assert 'data-admin-ready="false"' in html
-
-
-def test_admin_static_shell_and_route_templates_render_admin_owned_shells() -> None:
-    shell_html = (REPO_ROOT / "admin-app" / "app" / "frontend" / "admin-shell.html").read_text(encoding="utf-8")
-    audits_html = (REPO_ROOT / "admin-app" / "app" / "frontend" / "routes" / "admin-audits.html").read_text(encoding="utf-8")
-    checks_html = (REPO_ROOT / "admin-app" / "app" / "frontend" / "routes" / "admin-checks.html").read_text(encoding="utf-8")
-    activity_html = (REPO_ROOT / "admin-app" / "app" / "frontend" / "routes" / "admin-activity.html").read_text(encoding="utf-8")
-    testing_html = (REPO_ROOT / "admin-app" / "app" / "frontend" / "routes" / "admin-testing.html").read_text(encoding="utf-8")
-
-    assert "dotlineform admin" in shell_html
-    assert "data-admin-theme-toggle" in shell_html
-    assert "/admin/app/assets/css/admin.css?v=__ADMIN_ASSET_VERSION__" in shell_html
-    assert "/admin/app/frontend/js/admin-app.js?v=__ADMIN_ASSET_VERSION__" in shell_html
-    assert 'meta name="dlf-admin-config-url" content="/admin/runtime-config.json"' in shell_html
-    assert "data-admin-route-outlet" in shell_html
-    assert 'data-admin-route="admin-audits"' in audits_html
-    assert 'data-admin-route="admin-checks"' in checks_html
-    assert 'id="studioChecksRun"' in checks_html
-    assert 'data-admin-route="admin-activity"' in activity_html
-    assert 'data-admin-route="admin-testing"' in testing_html
-
-
 def test_admin_activity_api_returns_empty_admin_feed(tmp_path) -> None:
     payload = activity_get_payload(tmp_path, "/feed")
 

@@ -75,7 +75,7 @@ def test_load_service_config_rejects_non_local_or_mismatched_service_location(
             },
         )
 
-def test_manage_shell_is_static_and_service_api_base_lives_in_route_config() -> None:
+def test_management_service_api_base_lives_in_route_config() -> None:
     config = docs_viewer_service.DocsViewerServiceConfig(
         host="127.0.0.1",
         port=8776,
@@ -85,39 +85,15 @@ def test_manage_shell_is_static_and_service_api_base_lives_in_route_config() -> 
         watch_enabled=True,
     )
 
-    rendered = docs_viewer_service.manage_page_path(REPO_ROOT).read_text(encoding="utf-8")
     route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
     manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
-    assert "<title>Docs Viewer</title>" in rendered
-    assert 'data-allow-management="false"' in rendered
-    assert 'data-include-scope-param="false"' in rendered
-    assert 'data-route-id="docs-manage"' in rendered
-    assert 'data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"' in rendered
     assert manage_route["viewer_base_url"] == "/docs/"
     assert manage_route["include_scope_param"] is True
     assert manage_route["access"]["allow_scope_query"] is True
     assert manage_route["access"]["allow_management"] is True
     assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
     assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
-    assert "/docs-viewer/runtime/js/management/docs-viewer-manage.js?v=docs-viewer-manage-static" in rendered
-    assert "/docs-viewer/static/css/docs-viewer.css?v=docs-viewer-manage-static" in rendered
-    assert "/docs-viewer/static/css/docs-viewer-reports.css?v=docs-viewer-manage-static" in rendered
-    assert "/docs-viewer/static/css/docs-viewer-manage.css?v=docs-viewer-manage-static" in rendered
-    assert "/docs-viewer/static/css/docs-viewer-base.css" not in rendered
-    assert "/docs-viewer/static/css/docs-viewer-public.css" not in rendered
-    assert "/studio/api/docs" not in rendered
-    assert "/studio/app/assets/css/studio.css" not in rendered
-    assert "{%" not in rendered
-    assert "{{" not in rendered
-    assert "__DOCS_VIEWER_" not in rendered
-
-def test_manage_shell_template_is_service_template_not_liquid() -> None:
-    template = docs_viewer_service.manage_page_path(REPO_ROOT).read_text(encoding="utf-8")
-
-    assert "{%" not in template
-    assert "{{" not in template
-    assert "__DOCS_VIEWER_" not in template
 
 def test_manage_route_config_can_disable_management_access_by_capability_flag() -> None:
     config = docs_viewer_service.DocsViewerServiceConfig(

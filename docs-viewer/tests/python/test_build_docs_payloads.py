@@ -63,8 +63,6 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         'alt="Measured diagram" width="800" height="600"'
     ) in content_html
     assert 'title="Alt text"' in content_html
-    assert 'class="docsViewer__interactiveFrame"' in content_html
-    assert "--docs-viewer-interactive-height: 420px" in content_html
     assert 'href="/works/?work=00638"' in content_html
     assert "[[ref:work:638999|commented missing work]]" in content_html
     assert "[[ref:work:638998|commented missing work multiline]]" in content_html

@@ -143,6 +143,16 @@ The deleted Analytics tags adapter monolith is now:
    - menu visibility
    - “user can click X then Y”
 
+done: Removed UI assertions from Python service/server tests.
+
+The cleanup removed Python assertions that inspected shell HTML, CSS selectors, visible navigation, modal/open choreography, and button/menu-level page details. Remaining tests focus on service configuration, route config JSON, request/response contracts, static path policy, generated payloads, and public/private runtime boundaries.
+
+Changed areas:
+- Deleted `docs-viewer/tests/python/test_docs_viewer_management_runtime_boundaries.py`, which was almost entirely management-shell UI assertions.
+- Trimmed `docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py`, `test_docs_viewer_service_config.py`, and `test_docs_viewer_static_assets.py` back to data/config/static boundary checks.
+- Trimmed `studio/tests/python/test_studio_app_runtime_config.py` and `admin-app/tests/python/test_admin_app_server.py` so they no longer assert rendered shell navigation, CSS ownership, or visible page content.
+- Removed generated public route HTML shell assertions from `docs-viewer/tests/python/test_docs_scope_lifecycle.py`; the test still asserts the scope config, public route config, manifest records, and generated payload files.
+
 4. Shrink smoke tests hard
    Current smoke layer is large: about 18k lines. Biggest UI smoke offenders include:
    - `studio/tests/smoke/catalogue_work_modal.py` 776 lines

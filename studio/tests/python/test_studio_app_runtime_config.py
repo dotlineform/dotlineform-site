@@ -12,8 +12,6 @@ import pytest
 
 from studio_app_server_test_support import (
     REPO_ROOT,
-    STATIC_PREFIXES,
-    STUDIO_SHELL_PATH,
     StudioAppRequestHandler,
     asset_version,
     env_flag,
@@ -22,13 +20,6 @@ from studio_app_server_test_support import (
     studio_shell_route_paths,
     validate_studio_route_registry,
 )
-
-def test_studio_bootstrap_exposes_shared_search_list_assets() -> None:
-    html = STUDIO_SHELL_PATH.read_text(encoding="utf-8").replace("__STUDIO_ASSET_VERSION__", "test-version")
-
-    assert "/shared/frontend/" in STATIC_PREFIXES
-    assert '<link rel="stylesheet" href="/shared/frontend/css/search-list.css?v=test-version">' in html
-    assert '<link rel="stylesheet" href="/shared/frontend/css/record-list.css?v=test-version">' in html
 
 def test_runtime_config_exposes_adapter_contract() -> None:
     original_env = {key: os.environ.get(key) for key in ("SITE_HOST", "SITE_PORT", "SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
@@ -256,15 +247,6 @@ def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
 def test_studio_server_excludes_data_sharing_config() -> None:
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is False
     assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/adapters/documents/config/prepare-profiles.json") is False
-
-def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
-    html_shells = [
-        STUDIO_SHELL_PATH.read_text(encoding="utf-8").replace("__STUDIO_ASSET_VERSION__", "test-version"),
-    ]
-
-    for shell in html_shells:
-        assert "/studio/app/assets/css/studio.css?v=test-version" in shell
-        assert "/assets/css/main.css" not in shell
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
