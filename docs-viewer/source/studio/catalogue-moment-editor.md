@@ -47,11 +47,10 @@ The editor does not edit prose inline. Moment prose remains body-only Markdown u
 
 ## Route Ready State
 
-The page root `#catalogueMomentRoot` implements the shared Studio ready-state contract:
+The page root `#catalogueMomentRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific details:
 
-- `data-studio-ready="false"` during initial route setup
-- `data-studio-ready="true"` after the initial empty, focused-moment, or staged-import render completes
-- `data-studio-busy="true"` while save, publish, unpublish, media refresh, import preview/apply, staged-prose import, or delete commands are running
+- save, publish, unpublish, media refresh, import preview/apply, staged-prose import, and delete commands set route busy
 - `data-studio-mode="empty|single|import"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`

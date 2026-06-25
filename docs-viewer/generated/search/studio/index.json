@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-15db98ac9da3eb6210a40b43f6c78a07",
-    "generated_at_utc": "2026-06-25T15:22:13Z",
-    "count": 225
+    "version": "blake2b-212a534ac73996422e85d924632c7d7e",
+    "generated_at_utc": "2026-06-25T15:37:17Z",
+    "count": 224
   },
   "entries": [
     {
@@ -48,10 +48,10 @@
       "kind": "doc",
       "title": "Admin Static Route Template",
       "href": "/docs/?scope=studio&doc=admin-static-route-template",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-06-25",
       "parent_id": "admin",
       "parent_title": "Admin",
-      "display_meta": "2026-06-22 • Admin",
+      "display_meta": "2026-06-25 • Admin",
       "search_terms": [
         "admin-static-route-template",
         "admin",
@@ -59,12 +59,12 @@
         "route",
         "template",
         "admin static route template",
-        "2026-06-22",
+        "2026-06-25",
         "2026",
         "06",
-        "22"
+        "25"
       ],
-      "search_text": "admin-static-route-template admin static route template admin static route template 2026-06-22 2026 06 22"
+      "search_text": "admin-static-route-template admin static route template admin static route template 2026-06-25 2026 06 25"
     },
     {
       "id": "audit-runner",
@@ -499,10 +499,10 @@
       "kind": "doc",
       "title": "Analytics Static Route Template",
       "href": "/docs/?scope=studio&doc=analytics-static-route-template",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-06-25",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-06-22 • Analytics",
+      "display_meta": "2026-06-25 • Analytics",
       "search_terms": [
         "analytics-static-route-template",
         "analytics",
@@ -510,12 +510,12 @@
         "route",
         "template",
         "analytics static route template",
-        "2026-06-22",
+        "2026-06-25",
         "2026",
         "06",
-        "22"
+        "25"
       ],
-      "search_text": "analytics-static-route-template analytics static route template analytics static route template 2026-06-22 2026 06 22"
+      "search_text": "analytics-static-route-template analytics static route template analytics static route template 2026-06-25 2026 06 25"
     },
     {
       "id": "config-analytics-ui-text-json",
@@ -5057,29 +5057,6 @@
         "18"
       ],
       "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-05-13 17:18 2026 05 13 17 18"
-    },
-    {
-      "id": "studio-ready-state",
-      "kind": "doc",
-      "title": "Route State",
-      "href": "/docs/?scope=studio&doc=studio-ready-state",
-      "last_updated": "2026-05-15",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-15 • Studio",
-      "search_terms": [
-        "studio-ready-state",
-        "studio",
-        "ready",
-        "state",
-        "route state",
-        "route",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "studio-ready-state studio ready state route state route 2026-05-15 2026 05 15"
     },
     {
       "id": "data-models-studio",

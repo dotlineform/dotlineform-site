@@ -23,7 +23,7 @@ Permanent automated tests should protect data flows, server responses, generated
 
 Do not add or expand permanent tests just to prove UI choreography: modal timing, button placement, cursor changes, hover state, focus movement, labels, copy tone, layout, and ordinary user click paths are better covered by manual or temporary in-app verification. If a UI change exposes a real product contract, test the underlying server response, request payload, generated data shape, or shared component contract instead of the full screen workflow.
 
-Browser smoke checks are allowed when the durable risk is route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or a shared ready/busy contract. Existing UI-heavy smoke scripts are legacy cleanup targets; do not extend them for routine UI work.
+Browser smoke checks are allowed when the durable risk is route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract. Existing UI-heavy smoke scripts are legacy cleanup targets; do not extend them for routine UI work.
 
 ## Review Gate
 
@@ -124,7 +124,7 @@ Cross-app checks:
 
 ## Browser Smoke Testing
 
-Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, public/private asset boundaries, or shared ready/busy state.
+Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, public/private asset boundaries, or shared route ready/busy state.
 
 They should not be expanded to prove routine modal behavior or other UI choreography. Use manual verification, temporary scripts, or shared component tests for that work, and keep permanent checks focused on durable route and data contracts.
 
@@ -189,7 +189,7 @@ Known gaps:
 - several smoke scripts are still opt-in because their setup requirements need owner review
 - profile names still preserve some historical Studio terminology
 - cross-app route coverage is uneven
-- not every route exposes the same ready/busy contract
+- not every route exposes the same [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract
 - visual and tactile UI confidence still depends on manual or temporary browser review
 
 Treat these gaps as work to plan, not as permission to make new tests vague. Add a check only when it captures repeatable risk that would otherwise be hard to verify.

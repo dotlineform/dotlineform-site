@@ -63,10 +63,10 @@ This page does not upload workbook files, edit workbook rows, or write anything 
 
 ## Route Ready State
 
-The page root `#bulkAddWorkRoot` exposes the shared Studio route-ready contract:
+The page root `#bulkAddWorkRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific details:
 
-- `data-studio-ready` is `false` during initial config and local service checks, then `true` after the initial disabled or interactive state is rendered
-- `data-studio-busy` is `true` while preview or import is running
+- preview and import set route busy
 - `data-studio-mode` is `idle` before a preview and `preview` after a preview result is loaded
 - `data-studio-service` reports whether the Catalogue Write Server is available
 - `data-studio-record-loaded` is `true` when a preview result is loaded

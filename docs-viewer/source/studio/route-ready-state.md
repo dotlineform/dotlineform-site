@@ -8,90 +8,217 @@ viewable: true
 ---
 # Route Ready State
 
-## Related Ready-State References
+This is the canonical route lifecycle contract for Studio, Admin, Analytics, and Docs Viewer route shells.
+Other docs may name a route root or app helper, but they should link here instead of redefining ready/busy semantics.
 
-Core references:
+## Purpose
 
-- [Studio Route State](/docs/?scope=studio&doc=studio-ready-state) documents the implemented Studio route-ready contract, helper API, route inventory, smoke wait pattern, and current audit coverage.
-- [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) defines when browser smokes should use route ready/busy state and records the current gap this change request is closing.
-- [Testing](/docs/?scope=studio&doc=testing) places shared ready/busy contracts in the broader test policy and profile guidance.
-- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) describes route script ownership, including route-ready state, data loading, event binding, and local API coordination.
-- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state) documents the current Studio-only audit and its strict-mode checks.
-- [Audit Runner](/docs/?scope=studio&doc=audit-runner), [Audits](/docs/?scope=studio&doc=audits), and [Run Checks](/docs/?scope=studio&doc=scripts-run-checks) describe how the ready-state audit is exposed through Admin tooling and profiles.
+Routes render asynchronously and often depend on local services, generated payloads, browser modules, or route-specific startup.
+Browser smokes and local tooling need a stable signal for when a route is safe to inspect or interact with.
 
-Route contract examples:
+The route ready-state contract provides that signal without replacing visible status text.
+User-facing copy remains route-specific; ready/busy attributes are for test code, local tooling, and lifecycle checks.
 
-- Studio routes: [Catalogue Works](/docs/?scope=studio&doc=studio-works), [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor), [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor), [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor), [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status), [Catalogue Field Registry Review](/docs/?scope=studio&doc=catalogue-field-registry-review), [Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work), [Project State](/docs/?scope=studio&doc=project-state-page), and [Activity](/docs/?scope=studio&doc=activity).
-- Analytics routes: [Series Tag Editor](/docs/?scope=studio&doc=tag-editor), [Series Tags](/docs/?scope=studio&doc=series-tags), [Tag Registry](/docs/?scope=studio&doc=tag-registry), [Tag Aliases](/docs/?scope=studio&doc=tag-aliases), and [Tag Groups](/docs/?scope=studio&doc=tag-groups).
-- Docs Viewer import route: [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import).
-- Static route templates: [Admin Static Route Template](/docs/?scope=studio&doc=admin-static-route-template) and [Analytics Static Route Template](/docs/?scope=studio&doc=analytics-static-route-template).
+## Contract
 
-We need to turn “some routes expose readiness” into an enforced route lifecycle contract across Studio, Admin, Analytics, and Docs Viewer.
+Each participating route exposes readiness on one main route root.
 
-The practical work is:
+Canonical meanings:
 
-1. **Define the contract once**
-   Document the canonical meaning of:
-   - `ready=false`: route is mounted but not safe for interaction yet
-   - `busy=true`: route is doing initial load, save, import, audit run, or other blocking async work
-   - `ready=true` + `busy=false`: route is stable enough for browser smokes and dependent UI
-   - stable failure state: failed/unavailable routes should still become `ready=true`, with `service=unavailable` or equivalent, once the error UI is rendered
+- `ready="false"` means the route root exists, but initial data, config, module startup, or first render is not stable yet.
+- `ready="true"` means the route reached a stable initial state. This includes empty states and stable unavailable/error states after the route has rendered its fallback UI.
+- `busy="true"` means route-level work is in flight, such as initial load, save, preview, publish, delete, import, audit, report, refresh, rebuild, or package commands.
+- `busy="false"` means no route-level blocking work is in flight.
 
-2. **Settle the attribute naming**
-   Current state is app-prefixed:
-   - Studio: `data-studio-ready`, `data-studio-busy`
-   - Admin: `data-admin-ready`, `data-admin-busy`
-   - Analytics: `data-analytics-ready`, `data-analytics-busy`
-   - Docs Viewer: mixed local state, no consistent route-level contract everywhere
+`ready="true"` does not mean every command is available.
+When a required service is unavailable, the route should still become ready once it renders the unavailable state and disables affected controls.
 
-   I would keep app-prefixed attributes for now and standardize the semantics. Adding generic aliases like `data-route-ready` would create duplicate contracts unless we deliberately migrate everything.
+`busy` should not be used for trivial local UI toggles such as opening a menu, changing focus, or showing a local-only panel.
 
-3. **Inventory every app route**
-   For each route template, identify:
-   - root selector
-   - owning app
-   - expected ready/busy attributes
-   - controller/module responsible for transitions
-   - initial async work
-   - write/import/run actions that should set busy
-   - stable error/unavailable state
+## Attribute Names
 
-4. **Patch missing templates**
-   Every route root should start with:
-   - `ready="false"`
-   - `busy="false"`
+The current implementation uses app-prefixed attributes.
+Keep these names until a deliberate migration replaces them; adding generic aliases would create a second contract to maintain.
 
-   Static/home routes can become ready immediately, but the initial template should still expose the baseline consistently unless there is a specific reason not to.
+| app | ready attribute | busy attribute | ready event |
+| --- | --- | --- | --- |
+| Studio | `data-studio-ready` | `data-studio-busy` | `studio:ready` |
+| Admin | `data-admin-ready` | `data-admin-busy` | `admin:ready` |
+| Analytics | `data-analytics-ready` | `data-analytics-busy` | `analytics:ready` |
+| Docs Viewer | route-specific today | route-specific today | route-specific today |
 
-5. **Patch controllers to drive state**
-   Each route script needs to:
-   - initialize route state after mount
-   - set `busy=true` before blocking async work
-   - set `busy=false` in `finally`
-   - set `ready=true` after successful render or stable unavailable/error render
-   - avoid leaving `ready=false` forever on fetch/config/service failure
+Optional detail attributes follow the same prefix:
 
-6. **Validate templates during route loading**
-   Studio already does this in [studio-route-templates.js](/Users/dlf/Developer/dotlineform/dotlineform-site/studio/app/frontend/js/studio-route-templates.js). Admin and Analytics loaders currently parse templates but do not enforce ready/busy roots. They should get equivalent validation in:
-   - [admin-route-templates.js](/Users/dlf/Developer/dotlineform/dotlineform-site/admin-app/app/frontend/js/admin-route-templates.js)
-   - [analytics-route-templates.js](/Users/dlf/Developer/dotlineform/dotlineform-site/analytics-app/app/frontend/js/analytics-route-templates.js)
+- `data-<app>-route`
+- `data-<app>-mode`
+- `data-<app>-service`
+- `data-<app>-record-loaded`
 
-7. **Expand the audit**
-   The current audit is Studio-only: [audit_studio_ready_state.py](/Users/dlf/Developer/dotlineform/dotlineform-site/admin-app/checks/audit_studio_ready_state.py). To close the gap, add cross-app audits for Admin, Analytics, and Docs Viewer route templates, or replace it with a general `audit_route_ready_state.py` that uses per-app config.
+Tests should prefer DOM attributes over ready events because an event may have fired before the test attaches a listener.
 
-8. **Normalize smoke helpers**
-   Smoke tests should use a shared helper shape:
+## App Helpers
 
-   ```python
-   wait_for_route_ready(page, root_selector, ready_attr, busy_attr)
-   ```
+Current helper modules:
 
-   Then Studio/Admin/Analytics/Docs Viewer smokes can stop hand-rolling waits and route-specific timing guesses.
+- Studio: `studio/app/frontend/js/studio-route-state.js`
+- Admin: `admin-app/app/frontend/js/admin-route-state.js`
+- Analytics: `analytics-app/app/frontend/js/analytics-route-state.js`
+- Docs Viewer import modal: `docs-viewer/runtime/js/import/docs-html-import.js`
 
-9. **Add focused route-ready smokes only where useful**
-   The goal is not a huge UI test suite. Add narrow smokes for routes where the contract protects real integration risk: route boot, module load, API reachability, and stable unavailable states.
+Each app helper should provide the same behavior:
 
-10. **Update docs and remove the gap**
-   Once all owned routes are audited and smoke helpers use the contract, update [smoke-testing.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/smoke-testing.md) to replace the current gap with the maintained rule and audit command.
+- initialize route details and set `ready=false`, `busy=false`
+- set busy state with optional route details
+- set ready state with optional route details
+- dispatch the app-specific ready event when ready is written
 
-Definition of done: every app route has a documented root, starts with ready/busy attributes, reaches `ready=true` on success or stable failure, clears busy reliably, is covered by a template audit, and browser smokes wait on the shared contract instead of timing or ad hoc loaded text.
+Studio currently exports:
+
+- `initializeStudioRouteState(target, detail)`
+- `setStudioRouteBusy(target, busy, detail)`
+- `setStudioRouteReady(target, ready, detail)`
+
+Admin and Analytics helpers should match that shape for route lifecycle behavior.
+`target` may be the root element or an object with a `root` element.
+Helpers should normalize optional detail values, remove empty optional string attributes, write boolean detail attributes as `"true"` or `"false"`, and dispatch the app-specific ready event whenever ready is written.
+
+## Route Startup
+
+Async and service-backed route startup should follow this order:
+
+1. Template declares the route root with initial ready/busy attributes.
+2. Controller initializes route state after mount.
+3. Controller performs required config, lookup, service, URL-mode, and first-render work.
+4. Controller sets `ready=true` after the first stable render, including empty and unavailable states.
+5. Command flows set `busy=true` before starting and return it to `false` in a `finally` path after success or failure settles.
+
+Every route should avoid leaving `ready=false` forever on fetch, config, module, or service failure.
+
+Static or home routes may mark ready immediately, but they should still expose the same baseline unless the route owner has a documented reason not to.
+
+## Static Routes
+
+Studio static landing and reference routes use:
+
+- `studio/app/frontend/js/studio-static-route.js`
+
+Their route roots declare:
+
+- `data-studio-static-route="<route-id>"`
+- `data-studio-mode="landing"` or `data-studio-mode="reference"`
+- `data-studio-ready="false"`
+- `data-studio-busy="false"`
+
+`studio-static-route.js` initializes each static root after DOM load, sets `data-studio-record-loaded="true"`, and marks the route ready.
+
+Use this only for static or reference shells.
+If a static page gains async data, local-service checks, route commands, or another route module, replace the static initializer with a route-specific ready/busy implementation and run the ready-state audit in strict mode.
+
+Studio no longer has standalone dashboard route shells.
+The former Catalogue, Analytics, and Data Sharing dashboards were retired in favor of grouped `/studio/` home links and page-local metrics.
+
+## Current Route Roots
+
+Studio route roots:
+
+| route | root | attributes |
+| --- | --- | --- |
+| `/studio/` | `#studioHomeRoot` | `data-studio-*` |
+| `/studio/bulk-add-work/` | `#bulkAddWorkRoot` | `data-studio-*` |
+| `/studio/catalogue-field-registry/` | `#fieldRegistryReviewRoot` | `data-studio-*` |
+| `/studio/catalogue-moment/` | `#catalogueMomentRoot` | `data-studio-*` |
+| `/studio/catalogue-series/` | `#catalogueSeriesRoot` | `data-studio-*` |
+| `/studio/catalogue-status/` | `#catalogueStatusRoot` | `data-studio-*` |
+| `/studio/catalogue-work/` | `#catalogueWorkRoot` | `data-studio-*` |
+| `/studio/catalogue-work-detail/` | `#catalogueWorkDetailRoot` | `data-studio-*` |
+| `/studio/project-state/` | `#projectStateRoot` | `data-studio-*` |
+| `/studio/studio-works/` | `#worksStudioRoot` | `data-studio-*` |
+
+Admin route roots:
+
+| route | root | attributes |
+| --- | --- | --- |
+| `/admin/` | `[data-admin-home]` | `data-admin-*` |
+| `/admin/activity/` | `#studioActivityRoot` | `data-admin-*` |
+| `/admin/audits/` | `#studioAuditsRoot` | `data-admin-*` |
+| `/admin/checks/` | `#studioChecksRoot` | `data-admin-*` |
+| `/admin/testing/` | `#adminTestingRoot` | `data-admin-*` |
+
+Analytics route roots:
+
+| route | root | attributes |
+| --- | --- | --- |
+| `/analytics/` | `#analyticsHomeRoot` | `data-analytics-*` |
+| `/analytics/data-sharing/prepare/` | `#dataSharingPrepareRoot` | `data-analytics-*` |
+| `/analytics/data-sharing/review/` | `#dataSharingReviewRoot` | `data-analytics-*` |
+| `/analytics/series-tag-editor/` | `#seriesTagEditorRoot` | `data-analytics-*` |
+| `/analytics/series-tags/` | `#series-tags` | `data-analytics-*` |
+| `/analytics/tag-aliases/` | `#tag-aliases` | `data-analytics-*` |
+| `/analytics/tag-groups/` | `#tag-groups` | `data-analytics-*` |
+| `/analytics/tag-registry/` | `#tag-registry` | `data-analytics-*` |
+
+Docs Viewer route roots:
+
+| route | root | attributes |
+| --- | --- | --- |
+| `/docs/?import=1` | `#docsHtmlImportRoot` | `data-studio-*` currently, because the import modal mirrors the Studio helper behavior inside the Docs Viewer bundle |
+
+Docs Viewer public and manage shells still need a route-level ready/busy decision outside the import modal.
+
+Retired Studio Analytics, Data Sharing, UI Catalogue, and thumbnail-quality routes do not expose active ready-state roots.
+The legacy UI catalogue reference routes have also been retired and do not expose the production `data-studio-ready` contract.
+
+## Smoke Wait Pattern
+
+Smoke tests should use the app-specific attributes through one helper shape:
+
+```python
+def wait_for_route_ready(page, root_selector, ready_attr, busy_attr, timeout_ms=10_000):
+    page.wait_for_selector(f"{root_selector}:not([hidden])", timeout=timeout_ms)
+    page.wait_for_selector(f"{root_selector}[{ready_attr}='true']", timeout=timeout_ms)
+    page.wait_for_function(
+        """([selector, attr]) => document.querySelector(selector)?.getAttribute(attr) !== 'true'""",
+        arg=[root_selector, busy_attr],
+        timeout=timeout_ms,
+    )
+```
+
+After the shared wait, route-specific tests may assert mode, service, record-loaded state, visible status text, rendered rows, or enabled command controls.
+
+## Audit Coverage
+
+Current audit coverage is Studio-only:
+
+```bash
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
+```
+
+Strict mode fails on warnings as well as errors.
+The current Studio audit catches missing baseline attributes, static/dashboard marker mixups, missing static or dashboard helper scripts, dashboard metric markers on static routes, and static routes that start loading another module script.
+The `quick` profile includes this audit.
+
+The gap to close is cross-app enforcement.
+Either add Admin, Analytics, and Docs Viewer audits or replace the Studio-only script with a general route-ready audit that uses app-specific config for roots, attribute prefixes, static routes, and known exceptions.
+
+Definition of done:
+
+- every active app route has one documented root
+- every participating route starts with ready/busy attributes
+- route controllers reach `ready=true` on success or stable failure
+- route-level commands clear `busy` reliably
+- template loading validates the ready/busy baseline
+- audits cover Studio, Admin, Analytics, and Docs Viewer route templates
+- browser smokes wait on the shared helper shape rather than route-specific timing guesses
+
+## Related Documents
+
+Testing and audit references:
+
+- [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)
+- [Testing](/docs/?scope=studio&doc=testing)
+- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Audit Runner](/docs/?scope=studio&doc=audit-runner)
+- [Audits](/docs/?scope=studio&doc=audits)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+
+Route-level docs may name their local root and busy triggers, but they should not redefine this contract.

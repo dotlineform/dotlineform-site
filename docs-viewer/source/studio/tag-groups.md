@@ -17,10 +17,10 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#tag-groups` exposes the Analytics route-ready contract:
+The page root `#tag-groups` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
+Route-specific details:
 
-- `data-analytics-ready` is `false` while config and group descriptions load, then `true` after the list or error state is rendered
-- `data-analytics-busy` remains `false`; this route has no route-level commands
+- no route-level commands set busy
 - `data-analytics-mode` is `list` when groups are shown and `empty` for empty or failed loads
 - `data-analytics-record-loaded` is `true` when group descriptions are loaded
 

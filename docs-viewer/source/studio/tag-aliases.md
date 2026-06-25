@@ -17,10 +17,10 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#tag-aliases` exposes the Analytics route-ready contract:
+The page root `#tag-aliases` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
+Route-specific details:
 
-- `data-analytics-ready` is `false` while config, alias, registry, and group data load, then `true` after the list or error state is rendered
-- `data-analytics-busy` is `true` while import, edit/create, delete, promote, or demote work is running
+- import, edit/create, delete, promote, and demote work set route busy
 - `data-analytics-mode` is `list`, `import`, or `edit` depending on active modal state
 - `data-analytics-service` reports whether the Local Analytics API is available for direct writes
 - `data-analytics-record-loaded` is `true` when aliases are loaded

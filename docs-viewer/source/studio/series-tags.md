@@ -18,10 +18,10 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#series-tags` exposes the Analytics route-ready contract:
+The page root `#series-tags` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
+Route-specific details:
 
-- `data-analytics-ready` is `false` while config, series, assignment, registry, and group data load, then `true` after the table or empty/error state is rendered
-- `data-analytics-busy` is `true` while assignment import preview or apply is running
+- assignment import preview and apply set route busy
 - `data-analytics-mode` is `list`, `session`, or `import` depending on the active modal state
 - `data-analytics-service` reports whether the Local Analytics API is available for assignment import
 - `data-analytics-record-loaded` is `true` when series rows are loaded

@@ -1118,11 +1118,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-publish-media-to-r2.json"
         },
         {
-          "doc_id": "studio-ready-state",
-          "title": "Route State",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ready-state.json"
-        },
-        {
           "doc_id": "data-models-studio",
           "title": "Scope",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json"
@@ -1214,5 +1209,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-25T15:22:13Z"
+  "generated_at": "2026-06-25T15:40:14Z"
 }

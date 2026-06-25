@@ -71,19 +71,20 @@ Do not use a raw `file://` URL for pages that depend on module imports, local se
 
 Do not interact with a page immediately after `domcontentloaded`.
 
-For routes that have adopted a shared ready-state contract, wait for the route root to be visible and ready:
+For routes that have adopted the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract, wait for the route root to be visible, ready, and not busy:
 
 ```python
-def wait_for_route_ready(page, root_selector):
-    page.wait_for_selector(f"{root_selector}:not([hidden])")
-    page.wait_for_selector(f"{root_selector}[data-studio-ready='true']")
+def wait_for_route_ready(page, root_selector, ready_attr, busy_attr, timeout_ms=10_000):
+    page.wait_for_selector(f"{root_selector}:not([hidden])", timeout=timeout_ms)
+    page.wait_for_selector(f"{root_selector}[{ready_attr}='true']", timeout=timeout_ms)
     page.wait_for_function(
-        "selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'",
-        arg=root_selector,
+        """([selector, attr]) => document.querySelector(selector)?.getAttribute(attr) !== 'true'""",
+        arg=[root_selector, busy_attr],
+        timeout=timeout_ms,
     )
 ```
 
-The attribute names are still historically prefixed with `studio` in several route shells. That is a current implementation detail, not a naming model for new Analytics or Admin APIs.
+Use the app-specific attributes documented in Route Ready State.
 
 Minimum readiness for route-level smoke tests:
 
@@ -157,6 +158,7 @@ $HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --stri
 ```
 
 The `quick` profile includes this audit. The audit is still Studio-specific because it validates the current Studio route templates; it does not prove Admin, Analytics, or Docs Viewer route readiness.
+The shared cross-app contract and remaining audit gap are tracked in [Route Ready State](/docs/?scope=studio&doc=route-ready-state).
 
 ## Manual Check Pairing
 

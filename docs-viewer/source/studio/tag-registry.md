@@ -17,10 +17,10 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#tag-registry` exposes the Analytics route-ready contract:
+The page root `#tag-registry` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
+Route-specific details:
 
-- `data-analytics-ready` is `false` while config, registry, aliases, assignment, series, and group data load, then `true` after the list or error state is rendered
-- `data-analytics-busy` is `true` while import, edit, create, delete, demote, or delete-impact preview work is running
+- import, edit, create, delete, demote, and delete-impact preview work set route busy
 - `data-analytics-mode` is `list`, `import`, or `edit` depending on active modal state
 - `data-analytics-service` reports whether the Local Analytics API is available for direct writes
 - `data-analytics-record-loaded` is `true` when registry tags are loaded

@@ -2,7 +2,7 @@
 doc_id: admin-static-route-template
 title: Admin Static Route Template
 added_date: 2026-06-22
-last_updated: 2026-06-22
+last_updated: 2026-06-25
 parent_id: admin
 viewable: true
 ---
@@ -54,6 +54,9 @@ Each route config entry should identify the stable template and behavior module:
 
 ## Route Boundary
 
+Admin route templates participate in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Admin attributes.
+Template examples should show the route root and initial ready/busy baseline, while shared semantics stay in the Route Ready State doc.
+
 Route templates own stable DOM:
 
 ```html
@@ -78,5 +81,6 @@ bindChecksEvents(root);
 loadChecksReports();
 ```
 
+Route scripts should update readiness through `admin-app/app/frontend/js/admin-route-state.js`.
 JavaScript should still render genuinely dynamic UI such as recent runs, report output, activity feed entries, audit rows, testing run summaries, status text, modal content, and API results.
 Stable page skeletons should be HTML templates.

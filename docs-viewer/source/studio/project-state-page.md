@@ -45,10 +45,10 @@ The `include sub-folders` checkbox is off by default. When unchecked, the report
 
 ## Route Ready State
 
-The page root `#projectStateRoot` exposes the shared Studio route-ready contract:
+The page root `#projectStateRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific details:
 
-- `data-studio-ready` is `false` during initial config and local service checks, then `true` after the initial disabled or interactive state is rendered
-- `data-studio-busy` is `true` while the report is running
+- report generation sets route busy
 - `data-studio-mode` is `idle` before a report and `summary` after summary counts are loaded
 - `data-studio-service` is `available` when the local catalogue report API is available, and `unavailable` when it is unavailable
 - `data-studio-record-loaded` is `true` when report summary data is loaded

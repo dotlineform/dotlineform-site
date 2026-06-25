@@ -245,10 +245,11 @@ After a successful import, the page reports:
 
 ## Route Ready State
 
-The page root `#docsHtmlImportRoot` exposes the shared Studio route-ready contract:
+The page root `#docsHtmlImportRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state).
+It currently uses Studio-style attributes inside the Docs Viewer bundle.
+Route-specific details:
 
-- `data-studio-ready` is `false` during initial config, service, and staged-file checks, then `true` after the initial disabled or interactive state is rendered
-- `data-studio-busy` is `true` while an import or confirmed overwrite is running
+- import and confirmed overwrite commands set route busy
 - `data-studio-mode` is `idle` before import, `confirm` when an overwrite warning is shown, and `result` after a successful import
 - `data-studio-service` reports whether the Docs Management Service is available
 - `data-studio-record-loaded` is `true` when supported staged files are available

@@ -136,25 +136,9 @@ Studio controller splits that are already live:
 
 ## Route Ready State
 
-Studio pages can expose a shared machine-readable route state on their main page root.
-
-Shared attributes:
-
-- `data-studio-ready="false"` while initial route data and first render are still loading
-- `data-studio-ready="true"` after the route has reached its initial stable interaction state
-- `data-studio-busy="true"` while a route-level command is running
-- `data-studio-busy="false"` when no route-level command is running
-
-Optional route detail attributes:
-
-- `data-studio-route`
-- `data-studio-mode`
-- `data-studio-service`
-- `data-studio-record-loaded`
-
-`studio/app/frontend/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The current route inventory and implementation rules are documented in [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state).
-
-Static landing and reference routes use `studio/app/frontend/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
+Studio pages participate in the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract.
+`studio/app/frontend/js/studio-route-state.js` owns Studio helper functions, and `studio/app/frontend/js/studio-static-route.js` owns static landing/reference readiness.
+The route inventory and audit details live in [Route Ready State](/docs/?scope=studio&doc=route-ready-state).
 
 ## Relation to `/docs/`
 

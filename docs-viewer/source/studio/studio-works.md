@@ -18,10 +18,10 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#worksStudioRoot` exposes the shared Studio route-ready contract:
+The page root `#worksStudioRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific details:
 
-- `data-studio-ready` is `false` while config, works, series, and Studio storage data load, then `true` after the list or empty state is rendered
-- `data-studio-busy` is `true` during the initial data load and `false` after render
+- initial config, works, series, and Studio storage data loading set route busy
 - `data-studio-mode` is `list` for the full index, `single` for a series-filtered view, and `empty` when no rows can be rendered
 - `data-studio-record-loaded` is `true` when work rows are loaded
 

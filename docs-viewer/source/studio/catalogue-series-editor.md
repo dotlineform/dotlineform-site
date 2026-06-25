@@ -65,11 +65,10 @@ Local app migration:
 
 ## Route Ready State
 
-The page root `#catalogueSeriesRoot` implements the shared Studio ready-state contract:
+The page root `#catalogueSeriesRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific details:
 
-- `data-studio-ready="false"` during initial route setup
-- `data-studio-ready="true"` after the initial empty, new, or focused-series render completes
-- `data-studio-busy="true"` while save, create, publish, unpublish, build, or delete commands are running
+- save, create, publish, unpublish, build, and delete commands set route busy
 - `data-studio-mode="empty|single|new"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`

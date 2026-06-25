@@ -26,11 +26,8 @@ Sharing profile definitions live in `data-sharing/adapters/documents/config/prep
 
 ## Route Ready State
 
-Studio landing and operational routes expose the shared route-ready contract:
-
-- `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
-- retired Catalogue dashboard entry points should stay retired; their links live on the `/studio/` home page
-- page-local metrics should live on the individual workflow pages where they are relevant
+Studio landing and operational routes expose the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract.
+The same page owns Studio helper, route inventory, and audit guidance so the contract is not split across app-specific child docs.
 
 ## Key Documents
 
@@ -40,7 +37,7 @@ Studio landing and operational routes expose the shared route-ready contract:
   checked-in dependency sources, critical versus workflow-specific packages, and local/cloud dependency expectations.
 - **[UI](/docs/?scope=studio&doc=ui)** for UI framework and maintenance
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** for the shared `/docs/` implementation that hosts Studio documentation
-- **[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)** for the implemented route-ready contract, helper modules, route inventory, and audit coverage
+- **[Route Ready State](/docs/?scope=studio&doc=route-ready-state)** for the shared ready/busy contract across local app route shells
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell architecture, route registry, shared browser modules, and Docs Viewer integration
 - **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the app server boundary, sibling-service split, runtime config shape, and server module ownership
 - **[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)** for mounted local routes, route template ownership, retired route notes, page-level doc links, and route checks

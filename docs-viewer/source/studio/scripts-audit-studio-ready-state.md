@@ -23,7 +23,8 @@ $HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --stri
 
 ## Purpose
 
-The audit keeps the shared Studio ready-state contract from drifting as pages evolve. It is especially aimed at static/reference pages: those pages can expose a basic ready signal today, but if they later gain async data, service checks, commands, or additional route scripts, they should move to a route-specific ready/busy implementation.
+The audit keeps Studio route templates aligned with the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract.
+It is especially aimed at static/reference pages: those pages can expose a basic ready signal today, but if they later gain async data, service checks, commands, or additional route scripts, they should move to a route-specific ready/busy implementation.
 
 ## Checks
 

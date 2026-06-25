@@ -2,7 +2,7 @@
 doc_id: analytics-static-route-template
 title: Analytics Static Route Template
 added_date: 2026-06-21
-last_updated: 2026-06-22
+last_updated: 2026-06-25
 parent_id: analytics
 viewable: true
 ---
@@ -52,6 +52,9 @@ Each route config entry should identify the stable template and behavior module:
 
 ## Route Boundary
 
+Analytics route templates participate in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
+Template examples should show the route root and initial ready/busy baseline, while shared semantics stay in the Route Ready State doc.
+
 Route templates own stable DOM:
 
 ```html
@@ -75,4 +78,5 @@ bindPrepareEvents(root);
 loadPrepareConfig();
 ```
 
+Route scripts should update readiness through `analytics-app/app/frontend/js/analytics-route-state.js`.
 JavaScript should still render genuinely dynamic UI such as result lists, modal content, import previews, Data Sharing records, and validation output. Stable page skeletons should be HTML templates.

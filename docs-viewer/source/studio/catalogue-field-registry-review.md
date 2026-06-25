@@ -17,11 +17,10 @@ It is hosted by the local Studio app server.
 
 ## Route Ready State
 
-The page root `#fieldRegistryReviewRoot` implements the shared Studio ready-state contract:
+The page root `#fieldRegistryReviewRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific details:
 
-- `data-studio-ready="false"` during initial registry loading
-- `data-studio-ready="true"` after the registry has loaded or reached a stable unavailable state
-- `data-studio-busy="false"` because this route has no route-level commands
+- no route-level commands set busy
 - `data-studio-mode="registry"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`

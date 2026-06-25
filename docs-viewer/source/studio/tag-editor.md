@@ -20,10 +20,10 @@ Purpose:
 
 ## Route Ready State
 
-The page root `#seriesTagEditorRoot` exposes the Analytics route-ready contract:
+The page root `#seriesTagEditorRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
+Route-specific details:
 
-- `data-analytics-ready` is `false` while the series header and editor data load, then `true` after the tag editor has rendered or a stable error state is shown
-- `data-analytics-busy` is `true` while the editor save command is running
+- the editor save command sets route busy
 - `data-analytics-mode` is `single` when a work is selected, `edit` for the series-level editor state, and `empty` for missing or failed series loads
 - `data-analytics-service` reports whether the Local Analytics API is available for direct saves
 - `data-analytics-record-loaded` is `true` after a valid series id is loaded

@@ -239,12 +239,8 @@ After the refresh, the editor image element prefers the staged local primary der
 
 ## Route Ready State
 
-The page root `#catalogueWorkRoot` implements the shared Studio ready-state contract:
-
-- `data-studio-ready="false"` during initial route setup
-- `data-studio-ready="true"` after the initial empty, new, single-work, or bulk-work render completes
-- `data-studio-busy="true"` while route-level commands are running
-- `data-studio-busy="false"` when the route is stable for interaction
+The page root `#catalogueWorkRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
+Route-specific commands such as save, publish, unpublish, media refresh, import, and delete set route busy.
 
 Route-specific state attributes:
 
