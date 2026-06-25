@@ -341,16 +341,12 @@ export function initDocsViewerConfigController(context) {
       return Promise.resolve(null);
     }
 
-    scopeConfig.viewerConfigRequestPromise = Promise.all([
-      loadDocsViewerConfig(settings),
-      loadDocsViewerText()
-    ])
-      .then(function (results) {
-        var browserConfig = results[0] || {};
+    scopeConfig.viewerConfigRequestPromise = loadDocsViewerConfig(settings)
+      .then(function (browserConfig) {
+        browserConfig = browserConfig || {};
         var config = {
           docs_viewer: browserConfig.docsViewerSettings || {}
         };
-        config = mergeDocsViewerText(config, results[1]);
         applyViewerConfig(config);
         return config;
       })
@@ -369,25 +365,6 @@ export function initDocsViewerConfigController(context) {
       force: true,
       reloadNonce: String(Date.now())
     });
-  }
-
-  function loadDocsViewerText() {
-    if (typeof configService.fetchDocsViewerText !== "function") return Promise.resolve(null);
-    return configService.fetchDocsViewerText()
-      .catch(function (error) {
-        console.warn("docs_viewer: scoped UI text unavailable; using fallback copy", error);
-        return null;
-      });
-  }
-
-  function mergeDocsViewerText(config, text) {
-    if (!text || typeof text !== "object" || Array.isArray(text)) return config || {};
-    var target = config && typeof config === "object" ? config : {};
-    if (!target.ui_text || typeof target.ui_text !== "object" || Array.isArray(target.ui_text)) {
-      target.ui_text = {};
-    }
-    target.ui_text.docs_viewer = text;
-    return target;
   }
 
   return {

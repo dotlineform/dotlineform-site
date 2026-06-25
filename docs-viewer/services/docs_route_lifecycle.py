@@ -96,7 +96,6 @@ def public_route_record(
         },
         "config_urls": {
             "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-public-config.json",
-            "ui_text": "/docs-viewer/config/ui-text/public.json",
             "report_registry": "/assets/data/docs/public-reports.json",
         },
         "panels": {

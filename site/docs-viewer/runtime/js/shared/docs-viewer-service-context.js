@@ -25,8 +25,7 @@ export function createDocsViewerServiceContext(options) {
     },
     config: {
       authority: "browser-safe config asset",
-      docsViewerConfigUrl: cleanString(routeContext.docsViewerConfigUrl),
-      uiTextUrl: cleanString(routeContext.uiTextUrl)
+      docsViewerConfigUrl: cleanString(routeContext.docsViewerConfigUrl)
     },
     management: allowManagement
       ? {

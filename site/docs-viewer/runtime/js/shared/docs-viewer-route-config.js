@@ -243,7 +243,6 @@ export function resolveDocsViewerRouteConfig(options) {
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
     generatedBaseUrl: cleanString(rawConfig.generated_base_url),
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
-    uiTextUrl: cleanString(configUrls.ui_text),
     reportRegistryUrl: cleanString(configUrls.report_registry),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
     recentlyAddedUrl: normalizePath(requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")),

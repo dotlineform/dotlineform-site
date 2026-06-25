@@ -131,8 +131,7 @@ def assert_route_config_scope_default(page: Page) -> None:
                         search_index_url: '/assets/data/search/library/index.json'
                     },
                     config_urls: {
-                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
-                        ui_text: '/docs-viewer/config/ui-text/public.json'
+                        docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json'
                     }
                 }
             });

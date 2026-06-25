@@ -87,7 +87,6 @@
       "assets/data/search/analysis/index.json",
       "docs-viewer/config/defaults/docs-viewer-public-config.json",
       "docs-viewer/config/routes/docs-viewer-public-routes.json",
-      "docs-viewer/config/ui-text/public.json",
       "docs-viewer/static/css/docs-viewer.css",
       "docs-viewer/runtime/js/public/docs-viewer-public.js",
       "docs-viewer/runtime/js/shared/docs-viewer-app-boot.js",

@@ -142,7 +142,6 @@ The route config record sets:
 - `viewer_base_url`: the public route base
 - `docs_paths`: published `index-tree.json`, `recently-added.json`, and search index URLs
 - `config_urls.docs_viewer`: `/docs-viewer/config/defaults/docs-viewer-public-config.json`
-- `config_urls.ui_text`: `/docs-viewer/config/ui-text/public.json`
 
 Site validation config also needs to include required public docs/search assets and route files in `site-tools/config/site-tools.json` when they are deploy-critical.
 

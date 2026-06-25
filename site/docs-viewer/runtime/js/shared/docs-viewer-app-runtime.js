@@ -107,7 +107,6 @@ export function startDocsViewerRuntime(options) {
   var defaultRouteDocId = routeContext.defaultRouteDocId;
   var viewerPathname = routeContext.viewerPathname;
   var searchIndexUrl = routeContext.searchIndexUrl;
-  var uiTextUrl = routeContext.uiTextUrl;
   var managementBaseUrl = routeContext.managementBaseUrl;
   var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
   var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
@@ -405,8 +404,7 @@ export function startDocsViewerRuntime(options) {
       isManagementContext: function () { return routeWorkflow.isManagementContext(); },
       serviceClient: {
         docsViewerConfigUrl: docsViewerConfigUrl,
-        managementBaseUrl: managementBaseUrl,
-        uiTextUrl: uiTextUrl
+        managementBaseUrl: managementBaseUrl
       },
       managementState: {
         domains: {

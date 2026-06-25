@@ -35,6 +35,14 @@
       "parent_title": "Studio"
     },
     {
+      "doc_id": "site-request-ui-text-config-removal",
+      "title": "UI Text Config Removal",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-ui-text-config-removal.json",
+      "added_date": "2026-06-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-docs-viewer-embedded-detail-documents",
       "title": "Embedded Detail Documents",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-22",
       "parent_id": "admin",
       "parent_title": "Admin"
-    },
-    {
-      "doc_id": "catalogue-per-work-detail-source",
-      "title": "Catalogue Per-Work Detail Source",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-per-work-detail-source.json",
-      "added_date": "2026-06-22",
-      "parent_id": "studio",
-      "parent_title": "Studio"
     }
   ],
-  "generated_at": "2026-06-25T16:44:41Z"
+  "generated_at": "2026-06-25T18:58:01Z"
 }

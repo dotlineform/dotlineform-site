@@ -202,8 +202,7 @@ export function createDocsViewerAppComposition(options) {
   });
   var configService = createDocsViewerConfigService({
     dataRequestOptions: generatedDataRuntime.dataRequestOptions,
-    docsViewerConfigUrl: serviceContext.config.docsViewerConfigUrl,
-    uiTextUrl: serviceContext.config.uiTextUrl
+    docsViewerConfigUrl: serviceContext.config.docsViewerConfigUrl
   });
 
   function shouldInitializeManagement() {

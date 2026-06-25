@@ -82,7 +82,6 @@ export function createDocsViewerRouteContext(options) {
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),
     subScopes: [],
     subScopesById: new Map(),
-    uiTextUrl: routeConfig.uiTextUrl,
     reportRegistryUrl: routeConfig.reportRegistryUrl,
     managementBaseUrl: managementBaseUrl,
     generatedBaseUrl: generatedBaseUrl
