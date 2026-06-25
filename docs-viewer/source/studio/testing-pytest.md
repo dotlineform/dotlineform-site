@@ -2,7 +2,7 @@
 doc_id: testing-pytest
 title: Pytest
 added_date: 2026-05-14
-last_updated: 2026-06-12
+last_updated: 2026-06-25
 parent_id: testing
 ---
 # Pytest
@@ -51,6 +51,12 @@ Current integration:
 
 This keeps profile selection proportional to risk without turning every change into a broad suite run.
 Profiles should still stay proportional to risk.
+
+## Python Test Scope
+
+Python tests should be the default home for durable product checks. They should cover service inputs and outputs, HTTP response shapes, generated data contracts, parser behavior, fixture-backed data flows, and ownership boundaries.
+
+Do not use Python tests to preserve incidental UI behavior from a browser workflow. If a UI change matters because it sends a different payload or depends on a different server response, test that payload or response directly. Modal timing, cursor state, button copy, focus movement, and layout are not good permanent pytest assertions.
 
 ## Test File Compatibility
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ce8743e41b273911c66ef55716a2ce4d",
-    "generated_at_utc": "2026-06-25T12:47:33Z",
+    "version": "blake2b-790956b386b8398e363ecf9e096e45b6",
+    "generated_at_utc": "2026-06-25T12:51:29Z",
     "count": 225
   },
   "entries": [
@@ -1647,10 +1647,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-25",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-12 • Dev Home",
+      "display_meta": "2026-06-25 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1659,12 +1659,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-12",
+        "2026-06-25",
         "2026",
         "06",
-        "12"
+        "25"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-12 2026 06 12"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-25 2026 06 25"
     },
     {
       "id": "development-workflow",
@@ -5298,58 +5298,58 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-06-13",
-      "display_meta": "2026-06-13",
+      "last_updated": "2026-06-25",
+      "display_meta": "2026-06-25",
       "search_terms": [
         "testing",
-        "2026-06-13",
+        "2026-06-25",
         "2026",
         "06",
-        "13"
+        "25"
       ],
-      "search_text": "testing 2026-06-13 2026 06 13"
+      "search_text": "testing 2026-06-25 2026 06 25"
     },
     {
       "id": "smoke-testing",
       "kind": "doc",
       "title": "Browser Smoke Testing",
       "href": "/docs/?scope=studio&doc=smoke-testing",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-06-25",
       "parent_id": "testing",
       "parent_title": "Testing",
-      "display_meta": "2026-06-13 • Testing",
+      "display_meta": "2026-06-25 • Testing",
       "search_terms": [
         "smoke-testing",
         "smoke",
         "testing",
         "browser smoke testing",
         "browser",
-        "2026-06-13",
+        "2026-06-25",
         "2026",
         "06",
-        "13"
+        "25"
       ],
-      "search_text": "smoke-testing smoke testing browser smoke testing browser 2026-06-13 2026 06 13"
+      "search_text": "smoke-testing smoke testing browser smoke testing browser 2026-06-25 2026 06 25"
     },
     {
       "id": "testing-pytest",
       "kind": "doc",
       "title": "Pytest",
       "href": "/docs/?scope=studio&doc=testing-pytest",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-25",
       "parent_id": "testing",
       "parent_title": "Testing",
-      "display_meta": "2026-06-12 • Testing",
+      "display_meta": "2026-06-25 • Testing",
       "search_terms": [
         "testing-pytest",
         "testing",
         "pytest",
-        "2026-06-12",
+        "2026-06-25",
         "2026",
         "06",
-        "12"
+        "25"
       ],
-      "search_text": "testing-pytest testing pytest 2026-06-12 2026 06 12"
+      "search_text": "testing-pytest testing pytest 2026-06-25 2026 06 25"
     },
     {
       "id": "ui",

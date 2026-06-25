@@ -2,7 +2,7 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: 2026-06-13
+last_updated: 2026-06-25
 parent_id: ""
 ---
 # Testing
@@ -17,6 +17,14 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
 
 Choose the smallest profile or focused command that gives evidence for the risk you changed. Do not run broad profiles just to produce more output.
 
+## Test Policy
+
+Permanent automated tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration points.
+
+Do not add or expand permanent tests just to prove UI choreography: modal timing, button placement, cursor changes, hover state, focus movement, labels, copy tone, layout, and ordinary user click paths are better covered by manual or temporary in-app verification. If a UI change exposes a real product contract, test the underlying server response, request payload, generated data shape, or shared component contract instead of the full screen workflow.
+
+Browser smoke checks are allowed when the durable risk is route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or a shared ready/busy contract. Existing UI-heavy smoke scripts are legacy cleanup targets; do not extend them for routine UI work.
+
 ## What To Run
 
 Use this as the first-pass decision table.
@@ -25,11 +33,12 @@ Use this as the first-pass decision table.
 | --- | --- |
 | narrow docs copy | manual read-through, then `git diff --check` |
 | generated Studio docs/search contracts | `--profile docs` or focused docs builder/tests |
-| Docs Viewer public or management behavior | `--profile docs`; add `--profile docs-viewer-smoke` for browser/runtime changes |
+| Docs Viewer services, config, or generated data | `--profile docs` or focused `docs-viewer/tests/python/...` |
+| Docs Viewer public runtime or management route boundary | focused route/module smoke only when boot, public/private assets, payload reads, or local API reachability changed |
 | catalogue source, build, or publication behavior | `--profile catalogue`, focused `studio/tests/python/...`, or a narrow catalogue build preview |
-| Admin app checks, reports, risk, or operations pages | focused `admin-app/tests/python/...`; add `--profile admin-smoke` for route behavior |
-| Analytics tags or data sharing | focused `analytics-app/tests/python/...`; add `--profile analytics-smoke` for route/API smoke behavior |
-| public site or Studio-owned browser behavior | `--profile studio-smoke` or a focused script under `studio/tests/smoke/` |
+| Admin app checks, reports, risk, or operations pages | focused `admin-app/tests/python/...`; add `--profile admin-smoke` only for route boot or API reachability |
+| Analytics tags or data sharing | focused `analytics-app/tests/python/...`; add `--profile analytics-smoke` only for route/API boundaries |
+| public site or Studio-owned route behavior | `--profile studio-smoke` or a focused script under `studio/tests/smoke/` when the public route contract changed |
 | shared server, config, runner, or ownership boundary | `--profile quick`, then add owner-specific focused checks |
 
 Manual checks are still expected when the behavior depends on layout judgment, pointer feel, mobile ergonomics, or copy tone.
@@ -59,7 +68,7 @@ Profile roles:
 | `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
 | `docs-viewer-smoke` | `site/` validation plus Docs Viewer public read-only and standalone manage-service smoke checks. |
 | `admin-smoke` | local Admin home and operations route smoke checks. |
-| `analytics-smoke` | local Analytics tag API, tag route, modal, ready-state, and Data Sharing smoke checks. |
+| `analytics-smoke` | local Analytics tag APIs, route shells, ready-state, and Data Sharing route/API boundary smoke checks. |
 | `studio-smoke` | `site/` validation plus public-site and Studio-owned catalogue smoke checks. |
 | `full` | runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke` or `analytics-smoke`. |
 
@@ -104,7 +113,9 @@ Cross-app checks:
 
 ## Browser Smoke Testing
 
-Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, modal behavior, or ready/busy state.
+Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, public/private asset boundaries, or shared ready/busy state.
+
+They should not be expanded to prove routine modal behavior or other UI choreography. Use manual verification, temporary scripts, or shared component tests for that work, and keep permanent checks focused on durable route and data contracts.
 
 Do not use a raw `file://` URL for routes that depend on module imports, same-origin asset paths, or local APIs. Use a running local app, the checked-in `site/` root through a static server, or the route-specific setup expected by the smoke script.
 
@@ -119,6 +130,7 @@ Current conventions:
 - keep tests under the owning app test directory
 - use plain `assert`
 - prefer direct module tests over broad end-to-end setup unless the integration boundary is the behavior being tested
+- test server responses, request payloads, and data transformations before browser-visible UI outcomes
 - run grouped checks through `admin-app/commands/run_checks.py`, which invokes pytest with the same Python interpreter
 - run focused checks with `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
 - avoid network access
@@ -167,5 +179,6 @@ Known gaps:
 - profile names still preserve some historical Studio terminology
 - cross-app route coverage is uneven
 - not every route exposes the same ready/busy contract
+- several legacy smoke scripts still test UI choreography and should be pruned or split toward API/module coverage
 
 Treat these gaps as work to plan, not as permission to make new tests vague. Add a check only when it captures repeatable risk that would otherwise be hard to verify.

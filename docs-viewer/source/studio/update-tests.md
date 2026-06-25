@@ -28,6 +28,15 @@ I would start with Docs Viewer:
    - Add a clear rule: no new UI behavior assertions unless the acceptance contract is explicitly browser-bound.
    - Update `admin-app/commands/run_checks.py` profile descriptions so “smoke” does not imply broad UI workflow coverage.
 
+done: Codified the testing policy.
+
+Changes landed in:
+- [testing.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/testing.md:20): added the core policy that permanent tests should focus on data flows, server responses, generated contracts, ownership boundaries, and route/module integration, not UI choreography.
+- [testing-pytest.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/testing-pytest.md:55): clarified Python tests should cover payloads/responses/data flows, not modal timing, cursor state, copy, focus, or layout.
+- [smoke-testing.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/smoke-testing.md:19): narrowed browser smoke guidance to route/module/API boundaries and marked UI-heavy smokes as cleanup targets.
+- [development-checklist.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/source/studio/development-checklist.md:104): updated verification guidance so UI/layout work uses manual or temporary browser checks, not new permanent workflow tests.
+- [run_checks.py](/Users/dlf/Developer/dotlineform/dotlineform-site/admin-app/commands/run_checks.py:428): changed smoke profile descriptions so modal-heavy checks are labelled legacy/focused, not the pattern to extend.
+
 2. Split oversized Python tests by service boundary
    Biggest offenders:
    - `docs-viewer/tests/python/test_docs_management_service.py` at 1656 lines
@@ -44,6 +53,77 @@ I would start with Docs Viewer:
    - `test_docs_management_generated_reads.py`
    - `test_docs_import_conversion.py`
    - `test_docs_import_media_plans.py`
+
+done: Split `docs-viewer/tests/python/test_docs_management_service.py` by service boundary.
+
+The deleted monolith is now:
+- `docs-viewer/tests/python/docs_management_test_support.py`
+- `docs-viewer/tests/python/test_docs_management_metadata.py`
+- `docs-viewer/tests/python/test_docs_management_capabilities.py`
+- `docs-viewer/tests/python/test_docs_scope_config.py`
+- `docs-viewer/tests/python/test_docs_scope_lifecycle.py`
+- `docs-viewer/tests/python/test_docs_source_config_settings.py`
+- `docs-viewer/tests/python/test_docs_data_sharing_export.py`
+
+`admin-app/commands/run_checks.py --profile docs` now references the split files directly.
+
+done: Split `docs-viewer/tests/python/test_docs_import_service.py` by import contract.
+
+The deleted import monolith is now:
+- `docs-viewer/tests/python/docs_import_test_support.py`
+- `docs-viewer/tests/python/test_docs_import_returned_packages.py`
+- `docs-viewer/tests/python/test_docs_import_source_listing.py`
+- `docs-viewer/tests/python/test_docs_import_source_html.py`
+- `docs-viewer/tests/python/test_docs_import_source_formats.py`
+- `docs-viewer/tests/python/test_docs_import_media_packages.py`
+- `docs-viewer/tests/python/test_docs_import_apply_summaries.py`
+- `docs-viewer/tests/python/test_docs_import_apply_hierarchy.py`
+
+`admin-app/commands/run_checks.py --profile docs` now references the import split files directly.
+
+done: Split `docs-viewer/tests/python/test_build_docs_python.py` by builder contract.
+
+The deleted builder monolith is now:
+- `docs-viewer/tests/python/build_docs_test_support.py`
+- `docs-viewer/tests/python/test_build_docs_payloads.py`
+- `docs-viewer/tests/python/test_build_docs_subscopes.py`
+- `docs-viewer/tests/python/test_build_docs_public_payloads.py`
+- `docs-viewer/tests/python/test_build_docs_cli.py`
+- `docs-viewer/tests/python/test_build_docs_external_scopes.py`
+
+`admin-app/commands/run_checks.py --profile docs` now includes the split builder pytest files.
+
+done: Split `studio/tests/python/test_studio_app_server.py` by Studio server contract.
+
+The deleted Studio app server monolith is now:
+- `studio/tests/python/studio_app_server_test_support.py`
+- `studio/tests/python/test_studio_app_runtime_config.py`
+- `studio/tests/python/test_studio_catalogue_read_routes.py`
+- `studio/tests/python/test_studio_catalogue_import_routes.py`
+- `studio/tests/python/test_studio_catalogue_write_routes.py`
+
+`admin-app/commands/run_checks.py` now references the split Studio app server files in its static Python path inventory.
+
+done: Split `docs-viewer/tests/python/test_docs_viewer_service.py` by Docs Viewer service contract.
+
+The deleted Docs Viewer service monolith is now:
+- `docs-viewer/tests/python/docs_viewer_service_test_support.py`
+- `docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py`
+- `docs-viewer/tests/python/test_docs_viewer_management_runtime_boundaries.py`
+- `docs-viewer/tests/python/test_docs_viewer_service_config.py`
+- `docs-viewer/tests/python/test_docs_viewer_static_assets.py`
+
+`admin-app/commands/run_checks.py --profile docs` and the static Python path inventory now reference the split Docs Viewer service files.
+
+done: Split `analytics-app/tests/python/test_tags_data_sharing_adapter.py` by Analytics tags Data Sharing contract.
+
+The deleted Analytics tags adapter monolith is now:
+- `analytics-app/tests/python/tags_data_sharing_adapter_test_support.py`
+- `analytics-app/tests/python/test_tags_data_sharing_prepare.py`
+- `analytics-app/tests/python/test_tags_data_sharing_returned_registry_aliases.py`
+- `analytics-app/tests/python/test_tags_data_sharing_returned_assignments.py`
+
+`admin-app/commands/run_checks.py` now references the split Analytics tags Data Sharing files in its static Python path inventory.
 
 3. Remove UI assertions from Python service tests
    Service tests should assert:

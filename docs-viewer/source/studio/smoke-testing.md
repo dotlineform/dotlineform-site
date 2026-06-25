@@ -2,7 +2,7 @@
 doc_id: smoke-testing
 title: Browser Smoke Testing
 added_date: 2026-05-01
-last_updated: 2026-06-13
+last_updated: 2026-06-25
 parent_id: testing
 viewable: true
 ---
@@ -16,7 +16,7 @@ Use this page for browser-test mechanics. Use [Testing](/docs/?scope=studio&doc=
 
 ## When To Add A Smoke
 
-Add or run a browser smoke when the risk is route behavior, not just pure data transformation.
+Add or run a browser smoke when the risk is route or module integration, not just pure data transformation and not ordinary UI choreography.
 
 Good candidates:
 
@@ -24,11 +24,20 @@ Good candidates:
 - local app route boots against its expected config
 - browser modules expose the expected narrow public surface
 - management-only modules stay out of public installs
-- ready/busy state controls whether commands can be used
-- a modal, menu, or publish/confirm flow needs real DOM behavior
+- shared ready/busy state controls route availability
 - local APIs and route shells must agree on request/response shape
 
 Prefer Python module tests for deterministic service, parser, schema, and planner behavior. Do not add a browser smoke when a focused Python test would describe the risk more directly.
+
+Poor candidates for permanent browser smokes:
+
+- modal open/close timing
+- cursor, hover, focus, and button disabled state
+- copy, labels, and visual placement
+- normal user workflows whose data flow can be tested through services or HTTP responses
+- one-off UI regressions that can be verified manually or with a temporary script
+
+Existing UI-heavy smoke scripts may stay until their owners prune them, but new work should not deepen that coverage.
 
 ## Where Smokes Live
 
@@ -149,12 +158,12 @@ The `quick` profile includes this audit. The audit is still Studio-specific beca
 
 ## Manual Check Pairing
 
-Every Codex-run smoke test should still name the manual follow-up when behavior depends on tactile interaction, visual layout, copy tone, or mobile scrolling.
+Every Codex-run smoke test should still name the manual follow-up when behavior depends on tactile interaction, visual layout, copy tone, modal choreography, or mobile scrolling.
 
 Example:
 
-- Codex-run check: open the page, create draft state, click the target command, confirm modal text
-- manual check: repeat the same flow on desktop and mobile to confirm placement, timing, and pointer behavior feel correct
+- Codex-run check: open the route, wait for readiness, trigger the request boundary, and confirm the mocked API response is surfaced
+- manual check: repeat the user flow on desktop and mobile to confirm placement, timing, pointer behavior, and modal lifecycle feel correct
 
 ## Current Gaps
 
@@ -165,5 +174,6 @@ Known smoke-testing gaps:
 - app smoke profiles have different setup expectations
 - Analytics smoke coverage is broader than the default `full` profile
 - browser smokes do not replace visual review for UI conformance
+- several older smoke scripts still carry modal and workflow assertions that should move to API, service, or module tests
 
 Call out these gaps in change close-out when they affect the confidence of the evidence.
