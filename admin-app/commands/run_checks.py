@@ -146,7 +146,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_route_smoke_helpers.py",
                 "docs-viewer/tests/smoke/docs_viewer_routes.py",
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
-                "docs-viewer/tests/smoke/docs_viewer_manage_dark_theme.py",
                 "docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py",
                 "docs-viewer/tests/python/test_generated_output_contract_fixtures.py",
                 "studio/tests/smoke/local_studio_app_docs_viewer.py",

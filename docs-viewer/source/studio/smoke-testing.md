@@ -176,6 +176,6 @@ Known smoke-testing gaps:
 - app smoke profiles have different setup expectations
 - Analytics smoke coverage is broader than the default `full` profile
 - browser smokes do not replace visual review for UI conformance
-- several older smoke scripts still carry modal and workflow assertions that should move to API, service, or module tests
+- some retained route/module smokes still include narrow interactions only when needed to prove route, request, or module state boundaries
 
 Call out these gaps in change close-out when they affect the confidence of the evidence.

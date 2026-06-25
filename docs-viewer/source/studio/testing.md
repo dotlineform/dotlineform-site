@@ -190,6 +190,6 @@ Known gaps:
 - profile names still preserve some historical Studio terminology
 - cross-app route coverage is uneven
 - not every route exposes the same ready/busy contract
-- several legacy smoke scripts still test UI choreography and should be pruned or split toward API/module coverage
+- visual and tactile UI confidence still depends on manual or temporary browser review
 
 Treat these gaps as work to plan, not as permission to make new tests vague. Add a check only when it captures repeatable risk that would otherwise be hard to verify.

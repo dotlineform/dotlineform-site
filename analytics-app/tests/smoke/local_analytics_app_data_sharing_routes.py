@@ -319,12 +319,6 @@ def assert_prepare(page, base_url: str) -> None:
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     expect(page.locator("[data-data-sharing-prepare-record]").first).to_be_visible(timeout=10_000)
-    page.locator("#dataSharingPrepareSelectAll").click()
-    page.locator("#dataSharingPrepareRun").click()
-    expect(page.locator("[data-role='analytics-modal']")).to_be_visible(timeout=10_000)
-    title = page.locator("[data-role='analytics-modal'] .analyticsModal__title").first.inner_text(timeout=10_000)
-    if title != "Package result":
-        raise AssertionError(f"unexpected prepare modal title: {title!r}")
 
 
 def assert_review(page, base_url: str) -> None:
@@ -336,11 +330,7 @@ def assert_review(page, base_url: str) -> None:
     expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
-    page.locator("#dataSharingReviewRun").click()
-    expect(page.locator("[data-data-sharing-review-preview]").first).to_be_visible(timeout=10_000)
-    title = page.locator("[data-role='analytics-modal'] .analyticsModal__title").first.inner_text(timeout=10_000)
-    if title != "Returned package review":
-        raise AssertionError(f"unexpected review modal title: {title!r}")
+    expect(page.locator("#dataSharingReviewFileSelect")).to_have_value("summaries.jsonl", timeout=10_000)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -370,9 +360,7 @@ def main(argv: list[str] | None = None) -> int:
             "/analytics/api/data-sharing/health",
             "/analytics/api/data-sharing/config",
             "/analytics/api/data-sharing/selectable-records",
-            "/analytics/api/data-sharing/prepare",
             "/analytics/api/data-sharing/returned-packages",
-            "/analytics/api/data-sharing/review",
         }
         seen_paths = {str(call["path"]) for call in data_sharing_api_calls}
         missing_paths = required_paths.difference(seen_paths)

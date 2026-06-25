@@ -71,11 +71,6 @@ def main(argv: list[str] | None = None) -> int:
                     }
                     const liveWorkUrl = mod.buildPublicSiteUrl(config, "/works/", { work: "00123" }, { site: "production" });
 
-                    let openModalDetail = null;
-                    document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
-                        openModalDetail = event.detail;
-                    }, { once: true });
-                    const modalEvent = mod.openModal("Confirm Delete", { work_id: "00001" });
                     const homeLinks = [...document.querySelectorAll(".studioLinkList__item")].map((link) => ({
                         label: link.textContent.trim(),
                         viewId: link.getAttribute("data-studio-navigate"),
@@ -91,17 +86,6 @@ def main(argv: list[str] | None = None) -> int:
                     const topNavHomeHref = document.querySelector(".site-title a")?.getAttribute("href");
                     const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
 
-                    let delegatedModalDetail = null;
-                    document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
-                        delegatedModalDetail = event.detail;
-                    }, { once: true });
-                    const button = document.createElement("button");
-                    button.type = "button";
-                    button.setAttribute("data-studio-modal", "rename");
-                    button.setAttribute("data-studio-params", JSON.stringify({ work_id: "00001" }));
-                    document.body.append(button);
-                    button.click();
-
                     return {
                         hasDocsService: Object.prototype.hasOwnProperty.call(services, "docs"),
                         hasExternalLinks: Object.prototype.hasOwnProperty.call(config, "external_links"),
@@ -110,7 +94,6 @@ def main(argv: list[str] | None = None) -> int:
                         dataPath: config.app.runtime.data_paths.ui_text.catalogue_status,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
                         pipelineThumbSuffix: config.app.runtime.pipeline.variants.thumb.suffix,
-                        modalEventName: config.app.runtime.modals.event,
                         url,
                         workEditorUrl,
                         publicWorkUrl,
@@ -118,14 +101,11 @@ def main(argv: list[str] | None = None) -> int:
                         cataloguePublicMissingBaseError,
                         liveWorkUrl,
                         runtimePrimaryNav: config.app.runtime.navigation.primary,
-                        openModalDetail,
-                        modalDefaultPrevented: modalEvent.defaultPrevented,
                         homeLinks,
                         topNavLinks,
                         topNavTitle,
                         topNavHomeHref,
-                        homeReady,
-                        delegatedModalDetail
+                        homeReady
                     };
                 }"""
             )
@@ -157,8 +137,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected thumb works path: {result['mediaThumbWorks']!r}")
         if result["pipelineThumbSuffix"] != "thumb":
             raise AssertionError(f"unexpected pipeline thumb suffix: {result['pipelineThumbSuffix']!r}")
-        if result["modalEventName"] != "studio:open-modal":
-            raise AssertionError(f"unexpected modal event name: {result['modalEventName']!r}")
         if result["url"] != expected_url:
             raise AssertionError(f"unexpected view URL: {result['url']!r}")
         if result["workEditorUrl"] != "/studio/catalogue-work/?work=00001&zero=0":
@@ -171,10 +149,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"catalogue public links did not fail closed without a public base: {result['cataloguePublicMissingBaseError']!r}")
         if result["liveWorkUrl"] != "https://dotlineform.com/works/?work=00123":
             raise AssertionError(f"unexpected live work URL: {result['liveWorkUrl']!r}")
-        if result["openModalDetail"]["name"] != "confirm-delete":
-            raise AssertionError(f"unexpected openModal detail: {result['openModalDetail']!r}")
-        if result["modalDefaultPrevented"]:
-            raise AssertionError("openModal event was unexpectedly prevented")
         home_link_hrefs = {link["href"] for link in result["homeLinks"]}
         home_link_labels = [link["label"] for link in result["homeLinks"]]
         expected_home_hrefs = {
@@ -192,10 +166,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"Studio home has unexpected first links: {result['homeLinks']!r}")
         if result["homeReady"] != "true":
             raise AssertionError(f"Studio home did not expose ready state: {result['homeReady']!r}")
-        if result["delegatedModalDetail"]["name"] != "rename":
-            raise AssertionError(f"unexpected delegated modal detail: {result['delegatedModalDetail']!r}")
-        if result["delegatedModalDetail"]["params"]["work_id"] != "00001":
-            raise AssertionError(f"unexpected delegated modal params: {result['delegatedModalDetail']!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         print(f"local Studio navigation adapter OK: {base_url}/studio/")

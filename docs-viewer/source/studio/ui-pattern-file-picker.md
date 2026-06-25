@@ -121,34 +121,15 @@ The modal is the only editing surface for those three fields.
 
 ## Verification
 
-Shared component smoke:
+Do not add permanent route or modal workflow smokes for ordinary picker interaction.
+Use the test review gate from [Testing](/docs/?scope=studio&doc=testing): prove durable contracts at the lowest layer, and use manual or temporary browser checks for tactile interaction, focus feel, and modal choreography.
 
-```bash
-$HOME/miniconda3/bin/python3 admin-app/tests/smoke/ui_catalogue_file_picker_modules.py --site-root .
-```
+Durable checks should focus on:
 
-Studio Work editor integration smoke:
+- config mapping and returned selection shape
+- loader request arguments for folder, subfolder, and query changes
+- route adapter mapping from `{ folder, subfolder, filename }` into draft fields
+- server/API behavior that supplies folder and file records
+- generated or saved source fields after confirmed selection, when the route owns persistence
 
-```bash
-$HOME/miniconda3/bin/python3 studio/tests/smoke/catalogue_project_media_picker_modules.py --site-root .
-```
-
-The shared smoke covers:
-
-- existing folder, subfolder, and file preselection
-- parent-folder row selection after selecting a subfolder
-- prefix folder search
-- one-level subfolder and file loading
-- file listbox wheel selection
-- Enter submit from the file list
-- missing-current-file status
-- component-owned config text independent of Studio `ui-text`
-
-The Studio integration smoke covers:
-
-- picker modal title and action labels coming from shared picker config, not Studio `ui-text`
-- read-only page labels backed by hidden values
-- modal-owned folder search
-- no draft mutation while typing in the modal
-- Escape reset inside the modal without closing the modal
-- confirmed selection updating all three work draft fields
+Manual or temporary browser checks remain appropriate for listbox keyboard behavior, wheel interaction, focus trapping, labels, modal button placement, and visual fit.

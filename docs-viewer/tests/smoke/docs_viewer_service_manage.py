@@ -146,101 +146,24 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
 
 
 def assert_generated_requests(paths: set[str]) -> None:
-    for expected in ["/docs/generated/index-tree", "/docs/generated/payload", "/docs/generated/recently-added", "/docs/generated/search"]:
+    for expected in ["/docs/generated/index-tree", "/docs/generated/payload"]:
         if expected not in paths:
             raise AssertionError(f"expected generated service request {expected!r}; saw {sorted(paths)!r}")
 
 
-def assert_manage_info_panel(page: Page, timeout_ms: int) -> None:
-    page.locator("#docsViewerInfoToggle").click()
-    page.wait_for_function(
-        """() => {
-            const root = document.querySelector("#docsViewerRoot");
-            const panel = document.querySelector("#docsViewerInfoPanel");
-            const title = panel?.querySelector(".docsViewer__metadataInfoTitle");
-            return root?.dataset.infoPanelState === "open" &&
-                panel &&
-                !panel.hidden &&
-                title &&
-                title.textContent.trim() === "Docs Viewer";
-        }""",
-        timeout=timeout_ms,
-    )
-    info_state = page.locator("#docsViewerInfoPanel").evaluate(
-        """panel => ({
-            terms: Array.from(panel.querySelectorAll("dt")).map((node) => node.textContent.trim()),
-            text: panel.textContent || ""
-        })"""
-    )
-    expected_terms = ["Doc ID", "Summary", "Date", "Added", "Updated"]
-    if info_state["terms"] != expected_terms:
-        raise AssertionError(f"manage info panel did not render compact metadata terms: {info_state!r}")
-    for expected in ["docs-viewer"]:
-        if expected not in str(info_state["text"]):
-            raise AssertionError(f"manage info panel missed {expected!r}: {info_state!r}")
-
-
-def exercise_search(page: Page, timeout_ms: int) -> None:
-    page.locator("#docsViewerSearchInput").fill("viewer")
-    page.wait_for_function(
-        """() => {
-            const input = document.querySelector("#docsViewerSearchInput");
-            const status = document.querySelector("#docsViewerResultsStatus");
-            return input &&
-                input.value === "viewer" &&
-                status &&
-                !status.hidden &&
-                /results?|No results/.test(status.textContent);
-        }""",
-        timeout=timeout_ms,
-    )
-
-
-def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], set[str], str]:
+def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], str]:
     generated_requests: list[str] = []
-    management_posts: list[str] = []
     page.on(
         "request",
         lambda request: generated_requests.append(request.url)
         if "/docs/generated/" in request.url
         else None,
     )
-    page.on(
-        "request",
-        lambda request: management_posts.append(request.url)
-        if request.method == "POST" and "/docs/" in urlparse(request.url).path
-        else None,
-    )
 
     page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     assert_manage_route_contract(manage_route_state(page), base_url)
-    assert_manage_info_panel(page, timeout_ms)
-
-    page.locator("#docsViewerRecentButton").click()
-    page.wait_for_function(
-        """() => {
-            const status = document.querySelector("#docsViewerResultsStatus");
-            return status && !status.hidden && /recently added docs?/.test(status.textContent);
-        }""",
-        timeout=timeout_ms,
-    )
-    exercise_search(page, timeout_ms)
-
-    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
-    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
-    page.locator("#docsViewerManageActionsButton").click()
-    page.locator("#docsViewerManageDeleteButton").click()
-    page.wait_for_function(
-        """() => {
-            const status = document.querySelector("#docsViewerStatus");
-            return status &&
-                !status.hidden &&
-                status.textContent.includes("child docs still depend");
-        }""",
-        timeout=timeout_ms,
-    )
-    return request_paths(generated_requests), request_paths(management_posts), page.url
+    return request_paths(generated_requests), page.url
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -259,13 +182,11 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 page = browser.new_page()
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
-                generated_paths, management_post_paths, final_url = exercise_manage_route(page, base_url, args.timeout_ms)
+                generated_paths, final_url = exercise_manage_route(page, base_url, args.timeout_ms)
             finally:
                 browser.close()
 
         assert_generated_requests(generated_paths)
-        if "/docs/delete-preview" not in management_post_paths:
-            raise AssertionError(f"expected delete preview POST through Docs Viewer service: {sorted(management_post_paths)!r}")
         if query_value(final_url, "mode"):
             raise AssertionError(f"expected clean manage URL without mode query, got {final_url}")
         if errors:

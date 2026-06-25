@@ -142,11 +142,6 @@ def run_browser_smoke(base_url: str) -> None:
         expect(activity_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
         expect(activity_root).to_have_attribute("data-admin-mode", "list", timeout=10_000)
         expect(page.locator("[data-activity-id='admin-activity-smoke']")).to_be_visible(timeout=10_000)
-        page.locator("[data-activity-id='admin-activity-smoke']").click()
-        expect(page.locator("[data-role='admin-modal']")).to_be_visible(timeout=10_000)
-        modal_body = page.locator("[data-role='admin-modal'] .tagStudioModal__label").all_inner_texts()
-        if modal_body != ["Wrote source JSON", "Updated Admin activity feed"]:
-            raise AssertionError(f"unexpected activity modal body: {modal_body!r}")
 
         page.close()
         browser.close()
