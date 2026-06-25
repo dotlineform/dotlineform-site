@@ -484,6 +484,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json"
         },
         {
+          "doc_id": "docs-viewer-public-route-shell-template",
+          "title": "Docs Viewer Public Route Shell Template",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
+        },
+        {
           "doc_id": "scripts-docs-export",
           "title": "Documents Package Preparation Script",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json"
@@ -667,11 +672,6 @@
               "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-source-shape.json"
             }
           ]
-        },
-        {
-          "doc_id": "docs-viewer-public-route-shell-template",
-          "title": "Public Route Shell Template",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
         },
         {
           "doc_id": "docs-viewer-public-scopes",
@@ -1214,5 +1214,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-25T15:43:06Z"
+  "generated_at": "2026-06-25T15:46:57Z"
 }

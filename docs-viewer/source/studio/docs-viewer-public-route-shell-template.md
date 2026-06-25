@@ -1,12 +1,12 @@
 ---
 doc_id: docs-viewer-public-route-shell-template
-title: Public Route Shell Template
+title: Docs Viewer Public Route Shell Template
 added_date: 2026-06-13
 last_updated: 2026-06-13
+summary: describes the lifecycle-generated public site shell
 parent_id: docs-viewer
-viewable: true
 ---
-# Public Route Shell Template
+# Docs Viewer Public Route Shell Template
 
 Public Docs Viewer route shells are tracked static HTML files under `site/`.
 They are part of the canonical deploy root and are not generated during deploy.
