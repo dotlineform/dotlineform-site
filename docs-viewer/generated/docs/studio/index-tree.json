@@ -489,6 +489,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
         },
         {
+          "doc_id": "docs-viewer-static-route-template",
+          "title": "Docs Viewer Static Route Template",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json"
+        },
+        {
           "doc_id": "scripts-docs-export",
           "title": "Documents Package Preparation Script",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json"
@@ -1214,5 +1219,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-25T15:46:57Z"
+  "generated_at": "2026-06-25T15:50:14Z"
 }

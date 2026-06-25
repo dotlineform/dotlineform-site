@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "docs-viewer-static-route-template",
+      "title": "Docs Viewer Static Route Template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json",
+      "added_date": "2026-06-25",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "route-ready-state",
       "title": "Route Ready State",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-21 00:00",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "data-sharing-documents-adapter-structure",
-      "title": "Documents Data Sharing Adapter Structure",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-adapter-structure.json",
-      "added_date": "2026-06-21 00:00",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-06-25T15:43:06Z"
+  "generated_at": "2026-06-25T15:50:14Z"
 }

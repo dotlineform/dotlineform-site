@@ -25,7 +25,7 @@ Current policy:
 - local tracked scope creation is available through the same lifecycle action
 - external local scope creation replaces the former local untracked mode
 - user-created public scope deletion is available when the scope manifest records owned files
-- public route shells are rendered from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template)
+- public route shells are rendered from [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template)
 
 ## Scope Creation Boundary
 

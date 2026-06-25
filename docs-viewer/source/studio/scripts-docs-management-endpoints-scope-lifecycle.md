@@ -16,7 +16,7 @@ Current create support includes:
 - `local_committed`
 
 For public-readonly scopes, the lifecycle action renders `docs-viewer/templates/public-route/index.html` into `site/<route>/index.html`.
-See [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
+See [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
 User-created public scopes may be deleted when the manifest records the route shell, route records, and public payloads as owned by the lifecycle action.
 
 ## `POST /docs/scopes/create-preview`

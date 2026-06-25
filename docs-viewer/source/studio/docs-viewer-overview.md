@@ -29,6 +29,7 @@ Catalogue pages do not use the Docs Viewer.
 ## Shared Module Model
 
 The current implementation is split into three layers.
+Use [Docs Viewer Static Route Template](/docs/?scope=studio&doc=docs-viewer-static-route-template) for the public/manage route shell ownership, stable mount points, and runtime entrypoint boundaries.
 
 ### 1. Scope-owned route shells and service shell
 

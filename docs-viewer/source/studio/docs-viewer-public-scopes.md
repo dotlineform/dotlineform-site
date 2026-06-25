@@ -13,7 +13,7 @@ Current public routes:
 - `/analysis/`
 
 New public scopes can be created through the Docs Viewer New Scope lifecycle action with `publishing_mode: "public_readonly"`.
-The action renders the route shell from [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template), updates public route config, creates source/generated payloads, and syncs the initial public route asset copy under `site/assets/data/`.
+The action renders the route shell from [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template), updates public route config, creates source/generated payloads, and syncs the initial public route asset copy under `site/assets/data/`.
 
 ## Dependencies
 

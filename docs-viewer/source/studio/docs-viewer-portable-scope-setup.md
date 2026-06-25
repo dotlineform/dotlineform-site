@@ -86,7 +86,7 @@ The Docs Viewer New Scope action is the preferred way to create a repo-local pub
 For `publishing_mode: "public_readonly"`, it creates source/config records, working generated output, public payload snapshots, route registry records, and the tracked public route shell.
 It renders the shell from `docs-viewer/templates/public-route/index.html`.
 
-See [Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
+See [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
 
 ### External Local Scope Action
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-45b724aa213c62acdcbd7bc9ff282778",
-    "generated_at_utc": "2026-06-25T15:46:57Z",
-    "count": 225
+    "version": "blake2b-a29cfaf989f47808b31c4b7b9f4c89fc",
+    "generated_at_utc": "2026-06-25T15:50:14Z",
+    "count": 226
   },
   "entries": [
     {
@@ -2122,6 +2122,31 @@
         "13"
       ],
       "search_text": "docs-viewer-public-route-shell-template docs viewer public route shell template docs viewer public route shell template docs viewer 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "docs-viewer-static-route-template",
+      "kind": "doc",
+      "title": "Docs Viewer Static Route Template",
+      "href": "/docs/?scope=studio&doc=docs-viewer-static-route-template",
+      "last_updated": "2026-06-25",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-25 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-static-route-template",
+        "docs",
+        "viewer",
+        "static",
+        "route",
+        "template",
+        "docs viewer static route template",
+        "docs viewer",
+        "2026-06-25",
+        "2026",
+        "06",
+        "25"
+      ],
+      "search_text": "docs-viewer-static-route-template docs viewer static route template docs viewer static route template docs viewer 2026-06-25 2026 06 25"
     },
     {
       "id": "scripts-docs-export",
