@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "update-tests",
+      "title": "Tests policy and refactoring",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/update-tests.json",
+      "added_date": "2026-06-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-docs-viewer-embedded-detail-documents",
       "title": "Embedded Detail Documents",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-21 00:00",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "analytics-static-route-template",
-      "title": "Analytics Static Route Template",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template.json",
-      "added_date": "2026-06-21",
-      "parent_id": "analytics",
-      "parent_title": "Analytics"
     }
   ],
-  "generated_at": "2026-06-24T21:57:15Z"
+  "generated_at": "2026-06-25T12:47:33Z"
 }

@@ -327,6 +327,12 @@
           "title": "Shareable Content Blocks Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
           "ui_status": "draft"
+        },
+        {
+          "doc_id": "update-tests",
+          "title": "Tests policy and refactoring",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/update-tests.json",
+          "ui_status": "in-progress"
         }
       ]
     },
@@ -1209,5 +1215,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-24T21:57:15Z"
+  "generated_at": "2026-06-25T12:47:33Z"
 }

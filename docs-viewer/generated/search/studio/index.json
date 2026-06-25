@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5874b669befce1efb119c18223d895e2",
-    "generated_at_utc": "2026-06-24T21:57:15Z",
-    "count": 224
+    "version": "blake2b-ce8743e41b273911c66ef55716a2ce4d",
+    "generated_at_utc": "2026-06-25T12:47:33Z",
+    "count": 225
   },
   "entries": [
     {
@@ -1401,6 +1401,33 @@
         "23"
       ],
       "search_text": "site-request-shareable-content-blocks site request shareable content blocks shareable content blocks request change requests change requests 2026-06-23 2026 06 23"
+    },
+    {
+      "id": "update-tests",
+      "kind": "doc",
+      "title": "Tests policy and refactoring",
+      "href": "/docs/?scope=studio&doc=update-tests",
+      "last_updated": "2026-06-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-25 • Change Requests",
+      "search_terms": [
+        "update-tests",
+        "update",
+        "tests",
+        "tests policy and refactoring",
+        "policy",
+        "and",
+        "refactoring",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-25",
+        "2026",
+        "06",
+        "25"
+      ],
+      "search_text": "update-tests update tests tests policy and refactoring policy and refactoring change requests change requests 2026-06-25 2026 06 25"
     },
     {
       "id": "data-sharing",
