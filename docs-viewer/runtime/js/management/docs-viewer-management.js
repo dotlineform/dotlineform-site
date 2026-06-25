@@ -27,6 +27,9 @@ import {
 import {
   collectDescendantDocIds
 } from "./docs-viewer-management-action-workflow.js";
+import {
+  readSourceConfigSettings
+} from "./docs-viewer-management-client.js";
 
 function createDocsViewerManagementStateFacade(domains) {
   var sources = domains || {};
@@ -144,6 +147,10 @@ export function initDocsViewerManagement(context) {
   var settingsForm = shellRef("settingsForm", "docsViewerSettingsForm");
   var settingsHeading = shellRef("settingsHeading", "docsViewerSettingsHeading");
   var settingsScope = shellRef("settingsScope", "docsViewerSettingsScope");
+  var settingsUpdatedField = shellRef("settingsUpdatedField", "docsViewerSettingsUpdatedField");
+  var settingsUpdatedInput = shellRef("settingsUpdatedInput", "docsViewerSettingsUpdatedInput");
+  var settingsUpdatedLabel = shellRef("settingsUpdatedLabel", "docsViewerSettingsUpdatedLabel");
+  var settingsDescription = shellRef("settingsDescription", "docsViewerSettingsDescription");
   var settingsWarnings = shellRef("settingsWarnings", "docsViewerSettingsWarnings");
   var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
   var settingsCancelButton = shellRef("settingsCancelButton", "docsViewerSettingsCancelButton");
@@ -288,7 +295,17 @@ export function initDocsViewerManagement(context) {
 
   function openSettingsModal() {
     if (!modalController || !modalController.openSettingsModalShell()) return;
-    modalController.setSettingsField(null);
+    readSourceConfigSettings(managementClientOptions())
+      .then(function (payload) {
+        var scopes = Array.isArray(payload && payload.scopes) ? payload.scopes : [];
+        var fields = scopes[0] && Array.isArray(scopes[0].fields) ? scopes[0].fields : [];
+        modalController.setSettingsField(fields.find(function (field) {
+          return field && field.editable !== false;
+        }) || null);
+      })
+      .catch(function (error) {
+        modalController.setSettingsLoadError(error && error.message ? error.message : state.managementText.settingsLoadFailed);
+      });
   }
 
   function openMetadataModalForDoc(doc) {
@@ -956,6 +973,10 @@ export function initDocsViewerManagement(context) {
       settingsModal: settingsModal,
       settingsSaveButton: settingsSaveButton,
       settingsScope: settingsScope,
+      settingsUpdatedField: settingsUpdatedField,
+      settingsUpdatedInput: settingsUpdatedInput,
+      settingsUpdatedLabel: settingsUpdatedLabel,
+      settingsDescription: settingsDescription,
       settingsStatus: settingsStatus,
       settingsWarnings: settingsWarnings,
       manageSettingsButton: manageSettingsButton

@@ -139,8 +139,9 @@ def main(argv: list[str] | None = None) -> int:
                 page.wait_for_function(
                     """() => {
                         const input = document.querySelector("#docsViewerSettingsUpdatedInput");
+                        const field = document.querySelector("#docsViewerSettingsUpdatedField");
                         const save = document.querySelector("#docsViewerSettingsSaveButton");
-                        return input && save && !input.disabled && !save.disabled;
+                        return input && field && save && !field.hidden && !input.disabled && !save.disabled;
                     }""",
                     timeout=args.timeout_ms,
                 )

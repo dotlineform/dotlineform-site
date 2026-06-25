@@ -7,6 +7,7 @@ import {
   openManagedDocSource,
   previewManagedDocDelete,
   rebuildManagedDocs,
+  updateSourceConfigSettings,
   updateManagedDocMetadata,
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
@@ -336,7 +337,32 @@ export function createDocsViewerManagementActionController(options) {
     var settingsFieldState = modalController ? modalController.getSettingsFieldState() : null;
     if (!settingsFieldState) {
       if (modalController) modalController.closeSettingsModal();
+      return;
     }
+    var changes = typeof modalController.getSettingsChanges === "function" ? modalController.getSettingsChanges() : null;
+    if (!changes) {
+      modalController.closeSettingsModal();
+      return;
+    }
+    modalController.setSettingsSaving();
+    setManagementBusy(true);
+    updateSourceConfigSettings(changes, managementClientOptions())
+      .then(function (payload) {
+        modalController.closeSettingsModal();
+        setManagementMessage(state.managementText.settingsSaved, false);
+        var targetDocId = state.selectedDocId || context.defaultDocId();
+        if (payload && payload.changed && callbacks.reloadDocsIndex) {
+          return callbacks.reloadDocsIndex(targetDocId);
+        }
+        if (callbacks.renderManagementUi) callbacks.renderManagementUi();
+        return null;
+      })
+      .catch(function (error) {
+        modalController.setSettingsSaveError(error && error.message ? error.message : state.managementText.settingsSaveFailed);
+      })
+      .finally(function () {
+        setManagementBusy(false);
+      });
   }
 
   function handleSettingsSubmit(event) {

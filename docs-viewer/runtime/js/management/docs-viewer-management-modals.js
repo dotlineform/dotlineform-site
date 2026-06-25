@@ -244,6 +244,36 @@ export function createDocsViewerManagementModalController(options = {}) {
     refs.settingsStatus.hidden = !message;
   }
 
+  function settingsFieldLabel(field) {
+    return normalizeText(field).replace(/_/g, " ");
+  }
+
+  function renderSettingsField(field) {
+    if (!refs.settingsUpdatedField || !refs.settingsUpdatedInput) return;
+    if (!field) {
+      refs.settingsUpdatedField.hidden = true;
+      refs.settingsUpdatedInput.disabled = true;
+      refs.settingsUpdatedInput.checked = false;
+      refs.settingsUpdatedInput.name = "";
+      if (refs.settingsDescription) {
+        refs.settingsDescription.hidden = true;
+        refs.settingsDescription.textContent = "";
+      }
+      return;
+    }
+    refs.settingsUpdatedInput.disabled = false;
+    refs.settingsUpdatedInput.name = normalizeText(field.field);
+    refs.settingsUpdatedInput.checked = field.current_value === true;
+    if (refs.settingsUpdatedLabel) {
+      refs.settingsUpdatedLabel.textContent = settingsFieldLabel(field.field);
+    }
+    refs.settingsUpdatedField.hidden = false;
+    if (refs.settingsDescription) {
+      refs.settingsDescription.textContent = normalizeText(field.description);
+      refs.settingsDescription.hidden = !refs.settingsDescription.textContent;
+    }
+  }
+
   function renderSettingsWarnings(warnings) {
     if (!refs.settingsWarnings) return;
     var items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
@@ -258,6 +288,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     settingsFieldState = null;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     if (refs.settingsScope) refs.settingsScope.textContent = "scope: " + viewerScope();
+    renderSettingsField(null);
     setSettingsStatus(state.managementText.settingsLoading, "");
     renderSettingsWarnings([]);
     refs.settingsModal.hidden = false;
@@ -268,6 +299,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     settingsFieldState = field || null;
     if (!settingsFieldState) {
       if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
+      renderSettingsField(null);
       renderSettingsWarnings([]);
       setSettingsStatus(state.managementText.settingsEmpty, "");
       window.requestAnimationFrame(function () {
@@ -275,12 +307,22 @@ export function createDocsViewerManagementModalController(options = {}) {
       });
       return;
     }
+    renderSettingsField(settingsFieldState);
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = state.managementBusy;
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
     window.requestAnimationFrame(function () {
       focusWithoutScroll(refs.settingsUpdatedInput || refs.settingsSaveButton || refs.settingsModal);
     });
+  }
+
+  function getSettingsChanges() {
+    if (!settingsFieldState || !refs.settingsUpdatedInput) return null;
+    var fieldName = normalizeText(settingsFieldState.field);
+    if (!fieldName) return null;
+    return {
+      [fieldName]: refs.settingsUpdatedInput.checked === true
+    };
   }
 
   function setSettingsLoadError(message) {
@@ -433,6 +475,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     getSettingsFieldState: function () {
       return settingsFieldState;
     },
+    getSettingsChanges: getSettingsChanges,
     handleDocumentKeydown: handleDocumentKeydown,
     handleRootClick: handleRootClick,
     metadataModalOpen: metadataModalOpen,
