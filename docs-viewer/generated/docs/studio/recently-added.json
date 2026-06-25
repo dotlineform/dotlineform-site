@@ -3,9 +3,9 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "update-tests",
-      "title": "Tests policy and refactoring",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/update-tests.json",
+      "doc_id": "route-ready-state",
+      "title": "Route Ready State",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
       "added_date": "2026-06-25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
@@ -83,5 +83,5 @@
       "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-06-25T12:47:33Z"
+  "generated_at": "2026-06-25T15:22:13Z"
 }

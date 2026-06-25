@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-790956b386b8398e363ecf9e096e45b6",
-    "generated_at_utc": "2026-06-25T12:51:29Z",
+    "version": "blake2b-15db98ac9da3eb6210a40b43f6c78a07",
+    "generated_at_utc": "2026-06-25T15:22:13Z",
     "count": 225
   },
   "entries": [
@@ -1376,6 +1376,31 @@
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
     },
     {
+      "id": "route-ready-state",
+      "kind": "doc",
+      "title": "Route Ready State",
+      "href": "/docs/?scope=studio&doc=route-ready-state",
+      "last_updated": "2026-06-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-25 • Change Requests",
+      "search_terms": [
+        "route-ready-state",
+        "route",
+        "ready",
+        "state",
+        "route ready state",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-25",
+        "2026",
+        "06",
+        "25"
+      ],
+      "search_text": "route-ready-state route ready state route ready state change requests change requests 2026-06-25 2026 06 25"
+    },
+    {
       "id": "site-request-shareable-content-blocks",
       "kind": "doc",
       "title": "Shareable Content Blocks Request",
@@ -1401,33 +1426,6 @@
         "23"
       ],
       "search_text": "site-request-shareable-content-blocks site request shareable content blocks shareable content blocks request change requests change requests 2026-06-23 2026 06 23"
-    },
-    {
-      "id": "update-tests",
-      "kind": "doc",
-      "title": "Tests policy and refactoring",
-      "href": "/docs/?scope=studio&doc=update-tests",
-      "last_updated": "2026-06-25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-25 • Change Requests",
-      "search_terms": [
-        "update-tests",
-        "update",
-        "tests",
-        "tests policy and refactoring",
-        "policy",
-        "and",
-        "refactoring",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-25",
-        "2026",
-        "06",
-        "25"
-      ],
-      "search_text": "update-tests update tests tests policy and refactoring policy and refactoring change requests change requests 2026-06-25 2026 06 25"
     },
     {
       "id": "data-sharing",
