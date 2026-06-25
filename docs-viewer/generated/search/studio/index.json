@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ecf632fac4c9481da4236615e920cd2b",
-    "generated_at_utc": "2026-06-25T18:58:01Z",
+    "version": "blake2b-6c7f876814a48b01c6636aecbb721ea4",
+    "generated_at_utc": "2026-06-25T19:25:29Z",
     "count": 227
   },
   "entries": [
@@ -1985,22 +1985,22 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-12 • Docs Viewer",
+      "display_meta": "2026-06-25 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-06-12",
+        "2026-06-25",
         "2026",
         "06",
-        "12"
+        "25"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-06-12 2026 06 12"
+      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-06-25 2026 06 25"
     },
     {
       "id": "docs-viewer-css-cascade-design",

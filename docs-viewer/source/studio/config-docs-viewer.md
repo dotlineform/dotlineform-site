@@ -2,13 +2,53 @@
 doc_id: config-docs-viewer
 title: Config
 added_date: 2026-05-12
-last_updated: 2026-06-12
+last_updated: 2026-06-25
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer Config
 
-Docs Viewer configuration is split by audience.
+Docs Viewer configuration is split by owner and audience.
+
+There are three main config shapes:
+
+- Source scope config: `docs-viewer/config/scopes/docs_scopes.json`
+- Local browser config: `docs-viewer/config/defaults/docs-viewer-config.json`
+- Public browser config: `docs-viewer/config/defaults/docs-viewer-public-config.json`
+
+The source scope config is the authoring and build registry.
+It can describe Markdown source roots, generated output roots, local service behavior, public route policy, and management-only behavior.
+
+The local browser config is the browser-safe projection for the local `/docs/` manage shell.
+It includes the configured scopes that the local viewer needs to list, load, search, and manage.
+
+The public browser config is the browser-safe projection for static public routes.
+It includes only public read-only scopes and excludes local service and management details.
+
+The public browser config also has a deploy-root copy:
+
+- `site/docs-viewer/config/defaults/docs-viewer-public-config.json`
+
+That copy exists because `site/` is the public preview and GitHub Pages root.
+Static public pages must be able to load their config from the same tree that is served publicly.
+
+The configs stay separate because they have different consumers:
+
+- Build and service code need source-side paths and authoring policy.
+- Browser runtime code needs URLs and display metadata.
+- Public static pages must not receive local-only scopes or management capability.
+- The deploy root needs a physical public copy rather than depending on runtime projection.
+
+The projection flow is:
+
+1. Edit the source scope config.
+2. Run the docs build.
+3. The build writes the local browser config.
+4. The build writes the public browser config.
+5. The build mirrors the public browser config into `site/`.
+
+The projection code lives in `docs-viewer/build/docs_builder/browser_config.py`.
+The build command entry point is `docs-viewer/build/build_docs.py`.
 
 ## Host settings
 
@@ -16,7 +56,22 @@ Local Docs Viewer service host, port, base URL, and capability flags are host ru
 
 ## Public Site Config
 
-[needs updating]
+Public site config is the public browser projection plus its deploy-root mirror.
+
+The canonical generated file is:
+
+- `docs-viewer/config/defaults/docs-viewer-public-config.json`
+
+The static served copy is:
+
+- `site/docs-viewer/config/defaults/docs-viewer-public-config.json`
+
+The public projection is intentionally narrower than the local browser config.
+It includes public route scopes such as `library`, `analysis`, and `moments`.
+It does not include local-only scopes, management endpoints, source paths, or write capability.
+
+Public route shells load this config through the public route registry.
+They resolve their scope from `viewer_base_url`, so they do not need local service discovery.
 
 ## Source Scope Config
 
@@ -104,12 +159,25 @@ Future remote upload support should read credentials from environment variables 
 
 ## Local Service
 
-Standalone local service defaults and schema live in `docs-viewer/config/defaults/docs-viewer-service.json` and `docs-viewer/config/schema/docs-viewer-service.schema.json`.
+Standalone local service defaults live in:
 
-## Browser Config
+- `docs-viewer/config/defaults/docs-viewer-service.json`
 
-`docs-viewer/config/routes/docs-viewer-routes.json` is the browser-safe manage/local route-config registry.
-`site/docs-viewer/config/routes/docs-viewer-public-routes.json` is the browser-safe public route-config registry served at `/docs-viewer/config/routes/docs-viewer-public-routes.json`.
+The service schema lives in:
+
+- `docs-viewer/config/schema/docs-viewer-service.schema.json`
+
+## Route Config
+
+The manage/local route-config registry is:
+
+- `docs-viewer/config/routes/docs-viewer-routes.json`
+
+The public route-config registry is:
+
+- `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
+
+The public registry is served at `/docs-viewer/config/routes/docs-viewer-public-routes.json`.
 
 - Route registries are checked in and read by `site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js` before the app shell builds route context.
 - Shared and standalone route shells should carry only `data-route-id` and `data-route-config-url` for boot route context.
@@ -122,7 +190,7 @@ Each route record owns:
 - default scope
 - viewer base URL and scope-query policy
 - generated docs/search URL defaults
-- Docs Viewer config, route-owned UI text, and report registry URLs
+- Docs Viewer config and report registry URLs
 - static access intent, panel defaults, and hosted-view records
 
 Static public route config must not contain credentials, local filesystem paths, or write authority.
@@ -130,9 +198,19 @@ For the local `/docs/` shell, `docs-viewer/services/docs_viewer_service.py` serv
 The same service maps the public route registry URL to the site-owned public registry so `/docs/` and public routes see the same public config owner.
 Backend reachability and write availability still come from the service capability flow, not from static route config.
 
-`docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` are generated by `./docs-viewer/build/build_docs.py --write`.
+## Browser Config
 
-It exposes browser-safe settings only:
+The local browser config is:
+
+- `docs-viewer/config/defaults/docs-viewer-config.json`
+
+The public browser config is:
+
+- `docs-viewer/config/defaults/docs-viewer-public-config.json`
+
+Both files are generated by `./docs-viewer/build/build_docs.py --write`.
+
+They expose browser-safe settings only:
 
 - default scope id
 - each scope's viewer base URL
@@ -149,7 +227,7 @@ Public route files such as `site/library/index.html` and `site/analysis/index.ht
 New public route shells render from `docs-viewer/templates/public-route/index.html`, identify themselves with `data-route-id`, and read the public route registry from `/docs-viewer/config/routes/docs-viewer-public-routes.json`.
 The generated public config lets those pages resolve their scope from `viewer_base_url`.
 
-Do not hand-edit `docs-viewer-config.json` or `docs-viewer-public-config.json`, because they are generated files.
+Do not hand-edit generated browser configs.
 After changing `docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so both generated browser configs stay current.
 
 `docs_viewer.scope_type_badges` maps scope types to selector display labels and emoji.
