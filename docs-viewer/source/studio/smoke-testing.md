@@ -54,6 +54,16 @@ Keep each smoke with the app that owns the route or browser module.
 
 Do not put a smoke into `studio-smoke` just because it uses a browser. The profile should reflect the owner of the behavior.
 
+## Profile Membership
+
+Put a smoke in the owning app profile when it protects a durable boundary that should be checked during routine confidence runs. Good profile candidates cover route boot, module loading, public/private asset separation, API reachability, request/response agreement, or shared ready/busy state for routes that change often or carry broad operational risk.
+
+Keep a smoke as a focused script when it protects a niche workflow, a recent fix, an expensive setup, or a route-specific contract that is only relevant to narrow changes. Name the focused script in close-out when it is the evidence that proves the changed contract.
+
+Do not profile a smoke whose main value is UI choreography, visual fit, copy tone, hover/focus feel, modal timing, or mobile ergonomics. Use manual review or a temporary script for that evidence instead.
+
+If a retained smoke has no clear trigger for when to run it, either add it to the owning app profile, document the trigger near the script or owning doc, or prune it.
+
 ## Runtime Setup
 
 Use the target the route expects:
@@ -64,6 +74,20 @@ Use the target the route expects:
 - route-specific fixture server only when the script owns that setup explicitly
 
 `docs-viewer-smoke` and `studio-smoke` validate and serve the checked-in `site/` root for public-site behavior.
+
+Profile setup expectations:
+
+| profile or command type | setup target | evidence limit |
+| --- | --- | --- |
+| `docs-viewer-smoke` | checked-in `site/` for public Docs Viewer installs, plus standalone Docs Viewer manage-service setup when the script owns it | proves public read-only installs and manage-service route boundaries; does not prove unrelated local app routes |
+| `studio-smoke` | checked-in `site/` for public-site behavior and source module root for explicit module-contract smokes | proves public route/module boundaries selected by the profile; does not prove local Studio operational routes unless their scripts are run |
+| `admin-smoke` | local Admin app route servers and app-owned fixtures | proves Admin route/runtime boundaries; does not prove public-build behavior |
+| `analytics-smoke` | local Analytics app route/API servers, app-owned fixtures, and source module root for explicit module-contract smokes | proves Analytics route, API, ready-state, data-sharing, and module boundaries selected by the profile |
+| focused smoke script | the target named or created by that script | proves only the route, module, or fixture boundary named by the script |
+
+Treat profile results as evidence for the setup target they ran against. A passing local app smoke does not prove public-build behavior, and a passing public `site/` smoke does not prove local write-service or management-route behavior.
+
+The default `full` profile is a broad confidence run, not an exhaustive run of every app smoke profile. Run `analytics-smoke` explicitly when Analytics route, API, ready-state, data-sharing, or module-browser evidence matters.
 
 Do not use a raw `file://` URL for pages that depend on module imports, local services, or same-origin asset paths.
 
@@ -168,15 +192,3 @@ Example:
 
 - Codex-run check: open the route, wait for readiness, trigger the request boundary, and confirm the mocked API response is surfaced
 - manual check: repeat the user flow on desktop and mobile to confirm placement, timing, pointer behavior, and modal lifecycle feel correct
-
-## Current Gaps
-
-Known smoke-testing gaps:
-
-- some smoke scripts are focused one-offs and are not part of a profile
-- app smoke profiles have different setup expectations
-- Analytics smoke coverage is broader than the default `full` profile
-- browser smokes do not replace visual review for UI conformance
-- some retained route/module smokes still include narrow interactions only when needed to prove route, request, or module state boundaries
-
-Call out these gaps in change close-out when they affect the confidence of the evidence.
