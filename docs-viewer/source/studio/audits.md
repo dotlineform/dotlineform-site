@@ -13,7 +13,7 @@ Route:
 
 The audit page surfaces local maintenance audits inside Admin.
 
-The first version lists the Studio ready-state audit and provides a Run command. Results show pass/fail state, exit code, warning/error counts, run timestamp, findings when present, and a collapsible raw output block for debugging.
+The first version lists the route ready-state audit and provides a Run command. Results show pass/fail state, exit code, warning/error counts, run timestamp, findings when present, and a collapsible raw output block for debugging.
 
 ## Runtime
 
@@ -23,7 +23,7 @@ The page uses:
 - `admin-app/app/frontend/js/admin-transport.js`
 - `admin-app/app/server/admin_app/admin_audit_api.py`
 - `admin-app/app/server/admin_app/audit_runner.py`
-- `admin-app/checks/audit_studio_ready_state.py`
+- `admin-app/checks/audit_route_ready_state.py`
 
 Visible runtime copy lives in `admin-app/app/frontend/config/ui-text/admin-audits.json`, loaded through the Admin runtime config.
 
@@ -50,6 +50,6 @@ When the local app audit API is unavailable, the page stays readable, disables t
 
 When the service is available, the page fetches `/admin/api/audits/audits` to list allowlisted audits. It currently expects:
 
-- `studio-ready-state`
+- `route-ready-state`
 
 Running the audit posts only the audit ID to `/admin/api/audits/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.

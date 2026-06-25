@@ -96,7 +96,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/app/server/admin_app/admin_app_config.py",
                 "admin-app/app/server/admin_app/admin_app_server.py",
                 "admin-app/app/server/admin_app/admin_testing_api.py",
-                "admin-app/checks/audit_studio_ready_state.py",
+                "admin-app/checks/audit_route_ready_state.py",
                 "admin-app/checks/verify_activity_contract.py",
                 "docs-viewer/services/docs_activity.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_activity.py",
@@ -265,9 +265,9 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Validate the projection contract manifest and checked-in public projections.",
         ),
         CheckCommand(
-            "studio-ready-state-audit",
-            (sys.executable, "admin-app/checks/audit_studio_ready_state.py", "--strict"),
-            "Audit Studio route-ready template contracts.",
+            "route-ready-state-audit",
+            (sys.executable, "admin-app/checks/audit_route_ready_state.py", "--strict"),
+            "Audit route-ready template contracts across local apps.",
         ),
         CheckCommand(
             "studio-config-json",
@@ -395,6 +395,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "admin-app/tests/smoke/admin_home_route.py",
             ),
             "Smoke-check the local Admin home route boundary and runtime config.",
+        ),
+        CheckCommand(
+            "admin-testing-route-smoke",
+            (
+                sys.executable,
+                "admin-app/tests/smoke/admin_testing_route.py",
+            ),
+            "Smoke-check the local Admin Testing route ready-state boundary.",
         ),
         CheckCommand(
             "admin-operations-routes-smoke",

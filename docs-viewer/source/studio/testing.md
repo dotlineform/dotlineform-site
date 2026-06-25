@@ -74,7 +74,7 @@ Profile roles:
 
 | profile | role |
 | --- | --- |
-| `quick` | whitespace, Python syntax, core pytest checks, projection contract, Studio ready-state audit, and key JSON parsing. |
+| `quick` | whitespace, Python syntax, core pytest checks, projection contract, route ready-state audit, and key JSON parsing. |
 | `catalogue` | focused catalogue pytest checks plus a narrow field-aware build preview. |
 | `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
 | `docs-viewer-smoke` | `site/` validation plus Docs Viewer public read-only and standalone manage-service smoke checks. |
@@ -189,7 +189,7 @@ Known gaps:
 - several smoke scripts are still opt-in because their setup requirements need owner review
 - profile names still preserve some historical Studio terminology
 - cross-app route coverage is uneven
-- not every route exposes the same [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract
+- route-ready smoke coverage is intentionally focused on route boot, module wiring, API reachability, and stable unavailable states
 - visual and tactile UI confidence still depends on manual or temporary browser review
 
 Treat these gaps as work to plan, not as permission to make new tests vague. Add a check only when it captures repeatable risk that would otherwise be hard to verify.

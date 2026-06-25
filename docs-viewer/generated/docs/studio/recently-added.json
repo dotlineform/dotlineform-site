@@ -15,8 +15,16 @@
       "title": "Route Ready State",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
       "added_date": "2026-06-25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home"
+    },
+    {
+      "doc_id": "scripts-audit-route-ready-state",
+      "title": "Route Ready-State Audit",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-route-ready-state.json",
+      "added_date": "2026-06-25",
+      "parent_id": "admin",
+      "parent_title": "Admin"
     },
     {
       "doc_id": "studio-static-route-template",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-22",
       "parent_id": "studio",
       "parent_title": "Studio"
-    },
-    {
-      "doc_id": "data-sharing-adapter-architecture",
-      "title": "Data Sharing Adapter Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-adapter-architecture.json",
-      "added_date": "2026-06-21 00:00",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-06-25T15:50:14Z"
+  "generated_at": "2026-06-25T16:44:41Z"
 }

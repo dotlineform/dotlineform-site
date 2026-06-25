@@ -12,10 +12,6 @@ viewer_report_access: public
 
 
 
-
-
-
-
 ---
 
 possible frontmatter fields:

@@ -71,7 +71,8 @@ Do not use a raw `file://` URL for pages that depend on module imports, local se
 
 Do not interact with a page immediately after `domcontentloaded`.
 
-For routes that have adopted the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract, wait for the route root to be visible, ready, and not busy:
+For app route smokes, use the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) helper in `tests/smoke/route_ready_helpers.py`.
+It waits for the route root to be visible, ready, and not busy:
 
 ```python
 def wait_for_route_ready(page, root_selector, ready_attr, busy_attr, timeout_ms=10_000):
@@ -88,12 +89,11 @@ Use the app-specific attributes documented in Route Ready State.
 
 Minimum readiness for route-level smoke tests:
 
-1. wait for the route root to be visible
-2. wait for the route's loaded marker, ready attribute, or stable loaded text
-3. wait for busy state to clear when the route exposes it
-4. allow a short settle window only when the next action depends on async-rendered layout
+1. wait with `wait_for_route_ready(...)` when the route participates in the contract
+2. assert route-specific mode, service, record-loaded state, rendered rows, or enabled controls after the shared wait
+3. allow a short settle window only when the next action depends on async-rendered layout
 
-Use route-specific selectors. Do not assume every app uses the same status id, loaded text, or root attributes.
+Use route-specific selectors and app-specific ready/busy attributes. Do not assume every app uses the same status id, loaded text, or root attribute names.
 
 ## Pointer Clicks
 
@@ -151,14 +151,14 @@ Docs Viewer public Library and Analysis checks should verify that public install
 
 ## Ready-State Audit
 
-Run the ready-state audit after changing Studio route shells, route scripts, or route-ready helpers:
+Run the ready-state audit after changing Studio, Admin, Analytics, or Docs Viewer route shells, route scripts, or route-ready helpers:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_route_ready_state.py --strict
 ```
 
-The `quick` profile includes this audit. The audit is still Studio-specific because it validates the current Studio route templates; it does not prove Admin, Analytics, or Docs Viewer route readiness.
-The shared cross-app contract and remaining audit gap are tracked in [Route Ready State](/docs/?scope=studio&doc=route-ready-state).
+The `quick` profile includes this audit. The audit validates active route templates across Studio, Admin, Analytics, and Docs Viewer.
+The shared cross-app contract is maintained in [Route Ready State](/docs/?scope=studio&doc=route-ready-state).
 
 ## Manual Check Pairing
 
@@ -173,7 +173,6 @@ Example:
 
 Known smoke-testing gaps:
 
-- several app routes do not yet expose a consistent ready/busy contract
 - some smoke scripts are focused one-offs and are not part of a profile
 - app smoke profiles have different setup expectations
 - Analytics smoke coverage is broader than the default `full` profile

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-aa2b1b3e7b7fa2c7220e349de4dd57fb",
-    "generated_at_utc": "2026-06-25T15:59:15Z",
-    "count": 227
+    "version": "blake2b-7a0cec62d2f5ecc5becf9bcae1235450",
+    "generated_at_utc": "2026-06-25T16:44:41Z",
+    "count": 226
   },
   "entries": [
     {
@@ -409,6 +409,31 @@
       "search_text": "risk-ownership risk ownership risk ownership admin 2026-06-10 2026 06 10"
     },
     {
+      "id": "scripts-audit-route-ready-state",
+      "kind": "doc",
+      "title": "Route Ready-State Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-route-ready-state",
+      "last_updated": "2026-06-25",
+      "parent_id": "admin",
+      "parent_title": "Admin",
+      "display_meta": "2026-06-25 • Admin",
+      "search_terms": [
+        "scripts-audit-route-ready-state",
+        "scripts",
+        "audit",
+        "route",
+        "ready",
+        "state",
+        "route ready-state audit",
+        "admin",
+        "2026-06-25",
+        "2026",
+        "06",
+        "25"
+      ],
+      "search_text": "scripts-audit-route-ready-state scripts audit route ready state route ready-state audit admin 2026-06-25 2026 06 25"
+    },
+    {
       "id": "scripts-audit-site-consistency",
       "kind": "doc",
       "title": "Site Consistency Audit",
@@ -431,30 +456,6 @@
         "26"
       ],
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit admin 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "scripts-audit-studio-ready-state",
-      "kind": "doc",
-      "title": "Studio Ready-State Audit",
-      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
-      "last_updated": "2026-06-06",
-      "parent_id": "admin",
-      "parent_title": "Admin",
-      "display_meta": "2026-06-06 • Admin",
-      "search_terms": [
-        "scripts-audit-studio-ready-state",
-        "scripts",
-        "audit",
-        "studio",
-        "ready",
-        "state",
-        "studio ready-state audit",
-        "admin",
-        "2026-06-06",
-        "2026",
-        "06"
-      ],
-      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit admin 2026-06-06 2026 06"
     },
     {
       "id": "analytics",
@@ -1376,55 +1377,6 @@
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
     },
     {
-      "id": "route-ready-state",
-      "kind": "doc",
-      "title": "Route Ready State",
-      "href": "/docs/?scope=studio&doc=route-ready-state",
-      "last_updated": "2026-06-25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-25 • Change Requests",
-      "search_terms": [
-        "route-ready-state",
-        "route",
-        "ready",
-        "state",
-        "route ready state",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-25",
-        "2026",
-        "06",
-        "25"
-      ],
-      "search_text": "route-ready-state route ready state route ready state change requests change requests 2026-06-25 2026 06 25"
-    },
-    {
-      "id": "route-ready-state-tasks",
-      "kind": "doc",
-      "title": "Route Ready State Tasks",
-      "href": "/docs/?scope=studio&doc=route-ready-state-tasks",
-      "last_updated": "2026-06-09",
-      "parent_id": "route-ready-state",
-      "parent_title": "Route Ready State",
-      "display_meta": "2026-06-09 • Route Ready State",
-      "search_terms": [
-        "route-ready-state-tasks",
-        "route",
-        "ready",
-        "state",
-        "tasks",
-        "route ready state tasks",
-        "route ready state",
-        "2026-06-09",
-        "2026",
-        "06",
-        "09"
-      ],
-      "search_text": "route-ready-state-tasks route ready state tasks route ready state tasks route ready state 2026-06-09 2026 06 09"
-    },
-    {
       "id": "site-request-shareable-content-blocks",
       "kind": "doc",
       "title": "Shareable Content Blocks Request",
@@ -1735,6 +1687,31 @@
         "13"
       ],
       "search_text": "github-actions github actions github actions dev home dev home 2026-06-13 2026 06 13"
+    },
+    {
+      "id": "route-ready-state",
+      "kind": "doc",
+      "title": "Route Ready State",
+      "href": "/docs/?scope=studio&doc=route-ready-state",
+      "last_updated": "2026-06-25",
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-06-25 • Dev Home",
+      "search_terms": [
+        "route-ready-state",
+        "route",
+        "ready",
+        "state",
+        "route ready state",
+        "dev home",
+        "dev",
+        "home",
+        "2026-06-25",
+        "2026",
+        "06",
+        "25"
+      ],
+      "search_text": "route-ready-state route ready state route ready state dev home dev home 2026-06-25 2026 06 25"
     },
     {
       "id": "scripts-run-checks",

@@ -1,3 +1,9 @@
+import {
+  initializeAdminRouteState,
+  setAdminRouteBusy,
+  setAdminRouteReady
+} from "./admin-route-state.js";
+
 const root = document.querySelector("#adminTestingRoot");
 const statusEl = document.querySelector("#adminTestingStatus");
 const runsEl = document.querySelector("#adminTestingRuns");
@@ -59,7 +65,13 @@ async function boot() {
   if (!root) {
     return;
   }
-  root.dataset.adminBusy = "true";
+  initializeAdminRouteState(root, {
+    route: "admin-testing",
+    mode: "loading",
+    service: "available",
+    recordLoaded: false
+  });
+  setAdminRouteBusy(root, true);
   try {
     const response = await fetch("/admin/api/testing/runs", { headers: { Accept: "application/json" } });
     if (!response.ok) {
@@ -68,11 +80,20 @@ async function boot() {
     const payload = await response.json();
     renderRuns(payload.runs);
     setStatus(`Admin test runs: ${Array.isArray(payload.runs) ? payload.runs.length : 0}`, "success");
-    root.dataset.adminReady = "true";
+    setAdminRouteReady(root, true, {
+      mode: "list",
+      service: "available",
+      recordLoaded: true
+    });
   } catch (error) {
     setStatus(error instanceof Error ? error.message : "Could not load Admin test runs.", "error");
+    setAdminRouteReady(root, true, {
+      mode: "unavailable",
+      service: "unavailable",
+      recordLoaded: false
+    });
   } finally {
-    root.dataset.adminBusy = "false";
+    setAdminRouteBusy(root, false);
   }
 }
 

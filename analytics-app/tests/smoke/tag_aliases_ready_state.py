@@ -22,6 +22,7 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from analytics_app_server import AnalyticsAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[AnalyticsAppServer, str]:
@@ -40,8 +41,7 @@ def run(base_url: str) -> None:
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(target, wait_until="domcontentloaded")
         root = page.locator("#tag-aliases")
-        expect(root).to_be_visible(timeout=10_000)
-        expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
+        wait_for_route_ready(page, "#tag-aliases", "data-analytics-ready", "data-analytics-busy")
         expect(root).to_have_attribute("data-analytics-mode", "list", timeout=10_000)
         expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
         if errors:

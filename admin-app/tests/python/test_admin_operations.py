@@ -26,9 +26,9 @@ def test_audit_api_routes_return_registry_and_validate_runs() -> None:
 
     assert health_payload["ok"] is True
     assert health_payload["service"] == "admin_audit_runner"
-    assert "studio-ready-state" in health_payload["audits"]
+    assert "route-ready-state" in health_payload["audits"]
     assert audits_payload["ok"] is True
-    assert any(audit["audit_id"] == "studio-ready-state" for audit in audits_payload["audits"])
+    assert any(audit["audit_id"] == "route-ready-state" for audit in audits_payload["audits"])
 
     with pytest.raises(ValueError, match="allowlisted"):
         audit_post_response(REPO_ROOT, "/audits/run", {"audit_id": "not-allowlisted"})

@@ -100,14 +100,14 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-ownership.json"
         },
         {
+          "doc_id": "scripts-audit-route-ready-state",
+          "title": "Route Ready-State Audit",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-route-ready-state.json"
+        },
+        {
           "doc_id": "scripts-audit-site-consistency",
           "title": "Site Consistency Audit",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json"
-        },
-        {
-          "doc_id": "scripts-audit-studio-ready-state",
-          "title": "Studio Ready-State Audit",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-studio-ready-state.json"
         }
       ]
     },
@@ -323,18 +323,6 @@
           "ui_status": "paused"
         },
         {
-          "doc_id": "route-ready-state",
-          "title": "Route Ready State",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
-          "children": [
-            {
-              "doc_id": "route-ready-state-tasks",
-              "title": "Route Ready State Tasks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state-tasks.json"
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-shareable-content-blocks",
           "title": "Shareable Content Blocks Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
@@ -403,6 +391,11 @@
           "doc_id": "github-actions",
           "title": "GitHub Actions",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/github-actions.json"
+        },
+        {
+          "doc_id": "route-ready-state",
+          "title": "Route Ready State",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json"
         },
         {
           "doc_id": "scripts-run-checks",
@@ -1226,5 +1219,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-25T15:59:15Z"
+  "generated_at": "2026-06-25T16:44:41Z"
 }

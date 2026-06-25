@@ -15,6 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
 from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[StudioAppServer, str]:
@@ -36,7 +37,7 @@ def main(argv: list[str] | None = None) -> int:
             console_errors: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
-            page.wait_for_selector("#studioHomeRoot[data-studio-ready='true']", timeout=10_000)
+            wait_for_route_ready(page, "#studioHomeRoot", "data-studio-ready", "data-studio-busy")
             result = page.evaluate(
                 """async () => {
                     const mod = await import("/studio/app/frontend/js/studio-navigation.js");

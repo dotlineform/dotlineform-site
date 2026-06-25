@@ -25,6 +25,7 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from analytics_app_server import AnalyticsAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[AnalyticsAppServer, str]:
@@ -302,8 +303,7 @@ def assert_prepare(page, base_url: str) -> None:
     if page.locator("[data-analytics-route-outlet]").count() != 1:
         raise AssertionError("prepare route did not render the static Analytics shell outlet")
     root = page.locator("#dataSharingPrepareRoot")
-    expect(root).to_be_visible(timeout=10_000)
-    expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
+    wait_for_route_ready(page, "#dataSharingPrepareRoot", "data-analytics-ready", "data-analytics-busy")
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "false", timeout=10_000)
     app_initial = page.locator("#dataSharingPrepareAppSelect").evaluate(
@@ -326,8 +326,7 @@ def assert_review(page, base_url: str) -> None:
     if page.locator("[data-analytics-route-outlet]").count() != 1:
         raise AssertionError("review route did not render the static Analytics shell outlet")
     root = page.locator("#dataSharingReviewRoot")
-    expect(root).to_be_visible(timeout=10_000)
-    expect(root).to_have_attribute("data-analytics-ready", "true", timeout=10_000)
+    wait_for_route_ready(page, "#dataSharingReviewRoot", "data-analytics-ready", "data-analytics-busy")
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     expect(page.locator("#dataSharingReviewFileSelect")).to_have_value("summaries.jsonl", timeout=10_000)

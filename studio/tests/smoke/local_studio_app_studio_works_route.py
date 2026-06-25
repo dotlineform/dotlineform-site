@@ -17,6 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
 from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[StudioAppServer, str]:
@@ -71,8 +72,7 @@ def main(argv: list[str] | None = None) -> int:
 
                 page.goto(f"{base_url}/studio/studio-works/", wait_until="domcontentloaded")
                 root = page.locator("#worksStudioRoot")
-                expect(root).to_be_visible(timeout=10_000)
-                expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+                wait_for_route_ready(page, "#worksStudioRoot", "data-studio-ready", "data-studio-busy")
                 expect(root).to_have_attribute("data-studio-mode", "list", timeout=10_000)
                 expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
                 expect(page.locator(".worksList__item").first).to_be_visible(timeout=10_000)

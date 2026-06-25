@@ -4,8 +4,16 @@
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
 
 from playwright.sync_api import expect, sync_playwright
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT))
+
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 ROUTES = [
@@ -33,8 +41,7 @@ def run(base_url: str) -> None:
         for route in ROUTES:
             page.goto(f"{base_url.rstrip('/')}{route['path']}", wait_until="domcontentloaded")
             root = page.locator(route["root"])
-            expect(root).to_be_visible(timeout=10_000)
-            expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+            wait_for_route_ready(page, route["root"], "data-studio-ready", "data-studio-busy")
             expect(root).to_have_attribute("data-studio-service", "unavailable", timeout=10_000)
             expect(page.locator(route["button"])).to_be_disabled(timeout=10_000)
         if errors:

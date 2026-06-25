@@ -24,6 +24,7 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from analytics_app_server import AnalyticsAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[AnalyticsAppServer, str]:
@@ -87,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
             if page.locator("[data-analytics-route-outlet]").count() != 1:
                 raise AssertionError("tag groups route did not render the static Analytics shell outlet")
             nav_script_count = page.locator('script[src*="analytics-app.js"]').count()
-            page.wait_for_selector('#tag-groups[data-analytics-ready="true"]', timeout=10000)
+            wait_for_route_ready(page, "#tag-groups", "data-analytics-ready", "data-analytics-busy")
             mode = page.locator("#tag-groups").get_attribute("data-analytics-mode")
             record_loaded = page.locator("#tag-groups").get_attribute("data-analytics-record-loaded")
             chips = page.locator(".tagGroups__section .analytics__keyPill").all_text_contents()

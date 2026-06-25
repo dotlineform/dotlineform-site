@@ -25,8 +25,12 @@ export function validateStudioRouteTemplate(route, html) {
   if (!doc.body || !doc.body.firstElementChild) {
     throw new Error(`Studio route template has no body content: ${route && route.template}`);
   }
-  if (!doc.body.querySelector("[data-studio-ready]")) {
+  const readyRoot = doc.body.querySelector("[data-studio-ready]");
+  if (!readyRoot) {
     throw new Error(`Studio route template is missing a ready-state root: ${route && route.template}`);
+  }
+  if (!readyRoot.hasAttribute("data-studio-busy")) {
+    throw new Error(`Studio route template ready-state root is missing data-studio-busy: ${route && route.template}`);
   }
 }
 

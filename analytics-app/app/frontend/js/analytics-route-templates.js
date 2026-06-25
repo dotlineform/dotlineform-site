@@ -26,7 +26,21 @@ export function parseAnalyticsRouteTemplate(html, route = {}) {
   if (!template.content.childElementCount) {
     throw new Error(`Analytics route template is empty: ${route.template || route.id || "(unknown)"}`);
   }
+  validateAnalyticsRouteTemplate(route, template.content);
   return template.content.cloneNode(true);
+}
+
+export function validateAnalyticsRouteTemplate(route, content) {
+  const readyRoot = content && content.querySelector
+    ? content.querySelector("[data-analytics-ready]")
+    : null;
+  const label = route.template || route.id || "(unknown)";
+  if (!readyRoot) {
+    throw new Error(`Analytics route template is missing a ready-state root: ${label}`);
+  }
+  if (!readyRoot.hasAttribute("data-analytics-busy")) {
+    throw new Error(`Analytics route template ready-state root is missing data-analytics-busy: ${label}`);
+  }
 }
 
 export function mountAnalyticsRouteTemplate(outlet, fragment) {

@@ -17,6 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
 from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 ROUTES = [
@@ -96,10 +97,8 @@ def main(argv: list[str] | None = None) -> int:
                 for route in ROUTES:
                     page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
                     root = page.locator(route["root"])
-                    expect(root).to_be_visible(timeout=10_000)
+                    wait_for_route_ready(page, route["root"], "data-studio-ready", "data-studio-busy")
                     expect(root).to_have_attribute("data-studio-route", route["route"], timeout=10_000)
-                    expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-                    expect(root).to_have_attribute("data-studio-busy", "false", timeout=10_000)
                     expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
                     expect(root).to_have_attribute("data-studio-record-loaded", "false", timeout=10_000)
                     doc_link_count = page.locator(".studioLayout__docLink").count()

@@ -10,7 +10,7 @@ parent_id: admin
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id route-ready-state
 ```
 
 - Normal local sessions do not start a standalone audit service because the Admin app server owns the active audit HTTP surface through `admin-app/app/server/admin_app/admin_audit_api.py`.
@@ -24,7 +24,7 @@ The active Admin browser endpoints are served by `admin-app/app/server/admin_app
 
 The first allowlisted audit is:
 
-- `studio-ready-state`
+- `route-ready-state`
 
 List allowlisted audits:
 
@@ -35,7 +35,7 @@ $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --li
 Run the default ready-state audit:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id route-ready-state
 ```
 
 ## Endpoints
@@ -50,7 +50,7 @@ Run request:
 
 ```json
 {
-  "audit_id": "studio-ready-state"
+  "audit_id": "route-ready-state"
 }
 ```
 

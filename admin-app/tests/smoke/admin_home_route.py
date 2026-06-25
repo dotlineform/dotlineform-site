@@ -20,6 +20,7 @@ for path in (REPO_ROOT, ADMIN_SERVER_DIR):
         sys.path.insert(0, text)
 
 from admin_app_server import AdminAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[AdminAppServer, str]:
@@ -76,7 +77,7 @@ def main() -> int:
             if page.locator("[data-admin-route-outlet]").count() != 1:
                 raise AssertionError("Admin home did not render the static Admin shell outlet")
             root = page.locator("[data-admin-home]")
-            expect(root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
+            wait_for_route_ready(page, "[data-admin-home]", "data-admin-ready", "data-admin-busy")
             for href in ["/admin/audits/", "/admin/checks/", "/admin/activity/", "/admin/testing/"]:
                 expect(page.locator(f'a.studioHomeLinks__pill[href="{href}"]')).to_be_visible(timeout=10_000)
             theme_toggle = page.locator("[data-admin-theme-toggle]")

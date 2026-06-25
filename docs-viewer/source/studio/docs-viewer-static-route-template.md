@@ -95,7 +95,7 @@ The runtime owns behavior:
 
 - `docs-viewer/runtime/js/public/docs-viewer-public.js` for public read-only routes
 - `docs-viewer/runtime/js/management/docs-viewer-manage.js` for the local manage route
-- `docs-viewer/runtime/js/shared/docs-viewer-app-boot.js` and related shared modules for composition, route workflow, generated-data reads, search, document rendering, bookmarks, info panels, and hosted views
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js` and related shared modules for composition, route workflow, generated-data reads, search, document rendering, bookmarks, info panels, and hosted views
 
 Docs Viewer public route shell creation is documented separately in [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template).
 That document covers the lifecycle renderer, render inputs, New Scope flow, Delete Scope flow, and maintenance rules for tracked public `site/<route>/index.html` files.

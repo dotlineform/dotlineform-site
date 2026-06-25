@@ -36,7 +36,7 @@ For test strategy and profile selection, see [Testing](/docs/?scope=studio&doc=t
 focused standalone audit commands:
 
 - [Projection Contract Audit](/docs/?scope=studio&doc=scripts-audit-projection-contract),
-- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Route Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-route-ready-state)
 - [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency),
 - [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
 

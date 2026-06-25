@@ -18,9 +18,9 @@ import { buildAdminActivityContext } from "./admin-activity-context.js";
 
 const FALLBACK_AUDITS = Object.freeze([
   {
-    audit_id: "studio-ready-state",
-    label: "Studio ready state",
-    description: "Checks Studio route-ready template contracts and static-route drift."
+    audit_id: "route-ready-state",
+    label: "Route ready state",
+    description: "Checks route-ready template contracts across local apps."
   }
 ]);
 

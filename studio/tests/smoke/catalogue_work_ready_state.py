@@ -5,8 +5,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
+from pathlib import Path
 
 from playwright.sync_api import sync_playwright
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT))
+
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 ROOT_SELECTOR = "#catalogueWorkRoot"
@@ -17,23 +25,21 @@ def route_url(base_url: str, path: str) -> str:
 
 
 def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> dict[str, str]:
-    page.wait_for_selector(f"{root_selector}:not([hidden])", timeout=timeout_ms)
-    page.wait_for_selector(f"{root_selector}[data-studio-ready='true']", timeout=timeout_ms)
-    page.wait_for_function(
-        "selector => document.querySelector(selector)?.dataset.studioBusy !== 'true'",
-        arg=root_selector,
-        timeout=timeout_ms,
+    attrs = wait_for_route_ready(
+        page,
+        root_selector,
+        "data-studio-ready",
+        "data-studio-busy",
+        timeout_ms,
     )
-    return page.locator(root_selector).evaluate(
-        """root => ({
-            route: root.dataset.studioRoute || "",
-            ready: root.dataset.studioReady || "",
-            busy: root.dataset.studioBusy || "",
-            mode: root.dataset.studioMode || "",
-            service: root.dataset.studioService || "",
-            recordLoaded: root.dataset.studioRecordLoaded || ""
-        })"""
-    )
+    return {
+        "route": attrs.get("data-studio-route", ""),
+        "ready": attrs.get("data-studio-ready", ""),
+        "busy": attrs.get("data-studio-busy", ""),
+        "mode": attrs.get("data-studio-mode", ""),
+        "service": attrs.get("data-studio-service", ""),
+        "recordLoaded": attrs.get("data-studio-record-loaded", ""),
+    }
 
 
 def assert_ready_contract(attrs: dict[str, str]) -> None:

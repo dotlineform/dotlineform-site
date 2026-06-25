@@ -19,6 +19,7 @@ SERVER_DIR = REPO_ROOT / "admin-app" / "app" / "server" / "admin_app"
 sys.path.insert(0, str(SERVER_DIR))
 
 from admin_app_server import AdminAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[AdminAppServer, str]:
@@ -85,7 +86,7 @@ def assert_api_payloads(base_url: str) -> None:
     with urllib.request.urlopen(f"{base_url}/admin/api/audits/audits", timeout=10) as response:
         audits_payload = json.loads(response.read().decode("utf-8"))
     if not audits_payload.get("ok") or not any(
-        audit.get("audit_id") == "studio-ready-state"
+        audit.get("audit_id") == "route-ready-state"
         for audit in audits_payload.get("audits", [])
         if isinstance(audit, dict)
     ):
@@ -115,8 +116,7 @@ def run_browser_smoke(base_url: str) -> None:
         if page.locator("[data-admin-route-outlet]").count() != 1:
             raise AssertionError("Admin audits did not render the static Admin shell outlet")
         audits_root = page.locator("#studioAuditsRoot")
-        expect(audits_root).to_be_visible(timeout=10_000)
-        expect(audits_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
+        wait_for_route_ready(page, "#studioAuditsRoot", "data-admin-ready", "data-admin-busy")
         expect(audits_root).to_have_attribute("data-admin-mode", "summary", timeout=10_000)
         expect(page.locator("[data-run-audit]").first).to_be_enabled(timeout=10_000)
 
@@ -124,8 +124,7 @@ def run_browser_smoke(base_url: str) -> None:
         if page.locator("[data-admin-route-outlet]").count() != 1:
             raise AssertionError("Admin checks did not render the static Admin shell outlet")
         checks_root = page.locator("#studioChecksRoot")
-        expect(checks_root).to_be_visible(timeout=10_000)
-        expect(checks_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
+        wait_for_route_ready(page, "#studioChecksRoot", "data-admin-ready", "data-admin-busy")
         expect(checks_root).to_have_attribute("data-admin-service", "available", timeout=10_000)
         expect(page.locator("#studioChecksRun")).to_be_enabled(timeout=10_000)
         expect(page.locator("#studioChecksReport")).to_have_value("files")
@@ -138,8 +137,7 @@ def run_browser_smoke(base_url: str) -> None:
         if page.locator("[data-admin-route-outlet]").count() != 1:
             raise AssertionError("Admin activity did not render the static Admin shell outlet")
         activity_root = page.locator("#studioActivityRoot")
-        expect(activity_root).to_be_visible(timeout=10_000)
-        expect(activity_root).to_have_attribute("data-admin-ready", "true", timeout=10_000)
+        wait_for_route_ready(page, "#studioActivityRoot", "data-admin-ready", "data-admin-busy")
         expect(activity_root).to_have_attribute("data-admin-mode", "list", timeout=10_000)
         expect(page.locator("[data-activity-id='admin-activity-smoke']")).to_be_visible(timeout=10_000)
 

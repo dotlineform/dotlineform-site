@@ -7,10 +7,17 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import sys
 from threading import Thread
 from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import Page, sync_playwright
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT))
+
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 ROOT_SELECTOR = "#docsViewerRoot"
@@ -40,12 +47,12 @@ def route_url(base_url: str, path: str) -> str:
 
 
 def wait_for_docs_viewer_ready(page: Page, timeout_ms: int) -> None:
-    page.wait_for_selector(f"{ROOT_SELECTOR}:not([hidden])", timeout=timeout_ms)
-    page.wait_for_selector(f"{ROOT_SELECTOR}[data-docs-viewer-ready='true']", timeout=timeout_ms)
-    page.wait_for_function(
-        "selector => document.querySelector(selector)?.dataset.docsViewerBusy !== 'true'",
-        arg=ROOT_SELECTOR,
-        timeout=timeout_ms,
+    wait_for_route_ready(
+        page,
+        ROOT_SELECTOR,
+        "data-docs-viewer-ready",
+        "data-docs-viewer-busy",
+        timeout_ms,
     )
 
 

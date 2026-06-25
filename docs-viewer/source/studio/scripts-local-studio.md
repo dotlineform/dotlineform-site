@@ -292,7 +292,7 @@ There is no standalone audit HTTP service fallback in `bin/local-studio`.
 For direct automation, call:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id route-ready-state
 ```
 
 Related doc: [Audit Runner](/docs/?scope=studio&doc=audit-runner).

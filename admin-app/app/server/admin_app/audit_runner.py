@@ -76,13 +76,13 @@ def detect_repo_root(explicit_root: str) -> Path:
 
 def build_audit_registry(repo_root: Path) -> dict[str, AuditDefinition]:
     return {
-        "studio-ready-state": AuditDefinition(
-            audit_id="studio-ready-state",
-            label="Studio ready state",
-            description="Checks Studio route-ready template contracts and static-route drift.",
+        "route-ready-state": AuditDefinition(
+            audit_id="route-ready-state",
+            label="Route ready state",
+            description="Checks route-ready template contracts across local apps.",
             argv=(
                 sys.executable,
-                str(repo_root / "admin-app" / "checks" / "audit_studio_ready_state.py"),
+                str(repo_root / "admin-app" / "checks" / "audit_route_ready_state.py"),
                 "--strict",
                 "--json",
             ),
@@ -218,7 +218,7 @@ def run_audit_payload(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run an allowlisted Admin audit directly.")
     parser.add_argument("--repo-root", default="", help="Repo root path (auto-detected if omitted)")
-    parser.add_argument("--audit-id", default="studio-ready-state", help="Allowlisted audit id to run")
+    parser.add_argument("--audit-id", default="route-ready-state", help="Allowlisted audit id to run")
     parser.add_argument("--list", action="store_true", help="Print the allowlisted audit registry and exit")
     return parser.parse_args()
 

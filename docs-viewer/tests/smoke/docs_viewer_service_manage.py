@@ -21,6 +21,7 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "docs-viewer" / "services"))
 
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 def start_server() -> tuple[DocsViewerServer, str]:
@@ -87,12 +88,12 @@ def assert_origin_rejection(base_url: str) -> None:
 
 
 def wait_for_manage_doc(page: Page, title: str, timeout_ms: int) -> None:
-    page.wait_for_selector("#docsViewerRoot:not([hidden])", timeout=timeout_ms)
-    page.wait_for_selector("#docsViewerRoot[data-docs-viewer-ready='true']", timeout=timeout_ms)
-    page.wait_for_function(
-        "selector => document.querySelector(selector)?.dataset.docsViewerBusy !== 'true'",
-        arg="#docsViewerRoot",
-        timeout=timeout_ms,
+    wait_for_route_ready(
+        page,
+        "#docsViewerRoot",
+        "data-docs-viewer-ready",
+        "data-docs-viewer-busy",
+        timeout_ms,
     )
     page.wait_for_function(
         """expectedTitle => {

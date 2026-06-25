@@ -26,7 +26,21 @@ export function parseAdminRouteTemplate(html, route = {}) {
   if (!template.content.childElementCount) {
     throw new Error(`Admin route template is empty: ${route.template || route.id || "(unknown)"}`);
   }
+  validateAdminRouteTemplate(route, template.content);
   return template.content.cloneNode(true);
+}
+
+export function validateAdminRouteTemplate(route, content) {
+  const readyRoot = content && content.querySelector
+    ? content.querySelector("[data-admin-ready]")
+    : null;
+  const label = route.template || route.id || "(unknown)";
+  if (!readyRoot) {
+    throw new Error(`Admin route template is missing a ready-state root: ${label}`);
+  }
+  if (!readyRoot.hasAttribute("data-admin-busy")) {
+    throw new Error(`Admin route template ready-state root is missing data-admin-busy: ${label}`);
+  }
 }
 
 export function mountAdminRouteTemplate(outlet, fragment) {

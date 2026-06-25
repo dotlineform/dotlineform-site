@@ -40,7 +40,7 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
 ## Profiles
 
 - `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, grouped pytest checks for the quick-profile Python modules, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Admin audit runner, and core lightweight test modules.
+  Runs diff whitespace checks, lightweight Python syntax checks, grouped pytest checks for the quick-profile Python modules, the route ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Admin audit runner, and core lightweight test modules.
 - `catalogue`
   Runs grouped pytest checks for catalogue-profile Python modules and a representative field-aware build preview.
 - `docs`
@@ -72,6 +72,6 @@ Smoke profiles that need public-site files validate and use the checked-in `site
 - [Testing](/docs/?scope=studio&doc=testing)
 - [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
 - [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)
-- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Route Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-route-ready-state)
 - [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)

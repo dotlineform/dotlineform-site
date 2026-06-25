@@ -3,7 +3,7 @@ doc_id: route-ready-state
 title: Route Ready State
 added_date: 2026-06-25
 last_updated: 2026-06-25
-parent_id: change-requests
+parent_id: dev-home
 viewable: true
 ---
 # Route Ready State
@@ -124,13 +124,14 @@ Studio route roots:
 | `/studio/` | `#studioHomeRoot` | `data-studio-*` |
 | `/studio/bulk-add-work/` | `#bulkAddWorkRoot` | `data-studio-*` |
 | `/studio/catalogue-field-registry/` | `#fieldRegistryReviewRoot` | `data-studio-*` |
-| `/studio/catalogue-moment/` | `#catalogueMomentRoot` | `data-studio-*` |
 | `/studio/catalogue-series/` | `#catalogueSeriesRoot` | `data-studio-*` |
 | `/studio/catalogue-status/` | `#catalogueStatusRoot` | `data-studio-*` |
 | `/studio/catalogue-work/` | `#catalogueWorkRoot` | `data-studio-*` |
-| `/studio/catalogue-work-detail/` | `#catalogueWorkDetailRoot` | `data-studio-*` |
 | `/studio/project-state/` | `#projectStateRoot` | `data-studio-*` |
 | `/studio/studio-works/` | `#worksStudioRoot` | `data-studio-*` |
+
+`/studio/catalogue-moment/` and `/studio/catalogue-work-detail/` have route-level docs, but they are not active `studio/app/frontend/routes/*.html` entries in the current Studio app config.
+Add them to this inventory only when they have active route templates in `studio/app/frontend/config/studio-config.json`.
 
 Admin route roots:
 
@@ -186,18 +187,15 @@ After the shared wait, route-specific tests may assert mode, service, record-loa
 
 ## Audit Coverage
 
-Current audit coverage is Studio-only:
+Route ready-state template coverage is enforced by the cross-app audit:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 admin-app/checks/audit_route_ready_state.py --strict
 ```
 
 Strict mode fails on warnings as well as errors.
-The current Studio audit catches missing baseline attributes, static/dashboard marker mixups, missing static or dashboard helper scripts, dashboard metric markers on static routes, and static routes that start loading another module script.
-The `quick` profile includes this audit.
-
-The gap to close is cross-app enforcement.
-Either add Admin, Analytics, and Docs Viewer audits or replace the Studio-only script with a general route-ready audit that uses app-specific config for roots, attribute prefixes, static routes, and known exceptions.
+The audit catches missing ready roots, missing busy attributes, duplicate ready roots, invalid initial ready values, and invalid initial busy values across Studio, Admin, Analytics, and Docs Viewer route templates.
+The `quick` profile includes this audit as `route-ready-state-audit`.
 
 Definition of done:
 
@@ -215,7 +213,7 @@ Testing and audit references:
 
 - [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)
 - [Testing](/docs/?scope=studio&doc=testing)
-- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
+- [Route Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-route-ready-state)
 - [Audit Runner](/docs/?scope=studio&doc=audit-runner)
 - [Audits](/docs/?scope=studio&doc=audits)
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)

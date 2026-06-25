@@ -24,6 +24,7 @@ for path in (ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE_DIR):
         sys.path.insert(0, text)
 
 from analytics_app_server import AnalyticsAppServer  # noqa: E402
+from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
 ROUTES = [
@@ -133,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
                 if page.locator("[data-analytics-route-outlet]").count() != 1:
                     raise AssertionError(f"{route['path']} did not render the static Analytics shell outlet")
-                page.wait_for_selector(f'{route["root"]}[data-analytics-ready="true"]', timeout=10_000)
+                wait_for_route_ready(page, route["root"], "data-analytics-ready", "data-analytics-busy")
                 root = page.locator(route["root"])
                 mode = root.get_attribute("data-analytics-mode")
                 record_loaded = root.get_attribute("data-analytics-record-loaded")
