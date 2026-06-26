@@ -38,23 +38,19 @@ function renderContextFieldRows(config, context) {
   return fields.map((field) => {
     const outputPath = normalizeText(field && field.output_path);
     if (!outputPath) return "";
-    const source = normalizeText(field && field.source);
     const inputId = contextFieldId(outputPath);
     const description = context.field_descriptions && context.field_descriptions[outputPath]
       ? context.field_descriptions[outputPath]
       : "";
     return `
       <label class="analyticsForm__field dataSharingPrepareContextModal__field" for="${escapeHtml(inputId)}">
-        <span class="analyticsForm__label dataSharingPrepareContextModal__fieldLabel">
-          <code>${escapeHtml(outputPath)}</code>
-          ${source ? `<small>${escapeHtml(source)}</small>` : ""}
-        </span>
+        <span class="analyticsForm__label">${escapeHtml(outputPath)}</span>
         <textarea
           class="analytics__input dataSharingPrepareContextModal__textarea"
           id="${escapeHtml(inputId)}"
           data-role="context-field-description"
           data-output-path="${escapeHtml(outputPath)}"
-          rows="2"
+          rows="1"
         >${escapeHtml(description)}</textarea>
       </label>
     `;
@@ -82,7 +78,7 @@ function renderContextEditorBody(state, config) {
         class="analytics__input dataSharingPrepareContextModal__textarea dataSharingPrepareContextModal__textarea--guidance"
         id="dataSharingPrepareContextGuidance"
         data-role="context-response-guidance"
-        rows="5"
+        rows="2"
       >${escapeHtml(context.response_guidance)}</textarea>
     </label>
     <div class="dataSharingPrepareContextModal__fields" role="group" aria-label="${escapeHtml(getAnalyticsText(state.config, "data_sharing_prepare.context_fields_label", "field descriptions"))}">

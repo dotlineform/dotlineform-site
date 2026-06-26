@@ -1559,28 +1559,13 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
   align-items: start;
 }
 
-.dataSharingPrepareContextModal__fieldLabel {
-  display: grid;
-  gap: 0.2rem;
-}
-
-.dataSharingPrepareContextModal__fieldLabel code {
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-.dataSharingPrepareContextModal__fieldLabel small {
-  color: var(--muted, var(--analytics-muted));
-  font-size: var(--font-caption);
-}
-
 .dataSharingPrepareContextModal__textarea {
-  min-height: 4.5rem;
+  /* min-height: 2.4rem; let rows + normal input padding determine height */
   resize: vertical;
 }
 
 .dataSharingPrepareContextModal__textarea--guidance {
-  min-height: 7rem;
+  min-height: 3.2rem;
 }
 
 .dataSharingPrepareContextModal__fields {
