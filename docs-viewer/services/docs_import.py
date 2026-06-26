@@ -33,7 +33,7 @@ STAGED_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$
 EXPORT_ID_TO_IMPORT_TYPE = {
     "parent-child-relationships": "parent_child_relationships",
     "document-summaries": "document_summaries",
-    "full-document-content": "full_document_content",
+    "document-content": "full_document_content",
 }
 IMPORT_TYPE_CONFIG_FIELDS = {
     "parent_child_relationships": [

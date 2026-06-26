@@ -207,7 +207,7 @@
       "notes": "Default missing-summary filtering supports summary coverage review. Full document body text belongs to the full-content export."
     },
     {
-      "id": "full-document-content",
+      "id": "document-content",
       "label": "Document content",
       "description": "Document summaries, headings, and plain text content.",
       "enabled": true,

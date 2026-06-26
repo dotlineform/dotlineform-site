@@ -92,7 +92,7 @@ Implemented now:
 - keeps source timestamp provenance in `.meta.json` rather than in external records
 - returns a structured JSON report
 
-The `full-document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
+The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
 Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
 
 Not implemented yet:

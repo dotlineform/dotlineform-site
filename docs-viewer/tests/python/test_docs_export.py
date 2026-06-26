@@ -377,7 +377,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert config_ids == [
         "parent-child-relationships",
         "document-summaries",
-        "full-document-content",
+        "document-content",
     ]
     for config in configs:
         errors, warnings = docs_export.validate_export_config(config)
@@ -390,7 +390,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     }
     full_fields = {
         field["source"]
-        for field in docs_export.find_export_config(payload, "full-document-content")["document_fields"]
+        for field in docs_export.find_export_config(payload, "document-content")["document_fields"]
     }
     assert "source_text" not in summary_fields
     assert "source_text" in full_fields
@@ -407,7 +407,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
 
     relationship_config = docs_export.find_export_config(payload, "parent-child-relationships")
     summary_config = docs_export.find_export_config(payload, "document-summaries")
-    full_config = docs_export.find_export_config(payload, "full-document-content")
+    full_config = docs_export.find_export_config(payload, "document-content")
     assert docs_export.supported_target_formats(relationship_config) == ["json"]
     assert docs_export.supported_target_formats(summary_config) == ["jsonl", "json"]
     assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
@@ -424,7 +424,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
             root = Path(temp)
             report = docs_export.build_export(
                 repo_root=root,
-                config_id="full-document-content",
+                config_id="document-content",
                 scope="library",
                 selected_doc_ids=["library"],
                 select_all=False,
@@ -466,7 +466,7 @@ def test_export_uses_source_metadata_for_document_content() -> None:
 
         report = docs_export.build_export(
             repo_root=root,
-            config_id="full-document-content",
+            config_id="document-content",
             scope="library",
             selected_doc_ids=["library"],
             select_all=False,
@@ -561,7 +561,7 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
     assert metadata["counts"]["exported"] == 2
-    assert context["task"] == "review_parent_child_relationships"
+    assert context["task"] == "review parent-child relationships"
     assert context["records_path"] == "documents"
     assert "counts" not in context
 
@@ -583,7 +583,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
             "target_format": "jsonl",
         },
         {
-            "config_id": "full-document-content",
+            "config_id": "document-content",
             "selected_doc_ids": ["can-the-brain-comprehend-how-it-works"],
             "select_all": False,
             "missing_summary_only": None,

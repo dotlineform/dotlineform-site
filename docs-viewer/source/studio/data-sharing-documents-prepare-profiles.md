@@ -55,7 +55,7 @@ The current file defines three enabled document package profiles:
   envelope JSON for selected-branch or explicitly selected whole-corpus hierarchy and relationship review
 - `document-summaries`
   JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
-- `full-document-content`
+- `document-content`
   JSONL document rows for exporting multiple selected document bodies in one file, including explicitly declared parent, ancestor, and child relationship metadata
 
 Profile ids describe package shape, not Docs Viewer scope.
