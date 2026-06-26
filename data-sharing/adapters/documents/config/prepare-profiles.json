@@ -4,7 +4,7 @@
     {
       "id": "parent-child-relationships",
       "label": "Parent-child relationships",
-      "description": "Exports document hierarchy, relationship metadata, summaries, and headings for structure review.",
+      "description": "Document hierarchy, relationship metadata, summaries, and headings for structure review.",
       "enabled": true,
       "data_domains": ["documents"],
       "target": {
@@ -49,7 +49,7 @@
         ]
       },
       "external_context": {
-        "task": "review_parent_child_relationships",
+        "task": "review parent-child relationships",
         "response_guidance": "Review the current document hierarchy and return proposed parent-child relationship changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
         "field_descriptions": {
           "doc_id": "Stable document identifier. Preserve exactly in responses.",
@@ -61,8 +61,7 @@
           "child_ids": "Current child document ids.",
           "child_titles": "Current child document titles.",
           "summary": "Existing document summary.",
-          "headings": "Headings extracted from the document.",
-          "viewable": "Whether the source document is currently marked viewable."
+          "headings": "Headings extracted from the document."
         }
       },
       "document_fields": [
@@ -116,19 +115,14 @@
           "output_path": "headings",
           "default": [],
           "transforms": ["headings_from_rendered_html"]
-        },
-        {
-          "source": "viewable",
-          "output_path": "viewable",
-          "required": true
         }
       ],
-      "notes": "Intended for selected document branches or the full generated corpus when the operator explicitly selects all."
+      "notes": "Can be used on selected document branches or the whole hierarchy."
     },
     {
       "id": "document-summaries",
       "label": "Document summaries",
-      "description": "Exports document summary metadata for missing-summary review and summary audit.",
+      "description": "Document summary metadata for missing-summary review and summary audit.",
       "enabled": true,
       "data_domains": ["documents"],
       "target": {
@@ -172,7 +166,7 @@
         ]
       },
       "external_context": {
-        "task": "suggest_document_summaries",
+        "task": "review and edit document summaries",
         "response_guidance": "Return proposed summary changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
         "field_descriptions": {
           "doc_id": "Stable document identifier. Preserve exactly in responses.",
@@ -215,7 +209,7 @@
     {
       "id": "full-document-content",
       "label": "Full document content",
-      "description": "Exports multiple documents with summaries, headings, and fuller plain text content in one JSONL file.",
+      "description": "Document summaries, headings, and plain text content.",
       "enabled": true,
       "data_domains": ["documents"],
       "target": {
@@ -259,7 +253,7 @@
         ]
       },
       "external_context": {
-        "task": "suggest_document_content_changes",
+        "task": "review and edit document content",
         "response_guidance": "Return proposed content changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
         "field_descriptions": {
           "doc_id": "Stable document identifier. Preserve exactly in responses.",
@@ -272,8 +266,7 @@
           "child_titles": "Current child document titles.",
           "summary": "Existing document summary.",
           "headings": "Headings extracted from the document.",
-          "source_text": "Plain-text document body extracted from source content.",
-          "viewable": "Whether the source document is currently marked viewable."
+          "source_text": "Plain-text document body extracted from source content."
         }
       },
       "document_fields": [
@@ -342,11 +335,6 @@
             "empty_image_mode": "marker"
           },
           "limit_key": "max_chars_per_document"
-        },
-        {
-          "source": "viewable",
-          "output_path": "viewable",
-          "required": true
         }
       ],
       "notes": "Designed for external review, bulk LLM upload, and internal reporting where several selected docs should travel in the same file."

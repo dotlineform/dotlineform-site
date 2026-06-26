@@ -187,16 +187,42 @@ Supported source fields include:
 Each field mapping requires `source` and `output_path`.
 Optional controls include `required`, `include_if_empty`, `default`, `transforms`, `limit_key`, and `options`.
 
-Supported transforms include:
+Field mapping controls:
 
-- `identity`
-- `plain_text_from_rendered_html`
-- `headings_from_rendered_html`
-- `normalize_whitespace`
-- `omit_code_blocks`
-- `truncate_chars`
+| Control | Applies to | Description |
+| --- | --- | --- |
+| `required` | any field | When true, the export fails for a selected document if the resolved value is empty. Boolean `false` is allowed. |
+| `include_if_empty` | any field | When false, empty strings, arrays, and objects are omitted from the output record. Defaults to true. |
+| `default` | any field | Value used when the source resolves to null. Common defaults are `""` for strings and `[]` for lists. |
+| `transforms` | any field | Ordered list of supported transform names to apply before writing the output field. |
+| `limit_key` | `truncate_chars` | Names the configured integer limit used for truncation. Supported values are `max_chars_per_document` and `max_total_chars`. |
+| `options` | transform-specific | Object of transform options. Currently used by `plain_text_from_rendered_html` image handling. |
 
-The default content export should use rendered Docs Viewer HTML as the source for plain text extraction, not raw Markdown.
+Supported transforms:
+
+| Transform | Description |
+| --- | --- |
+| `identity` | No-op marker. The value is written unchanged unless another transform changes it. |
+| `headings_from_rendered_html` | Documents that the field is heading-derived; headings are resolved from source-rendered HTML by the field source. |
+| `plain_text_from_rendered_html` | Converts rendered Docs Viewer HTML into plain text. Required for `source_text` fields. |
+| `normalize_whitespace` | Collapses line-level whitespace and repeated blank lines in plain-text content. |
+| `omit_code_blocks` | Used with `plain_text_from_rendered_html` to exclude `pre` and `code` content from extracted text. |
+| `truncate_chars` | Truncates text using the configured `limit_key` and `limits.truncate` strategy/marker. |
+
+Supported transform options:
+
+| Option | Values | Description |
+| --- | --- | --- |
+| `image_text_mode` | `omit`, `marker`, `extract_text` | Controls how image/SVG text is represented during plain-text extraction. Defaults to `extract_text`; invalid values fall back to `extract_text`. |
+| `empty_image_mode` | `omit`, `marker` | Controls images with no useful text during plain-text extraction. Defaults to `omit`; invalid values fall back to `omit`. |
+
+The default content export uses rendered Docs Viewer HTML as the source for plain text extraction, not raw Markdown.
+
+- Rendered HTML is closer to the document that Docs Viewer actually publishes and reviews.
+- Using it keeps Markdown parsing, inline HTML, renderer behavior, generated structure, image alt text, SVG text, headings, lists, blockquotes, and optional code-block omission on the same path as the visible document.
+- Raw Markdown can contain syntax, reference definitions, comments, embedded HTML, or formatting artifacts that are not intended to be reviewed as readable document text.
+
+The tradeoff is that source-text export depends on successful Docs Viewer rendering, which is intentional: a document that cannot render should surface as an export issue rather than silently producing misleading review text.
 
 ## Validation Boundary
 
