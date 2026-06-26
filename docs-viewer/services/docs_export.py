@@ -660,6 +660,10 @@ def resolve_selected_doc_ids(selected_doc_ids: list[str]) -> list[str]:
     return resolved
 
 
+def sort_doc_ids(doc_ids: list[str]) -> list[str]:
+    return sorted(doc_ids)
+
+
 def selected_docs(
     context: ExportContext,
     *,
@@ -679,9 +683,9 @@ def selected_docs(
         warnings.append("selection: missing_summary_only was ignored because the selected config does not support it")
 
     if mode == "all_matching" or select_all:
-        requested_ids = [normalize_text(doc.get("doc_id")) for doc in context.docs]
+        requested_ids = sort_doc_ids([normalize_text(doc.get("doc_id")) for doc in context.docs])
     else:
-        requested_ids = resolve_selected_doc_ids(selected_doc_ids)
+        requested_ids = sort_doc_ids(resolve_selected_doc_ids(selected_doc_ids))
         if not requested_ids:
             errors.append("explicit_doc_ids selection requires at least one --doc-id, --doc-ids, or --all")
 

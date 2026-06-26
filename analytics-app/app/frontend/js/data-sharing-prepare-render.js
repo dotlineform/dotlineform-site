@@ -171,7 +171,12 @@ function rowHiddenByCollapsedAncestor(state, docId, visibleDocIds) {
 
 export function currentDataSharingPrepareSelectedIds(state) {
   const selectableIds = new Set(selectableDataSharingPrepareDocIds(state));
-  return Array.from(state.selectedIds || []).filter((docId) => selectableIds.has(docId));
+  return Array.from(state.selectedIds || [])
+    .filter((docId) => selectableIds.has(docId))
+    .sort((left, right) => {
+      if (left === right) return 0;
+      return left < right ? -1 : 1;
+    });
 }
 
 export function syncDataSharingPrepareCheckboxes(state) {

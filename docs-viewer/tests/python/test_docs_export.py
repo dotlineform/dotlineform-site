@@ -208,6 +208,18 @@ def test_selected_doc_resolution_uses_explicit_ids_only() -> None:
     assert report["skipped"] == []
 
 
+def test_selected_docs_are_exported_in_doc_id_order() -> None:
+    with make_repo() as temp:
+        report = run_export(
+            Path(temp),
+            selected_doc_ids=["library", "child-with-summary"],
+            missing_summary_only=False,
+        )
+    assert report["ok"] is True
+    assert report["selected_doc_ids"] == ["child-with-summary", "library"]
+    assert report["exported_doc_ids"] == ["child-with-summary", "library"]
+
+
 def test_unknown_selected_doc_blocks_export() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp), selected_doc_ids=["missing-doc"])
@@ -299,12 +311,12 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     rows = [json.loads(line) for line in first_text.splitlines()]
     metadata = json.loads(first_metadata_text)
     context = json.loads(first_context_text)
-    assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in rows] == ["child-with-summary", "library"]
     assert "_export" not in rows[0]
     assert "last_updated" not in rows[0]
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
-    assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
+    assert metadata["selected_doc_ids"] == ["child-with-summary", "library"]
     assert context["task"] == "suggest_document_summaries"
     assert context["response_guidance"] == "Return proposed summary changes keyed by doc_id."
     assert context["record_format"] == "jsonl"
@@ -343,7 +355,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
         "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.json"
     )
     assert isinstance(payload, list)
-    assert [row["doc_id"] for row in payload] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in payload] == ["child-with-summary", "library"]
     assert "_export" not in payload[0]
     assert "last_updated" not in payload[0]
     assert metadata["generated_at"] == fixed_generated_at
@@ -446,10 +458,11 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert report["ok"] is True, report
     assert report["output_written"] is True
     assert report["metadata_file"].endswith(".meta.json")
-    assert [row["doc_id"] for row in rows] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in rows] == ["child-with-summary", "library"]
     assert "last_updated" not in rows[0]
-    library_row = rows[0]
-    child_row = rows[1]
+    rows_by_doc_id = {row["doc_id"]: row for row in rows}
+    library_row = rows_by_doc_id["library"]
+    child_row = rows_by_doc_id["child-with-summary"]
     assert library_row["parent_id"] == ""
     assert library_row["parent_title"] == ""
     assert library_row["ancestor_ids"] == []
@@ -483,9 +496,9 @@ def test_export_uses_source_metadata_for_document_content() -> None:
         rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
 
     assert report["ok"] is True, report
-    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
-    assert rows[0]["doc_id"] == "library"
-    assert rows[0]["source_text"] == "Body text."
+    assert report["exported_doc_ids"] == ["child-with-summary", "library"]
+    rows_by_doc_id = {row["doc_id"]: row for row in rows}
+    assert rows_by_doc_id["library"]["source_text"] == "Body text."
 
 
 def test_missing_source_metadata_returns_structured_export_error() -> None:
@@ -563,7 +576,7 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
 
     assert report["ok"] is True, report
     assert sorted(payload.keys()) == ["documents"]
-    assert [row["doc_id"] for row in payload["documents"]] == ["library", "child-with-summary"]
+    assert [row["doc_id"] for row in payload["documents"]] == ["child-with-summary", "library"]
     assert "last_updated" not in payload["documents"][0]
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
