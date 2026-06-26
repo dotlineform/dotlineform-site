@@ -1,0 +1,8 @@
+{
+  "doc_id": "figma",
+  "title": "figma",
+  "added_date": "2026-05-26",
+  "last_updated": "2026-06-26",
+  "viewer_url": "/docs/?scope=tmp&doc=figma",
+  "content_html": "<p>https://www.figma.com/pricing/</p>\n<p>https://excalidraw.com</p>\n<p>For this repo, the most useful format is usually:</p>\n<ol>\n<li>\n<p><strong>Annotated screenshot or sketch</strong></p>\n<ul>\n<li>PNG/JPEG is fine.</li>\n<li>Mark regions with labels like “filters”, “run list”, “details panel”.</li>\n<li>Add notes for behavior/state, not just layout.</li>\n</ul>\n</li>\n<li>\n<p><strong>Simple wireframe in Excalidraw, Figma, or a hand sketch</strong></p>\n<ul>\n<li>Export as PNG.</li>\n<li>Low fidelity is enough. Boxes and labels are better than polished mockups if the workflow is still changing.</li>\n</ul>\n</li>\n<li>\n<p><strong>Short workflow notes</strong>\nInclude:</p>\n<ul>\n<li>primary user goal</li>\n<li>required actions</li>\n<li>important empty/loading/error states</li>\n<li>what should be visible without scrolling</li>\n<li>what can be hidden behind details/modals</li>\n</ul>\n</li>\n</ol>\n<p>Best lightweight template:</p>\n<pre><code class=\"language-text\">Screen: /admin/checks/\nGoal: Run a report and review output quickly.\n\nMust show:\n- report + target filters\n- run button\n- recent runs\n- selected report output\n\nStates:\n- idle\n- running\n- failed\n- no runs\n- selected run loaded\n\nNotes:\n- controls should be compact\n- output is more important than run history\n- mobile is not important for this route\n</code></pre>\n<p>If you send an image plus those notes, I can translate it into implementation while keeping it consistent with the existing Admin/UI Catalogue guidance.</p>\n"
+}

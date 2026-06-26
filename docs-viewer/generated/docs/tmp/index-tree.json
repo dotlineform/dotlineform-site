@@ -40,10 +40,20 @@
       "ui_status": "draft"
     },
     {
+      "doc_id": "figma",
+      "title": "figma",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/figma.json"
+    },
+    {
       "doc_id": "file-picker",
       "title": "file picker component",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/file-picker.json",
       "ui_status": "draft"
+    },
+    {
+      "doc_id": "frontmatter",
+      "title": "frontmatter",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/frontmatter.json"
     },
     {
       "doc_id": "github-notes",
@@ -108,16 +118,25 @@
       ]
     },
     {
+      "doc_id": "search",
+      "title": "search",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/search.json"
+    },
+    {
       "doc_id": "tmp",
       "title": "tmp",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json",
-      "ui_status": "draft"
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json"
     },
     {
       "doc_id": "studio",
       "title": "tmp studio",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
+    },
+    {
+      "doc_id": "vs-code",
+      "title": "vs code",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/vs-code.json"
     }
   ],
-  "generated_at": "2026-06-26T21:40:50Z"
+  "generated_at": "2026-06-26T21:57:18Z"
 }
