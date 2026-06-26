@@ -25,7 +25,7 @@ The page uses:
 - `admin-app/app/server/admin_app/audit_runner.py`
 - `admin-app/checks/audit_route_ready_state.py`
 
-Visible runtime copy lives in `admin-app/app/frontend/config/ui-text/admin-audits.json`, loaded through the Admin runtime config.
+Visible runtime copy is code-owned by the Admin frontend modules.
 
 The local service endpoint definitions live in `admin-app/app/frontend/js/admin-transport.js`, matching the Admin transport pattern.
 The active browser endpoints are hosted by the Admin app server under `/admin/api/audits/...`.

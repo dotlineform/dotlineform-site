@@ -169,9 +169,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-route-templates.js",
         repo_root / "admin-app" / "app" / "assets" / "css" / "admin.css",
         repo_root / "admin-app" / "app" / "frontend" / "config" / "admin-config.json",
-        repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-activity.json",
-        repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-audits.json",
-        repo_root / "admin-app" / "app" / "frontend" / "config" / "ui-text" / "admin-checks.json",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity-context.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-activity-modals.js",
@@ -184,6 +181,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-theme.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-testing.js",
         repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-transport.js",
+        repo_root / "admin-app" / "app" / "frontend" / "js" / "admin-ui-text.js",
     ]
     routes_dir = repo_root / "admin-app" / "app" / "frontend" / "routes"
     if routes_dir.exists():
@@ -212,11 +210,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             for route_id, route in admin_views(repo_root, payload).items()
         ],
         "data_paths": {
-            "ui_text": {
-                "admin_activity": "/admin/app/frontend/config/ui-text/admin-activity.json",
-                "admin_audits": "/admin/app/frontend/config/ui-text/admin-audits.json",
-                "admin_checks": "/admin/app/frontend/config/ui-text/admin-checks.json",
-            },
             "activity": {
                 "feed": "var/admin/activity/activity_log.json",
                 "journal": "var/admin/activity/activity_log.jsonl",

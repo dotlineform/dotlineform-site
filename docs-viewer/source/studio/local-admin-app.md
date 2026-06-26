@@ -62,7 +62,7 @@ The static Local Admin shell declares the runtime config endpoint with `meta[nam
 
 - Admin route ids, labels, titles, paths, templates, scripts, shell type, and navigation visibility from `admin-app/app/frontend/config/admin-config.json`
 - service endpoints for activity, audits, checks, and testing
-- UI text paths under `/admin/app/frontend/config/ui-text/...`
+- code-owned Admin route copy from frontend modules
 - local output paths for activity, checks runs, and testing run summaries
 - sibling links to Studio, Analytics, and Docs Viewer
 

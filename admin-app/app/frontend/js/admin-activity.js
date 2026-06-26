@@ -1,6 +1,6 @@
 import {
   getAdminText,
-  loadAdminConfigWithText
+  loadAdminConfig
 } from "./admin-config.js";
 import {
   ACTIVITY_API_ENDPOINTS,
@@ -188,7 +188,7 @@ async function init() {
   initializeAdminRouteState(root, { route: "admin-activity" });
 
   try {
-    const config = await loadAdminConfigWithText("admin_activity");
+    const config = await loadAdminConfig();
     const payload = await loadFeed();
     const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
     metaNode.textContent = entries.length === 1
@@ -239,7 +239,7 @@ async function init() {
   } catch (error) {
     console.warn("admin_activity: load failed", error);
     try {
-      const config = await loadAdminConfigWithText("admin_activity");
+      const config = await loadAdminConfig();
       statusNode.textContent = getAdminText(config, "admin_activity.load_failed_error", "Failed to load Admin activity.");
     } catch (_configError) {
       statusNode.textContent = "Failed to load Admin activity.";

@@ -1,6 +1,9 @@
+import {
+  DEFAULT_ADMIN_UI_TEXT
+} from "./admin-ui-text.js";
+
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
 let adminConfigPromise = null;
-const scopedTextPromises = new Map();
 
 export async function loadAdminConfig() {
   if (!adminConfigPromise) {
@@ -27,60 +30,8 @@ function readConfiguredAdminConfigUrl() {
   return meta ? String(meta.getAttribute("content") || "").trim() : "";
 }
 
-export async function loadAdminConfigWithText(group) {
-  const config = await loadAdminConfig();
-  await loadScopedAdminText(config, group);
-  return config;
-}
-
-export async function loadScopedAdminText(config, group) {
-  const normalizedGroup = normalizeUiTextGroup(group);
-  const targetConfig = config && typeof config === "object" ? config : {};
-  if (!normalizedGroup) return targetConfig;
-  if (pathValue(targetConfig, ["ui_text", normalizedGroup]) && typeof pathValue(targetConfig, ["ui_text", normalizedGroup]) === "object") {
-    return targetConfig;
-  }
-
-  const url = getAdminUiTextPath(targetConfig, normalizedGroup);
-  if (!url) {
-    warnScopedTextFallback(normalizedGroup, "missing scoped text path");
-    return targetConfig;
-  }
-
-  let request = scopedTextPromises.get(url);
-  if (!request) {
-    request = fetch(url, { cache: "default" })
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      });
-    scopedTextPromises.set(url, request);
-  }
-
-  try {
-    const payload = await request;
-    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-      throw new Error("expected object payload");
-    }
-    if (!targetConfig.ui_text || typeof targetConfig.ui_text !== "object" || Array.isArray(targetConfig.ui_text)) {
-      targetConfig.ui_text = {};
-    }
-    targetConfig.ui_text[normalizedGroup] = payload;
-  } catch (error) {
-    scopedTextPromises.delete(url);
-    warnScopedTextFallback(normalizedGroup, error);
-  }
-  return targetConfig;
-}
-
 export function getAdminDataPath(config, key) {
   const path = pathValue(config, ["paths", "data", "admin", key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
-export function getAdminUiTextPath(config, group) {
-  const normalizedGroup = normalizeUiTextGroup(group);
-  const path = pathValue(config, ["paths", "data", "ui_text", normalizedGroup]);
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
@@ -111,17 +62,10 @@ export function buildAdminRouteUrl(config, key, params = {}) {
 }
 
 export function getAdminText(config, key, fallback = "", tokens = null) {
-  const pathKeys = ["ui_text", ...String(key || "").split(".").filter(Boolean)];
-  const value = pathValue(config, pathKeys);
+  const pathKeys = String(key || "").split(".").filter(Boolean);
+  const value = pathValue(DEFAULT_ADMIN_UI_TEXT, pathKeys);
   const source = typeof value === "string" ? value : fallback;
   return applyTextTokens(source, tokens);
-}
-
-function normalizeUiTextGroup(value) {
-  return String(value || "")
-    .trim()
-    .replace(/-/g, "_")
-    .replace(/[^a-z0-9_]/gi, "");
 }
 
 function normalizeRouteKey(value) {
@@ -129,11 +73,6 @@ function normalizeRouteKey(value) {
     .trim()
     .replace(/-/g, "_")
     .toLowerCase();
-}
-
-function warnScopedTextFallback(group, detail) {
-  if (typeof console === "undefined" || !console.warn) return;
-  console.warn(`admin_config: scoped ui_text.${group} unavailable; using caller fallback copy`, detail);
 }
 
 function deriveSiteBasePath(importUrl) {

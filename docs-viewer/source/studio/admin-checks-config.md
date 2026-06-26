@@ -268,7 +268,7 @@ total routes:   45
         "admin-app/checks/reports/",
         "admin-app/checks/run_reports.py",
         "admin-app/app/frontend/js/admin-checks.js",
-        "admin-app/app/frontend/config/ui-text/admin-checks.json",
+        "admin-app/app/frontend/js/admin-ui-text.js",
         "admin-app/app/server/admin_app/admin_checks_api.py"
       ],
       "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],

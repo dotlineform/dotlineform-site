@@ -1,4 +1,4 @@
-import { getAdminText, loadAdminConfigWithText } from "./admin-config.js";
+import { getAdminText, loadAdminConfig } from "./admin-config.js";
 import {
   CHECKS_API_ENDPOINTS,
   deleteJson,
@@ -297,7 +297,7 @@ async function init() {
   initializeAdminRouteState(root, { route: "admin-checks", mode: "idle" });
 
   try {
-    const config = await loadAdminConfigWithText("admin_checks");
+    const config = await loadAdminConfig();
     const serviceAvailable = await probeChecksApiHealth();
     const metadata = serviceAvailable ? normalizeMetadata(await getJson(CHECKS_API_ENDPOINTS.reports)) : normalizeMetadata(null);
     const state = {

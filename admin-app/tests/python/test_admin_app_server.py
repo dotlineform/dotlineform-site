@@ -46,8 +46,7 @@ def test_runtime_config_exposes_admin_home_and_planned_routes() -> None:
     assert payload["app"]["routes"]["admin_testing"]["template"] == "/admin/app/frontend/routes/admin-testing.html"
     assert payload["app"]["routes"]["admin_testing"]["script"] == "/admin/app/frontend/js/admin-testing.js"
     assert any(view["id"] == "admin_home" and view["path"] == "/admin/" for view in runtime["views"])
-    assert runtime["data_paths"]["ui_text"]["admin_checks"] == "/admin/app/frontend/config/ui-text/admin-checks.json"
-    assert "admin_home" not in runtime["data_paths"]["ui_text"]
+    assert "ui_text" not in runtime["data_paths"]
     assert runtime["services"]["audits"]["run"] == "/admin/api/audits/audits/run"
     assert runtime["services"]["checks"]["runs"] == "/admin/api/checks/runs"
     assert runtime["services"]["testing"]["runs"] == "/admin/api/testing/runs"
@@ -97,7 +96,7 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
     assert allowed("/admin/app/frontend/routes/admin-home.html") is True
     assert allowed("/admin/app/frontend/routes/admin-checks.html") is True
     assert allowed("/admin/app/frontend/config/admin-config.json") is True
-    assert allowed("/admin/app/frontend/config/ui-text/admin-checks.json") is True
+    assert allowed("/admin/app/frontend/js/admin-ui-text.js") is True
 
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/analytics/app/assets/css/analytics.css") is False

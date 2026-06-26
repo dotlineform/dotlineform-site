@@ -259,7 +259,7 @@
       "label": "Activity",
       "include": [
         "**/*activity*",
-        "admin-app/app/frontend/config/ui-text/admin-activity.json",
+        "admin-app/app/frontend/js/admin-ui-text.js",
         "admin-app/app/server/admin_app/admin_activity_api.py",
         "docs-viewer/services/docs_activity.py"
       ]
@@ -305,7 +305,7 @@
         "admin-app/checks/run_reports.py",
         "admin-app/app/frontend/routes/admin-checks.html",
         "admin-app/app/frontend/js/admin-checks.js",
-        "admin-app/app/frontend/config/ui-text/admin-checks.json",
+        "admin-app/app/frontend/js/admin-ui-text.js",
         "admin-app/app/server/admin_app/admin_checks_api.py"
       ],
       "shared": [
@@ -338,7 +338,7 @@
       "include": [
         "admin-app/app/frontend/routes/admin-audits.html",
         "admin-app/app/frontend/js/admin-audits.js",
-        "admin-app/app/frontend/config/ui-text/admin-audits.json",
+        "admin-app/app/frontend/js/admin-ui-text.js",
         "admin-app/app/server/admin_app/admin_audit_api.py",
         "admin-app/app/server/admin_app/audit_runner.py"
       ],
@@ -356,7 +356,7 @@
       "include": [
         "admin-app/app/frontend/routes/admin-activity.html",
         "admin-app/app/frontend/js/admin-activity*",
-        "admin-app/app/frontend/config/ui-text/admin-activity.json",
+        "admin-app/app/frontend/js/admin-ui-text.js",
         "admin-app/app/server/admin_app/admin_activity_api.py"
       ],
       "shared": [

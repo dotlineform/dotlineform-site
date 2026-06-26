@@ -1,4 +1,4 @@
-import { getAdminText, loadAdminConfigWithText } from "./admin-config.js";
+import { getAdminText, loadAdminConfig } from "./admin-config.js";
 import {
   AUDIT_API_ENDPOINTS,
   getJson,
@@ -253,7 +253,7 @@ async function init() {
   initializeAdminRouteState(root, { route: "admin-audits", mode: "summary" });
 
   try {
-    const config = await loadAdminConfigWithText("admin_audits");
+    const config = await loadAdminConfig();
     const serviceAvailable = await probeAuditApiHealth();
     const audits = await loadAudits(serviceAvailable);
     const state = {
