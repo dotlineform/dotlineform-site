@@ -10,6 +10,10 @@ viewer_report: docs_index_table
 viewer_report_access: public
 
 
+we are removing ui-text config files, because the UI copy needs to be agreed at design and keeping it user-editable is unnecessary code overhead. see [UI Text Config Removal](/docs/?scope=studio&doc=site-request-ui-text-config-removal)
+we have done docs-viewer, next we need to clean up `analytics-app/app/frontend/config/ui-text`.
+
+
 ---
 
 possible frontmatter fields:
