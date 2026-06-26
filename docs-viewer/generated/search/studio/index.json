@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e0270f33ed36a5fd9dd6701f8145af08",
-    "generated_at_utc": "2026-06-26T11:59:30Z",
-    "count": 225
+    "version": "blake2b-ddb98d6a2f116d062d199ae316f0e90e",
+    "generated_at_utc": "2026-06-26T12:12:59Z",
+    "count": 224
   },
   "entries": [
     {
@@ -1378,34 +1378,6 @@
         "23"
       ],
       "search_text": "site-request-shareable-content-blocks site request shareable content blocks shareable content blocks request change requests change requests 2026-06-23 2026 06 23"
-    },
-    {
-      "id": "site-request-ui-text-config-removal",
-      "kind": "doc",
-      "title": "UI Text Config Removal",
-      "href": "/docs/?scope=studio&doc=site-request-ui-text-config-removal",
-      "last_updated": "2026-06-25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-25 • Change Requests",
-      "search_terms": [
-        "site-request-ui-text-config-removal",
-        "site",
-        "request",
-        "ui",
-        "text",
-        "config",
-        "removal",
-        "ui text config removal",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-25",
-        "2026",
-        "06",
-        "25"
-      ],
-      "search_text": "site-request-ui-text-config-removal site request ui text config removal ui text config removal change requests change requests 2026-06-25 2026 06 25"
     },
     {
       "id": "data-sharing",

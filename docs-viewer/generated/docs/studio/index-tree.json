@@ -322,11 +322,6 @@
           "title": "Shareable Content Blocks Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
           "ui_status": "draft"
-        },
-        {
-          "doc_id": "site-request-ui-text-config-removal",
-          "title": "UI Text Config Removal",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-ui-text-config-removal.json"
         }
       ]
     },
@@ -1214,5 +1209,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-26T11:59:30Z"
+  "generated_at": "2026-06-26T12:12:59Z"
 }
