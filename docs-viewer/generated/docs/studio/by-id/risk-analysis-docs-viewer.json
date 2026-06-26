@@ -3,7 +3,6 @@
   "title": "Risk Analysis - Docs Viewer",
   "added_date": "2026-06-07",
   "last_updated": "2026-06-07",
-  "source_path": "risk-analysis-docs-viewer.md",
   "viewer_url": "/docs/?scope=studio&doc=risk-analysis-docs-viewer",
   "parent_id": "admin",
   "content_html": "<h1>Risk Analysis - Docs Viewer</h1>\n<p>Policy: <a href=\"/docs/?scope=studio&amp;doc=risk-analysis-policy\">Risk Analysis Policy</a>.</p>\n<h2>Priority Order</h2>\n<ol>\n<li>Structural</li>\n<li>Performance / cost</li>\n<li>Architectural fit</li>\n<li>Workflow</li>\n</ol>\n<h2>Risk Analysis</h2>\n<table>\n<thead>\n<tr>\n<th>Area</th>\n<th>Indicator</th>\n<th>Evidence</th>\n<th>Current action</th>\n</tr>\n</thead>\n</table>\n"

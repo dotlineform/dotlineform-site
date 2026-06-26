@@ -12,8 +12,13 @@ viewer_report_access: public
 
 
 we are looking at the data sharing workflow and UI at `/analytics/data-sharing/prepare/`
-I've done a documents summary export: `var/analytics/data-sharing/exports/documents-library-document-summaries-20260626-115828.json`
-the "viewable" field isn't needed in this profile. this would just be a profile config change? what would I need to do?
+
+
+If a doc has no doc_id, filename stem is the fallback ID. Renaming that file changes the doc identity.
+Markdown links to another source file by relative filename can break unless updated.
+Generated metadata includes source_path, and semantic reference records include source_path, so generated artifacts become stale until rebuild.
+If anything external references source filenames directly, that would need updating.
+
 
 ---
 

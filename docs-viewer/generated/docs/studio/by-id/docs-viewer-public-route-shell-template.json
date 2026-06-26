@@ -3,7 +3,6 @@
   "title": "Docs Viewer Public Route Shell Template",
   "added_date": "2026-06-13",
   "last_updated": "2026-06-13",
-  "source_path": "docs-viewer-public-route-shell-template.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-public-route-shell-template",
   "parent_id": "docs-viewer",
   "summary": "describes the lifecycle-generated public site shell",

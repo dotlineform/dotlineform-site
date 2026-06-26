@@ -3,7 +3,6 @@
   "title": "Dependencies",
   "added_date": "2026-05-14",
   "last_updated": "2026-06-01",
-  "source_path": "docs-viewer-dependencies.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-dependencies",
   "parent_id": "docs-viewer",
   "summary": "Docs Viewer-specific dependency boundary, especially the parser stack introduced for staged source import.",

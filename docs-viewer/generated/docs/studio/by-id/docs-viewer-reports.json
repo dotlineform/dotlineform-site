@@ -3,7 +3,6 @@
   "title": "Reports",
   "added_date": "2026-05-13",
   "last_updated": "2026-06-24",
-  "source_path": "docs-viewer-reports.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
   "parent_id": "docs-viewer",
   "viewer_report": "reports_list",
