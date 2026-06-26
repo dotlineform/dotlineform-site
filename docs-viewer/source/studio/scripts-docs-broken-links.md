@@ -31,7 +31,6 @@ JSON entries include:
 - `from_page_url`
 - `from_page_scope`
 - `from_page_doc_id`
-- `from_page_source_path`
 - `link_text`
 - `link_url`
 

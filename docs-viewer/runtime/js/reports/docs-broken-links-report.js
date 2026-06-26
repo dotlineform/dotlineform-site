@@ -117,7 +117,7 @@ function appendSourceCell(row, state, entry) {
   link.dataset.docId = cleanString(entry.from_page_doc_id);
   link.target = "_blank";
   link.rel = "noopener noreferrer";
-  link.textContent = cleanString(entry.from_page_text) || cleanString(entry.from_page_source_path) || cleanString(entry.from_page_url) || "source";
+  link.textContent = cleanString(entry.from_page_text) || cleanString(entry.from_page_url);
   row.appendChild(link);
 }
 

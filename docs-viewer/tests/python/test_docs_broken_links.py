@@ -42,7 +42,6 @@ def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: st
             "doc_id": doc_id,
             "title": "Source",
             "viewer_url": "/docs/?scope=studio&doc=source",
-            "source_path": "source.md",
             "content_html": content_html,
         },
     )
@@ -117,7 +116,7 @@ def test_missing_docs_links_inside_code_blocks_are_ignored() -> None:
     assert [entry["link_url"] for entry in result["entries"]] == ["/docs/?scope=studio&doc=missing-prose"]
     assert result["entries"][0]["from_page_scope"] == "studio"
     assert result["entries"][0]["from_page_doc_id"] == "source"
-    assert result["entries"][0]["from_page_source_path"] == "source.md"
+    assert "from_page_source_path" not in result["entries"][0]
 
 
 def test_public_reader_payloads_do_not_need_viewer_url_metadata() -> None:

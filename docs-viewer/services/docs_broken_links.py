@@ -32,7 +32,6 @@ class DocMeta:
     doc_id: str
     title: str
     viewer_url: str
-    source_path: str
 
 
 @dataclass(frozen=True)
@@ -147,7 +146,6 @@ def flatten_index_tree(scope: str, docs: list[Any]) -> list[DocMeta]:
                     doc_id=doc_id,
                     title=title,
                     viewer_url=viewer_url_for(scope, doc_id),
-                    source_path="",
                 )
             )
         children = item.get("children")
@@ -173,7 +171,6 @@ def load_doc_payload(repo_root: Path, meta: DocMeta) -> DocPayload:
         doc_id=meta.doc_id,
         title=normalize_text(payload.get("title")) or meta.title,
         viewer_url=normalize_text(payload.get("viewer_url")) or meta.viewer_url,
-        source_path=normalize_text(payload.get("source_path")) or meta.source_path,
     )
     if not hydrated_meta.title or not hydrated_meta.viewer_url:
         raise ValueError(f"Expected title and viewer_url in {payload_path}")
@@ -250,11 +247,6 @@ def is_same_doc_fragment_link(current_doc: DocMeta, target: dict[str, str]) -> b
             and normalize_text(target.get("doc_id")) == current_doc.doc_id
         )
 
-    if target.get("kind") == "source_markdown":
-        target_name = Path(normalize_text(target.get("path"))).name
-        current_name = Path(current_doc.source_path).name
-        return bool(target_name and current_name and target_name == current_name)
-
     return False
 
 
@@ -286,7 +278,6 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
             from_page_url = doc.meta.viewer_url
             from_page_scope = doc.meta.scope
             from_page_doc_id = doc.meta.doc_id
-            from_page_source_path = doc.meta.source_path
 
             if target.get("kind") == "source_markdown":
                 entries.append(
@@ -297,7 +288,6 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
                         "from_page_url": from_page_url,
                         "from_page_scope": from_page_scope,
                         "from_page_doc_id": from_page_doc_id,
-                        "from_page_source_path": from_page_source_path,
                     }
                 )
                 continue
@@ -313,7 +303,6 @@ def audit_docs_broken_links(repo_root: Path, scope: str) -> dict[str, Any]:
                         "from_page_url": from_page_url,
                         "from_page_scope": from_page_scope,
                         "from_page_doc_id": from_page_doc_id,
-                        "from_page_source_path": from_page_source_path,
                     }
                 )
 
