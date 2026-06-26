@@ -302,6 +302,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert "_export" not in rows[0]
     assert "last_updated" not in rows[0]
     assert metadata["generated_at"] == fixed_generated_at
+    assert metadata["scope"] == "library"
     assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
     assert context["task"] == "suggest_document_summaries"
     assert context["response_guidance"] == "Return proposed summary changes keyed by doc_id."
@@ -339,6 +340,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert "_export" not in payload[0]
     assert "last_updated" not in payload[0]
     assert metadata["generated_at"] == fixed_generated_at
+    assert metadata["scope"] == "library"
     assert context["record_container"] == "JSON array of document objects"
 
 
@@ -557,6 +559,7 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
     assert [row["doc_id"] for row in payload["documents"]] == ["library", "child-with-summary"]
     assert "last_updated" not in payload["documents"][0]
     assert metadata["generated_at"] == fixed_generated_at
+    assert metadata["scope"] == "library"
     assert metadata["counts"]["exported"] == 2
     assert context["task"] == "review_parent_child_relationships"
     assert context["records_path"] == "documents"

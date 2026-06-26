@@ -104,6 +104,7 @@ When `target.record_shape` is `envelope`, `document_array_path` identifies where
 Envelope profiles support JSON only.
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
 Export-run metadata is written once to a sibling `.meta.json` sidecar instead of being included in the external JSON or JSONL payload.
+Current profiles include the Docs Viewer `scope` in that metadata sidecar so returned packages can identify the source scope without adding scope to each external document row.
 A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
 External payload records should not include internal run details, row counts, checksums, or source timestamps; source-date provenance belongs in `.meta.json`.
 
@@ -144,7 +145,7 @@ The `.meta.json` and `.context.json` patterns are derived from the output filena
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
 It formats the filename timestamp in the local runtime timezone.
-Export metadata `generated_at` remains UTC.
+Export metadata `generated_at` remains UTC, and `scope` records the Docs Viewer source scope used for the run.
 
 The package engine is documented in [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export).
 

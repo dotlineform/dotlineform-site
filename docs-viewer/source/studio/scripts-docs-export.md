@@ -28,13 +28,14 @@ Current input paths:
 
 Current output pattern:
 
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.meta.json` for internal export provenance
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.context.json` for external task and schema context
+- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.json`
+- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.jsonl`
+- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.meta.json` for internal export provenance
+- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.context.json` for external task and schema context
 
 The filename timestamp is formatted in the local runtime timezone.
-Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance and is written only to the internal `.meta.json` sidecar.
+Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance, and `scope` records the Docs Viewer source scope used for the run.
+Both are written only to the internal `.meta.json` sidecar.
 
 ## Runtime Contract
 

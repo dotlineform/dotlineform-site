@@ -41,6 +41,7 @@
           "config_id",
           "config_checksum",
           "data_domain",
+          "scope",
           "generated_at",
           "selected_doc_ids",
           "source_last_updated",
@@ -163,6 +164,7 @@
           "config_id",
           "config_checksum",
           "data_domain",
+          "scope",
           "generated_at",
           "selected_doc_ids",
           "source_last_updated",
@@ -177,8 +179,7 @@
           "title": "Document title.",
           "parent_id": "Current parent document id, if present.",
           "headings": "Headings extracted from the document.",
-          "current_summary": "Existing document summary. Empty means a new summary may be needed.",
-          "viewable": "Whether the source document is currently marked viewable."
+          "current_summary": "Existing document summary. Empty means a new summary may be needed."
         }
       },
       "document_fields": [
@@ -207,11 +208,6 @@
           "source": "current_summary",
           "output_path": "current_summary",
           "default": ""
-        },
-        {
-          "source": "viewable",
-          "output_path": "viewable",
-          "required": true
         }
       ],
       "notes": "Default missing-summary filtering supports summary coverage review. Full document body text belongs to the full-content export."
@@ -255,6 +251,7 @@
           "config_id",
           "config_checksum",
           "data_domain",
+          "scope",
           "generated_at",
           "selected_doc_ids",
           "source_last_updated",

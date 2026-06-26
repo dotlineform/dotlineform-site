@@ -974,6 +974,7 @@ def export_metadata(
         "config_id": config_id,
         "config_checksum": config_checksum(context.config),
         "data_domain": context.data_domain,
+        "scope": context.scope,
         "generated_at": generated_at,
         "selected_doc_ids": selected_doc_ids,
         "source_last_updated": source_last_updated,
