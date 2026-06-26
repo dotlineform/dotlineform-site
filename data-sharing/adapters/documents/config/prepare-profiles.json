@@ -208,7 +208,7 @@
     },
     {
       "id": "full-document-content",
-      "label": "Full document content",
+      "label": "Document content",
       "description": "Document summaries, headings, and plain text content.",
       "enabled": true,
       "data_domains": ["documents"],

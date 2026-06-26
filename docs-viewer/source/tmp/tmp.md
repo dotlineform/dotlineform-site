@@ -9,6 +9,8 @@ Docs Index Table
 viewer_report: docs_index_table
 viewer_report_access: public
 
+
+
 we are looking at the data sharing workflow and UI at `/analytics/data-sharing/prepare/`
 I've done a documents summary export: `var/analytics/data-sharing/exports/documents-library-document-summaries-20260626-115828.json`
 the "viewable" field isn't needed in this profile. this would just be a profile config change? what would I need to do?
