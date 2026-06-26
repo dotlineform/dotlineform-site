@@ -6,7 +6,7 @@ import {
 } from "./analytics-transport.js";
 import {
   getAnalyticsText,
-  loadAnalyticsConfigWithText
+  loadAnalyticsConfig
 } from "./analytics-config.js";
 import {
   initializeAnalyticsRouteState,
@@ -560,7 +560,7 @@ async function init() {
 
   try {
     markBusy(state, true);
-    state.config = await loadAnalyticsConfigWithText("data_sharing_prepare");
+    state.config = await loadAnalyticsConfig();
     configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry();
     state.dataDomains = dataSharingDomainsForOperation(adapterRegistry, "prepare", DATA_SHARING_DOMAINS);

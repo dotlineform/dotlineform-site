@@ -71,20 +71,7 @@ def main() -> int:
                     ]);
                     const reportInput = {
                         mount: document.querySelector('#mount'),
-                        config: {
-                            ui_text: {
-                                series_tags: {
-                                    table_heading_series: 'series',
-                                    table_heading_status: 'status',
-                                    table_heading_tags: 'tags',
-                                    filter_all_tags: 'All tags',
-                                    chip_caption_local: 'local',
-                                    chip_caption_delete: 'delete',
-                                    group_info_title: 'Open groups',
-                                    group_info_aria_label: 'Open groups'
-                                }
-                            }
-                        },
+                        config: {},
                         studioGroups: ['subject', 'domain', 'form', 'theme'],
                         groupInfoPagePath: '/analytics/tag-groups/',
                         groupDescriptions: new Map([
@@ -162,9 +149,9 @@ def main() -> int:
         raise AssertionError(f"red RAG output mismatch: {result!r}")
     if "rag--amber" not in result["allRows"][1]["ragClass"] or "deprecated:" in result["allRows"][1]["ragTitle"]:
         raise AssertionError(f"amber RAG output mismatch: {result!r}")
-    if "old local" not in result["allRows"][1]["chips"]:
+    if "old" not in result["allRows"][1]["chips"]:
         raise AssertionError(f"local chip output mismatch: {result!r}")
-    if result["themeRows"][1]["chips"] != ["old local"] or result["themeRows"][0]["chips"] != []:
+    if result["themeRows"][1]["chips"] != ["old"] or result["themeRows"][0]["chips"] != []:
         raise AssertionError(f"theme filter output mismatch: {result!r}")
     if result["activeFilter"] != "active" or result["groupInfoCount"]:
         raise AssertionError(f"filter controls mismatch: {result!r}")

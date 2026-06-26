@@ -3,7 +3,7 @@ import {
   getAnalyticsGroups,
   getAnalyticsRoute,
   getAnalyticsText,
-  loadAnalyticsConfigWithText
+  loadAnalyticsConfig
 } from "./analytics-config.js";
 import {
   buildAnalyticsGroupDescriptionMap,
@@ -82,7 +82,7 @@ async function initSeriesTagsPage() {
 
   let config = null;
   try {
-    config = await loadAnalyticsConfigWithText("series_tags");
+    config = await loadAnalyticsConfig();
     STUDIO_GROUPS = getAnalyticsGroups(config);
     GROUP_INFO_PAGE_PATH = getAnalyticsRoute(config, "tag_groups");
   } catch (error) {

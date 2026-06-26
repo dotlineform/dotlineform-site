@@ -406,7 +406,7 @@
       "include": [
         "analytics-app/app/frontend/routes/tag-groups.html",
         "analytics-app/app/frontend/js/tag-groups.js",
-        "analytics-app/app/frontend/config/ui-text/tag-groups.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",
@@ -421,7 +421,7 @@
       "include": [
         "analytics-app/app/frontend/routes/tag-registry.html",
         "analytics-app/app/frontend/js/tag-registry.js",
-        "analytics-app/app/frontend/config/ui-text/tag-registry.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",
@@ -436,7 +436,7 @@
       "include": [
         "analytics-app/app/frontend/routes/tag-aliases.html",
         "analytics-app/app/frontend/js/tag-aliases.js",
-        "analytics-app/app/frontend/config/ui-text/tag-aliases.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",
@@ -451,7 +451,7 @@
       "include": [
         "analytics-app/app/frontend/routes/series-tags.html",
         "analytics-app/app/frontend/js/series-tags.js",
-        "analytics-app/app/frontend/config/ui-text/series-tags.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",
@@ -466,7 +466,7 @@
       "include": [
         "analytics-app/app/frontend/routes/series-tag-editor.html",
         "analytics-app/app/frontend/js/series-tag-editor-page.js",
-        "analytics-app/app/frontend/config/ui-text/series-tag-editor.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",
@@ -481,7 +481,7 @@
       "include": [
         "analytics-app/app/frontend/routes/data-sharing-prepare.html",
         "analytics-app/app/frontend/js/data-sharing-prepare*",
-        "analytics-app/app/frontend/config/ui-text/data-sharing-prepare.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",
@@ -498,7 +498,7 @@
       "include": [
         "analytics-app/app/frontend/routes/data-sharing-review.html",
         "analytics-app/app/frontend/js/data-sharing-review*",
-        "analytics-app/app/frontend/config/ui-text/data-sharing-review.json"
+        "analytics-app/app/frontend/js/analytics-ui-text.js"
       ],
       "shared": [
         "analytics-app/app/frontend/analytics-shell.html",

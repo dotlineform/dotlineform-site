@@ -2,7 +2,7 @@
 doc_id: config-analytics-config-json
 title: Analytics Config JSON
 added_date: 2026-06-02
-last_updated: 2026-06-03
+last_updated: 2026-06-26
 parent_id: analytics
 ---
 # Analytics Config JSON
@@ -14,7 +14,7 @@ Config file:
 ## Contract Role
 
 `analytics-config.json` is the browser-facing bootstrap manifest for the Local Analytics app.
-It owns Analytics route shell metadata under `app.routes`, public catalogue index data lookup, and Analytics UI-text bundle paths.
+It owns Analytics route shell metadata under `app.routes` and public catalogue index data lookup.
 It also owns the Analytics tag grouping and RAG scoring policy under `analysis`.
 
 It is separate from Local Studio config.
@@ -27,7 +27,6 @@ Analytics route modules use it for:
 
 - route URL lookup from `app.routes` for tag registry, aliases, groups, series tags, series tag editor, and Data Sharing prepare/review
 - site data lookup for series and works indexes
-- route-scoped UI-text bundle paths under `paths.data.ui_text`
 - tag group order and coverage groups under `analysis.groups`
 - RAG scoring thresholds under `analysis.rag`
 
@@ -46,7 +45,6 @@ Allowed edits include:
 
 - adding or retiring Analytics route keys with matching route/server/test changes
 - changing data path ownership when a data source moves
-- adding or retiring UI-text bundle paths with route module changes
 
 Do not add Local Studio route keys, Docs Viewer internals, generated payload schemas, or scoring implementations here.
 Scoring policy belongs here, but scoring implementation belongs in `analytics-app/app/frontend/js/analysis-tag-scoring.js`.
@@ -59,6 +57,7 @@ Completed cleanup:
 - Analytics app-route metadata moved from `paths.routes` to `app.routes`
 - Analytics public catalogue links now use fixed public shells with query-state, matching the current public route contract
 - Data Sharing config paths were removed from Analytics bootstrap config; Analytics-hosted Data Sharing routes now use the read-only Data Sharing config API endpoint
+- Analytics UI-text bundle paths were removed; visible route copy is code-owned by the Analytics frontend modules
 - tag grouping and RAG scoring policy are now explicit in the source JSON rather than only present in JavaScript fallback defaults
 - tests assert the removed public route keys stay absent
 - tests assert Analytics route metadata stays out of `paths.routes`

@@ -2,7 +2,7 @@ import {
   getAnalyticsGroups,
   getAnalyticsRoute,
   getAnalyticsText,
-  loadAnalyticsConfigWithText
+  loadAnalyticsConfig
 } from "./analytics-config.js";
 import {
   loadAnalyticsAliasesJson,
@@ -137,7 +137,7 @@ async function initTagAliasesPage() {
 
   let config = null;
   try {
-    config = await loadAnalyticsConfigWithText("tag_aliases");
+    config = await loadAnalyticsConfig();
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag aliases config.</div>`;
     setAnalyticsRouteReady(mount, true, {

@@ -2,7 +2,7 @@ import {
   getAnalyticsGroups,
   getAnalyticsRoute,
   getAnalyticsText,
-  loadAnalyticsConfigWithText
+  loadAnalyticsConfig
 } from "./analytics-config.js";
 import {
   buildAnalyticsGroupDescriptionMap,
@@ -142,7 +142,7 @@ async function initTagRegistryPage() {
 
   let config = null;
   try {
-    config = await loadAnalyticsConfigWithText("tag_registry");
+    config = await loadAnalyticsConfig();
   } catch (error) {
     mount.innerHTML = `<div class="${UI_CLASS.error}">Failed to load tag registry config.</div>`;
     setAnalyticsRouteReady(mount, true, {

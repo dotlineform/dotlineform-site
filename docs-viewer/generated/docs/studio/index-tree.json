@@ -127,11 +127,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-static-route-template.json"
         },
         {
-          "doc_id": "config-analytics-ui-text-json",
-          "title": "Analytics UI Text Config",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-ui-text-json.json"
-        },
-        {
           "doc_id": "dimension-visualisation-projection",
           "title": "Dimension Visualisation Projection Table",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/dimension-visualisation-projection.json",
@@ -1224,5 +1219,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-25T18:58:01Z"
+  "generated_at": "2026-06-26T11:40:56Z"
 }

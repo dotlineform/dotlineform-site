@@ -82,15 +82,6 @@
       "site": {
         "series_index": "/assets/data/series_index.json",
         "works_index": "/assets/data/works_index.json"
-      },
-      "ui_text": {
-        "tag_registry": "/analytics/app/frontend/config/ui-text/tag-registry.json",
-        "tag_aliases": "/analytics/app/frontend/config/ui-text/tag-aliases.json",
-        "data_sharing_review": "/analytics/app/frontend/config/ui-text/data-sharing-review.json",
-        "data_sharing_prepare": "/analytics/app/frontend/config/ui-text/data-sharing-prepare.json",
-        "series_tag_editor": "/analytics/app/frontend/config/ui-text/series-tag-editor.json",
-        "series_tags": "/analytics/app/frontend/config/ui-text/series-tags.json",
-        "tag_groups": "/analytics/app/frontend/config/ui-text/tag-groups.json"
       }
     }
   },

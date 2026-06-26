@@ -1,7 +1,7 @@
 import {
   getAnalyticsGroups,
   getAnalyticsText,
-  loadAnalyticsConfigWithText
+  loadAnalyticsConfig
 } from "./analytics-config.js";
 import {
   loadSiteSeriesIndexJson,
@@ -101,7 +101,7 @@ async function initAnalyticsTagEditor() {
 
   let config = null;
   try {
-    config = await loadAnalyticsConfigWithText("series_tag_editor");
+    config = await loadAnalyticsConfig();
   } catch (error) {
     renderFatalError(mount, "Failed to load tag editor config.");
     setAnalyticsRouteReady(routeRoot, true, {

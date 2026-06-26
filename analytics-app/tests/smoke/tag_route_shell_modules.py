@@ -150,7 +150,7 @@ def assert_analytics_tag_editor_interactions(page: Page) -> None:
             const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
             const gamma = { tag_id: 'theme:gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
             const state = {
-                config: { ui_text: {} },
+                config: {},
                 seriesId: 'demo',
                 tagsById: new Map([
                     ['subject:alpha', alpha],

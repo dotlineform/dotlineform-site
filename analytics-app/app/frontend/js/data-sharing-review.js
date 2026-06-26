@@ -1,4 +1,4 @@
-import { getAnalyticsText, loadAnalyticsConfigWithText } from "./analytics-config.js";
+import { getAnalyticsText, loadAnalyticsConfig } from "./analytics-config.js";
 import {
   DATA_SHARING_ENDPOINTS,
   configureAnalyticsTransport,
@@ -278,7 +278,7 @@ async function init() {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadAnalyticsConfigWithText("data_sharing_review");
+    state.config = await loadAnalyticsConfig();
     configureAnalyticsTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry();
     state.adapterRegistry = adapterRegistry;

@@ -77,12 +77,13 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
         "prepare": "/analytics/api/data-sharing/prepare",
         "review": "/analytics/api/data-sharing/review",
         "apply": "/analytics/api/data-sharing/apply",
+        "context": "/analytics/api/data-sharing/context",
     }
 
     assert "analytics" not in runtime["data_paths"]
     assert runtime["data_paths"]["site"]["series_index"] == "/assets/data/series_index.json"
     assert runtime["data_paths"]["site"]["works_index"] == "/assets/data/works_index.json"
-    assert runtime["data_paths"]["ui_text"]["tag_registry"] == "/analytics/app/frontend/config/ui-text/tag-registry.json"
+    assert "ui_text" not in runtime["data_paths"]
     assert runtime["series_tag_editor"]["series_index_url"] == "/assets/data/series_index.json"
     assert runtime["series_tag_editor"]["analytics_tag_editor_module_url"] == "/analytics/app/frontend/js/analytics-tag-editor.js"
     assert runtime["modals"]["event"] == "analytics:open-modal"

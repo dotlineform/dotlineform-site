@@ -2,7 +2,7 @@
 doc_id: config-files-inventory
 title: Config Files Inventory
 added_date: 2026-06-02
-last_updated: 2026-06-12
+last_updated: 2026-06-26
 parent_id: studio
 viewable: true
 ---
@@ -38,7 +38,6 @@ Every config contract review should answer:
 | file | role | edit class | contract doc |
 | --- | --- | --- | --- |
 | `analytics-app/app/frontend/config/analytics-config.json` | Local Analytics browser route/data manifest | maintainer-editable code infrastructure | [Analytics Config JSON](/docs/?scope=studio&doc=config-analytics-config-json) |
-| `analytics-app/app/frontend/config/ui-text/*.json` | route-scoped Local Analytics UI copy bundles | maintainer-editable copy config | [Analytics UI Text Config](/docs/?scope=studio&doc=config-analytics-ui-text-json) |
 
 ## Docs Viewer
 
@@ -76,7 +75,7 @@ Every config contract review should answer:
 
 - Local Studio: `paths.routes` values, unused site/docs/search helper exports, `paths.data.studio.catalogue_lookup_meta`, `paths.data.ui_text.site_series_index`, and broad `catalogue.series_type_options` have been removed; continue reviewing remaining `paths.data.studio` and `paths.data.ui_text` keys only with active call-site scans and focused tests
 - Local Studio docs: active config docs now use `studio/app/frontend/config/studio-config.json`; historical request docs may still contain old paths and should be treated as history
-- Analytics app: decide whether remaining public site data paths should stay in Analytics config or move behind narrower data loaders
+- Analytics app: UI-text config files have been removed; decide whether remaining public site data paths should stay in Analytics config or move behind narrower data loaders
 - Docs Viewer: keep source scope config, generated defaults, and route registries distinct in docs and tests
 - Data Sharing: keep user-editable export profiles separate from adapter/service dispatch infrastructure; keep `/analytics/api/data-sharing/config` on a UI-safe public payload whitelist
 

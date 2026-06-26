@@ -50,7 +50,7 @@ The adapter registry schema is code infrastructure.
 Cleanup should focus on ownership:
 
 - keep Data Sharing domain capability and path contracts in `adapters.json`, not Studio or Analytics route config
-- keep route visible copy in Analytics UI-text bundles, not adapter capability records unless the copy is operation-owned
+- keep Analytics route visible copy in Analytics frontend modules, not adapter capability records unless the copy is operation-owned
 - remove retired domains or operations only with service dispatch tests
 - keep source-write targets explicit and narrow
 - keep returned-package staging and review output paths under local working output roots

@@ -1,7 +1,7 @@
 import {
   getAnalyticsGroups,
   getAnalyticsText,
-  loadAnalyticsConfigWithText
+  loadAnalyticsConfig
 } from "./analytics-config.js";
 import {
   loadAnalyticsGroupsJson,
@@ -33,7 +33,7 @@ async function initTagGroupsPage() {
   initializeAnalyticsRouteState(root, { route: "tag-groups", mode: "list" });
 
   try {
-    const config = await loadAnalyticsConfigWithText("tag_groups");
+    const config = await loadAnalyticsConfig();
     STUDIO_GROUPS = getAnalyticsGroups(config);
     const data = await loadAnalyticsGroupsJson(config);
     const groups = normalizeAnalyticsGroups(data, STUDIO_GROUPS);

@@ -1,3 +1,7 @@
+import {
+  DEFAULT_ANALYTICS_UI_TEXT
+} from "./analytics-ui-text.js";
+
 const DEFAULT_ANALYTICS_CONFIG = {
   "analytics_config_version": "analytics_config_v1",
   "updated_at_utc": "2026-05-30T00:00:00Z",
@@ -82,15 +86,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
       "site": {
         "series_index": "/assets/data/series_index.json",
         "works_index": "/assets/data/works_index.json"
-      },
-      "ui_text": {
-        "tag_registry": "/analytics/app/frontend/config/ui-text/tag-registry.json",
-        "tag_aliases": "/analytics/app/frontend/config/ui-text/tag-aliases.json",
-        "data_sharing_review": "/analytics/app/frontend/config/ui-text/data-sharing-review.json",
-        "data_sharing_prepare": "/analytics/app/frontend/config/ui-text/data-sharing-prepare.json",
-        "series_tag_editor": "/analytics/app/frontend/config/ui-text/series-tag-editor.json",
-        "series_tags": "/analytics/app/frontend/config/ui-text/series-tags.json",
-        "tag_groups": "/analytics/app/frontend/config/ui-text/tag-groups.json"
       }
     }
   },
@@ -139,7 +134,6 @@ const DEFAULT_ANALYTICS_CONFIG = {
 
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
 let analyticsConfigPromise = null;
-const scopedTextPromises = new Map();
 
 export {
   DEFAULT_ANALYTICS_CONFIG
@@ -171,52 +165,6 @@ function readConfiguredAnalyticsConfigUrl() {
   return meta ? String(meta.getAttribute("content") || "").trim() : "";
 }
 
-export async function loadAnalyticsConfigWithText(group) {
-  const config = await loadAnalyticsConfig();
-  await loadScopedAnalyticsText(config, group);
-  return config;
-}
-
-export async function loadScopedAnalyticsText(config, group) {
-  const normalizedGroup = normalizeUiTextGroup(group);
-  const targetConfig = config && typeof config === "object" ? config : {};
-  if (!normalizedGroup) return targetConfig;
-  if (pathValue(targetConfig, ["ui_text", normalizedGroup]) && typeof pathValue(targetConfig, ["ui_text", normalizedGroup]) === "object") {
-    return targetConfig;
-  }
-
-  const url = getAnalyticsUiTextPath(targetConfig, normalizedGroup);
-  if (!url) {
-    warnScopedTextFallback(normalizedGroup, "missing scoped text path");
-    return targetConfig;
-  }
-
-  let request = scopedTextPromises.get(url);
-  if (!request) {
-    request = fetch(url, { cache: "default" })
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      });
-    scopedTextPromises.set(url, request);
-  }
-
-  try {
-    const payload = await request;
-    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-      throw new Error("expected object payload");
-    }
-    if (!targetConfig.ui_text || typeof targetConfig.ui_text !== "object" || Array.isArray(targetConfig.ui_text)) {
-      targetConfig.ui_text = {};
-    }
-    targetConfig.ui_text[normalizedGroup] = payload;
-  } catch (error) {
-    scopedTextPromises.delete(url);
-    warnScopedTextFallback(normalizedGroup, error);
-  }
-  return targetConfig;
-}
-
 export function getAnalyticsGroups(config) {
   const fallback = DEFAULT_ANALYTICS_CONFIG.analysis.groups.ordered;
   return sanitizeStringArray(pathValue(config, ["analysis", "groups", "ordered"]), fallback);
@@ -232,12 +180,6 @@ export function getSiteDataPath(config, key) {
   return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
-export function getAnalyticsUiTextPath(config, group) {
-  const normalizedGroup = normalizeUiTextGroup(group);
-  const path = pathValue(config, ["paths", "data", "ui_text", normalizedGroup]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
 export function getAnalyticsRoute(config, key) {
   const path = pathValue(config, ["app", "routes", key, "path"]);
   return resolveSitePath(typeof path === "string" ? path : "");
@@ -250,22 +192,10 @@ export function buildAnalyticsRouteUrl(config, key, params = {}) {
 }
 
 export function getAnalyticsText(config, key, fallback = "", tokens = null) {
-  const pathKeys = ["ui_text", ...String(key || "").split(".").filter(Boolean)];
-  const value = pathValue(config, pathKeys);
+  const pathKeys = String(key || "").split(".").filter(Boolean);
+  const value = pathValue(DEFAULT_ANALYTICS_UI_TEXT, pathKeys);
   const source = typeof value === "string" ? value : fallback;
   return applyTextTokens(source, tokens);
-}
-
-function normalizeUiTextGroup(value) {
-  return String(value || "")
-    .trim()
-    .replace(/-/g, "_")
-    .replace(/[^a-z0-9_]/gi, "");
-}
-
-function warnScopedTextFallback(group, detail) {
-  if (typeof console === "undefined" || !console.warn) return;
-  console.warn(`analytics_config: scoped ui_text.${group} unavailable; using caller fallback copy`, detail);
 }
 
 function deriveSiteBasePath(importUrl) {

@@ -225,6 +225,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "data-sharing-review.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "catalogue-public-links.js",
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-tag-editor.js",
+        repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-ui-text.js",
         repo_root / "analytics-app" / "app" / "assets" / "css" / "analytics.css",
         repo_root / "analytics-app" / "app" / "frontend" / "config" / "analytics-config.json",
     ]
