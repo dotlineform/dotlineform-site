@@ -264,7 +264,6 @@ Each reference record includes:
 - `source_scope`
 - `source_doc_id`
 - `source_title`
-- `source_path`
 - `source_viewer_url`
 - `target_kind`
 - `target_id`

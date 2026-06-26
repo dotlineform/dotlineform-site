@@ -191,7 +191,6 @@ def test_docs_viewer_reference_payload_contract_fixtures() -> None:
         "source_scope",
         "source_doc_id",
         "source_title",
-        "source_path",
         "source_viewer_url",
         "label",
         "action",

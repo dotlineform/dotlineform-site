@@ -75,7 +75,6 @@ class ReferenceArtifactsMixin:
                             "source_scope": ref["source_scope"],
                             "source_doc_id": ref["source_doc_id"],
                             "source_title": ref["source_title"],
-                            "source_path": ref["source_path"],
                             "source_viewer_url": ref["source_viewer_url"],
                             "label": ref["label"],
                             "action": ref["action"],

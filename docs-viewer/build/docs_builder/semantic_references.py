@@ -218,7 +218,6 @@ class SemanticReferencesMixin:
             "source_scope": self.scope_id,
             "source_doc_id": doc.doc_id,
             "source_title": doc.title,
-            "source_path": doc.source_path,
             "source_viewer_url": doc.viewer_url,
             "target_kind": resolution["target_kind"],
             "target_id": resolution["target_id"],
