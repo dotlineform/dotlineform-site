@@ -6,6 +6,22 @@ last_updated: 2026-06-12
 ui_status: draft
 ---
 
+## Temporary Workflow Change
+
+During this refactor, the public-site GitHub Actions workflow should not run automatically on pushes to `main`.
+The migration is expected to involve many local commits and local verification runs.
+Automatic `main` push runs would add noise while the deploy root is being refactored.
+
+The workflow should keep:
+
+- `workflow_dispatch`, so the public-site validation/upload/deploy path can be run manually when needed;
+- `pull_request`, so review branches can still get workflow feedback when relevant.
+
+This is an intentional temporary change for the catalogue runtime migration.
+After the refactor is complete, restore the `main` push trigger for `site/**`, `site-tools/**`, `bin/site-validate`, and `.github/workflows/public-site.yml`.
+
+---
+
 ## run workflow manually:
 
 `gh run watch` will show both jobs and their outcomes. If deploy is gated off, you’ll see `Validate Pages artifact` pass and `Deploy Pages artifact` skipped.
@@ -126,3 +142,31 @@ The more relevant check is what makes up the 107 MB:
 - The `_public_site/` builder should report artifact size and largest file/folder contributors as part of the verification gate.
 
 I’d add a task/check: after building `_public_site/`, print total size plus top 20 largest paths, and fail only if size crosses a chosen warning threshold, maybe `250 MB` initially.
+
+---
+
+> so the public site has to be built as one artifact? the bulk of the public site is image assets and catalogue search json, which rarely change during development work, but get rebuilt and redeployed regardless. is this just a fact of life?
+
+For GitHub Pages Actions, yes: the deploy unit is one complete artifact. `actions/upload-pages-artifact` uploads a whole directory, and `actions/deploy-pages` publishes that snapshot. There is no first-class “only update these three files” Pages deploy.
+
+But it is not quite “everything gets rebuilt all the time”:
+
+- unrelated commits now do not trigger the workflow, as you verified with `tmp.md`
+- image assets and JSON are mostly copied into `_public_site/`, not regenerated
+- the expensive part is only whatever upstream generation you run before committing, not the Pages deploy itself
+- the artifact must still contain the complete public site so deletes, renames, and route changes are represented correctly
+
+So the practical answer is:
+
+- **Fact of life for GitHub Pages artifact deployment:** publish a complete artifact.
+- **Not a fact of life for every commit:** path filters avoid unrelated rebuild/deploy runs.
+- **Probably acceptable for now:** 6,912 files is not large for a Pages artifact unless Actions time or artifact size becomes painful.
+
+If it does become painful, the clean optimizations are:
+
+1. Keep large rarely-changing media on R2/CDN and reference it remotely.
+2. Make the builder copy unchanged files more efficiently locally.
+3. Keep tighter workflow path filters.
+4. Move to a host with delta sync only if artifact size becomes a real operational problem.
+
+I would not add incremental deploy complexity unless the current workflow is measurably slow or hitting Pages limits.

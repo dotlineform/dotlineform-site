@@ -8,6 +8,14 @@ viewable: true
 ---
 # Docs Viewer View And Mode Registry
 
+This needs reviewing. The useful core was the original doc:
+
+- create site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js
+- use it as the shared owner for normalization and lookup
+- centralize the decisions currently split across hosted views, display modes, and toolbar rendering
+- keep runtime implementations where they are
+- make config answer “is this view/mode/control available here?”
+
 ## Request
 
 Centralize Docs Viewer decisions about views, display modes, and view toolbar controls.

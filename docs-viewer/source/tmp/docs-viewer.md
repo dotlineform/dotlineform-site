@@ -2,9 +2,30 @@
 doc_id: docs-viewer
 title: "docs viewer"
 added_date: 2026-05-30
-last_updated: 2026-05-30
+last_updated: 2026-06-26
 ui_status: draft
 parent_id: ""
+---
+
+## doc viewer toolbars
+
+- `docsViewer__controls`
+  - mount point only, plus status/bookmark row
+- `docsViewer__topBar`
+  - `docsViewer__viewerToolbar` with `role="toolbar"` and `aria-label="Viewer controls"`
+    - scope selector
+    - recently added
+    - search input
+    - panel controls group: folder toggle + info toggle
+  - management toolbar mount
+    - `docsViewer__manageActions` with `role="toolbar"` and `aria-label="Management actions"`
+      - Actions
+      - Show
+      - show non-viewable
+    - theme toggle sits in the management row beside that toolbar
+
+So search and recents are not floating controls. Structurally they are inside the viewer toolbar. The visual top row is a top bar containing two toolbar groups: viewer controls on the left, management controls on the right.
+
 ---
 
 ## panel widths

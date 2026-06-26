@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-ed24ec3a24f15de170ca4e4f6ea941e5",
-    "generated_at_utc": "2026-06-14T14:36:56Z",
-    "count": 16
+    "version": "blake2b-b35d817693804b7864fc3f9dfdcae9b9",
+    "generated_at_utc": "2026-06-26T21:40:50Z",
+    "count": 19
   },
   "entries": [
     {
@@ -40,23 +40,55 @@
       "search_text": "azure 2026-05-28 2026 05 28"
     },
     {
+      "id": "components",
+      "kind": "doc",
+      "title": "components",
+      "href": "/docs/?scope=tmp&doc=components",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
+      "search_terms": [
+        "components",
+        "2026-06-26",
+        "2026",
+        "06",
+        "26"
+      ],
+      "search_text": "components 2026-06-26 2026 06 26"
+    },
+    {
+      "id": "css",
+      "kind": "doc",
+      "title": "css",
+      "href": "/docs/?scope=tmp&doc=css",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
+      "search_terms": [
+        "css",
+        "2026-06-26",
+        "2026",
+        "06",
+        "26"
+      ],
+      "search_text": "css 2026-06-26 2026 06 26"
+    },
+    {
       "id": "docs-viewer",
       "kind": "doc",
       "title": "docs viewer",
       "href": "/docs/?scope=tmp&doc=docs-viewer",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-30",
+        "2026-06-26",
         "2026",
-        "05",
-        "30"
+        "06",
+        "26"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-30 2026 05 30"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-06-26 2026 06 26"
     },
     {
       "id": "emoji",
@@ -185,6 +217,22 @@
         "37"
       ],
       "search_text": "panel-sizes panel sizes panel sizes 2026-05-20 19:37 2026 05 20 19 37"
+    },
+    {
+      "id": "python",
+      "kind": "doc",
+      "title": "python",
+      "href": "/docs/?scope=tmp&doc=python",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
+      "search_terms": [
+        "python",
+        "2026-06-26",
+        "2026",
+        "06",
+        "26"
+      ],
+      "search_text": "python 2026-06-26 2026 06 26"
     },
     {
       "id": "risks",

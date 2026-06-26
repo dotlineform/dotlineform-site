@@ -18,6 +18,16 @@
       "ui_status": "draft"
     },
     {
+      "doc_id": "components",
+      "title": "components",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/components.json"
+    },
+    {
+      "doc_id": "css",
+      "title": "css",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/css.json"
+    },
+    {
       "doc_id": "docs-viewer",
       "title": "docs viewer",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/docs-viewer.json",
@@ -73,6 +83,11 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/panel-sizes.json"
     },
     {
+      "doc_id": "python",
+      "title": "python",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/python.json"
+    },
+    {
       "doc_id": "risks",
       "title": "risks",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/risks.json",
@@ -104,5 +119,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
     }
   ],
-  "generated_at": "2026-06-20T18:23:55Z"
+  "generated_at": "2026-06-26T21:40:50Z"
 }
