@@ -1,7 +1,7 @@
 import {
   getStudioDataPath,
   getStudioText,
-  loadStudioConfigWithText
+  loadStudioConfig
 } from "./studio-config.js";
 import { fetchJson } from "./studio-data.js";
 import {
@@ -109,7 +109,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "catalogue-field-registry" });
 
   try {
-    const config = await loadStudioConfigWithText("catalogue_field_registry_review");
+    const config = await loadStudioConfig();
     const state = {
       config,
       registry: null,

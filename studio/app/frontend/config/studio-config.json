@@ -96,15 +96,6 @@
         "catalogue_work_record": "/studio/api/catalogue/read?key=catalogue_work_record",
         "catalogue_work_detail_record": "/studio/api/catalogue/read?key=catalogue_work_detail_record",
         "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json"
-      },
-      "ui_text": {
-        "catalogue_work_editor": "/studio/app/frontend/config/ui-text/catalogue-work-editor.json",
-        "catalogue_series_editor": "/studio/app/frontend/config/ui-text/catalogue-series-editor.json",
-        "bulk_add_work": "/studio/app/frontend/config/ui-text/bulk-add-work.json",
-        "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
-        "catalogue_status": "/studio/app/frontend/config/ui-text/catalogue-status.json",
-        "project_state": "/studio/app/frontend/config/ui-text/project-state.json",
-        "studio_works": "/studio/app/frontend/config/ui-text/studio-works.json"
       }
     }
   }

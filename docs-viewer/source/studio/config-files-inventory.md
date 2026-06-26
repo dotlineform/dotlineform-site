@@ -29,7 +29,6 @@ Every config contract review should answer:
 | file | role | edit class | contract doc |
 | --- | --- | --- | --- |
 | `studio/app/frontend/config/studio-config.json` | Local Studio browser bootstrap and route/data manifest | maintainer-editable code infrastructure | [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json) |
-| `studio/app/frontend/config/ui-text/*.json` | route-scoped Local Studio UI copy bundles | maintainer-editable copy config | [Studio UI Text Config](/docs/?scope=studio&doc=config-studio-ui-text-json) |
 | `studio/data/config/catalogue/catalogue-field-registry.json` | catalogue field-to-artifact build rules and defaults | maintainer-editable domain config | [Studio Data Config Files](/docs/?scope=studio&doc=config-studio-data-configs) |
 | `studio/data/config/runtime/activity-contract.json` | activity log grouping and display contract | code infrastructure | [Studio Data Config Files](/docs/?scope=studio&doc=config-studio-data-configs) |
 
@@ -73,7 +72,7 @@ Every config contract review should answer:
 
 ## Cleanup Queue
 
-- Local Studio: `paths.routes` values, unused site/docs/search helper exports, `paths.data.studio.catalogue_lookup_meta`, `paths.data.ui_text.site_series_index`, and broad `catalogue.series_type_options` have been removed; continue reviewing remaining `paths.data.studio` and `paths.data.ui_text` keys only with active call-site scans and focused tests
+- Local Studio: `paths.routes` values, unused site/docs/search helper exports, `paths.data.studio.catalogue_lookup_meta`, UI-text config files, and broad `catalogue.series_type_options` have been removed; continue reviewing remaining `paths.data.studio` keys only with active call-site scans and focused tests
 - Local Studio docs: active config docs now use `studio/app/frontend/config/studio-config.json`; historical request docs may still contain old paths and should be treated as history
 - Analytics app: UI-text config files have been removed; decide whether remaining public site data paths should stay in Analytics config or move behind narrower data loaders
 - Docs Viewer: keep source scope config, generated defaults, and route registries distinct in docs and tests

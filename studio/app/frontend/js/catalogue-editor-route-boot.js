@@ -1,6 +1,6 @@
 import {
   getStudioText,
-  loadStudioConfigWithText
+  loadStudioConfig
 } from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
 import { probeCatalogueHealth } from "./studio-transport.js";
@@ -99,9 +99,9 @@ export function markCatalogueEditorRouteReady(state, ready, options) {
 
 export async function configureCatalogueEditorRouteRuntime(state, options) {
   const namespace = options.namespace;
-  const configLoader = options.configLoader || loadStudioConfigWithText;
+  const configLoader = options.configLoader || loadStudioConfig;
   const healthProbe = options.healthProbe || probeCatalogueHealth;
-  const config = await configLoader(namespace);
+  const config = await configLoader();
   state.config = config;
   if (typeof options.applyText === "function") options.applyText(config);
   state.serverAvailable = Boolean(await healthProbe());
@@ -138,10 +138,10 @@ export function revealCatalogueEditorRoute(state, options) {
 }
 
 export async function showCatalogueEditorInitError(loadingNode, namespace, fallback, options = {}) {
-  const configLoader = options.configLoader || loadStudioConfigWithText;
+  const configLoader = options.configLoader || loadStudioConfig;
   const textGetter = options.textGetter || getStudioText;
   try {
-    const config = await configLoader(namespace);
+    const config = await configLoader();
     loadingNode.textContent = textGetter(config, `${namespace}.load_failed_error`, fallback);
   } catch (_configError) {
     loadingNode.textContent = fallback;

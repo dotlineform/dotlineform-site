@@ -1,7 +1,7 @@
 import {
   buildStudioRouteUrl,
   getStudioText,
-  loadStudioConfigWithText
+  loadStudioConfig
 } from "./studio-config.js";
 import {
   loadStudioLookupJson
@@ -214,7 +214,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "catalogue-status" });
 
   try {
-    const config = await loadStudioConfigWithText("catalogue_status");
+    const config = await loadStudioConfig();
     const serverAvailable = await probeCatalogueReadHealth();
     if (!serverAvailable) {
       loadingNode.textContent = getStudioText(config, "catalogue_status.load_failed_error", "Failed to load catalogue drafts.");
@@ -277,7 +277,7 @@ async function init() {
   } catch (error) {
     console.warn("catalogue_status: load failed", error);
     try {
-      const config = await loadStudioConfigWithText("catalogue_status");
+      const config = await loadStudioConfig();
       loadingNode.textContent = getStudioText(config, "catalogue_status.load_failed_error", "Failed to load catalogue drafts.");
     } catch (_configError) {
       loadingNode.textContent = "Failed to load catalogue drafts.";

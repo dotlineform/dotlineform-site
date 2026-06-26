@@ -1,6 +1,6 @@
 import {
   getStudioText,
-  loadStudioConfigWithText
+  loadStudioConfig
 } from "./studio-config.js";
 import {
   BULK_ADD_WORK_ENDPOINTS,
@@ -208,7 +208,7 @@ async function init() {
   initializeStudioRouteState(root, { route: "bulk-add-work" });
 
   try {
-    const config = await loadStudioConfigWithText("bulk_add_work");
+    const config = await loadStudioConfig();
     state.config = config;
     state.workbookPath = readBulkImportWorkbookPath(config);
     root.dataset.workbookPath = state.workbookPath;

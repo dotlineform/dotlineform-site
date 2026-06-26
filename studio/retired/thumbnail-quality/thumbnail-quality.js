@@ -1,7 +1,7 @@
 import {
   getStudioDataPath,
   getStudioText,
-  loadStudioConfigWithText
+  loadStudioConfig
 } from "./studio-config.js";
 import {
   THUMBNAIL_QUALITY_ENDPOINTS,
@@ -274,7 +274,7 @@ async function initThumbnailQualityPage() {
 
   try {
     const [config, catalogueServerAvailable] = await Promise.all([
-      loadStudioConfigWithText(UI_TEXT_GROUP),
+      loadStudioConfig(),
       probeThumbnailQualityCatalogueHealth().catch(() => false)
     ]);
     state.config = config;

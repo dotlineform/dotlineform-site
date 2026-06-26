@@ -86,7 +86,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "risk" not in runtime["services"]
     assert "external_links" not in payload
     assert "catalogue" not in payload
-    assert set(runtime["data_paths"]) == {"studio", "ui_text"}
+    assert set(runtime["data_paths"]) == {"studio"}
     assert set(runtime["data_paths"]["studio"]) == {
         "catalogue_works",
         "catalogue_series",
@@ -97,7 +97,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
         "catalogue_work_detail_record",
         "catalogue_field_registry",
     }
-    assert "docs_viewer" not in runtime["data_paths"].get("ui_text", {})
+    assert "ui_text" not in runtime["data_paths"]
     assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
     assert runtime["services"]["catalogue"]["read"] == "/studio/api/catalogue/read"
     assert runtime["services"]["catalogue"]["bulk_save"] == "/studio/api/catalogue/bulk-save"
@@ -124,7 +124,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
     assert "library_export_configs" not in runtime["data_paths"]["studio"]
     assert "catalogue_lookup_meta" not in runtime["data_paths"]["studio"]
-    assert "tag_groups" not in runtime["data_paths"]["ui_text"]
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["pipeline"]["encoding"]["format"] == "webp"

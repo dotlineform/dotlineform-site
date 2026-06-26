@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e1a96a2bf1831c6baea56bcc22593a0a",
-    "generated_at_utc": "2026-06-26T11:40:56Z",
-    "count": 226
+    "version": "blake2b-e0270f33ed36a5fd9dd6701f8145af08",
+    "generated_at_utc": "2026-06-26T11:59:30Z",
+    "count": 225
   },
   "entries": [
     {
@@ -4839,10 +4839,10 @@
       "kind": "doc",
       "title": "Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-06-02",
+      "last_updated": "2026-06-26",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-02 • Studio",
+      "display_meta": "2026-06-26 • Studio",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -4850,12 +4850,12 @@
         "js",
         "config loader js",
         "loader",
-        "2026-06-02",
+        "2026-06-26",
         "2026",
         "06",
-        "02"
+        "26"
       ],
-      "search_text": "config-studio-config-js config studio js config loader js loader 2026-06-02 2026 06 02"
+      "search_text": "config-studio-config-js config studio js config loader js loader 2026-06-26 2026 06 26"
     },
     {
       "id": "data-flow",
@@ -5189,22 +5189,22 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-06-26",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-03 • Studio",
+      "display_meta": "2026-06-26 • Studio",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-06-03",
+        "2026-06-26",
         "2026",
         "06",
-        "03"
+        "26"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-06-03 2026 06 03"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-06-26 2026 06 26"
     },
     {
       "id": "config-studio-data-configs",
@@ -5273,30 +5273,6 @@
         "25"
       ],
       "search_text": "studio-static-route-template studio static route template studio static route template 2026-06-25 2026 06 25"
-    },
-    {
-      "id": "config-studio-ui-text-json",
-      "kind": "doc",
-      "title": "Studio UI Text Config",
-      "href": "/docs/?scope=studio&doc=config-studio-ui-text-json",
-      "last_updated": "2026-06-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-06-03 • Studio",
-      "search_terms": [
-        "config-studio-ui-text-json",
-        "config",
-        "studio",
-        "ui",
-        "text",
-        "json",
-        "studio ui text config",
-        "2026-06-03",
-        "2026",
-        "06",
-        "03"
-      ],
-      "search_text": "config-studio-ui-text-json config studio ui text json studio ui text config 2026-06-03 2026 06 03"
     },
     {
       "id": "thumbnail-quality-page",

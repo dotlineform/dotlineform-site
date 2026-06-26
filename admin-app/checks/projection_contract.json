@@ -104,18 +104,18 @@
       "owner_doc": "analytics"
     },
     {
-      "id": "studio_config_and_ui_text",
+      "id": "studio_config_and_route_ui",
       "classification": "studio_projection",
       "repo_paths": [
         "studio/app/frontend/config/studio-config.json",
-        "studio/app/frontend/config/ui-text/*.json",
+        "studio/app/frontend/js/studio-ui-text.js",
         "studio/data/config/runtime/activity-contract.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
           "studio/app/frontend/config/studio-config.json",
-          "studio/app/frontend/config/ui-text",
+          "studio/app/frontend/js/studio-ui-text.js",
           "studio/data/config/runtime/activity-contract.json"
         ]
       },

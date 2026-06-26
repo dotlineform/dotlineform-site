@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: 2026-06-03
+last_updated: 2026-06-26
 parent_id: studio
 viewable: true
 ---
@@ -15,7 +15,6 @@ Config file:
 See also:
 
 - [Config Files Inventory](/docs/?scope=studio&doc=config-files-inventory)
-- [Studio UI Text Config](/docs/?scope=studio&doc=config-studio-ui-text-json)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 
 ## Contract Role
@@ -27,13 +26,12 @@ The file currently owns:
 
 - Local Studio route shell metadata under `app.routes`
 - Studio data path lookup under `paths.data.studio`
-- Studio UI-text bundle path lookup under `paths.data.ui_text`
 
 It does not own:
 
 - Analytics app routes or Analytics tag runtime policy
 - Data Sharing adapter behavior or source-write policy
-- Docs Viewer scope, route, status, or UI-text configuration
+- Docs Viewer scope, route, status, or UI copy
 - public catalogue route construction policy
 - service endpoint contracts injected by the local app server
 - generated payload schemas
@@ -43,9 +41,9 @@ It does not own:
 Current readers include:
 
 - `studio/app/server/studio/studio_app_config.py`, which loads the file, validates `app.routes`, injects `app.runtime`, and serves the runtime config
-- `studio/app/frontend/js/studio-config.js`, which fetches the served runtime config and exposes route, data-path, UI-text, and copy helpers
+- `studio/app/frontend/js/studio-config.js`, which fetches the served runtime config and exposes route, data-path, and copy helpers
 - `studio/app/frontend/js/studio-app.js`, `studio-navigation.js`, and `studio-route-registry.js`, which use `app.routes` for shell boot and navigation
-- route modules that call `loadStudioConfigWithText(group)` and `getStudioText(...)`
+- route modules that call `loadStudioConfig()` and `getStudioText(...)`
 - `studio/app/frontend/js/studio-data.js`, which uses Studio data paths for static fallback reads when catalogue server reads are unavailable
 - `studio/services/catalogue/catalogue_field_registry.py`, which resolves the catalogue field registry path from `paths.data.studio.catalogue_field_registry`
 
@@ -75,7 +73,6 @@ Safe edits require matching code/tests when they change:
 
 - route ids, paths, scripts, navigation flags, shell type, or ready-state ids
 - data path keys used by route modules
-- UI-text bundle path keys
 - catalogue option lists used by route modules
 
 ## Active Sections
@@ -110,11 +107,6 @@ Static paths are fallback/runtime asset paths, not write contracts.
 The Studio activity route reads `activity_log` through the Local Studio catalogue API, so `paths.data.studio.activity_log` is not exposed as a browser fallback path.
 Do not add source-write targets, adapter contracts, generated metadata payloads, or inactive build outputs here.
 
-### `paths.data.ui_text`
-
-Maps route UI-text group names to files under `studio/app/frontend/config/ui-text/`.
-The text bundle contract is documented in [Studio UI Text Config](/docs/?scope=studio&doc=config-studio-ui-text-json).
-
 ## Cleanup Review
 
 Completed cleanup:
@@ -123,9 +115,9 @@ Completed cleanup:
 - stale public/content route keys such as `library_page`, `search`, `series_page_base`, `works_page_base`, `moments_page_base`, and stale `work_details_page_base` have been removed from Local Studio config
 - unused `studio-config.js` helper exports for site data, Docs scope data, search scope indexes, and search policy paths have been removed
 - public moment URL construction now lives with the public catalogue link helper instead of generic Studio route lookup
-- focused tests assert that runtime `data_paths` exposes only `studio` and `ui_text`
+- focused tests assert that runtime `data_paths` exposes only `studio`
 - focused tests assert the active `paths.data.studio` key set so this browser-facing surface does not widen silently
-- unused `paths.data.ui_text.site_series_index` and its orphaned `site-series-index.json` bundle have been removed
+- Studio UI-text bundle paths and files have been removed; visible route copy is code-owned by Studio frontend modules
 - unused `paths.data.studio.catalogue_lookup_meta` and the generated lookup metadata payload have been removed
 - unused `paths.data.studio.activity_log` has been removed; `activity_log` remains an active catalogue API read key, not a Studio config path
 - `catalogue.series_type_options` has been removed from broad Studio bootstrap config; the Series editor owns its current option list in `catalogue-series-fields.js`

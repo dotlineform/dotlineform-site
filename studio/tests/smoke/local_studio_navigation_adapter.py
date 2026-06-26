@@ -92,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
                         hasExternalLinks: Object.prototype.hasOwnProperty.call(config, "external_links"),
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
-                        dataPath: config.app.runtime.data_paths.ui_text.catalogue_status,
+                        hasUiTextDataPaths: Object.prototype.hasOwnProperty.call(config.app.runtime.data_paths, "ui_text"),
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
                         pipelineThumbSuffix: config.app.runtime.pipeline.variants.thumb.suffix,
                         url,
@@ -132,8 +132,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected top nav labels: {result['topNavLinks']!r}")
         if result["topNavTitle"] != "dotlineform studio" or result["topNavHomeHref"] != "/studio/":
             raise AssertionError(f"unexpected top nav home link: {result['topNavTitle']!r} {result['topNavHomeHref']!r}")
-        if result["dataPath"] != "/studio/app/frontend/config/ui-text/catalogue-status.json":
-            raise AssertionError(f"unexpected UI text path: {result['dataPath']!r}")
+        if result["hasUiTextDataPaths"]:
+            raise AssertionError("runtime config unexpectedly exposed UI text paths")
         if result["mediaThumbWorks"] != "/assets/works/img":
             raise AssertionError(f"unexpected thumb works path: {result['mediaThumbWorks']!r}")
         if result["pipelineThumbSuffix"] != "thumb":

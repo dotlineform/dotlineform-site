@@ -31,7 +31,7 @@ Current responsibilities:
 
 - Local Studio route shell metadata under `app.routes`
 - Studio data path lookup under `paths.data.studio`
-- Studio UI-text bundle lookup under `paths.data.ui_text`
+- Studio visible route copy is code-owned by frontend modules
 - route-local option lists are owned by their route modules rather than broad Studio bootstrap config
 
 Current route/data-path responsibilities do not include Analytics, Data Sharing adapter behavior, or Docs Viewer scope and route policy.

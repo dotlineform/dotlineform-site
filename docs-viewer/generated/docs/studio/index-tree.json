@@ -1163,11 +1163,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-static-route-template.json"
         },
         {
-          "doc_id": "config-studio-ui-text-json",
-          "title": "Studio UI Text Config",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-ui-text-json.json"
-        },
-        {
           "doc_id": "thumbnail-quality-page",
           "title": "Thumbnail Quality Page",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/thumbnail-quality-page.json"
@@ -1219,5 +1214,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-26T11:40:56Z"
+  "generated_at": "2026-06-26T11:59:30Z"
 }

@@ -53,5 +53,5 @@ For `activity-contract.json`:
 
 - verify each grouping/status value is still emitted by current services
 - remove retired activity families
-- keep visible copy in route UI-text bundles rather than in the activity contract
+- keep visible copy in route frontend modules rather than in the activity contract
 - the 2026-06-03 cleanup review retained the current contract rows because the listed Studio, Docs, Analytics, and Data Sharing actions still have live emitters; the verifier now validates Analytics routes as a first-class activity surface

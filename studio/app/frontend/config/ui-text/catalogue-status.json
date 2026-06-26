@@ -1,6 +1,0 @@
-{
-  "load_failed_error": "Failed to load catalogue drafts.",
-  "empty_state": "No draft {family}.",
-  "meta_summary": "{count} draft {family}",
-  "meta_summary_one": "1 draft {family}"
-}

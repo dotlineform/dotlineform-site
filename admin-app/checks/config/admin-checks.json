@@ -528,7 +528,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/project-state*",
-        "studio/app/frontend/config/ui-text/project-state.json"
+        "studio/app/frontend/js/studio-ui-text.js"
       ],
       "shared": [
         "studio/app/server/studio/studio_app_server.py"
@@ -543,7 +543,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/bulk-add-work*",
-        "studio/app/frontend/config/ui-text/bulk-add-work.json"
+        "studio/app/frontend/js/studio-ui-text.js"
       ],
       "shared": [
         "studio/app/server/studio/studio_app_server.py"
@@ -559,7 +559,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/catalogue-field-registry*",
-        "studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",
+        "studio/app/frontend/js/studio-ui-text.js",
         "studio/data/config/catalogue/catalogue-field-registry.json"
       ],
       "shared": [
@@ -576,7 +576,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/catalogue-status*",
-        "studio/app/frontend/config/ui-text/catalogue-status.json"
+        "studio/app/frontend/js/studio-ui-text.js"
       ],
       "shared": [
         "studio/app/server/studio/studio_app_server.py"
@@ -591,7 +591,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/studio-works*",
-        "studio/app/frontend/config/ui-text/studio-works.json"
+        "studio/app/frontend/js/studio-ui-text.js"
       ],
       "shared": [
         "studio/app/server/studio/studio_app_server.py"
@@ -606,7 +606,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/catalogue-series*",
-        "studio/app/frontend/config/ui-text/catalogue-series-editor.json",
+        "studio/app/frontend/js/studio-ui-text.js",
         "studio/services/catalogue/catalogue_series_service.py"
       ],
       "shared": [
@@ -623,7 +623,7 @@
       "include": [
         "studio/app/frontend/js/catalogue-work-*",
         "studio/app/frontend/js/catalogue-work.js",
-        "studio/app/frontend/config/ui-text/catalogue-work-editor.json",
+        "studio/app/frontend/js/studio-ui-text.js",
         "studio/services/catalogue/catalogue_work_service.py"
       ],
       "shared": [
@@ -639,7 +639,7 @@
       "status": "inventory-only",
       "include": [
         "studio/app/frontend/js/catalogue-work-detail*",
-        "studio/app/frontend/config/ui-text/catalogue-work-detail-editor.json",
+        "studio/app/frontend/js/studio-ui-text.js",
         "studio/services/catalogue/catalogue_work_detail_service.py"
       ],
       "shared": [

@@ -102,7 +102,7 @@ Before editing, classify each key or payload field under review:
 - Remove a key only when no active route, service, test, generated-default pipeline, or documented operator workflow consumes it.
 - Do not move server-only source paths, write targets, adapter path contracts, output patterns, metadata contracts, activity emit metadata, or source-write scope into browser bootstrap config.
 - Keep browser public/config endpoints on explicit whitelists when they project domain config. Passing through nested source config is not an acceptable shortcut.
-- Keep UI copy in route UI-text bundles unless the string is operation-owned workflow metadata.
+- Keep UI copy in frontend route modules unless the string is operation-owned workflow metadata.
 - When a cleanup preserves a browser-visible surface, use a positive owner-contract test that asserts the allowed key set or whitelisted payload shape.
 - Update the owning config doc in the same slice with removed keys, retained keys, owner, and reason.
 

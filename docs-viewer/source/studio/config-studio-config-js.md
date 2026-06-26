@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Config Loader JS
 added_date: 2026-04-01
-last_updated: 2026-06-02
+last_updated: 2026-06-26
 parent_id: studio
 viewable: true
 ---
@@ -14,11 +14,11 @@ Config module:
 
 ## Scope
 
-`studio-config.js` is the shared browser-side loader and accessor layer for the Studio runtime config and Studio scoped UI-text bundles.
+`studio-config.js` is the shared browser-side loader and accessor layer for the Studio runtime config and code-owned Studio UI text.
 The runtime config URL is supplied by `meta[name="dlf-studio-config-url"]`; local Studio currently publishes `/studio/runtime-config.json`.
 Analytics/Data Sharing pages use `analytics-app/app/frontend/js/analytics-config.js` with `analytics-app/app/frontend/config/analytics-config.json` instead of this Studio config surface.
 
-It is configuration code rather than a route controller. Its job is to fetch the runtime config once, resolve site-relative paths, load route-owned text bundles on demand, and expose stable helpers to the rest of the Studio browser runtime.
+It is configuration code rather than a route controller. Its job is to fetch the runtime config once, resolve site-relative paths, and expose stable helpers to the rest of the Studio browser runtime.
 
 ## What calls it
 
@@ -28,21 +28,18 @@ Current direct importers are active Studio frontend modules under `studio/app/fr
 
 - when a Studio page imports the module during page boot
 - when `loadStudioConfig()` is first called on that page
-- when a route calls `loadStudioConfigWithText(...)` or `loadScopedStudioText(...)`
-- when accessor helpers such as `getStudioRoute(...)` or `getStudioUiTextPath(...)` are used after config load
+- when accessor helpers such as `getStudioRoute(...)`, `getStudioDataPath(...)`, or `getStudioText(...)` are used after config load
 
 ## Current responsibilities
 
 Current responsibilities include:
 
 - fetching the configured runtime config JSON
-- fetching scoped UI-text bundles with route-level caching
 - resolving root-relative paths against the current site base path
 - exposing accessors for:
   - Studio data paths
-  - scoped UI-text bundle paths
   - Studio route paths
-  - Studio UI text from loaded scoped bundles
+  - Studio UI text from code-owned defaults
 - exposing Studio-owned config-backed accessors used by current Studio routes
 
 Legacy exports for shared site data, Docs scope data, search scope indexes, and search policy lookup have been removed.
@@ -56,7 +53,7 @@ What stays here:
 
 - small accessor fallbacks and path-resolution logic shared by multiple browser modules
 - reusable config accessors
-- scoped UI-text loading, route-level caching, and fallback warnings
+- code-owned Studio UI text lookup
 - shared config-backed Studio route accessors
 
 What does not stay here:

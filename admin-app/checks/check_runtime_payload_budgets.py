@@ -11,8 +11,6 @@ DEFAULT_BUDGETS = {
     "studio/app/frontend/config/studio-config.json": 12_000,
     "site/assets/data/search/policy.json": 8_000,
 }
-UI_TEXT_GLOB = "studio/app/frontend/config/ui-text/*.json"
-DEFAULT_UI_TEXT_BUDGET = 16_000
 
 
 def parse_args() -> argparse.Namespace:
@@ -20,7 +18,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repo-root", default=Path.cwd(), type=Path)
     parser.add_argument("--studio-config-max-bytes", default=DEFAULT_BUDGETS["studio/app/frontend/config/studio-config.json"], type=int)
     parser.add_argument("--search-policy-max-bytes", default=DEFAULT_BUDGETS["site/assets/data/search/policy.json"], type=int)
-    parser.add_argument("--ui-text-max-bytes", default=DEFAULT_UI_TEXT_BUDGET, type=int)
     return parser.parse_args()
 
 
@@ -43,10 +40,6 @@ def main() -> int:
     }
     for rel_path, max_bytes in budgets.items():
         check_file(repo_root, rel_path, max_bytes, failures)
-
-    for path in sorted(repo_root.glob(UI_TEXT_GLOB)):
-        rel_path = path.relative_to(repo_root).as_posix()
-        check_file(repo_root, rel_path, args.ui_text_max_bytes, failures)
 
     if failures:
         print("\nRuntime payload budget failures:")

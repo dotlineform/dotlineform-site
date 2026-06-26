@@ -102,7 +102,7 @@ def assert_route_boot_helpers(page: Page) -> None:
             module.syncCatalogueEditorRouteBusyState(busyState, busyOptions);
             const available = await module.configureCatalogueEditorRouteRuntime(state, {
                 namespace: 'catalogue_test',
-                configLoader: async () => ({ ui_text: {} }),
+                configLoader: async () => ({}),
                 healthProbe: async () => false,
                 applyText: () => {
                     root.dataset.textApplied = 'true';
