@@ -104,7 +104,7 @@ def config_payload() -> dict[str, object]:
                         "selection_model": "documents",
                         "sharing_profiles": [
                             {
-                                "id": "library-parent-child-relationships",
+                                "id": "parent-child-relationships",
                                 "label": "Parent-child relationships",
                                 "enabled": True,
                                 "data_domains": ["documents"],
@@ -179,7 +179,7 @@ def review_payload() -> dict[str, object]:
         "scope": "library",
         "summary_text": "Generated 2 Library returned package review files.",
         "detected_import_type": "parent_child_relationships",
-        "source_export_id": "library-parent-child-relationships",
+        "source_export_id": "parent-child-relationships",
         "generated_at": "2026-05-04T12:05:00Z",
         "counts": {
             "records": 2,
@@ -313,7 +313,7 @@ def assert_prepare(page, base_url: str) -> None:
         raise AssertionError("prepare app select should start blank")
     page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
     page.locator("#dataSharingPrepareDataDomainSelect").select_option("documents")
-    page.locator("#dataSharingPrepareConfigSelect").select_option("library-parent-child-relationships")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("parent-child-relationships")
     if page.locator("#dataSharingPrepareDocsScopeSelect").evaluate("select => select.value") != "":
         raise AssertionError("prepare docs scope select should start blank")
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")

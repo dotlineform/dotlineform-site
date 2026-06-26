@@ -49,7 +49,7 @@ Implemented now:
 - parses JSONL document-row packages
 - reads sibling `.meta.json` sidecars for package metadata
 - excludes `.meta.json` and `.context.json` sidecars from staged package listings
-- detects the three v1 Library package families when package metadata is present
+- detects the three v1 document package families when package metadata is present
 - falls back to structural detection for relationship, summary, full-content, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
@@ -72,19 +72,19 @@ Implemented now:
 Parse a staged Library summary package:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl
 ```
 
 Write Markdown review artifacts for a staged Library summary package:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl --write-previews
 ```
 
 Parse a staged Library relationships package and omit normalized records from the printed report:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file library-parent-child-relationships.json --no-records
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file parent-child-relationships.json --no-records
 ```
 
 ## Report Shape

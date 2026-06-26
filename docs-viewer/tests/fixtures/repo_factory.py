@@ -134,7 +134,7 @@ def write_documents_prepare_profiles(root: Path) -> None:
             "schema_version": "documents_prepare_profiles_v1",
             "configs": [
                 {
-                    "id": "library-document-summaries",
+                    "id": "document-summaries",
                     "label": "Document summaries",
                     "description": "Exports summary metadata.",
                     "enabled": True,

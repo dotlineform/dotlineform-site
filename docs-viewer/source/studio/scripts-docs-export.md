@@ -17,7 +17,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py
 
 `docs_export.py` is the read-only package-preparation engine used by the documents Data Sharing adapter.
 
-It reads Docs Viewer source metadata and source-controlled Library sharing profiles, then writes an ephemeral share package under `var/analytics/data-sharing/<scope>/exports/`.
+It reads Docs Viewer source metadata and source-controlled document sharing profiles, then writes an ephemeral share package under `var/analytics/data-sharing/<scope>/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
@@ -91,7 +91,7 @@ Implemented now:
 - keeps source timestamp provenance in `.meta.json` rather than in external records
 - returns a structured JSON report
 
-The `library-full-document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
+The `full-document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
 Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
 
 Not implemented yet:
@@ -112,43 +112,43 @@ Image handling:
 Dry-run the parent-child relationships export:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library
 ```
 
 Write the parent-child relationships export:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library --write
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library --write
 ```
 
 Use all matching docs for whole-corpus relationship review:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --all
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --all
 ```
 
 Prepare explicit documents for profiles that require selected ids:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --doc-id library
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --doc-id library
 ```
 
 Use all matching docs for an explicit-selection config:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --all
 ```
 
 Disable a summary config's default missing-summary-only filter:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --all --include-summary-complete
 ```
 
 Write a document-row export as JSON instead of its JSONL default when the config supports both:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --format json --write
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --all --format json --write
 ```
 
 ## Verification
@@ -159,7 +159,7 @@ Focused package-preparation checks live in:
 docs-viewer/tests/python/test_docs_export.py
 ```
 
-They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output, metadata/context sidecars, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
+They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output, metadata/context sidecars, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the v1 document sharing profiles.
 The same check runs in the `docs` profile:
 
 ```bash

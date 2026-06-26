@@ -2,8 +2,8 @@
 """Parse staged Docs Viewer import data and optionally write Markdown previews.
 
 Run:
-  ./docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
-  ./docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+  ./docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl
+  ./docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl --write-previews
   ./docs-viewer/services/docs_import.py --scope catalogue --file works.jsonl --write-previews
 """
 
@@ -31,9 +31,9 @@ FILENAME_RE = re.compile(r"[^a-z0-9-]+")
 STAGED_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
 
 EXPORT_ID_TO_IMPORT_TYPE = {
-    "library-parent-child-relationships": "parent_child_relationships",
-    "library-document-summaries": "document_summaries",
-    "library-full-document-content": "full_document_content",
+    "parent-child-relationships": "parent_child_relationships",
+    "document-summaries": "document_summaries",
+    "full-document-content": "full_document_content",
 }
 IMPORT_TYPE_CONFIG_FIELDS = {
     "parent_child_relationships": [

@@ -2,8 +2,8 @@
 """Export Docs Viewer source data through configured prepare profiles.
 
 Run:
-  ./docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library
-  ./docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library --write
+  ./docs-viewer/services/docs_export.py --config-id parent-child-relationships --scope library
+  ./docs-viewer/services/docs_export.py --config-id parent-child-relationships --scope library --write
 """
 
 from __future__ import annotations

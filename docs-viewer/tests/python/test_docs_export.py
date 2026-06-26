@@ -36,7 +36,7 @@ BASE_CONFIG = {
     "schema_version": "documents_prepare_profiles_v1",
     "configs": [
         {
-            "id": "library-document-summaries",
+            "id": "document-summaries",
             "label": "Document summaries",
             "description": "Exports summary metadata.",
             "enabled": True,
@@ -179,7 +179,7 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
 def run_export(root: Path, **overrides):
     args = {
         "repo_root": root,
-        "config_id": "library-document-summaries",
+        "config_id": "document-summaries",
         "scope": "library",
         "selected_doc_ids": ["library"],
         "select_all": False,
@@ -226,7 +226,7 @@ def test_config_validation_blocks_duplicate_output_paths() -> None:
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
-    assert "config library-document-summaries: duplicate document output_path title" in report["errors"]
+    assert "config document-summaries: duplicate document output_path title" in report["errors"]
 
 
 def test_config_validation_requires_external_context_descriptions() -> None:
@@ -237,8 +237,8 @@ def test_config_validation_requires_external_context_descriptions() -> None:
         report = run_export(Path(temp))
 
     assert report["ok"] is False
-    assert "config library-document-summaries: external_context.field_descriptions.current_summary is required" in report["errors"]
-    assert "config library-document-summaries: external_context.field_descriptions.retired_field does not match a document output_path" in report["errors"]
+    assert "config document-summaries: external_context.field_descriptions.current_summary is required" in report["errors"]
+    assert "config document-summaries: external_context.field_descriptions.retired_field does not match a document output_path" in report["errors"]
 
 
 def test_unknown_config_returns_structured_validation_report() -> None:
@@ -256,7 +256,7 @@ def test_jsonl_config_requires_jsonl_output_extension() -> None:
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
-    assert "config library-document-summaries: output.path_pattern extension must match target.format" in report["errors"]
+    assert "config document-summaries: output.path_pattern extension must match target.format" in report["errors"]
 
 
 def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
@@ -284,13 +284,13 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
 
     assert first_report["ok"] is True
     assert first_report["output_file"] == (
-        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.jsonl"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.jsonl"
     )
     assert first_report["metadata_file"] == (
-        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.meta.json"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.meta.json"
     )
     assert first_report["context_file"] == (
-        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.context.json"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.context.json"
     )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
@@ -332,7 +332,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["ok"] is True, report
     assert report["target_format"] == "json"
     assert report["output_file"] == (
-        "var/analytics/data-sharing/exports/documents-library-document-summaries-20260503-161507.json"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.json"
     )
     assert isinstance(payload, list)
     assert [row["doc_id"] for row in payload] == ["library", "child-with-summary"]
@@ -349,7 +349,7 @@ def test_unsupported_format_override_blocks_export() -> None:
         report = run_export(Path(temp), target_format="json")
 
     assert report["ok"] is False
-    assert "config library-document-summaries: target_format 'json' is not supported; supported formats: jsonl" in report["errors"]
+    assert "config document-summaries: target_format 'json' is not supported; supported formats: jsonl" in report["errors"]
     assert report["target_format"] == "json"
     assert report["output_file"].endswith(".json")
     assert report["output_written"] is False
@@ -373,9 +373,9 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     configs = payload["configs"]
     config_ids = [config["id"] for config in configs]
     assert config_ids == [
-        "library-parent-child-relationships",
-        "library-document-summaries",
-        "library-full-document-content",
+        "parent-child-relationships",
+        "document-summaries",
+        "full-document-content",
     ]
     for config in configs:
         errors, warnings = docs_export.validate_export_config(config)
@@ -384,11 +384,11 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
 
     summary_fields = {
         field["source"]
-        for field in docs_export.find_export_config(payload, "library-document-summaries")["document_fields"]
+        for field in docs_export.find_export_config(payload, "document-summaries")["document_fields"]
     }
     full_fields = {
         field["source"]
-        for field in docs_export.find_export_config(payload, "library-full-document-content")["document_fields"]
+        for field in docs_export.find_export_config(payload, "full-document-content")["document_fields"]
     }
     assert "source_text" not in summary_fields
     assert "source_text" in full_fields
@@ -403,9 +403,9 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert relationship_fields <= full_fields
     assert "sort_order" not in full_fields
 
-    relationship_config = docs_export.find_export_config(payload, "library-parent-child-relationships")
-    summary_config = docs_export.find_export_config(payload, "library-document-summaries")
-    full_config = docs_export.find_export_config(payload, "library-full-document-content")
+    relationship_config = docs_export.find_export_config(payload, "parent-child-relationships")
+    summary_config = docs_export.find_export_config(payload, "document-summaries")
+    full_config = docs_export.find_export_config(payload, "full-document-content")
     assert docs_export.supported_target_formats(relationship_config) == ["json"]
     assert docs_export.supported_target_formats(summary_config) == ["jsonl", "json"]
     assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
@@ -422,7 +422,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
             root = Path(temp)
             report = docs_export.build_export(
                 repo_root=root,
-                config_id="library-full-document-content",
+                config_id="full-document-content",
                 scope="library",
                 selected_doc_ids=["library"],
                 select_all=False,
@@ -464,7 +464,7 @@ def test_export_uses_source_metadata_for_document_content() -> None:
 
         report = docs_export.build_export(
             repo_root=root,
-            config_id="library-full-document-content",
+            config_id="full-document-content",
             scope="library",
             selected_doc_ids=["library"],
             select_all=False,
@@ -515,7 +515,7 @@ def test_missing_source_metadata_returns_structured_export_error() -> None:
 def test_repo_parent_child_relationships_respects_selected_docs() -> None:
     report = docs_export.build_export(
         repo_root=REPO_ROOT,
-        config_id="library-parent-child-relationships",
+        config_id="parent-child-relationships",
         scope="library",
         selected_doc_ids=["can-the-brain-comprehend-how-it-works"],
         select_all=False,
@@ -539,7 +539,7 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
             root = Path(temp)
             report = docs_export.build_export(
                 repo_root=root,
-                config_id="library-parent-child-relationships",
+                config_id="parent-child-relationships",
                 scope="library",
                 selected_doc_ids=["library"],
                 select_all=False,
@@ -566,21 +566,21 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
 def test_repo_representative_library_exports_dry_run_successfully() -> None:
     cases = [
         {
-            "config_id": "library-parent-child-relationships",
+            "config_id": "parent-child-relationships",
             "selected_doc_ids": ["library"],
             "select_all": False,
             "missing_summary_only": None,
             "target_format": "json",
         },
         {
-            "config_id": "library-document-summaries",
+            "config_id": "document-summaries",
             "selected_doc_ids": ["library"],
             "select_all": False,
             "missing_summary_only": False,
             "target_format": "jsonl",
         },
         {
-            "config_id": "library-full-document-content",
+            "config_id": "full-document-content",
             "selected_doc_ids": ["can-the-brain-comprehend-how-it-works"],
             "select_all": False,
             "missing_summary_only": None,

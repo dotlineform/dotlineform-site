@@ -22,7 +22,7 @@ The file is adapter-local because it describes document package shapes, document
 
 Docs Viewer scope is not encoded in the filename.
 The running prepare request supplies scope through `selection.docs_scope`.
-Current profiles are used for the Library scope, but the same profile file can support other Docs Viewer-backed scopes when their document package shape is compatible.
+The same profile file can support any Docs Viewer-backed scope when its document package shape is compatible.
 
 The Analytics Data Sharing UI reads a browser-safe projection of these profiles from `/analytics/api/data-sharing/config`.
 Browser routes must not fetch this config file directly.
@@ -51,16 +51,15 @@ Any new field source, transform, output format, or record shape needs export-eng
 
 The current file defines three enabled document package profiles:
 
-- `library-parent-child-relationships`
+- `parent-child-relationships`
   envelope JSON for selected-branch or explicitly selected whole-corpus hierarchy and relationship review
-- `library-document-summaries`
+- `document-summaries`
   JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
-- `library-full-document-content`
+- `full-document-content`
   JSONL document rows for exporting multiple selected document bodies in one file, including explicitly declared parent, ancestor, and child relationship metadata
 
-The profile ids are still Library-named because those were the first document package patterns.
-Do not infer a separate config file per Docs Viewer scope from those ids.
-Add a new profile only when another scope needs a materially different package shape, field set, limits, or selection behavior.
+Profile ids describe package shape, not Docs Viewer scope.
+Add a new profile only when a scope or workflow needs a materially different package shape, field set, limits, or selection behavior.
 
 ## Top-Level Shape
 

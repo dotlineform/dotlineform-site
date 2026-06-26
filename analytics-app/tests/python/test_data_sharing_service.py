@@ -50,7 +50,7 @@ def test_gateway_dispatches_active_documents_adapter() -> None:
 
     payload = data_sharing_service.prepare_package(
         REPO_ROOT,
-        {"data_domain": "documents", "config_id": "library-document-summaries"},
+        {"data_domain": "documents", "config_id": "document-summaries"},
         True,
         handlers,
     )
@@ -77,7 +77,7 @@ def test_headless_prepare_workflow_uses_injected_resolver_and_handlers() -> None
 
     payload = data_sharing_prepare_package(
         REPO_ROOT,
-        {"data_domain": "documents", "config_id": "library-document-summaries"},
+        {"data_domain": "documents", "config_id": "document-summaries"},
         True,
         {"documents": DataSharingAdapterHandlers(module="documents", prepare=fake_prepare)},
         fake_resolver,

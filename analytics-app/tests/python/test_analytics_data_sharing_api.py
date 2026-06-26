@@ -163,7 +163,7 @@ def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) ->
     status, payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/prepare",
-        {"data_domain": "documents", "config_id": "library-document-summaries"},
+        {"data_domain": "documents", "config_id": "document-summaries"},
         dry_run=True,
     )
 

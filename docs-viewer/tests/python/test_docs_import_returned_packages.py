@@ -96,7 +96,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             root,
             {
                 "data_domain": "library",
-                "config_id": "library-document-summaries",
+                "config_id": "document-summaries",
                 "selection": {
                     "docs_scope": "library",
                     "doc_ids": ["alpha"],
@@ -110,7 +110,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             root,
             {
                 "data_domain": "library",
-                "config_id": "library-document-summaries",
+                "config_id": "document-summaries",
                 "selection": {
                     "docs_scope": "library",
                     "doc_ids": ["library", "alpha"],

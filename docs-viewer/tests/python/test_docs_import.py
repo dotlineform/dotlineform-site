@@ -158,7 +158,7 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
             "summaries.meta.json",
             json.dumps(
                 {
-                    "export_id": "library-document-summaries",
+                    "export_id": "document-summaries",
                     "scope": "library",
                     "generated_at": "2026-05-03T20:00:00Z",
                 }
@@ -170,7 +170,7 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
     assert report["input_format"] == "jsonl"
     assert report["source_metadata_file"].endswith("summaries.meta.json")
     assert report["detected_import_type"] == "document_summaries"
-    assert report["source_export_id"] == "library-document-summaries"
+    assert report["source_export_id"] == "document-summaries"
     assert report["source_scope"] == "library"
     assert report["generated_at"] == "2026-05-03T20:00:00Z"
     assert report["counts"] == {"records": 2, "parsed_records": 2, "malformed_records": 0, "warnings": 0, "errors": 0}
@@ -182,7 +182,7 @@ def test_staged_import_listing_skips_package_sidecars() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", '{"doc_id": "alpha", "title": "Alpha"}\n')
-        write_staged(root, "summaries.meta.json", '{"export_id": "library-document-summaries"}\n')
+        write_staged(root, "summaries.meta.json", '{"export_id": "document-summaries"}\n')
         write_staged(root, "summaries.context.json", '{"task": "suggest_document_summaries"}\n')
         files = docs_import.list_staged_import_files(root, "library")
 
@@ -217,7 +217,7 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
             "relationships.meta.json",
             json.dumps(
                 {
-                    "export_id": "library-parent-child-relationships",
+                    "export_id": "parent-child-relationships",
                     "scope": "library",
                     "generated_at": "2026-05-03T20:10:00Z",
                 }
@@ -228,7 +228,7 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
     assert report["ok"] is True
     assert report["detected_import_type"] == "parent_child_relationships"
     assert report["source_metadata_file"].endswith("relationships.meta.json")
-    assert report["source_export_id"] == "library-parent-child-relationships"
+    assert report["source_export_id"] == "parent-child-relationships"
     assert report["unknown_file_metadata"] == {"review_batch": "tree-a"}
     assert report["records"][0]["relationships"]["child_ids"] == ["alpha"]
     assert report["records"][1]["relationships"]["ancestor_ids"] == ["library"]
@@ -461,7 +461,7 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
         write_staged(
             root,
             "relationships.meta.json",
-            json.dumps({"export_id": "library-parent-child-relationships", "scope": "library"}),
+            json.dumps({"export_id": "parent-child-relationships", "scope": "library"}),
         )
         report = render(root, parse(root, "relationships.json"))
         preview = (root / "var/analytics/data-sharing/library/import-preview/relationships-tree-20260503-204000.md").read_text(encoding="utf-8")
