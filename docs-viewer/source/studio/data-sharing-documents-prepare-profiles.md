@@ -37,7 +37,7 @@ Each profile controls:
 
 - whether the UI presents it
 - whether the user selects explicit documents or the exporter uses all matching documents
-- whether selected parent documents include descendants
+- whether the prepare UI cascades parent checkbox changes to descendants by default
 - whether source docs marked non-viewable are included
 - whether summary profiles default to missing-summary-only filtering
 - which source-derived document fields are written to each output record
@@ -52,7 +52,7 @@ Any new field source, transform, output format, or record shape needs export-eng
 The current file defines three enabled document package profiles:
 
 - `parent-child-relationships`
-  envelope JSON for selected-branch or explicitly selected whole-corpus hierarchy and relationship review
+  envelope JSON for explicitly selected or whole-corpus hierarchy and relationship review
 - `document-summaries`
   JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
 - `document-content`
@@ -156,8 +156,10 @@ The package engine is documented in [Documents Package Preparation Script](/docs
 - `explicit_doc_ids`: the Analytics UI supplies selected document ids through `selection.doc_ids`
 - `all_matching`: the exporter includes every document matching the profile filters
 
-Selection also defines whether the run includes descendants and non-viewable docs.
+Selection also defines whether the prepare UI cascades parent checkbox changes to descendants by default, and whether the run includes non-viewable docs.
 Current profiles use explicit document selection; Select all in Analytics or `--all` in the CLI remains available when a whole-corpus export is intentional.
+The exporter treats `selection.doc_ids` and repeated CLI `--doc-id` values as the exact document set to export.
+Relationship fields such as `child_ids`, `child_titles`, and ancestors are still derived from source hierarchy metadata and are not filtered by the selected export set.
 
 `supports_missing_summary_only` and `default_missing_summary_only` are profile-level flags for summary-focused exports.
 

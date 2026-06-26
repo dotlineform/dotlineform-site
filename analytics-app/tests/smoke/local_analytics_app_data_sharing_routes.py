@@ -49,7 +49,7 @@ def selectable_records_payload() -> dict[str, object]:
                 "published": True,
                 "viewable": True,
                 "content_text_length": 120,
-                "summary": "Library root.",
+                "summary": "",
             },
             {
                 "id": "alpha",
@@ -113,6 +113,7 @@ def config_payload() -> dict[str, object]:
                                     "mode": "explicit_doc_ids",
                                     "include_descendants": True,
                                     "include_non_viewable": True,
+                                    "supports_missing_summary_only": True,
                                 },
                             }
                         ],
@@ -233,7 +234,13 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
         if parsed.path not in data_sharing_paths:
             route.continue_()
             return
-        calls.append({"method": request.method, "path": parsed.path})
+        call: dict[str, object] = {"method": request.method, "path": parsed.path}
+        if request.method == "POST":
+            try:
+                call["body"] = request.post_data_json
+            except Exception:
+                call["body"] = request.post_data
+        calls.append(call)
         payload: dict[str, object]
         if parsed.path == "/analytics/api/data-sharing/health":
             payload = {"ok": True, "service": "analytics_data_sharing", "dry_run": False}
@@ -319,6 +326,26 @@ def assert_prepare(page, base_url: str) -> None:
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     expect(page.locator("[data-data-sharing-prepare-record]").first).to_be_visible(timeout=10_000)
+    page.locator("#dataSharingPrepareSelectAll").click()
+    expect(page.locator("#dataSharingPrepareSelectionSummary")).to_contain_text("2 records selected.", timeout=10_000)
+    page.locator("#dataSharingPrepareMissingSummaryOnly").check()
+    expect(page.locator("#dataSharingPrepareSelectionSummary")).to_contain_text("1 record selected.", timeout=10_000)
+    page.locator("#dataSharingPrepareMissingSummaryOnly").uncheck()
+    expect(page.locator("#dataSharingPrepareSelectionSummary")).to_contain_text("2 records selected.", timeout=10_000)
+    parent_checkbox = page.locator("input.dataSharingPrepareList__checkbox[value='library']")
+    child_checkbox = page.locator("input.dataSharingPrepareList__checkbox[value='alpha']")
+    expect(page.locator("#dataSharingPrepareIncludeDescendants")).to_be_checked(timeout=10_000)
+    parent_checkbox.check()
+    expect(child_checkbox).to_be_checked(timeout=10_000)
+    child_checkbox.uncheck()
+    parent_state = parent_checkbox.evaluate("input => ({ checked: input.checked, indeterminate: input.indeterminate })")
+    child_state = child_checkbox.evaluate("input => ({ checked: input.checked, indeterminate: input.indeterminate })")
+    if parent_state != {"checked": True, "indeterminate": False}:
+        raise AssertionError(f"parent checkbox should remain checked after deselecting child: {parent_state!r}")
+    if child_state != {"checked": False, "indeterminate": False}:
+        raise AssertionError(f"child checkbox should be unchecked after deselection: {child_state!r}")
+    page.locator("#dataSharingPrepareRun").click()
+    expect(page.locator("#dataSharingPrepareStatus")).to_contain_text("Package prepared.", timeout=10_000)
 
 
 def assert_review(page, base_url: str) -> None:
@@ -359,6 +386,7 @@ def main(argv: list[str] | None = None) -> int:
             "/analytics/api/data-sharing/health",
             "/analytics/api/data-sharing/config",
             "/analytics/api/data-sharing/selectable-records",
+            "/analytics/api/data-sharing/prepare",
             "/analytics/api/data-sharing/returned-packages",
         }
         seen_paths = {str(call["path"]) for call in data_sharing_api_calls}
@@ -367,6 +395,13 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"missing Analytics Data Sharing API calls: {sorted(missing_paths)!r}; calls={data_sharing_api_calls!r}")
         if "/docs/generated/index" in seen_paths:
             raise AssertionError(f"prepare page still read the generic generated docs index: {data_sharing_api_calls!r}")
+        prepare_calls = [call for call in data_sharing_api_calls if call["path"] == "/analytics/api/data-sharing/prepare"]
+        if len(prepare_calls) != 1:
+            raise AssertionError(f"unexpected prepare call count: {prepare_calls!r}")
+        prepare_body = prepare_calls[0].get("body")
+        selection = prepare_body.get("selection", {}) if isinstance(prepare_body, dict) else {}
+        if selection.get("doc_ids") != ["library"]:
+            raise AssertionError(f"prepare should post the final checked document ids only: {prepare_body!r}")
         static_config_requests = [request for request in requests if "/data-sharing/config/" in request]
         if static_config_requests:
             raise AssertionError(f"routes still requested static Data Sharing config: {static_config_requests!r}")

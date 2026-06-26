@@ -194,17 +194,17 @@ def test_missing_summary_filter_reports_expected_skips() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp))
     assert report["ok"] is True
-    assert report["counts"] == {"selected": 1, "exported": 1, "skipped": 1, "failed": 0, "truncated": 0}
-    assert report["skipped_summary"] == {"has_summary": 1}
-    assert report["warnings"] == ["selection: 1 document(s) skipped because they already have summaries"]
+    assert report["counts"] == {"selected": 1, "exported": 1, "skipped": 0, "failed": 0, "truncated": 0}
+    assert report["skipped_summary"] == {}
+    assert report["warnings"] == []
 
 
-def test_selected_doc_resolution_expands_descendants_in_index_order() -> None:
+def test_selected_doc_resolution_uses_explicit_ids_only() -> None:
     with make_repo() as temp:
         report = run_export(Path(temp), missing_summary_only=False)
     assert report["ok"] is True
-    assert report["selected_doc_ids"] == ["library", "child-with-summary"]
-    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
+    assert report["selected_doc_ids"] == ["library"]
+    assert report["exported_doc_ids"] == ["library"]
     assert report["skipped"] == []
 
 
@@ -267,7 +267,8 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     try:
         with make_repo() as temp:
             root = Path(temp)
-            first_report = run_export(root, missing_summary_only=False, write=True)
+            selected_doc_ids = ["library", "child-with-summary"]
+            first_report = run_export(root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
             first_output = root / first_report["output_file"]
             first_metadata_output = root / first_report["metadata_file"]
             first_context_output = root / first_report["context_file"]
@@ -275,7 +276,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             first_metadata_text = first_metadata_output.read_text(encoding="utf-8")
             first_context_text = first_context_output.read_text(encoding="utf-8")
 
-            second_report = run_export(root, missing_summary_only=False, write=True)
+            second_report = run_export(root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
             second_text = (root / second_report["output_file"]).read_text(encoding="utf-8")
             second_metadata_text = (root / second_report["metadata_file"]).read_text(encoding="utf-8")
             second_context_text = (root / second_report["context_file"]).read_text(encoding="utf-8")
@@ -323,7 +324,13 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     try:
         with make_repo() as temp:
             root = Path(temp)
-            report = run_export(root, missing_summary_only=False, write=True, target_format="json")
+            report = run_export(
+                root,
+                selected_doc_ids=["library", "child-with-summary"],
+                missing_summary_only=False,
+                write=True,
+                target_format="json",
+            )
             payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
             metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
             context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
@@ -426,7 +433,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
                 repo_root=root,
                 config_id="document-content",
                 scope="library",
-                selected_doc_ids=["library"],
+                selected_doc_ids=["library", "child-with-summary"],
                 select_all=False,
                 missing_summary_only=None,
                 write=True,
@@ -468,7 +475,7 @@ def test_export_uses_source_metadata_for_document_content() -> None:
             repo_root=root,
             config_id="document-content",
             scope="library",
-            selected_doc_ids=["library"],
+            selected_doc_ids=["library", "child-with-summary"],
             select_all=False,
             missing_summary_only=None,
             write=True,
@@ -543,7 +550,7 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
                 repo_root=root,
                 config_id="parent-child-relationships",
                 scope="library",
-                selected_doc_ids=["library"],
+                selected_doc_ids=["library", "child-with-summary"],
                 select_all=False,
                 missing_summary_only=None,
                 write=True,
@@ -615,7 +622,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
 def main() -> None:
     tests = [
         test_missing_summary_filter_reports_expected_skips,
-        test_selected_doc_resolution_expands_descendants_in_index_order,
+        test_selected_doc_resolution_uses_explicit_ids_only,
         test_unknown_selected_doc_blocks_export,
         test_config_validation_blocks_duplicate_output_paths,
         test_config_validation_requires_external_context_descriptions,

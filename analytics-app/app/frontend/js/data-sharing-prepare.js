@@ -41,16 +41,16 @@ import {
   loadDataSharingPrepareDocsState
 } from "./data-sharing-prepare-docs.js";
 import {
-  applyDataSharingPrepareSelectionFilter,
+  currentDataSharingPrepareSelectedIds,
   renderDataSharingPrepareConfigSelect,
   renderDataSharingPrepareDocList,
-  renderDataSharingPrepareFormatOptions,
   selectableDataSharingPrepareDocIds,
   selectedDataSharingPrepareConfig,
   syncDataSharingPrepareListActions,
   supportedUiFormatsForDataSharingPrepareConfig,
   syncDataSharingPrepareCheckboxes,
   syncDataSharingPrepareConfigOptions,
+  updateDataSharingPrepareCollapseFromClick,
   updateDataSharingPrepareSelectionFromChange,
   updateDataSharingPrepareSelectionSummary
 } from "./data-sharing-prepare-render.js";
@@ -214,6 +214,12 @@ function markReady(state, ready) {
   setAnalyticsRouteReady(state.root, ready, routeStateDetail(state));
 }
 
+function markDocumentListLoading(state, loading) {
+  const isLoading = Boolean(loading);
+  state.root.classList.toggle("dataSharingPreparePage--listLoading", isLoading);
+  state.listNode.classList.toggle("dataSharingPrepareList--loading", isLoading);
+}
+
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
@@ -234,12 +240,19 @@ function prepareConfigRequiresSelectedRecords(state, config) {
   );
 }
 
+function currentPrepareSelectionCount(state) {
+  return currentDataSharingPrepareSelectedIds(state).length;
+}
+
 function clearDocumentSelectionState(state) {
   state.docsIndexError = false;
   state.docs = [];
   state.childrenByParent = new Map();
   state.depthById = new Map();
   state.docsById = new Map();
+  state.visibleChildrenByParent = new Map();
+  state.visibleDepthById = new Map();
+  state.collapsedDocIds.clear();
   state.selectedIds.clear();
   state.listNode.innerHTML = "";
   state.listNode.hidden = false;
@@ -268,33 +281,43 @@ async function loadDocumentsForCurrentSelection(state) {
     return;
   }
   if (usesPrepareDocumentSelection(state.prepareCapability) && !state.docsScope) return;
-  const docsState = await loadDataSharingPrepareDocsState({
-    dataDomain: state.dataDomain,
-    docsScope: state.docsScope,
-    config,
-    serviceAvailable: state.serviceAvailable,
-    prepareCapability: state.prepareCapability,
-    workflowActive: dataSharingDomainIsActive(state.dataDomains, state.dataDomain),
-    exportConfigCount: state.exportConfigs.length,
-    loadJson,
-    onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.dataDomain, state.docsScope, error)
-  });
-  state.docsIndexError = docsState.docsIndexError;
-  state.docs = docsState.docs;
-  state.childrenByParent = docsState.childrenByParent;
-  state.depthById = docsState.depthById;
-  state.docsById = new Map(state.docs.map((doc) => [prepareRecordId(doc), doc]));
-  syncDataSharingPrepareListActions(state);
-  renderDataSharingPrepareDocList(state);
+  markDocumentListLoading(state, true);
+  try {
+    const docsState = await loadDataSharingPrepareDocsState({
+      dataDomain: state.dataDomain,
+      docsScope: state.docsScope,
+      config,
+      serviceAvailable: state.serviceAvailable,
+      prepareCapability: state.prepareCapability,
+      workflowActive: dataSharingDomainIsActive(state.dataDomains, state.dataDomain),
+      exportConfigCount: state.exportConfigs.length,
+      loadJson,
+      onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.dataDomain, state.docsScope, error)
+    });
+    state.docsIndexError = docsState.docsIndexError;
+    state.docs = docsState.docs;
+    state.childrenByParent = docsState.childrenByParent;
+    state.depthById = docsState.depthById;
+    state.docsById = new Map(state.docs.map((doc) => [prepareRecordId(doc), doc]));
+    syncDataSharingPrepareListActions(state);
+    renderDataSharingPrepareDocList(state);
+  } finally {
+    markDocumentListLoading(state, false);
+  }
 }
 
-async function refreshPrepareSelection(state) {
+async function refreshPrepareSelection(state, options = {}) {
+  const {
+    reloadDocuments = true,
+    preserveOptions = false,
+    preserveSelection = false
+  } = options;
   markBusy(state, true);
   setProgressiveGroups(state);
-  syncDataSharingPrepareConfigOptions(state);
+  syncDataSharingPrepareConfigOptions(state, { preserveOptions, preserveSelection });
   setProgressiveGroups(state);
   try {
-    await loadDocumentsForCurrentSelection(state);
+    if (reloadDocuments) await loadDocumentsForCurrentSelection(state);
     updateStatus(state);
     markReady(state, true);
   } finally {
@@ -361,7 +384,7 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
-  if (prepareConfigRequiresSelectedRecords(state, config) && state.selectedIds.size === 0) {
+  if (prepareConfigRequiresSelectedRecords(state, config) && currentPrepareSelectionCount(state) === 0) {
     setStatus(state.statusNode, "", getAnalyticsText(state.config, "data_sharing_prepare.idle_status", ""));
     state.runButton.disabled = true;
     return;
@@ -446,7 +469,7 @@ async function runPreparePackage(state) {
     state.isRunning = false;
     state.runButton.disabled = !state.serviceAvailable
       || !selectedDropdownsComplete(state)
-      || (prepareConfigRequiresSelectedRecords(state, config) && state.selectedIds.size === 0);
+      || (prepareConfigRequiresSelectedRecords(state, config) && currentPrepareSelectionCount(state) === 0);
     updateContextButton(state);
     markBusy(state, false);
   }
@@ -502,6 +525,9 @@ async function init() {
     missingSummaryOnlyWrap: document.getElementById("dataSharingPrepareMissingSummaryWrap"),
     missingSummaryOnly: document.getElementById("dataSharingPrepareMissingSummaryOnly"),
     missingSummaryLabelNode: document.getElementById("dataSharingPrepareMissingSummaryLabel"),
+    includeDescendantsWrap: document.getElementById("dataSharingPrepareIncludeDescendantsWrap"),
+    includeDescendantsInput: document.getElementById("dataSharingPrepareIncludeDescendants"),
+    includeDescendantsLabelNode: document.getElementById("dataSharingPrepareIncludeDescendantsLabel"),
     optionsGroup: document.getElementById("dataSharingPrepareOptionsGroup"),
     formatWrap: document.getElementById("dataSharingPrepareFormatWrap"),
     formatLabelNode: document.getElementById("dataSharingPrepareFormatLabel"),
@@ -520,8 +546,12 @@ async function init() {
     docs: [],
     docsById: new Map(),
     childrenByParent: new Map(),
+    visibleChildrenByParent: new Map(),
+    visibleDepthById: new Map(),
     depthById: new Map(),
+    collapsedDocIds: new Set(),
     selectedIds: new Set(),
+    includeDescendants: true,
     targetFormat: "",
     docsIndexError: false,
     serviceAvailable: false,
@@ -542,6 +572,9 @@ async function init() {
     state.missingSummaryOnlyWrap,
     state.missingSummaryOnly,
     state.missingSummaryLabelNode,
+    state.includeDescendantsWrap,
+    state.includeDescendantsInput,
+    state.includeDescendantsLabelNode,
     state.optionsGroup,
     state.formatWrap,
     state.formatLabelNode,
@@ -578,6 +611,10 @@ async function init() {
     setText(
       state.missingSummaryLabelNode,
       getAnalyticsText(state.config, "data_sharing_prepare.missing_summary_label", "missing summaries only")
+    );
+    setText(
+      state.includeDescendantsLabelNode,
+      getAnalyticsText(state.config, "data_sharing_prepare.include_descendants_label", "select descendants with parent")
     );
     setText(state.formatLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.format_label", "format"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_prepare.select_all", "Select all"));
@@ -628,8 +665,11 @@ async function init() {
       refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: docs scope change failed", error));
     });
     state.configSelect.addEventListener("change", () => {
-      state.docsScope = "";
-      refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: config change failed", error));
+      refreshPrepareSelection(state, {
+        reloadDocuments: false,
+        preserveOptions: true,
+        preserveSelection: true
+      }).catch((error) => console.warn("data_sharing_prepare: config change failed", error));
     });
     state.formatOptionsNode.addEventListener("change", (event) => {
       const target = event.target;
@@ -638,8 +678,12 @@ async function init() {
       updateStatus(state);
     });
     state.missingSummaryOnly.addEventListener("change", () => {
-      applyDataSharingPrepareSelectionFilter(state);
       renderDataSharingPrepareDocList(state);
+      updateStatus(state);
+    });
+    state.includeDescendantsInput.addEventListener("change", () => {
+      state.includeDescendants = state.includeDescendantsInput.checked;
+      syncDataSharingPrepareCheckboxes(state);
       updateStatus(state);
     });
     state.selectAllButton.addEventListener("click", () => {
@@ -653,6 +697,11 @@ async function init() {
       syncDataSharingPrepareCheckboxes(state);
       updateDataSharingPrepareSelectionSummary(state);
       updateStatus(state);
+    });
+    state.listNode.addEventListener("click", (event) => {
+      if (!updateDataSharingPrepareCollapseFromClick(state, event)) return;
+      event.preventDefault();
+      event.stopPropagation();
     });
     state.listNode.addEventListener("change", (event) => {
       if (!updateDataSharingPrepareSelectionFromChange(state, event)) return;

@@ -13,6 +13,7 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     docs_scope_label: "Docs Viewer scope",
     config_label: "sharing profile",
     missing_summary_label: "missing summaries only",
+    include_descendants_label: "select descendants with parent",
     format_label: "format",
     format_json: "JSON",
     format_jsonl: "JSONL",

@@ -8,6 +8,9 @@ import {
   usesPrepareDocumentSelection,
   usesPrepareRecordSelection
 } from "./data-sharing-prepare-workflow.js";
+import {
+  currentDataSharingPrepareSelectedIds
+} from "./data-sharing-prepare-render.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -40,7 +43,7 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
     docsScope: state.docsScope,
     config,
     targetFormat,
-    selectedIds: state.selectedIds,
+    selectedIds: usesRecordSelection ? currentDataSharingPrepareSelectedIds(state) : state.selectedIds,
     usesDocumentSelection,
     usesRecordSelection,
     missingSummaryOnlyAvailable: !state.missingSummaryOnlyWrap.hidden,

@@ -1313,6 +1313,11 @@ textarea.analytics__input:disabled {
   gap: 0.8rem;
 }
 
+.dataSharingPreparePage--listLoading,
+.dataSharingPreparePage--listLoading * {
+  cursor: wait !important;
+}
+
 .analyticsForm__meta.dataSharingPreparePage__selectionSummary {
   flex: 0 1 auto;
   align-self: center;
@@ -1574,7 +1579,8 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
 }
 
 .dataSharingPrepareList__row {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 1rem minmax(0, 1fr);
+  column-gap: 0.5rem;
 }
 
 .dataSharingPrepareList__label {
@@ -1583,7 +1589,29 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
   gap: 0.5rem;
   align-items: center;
   min-width: 0;
-  padding-left: calc(var(--data-sharing-prepare-depth, 0) * 1.15rem);
+}
+
+.dataSharingPrepareList__toggle,
+.dataSharingPrepareList__toggleSpacer {
+  display: inline-grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+}
+
+.dataSharingPrepareList__toggle {
+  border: 0;
+  padding: 0;
+  color: var(--text, var(--analytics-text));
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.dataSharingPrepareList__toggle:hover {
+  color: var(--accent, var(--analytics-accent));
 }
 
 .dataSharingPrepareList__checkbox {

@@ -210,7 +210,7 @@ def public_profile_selection(selection: dict[str, Any]) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": str(selection.get("mode") or "").strip(),
     }
-    for key in ("supports_missing_summary_only", "default_missing_summary_only"):
+    for key in ("include_descendants", "supports_missing_summary_only", "default_missing_summary_only"):
         if key in selection:
             payload[key] = selection.get(key) is True
     return payload

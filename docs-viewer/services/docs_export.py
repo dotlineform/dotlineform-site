@@ -647,39 +647,17 @@ def build_children_by_parent(docs: list[dict[str, Any]]) -> dict[str, list[dict[
     return children
 
 
-def descendant_ids(children_by_parent: dict[str, list[dict[str, Any]]], root_id: str) -> set[str]:
-    found: set[str] = set()
-    stack = [root_id]
-    while stack:
-        parent_id = stack.pop()
-        for child in children_by_parent.get(parent_id, []):
-            doc_id = normalize_text(child.get("doc_id"))
-            if doc_id and doc_id not in found:
-                found.add(doc_id)
-                stack.append(doc_id)
-    return found
-
-
-def expand_selected_doc_ids(context: ExportContext, selected_doc_ids: list[str]) -> list[str]:
+def resolve_selected_doc_ids(selected_doc_ids: list[str]) -> list[str]:
     seen: set[str] = set()
-    expanded: list[str] = []
-    include_descendants = bool(context.config.get("selection", {}).get("include_descendants"))
+    resolved: list[str] = []
     for raw_doc_id in selected_doc_ids:
         doc_id = normalize_text(raw_doc_id)
         if not doc_id:
             continue
-        ids = [doc_id]
-        if include_descendants:
-            ids.extend(
-                child_doc_id
-                for child_doc_id in context.docs_by_id
-                if child_doc_id in descendant_ids(context.children_by_parent, doc_id)
-            )
-        for candidate in ids:
-            if candidate not in seen:
-                seen.add(candidate)
-                expanded.append(candidate)
-    return expanded
+        if doc_id not in seen:
+            seen.add(doc_id)
+            resolved.append(doc_id)
+    return resolved
 
 
 def selected_docs(
@@ -703,7 +681,7 @@ def selected_docs(
     if mode == "all_matching" or select_all:
         requested_ids = [normalize_text(doc.get("doc_id")) for doc in context.docs]
     else:
-        requested_ids = expand_selected_doc_ids(context, selected_doc_ids)
+        requested_ids = resolve_selected_doc_ids(selected_doc_ids)
         if not requested_ids:
             errors.append("explicit_doc_ids selection requires at least one --doc-id, --doc-ids, or --all")
 

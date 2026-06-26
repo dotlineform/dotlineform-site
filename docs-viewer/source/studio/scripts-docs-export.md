@@ -73,7 +73,7 @@ Implemented now:
 - loads Docs Viewer source metadata for the requested scope
 - resolves selected `doc_id` values
 - supports all-matching profiles
-- expands selected descendants when the profile requests it
+- exports the exact selected document ids supplied by the caller
 - includes source docs marked non-viewable when the profile requests it
 - supports missing-summary filtering for profiles that allow it
 - maps supported document fields into configured output paths
@@ -114,6 +114,12 @@ Dry-run the parent-child relationships export:
 
 ```bash
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library
+```
+
+Repeated `--doc-id` values export multiple explicit documents:
+
+```bash
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library --doc-id child-doc
 ```
 
 Write the parent-child relationships export:
@@ -160,7 +166,7 @@ Focused package-preparation checks live in:
 docs-viewer/tests/python/test_docs_export.py
 ```
 
-They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output, metadata/context sidecars, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the v1 document sharing profiles.
+They cover config loading, semantic config validation, exact selected-document resolution, deterministic JSONL output, metadata/context sidecars, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the v1 document sharing profiles.
 The same check runs in the `docs` profile:
 
 ```bash

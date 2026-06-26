@@ -88,6 +88,7 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert profile["target"] == {"format": "json", "supported_formats": ["json"]}
     assert profile["selection"] == {
         "mode": "explicit_doc_ids",
+        "include_descendants": True,
         "supports_missing_summary_only": True,
         "default_missing_summary_only": False,
     }
@@ -102,7 +103,6 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert "output" not in profile
     assert "metadata" not in profile
     assert "path_pattern" not in json.dumps(profile)
-    assert "include_descendants" not in json.dumps(profile)
     assert "include_non_viewable" not in json.dumps(profile)
     assert "paths" not in adapter["data_domains"]["documents"]
     assert "path_contract" not in prepare

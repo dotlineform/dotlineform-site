@@ -80,9 +80,16 @@ function prepareListRecordName(record) {
 function renderRecordRow(state, record) {
   const recordId = prepareListRecordId(record);
   const name = prepareListRecordName(record);
-  const depth = Math.max(0, Number(state.depthById.get(recordId) || 0));
+  const depth = Math.max(0, Number((state.visibleDepthById && state.visibleDepthById.get(recordId)) || state.depthById.get(recordId) || 0));
+  const indent = `${(depth * 1.35).toFixed(2)}rem`;
+  const expanded = !state.collapsedDocIds.has(recordId);
+  const hasVisibleChildren = (state.visibleChildrenByParent.get(recordId) || []).length > 0;
+  const toggle = hasVisibleChildren
+    ? `<button class="dataSharingPrepareList__toggle" type="button" data-data-sharing-prepare-toggle="${escapeHtml(recordId)}" aria-expanded="${expanded ? "true" : "false"}" aria-label="${expanded ? "Collapse section" : "Expand section"}">${expanded ? "▼" : "▶"}</button>`
+    : `<span class="dataSharingPrepareList__toggleSpacer" aria-hidden="true"></span>`;
   return `
-    <li class="analyticsList__row analyticsList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-record="${escapeHtml(recordId)}" style="--data-sharing-prepare-depth: ${depth};">
+    <li class="analyticsList__row analyticsList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-record="${escapeHtml(recordId)}" style="margin-left: ${indent};">
+      ${toggle}
       <label class="dataSharingPrepareList__label">
         <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(recordId)}">
         <span class="dataSharingPrepareList__title">${escapeHtml(name)}</span>
@@ -118,18 +125,65 @@ export function selectableDataSharingPrepareDocIds(state) {
     .filter(Boolean);
 }
 
+function visibleTreeState(state, visibleDocIds) {
+  const childrenByParent = new Map();
+  state.docs.forEach((doc) => {
+    const docId = prepareListRecordId(doc);
+    if (!visibleDocIds.has(docId)) return;
+    const parentId = normalizeText(doc.parent_id);
+    const effectiveParent = visibleDocIds.has(parentId) ? parentId : "";
+    if (!childrenByParent.has(effectiveParent)) childrenByParent.set(effectiveParent, []);
+    childrenByParent.get(effectiveParent).push(doc);
+  });
+
+  const depthById = new Map();
+  const visit = (parentId, depth) => {
+    const children = childrenByParent.get(parentId) || [];
+    children.forEach((doc) => {
+      const docId = prepareListRecordId(doc);
+      if (!docId || depthById.has(docId)) return;
+      depthById.set(docId, depth);
+      visit(docId, depth + 1);
+    });
+  };
+  visit("", 0);
+
+  state.docs.forEach((doc) => {
+    const docId = prepareListRecordId(doc);
+    if (visibleDocIds.has(docId) && !depthById.has(docId)) depthById.set(docId, 0);
+  });
+
+  return { childrenByParent, depthById };
+}
+
+function rowHiddenByCollapsedAncestor(state, docId, visibleDocIds) {
+  const seen = new Set();
+  let current = state.docsById.get(docId);
+  while (current) {
+    const parentId = normalizeText(current.parent_id);
+    if (!parentId || seen.has(parentId)) return false;
+    seen.add(parentId);
+    if (visibleDocIds.has(parentId) && state.collapsedDocIds.has(parentId)) return true;
+    current = state.docsById.get(parentId);
+  }
+  return false;
+}
+
+export function currentDataSharingPrepareSelectedIds(state) {
+  const selectableIds = new Set(selectableDataSharingPrepareDocIds(state));
+  return Array.from(state.selectedIds || []).filter((docId) => selectableIds.has(docId));
+}
+
 export function syncDataSharingPrepareCheckboxes(state) {
-  const visibleSelected = new Set(
-    selectableDataSharingPrepareDocIds(state).filter((docId) => state.selectedIds.has(docId))
-  );
+  const visibleSelected = new Set(currentDataSharingPrepareSelectedIds(state));
   state.listNode.querySelectorAll("[data-data-sharing-prepare-record]").forEach((row) => {
     const docId = normalizeText(row.getAttribute("data-data-sharing-prepare-record"));
     const checkbox = row.querySelector("input[type='checkbox']");
     if (!(checkbox instanceof HTMLInputElement)) return;
-    const subtreeIds = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
-    const selectedCount = subtreeIds.filter((id) => visibleSelected.has(id)).length;
-    checkbox.checked = subtreeIds.length > 0 && selectedCount === subtreeIds.length;
-    checkbox.indeterminate = selectedCount > 0 && selectedCount < subtreeIds.length;
+    const descendants = descendantIds(state, docId).filter((id) => rowMatchesCurrentFilters(state, id));
+    const selectedDescendantCount = descendants.filter((id) => visibleSelected.has(id)).length;
+    checkbox.checked = visibleSelected.has(docId);
+    checkbox.indeterminate = !checkbox.checked && selectedDescendantCount > 0;
   });
 }
 
@@ -149,7 +203,7 @@ export function updateDataSharingPrepareSelectionSummary(state) {
     setText(state.selectionSummary, "");
     return;
   }
-  const count = state.selectedIds.size;
+  const count = currentDataSharingPrepareSelectedIds(state).length;
   setText(
     state.selectionSummary,
     getAnalyticsText(
@@ -189,17 +243,30 @@ export function renderDataSharingPrepareFormatOptions(state) {
   state.formatOptionsNode.value = state.targetFormat;
 }
 
-export function syncDataSharingPrepareConfigOptions(state) {
+export function syncDataSharingPrepareConfigOptions(state, options = {}) {
+  const {
+    preserveOptions = false,
+    preserveSelection = false
+  } = options;
   const config = selectedDataSharingPrepareConfig(state);
   const selection = prepareConfigSelection(config);
   const supportsMissing = Boolean(selection.supports_missing_summary_only);
+  const supportsDescendantCascade = usesPrepareDocumentSelection(state.prepareCapability)
+    && normalizeText(selection.mode) === "explicit_doc_ids";
   state.missingSummaryOnlyWrap.hidden = !usesPrepareDocumentSelection(state.prepareCapability) || !supportsMissing;
-  state.missingSummaryOnly.checked = false;
-  state.targetFormat = supportedUiFormatsForDataSharingPrepareConfig(config).includes("json")
-    ? "json"
-    : defaultUiFormatForDataSharingPrepareConfig(config);
+  if (!preserveOptions) state.missingSummaryOnly.checked = false;
+  state.includeDescendantsWrap.hidden = !supportsDescendantCascade;
+  if (preserveOptions) {
+    state.includeDescendants = state.includeDescendantsInput.checked;
+  } else {
+    state.includeDescendants = supportsDescendantCascade && selection.include_descendants !== false;
+    state.includeDescendantsInput.checked = state.includeDescendants;
+    state.targetFormat = supportedUiFormatsForDataSharingPrepareConfig(config).includes("json")
+      ? "json"
+      : defaultUiFormatForDataSharingPrepareConfig(config);
+  }
   renderDataSharingPrepareFormatOptions(state);
-  applyDataSharingPrepareSelectionFilter(state);
+  if (!preserveSelection) applyDataSharingPrepareSelectionFilter(state);
   syncDataSharingPrepareListActions(state);
   renderDataSharingPrepareDocList(state);
 }
@@ -221,8 +288,14 @@ export function renderDataSharingPrepareDocList(state) {
     return;
   }
   const visibleDocIds = new Set(selectableDataSharingPrepareDocIds(state));
+  const visibleTree = visibleTreeState(state, visibleDocIds);
+  state.visibleChildrenByParent = visibleTree.childrenByParent;
+  state.visibleDepthById = visibleTree.depthById;
   const rows = state.docs
-    .filter((doc) => visibleDocIds.has(prepareListRecordId(doc)))
+    .filter((doc) => {
+      const docId = prepareListRecordId(doc);
+      return visibleDocIds.has(docId) && !rowHiddenByCollapsedAncestor(state, docId, visibleDocIds);
+    })
     .map((doc) => renderRecordRow(state, doc));
   state.listNode.hidden = false;
   state.listNode.innerHTML = rows.length
@@ -232,13 +305,34 @@ export function renderDataSharingPrepareDocList(state) {
   updateDataSharingPrepareSelectionSummary(state);
 }
 
+export function updateDataSharingPrepareCollapseFromClick(state, event) {
+  const target = event.target;
+  const button = target instanceof Element
+    ? target.closest("[data-data-sharing-prepare-toggle]")
+    : null;
+  if (!(button instanceof HTMLButtonElement)) return false;
+  const docId = normalizeText(button.getAttribute("data-data-sharing-prepare-toggle"));
+  if (!docId) return false;
+  if (state.collapsedDocIds.has(docId)) {
+    state.collapsedDocIds.delete(docId);
+  } else {
+    state.collapsedDocIds.add(docId);
+  }
+  renderDataSharingPrepareDocList(state);
+  return true;
+}
+
 export function updateDataSharingPrepareSelectionFromChange(state, event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return false;
   const row = target.closest("[data-data-sharing-prepare-record]");
   const docId = normalizeText(row ? row.getAttribute("data-data-sharing-prepare-record") : "");
   if (!docId) return false;
-  const ids = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
+  const ids = (
+    state.includeDescendants
+      ? [docId, ...descendantIds(state, docId)]
+      : [docId]
+  ).filter((id) => rowMatchesCurrentFilters(state, id));
   ids.forEach((id) => {
     if (target.checked) {
       state.selectedIds.add(id);
