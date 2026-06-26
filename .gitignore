@@ -50,3 +50,6 @@ docs-viewer/.tmp/
 docs-viewer/logs/
 docs-viewer/run/
 docs-viewer/var/
+
+# all of var
+var/
