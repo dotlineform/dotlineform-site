@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-4e089ac2299fde3082eef047c5b2559a",
-    "generated_at_utc": "2026-06-26T22:04:05Z",
+    "version": "blake2b-5eb6e754c6d3589afcb6f95b1e6d5aaa",
+    "generated_at_utc": "2026-06-26T22:55:56Z",
     "count": 18
   },
   "entries": [
@@ -305,16 +305,16 @@
       "kind": "doc",
       "title": "tmp",
       "href": "/docs/?scope=tmp&doc=tmp",
-      "last_updated": "2026-05-26",
-      "display_meta": "2026-05-26",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
       "search_terms": [
         "tmp",
-        "2026-05-26",
+        "2026-06-26",
         "2026",
-        "05",
+        "06",
         "26"
       ],
-      "search_text": "tmp 2026-05-26 2026 05 26"
+      "search_text": "tmp 2026-06-26 2026 06 26"
     },
     {
       "id": "jekyll",
