@@ -111,8 +111,8 @@ Current effect:
 
 Important builder consequence:
 
-- the docs builder still resolves relative markdown links from each file's `source_path`
-- any future source-layout change must review or rewrite source-relative `.md` links if nested paths are reintroduced
+- source-relative `.md` links are unsupported; docs should link to viewer URLs with `doc=<doc_id>`
+- source filenames are loader inputs only and are not emitted as generated runtime metadata
 
 ## Current Generated Output Boundary
 

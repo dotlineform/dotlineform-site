@@ -40,10 +40,6 @@ def add_missing_image_titles(content_html: str) -> str:
 class ContentRenderingMixin:
     def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: list[DocRecord]) -> str:
         docs_by_id = {doc.doc_id: doc for doc in docs}
-        docs_by_source = {doc.source_path: doc for doc in docs}
-        docs_by_repo_path = {
-            (self.source_dir / doc.source_path).resolve().as_posix(): doc for doc in docs
-        }
 
         def replace(match: re.Match[str]) -> str:
             quote_char = match.group(1)
@@ -52,8 +48,6 @@ class ContentRenderingMixin:
                 href,
                 current_doc=current_doc,
                 docs_by_id=docs_by_id,
-                docs_by_source=docs_by_source,
-                docs_by_repo_path=docs_by_repo_path,
             )
             return f"href={quote_char}{rewritten}{quote_char}"
 
@@ -65,8 +59,6 @@ class ContentRenderingMixin:
         *,
         current_doc: DocRecord,
         docs_by_id: dict[str, DocRecord],
-        docs_by_source: dict[str, DocRecord],
-        docs_by_repo_path: dict[str, DocRecord],
     ) -> str:
         if not href or href.startswith(("#", "mailto:")) or re.match(r"\A[a-z][a-z0-9+\-.]*:", href, re.IGNORECASE):
             return href
@@ -79,15 +71,7 @@ class ContentRenderingMixin:
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):
             target = docs_by_id.get(viewer_doc_id)
             return self.viewer_url_for(target.doc_id, parsed.fragment) if target else href
-        if path_part.startswith(self.repo_root.as_posix()):
-            target = docs_by_repo_path.get(Path(path_part).resolve().as_posix())
-            return self.viewer_url_for(target.doc_id, parsed.fragment) if target else href
-        if not path_part.endswith(".md"):
-            return href
-        resolved = (Path(current_doc.source_path).parent / path_part).as_posix()
-        normalized = Path(resolved).as_posix()
-        target = docs_by_source.get(normalized)
-        return self.viewer_url_for(target.doc_id, parsed.fragment) if target else href
+        return href
 
     def viewer_path_match(self, path_part: str, query_values: dict[str, list[str]]) -> bool:
         explicit_scope = (query_values.get("scope") or [""])[0]

@@ -158,7 +158,7 @@ Current site mapping:
 
 - the content pane and public info panel on `/<scope>/`
 
-Public by-id payloads do not expose management fields such as `doc_id`, `source_path`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
+Public by-id payloads do not expose management fields such as `doc_id`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
 
 ### `site/assets/data/docs/scopes/<scope>/recently-added.json`
 

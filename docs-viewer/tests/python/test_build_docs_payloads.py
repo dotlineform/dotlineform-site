@@ -56,7 +56,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert recently_added["docs"][0]["parent_title"] == "Parent"
 
     content_html = child["content_html"]
-    assert 'href="/docs/?scope=studio&doc=parent"' in content_html
+    assert 'href="/docs/?scope=studio&amp;doc=parent"' in content_html
     assert 'src="https://media.example.test/docs/studio/diagram.png"' in content_html
     assert (
         '<img src="https://media.example.test/docs/studio/measured-diagram.png" '

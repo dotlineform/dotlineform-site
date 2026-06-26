@@ -238,7 +238,6 @@ class SourceLoadingMixin:
             "title": doc.title,
             "added_date": doc.added_date,
             "last_updated": doc.last_updated,
-            "source_path": doc.source_path,
             "viewer_url": doc.viewer_url,
         }
         if doc.date:

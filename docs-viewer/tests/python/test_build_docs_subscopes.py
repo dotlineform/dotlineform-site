@@ -139,9 +139,9 @@ Related body.
     assert detail["doc_id"] == "detail"
     assert detail["title"] == "Detail"
     assert detail["last_updated"] == "2026-06-21"
-    assert detail["source_path"] == "detail.md"
+    assert "source_path" not in detail
     assert detail["viewer_url"] == "/docs/?scope=studio&doc=tags-report&subdoc=detail"
-    assert 'href="/docs/?scope=studio&doc=tags-report&subdoc=related"' in detail["content_html"]
+    assert 'href="related.md"' in detail["content_html"]
     assert related["parent_id"] == "detail"
     assert not (root / "docs-viewer/generated/docs/studio/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/index-tree.json").exists()

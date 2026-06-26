@@ -106,7 +106,6 @@ def test_docs_viewer_index_contract_fixture() -> None:
             "added_date",
             "last_updated",
             "parent_id",
-            "source_path",
             "viewer_url",
             "content_url",
             "content_text_length",

@@ -63,7 +63,6 @@ Fields excluded from public `index-tree.json`:
 
 - `summary`
 - `last_updated`
-- `source_path`
 - `viewer_url`
 - `content_text_length`
 - default or derivable values

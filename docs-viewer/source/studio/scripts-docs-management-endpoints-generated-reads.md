@@ -103,7 +103,6 @@ Payload shape:
   "title": "Docs Viewer",
   "added_date": "2026-06-07",
   "last_updated": "2026-06-07",
-  "source_path": "docs-viewer.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
   "parent_id": "docs-viewer-overview",
   "content_html": "<h1>Docs Viewer</h1>\n"

@@ -210,7 +210,7 @@ viewer_report_subscope: tags
 ---
 # Child
 
-Intro with [parent](parent.md), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
+Intro with [parent](/docs/?scope=studio&doc=parent), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
 
 ![Measured diagram]([[media:docs/studio/measured-diagram.png width=800 height=600]])
 

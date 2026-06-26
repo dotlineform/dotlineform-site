@@ -54,7 +54,7 @@ The working index tree includes non-viewable docs.
 Tree rows omit `viewable` for the default viewable state and include `viewable: false` only when the source doc is non-viewable.
 
 The builder generates per-doc payloads for non-viewable docs so manage mode can open and review them.
-For public read-only scopes such as Library and Analysis, by-id payloads are compact reader payloads and do not carry management metadata such as `doc_id`, `source_path`, `parent_id`, `ui_status`, or `viewable`.
+For public read-only scopes such as Library and Analysis, by-id payloads are compact reader payloads and do not carry management metadata such as `doc_id`, `parent_id`, `ui_status`, or `viewable`.
 
 The working `recently-added.json` payload is also generated from the configured docs set.
 It should not be treated as the public visibility boundary; public filtering happens at runtime for navigation and when the `/docs/` Publish action copies public-scope payloads to site assets.
