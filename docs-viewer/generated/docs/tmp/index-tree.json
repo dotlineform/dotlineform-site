@@ -128,15 +128,10 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/tmp.json"
     },
     {
-      "doc_id": "studio",
-      "title": "tmp studio",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json"
-    },
-    {
       "doc_id": "vs-code",
       "title": "vs code",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/vs-code.json"
     }
   ],
-  "generated_at": "2026-06-26T21:57:18Z"
+  "generated_at": "2026-06-26T22:04:05Z"
 }

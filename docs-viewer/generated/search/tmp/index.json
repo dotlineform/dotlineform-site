@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-b35d817693804b7864fc3f9dfdcae9b9",
-    "generated_at_utc": "2026-06-26T21:40:50Z",
-    "count": 19
+    "version": "blake2b-4e089ac2299fde3082eef047c5b2559a",
+    "generated_at_utc": "2026-06-26T22:04:05Z",
+    "count": 18
   },
   "entries": [
     {
@@ -315,24 +315,6 @@
         "26"
       ],
       "search_text": "tmp 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "studio",
-      "kind": "doc",
-      "title": "tmp studio",
-      "href": "/docs/?scope=tmp&doc=studio",
-      "last_updated": "2026-05-24",
-      "display_meta": "2026-05-24",
-      "search_terms": [
-        "studio",
-        "tmp studio",
-        "tmp",
-        "2026-05-24",
-        "2026",
-        "05",
-        "24"
-      ],
-      "search_text": "studio tmp studio tmp 2026-05-24 2026 05 24"
     },
     {
       "id": "jekyll",
