@@ -153,3 +153,28 @@ invalid front matter
     assert completed.returncode == 1
     assert "problem with front-matter on doc" in completed.stderr
     assert "Traceback" not in completed.stderr
+
+
+def test_python_docs_builder_script_requires_doc_id_without_traceback() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_text(
+            root / "docs-viewer/source/studio/missing-doc-id.md",
+            """---
+title: Missing Doc Id
+---
+# Missing Doc Id
+""",
+        )
+        completed = subprocess.run(
+            [sys.executable, str(BUILD_DIR / "build_docs.py"), "--scope", "studio", "--write"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    assert completed.returncode == 1
+    assert "Missing required doc_id in missing-doc-id.md" in completed.stderr
+    assert "Traceback" not in completed.stderr

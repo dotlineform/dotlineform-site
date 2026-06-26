@@ -20,7 +20,9 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
     docs = []
     for path in source_model.scope_markdown_paths(root, scope):
         front_matter, body = source_model.parse_source(path)
-        doc_id = str(front_matter.get("doc_id") or path.stem).strip()
+        doc_id = str(front_matter.get("doc_id") or "").strip()
+        if not doc_id:
+            raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
         title = str(front_matter.get("title") or source_model.humanize(doc_id or path.stem)).strip() or doc_id
         docs.append(
             source_model.ScopeDoc(

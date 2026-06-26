@@ -96,6 +96,21 @@ def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     assert "Duplicate doc_id 'duplicate'" in message
 
 
+def test_load_scope_docs_rejects_missing_doc_id() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        write_doc(root, "docs-viewer/source/studio", "missing.md", {"title": "Missing"})
+
+        try:
+            source_model.load_scope_docs(root, "studio")
+        except ValueError as error:
+            message = str(error)
+        else:
+            raise AssertionError("missing doc_id should fail")
+
+    assert "missing required doc_id in missing.md" in message
+
+
 def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)

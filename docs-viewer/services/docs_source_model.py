@@ -204,7 +204,9 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
     docs: list[ScopeDoc] = []
     for path in scope_markdown_paths(root, scope):
         front_matter, body = parse_source(path)
-        doc_id = str(front_matter.get("doc_id") or path.stem).strip()
+        doc_id = str(front_matter.get("doc_id") or "").strip()
+        if not doc_id:
+            raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = str(front_matter.get("parent_id") or "").strip()

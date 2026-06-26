@@ -121,6 +121,9 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
     docs = []
     for path in sorted(root.glob("*.md")):
         front_matter, _body = source_model.parse_source(path)
+        doc_id = str(front_matter.get("doc_id") or "").strip()
+        if not doc_id:
+            raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
         docs.append(
             source_model.ScopeDoc(
                 scope=config.scope_id,
@@ -128,7 +131,7 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
                 source_text=path.read_text(encoding="utf-8"),
                 front_matter=dict(front_matter),
                 body="",
-                doc_id=str(front_matter.get("doc_id") or path.stem).strip(),
+                doc_id=doc_id,
                 title=str(front_matter.get("title") or path.stem).strip(),
                 ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
                 parent_id=str(front_matter.get("parent_id") or "").strip(),

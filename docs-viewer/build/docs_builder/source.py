@@ -24,6 +24,10 @@ class FrontMatterSyntaxError(Exception):
     pass
 
 
+class MissingDocIdError(Exception):
+    pass
+
+
 @dataclass(frozen=True)
 class DocRecord:
     scope_id: str
@@ -128,7 +132,9 @@ class SourceLoadingMixin:
             relative_path = path.relative_to(self.source_dir).as_posix()
             front_matter, body_markdown = parse_source(path)
             stem = path.stem
-            doc_id = str(front_matter.get("doc_id") or stem).strip()
+            doc_id = str(front_matter.get("doc_id") or "").strip()
+            if not doc_id:
+                raise MissingDocIdError(f"Missing required doc_id in {relative_path}")
             title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
             parent_id = str(front_matter.get("parent_id") if "parent_id" in front_matter else "").strip()
             date = str(front_matter.get("date") or "").strip()
