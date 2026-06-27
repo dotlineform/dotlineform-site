@@ -47,10 +47,8 @@ SUPPORTED_FIELD_SOURCES = {
     "title",
     "parent_id",
     "parent_title",
-    "ancestor_ids",
-    "ancestor_titles",
-    "child_ids",
-    "child_titles",
+    "ancestors",
+    "children",
     "summary",
     "current_summary",
     "headings",
@@ -874,19 +872,30 @@ def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> An
         parent_id = normalize_text(doc.get("parent_id"))
         parent = context.docs_by_id.get(parent_id)
         return parent.get("title") if parent else ""
-    if source == "ancestor_ids":
-        return [normalize_text(item.get("doc_id")) for item in ancestor_chain(context, doc)]
-    if source == "ancestor_titles":
-        return [normalize_text(item.get("title")) for item in ancestor_chain(context, doc)]
-    if source == "child_ids":
-        return [normalize_text(item.get("doc_id")) for item in context.children_by_parent.get(doc_id, [])]
-    if source == "child_titles":
-        return [normalize_text(item.get("title")) for item in context.children_by_parent.get(doc_id, [])]
+    if source == "ancestors":
+        return related_document_refs(ancestor_chain(context, doc))
+    if source == "children":
+        return related_document_refs(context.children_by_parent.get(doc_id, []))
     if source == "headings":
         return source_metadata.data_sharing_doc_headings(context.source_context, doc_id)
     if source == "source_text":
         return source_metadata.render_data_sharing_doc_html(context.source_context, doc_id)
     raise ValueError(f"Unsupported field source: {source}")
+
+
+def related_document_refs(docs: list[dict[str, Any]]) -> list[dict[str, str]]:
+    refs: list[dict[str, str]] = []
+    for item in docs:
+        ref_id = normalize_text(item.get("doc_id"))
+        if not ref_id:
+            continue
+        refs.append(
+            {
+                "id": ref_id,
+                "title": normalize_text(item.get("title")),
+            }
+        )
+    return refs
 
 
 def set_output_path(record: dict[str, Any], output_path: str, value: Any) -> None:
@@ -1049,7 +1058,9 @@ def resolve_output_path(
 def external_field_type(field: dict[str, Any]) -> str:
     output_path = normalize_text(field.get("output_path"))
     source = normalize_text(field.get("source"))
-    if output_path in {"headings", "ancestor_ids", "ancestor_titles", "child_ids", "child_titles"}:
+    if output_path in {"ancestors", "children"} or source in {"ancestors", "children"}:
+        return "array<object>"
+    if output_path in {"headings"}:
         return "array<string>"
     if source == "viewable" or output_path == "viewable":
         return "boolean"

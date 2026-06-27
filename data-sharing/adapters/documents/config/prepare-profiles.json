@@ -55,10 +55,8 @@
           "title": "Document title.",
           "parent_id": "Current parent document id, if present.",
           "parent_title": "Current parent document title, if present.",
-          "ancestor_ids": "Current ancestor document ids, nearest parent first.",
-          "ancestor_titles": "Current ancestor document titles, nearest parent first.",
-          "child_ids": "Current child document ids.",
-          "child_titles": "Current child document titles.",
+          "ancestors": "Current ancestor documents as id/title objects, ordered from root to nearest parent.",
+          "children": "Current direct child documents as id/title objects.",
           "summary": "Existing document summary.",
           "headings": "Headings extracted from the document."
         }
@@ -85,23 +83,13 @@
           "include_if_empty": true
         },
         {
-          "source": "ancestor_ids",
-          "output_path": "ancestor_ids",
+          "source": "ancestors",
+          "output_path": "ancestors",
           "default": []
         },
         {
-          "source": "ancestor_titles",
-          "output_path": "ancestor_titles",
-          "default": []
-        },
-        {
-          "source": "child_ids",
-          "output_path": "child_ids",
-          "default": []
-        },
-        {
-          "source": "child_titles",
-          "output_path": "child_titles",
+          "source": "children",
+          "output_path": "children",
           "default": []
         },
         {
@@ -171,7 +159,8 @@
           "title": "Document title.",
           "parent_id": "Current parent document id, if present.",
           "headings": "Headings extracted from the document.",
-          "current_summary": "Existing document summary. Empty means a new summary may be needed."
+          "current_summary": "Existing document summary. Empty means a new summary may be needed.",
+          "summary": "Proposed document summary."
         }
       },
       "document_fields": [
@@ -199,6 +188,11 @@
         {
           "source": "current_summary",
           "output_path": "current_summary",
+          "default": ""
+        },
+        {
+          "source": "summary",
+          "output_path": "summary",
           "default": ""
         }
       ],
@@ -250,18 +244,17 @@
         ]
       },
       "external_context": {
-        "task": "review and edit document content",
+        "task": "Review and edit document content",
         "response_guidance": "Return proposed content changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
         "field_descriptions": {
           "doc_id": "Stable document identifier. Preserve exactly in responses.",
           "title": "Document title.",
           "parent_id": "Current parent document id, if present.",
           "parent_title": "Current parent document title, if present.",
-          "ancestor_ids": "Current ancestor document ids, nearest parent first.",
-          "ancestor_titles": "Current ancestor document titles, nearest parent first.",
-          "child_ids": "Current child document ids.",
-          "child_titles": "Current child document titles.",
-          "summary": "Existing document summary.",
+          "ancestors": "Current ancestor documents as id/title objects, ordered from root to nearest parent.",
+          "children": "Current direct child documents as id/title objects.",
+          "current_summary": "Existing document summary. Empty means a new summary may be needed.",
+          "summary": "Proposed document summary.",
           "headings": "Headings extracted from the document.",
           "source_text": "Plain-text document body extracted from source content."
         }
@@ -288,24 +281,19 @@
           "include_if_empty": true
         },
         {
-          "source": "ancestor_ids",
-          "output_path": "ancestor_ids",
+          "source": "ancestors",
+          "output_path": "ancestors",
           "default": []
         },
         {
-          "source": "ancestor_titles",
-          "output_path": "ancestor_titles",
+          "source": "children",
+          "output_path": "children",
           "default": []
         },
         {
-          "source": "child_ids",
-          "output_path": "child_ids",
-          "default": []
-        },
-        {
-          "source": "child_titles",
-          "output_path": "child_titles",
-          "default": []
+          "source": "current_summary",
+          "output_path": "current_summary",
+          "default": ""
         },
         {
           "source": "summary",

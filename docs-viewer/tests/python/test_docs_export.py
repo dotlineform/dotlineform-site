@@ -467,10 +467,8 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     relationship_fields = {
         "parent_id",
         "parent_title",
-        "ancestor_ids",
-        "ancestor_titles",
-        "child_ids",
-        "child_titles",
+        "ancestors",
+        "children",
     }
     assert relationship_fields <= full_fields
     assert "sort_order" not in full_fields
@@ -518,16 +516,12 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     child_row = rows_by_doc_id["child-with-summary"]
     assert library_row["parent_id"] == ""
     assert library_row["parent_title"] == ""
-    assert library_row["ancestor_ids"] == []
-    assert library_row["ancestor_titles"] == []
-    assert library_row["child_ids"] == ["child-with-summary"]
-    assert library_row["child_titles"] == ["Child With Summary"]
+    assert library_row["ancestors"] == []
+    assert library_row["children"] == [{"id": "child-with-summary", "title": "Child With Summary"}]
     assert child_row["parent_id"] == "library"
     assert child_row["parent_title"] == "Library"
-    assert child_row["ancestor_ids"] == ["library"]
-    assert child_row["ancestor_titles"] == ["Library"]
-    assert child_row["child_ids"] == []
-    assert child_row["child_titles"] == []
+    assert child_row["ancestors"] == [{"id": "library", "title": "Library"}]
+    assert child_row["children"] == []
     assert "sort_order" not in library_row
     assert "sort_order" not in child_row
 

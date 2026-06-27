@@ -161,7 +161,7 @@ The package engine is documented in [Documents Package Preparation Script](/docs
 Selection also defines whether the prepare UI cascades parent checkbox changes to descendants by default, and whether the run includes non-viewable docs.
 Current profiles use explicit document selection; Select all in Analytics or `--all` in the CLI remains available when a whole-corpus export is intentional.
 The exporter treats `selection.doc_ids` and repeated CLI `--doc-id` values as the exact document set to export.
-Relationship fields such as `child_ids`, `child_titles`, and ancestors are still derived from source hierarchy metadata and are not filtered by the selected export set.
+Relationship fields such as `children` and `ancestors` are still derived from source hierarchy metadata and are not filtered by the selected export set.
 
 `supports_missing_summary_only` and `default_missing_summary_only` are profile-level flags for summary-focused exports.
 
@@ -177,10 +177,8 @@ Supported source fields include:
 - `title`
 - `parent_id`
 - `parent_title`
-- `ancestor_ids`
-- `ancestor_titles`
-- `child_ids`
-- `child_titles`
+- `ancestors`
+- `children`
 - `summary`
 - `current_summary`
 - `headings`
