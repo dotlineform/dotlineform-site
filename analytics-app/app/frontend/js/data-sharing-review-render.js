@@ -7,17 +7,6 @@ function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function dataDomainLabel(state, dataDomain = state.dataDomain) {
-  const item = (state.dataDomains || []).find((candidate) => candidate.key === dataDomain);
-  if (item && item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
-  return normalizeText(item && item.label) || normalizeText(item && item.fallback) || dataDomain;
-}
-
-function dataDomainTitle(state, dataDomain = state.dataDomain) {
-  const label = dataDomainLabel(state, dataDomain);
-  return label ? label.charAt(0).toUpperCase() + label.slice(1) : dataDomain;
-}
-
 function issueLabel(issue) {
   const code = normalizeText(issue && issue.code);
   const level = normalizeText(issue && issue.level);
@@ -39,115 +28,16 @@ function previewRowId(item, index) {
     || `preview-${index + 1}`;
 }
 
-function recordRowId(record, index) {
-  const recordIndex = Number.isInteger(record && record.record_index) ? record.record_index : index;
-  const docId = normalizeText(record && record.doc_id) || "missing-doc-id";
-  return `${docId}-record-${recordIndex + 1}`;
-}
-
-function previewFilesByRecord(previewFiles) {
-  const byRecordIndex = new Map();
-  const byDocId = new Map();
-  (Array.isArray(previewFiles) ? previewFiles : []).forEach((item, index) => {
-    if (!item || typeof item !== "object") return;
-    const kind = normalizeText(item.kind);
-    if (kind === "relationship_tree") return;
-    const recordIndex = Number.isInteger(item.record_index) ? item.record_index : null;
-    if (recordIndex !== null && !byRecordIndex.has(recordIndex)) byRecordIndex.set(recordIndex, item);
-    const docId = normalizeText(item.doc_id);
-    if (docId && !byDocId.has(docId)) byDocId.set(docId, item);
-  });
-  return { byRecordIndex, byDocId };
-}
-
-function duplicateDocIds(records) {
-  const counts = new Map();
-  records.forEach((record) => {
-    const docId = normalizeText(record && record.doc_id);
-    if (!docId) return;
-    counts.set(docId, Number(counts.get(docId) || 0) + 1);
-  });
-  return new Set(Array.from(counts.entries()).filter(([, count]) => count > 1).map(([docId]) => docId));
-}
-
-function rowMetaParts(state, { docId, duplicate, currentLibrary }) {
-  const parts = [];
-  parts.push(
-    docId
-      || getAnalyticsText(state.config, "data_sharing_review.missing_doc_id", "missing doc_id")
-  );
-  if (duplicate) {
-    parts.push(getAnalyticsText(state.config, "data_sharing_review.duplicate_doc_id", "duplicate doc_id"));
-  }
-  if (currentLibrary && currentLibrary.exists === false) {
-    parts.push(getAnalyticsText(
-      state.config,
-      "data_sharing_review.not_current_data_domain",
-      "not in current {data_domain_label}",
-      { data_domain_label: dataDomainTitle(state) }
-    ));
-  }
-  return parts.filter(Boolean);
-}
-
-function buildDocumentRows(state, payload, previewLookup) {
-  const records = Array.isArray(payload && payload.records) ? payload.records : [];
-  const duplicates = duplicateDocIds(records);
-  return records.map((record, index) => {
-    const recordIndex = Number.isInteger(record && record.record_index) ? record.record_index : index;
-    const docId = normalizeText(record && record.doc_id);
-    const previewFile = previewLookup.byRecordIndex.get(recordIndex) || previewLookup.byDocId.get(docId) || null;
-    const path = normalizeText(previewFile && previewFile.path);
-    const currentLibrary = record && typeof record.current_library === "object" ? record.current_library : null;
-    const duplicate = docId ? duplicates.has(docId) : false;
-    return {
-      id: recordRowId(record, index),
-      type: "document",
-      docId,
-      parentId: normalizeText(record && record.parent_id),
-      recordIndex,
-      duplicate,
-      kind: normalizeText(previewFile && previewFile.kind) || "document",
-      path,
-      title: normalizeText(record && record.title)
-        || getAnalyticsText(state.config, "data_sharing_review.missing_title", "missing title"),
-      meta: rowMetaParts(state, { docId, duplicate, currentLibrary }).join(" \u00b7 "),
-      depth: 0,
-      selectable: true,
-      issues: Array.isArray(record && record.issues) ? record.issues : []
-    };
-  });
-}
-
-function documentRowDepth(row, byDocId, activeDocIds = new Set()) {
-  if (!row || !row.docId || !row.parentId || row.parentId === row.docId) return 0;
-  if (activeDocIds.has(row.docId)) return 0;
-  const parent = byDocId.get(row.parentId);
-  if (!parent) return 0;
-  const nextActive = new Set(activeDocIds);
-  nextActive.add(row.docId);
-  return documentRowDepth(parent, byDocId, nextActive) + 1;
-}
-
-function prepareDocumentRowsForDisplay(rows) {
-  const byDocId = new Map();
-  rows.forEach((row) => {
-    if (row.docId && !byDocId.has(row.docId)) byDocId.set(row.docId, row);
-  });
-  rows.forEach((row) => {
-    row.depth = documentRowDepth(row, byDocId);
-  });
-  return rows;
-}
-
 export function buildDataSharingReviewPreviewRows(state, payload) {
   const genericRows = Array.isArray(payload && payload.review_rows) ? payload.review_rows : [];
-  if (genericRows.length) {
-    return genericRows.map((row, index) => normalizeReviewRow(state, row, index)).filter(Boolean);
-  }
-  const previewLookup = previewFilesByRecord(payload && payload.preview_files);
-  const documentRows = prepareDocumentRowsForDisplay(buildDocumentRows(state, payload, previewLookup));
-  return documentRows;
+  return genericRows
+    .filter((row) => {
+      const rowType = normalizeText(row && row.type);
+      const rowKind = normalizeText(row && row.kind);
+      return rowType !== "relationship_tree" && rowKind !== "relationship_tree";
+    })
+    .map((row, index) => normalizeReviewRow(state, row, index))
+    .filter(Boolean);
 }
 
 function normalizeReviewRow(state, row, index) {

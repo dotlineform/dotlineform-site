@@ -202,38 +202,33 @@ def review_payload() -> dict[str, object]:
             "errors": 0,
         },
         "issues": [],
-        "records": [
+        "review_rows": [
             {
-                "doc_id": "library",
+                "id": "relationship-tree-preview",
+                "type": "relationship_tree",
+                "title": "Relationship tree",
+                "record_index": None,
+                "selectable": False,
+            },
+            {
+                "id": "library-record-1",
+                "type": "document",
                 "title": "Library",
+                "meta": "library",
                 "record_index": 0,
+                "selectable": True,
                 "issues": [],
+                "depth": 0,
             },
             {
-                "doc_id": "alpha",
-                "parent_id": "library",
+                "id": "alpha-record-2",
+                "type": "document",
                 "title": "Alpha",
+                "meta": "alpha",
                 "record_index": 1,
+                "selectable": True,
                 "issues": [],
-            },
-        ],
-        "preview_files": [
-            {
-                "path": "var/analytics/data-sharing/import-preview/library-tree.md",
-                "record_count": 2,
-                "kind": "relationship_tree",
-            },
-            {
-                "path": "var/analytics/data-sharing/import-preview/library.md",
-                "record_index": 0,
-                "doc_id": "library",
-                "kind": "document",
-            },
-            {
-                "path": "var/analytics/data-sharing/import-preview/alpha.md",
-                "record_index": 1,
-                "doc_id": "alpha",
-                "kind": "document",
+                "depth": 1,
             },
         ],
     }
