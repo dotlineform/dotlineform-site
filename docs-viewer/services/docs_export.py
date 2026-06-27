@@ -2,8 +2,8 @@
 """Export Docs Viewer source data through configured prepare profiles.
 
 Run:
-  ./docs-viewer/services/docs_export.py --config-id parent-child-relationships --scope library
-  ./docs-viewer/services/docs_export.py --config-id parent-child-relationships --scope library --write
+  ./docs-viewer/services/docs_export.py --config-id document-content --scope library
+  ./docs-viewer/services/docs_export.py --config-id document-content --scope library --write
 """
 
 from __future__ import annotations
@@ -57,7 +57,7 @@ SUPPORTED_FIELD_SOURCES = {
     "viewable",
 }
 SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
-SUPPORTED_RECORD_SHAPES = {"envelope", "document_rows"}
+SUPPORTED_RECORD_SHAPES = {"document_rows"}
 SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
 SKIPPED_REASON_LABELS = {
     "has_summary": "already have summaries",
@@ -537,11 +537,6 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         errors.append(f"config {config_id}: target.format must be included in target.supported_formats")
     if record_shape not in SUPPORTED_RECORD_SHAPES:
         errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
-    if record_shape == "envelope":
-        document_array_path = normalize_text(target.get("document_array_path") or "records")
-        if not OUTPUT_PATH_RE.match(document_array_path):
-            errors.append(f"config {config_id}: target.document_array_path is not a supported output path")
-
     output = config.get("output") if isinstance(config.get("output"), dict) else {}
     path_pattern = normalize_text(output.get("path_pattern"))
     if not path_pattern:
@@ -1079,7 +1074,6 @@ def external_field_type(field: dict[str, Any]) -> str:
 def build_external_context(config: dict[str, Any], target_format: str) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     record_shape = normalize_text(target.get("record_shape"))
-    document_array_path = normalize_text(target.get("document_array_path") or "records")
     external_context = config.get("external_context") if isinstance(config.get("external_context"), dict) else {}
     field_descriptions = (
         external_context.get("field_descriptions")
@@ -1089,9 +1083,6 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
     if target_format == "jsonl":
         record_container = "JSONL header row followed by one JSON object per line"
         records_path = ""
-    elif record_shape == "envelope":
-        record_container = "JSON object containing a records array"
-        records_path = document_array_path
     else:
         record_container = "JSON object containing a records array"
         records_path = "records"
@@ -1136,14 +1127,6 @@ def build_export_payload(
 ) -> dict[str, Any] | list[dict[str, Any]]:
     target = context.config.get("target", {})
     record_shape = normalize_text(target.get("record_shape"))
-    if record_shape == "envelope":
-        payload: dict[str, Any] = {
-            "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
-            "export_id": export_id,
-        }
-        document_array_path = normalize_text(target.get("document_array_path") or "records")
-        set_output_path(payload, document_array_path, records)
-        return payload
     if record_shape == "document_rows":
         if target_format == "json":
             return {

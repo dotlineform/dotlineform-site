@@ -104,11 +104,11 @@ def config_payload() -> dict[str, object]:
                         "selection_model": "documents",
                         "sharing_profiles": [
                             {
-                                "id": "parent-child-relationships",
-                                "label": "Parent-child relationships",
+                                "id": "document-content",
+                                "label": "Document content",
                                 "enabled": True,
                                 "data_domains": ["documents"],
-                                "target": {"format": "json", "supported_formats": ["json"]},
+                                "target": {"format": "jsonl", "supported_formats": ["jsonl", "json"]},
                                 "selection": {
                                     "mode": "explicit_doc_ids",
                                     "include_descendants": True,
@@ -140,7 +140,7 @@ def config_payload() -> dict[str, object]:
 def prepare_payload() -> dict[str, object]:
     return {
         "ok": True,
-        "target_format": "json",
+        "target_format": "jsonl",
         "count_unit": "document",
         "counts": {
             "selected": 2,
@@ -150,7 +150,7 @@ def prepare_payload() -> dict[str, object]:
             "truncated": 0,
         },
         "output_files": [
-            "var/analytics/data-sharing/exports/local-smoke.json",
+            "var/analytics/data-sharing/exports/local-smoke.jsonl",
         ],
         "warnings": [],
         "summary_text": "Package prepared.",
@@ -190,9 +190,9 @@ def review_payload() -> dict[str, object]:
     return {
         "ok": True,
         "scope": "library",
-        "summary_text": "Generated 2 Library returned package review files.",
-        "detected_import_type": "parent_child_relationships",
-        "source_export_id": "parent-child-relationships",
+        "summary_text": "Generated Library returned package review.",
+        "detected_import_type": "document_changes",
+        "source_export_id": "ds_20260504T120000Z",
         "generated_at": "2026-05-04T12:05:00Z",
         "counts": {
             "records": 2,
@@ -334,7 +334,7 @@ def assert_prepare(page, base_url: str) -> None:
         raise AssertionError(f"prepare app select should start on the only available app: {app_initial!r}")
     page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
     page.locator("#dataSharingPrepareDataDomainSelect").select_option("documents")
-    page.locator("#dataSharingPrepareConfigSelect").select_option("parent-child-relationships")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("document-content")
     if page.locator("#dataSharingPrepareDocsScopeSelect").evaluate("select => select.value") != "":
         raise AssertionError("prepare docs scope select should start blank")
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")

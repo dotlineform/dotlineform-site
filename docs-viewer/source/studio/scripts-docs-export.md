@@ -84,7 +84,6 @@ Implemented now:
 - omits code blocks when the selected field mapping includes `omit_code_blocks`
 - truncates `source_text` when the selected field mapping includes `truncate_chars`
 - handles image/SVG text according to field-level extraction options
-- writes JSON envelope exports with top-level `schema_version` and `export_id`
 - writes JSONL document-row exports with a first-line `data_sharing_header` record containing `export_id`
 - writes JSON document-row overrides as objects containing top-level `schema_version`, `export_id`, and `records`
 - writes internal `.meta.json` files under `var/analytics/data-sharing/meta/` and external `.context.json` sidecars
@@ -109,30 +108,6 @@ Image handling:
 - `empty_image_mode: "omit"` omits empty images
 
 ## Commands
-
-Dry-run the parent-child relationships export:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library
-```
-
-Repeated `--doc-id` values export multiple explicit documents:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library --doc-id child-doc
-```
-
-Write the parent-child relationships export:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --doc-id library --write
-```
-
-Use all matching docs for whole-corpus relationship review:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id parent-child-relationships --all
-```
 
 Prepare explicit documents for profiles that require selected ids:
 

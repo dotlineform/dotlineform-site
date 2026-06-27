@@ -48,10 +48,8 @@ Any new field source, transform, output format, or record shape needs export-eng
 
 ## Current Profiles
 
-The current file defines two enabled document package profiles:
+The current file defines one enabled document package profile:
 
-- `parent-child-relationships`
-  envelope JSON for explicitly selected or whole-corpus hierarchy and relationship review
 - `document-content`
   JSONL document rows for exporting multiple selected document bodies in one file, including current/proposed summary fields and explicitly declared parent, ancestor, and child relationship metadata
 
@@ -94,11 +92,8 @@ When omitted, the default `target.format` is the only supported format.
 
 `target.record_shape` supports:
 
-- `envelope`: one JSON object containing a `records` array
 - `document_rows`: one complete document record per JSONL row after the required header row, or one JSON object with a `records` array when `json` is selected
 
-When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `records`.
-Envelope profiles support JSON only.
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
 Export-run metadata is written once to an internal metadata file under `var/analytics/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
 External packages carry an `export_id` that review uses to find that metadata after the returned file is staged.

@@ -449,7 +449,6 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     configs = payload["configs"]
     config_ids = [config["id"] for config in configs]
     assert config_ids == [
-        "parent-child-relationships",
         "document-content",
     ]
     for config in configs:
@@ -473,9 +472,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert relationship_fields <= full_fields
     assert "sort_order" not in full_fields
 
-    relationship_config = docs_export.find_export_config(payload, "parent-child-relationships")
     full_config = docs_export.find_export_config(payload, "document-content")
-    assert docs_export.supported_target_formats(relationship_config) == ["json"]
     assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
 
 
@@ -580,70 +577,8 @@ def test_missing_source_metadata_returns_structured_export_error() -> None:
     assert "source metadata: missing source root for scope library: docs-viewer/source/missing-library" in report["errors"]
 
 
-def test_repo_parent_child_relationships_respects_selected_docs() -> None:
-    report = docs_export.build_export(
-        repo_root=REPO_ROOT,
-        config_id="parent-child-relationships",
-        scope="library",
-        selected_doc_ids=["can-the-brain-comprehend-how-it-works"],
-        select_all=False,
-        missing_summary_only=None,
-        write=False,
-    )
-    assert report["ok"] is True, report
-    assert report["selected_doc_ids"] == ["can-the-brain-comprehend-how-it-works"]
-    assert report["exported_doc_ids"] == ["can-the-brain-comprehend-how-it-works"]
-    assert report["counts"]["exported"] == 1
-
-
-def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
-    config = docs_export.load_config_file(REPO_ROOT)
-    fixed_generated_at = "2026-05-04T12:00:00Z"
-    fixed_filename_dt = dt.datetime(2026, 5, 4, 13, 0, 0, tzinfo=dt.timezone(dt.timedelta(hours=1)))
-    original_export_run_times = docs_export.export_run_times
-    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
-    try:
-        with make_repo(copy.deepcopy(config)) as temp:
-            root = Path(temp)
-            report = docs_export.build_export(
-                repo_root=root,
-                config_id="parent-child-relationships",
-                scope="library",
-                selected_doc_ids=["library", "child-with-summary"],
-                select_all=False,
-                missing_summary_only=None,
-                write=True,
-            )
-            payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
-            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
-            context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
-    finally:
-        docs_export.export_run_times = original_export_run_times
-
-    assert report["ok"] is True, report
-    assert sorted(payload.keys()) == ["export_id", "records", "schema_version"]
-    assert payload["schema_version"] == "data_sharing_returned_package_v1"
-    assert payload["export_id"] == "ds_20260504T120000Z"
-    assert [row["doc_id"] for row in payload["records"]] == ["library", "child-with-summary"]
-    assert "last_updated" not in payload["records"][0]
-    assert metadata["export_id"] == "ds_20260504T120000Z"
-    assert metadata["generated_at"] == fixed_generated_at
-    assert metadata["scope"] == "library"
-    assert metadata["counts"]["exported"] == 2
-    assert context["task"] == "review parent-child relationships"
-    assert context["records_path"] == "records"
-    assert "counts" not in context
-
-
 def test_repo_representative_library_exports_dry_run_successfully() -> None:
     cases = [
-        {
-            "config_id": "parent-child-relationships",
-            "selected_doc_ids": ["library"],
-            "select_all": False,
-            "missing_summary_only": None,
-            "target_format": "json",
-        },
         {
             "config_id": "document-content",
             "selected_doc_ids": ["can-the-brain-comprehend-how-it-works"],
@@ -696,8 +631,6 @@ def main() -> None:
         test_repo_full_document_content_exports_relationship_fields,
         test_export_uses_source_metadata_for_document_content,
         test_missing_source_metadata_returns_structured_export_error,
-        test_repo_parent_child_relationships_respects_selected_docs,
-        test_envelope_json_export_writes_clean_payload_and_sidecars,
         test_repo_representative_library_exports_dry_run_successfully,
     ]
     for test in tests:

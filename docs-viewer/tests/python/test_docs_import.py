@@ -283,34 +283,6 @@ def test_jsonl_header_export_id_loads_internal_profile_metadata() -> None:
     assert report["source_metadata_file"] == f"var/analytics/data-sharing/meta/{export_id}.meta.json"
 
 
-def test_relationship_profile_is_selected_only_by_metadata() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        export_id = "ds_20260627T120002Z"
-        write_internal_meta(root, export_id, "parent-child-relationships")
-        write_staged(
-            root,
-            "relationships.json",
-            {
-                "export_id": export_id,
-                "records": [
-                    {
-                        "doc_id": "library",
-                        "title": "Library",
-                        "children": [{"id": "alpha", "title": "Alpha"}],
-                    }
-                ]
-            },
-        )
-        report = parse(root, "relationships.json")
-
-    assert report["ok"] is True
-    assert report["detected_import_type"] == "parent_child_relationships"
-    assert report["source_export_id"] == export_id
-    assert report["source_profile_id"] == "parent-child-relationships"
-    assert report["records"][0]["relationships"]["children"] == [{"id": "alpha", "title": "Alpha"}]
-
-
 def test_unsupported_profile_metadata_fails_closed() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -368,7 +340,6 @@ def main() -> None:
         test_config_id_is_not_a_profile_id_fallback,
         test_document_content_profile_is_sparse_document_changes,
         test_jsonl_header_export_id_loads_internal_profile_metadata,
-        test_relationship_profile_is_selected_only_by_metadata,
         test_unsupported_profile_metadata_fails_closed,
         test_invalid_jsonl_is_a_file_level_blocker,
         test_parser_rejects_paths_outside_staging_root,

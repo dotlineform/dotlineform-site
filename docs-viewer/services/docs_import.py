@@ -26,7 +26,6 @@ TEXT_WHITESPACE_RE = re.compile(r"\s+")
 EXPORT_ID_RE = re.compile(r"^ds_\d{8}T\d{6}Z$")
 
 PROFILE_ID_TO_IMPORT_TYPE = {
-    "parent-child-relationships": "parent_child_relationships",
     "document-content": "document_changes",
 }
 EXPORT_METADATA_FIELDS = {

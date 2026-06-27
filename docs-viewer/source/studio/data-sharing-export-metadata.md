@@ -114,7 +114,7 @@ The documents adapter treats `profile_id` as the same value as `config_id` until
 | `profile_id` | Workflow profile identity for review UI and future profile-specific behavior. | For documents, currently the same value as `config_id`. If config and UI profile concepts diverge later, this records the user-facing profile id. |
 | `scope` | Source Docs Viewer scope used during prepare. | Required for documents, for example `library`. Corresponds to `selection.docs_scope` and a configured scope in `docs-viewer/config/scopes/docs_scopes.json`. |
 | `target_format` | File format written by prepare and expected by review. | `json` or `jsonl`. Must match the selected profile's supported target format and the staged file extension. |
-| `record_shape` | Structural shape of the external records inside the package. | `envelope` for a JSON object containing a `records` array, or `document_rows` for JSONL rows / JSON `records` arrays. |
+| `record_shape` | Structural shape of the external records inside the package. | `document_rows` for JSONL rows or JSON `records` arrays. |
 | `generated_at` | UTC timestamp for the prepare run. | `YYYY-MM-DDTHH:MM:SSZ`. This is the source of `export_id` and should not be edited. |
 | `config_checksum` | Optional integrity/provenance value for the prepare profile used at export time. | Present when included by the profile metadata settings. Hashes the profile config so later review can detect profile drift if needed. |
 | `selected_doc_ids` | Optional provenance list of documents selected for export. | Ordered normalized document ids after selection resolution. Useful for audit, not for routing. |
@@ -125,22 +125,7 @@ The documents adapter treats `profile_id` as the same value as `config_id` until
 
 External package payloads must include `export_id` and must not include internal metadata fields such as app, domain, adapter id, source scope, generated counts, source timestamps, or checksums.
 
-JSON envelope packages use a top-level `export_id`:
-
-```json
-{
-  "schema_version": "data_sharing_returned_package_v1",
-  "export_id": "ds_20260627T173012Z",
-  "records": [
-    {
-      "doc_id": "library",
-      "title": "Library"
-    }
-  ]
-}
-```
-
-JSON document-row packages that would otherwise be a bare array also use an identity envelope:
+JSON document-row packages use a top-level `export_id`:
 
 ```json
 {
@@ -176,7 +161,7 @@ var/analytics/data-sharing/import-staging/
 It ignores context files such as `.context.json`.
 When a user selects a staged file, review reads only enough of the file to extract `export_id`:
 
-- JSON envelope: read top-level `export_id`
+- JSON: read top-level `export_id`
 - JSONL: read line 1 and require `record_type: "data_sharing_header"`
 
 If `export_id` is missing or invalid, the staged file is invalid.

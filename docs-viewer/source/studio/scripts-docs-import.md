@@ -66,10 +66,10 @@ Parse a staged Library content package:
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-content.jsonl
 ```
 
-Parse a staged Library relationships package and omit normalized records from the printed report:
+Parse a staged Library document-content JSON package and omit normalized records from the printed report:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file parent-child-relationships.json --no-records
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-content.json --no-records
 ```
 
 ## Report Shape
@@ -148,7 +148,7 @@ Focused parser checks live in:
 docs-viewer/tests/python/test_docs_import.py
 ```
 
-They cover JSONL rows, JSON envelopes, package metadata sidecars, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, relationship whole-tree review output for relationship and non-relationship packages, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
+They cover JSONL rows, JSON packages with `records` arrays, package metadata sidecars, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
 Service handler checks live in:
 
 ```bash

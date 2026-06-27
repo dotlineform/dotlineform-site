@@ -290,8 +290,7 @@ def write_prepare_profiles(root: Path) -> None:
                     "target": {
                         "format": "json",
                         "supported_formats": ["json"],
-                        "record_shape": "envelope",
-                        "document_array_path": "records",
+                        "record_shape": "document_rows",
                     },
                     "output": {
                         "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",

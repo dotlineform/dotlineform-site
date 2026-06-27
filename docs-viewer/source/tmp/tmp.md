@@ -6,13 +6,11 @@ last_updated: 2026-06-26
 ---
 
 
-we have just implemented on `/analytics/data-sharing/review/` the shared component described in [Selectable List Component](/docs/?scope=studio&doc=ui-selectable-list-component)
-now we need to replace the old list in `/analytics/data-sharing/review/` with this component to display documents in the staged json file (done by clicking the 'Review' button).
+
+we are refining the behaviour of `/analytics/data-sharing/review/`.
 
 
-
-
-
+ we need to produce a tree json export but it doesn't need the review workflow, because it is just a one-way export.
 
 ---
 
