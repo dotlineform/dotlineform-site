@@ -17,9 +17,7 @@ import {
   createAnalyticsModalHost
 } from "./analytics-modal.js";
 import {
-  clearDataSharingPrepareResultModal,
-  showDataSharingPrepareContextModal,
-  showDataSharingPrepareResultModal
+  showDataSharingPrepareContextModal
 } from "./data-sharing-prepare-modals.js";
 import {
   dataSharingAppsForDomains,
@@ -485,10 +483,6 @@ function updateContextButton(state) {
     );
 }
 
-function resetResult(state) {
-  clearDataSharingPrepareResultModal(state);
-}
-
 async function runPreparePackage(state) {
   if (!state.serviceAvailable || state.isRunning) return;
   if (!selectedDropdownsComplete(state)) {
@@ -513,7 +507,6 @@ async function runPreparePackage(state) {
     return;
   }
 
-  resetResult(state);
   state.isRunning = true;
   state.runButton.disabled = true;
   updateContextButton(state);
@@ -522,7 +515,6 @@ async function runPreparePackage(state) {
 
   try {
     const result = await runDataSharingPreparePackage(state, submission.request);
-    showDataSharingPrepareResultModal(state, result.payload, result.failed);
     if (result.failed) {
       setStatus(state.statusNode, result.statusState, result.statusMessage);
     } else {

@@ -47,20 +47,7 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     selection_required: "Select at least one record.",
     status_running: "Preparing share package...",
     status_success: "Package prepared.",
-    status_failed: "Package preparation failed.",
-    result_title: "Package result",
-    result_title_failed: "Package preparation failed",
-    result_close: "Close",
-    result_format_label: "format",
-    result_files_label: "files created",
-    result_files_empty: "No files created.",
-    count_selected: "selected",
-    count_exported: "packaged",
-    count_skipped: "skipped",
-    count_failed: "failed",
-    count_truncated: "truncated",
-    warnings_heading: "Warnings",
-    issues_heading: "Issues"
+    status_failed: "Package preparation failed."
   },
   data_sharing_review: {
     app_label: "app",
@@ -106,19 +93,7 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     apply_cancelled: "Apply cancelled.",
     apply_confirm_title: "Apply returned changes?",
     apply_confirm_ok: "OK",
-    apply_confirm_cancel: "Cancel",
-    apply_result_title: "Apply complete",
-    result_title: "Returned package review",
-    result_title_failed: "Returned package review failed",
-    result_close_button: "Close",
-    result_button: "results",
-    count_records: "records",
-    count_parsed: "parsed",
-    count_malformed: "malformed",
-    count_skipped: "skipped",
-    count_warnings: "warnings",
-    count_errors: "errors",
-    issues_heading: "Issues"
+    apply_confirm_cancel: "Cancel"
   },
   series_tag_editor: {
     missing_series_id_error: "Tag editor error: missing series id.",

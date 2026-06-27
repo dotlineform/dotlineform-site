@@ -5,8 +5,7 @@ import {
   postJson
 } from "./analytics-transport.js";
 import {
-  confirmDataSharingReviewApply,
-  showDataSharingReviewResultModal
+  confirmDataSharingReviewApply
 } from "./data-sharing-review-modals.js";
 import {
   selectedDataSharingReviewRecordIndices
@@ -26,63 +25,10 @@ function setStatus(node, state, message) {
   }
 }
 
-function hideResultButton(state) {
-  if (!state || !state.resultButton) return;
-  state.resultButton.hidden = true;
-}
-
 function selectedFileName(state) {
   const filename = normalizeText(state.fileSelect && state.fileSelect.value);
   const file = (state.files || []).find((item) => normalizeText(item.filename) === filename) || null;
   return normalizeText(file && file.filename);
-}
-
-function applyIssues(payload, fallbackPrefix) {
-  const errors = Array.isArray(payload && payload.errors) ? payload.errors : [];
-  const warnings = Array.isArray(payload && payload.warnings) ? payload.warnings : [];
-  const skipped = Array.isArray(payload && payload.skipped) ? payload.skipped : [];
-  return [
-    ...errors.map((item) => ({
-      level: "error",
-      code: item.reason || item.code || "error",
-      doc_id: item.doc_id,
-      message: item.message || item.reason || `${fallbackPrefix} error`
-    })),
-    ...warnings.map((item) => ({
-      level: item.level || "warning",
-      code: item.reason || item.code || "warning",
-      doc_id: item.doc_id,
-      message: item.message || item.reason || `${fallbackPrefix} warning`
-    })),
-    ...skipped.map((item) => ({
-      level: "warning",
-      code: item.reason || "skipped",
-      doc_id: item.doc_id,
-      message: item.message || "selected row skipped"
-    }))
-  ];
-}
-
-function countValue(counts, row) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  const key = normalizeText(row && row.key);
-  if (!key) return "";
-  const fallbackKey = normalizeText(row && row.fallback_key);
-  return Number(safeCounts[key] || (fallbackKey ? safeCounts[fallbackKey] : 0) || 0);
-}
-
-function actionCountRows(action, counts) {
-  if (!action.countRows.length) {
-    const safeCounts = counts && typeof counts === "object" ? counts : {};
-    return Object.keys(safeCounts).map((key) => ({
-      label: key.replace(/_/g, " "),
-      value: Number(safeCounts[key] || 0)
-    }));
-  }
-  return action.countRows.map((row) => ({
-    label: normalizeText(row && row.label) || normalizeText(row && row.key),
-    value: countValue(counts, row)
-  })).filter((row) => row.label);
 }
 
 function actionCountsText(action, counts) {
@@ -96,19 +42,6 @@ function actionChangeCount(action, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   const key = action.noChangeCountKey || (action.countRows[0] && normalizeText(action.countRows[0].key)) || "updates";
   return Number(safeCounts[key] || 0);
-}
-
-function renderApplyActionResult(state, action, payload) {
-  const countsValue = actionCountsText(action, payload && payload.counts);
-  const summary = normalizeText(payload && payload.summary_text);
-  showDataSharingReviewResultModal(state, {
-    title: action.resultTitle || getAnalyticsText(state.config, "data_sharing_review.apply_result_title", "Apply complete"),
-    summary: `${summary} ${countsValue}`.trim(),
-    countRows: actionCountRows(action, payload && payload.counts),
-    issues: applyIssues(payload || {}, action.id)
-  }, {
-    restoreFocus: state.actionMenuButton
-  });
 }
 
 function actionActivityContext(state, action, stagedFilename) {
@@ -130,7 +63,6 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
   if (!state.serviceAvailable || state.isRunning) return;
   const action = state.applyActions.find((item) => item.id === actionId);
   if (!action || action.status !== "active") return;
-  hideResultButton(state);
   const stagedFilename = selectedFileName(state);
   const recordIndices = selectedDataSharingReviewRecordIndices(state);
   if (!stagedFilename || !recordIndices.length) {
@@ -163,7 +95,6 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
     const countsTextValue = actionCountsText(action, preflight.counts);
     if (!preflight.ok || actionChangeCount(action, preflight.counts) < 1) {
       setStatus(state.statusNode, preflight.ok ? "warn" : "error", preflight.summary_text || countsTextValue);
-      renderApplyActionResult(state, action, preflight);
       return;
     }
 
@@ -191,7 +122,6 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
       confirm: true,
       activity_context: actionActivityContext(state, action, stagedFilename)
     });
-    renderApplyActionResult(state, action, applied);
     setStatus(
       state.statusNode,
       "success",
@@ -201,7 +131,6 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
     const payload = error && error.payload ? error.payload : {};
     const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
       || action.failedStatus || getAnalyticsText(state.config, "data_sharing_review.apply_failed", "Apply failed.");
-    renderApplyActionResult(state, action, { ...payload, summary_text: message });
     setStatus(state.statusNode, "error", message);
   } finally {
     state.isRunning = false;

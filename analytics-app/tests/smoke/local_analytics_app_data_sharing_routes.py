@@ -379,7 +379,6 @@ def assert_review(page, base_url: str) -> None:
     expect(review_list.locator("[data-selectable-list-row='true']")).to_have_count(2, timeout=10_000)
     expect(review_list).to_contain_text("Library", timeout=10_000)
     expect(review_list).to_contain_text("Alpha", timeout=10_000)
-    page.locator("button[data-role='modal-cancel']").click()
     page.locator("#dataSharingReviewSelectAll").click()
     expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 previews selected.", timeout=10_000)
 

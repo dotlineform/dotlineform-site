@@ -201,17 +201,6 @@ export function resetDataSharingReviewResult(state) {
   updateDataSharingReviewSelectionState(state);
 }
 
-export function hideDataSharingReviewResultButton(state) {
-  if (!state || !state.resultButton) return;
-  state.resultButton.hidden = true;
-}
-
-export function maybeShowDataSharingReviewResultButton(state, summary) {
-  if (!state || !state.resultButton || !state.lastImportResult) return;
-  const currentSummary = normalizeDataSharingReviewText(summary);
-  state.resultButton.hidden = !currentSummary || currentSummary !== state.lastImportResult.summary;
-}
-
 export function updateDataSharingReviewSelectionState(state) {
   updateDataSharingReviewSelectionSummary(state);
   syncDataSharingReviewApplyActionState(state);

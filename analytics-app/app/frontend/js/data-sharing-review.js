@@ -11,9 +11,6 @@ import {
   setAnalyticsRouteBusy,
   setAnalyticsRouteReady
 } from "./analytics-route-state.js";
-import {
-  showDataSharingReviewResultModal
-} from "./data-sharing-review-modals.js";
 import { runDataSharingReviewApplyAction } from "./data-sharing-review-apply.js";
 import {
   buildDataSharingReviewPreviewRows,
@@ -32,8 +29,6 @@ import {
   dataSharingReviewDataDomainLabel,
   escapeDataSharingReviewHtml,
   hideDataSharingReviewApplyActionsMenu,
-  hideDataSharingReviewResultButton,
-  maybeShowDataSharingReviewResultButton,
   normalizeDataSharingReviewText,
   renderDataSharingReviewApplyActions,
   resetDataSharingReviewResult,
@@ -98,49 +93,11 @@ function markRouteReady(state, ready) {
   setAnalyticsRouteReady(state.root, ready, routeStateDetail(state));
 }
 
-function previewCountRows(state, counts) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  return [
-    {
-      label: getAnalyticsText(state.config, "data_sharing_review.count_records", "records"),
-      value: Number(safeCounts.records || 0)
-    },
-    {
-      label: getAnalyticsText(state.config, "data_sharing_review.count_parsed", "parsed"),
-      value: Number(safeCounts.parsed_records || 0)
-    },
-    {
-      label: getAnalyticsText(state.config, "data_sharing_review.count_malformed", "malformed"),
-      value: Number(safeCounts.malformed_records || 0)
-    },
-    {
-      label: getAnalyticsText(state.config, "data_sharing_review.count_warnings", "warnings"),
-      value: Number(safeCounts.warnings || 0)
-    },
-    {
-      label: getAnalyticsText(state.config, "data_sharing_review.count_errors", "errors"),
-      value: Number(safeCounts.errors || 0)
-    }
-  ];
-}
-
 function renderResult(state, payload, failed = false) {
-  const result = {
-    title: getAnalyticsText(
-      state.config,
-      failed ? "data_sharing_review.result_title_failed" : "data_sharing_review.result_title",
-      failed ? "Returned package review failed" : "Returned package review"
-    ),
-    summary: normalizeText(payload.summary_text || ""),
-    countRows: previewCountRows(state, payload.counts),
-    issues: payload.issues
-  };
   state.previewRows = failed ? [] : buildDataSharingReviewPreviewRows(state, payload);
   state.selectedPreviewIds.clear();
   renderDataSharingReviewPreviewList(state);
   updateDataSharingReviewSelectionState(state);
-  state.lastImportResult = failed ? null : result;
-  showDataSharingReviewResultModal(state, result, { restoreFocus: state.previewButton });
 }
 
 async function loadImportFiles() {
@@ -224,7 +181,6 @@ async function runPreview(state) {
   if (!state.serviceAvailable || state.isRunning) return;
   const file = selectedDataSharingReviewFile(state);
   if (!file) {
-    hideDataSharingReviewResultButton(state);
     setStatus(
       state.statusNode,
       "error",
@@ -233,7 +189,6 @@ async function runPreview(state) {
     return;
   }
   if (!state.dataDomain) {
-    hideDataSharingReviewResultButton(state);
     setStatus(
       state.statusNode,
       "error",
@@ -243,7 +198,6 @@ async function runPreview(state) {
   }
 
   resetDataSharingReviewResult(state);
-  hideDataSharingReviewResultButton(state);
   state.isRunning = true;
   setDataSharingReviewControlsDisabled(state, true);
   syncRouteBusyState(state);
@@ -267,11 +221,9 @@ async function runPreview(state) {
       "success",
       successMessage
     );
-    maybeShowDataSharingReviewResultButton(state, successMessage);
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
     renderResult(state, payload, true);
-    hideDataSharingReviewResultButton(state);
     setStatus(
       state.statusNode,
       "error",
@@ -315,7 +267,6 @@ async function init() {
     actionMenuButton: document.getElementById("dataSharingReviewActionsButton"),
     applyActionMenu: document.getElementById("dataSharingReviewActionsMenu"),
     statusNode: document.getElementById("dataSharingReviewStatus"),
-    resultButton: document.getElementById("dataSharingReviewResults"),
     selectionSummary: document.getElementById("dataSharingReviewSelectionSummary"),
     selectAllButton: document.getElementById("dataSharingReviewSelectAll"),
     clearButton: document.getElementById("dataSharingReviewClear"),
@@ -326,7 +277,6 @@ async function init() {
     selectedPreviewIds: new Set(),
     selectableList: null,
     onPreviewSelectionChange: null,
-    lastImportResult: null,
     serviceAvailable: false,
     isRunning: false
   };
@@ -348,7 +298,6 @@ async function init() {
     state.actionMenuButton,
     state.applyActionMenu,
     state.statusNode,
-    state.resultButton,
     state.selectionSummary,
     state.selectAllButton,
     state.clearButton,
@@ -372,7 +321,6 @@ async function init() {
     setText(state.fileLabelNode, getAnalyticsText(state.config, "data_sharing_review.file_label", "staged file"));
     setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review package"));
     setText(state.actionMenuButton, getAnalyticsText(state.config, "data_sharing_review.actions_button", "Actions"));
-    setText(state.resultButton, getAnalyticsText(state.config, "data_sharing_review.result_button", "results"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
     setFilePickerVisible(state, false);
@@ -435,8 +383,6 @@ async function init() {
 
     state.fileSelect.addEventListener("change", () => {
       resetDataSharingReviewResult(state);
-      state.lastImportResult = null;
-      hideDataSharingReviewResultButton(state);
       syncSelectedFileMetadata(state);
       setDataSharingReviewControlsDisabled(state, false);
       const status = selectedFileIdleStatus(state);
@@ -459,9 +405,6 @@ async function init() {
     });
     window.addEventListener("scroll", () => hideDataSharingReviewApplyActionsMenu(state), { passive: true });
     window.addEventListener("resize", () => hideDataSharingReviewApplyActionsMenu(state));
-    state.resultButton.addEventListener("click", () => {
-      if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult, { restoreFocus: state.resultButton });
-    });
     state.applyActionContainer.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;
       if (!(target instanceof HTMLButtonElement)) return;
