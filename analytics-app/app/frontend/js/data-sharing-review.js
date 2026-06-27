@@ -152,6 +152,11 @@ function resolvedMetadataValue(value) {
   return normalizeText(value) || "unresolved";
 }
 
+function setFilePickerVisible(state, visible) {
+  if (!state.filePickerNode) return;
+  state.filePickerNode.hidden = !visible;
+}
+
 function selectedFileIdleStatus(state) {
   const file = selectedDataSharingReviewFile(state);
   if (file && !file.metadata_ok) {
@@ -177,6 +182,22 @@ function selectedFileIdleStatus(state) {
 
 function syncSelectedFileMetadata(state) {
   const file = selectedDataSharingReviewFile(state);
+  if (!file) {
+    state.app = "";
+    state.dataDomain = "";
+    state.docsScope = "";
+    state.applyCapability = null;
+    state.applyActions = [];
+    renderDataSharingReviewApplyActions(state);
+    if (state.resolvedContextNode) state.resolvedContextNode.hidden = true;
+    setText(state.appValueNode, "");
+    setText(state.dataDomainValueNode, "");
+    setText(state.scopeValueNode, "");
+    if (state.scopeRow) state.scopeRow.hidden = true;
+    syncRouteBusyState(state);
+    return;
+  }
+
   state.app = normalizeText(file && file.app).toLowerCase();
   state.dataDomain = normalizeText(file && file.data_domain).toLowerCase();
   state.docsScope = normalizeText(file && file.scope).toLowerCase();
@@ -187,12 +208,14 @@ function syncSelectedFileMetadata(state) {
     .filter((action) => action.status === "active");
   renderDataSharingReviewApplyActions(state);
 
+  if (state.resolvedContextNode) state.resolvedContextNode.hidden = false;
   setText(state.appValueNode, state.app ? dataSharingReviewAppLabel(state, state.app) : "unresolved");
   setText(state.dataDomainValueNode, state.dataDomain ? dataSharingReviewDataDomainLabel(state, state.dataDomain) : "unresolved");
   if (state.scopeRow) {
     const showScope = state.dataDomain === "documents";
     state.scopeRow.hidden = !showScope;
     if (showScope) setText(state.scopeValueNode, resolvedMetadataValue(state.docsScope));
+    if (!showScope) setText(state.scopeValueNode, "");
   }
   syncRouteBusyState(state);
 }
@@ -285,6 +308,8 @@ async function init() {
     scopeRow: document.getElementById("dataSharingReviewScopeRow"),
     fileLabelNode: document.getElementById("dataSharingReviewFileLabel"),
     fileSelect: document.getElementById("dataSharingReviewFileSelect"),
+    filePickerNode: null,
+    resolvedContextNode: document.getElementById("dataSharingReviewResolvedContext"),
     previewButton: document.getElementById("dataSharingReviewRun"),
     applyActionContainer: document.getElementById("dataSharingReviewApplyActions"),
     actionMenuButton: document.getElementById("dataSharingReviewActionsButton"),
@@ -305,6 +330,9 @@ async function init() {
     serviceAvailable: false,
     isRunning: false
   };
+  state.filePickerNode = state.fileSelect
+    ? state.fileSelect.closest(".dataSharingReviewPage__dropdownGroup")
+    : null;
   state.onPreviewSelectionChange = () => updateDataSharingReviewSelectionState(state);
 
   const requiredNodes = [
@@ -314,6 +342,7 @@ async function init() {
     state.scopeRow,
     state.fileLabelNode,
     state.fileSelect,
+    state.resolvedContextNode,
     state.previewButton,
     state.applyActionContainer,
     state.actionMenuButton,
@@ -346,6 +375,8 @@ async function init() {
     setText(state.resultButton, getAnalyticsText(state.config, "data_sharing_review.result_button", "results"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
+    setFilePickerVisible(state, false);
+    syncSelectedFileMetadata(state);
     renderDataSharingReviewPreviewList(state);
     updateDataSharingReviewSelectionState(state);
     setDataSharingReviewControlsDisabled(state, true);
@@ -370,6 +401,9 @@ async function init() {
 
     state.files = await loadImportFiles();
     if (!state.files.length) {
+      state.fileSelect.innerHTML = "";
+      setFilePickerVisible(state, false);
+      syncSelectedFileMetadata(state);
       setDataSharingReviewControlsDisabled(state, true);
       setStatus(
         state.statusNode,
@@ -384,6 +418,7 @@ async function init() {
       return;
     }
 
+    setFilePickerVisible(state, true);
     state.fileSelect.innerHTML = state.files.map((file, index) => {
       const filename = normalizeText(file.filename);
       const selected = index === 0 ? " selected" : "";

@@ -84,7 +84,7 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     running_status: "Reviewing returned package...",
     data_domain_unsupported: "{data_domain_label} returned-package review is not implemented yet.",
     load_failed: "Failed to load {data_domain_label} returned package data.",
-    no_files: "No staged {data_domain_label} data files found under var/analytics/data-sharing/{data_domain}/import-staging/.",
+    no_files: "No staged returned package files found under var/analytics/data-sharing/import-staging/.",
     empty_state: "Generate a preview to list staged documents.",
     file_required: "Select a staged data file first.",
     missing_title: "missing title",

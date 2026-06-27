@@ -157,31 +157,32 @@ def prepare_payload() -> dict[str, object]:
     }
 
 
-def returned_packages_payload() -> dict[str, object]:
+def returned_packages_payload(files: list[dict[str, object]] | None = None) -> dict[str, object]:
+    staged_files = files if files is not None else [
+        {
+            "filename": "summaries.jsonl",
+            "path": "var/analytics/data-sharing/import-staging/summaries.jsonl",
+            "format": "jsonl",
+            "size_bytes": 512,
+            "modified_utc": "2026-05-04T12:00:00Z",
+            "metadata_ok": True,
+            "metadata_file": "var/analytics/data-sharing/meta/ds_20260504T120000Z.meta.json",
+            "export_id": "ds_20260504T120000Z",
+            "app": "docs-viewer",
+            "data_domain": "documents",
+            "adapter_id": "documents",
+            "config_id": "document-summaries",
+            "profile_id": "document-summaries",
+            "scope": "library",
+            "target_format": "jsonl",
+            "record_shape": "document_rows",
+        }
+    ]
     return {
         "ok": True,
         "staging_root": "var/analytics/data-sharing/import-staging",
         "meta_root": "var/analytics/data-sharing/meta",
-        "files": [
-            {
-                "filename": "summaries.jsonl",
-                "path": "var/analytics/data-sharing/import-staging/summaries.jsonl",
-                "format": "jsonl",
-                "size_bytes": 512,
-                "modified_utc": "2026-05-04T12:00:00Z",
-                "metadata_ok": True,
-                "metadata_file": "var/analytics/data-sharing/meta/ds_20260504T120000Z.meta.json",
-                "export_id": "ds_20260504T120000Z",
-                "app": "docs-viewer",
-                "data_domain": "documents",
-                "adapter_id": "documents",
-                "config_id": "document-summaries",
-                "profile_id": "document-summaries",
-                "scope": "library",
-                "target_format": "jsonl",
-                "record_shape": "document_rows",
-            }
-        ],
+        "files": staged_files,
     }
 
 
@@ -228,8 +229,9 @@ def review_payload() -> dict[str, object]:
     }
 
 
-def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
+def install_mock_data_sharing_api(page, returned_payload: dict[str, object] | None = None) -> list[dict[str, object]]:
     calls: list[dict[str, object]] = []
+    returned_packages = returned_payload or returned_packages_payload()
 
     def handle(route) -> None:
         request = route.request
@@ -262,7 +264,7 @@ def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
         elif parsed.path == "/analytics/api/data-sharing/prepare":
             payload = prepare_payload()
         elif parsed.path == "/analytics/api/data-sharing/returned-packages":
-            payload = returned_packages_payload()
+            payload = returned_packages
         elif parsed.path == "/analytics/api/data-sharing/review":
             payload = review_payload()
         else:
@@ -384,6 +386,27 @@ def assert_review(page, base_url: str) -> None:
     expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 previews selected.", timeout=10_000)
 
 
+def assert_review_empty(page, base_url: str) -> None:
+    page.goto(f"{base_url}/analytics/data-sharing/review/?data_domain=documents", wait_until="domcontentloaded")
+    root = page.locator("#dataSharingReviewRoot")
+    wait_for_route_ready(page, "#dataSharingReviewRoot", "data-analytics-ready", "data-analytics-busy")
+    expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
+    expect(root).to_have_attribute("data-analytics-record-loaded", "false", timeout=10_000)
+    status = page.locator("#dataSharingReviewStatus")
+    expect(status).to_contain_text(
+        "No staged returned package files found under var/analytics/data-sharing/import-staging/.",
+        timeout=10_000,
+    )
+    status_text = status.inner_text()
+    if "{" in status_text or "}" in status_text:
+        raise AssertionError(f"empty review status still contains unresolved tokens: {status_text!r}")
+    expect(page.locator("#dataSharingReviewFileSelect")).to_be_hidden(timeout=10_000)
+    expect(page.locator("#dataSharingReviewResolvedContext")).to_be_hidden(timeout=10_000)
+    context_text = page.locator("#dataSharingReviewResolvedContext").inner_text().strip()
+    if context_text:
+        raise AssertionError(f"empty review context should not expose unresolved metadata: {context_text!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
@@ -405,6 +428,15 @@ def main(argv: list[str] | None = None) -> int:
 
             assert_prepare(page, base_url)
             assert_review(page, base_url)
+
+            empty_page = browser.new_page()
+            empty_page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
+            empty_page.on("pageerror", lambda error: page_errors.append(str(error)))
+            empty_page.on("request", lambda request: requests.append(request.url))
+            data_sharing_api_calls.extend(
+                install_mock_data_sharing_api(empty_page, returned_packages_payload(files=[]))
+            )
+            assert_review_empty(empty_page, base_url)
             browser.close()
 
         required_paths = {
