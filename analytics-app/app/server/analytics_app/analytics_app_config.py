@@ -228,6 +228,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "analytics-app" / "app" / "frontend" / "js" / "analytics-ui-text.js",
         repo_root / "analytics-app" / "app" / "assets" / "css" / "analytics.css",
         repo_root / "analytics-app" / "app" / "frontend" / "config" / "analytics-config.json",
+        repo_root / "shared" / "frontend" / "js" / "selectable-list.js",
+        repo_root / "shared" / "frontend" / "css" / "selectable-list.css",
     ]
     routes_dir = repo_root / "analytics-app" / "app" / "frontend" / "routes"
     if routes_dir.exists():

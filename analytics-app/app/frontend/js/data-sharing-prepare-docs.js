@@ -48,39 +48,7 @@ export function buildVisibleDocs(indexPayload) {
     const name = normalizeText(doc && doc.name);
     return Boolean(docId && name);
   });
-
-  const visibleIds = new Set(docs.map((doc) => prepareRecordId(doc)));
-  const childrenByParent = new Map();
-  docs.forEach((doc) => {
-    const parentId = normalizeText(doc.parent_id);
-    const effectiveParent = visibleIds.has(parentId) ? parentId : "";
-    if (!childrenByParent.has(effectiveParent)) childrenByParent.set(effectiveParent, []);
-    childrenByParent.get(effectiveParent).push(doc);
-  });
-
-  const orderedDocs = [];
-  const depthById = new Map();
-  const visit = (parentId, depth) => {
-    const children = childrenByParent.get(parentId) || [];
-    children.forEach((doc) => {
-      const docId = prepareRecordId(doc);
-      orderedDocs.push(doc);
-      depthById.set(docId, depth);
-      visit(docId, depth + 1);
-    });
-  };
-  visit("", 0);
-
-  const orderedIds = new Set(orderedDocs.map((doc) => prepareRecordId(doc)));
-  docs.forEach((doc) => {
-    const docId = prepareRecordId(doc);
-    if (!orderedIds.has(docId)) {
-      orderedDocs.push(doc);
-      depthById.set(docId, 0);
-    }
-  });
-
-  return { docs: orderedDocs, childrenByParent, depthById };
+  return { docs };
 }
 
 function selectableRecordsUrl(dataDomain, docsScope, configId) {

@@ -1,5 +1,8 @@
 import { getAnalyticsText } from "./analytics-config.js";
 import {
+  createSelectableList
+} from "/shared/frontend/js/selectable-list.js";
+import {
   defaultFormatForPrepareConfig,
   prepareConfigSelection,
   selectedPrepareConfig,
@@ -15,15 +18,6 @@ const FORMAT_OPTIONS = [
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
-}
-
-function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function dataDomainLabel(state, dataDomain = state.dataDomain) {
@@ -42,31 +36,11 @@ function setText(node, value) {
   node.textContent = normalizeText(value);
 }
 
-function descendantIds(state, docId) {
-  const ids = [];
-  const collect = (parentId) => {
-    const children = state.childrenByParent.get(parentId) || [];
-    children.forEach((child) => {
-      const childId = prepareListRecordId(child);
-      if (!childId) return;
-      ids.push(childId);
-      collect(childId);
-    });
-  };
-  collect(docId);
-  return ids;
-}
-
 function docMatchesConfigFilter(state, docId) {
   const missingOnly = state.missingSummaryOnly.checked && state.missingSummaryOnlyWrap.hidden === false;
   const doc = state.docsById.get(docId);
   if (!doc) return false;
   return !missingOnly || !normalizeText(doc.summary);
-}
-
-function rowMatchesCurrentFilters(state, docId) {
-  const doc = state.docsById.get(docId);
-  return Boolean(doc && docMatchesConfigFilter(state, docId));
 }
 
 function prepareListRecordId(record) {
@@ -75,27 +49,6 @@ function prepareListRecordId(record) {
 
 function prepareListRecordName(record) {
   return normalizeText(record && record.name);
-}
-
-function renderRecordRow(state, record) {
-  const recordId = prepareListRecordId(record);
-  const name = prepareListRecordName(record);
-  const depth = Math.max(0, Number((state.visibleDepthById && state.visibleDepthById.get(recordId)) || state.depthById.get(recordId) || 0));
-  const indent = `${(depth * 1.35).toFixed(2)}rem`;
-  const expanded = !state.collapsedDocIds.has(recordId);
-  const hasVisibleChildren = (state.visibleChildrenByParent.get(recordId) || []).length > 0;
-  const toggle = hasVisibleChildren
-    ? `<button class="dataSharingPrepareList__toggle" type="button" data-data-sharing-prepare-toggle="${escapeHtml(recordId)}" aria-expanded="${expanded ? "true" : "false"}" aria-label="${expanded ? "Collapse section" : "Expand section"}">${expanded ? "▼" : "▶"}</button>`
-    : `<span class="dataSharingPrepareList__toggleSpacer" aria-hidden="true"></span>`;
-  return `
-    <li class="analyticsList__row analyticsList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-record="${escapeHtml(recordId)}" style="margin-left: ${indent};">
-      ${toggle}
-      <label class="dataSharingPrepareList__label">
-        <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(recordId)}">
-        <span class="dataSharingPrepareList__title">${escapeHtml(name)}</span>
-      </label>
-    </li>
-  `;
 }
 
 export function selectedDataSharingPrepareConfig(state) {
@@ -116,57 +69,13 @@ export function defaultUiFormatForDataSharingPrepareConfig(config) {
 }
 
 export function selectableDataSharingPrepareDocIds(state) {
-  return state.docs
-    .filter((doc) => {
-      const docId = prepareListRecordId(doc);
-      return docMatchesConfigFilter(state, docId);
-    })
+  return selectableDataSharingPrepareDocs(state)
     .map((doc) => prepareListRecordId(doc))
     .filter(Boolean);
 }
 
-function visibleTreeState(state, visibleDocIds) {
-  const childrenByParent = new Map();
-  state.docs.forEach((doc) => {
-    const docId = prepareListRecordId(doc);
-    if (!visibleDocIds.has(docId)) return;
-    const parentId = normalizeText(doc.parent_id);
-    const effectiveParent = visibleDocIds.has(parentId) ? parentId : "";
-    if (!childrenByParent.has(effectiveParent)) childrenByParent.set(effectiveParent, []);
-    childrenByParent.get(effectiveParent).push(doc);
-  });
-
-  const depthById = new Map();
-  const visit = (parentId, depth) => {
-    const children = childrenByParent.get(parentId) || [];
-    children.forEach((doc) => {
-      const docId = prepareListRecordId(doc);
-      if (!docId || depthById.has(docId)) return;
-      depthById.set(docId, depth);
-      visit(docId, depth + 1);
-    });
-  };
-  visit("", 0);
-
-  state.docs.forEach((doc) => {
-    const docId = prepareListRecordId(doc);
-    if (visibleDocIds.has(docId) && !depthById.has(docId)) depthById.set(docId, 0);
-  });
-
-  return { childrenByParent, depthById };
-}
-
-function rowHiddenByCollapsedAncestor(state, docId, visibleDocIds) {
-  const seen = new Set();
-  let current = state.docsById.get(docId);
-  while (current) {
-    const parentId = normalizeText(current.parent_id);
-    if (!parentId || seen.has(parentId)) return false;
-    seen.add(parentId);
-    if (visibleDocIds.has(parentId) && state.collapsedDocIds.has(parentId)) return true;
-    current = state.docsById.get(parentId);
-  }
-  return false;
+function selectableDataSharingPrepareDocs(state) {
+  return state.docs.filter((doc) => docMatchesConfigFilter(state, prepareListRecordId(doc)));
 }
 
 export function currentDataSharingPrepareSelectedIds(state) {
@@ -180,15 +89,10 @@ export function currentDataSharingPrepareSelectedIds(state) {
 }
 
 export function syncDataSharingPrepareCheckboxes(state) {
-  const visibleSelected = new Set(currentDataSharingPrepareSelectedIds(state));
-  state.listNode.querySelectorAll("[data-data-sharing-prepare-record]").forEach((row) => {
-    const docId = normalizeText(row.getAttribute("data-data-sharing-prepare-record"));
-    const checkbox = row.querySelector("input[type='checkbox']");
-    if (!(checkbox instanceof HTMLInputElement)) return;
-    const descendants = descendantIds(state, docId).filter((id) => rowMatchesCurrentFilters(state, id));
-    const selectedDescendantCount = descendants.filter((id) => visibleSelected.has(id)).length;
-    checkbox.checked = visibleSelected.has(docId);
-    checkbox.indeterminate = !checkbox.checked && selectedDescendantCount > 0;
+  if (!state.selectableList) return;
+  state.selectableList.update({
+    selectedIds: currentDataSharingPrepareSelectedIds(state),
+    cascadeSelection: state.includeDescendants
   });
 }
 
@@ -287,65 +191,37 @@ export function renderDataSharingPrepareConfigSelect(state) {
 
 export function renderDataSharingPrepareDocList(state) {
   if (!stateUsesPrepareRecordSelection(state)) {
+    if (state.selectableList) state.selectableList.update({ items: [], selectedIds: [] });
     state.listNode.innerHTML = "";
     state.listNode.hidden = false;
     updateDataSharingPrepareSelectionSummary(state);
     return;
   }
-  const visibleDocIds = new Set(selectableDataSharingPrepareDocIds(state));
-  const visibleTree = visibleTreeState(state, visibleDocIds);
-  state.visibleChildrenByParent = visibleTree.childrenByParent;
-  state.visibleDepthById = visibleTree.depthById;
-  const rows = state.docs
-    .filter((doc) => {
-      const docId = prepareListRecordId(doc);
-      return visibleDocIds.has(docId) && !rowHiddenByCollapsedAncestor(state, docId, visibleDocIds);
-    })
-    .map((doc) => renderRecordRow(state, doc));
+  const selectableDocs = selectableDataSharingPrepareDocs(state);
   state.listNode.hidden = false;
-  state.listNode.innerHTML = rows.length
-    ? `<ul class="analyticsList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
-    : "";
-  syncDataSharingPrepareCheckboxes(state);
-  updateDataSharingPrepareSelectionSummary(state);
-}
-
-export function updateDataSharingPrepareCollapseFromClick(state, event) {
-  const target = event.target;
-  const button = target instanceof Element
-    ? target.closest("[data-data-sharing-prepare-toggle]")
-    : null;
-  if (!(button instanceof HTMLButtonElement)) return false;
-  const docId = normalizeText(button.getAttribute("data-data-sharing-prepare-toggle"));
-  if (!docId) return false;
-  if (state.collapsedDocIds.has(docId)) {
-    state.collapsedDocIds.delete(docId);
-  } else {
-    state.collapsedDocIds.add(docId);
+  if (!state.selectableList) {
+    state.selectableList = createSelectableList(state.listNode, {
+      id: "dataSharingPrepareRecords",
+      selectAllButton: state.selectAllButton,
+      clearButton: state.clearButton,
+      tree: true,
+      getId: (record) => prepareListRecordId(record),
+      getLabel: (record) => prepareListRecordName(record),
+      getParentId: (record) => normalizeText(record && record.parent_id),
+      onSelectionChange: ({ selectedIds }) => {
+        state.selectedIds = new Set(selectedIds);
+        updateDataSharingPrepareSelectionSummary(state);
+        if (typeof state.onSelectionChange === "function") state.onSelectionChange();
+      }
+    });
   }
-  renderDataSharingPrepareDocList(state);
-  return true;
-}
-
-export function updateDataSharingPrepareSelectionFromChange(state, event) {
-  const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return false;
-  const row = target.closest("[data-data-sharing-prepare-record]");
-  const docId = normalizeText(row ? row.getAttribute("data-data-sharing-prepare-record") : "");
-  if (!docId) return false;
-  const ids = (
-    state.includeDescendants
-      ? [docId, ...descendantIds(state, docId)]
-      : [docId]
-  ).filter((id) => rowMatchesCurrentFilters(state, id));
-  ids.forEach((id) => {
-    if (target.checked) {
-      state.selectedIds.add(id);
-    } else {
-      state.selectedIds.delete(id);
-    }
+  state.selectableList.update({
+    items: selectableDocs,
+    selectedIds: currentDataSharingPrepareSelectedIds(state),
+    cascadeSelection: state.includeDescendants,
+    emptyMessage: ""
   });
-  return true;
+  updateDataSharingPrepareSelectionSummary(state);
 }
 
 export function renderDataSharingPrepareResultBody(state, payload) {

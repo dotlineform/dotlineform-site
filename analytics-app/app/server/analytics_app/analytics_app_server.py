@@ -50,6 +50,7 @@ STATIC_PREFIXES = (
     "/analytics/app/frontend/js/",
     "/analytics/app/frontend/config/",
     "/analytics/app/frontend/routes/",
+    "/shared/frontend/",
 )
 STATIC_FILES = {
     "/favicon.ico",

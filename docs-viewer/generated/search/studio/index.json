@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-70713228d79ac7815260dea6be8dfcd9",
-    "generated_at_utc": "2026-06-27T10:45:50Z",
-    "count": 225
+    "version": "blake2b-54d20fd2c588bd8f3b5064065ee37137",
+    "generated_at_utc": "2026-06-27T13:06:54Z",
+    "count": 226
   },
   "entries": [
     {
@@ -5466,6 +5466,29 @@
         "15"
       ],
       "search_text": "ui-pattern-record-action-list ui pattern record action list record list and action layer implementation note and layer implementation note 2026-06-15 2026 06 15"
+    },
+    {
+      "id": "ui-selectable-list-component",
+      "kind": "doc",
+      "title": "Selectable List Component",
+      "href": "/docs/?scope=studio&doc=ui-selectable-list-component",
+      "last_updated": "2026-06-27",
+      "parent_id": "ui",
+      "parent_title": "UI",
+      "display_meta": "2026-06-27 • UI",
+      "search_terms": [
+        "ui-selectable-list-component",
+        "ui",
+        "selectable",
+        "list",
+        "component",
+        "selectable list component",
+        "2026-06-27",
+        "2026",
+        "06",
+        "27"
+      ],
+      "search_text": "ui-selectable-list-component ui selectable list component selectable list component 2026-06-27 2026 06 27"
     }
   ]
 }

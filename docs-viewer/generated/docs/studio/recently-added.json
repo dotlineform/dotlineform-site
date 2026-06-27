@@ -11,6 +11,14 @@
       "parent_title": "Data Sharing"
     },
     {
+      "doc_id": "ui-selectable-list-component",
+      "title": "Selectable List Component",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-selectable-list-component.json",
+      "added_date": "2026-06-27",
+      "parent_id": "ui",
+      "parent_title": "UI"
+    },
+    {
       "doc_id": "docs-viewer-static-route-template",
       "title": "Docs Viewer Static Route Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-23",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "admin-static-route-template",
-      "title": "Admin Static Route Template",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-static-route-template.json",
-      "added_date": "2026-06-22",
-      "parent_id": "admin",
-      "parent_title": "Admin"
     }
   ],
-  "generated_at": "2026-06-27T10:32:35Z"
+  "generated_at": "2026-06-27T13:06:53Z"
 }

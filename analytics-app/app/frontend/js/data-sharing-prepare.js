@@ -44,15 +44,11 @@ import {
   currentDataSharingPrepareSelectedIds,
   renderDataSharingPrepareConfigSelect,
   renderDataSharingPrepareDocList,
-  selectableDataSharingPrepareDocIds,
   selectedDataSharingPrepareConfig,
   syncDataSharingPrepareListActions,
   supportedUiFormatsForDataSharingPrepareConfig,
   syncDataSharingPrepareCheckboxes,
-  syncDataSharingPrepareConfigOptions,
-  updateDataSharingPrepareCollapseFromClick,
-  updateDataSharingPrepareSelectionFromChange,
-  updateDataSharingPrepareSelectionSummary
+  syncDataSharingPrepareConfigOptions
 } from "./data-sharing-prepare-render.js";
 import {
   buildDataSharingPrepareSubmission,
@@ -247,14 +243,13 @@ function currentPrepareSelectionCount(state) {
 function clearDocumentSelectionState(state) {
   state.docsIndexError = false;
   state.docs = [];
-  state.childrenByParent = new Map();
-  state.depthById = new Map();
   state.docsById = new Map();
-  state.visibleChildrenByParent = new Map();
-  state.visibleDepthById = new Map();
-  state.collapsedDocIds.clear();
   state.selectedIds.clear();
-  state.listNode.innerHTML = "";
+  if (state.selectableList) {
+    state.selectableList.update({ items: [], selectedIds: [] });
+  } else {
+    state.listNode.innerHTML = "";
+  }
   state.listNode.hidden = false;
   state.selectionSummary.textContent = "";
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
@@ -296,8 +291,6 @@ async function loadDocumentsForCurrentSelection(state) {
     });
     state.docsIndexError = docsState.docsIndexError;
     state.docs = docsState.docs;
-    state.childrenByParent = docsState.childrenByParent;
-    state.depthById = docsState.depthById;
     state.docsById = new Map(state.docs.map((doc) => [prepareRecordId(doc), doc]));
     syncDataSharingPrepareListActions(state);
     renderDataSharingPrepareDocList(state);
@@ -545,19 +538,17 @@ async function init() {
     exportConfigs: [],
     docs: [],
     docsById: new Map(),
-    childrenByParent: new Map(),
-    visibleChildrenByParent: new Map(),
-    visibleDepthById: new Map(),
-    depthById: new Map(),
-    collapsedDocIds: new Set(),
     selectedIds: new Set(),
     includeDescendants: true,
     targetFormat: "",
     docsIndexError: false,
     serviceAvailable: false,
     isRunning: false,
-    prepareCapability: null
+    prepareCapability: null,
+    selectableList: null,
+    onSelectionChange: null
   };
+  state.onSelectionChange = () => updateStatus(state);
 
   const requiredNodes = [
     state.appLabelNode,
@@ -684,29 +675,6 @@ async function init() {
     state.includeDescendantsInput.addEventListener("change", () => {
       state.includeDescendants = state.includeDescendantsInput.checked;
       syncDataSharingPrepareCheckboxes(state);
-      updateStatus(state);
-    });
-    state.selectAllButton.addEventListener("click", () => {
-      selectableDataSharingPrepareDocIds(state).forEach((docId) => state.selectedIds.add(docId));
-      syncDataSharingPrepareCheckboxes(state);
-      updateDataSharingPrepareSelectionSummary(state);
-      updateStatus(state);
-    });
-    state.clearButton.addEventListener("click", () => {
-      state.selectedIds.clear();
-      syncDataSharingPrepareCheckboxes(state);
-      updateDataSharingPrepareSelectionSummary(state);
-      updateStatus(state);
-    });
-    state.listNode.addEventListener("click", (event) => {
-      if (!updateDataSharingPrepareCollapseFromClick(state, event)) return;
-      event.preventDefault();
-      event.stopPropagation();
-    });
-    state.listNode.addEventListener("change", (event) => {
-      if (!updateDataSharingPrepareSelectionFromChange(state, event)) return;
-      syncDataSharingPrepareCheckboxes(state);
-      updateDataSharingPrepareSelectionSummary(state);
       updateStatus(state);
     });
     state.runButton.addEventListener("click", () => {

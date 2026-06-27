@@ -1,0 +1,92 @@
+.sharedSelectableList {
+  width: min(100%, var(--shared-selectable-list-width, 100%));
+  max-width: 100%;
+  color: inherit;
+}
+
+.sharedSelectableList__rows {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sharedSelectableList__row {
+  display: flex;
+  align-items: center;
+  gap: var(--shared-selectable-list-gap, 0.35rem);
+  min-width: 0;
+  margin: 0;
+  margin-inline-start: var(--shared-selectable-list-indent, 0);
+  padding: var(--shared-selectable-list-row-padding-y, 0.3rem) 0;
+  font-size: var(--shared-selectable-list-font, 0.95rem);
+  line-height: 1.25;
+}
+
+.sharedSelectableList__row[data-disabled="true"] {
+  color: var(--shared-selectable-list-disabled, var(--muted, #666));
+  opacity: 0.65;
+}
+
+.sharedSelectableList__leading {
+  flex: 0 0 auto;
+}
+
+.sharedSelectableList__toggle,
+.sharedSelectableList__toggleSpacer {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: var(--shared-selectable-list-toggle-size, 1rem);
+  height: var(--shared-selectable-list-toggle-size, 1rem);
+  margin: 0;
+}
+
+.sharedSelectableList__toggle {
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.sharedSelectableList__toggle:hover {
+  color: var(--shared-selectable-list-accent, var(--accent, currentColor));
+}
+
+.sharedSelectableList__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--shared-selectable-list-label-gap, 0.4rem);
+  min-width: 0;
+}
+
+.sharedSelectableList__checkbox {
+  flex: 0 0 auto;
+  width: var(--shared-selectable-list-checkbox-size, 1rem);
+  height: var(--shared-selectable-list-checkbox-size, 1rem);
+  margin: 0;
+}
+
+.sharedSelectableList__title,
+.sharedSelectableList__meta {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sharedSelectableList__meta {
+  color: var(--shared-selectable-list-muted, var(--muted, #666));
+  font-size: var(--shared-selectable-list-small-font, 0.875rem);
+}
+
+.sharedSelectableList__status,
+.sharedSelectableList__empty {
+  margin: 0;
+  color: var(--shared-selectable-list-muted, var(--muted, #666));
+  font-size: var(--shared-selectable-list-small-font, 0.875rem);
+  line-height: 1.35;
+}
