@@ -103,10 +103,11 @@ When omitted, the default `target.format` is the only supported format.
 When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `documents`.
 Envelope profiles support JSON only.
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
-Export-run metadata is written once to a sibling `.meta.json` sidecar instead of being included in the external JSON or JSONL payload.
-Current profiles include the Docs Viewer `scope` in that metadata sidecar so returned packages can identify the source scope without adding scope to each external document row.
+Export-run metadata is written once to an internal metadata file under `var/analytics/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
+External packages carry an `export_id` that review uses to find that metadata after the returned file is staged.
 A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
-External payload records should not include internal run details, row counts, checksums, or source timestamps; source-date provenance belongs in `.meta.json`.
+External payload records should not include internal run details, row counts, checksums, source scope, or source timestamps.
+The metadata and `export_id` contract is documented in [Data Sharing Export Metadata](/docs/?scope=studio&doc=data-sharing-export-metadata).
 
 ## External Context
 
@@ -133,7 +134,6 @@ Saving from the modal rewrites the profile config after validating the full prep
 ```text
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.json
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl
-var/analytics/data-sharing/exports/{export_id}-{timestamp}.meta.json
 var/analytics/data-sharing/exports/{export_id}-{timestamp}.context.json
 ```
 
@@ -141,7 +141,8 @@ The placeholders are resolved by the export engine.
 Current profiles use `{export_id}` and `{timestamp}`.
 Other placeholders, including `{data_domain}`, are only valid when supported by the export engine and still resolve under the shared export root.
 When an operator chooses a non-default supported format, the export engine keeps the configured directory, export id, and timestamp, then switches the output file extension to the selected format.
-The `.meta.json` and `.context.json` patterns are derived from the output filename; they are not configured as separate profile paths.
+The `.context.json` pattern is derived from the output filename; it is not configured as a separate profile path.
+The internal `.meta.json` file is stored separately under `var/analytics/data-sharing/meta/` and keyed by the package `export_id`.
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
 It formats the filename timestamp in the local runtime timezone.

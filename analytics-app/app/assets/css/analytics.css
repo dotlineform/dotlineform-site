@@ -1110,37 +1110,54 @@ textarea.analytics__input:disabled {
 }
 
 .dataSharingReviewPage__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.dataSharingReviewPage__buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+}
+
+.dataSharingReviewPage__buttonGroup > .analytics__status {
+  flex: 1 1 16rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.dataSharingReviewPage__dropdownGroup {
   display: grid;
-  grid-template-columns: minmax(8rem, 0.22fr) minmax(8rem, 0.22fr) minmax(0, 0.36fr) auto;
-  gap: 0.5rem 0.65rem;
-  align-items: end;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  align-items: stretch;
 }
 
-.dataSharingReviewPage__appField,
-.dataSharingReviewPage__dataDomainField,
-.dataSharingReviewPage__field {
-  min-inline-size: 0;
-  width: 100%;
+.dataSharingReviewPage__buttonGroup[hidden],
+.dataSharingReviewPage__dropdownGroup[hidden] {
+  display: none;
 }
 
-.dataSharingReviewPage__appField .analyticsField__control,
-.dataSharingReviewPage__dataDomainField .analyticsField__control,
-.dataSharingReviewPage__field .analyticsField__control {
-  width: 100%;
-}
-
-.dataSharingReviewPage__appField .analyticsField__control > .analytics__input,
-.dataSharingReviewPage__dataDomainField .analyticsField__control > .analytics__input,
-.dataSharingReviewPage__field .analyticsField__control > .analytics__input {
+.dataSharingReviewPage__choiceField,
+.dataSharingReviewPage__choiceField .analyticsField__control,
+.dataSharingReviewPage__choiceField .analyticsField__control > .analytics__input {
   flex: 1 1 auto;
   width: 100%;
 }
 
-.dataSharingReviewPage__commandButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.65rem;
-  align-items: center;
+.dataSharingReviewPage__choiceField {
+  display: block;
+  min-width: 0;
+}
+
+select.analytics__input.dataSharingReviewPage__listbox {
+  min-height: 0;
+  height: auto;
+  padding-block: 0.25rem;
+  overflow-y: auto;
 }
 
 .dataSharingReviewPage__actionsMenuHost {
@@ -1192,17 +1209,6 @@ textarea.analytics__input:disabled {
 
 .dataSharingReviewPage__actionMenuItem:disabled:hover {
   background: transparent;
-}
-
-.dataSharingReviewPage__statusRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.55rem;
-  align-items: center;
-}
-
-.dataSharingReviewPage__statusRow > .analytics__status {
-  margin: 0;
 }
 
 .dataSharingReviewPage__resultButton[hidden] {
@@ -2391,16 +2397,7 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
     width: 100%;
   }
 
-  .dataSharingReviewPage__controls,
-  .dataSharingPreparePage__controls {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .dataSharingReviewPage__controls {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: stretch;
-  }
-
+  .dataSharingReviewPage__dropdownGroup,
   .dataSharingPreparePage__dropdownGroup {
     grid-template-columns: minmax(0, 1fr);
   }

@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "data-sharing-export-metadata",
+      "title": "Data Sharing Export Metadata",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json",
+      "added_date": "2026-06-27",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing"
+    },
+    {
       "doc_id": "docs-viewer-static-route-template",
       "title": "Docs Viewer Static Route Template",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-22",
       "parent_id": "admin",
       "parent_title": "Admin"
-    },
-    {
-      "doc_id": "catalogue-per-work-detail-source",
-      "title": "Catalogue Per-Work Detail Source",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-per-work-detail-source.json",
-      "added_date": "2026-06-22",
-      "parent_id": "studio",
-      "parent_title": "Studio"
     }
   ],
-  "generated_at": "2026-06-26T12:12:59Z"
+  "generated_at": "2026-06-27T10:32:35Z"
 }

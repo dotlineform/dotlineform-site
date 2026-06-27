@@ -346,6 +346,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json"
         },
         {
+          "doc_id": "data-sharing-export-metadata",
+          "title": "Data Sharing Export Metadata",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json"
+        },
+        {
           "doc_id": "data-sharing-documents-adapter-structure",
           "title": "Documents Data Sharing Adapter Structure",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-adapter-structure.json"
@@ -1209,5 +1214,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-26T12:12:59Z"
+  "generated_at": "2026-06-27T10:32:35Z"
 }
