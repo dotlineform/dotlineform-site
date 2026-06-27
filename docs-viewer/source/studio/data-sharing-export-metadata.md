@@ -103,6 +103,24 @@ Required fields:
 Documents packages also require `scope`.
 The documents adapter treats `profile_id` as the same value as `config_id` until those concepts diverge.
 
+| Field | Purpose | Values / Corresponds To |
+| --- | --- | --- |
+| `schema_version` | Identifies the metadata contract so review can validate the file before using it. | Currently `data_sharing_export_meta_v1`. |
+| `export_id` | Stable routing id shared by the external package and this internal metadata file. | `ds_YYYYMMDDTHHMMSSZ`, derived from the UTC prepare run time. Must match the staged package `export_id` and the metadata filename. |
+| `app` | Browser/app surface that owns the data domain. | Current documents value is `docs-viewer`. Tags use `analytics`. Future domains should use the app key from the adapter registry. |
+| `data_domain` | Dispatch domain used by review and apply. | Current documents value is `documents`. Must match an active `data_domain` in `data-sharing/config/adapters.json`. |
+| `adapter_id` | Exact adapter registry id that prepared the package. | Current documents value is `documents`. Must match the adapter id configured for the metadata `data_domain`. |
+| `config_id` | Prepare profile/config that generated the package. | For documents, one of the ids from `data-sharing/adapters/documents/config/prepare-profiles.json`, such as `document-content`. |
+| `profile_id` | Workflow profile identity for review UI and future profile-specific behavior. | For documents, currently the same value as `config_id`. If config and UI profile concepts diverge later, this records the user-facing profile id. |
+| `scope` | Source Docs Viewer scope used during prepare. | Required for documents, for example `library`. Corresponds to `selection.docs_scope` and a configured scope in `docs-viewer/config/scopes/docs_scopes.json`. |
+| `target_format` | File format written by prepare and expected by review. | `json` or `jsonl`. Must match the selected profile's supported target format and the staged file extension. |
+| `record_shape` | Structural shape of the external records inside the package. | `envelope` for a JSON object containing a document array, or `document_rows` for JSONL rows / JSON `records` arrays. |
+| `generated_at` | UTC timestamp for the prepare run. | `YYYY-MM-DDTHH:MM:SSZ`. This is the source of `export_id` and should not be edited. |
+| `config_checksum` | Optional integrity/provenance value for the prepare profile used at export time. | Present when included by the profile metadata settings. Hashes the profile config so later review can detect profile drift if needed. |
+| `selected_doc_ids` | Optional provenance list of documents selected for export. | Ordered normalized document ids after selection resolution. Useful for audit, not for routing. |
+| `source_last_updated` | Optional freshness map for selected source docs. | Object keyed by `doc_id`, with source `last_updated` values from prepare time. Apply can use this later for freshness checks. |
+| `counts` | Optional prepare run counts. | Object with counts such as `selected`, `exported`, `skipped`, `failed`, and `truncated`. Used for operator audit, not for dispatch. |
+
 ## External Package Identity
 
 External package payloads must include `export_id` and must not include internal metadata fields such as app, domain, adapter id, source scope, generated counts, source timestamps, or checksums.
