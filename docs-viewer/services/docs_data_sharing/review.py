@@ -27,9 +27,16 @@ def filename_slug(value: Any, fallback: str) -> str:
 
 def local_filename_timestamp(value: dt.datetime | None = None) -> str:
     timestamp = value or dt.datetime.now().astimezone()
-    if timestamp.tzinfo is None:
-        timestamp = timestamp.astimezone()
-    return timestamp.strftime("%Y%m%d-%H%M%S")
+    return timestamp.astimezone().strftime("%Y%m%d-%H%M%S")
+
+
+def source_filename_timestamp(report: Dict[str, Any]) -> str:
+    generated_at = normalize_text(report.get("generated_at"))
+    try:
+        timestamp = dt.datetime.strptime(generated_at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+    except ValueError as exc:
+        raise ValueError(f"source metadata generated_at must be UTC YYYY-MM-DDTHH:MM:SSZ: {generated_at}") from exc
+    return local_filename_timestamp(timestamp)
 
 
 def yaml_scalar(value: Any) -> str:
@@ -258,7 +265,7 @@ def review_returned_document_package(
     records = selected_records(report, selected_indices)
     profile_id = normalize_text(report.get("source_profile_id"))
     source_scope = normalize_text(report.get("source_scope")) or normalized_scope
-    timestamp = local_filename_timestamp()
+    timestamp = source_filename_timestamp(report)
     output_path = resolve_review_output_path(
         repo_root,
         preview_root=preview_root,

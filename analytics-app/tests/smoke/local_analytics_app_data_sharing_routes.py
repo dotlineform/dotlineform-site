@@ -371,19 +371,21 @@ def assert_review(page, base_url: str) -> None:
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     expect(page.locator("#dataSharingReviewFileSelect")).to_have_value("content.jsonl", timeout=10_000)
-    page.locator("#dataSharingReviewRun").click()
-    expect(page.locator("#dataSharingReviewStatus")).to_contain_text(
-        "Generated 2 Library returned package review files.",
-        timeout=10_000,
-    )
     review_list = page.locator("#dataSharingReviewList")
     if not review_list.evaluate("node => node.classList.contains('sharedSelectableList')"):
         raise AssertionError("review list should use the shared selectable list component")
     expect(review_list.locator("[data-selectable-list-row='true']")).to_have_count(2, timeout=10_000)
     expect(review_list).to_contain_text("Library", timeout=10_000)
     expect(review_list).to_contain_text("Alpha", timeout=10_000)
+    expect(page.locator("#dataSharingReviewRun")).to_be_disabled(timeout=10_000)
     page.locator("#dataSharingReviewSelectAll").click()
-    expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 previews selected.", timeout=10_000)
+    expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 documents selected.", timeout=10_000)
+    expect(page.locator("#dataSharingReviewRun")).to_be_enabled(timeout=10_000)
+    page.locator("#dataSharingReviewRun").click()
+    expect(page.locator("#dataSharingReviewStatus")).to_contain_text(
+        "Generated Library returned package review.",
+        timeout=10_000,
+    )
 
 
 def assert_review_empty(page, base_url: str) -> None:

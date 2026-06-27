@@ -14,7 +14,7 @@ from docs_import_test_support import (
 )
 
 
-def write_content_meta(root: Path, export_id: str) -> None:
+def write_content_meta(root: Path, export_id: str, generated_at: str = "2026-06-27T20:50:10Z") -> None:
     path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -22,7 +22,10 @@ def write_content_meta(root: Path, export_id: str) -> None:
             '{"export_id": "'
             + export_id
             + '", "app": "docs-viewer", "adapter_id": "documents", "data_domain": "documents", '
-            + '"config_id": "document-content", "profile_id": "document-content", "scope": "library"}\n'
+            + '"config_id": "document-content", "profile_id": "document-content", "scope": "library", '
+            + '"generated_at": "'
+            + generated_at
+            + '"}\n'
         ),
         encoding="utf-8",
     )
@@ -48,7 +51,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
 def test_library_import_review_writes_selected_record_document() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        export_id = "ds_20260627T120010Z"
+        export_id = "ds_20260627T205010Z"
         write_staged(
             root,
             "content.jsonl",
@@ -77,7 +80,7 @@ def test_library_import_review_writes_selected_record_document() -> None:
     assert payload["review_written"] is True
     assert "preview_files" not in payload
     assert "preview_written" not in payload
-    assert review_path.name.endswith("-library-document-content.md")
+    assert review_path.name == "20260627-215010-library-document-content.md"
     assert "| alpha | Alpha | Preview summary. | library |" in review_text
 
 def test_documents_import_rejects_unconfigured_data_domain() -> None:

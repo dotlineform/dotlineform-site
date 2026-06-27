@@ -204,7 +204,14 @@ export function resetDataSharingReviewResult(state) {
 
 export function updateDataSharingReviewSelectionState(state) {
   updateDataSharingReviewSelectionSummary(state);
+  syncDataSharingReviewPrimaryActionState(state);
   syncDataSharingReviewApplyActionState(state);
+}
+
+function syncDataSharingReviewPrimaryActionState(state) {
+  const selectedFile = selectedDataSharingReviewFile(state);
+  const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
+  state.previewButton.disabled = state.isRunning || !state.serviceAvailable || !selectedFile || !state.dataDomain || !selectedRecordCount;
 }
 
 export function setDataSharingReviewControlsDisabled(state, disabled) {
