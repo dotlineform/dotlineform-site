@@ -18,13 +18,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from docs_scope_config import load_docs_scope_configs
 from docs_data_sharing import source_metadata
 
 
 WORKFLOW_ROOT = Path("var/analytics/data-sharing")
 STAGING_DIR_NAME = "import-staging"
 PREVIEW_DIR_NAME = "import-preview"
-SUPPORTED_SCOPES = {"analytics", "catalogue", "library"}
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 FILENAME_RE = re.compile(r"[^a-z0-9-]+")
@@ -208,6 +208,18 @@ def default_preview_root(scope: str) -> Path:
     return WORKFLOW_ROOT / normalize_text(scope).lower() / PREVIEW_DIR_NAME
 
 
+def supported_scopes(repo_root: Path) -> set[str]:
+    return set(load_docs_scope_configs(repo_root).keys())
+
+
+def validate_scope(repo_root: Path, scope: str) -> str:
+    normalized_scope = normalize_text(scope).lower()
+    scopes = supported_scopes(repo_root)
+    if normalized_scope not in scopes:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(scopes))}")
+    return normalized_scope
+
+
 def issue(
     level: str,
     code: str,
@@ -253,9 +265,7 @@ def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any
 
 
 def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_root: Path | str | None = None) -> Path:
-    normalized_scope = normalize_text(scope).lower()
-    if normalized_scope not in SUPPORTED_SCOPES:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
+    normalized_scope = validate_scope(repo_root, scope)
     base_root = Path(staging_root) if staging_root else default_staging_root(normalized_scope)
     raw_path = Path(staged_file)
     path = raw_path if raw_path.is_absolute() else repo_root / base_root / raw_path
@@ -267,9 +277,7 @@ def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_r
 
 
 def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
-    normalized_scope = normalize_text(scope).lower()
-    if normalized_scope not in SUPPORTED_SCOPES:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
+    normalized_scope = validate_scope(repo_root, scope)
     base_root = Path(staging_root) if staging_root else default_staging_root(normalized_scope)
     resolved_staging_root = (repo_root / base_root).resolve()
     if not resolved_staging_root.exists():
@@ -294,9 +302,7 @@ def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | s
 
 
 def resolve_preview_path(repo_root: Path, scope: str, filename: str, preview_root: Path | str | None = None) -> Path:
-    normalized_scope = normalize_text(scope).lower()
-    if normalized_scope not in SUPPORTED_SCOPES:
-        raise ValueError(f"scope must be one of: {', '.join(sorted(SUPPORTED_SCOPES))}")
+    normalized_scope = validate_scope(repo_root, scope)
     relative = Path(filename)
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"unsafe preview filename: {filename}")

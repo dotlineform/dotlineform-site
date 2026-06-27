@@ -58,8 +58,8 @@ def make_repo() -> tempfile.TemporaryDirectory:
     return temp_dir
 
 
-def write_current_source_docs(root: Path, docs: list[dict]) -> None:
-    source_root = root / "docs-viewer/source/library"
+def write_current_source_docs(root: Path, docs: list[dict], *, scope: str = "library") -> None:
+    source_root = root / "docs-viewer/source" / scope
     source_root.mkdir(parents=True, exist_ok=True)
     for existing in source_root.glob("*.md"):
         existing.unlink()
@@ -82,29 +82,33 @@ def write_current_source_docs(root: Path, docs: list[dict]) -> None:
         (source_root / f"{doc_id}.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_scope_config(root: Path) -> None:
+def scope_config(scope: str) -> dict:
+    public = scope == "library"
+    return {
+        "scope_id": scope,
+        "scope_type": "public" if public else "local",
+        "source": f"docs-viewer/source/{scope}",
+        "media_path_prefix": f"docs/{scope}",
+        "output": f"docs-viewer/generated/docs/{scope}",
+        "search_output": f"docs-viewer/generated/search/{scope}/index.json",
+        "publish_output": f"site/assets/data/docs/scopes/{scope}" if public else f"docs-viewer/generated/docs/{scope}",
+        "publish_search_output": f"site/assets/data/search/{scope}/index.json" if public else f"docs-viewer/generated/search/{scope}/index.json",
+        "viewer_base_url": "/library/" if public else "/docs/",
+        "include_scope_param": not public,
+        "default_doc_id": scope,
+        "allow_unresolved_parent_ids": public,
+    }
+
+
+def write_scope_config(root: Path, scopes: list[str] | None = None) -> None:
+    scope_ids = scopes or ["library"]
     path = root / "docs-viewer/config/scopes/docs_scopes.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(
             {
                 "schema_version": "docs_scopes_v1",
-                "scopes": [
-                    {
-                        "scope_id": "library",
-                        "scope_type": "public",
-                        "source": "docs-viewer/source/library",
-                        "media_path_prefix": "docs/library",
-                        "output": "docs-viewer/generated/docs/library",
-                        "search_output": "docs-viewer/generated/search/library/index.json",
-                        "publish_output": "site/assets/data/docs/scopes/library",
-                        "publish_search_output": "site/assets/data/search/library/index.json",
-                        "viewer_base_url": "/library/",
-                        "include_scope_param": False,
-                        "default_doc_id": "library",
-                        "allow_unresolved_parent_ids": True,
-                    }
-                ],
+                "scopes": [scope_config(scope) for scope in scope_ids],
             },
             ensure_ascii=False,
             indent=2,
@@ -114,14 +118,14 @@ def write_scope_config(root: Path) -> None:
     )
 
 
-def write_staged(root: Path, filename: str, text: str) -> None:
-    path = root / "var/analytics/data-sharing/library/import-staging" / filename
+def write_staged(root: Path, filename: str, text: str, *, scope: str = "library") -> None:
+    path = root / "var/analytics/data-sharing" / scope / "import-staging" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
 
 
-def parse(root: Path, filename: str):
-    return docs_import.parse_staged_import(repo_root=root, scope="library", staged_file=filename)
+def parse(root: Path, filename: str, *, scope: str = "library"):
+    return docs_import.parse_staged_import(repo_root=root, scope=scope, staged_file=filename)
 
 
 def render(root: Path, report: dict, *, write: bool = True, generated_at: str = "2026-05-03T20:40:00Z"):
@@ -187,6 +191,67 @@ def test_staged_import_listing_skips_package_sidecars() -> None:
         files = docs_import.list_staged_import_files(root, "library")
 
     assert [item["filename"] for item in files] == ["summaries.jsonl"]
+
+
+def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_scope_config(root, ["library", "studio"])
+        write_current_source_docs(
+            root,
+            [
+                {"doc_id": "admin", "title": "Admin", "parent_id": "", "viewable": True},
+                {"doc_id": "admin-checks", "title": "Checks", "parent_id": "admin", "viewable": True},
+            ],
+            scope="studio",
+        )
+        write_text(
+            root / "var/analytics/data-sharing/import-staging/documents-document-summaries-20260627-162139.json",
+            json.dumps(
+                {
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": "ds_20260627T152139Z",
+                    "records": [
+                        {
+                            "doc_id": "admin-checks",
+                            "title": "Checks",
+                            "parent_id": "admin",
+                            "current_summary": "",
+                        }
+                    ],
+                }
+            ),
+        )
+        report = docs_import.parse_staged_import(
+            repo_root=root,
+            scope="studio",
+            staged_file="documents-document-summaries-20260627-162139.json",
+            staging_root=Path("var/analytics/data-sharing/import-staging"),
+        )
+        rendered = docs_import.render_markdown_previews(
+            repo_root=root,
+            scope="studio",
+            report=report,
+            write=True,
+            generated_at="2026-06-27T16:21:39Z",
+            preview_root=Path("var/analytics/data-sharing/import-preview"),
+        )
+        files = docs_import.list_staged_import_files(
+            root,
+            "studio",
+            staging_root=Path("var/analytics/data-sharing/import-staging"),
+        )
+
+    assert report["ok"] is True
+    assert report["scope"] == "studio"
+    assert report["current_library"]["source_root"] == "docs-viewer/source/studio"
+    assert report["records"][0]["current_library"]["exists"] is True
+    preview_paths = [item["path"] for item in rendered["preview_files"]]
+    assert (
+        "var/analytics/data-sharing/import-preview/"
+        "admin-checks-20260627-162139.md"
+    ) in preview_paths
+    assert [item["filename"] for item in files] == ["documents-document-summaries-20260627-162139.json"]
 
 
 def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
@@ -596,7 +661,9 @@ def main() -> None:
     tests = [
         test_jsonl_summary_export_rows_are_detected_and_normalized,
         test_staged_import_listing_skips_package_sidecars,
+        test_configured_studio_scope_json_envelope_can_be_previewed,
         test_json_envelope_relationship_export_preserves_tree_metadata,
+        test_json_records_envelope_is_parsed_without_legacy_documents_key,
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,
         test_current_library_lookup_adds_record_level_warnings,

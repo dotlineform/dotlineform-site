@@ -155,7 +155,7 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
     assert child.content_text_length == len("Details\n\nChild body with parent.")
     assert source_metadata.data_sharing_doc_headings(context, "child") == ["Details"]
     assert source_metadata.data_sharing_doc_content_text(context, "child") == "Details\n\nChild body with parent."
-    assert 'href="/docs/?scope=studio&doc=parent"' in source_metadata.render_data_sharing_doc_html(context, "child")
+    assert 'href="parent.md"' in source_metadata.render_data_sharing_doc_html(context, "child")
 
 
 def test_source_metadata_uses_scope_config_without_scope_name_branches() -> None:

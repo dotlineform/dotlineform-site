@@ -229,17 +229,9 @@ export function renderDataSharingReviewPreviewList(state) {
       clearButton: state.clearButton,
       getId: (row) => normalizeText(row && row.id),
       getLabel: (row) => normalizeText(row && row.title),
-      getMeta: (row) => normalizeText(row && row.meta),
+      getMeta: () => [],
       getIndent: (row) => `${Math.max(0, Number(row && row.depth || 0)) * 1.15}rem`,
       isDisabled: (row) => row && row.selectable === false,
-      renderLeading: ({ item }) => {
-        const type = normalizeText(item && item.type);
-        if (!type) return null;
-        const marker = document.createElement("span");
-        marker.className = "dataSharingReviewList__type";
-        marker.textContent = type;
-        return marker;
-      },
       onSelectionChange: ({ selectedIds }) => {
         state.selectedPreviewIds = new Set(selectedIds);
         if (typeof state.onPreviewSelectionChange === "function") {

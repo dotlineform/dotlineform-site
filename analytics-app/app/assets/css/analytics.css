@@ -1313,31 +1313,13 @@ select.analytics__input.dataSharingReviewPage__listbox {
   border-top: 0;
 }
 
-.dataSharingReviewList .sharedSelectableList__leading {
-  width: 6.5rem;
-  min-width: 0;
-}
-
 .dataSharingReviewList .sharedSelectableList__label {
   display: grid;
-  grid-template-columns: 1rem minmax(0, 0.42fr) minmax(0, 0.58fr);
+  grid-template-columns: 1rem minmax(0, 1fr);
   gap: 0.5rem;
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
-}
-
-.dataSharingReviewList .sharedSelectableList__meta {
-  color: var(--muted, var(--analytics-muted));
-  font-size: var(--font-caption);
-}
-
-.dataSharingReviewList__type {
-  display: inline-block;
-  color: var(--muted, var(--analytics-muted));
-  font-size: var(--font-caption);
-  text-transform: lowercase;
-  overflow-wrap: anywhere;
 }
 
 .dataSharingPreparePage__panel {
@@ -2444,16 +2426,8 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
     gap: 0.25rem;
   }
 
-  .dataSharingReviewList .sharedSelectableList__leading {
-    width: 5.4rem;
-  }
-
   .dataSharingReviewList .sharedSelectableList__label {
     grid-template-columns: 1rem minmax(0, 1fr);
-  }
-
-  .dataSharingReviewList .sharedSelectableList__meta {
-    grid-column: 2;
   }
 
   .analytics__buttonFeedback--editor {
