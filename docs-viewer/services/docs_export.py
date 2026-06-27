@@ -319,7 +319,7 @@ def write_json_atomic(path: Path, payload: Any) -> None:
 
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    text = "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows)
+    text = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows)
     path.write_text(text, encoding="utf-8")
 
 

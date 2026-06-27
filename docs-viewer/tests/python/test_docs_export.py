@@ -319,9 +319,13 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
     assert first_context_text == second_context_text
-    rows = [json.loads(line) for line in first_text.splitlines()]
+    lines = first_text.splitlines()
+    rows = [json.loads(line) for line in lines]
     metadata = json.loads(first_metadata_text)
     context = json.loads(first_context_text)
+    assert lines[0].startswith('{"record_type":')
+    assert lines[1].startswith('{"doc_id":')
+    assert lines[1].find('"doc_id"') < lines[1].find('"title"') < lines[1].find('"current_summary"')
     assert rows[0] == {
         "export_id": "ds_20260503T151507Z",
         "record_type": "data_sharing_header",
