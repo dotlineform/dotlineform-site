@@ -94,7 +94,7 @@ def write_staged(root: Path, filename: str, payload: object | str) -> None:
         write_text(path, json.dumps(payload) + "\n")
 
 
-def write_sidecar_meta(root: Path, filename: str, profile_id: str, *, export_id: str = "ds_test") -> None:
+def write_sidecar_meta(root: Path, filename: str, profile_id: str, *, export_id: str = "ds_20260627T120000Z") -> None:
     stem = Path(filename).with_suffix("").name
     write_staged(
         root,
@@ -115,6 +115,9 @@ def write_internal_meta(root: Path, export_id: str, profile_id: str) -> None:
             {
                 "schema_version": "data_sharing_export_meta_v1",
                 "export_id": export_id,
+                "app": "docs-viewer",
+                "adapter_id": "documents",
+                "data_domain": "documents",
                 "config_id": profile_id,
                 "profile_id": profile_id,
                 "scope": "library",
@@ -140,11 +143,77 @@ def render(root: Path, report: dict) -> dict:
     )
 
 
-def test_missing_profile_metadata_fails_closed() -> None:
+def test_missing_export_id_fails_closed() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "returned.json", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
         report = parse(root, "returned.json")
+
+    assert report["ok"] is False
+    assert report["detected_import_type"] == "unknown"
+    assert report["counts"]["errors"] == 1
+    assert [item["code"] for item in report["issues"]] == ["missing_export_id"]
+
+
+def test_sidecar_metadata_is_not_a_fallback() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T120000Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": export_id,
+                },
+                {"doc_id": "alpha", "title": "Alpha", "summary": "New summary."},
+            ],
+        )
+        write_sidecar_meta(root, "content.jsonl", "document-content", export_id=export_id)
+        report = parse(root, "content.jsonl")
+
+    assert report["ok"] is False
+    assert report["detected_import_type"] == "unknown"
+    assert report["counts"]["errors"] == 1
+    assert [item["code"] for item in report["issues"]] == ["missing_export_metadata"]
+
+
+def test_config_id_is_not_a_profile_id_fallback() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T120005Z"
+        write_text(
+            root / f"var/analytics/data-sharing/meta/{export_id}.meta.json",
+            json.dumps(
+                {
+                    "schema_version": "data_sharing_export_meta_v1",
+                    "export_id": export_id,
+                    "app": "docs-viewer",
+                    "adapter_id": "documents",
+                    "data_domain": "documents",
+                    "config_id": "document-content",
+                    "scope": "library",
+                    "target_format": "jsonl",
+                    "record_shape": "document_rows",
+                }
+            )
+            + "\n",
+        )
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": export_id,
+                },
+                {"doc_id": "alpha", "title": "Alpha", "summary": "New summary."},
+            ],
+        )
+        report = parse(root, "content.jsonl")
 
     assert report["ok"] is False
     assert report["detected_import_type"] == "unknown"
@@ -155,10 +224,17 @@ def test_missing_profile_metadata_fails_closed() -> None:
 def test_document_content_profile_is_sparse_document_changes() -> None:
     with make_repo() as temp:
         root = Path(temp)
+        export_id = "ds_20260627T120001Z"
+        write_internal_meta(root, export_id, "document-content")
         write_staged(
             root,
             "content.jsonl",
             [
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": export_id,
+                },
                 {
                     "doc_id": "alpha",
                     "title": "Alpha",
@@ -169,7 +245,6 @@ def test_document_content_profile_is_sparse_document_changes() -> None:
                 }
             ],
         )
-        write_sidecar_meta(root, "content.jsonl", "document-content", export_id="ds_content")
         report = render(root, parse(root, "content.jsonl"))
         preview = (
             root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md"
@@ -177,7 +252,7 @@ def test_document_content_profile_is_sparse_document_changes() -> None:
 
     assert report["ok"] is True
     assert report["detected_import_type"] == "document_changes"
-    assert report["source_export_id"] == "ds_content"
+    assert report["source_export_id"] == export_id
     assert report["source_profile_id"] == "document-content"
     assert report["records"][0]["metadata"]["summary"] == "New summary."
     assert report["records"][0]["relationships"]["children"] == [{"id": "alpha-child", "title": "Alpha Child"}]
@@ -227,10 +302,13 @@ def test_jsonl_header_export_id_loads_internal_profile_metadata() -> None:
 def test_relationship_profile_is_selected_only_by_metadata() -> None:
     with make_repo() as temp:
         root = Path(temp)
+        export_id = "ds_20260627T120002Z"
+        write_internal_meta(root, export_id, "parent-child-relationships")
         write_staged(
             root,
             "relationships.json",
             {
+                "export_id": export_id,
                 "records": [
                     {
                         "doc_id": "library",
@@ -240,12 +318,11 @@ def test_relationship_profile_is_selected_only_by_metadata() -> None:
                 ]
             },
         )
-        write_sidecar_meta(root, "relationships.json", "parent-child-relationships", export_id="ds_relationships")
         report = parse(root, "relationships.json")
 
     assert report["ok"] is True
     assert report["detected_import_type"] == "parent_child_relationships"
-    assert report["source_export_id"] == "ds_relationships"
+    assert report["source_export_id"] == export_id
     assert report["source_profile_id"] == "parent-child-relationships"
     assert report["records"][0]["relationships"]["children"] == [{"id": "alpha", "title": "Alpha"}]
 
@@ -253,8 +330,9 @@ def test_relationship_profile_is_selected_only_by_metadata() -> None:
 def test_unsupported_profile_metadata_fails_closed() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "returned.json", [{"doc_id": "alpha", "title": "Alpha"}])
-        write_sidecar_meta(root, "returned.json", "future-profile")
+        export_id = "ds_20260627T120003Z"
+        write_internal_meta(root, export_id, "future-profile")
+        write_staged(root, "returned.json", {"export_id": export_id, "records": [{"doc_id": "alpha", "title": "Alpha"}]})
         report = parse(root, "returned.json")
 
     assert report["ok"] is False
@@ -266,7 +344,18 @@ def test_unsupported_profile_metadata_fails_closed() -> None:
 def test_invalid_jsonl_is_a_file_level_blocker() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "broken.jsonl", '{"doc_id": "alpha"}\n{bad json}\n')
+        write_staged(
+            root,
+            "broken.jsonl",
+            json.dumps(
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": "ds_20260627T120004Z",
+                }
+            )
+            + "\n{bad json}\n",
+        )
         report = parse(root, "broken.jsonl")
 
     assert report["ok"] is False
@@ -290,7 +379,9 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
 
 def main() -> None:
     tests = [
-        test_missing_profile_metadata_fails_closed,
+        test_missing_export_id_fails_closed,
+        test_sidecar_metadata_is_not_a_fallback,
+        test_config_id_is_not_a_profile_id_fallback,
         test_document_content_profile_is_sparse_document_changes,
         test_jsonl_header_export_id_loads_internal_profile_metadata,
         test_relationship_profile_is_selected_only_by_metadata,

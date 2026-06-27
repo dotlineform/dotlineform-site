@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-5eb6e754c6d3589afcb6f95b1e6d5aaa",
-    "generated_at_utc": "2026-06-26T22:55:56Z",
-    "count": 18
+    "version": "blake2b-3516f11b6f35c7e59206aedfaa3642a6",
+    "generated_at_utc": "2026-06-27T21:10:21Z",
+    "count": 23
   },
   "entries": [
     {
@@ -107,6 +107,22 @@
       "search_text": "emoji 2026-05-28 2026 05 28"
     },
     {
+      "id": "figma",
+      "kind": "doc",
+      "title": "figma",
+      "href": "/docs/?scope=tmp&doc=figma",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
+      "search_terms": [
+        "figma",
+        "2026-06-26",
+        "2026",
+        "06",
+        "26"
+      ],
+      "search_text": "figma 2026-06-26 2026 06 26"
+    },
+    {
       "id": "file-picker",
       "kind": "doc",
       "title": "file picker component",
@@ -127,6 +143,22 @@
       "search_text": "file-picker file picker file picker component component 2026-06-14 2026 06 14"
     },
     {
+      "id": "frontmatter",
+      "kind": "doc",
+      "title": "frontmatter",
+      "href": "/docs/?scope=tmp&doc=frontmatter",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
+      "search_terms": [
+        "frontmatter",
+        "2026-06-26",
+        "2026",
+        "06",
+        "26"
+      ],
+      "search_text": "frontmatter 2026-06-26 2026 06 26"
+    },
+    {
       "id": "github-notes",
       "kind": "doc",
       "title": "github notes",
@@ -144,6 +176,22 @@
         "12"
       ],
       "search_text": "github-notes github notes github notes 2026-06-12 2026 06 12"
+    },
+    {
+      "id": "hd",
+      "kind": "doc",
+      "title": "HD",
+      "href": "/docs/?scope=tmp&doc=hd",
+      "last_updated": "2026-06-20",
+      "display_meta": "2026-06-20",
+      "search_terms": [
+        "hd",
+        "2026-06-20",
+        "2026",
+        "06",
+        "20"
+      ],
+      "search_text": "hd 2026-06-20 2026 06 20"
     },
     {
       "id": "index-space",
@@ -196,6 +244,25 @@
         "28"
       ],
       "search_text": "links 2026-05-28 2026 05 28"
+    },
+    {
+      "id": "notes-cache",
+      "kind": "doc",
+      "title": "notes cache",
+      "href": "/docs/?scope=tmp&doc=notes-cache",
+      "last_updated": "2026-06-20",
+      "display_meta": "2026-06-20",
+      "search_terms": [
+        "notes-cache",
+        "notes",
+        "cache",
+        "notes cache",
+        "2026-06-20",
+        "2026",
+        "06",
+        "20"
+      ],
+      "search_text": "notes-cache notes cache notes cache 2026-06-20 2026 06 20"
     },
     {
       "id": "panel-sizes",
@@ -301,6 +368,22 @@
       "search_text": "risk-runtime-browser-evidence-plan risk runtime browser evidence plan risk runtime browser evidence - plan risks 2026-06-08 2026 06 08"
     },
     {
+      "id": "search",
+      "kind": "doc",
+      "title": "search",
+      "href": "/docs/?scope=tmp&doc=search",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
+      "search_terms": [
+        "search",
+        "2026-06-26",
+        "2026",
+        "06",
+        "26"
+      ],
+      "search_text": "search 2026-06-26 2026 06 26"
+    },
+    {
       "id": "tmp",
       "kind": "doc",
       "title": "tmp",
@@ -317,20 +400,23 @@
       "search_text": "tmp 2026-06-26 2026 06 26"
     },
     {
-      "id": "jekyll",
+      "id": "vs-code",
       "kind": "doc",
-      "title": "jekyll",
-      "href": "/docs/?scope=tmp&doc=jekyll",
-      "last_updated": "2026-05-30",
-      "display_meta": "2026-05-30",
+      "title": "vs code",
+      "href": "/docs/?scope=tmp&doc=vs-code",
+      "last_updated": "2026-06-26",
+      "display_meta": "2026-06-26",
       "search_terms": [
-        "jekyll",
-        "2026-05-30",
+        "vs-code",
+        "vs",
+        "code",
+        "vs code",
+        "2026-06-26",
         "2026",
-        "05",
-        "30"
+        "06",
+        "26"
       ],
-      "search_text": "jekyll 2026-05-30 2026 05 30"
+      "search_text": "vs-code vs code vs code 2026-06-26 2026 06 26"
     }
   ]
 }

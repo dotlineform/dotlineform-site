@@ -233,12 +233,3 @@ Runtime validation checks source-dependent concerns such as unknown `doc_id` val
 Blocking profile errors include duplicate profile ids, unsupported target formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `source_text` mappings that would emit raw rendered HTML, and truncating mappings without configured integer limits.
 
 Warnings are reserved for non-blocking runtime context such as expected skipped filters, ignored `doc_ids` when `select_all` is true, ignored `missing_summary_only` on unsupported profiles, truncation, and deferred `max_total_chars` enforcement.
-
-## Verification
-
-Run focused checks after changing document prepare profiles:
-
-```bash
-$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_export.py -q
-$HOME/miniconda3/bin/python3 -m pytest analytics-app/tests/python/test_analytics_data_sharing_api.py analytics-app/tests/python/test_data_sharing_adapters.py -q
-```

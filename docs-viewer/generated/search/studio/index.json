@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9ec16b4c55684f687bcb5fdfd6aec9ed",
-    "generated_at_utc": "2026-06-27T20:19:17Z",
-    "count": 227
+    "version": "blake2b-c783a910c42368a694a776cde5ad43a1",
+    "generated_at_utc": "2026-06-27T20:35:52Z",
+    "count": 228
   },
   "entries": [
     {
@@ -1546,6 +1546,32 @@
         "25"
       ],
       "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-25 2026 06 25"
+    },
+    {
+      "id": "data-sharing-documents-returned-package-review",
+      "kind": "doc",
+      "title": "Documents Returned Package Review",
+      "href": "/docs/?scope=studio&doc=data-sharing-documents-returned-package-review",
+      "last_updated": "2026-06-27",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-06-27 • Data Sharing",
+      "search_terms": [
+        "data-sharing-documents-returned-package-review",
+        "data",
+        "sharing",
+        "documents",
+        "returned",
+        "package",
+        "review",
+        "documents returned package review",
+        "data sharing",
+        "2026-06-27",
+        "2026",
+        "06",
+        "27"
+      ],
+      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-06-27 2026 06 27"
     },
     {
       "id": "data-sharing-tags-adapter-structure",

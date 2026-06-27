@@ -11,6 +11,14 @@
       "parent_title": "Data Sharing"
     },
     {
+      "doc_id": "data-sharing-documents-returned-package-review",
+      "title": "Documents Returned Package Review",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-returned-package-review.json",
+      "added_date": "2026-06-27",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing"
+    },
+    {
       "doc_id": "ui-selectable-list-component",
       "title": "Selectable List Component",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-selectable-list-component.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "docs-viewer-semantic-references-editor",
-      "title": "Semantic References Editor",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references-editor.json",
-      "added_date": "2026-06-23",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-06-27T20:19:17Z"
+  "generated_at": "2026-06-27T20:35:51Z"
 }

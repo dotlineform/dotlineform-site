@@ -12,7 +12,7 @@ from docs_export import (
     update_external_context_config,
 )
 from docs_data_sharing import source_metadata
-from docs_import import list_staged_import_files
+from services.returned_metadata import list_staged_files_with_metadata
 import docs_source_model as source_model
 
 
@@ -140,9 +140,18 @@ def update_document_prepare_context(
 
 def list_returned_document_packages(repo_root: Path, *, scope: str, staging_root: Path) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
-    return {
-        "ok": True,
-        "scope": normalized_scope,
-        "staging_root": staging_root.as_posix(),
-        "files": list_staged_import_files(repo_root, normalized_scope, staging_root=staging_root),
-    }
+    report = list_staged_files_with_metadata(repo_root, staging_root=staging_root)
+    report["scope"] = normalized_scope
+    report["files"] = [
+        item
+        for item in report.get("files", [])
+        if not item.get("metadata_ok")
+        or (
+            str(item.get("data_domain") or "").strip() == "documents"
+            and (
+                not str(item.get("scope") or "").strip()
+                or str(item.get("scope") or "").strip() == normalized_scope
+            )
+        )
+    ]
+    return report

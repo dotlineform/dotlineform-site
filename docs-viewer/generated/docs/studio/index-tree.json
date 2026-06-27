@@ -361,6 +361,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-prepare-profiles.json"
         },
         {
+          "doc_id": "data-sharing-documents-returned-package-review",
+          "title": "Documents Returned Package Review",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-returned-package-review.json"
+        },
+        {
           "doc_id": "data-sharing-tags-adapter-structure",
           "title": "Tags Data Sharing Adapter Structure",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-tags-adapter-structure.json"
@@ -1224,5 +1229,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-27T20:19:17Z"
+  "generated_at": "2026-06-27T20:35:51Z"
 }

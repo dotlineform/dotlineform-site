@@ -30,6 +30,7 @@ TEXT_WHITESPACE_RE = re.compile(r"\s+")
 FILENAME_RE = re.compile(r"[^a-z0-9-]+")
 STAGED_PREFIX_TIMESTAMP_RE = re.compile(r"^(?P<timestamp>\d{8}-\d{6})[-_](?P<base>.+)$")
 STAGED_SUFFIX_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
+EXPORT_ID_RE = re.compile(r"^ds_\d{8}T\d{6}Z$")
 
 PROFILE_ID_TO_IMPORT_TYPE = {
     "parent-child-relationships": "parent_child_relationships",
@@ -340,18 +341,14 @@ def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
         return None, [issue("error", "invalid_json", f"invalid JSON: {exc.msg}", line=exc.lineno)]
 
 
-def package_metadata_sidecar_path(path: Path) -> Path:
-    return path.with_suffix(".meta.json")
-
-
 def internal_metadata_path(repo_root: Path, export_id: str) -> Path | None:
     normalized = normalize_text(export_id)
-    if not re.fullmatch(r"[A-Za-z0-9_.:-]+", normalized):
+    if not EXPORT_ID_RE.fullmatch(normalized):
         return None
     return repo_root / WORKFLOW_ROOT / "meta" / f"{normalized}.meta.json"
 
 
-def metadata_from_jsonl_header(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+def export_id_from_jsonl_header(path: Path) -> tuple[str, list[dict[str, Any]]]:
     try:
         for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
             if not line.strip():
@@ -359,39 +356,48 @@ def metadata_from_jsonl_header(path: Path) -> tuple[dict[str, Any], dict[str, An
             try:
                 row = json.loads(line)
             except json.JSONDecodeError as exc:
-                return {}, {}, [issue("error", "invalid_jsonl", f"invalid JSONL on line {line_number}: {exc.msg}", line=line_number)]
-            if isinstance(row, dict) and row.get("record_type") == "data_sharing_header":
-                metadata, unknown = file_metadata_from_envelope(row)
-                return metadata, unknown, []
-            return {}, {}, []
+                return "", [issue("error", "invalid_jsonl", f"invalid JSONL on line {line_number}: {exc.msg}", line=line_number)]
+            if not isinstance(row, dict) or row.get("record_type") != "data_sharing_header":
+                return "", [
+                    issue(
+                        "error",
+                        "missing_export_id",
+                        "first JSONL row must be a data_sharing_header with export_id",
+                        line=line_number,
+                    )
+                ]
+            export_id = normalize_text(row.get("export_id"))
+            if not export_id:
+                return "", [issue("error", "missing_export_id", "JSONL header is missing export_id", line=line_number)]
+            if not EXPORT_ID_RE.fullmatch(export_id):
+                return "", [issue("error", "invalid_export_id", f"invalid export_id: {export_id}", line=line_number)]
+            return export_id, []
     except OSError as exc:
-        return {}, {}, [issue("error", "unreadable_file", f"unreadable file: {exc}")]
-    return {}, {}, []
-
-
-def metadata_from_package_sidecar(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
-    metadata_path = package_metadata_sidecar_path(path)
-    if not metadata_path.exists():
-        return {}, {}, [], None
-    payload, issues = parse_json_file(metadata_path)
-    if any(item["level"] == "error" for item in issues):
-        return {}, {}, issues, metadata_path
-    if not isinstance(payload, dict):
-        return {}, {}, [issue("error", "invalid_metadata_sidecar", "JSONL metadata sidecar is not a JSON object")], metadata_path
-    metadata, unknown = file_metadata_from_envelope(payload)
-    return metadata, unknown, [], metadata_path
+        return "", [issue("error", "unreadable_file", f"unreadable file: {exc}")]
+    return "", [issue("error", "missing_export_id", "JSONL file is empty")]
 
 
 def metadata_from_internal_export_meta(repo_root: Path, export_id: str) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
     metadata_path = internal_metadata_path(repo_root, export_id)
-    if metadata_path is None or not metadata_path.exists():
-        return {}, {}, [], None
+    if metadata_path is None:
+        return {}, {}, [issue("error", "invalid_export_id", f"invalid export_id: {export_id}")], None
+    if not metadata_path.exists():
+        return {}, {}, [issue("error", "missing_export_metadata", f"metadata file not found for export_id: {export_id}")], metadata_path
     payload, issues = parse_json_file(metadata_path)
     if any(item["level"] == "error" for item in issues):
         return {}, {}, issues, metadata_path
     if not isinstance(payload, dict):
         return {}, {}, [issue("error", "invalid_metadata_file", "internal export metadata file is not a JSON object")], metadata_path
     metadata, unknown = file_metadata_from_envelope(payload)
+    metadata_export_id = normalize_text(metadata.get("export_id"))
+    if metadata_export_id != export_id:
+        return {}, {}, [
+            issue(
+                "error",
+                "metadata_export_id_mismatch",
+                f"metadata export_id {metadata_export_id or '<missing>'} does not match {export_id}",
+            )
+        ], metadata_path
     return metadata, unknown, [], metadata_path
 
 
@@ -455,6 +461,17 @@ def rows_from_payload(payload: Any) -> tuple[list[Any], dict[str, Any], dict[str
         return [], {}, copy.deepcopy(payload), issues
     issues.append(issue("warning", "unsupported_import_shape", "JSON payload is not an object or array"))
     return [], {}, {}, issues
+
+
+def export_id_from_json_payload(payload: Any) -> tuple[str, list[dict[str, Any]]]:
+    if not isinstance(payload, dict):
+        return "", [issue("error", "missing_export_id", "JSON staged file must be an object with export_id")]
+    export_id = normalize_text(payload.get("export_id"))
+    if not export_id:
+        return "", [issue("error", "missing_export_id", "JSON staged file is missing export_id")]
+    if not EXPORT_ID_RE.fullmatch(export_id):
+        return "", [issue("error", "invalid_export_id", f"invalid export_id: {export_id}")]
+    return export_id, []
 
 
 def read_json_object(path: Path, label: str) -> dict[str, Any]:
@@ -548,7 +565,7 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
 
 
 def detect_import_type(source_metadata: dict[str, Any]) -> str:
-    profile_id = normalize_text(source_metadata.get("profile_id") or source_metadata.get("config_id"))
+    profile_id = normalize_text(source_metadata.get("profile_id"))
     if profile_id in PROFILE_ID_TO_IMPORT_TYPE:
         return PROFILE_ID_TO_IMPORT_TYPE[profile_id]
     return "unknown"
@@ -949,28 +966,23 @@ def parse_staged_import(
         return report
 
     try:
-        file_metadata, unknown_file_metadata, metadata_issues, metadata_path = metadata_from_package_sidecar(path)
-        if metadata_path is not None:
-            report["source_metadata_file"] = relative_path(repo_root, metadata_path)
+        file_metadata: dict[str, Any] = {}
+        unknown_file_metadata: dict[str, Any] = {}
+        export_id_for_metadata = ""
         if extension == ".jsonl":
-            header_metadata, header_unknown_metadata, header_issues = metadata_from_jsonl_header(path)
-            file_metadata.update(header_metadata)
-            unknown_file_metadata.update(header_unknown_metadata)
-            metadata_issues.extend(header_issues)
+            export_id_for_metadata, metadata_issues = export_id_from_jsonl_header(path)
             raw_rows, parse_issues = parse_jsonl_file(path)
             parse_issues.extend(metadata_issues)
         else:
             payload, parse_issues = parse_json_file(path)
-            parse_issues.extend(metadata_issues)
             if any(item["level"] == "error" for item in parse_issues):
                 raw_rows = []
             else:
-                raw_rows, payload_metadata, payload_unknown_metadata, shape_issues = rows_from_payload(payload)
-                file_metadata.update(payload_metadata)
-                unknown_file_metadata.update(payload_unknown_metadata)
+                export_id_for_metadata, metadata_issues = export_id_from_json_payload(payload)
+                parse_issues.extend(metadata_issues)
+                raw_rows, _payload_metadata, _payload_unknown_metadata, shape_issues = rows_from_payload(payload)
                 parse_issues.extend(shape_issues)
-        export_id_for_metadata = normalize_text(file_metadata.get("export_id"))
-        if export_id_for_metadata and not normalize_text(file_metadata.get("profile_id") or file_metadata.get("config_id")):
+        if export_id_for_metadata and not any(item["level"] == "error" for item in parse_issues):
             internal_metadata, internal_unknown_metadata, internal_issues, internal_metadata_path = metadata_from_internal_export_meta(
                 repo_root,
                 export_id_for_metadata,
@@ -1030,7 +1042,7 @@ def parse_staged_import(
     current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
     report["issues"].extend(current_issues)
     source_export_id = normalize_text(source_metadata.get("export_id"))
-    source_profile_id = normalize_text(source_metadata.get("profile_id") or source_metadata.get("config_id"))
+    source_profile_id = normalize_text(source_metadata.get("profile_id"))
     report["source_export_id"] = source_export_id
     report["source_profile_id"] = source_profile_id
     report["source_scope"] = normalize_text(source_metadata.get("scope"))
@@ -1056,7 +1068,7 @@ def parse_staged_import(
                 issue(
                     "error",
                     "missing_import_metadata",
-                    "missing import profile metadata: profile_id or config_id is required",
+                    "missing import profile metadata: profile_id is required",
                 )
             )
     elif raw_rows and report["detected_import_type"] == "unknown":
