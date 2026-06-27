@@ -41,17 +41,15 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             dry_run=False,
         )
         preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-alpha.md"))
-        tree_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-summaries-tree.md"))
         preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["preview_written"] is True
     assert len(preview_paths) == 1
-    assert len(tree_paths) == 1
     assert f"var/analytics/data-sharing/import-preview/{preview_paths[0].name}" in [
         item["path"] for item in payload["preview_files"]
     ]
-    assert payload["summary_text"] == "Generated 2 Library import preview files."
+    assert payload["summary_text"] == "Generated 1 Library import preview file."
     assert "Preview summary." in preview_text
 
 def test_library_import_preview_dry_run_reports_without_writing() -> None:

@@ -522,7 +522,6 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
 
     assert report["preview_written"] is True
     assert [item["path"] for item in report["preview_files"]] == [
-        "var/analytics/data-sharing/library/import-preview/20260503-204000-summaries-tree.md",
         "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md",
         "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha-record-2.md",
         "var/analytics/data-sharing/library/import-preview/20260503-204000-record-3.md",
@@ -559,11 +558,6 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
 
     assert report["preview_files"] == [
         {
-            "path": "var/analytics/data-sharing/library/import-preview/20260102-030405-content-tree.md",
-            "record_count": 1,
-            "kind": "relationship_tree",
-        },
-        {
             "path": "var/analytics/data-sharing/library/import-preview/20260102-030405-alpha.md",
             "record_index": 0,
             "doc_id": "alpha",
@@ -572,39 +566,6 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
     ]
     assert "## Imported Headings\n\n- One\n- Two" in preview
     assert "## Imported Source Text\n\n# One\n\n- A point\n\n> A quote" in preview
-
-
-def test_relationship_preview_writes_one_whole_tree_file() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        payload = {
-            "records": [
-                {"doc_id": "library", "title": "Library", "parent_id": ""},
-                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Alpha summary."},
-                {"doc_id": "beta", "title": "Beta", "parent_id": "library", "headings": ["Beta Heading"]},
-            ],
-        }
-        write_staged(root, "relationships.json", json.dumps(payload))
-        write_staged(
-            root,
-            "relationships.meta.json",
-            json.dumps({"export_id": "parent-child-relationships", "scope": "library"}),
-        )
-        report = render(root, parse(root, "relationships.json"))
-        preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-relationships-tree.md").read_text(encoding="utf-8")
-
-    assert report["preview_files"][:1] == [
-        {
-            "path": "var/analytics/data-sharing/library/import-preview/20260503-204000-relationships-tree.md",
-            "record_count": 3,
-            "kind": "relationship_tree",
-        }
-    ]
-    assert [item["kind"] for item in report["preview_files"]] == ["relationship_tree", "document", "document", "document"]
-    assert 'import_type: "parent_child_relationships"' in preview
-    assert "- Library (`library`)\n  - Alpha (`alpha`)" in preview
-    assert "  - summary: Alpha summary." in preview
-    assert "  - Beta (`beta`)\n    - headings: Beta Heading" in preview
 
 
 def test_preview_renderer_can_dry_run_without_writing_files() -> None:
@@ -671,7 +632,6 @@ def main() -> None:
         test_missing_source_metadata_adds_current_context_warning,
         test_summary_preview_writes_one_file_per_document_with_fallback_names,
         test_full_content_preview_preserves_headings_and_source_text,
-        test_relationship_preview_writes_one_whole_tree_file,
         test_preview_renderer_can_dry_run_without_writing_files,
         test_preview_path_rejects_unsafe_filename,
         test_invalid_jsonl_is_a_file_level_blocker,

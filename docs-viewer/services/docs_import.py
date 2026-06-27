@@ -685,11 +685,6 @@ def record_preview_filename(record: dict[str, Any], seen: dict[str, int], timest
     return f"{timestamp_suffix}-{base}.md"
 
 
-def relationship_preview_filename(report: dict[str, Any], timestamp_suffix: str) -> str:
-    base = staged_stem_without_timestamp(report, "relationships")
-    return f"{timestamp_suffix}-{base}-tree.md"
-
-
 def render_doc_front_matter(record: dict[str, Any], report: dict[str, Any], generated_at: str) -> str:
     import_type = normalize_text(report.get("detected_import_type"))
     return render_preview_metadata_sections(
@@ -830,103 +825,6 @@ def render_full_content_preview(report: dict[str, Any], record: dict[str, Any], 
     return "\n".join(lines).rstrip() + "\n"
 
 
-def children_by_parent(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
-    children: dict[str, list[dict[str, Any]]] = {}
-    for record in records:
-        parent_id = normalize_text(record.get("parent_id"))
-        children.setdefault(parent_id, []).append(record)
-    return children
-
-
-def render_tree_item(
-    record: dict[str, Any],
-    *,
-    children: dict[str, list[dict[str, Any]]],
-    depth: int,
-    visited: set[str],
-    rendered: set[str],
-    lines: list[str],
-) -> None:
-    doc_id = normalize_text(record.get("doc_id")) or f"record-{int(record.get('record_index') or 0) + 1}"
-    title = normalize_text(record.get("title")) or "[missing title]"
-    indent = "  " * depth
-    lines.append(f"{indent}- {title} (`{doc_id}`)")
-    rendered.add(doc_id)
-    if doc_id in visited:
-        lines.append(f"{indent}  - [cycle detected]")
-        return
-    visited.add(doc_id)
-    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
-    summary = normalize_text(metadata.get("summary") or metadata.get("current_summary"))
-    headings = metadata.get("headings") if isinstance(metadata.get("headings"), list) else []
-    if summary:
-        lines.append(f"{indent}  - summary: {markdown_escape_inline(summary)}")
-    if headings:
-        lines.append(f"{indent}  - headings: {', '.join(markdown_escape_inline(item) for item in headings)}")
-    for child in children.get(doc_id, []):
-        render_tree_item(child, children=children, depth=depth + 1, visited=visited, rendered=rendered, lines=lines)
-    visited.remove(doc_id)
-
-
-def render_relationship_preview(report: dict[str, Any], generated_at: str) -> str:
-    records = [record for record in report.get("records", []) if isinstance(record, dict)]
-    ids = {normalize_text(record.get("doc_id")) for record in records if normalize_text(record.get("doc_id"))}
-    children = children_by_parent(records)
-    roots = [
-        record
-        for record in records
-        if not normalize_text(record.get("parent_id")) or normalize_text(record.get("parent_id")) not in ids
-    ]
-    if not roots:
-        roots = records
-    lines = [
-        front_matter(
-            {
-                "title": f"{scope_title(normalize_text(report.get('scope')))} Import Relationship Tree",
-                "import_type": normalize_text(report.get("detected_import_type")),
-                "preview_generated_at": generated_at,
-            }
-        ),
-        "",
-        f"# {scope_title(normalize_text(report.get('scope')))} Import Relationship Tree",
-        "",
-        "## Import Metadata",
-        "",
-        f"- source file: `{normalize_text(report.get('input_file'))}`",
-        f"- records: {len(records)}",
-        "",
-    ]
-    report_issues = [
-        item
-        for item in report.get("issues", [])
-        if isinstance(item, dict)
-    ]
-    lines.extend(render_issue_list(report_issues))
-    lines.extend(["## Candidate Tree", ""])
-    rendered_ids: set[str] = set()
-    for root in roots:
-        root_id = normalize_text(root.get("doc_id")) or f"record-{int(root.get('record_index') or 0) + 1}"
-        if root_id in rendered_ids:
-            continue
-        render_tree_item(root, children=children, depth=0, visited=set(), rendered=rendered_ids, lines=lines)
-    for record in records:
-        doc_id = normalize_text(record.get("doc_id")) or f"record-{int(record.get('record_index') or 0) + 1}"
-        if doc_id not in rendered_ids:
-            render_tree_item(record, children=children, depth=0, visited=set(), rendered=rendered_ids, lines=lines)
-    lines.append("")
-    return "\n".join(lines).rstrip() + "\n"
-
-
-def has_relationship_metadata(records: list[dict[str, Any]]) -> bool:
-    for record in records:
-        if normalize_text(record.get("parent_id")):
-            return True
-        relationships = record.get("relationships") if isinstance(record.get("relationships"), dict) else {}
-        if any(relationships.get(key) for key in ["ancestor_ids", "ancestor_titles", "child_ids", "child_titles"]):
-            return True
-    return False
-
-
 def render_markdown_previews(
     *,
     repo_root: Path,
@@ -946,15 +844,6 @@ def render_markdown_previews(
     import_type = normalize_text(report.get("detected_import_type"))
     records = [record for record in report.get("records", []) if isinstance(record, dict)]
     preview_files: list[dict[str, Any]] = []
-
-    if has_relationship_metadata(records):
-        filename = relationship_preview_filename(report, timestamp_suffix)
-        path = resolve_preview_path(repo_root, scope, filename, preview_root)
-        content = render_relationship_preview(report, generated)
-        preview_files.append({"path": relative_path(repo_root, path), "record_count": len(records), "kind": "relationship_tree"})
-        if write:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding="utf-8")
 
     seen: dict[str, int] = {}
     for record in records:

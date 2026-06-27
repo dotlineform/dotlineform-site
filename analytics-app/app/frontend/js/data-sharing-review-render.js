@@ -31,11 +31,6 @@ function previewRowId(item, index) {
 export function buildDataSharingReviewPreviewRows(state, payload) {
   const genericRows = Array.isArray(payload && payload.review_rows) ? payload.review_rows : [];
   return genericRows
-    .filter((row) => {
-      const rowType = normalizeText(row && row.type);
-      const rowKind = normalizeText(row && row.kind);
-      return rowType !== "relationship_tree" && rowKind !== "relationship_tree";
-    })
     .map((row, index) => normalizeReviewRow(state, row, index))
     .filter(Boolean);
 }

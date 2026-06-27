@@ -32,44 +32,19 @@ def duplicate_doc_ids(records: list[Dict[str, Any]]) -> set[str]:
     return {doc_id for doc_id, count in counts.items() if count > 1}
 
 
-def ordered_document_records(records: list[Dict[str, Any]]) -> list[tuple[Dict[str, Any], int]]:
-    ids = {normalize_text(record.get("doc_id")) for record in records if normalize_text(record.get("doc_id"))}
-    children_by_parent: dict[str, list[Dict[str, Any]]] = {}
-    for record in records:
-        doc_id = normalize_text(record.get("doc_id"))
-        parent_id = normalize_text(record.get("parent_id"))
-        parent_key = parent_id if parent_id and parent_id != doc_id else ""
-        children_by_parent.setdefault(parent_key, []).append(record)
-
-    roots = [
-        record
-        for record in records
-        if not normalize_text(record.get("parent_id"))
-        or normalize_text(record.get("parent_id")) not in ids
-        or normalize_text(record.get("parent_id")) == normalize_text(record.get("doc_id"))
-    ]
-    ordered: list[tuple[Dict[str, Any], int]] = []
-    rendered: set[int] = set()
-
-    def visit(record: Dict[str, Any], depth: int, active_doc_ids: set[str]) -> None:
-        identity = id(record)
-        if identity in rendered:
-            return
-        rendered.add(identity)
-        ordered.append((record, depth))
-        doc_id = normalize_text(record.get("doc_id"))
-        if not doc_id or doc_id in active_doc_ids:
-            return
-        next_active = set(active_doc_ids)
-        next_active.add(doc_id)
-        for child in children_by_parent.get(doc_id, []):
-            visit(child, depth + 1, next_active)
-
-    for record in roots:
-        visit(record, 0, set())
-    for record in records:
-        visit(record, 0, set())
-    return ordered
+def document_record_depth(record: Dict[str, Any], by_doc_id: dict[str, Dict[str, Any]], active_doc_ids: set[str] | None = None) -> int:
+    doc_id = normalize_text(record.get("doc_id"))
+    parent_id = normalize_text(record.get("parent_id"))
+    if not doc_id or not parent_id or parent_id == doc_id:
+        return 0
+    active = set(active_doc_ids or set())
+    if doc_id in active:
+        return 0
+    parent = by_doc_id.get(parent_id)
+    if parent is None:
+        return 0
+    active.add(doc_id)
+    return document_record_depth(parent, by_doc_id, active) + 1
 
 
 def review_row_meta(scope: str, record: Dict[str, Any], duplicates: set[str]) -> str:
@@ -88,24 +63,12 @@ def build_review_rows(report: Dict[str, Any], scope: str) -> list[Dict[str, Any]
     issues_by_record = record_issue_map(report)
     duplicates = duplicate_doc_ids(records)
     rows: list[Dict[str, Any]] = []
-    for index, item in enumerate(report.get("preview_files", [])):
-        if not isinstance(item, dict) or normalize_text(item.get("kind")) != "relationship_tree":
-            continue
-        path = normalize_text(item.get("path"))
-        rows.append(
-            {
-                "id": path or f"relationship-tree-{index + 1}",
-                "type": "relationship_tree",
-                "title": "Relationship tree",
-                "meta": f"{int(item.get('record_count') or 0)} records",
-                "record_index": None,
-                "selectable": False,
-                "record_groups": {"files": [path]} if path else {},
-                "issues": [],
-                "depth": 0,
-            }
-        )
-    for record, depth in ordered_document_records(records):
+    by_doc_id = {
+        normalize_text(record.get("doc_id")): record
+        for record in records
+        if normalize_text(record.get("doc_id"))
+    }
+    for record in records:
         record_index = int(record.get("record_index")) if isinstance(record.get("record_index"), int) else len(rows)
         doc_id = normalize_text(record.get("doc_id"))
         rows.append(
@@ -118,7 +81,7 @@ def build_review_rows(report: Dict[str, Any], scope: str) -> list[Dict[str, Any]
                 "selectable": True,
                 "record_groups": {"documents": [doc_id]} if doc_id else {},
                 "issues": issues_by_record.get(record_index, []),
-                "depth": depth,
+                "depth": document_record_depth(record, by_doc_id),
             }
         )
     return rows
