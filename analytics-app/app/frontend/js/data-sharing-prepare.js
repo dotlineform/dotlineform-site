@@ -92,12 +92,49 @@ function setText(node, value) {
 
 function setStatus(node, state, message) {
   if (!node) return;
+  const buttonGroup = node.closest(".dataSharingPreparePage__buttonGroup");
+  if (buttonGroup) buttonGroup.classList.remove("dataSharingPreparePage__buttonGroup--result");
   node.textContent = normalizeText(message);
   if (state) {
     node.setAttribute("data-state", state);
   } else {
     node.removeAttribute("data-state");
   }
+}
+
+function countUnitLabel(count, unit) {
+  const safeCount = Number(count || 0);
+  const normalizedUnit = normalizeText(unit) || "document";
+  if (normalizedUnit === "record") return safeCount === 1 ? "1 record" : `${safeCount} records`;
+  if (normalizedUnit === "file") return safeCount === 1 ? "1 file" : `${safeCount} files`;
+  return safeCount === 1 ? "1 document" : `${safeCount} documents`;
+}
+
+function setPackageSuccessStatus(state, payload) {
+  const node = state.statusNode;
+  if (!node) return;
+  const outputFile = normalizeText(payload && payload.output_file);
+  if (!outputFile) {
+    setStatus(node, "success", normalizeText(payload && payload.summary_text));
+    return;
+  }
+  const buttonGroup = node.closest(".dataSharingPreparePage__buttonGroup");
+  if (buttonGroup) buttonGroup.classList.add("dataSharingPreparePage__buttonGroup--result");
+  const counts = payload && typeof payload.counts === "object" ? payload.counts : {};
+  const countText = countUnitLabel(Number(counts.exported || counts.selected || 0), payload && payload.count_unit);
+  const action = payload && payload.dry_run ? "Validated" : "Prepared";
+  node.textContent = "";
+  node.setAttribute("data-state", "success");
+
+  const wrap = document.createElement("span");
+  wrap.className = "dataSharingPreparePage__resultStatus";
+  const summary = document.createElement("span");
+  summary.textContent = `${action} ${countText} in package:`;
+  const path = document.createElement("span");
+  path.className = "dataSharingPreparePage__resultPath";
+  path.textContent = outputFile;
+  wrap.append(summary, path);
+  node.appendChild(wrap);
 }
 
 function docsScopeOptionsFromRegistry(registry) {
@@ -172,6 +209,35 @@ function renderDocsScopeSelect(state) {
   }).join("");
   state.docsScopeSelect.value = state.docsScope;
   state.docsScopeField.hidden = !usesPrepareDocumentSelection(state.prepareCapability);
+}
+
+function defaultPrepareApp(state) {
+  const app = (state.apps || []).find((candidate) => (
+    candidate
+    && candidate.key
+    && dataSharingDomainsForApp(state.dataDomains, candidate.key).length
+  ));
+  return normalizeText(app && app.key) || normalizeText(state.apps && state.apps[0] && state.apps[0].key);
+}
+
+function loadPrepareProfilesForDomain(state, adapterRegistry) {
+  state.prepareCapability = dataSharingCapabilityForOperation(adapterRegistry, "prepare", state.dataDomain);
+  if (state.dataDomain && dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
+    const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
+    const exportConfigPayload = { configs: capabilityProfiles };
+    state.exportConfigs = enabledPrepareConfigsForDataDomain(exportConfigPayload, state.dataDomain);
+  } else {
+    state.exportConfigs = [];
+  }
+}
+
+function selectOnlyPrepareDomainForApp(state, adapterRegistry) {
+  const domains = dataSharingDomainsForApp(state.dataDomains, state.app);
+  if (domains.length !== 1) return false;
+  state.dataDomain = domains[0].key;
+  renderDataDomainSelect(state);
+  loadPrepareProfilesForDomain(state, adapterRegistry);
+  return true;
 }
 
 async function loadAdapterRegistry() {
@@ -457,7 +523,11 @@ async function runPreparePackage(state) {
   try {
     const result = await runDataSharingPreparePackage(state, submission.request);
     showDataSharingPrepareResultModal(state, result.payload, result.failed);
-    setStatus(state.statusNode, result.statusState, result.statusMessage);
+    if (result.failed) {
+      setStatus(state.statusNode, result.statusState, result.statusMessage);
+    } else {
+      setPackageSuccessStatus(state, result.payload);
+    }
   } finally {
     state.isRunning = false;
     state.runButton.disabled = !state.serviceAvailable
@@ -590,8 +660,9 @@ async function init() {
     state.dataDomains = dataSharingDomainsForOperation(adapterRegistry, "prepare", DATA_SHARING_DOMAINS);
     state.docsScopes = docsScopeOptionsFromRegistry(adapterRegistry);
     state.apps = dataSharingAppsForDomains(state.dataDomains, DATA_SHARING_APPS);
+    state.app = defaultPrepareApp(state);
     renderAppSelect(state);
-    renderDataDomainSelect(state);
+    if (!selectOnlyPrepareDomainForApp(state, adapterRegistry)) renderDataDomainSelect(state);
     renderDocsScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
@@ -634,20 +705,14 @@ async function init() {
       state.prepareCapability = null;
       state.exportConfigs = [];
       renderDataDomainSelect(state);
+      selectOnlyPrepareDomainForApp(state, adapterRegistry);
       renderDataSharingPrepareConfigSelect(state);
       refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: app change failed", error));
     });
     state.dataDomainSelect.addEventListener("change", () => {
       state.dataDomain = normalizeText(state.dataDomainSelect.value).toLowerCase();
       state.docsScope = "";
-      state.prepareCapability = dataSharingCapabilityForOperation(adapterRegistry, "prepare", state.dataDomain);
-      if (state.dataDomain && dataSharingDomainIsActive(state.dataDomains, state.dataDomain)) {
-        const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
-        const exportConfigPayload = { configs: capabilityProfiles };
-        state.exportConfigs = enabledPrepareConfigsForDataDomain(exportConfigPayload, state.dataDomain);
-      } else {
-        state.exportConfigs = [];
-      }
+      loadPrepareProfilesForDomain(state, adapterRegistry);
       renderDataSharingPrepareConfigSelect(state);
       refreshPrepareSelection(state).catch((error) => console.warn("data_sharing_prepare: data domain change failed", error));
     });

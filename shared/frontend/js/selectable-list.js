@@ -292,7 +292,10 @@ function renderRows(controller) {
     const indent = treeEnabled(options)
       ? `${((entry.depth || 0) * Number(options.treeIndentRem || 1.35)).toFixed(2)}rem`
       : itemIndent(options, item, index);
-    if (indent) row.style.setProperty("--shared-selectable-list-indent", indent);
+    if (indent) {
+      row.style.setProperty("--shared-selectable-list-indent", indent);
+      row.style.marginInlineStart = indent;
+    }
 
     if (treeEnabled(options) && typeof options.renderLeading !== "function") {
       const toggle = document.createElement(entry.hasChildren ? "button" : "span");

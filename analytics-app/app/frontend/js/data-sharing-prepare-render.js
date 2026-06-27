@@ -20,6 +20,15 @@ function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
 
+function escapeHtml(value) {
+  return normalizeText(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function dataDomainLabel(state, dataDomain = state.dataDomain) {
   const item = (state.dataDomains || []).find((candidate) => candidate.key === dataDomain);
   if (item && item.labelKey) return getAnalyticsText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
@@ -207,6 +216,7 @@ export function renderDataSharingPrepareDocList(state) {
       tree: true,
       getId: (record) => prepareListRecordId(record),
       getLabel: (record) => prepareListRecordName(record),
+      getMeta: () => [],
       getParentId: (record) => normalizeText(record && record.parent_id),
       onSelectionChange: ({ selectedIds }) => {
         state.selectedIds = new Set(selectedIds);
