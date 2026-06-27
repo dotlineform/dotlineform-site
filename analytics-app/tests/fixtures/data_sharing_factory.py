@@ -294,7 +294,7 @@ def write_prepare_profiles(root: Path) -> None:
                         "document_array_path": "records",
                     },
                     "output": {
-                        "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.json",
+                        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",
                     },
                     "selection": {
                         "mode": "explicit_doc_ids",

@@ -28,7 +28,8 @@ PREVIEW_DIR_NAME = "import-preview"
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 FILENAME_RE = re.compile(r"[^a-z0-9-]+")
-STAGED_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
+STAGED_PREFIX_TIMESTAMP_RE = re.compile(r"^(?P<timestamp>\d{8}-\d{6})[-_](?P<base>.+)$")
+STAGED_SUFFIX_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
 
 EXPORT_ID_TO_IMPORT_TYPE = {
     "parent-child-relationships": "parent_child_relationships",
@@ -162,7 +163,7 @@ def local_filename_timestamp(value: dt.datetime | None = None) -> str:
 
 def staged_timestamp_suffix(report: dict[str, Any], fallback_timestamp: str) -> str:
     stem = Path(normalize_text(report.get("input_file"))).stem
-    match = STAGED_TIMESTAMP_RE.fullmatch(stem)
+    match = STAGED_PREFIX_TIMESTAMP_RE.fullmatch(stem) or STAGED_SUFFIX_TIMESTAMP_RE.fullmatch(stem)
     if match:
         return match.group("timestamp")
     return fallback_timestamp
@@ -170,7 +171,7 @@ def staged_timestamp_suffix(report: dict[str, Any], fallback_timestamp: str) -> 
 
 def staged_stem_without_timestamp(report: dict[str, Any], fallback: str) -> str:
     stem = Path(normalize_text(report.get("input_file")) or fallback).stem
-    match = STAGED_TIMESTAMP_RE.fullmatch(stem)
+    match = STAGED_PREFIX_TIMESTAMP_RE.fullmatch(stem) or STAGED_SUFFIX_TIMESTAMP_RE.fullmatch(stem)
     if match:
         stem = match.group("base")
     return slugify_filename(stem, fallback)
@@ -680,13 +681,13 @@ def record_preview_filename(record: dict[str, Any], seen: dict[str, int], timest
     count = seen.get(base, 0)
     seen[base] = count + 1
     if count:
-        return f"{base}-record-{record_index + 1}-{timestamp_suffix}.md"
-    return f"{base}-{timestamp_suffix}.md"
+        return f"{timestamp_suffix}-{base}-record-{record_index + 1}.md"
+    return f"{timestamp_suffix}-{base}.md"
 
 
 def relationship_preview_filename(report: dict[str, Any], timestamp_suffix: str) -> str:
     base = staged_stem_without_timestamp(report, "relationships")
-    return f"{base}-tree-{timestamp_suffix}.md"
+    return f"{timestamp_suffix}-{base}-tree.md"
 
 
 def render_doc_front_matter(record: dict[str, Any], report: dict[str, Any], generated_at: str) -> str:

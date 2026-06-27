@@ -40,8 +40,8 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=False,
         )
-        preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("alpha-*.md"))
-        tree_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("summaries-tree-*.md"))
+        preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-alpha.md"))
+        tree_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-summaries-tree.md"))
         preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True

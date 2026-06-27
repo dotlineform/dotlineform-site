@@ -132,9 +132,9 @@ Saving from the modal rewrites the profile config after validating the full prep
 `output.path_pattern` must stay under the shared Data Sharing export root:
 
 ```text
-var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.json
-var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.jsonl
-var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.context.json
+var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json
+var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl
+var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.context.json
 ```
 
 The placeholders are resolved by the export engine.

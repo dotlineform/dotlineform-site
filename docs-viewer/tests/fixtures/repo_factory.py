@@ -145,7 +145,7 @@ def write_documents_prepare_profiles(root: Path) -> None:
                         "record_shape": "document_rows",
                     },
                     "output": {
-                        "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.jsonl",
+                        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl",
                         "timestamp_format": "%Y%m%d-%H%M%S",
                     },
                     "selection": {

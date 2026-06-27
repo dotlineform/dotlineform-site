@@ -206,7 +206,7 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
             scope="studio",
         )
         write_text(
-            root / "var/analytics/data-sharing/import-staging/documents-document-summaries-20260627-162139.json",
+            root / "var/analytics/data-sharing/import-staging/20260627-162139-documents-document-summaries.json",
             json.dumps(
                 {
                     "schema_version": "data_sharing_returned_package_v1",
@@ -225,7 +225,7 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
         report = docs_import.parse_staged_import(
             repo_root=root,
             scope="studio",
-            staged_file="documents-document-summaries-20260627-162139.json",
+            staged_file="20260627-162139-documents-document-summaries.json",
             staging_root=Path("var/analytics/data-sharing/import-staging"),
         )
         rendered = docs_import.render_markdown_previews(
@@ -249,9 +249,9 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
     preview_paths = [item["path"] for item in rendered["preview_files"]]
     assert (
         "var/analytics/data-sharing/import-preview/"
-        "admin-checks-20260627-162139.md"
+        "20260627-162139-admin-checks.md"
     ) in preview_paths
-    assert [item["filename"] for item in files] == ["documents-document-summaries-20260627-162139.json"]
+    assert [item["filename"] for item in files] == ["20260627-162139-documents-document-summaries.json"]
 
 
 def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
@@ -517,15 +517,15 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
         ]
         write_staged(root, "summaries.json", json.dumps(payload))
         report = render(root, parse(root, "summaries.json"))
-        first_preview = (root / "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md").read_text(encoding="utf-8")
-        missing_preview = (root / "var/analytics/data-sharing/library/import-preview/record-3-20260503-204000.md").read_text(encoding="utf-8")
+        first_preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md").read_text(encoding="utf-8")
+        missing_preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-record-3.md").read_text(encoding="utf-8")
 
     assert report["preview_written"] is True
     assert [item["path"] for item in report["preview_files"]] == [
-        "var/analytics/data-sharing/library/import-preview/summaries-tree-20260503-204000.md",
-        "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md",
-        "var/analytics/data-sharing/library/import-preview/alpha-record-2-20260503-204000.md",
-        "var/analytics/data-sharing/library/import-preview/record-3-20260503-204000.md",
+        "var/analytics/data-sharing/library/import-preview/20260503-204000-summaries-tree.md",
+        "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md",
+        "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha-record-2.md",
+        "var/analytics/data-sharing/library/import-preview/20260503-204000-record-3.md",
     ]
     assert "matched_config_fields" in first_preview
     assert "staged_only_fields" in first_preview
@@ -555,16 +555,16 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
             + "\n",
         )
         report = render(root, parse(root, "content-20260102-030405.jsonl"))
-        preview = (root / "var/analytics/data-sharing/library/import-preview/alpha-20260102-030405.md").read_text(encoding="utf-8")
+        preview = (root / "var/analytics/data-sharing/library/import-preview/20260102-030405-alpha.md").read_text(encoding="utf-8")
 
     assert report["preview_files"] == [
         {
-            "path": "var/analytics/data-sharing/library/import-preview/content-tree-20260102-030405.md",
+            "path": "var/analytics/data-sharing/library/import-preview/20260102-030405-content-tree.md",
             "record_count": 1,
             "kind": "relationship_tree",
         },
         {
-            "path": "var/analytics/data-sharing/library/import-preview/alpha-20260102-030405.md",
+            "path": "var/analytics/data-sharing/library/import-preview/20260102-030405-alpha.md",
             "record_index": 0,
             "doc_id": "alpha",
             "kind": "document",
@@ -591,11 +591,11 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
             json.dumps({"export_id": "parent-child-relationships", "scope": "library"}),
         )
         report = render(root, parse(root, "relationships.json"))
-        preview = (root / "var/analytics/data-sharing/library/import-preview/relationships-tree-20260503-204000.md").read_text(encoding="utf-8")
+        preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-relationships-tree.md").read_text(encoding="utf-8")
 
     assert report["preview_files"][:1] == [
         {
-            "path": "var/analytics/data-sharing/library/import-preview/relationships-tree-20260503-204000.md",
+            "path": "var/analytics/data-sharing/library/import-preview/20260503-204000-relationships-tree.md",
             "record_count": 3,
             "kind": "relationship_tree",
         }
@@ -612,10 +612,10 @@ def test_preview_renderer_can_dry_run_without_writing_files() -> None:
         root = Path(temp)
         write_staged(root, "summaries.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
         report = render(root, parse(root, "summaries.json"), write=False)
-        preview_exists = (root / "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md").exists()
+        preview_exists = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md").exists()
 
     assert report["preview_written"] is False
-    assert report["preview_files"][0]["path"] == "var/analytics/data-sharing/library/import-preview/alpha-20260503-204000.md"
+    assert report["preview_files"][0]["path"] == "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md"
     assert preview_exists is False
 
 

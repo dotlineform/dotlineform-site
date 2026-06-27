@@ -127,7 +127,8 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
 
     assert payload["ok"] is True
     assert payload["output_written"] is True
-    assert payload["output_file"].startswith("var/analytics/data-sharing/exports/tags-bundle-")
+    assert payload["output_file"].startswith("var/analytics/data-sharing/exports/")
+    assert payload["output_file"].endswith("-tags-bundle.json")
     assert package["package_metadata"]["package_family"] == "bundle"
     assert set(package["families"]) == {"registry", "aliases", "assignments"}
     assert activity["record_groups"]["files"]["sample_ids"] == [payload["output_file"]]

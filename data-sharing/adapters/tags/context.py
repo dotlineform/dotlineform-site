@@ -95,7 +95,7 @@ def resolve_outbound_package_path(repo_root: Path, adapter: AdapterResolution, c
         raise ValueError("target_format must be json")
     timestamp = dt.datetime.now(dt.timezone.utc).astimezone().strftime("%Y%m%d-%H%M%S")
     outbound_root = resolve_outbound_root(repo_root, adapter)
-    path = (outbound_root / f"{config_id}-{timestamp}.{target_format}").resolve()
+    path = (outbound_root / f"{timestamp}-{config_id}.{target_format}").resolve()
     if path != outbound_root and outbound_root not in path.parents:
         raise ValueError(f"output file must stay under {adapter.path('outbound_package_root')}")
     return path
