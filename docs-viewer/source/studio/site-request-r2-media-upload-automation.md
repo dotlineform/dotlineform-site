@@ -12,7 +12,7 @@ viewable: true
 Status:
 
 - the first implementation is CLI-only.
-- var/local/site.env has been implemenmted
+- .env.local has been implemenmted
 - still need to create the R2 keys
 - then need to switch UI over to using R2
 
@@ -79,7 +79,7 @@ R2 credentials should be provided through environment variables that match the c
 - `R2_BUCKET`
 - `R2_ENDPOINT`
 
-Local setup uses the gitignored `var/local/site.env` file for those same R2 variables.
+Local setup uses the gitignored `.env.local` file for those same R2 variables.
 The file must be loaded only by CLI scripts or local server-side wrappers.
 The script should fail closed when credentials are missing, with setup guidance that names the missing variables but never prints existing secret values.
 

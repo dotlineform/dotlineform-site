@@ -56,7 +56,7 @@ Run `bin/local-all` when a local session needs the sibling services supervised t
 Each command:
 
 - changes into the repo root
-- loads `var/local/site.env` when present
+- loads `.env.local` when present
 - uses the repo's preferred Python executable for local app runners and maintenance tasks
 - otherwise falls back to the corresponding executable on `PATH`
 
@@ -64,11 +64,11 @@ Each command:
 
 These runner scripts do not currently take general CLI flags, except for public-site preview behavior documented below.
 
-For local runs, configure repo-specific defaults in `var/local/site.env`.
+For local runs, configure repo-specific defaults in `.env.local`.
 
 Values in that file are loaded before defaults are evaluated and win over inherited shell values.
 
-If `var/local/site.env` is absent, the runner falls back to process environment variables.
+If `.env.local` is absent, the runner falls back to process environment variables.
 
 - `STUDIO_APP_ENABLED`
   default: `1`
@@ -145,7 +145,7 @@ export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 
 ### Start All
 
-Before it starts any child process, `bin/local-all` loads `var/local/site.env`, resolves the configured public preview, Local Studio, Local Admin, Local Analytics, and Docs Viewer web service host/port settings, and checks that enabled service ports are both distinct and available.
+Before it starts any child process, `bin/local-all` loads `.env.local`, resolves the configured public preview, Local Studio, Local Admin, Local Analytics, and Docs Viewer web service host/port settings, and checks that enabled service ports are both distinct and available.
 If a configured port is unavailable or two services are configured for the same binding, the runner exits before starting any service.
 
 After preflight, `bin/local-all` starts:

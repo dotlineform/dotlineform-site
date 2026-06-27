@@ -56,7 +56,7 @@ Shell entrypoint arguments:
 - `--dry-run`
   - preview derivative writes and source cleanup only
 
-Runtime defaults are resolved from `_data/pipeline.json` plus `var/local/site.env`, especially:
+Runtime defaults are resolved from `_data/pipeline.json` plus `.env.local`, especially:
 
 - `MAKE_SRCSET_JOBS`
 - `MAKE_SRCSET_WORK_IDS_FILE`

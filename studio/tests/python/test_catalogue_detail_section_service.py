@@ -82,10 +82,13 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
             },
         },
     )
-    env_path = repo_root / "var/local/site.env"
-    env_path.parent.mkdir(parents=True)
+    env_path = repo_root / ".env.local"
     env_path.write_text(f"{PROJECTS_BASE_DIR_ENV_NAME}={projects_base}\n", encoding="utf-8")
     return repo_root, projects_base
+
+
+def stub_lookup_refresh(monkeypatch) -> None:
+    monkeypatch.setattr(detail_section_service, "refresh_lookup_payloads", lambda _context: {})
 
 
 def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkeypatch) -> None:
@@ -101,6 +104,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
         }
 
     monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
+    stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.create_detail_section_payload(
         context,
@@ -243,6 +247,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
         return True, {"completed_at_utc": "2026-01-01T00:00:00Z"}
 
     monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
+    stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.save_detail_section_payload(
         build_catalogue_write_context(repo_root),
@@ -307,6 +312,7 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
         return True, {"completed_at_utc": "2026-01-01T00:00:00Z"}
 
     monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
+    stub_lookup_refresh(monkeypatch)
 
     payload = detail_section_service.save_detail_section_payload(
         build_catalogue_write_context(repo_root),

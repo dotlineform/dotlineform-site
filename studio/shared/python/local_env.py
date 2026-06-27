@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Load repo-local runtime environment from var/local/site.env."""
+"""Load repo-local runtime environment from .env.local."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Iterable, Mapping
 
 
-SITE_ENV_REL_PATH = Path("var/local/site.env")
+SITE_ENV_REL_PATH = Path(".env.local")
 
 
 def resolve_repo_root(start: str | Path | None = None) -> Path:
@@ -69,7 +69,7 @@ def runtime_env(
 ) -> Dict[str, str]:
     """Return process env overlaid with repo-local env-file values.
 
-    If var/local/site.env exists, its values win over inherited shell values so
+    If .env.local exists, its values win over inherited shell values so
     local runs have one predictable source of repo-specific configuration.
     """
 

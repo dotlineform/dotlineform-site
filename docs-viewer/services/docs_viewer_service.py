@@ -32,6 +32,7 @@ if str(SERVICE_DIR) not in sys.path:
 
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
+from local_env import SITE_ENV_REL_PATH  # noqa: E402
 
 
 ENABLED_VALUES = {"1", "on", "true", "yes"}
@@ -173,7 +174,7 @@ def load_service_config(
     port_override: int | None = None,
     base_url_override: str | None = None,
 ) -> DocsViewerServiceConfig:
-    env = dict(parse_site_env(repo_root / "var" / "local" / "site.env"))
+    env = dict(parse_site_env(repo_root / SITE_ENV_REL_PATH))
     env.update(os.environ if environ is None else environ)
     defaults = service_defaults(repo_root)
     host = str(host_override or env.get("DOCS_VIEWER_HOST") or "127.0.0.1").strip()

@@ -300,7 +300,7 @@ Current fields:
 - targeted writes require existing full-scope generated output for the scope; use a full `./docs-viewer/build/build_docs.py --scope <scope> --write` first when initializing or repairing an output tree
 - if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
 
-Local runtime values shared with media/generation scripts live in `var/local/site.env`:
+Local runtime values shared with media/generation scripts live in `.env.local`:
 
 ```bash
 export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"

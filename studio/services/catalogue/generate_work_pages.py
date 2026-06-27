@@ -535,7 +535,7 @@ def main() -> None:
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Add {PROJECTS_BASE_DIR_ENV_NAME} "
-            "to var/local/site.env or pass --projects-base-dir."
+            "to .env.local or pass --projects-base-dir."
         )
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)

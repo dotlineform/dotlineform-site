@@ -12,8 +12,7 @@ parent_id: local-setup
 Use a gitignored repo-local env file for runtime paths, local runner options, and R2 credentials:
 
 ```bash
-mkdir -p var/local
-$EDITOR var/local/site.env
+$EDITOR .env.local
 ```
 
 Recommended shape:
@@ -69,9 +68,9 @@ R2 media publishing also requires:
 
 Do not commit R2 credential values.
 The publisher script reports missing variable names without printing configured values.
-`var/local/` is gitignored, so `var/local/site.env` is local-only.
+`.env.local` is gitignored, so it is local-only.
 
-The R2 publisher reads `var/local/site.env` by default:
+The R2 publisher reads `.env.local` by default:
 
 ```bash
 ./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
@@ -84,18 +83,18 @@ Two additional env vars are used by the srcset wrapper, but they are usually set
 
 Those manifest env vars do not normally need to be added to your shell startup files.
 
-## site.env versus process environment
+## .env.local versus process environment
 
-For local runs, `var/local/site.env` is the canonical source for repo-specific runtime configuration.
+For local runs, `.env.local` is the canonical source for repo-specific runtime configuration.
 The shared Python loader reads it directly, and values from this file win over inherited shell values when the same key appears in both places.
 
-- `var/local/site.env` is a repo-specific source file that keeps local paths and credentials in one predictable place.
-- Local CLI scripts and local services read `site.env` server-side; browser code must never read this file or receive R2 credentials.
-- If `site.env` is absent, scripts fall back to process environment variables for cloud/Codespaces runs.
-- In cloud/Codespaces, use platform secret stores or configured environment variables instead of creating, committing, or syncing a `site.env` file.
+- `.env.local` is a repo-specific source file that keeps local paths and credentials in one predictable place.
+- Local CLI scripts and local services read `.env.local` server-side; browser code must never read this file or receive R2 credentials.
+- If `.env.local` is absent, scripts fall back to process environment variables for cloud/Codespaces runs.
+- In cloud/Codespaces, use platform secret stores or configured environment variables instead of creating, committing, or syncing a `.env.local` file.
 
 The practical reason for this convention is that media handling is increasingly driven by local Studio actions.
-Keeping repo-specific runtime config in `var/local/site.env` gives CLI commands, local write services, and future UI-triggered orchestration one consistent source of local configuration without relying on shell startup files.
+Keeping repo-specific runtime config in `.env.local` gives CLI commands, local write services, and future UI-triggered orchestration one consistent source of local configuration without relying on shell startup files.
 
 
 ## Repo-specific operating notes

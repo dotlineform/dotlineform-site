@@ -50,7 +50,7 @@ def detect_repo_root(start: Path | None = None) -> Path:
 def detect_projects_base_dir(env: Dict[str, str] | None = None) -> Path:
     value = env_var_value(PIPELINE_CONFIG, "projects_base_dir", env)
     if not value:
-        raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} is required in var/local/site.env for catalogue media builds.")
+        raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} is required in .env.local for catalogue media builds.")
     path = Path(value).expanduser().resolve()
     if not path.exists():
         raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} does not exist: {path}")

@@ -24,9 +24,9 @@ It is meant to replace ad hoc catalogue/source-folder comparisons when deciding 
 
 - `studio/data/canonical/catalogue/works.json`
 - `studio/data/canonical/catalogue/work_details/`, only to identify detail subfolder paths to skip
-- `DOTLINEFORM_PROJECTS_BASE_DIR` from `var/local/site.env`, resolving to a folder that contains `projects/`
+- `DOTLINEFORM_PROJECTS_BASE_DIR` from `.env.local`, resolving to a folder that contains `projects/`
 
-Do not pass `--projects-base-dir` during normal local runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` in `var/local/site.env` instead.
+Do not pass `--projects-base-dir` during normal local runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` in `.env.local` instead.
 Cloud/Codespaces runs can provide the same key through platform environment configuration.
 
 ## Output

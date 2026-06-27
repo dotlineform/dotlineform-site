@@ -281,7 +281,7 @@ def load_r2_credentials(
         names = ", ".join(missing)
         raise SystemExit(
             "Error: missing R2 configuration: "
-            f"{names}. Add them to var/local/site.env for local runs or provide cloud environment variables."
+            f"{names}. Add them to .env.local for local runs or provide cloud environment variables."
         )
 
     endpoint = str(combined["R2_ENDPOINT"]).strip().rstrip("/")

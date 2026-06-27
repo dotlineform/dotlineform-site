@@ -52,7 +52,7 @@ The build command entry point is `docs-viewer/build/build_docs.py`.
 
 ## Host settings
 
-Local Docs Viewer service host, port, base URL, and capability flags are host runtime settings in `var/local/site.env`, not checked-in Docs Viewer defaults.
+Local Docs Viewer service host, port, base URL, and capability flags are host runtime settings in `.env.local`, not checked-in Docs Viewer defaults.
 
 ## Public Site Config
 

@@ -30,7 +30,7 @@ Docs media publishing is reserved for a later milestone.
 
 ## Credentials
 
-The script reads R2 settings from `var/local/site.env` by default for local runs:
+The script reads R2 settings from `.env.local` by default for local runs:
 
 - `R2_ACCOUNT_ID`
 - `R2_ACCESS_KEY_ID`
@@ -39,9 +39,9 @@ The script reads R2 settings from `var/local/site.env` by default for local runs
 - `R2_ENDPOINT`
 
 It can also load additional files passed with `--env-file`.
-If `var/local/site.env` is absent, it falls back to process environment variables for cloud/Codespaces runs.
+If `.env.local` is absent, it falls back to process environment variables for cloud/Codespaces runs.
 
-`var/local/site.env` is gitignored and must not be committed.
+`.env.local` is gitignored and must not be committed.
 When credentials are missing, the command reports the missing variable names but never prints configured values.
 
 ## Source And Target Mapping

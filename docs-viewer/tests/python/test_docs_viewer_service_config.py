@@ -10,7 +10,7 @@ import pytest
 
 from docs_viewer_service_test_support import REPO_ROOT, docs_viewer_service, write_json
 
-def test_load_service_config_reads_static_site_env() -> None:
+def test_load_service_config_reads_env_local() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         repo_root = Path(temp_dir)
         write_json(
@@ -27,8 +27,7 @@ def test_load_service_config_reads_static_site_env() -> None:
                 },
             },
         )
-        site_env = repo_root / "var/local/site.env"
-        site_env.parent.mkdir(parents=True)
+        site_env = repo_root / ".env.local"
         site_env.write_text(
             "\n".join(
                 [

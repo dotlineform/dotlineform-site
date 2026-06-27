@@ -136,7 +136,7 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 
 - `bin/local-studio` starts this watcher by default
 - `bin/local-studio` does not perform startup docs/docs-search rebuilds
-- `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `var/local/site.env` for local runs, including when the watcher is started through `bin/local-studio`
+- `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `.env.local` for local runs, including when the watcher is started through `bin/local-studio`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
 - when the localhost Docs Viewer service writes a source doc and rebuilds the same scope itself, it leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change

@@ -64,7 +64,7 @@ def detect_repo_root(start: Path | None = None) -> Path:
 def resolve_projects_base_dir(explicit: str = "", env: Mapping[str, str] | None = None) -> Path:
     raw_value = explicit or env_var_value(PIPELINE_CONFIG, "projects_base_dir", env)
     if not raw_value:
-        raise ValueError(f"Missing source base dir. Add {PROJECTS_BASE_DIR_ENV_NAME} to var/local/site.env or pass --projects-base-dir.")
+        raise ValueError(f"Missing source base dir. Add {PROJECTS_BASE_DIR_ENV_NAME} to .env.local or pass --projects-base-dir.")
     base_dir = Path(raw_value).expanduser().resolve()
     if not base_dir.exists():
         raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} does not exist: {base_dir}")

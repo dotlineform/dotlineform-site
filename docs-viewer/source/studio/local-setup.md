@@ -32,7 +32,7 @@ Do not make public preview part of Studio startup semantics, and do not reintrod
 ## Child References
 
 - [Toolchain](/docs/?scope=studio&doc=local-setup-toolchain) covers current versions, fresh macOS install, version checks, and switching Python versions.
-- [Environment](/docs/?scope=studio&doc=local-setup-environment) covers `var/local/site.env`, process environment fallback, repo-specific operating notes, and common commands.
+- [Environment](/docs/?scope=studio&doc=local-setup-environment) covers `.env.local`, process environment fallback, repo-specific operating notes, and common commands.
 - [Public Site Preview](/docs/?scope=studio&doc=local-setup-public-site-preview) covers the public static preview and validation commands and wrapper defaults.
 - [Local Admin App](/docs/?scope=studio&doc=local-admin-app) covers Admin route/API ownership and output paths.
 - [Recovery](/docs/?scope=studio&doc=local-setup-recovery) covers recovery after macOS, Xcode, or Command Line Tools updates.

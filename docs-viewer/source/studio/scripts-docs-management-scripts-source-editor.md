@@ -34,7 +34,7 @@ Not responsible for:
 
 ## Editor Selection
 
-`DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP` in `var/local/site.env` wins when set. Without that setting, default editor selection checks:
+`DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP` in `.env.local` wins when set. Without that setting, default editor selection checks:
 
 ```text
 MarkEdit

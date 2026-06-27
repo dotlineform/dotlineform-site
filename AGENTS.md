@@ -29,7 +29,7 @@
 - Run project commands from `dotlineform-site/` unless explicitly told otherwise.
 - Use `$HOME/miniconda3/bin/python3` for Python commands.
 - Do not invoke Python entrypoints through their shebangs in Codex runs. Use `$HOME/miniconda3/bin/python3 <script>` explicitly.
-- Env vars are saved in `var/local/site.env`.
+- Env vars are saved in `.env.local`.
 - In repo docs and command examples, prefer the shortest project-local script form unless a pinned interpreter or non-default path is required.
 
 ## Checks And Test Policy

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify repo-local site.env loading."""
+"""Verify repo-local .env.local loading."""
 
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ def assert_raises_contains(fn: Callable[[], Any], expected: str, label: str) -> 
 
 def test_load_env_file_accepts_export_quotes_and_blank_values() -> None:
     with tempfile.TemporaryDirectory() as temp:
-        path = Path(temp) / "site.env"
+        path = Path(temp) / ".env.local"
         path.write_text(
             "\n".join(
                 [
@@ -55,18 +55,18 @@ def test_load_env_file_accepts_export_quotes_and_blank_values() -> None:
     assert_equal(values["EMPTY_VALUE"], "", "blank value")
 
 
-def test_runtime_env_site_file_wins_over_inherited_shell() -> None:
+def test_runtime_env_local_file_wins_over_inherited_shell() -> None:
     with tempfile.TemporaryDirectory() as temp:
-        path = Path(temp) / "site.env"
+        path = Path(temp) / ".env.local"
         path.write_text("R2_BUCKET=site-bucket\n", encoding="utf-8")
 
         values = local_env.runtime_env(environ={"R2_BUCKET": "shell-bucket", "HOME": "/tmp/home"}, env_files=[path])
 
-    assert_equal(values["R2_BUCKET"], "site-bucket", "site env wins")
+    assert_equal(values["R2_BUCKET"], "site-bucket", ".env.local wins")
     assert_equal(values["HOME"], "/tmp/home", "unrelated env preserved")
 
 
-def test_missing_default_site_env_falls_back_to_process_env() -> None:
+def test_missing_default_local_env_falls_back_to_process_env() -> None:
     with tempfile.TemporaryDirectory() as temp:
         repo = Path(temp)
         marker = repo / "site-tools/config/site-tools.json"
@@ -80,7 +80,7 @@ def test_missing_default_site_env_falls_back_to_process_env() -> None:
 
 def test_invalid_line_is_rejected() -> None:
     with tempfile.TemporaryDirectory() as temp:
-        path = Path(temp) / "site.env"
+        path = Path(temp) / ".env.local"
         path.write_text("not valid\n", encoding="utf-8")
 
         assert_raises_contains(lambda: local_env.load_env_file(path), "invalid env file line", "invalid line")

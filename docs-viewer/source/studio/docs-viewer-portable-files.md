@@ -258,7 +258,7 @@ Optional adjacent docs tools:
 
 The management service is local-only and should be exposed only through the loopback-bound standalone Docs Viewer service. It is not part of the public static site.
 
-The v1 service reads host, port, base URL, and capability flags from `var/local/site.env`.
+The v1 service reads host, port, base URL, and capability flags from `.env.local`.
 
 Generated-data reads, source writes, import targets, and rebuild commands use `docs-viewer/config/scopes/docs_scopes.json` as the docs scope contract.
 

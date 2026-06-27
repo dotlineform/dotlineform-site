@@ -34,7 +34,7 @@ The service expects:
 - `docs-viewer/config/scopes/docs_scopes.json`
 - generated docs/search artifacts for read endpoints
 - Python rebuild entrypoints at `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py`
-- local runtime settings in `var/local/site.env`
+- local runtime settings in `.env.local`
 
 Loopback host and port are configured with:
 

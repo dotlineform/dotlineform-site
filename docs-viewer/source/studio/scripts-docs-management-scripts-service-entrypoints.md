@@ -35,7 +35,7 @@ Ownership: owns the local HTTP server boundary for `/docs/`, Docs Viewer assets/
 
 Responsibilities:
 
-- loads local Docs Viewer service config from `var/local/site.env`
+- loads local Docs Viewer service config from `.env.local`
 - enforces loopback service binding
 - serves `/docs/` management shell HTML
 - serves Docs Viewer runtime, static assets, and route config

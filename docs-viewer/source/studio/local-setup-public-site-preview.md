@@ -55,7 +55,7 @@ Public browser URLs such as `/assets/...` resolve inside that root, so their fil
 The preview wrapper:
 
 - changes into the repo root
-- loads `var/local/site.env` when present
+- loads `.env.local` when present
 - uses `SITE_PYTHON`, defaulting to `$HOME/miniconda3/bin/python3` when available
 - uses `SITE_HOST`, defaulting to `127.0.0.1`
 - uses `SITE_PORT`, defaulting to `4000`

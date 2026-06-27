@@ -78,7 +78,7 @@ def write_primary(repo_root: Path, kind_subdir: str, filename: str, content: byt
 
 def test_credentials_load_from_env_file_without_printing_values() -> None:
     with tempfile.TemporaryDirectory() as temp:
-        env_file = Path(temp) / "site.env"
+        env_file = Path(temp) / ".env.local"
         env_file.write_text(
             "\n".join(
                 [
@@ -102,8 +102,8 @@ def test_credentials_load_from_env_file_without_printing_values() -> None:
     assert credentials.endpoint == "https://example.r2.cloudflarestorage.com"
 
 
-def test_default_env_file_is_site_env() -> None:
-    assert publisher.DEFAULT_ENV_FILES == (Path("var/local/site.env"),)
+def test_default_env_file_is_env_local() -> None:
+    assert publisher.DEFAULT_ENV_FILES == (Path(".env.local"),)
 
 
 def test_missing_credentials_error_names_missing_vars_only() -> None:
@@ -115,7 +115,7 @@ def test_missing_credentials_error_names_missing_vars_only() -> None:
         raise AssertionError("missing credentials should exit")
 
     assert "R2_ACCOUNT_ID" in message
-    assert "var/local/site.env" in message
+    assert ".env.local" in message
     assert "R2_ACCESS_KEY_ID" not in message
     assert "access" not in message
 

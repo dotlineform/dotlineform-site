@@ -94,7 +94,7 @@ Use the New Scope action's `external local` mode when a scope should be register
 
 External local setup requires:
 
-- `DOTLINEFORM_PROJECTS_BASE_DIR` set in `var/local/site.env` or the process environment
+- `DOTLINEFORM_PROJECTS_BASE_DIR` set in `.env.local` or the process environment
 - an existing readable and writable `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` directory
 - the standalone Docs Viewer service for management and generated-data reads
 
