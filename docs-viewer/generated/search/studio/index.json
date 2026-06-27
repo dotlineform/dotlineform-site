@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-157874622fb90d2be353c420394d5658",
-    "generated_at_utc": "2026-06-27T10:32:35Z",
+    "version": "blake2b-70713228d79ac7815260dea6be8dfcd9",
+    "generated_at_utc": "2026-06-27T10:45:50Z",
     "count": 225
   },
   "entries": [
@@ -2154,10 +2154,10 @@
       "kind": "doc",
       "title": "Documents Package Preparation Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-27",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-05 • Docs Viewer",
+      "display_meta": "2026-06-27 • Docs Viewer",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
@@ -2170,12 +2170,12 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-06-05",
+        "2026-06-27",
         "2026",
         "06",
-        "05"
+        "27"
       ],
-      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-06-05 2026 06 05"
+      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-06-27 2026 06 27"
     },
     {
       "id": "scripts-docs-import",

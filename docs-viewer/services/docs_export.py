@@ -25,10 +25,14 @@ from docs_data_sharing import source_metadata
 
 DEFAULT_CONFIG_PATH = Path("data-sharing/adapters/documents/config/prepare-profiles.json")
 OUTPUT_ROOT = Path("var/analytics/data-sharing")
+EXPORT_META_ROOT = Path("var/analytics/data-sharing/meta")
 SCHEMA_VERSION = "documents_prepare_profiles_v1"
+EXPORT_META_SCHEMA_VERSION = "data_sharing_export_meta_v1"
+RETURNED_PACKAGE_SCHEMA_VERSION = "data_sharing_returned_package_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 PUNCTUATION_SPACING_RE = re.compile(r"\s+([,.;:!?])")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
+EXPORT_ID_RE = re.compile(r"^ds_[0-9]{8}T[0-9]{6}Z$")
 OUTPUT_PATH_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")
 SUPPORTED_TRANSFORMS = {
     "identity",
@@ -321,11 +325,33 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def data_sharing_header_row(export_id: str) -> dict[str, str]:
+    return {
+        "record_type": "data_sharing_header",
+        "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
+        "export_id": export_id,
+    }
+
+
 EXTERNAL_CONTEXT_SCHEMA_VERSION = "documents_external_context_v1"
 
 
-def package_metadata_sidecar_path(path: Path) -> Path:
-    return path.with_suffix(".meta.json")
+def export_id_from_generated_at(generated_at: str) -> str:
+    normalized = normalize_text(generated_at)
+    match = re.fullmatch(r"([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z", normalized)
+    if not match:
+        raise ValueError(f"generated_at must be UTC YYYY-MM-DDTHH:MM:SSZ: {generated_at}")
+    export_id = f"ds_{match.group(1)}{match.group(2)}{match.group(3)}T{match.group(4)}{match.group(5)}{match.group(6)}Z"
+    if not EXPORT_ID_RE.fullmatch(export_id):
+        raise ValueError(f"generated export_id is invalid: {export_id}")
+    return export_id
+
+
+def package_metadata_path(repo_root: Path, export_id: str) -> Path:
+    normalized = normalize_text(export_id)
+    if not EXPORT_ID_RE.fullmatch(normalized):
+        raise ValueError(f"invalid export_id: {export_id}")
+    return repo_root / EXPORT_META_ROOT / f"{normalized}.meta.json"
 
 
 def package_context_sidecar_path(path: Path) -> Path:
@@ -940,49 +966,64 @@ def skipped_summary_warnings(skipped: list[dict[str, str]]) -> list[str]:
 def export_metadata(
     context: ExportContext,
     *,
+    export_id: str,
     generated_at: str,
     selected: list[dict[str, Any]],
     counts: dict[str, int],
+    target_format: str,
 ) -> dict[str, Any]:
     include = set(context.config.get("metadata", {}).get("include", []))
     config_id = normalize_text(context.config.get("id"))
+    target = context.config.get("target") if isinstance(context.config.get("target"), dict) else {}
+    record_shape = normalize_text(target.get("record_shape"))
     selected_doc_ids = [normalize_text(doc.get("doc_id")) for doc in selected]
     source_last_updated = {
         normalize_text(doc.get("doc_id")): normalize_text(doc.get("last_updated"))
         for doc in selected
     }
-    values = {
-        "export_id": config_id,
-        "config_id": config_id,
-        "config_checksum": config_checksum(context.config),
+    metadata: dict[str, Any] = {
+        "schema_version": EXPORT_META_SCHEMA_VERSION,
+        "export_id": export_id,
+        "app": "docs-viewer",
         "data_domain": context.data_domain,
+        "adapter_id": "documents",
+        "config_id": config_id,
+        "profile_id": config_id,
         "scope": context.scope,
+        "target_format": target_format,
+        "record_shape": record_shape,
         "generated_at": generated_at,
+    }
+    optional_values = {
+        "config_checksum": config_checksum(context.config),
         "selected_doc_ids": selected_doc_ids,
         "source_last_updated": source_last_updated,
         "counts": counts,
     }
-    return {key: value for key, value in values.items() if key in include}
+    metadata.update({key: value for key, value in optional_values.items() if key in include})
+    return metadata
 
 
 def resolve_output_path(
     repo_root: Path,
     config: dict[str, Any],
     data_domain: str,
+    export_id: str,
     timestamp: str,
     target_format: str,
     output_root: Path | str | None = None,
 ) -> Path:
-    config_id = normalize_text(config.get("id"))
     output = config.get("output") if isinstance(config.get("output"), dict) else {}
     pattern = normalize_text(output.get("path_pattern"))
     if not pattern:
-        raise ValueError(f"Export config {config_id} is missing output.path_pattern")
+        raise ValueError(f"Export config {normalize_text(config.get('id'))} is missing output.path_pattern")
     relative = Path(
         pattern.format(
             data_domain=data_domain,
             timestamp=timestamp,
-            export_id=config_id,
+            export_id=export_id,
+            profile_id=normalize_text(config.get("id")),
+            config_id=normalize_text(config.get("id")),
         )
     )
     if relative.is_absolute() or ".." in relative.parts:
@@ -1025,14 +1066,14 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
         else {}
     )
     if target_format == "jsonl":
-        record_container = "one JSON object per line"
+        record_container = "JSONL header row followed by one JSON object per line"
         records_path = ""
     elif record_shape == "envelope":
         record_container = "JSON object containing a document array"
         records_path = document_array_path
     else:
-        record_container = "JSON array of document objects"
-        records_path = ""
+        record_container = "JSON object containing a records array"
+        records_path = "records"
 
     schema: list[dict[str, str]] = []
     for field in config.get("document_fields", []):
@@ -1049,6 +1090,11 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
             }
         )
 
+    response_guidance = normalize_text(external_context.get("response_guidance"))
+    if target_format == "jsonl":
+        header_guidance = "Preserve the first JSONL line unchanged; it is an internal routing header."
+        response_guidance = f"{response_guidance} {header_guidance}".strip()
+
     return {
         "schema_version": EXTERNAL_CONTEXT_SCHEMA_VERSION,
         "task": normalize_text(external_context.get("task")),
@@ -1056,24 +1102,34 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
         "record_container": record_container,
         "records_path": records_path,
         "record_schema": schema,
-        "response_guidance": normalize_text(external_context.get("response_guidance")),
+        "response_guidance": response_guidance,
     }
 
 
 def build_export_payload(
     context: ExportContext,
     *,
+    export_id: str,
     records: list[dict[str, Any]],
     target_format: str,
 ) -> dict[str, Any] | list[dict[str, Any]]:
     target = context.config.get("target", {})
     record_shape = normalize_text(target.get("record_shape"))
     if record_shape == "envelope":
-        payload: dict[str, Any] = {}
+        payload: dict[str, Any] = {
+            "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
+            "export_id": export_id,
+        }
         document_array_path = normalize_text(target.get("document_array_path") or "documents")
         set_output_path(payload, document_array_path, records)
         return payload
     if record_shape == "document_rows":
+        if target_format == "json":
+            return {
+                "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
+                "export_id": export_id,
+                "records": records,
+            }
         return records
     raise ValueError(f"Unsupported target.record_shape: {record_shape}")
 
@@ -1116,12 +1172,14 @@ def build_export(
     output_root: Path | str | None = None,
 ) -> dict[str, Any]:
     generated_at, filename_timestamp_dt = export_run_times()
+    export_id = export_id_from_generated_at(generated_at)
     config_payload = load_config_file(repo_root, config_path)
     payload_errors, payload_warnings = validate_config_payload(config_payload)
     if payload_errors:
         return {
             "ok": False,
             "dry_run": not write,
+            "export_id": export_id,
             "config_id": config_id,
             "scope": scope,
             "target_format": "",
@@ -1145,6 +1203,7 @@ def build_export(
         return {
             "ok": False,
             "dry_run": not write,
+            "export_id": export_id,
             "config_id": config_id,
             "scope": scope,
             "target_format": "",
@@ -1188,20 +1247,22 @@ def build_export(
     context_output_path: Path | None = None
     relative_context_output = ""
     try:
-        output_path = resolve_output_path(repo_root, config, data_domain, timestamp, resolved_target_format, output_root)
+        output_path = resolve_output_path(repo_root, config, data_domain, export_id, timestamp, resolved_target_format, output_root)
         relative_output = str(output_path.relative_to(repo_root))
-        if bool(target_config.get("include_export_metadata", True)):
-            metadata_output_path = package_metadata_sidecar_path(output_path)
-            relative_metadata_output = str(metadata_output_path.relative_to(repo_root))
+        metadata_output_path = package_metadata_path(repo_root, export_id)
+        relative_metadata_output = str(metadata_output_path.relative_to(repo_root))
         context_output_path = package_context_sidecar_path(output_path)
         relative_context_output = str(context_output_path.relative_to(repo_root))
     except ValueError as exc:
         errors.append(f"config {config_id}: {exc}")
+    if write and metadata_output_path is not None and metadata_output_path.exists():
+        errors.append(f"export_id {export_id}: metadata file already exists")
 
     if errors:
         return {
             "ok": False,
             "dry_run": not write,
+            "export_id": export_id,
             "config_id": config_id,
             "scope": scope,
             "target_format": resolved_target_format,
@@ -1226,6 +1287,7 @@ def build_export(
         return {
             "ok": False,
             "dry_run": not write,
+            "export_id": export_id,
             "config_id": config_id,
             "scope": scope,
             "target_format": resolved_target_format,
@@ -1290,6 +1352,7 @@ def build_export(
     report: dict[str, Any] = {
         "ok": not errors,
         "dry_run": not write,
+        "export_id": export_id,
         "config_id": config_id,
         "scope": scope,
         "target_format": resolved_target_format,
@@ -1311,9 +1374,17 @@ def build_export(
         report["output_written"] = False
         return report
 
-    metadata = export_metadata(context, generated_at=generated_at, selected=selected, counts=counts)
+    metadata = export_metadata(
+        context,
+        export_id=export_id,
+        generated_at=generated_at,
+        selected=selected,
+        counts=counts,
+        target_format=resolved_target_format,
+    )
     payload = build_export_payload(
         context,
+        export_id=export_id,
         records=records,
         target_format=resolved_target_format,
     )
@@ -1326,7 +1397,7 @@ def build_export(
         elif resolved_target_format == "jsonl":
             if not isinstance(payload, list):
                 raise ValueError("JSONL document_rows payload must be an array")
-            write_jsonl(output_path, payload)
+            write_jsonl(output_path, [data_sharing_header_row(export_id), *payload])
         else:
             raise ValueError(f"Unsupported target.format: {resolved_target_format}")
         if metadata_output_path is not None:

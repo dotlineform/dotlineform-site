@@ -11,8 +11,7 @@
         "format": "json",
         "supported_formats": ["json"],
         "record_shape": "envelope",
-        "document_array_path": "documents",
-        "include_export_metadata": true
+        "document_array_path": "documents"
       },
       "output": {
         "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.json",
@@ -128,8 +127,7 @@
       "target": {
         "format": "jsonl",
         "supported_formats": ["jsonl", "json"],
-        "record_shape": "document_rows",
-        "include_export_metadata": true
+        "record_shape": "document_rows"
       },
       "output": {
         "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
@@ -215,8 +213,7 @@
       "target": {
         "format": "jsonl",
         "supported_formats": ["jsonl", "json"],
-        "record_shape": "document_rows",
-        "include_export_metadata": true
+        "record_shape": "document_rows"
       },
       "output": {
         "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",

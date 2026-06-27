@@ -98,7 +98,7 @@ When omitted, the default `target.format` is the only supported format.
 `target.record_shape` supports:
 
 - `envelope`: one JSON object containing a document array
-- `document_rows`: one complete document record per JSONL row, or one JSON array when `json` is selected
+- `document_rows`: one complete document record per JSONL row after the required header row, or one JSON object with a `records` array when `json` is selected
 
 When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `documents`.
 Envelope profiles support JSON only.

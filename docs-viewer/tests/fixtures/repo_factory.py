@@ -143,7 +143,6 @@ def write_documents_prepare_profiles(root: Path) -> None:
                     "target": {
                         "format": "jsonl",
                         "record_shape": "document_rows",
-                        "include_export_metadata": True,
                     },
                     "output": {
                         "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",

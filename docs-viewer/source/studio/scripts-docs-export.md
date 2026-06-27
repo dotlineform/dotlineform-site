@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
-last_updated: 2026-06-05
+last_updated: 2026-06-27
 parent_id: docs-viewer
 ---
 # Documents Package Preparation Script
@@ -17,7 +17,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py
 
 `docs_export.py` is the read-only package-preparation engine used by the documents Data Sharing adapter.
 
-It reads Docs Viewer source metadata and source-controlled document sharing profiles, then writes an ephemeral share package under `var/analytics/data-sharing/<scope>/exports/`.
+It reads Docs Viewer source metadata and source-controlled document sharing profiles, then writes an ephemeral share package under `var/analytics/data-sharing/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
@@ -30,12 +30,14 @@ Current output pattern:
 
 - `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.json`
 - `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.jsonl`
-- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.meta.json` for internal export provenance
 - `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.context.json` for external task and schema context
+- `var/analytics/data-sharing/meta/<export_id>.meta.json` for internal export provenance and review routing
 
 The filename timestamp is formatted in the local runtime timezone.
-Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance, and `scope` records the Docs Viewer source scope used for the run.
-Both are written only to the internal `.meta.json` sidecar.
+Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
+The `export_id` is derived from that UTC timestamp as `ds_YYYYMMDDTHHMMSSZ`.
+The internal `.meta.json` file stores source scope, profile, domain, and adapter routing data; external package files carry only `export_id`.
+The metadata and `export_id` contract is documented in [Data Sharing Export Metadata](/docs/?scope=studio&doc=data-sharing-export-metadata).
 
 ## Runtime Contract
 
@@ -55,7 +57,7 @@ Outputs:
 - a structured JSON report on stdout
 - no file in dry-run mode
 - one JSON or JSONL external share package in write mode
-- one sibling `.meta.json` internal metadata sidecar when export metadata is enabled
+- one internal `.meta.json` metadata file under `var/analytics/data-sharing/meta/`
 - one sibling `.context.json` external task/schema sidecar
 
 Export preparation is read-only with respect to docs source and generated docs/search payloads.
@@ -84,12 +86,12 @@ Implemented now:
 - omits code blocks when the selected field mapping includes `omit_code_blocks`
 - truncates `source_text` when the selected field mapping includes `truncate_chars`
 - handles image/SVG text according to field-level extraction options
-- writes JSON envelope exports without run metadata in the payload
-- writes JSONL document-row exports without run metadata in the rows
-- writes JSON arrays for document-row configs without run metadata when `json` is selected
-- writes internal `.meta.json` sidecars and external `.context.json` sidecars
+- writes JSON envelope exports with top-level `schema_version` and `export_id`
+- writes JSONL document-row exports with a first-line `data_sharing_header` record containing `export_id`
+- writes JSON document-row overrides as objects containing top-level `schema_version`, `export_id`, and `records`
+- writes internal `.meta.json` files under `var/analytics/data-sharing/meta/` and external `.context.json` sidecars
 - derives external task wording and field descriptions from profile `external_context`
-- keeps source timestamp provenance in `.meta.json` rather than in external records
+- keeps source timestamp provenance in internal `.meta.json` rather than in external records
 - returns a structured JSON report
 
 The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
@@ -179,6 +181,7 @@ The script prints a JSON report with:
 
 - `ok`
 - `dry_run`
+- `export_id`
 - `config_id`
 - `scope`
 - `target_format`

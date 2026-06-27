@@ -45,7 +45,6 @@ BASE_CONFIG = {
                 "format": "jsonl",
                 "supported_formats": ["jsonl", "json"],
                 "record_shape": "document_rows",
-                "include_export_metadata": True,
             },
             "output": {
                 "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
@@ -288,22 +287,25 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             first_metadata_text = first_metadata_output.read_text(encoding="utf-8")
             first_context_text = first_context_output.read_text(encoding="utf-8")
 
-            second_report = run_export(root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
-            second_text = (root / second_report["output_file"]).read_text(encoding="utf-8")
-            second_metadata_text = (root / second_report["metadata_file"]).read_text(encoding="utf-8")
-            second_context_text = (root / second_report["context_file"]).read_text(encoding="utf-8")
+            with make_repo() as second_temp:
+                second_root = Path(second_temp)
+                second_report = run_export(second_root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
+                second_text = (second_root / second_report["output_file"]).read_text(encoding="utf-8")
+                second_metadata_text = (second_root / second_report["metadata_file"]).read_text(encoding="utf-8")
+                second_context_text = (second_root / second_report["context_file"]).read_text(encoding="utf-8")
     finally:
         docs_export.export_run_times = original_export_run_times
 
     assert first_report["ok"] is True
+    assert first_report["export_id"] == "ds_20260503T151507Z"
     assert first_report["output_file"] == (
-        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.jsonl"
+        "var/analytics/data-sharing/exports/documents-ds_20260503T151507Z-20260503-161507.jsonl"
     )
     assert first_report["metadata_file"] == (
-        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.meta.json"
+        "var/analytics/data-sharing/meta/ds_20260503T151507Z.meta.json"
     )
     assert first_report["context_file"] == (
-        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.context.json"
+        "var/analytics/data-sharing/exports/documents-ds_20260503T151507Z-20260503-161507.context.json"
     )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
@@ -311,14 +313,31 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     rows = [json.loads(line) for line in first_text.splitlines()]
     metadata = json.loads(first_metadata_text)
     context = json.loads(first_context_text)
-    assert [row["doc_id"] for row in rows] == ["child-with-summary", "library"]
-    assert "_export" not in rows[0]
-    assert "last_updated" not in rows[0]
+    assert rows[0] == {
+        "export_id": "ds_20260503T151507Z",
+        "record_type": "data_sharing_header",
+        "schema_version": "data_sharing_returned_package_v1",
+    }
+    assert [row["doc_id"] for row in rows[1:]] == ["child-with-summary", "library"]
+    assert "_export" not in rows[1]
+    assert "last_updated" not in rows[1]
+    assert metadata["schema_version"] == "data_sharing_export_meta_v1"
+    assert metadata["export_id"] == "ds_20260503T151507Z"
+    assert metadata["app"] == "docs-viewer"
+    assert metadata["data_domain"] == "documents"
+    assert metadata["adapter_id"] == "documents"
+    assert metadata["config_id"] == "document-summaries"
+    assert metadata["profile_id"] == "document-summaries"
+    assert metadata["target_format"] == "jsonl"
+    assert metadata["record_shape"] == "document_rows"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
     assert metadata["selected_doc_ids"] == ["child-with-summary", "library"]
     assert context["task"] == "suggest_document_summaries"
-    assert context["response_guidance"] == "Return proposed summary changes keyed by doc_id."
+    assert context["response_guidance"] == (
+        "Return proposed summary changes keyed by doc_id. "
+        "Preserve the first JSONL line unchanged; it is an internal routing header."
+    )
     assert context["record_format"] == "jsonl"
     assert {field["field"] for field in context["record_schema"]} >= {"doc_id", "title", "current_summary"}
     description_by_field = {field["field"]: field["description"] for field in context["record_schema"]}
@@ -351,16 +370,39 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
 
     assert report["ok"] is True, report
     assert report["target_format"] == "json"
+    assert report["export_id"] == "ds_20260503T151507Z"
     assert report["output_file"] == (
-        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.json"
+        "var/analytics/data-sharing/exports/documents-ds_20260503T151507Z-20260503-161507.json"
     )
-    assert isinstance(payload, list)
-    assert [row["doc_id"] for row in payload] == ["child-with-summary", "library"]
-    assert "_export" not in payload[0]
-    assert "last_updated" not in payload[0]
+    assert payload["schema_version"] == "data_sharing_returned_package_v1"
+    assert payload["export_id"] == "ds_20260503T151507Z"
+    assert [row["doc_id"] for row in payload["records"]] == ["child-with-summary", "library"]
+    assert "_export" not in payload["records"][0]
+    assert "last_updated" not in payload["records"][0]
+    assert metadata["export_id"] == "ds_20260503T151507Z"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
-    assert context["record_container"] == "JSON array of document objects"
+    assert context["record_container"] == "JSON object containing a records array"
+    assert context["records_path"] == "records"
+
+
+def test_existing_export_metadata_blocks_same_export_id_write() -> None:
+    fixed_generated_at = "2026-05-03T15:15:07Z"
+    fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
+    original_export_run_times = docs_export.export_run_times
+    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
+    try:
+        with make_repo() as temp:
+            root = Path(temp)
+            first = run_export(root, selected_doc_ids=["library"], missing_summary_only=False, write=True)
+            second = run_export(root, selected_doc_ids=["library"], missing_summary_only=False, write=True)
+    finally:
+        docs_export.export_run_times = original_export_run_times
+
+    assert first["ok"] is True
+    assert second["ok"] is False
+    assert second["output_written"] is False
+    assert "export_id ds_20260503T151507Z: metadata file already exists" in second["errors"]
 
 
 def test_unsupported_format_override_blocks_export() -> None:
@@ -458,9 +500,11 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert report["ok"] is True, report
     assert report["output_written"] is True
     assert report["metadata_file"].endswith(".meta.json")
-    assert [row["doc_id"] for row in rows] == ["child-with-summary", "library"]
-    assert "last_updated" not in rows[0]
-    rows_by_doc_id = {row["doc_id"]: row for row in rows}
+    assert rows[0]["record_type"] == "data_sharing_header"
+    assert rows[0]["export_id"] == "ds_20260504T120000Z"
+    assert [row["doc_id"] for row in rows[1:]] == ["child-with-summary", "library"]
+    assert "last_updated" not in rows[1]
+    rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
     library_row = rows_by_doc_id["library"]
     child_row = rows_by_doc_id["child-with-summary"]
     assert library_row["parent_id"] == ""
@@ -497,7 +541,8 @@ def test_export_uses_source_metadata_for_document_content() -> None:
 
     assert report["ok"] is True, report
     assert report["exported_doc_ids"] == ["child-with-summary", "library"]
-    rows_by_doc_id = {row["doc_id"]: row for row in rows}
+    assert rows[0]["record_type"] == "data_sharing_header"
+    rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
     assert rows_by_doc_id["library"]["source_text"] == "Body text."
 
 
@@ -575,9 +620,12 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
         docs_export.export_run_times = original_export_run_times
 
     assert report["ok"] is True, report
-    assert sorted(payload.keys()) == ["documents"]
+    assert sorted(payload.keys()) == ["documents", "export_id", "schema_version"]
+    assert payload["schema_version"] == "data_sharing_returned_package_v1"
+    assert payload["export_id"] == "ds_20260504T120000Z"
     assert [row["doc_id"] for row in payload["documents"]] == ["child-with-summary", "library"]
     assert "last_updated" not in payload["documents"][0]
+    assert metadata["export_id"] == "ds_20260504T120000Z"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
     assert metadata["counts"]["exported"] == 2
@@ -626,8 +674,10 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["counts"]["exported"] > 0
         assert report["counts"]["failed"] == 0
         assert report["output_written"] is False
-        assert report["output_file"].startswith(f"var/analytics/data-sharing/exports/documents-{case['config_id']}-")
+        assert report["export_id"].startswith("ds_")
+        assert report["output_file"].startswith("var/analytics/data-sharing/exports/documents-ds_")
         assert report["output_file"].endswith(f".{case['target_format']}")
+        assert report["metadata_file"].startswith("var/analytics/data-sharing/meta/ds_")
         assert report["metadata_file"].endswith(".meta.json")
         assert report["context_file"].endswith(".context.json")
 
@@ -643,6 +693,7 @@ def main() -> None:
         test_jsonl_config_requires_jsonl_output_extension,
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
         test_document_rows_json_format_override_writes_json_array,
+        test_existing_export_metadata_blocks_same_export_id_write,
         test_unsupported_format_override_blocks_export,
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_documents_prepare_profiles_load_and_validate,

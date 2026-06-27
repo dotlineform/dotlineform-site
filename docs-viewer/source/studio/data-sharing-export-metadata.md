@@ -95,12 +95,13 @@ Required fields:
 - `data_domain`
 - `adapter_id`
 - `config_id`
+- `profile_id`
 - `target_format`
 - `record_shape`
 - `generated_at`
 
 Documents packages also require `scope`.
-The documents adapter may treat `profile_id` as the same value as `config_id` until those concepts diverge.
+The documents adapter treats `profile_id` as the same value as `config_id` until those concepts diverge.
 
 ## External Package Identity
 
@@ -113,6 +114,21 @@ JSON envelope packages use a top-level `export_id`:
   "schema_version": "data_sharing_returned_package_v1",
   "export_id": "ds_20260627T173012Z",
   "documents": [
+    {
+      "doc_id": "library",
+      "title": "Library"
+    }
+  ]
+}
+```
+
+JSON document-row packages that would otherwise be a bare array also use an identity envelope:
+
+```json
+{
+  "schema_version": "data_sharing_returned_package_v1",
+  "export_id": "ds_20260627T173012Z",
+  "records": [
     {
       "doc_id": "library",
       "title": "Library"
