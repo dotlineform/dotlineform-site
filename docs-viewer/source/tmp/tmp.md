@@ -5,51 +5,14 @@ added_date: 2026-05-26
 last_updated: 2026-06-26
 ---
 
-If changing from `var/local/site.env` to `.env.local`, these are the main updates:
 
-- Shell launchers: [bin/local-all](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/local-all:8), [bin/local-studio](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/local-studio:8), [bin/local-admin](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/local-admin:8), [bin/local-analytics](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/local-analytics:8), [bin/site-preview](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/site-preview:8), [bin/site-validate](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/site-validate:8).
+we have just implemented on `/analytics/data-sharing/review/` the shared component described in [Selectable List Component](/docs/?scope=studio&doc=ui-selectable-list-component)
+now we need to replace the old list in `/analytics/data-sharing/review/` with this component to display documents in the staged json file (done by clicking the 'Review' button).
 
-- Python env loader: [local_env.py](/Users/dlf/Developer/dotlineform/dotlineform-site/studio/shared/python/local_env.py:12). This is the central constant used by R2 publishing and other Studio tooling.
 
-- One direct hard-coded Docs Viewer service read: [docs_viewer_service.py](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/services/docs_viewer_service.py:176).
 
-- Error/help text in catalogue/media scripts that tells users to add values to `var/local/site.env`.
 
-- Tests asserting the path, especially `test_local_env.py`, `test_publish_media_to_r2.py`, `test_docs_viewer_service_config.py`, and a catalogue detail-section test.
 
-- Docs and repo instructions: [AGENTS.md](/Users/dlf/Developer/dotlineform/dotlineform-site/AGENTS.md:32), plus the Studio docs that explain local setup, local scripts, R2 publishing, Docs Viewer service config, and cloud environment behavior.
-
-`.gitignore` already ignores `.env.local`, so that part is mostly done.
-
-I’d probably implement this as dual support first: prefer `.env.local`, fall back to `var/local/site.env`, and warn/document that `var/local/site.env` is legacy. That avoids breaking existing local setups while making the new convention clear.
-
-By “local setups” I mean each developer/machine’s private runtime configuration and habits around this repo.
-
-In this repo, that likely includes:
-
-- `var/local/site.env` containing local paths like `DOTLINEFORM_PROJECTS_BASE_DIR`
-- local port overrides for Studio/Admin/Analytics/Docs Viewer
-- R2/media credentials or bucket settings
-- editor preferences like `DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP`
-- any shell aliases, scripts, or muscle memory that assume `var/local/site.env`
-
-So if the repo suddenly only read `.env.local`, your current machine would stop picking up the existing `var/local/site.env` until you renamed/copied it. Same for any other clone or Codespace that had followed the current docs.
-
-“Dual support first” means the code could read `.env.local` when present, otherwise still read `var/local/site.env`, so nothing silently breaks during the transition.
-
-`.env.local` is a common default ignore entry, and in this repo it looks like the implementation later standardized on `var/local/site.env` instead.
-
-Current `.gitignore` has both:
-
-```gitignore
-.env.local
-var/local/
-var/local/site.env
-```
-
-So `.env.local` being ignored does not mean it is active. It just means it is protected if someone creates one.
-
-Given the repo’s code and docs are consistently wired to `var/local/site.env`, I’d treat `.env.local` as an unused conventional fallback/placeholder unless you decide to migrate.
 
 ---
 
