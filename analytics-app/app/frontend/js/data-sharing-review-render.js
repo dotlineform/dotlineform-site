@@ -1,16 +1,10 @@
 import { getAnalyticsText } from "./analytics-config.js";
+import {
+  createSelectableList
+} from "/shared/frontend/js/selectable-list.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
-}
-
-function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function dataDomainLabel(state, dataDomain = state.dataDomain) {
@@ -222,34 +216,47 @@ function normalizeReviewRow(state, row, index) {
   };
 }
 
-function renderPreviewRow(row) {
-  const depth = Math.max(0, Number(row.depth || 0));
-  const treeClass = row.type === "relationship_tree" ? " dataSharingReviewList__row--tree" : "";
-  const disabled = row.selectable === false ? " disabled" : "";
-  const checkedValue = row.selectable === false ? " aria-disabled=\"true\"" : "";
-  return `
-    <li class="analyticsList__row analyticsList__row--center dataSharingReviewList__row${treeClass}" data-data-sharing-review-preview="${escapeHtml(row.id)}" data-data-sharing-review-depth="${depth}" style="--data-sharing-review-depth: ${depth};">
-      <label class="dataSharingReviewList__label">
-        <input class="dataSharingReviewList__checkbox" type="checkbox" value="${escapeHtml(row.id)}"${disabled}${checkedValue}>
-        <span class="dataSharingReviewList__title"><span class="dataSharingReviewList__type">${escapeHtml(row.type)}</span><span class="dataSharingReviewList__titleText">${escapeHtml(row.title)}</span></span>
-        ${row.meta ? `<span class="dataSharingReviewList__meta">${escapeHtml(row.meta)}</span>` : ""}
-      </label>
-    </li>
-  `;
-}
-
 export function renderDataSharingReviewPreviewList(state) {
-  if (!state.previewRows.length) {
-    const emptyState = getAnalyticsText(
-      state.config,
-      "data_sharing_review.empty_state",
-      "Generate a preview to list staged documents."
-    );
-    state.listNode.innerHTML = `<p class="analytics__status">${escapeHtml(emptyState)}</p>`;
-    return;
+  const emptyMessage = getAnalyticsText(
+    state.config,
+    "data_sharing_review.empty_state",
+    "Generate a preview to list staged documents."
+  );
+  if (!state.selectableList) {
+    state.selectableList = createSelectableList(state.listNode, {
+      id: "dataSharingReviewDocuments",
+      selectAllButton: state.selectAllButton,
+      clearButton: state.clearButton,
+      getId: (row) => normalizeText(row && row.id),
+      getLabel: (row) => normalizeText(row && row.title),
+      getMeta: (row) => normalizeText(row && row.meta),
+      getIndent: (row) => `${Math.max(0, Number(row && row.depth || 0)) * 1.15}rem`,
+      isDisabled: (row) => row && row.selectable === false,
+      renderLeading: ({ item }) => {
+        const type = normalizeText(item && item.type);
+        if (!type) return null;
+        const marker = document.createElement("span");
+        marker.className = "dataSharingReviewList__type";
+        marker.textContent = type;
+        return marker;
+      },
+      onSelectionChange: ({ selectedIds }) => {
+        state.selectedPreviewIds = new Set(selectedIds);
+        if (typeof state.onPreviewSelectionChange === "function") {
+          state.onPreviewSelectionChange();
+        } else {
+          updateDataSharingReviewSelectionSummary(state);
+        }
+      }
+    });
   }
-  state.listNode.innerHTML = `<ul class="analyticsList__rows dataSharingReviewList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
-  syncDataSharingReviewPreviewCheckboxes(state);
+  state.selectableList.update({
+    items: state.previewRows,
+    selectedIds: Array.from(state.selectedPreviewIds),
+    disabled: Boolean(state.isRunning),
+    emptyMessage
+  });
+  updateDataSharingReviewSelectionSummary(state);
 }
 
 export function selectableDataSharingReviewPreviewIds(state) {
@@ -265,15 +272,6 @@ export function selectedDataSharingReviewRecordIndices(state) {
     .map((row) => row.recordIndex);
 }
 
-export function syncDataSharingReviewPreviewCheckboxes(state) {
-  state.listNode.querySelectorAll("[data-data-sharing-review-preview]").forEach((row) => {
-    const rowId = normalizeText(row.getAttribute("data-data-sharing-review-preview"));
-    const checkbox = row.querySelector("input[type='checkbox']");
-    if (!(checkbox instanceof HTMLInputElement)) return;
-    checkbox.checked = state.selectedPreviewIds.has(rowId);
-  });
-}
-
 export function updateDataSharingReviewSelectionSummary(state) {
   const count = state.selectedPreviewIds.size;
   if (!state.selectionSummary) return;
@@ -285,18 +283,4 @@ export function updateDataSharingReviewSelectionSummary(state) {
     count === 1 ? "1 preview selected." : "{count} previews selected.",
     { count }
   ));
-}
-
-export function updateDataSharingReviewSelectionFromChange(state, event) {
-  const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return false;
-  const row = target.closest("[data-data-sharing-review-preview]");
-  const rowId = normalizeText(row ? row.getAttribute("data-data-sharing-review-preview") : "");
-  if (!rowId) return false;
-  if (target.checked) {
-    state.selectedPreviewIds.add(rowId);
-  } else {
-    state.selectedPreviewIds.delete(rowId);
-  }
-  return true;
 }

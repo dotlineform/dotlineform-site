@@ -27,19 +27,16 @@ import {
 import {
   DATA_SHARING_REVIEW_APPS,
   DATA_SHARING_REVIEW_DOMAINS,
-  clearDataSharingReviewPreviewSelection,
   dataSharingReviewApplyActionsForCapability,
   dataSharingReviewAppLabel,
   dataSharingReviewDataDomainLabel,
   escapeDataSharingReviewHtml,
-  handleDataSharingReviewPreviewListChange,
   hideDataSharingReviewApplyActionsMenu,
   hideDataSharingReviewResultButton,
   maybeShowDataSharingReviewResultButton,
   normalizeDataSharingReviewText,
   renderDataSharingReviewApplyActions,
   resetDataSharingReviewResult,
-  selectAllDataSharingReviewPreviewRows,
   selectedDataSharingReviewFile,
   setDataSharingReviewControlsDisabled,
   toggleDataSharingReviewApplyActionsMenu,
@@ -302,10 +299,13 @@ async function init() {
     files: [],
     previewRows: [],
     selectedPreviewIds: new Set(),
+    selectableList: null,
+    onPreviewSelectionChange: null,
     lastImportResult: null,
     serviceAvailable: false,
     isRunning: false
   };
+  state.onPreviewSelectionChange = () => updateDataSharingReviewSelectionState(state);
 
   const requiredNodes = [
     state.appValueNode,
@@ -427,13 +427,6 @@ async function init() {
     state.resultButton.addEventListener("click", () => {
       if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult, { restoreFocus: state.resultButton });
     });
-    state.selectAllButton.addEventListener("click", () => {
-      selectAllDataSharingReviewPreviewRows(state);
-    });
-    state.clearButton.addEventListener("click", () => {
-      clearDataSharingReviewPreviewSelection(state);
-    });
-    state.listNode.addEventListener("change", (event) => handleDataSharingReviewPreviewListChange(state, event));
     state.applyActionContainer.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;
       if (!(target instanceof HTMLButtonElement)) return;

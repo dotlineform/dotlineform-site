@@ -3,8 +3,6 @@ import {
   renderDataSharingReviewPreviewList,
   selectableDataSharingReviewPreviewIds,
   selectedDataSharingReviewRecordIndices,
-  syncDataSharingReviewPreviewCheckboxes,
-  updateDataSharingReviewSelectionFromChange,
   updateDataSharingReviewSelectionSummary
 } from "./data-sharing-review-render.js";
 import {
@@ -219,32 +217,17 @@ export function updateDataSharingReviewSelectionState(state) {
   syncDataSharingReviewApplyActionState(state);
 }
 
-export function handleDataSharingReviewPreviewListChange(state, event) {
-  if (!updateDataSharingReviewSelectionFromChange(state, event)) return;
-  updateDataSharingReviewSelectionState(state);
-}
-
-export function selectAllDataSharingReviewPreviewRows(state) {
-  selectableDataSharingReviewPreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));
-  syncDataSharingReviewPreviewCheckboxes(state);
-  updateDataSharingReviewSelectionState(state);
-}
-
-export function clearDataSharingReviewPreviewSelection(state) {
-  state.selectedPreviewIds.clear();
-  syncDataSharingReviewPreviewCheckboxes(state);
-  updateDataSharingReviewSelectionState(state);
-}
-
 export function setDataSharingReviewControlsDisabled(state, disabled) {
   const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
   const selectedFile = selectedDataSharingReviewFile(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
+  const selectableRecordCount = selectableDataSharingReviewPreviewIds(state).length;
   const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !selectedFile || !state.dataDomain;
-  state.selectAllButton.disabled = disabled || !state.previewRows.length;
-  state.clearButton.disabled = disabled || !state.previewRows.length;
+  state.selectAllButton.disabled = disabled || !selectableRecordCount;
+  state.clearButton.disabled = disabled || !state.selectedPreviewIds.size;
+  if (state.selectableList) state.selectableList.update({ disabled: Boolean(disabled) });
   state.actionMenuButton.disabled = disableApplyMenu;
   if (disableApplyMenu) hideDataSharingReviewApplyActionsMenu(state);
   state.applyButtons.forEach((button, actionId) => {

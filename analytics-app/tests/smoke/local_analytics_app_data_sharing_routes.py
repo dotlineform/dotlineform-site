@@ -323,12 +323,12 @@ def assert_prepare(page, base_url: str) -> None:
     root = page.locator("#dataSharingPrepareRoot")
     wait_for_route_ready(page, "#dataSharingPrepareRoot", "data-analytics-ready", "data-analytics-busy")
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
-    expect(root).to_have_attribute("data-analytics-record-loaded", "false", timeout=10_000)
+    expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     app_initial = page.locator("#dataSharingPrepareAppSelect").evaluate(
-        "select => ({ value: select.value, size: select.size, selectedIndex: select.selectedIndex })"
+        "select => ({ value: select.value, selectedIndex: select.selectedIndex })"
     )
-    if app_initial != {"value": "", "size": 5, "selectedIndex": -1}:
-        raise AssertionError("prepare app select should start blank")
+    if app_initial != {"value": "docs-viewer", "selectedIndex": 0}:
+        raise AssertionError(f"prepare app select should start on the only available app: {app_initial!r}")
     page.locator("#dataSharingPrepareAppSelect").select_option("docs-viewer")
     page.locator("#dataSharingPrepareDataDomainSelect").select_option("documents")
     page.locator("#dataSharingPrepareConfigSelect").select_option("parent-child-relationships")
@@ -336,15 +336,15 @@ def assert_prepare(page, base_url: str) -> None:
         raise AssertionError("prepare docs scope select should start blank")
     page.locator("#dataSharingPrepareDocsScopeSelect").select_option("library")
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
-    expect(page.locator("[data-data-sharing-prepare-record]").first).to_be_visible(timeout=10_000)
+    expect(page.locator("#dataSharingPrepareList [data-selectable-list-row='true']").first).to_be_visible(timeout=10_000)
     page.locator("#dataSharingPrepareSelectAll").click()
     expect(page.locator("#dataSharingPrepareSelectionSummary")).to_contain_text("2 records selected.", timeout=10_000)
     page.locator("#dataSharingPrepareMissingSummaryOnly").check()
     expect(page.locator("#dataSharingPrepareSelectionSummary")).to_contain_text("1 record selected.", timeout=10_000)
     page.locator("#dataSharingPrepareMissingSummaryOnly").uncheck()
     expect(page.locator("#dataSharingPrepareSelectionSummary")).to_contain_text("2 records selected.", timeout=10_000)
-    parent_checkbox = page.locator("input.dataSharingPrepareList__checkbox[value='library']")
-    child_checkbox = page.locator("input.dataSharingPrepareList__checkbox[value='alpha']")
+    parent_checkbox = page.locator("#dataSharingPrepareList input.sharedSelectableList__checkbox[value='library']")
+    child_checkbox = page.locator("#dataSharingPrepareList input.sharedSelectableList__checkbox[value='alpha']")
     expect(page.locator("#dataSharingPrepareIncludeDescendants")).to_be_checked(timeout=10_000)
     parent_checkbox.check()
     expect(child_checkbox).to_be_checked(timeout=10_000)
@@ -368,6 +368,20 @@ def assert_review(page, base_url: str) -> None:
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
     expect(page.locator("#dataSharingReviewFileSelect")).to_have_value("summaries.jsonl", timeout=10_000)
+    page.locator("#dataSharingReviewRun").click()
+    expect(page.locator("#dataSharingReviewStatus")).to_contain_text(
+        "Generated 2 Library returned package review files.",
+        timeout=10_000,
+    )
+    review_list = page.locator("#dataSharingReviewList")
+    if not review_list.evaluate("node => node.classList.contains('sharedSelectableList')"):
+        raise AssertionError("review list should use the shared selectable list component")
+    expect(review_list.locator("[data-selectable-list-row='true']")).to_have_count(2, timeout=10_000)
+    expect(review_list).to_contain_text("Library", timeout=10_000)
+    expect(review_list).to_contain_text("Alpha", timeout=10_000)
+    page.locator("button[data-role='modal-cancel']").click()
+    page.locator("#dataSharingReviewSelectAll").click()
+    expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 previews selected.", timeout=10_000)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -399,6 +413,7 @@ def main(argv: list[str] | None = None) -> int:
             "/analytics/api/data-sharing/selectable-records",
             "/analytics/api/data-sharing/prepare",
             "/analytics/api/data-sharing/returned-packages",
+            "/analytics/api/data-sharing/review",
         }
         seen_paths = {str(call["path"]) for call in data_sharing_api_calls}
         missing_paths = required_paths.difference(seen_paths)
