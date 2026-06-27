@@ -16,7 +16,7 @@ from docs_import_test_support import (
 def test_library_import_files_lists_json_and_jsonl_only() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
+        write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "source_text": "Body."}])
         write_staged(root, "relationships.json", {"records": []})
         (root / "var/analytics/data-sharing/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
         payload = handle_documents_import_files(root, "library")
@@ -24,7 +24,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
     assert payload["ok"] is True
     assert payload["scope"] == "library"
     assert payload["staging_root"] == "var/analytics/data-sharing/import-staging"
-    assert [item["filename"] for item in payload["files"]] == ["relationships.json", "summaries.jsonl"]
+    assert [item["filename"] for item in payload["files"]] == ["content.jsonl", "relationships.json"]
     assert [item["format"] for item in payload["files"]] == ["json", "jsonl"]
 
 def test_library_import_preview_writes_when_not_dry_run() -> None:
@@ -32,12 +32,12 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
         root = Path(temp)
         write_staged(
             root,
-            "summaries.jsonl",
-            [{"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary."}],
+            "content.jsonl",
+            [{"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "source_text": "Preview body."}],
         )
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
+            {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-alpha.md"))
@@ -50,15 +50,15 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
         item["path"] for item in payload["preview_files"]
     ]
     assert payload["summary_text"] == "Generated 1 Library import preview file."
-    assert "Preview summary." in preview_text
+    assert "Preview body." in preview_text
 
 def test_library_import_preview_dry_run_reports_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
+        write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "source_text": "Body."}])
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
+            {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},
             dry_run=True,
         )
         preview_exists = list((root / "var/analytics/data-sharing/import-preview").glob("alpha-*.md"))
@@ -94,7 +94,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             root,
             {
                 "data_domain": "library",
-                "config_id": "document-summaries",
+                "config_id": "document-content",
                 "selection": {
                     "docs_scope": "library",
                     "doc_ids": ["alpha"],
@@ -108,7 +108,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             root,
             {
                 "data_domain": "library",
-                "config_id": "document-summaries",
+                "config_id": "document-content",
                 "selection": {
                     "docs_scope": "library",
                     "doc_ids": ["library", "alpha"],

@@ -160,8 +160,8 @@ def prepare_payload() -> dict[str, object]:
 def returned_packages_payload(files: list[dict[str, object]] | None = None) -> dict[str, object]:
     staged_files = files if files is not None else [
         {
-            "filename": "summaries.jsonl",
-            "path": "var/analytics/data-sharing/import-staging/summaries.jsonl",
+            "filename": "content.jsonl",
+            "path": "var/analytics/data-sharing/import-staging/content.jsonl",
             "format": "jsonl",
             "size_bytes": 512,
             "modified_utc": "2026-05-04T12:00:00Z",
@@ -171,8 +171,8 @@ def returned_packages_payload(files: list[dict[str, object]] | None = None) -> d
             "app": "docs-viewer",
             "data_domain": "documents",
             "adapter_id": "documents",
-            "config_id": "document-summaries",
-            "profile_id": "document-summaries",
+            "config_id": "document-content",
+            "profile_id": "document-content",
             "scope": "library",
             "target_format": "jsonl",
             "record_shape": "document_rows",
@@ -367,7 +367,7 @@ def assert_review(page, base_url: str) -> None:
     wait_for_route_ready(page, "#dataSharingReviewRoot", "data-analytics-ready", "data-analytics-busy")
     expect(root).to_have_attribute("data-analytics-service", "available", timeout=10_000)
     expect(root).to_have_attribute("data-analytics-record-loaded", "true", timeout=10_000)
-    expect(page.locator("#dataSharingReviewFileSelect")).to_have_value("summaries.jsonl", timeout=10_000)
+    expect(page.locator("#dataSharingReviewFileSelect")).to_have_value("content.jsonl", timeout=10_000)
     page.locator("#dataSharingReviewRun").click()
     expect(page.locator("#dataSharingReviewStatus")).to_contain_text(
         "Generated 2 Library returned package review files.",

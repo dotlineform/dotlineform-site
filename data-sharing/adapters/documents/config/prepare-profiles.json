@@ -107,98 +107,6 @@
       "notes": "Can be used on selected document branches or the whole hierarchy."
     },
     {
-      "id": "document-summaries",
-      "label": "Document summaries",
-      "description": "Document summary metadata for missing-summary review and summary audit.",
-      "enabled": true,
-      "data_domains": ["documents"],
-      "target": {
-        "format": "jsonl",
-        "supported_formats": ["jsonl", "json"],
-        "record_shape": "document_rows"
-      },
-      "output": {
-        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl",
-        "timestamp_format": "%Y%m%d-%H%M%S"
-      },
-      "selection": {
-        "mode": "explicit_doc_ids",
-        "include_descendants": true,
-        "include_non_viewable": true,
-        "supports_missing_summary_only": true,
-        "default_missing_summary_only": true
-      },
-      "limits": {
-        "max_documents": null,
-        "max_chars_per_document": null,
-        "max_total_chars": null,
-        "truncate": {
-          "enabled": false,
-          "strategy": "paragraph_boundary",
-          "marker": "[truncated]"
-        }
-      },
-      "metadata": {
-        "include": [
-          "export_id",
-          "config_id",
-          "config_checksum",
-          "data_domain",
-          "scope",
-          "generated_at",
-          "selected_doc_ids",
-          "source_last_updated",
-          "counts"
-        ]
-      },
-      "external_context": {
-        "task": "review and edit document summaries",
-        "response_guidance": "Return proposed summary changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
-        "field_descriptions": {
-          "doc_id": "Stable document identifier. Preserve exactly in responses.",
-          "title": "Document title.",
-          "parent_id": "Current parent document id, if present.",
-          "headings": "Headings extracted from the document.",
-          "current_summary": "Existing document summary. Empty means a new summary may be needed.",
-          "summary": "Proposed document summary."
-        }
-      },
-      "document_fields": [
-        {
-          "source": "doc_id",
-          "output_path": "doc_id",
-          "required": true
-        },
-        {
-          "source": "title",
-          "output_path": "title",
-          "required": true
-        },
-        {
-          "source": "parent_id",
-          "output_path": "parent_id",
-          "include_if_empty": true
-        },
-        {
-          "source": "headings",
-          "output_path": "headings",
-          "default": [],
-          "transforms": ["headings_from_rendered_html"]
-        },
-        {
-          "source": "current_summary",
-          "output_path": "current_summary",
-          "default": ""
-        },
-        {
-          "source": "summary",
-          "output_path": "summary",
-          "default": ""
-        }
-      ],
-      "notes": "Default missing-summary filtering supports summary coverage review. Full document body text belongs to the full-content export."
-    },
-    {
       "id": "document-content",
       "label": "Document content",
       "description": "Document summaries, headings, and plain text content.",
@@ -245,7 +153,7 @@
       },
       "external_context": {
         "task": "Review and edit document content",
-        "response_guidance": "Return proposed content changes keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
+        "response_guidance": "Return only proposed changed fields keyed by doc_id. Preserve doc_id values exactly and do not invent document ids.",
         "field_descriptions": {
           "doc_id": "Stable document identifier. Preserve exactly in responses.",
           "title": "Document title.",

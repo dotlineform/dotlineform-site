@@ -50,7 +50,6 @@ Inputs:
 - a Docs Viewer scope, currently Library in v1
 - explicit document ids or `--all`
 - an optional `--format json|jsonl` override when the selected profile declares that format in `target.supported_formats`
-- an optional missing-summary override for profiles that support it
 
 Outputs:
 
@@ -77,7 +76,6 @@ Implemented now:
 - supports all-matching profiles
 - exports the exact selected document ids supplied by the caller
 - includes source docs marked non-viewable when the profile requests it
-- supports missing-summary filtering for profiles that allow it
 - maps supported document fields into configured output paths
 - computes parent, ancestor, and child relationship fields from source metadata
 - extracts heading lists from source-rendered HTML
@@ -94,7 +92,7 @@ Implemented now:
 - keeps source timestamp provenance in internal `.meta.json` rather than in external records
 - returns a structured JSON report
 
-The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
+The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestors`, and `children` alongside `current_summary`, `summary`, and `source_text`.
 Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
 
 Not implemented yet:
@@ -139,25 +137,19 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library
 Prepare explicit documents for profiles that require selected ids:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --doc-id library
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-content --doc-id library
 ```
 
 Use all matching docs for an explicit-selection config:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --all
-```
-
-Disable a summary config's default missing-summary-only filter:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --all --include-summary-complete
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-content --all
 ```
 
 Write a document-row export as JSON instead of its JSONL default when the config supports both:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-summaries --all --format json --write
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-content --all --format json --write
 ```
 
 ## Verification

@@ -105,7 +105,7 @@ def activity_entries(repo_root: Path) -> list[dict[str, object]]:
 def export_body() -> dict[str, object]:
     return {
         "data_domain": "library",
-        "config_id": "document-summaries",
+        "config_id": "document-content",
         "doc_ids": ["library", "longform", "notes"],
         "activity_context": {
             "page_id": "data-sharing-prepare",
@@ -114,7 +114,7 @@ def export_body() -> dict[str, object]:
             "control_id": "dataSharingPrepareRun",
             "control_selector": "#dataSharingPrepareRun",
             "correlation_id": "export:library",
-            "export_id": "library:document-summaries",
+            "export_id": "library:document-content",
         },
     }
 
@@ -127,7 +127,7 @@ def test_docs_export_activity_suppresses_dry_run_and_no_write() -> None:
             "ok": True,
             "output_written": True,
             "data_domain": "library",
-            "config_id": "document-summaries",
+            "config_id": "document-content",
             "counts": {"exported": 3, "failed": 0},
             "issue_counts": {"warnings": 0},
         }
@@ -150,7 +150,7 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
             "ok": True,
             "output_written": True,
             "data_domain": "library",
-            "config_id": "document-summaries",
+            "config_id": "document-content",
             "output_file": "var/analytics/data-sharing/library/exports/export.jsonl",
             "counts": {"exported": 3, "failed": 0},
             "issue_counts": {"warnings": 0},
@@ -198,7 +198,7 @@ def test_import_source_activity_suppresses_preview_and_confirmation() -> None:
 
 def import_apply_body(confirm: bool) -> dict[str, object]:
     return {
-        "staged_filename": "summaries.jsonl",
+        "staged_filename": "content.jsonl",
         "confirm": confirm,
         "activity_context": {
             "page_id": "data-sharing-review",
@@ -206,8 +206,8 @@ def import_apply_body(confirm: bool) -> dict[str, object]:
             "route": "/analytics/data-sharing/review/",
             "control_id": "dataSharingReviewUpdateSummary",
             "control_selector": "#dataSharingReviewUpdateSummary",
-            "correlation_id": "import-apply:summaries",
-            "staged_filename": "summaries.jsonl",
+            "correlation_id": "import-apply:content",
+            "staged_filename": "content.jsonl",
         },
     }
 

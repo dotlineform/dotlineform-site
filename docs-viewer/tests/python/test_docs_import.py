@@ -138,7 +138,7 @@ def render(root: Path, report: dict, *, write: bool = True, generated_at: str = 
     )
 
 
-def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
+def test_jsonl_content_export_rows_are_detected_and_normalized() -> None:
     with make_repo() as temp:
         root = Path(temp)
         rows = [
@@ -147,6 +147,8 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
                 "title": "Alpha",
                 "parent_id": "library",
                 "current_summary": "Existing summary.",
+                "summary": "Proposed summary.",
+                "source_text": "Alpha body.",
                 "review_note": "Keep this unknown field.",
             },
             {
@@ -154,43 +156,47 @@ def test_jsonl_summary_export_rows_are_detected_and_normalized() -> None:
                 "title": "Beta",
                 "parent_id": "library",
                 "current_summary": "",
+                "summary": "",
+                "source_text": "Beta body.",
             },
         ]
-        write_staged(root, "summaries.jsonl", "".join(json.dumps(row) + "\n" for row in rows))
+        write_staged(root, "content.jsonl", "".join(json.dumps(row) + "\n" for row in rows))
         write_staged(
             root,
-            "summaries.meta.json",
+            "content.meta.json",
             json.dumps(
                 {
-                    "export_id": "document-summaries",
+                    "export_id": "document-content",
                     "scope": "library",
                     "generated_at": "2026-05-03T20:00:00Z",
                 }
             ),
         )
-        report = parse(root, "summaries.jsonl")
+        report = parse(root, "content.jsonl")
 
     assert report["ok"] is True
     assert report["input_format"] == "jsonl"
-    assert report["source_metadata_file"].endswith("summaries.meta.json")
-    assert report["detected_import_type"] == "document_summaries"
-    assert report["source_export_id"] == "document-summaries"
+    assert report["source_metadata_file"].endswith("content.meta.json")
+    assert report["detected_import_type"] == "full_document_content"
+    assert report["source_export_id"] == "document-content"
     assert report["source_scope"] == "library"
     assert report["generated_at"] == "2026-05-03T20:00:00Z"
     assert report["counts"] == {"records": 2, "parsed_records": 2, "malformed_records": 0, "warnings": 0, "errors": 0}
     assert report["records"][0]["metadata"]["current_summary"] == "Existing summary."
+    assert report["records"][0]["metadata"]["summary"] == "Proposed summary."
+    assert report["records"][0]["metadata"]["source_text"] == "Alpha body."
     assert report["records"][0]["unknown_metadata"] == {"review_note": "Keep this unknown field."}
 
 
 def test_staged_import_listing_skips_package_sidecars() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "summaries.jsonl", '{"doc_id": "alpha", "title": "Alpha"}\n')
-        write_staged(root, "summaries.meta.json", '{"export_id": "document-summaries"}\n')
-        write_staged(root, "summaries.context.json", '{"task": "suggest_document_summaries"}\n')
+        write_staged(root, "content.jsonl", '{"doc_id": "alpha", "title": "Alpha", "source_text": "Body."}\n')
+        write_staged(root, "content.meta.json", '{"export_id": "document-content"}\n')
+        write_staged(root, "content.context.json", '{"task": "review_document_content"}\n')
         files = docs_import.list_staged_import_files(root, "library")
 
-    assert [item["filename"] for item in files] == ["summaries.jsonl"]
+    assert [item["filename"] for item in files] == ["content.jsonl"]
 
 
 def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
@@ -206,7 +212,7 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
             scope="studio",
         )
         write_text(
-            root / "var/analytics/data-sharing/import-staging/20260627-162139-documents-document-summaries.json",
+            root / "var/analytics/data-sharing/import-staging/20260627-162139-documents-document-content.json",
             json.dumps(
                 {
                     "schema_version": "data_sharing_returned_package_v1",
@@ -217,6 +223,7 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
                             "title": "Checks",
                             "parent_id": "admin",
                             "current_summary": "",
+                            "source_text": "Checks body.",
                         }
                     ],
                 }
@@ -225,7 +232,7 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
         report = docs_import.parse_staged_import(
             repo_root=root,
             scope="studio",
-            staged_file="20260627-162139-documents-document-summaries.json",
+            staged_file="20260627-162139-documents-document-content.json",
             staging_root=Path("var/analytics/data-sharing/import-staging"),
         )
         rendered = docs_import.render_markdown_previews(
@@ -251,7 +258,7 @@ def test_configured_studio_scope_json_envelope_can_be_previewed() -> None:
         "var/analytics/data-sharing/import-preview/"
         "20260627-162139-admin-checks.md"
     ) in preview_paths
-    assert [item["filename"] for item in files] == ["20260627-162139-documents-document-summaries.json"]
+    assert [item["filename"] for item in files] == ["20260627-162139-documents-document-content.json"]
 
 
 def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
@@ -264,15 +271,13 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
                     "doc_id": "library",
                     "title": "Library",
                     "parent_id": "",
-                    "child_ids": ["alpha"],
-                    "child_titles": ["Alpha"],
+                    "children": [{"id": "alpha", "title": "Alpha"}],
                 },
                 {
                     "doc_id": "alpha",
                     "title": "Alpha",
                     "parent_id": "library",
-                    "ancestor_ids": ["library"],
-                    "ancestor_titles": ["Library"],
+                    "ancestors": [{"id": "library", "title": "Library"}],
                 },
             ],
         }
@@ -295,11 +300,11 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
     assert report["source_metadata_file"].endswith("relationships.meta.json")
     assert report["source_export_id"] == "parent-child-relationships"
     assert report["unknown_file_metadata"] == {"review_batch": "tree-a"}
-    assert report["records"][0]["relationships"]["child_ids"] == ["alpha"]
-    assert report["records"][1]["relationships"]["ancestor_ids"] == ["library"]
+    assert report["records"][0]["relationships"]["children"] == [{"id": "alpha", "title": "Alpha"}]
+    assert report["records"][1]["relationships"]["ancestors"] == [{"id": "library", "title": "Library"}]
 
 
-def test_json_records_envelope_is_parsed_without_legacy_documents_key() -> None:
+def test_json_content_records_envelope_is_parsed_without_legacy_documents_key() -> None:
     with make_repo() as temp:
         root = Path(temp)
         payload = {
@@ -311,6 +316,8 @@ def test_json_records_envelope_is_parsed_without_legacy_documents_key() -> None:
                     "title": "Alpha",
                     "parent_id": "library",
                     "current_summary": "Updated summary.",
+                    "summary": "Proposed summary.",
+                    "source_text": "Plain text body.",
                 }
             ],
         }
@@ -318,12 +325,13 @@ def test_json_records_envelope_is_parsed_without_legacy_documents_key() -> None:
         report = parse(root, "records-envelope.json")
 
     assert report["ok"] is True
-    assert report["detected_import_type"] == "document_summaries"
+    assert report["detected_import_type"] == "full_document_content"
     assert report["source_export_id"] == "ds_20260627T120000Z"
     assert report["source_metadata"]["schema_version"] == "data_sharing_returned_package_v1"
     assert report["unknown_file_metadata"] == {}
     assert report["counts"] == {"records": 1, "parsed_records": 1, "malformed_records": 0, "warnings": 0, "errors": 0}
     assert report["records"][0]["metadata"]["current_summary"] == "Updated summary."
+    assert report["records"][0]["metadata"]["summary"] == "Proposed summary."
 
 
 def test_jsonl_full_content_is_detected_from_source_text_without_metadata() -> None:
@@ -348,6 +356,41 @@ def test_jsonl_full_content_is_detected_from_source_text_without_metadata() -> N
     assert report["detected_import_type"] == "full_document_content"
     assert report["source_export_id"] == ""
     assert report["records"][0]["metadata"]["source_text"] == "Plain text body.\n\nSecond paragraph."
+
+
+def test_summary_only_rows_are_sparse_document_changes() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged(
+            root,
+            "summary-only.jsonl",
+            json.dumps(
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                    "current_summary": "Existing summary.",
+                    "summary": "Proposed summary.",
+                }
+            )
+            + "\n",
+        )
+        report = render(root, parse(root, "summary-only.jsonl"))
+        preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md").read_text(encoding="utf-8")
+
+    assert report["ok"] is True
+    assert report["detected_import_type"] == "document_changes"
+    assert report["preview_written"] is True
+    assert report["preview_files"] == [
+        {
+            "path": "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md",
+            "record_index": 0,
+            "doc_id": "alpha",
+            "kind": "document",
+        }
+    ]
+    assert 'import_type: "document_changes"' in preview
+    assert "## Proposed Summary\n\nProposed summary." in preview
+    assert report["issues"] == []
 
 
 def test_jsonl_data_sharing_header_row_is_skipped() -> None:
@@ -501,7 +544,7 @@ def test_missing_source_metadata_adds_current_context_warning() -> None:
     assert "missing source root for scope library" in report["issues"][0]["message"]
 
 
-def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> None:
+def test_relationship_preview_writes_one_file_per_document_with_fallback_names() -> None:
     with make_repo() as temp:
         root = Path(temp)
         payload = [
@@ -515,8 +558,9 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
             {"doc_id": "alpha", "title": "Alpha Duplicate", "parent_id": "library", "summary": "Duplicate summary."},
             {"doc_id": "", "title": "Missing Id", "parent_id": "library", "summary": "Missing id summary."},
         ]
-        write_staged(root, "summaries.json", json.dumps(payload))
-        report = render(root, parse(root, "summaries.json"))
+        write_staged(root, "relationships.json", json.dumps(payload))
+        write_staged(root, "relationships.meta.json", '{"export_id": "parent-child-relationships"}\n')
+        report = render(root, parse(root, "relationships.json"))
         first_preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md").read_text(encoding="utf-8")
         missing_preview = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-record-3.md").read_text(encoding="utf-8")
 
@@ -529,7 +573,7 @@ def test_summary_preview_writes_one_file_per_document_with_fallback_names() -> N
     assert "matched_config_fields" in first_preview
     assert "staged_only_fields" in first_preview
     assert 'doc_id: "alpha"' in first_preview
-    assert 'import_type: "document_summaries"' in first_preview
+    assert 'import_type: "parent_child_relationships"' in first_preview
     assert 'review_note: "Keep this staged-only note."' in first_preview
     assert "## Proposed Summary\n\nNew alpha summary." in first_preview
     assert 'doc_id: ""' in missing_preview
@@ -571,8 +615,8 @@ def test_full_content_preview_preserves_headings_and_source_text() -> None:
 def test_preview_renderer_can_dry_run_without_writing_files() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "summaries.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
-        report = render(root, parse(root, "summaries.json"), write=False)
+        write_staged(root, "minimal.json", json.dumps([{"doc_id": "alpha", "title": "Alpha"}]))
+        report = render(root, parse(root, "minimal.json"), write=False)
         preview_exists = (root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md").exists()
 
     assert report["preview_written"] is False
@@ -620,17 +664,18 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
 
 def main() -> None:
     tests = [
-        test_jsonl_summary_export_rows_are_detected_and_normalized,
+        test_jsonl_content_export_rows_are_detected_and_normalized,
         test_staged_import_listing_skips_package_sidecars,
         test_configured_studio_scope_json_envelope_can_be_previewed,
         test_json_envelope_relationship_export_preserves_tree_metadata,
-        test_json_records_envelope_is_parsed_without_legacy_documents_key,
+        test_json_content_records_envelope_is_parsed_without_legacy_documents_key,
         test_jsonl_full_content_is_detected_from_source_text_without_metadata,
+        test_summary_only_rows_are_sparse_document_changes,
         test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing,
         test_current_library_lookup_adds_record_level_warnings,
         test_current_lookup_uses_source_metadata,
         test_missing_source_metadata_adds_current_context_warning,
-        test_summary_preview_writes_one_file_per_document_with_fallback_names,
+        test_relationship_preview_writes_one_file_per_document_with_fallback_names,
         test_full_content_preview_preserves_headings_and_source_text,
         test_preview_renderer_can_dry_run_without_writing_files,
         test_preview_path_rejects_unsafe_filename,

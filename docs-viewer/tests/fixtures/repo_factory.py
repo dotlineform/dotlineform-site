@@ -134,9 +134,9 @@ def write_documents_prepare_profiles(root: Path) -> None:
             "schema_version": "documents_prepare_profiles_v1",
             "configs": [
                 {
-                    "id": "document-summaries",
-                    "label": "Document summaries",
-                    "description": "Exports summary metadata.",
+                    "id": "document-content",
+                    "label": "Document content",
+                    "description": "Exports document content.",
                     "enabled": True,
                     "data_domains": ["library"],
                     "scopes": ["library"],
@@ -169,8 +169,8 @@ def write_documents_prepare_profiles(root: Path) -> None:
                         "include": ["export_id", "config_id", "scope", "generated_at", "selected_doc_ids", "counts"],
                     },
                     "external_context": {
-                        "task": "suggest_document_summaries",
-                        "response_guidance": "Return proposed summary changes keyed by doc_id.",
+                        "task": "review_document_content",
+                        "response_guidance": "Return only proposed changed fields keyed by doc_id.",
                         "field_descriptions": {
                             "doc_id": "Stable document identifier. Preserve exactly in responses.",
                             "title": "Document title.",

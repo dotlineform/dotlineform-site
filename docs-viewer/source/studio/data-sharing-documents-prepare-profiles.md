@@ -39,7 +39,6 @@ Each profile controls:
 - whether the user selects explicit documents or the exporter uses all matching documents
 - whether the prepare UI cascades parent checkbox changes to descendants by default
 - whether source docs marked non-viewable are included
-- whether summary profiles default to missing-summary-only filtering
 - which source-derived document fields are written to each output record
 - whether body content is converted to plain text and how images/SVGs are represented
 - which JSON or JSONL file pattern the run writes
@@ -49,14 +48,12 @@ Any new field source, transform, output format, or record shape needs export-eng
 
 ## Current Profiles
 
-The current file defines three enabled document package profiles:
+The current file defines two enabled document package profiles:
 
 - `parent-child-relationships`
   envelope JSON for explicitly selected or whole-corpus hierarchy and relationship review
-- `document-summaries`
-  JSONL document rows for summary coverage and summary audit, defaulting to missing-summary filtering and excluding full document body text
 - `document-content`
-  JSONL document rows for exporting multiple selected document bodies in one file, including explicitly declared parent, ancestor, and child relationship metadata
+  JSONL document rows for exporting multiple selected document bodies in one file, including current/proposed summary fields and explicitly declared parent, ancestor, and child relationship metadata
 
 Profile ids describe package shape, not Docs Viewer scope.
 Add a new profile only when a scope or workflow needs a materially different package shape, field set, limits, or selection behavior.
@@ -123,6 +120,8 @@ Each profile must define:
 The exporter derives `.context.json` from `external_context`, `target`, and `document_fields`.
 It infers simple field types from the field mapping/defaults and preserves the configured descriptions verbatim.
 Validation fails when a document output field has no description or when `field_descriptions` contains a stale field that no longer exists in `document_fields`.
+Returned packages do not need to echo every exported context field.
+They may include only changed candidate fields, such as `summary`, keyed by `doc_id`.
 
 The prepare UI exposes only `external_context.task`, `external_context.response_guidance`, and `external_context.field_descriptions`.
 Saving from the modal rewrites the profile config after validating the full prepare-profile payload.
@@ -163,7 +162,7 @@ Current profiles use explicit document selection; Select all in Analytics or `--
 The exporter treats `selection.doc_ids` and repeated CLI `--doc-id` values as the exact document set to export.
 Relationship fields such as `children` and `ancestors` are still derived from source hierarchy metadata and are not filtered by the selected export set.
 
-`supports_missing_summary_only` and `default_missing_summary_only` are profile-level flags for summary-focused exports.
+The current profiles do not enable missing-summary-only filtering.
 
 ## Document Fields
 

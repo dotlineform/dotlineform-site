@@ -21,6 +21,8 @@ It reads local JSON or JSONL files manually copied under the Library returned-pa
 It does not mutate source Markdown, generated docs payloads, share packages, or config files.
 When `--write-previews` is passed, it writes Markdown review artifacts under the Library review output root.
 The same engine is used by the documents adapter when `/analytics/data-sharing/review/` calls `POST /analytics/api/data-sharing/review`.
+Returned files may be sparse.
+For example, a service that only proposes summaries can return `doc_id`, `title`, and `summary` without echoing exported `source_text`, `ancestors`, or `children`.
 
 Current input path:
 
@@ -44,23 +46,20 @@ Implemented now:
 
 - enforces that parsed files stay under `var/analytics/data-sharing/import-staging/`
 - reads `.json` and `.jsonl`
-- parses JSON package envelopes with a `documents` array
+- parses JSON package envelopes with a `records` array
 - parses JSON arrays of document-like records
 - parses JSONL document-row packages
 - reads sibling `.meta.json` sidecars for package metadata
 - excludes `.meta.json` and `.context.json` sidecars from staged package listings
-- detects the three v1 document package families when package metadata is present
-- falls back to structural detection for relationship, summary, full-content, and minimal document records
+- detects relationship, full-content, sparse document-change, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
 - loads current Library source metadata through Docs Viewer source parsing/rendering helpers
 - annotates each normalized record with current Library existence, viewability, source renderability, current summary, and parent source state
 - renders one Markdown-style review artifact per parsed document
-- renders one additional whole-tree Markdown review artifact whenever staged relationship metadata is available
 - writes review artifacts only under `var/analytics/data-sharing/import-preview/`
 - supports timestamped document review filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
 - uses the staged-file timestamp suffix for review filenames when present, otherwise the current review-generation time
-- supports deterministic relationship-tree review filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through the documents Data Sharing adapter for returned-package listing and review generation
 - is exposed through the `/analytics/data-sharing/review/` page for local returned-package review
@@ -69,16 +68,16 @@ Implemented now:
 
 ## Commands
 
-Parse a staged Library summary package:
+Parse a staged Library content package:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-content.jsonl
 ```
 
-Write Markdown review artifacts for a staged Library summary package:
+Write Markdown review artifacts for a staged Library content package:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl --write-previews
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-content.jsonl --write-previews
 ```
 
 Parse a staged Library relationships package and omit normalized records from the printed report:

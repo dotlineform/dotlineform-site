@@ -36,7 +36,7 @@ def test_docs_export_request_passes_target_format() -> None:
                 repo_root,
                 {
                     "data_domain": "documents",
-                    "config_id": "document-summaries",
+                    "config_id": "document-content",
                     "selection": {
                         "docs_scope": "studio",
                         "doc_ids": ["child"],

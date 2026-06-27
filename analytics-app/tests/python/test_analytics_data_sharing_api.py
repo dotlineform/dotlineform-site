@@ -163,7 +163,7 @@ def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) ->
     status, payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/prepare",
-        {"data_domain": "documents", "config_id": "document-summaries"},
+        {"data_domain": "documents", "config_id": "document-content"},
         dry_run=True,
     )
 
@@ -357,13 +357,13 @@ def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeyp
     review_status, review_payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/review",
-        {"data_domain": "documents", "staged_filename": "summaries.jsonl"},
+        {"data_domain": "documents", "staged_filename": "content.jsonl"},
         dry_run=True,
     )
     apply_status, apply_payload = analytics_data_sharing_api.data_sharing_post_response(
         REPO_ROOT,
         "/apply",
-        {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl"},
+        {"data_domain": "documents", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
         dry_run=True,
     )
 

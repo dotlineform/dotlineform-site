@@ -36,9 +36,9 @@ BASE_CONFIG = {
     "schema_version": "documents_prepare_profiles_v1",
     "configs": [
         {
-            "id": "document-summaries",
-            "label": "Document summaries",
-            "description": "Exports summary metadata.",
+            "id": "document-content",
+            "label": "Document content",
+            "description": "Exports document content.",
             "enabled": True,
             "data_domains": ["documents"],
             "target": {
@@ -54,8 +54,8 @@ BASE_CONFIG = {
                 "mode": "explicit_doc_ids",
                 "include_descendants": True,
                 "include_non_viewable": True,
-                "supports_missing_summary_only": True,
-                "default_missing_summary_only": True,
+                "supports_missing_summary_only": False,
+                "default_missing_summary_only": False,
             },
             "limits": {
                 "max_documents": None,
@@ -71,8 +71,8 @@ BASE_CONFIG = {
                 "include": ["export_id", "config_id", "scope", "generated_at", "selected_doc_ids", "counts"],
             },
             "external_context": {
-                "task": "suggest_document_summaries",
-                "response_guidance": "Return proposed summary changes keyed by doc_id.",
+                "task": "review_document_content",
+                "response_guidance": "Return only proposed changed fields keyed by doc_id.",
                 "field_descriptions": {
                     "doc_id": "Stable document identifier. Preserve exactly in responses.",
                     "title": "Document title.",
@@ -178,7 +178,7 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
 def run_export(root: Path, **overrides):
     args = {
         "repo_root": root,
-        "config_id": "document-summaries",
+        "config_id": "document-content",
         "scope": "library",
         "selected_doc_ids": ["library"],
         "select_all": False,
@@ -237,7 +237,7 @@ def test_config_validation_blocks_duplicate_output_paths() -> None:
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
-    assert "config document-summaries: duplicate document output_path title" in report["errors"]
+    assert "config document-content: duplicate document output_path title" in report["errors"]
 
 
 def test_config_validation_requires_external_context_descriptions() -> None:
@@ -248,8 +248,8 @@ def test_config_validation_requires_external_context_descriptions() -> None:
         report = run_export(Path(temp))
 
     assert report["ok"] is False
-    assert "config document-summaries: external_context.field_descriptions.current_summary is required" in report["errors"]
-    assert "config document-summaries: external_context.field_descriptions.retired_field does not match a document output_path" in report["errors"]
+    assert "config document-content: external_context.field_descriptions.current_summary is required" in report["errors"]
+    assert "config document-content: external_context.field_descriptions.retired_field does not match a document output_path" in report["errors"]
 
 
 def test_unknown_config_returns_structured_validation_report() -> None:
@@ -267,7 +267,7 @@ def test_jsonl_config_requires_jsonl_output_extension() -> None:
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
-    assert "config document-summaries: output.path_pattern extension must match target.format" in report["errors"]
+    assert "config document-content: output.path_pattern extension must match target.format" in report["errors"]
 
 
 def test_output_path_rejects_export_id_placeholder() -> None:
@@ -276,7 +276,7 @@ def test_output_path_rejects_export_id_placeholder() -> None:
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
-    assert "config document-summaries: output.path_pattern must not include export_id; use profile_id for filenames" in report["errors"]
+    assert "config document-content: output.path_pattern must not include export_id; use profile_id for filenames" in report["errors"]
 
 
 def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
@@ -308,13 +308,13 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_report["ok"] is True
     assert first_report["export_id"] == "ds_20260503T151507Z"
     assert first_report["output_file"] == (
-        "var/analytics/data-sharing/exports/20260503-161507-documents-document-summaries.jsonl"
+        "var/analytics/data-sharing/exports/20260503-161507-documents-document-content.jsonl"
     )
     assert first_report["metadata_file"] == (
         "var/analytics/data-sharing/meta/ds_20260503T151507Z.meta.json"
     )
     assert first_report["context_file"] == (
-        "var/analytics/data-sharing/exports/20260503-161507-documents-document-summaries.context.json"
+        "var/analytics/data-sharing/exports/20260503-161507-documents-document-content.context.json"
     )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
@@ -339,16 +339,16 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert metadata["app"] == "docs-viewer"
     assert metadata["data_domain"] == "documents"
     assert metadata["adapter_id"] == "documents"
-    assert metadata["config_id"] == "document-summaries"
-    assert metadata["profile_id"] == "document-summaries"
+    assert metadata["config_id"] == "document-content"
+    assert metadata["profile_id"] == "document-content"
     assert metadata["target_format"] == "jsonl"
     assert metadata["record_shape"] == "document_rows"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
     assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
-    assert context["task"] == "suggest_document_summaries"
+    assert context["task"] == "review_document_content"
     assert context["response_guidance"] == (
-        "Return proposed summary changes keyed by doc_id. "
+        "Return only proposed changed fields keyed by doc_id. "
         "Preserve the first JSONL line unchanged; it is an internal routing header."
     )
     assert context["record_format"] == "jsonl"
@@ -385,7 +385,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["target_format"] == "json"
     assert report["export_id"] == "ds_20260503T151507Z"
     assert report["output_file"] == (
-        "var/analytics/data-sharing/exports/20260503-161507-documents-document-summaries.json"
+        "var/analytics/data-sharing/exports/20260503-161507-documents-document-content.json"
     )
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260503T151507Z"
@@ -425,7 +425,7 @@ def test_unsupported_format_override_blocks_export() -> None:
         report = run_export(Path(temp), target_format="json")
 
     assert report["ok"] is False
-    assert "config document-summaries: target_format 'json' is not supported; supported formats: jsonl" in report["errors"]
+    assert "config document-content: target_format 'json' is not supported; supported formats: jsonl" in report["errors"]
     assert report["target_format"] == "json"
     assert report["output_file"].endswith(".json")
     assert report["output_written"] is False
@@ -450,7 +450,6 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     config_ids = [config["id"] for config in configs]
     assert config_ids == [
         "parent-child-relationships",
-        "document-summaries",
         "document-content",
     ]
     for config in configs:
@@ -458,16 +457,13 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
         assert errors == []
         assert warnings == []
 
-    summary_fields = {
-        field["source"]
-        for field in docs_export.find_export_config(payload, "document-summaries")["document_fields"]
-    }
     full_fields = {
         field["source"]
         for field in docs_export.find_export_config(payload, "document-content")["document_fields"]
     }
-    assert "source_text" not in summary_fields
     assert "source_text" in full_fields
+    assert "current_summary" in full_fields
+    assert "summary" in full_fields
     relationship_fields = {
         "parent_id",
         "parent_title",
@@ -478,10 +474,8 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert "sort_order" not in full_fields
 
     relationship_config = docs_export.find_export_config(payload, "parent-child-relationships")
-    summary_config = docs_export.find_export_config(payload, "document-summaries")
     full_config = docs_export.find_export_config(payload, "document-content")
     assert docs_export.supported_target_formats(relationship_config) == ["json"]
-    assert docs_export.supported_target_formats(summary_config) == ["jsonl", "json"]
     assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
 
 
@@ -649,13 +643,6 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
             "select_all": False,
             "missing_summary_only": None,
             "target_format": "json",
-        },
-        {
-            "config_id": "document-summaries",
-            "selected_doc_ids": ["library"],
-            "select_all": False,
-            "missing_summary_only": False,
-            "target_format": "jsonl",
         },
         {
             "config_id": "document-content",

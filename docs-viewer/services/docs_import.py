@@ -2,8 +2,8 @@
 """Parse staged Docs Viewer import data and optionally write Markdown previews.
 
 Run:
-  ./docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl
-  ./docs-viewer/services/docs_import.py --scope library --file document-summaries.jsonl --write-previews
+  ./docs-viewer/services/docs_import.py --scope library --file document-content.jsonl
+  ./docs-viewer/services/docs_import.py --scope library --file document-content.jsonl --write-previews
   ./docs-viewer/services/docs_import.py --scope catalogue --file works.jsonl --write-previews
 """
 
@@ -33,8 +33,6 @@ STAGED_SUFFIX_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-
 
 EXPORT_ID_TO_IMPORT_TYPE = {
     "parent-child-relationships": "parent_child_relationships",
-    "document-summaries": "document_summaries",
-    "document-content": "full_document_content",
 }
 IMPORT_TYPE_CONFIG_FIELDS = {
     "parent_child_relationships": [
@@ -42,21 +40,10 @@ IMPORT_TYPE_CONFIG_FIELDS = {
         "title",
         "parent_id",
         "parent_title",
-        "ancestor_ids",
-        "ancestor_titles",
-        "child_ids",
-        "child_titles",
+        "ancestors",
+        "children",
         "summary",
         "headings",
-        "last_updated",
-        "viewable",
-    ],
-    "document_summaries": [
-        "doc_id",
-        "title",
-        "parent_id",
-        "headings",
-        "current_summary",
         "last_updated",
         "viewable",
     ],
@@ -64,11 +51,22 @@ IMPORT_TYPE_CONFIG_FIELDS = {
         "doc_id",
         "title",
         "parent_id",
+        "parent_title",
+        "current_summary",
         "summary",
+        "ancestors",
+        "children",
         "headings",
         "source_text",
         "last_updated",
         "viewable",
+    ],
+    "document_changes": [
+        "doc_id",
+        "title",
+        "parent_id",
+        "current_summary",
+        "summary",
     ],
     "minimal_document_records": [
         "doc_id",
@@ -92,10 +90,8 @@ KNOWN_RECORD_FIELDS = {
     "title",
     "parent_id",
     "parent_title",
-    "ancestor_ids",
-    "ancestor_titles",
-    "child_ids",
-    "child_titles",
+    "ancestors",
+    "children",
     "summary",
     "current_summary",
     "headings",
@@ -191,6 +187,20 @@ def normalize_string_list(value: Any) -> list[str]:
         text = normalize_text(item)
         if text:
             normalized.append(text)
+    return normalized
+
+
+def normalize_id_title_pairs(value: Any) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        return []
+    normalized: list[dict[str, str]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        doc_id = normalize_text(item.get("id"))
+        title = normalize_text(item.get("title"))
+        if doc_id or title:
+            normalized.append({"id": doc_id, "title": title})
     return normalized
 
 
@@ -478,9 +488,9 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
     if "source_text" in row:
         normalized["metadata"]["source_text"] = str(row.get("source_text") or "")
 
-    for key in ["ancestor_ids", "ancestor_titles", "child_ids", "child_titles"]:
+    for key in ["ancestors", "children"]:
         if key in row:
-            normalized["relationships"][key] = normalize_string_list(row.get(key))
+            normalized["relationships"][key] = normalize_id_title_pairs(row.get(key))
 
     unknown = {
         key: copy.deepcopy(value)
@@ -502,7 +512,9 @@ def detect_import_type(source_export_id: str, records: list[dict[str, Any]]) -> 
         "current_summary" in record.get("metadata", {}) or "summary" in record.get("metadata", {})
         for record in records
     ):
-        return "document_summaries"
+        return "document_changes"
+    if source_export_id == "document-content":
+        return "document_changes"
     if records:
         return "minimal_document_records"
     return "unknown"
@@ -842,6 +854,10 @@ def render_markdown_previews(
     fallback_timestamp = preview_filename_timestamp(generated_at) if generated_at else local_filename_timestamp()
     timestamp_suffix = staged_timestamp_suffix(report, fallback_timestamp)
     import_type = normalize_text(report.get("detected_import_type"))
+    if import_type == "unknown":
+        report["preview_files"] = []
+        report["preview_written"] = False
+        return report
     records = [record for record in report.get("records", []) if isinstance(record, dict)]
     preview_files: list[dict[str, Any]] = []
 

@@ -21,7 +21,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
         write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "summary": "Old summary."})
         write_staged(
             root,
-            "summaries.jsonl",
+            "content.jsonl",
             [
                 {"doc_id": "alpha", "title": "Alpha", "summary": "New summary."},
                 {"doc_id": "missing", "title": "Missing", "summary": "Missing summary."},
@@ -29,7 +29,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -57,10 +57,10 @@ def test_library_import_summary_apply_writes_source() -> None:
                     "parent_id": "library",
                 },
             )
-            write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
+            write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
             payload = handle_documents_import_apply(
                 root,
-                {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
+                {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0], "confirm": True},
                 dry_run=False,
             )
             source_text = (root / "docs-viewer/source/library/alpha.md").read_text(encoding="utf-8")
@@ -118,10 +118,10 @@ def test_documents_data_sharing_apply_uses_python_docs_rebuild_commands() -> Non
                     "parent_id": "library",
                 },
             )
-            write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
+            write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
             payload = handle_documents_import_apply(
                 root,
-                {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
+                {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0], "confirm": True},
                 dry_run=False,
             )
     finally:
@@ -142,7 +142,7 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library"})
         write_staged(
             root,
-            "summaries.jsonl",
+            "content.jsonl",
             [
                 {"doc_id": "alpha", "title": "Alpha", "summary": "Same summary."},
                 {"doc_id": "library", "title": "Library"},
@@ -150,7 +150,7 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
         )
         payload = handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
