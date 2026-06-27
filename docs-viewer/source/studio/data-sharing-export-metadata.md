@@ -58,7 +58,7 @@ Internal metadata files live under:
 var/analytics/data-sharing/meta/
 ```
 
-The filename is derived from `export_id`:
+The internal metadata filename is derived from `export_id`:
 
 ```text
 var/analytics/data-sharing/meta/ds_20260627T173012Z.meta.json
@@ -106,7 +106,7 @@ The documents adapter treats `profile_id` as the same value as `config_id` until
 | Field | Purpose | Values / Corresponds To |
 | --- | --- | --- |
 | `schema_version` | Identifies the metadata contract so review can validate the file before using it. | Currently `data_sharing_export_meta_v1`. |
-| `export_id` | Stable routing id shared by the external package and this internal metadata file. | `ds_YYYYMMDDTHHMMSSZ`, derived from the UTC prepare run time. Must match the staged package `export_id` and the metadata filename. |
+| `export_id` | Stable routing id shared by the external package and this internal metadata file. | `ds_YYYYMMDDTHHMMSSZ`, derived from the UTC prepare run time. Must match the staged package `export_id` and the internal metadata filename. It must not be used in external package filenames. |
 | `app` | Browser/app surface that owns the data domain. | Current documents value is `docs-viewer`. Tags use `analytics`. Future domains should use the app key from the adapter registry. |
 | `data_domain` | Dispatch domain used by review and apply. | Current documents value is `documents`. Must match an active `data_domain` in `data-sharing/config/adapters.json`. |
 | `adapter_id` | Exact adapter registry id that prepared the package. | Current documents value is `documents`. Must match the adapter id configured for the metadata `data_domain`. |
@@ -114,7 +114,7 @@ The documents adapter treats `profile_id` as the same value as `config_id` until
 | `profile_id` | Workflow profile identity for review UI and future profile-specific behavior. | For documents, currently the same value as `config_id`. If config and UI profile concepts diverge later, this records the user-facing profile id. |
 | `scope` | Source Docs Viewer scope used during prepare. | Required for documents, for example `library`. Corresponds to `selection.docs_scope` and a configured scope in `docs-viewer/config/scopes/docs_scopes.json`. |
 | `target_format` | File format written by prepare and expected by review. | `json` or `jsonl`. Must match the selected profile's supported target format and the staged file extension. |
-| `record_shape` | Structural shape of the external records inside the package. | `envelope` for a JSON object containing a document array, or `document_rows` for JSONL rows / JSON `records` arrays. |
+| `record_shape` | Structural shape of the external records inside the package. | `envelope` for a JSON object containing a `records` array, or `document_rows` for JSONL rows / JSON `records` arrays. |
 | `generated_at` | UTC timestamp for the prepare run. | `YYYY-MM-DDTHH:MM:SSZ`. This is the source of `export_id` and should not be edited. |
 | `config_checksum` | Optional integrity/provenance value for the prepare profile used at export time. | Present when included by the profile metadata settings. Hashes the profile config so later review can detect profile drift if needed. |
 | `selected_doc_ids` | Optional provenance list of documents selected for export. | Ordered normalized document ids after selection resolution. Useful for audit, not for routing. |
@@ -131,7 +131,7 @@ JSON envelope packages use a top-level `export_id`:
 {
   "schema_version": "data_sharing_returned_package_v1",
   "export_id": "ds_20260627T173012Z",
-  "documents": [
+  "records": [
     {
       "doc_id": "library",
       "title": "Library"

@@ -160,8 +160,8 @@ def prepare_payload() -> dict[str, object]:
 def returned_packages_payload() -> dict[str, object]:
     return {
         "ok": True,
-        "scope": "library",
         "staging_root": "var/analytics/data-sharing/import-staging",
+        "meta_root": "var/analytics/data-sharing/meta",
         "files": [
             {
                 "filename": "summaries.jsonl",
@@ -169,6 +169,17 @@ def returned_packages_payload() -> dict[str, object]:
                 "format": "jsonl",
                 "size_bytes": 512,
                 "modified_utc": "2026-05-04T12:00:00Z",
+                "metadata_ok": True,
+                "metadata_file": "var/analytics/data-sharing/meta/ds_20260504T120000Z.meta.json",
+                "export_id": "ds_20260504T120000Z",
+                "app": "docs-viewer",
+                "data_domain": "documents",
+                "adapter_id": "documents",
+                "config_id": "document-summaries",
+                "profile_id": "document-summaries",
+                "scope": "library",
+                "target_format": "jsonl",
+                "record_shape": "document_rows",
             }
         ],
     }

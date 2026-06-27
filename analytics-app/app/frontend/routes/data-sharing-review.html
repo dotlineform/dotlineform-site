@@ -35,18 +35,17 @@
             <select class="analytics__input dataSharingReviewPage__listbox" id="dataSharingReviewFileSelect" size="5"></select>
           </span>
         </label>
-        <label class="dataSharingReviewPage__choiceField" for="dataSharingReviewAppSelect">
-          <span class="visually-hidden" id="dataSharingReviewAppLabel"></span>
-          <span class="analyticsField__control">
-            <select class="analytics__input dataSharingReviewPage__listbox" id="dataSharingReviewAppSelect" size="5"></select>
-          </span>
-        </label>
-        <label class="dataSharingReviewPage__choiceField" for="dataSharingReviewDataDomainSelect">
-          <span class="visually-hidden" id="dataSharingReviewDataDomainLabel"></span>
-          <span class="analyticsField__control">
-            <select class="analytics__input dataSharingReviewPage__listbox" id="dataSharingReviewDataDomainSelect" size="5"></select>
-          </span>
-        </label>
+        <div class="dataSharingReviewPage__resolvedContext" id="dataSharingReviewResolvedContext" aria-live="polite">
+          <p class="dataSharingReviewPage__resolvedField">
+            <span class="dataSharingReviewPage__resolvedValue" id="dataSharingReviewAppValue"></span>
+          </p>
+          <p class="dataSharingReviewPage__resolvedField">
+            <span class="dataSharingReviewPage__resolvedValue" id="dataSharingReviewDataDomainValue"></span>
+          </p>
+          <p class="dataSharingReviewPage__resolvedField" id="dataSharingReviewScopeRow" hidden>
+            <span class="dataSharingReviewPage__resolvedValue" id="dataSharingReviewScopeValue"></span>
+          </p>
+        </div>
       </div>
     </div>
     <p class="analyticsForm__meta dataSharingReviewPage__selectionSummary" id="dataSharingReviewSelectionSummary"></p>

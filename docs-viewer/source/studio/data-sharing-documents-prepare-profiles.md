@@ -97,10 +97,10 @@ When omitted, the default `target.format` is the only supported format.
 
 `target.record_shape` supports:
 
-- `envelope`: one JSON object containing a document array
+- `envelope`: one JSON object containing a `records` array
 - `document_rows`: one complete document record per JSONL row after the required header row, or one JSON object with a `records` array when `json` is selected
 
-When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `documents`.
+When `target.record_shape` is `envelope`, `document_array_path` identifies where document records are written, normally `records`.
 Envelope profiles support JSON only.
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
 Export-run metadata is written once to an internal metadata file under `var/analytics/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
@@ -132,15 +132,16 @@ Saving from the modal rewrites the profile config after validating the full prep
 `output.path_pattern` must stay under the shared Data Sharing export root:
 
 ```text
-var/analytics/data-sharing/exports/{export_id}-{timestamp}.json
-var/analytics/data-sharing/exports/{export_id}-{timestamp}.jsonl
-var/analytics/data-sharing/exports/{export_id}-{timestamp}.context.json
+var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.json
+var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.jsonl
+var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.context.json
 ```
 
 The placeholders are resolved by the export engine.
-Current profiles use `{export_id}` and `{timestamp}`.
-Other placeholders, including `{data_domain}`, are only valid when supported by the export engine and still resolve under the shared export root.
-When an operator chooses a non-default supported format, the export engine keeps the configured directory, export id, and timestamp, then switches the output file extension to the selected format.
+Current profiles use `{data_domain}`, `{profile_id}`, and `{timestamp}`.
+Other placeholders are only valid when supported by the export engine and still resolve under the shared export root.
+External filenames must not include `{export_id}`; that id is reserved for package content and the internal metadata filename.
+When an operator chooses a non-default supported format, the export engine keeps the configured directory, profile id, and timestamp, then switches the output file extension to the selected format.
 The `.context.json` pattern is derived from the output filename; it is not configured as a separate profile path.
 The internal `.meta.json` file is stored separately under `var/analytics/data-sharing/meta/` and keyed by the package `export_id`.
 

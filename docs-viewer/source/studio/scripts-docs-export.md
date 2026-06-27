@@ -28,15 +28,15 @@ Current input paths:
 
 Current output pattern:
 
-- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.json`
-- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.jsonl`
-- `var/analytics/data-sharing/exports/<data_domain>-<export_id>-<timestamp>.context.json` for external task and schema context
+- `var/analytics/data-sharing/exports/<data_domain>-<profile_id>-<timestamp>.json`
+- `var/analytics/data-sharing/exports/<data_domain>-<profile_id>-<timestamp>.jsonl`
+- `var/analytics/data-sharing/exports/<data_domain>-<profile_id>-<timestamp>.context.json` for external task and schema context
 - `var/analytics/data-sharing/meta/<export_id>.meta.json` for internal export provenance and review routing
 
 The filename timestamp is formatted in the local runtime timezone.
 Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
 The `export_id` is derived from that UTC timestamp as `ds_YYYYMMDDTHHMMSSZ`.
-The internal `.meta.json` file stores source scope, profile, domain, and adapter routing data; external package files carry only `export_id`.
+The internal `.meta.json` file stores source scope, profile, domain, and adapter routing data; external package payloads carry `export_id`, but external filenames use profile id and timestamp.
 The metadata and `export_id` contract is documented in [Data Sharing Export Metadata](/docs/?scope=studio&doc=data-sharing-export-metadata).
 
 ## Runtime Contract

@@ -254,6 +254,65 @@ def test_returned_packages_endpoint_dispatches_through_registered_handlers(monke
     assert calls[0]["data_domain"] == "documents"
 
 
+def test_returned_packages_endpoint_resolves_unfiltered_staging_files_from_internal_meta() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        export_id = "ds_20260627T120000Z"
+        staged_path = root / "var/analytics/data-sharing/import-staging/renamed-by-user.jsonl"
+        staged_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.write_text(
+            "\n".join(
+                [
+                    json.dumps(
+                        {
+                            "record_type": "data_sharing_header",
+                            "schema_version": "data_sharing_returned_package_v1",
+                            "export_id": export_id,
+                        }
+                    ),
+                    json.dumps({"doc_id": "library", "title": "Library", "source_text": "Document body."}),
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        metadata_path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+        metadata_path.parent.mkdir(parents=True, exist_ok=True)
+        metadata_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "data_sharing_export_metadata_v1",
+                    "export_id": export_id,
+                    "app": "docs-viewer",
+                    "data_domain": "documents",
+                    "adapter_id": "documents",
+                    "config_id": "document-content",
+                    "profile_id": "document-content",
+                    "scope": "catalogue",
+                    "target_format": "jsonl",
+                    "record_shape": "document_rows",
+                    "generated_at": "2026-06-27T12:00:00Z",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        payload = analytics_data_sharing_api.data_sharing_get_payload(root, "/returned-packages", {})
+
+    assert payload["ok"] is True
+    assert payload["staging_root"] == "var/analytics/data-sharing/import-staging"
+    assert payload["meta_root"] == "var/analytics/data-sharing/meta"
+    assert len(payload["files"]) == 1
+    file_record = payload["files"][0]
+    assert file_record["filename"] == "renamed-by-user.jsonl"
+    assert file_record["metadata_ok"] is True
+    assert file_record["export_id"] == export_id
+    assert file_record["metadata_file"] == f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+    assert file_record["app"] == "docs-viewer"
+    assert file_record["data_domain"] == "documents"
+    assert file_record["scope"] == "catalogue"
+
+
 def test_returned_packages_endpoint_lists_documents_with_default_review_scope() -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)

@@ -194,7 +194,7 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
         root = Path(temp)
         payload = {
             "review_batch": "tree-a",
-            "documents": [
+            "records": [
                 {
                     "doc_id": "library",
                     "title": "Library",
@@ -234,6 +234,33 @@ def test_json_envelope_relationship_export_preserves_tree_metadata() -> None:
     assert report["records"][1]["relationships"]["ancestor_ids"] == ["library"]
 
 
+def test_json_records_envelope_is_parsed_without_legacy_documents_key() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        payload = {
+            "schema_version": "data_sharing_returned_package_v1",
+            "export_id": "ds_20260627T120000Z",
+            "records": [
+                {
+                    "doc_id": "alpha",
+                    "title": "Alpha",
+                    "parent_id": "library",
+                    "current_summary": "Updated summary.",
+                }
+            ],
+        }
+        write_staged(root, "records-envelope.json", json.dumps(payload))
+        report = parse(root, "records-envelope.json")
+
+    assert report["ok"] is True
+    assert report["detected_import_type"] == "document_summaries"
+    assert report["source_export_id"] == "ds_20260627T120000Z"
+    assert report["source_metadata"]["schema_version"] == "data_sharing_returned_package_v1"
+    assert report["unknown_file_metadata"] == {}
+    assert report["counts"] == {"records": 1, "parsed_records": 1, "malformed_records": 0, "warnings": 0, "errors": 0}
+    assert report["records"][0]["metadata"]["current_summary"] == "Updated summary."
+
+
 def test_jsonl_full_content_is_detected_from_source_text_without_metadata() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -256,6 +283,41 @@ def test_jsonl_full_content_is_detected_from_source_text_without_metadata() -> N
     assert report["detected_import_type"] == "full_document_content"
     assert report["source_export_id"] == ""
     assert report["records"][0]["metadata"]["source_text"] == "Plain text body.\n\nSecond paragraph."
+
+
+def test_jsonl_data_sharing_header_row_is_skipped() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged(
+            root,
+            "content-with-header.jsonl",
+            "\n".join(
+                [
+                    json.dumps(
+                        {
+                            "record_type": "data_sharing_header",
+                            "schema_version": "data_sharing_returned_package_v1",
+                            "export_id": "ds_20260627T120000Z",
+                        }
+                    ),
+                    json.dumps(
+                        {
+                            "doc_id": "alpha",
+                            "title": "Alpha",
+                            "parent_id": "library",
+                            "source_text": "Plain text body.",
+                        }
+                    ),
+                ]
+            )
+            + "\n",
+        )
+        report = parse(root, "content-with-header.jsonl")
+
+    assert report["ok"] is True
+    assert report["counts"] == {"records": 1, "parsed_records": 1, "malformed_records": 0, "warnings": 0, "errors": 0}
+    assert report["records"][0]["doc_id"] == "alpha"
+    assert report["records"][0]["line"] == 2
 
 
 def test_minimal_hand_authored_json_array_reports_malformed_records_but_keeps_parsing() -> None:
@@ -451,7 +513,7 @@ def test_relationship_preview_writes_one_whole_tree_file() -> None:
     with make_repo() as temp:
         root = Path(temp)
         payload = {
-            "documents": [
+            "records": [
                 {"doc_id": "library", "title": "Library", "parent_id": ""},
                 {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Alpha summary."},
                 {"doc_id": "beta", "title": "Beta", "parent_id": "library", "headings": ["Beta Heading"]},

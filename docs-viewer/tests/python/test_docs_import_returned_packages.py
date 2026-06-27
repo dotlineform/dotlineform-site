@@ -17,7 +17,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
-        write_staged(root, "relationships.json", {"documents": []})
+        write_staged(root, "relationships.json", {"records": []})
         (root / "var/analytics/data-sharing/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
         payload = handle_documents_import_files(root, "library")
 

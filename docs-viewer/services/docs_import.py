@@ -76,6 +76,7 @@ IMPORT_TYPE_CONFIG_FIELDS = {
     ],
 }
 EXPORT_METADATA_FIELDS = {
+    "schema_version",
     "export_id",
     "config_id",
     "config_checksum",
@@ -347,6 +348,8 @@ def parse_jsonl_file(path: Path) -> tuple[list[Any], list[dict[str, Any]]]:
             issues.append(issue("error", "invalid_jsonl", f"invalid JSONL on line {line_number}: {exc.msg}", line=line_number))
             continue
         if isinstance(row, dict):
+            if row.get("record_type") == "data_sharing_header":
+                continue
             row = dict(row)
             row["_source_line"] = line_number
         records.append(row)
@@ -364,7 +367,7 @@ def file_metadata_from_envelope(payload: dict[str, Any]) -> tuple[dict[str, Any]
     unknown = {
         key: copy.deepcopy(value)
         for key, value in payload.items()
-        if key not in EXPORT_METADATA_FIELDS and key != "documents"
+        if key not in EXPORT_METADATA_FIELDS and key != "records"
     }
     return metadata, unknown
 
@@ -374,20 +377,16 @@ def rows_from_payload(payload: Any) -> tuple[list[Any], dict[str, Any], dict[str
     if isinstance(payload, list):
         return payload, {}, {}, issues
     if isinstance(payload, dict):
-        if isinstance(payload.get("documents"), list):
-            unknown = {
-                key: copy.deepcopy(value)
-                for key, value in payload.items()
-                if key != "documents"
-            }
-            return payload["documents"], {}, unknown, issues
+        if isinstance(payload.get("records"), list):
+            metadata, unknown = file_metadata_from_envelope(payload)
+            return payload["records"], metadata, unknown, issues
         if is_document_like_record(payload):
             return [payload], {}, {}, issues
         issues.append(
             issue(
                 "warning",
                 "unsupported_import_shape",
-                "JSON object does not contain a documents array or document-like fields",
+                "JSON object does not contain a records array or document-like fields",
             )
         )
         return [], {}, copy.deepcopy(payload), issues
@@ -1016,7 +1015,8 @@ def parse_staged_import(
             if any(item["level"] == "error" for item in parse_issues):
                 raw_rows = []
             else:
-                raw_rows, _payload_metadata, payload_unknown_metadata, shape_issues = rows_from_payload(payload)
+                raw_rows, payload_metadata, payload_unknown_metadata, shape_issues = rows_from_payload(payload)
+                file_metadata.update(payload_metadata)
                 unknown_file_metadata.update(payload_unknown_metadata)
                 parse_issues.extend(shape_issues)
     except OSError as exc:

@@ -1131,7 +1131,7 @@ textarea.analytics__input:disabled {
 
 .dataSharingReviewPage__dropdownGroup {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(20rem, 2fr) minmax(13rem, 1fr);
   gap: 0.65rem;
   align-items: stretch;
 }
@@ -1151,6 +1151,34 @@ textarea.analytics__input:disabled {
 .dataSharingReviewPage__choiceField {
   display: block;
   min-width: 0;
+}
+
+.dataSharingReviewPage__resolvedContext {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  font-size: var(--font-small);
+  line-height: normal;
+  min-width: 0;
+  padding: 0.35rem 0;
+}
+
+.dataSharingReviewPage__resolvedField {
+  display: block;
+  margin: 0;
+  min-width: 0;
+  text-align: left;
+}
+
+.dataSharingReviewPage__resolvedValue {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.dataSharingReviewPage__resolvedField[hidden] {
+  display: none;
 }
 
 select.analytics__input.dataSharingReviewPage__listbox {

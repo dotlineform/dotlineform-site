@@ -540,7 +540,7 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     if record_shape not in SUPPORTED_RECORD_SHAPES:
         errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
     if record_shape == "envelope":
-        document_array_path = normalize_text(target.get("document_array_path") or "documents")
+        document_array_path = normalize_text(target.get("document_array_path") or "records")
         if not OUTPUT_PATH_RE.match(document_array_path):
             errors.append(f"config {config_id}: target.document_array_path is not a supported output path")
 
@@ -548,8 +548,10 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     path_pattern = normalize_text(output.get("path_pattern"))
     if not path_pattern:
         errors.append(f"config {config_id}: output.path_pattern is required")
-    elif "{data_domain}" not in path_pattern or "{export_id}" not in path_pattern or "{timestamp}" not in path_pattern:
-        errors.append(f"config {config_id}: output.path_pattern must include data_domain, export_id, and timestamp placeholders")
+    elif "{export_id}" in path_pattern:
+        errors.append(f"config {config_id}: output.path_pattern must not include export_id; use profile_id for filenames")
+    elif "{data_domain}" not in path_pattern or "{profile_id}" not in path_pattern or "{timestamp}" not in path_pattern:
+        errors.append(f"config {config_id}: output.path_pattern must include data_domain, profile_id, and timestamp placeholders")
     elif target_format and not path_pattern.endswith(f".{target_format}"):
         errors.append(f"config {config_id}: output.path_pattern extension must match target.format")
     timestamp_format = normalize_text(output.get("timestamp_format") or "%Y%m%d-%H%M%S")
@@ -1058,7 +1060,7 @@ def external_field_type(field: dict[str, Any]) -> str:
 def build_external_context(config: dict[str, Any], target_format: str) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     record_shape = normalize_text(target.get("record_shape"))
-    document_array_path = normalize_text(target.get("document_array_path") or "documents")
+    document_array_path = normalize_text(target.get("document_array_path") or "records")
     external_context = config.get("external_context") if isinstance(config.get("external_context"), dict) else {}
     field_descriptions = (
         external_context.get("field_descriptions")
@@ -1069,7 +1071,7 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
         record_container = "JSONL header row followed by one JSON object per line"
         records_path = ""
     elif record_shape == "envelope":
-        record_container = "JSON object containing a document array"
+        record_container = "JSON object containing a records array"
         records_path = document_array_path
     else:
         record_container = "JSON object containing a records array"
@@ -1120,7 +1122,7 @@ def build_export_payload(
             "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
             "export_id": export_id,
         }
-        document_array_path = normalize_text(target.get("document_array_path") or "documents")
+        document_array_path = normalize_text(target.get("document_array_path") or "records")
         set_output_path(payload, document_array_path, records)
         return payload
     if record_shape == "document_rows":

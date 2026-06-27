@@ -47,7 +47,7 @@ BASE_CONFIG = {
                 "record_shape": "document_rows",
             },
             "output": {
-                "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl",
+                "path_pattern": "var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.jsonl",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "selection": {
@@ -263,11 +263,20 @@ def test_unknown_config_returns_structured_validation_report() -> None:
 
 def test_jsonl_config_requires_jsonl_output_extension() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.json"
+    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{data_domain}-{profile_id}-{timestamp}.json"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
     assert "config document-summaries: output.path_pattern extension must match target.format" in report["errors"]
+
+
+def test_output_path_rejects_export_id_placeholder() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{data_domain}-{export_id}-{timestamp}.jsonl"
+    with make_repo(config) as temp:
+        report = run_export(Path(temp))
+    assert report["ok"] is False
+    assert "config document-summaries: output.path_pattern must not include export_id; use profile_id for filenames" in report["errors"]
 
 
 def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
@@ -299,13 +308,13 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert first_report["ok"] is True
     assert first_report["export_id"] == "ds_20260503T151507Z"
     assert first_report["output_file"] == (
-        "var/analytics/data-sharing/exports/documents-ds_20260503T151507Z-20260503-161507.jsonl"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.jsonl"
     )
     assert first_report["metadata_file"] == (
         "var/analytics/data-sharing/meta/ds_20260503T151507Z.meta.json"
     )
     assert first_report["context_file"] == (
-        "var/analytics/data-sharing/exports/documents-ds_20260503T151507Z-20260503-161507.context.json"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.context.json"
     )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
@@ -372,7 +381,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["target_format"] == "json"
     assert report["export_id"] == "ds_20260503T151507Z"
     assert report["output_file"] == (
-        "var/analytics/data-sharing/exports/documents-ds_20260503T151507Z-20260503-161507.json"
+        "var/analytics/data-sharing/exports/documents-document-summaries-20260503-161507.json"
     )
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260503T151507Z"
@@ -620,17 +629,17 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
         docs_export.export_run_times = original_export_run_times
 
     assert report["ok"] is True, report
-    assert sorted(payload.keys()) == ["documents", "export_id", "schema_version"]
+    assert sorted(payload.keys()) == ["export_id", "records", "schema_version"]
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260504T120000Z"
-    assert [row["doc_id"] for row in payload["documents"]] == ["child-with-summary", "library"]
-    assert "last_updated" not in payload["documents"][0]
+    assert [row["doc_id"] for row in payload["records"]] == ["child-with-summary", "library"]
+    assert "last_updated" not in payload["records"][0]
     assert metadata["export_id"] == "ds_20260504T120000Z"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
     assert metadata["counts"]["exported"] == 2
     assert context["task"] == "review parent-child relationships"
-    assert context["records_path"] == "documents"
+    assert context["records_path"] == "records"
     assert "counts" not in context
 
 
@@ -675,7 +684,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["counts"]["failed"] == 0
         assert report["output_written"] is False
         assert report["export_id"].startswith("ds_")
-        assert report["output_file"].startswith("var/analytics/data-sharing/exports/documents-ds_")
+        assert report["output_file"].startswith(f"var/analytics/data-sharing/exports/documents-{case['config_id']}-")
         assert report["output_file"].endswith(f".{case['target_format']}")
         assert report["metadata_file"].startswith("var/analytics/data-sharing/meta/ds_")
         assert report["metadata_file"].endswith(".meta.json")
@@ -691,6 +700,7 @@ def main() -> None:
         test_config_validation_requires_external_context_descriptions,
         test_unknown_config_returns_structured_validation_report,
         test_jsonl_config_requires_jsonl_output_extension,
+        test_output_path_rejects_export_id_placeholder,
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
         test_document_rows_json_format_override_writes_json_array,
         test_existing_export_metadata_blocks_same_export_id_write,

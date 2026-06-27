@@ -51,15 +51,19 @@ export function dataSharingReviewDataDomainSupportsApply(state) {
 }
 
 export function dataSharingReviewAppLabel(state, app = state.app) {
-  const item = (state.apps || DATA_SHARING_REVIEW_APPS).find((candidate) => candidate.key === app) || DATA_SHARING_REVIEW_APPS[0];
+  const normalizedApp = normalizeDataSharingReviewText(app);
+  const item = (state.apps || DATA_SHARING_REVIEW_APPS).find((candidate) => candidate.key === normalizedApp);
+  if (!item) return normalizedApp;
   if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
-  return normalizeDataSharingReviewText(item.label) || item.fallback || app;
+  return normalizeDataSharingReviewText(item.label) || item.fallback || normalizedApp;
 }
 
 export function dataSharingReviewDataDomainLabel(state, dataDomain = state.dataDomain) {
-  const item = dataSharingDomainForKey(state.dataDomains, dataDomain) || DATA_SHARING_REVIEW_DOMAINS[0];
+  const normalizedDomain = normalizeDataSharingReviewText(dataDomain);
+  const item = dataSharingDomainForKey(state.dataDomains, normalizedDomain);
+  if (!item) return normalizedDomain;
   if (item.labelKey) return getAnalyticsText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
-  return normalizeDataSharingReviewText(item.label) || item.fallback || dataDomain;
+  return normalizeDataSharingReviewText(item.label) || item.fallback || normalizedDomain;
 }
 
 export function dataSharingReviewDataDomainTitle(state, dataDomain = state.dataDomain) {
@@ -234,10 +238,11 @@ export function clearDataSharingReviewPreviewSelection(state) {
 
 export function setDataSharingReviewControlsDisabled(state, disabled) {
   const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
+  const selectedFile = selectedDataSharingReviewFile(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.fileSelect.disabled = disabled || !state.files.length;
-  state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
+  state.previewButton.disabled = disabled || !state.serviceAvailable || !selectedFile || !state.dataDomain;
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
   state.clearButton.disabled = disabled || !state.previewRows.length;
   state.actionMenuButton.disabled = disableApplyMenu;
