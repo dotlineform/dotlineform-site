@@ -123,33 +123,25 @@ function buildDocumentRows(state, payload, previewLookup) {
   });
 }
 
-function orderDocumentRows(rows) {
-  const ids = new Set(rows.map((row) => row.docId).filter(Boolean));
-  const childrenByParent = new Map();
+function documentRowDepth(row, byDocId, activeDocIds = new Set()) {
+  if (!row || !row.docId || !row.parentId || row.parentId === row.docId) return 0;
+  if (activeDocIds.has(row.docId)) return 0;
+  const parent = byDocId.get(row.parentId);
+  if (!parent) return 0;
+  const nextActive = new Set(activeDocIds);
+  nextActive.add(row.docId);
+  return documentRowDepth(parent, byDocId, nextActive) + 1;
+}
+
+function prepareDocumentRowsForDisplay(rows) {
+  const byDocId = new Map();
   rows.forEach((row) => {
-    const parentId = row.parentId && row.parentId !== row.docId ? row.parentId : "";
-    if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
-    childrenByParent.get(parentId).push(row);
+    if (row.docId && !byDocId.has(row.docId)) byDocId.set(row.docId, row);
   });
-
-  const roots = rows.filter((row) => !row.parentId || !ids.has(row.parentId) || row.parentId === row.docId);
-  const ordered = [];
-  const rendered = new Set();
-
-  const visit = (row, depth, activeDocIds) => {
-    if (!row || rendered.has(row.id)) return;
-    row.depth = depth;
-    ordered.push(row);
-    rendered.add(row.id);
-    if (!row.docId || activeDocIds.has(row.docId)) return;
-    const nextActive = new Set(activeDocIds);
-    nextActive.add(row.docId);
-    (childrenByParent.get(row.docId) || []).forEach((child) => visit(child, depth + 1, nextActive));
-  };
-
-  roots.forEach((row) => visit(row, 0, new Set()));
-  rows.forEach((row) => visit(row, 0, new Set()));
-  return ordered;
+  rows.forEach((row) => {
+    row.depth = documentRowDepth(row, byDocId);
+  });
+  return rows;
 }
 
 function buildTreeRows(state, previewLookup) {
@@ -187,7 +179,7 @@ export function buildDataSharingReviewPreviewRows(state, payload) {
   }
   const previewLookup = previewFilesByRecord(payload && payload.preview_files);
   const treeRows = buildTreeRows(state, previewLookup);
-  const documentRows = orderDocumentRows(buildDocumentRows(state, payload, previewLookup));
+  const documentRows = prepareDocumentRowsForDisplay(buildDocumentRows(state, payload, previewLookup));
   return [...treeRows, ...documentRows];
 }
 

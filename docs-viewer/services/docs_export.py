@@ -688,8 +688,13 @@ def resolve_selected_doc_ids(selected_doc_ids: list[str]) -> list[str]:
     return resolved
 
 
-def sort_doc_ids(doc_ids: list[str]) -> list[str]:
-    return sorted(doc_ids)
+def docs_in_source_order(context: ExportContext, doc_ids: list[str]) -> list[str]:
+    selected_ids = set(doc_ids)
+    return [
+        normalize_text(doc.get("doc_id"))
+        for doc in context.docs
+        if normalize_text(doc.get("doc_id")) in selected_ids
+    ]
 
 
 def selected_docs(
@@ -711,10 +716,13 @@ def selected_docs(
         warnings.append("selection: missing_summary_only was ignored because the selected config does not support it")
 
     if mode == "all_matching" or select_all:
-        requested_ids = sort_doc_ids([normalize_text(doc.get("doc_id")) for doc in context.docs])
+        requested_ids = [normalize_text(doc.get("doc_id")) for doc in context.docs]
     else:
-        requested_ids = sort_doc_ids(resolve_selected_doc_ids(selected_doc_ids))
-        if not requested_ids:
+        explicit_ids = resolve_selected_doc_ids(selected_doc_ids)
+        requested_ids = docs_in_source_order(context, explicit_ids)
+        unknown_ids = [doc_id for doc_id in explicit_ids if doc_id not in context.docs_by_id]
+        skipped.extend({"doc_id": doc_id, "reason": "unknown_doc_id"} for doc_id in unknown_ids)
+        if not explicit_ids:
             errors.append("explicit_doc_ids selection requires at least one --doc-id, --doc-ids, or --all")
 
     selected: list[dict[str, Any]] = []

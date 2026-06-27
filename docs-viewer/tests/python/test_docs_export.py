@@ -207,16 +207,16 @@ def test_selected_doc_resolution_uses_explicit_ids_only() -> None:
     assert report["skipped"] == []
 
 
-def test_selected_docs_are_exported_in_doc_id_order() -> None:
+def test_selected_docs_are_exported_in_source_order() -> None:
     with make_repo() as temp:
         report = run_export(
             Path(temp),
-            selected_doc_ids=["library", "child-with-summary"],
+            selected_doc_ids=["child-with-summary", "library"],
             missing_summary_only=False,
         )
     assert report["ok"] is True
-    assert report["selected_doc_ids"] == ["child-with-summary", "library"]
-    assert report["exported_doc_ids"] == ["child-with-summary", "library"]
+    assert report["selected_doc_ids"] == ["library", "child-with-summary"]
+    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
 
 
 def test_unknown_selected_doc_blocks_export() -> None:
@@ -327,7 +327,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
         "record_type": "data_sharing_header",
         "schema_version": "data_sharing_returned_package_v1",
     }
-    assert [row["doc_id"] for row in rows[1:]] == ["child-with-summary", "library"]
+    assert [row["doc_id"] for row in rows[1:]] == ["library", "child-with-summary"]
     assert "_export" not in rows[1]
     assert "last_updated" not in rows[1]
     assert metadata["schema_version"] == "data_sharing_export_meta_v1"
@@ -341,7 +341,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert metadata["record_shape"] == "document_rows"
     assert metadata["generated_at"] == fixed_generated_at
     assert metadata["scope"] == "library"
-    assert metadata["selected_doc_ids"] == ["child-with-summary", "library"]
+    assert metadata["selected_doc_ids"] == ["library", "child-with-summary"]
     assert context["task"] == "suggest_document_summaries"
     assert context["response_guidance"] == (
         "Return proposed summary changes keyed by doc_id. "
@@ -385,7 +385,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     )
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260503T151507Z"
-    assert [row["doc_id"] for row in payload["records"]] == ["child-with-summary", "library"]
+    assert [row["doc_id"] for row in payload["records"]] == ["library", "child-with-summary"]
     assert "_export" not in payload["records"][0]
     assert "last_updated" not in payload["records"][0]
     assert metadata["export_id"] == "ds_20260503T151507Z"
@@ -511,7 +511,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert report["metadata_file"].endswith(".meta.json")
     assert rows[0]["record_type"] == "data_sharing_header"
     assert rows[0]["export_id"] == "ds_20260504T120000Z"
-    assert [row["doc_id"] for row in rows[1:]] == ["child-with-summary", "library"]
+    assert [row["doc_id"] for row in rows[1:]] == ["library", "child-with-summary"]
     assert "last_updated" not in rows[1]
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
     library_row = rows_by_doc_id["library"]
@@ -549,7 +549,7 @@ def test_export_uses_source_metadata_for_document_content() -> None:
         rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
 
     assert report["ok"] is True, report
-    assert report["exported_doc_ids"] == ["child-with-summary", "library"]
+    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
     assert rows[0]["record_type"] == "data_sharing_header"
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
     assert rows_by_doc_id["library"]["source_text"] == "Body text."
@@ -632,7 +632,7 @@ def test_envelope_json_export_writes_clean_payload_and_sidecars() -> None:
     assert sorted(payload.keys()) == ["export_id", "records", "schema_version"]
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260504T120000Z"
-    assert [row["doc_id"] for row in payload["records"]] == ["child-with-summary", "library"]
+    assert [row["doc_id"] for row in payload["records"]] == ["library", "child-with-summary"]
     assert "last_updated" not in payload["records"][0]
     assert metadata["export_id"] == "ds_20260504T120000Z"
     assert metadata["generated_at"] == fixed_generated_at
