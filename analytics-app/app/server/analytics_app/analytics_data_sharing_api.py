@@ -44,6 +44,7 @@ HEALTH_PATH = "/health"
 CONFIG_PATH = "/config"
 SELECTABLE_RECORDS_PATH = "/selectable-records"
 RETURNED_PACKAGES_PATH = "/returned-packages"
+RETURNED_RECORDS_PATH = "/returned-records"
 PREPARE_PATH = "/prepare"
 CONTEXT_PATH = "/context"
 REVIEW_PATH = "/review"
@@ -89,6 +90,7 @@ def service_endpoints() -> dict[str, str]:
         "config": f"{API_BASE}{CONFIG_PATH}",
         "selectable_records": f"{API_BASE}{SELECTABLE_RECORDS_PATH}",
         "returned_packages": f"{API_BASE}{RETURNED_PACKAGES_PATH}",
+        "returned_records": f"{API_BASE}{RETURNED_RECORDS_PATH}",
         "prepare": f"{API_BASE}{PREPARE_PATH}",
         "context": f"{API_BASE}{CONTEXT_PATH}",
         "review": f"{API_BASE}{REVIEW_PATH}",
@@ -350,6 +352,9 @@ def data_sharing_post_response(
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == REVIEW_PATH:
         payload = data_sharing_service.review_returned_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
+        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
+    if api_path == RETURNED_RECORDS_PATH:
+        payload = data_sharing_service.returned_records(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if api_path == APPLY_PATH:
         payload = data_sharing_service.apply_returned_changes(repo_root, body, dry_run, DATA_SHARING_HANDLERS)

@@ -72,6 +72,7 @@ The review page:
 
 - lists returned `.json` and `.jsonl` package files from the active adapter staging root
 - displays parsed records, warnings, and review rows
+- writes one Markdown review document for the selected rows
 - can apply selected summary or hierarchy changes after confirmation
 - lists returned Tags `.json` and `.jsonl` package files from the configured staging root
 - validates tag registry, tag aliases, and tag assignments returned packages without writing
@@ -153,7 +154,7 @@ Successful write runs attach Studio Activity context with:
 - review action ids: `apply-returned-summaries` and `apply-returned-hierarchy`
 - tags review action ids: `apply-returned-tag-registry`, `apply-returned-tag-aliases`, and `apply-returned-tag-assignments`
 
-Selection changes, filter changes, review-only previews, and unavailable-service states are not written to Studio Activity.
+Selection changes, filter changes, and unavailable-service states are not written to Studio Activity.
 
 ## Verification
 

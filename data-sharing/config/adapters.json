@@ -109,7 +109,7 @@
         {
           "operation": "review",
           "status": "active",
-          "selection_model": "file_only",
+          "selection_model": "records",
           "input_formats": ["json", "jsonl"],
           "output_formats": ["markdown"],
           "path_contract": {
@@ -143,7 +143,7 @@
                 "control_id": "dataSharingReviewUpdateSummary",
                 "control_selector": "#dataSharingReviewUpdateSummary",
                 "activity_action_id": "apply-returned-summaries",
-                "selection_required_message": "Select at least one document preview.",
+                "selection_required_message": "Select at least one staged document.",
                 "preflight_status": "Checking selected summaries...",
                 "running_status": "Updating selected summaries...",
                 "success_status": "Summaries updated.",
@@ -188,7 +188,7 @@
                 "control_id": "dataSharingReviewApplyHierarchy",
                 "control_selector": "#dataSharingReviewApplyHierarchy",
                 "activity_action_id": "apply-returned-hierarchy",
-                "selection_required_message": "Select at least one document preview.",
+                "selection_required_message": "Select at least one staged document.",
                 "preflight_status": "Checking selected hierarchy changes...",
                 "running_status": "Updating selected hierarchy...",
                 "success_status": "Hierarchy updated.",

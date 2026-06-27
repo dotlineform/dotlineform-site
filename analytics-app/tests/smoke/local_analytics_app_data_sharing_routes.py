@@ -240,6 +240,7 @@ def install_mock_data_sharing_api(page, returned_payload: dict[str, object] | No
             "/analytics/api/data-sharing/selectable-records",
             "/analytics/api/data-sharing/prepare",
             "/analytics/api/data-sharing/returned-packages",
+            "/analytics/api/data-sharing/returned-records",
             "/analytics/api/data-sharing/review",
         }
         if parsed.path not in data_sharing_paths:
@@ -263,6 +264,8 @@ def install_mock_data_sharing_api(page, returned_payload: dict[str, object] | No
             payload = prepare_payload()
         elif parsed.path == "/analytics/api/data-sharing/returned-packages":
             payload = returned_packages
+        elif parsed.path == "/analytics/api/data-sharing/returned-records":
+            payload = review_payload()
         elif parsed.path == "/analytics/api/data-sharing/review":
             payload = review_payload()
         else:

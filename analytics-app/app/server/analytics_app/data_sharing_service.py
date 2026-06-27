@@ -20,6 +20,7 @@ from services.dispatch import (  # noqa: E402
     DataSharingAdapterHandlers,
     ListReturnedHandler,
     PrepareHandler,
+    ReturnedRecordsHandler,
     ReviewHandler,
     SelectableRecordsHandler,
     adapter_module,
@@ -69,6 +70,17 @@ def list_returned_packages(
     return dispatch_list_returned_packages(repo_root, data_domain, handlers, resolve_for_service)
 
 
+def returned_records(
+    repo_root: Path,
+    body: dict[str, Any],
+    dry_run: bool,
+    handlers: dict[str, DataSharingAdapterHandlers],
+) -> dict[str, Any]:
+    adapter = resolve_for_service(repo_root, body.get("data_domain"), "review")
+    handler = handler_for(handlers, adapter, "returned_records")
+    return handler(repo_root, body, dry_run, adapter)
+
+
 def review_returned_package(
     repo_root: Path,
     body: dict[str, Any],
@@ -93,6 +105,7 @@ __all__ = [
     "DataSharingAdapterHandlers",
     "ListReturnedHandler",
     "PrepareHandler",
+    "ReturnedRecordsHandler",
     "ReviewHandler",
     "SelectableRecordsHandler",
     "adapter_module",
@@ -101,6 +114,7 @@ __all__ = [
     "list_returned_packages",
     "list_staged_files_with_metadata",
     "prepare_package",
+    "returned_records",
     "resolve_for_service",
     "selectable_records",
 ]

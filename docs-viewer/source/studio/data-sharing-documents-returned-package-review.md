@@ -62,16 +62,15 @@ The review/apply layer treats returned fields as candidate changes.
 Only fields used by the selected write action are considered write candidates.
 Unchanged context fields are not required.
 
-## Review Operation
+## Returned Records Operation
 
-The review operation is exposed through:
+The review page loads records from the selected staged file through:
 
 ```text
-POST /analytics/api/data-sharing/review
+POST /analytics/api/data-sharing/returned-records
 ```
 
-For documents, it dispatches to `review_returned_document_package`.
-The operation:
+For documents, this operation:
 
 - validates the staged file path
 - parses the returned JSON or JSONL file
@@ -81,8 +80,38 @@ The operation:
 - annotates each returned row with current-source existence and renderability
 - returns `review_rows` for the Analytics review page selectable list
 
+It does not write Markdown artifacts or source files.
+
+## Review Operation
+
+The Review button is exposed through:
+
+```text
+POST /analytics/api/data-sharing/review
+```
+
+For documents, it dispatches to `review_returned_document_package`.
+The operation requires selected `record_indices` and writes one Markdown review document for only those selected records:
+
+```text
+var/analytics/data-sharing/import-preview/{timestamp}-{data_domain}-{profile_id}.md
+```
+
+The Markdown document front matter includes:
+
+- `source_file`
+- `profile_id`
+- `scope`
+
+The body is a table with one row per selected document:
+
+- `doc_id`
+- `title`
+- `summary`
+- `parent_id`
+
 Review does not mutate source Markdown.
-It is a validation and preview step.
+It is a selected-record review artifact step.
 
 ## Review Rows
 
@@ -207,5 +236,5 @@ It checks package shape, metadata, current-source context, and write-action prec
 
 It does not infer file meaning from row fields.
 It does not apply unrecognized fields.
-It does not treat preview Markdown as canonical.
+It does not treat review Markdown as canonical apply input.
 It does not automatically create missing documents or parent documents.

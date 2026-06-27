@@ -29,6 +29,16 @@ def review_returned_package(
     return documents.review_returned_package(repo_root, body, dry_run, adapter, dependencies)
 
 
+def returned_records(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[Any] = None,
+    dependencies: Optional[DocumentsDataSharingDependencies] = None,
+) -> Dict[str, Any]:
+    return documents.returned_records(repo_root, body, dry_run, adapter, dependencies)
+
+
 def apply_returned_changes(
     repo_root: Path,
     body: Dict[str, Any],

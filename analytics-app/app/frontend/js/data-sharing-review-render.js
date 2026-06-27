@@ -64,7 +64,7 @@ export function renderDataSharingReviewPreviewList(state) {
   const emptyMessage = getAnalyticsText(
     state.config,
     "data_sharing_review.empty_state",
-    "Generate a preview to list staged documents."
+    "Select a staged file to list documents."
   );
   if (!state.selectableList) {
     state.selectableList = createSelectableList(state.listNode, {
@@ -116,7 +116,7 @@ export function updateDataSharingReviewSelectionSummary(state) {
     count === 1
       ? "data_sharing_review.selection_summary_one"
       : "data_sharing_review.selection_summary",
-    count === 1 ? "1 preview selected." : "{count} previews selected.",
+    count === 1 ? "1 document selected." : "{count} documents selected.",
     { count }
   ));
 }

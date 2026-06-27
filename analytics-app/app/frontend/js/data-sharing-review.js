@@ -14,7 +14,8 @@ import {
 import { runDataSharingReviewApplyAction } from "./data-sharing-review-apply.js";
 import {
   buildDataSharingReviewPreviewRows,
-  renderDataSharingReviewPreviewList
+  renderDataSharingReviewPreviewList,
+  selectedDataSharingReviewRecordIndices
 } from "./data-sharing-review-render.js";
 import {
   dataSharingAppsForDomains,
@@ -100,6 +101,10 @@ function renderResult(state, payload, failed = false) {
   updateDataSharingReviewSelectionState(state);
 }
 
+function selectedFileSelection(state) {
+  return state.dataDomain === "documents" && state.docsScope ? { docs_scope: state.docsScope } : {};
+}
+
 async function loadImportFiles() {
   const payload = await getJson(DATA_SHARING_ENDPOINTS.returnedPackages);
   return Array.isArray(payload.files) ? payload.files : [];
@@ -131,7 +136,7 @@ function selectedFileIdleStatus(state) {
     message: getAnalyticsText(
       state.config,
       "data_sharing_review.idle_status",
-      "Select a staged {data_domain_label} data file and generate previews.",
+      "Select a staged {data_domain_label} data file.",
       { data_domain_label: state.dataDomain ? dataSharingReviewDataDomainLabel(state) : "returned package" }
     )
   };
@@ -140,6 +145,7 @@ function selectedFileIdleStatus(state) {
 function syncSelectedFileMetadata(state) {
   const file = selectedDataSharingReviewFile(state);
   if (!file) {
+    state.reviewReady = false;
     state.app = "";
     state.dataDomain = "";
     state.docsScope = "";
@@ -177,6 +183,56 @@ function syncSelectedFileMetadata(state) {
   syncRouteBusyState(state);
 }
 
+async function loadSelectedFileRows(state) {
+  if (!state.serviceAvailable || state.isRunning) return;
+  const file = selectedDataSharingReviewFile(state);
+  state.reviewReady = false;
+  if (!file || !state.dataDomain || !file.metadata_ok) {
+    renderResult(state, {}, true);
+    return;
+  }
+
+  state.isRunning = true;
+  setDataSharingReviewControlsDisabled(state, true);
+  syncRouteBusyState(state);
+  setStatus(
+    state.statusNode,
+    "",
+    getAnalyticsText(state.config, "data_sharing_review.records_loading_status", "Loading staged documents...")
+  );
+
+  try {
+    const payload = await postJson(DATA_SHARING_ENDPOINTS.returnedRecords, {
+      data_domain: state.dataDomain,
+      staged_filename: file.filename,
+      selection: selectedFileSelection(state)
+    });
+    renderResult(state, payload, false);
+    const rowCount = state.previewRows.length;
+    const loadedMessage = payload.summary_text || getAnalyticsText(
+      state.config,
+      rowCount === 1
+        ? "data_sharing_review.records_loaded_status_one"
+        : "data_sharing_review.records_loaded_status",
+      rowCount === 1 ? "Loaded 1 staged document." : "Loaded {count} staged documents.",
+      { count: rowCount }
+    );
+    setStatus(state.statusNode, "success", loadedMessage);
+  } catch (error) {
+    const payload = error && error.payload ? error.payload : {};
+    renderResult(state, payload, true);
+    setStatus(
+      state.statusNode,
+      "error",
+      normalizeText(error && error.message) || getAnalyticsText(state.config, "data_sharing_review.records_load_failed", "Failed to load staged documents.")
+    );
+  } finally {
+    state.isRunning = false;
+    setDataSharingReviewControlsDisabled(state, false);
+    syncRouteBusyState(state);
+  }
+}
+
 async function runPreview(state) {
   if (!state.serviceAvailable || state.isRunning) return;
   const file = selectedDataSharingReviewFile(state);
@@ -196,15 +252,23 @@ async function runPreview(state) {
     );
     return;
   }
+  const recordIndices = selectedDataSharingReviewRecordIndices(state);
+  if (!recordIndices.length) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getAnalyticsText(state.config, "data_sharing_review.review_selection_required", "Select at least one staged document.")
+    );
+    return;
+  }
 
-  resetDataSharingReviewResult(state);
   state.isRunning = true;
   setDataSharingReviewControlsDisabled(state, true);
   syncRouteBusyState(state);
   setStatus(
     state.statusNode,
     "",
-    getAnalyticsText(state.config, "data_sharing_review.running_status", "Generating returned package reviews...")
+    getAnalyticsText(state.config, "data_sharing_review.running_status", "Generating selected document review...")
   );
 
   try {
@@ -212,18 +276,18 @@ async function runPreview(state) {
       data_domain: state.dataDomain,
       operation: "review",
       staged_filename: file.filename,
-      selection: state.dataDomain === "documents" && state.docsScope ? { docs_scope: state.docsScope } : {}
+      record_indices: recordIndices,
+      selection: selectedFileSelection(state)
     });
-    renderResult(state, payload, false);
-    const successMessage = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.status_success", "Returned package reviews generated.");
+    state.reviewReady = true;
+    const successMessage = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.status_success", "Selected document review generated.");
     setStatus(
       state.statusNode,
       "success",
       successMessage
     );
   } catch (error) {
-    const payload = error && error.payload ? error.payload : {};
-    renderResult(state, payload, true);
+    state.reviewReady = false;
     setStatus(
       state.statusNode,
       "error",
@@ -277,13 +341,17 @@ async function init() {
     selectedPreviewIds: new Set(),
     selectableList: null,
     onPreviewSelectionChange: null,
+    reviewReady: false,
     serviceAvailable: false,
     isRunning: false
   };
   state.filePickerNode = state.fileSelect
     ? state.fileSelect.closest(".dataSharingReviewPage__dropdownGroup")
     : null;
-  state.onPreviewSelectionChange = () => updateDataSharingReviewSelectionState(state);
+  state.onPreviewSelectionChange = () => {
+    state.reviewReady = false;
+    updateDataSharingReviewSelectionState(state);
+  };
 
   const requiredNodes = [
     state.appValueNode,
@@ -319,7 +387,7 @@ async function init() {
     setText(state.dataDomainValueNode, "unresolved");
     setText(state.scopeValueNode, "unresolved");
     setText(state.fileLabelNode, getAnalyticsText(state.config, "data_sharing_review.file_label", "staged file"));
-    setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review package"));
+    setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review selected"));
     setText(state.actionMenuButton, getAnalyticsText(state.config, "data_sharing_review.actions_button", "Actions"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
@@ -379,6 +447,7 @@ async function init() {
     setDataSharingReviewControlsDisabled(state, false);
     const initialStatus = selectedFileIdleStatus(state);
     setStatus(state.statusNode, initialStatus.state, initialStatus.message);
+    await loadSelectedFileRows(state);
     markRouteReady(state, true);
 
     state.fileSelect.addEventListener("change", () => {
@@ -388,6 +457,7 @@ async function init() {
       const status = selectedFileIdleStatus(state);
       setStatus(state.statusNode, status.state, status.message);
       syncRouteBusyState(state);
+      loadSelectedFileRows(state).catch((error) => console.warn("data_sharing_review: unexpected records load failure", error));
     });
     state.previewButton.addEventListener("click", () => {
       runPreview(state).catch((error) => console.warn("data_sharing_review: unexpected preview failure", error));

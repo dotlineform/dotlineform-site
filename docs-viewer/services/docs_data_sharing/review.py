@@ -3,15 +3,68 @@
 
 from __future__ import annotations
 
+import datetime as dt
+import json
 from pathlib import Path
+import re
 from typing import Any, Dict
 
 from docs_import import parse_staged_import, scope_title
 import docs_source_model as source_model
 
 
+FILENAME_RE = re.compile(r"[^a-z0-9-]+")
+
+
 def normalize_text(value: Any) -> str:
     return str(value or "").strip()
+
+
+def filename_slug(value: Any, fallback: str) -> str:
+    slug = FILENAME_RE.sub("-", normalize_text(value).lower()).strip("-")
+    return slug or fallback
+
+
+def local_filename_timestamp(value: dt.datetime | None = None) -> str:
+    timestamp = value or dt.datetime.now().astimezone()
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.astimezone()
+    return timestamp.strftime("%Y%m%d-%H%M%S")
+
+
+def yaml_scalar(value: Any) -> str:
+    return json.dumps("" if value is None else str(value), ensure_ascii=False)
+
+
+def markdown_table_cell(value: Any) -> str:
+    return re.sub(r"\s+", " ", str(value or "")).strip().replace("|", "\\|")
+
+
+def record_summary(record: Dict[str, Any]) -> str:
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
+    return str(metadata.get("summary") or "")
+
+
+def selected_record_indices(value: Any) -> list[int]:
+    if not isinstance(value, list):
+        raise ValueError("record_indices must be a list")
+    selected: list[int] = []
+    seen: set[int] = set()
+    for item in value:
+        if isinstance(item, bool):
+            raise ValueError("record_indices must contain integers")
+        try:
+            index = int(item)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("record_indices must contain integers") from exc
+        if index < 0:
+            raise ValueError("record_indices must contain zero or positive integers")
+        if index not in seen:
+            selected.append(index)
+            seen.add(index)
+    if not selected:
+        raise ValueError("record_indices must include at least one selected record")
+    return selected
 
 
 def record_issue_map(report: Dict[str, Any]) -> dict[int, list[Dict[str, Any]]]:
@@ -87,16 +140,13 @@ def build_review_rows(report: Dict[str, Any], scope: str) -> list[Dict[str, Any]
     return rows
 
 
-def review_returned_document_package(
+def parse_returned_document_records(
     repo_root: Path,
     *,
     scope: str,
     staged_filename: str,
-    dry_run: bool,
     staging_root: Path,
-    preview_root: Path,
 ) -> Dict[str, Any]:
-    del preview_root
     normalized_scope = source_model.normalize_scope(scope)
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -108,4 +158,127 @@ def review_returned_document_package(
         staging_root=staging_root,
     )
     report["review_rows"] = build_review_rows(report, normalized_scope)
+    return report
+
+
+def selected_records(report: Dict[str, Any], record_indices: list[int]) -> list[Dict[str, Any]]:
+    records_by_index = {
+        int(record.get("record_index")): record
+        for record in report.get("records", [])
+        if isinstance(record, dict) and isinstance(record.get("record_index"), int)
+    }
+    selected: list[Dict[str, Any]] = []
+    for record_index in record_indices:
+        record = records_by_index.get(record_index)
+        if record is None:
+            raise ValueError(f"selected record is not present in staged file: {record_index}")
+        selected.append(record)
+    return selected
+
+
+def review_markdown(
+    *,
+    source_file: str,
+    profile_id: str,
+    scope: str,
+    records: list[Dict[str, Any]],
+) -> str:
+    lines = [
+        "---",
+        f"source_file: {yaml_scalar(source_file)}",
+        f"profile_id: {yaml_scalar(profile_id)}",
+        f"scope: {yaml_scalar(scope)}",
+        "---",
+        "",
+        "| doc_id | title | summary | parent_id |",
+        "| --- | --- | --- | --- |",
+    ]
+    for record in records:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    markdown_table_cell(record.get("doc_id")),
+                    markdown_table_cell(record.get("title")),
+                    markdown_table_cell(record_summary(record)),
+                    markdown_table_cell(record.get("parent_id")),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def resolve_review_output_path(
+    repo_root: Path,
+    *,
+    preview_root: Path,
+    timestamp: str,
+    data_domain: str,
+    profile_id: str,
+) -> Path:
+    filename = (
+        f"{filename_slug(timestamp, 'review')}-"
+        f"{filename_slug(data_domain, 'data')}-"
+        f"{filename_slug(profile_id, 'profile')}.md"
+    )
+    root = (repo_root / preview_root).resolve()
+    path = (root / filename).resolve()
+    if path != root and root not in path.parents:
+        raise ValueError("review output path must stay under preview root")
+    return path
+
+
+def review_returned_document_package(
+    repo_root: Path,
+    *,
+    scope: str,
+    staged_filename: str,
+    dry_run: bool,
+    staging_root: Path,
+    preview_root: Path,
+    data_domain: str,
+    record_indices: Any,
+) -> Dict[str, Any]:
+    normalized_scope = source_model.normalize_scope(scope)
+    selected_indices = selected_record_indices(record_indices)
+    report = parse_returned_document_records(
+        repo_root=repo_root,
+        scope=normalized_scope,
+        staged_filename=staged_filename,
+        staging_root=staging_root,
+    )
+    report["selected_record_indices"] = selected_indices
+    if not report.get("ok"):
+        report["selected_records"] = []
+        report["review_file"] = ""
+        report["review_written"] = False
+        return report
+
+    records = selected_records(report, selected_indices)
+    profile_id = normalize_text(report.get("source_profile_id"))
+    source_scope = normalize_text(report.get("source_scope")) or normalized_scope
+    timestamp = local_filename_timestamp()
+    output_path = resolve_review_output_path(
+        repo_root,
+        preview_root=preview_root,
+        timestamp=timestamp,
+        data_domain=data_domain,
+        profile_id=profile_id,
+    )
+    content = review_markdown(
+        source_file=normalize_text(report.get("input_file")),
+        profile_id=profile_id,
+        scope=source_scope,
+        records=records,
+    )
+    if not dry_run and report.get("ok"):
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(content, encoding="utf-8")
+    report["selected_records"] = [
+        {"record_index": index, "doc_id": normalize_text(record.get("doc_id"))}
+        for index, record in zip(selected_indices, records)
+    ]
+    report["review_file"] = output_path.resolve().relative_to(repo_root.resolve()).as_posix()
+    report["review_written"] = bool(not dry_run and report.get("ok"))
     return report

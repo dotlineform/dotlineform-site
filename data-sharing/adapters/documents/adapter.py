@@ -27,6 +27,9 @@ def handlers_for(
     def review_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return returned.review_returned_package(repo_root, body, dry_run, adapter, dependencies_factory())
 
+    def returned_records_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
+        return returned.returned_records(repo_root, body, dry_run, adapter, dependencies_factory())
+
     def apply_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return returned.apply_returned_changes(repo_root, body, dry_run, adapter, dependencies_factory())
 
@@ -35,6 +38,7 @@ def handlers_for(
         selectable_records=selectable_records_handler,
         prepare=prepare_handler,
         list_returned=list_handler,
+        returned_records=returned_records_handler,
         review=review_handler,
         apply=apply_handler,
     )

@@ -13,6 +13,7 @@ AdapterResolver = Callable[[Path, Any, str], Any]
 SelectableRecordsHandler = Callable[[Path, Any, Any, Any], dict[str, Any]]
 PrepareHandler = Callable[[Path, dict[str, Any], bool, Any], dict[str, Any]]
 ListReturnedHandler = Callable[[Path, Any, Any], dict[str, Any]]
+ReturnedRecordsHandler = Callable[[Path, dict[str, Any], bool, Any], dict[str, Any]]
 ReviewHandler = Callable[[Path, dict[str, Any], bool, Any], dict[str, Any]]
 ApplyHandler = Callable[[Path, dict[str, Any], bool, Any], dict[str, Any]]
 
@@ -23,6 +24,7 @@ class DataSharingAdapterHandlers:
     selectable_records: SelectableRecordsHandler | None = None
     prepare: PrepareHandler | None = None
     list_returned: ListReturnedHandler | None = None
+    returned_records: ReturnedRecordsHandler | None = None
     review: ReviewHandler | None = None
     apply: ApplyHandler | None = None
 
@@ -136,6 +138,7 @@ __all__ = [
     "DataSharingAdapterHandlers",
     "ListReturnedHandler",
     "PrepareHandler",
+    "ReturnedRecordsHandler",
     "ReviewHandler",
     "SelectableRecordsHandler",
     "adapter_module",

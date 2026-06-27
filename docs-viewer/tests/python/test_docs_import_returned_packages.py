@@ -45,7 +45,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         "relationships.json": "json",
     }
 
-def test_library_import_review_returns_rows_without_preview_artifacts() -> None:
+def test_library_import_review_writes_selected_record_document() -> None:
     with make_repo() as temp:
         root = Path(temp)
         export_id = "ds_20260627T120010Z"
@@ -64,17 +64,21 @@ def test_library_import_review_returns_rows_without_preview_artifacts() -> None:
         write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},
+            {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl", "record_indices": [0]},
             dry_run=False,
         )
-        preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-alpha.md"))
+        review_path = root / str(payload["review_file"])
+        review_text = review_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
-    assert payload["summary_text"] == "Validated 1 Library import review row."
+    assert payload["summary_text"] == "Generated Library import review for 1 selected document."
     assert payload["review_rows"][0]["record_index"] == 0
+    assert payload["selected_records"] == [{"record_index": 0, "doc_id": "alpha"}]
+    assert payload["review_written"] is True
     assert "preview_files" not in payload
     assert "preview_written" not in payload
-    assert preview_paths == []
+    assert review_path.name.endswith("-library-document-content.md")
+    assert "| alpha | Alpha | Preview summary. | library |" in review_text
 
 def test_documents_import_rejects_unconfigured_data_domain() -> None:
     with make_repo() as temp:

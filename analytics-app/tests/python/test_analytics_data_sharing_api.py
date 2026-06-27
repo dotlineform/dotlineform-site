@@ -35,6 +35,7 @@ def test_runtime_config_publishes_analytics_owned_data_sharing_endpoints() -> No
         "config": "/analytics/api/data-sharing/config",
         "selectable_records": "/analytics/api/data-sharing/selectable-records",
         "returned_packages": "/analytics/api/data-sharing/returned-packages",
+        "returned_records": "/analytics/api/data-sharing/returned-records",
         "prepare": "/analytics/api/data-sharing/prepare",
         "context": "/analytics/api/data-sharing/context",
         "review": "/analytics/api/data-sharing/review",

@@ -18,6 +18,7 @@ from docs_data_sharing.package import (
     update_document_prepare_context,
 )
 from docs_data_sharing.review import review_returned_document_package
+from docs_data_sharing.review import parse_returned_document_records
 
 from ..context import (
     DocumentsDataSharingDependencies,
@@ -184,6 +185,7 @@ def review_returned_package(
     selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
     scope = resolve_docs_scope(adapter, selection.get("docs_scope"), required=False)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
+    record_indices = body.get("record_indices", [])
     report = review_returned_document_package(
         repo_root,
         scope=scope,
@@ -191,6 +193,8 @@ def review_returned_package(
         dry_run=dry_run,
         staging_root=adapter.path("returned_package_staging_root"),
         preview_root=adapter.path("review_output_root"),
+        data_domain=adapter.data_domain,
+        record_indices=record_indices,
     )
     report = attach_adapter_context(report, adapter)
     if dependencies is not None:
@@ -210,15 +214,60 @@ def review_returned_package(
                 "errors": int(report.get("counts", {}).get("errors") or 0),
                 "warnings": int(report.get("counts", {}).get("warnings") or 0),
                 "review_rows": len(report.get("review_rows", [])),
+                "selected_records": len(report.get("selected_records", [])),
+                "review_written": bool(report.get("review_written")),
+                "review_file": str(report.get("review_file") or ""),
             },
         )
     if report.get("ok"):
-        action = "Validated"
+        action = "Validated" if dry_run else "Generated"
+        row_count = len(report.get("selected_records", []))
+        row_label = "document" if row_count == 1 else "documents"
+        report["summary_text"] = (
+            f"{action} {adapter.label} import review for {row_count} selected {row_label}."
+        )
+    return report
+
+
+def returned_records(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[Any] = None,
+    dependencies: Optional[DocumentsDataSharingDependencies] = None,
+) -> Dict[str, Any]:
+    del dry_run
+    adapter = require_documents_adapter(adapter)
+    selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
+    scope = resolve_docs_scope(adapter, selection.get("docs_scope"), required=False)
+    staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
+    report = parse_returned_document_records(
+        repo_root,
+        scope=scope,
+        staged_filename=staged_filename,
+        staging_root=adapter.path("returned_package_staging_root"),
+    )
+    report = attach_adapter_context(report, adapter)
+    if dependencies is not None:
+        dependencies.log_event(
+            repo_root,
+            "docs-import-records",
+            {
+                "data_domain": adapter.data_domain,
+                "adapter_id": adapter.adapter_id,
+                "scope": scope,
+                "staged_filename": staged_filename,
+                "detected_import_type": str(report.get("detected_import_type") or ""),
+                "records": int(report.get("counts", {}).get("records") or 0),
+                "review_rows": len(report.get("review_rows", [])),
+                "errors": int(report.get("counts", {}).get("errors") or 0),
+                "warnings": int(report.get("counts", {}).get("warnings") or 0),
+            },
+        )
+    if report.get("ok"):
         row_count = len(report.get("review_rows", []))
         row_label = "row" if row_count == 1 else "rows"
-        report["summary_text"] = (
-            f"{action} {row_count} {adapter.label} import review {row_label}."
-        )
+        report["summary_text"] = f"Loaded {row_count} {adapter.label} import review {row_label}."
     return report
 
 

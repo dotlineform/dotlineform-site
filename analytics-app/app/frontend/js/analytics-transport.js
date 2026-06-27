@@ -23,6 +23,7 @@ const DATA_SHARING_ENDPOINTS = {
   prepare: "/analytics/api/data-sharing/prepare",
   context: "/analytics/api/data-sharing/context",
   returnedPackages: "/analytics/api/data-sharing/returned-packages",
+  returnedRecords: "/analytics/api/data-sharing/returned-records",
   review: "/analytics/api/data-sharing/review",
   apply: "/analytics/api/data-sharing/apply"
 };
@@ -45,6 +46,7 @@ export function configureAnalyticsTransport(config) {
       prepare: configuredDataSharing.prepare || DATA_SHARING_ENDPOINTS.prepare,
       context: configuredDataSharing.context || DATA_SHARING_ENDPOINTS.context,
       returnedPackages: configuredDataSharing.returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
+      returnedRecords: configuredDataSharing.returned_records || DATA_SHARING_ENDPOINTS.returnedRecords,
       review: configuredDataSharing.review || DATA_SHARING_ENDPOINTS.review,
       apply: configuredDataSharing.apply || DATA_SHARING_ENDPOINTS.apply
     });

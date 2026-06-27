@@ -74,6 +74,7 @@ def test_runtime_config_exposes_analytics_routes_and_services() -> None:
         "config": "/analytics/api/data-sharing/config",
         "selectable_records": "/analytics/api/data-sharing/selectable-records",
         "returned_packages": "/analytics/api/data-sharing/returned-packages",
+        "returned_records": "/analytics/api/data-sharing/returned-records",
         "prepare": "/analytics/api/data-sharing/prepare",
         "review": "/analytics/api/data-sharing/review",
         "apply": "/analytics/api/data-sharing/apply",
