@@ -14,11 +14,16 @@ from docs_import_test_support import (
 )
 
 
-def write_content_meta(root: Path) -> None:
-    path = root / "var/analytics/data-sharing/import-staging/content.meta.json"
+def write_content_meta(root: Path, export_id: str) -> None:
+    path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        '{"export_id": "ds_test", "config_id": "document-content", "profile_id": "document-content", "scope": "library"}\n',
+        (
+            '{"export_id": "'
+            + export_id
+            + '", "app": "docs-viewer", "adapter_id": "documents", "data_domain": "documents", '
+            + '"config_id": "document-content", "profile_id": "document-content", "scope": "library"}\n'
+        ),
         encoding="utf-8",
     )
 
@@ -35,52 +40,41 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
     assert payload["scope"] == "library"
     assert payload["staging_root"] == "var/analytics/data-sharing/import-staging"
     assert [item["filename"] for item in payload["files"]] == ["content.jsonl", "relationships.json"]
-    assert [item["format"] for item in payload["files"]] == ["json", "jsonl"]
+    assert {item["filename"]: item["format"] for item in payload["files"]} == {
+        "content.jsonl": "jsonl",
+        "relationships.json": "json",
+    }
 
-def test_library_import_preview_writes_when_not_dry_run() -> None:
+def test_library_import_review_returns_rows_without_preview_artifacts() -> None:
     with make_repo() as temp:
         root = Path(temp)
+        export_id = "ds_20260627T120010Z"
         write_staged(
             root,
             "content.jsonl",
-            [{"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "source_text": "Preview body."}],
+            [
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": export_id,
+                },
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "source_text": "Preview body."},
+            ],
         )
-        write_content_meta(root)
+        write_content_meta(root, export_id)
         payload = handle_documents_import_preview(
             root,
             {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
         preview_paths = sorted((root / "var/analytics/data-sharing/import-preview").glob("*-alpha.md"))
-        preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True
-    assert payload["preview_written"] is True
-    assert len(preview_paths) == 1
-    assert f"var/analytics/data-sharing/import-preview/{preview_paths[0].name}" in [
-        item["path"] for item in payload["preview_files"]
-    ]
-    assert payload["summary_text"] == "Generated 1 Library import preview file."
-    assert "Preview body." in preview_text
-
-def test_library_import_preview_dry_run_reports_without_writing() -> None:
-    with make_repo() as temp:
-        root = Path(temp)
-        write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "source_text": "Body."}])
-        write_content_meta(root)
-        payload = handle_documents_import_preview(
-            root,
-            {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},
-            dry_run=True,
-        )
-        preview_exists = list((root / "var/analytics/data-sharing/import-preview").glob("alpha-*.md"))
-
-    assert payload["ok"] is True
-    assert payload["preview_written"] is False
-    assert payload["preview_files"][0]["path"].startswith("var/analytics/data-sharing/import-preview/alpha-")
-    assert payload["preview_files"][0]["path"].endswith(".md")
-    assert payload["summary_text"] == "Validated 1 Library import preview file without writing."
-    assert preview_exists == []
+    assert payload["summary_text"] == "Validated 1 Library import review row."
+    assert payload["review_rows"][0]["record_index"] == 0
+    assert "preview_files" not in payload
+    assert "preview_written" not in payload
+    assert preview_paths == []
 
 def test_documents_import_rejects_unconfigured_data_domain() -> None:
     with make_repo() as temp:

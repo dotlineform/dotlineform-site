@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
-"""Parse staged Docs Viewer import data and optionally write Markdown previews.
+"""Parse staged Docs Viewer import data.
 
 Run:
   ./docs-viewer/services/docs_import.py --scope library --file document-content.jsonl
-  ./docs-viewer/services/docs_import.py --scope library --file document-content.jsonl --write-previews
-  ./docs-viewer/services/docs_import.py --scope catalogue --file works.jsonl --write-previews
 """
 
 from __future__ import annotations
 
 import argparse
 import copy
-import datetime as dt
 import json
 import re
 import sys
@@ -24,57 +21,13 @@ from docs_data_sharing import source_metadata
 
 WORKFLOW_ROOT = Path("var/analytics/data-sharing")
 STAGING_DIR_NAME = "import-staging"
-PREVIEW_DIR_NAME = "import-preview"
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
-FILENAME_RE = re.compile(r"[^a-z0-9-]+")
-STAGED_PREFIX_TIMESTAMP_RE = re.compile(r"^(?P<timestamp>\d{8}-\d{6})[-_](?P<base>.+)$")
-STAGED_SUFFIX_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
 EXPORT_ID_RE = re.compile(r"^ds_\d{8}T\d{6}Z$")
 
 PROFILE_ID_TO_IMPORT_TYPE = {
     "parent-child-relationships": "parent_child_relationships",
     "document-content": "document_changes",
-}
-IMPORT_TYPE_CONFIG_FIELDS = {
-    "parent_child_relationships": [
-        "doc_id",
-        "title",
-        "parent_id",
-        "parent_title",
-        "ancestors",
-        "children",
-        "summary",
-        "headings",
-        "last_updated",
-        "viewable",
-    ],
-    "full_document_content": [
-        "doc_id",
-        "title",
-        "parent_id",
-        "parent_title",
-        "current_summary",
-        "summary",
-        "ancestors",
-        "children",
-        "headings",
-        "source_text",
-        "last_updated",
-        "viewable",
-    ],
-    "document_changes": [
-        "doc_id",
-        "title",
-        "parent_id",
-        "current_summary",
-        "summary",
-    ],
-    "minimal_document_records": [
-        "doc_id",
-        "title",
-        "parent_id",
-    ],
 }
 EXPORT_METADATA_FIELDS = {
     "schema_version",
@@ -143,49 +96,6 @@ def scope_title(scope: str) -> str:
     return labels.get(normalized, normalized.title() if normalized else "Docs")
 
 
-def preview_generated_at(generated_at_dt: dt.datetime | None = None) -> str:
-    value = generated_at_dt or dt.datetime.now(dt.timezone.utc)
-    if value.tzinfo is None:
-        value = value.replace(tzinfo=dt.timezone.utc)
-    return value.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def preview_filename_timestamp(generated_at: str) -> str:
-    match = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z", normalize_text(generated_at))
-    if match:
-        year, month, day, hour, minute, second = match.groups()
-        return f"{year}{month}{day}-{hour}{minute}{second}"
-    return slugify_filename(generated_at, "preview")
-
-
-def local_filename_timestamp(value: dt.datetime | None = None) -> str:
-    timestamp = value or dt.datetime.now().astimezone()
-    if timestamp.tzinfo is None:
-        timestamp = timestamp.astimezone()
-    return timestamp.strftime("%Y%m%d-%H%M%S")
-
-
-def staged_timestamp_suffix(report: dict[str, Any], fallback_timestamp: str) -> str:
-    stem = Path(normalize_text(report.get("input_file"))).stem
-    match = STAGED_PREFIX_TIMESTAMP_RE.fullmatch(stem) or STAGED_SUFFIX_TIMESTAMP_RE.fullmatch(stem)
-    if match:
-        return match.group("timestamp")
-    return fallback_timestamp
-
-
-def staged_stem_without_timestamp(report: dict[str, Any], fallback: str) -> str:
-    stem = Path(normalize_text(report.get("input_file")) or fallback).stem
-    match = STAGED_PREFIX_TIMESTAMP_RE.fullmatch(stem) or STAGED_SUFFIX_TIMESTAMP_RE.fullmatch(stem)
-    if match:
-        stem = match.group("base")
-    return slugify_filename(stem, fallback)
-
-
-def slugify_filename(value: Any, fallback: str) -> str:
-    slug = FILENAME_RE.sub("-", normalize_text(value).lower()).strip("-")
-    return slug or fallback
-
-
 def normalize_string_list(value: Any) -> list[str]:
     if value is None:
         return []
@@ -221,10 +131,6 @@ def relative_path(repo_root: Path, path: Path) -> str:
 
 def default_staging_root(scope: str) -> Path:
     return WORKFLOW_ROOT / normalize_text(scope).lower() / STAGING_DIR_NAME
-
-
-def default_preview_root(scope: str) -> Path:
-    return WORKFLOW_ROOT / normalize_text(scope).lower() / PREVIEW_DIR_NAME
 
 
 def supported_scopes(repo_root: Path) -> set[str]:
@@ -319,19 +225,6 @@ def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | s
             }
         )
     return files
-
-
-def resolve_preview_path(repo_root: Path, scope: str, filename: str, preview_root: Path | str | None = None) -> Path:
-    normalized_scope = validate_scope(repo_root, scope)
-    relative = Path(filename)
-    if relative.is_absolute() or ".." in relative.parts:
-        raise ValueError(f"unsafe preview filename: {filename}")
-    base_root = Path(preview_root) if preview_root else default_preview_root(normalized_scope)
-    path = (repo_root / base_root / relative).resolve()
-    allowed_root = (repo_root / base_root).resolve()
-    if path != allowed_root and allowed_root not in path.parents:
-        raise ValueError(f"preview file must stay under {base_root}")
-    return path
 
 
 def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
@@ -680,263 +573,6 @@ def add_current_library_report(
     return issues
 
 
-def issue_applies_to_record(item: dict[str, Any], record: dict[str, Any]) -> bool:
-    record_index = record.get("record_index")
-    doc_id = normalize_text(record.get("doc_id"))
-    if "record_index" in item:
-        return item.get("record_index") == record_index
-    if item.get("doc_id"):
-        return normalize_text(item.get("doc_id")) == doc_id
-    return False
-
-
-def issues_for_record(report: dict[str, Any], record: dict[str, Any]) -> list[dict[str, Any]]:
-    return [
-        item
-        for item in report.get("issues", [])
-        if isinstance(item, dict) and issue_applies_to_record(item, record)
-    ]
-
-
-def yaml_scalar(value: Any) -> str:
-    return json.dumps("" if value is None else str(value), ensure_ascii=False)
-
-
-def front_matter(values: dict[str, Any]) -> str:
-    lines = ["---"]
-    for key, value in values.items():
-        lines.append(f"{key}: {yaml_scalar(value)}")
-    lines.append("---")
-    return "\n".join(lines)
-
-
-def markdown_escape_inline(value: Any) -> str:
-    return str(value or "").replace("|", "\\|").strip()
-
-
-def normalize_markdown_body(value: Any) -> str:
-    lines = [line.rstrip() for line in str(value or "").replace("\r\n", "\n").replace("\r", "\n").split("\n")]
-    trimmed_start = 0
-    trimmed_end = len(lines)
-    while trimmed_start < trimmed_end and not lines[trimmed_start].strip():
-        trimmed_start += 1
-    while trimmed_end > trimmed_start and not lines[trimmed_end - 1].strip():
-        trimmed_end -= 1
-    return "\n".join(lines[trimmed_start:trimmed_end]).strip()
-
-
-def render_issue_list(items: list[dict[str, Any]]) -> list[str]:
-    if not items:
-        return []
-    lines = ["## Import Warnings", ""]
-    for item in items:
-        code = normalize_text(item.get("code")) or "warning"
-        message = normalize_text(item.get("message"))
-        lines.append(f"- `{code}`: {message}")
-    lines.append("")
-    return lines
-
-
-def record_preview_filename(record: dict[str, Any], seen: dict[str, int], timestamp_suffix: str) -> str:
-    record_index = int(record.get("record_index") or 0)
-    doc_id = normalize_text(record.get("doc_id"))
-    base = slugify_filename(doc_id, f"record-{record_index + 1}")
-    count = seen.get(base, 0)
-    seen[base] = count + 1
-    if count:
-        return f"{timestamp_suffix}-{base}-record-{record_index + 1}.md"
-    return f"{timestamp_suffix}-{base}.md"
-
-
-def render_doc_front_matter(record: dict[str, Any], report: dict[str, Any], generated_at: str) -> str:
-    import_type = normalize_text(report.get("detected_import_type"))
-    return render_preview_metadata_sections(
-        record=record,
-        import_type=import_type,
-        generated_at=generated_at,
-        source_file=normalize_text(report.get("input_file")),
-    )
-
-
-def record_field_value(record: dict[str, Any], field: str) -> Any:
-    if field in {"doc_id", "title", "parent_id"}:
-        return normalize_text(record.get(field))
-    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
-    relationships = record.get("relationships") if isinstance(record.get("relationships"), dict) else {}
-    if field in metadata:
-        return metadata.get(field)
-    if field in relationships:
-        return relationships.get(field)
-    return ""
-
-
-def preview_scalar(value: Any, *, field: str = "") -> str:
-    if field == "source_text" and normalize_text(value):
-        return '"[see Imported Source Text section]"'
-    if isinstance(value, (list, dict)):
-        return json.dumps(value, ensure_ascii=False)
-    text = str(value or "")
-    if "\n" in text or len(text) > 160:
-        text = normalize_text(text)
-        if len(text) > 160:
-            text = text[:157].rstrip() + "..."
-    return yaml_scalar(text)
-
-
-def metadata_section(title: str, rows: list[tuple[str, Any]]) -> list[str]:
-    lines = ["---", title]
-    if rows:
-        for key, value in rows:
-            lines.append(f"{key}: {preview_scalar(value, field=key)}")
-    else:
-        lines.append("none")
-    lines.append("---")
-    return lines
-
-
-def matched_config_fields(import_type: str, record: dict[str, Any]) -> list[tuple[str, Any]]:
-    fields = IMPORT_TYPE_CONFIG_FIELDS.get(import_type) or IMPORT_TYPE_CONFIG_FIELDS["minimal_document_records"]
-    return [(field, record_field_value(record, field)) for field in fields]
-
-
-def render_preview_metadata_sections(
-    *,
-    record: dict[str, Any],
-    import_type: str,
-    generated_at: str,
-    source_file: str,
-) -> str:
-    lines: list[str] = []
-    lines.extend(metadata_section("matched_config_fields", matched_config_fields(import_type, record)))
-    unknown = record.get("unknown_metadata") if isinstance(record.get("unknown_metadata"), dict) else {}
-    lines.extend(metadata_section("staged_only_fields", sorted(unknown.items())))
-    lines.extend(
-        metadata_section(
-            "preview_metadata",
-            [
-                ("import_type", import_type),
-                ("preview_generated_at", generated_at),
-                ("source_file", source_file),
-            ],
-        )
-    )
-    return "\n".join(lines)
-
-
-def render_metadata_lines(record: dict[str, Any], report: dict[str, Any]) -> list[str]:
-    scope = normalize_text(report.get("scope")) or ""
-    lines = [
-        "- doc_id: `" + (normalize_text(record.get("doc_id")) or "[missing]") + "`",
-        "- parent_id: `" + (normalize_text(record.get("parent_id")) or "[root]") + "`",
-    ]
-    current = record.get("current_library") if isinstance(record.get("current_library"), dict) else {}
-    if current:
-        exists = "yes" if current.get("exists") else "no"
-        source = "yes" if current.get("source_renderable") else "no"
-        lines.extend(
-            [
-                f"- current {scope_title(scope)} match: {exists}",
-                f"- source renderable: {source}",
-            ]
-        )
-    return lines
-
-
-def render_summary_preview(report: dict[str, Any], record: dict[str, Any], generated_at: str) -> str:
-    title = normalize_text(record.get("title")) or "Untitled Import Record"
-    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
-    summary = str(metadata.get("summary") if "summary" in metadata else metadata.get("current_summary", ""))
-    lines = [
-        render_doc_front_matter(record, report, generated_at),
-        "",
-        f"# {title}",
-        "",
-        "## Import Metadata",
-        "",
-        *render_metadata_lines(record, report),
-        "",
-        *render_issue_list(issues_for_record(report, record)),
-        "## Proposed Summary",
-        "",
-        normalize_markdown_body(summary) or "[missing summary]",
-        "",
-    ]
-    return "\n".join(lines).rstrip() + "\n"
-
-
-def render_full_content_preview(report: dict[str, Any], record: dict[str, Any], generated_at: str) -> str:
-    title = normalize_text(record.get("title")) or "Untitled Import Record"
-    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
-    headings = metadata.get("headings") if isinstance(metadata.get("headings"), list) else []
-    source_text = normalize_markdown_body(metadata.get("source_text", ""))
-    lines = [
-        render_doc_front_matter(record, report, generated_at),
-        "",
-        f"# {title}",
-        "",
-        "## Import Metadata",
-        "",
-        *render_metadata_lines(record, report),
-        "",
-        *render_issue_list(issues_for_record(report, record)),
-    ]
-    if headings:
-        lines.extend(["## Imported Headings", ""])
-        lines.extend(f"- {markdown_escape_inline(item)}" for item in headings)
-        lines.append("")
-    lines.extend(["## Imported Source Text", "", source_text or "[missing source_text]", ""])
-    return "\n".join(lines).rstrip() + "\n"
-
-
-def render_markdown_previews(
-    *,
-    repo_root: Path,
-    scope: str,
-    report: dict[str, Any],
-    write: bool,
-    generated_at: str | None = None,
-    preview_root: Path | str | None = None,
-) -> dict[str, Any]:
-    if not report.get("ok"):
-        report["preview_files"] = []
-        report["preview_written"] = False
-        return report
-    generated = generated_at or preview_generated_at()
-    fallback_timestamp = preview_filename_timestamp(generated_at) if generated_at else local_filename_timestamp()
-    timestamp_suffix = staged_timestamp_suffix(report, fallback_timestamp)
-    import_type = normalize_text(report.get("detected_import_type"))
-    if import_type == "unknown":
-        report["preview_files"] = []
-        report["preview_written"] = False
-        return report
-    records = [record for record in report.get("records", []) if isinstance(record, dict)]
-    preview_files: list[dict[str, Any]] = []
-
-    seen: dict[str, int] = {}
-    for record in records:
-        filename = record_preview_filename(record, seen, timestamp_suffix)
-        path = resolve_preview_path(repo_root, scope, filename, preview_root)
-        if import_type == "full_document_content":
-            content = render_full_content_preview(report, record, generated)
-        else:
-            content = render_summary_preview(report, record, generated)
-        preview_files.append(
-            {
-                "path": relative_path(repo_root, path),
-                "record_index": record.get("record_index"),
-                "doc_id": normalize_text(record.get("doc_id")),
-                "kind": "document",
-            }
-        )
-        if write:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding="utf-8")
-
-    report["preview_files"] = preview_files
-    report["preview_written"] = bool(write)
-    return report
-
-
 def parse_staged_import(
     *,
     repo_root: Path,
@@ -1094,11 +730,10 @@ def parse_staged_import(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Parse staged Docs Viewer import data and optionally write Markdown previews.")
+    parser = argparse.ArgumentParser(description="Parse staged Docs Viewer import data.")
     parser.add_argument("--scope", default="library", help="Docs Viewer scope to import")
     parser.add_argument("--file", required=True, help="Staged JSON or JSONL filename under var/analytics/data-sharing/<scope>/import-staging/")
     parser.add_argument("--repo-root", default="", help="Override repo root")
-    parser.add_argument("--write-previews", action="store_true", help="Write Markdown previews under var/analytics/data-sharing/<scope>/import-preview/")
     parser.add_argument("--no-records", action="store_true", help="Omit normalized records from the printed report")
     return parser.parse_args()
 
@@ -1111,12 +746,6 @@ def main() -> int:
             repo_root=repo_root,
             scope=args.scope,
             staged_file=args.file,
-        )
-        report = render_markdown_previews(
-            repo_root=repo_root,
-            scope=args.scope,
-            report=report,
-            write=bool(args.write_previews),
         )
     except Exception as exc:
         print(f"docs_import: {exc}", file=sys.stderr)

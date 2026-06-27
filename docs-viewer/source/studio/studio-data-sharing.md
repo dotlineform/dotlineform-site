@@ -71,7 +71,6 @@ The prepare page:
 The review page:
 
 - lists returned `.json` and `.jsonl` package files from the active adapter staging root
-- generates Markdown review artifacts for the selected package
 - displays parsed records, warnings, and review rows
 - can apply selected summary or hierarchy changes after confirmation
 - lists returned Tags `.json` and `.jsonl` package files from the configured staging root

@@ -74,7 +74,7 @@ The adapter adds Data Sharing context and summary text, and logs a `docs-export`
 Returned packages are staged under the shared Data Sharing import-staging root.
 The documents adapter delegates parsing and preview generation to Docs Viewer returned-package helpers.
 
-Review produces document-oriented review rows and optional Markdown preview files under the shared review-output root.
+Review produces document-oriented review rows from the selected staged file.
 
 Current apply actions are:
 

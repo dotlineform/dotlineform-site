@@ -133,16 +133,6 @@ def parse(root: Path, filename: str) -> dict:
     return docs_import.parse_staged_import(repo_root=root, scope="library", staged_file=filename)
 
 
-def render(root: Path, report: dict) -> dict:
-    return docs_import.render_markdown_previews(
-        repo_root=root,
-        scope="library",
-        report=report,
-        write=True,
-        generated_at="2026-05-03T20:40:00Z",
-    )
-
-
 def test_missing_export_id_fails_closed() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -245,10 +235,7 @@ def test_document_content_profile_is_sparse_document_changes() -> None:
                 }
             ],
         )
-        report = render(root, parse(root, "content.jsonl"))
-        preview = (
-            root / "var/analytics/data-sharing/library/import-preview/20260503-204000-alpha.md"
-        ).read_text(encoding="utf-8")
+        report = parse(root, "content.jsonl")
 
     assert report["ok"] is True
     assert report["detected_import_type"] == "document_changes"
@@ -256,9 +243,6 @@ def test_document_content_profile_is_sparse_document_changes() -> None:
     assert report["source_profile_id"] == "document-content"
     assert report["records"][0]["metadata"]["summary"] == "New summary."
     assert report["records"][0]["relationships"]["children"] == [{"id": "alpha-child", "title": "Alpha Child"}]
-    assert 'import_type: "document_changes"' in preview
-    assert "## Proposed Summary\n\nNew summary." in preview
-    assert "## Imported Source Text" not in preview
 
 
 def test_jsonl_header_export_id_loads_internal_profile_metadata() -> None:

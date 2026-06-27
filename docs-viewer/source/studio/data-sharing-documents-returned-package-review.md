@@ -79,7 +79,6 @@ The operation:
 - normalizes returned records into document rows
 - loads current Docs Viewer source metadata for the selected scope
 - annotates each returned row with current-source existence and renderability
-- writes one Markdown preview artifact per returned document when not dry-run
 - returns `review_rows` for the Analytics review page selectable list
 
 Review does not mutate source Markdown.
@@ -104,18 +103,7 @@ The row title comes from the returned record title.
 The row metadata includes the returned `doc_id`, duplicate status, and whether the document exists in current source metadata.
 
 The selectable row index is the apply input.
-Apply actions receive selected `record_indices`, not file paths or preview filenames.
-
-## Preview Artifacts
-
-Review can write Markdown artifacts under:
-
-```text
-var/analytics/data-sharing/import-preview/
-```
-
-These files are review aids only.
-They are not source files and are not the canonical apply input.
+Apply actions receive selected `record_indices`, not file paths.
 
 The canonical apply input is still:
 
@@ -123,9 +111,6 @@ The canonical apply input is still:
 - selected record indices
 - selected apply action
 - confirmation flag
-
-Preview filenames are generated from staged timestamps and `doc_id` values.
-Duplicate or missing ids receive record-index fallback names.
 
 ## Write Actions
 

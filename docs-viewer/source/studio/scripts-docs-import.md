@@ -15,11 +15,10 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py
 
 ## Scope
 
-`docs_import.py` is the staged returned-package parser and Markdown review renderer used by the documents Data Sharing adapter.
+`docs_import.py` is the staged returned-package parser used by the documents Data Sharing adapter.
 
 It reads local JSON or JSONL files manually copied under the Library returned-package staging root and returns a structured JSON report.
 It does not mutate source Markdown, generated docs payloads, share packages, or config files.
-When `--write-previews` is passed, it writes Markdown review artifacts under the Library review output root.
 The same engine is used by the documents adapter when `/analytics/data-sharing/review/` calls `POST /analytics/api/data-sharing/review`.
 Returned files may be sparse.
 For example, a service that only proposes summaries can return `doc_id`, `title`, and `summary` without echoing exported `source_text`, `ancestors`, or `children`.
@@ -28,7 +27,6 @@ Current input path:
 
 - `var/analytics/data-sharing/import-staging/<filename>.json`
 - `var/analytics/data-sharing/import-staging/<filename>.jsonl`
-- optional `var/analytics/data-sharing/import-staging/<stem>.meta.json` sidecar for package metadata
 - optional `var/analytics/data-sharing/import-staging/<stem>.context.json` sidecar for external task/schema context
 
 Current lookup path:
@@ -38,7 +36,6 @@ Current lookup path:
 Current outputs:
 
 - a structured JSON report on stdout
-- optional Markdown review artifacts under `var/analytics/data-sharing/import-preview/`
 
 ## Current Capability
 
@@ -49,19 +46,14 @@ Implemented now:
 - parses JSON package envelopes with a `records` array
 - parses JSON arrays of document-like records
 - parses JSONL document-row packages
-- reads sibling `.meta.json` sidecars for package metadata
+- reads canonical metadata from `var/analytics/data-sharing/meta/<export_id>.meta.json`
 - excludes `.meta.json` and `.context.json` sidecars from staged package listings
 - detects relationship, full-content, sparse document-change, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
 - loads current Library source metadata through Docs Viewer source parsing/rendering helpers
 - annotates each normalized record with current Library existence, viewability, source renderability, current summary, and parent source state
-- renders one Markdown-style review artifact per parsed document
-- writes review artifacts only under `var/analytics/data-sharing/import-preview/`
-- supports timestamped document review filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
-- uses the staged-file timestamp suffix for review filenames when present, otherwise the current review-generation time
-- writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
-- is callable through the documents Data Sharing adapter for returned-package listing and review generation
+- is callable through the documents Data Sharing adapter for returned-package listing and review-row generation
 - is exposed through the `/analytics/data-sharing/review/` page for local returned-package review
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unreadable current source metadata, unrenderable current source records, missing parents, and parent records with unrenderable source
@@ -72,12 +64,6 @@ Parse a staged Library content package:
 
 ```bash
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-content.jsonl
-```
-
-Write Markdown review artifacts for a staged Library content package:
-
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file document-content.jsonl --write-previews
 ```
 
 Parse a staged Library relationships package and omit normalized records from the printed report:
@@ -105,8 +91,6 @@ The script prints a JSON report with:
 - `source_metadata_file`
 - `unknown_file_metadata`
 - `current_library`
-- `preview_files`
-- `preview_written`
 
 The Data Sharing review endpoint returns this same report shape from `POST /analytics/api/data-sharing/review` after documents-adapter dispatch.
 
@@ -141,8 +125,6 @@ When an apply action writes Library Markdown source:
 - `rebuild.diagnostics.search` describes the full or targeted search update
 - activity rows are attached by the Docs Viewer service after successful apply handling
 
-The parser CLI remains read-only unless `--write-previews` is passed, and preview writes do not trigger generated docs or docs-search rebuilds.
-
 ## Validation Boundary
 
 This parser is intentionally not an apply validator.
@@ -156,7 +138,6 @@ It blocks only concerns that prevent useful parsing:
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.
-Review writes are limited to `var/analytics/data-sharing/import-preview/`.
 Apply-time freshness checks belong to the documents adapter apply actions.
 
 ## Verification

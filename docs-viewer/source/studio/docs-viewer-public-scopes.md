@@ -54,9 +54,6 @@ Source and generated artifacts:
 - local import staging artifacts:
   - `var/analytics/data-sharing/<scope>/import-staging/<filename>.json`
   - `var/analytics/data-sharing/<scope>/import-staging/<filename>.jsonl`
-- local import preview artifacts:
-  - `var/analytics/data-sharing/<scope>/import-preview/<filename>.md`
-
 ## Source Model
 
 ### `site/<route>/index.html`
@@ -242,8 +239,6 @@ Staged input:
 
 Preview output:
 
-- `var/analytics/data-sharing/<scope>/import-preview/<filename>.md`
-
 Current model:
 
 - staged files are ignored by git and are safe to delete
@@ -251,9 +246,6 @@ Current model:
 - the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
 - unknown file-level and record-level metadata is preserved in parser reports
 - parser reports compare staged records with adapter-owned current document records and generated payload filenames
-- Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --write-previews` is used
-- summary and full-content imports write one preview file per parsed document
-- relationship imports write one whole-tree preview file per staged relationships file
 - summary apply can update selected source `summary` values through the Analytics Data Sharing API after preflight and confirmation
 - hierarchy apply can update selected source `parent_id` values through the Analytics Data Sharing API after preflight and confirmation; retired `sort_order` front matter is removed when touched
 - hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships

@@ -196,34 +196,28 @@ def review_returned_package(
     if dependencies is not None:
         dependencies.log_event(
             repo_root,
-            "docs-import-preview",
+            "docs-import-review",
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
                 "scope": scope,
                 "staged_filename": staged_filename,
                 "dry_run": dry_run,
-                "preview_written": bool(report.get("preview_written")),
                 "detected_import_type": str(report.get("detected_import_type") or ""),
                 "records": int(report.get("counts", {}).get("records") or 0),
                 "parsed_records": int(report.get("counts", {}).get("parsed_records") or 0),
                 "malformed_records": int(report.get("counts", {}).get("malformed_records") or 0),
                 "errors": int(report.get("counts", {}).get("errors") or 0),
                 "warnings": int(report.get("counts", {}).get("warnings") or 0),
-                "preview_files": [
-                    str(item.get("path") or "")
-                    for item in report.get("preview_files", [])
-                    if isinstance(item, dict) and item.get("path")
-                ],
+                "review_rows": len(report.get("review_rows", [])),
             },
         )
     if report.get("ok"):
-        action = "Validated" if dry_run else "Generated"
-        suffix = " without writing" if dry_run else ""
-        preview_count = len(report.get("preview_files", []))
-        preview_file_label = "preview file" if preview_count == 1 else "preview files"
+        action = "Validated"
+        row_count = len(report.get("review_rows", []))
+        row_label = "row" if row_count == 1 else "rows"
         report["summary_text"] = (
-            f"{action} {preview_count} {adapter.label} import {preview_file_label}{suffix}."
+            f"{action} {row_count} {adapter.label} import review {row_label}."
         )
     return report
 

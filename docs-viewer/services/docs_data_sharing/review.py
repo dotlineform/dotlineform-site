@@ -6,7 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
-from docs_import import parse_staged_import, render_markdown_previews, scope_title
+from docs_import import parse_staged_import, scope_title
 import docs_source_model as source_model
 
 
@@ -96,6 +96,7 @@ def review_returned_document_package(
     staging_root: Path,
     preview_root: Path,
 ) -> Dict[str, Any]:
+    del preview_root
     normalized_scope = source_model.normalize_scope(scope)
     if not staged_filename:
         raise ValueError("staged_filename is required")
@@ -105,13 +106,6 @@ def review_returned_document_package(
         scope=normalized_scope,
         staged_file=staged_filename,
         staging_root=staging_root,
-    )
-    report = render_markdown_previews(
-        repo_root=repo_root,
-        scope=normalized_scope,
-        report=report,
-        write=not dry_run,
-        preview_root=preview_root,
     )
     report["review_rows"] = build_review_rows(report, normalized_scope)
     return report
