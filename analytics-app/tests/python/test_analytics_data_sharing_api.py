@@ -247,11 +247,32 @@ def test_returned_packages_endpoint_dispatches_through_registered_handlers(monke
     payload = analytics_data_sharing_api.data_sharing_get_payload(
         REPO_ROOT,
         "/returned-packages",
-            {"data_domain": ["documents"]},
+        {"data_domain": ["documents"]},
     )
 
     assert payload == {"ok": True, "adapter_id": "documents", "operation": "list_returned", "files": []}
     assert calls[0]["data_domain"] == "documents"
+
+
+def test_returned_packages_endpoint_lists_documents_with_default_review_scope() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        path = root / "var/analytics/data-sharing/import-staging/documents-document-content-20260627-120000.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"doc_id": "library", "title": "Library", "source_text": "Document body."}) + "\n",
+            encoding="utf-8",
+        )
+
+        payload = analytics_data_sharing_api.data_sharing_get_payload(
+            root,
+            "/returned-packages",
+            {"data_domain": ["documents"]},
+        )
+
+    assert payload["ok"] is True
+    assert payload["scope"] == "library"
+    assert [item["filename"] for item in payload["files"]] == ["documents-document-content-20260627-120000.jsonl"]
 
 
 def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeypatch) -> None:

@@ -13,6 +13,10 @@ def test_list_returned_packages_finds_json_files() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(root / "var/analytics/data-sharing/import-staging/registry.json", {"import_registry": {"tags": []}})
+        (root / "var/analytics/data-sharing/import-staging/documents-document-content-20260627-120000.jsonl").write_text(
+            '{"doc_id":"alpha","title":"Alpha","source_text":"Document body."}\n',
+            encoding="utf-8",
+        )
 
         payload = returned.list_returned_packages(
             root,

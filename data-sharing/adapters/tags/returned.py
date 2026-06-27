@@ -76,6 +76,14 @@ def load_returned_package(repo_root: Path, adapter: AdapterResolution, staged_fi
     raise ValueError("returned package must include import_registry, import_aliases, import_assignments, tags, aliases, or series")
 
 
+def is_tags_returned_package(repo_root: Path, adapter: AdapterResolution, filename: str) -> bool:
+    try:
+        load_returned_package(repo_root, adapter, filename)
+    except (FileNotFoundError, OSError, ValueError):
+        return False
+    return True
+
+
 def list_returned_packages(
     repo_root: Path,
     data_domain: Any,
@@ -89,6 +97,8 @@ def list_returned_packages(
     if staging_root.exists():
         for path in sorted(staging_root.iterdir()):
             if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
+                continue
+            if not is_tags_returned_package(repo_root, adapter, path.name):
                 continue
             stat = path.stat()
             files.append(
