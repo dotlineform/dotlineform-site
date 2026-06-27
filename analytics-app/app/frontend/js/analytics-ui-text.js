@@ -91,8 +91,6 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     missing_doc_id: "missing doc_id",
     duplicate_doc_id: "duplicate doc_id",
     not_current_data_domain: "not in current {data_domain_label}",
-    relationship_tree_title: "Relationship tree",
-    relationship_tree_count: "{count} records",
     row_type_record: "record",
     record_index_meta: "row {record_index}",
     row_issues_meta: "{count} issue(s)",

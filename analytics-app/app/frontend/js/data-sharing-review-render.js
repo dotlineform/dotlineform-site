@@ -48,20 +48,16 @@ function recordRowId(record, index) {
 function previewFilesByRecord(previewFiles) {
   const byRecordIndex = new Map();
   const byDocId = new Map();
-  const treeFiles = [];
   (Array.isArray(previewFiles) ? previewFiles : []).forEach((item, index) => {
     if (!item || typeof item !== "object") return;
     const kind = normalizeText(item.kind);
-    if (kind === "relationship_tree") {
-      treeFiles.push({ item, index });
-      return;
-    }
+    if (kind === "relationship_tree") return;
     const recordIndex = Number.isInteger(item.record_index) ? item.record_index : null;
     if (recordIndex !== null && !byRecordIndex.has(recordIndex)) byRecordIndex.set(recordIndex, item);
     const docId = normalizeText(item.doc_id);
     if (docId && !byDocId.has(docId)) byDocId.set(docId, item);
   });
-  return { byRecordIndex, byDocId, treeFiles };
+  return { byRecordIndex, byDocId };
 }
 
 function duplicateDocIds(records) {
@@ -144,43 +140,14 @@ function prepareDocumentRowsForDisplay(rows) {
   return rows;
 }
 
-function buildTreeRows(state, previewLookup) {
-  return previewLookup.treeFiles.map(({ item, index }) => {
-    const path = normalizeText(item.path);
-    const count = Number(item.record_count || 0);
-    const countText = getAnalyticsText(
-      state.config,
-      "data_sharing_review.relationship_tree_count",
-      "{count} records",
-      { count }
-    );
-    return {
-      id: previewRowId(item, index),
-      type: "relationship_tree",
-      docId: "",
-      parentId: "",
-      recordIndex: null,
-      duplicate: false,
-      kind: "relationship_tree",
-      path,
-      title: getAnalyticsText(state.config, "data_sharing_review.relationship_tree_title", "Relationship tree"),
-      meta: countText,
-      depth: 0,
-      selectable: false,
-      issues: []
-    };
-  });
-}
-
 export function buildDataSharingReviewPreviewRows(state, payload) {
   const genericRows = Array.isArray(payload && payload.review_rows) ? payload.review_rows : [];
   if (genericRows.length) {
     return genericRows.map((row, index) => normalizeReviewRow(state, row, index)).filter(Boolean);
   }
   const previewLookup = previewFilesByRecord(payload && payload.preview_files);
-  const treeRows = buildTreeRows(state, previewLookup);
   const documentRows = prepareDocumentRowsForDisplay(buildDocumentRows(state, payload, previewLookup));
-  return [...treeRows, ...documentRows];
+  return documentRows;
 }
 
 function normalizeReviewRow(state, row, index) {

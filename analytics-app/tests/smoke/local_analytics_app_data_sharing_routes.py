@@ -202,28 +202,38 @@ def review_payload() -> dict[str, object]:
             "errors": 0,
         },
         "issues": [],
-        "records": [],
-        "preview_files": [],
-        "review_rows": [
+        "records": [
             {
-                "id": "library-record-1",
-                "type": "document",
+                "doc_id": "library",
                 "title": "Library",
-                "meta": "library",
                 "record_index": 0,
-                "selectable": True,
                 "issues": [],
-                "depth": 0,
             },
             {
-                "id": "alpha-record-2",
-                "type": "document",
+                "doc_id": "alpha",
+                "parent_id": "library",
                 "title": "Alpha",
-                "meta": "alpha",
                 "record_index": 1,
-                "selectable": True,
                 "issues": [],
-                "depth": 1,
+            },
+        ],
+        "preview_files": [
+            {
+                "path": "var/analytics/data-sharing/import-preview/library-tree.md",
+                "record_count": 2,
+                "kind": "relationship_tree",
+            },
+            {
+                "path": "var/analytics/data-sharing/import-preview/library.md",
+                "record_index": 0,
+                "doc_id": "library",
+                "kind": "document",
+            },
+            {
+                "path": "var/analytics/data-sharing/import-preview/alpha.md",
+                "record_index": 1,
+                "doc_id": "alpha",
+                "kind": "document",
             },
         ],
     }
@@ -381,6 +391,7 @@ def assert_review(page, base_url: str) -> None:
     expect(review_list.locator("[data-selectable-list-row='true']")).to_have_count(2, timeout=10_000)
     expect(review_list).to_contain_text("Library", timeout=10_000)
     expect(review_list).to_contain_text("Alpha", timeout=10_000)
+    expect(review_list).not_to_contain_text("Relationship tree", timeout=10_000)
     page.locator("button[data-role='modal-cancel']").click()
     page.locator("#dataSharingReviewSelectAll").click()
     expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 previews selected.", timeout=10_000)
