@@ -1183,6 +1183,11 @@
           "doc_id": "testing-pytest",
           "title": "Pytest",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/testing-pytest.json"
+        },
+        {
+          "doc_id": "test-contract-discipline",
+          "title": "Test Contract Discipline",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/test-contract-discipline.json"
         }
       ]
     },
@@ -1219,5 +1224,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-27T13:06:53Z"
+  "generated_at": "2026-06-27T20:19:17Z"
 }

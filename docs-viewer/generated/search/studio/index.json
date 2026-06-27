@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-54d20fd2c588bd8f3b5064065ee37137",
-    "generated_at_utc": "2026-06-27T13:06:54Z",
-    "count": 226
+    "version": "blake2b-9ec16b4c55684f687bcb5fdfd6aec9ed",
+    "generated_at_utc": "2026-06-27T20:19:17Z",
+    "count": 227
   },
   "entries": [
     {
@@ -5350,6 +5350,29 @@
         "25"
       ],
       "search_text": "testing-pytest testing pytest 2026-06-25 2026 06 25"
+    },
+    {
+      "id": "test-contract-discipline",
+      "kind": "doc",
+      "title": "Test Contract Discipline",
+      "href": "/docs/?scope=studio&doc=test-contract-discipline",
+      "last_updated": "2026-06-27",
+      "parent_id": "testing",
+      "parent_title": "Testing",
+      "display_meta": "2026-06-27 • Testing",
+      "search_terms": [
+        "test-contract-discipline",
+        "test",
+        "contract",
+        "discipline",
+        "test contract discipline",
+        "testing",
+        "2026-06-27",
+        "2026",
+        "06",
+        "27"
+      ],
+      "search_text": "test-contract-discipline test contract discipline test contract discipline testing 2026-06-27 2026 06 27"
     },
     {
       "id": "ui",

@@ -15,6 +15,16 @@ from docs_import_test_support import (
     write_staged,
 )
 
+
+def write_content_meta(root: Path) -> None:
+    path = root / "var/analytics/data-sharing/import-staging/content.meta.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        '{"export_id": "ds_test", "config_id": "document-content", "profile_id": "document-content", "scope": "library"}\n',
+        encoding="utf-8",
+    )
+
+
 def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -27,6 +37,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
                 {"doc_id": "missing", "title": "Missing", "summary": "Missing summary."},
             ],
         )
+        write_content_meta(root)
         payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0, 1]},
@@ -58,6 +69,7 @@ def test_library_import_summary_apply_writes_source() -> None:
                 },
             )
             write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
+            write_content_meta(root)
             payload = handle_documents_import_apply(
                 root,
                 {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0], "confirm": True},
@@ -119,6 +131,7 @@ def test_documents_data_sharing_apply_uses_python_docs_rebuild_commands() -> Non
                 },
             )
             write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
+            write_content_meta(root)
             payload = handle_documents_import_apply(
                 root,
                 {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0], "confirm": True},
@@ -148,6 +161,7 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
                 {"doc_id": "library", "title": "Library"},
             ],
         )
+        write_content_meta(root)
         payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0, 1]},

@@ -13,6 +13,16 @@ from docs_import_test_support import (
     write_staged,
 )
 
+
+def write_content_meta(root: Path) -> None:
+    path = root / "var/analytics/data-sharing/import-staging/content.meta.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        '{"export_id": "ds_test", "config_id": "document-content", "profile_id": "document-content", "scope": "library"}\n',
+        encoding="utf-8",
+    )
+
+
 def test_library_import_files_lists_json_and_jsonl_only() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -35,6 +45,7 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             "content.jsonl",
             [{"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "source_text": "Preview body."}],
         )
+        write_content_meta(root)
         payload = handle_documents_import_preview(
             root,
             {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},
@@ -56,6 +67,7 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "source_text": "Body."}])
+        write_content_meta(root)
         payload = handle_documents_import_preview(
             root,
             {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl"},

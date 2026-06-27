@@ -1,0 +1,88 @@
+---
+doc_id: test-contract-discipline
+title: Test Contract Discipline
+added_date: "2026-06-27"
+last_updated: 2026-06-27
+parent_id: testing
+viewable: true
+---
+# Test Contract Discipline
+
+Permanent tests are product and maintenance contracts.
+They should not become an independent specification written by accident.
+
+## Principle
+
+Do not add or preserve a permanent test unless the behavior is agreed.
+
+A test must be traceable to one of:
+
+- an explicit requirement
+- a confirmed bug
+- a documented invariant
+- a stable integration boundary
+- a safety property that would be expensive or risky to verify manually
+
+If that trace is unclear, do not encode the behavior as a test.
+
+## Test Failures
+
+A failing test is not automatically a code requirement.
+First decide whether the test is still legitimate.
+
+Ask:
+
+- Is this behavior still desired?
+- Is the test asserting implementation detail instead of product behavior?
+- Is it preserving a fallback or compatibility path we do not want?
+- Is it testing a scenario that was never agreed?
+
+Only update production code to satisfy a test after the test's contract is confirmed.
+Otherwise update or delete the test.
+
+## Fallbacks
+
+Fallback behavior requires explicit acceptance.
+
+Tests must not create or preserve fallback behavior just because a fallback is easy to assert.
+If a fallback is necessary, document:
+
+- why the fallback exists
+- what user or data condition it supports
+- how it fails closed
+- when it can be removed
+
+No fallback means no fallback test.
+
+## Scope
+
+Prefer small, named contract tests over broad narrative files.
+
+A good test file should make it obvious what contract it protects.
+If a test file mixes parser rules, UI preview behavior, current-source lookup, filename generation, malformed input handling, legacy packages, and route behavior, split or delete it.
+
+For parser and import contracts, keep tests focused on:
+
+- required metadata
+- supported profile ids
+- rejected unsupported profile ids
+- accepted sparse returned changes
+- security boundaries such as unsafe paths
+- file-level parse blockers
+
+Do not use parser tests to preserve old package shapes, legacy aliases, UI copy, or incidental preview formatting.
+
+## Running Tests
+
+Run the narrowest check that covers the changed contract.
+
+Do not run route smokes, API suites, or browser checks for a parser-only edit unless the changed behavior crosses that boundary.
+Broad checks are useful when a boundary changes, not as a reflex after every local change.
+
+## Legacy Tests
+
+Older tests may not meet this standard.
+Treat them as cleanup candidates, not authority.
+
+When a legacy test fails, decide whether it describes a still-valid contract before updating anything else.
+If it only preserves an accidental assumption, delete or rewrite it as part of the change.

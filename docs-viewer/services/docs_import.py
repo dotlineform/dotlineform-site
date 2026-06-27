@@ -31,8 +31,9 @@ FILENAME_RE = re.compile(r"[^a-z0-9-]+")
 STAGED_PREFIX_TIMESTAMP_RE = re.compile(r"^(?P<timestamp>\d{8}-\d{6})[-_](?P<base>.+)$")
 STAGED_SUFFIX_TIMESTAMP_RE = re.compile(r"^(?P<base>.+?)[-_](?P<timestamp>\d{8}-\d{6})$")
 
-EXPORT_ID_TO_IMPORT_TYPE = {
+PROFILE_ID_TO_IMPORT_TYPE = {
     "parent-child-relationships": "parent_child_relationships",
+    "document-content": "document_changes",
 }
 IMPORT_TYPE_CONFIG_FIELDS = {
     "parent_child_relationships": [
@@ -77,9 +78,15 @@ IMPORT_TYPE_CONFIG_FIELDS = {
 EXPORT_METADATA_FIELDS = {
     "schema_version",
     "export_id",
+    "profile_id",
     "config_id",
     "config_checksum",
+    "app",
+    "adapter_id",
+    "data_domain",
     "scope",
+    "target_format",
+    "record_shape",
     "generated_at",
     "selected_doc_ids",
     "source_last_updated",
@@ -258,6 +265,7 @@ def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any
         "input_format": "",
         "detected_import_type": "unknown",
         "source_export_id": "",
+        "source_profile_id": "",
         "source_scope": "",
         "generated_at": "",
         "counts": {
@@ -336,6 +344,31 @@ def package_metadata_sidecar_path(path: Path) -> Path:
     return path.with_suffix(".meta.json")
 
 
+def internal_metadata_path(repo_root: Path, export_id: str) -> Path | None:
+    normalized = normalize_text(export_id)
+    if not re.fullmatch(r"[A-Za-z0-9_.:-]+", normalized):
+        return None
+    return repo_root / WORKFLOW_ROOT / "meta" / f"{normalized}.meta.json"
+
+
+def metadata_from_jsonl_header(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    try:
+        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                return {}, {}, [issue("error", "invalid_jsonl", f"invalid JSONL on line {line_number}: {exc.msg}", line=line_number)]
+            if isinstance(row, dict) and row.get("record_type") == "data_sharing_header":
+                metadata, unknown = file_metadata_from_envelope(row)
+                return metadata, unknown, []
+            return {}, {}, []
+    except OSError as exc:
+        return {}, {}, [issue("error", "unreadable_file", f"unreadable file: {exc}")]
+    return {}, {}, []
+
+
 def metadata_from_package_sidecar(path: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
     metadata_path = package_metadata_sidecar_path(path)
     if not metadata_path.exists():
@@ -345,6 +378,19 @@ def metadata_from_package_sidecar(path: Path) -> tuple[dict[str, Any], dict[str,
         return {}, {}, issues, metadata_path
     if not isinstance(payload, dict):
         return {}, {}, [issue("error", "invalid_metadata_sidecar", "JSONL metadata sidecar is not a JSON object")], metadata_path
+    metadata, unknown = file_metadata_from_envelope(payload)
+    return metadata, unknown, [], metadata_path
+
+
+def metadata_from_internal_export_meta(repo_root: Path, export_id: str) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
+    metadata_path = internal_metadata_path(repo_root, export_id)
+    if metadata_path is None or not metadata_path.exists():
+        return {}, {}, [], None
+    payload, issues = parse_json_file(metadata_path)
+    if any(item["level"] == "error" for item in issues):
+        return {}, {}, issues, metadata_path
+    if not isinstance(payload, dict):
+        return {}, {}, [issue("error", "invalid_metadata_file", "internal export metadata file is not a JSON object")], metadata_path
     metadata, unknown = file_metadata_from_envelope(payload)
     return metadata, unknown, [], metadata_path
 
@@ -501,22 +547,10 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
     return normalized, issues
 
 
-def detect_import_type(source_export_id: str, records: list[dict[str, Any]]) -> str:
-    if source_export_id in EXPORT_ID_TO_IMPORT_TYPE:
-        return EXPORT_ID_TO_IMPORT_TYPE[source_export_id]
-    if any(record.get("relationships") for record in records):
-        return "parent_child_relationships"
-    if any("source_text" in record.get("metadata", {}) for record in records):
-        return "full_document_content"
-    if any(
-        "current_summary" in record.get("metadata", {}) or "summary" in record.get("metadata", {})
-        for record in records
-    ):
-        return "document_changes"
-    if source_export_id == "document-content":
-        return "document_changes"
-    if records:
-        return "minimal_document_records"
+def detect_import_type(source_metadata: dict[str, Any]) -> str:
+    profile_id = normalize_text(source_metadata.get("profile_id") or source_metadata.get("config_id"))
+    if profile_id in PROFILE_ID_TO_IMPORT_TYPE:
+        return PROFILE_ID_TO_IMPORT_TYPE[profile_id]
     return "unknown"
 
 
@@ -919,6 +953,10 @@ def parse_staged_import(
         if metadata_path is not None:
             report["source_metadata_file"] = relative_path(repo_root, metadata_path)
         if extension == ".jsonl":
+            header_metadata, header_unknown_metadata, header_issues = metadata_from_jsonl_header(path)
+            file_metadata.update(header_metadata)
+            unknown_file_metadata.update(header_unknown_metadata)
+            metadata_issues.extend(header_issues)
             raw_rows, parse_issues = parse_jsonl_file(path)
             parse_issues.extend(metadata_issues)
         else:
@@ -931,6 +969,19 @@ def parse_staged_import(
                 file_metadata.update(payload_metadata)
                 unknown_file_metadata.update(payload_unknown_metadata)
                 parse_issues.extend(shape_issues)
+        export_id_for_metadata = normalize_text(file_metadata.get("export_id"))
+        if export_id_for_metadata and not normalize_text(file_metadata.get("profile_id") or file_metadata.get("config_id")):
+            internal_metadata, internal_unknown_metadata, internal_issues, internal_metadata_path = metadata_from_internal_export_meta(
+                repo_root,
+                export_id_for_metadata,
+            )
+            if internal_metadata_path is not None:
+                report["source_metadata_file"] = relative_path(repo_root, internal_metadata_path)
+            if internal_metadata:
+                file_metadata.update(internal_metadata)
+            if internal_unknown_metadata:
+                unknown_file_metadata.update(internal_unknown_metadata)
+            parse_issues.extend(internal_issues)
     except OSError as exc:
         report["issues"].append(issue("error", "unreadable_file", f"unreadable file: {exc}"))
         report["counts"]["errors"] = 1
@@ -978,19 +1029,44 @@ def parse_staged_import(
     source_metadata = copy.deepcopy(file_metadata)
     current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
     report["issues"].extend(current_issues)
-    source_export_id = normalize_text(source_metadata.get("export_id") or source_metadata.get("config_id"))
+    source_export_id = normalize_text(source_metadata.get("export_id"))
+    source_profile_id = normalize_text(source_metadata.get("profile_id") or source_metadata.get("config_id"))
     report["source_export_id"] = source_export_id
+    report["source_profile_id"] = source_profile_id
     report["source_scope"] = normalize_text(source_metadata.get("scope"))
     report["generated_at"] = normalize_text(source_metadata.get("generated_at"))
     report["source_metadata"] = source_metadata
     report["unknown_file_metadata"] = unknown_file_metadata
     report["records"] = records
-    report["detected_import_type"] = detect_import_type(source_export_id, records)
+    report["detected_import_type"] = detect_import_type(source_metadata)
     report["current_library"] = current_report_context(current_context)
     report["issues"].extend(add_current_library_report(records, current=current_context, scope=normalized_scope))
 
-    if report["detected_import_type"] == "unknown" and raw_rows:
-        report["issues"].append(issue("warning", "unsupported_import_shape", "could not detect import type"))
+    if raw_rows and not source_profile_id:
+        if source_export_id:
+            report["issues"].append(
+                issue(
+                    "error",
+                    "missing_import_metadata",
+                    f"missing import profile metadata for export_id: {source_export_id}",
+                )
+            )
+        else:
+            report["issues"].append(
+                issue(
+                    "error",
+                    "missing_import_metadata",
+                    "missing import profile metadata: profile_id or config_id is required",
+                )
+            )
+    elif raw_rows and report["detected_import_type"] == "unknown":
+        report["issues"].append(
+            issue(
+                "error",
+                "unsupported_import_profile",
+                f"unsupported import profile: {source_profile_id}",
+            )
+        )
 
     error_count = len([item for item in report["issues"] if item["level"] == "error"])
     warning_count = len([item for item in report["issues"] if item["level"] == "warning"])
