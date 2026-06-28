@@ -164,12 +164,12 @@ def test_activity_append_failure_is_non_fatal() -> None:
 
 def test_common_activity_helper_uses_studio_activity_append() -> None:
     calls: list[Dict[str, Any]] = []
-    original_append = write_common.studio_activity.append_studio_activity
+    original_append = write_common.admin_activity_log.append_studio_activity
 
     def fake_append(repo_root: Path, entry: Dict[str, Any]) -> None:
         calls.append({"repo_root": repo_root, "entry": entry})
 
-    write_common.studio_activity.append_studio_activity = fake_append
+    write_common.admin_activity_log.append_studio_activity = fake_append
     try:
         response = {"updated_at_utc": "2026-05-09T12:00:00Z", "summary_text": "edited tag"}
         write_common.attach_tag_activity(
@@ -182,7 +182,7 @@ def test_common_activity_helper_uses_studio_activity_append() -> None:
             status="completed",
         )
     finally:
-        write_common.studio_activity.append_studio_activity = original_append
+        write_common.admin_activity_log.append_studio_activity = original_append
 
     assert_equal(len(calls), 1, "common helper append calls")
     assert_equal(calls[0]["repo_root"], REPO_ROOT, "common helper repo root")
