@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import datetime as dt
 import json
 import sys
 from http import HTTPStatus
@@ -20,10 +19,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
-SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-import script_logging  # noqa: E402
-import studio_activity  # noqa: E402
 from tag_services import tag_activity  # noqa: E402
 from tag_services import tag_alias_mutations as tag_aliases  # noqa: E402
 from tag_services import tag_assignment_service as tag_assignments  # noqa: E402
@@ -32,10 +28,10 @@ from tag_services import tag_registry_mutations as tag_registry  # noqa: E402
 from tag_services import tag_routes  # noqa: E402
 from tag_services import tag_source_model as tag_source  # noqa: E402
 from tag_services import tag_write_transactions as tag_transactions  # noqa: E402
+from tag_write_api import common as tag_write_common  # noqa: E402
 
 
 ANALYTICS_DATA_DIR = tag_source.TAG_SOURCE_ROOT_REL_PATH
-LOGS_REL_DIR = Path("var/studio/logs")
 READ_ENDPOINTS = {
     "/tag-aliases": {
         "path": ANALYTICS_DATA_DIR / "tag-aliases.json",
@@ -63,10 +59,6 @@ READ_ENDPOINTS = {
     },
 }
 ANALYTICS_POST_PATHS = tag_routes.POST_PATHS
-
-
-def utc_now() -> str:
-    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def analytics_health_payload() -> dict[str, object]:
@@ -168,7 +160,7 @@ def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool =
     keep_work = body.get("keep_work")
     tags = body.get("tags")
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     payload = tag_source.load_assignments(assignments_path)
     updated_payload, response_payload, would_write = tag_assignments.plan_assignment_save(
         payload,
@@ -191,7 +183,7 @@ def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool =
             raise ValueError("write target not allowlisted")
         tag_transactions.atomic_write(assignments_path, updated_payload)
 
-    log_event(
+    tag_write_common.log_event(
         repo_root,
         "save_tags",
         {
@@ -203,11 +195,10 @@ def save_tags_response(repo_root: Path, body: dict[str, Any], *, dry_run: bool =
             "dry_run": dry_run,
         },
     )
-    tag_activity.attach_tag_activity(
+    tag_write_common.attach_tag_activity(
         repo_root=repo_root,
         endpoint=tag_routes.SAVE_TAGS_PATH,
         dry_run=dry_run,
-        append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
         body=body,
         response_payload=response_payload,
         record_id=normalized_series_id,
@@ -240,7 +231,7 @@ def import_tag_assignments_response(
     import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
     resolutions = sanitize_import_resolutions(body.get("resolutions"))
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     existing_payload = tag_source.load_assignments(assignments_path)
     series_index_payload = tag_source.load_series_index(series_index_path)
     preview_payload = tag_assignments.preview_assignment_import(
@@ -255,7 +246,7 @@ def import_tag_assignments_response(
     )
 
     if preview:
-        log_event(
+        tag_write_common.log_event(
             repo_root,
             "import_tag_assignments_preview",
             {
@@ -290,7 +281,7 @@ def import_tag_assignments_response(
             raise ValueError("write target not allowlisted")
         tag_transactions.atomic_write(assignments_path, updated_payload)
 
-    log_event(
+    tag_write_common.log_event(
         repo_root,
         "import_tag_assignments",
         {
@@ -299,11 +290,10 @@ def import_tag_assignments_response(
         },
     )
     if tag_activity.tag_activity_changed(apply_stats):
-        tag_activity.attach_tag_activity(
+        tag_write_common.attach_tag_activity(
             repo_root=repo_root,
             endpoint=tag_routes.IMPORT_ASSIGNMENTS_APPLY_PATH,
             dry_run=dry_run,
-            append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
             body=body,
             response_payload=response_payload,
             detail_items=[
@@ -323,7 +313,7 @@ def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_r
     import_registry = body.get("import_registry")
     import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     existing_payload = tag_source.load_registry(registry_path)
     updated_payload, stats = tag_registry.apply_registry_import(existing_payload, import_registry, mode, now_utc)
     summary_text = tag_registry.build_import_summary_text(stats)
@@ -347,7 +337,7 @@ def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_r
             raise ValueError("write target not allowlisted")
         tag_transactions.atomic_write(registry_path, updated_payload)
 
-    log_event(
+    tag_write_common.log_event(
         repo_root,
         "import_tag_registry",
         {
@@ -359,11 +349,10 @@ def import_tag_registry_response(repo_root: Path, body: dict[str, Any], *, dry_r
         },
     )
     if tag_activity.tag_activity_changed(stats):
-        tag_activity.attach_tag_activity(
+        tag_write_common.attach_tag_activity(
             repo_root=repo_root,
             endpoint=tag_routes.IMPORT_REGISTRY_PATH,
             dry_run=dry_run,
-            append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
             body=body,
             response_payload=response_payload,
             detail_items=[
@@ -383,7 +372,7 @@ def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_ru
     import_aliases = body.get("import_aliases")
     import_filename = tag_source.sanitize_import_filename(body.get("import_filename"))
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     existing_payload = tag_source.load_aliases(aliases_path)
     updated_payload, stats = tag_aliases.apply_aliases_import(existing_payload, import_aliases, mode, now_utc)
     summary_text = tag_registry.build_import_summary_text(stats, noun="aliases")
@@ -407,7 +396,7 @@ def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_ru
             raise ValueError("write target not allowlisted")
         tag_transactions.atomic_write(aliases_path, updated_payload)
 
-    log_event(
+    tag_write_common.log_event(
         repo_root,
         "import_tag_aliases",
         {
@@ -419,11 +408,10 @@ def import_tag_aliases_response(repo_root: Path, body: dict[str, Any], *, dry_ru
         },
     )
     if tag_activity.tag_activity_changed(stats):
-        tag_activity.attach_tag_activity(
+        tag_write_common.attach_tag_activity(
             repo_root=repo_root,
             endpoint=tag_routes.IMPORT_ALIASES_PATH,
             dry_run=dry_run,
-            append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
             body=body,
             response_payload=response_payload,
             detail_items=[
@@ -441,7 +429,7 @@ def delete_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run:
 
     alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     existing_payload = tag_source.load_aliases(aliases_path)
     updated_payload, stats = tag_aliases.delete_alias_key(existing_payload, alias_key, now_utc)
     summary_text = f"deleted alias {alias_key}; final {int(stats.get('final_total') or 0)}"
@@ -464,7 +452,7 @@ def delete_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run:
             raise ValueError("write target not allowlisted")
         tag_transactions.atomic_write(aliases_path, updated_payload)
 
-    log_event(
+    tag_write_common.log_event(
         repo_root,
         "delete_tag_alias",
         {
@@ -473,11 +461,10 @@ def delete_tag_alias_response(repo_root: Path, body: dict[str, Any], *, dry_run:
             **stats,
         },
     )
-    tag_activity.attach_tag_activity(
+    tag_write_common.attach_tag_activity(
         repo_root=repo_root,
         endpoint=tag_routes.DELETE_ALIAS_PATH,
         dry_run=dry_run,
-        append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
         body=body,
         response_payload=response_payload,
         detail_items=[summary_text],
@@ -503,7 +490,7 @@ def mutate_tag_alias_response(
     tags = tag_source.sanitize_tag_id_list(body.get("tags"), "tags")
     tag_source.enforce_alias_group_constraints(tags, "tags")
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     aliases_payload = tag_source.load_aliases(aliases_path)
     registry_payload = tag_source.load_registry(registry_path)
     aliases_updated, stats = tag_aliases.mutate_alias_entry(
@@ -544,7 +531,7 @@ def mutate_tag_alias_response(
         tag_transactions.atomic_write(aliases_path, aliases_updated)
 
     if not preview:
-        log_event(
+        tag_write_common.log_event(
             repo_root,
             "mutate_tag_alias",
             {
@@ -554,11 +541,10 @@ def mutate_tag_alias_response(
             },
         )
         if tag_activity.tag_activity_changed(stats):
-            tag_activity.attach_tag_activity(
+            tag_write_common.attach_tag_activity(
                 repo_root=repo_root,
                 endpoint=tag_routes.MUTATE_ALIAS_APPLY_PATH,
                 dry_run=dry_run,
-                append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
                 body=body,
                 response_payload=response_payload,
                 detail_items=[
@@ -583,7 +569,7 @@ def promote_tag_alias_response(
 
     alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)
     aliases_payload = tag_source.load_aliases(aliases_path)
     allowed_groups = tag_source.extract_allowed_groups(registry_payload)
@@ -632,7 +618,7 @@ def promote_tag_alias_response(
             tag_transactions.atomic_write_many(payloads_to_write)
 
     if not preview:
-        log_event(
+        tag_write_common.log_event(
             repo_root,
             "promote_tag_alias",
             {
@@ -642,11 +628,10 @@ def promote_tag_alias_response(
             },
         )
         if tag_activity.tag_activity_changed(stats):
-            tag_activity.attach_tag_activity(
+            tag_write_common.attach_tag_activity(
                 repo_root=repo_root,
                 endpoint=tag_routes.PROMOTE_ALIAS_APPLY_PATH,
                 dry_run=dry_run,
-                append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
                 body=body,
                 response_payload=response_payload,
                 detail_items=[
@@ -674,7 +659,7 @@ def demote_tag_response(
     alias_targets = tag_source.sanitize_tag_id_list(body.get("alias_targets"), "alias_targets")
     tag_source.enforce_alias_group_constraints(alias_targets, "alias_targets")
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)
     aliases_payload = tag_source.load_aliases(aliases_path)
     assignments_payload = tag_source.load_assignments(assignments_path)
@@ -723,7 +708,7 @@ def demote_tag_response(
         tag_transactions.atomic_write_many(payloads_to_write)
 
     if not preview:
-        log_event(
+        tag_write_common.log_event(
             repo_root,
             "demote_tag",
             {
@@ -733,11 +718,10 @@ def demote_tag_response(
             },
         )
         if tag_activity.tag_activity_changed(stats):
-            tag_activity.attach_tag_activity(
+            tag_write_common.attach_tag_activity(
                 repo_root=repo_root,
                 endpoint=tag_routes.DEMOTE_TAG_APPLY_PATH,
                 dry_run=dry_run,
-                append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
                 body=body,
                 response_payload=response_payload,
                 detail_items=[
@@ -780,7 +764,7 @@ def mutate_tag_response(
         if "description" in body:
             new_description = tag_source.sanitize_alias_description(body.get("description"), "description")
 
-    now_utc = utc_now()
+    now_utc = tag_write_common.utc_now()
     registry_payload = tag_source.load_registry(registry_path)
     aliases_payload = tag_source.load_aliases(aliases_path)
     assignments_payload = tag_source.load_assignments(assignments_path)
@@ -871,7 +855,7 @@ def mutate_tag_response(
         tag_transactions.atomic_write_many(payloads_to_write)
 
     if not preview:
-        log_event(
+        tag_write_common.log_event(
             repo_root,
             "mutate_tag",
             {
@@ -881,11 +865,10 @@ def mutate_tag_response(
             },
         )
         if tag_activity.tag_activity_changed(stats):
-            tag_activity.attach_tag_activity(
+            tag_write_common.attach_tag_activity(
                 repo_root=repo_root,
                 endpoint=tag_routes.MUTATE_TAG_APPLY_PATH,
                 dry_run=dry_run,
-                append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
                 body=body,
                 response_payload=response_payload,
                 detail_items=[
@@ -912,17 +895,3 @@ def sanitize_import_resolutions(raw_resolutions: object) -> dict[str, str]:
             raise ValueError(f"resolutions[{series_id}] must be overwrite or skip")
         resolutions[series_id] = resolution
     return resolutions
-
-
-def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
-    try:
-        script_logging.append_script_log(
-            Path(__file__).resolve(),
-            event=event,
-            details=details,
-            repo_root=repo_root,
-            log_dir_rel=LOGS_REL_DIR,
-        )
-    except Exception:
-        # Logging should not block local API requests.
-        pass

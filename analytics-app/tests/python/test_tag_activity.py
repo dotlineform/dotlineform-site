@@ -17,6 +17,7 @@ for path in (SCRIPTS_DIR, ANALYTICS_PACKAGE_DIR):
 
 from tag_services import tag_activity as activity  # noqa: E402
 from tag_services import tag_routes as routes  # noqa: E402
+from tag_write_api import common as write_common  # noqa: E402
 
 
 def assert_equal(actual: Any, expected: Any, label: str) -> None:
@@ -161,6 +162,34 @@ def test_activity_append_failure_is_non_fatal() -> None:
     assert_true("append failed" in response["activity_log"].get("error", ""), "failed append error")
 
 
+def test_common_activity_helper_uses_studio_activity_append() -> None:
+    calls: list[Dict[str, Any]] = []
+    original_append = write_common.studio_activity.append_studio_activity
+
+    def fake_append(repo_root: Path, entry: Dict[str, Any]) -> None:
+        calls.append({"repo_root": repo_root, "entry": entry})
+
+    write_common.studio_activity.append_studio_activity = fake_append
+    try:
+        response = {"updated_at_utc": "2026-05-09T12:00:00Z", "summary_text": "edited tag"}
+        write_common.attach_tag_activity(
+            repo_root=REPO_ROOT,
+            endpoint=routes.MUTATE_TAG_APPLY_PATH,
+            dry_run=False,
+            body={"activity_context": tag_context()},
+            response_payload=response,
+            record_id="subject:trees",
+            status="completed",
+        )
+    finally:
+        write_common.studio_activity.append_studio_activity = original_append
+
+    assert_equal(len(calls), 1, "common helper append calls")
+    assert_equal(calls[0]["repo_root"], REPO_ROOT, "common helper repo root")
+    assert_equal(calls[0]["entry"]["record_groups"]["tags"], ["subject:trees"], "common helper tag record group")
+    assert_equal(response["activity_log"], {"written_count": 1}, "common helper activity log")
+
+
 def main() -> None:
     test_activity_write_endpoints_are_route_owned()
     test_activity_status_decisions()
@@ -169,6 +198,7 @@ def main() -> None:
     test_tag_record_group_is_resolved_from_context()
     test_alias_record_group_is_resolved_from_context()
     test_activity_append_failure_is_non_fatal()
+    test_common_activity_helper_uses_studio_activity_append()
     print("Tag activity tests OK")
 
 
