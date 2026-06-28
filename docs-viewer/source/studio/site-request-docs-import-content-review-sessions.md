@@ -18,7 +18,9 @@ Returned `document-content` packages can contain expanded or rewritten text for 
 
 Changing `doc_id` breaks existing parent-child relationships, links, references, and any other stable identity assumptions. If a parent document moved to a new revision id, its children and inbound links would also need coordinated changes. That turns a content review workflow into a source graph migration.
 
-The returned content also may not be canonical Docs Viewer Markdown. The current `document-content` profile exports `source_text` as plain text extracted from rendered HTML, using whitespace normalization and truncation. Links, media tokens, references, tables, details, and other Markdown semantics are not guaranteed to survive. A future prepare option can export Markdown content, but plain text and Markdown should share the same review workflow.
+The returned content also may not be canonical Docs Viewer Markdown. The current `document-content` profile exports `source_text` as plain text extracted from rendered HTML, using whitespace normalization and truncation. Links, media tokens, references, tables, details, and other Markdown semantics are not guaranteed to survive.
+
+Plain text remains useful for summary-generation workflows because the requested output is already compressed and lossy. It is not a good basis for full content rewrite/review sessions, because the missing structure can make generated or returned full content ambiguous. For content-review sessions, Markdown support is therefore a prerequisite rather than a later enhancement.
 
 ## Decision
 
@@ -52,21 +54,49 @@ No live source docs are created, overwritten, or deleted by this action.
 
 Content format should be a prepare option on the `document-content` profile, not a separate profile.
 
-Initial behavior remains:
+Existing summary-oriented behavior can remain:
 
 - `content_format: "plain_text"`
 - returned row content is treated as plain text
-- the review draft can render that text as simple Markdown prose
+- suitable for summary-generation or other lossy review tasks
+- not sufficient for full content review sessions
 
-Future behavior can add:
+Content review sessions require:
 
 - `content_format: "markdown"`
-- returned row content can be rendered as Markdown in the review session
+- returned row content is rendered as Markdown in the review session
+- headings, lists, links, blockquotes, code blocks, and simple tables are preserved where the shared converter supports them
 - later apply workflows can decide whether Markdown content is safe enough for canonical source replacement
 
 The returned package metadata should identify the content format so import/review behavior is self-describing. The import side should handle whichever supported format the package declares.
 
-Plain text versus Markdown changes review quality, not the session workflow.
+The exported file itself should also include `content_format` at package level. Do not support mixed content formats within one package.
+
+For JSON package exports:
+
+```json
+{
+  "export_id": "ds_20260628T120000Z",
+  "profile_id": "document-content",
+  "content_format": "markdown",
+  "records": [
+    {
+      "doc_id": "example",
+      "title": "Example",
+      "source_markdown": "# Example\n\nReturned Markdown body."
+    }
+  ]
+}
+```
+
+For JSONL package exports, put `content_format` in the header row:
+
+```json
+{"record_type":"data_sharing_header","export_id":"ds_20260628T120000Z","profile_id":"document-content","content_format":"markdown"}
+{"doc_id":"example","title":"Example","source_markdown":"# Example\n\nReturned Markdown body."}
+```
+
+Plain text versus Markdown changes review quality, not the session workflow, but full content review should be gated to Markdown packages. If a staged file only contains plain text content, the UI should either block content-review session creation or label it as a lower-fidelity text review rather than a document-content review.
 
 ## Temporary Review Sessions
 
@@ -109,6 +139,8 @@ The file shape is:
 
 The body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process the returned content. If the selected content field is `source_text`, the body is exactly that `source_text` value.
 
+For full content-review sessions, the selected content field should be the Markdown content field produced by the `document-content` prepare format option. Data Sharing prepares that field from the rendered source HTML using the shared Docs Viewer HTML-to-Markdown converter. The session builder still copies the staged field verbatim; conversion belongs to prepare/export, not session creation.
+
 Front matter should be mapping-driven rather than hard-coded. Generated/system fields are owned by the session builder. Mapped fields come from the staged row when present.
 
 System fields include:
@@ -133,7 +165,8 @@ The content mapping should be declared by the profile or session builder, for ex
 
 ```json
 {
-  "content_field": "source_text",
+  "content_field": "source_markdown",
+  "content_format": "markdown",
   "front_matter_fields": ["title", "parent_id", "summary", "viewable"]
 }
 ```
@@ -150,6 +183,10 @@ They must not be added to:
 - public scope lists
 - regular generated scope outputs
 - canonical source roots
+
+Session folders are temporary artifacts. The folder tree under `var/analytics/data-sharing/import-preview/...` is the source of truth for what sessions exist. There should be no config registration, durable session registry, or source-control lifecycle for these sessions.
+
+Manual deletion is valid. If a user deletes a session folder outside the UI, the system should not complain. The next list operation should simply omit that session, and an already-open stale session can report that the session no longer exists.
 
 Backend support should be management-only. Possible endpoints:
 
@@ -168,7 +205,7 @@ The normal scope selector should not list review sessions.
 
 Review sessions should be opened from the data-sharing/import workflow. The viewer should make the mode visible with a label such as:
 
-`Import review - library - document-content - plain text`
+`Import review - library - document-content - markdown`
 
 Review mode should be read-only:
 
@@ -184,6 +221,20 @@ The route should be distinct from normal scope navigation, for example:
 
 Avoid URLs that imply the review session is a normal scope, such as `scope=library-review`.
 
+Initial Docs Viewer UI shape:
+
+- add a manage-toolbar sessions icon toggle button
+- clicking the sessions toggle opens a modal listing current session folders under `var/analytics/data-sharing/import-preview/...`
+- each listed session should indicate whether it has already been built
+- selecting a built session loads its generated docs in Docs Viewer review mode
+- selecting an unbuilt session enables a Build action
+- a Delete action deletes the complete session folder
+- clicking the sessions toggle again exits review-session mode and returns to the selected normal scope
+
+The modal should treat sessions as folders/artifacts, not as scope records. Build and delete actions operate on the session folder, and loading a session should not mutate the active configured scope.
+
+Delete in Docs Viewer is acceptable because it is temp-artifact cleanup, not a canonical source mutation. The delete action should be guarded by path validation under the import-preview root and should delete the complete selected session folder. It must not touch canonical source Markdown, configured scopes, public generated payloads, or any folder outside the session root.
+
 ## Gating
 
 Because a staged returned file can contain many documents, session creation should be explicit. However, a session should include the complete staged file rather than selected rows.
@@ -192,6 +243,7 @@ The first implementation should:
 
 - require a user action to create or regenerate the session
 - show the staged filename, source export id, source scope, content format, record count, and warnings before opening
+- require `content_format: "markdown"` for full content-review sessions
 - block or report rows with missing `doc_id`, missing `title`, or missing content
 - warn when content was truncated during prepare
 - keep all canonical source writes out of this workflow
@@ -200,7 +252,7 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 ## Future Extension
 
-Markdown return content can be added as a `document-content` prepare formatting option.
+Markdown return content should be added as a `document-content` prepare formatting option before the content-review session workflow is implemented.
 
 If Markdown return content later proves reliable enough for source replacement, that should be a separate apply action with stronger review and diff tooling. It should not reuse the plain-text content review action as an implicit live-source overwrite.
 
@@ -220,5 +272,12 @@ Likely ownership:
 - content review session creation should use a new data-sharing apply/review module rather than summary or hierarchy modules
 - session manifests and generated payload serving should be management-only
 - UI workflow state belongs to Docs Viewer management/import UI, not normal public scope runtime
+
+Completed enabling refactor:
+
+- `docs-viewer/services/docs_html_markdown.py` now owns reusable HTML/SVG parsing, sanitization helpers, and `html_to_markdown(...)`.
+- `docs_import_html_parser.py` is now import-preview-specific and builds HTML summaries from the shared converter.
+- `docs_import_preview.py` and `docs_import_media.py` use the shared conversion boundary where they need HTML-derived Markdown.
+- Data Sharing markdown export should call `docs_html_markdown.html_to_markdown(...)` rather than duplicating HTML-to-Markdown logic or depending on import-preview summaries.
 
 The initial implementation should prefer a narrow, disposable review session over a broad live-scope integration.
