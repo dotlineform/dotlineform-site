@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0d4c3950e57f94ade10690908fe25e69",
-    "generated_at_utc": "2026-06-28T20:07:50Z",
-    "count": 230
+    "version": "blake2b-33e3a8f061919fbc0ef5808f85657cc6",
+    "generated_at_utc": "2026-06-28T20:39:52Z",
+    "count": 231
   },
   "entries": [
     {
@@ -1289,6 +1289,36 @@
         "28"
       ],
       "search_text": "site-request-docs-review-local-app site request docs review local app docs review local app change requests change requests 2026-06-28 2026 06 28"
+    },
+    {
+      "id": "site-request-docs-viewer-local-public-projection",
+      "kind": "doc",
+      "title": "Docs Viewer Local To Public Projection",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-local-public-projection",
+      "last_updated": "2026-06-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-28 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-local-public-projection",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "local",
+        "public",
+        "projection",
+        "docs viewer local to public projection",
+        "to",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-28",
+        "2026",
+        "06",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-local-public-projection site request docs viewer local public projection docs viewer local to public projection to change requests change requests 2026-06-28 2026 06 28"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

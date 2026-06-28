@@ -19,6 +19,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "site-request-docs-viewer-local-public-projection",
+      "title": "Docs Viewer Local To Public Projection",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-local-public-projection.json",
+      "added_date": "2026-06-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "data-sharing-export-metadata",
       "title": "Data Sharing Export Metadata",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-25",
       "parent_id": "admin",
       "parent_title": "Admin"
-    },
-    {
-      "doc_id": "studio-static-route-template",
-      "title": "Studio Static Route Template",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-static-route-template.json",
-      "added_date": "2026-06-25",
-      "parent_id": "studio",
-      "parent_title": "Studio"
     }
   ],
-  "generated_at": "2026-06-28T19:38:57Z"
+  "generated_at": "2026-06-28T20:39:52Z"
 }
