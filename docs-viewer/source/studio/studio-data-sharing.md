@@ -32,10 +32,10 @@ The Analytics app calls it from local API handlers.
 
 Domain adapters own the records a prepare workflow can select.
 The prepare page asks the active adapter for selectable records instead of reading a generic generated-docs index from app-shell code.
-For Library documents, that selectable-record response is backed by Docs Viewer source metadata and docs-domain helpers; the shared Analytics shell should not hard-code that implementation detail.
+For Library documents, that selectable-record response is backed by Docs Viewer source context and docs-domain helpers; the shared Analytics shell should not hard-code that implementation detail.
 
 Document source writes remain docs-aware.
-The documents adapter calls reusable docs-domain helpers for source-derived metadata, package creation, returned JSON review, Markdown/front matter updates, and docs/search rebuild follow-through.
+The documents adapter calls reusable docs-domain helpers for source-derived records/content, package creation, returned JSON review, Markdown/front matter updates, and docs/search rebuild follow-through.
 Those helpers are callable without routing through Docs Viewer HTTP endpoints.
 
 Data Sharing apply routes no longer create local backup artifacts.

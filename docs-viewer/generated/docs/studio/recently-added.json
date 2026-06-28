@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-docs-import-content-review-sessions",
+      "title": "Docs Import Content Review Sessions",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-content-review-sessions.json",
+      "added_date": "2026-06-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "data-sharing-export-metadata",
       "title": "Data Sharing Export Metadata",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-23",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "docs-viewer-info-panel",
-      "title": "Info Panel",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-info-panel.json",
-      "added_date": "2026-06-23",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-06-27T20:35:51Z"
+  "generated_at": "2026-06-28T17:19:44Z"
 }

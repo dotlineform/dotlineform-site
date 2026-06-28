@@ -38,9 +38,9 @@ Library docs source root:
 Each scope owns its own source-doc tree and generated output tree.
 The shared viewer does not merge those scopes into one combined docs corpus.
 
-Document Data Sharing reads this same source boundary through Docs Viewer-owned source metadata helpers.
+Document Data Sharing reads this same source boundary through Docs Viewer-owned source context helpers.
 Those helpers use scope config plus source Markdown front matter and body content, then render source content through shared Docs Viewer rendering code when export or review workflows need headings or plain text.
-Generated Docs Viewer payloads are publication/runtime outputs and are not the Data Sharing document metadata source.
+Generated Docs Viewer payloads are publication/runtime outputs and are not the Data Sharing document source-record input.
 
 Normal scope source roots are flat:
 

@@ -76,7 +76,7 @@ For documents, this operation:
 - parses the returned JSON or JSONL file
 - loads required package metadata
 - normalizes returned records into document rows
-- loads current Docs Viewer source metadata for the selected scope
+- loads current Docs Viewer source context for the selected scope
 - annotates each returned row with current-source existence and renderability
 - returns `review_rows` for the Analytics review page selectable list
 
@@ -129,7 +129,7 @@ Each row includes:
 - `depth`
 
 The row title comes from the returned record title.
-The row metadata includes the returned `doc_id`, duplicate status, and whether the document exists in current source metadata.
+The row metadata includes the returned `doc_id`, duplicate status, and whether the document exists in the current source context.
 
 The selectable row index is the apply input.
 Apply actions receive selected `record_indices`, not file paths.

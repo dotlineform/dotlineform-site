@@ -351,7 +351,7 @@ def build_export(
             target_format=resolved_target_format,
             paths=paths,
             warnings=warnings,
-            errors=[f"source metadata: {exc}"],
+            errors=[f"source context: {exc}"],
             supported_formats=supported_formats,
         )
     docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}

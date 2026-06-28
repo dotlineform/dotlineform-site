@@ -7,10 +7,10 @@ from typing import Any
 
 from docs_returned_import_common import PROFILE_ID_TO_IMPORT_TYPE, normalize_text
 
-def detect_import_type(source_metadata: dict[str, Any]) -> str:
-    if source_metadata.get("supports_return_import") is False:
+def detect_import_type(package_metadata: dict[str, Any]) -> str:
+    if package_metadata.get("supports_return_import") is False:
         return "export_only"
-    profile_id = normalize_text(source_metadata.get("profile_id"))
+    profile_id = normalize_text(package_metadata.get("profile_id"))
     if profile_id in PROFILE_ID_TO_IMPORT_TYPE:
         return PROFILE_ID_TO_IMPORT_TYPE[profile_id]
     return "unknown"

@@ -649,7 +649,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert "sort_order" not in child_row
 
 
-def test_export_uses_source_metadata_for_document_content() -> None:
+def test_export_uses_source_context_for_document_content() -> None:
     config = docs_export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
@@ -672,7 +672,7 @@ def test_export_uses_source_metadata_for_document_content() -> None:
     assert rows_by_doc_id["library"]["source_text"] == "Body text."
 
 
-def test_missing_source_metadata_returns_structured_export_error() -> None:
+def test_missing_source_context_returns_structured_export_error() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
@@ -702,7 +702,7 @@ def test_missing_source_metadata_returns_structured_export_error() -> None:
     assert report["ok"] is False
     assert report["counts"] == {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
     assert report["output_written"] is False
-    assert "source metadata: missing source root for scope library: docs-viewer/source/missing-library" in report["errors"]
+    assert "source context: missing source root for scope library: docs-viewer/source/missing-library" in report["errors"]
 
 
 def test_repo_representative_library_exports_dry_run_successfully() -> None:
@@ -767,8 +767,8 @@ def main() -> None:
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_documents_prepare_profiles_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
-        test_export_uses_source_metadata_for_document_content,
-        test_missing_source_metadata_returns_structured_export_error,
+        test_export_uses_source_context_for_document_content,
+        test_missing_source_context_returns_structured_export_error,
         test_repo_representative_library_exports_dry_run_successfully,
     ]
     for test in tests:

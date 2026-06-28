@@ -50,7 +50,7 @@ Document selection is scoped by `selection.docs_scope`.
 When a request omits that value, the adapter can fall back to the configured adapter domain scope.
 If neither request nor domain config supplies a scope for a required operation, scope validation fails.
 
-Selectable records come from Docs Viewer source metadata, not generated publication payloads.
+Selectable records come from Docs Viewer source context, not generated publication payloads.
 The documents adapter calls `selectable_document_records(...)`, which returns generic selectable records for the prepare UI.
 Records must include the shared `id` and `name` fields; document-specific fields such as `doc_id` and `title` are implementation details.
 
@@ -100,7 +100,7 @@ Run these focused checks after documents adapter changes:
 
 ```bash
 $HOME/miniconda3/bin/python3 -m py_compile data-sharing/adapters/documents/*.py data-sharing/adapters/documents/families/*.py
-$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_import_service.py docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/python/test_docs_data_sharing_source_metadata.py -q
+$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_import_service.py docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/python/test_docs_data_sharing_source_context.py -q
 $HOME/miniconda3/bin/python3 -m pytest analytics-app/tests/python/test_data_sharing_adapters.py analytics-app/tests/python/test_data_sharing_service.py analytics-app/tests/python/test_analytics_data_sharing_api.py -q
 ```
 

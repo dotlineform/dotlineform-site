@@ -12,7 +12,7 @@ from docs_export import (
 )
 from docs_export_config import update_external_context_config
 from docs_returned_import_profiles import supported_return_import_profile_ids
-from docs_data_sharing import source_metadata
+from docs_data_sharing import source_context
 from services.returned_metadata import list_staged_files_with_metadata
 import docs_source_model as source_model
 
@@ -48,7 +48,7 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
 
 def selectable_document_records(repo_root: Path, *, scope: str, selection_model: str) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
-    docs = source_metadata.load_data_sharing_docs_source_records(repo_root, normalized_scope)
+    docs = source_context.load_data_sharing_docs_source_records(repo_root, normalized_scope)
     records = [
         document_selectable_record(
             {
@@ -72,7 +72,7 @@ def selectable_document_records(repo_root: Path, *, scope: str, selection_model:
         "source": {
             "kind": "adapter",
             "module": "documents",
-            "source": "docs_source_metadata",
+            "source": "docs_source_context",
             "scope": normalized_scope,
         },
     }

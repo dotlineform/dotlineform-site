@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for Data Sharing docs source metadata helpers."""
+"""Focused checks for Data Sharing docs source context helpers."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ for path in (DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
         sys.path.insert(0, str(path))
 
 from docs_data_sharing import package as data_sharing_package  # noqa: E402
-from docs_data_sharing import source_metadata  # noqa: E402
+from docs_data_sharing import rendered_content, source_context  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -139,7 +139,7 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
             body="# Child\n\n## Details\n\nChild **body** with [parent](parent.md).",
         )
 
-        context = source_metadata.load_data_sharing_docs_source_context(repo_root, "studio")
+        context = source_context.load_data_sharing_docs_source_context(repo_root, "studio")
 
     child = context.records_by_id["child"]
     assert child.scope == "studio"
@@ -153,12 +153,12 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
     assert child.source_path == "docs-viewer/source/studio/child.md"
     assert child.viewer_url == "/docs/?scope=studio&doc=child"
     assert child.content_text_length == len("Details\n\nChild body with parent.")
-    assert source_metadata.data_sharing_doc_headings(context, "child") == ["Details"]
-    assert source_metadata.data_sharing_doc_content_text(context, "child") == "Details\n\nChild body with parent."
-    assert 'href="parent.md"' in source_metadata.render_data_sharing_doc_html(context, "child")
+    assert rendered_content.doc_headings(context, "child") == ["Details"]
+    assert rendered_content.doc_content_text(context, "child") == "Details\n\nChild body with parent."
+    assert 'href="parent.md"' in rendered_content.render_doc_html(context, "child")
 
 
-def test_source_metadata_uses_scope_config_without_scope_name_branches() -> None:
+def test_source_context_uses_scope_config_without_scope_name_branches() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_scope_config(
@@ -177,8 +177,8 @@ def test_source_metadata_uses_scope_config_without_scope_name_branches() -> None
         write_doc(repo_root, "studio", "studio.md", doc_id="studio-doc", title="Studio Doc")
         write_doc(repo_root, "research", "research.md", doc_id="research-doc", title="Research Doc")
 
-        studio_records = source_metadata.load_data_sharing_docs_source_records(repo_root, "studio")
-        research_records = source_metadata.load_data_sharing_docs_source_records(repo_root, "research")
+        studio_records = source_context.load_data_sharing_docs_source_records(repo_root, "studio")
+        research_records = source_context.load_data_sharing_docs_source_records(repo_root, "research")
 
     assert [record.doc_id for record in studio_records] == ["studio-doc"]
     assert [record.doc_id for record in research_records] == ["research-doc"]
@@ -193,14 +193,14 @@ def test_duplicate_doc_ids_and_missing_source_roots_fail_visibly() -> None:
         write_doc(repo_root, "studio", "two.md", doc_id="same", title="Two")
 
         try:
-            source_metadata.load_data_sharing_docs_source_context(repo_root, "studio")
+            source_context.load_data_sharing_docs_source_context(repo_root, "studio")
         except RuntimeError as exc:
             assert "Duplicate doc_id" in str(exc)
         else:
             raise AssertionError("Expected duplicate source doc_id values to fail")
 
         try:
-            source_metadata.load_data_sharing_docs_source_context(repo_root, "missing")
+            source_context.load_data_sharing_docs_source_context(repo_root, "missing")
         except RuntimeError as exc:
             assert "missing source root" in str(exc)
         else:
@@ -221,32 +221,32 @@ def test_unresolved_parent_policy_follows_scope_config() -> None:
         write_doc(repo_root, "loose", "child.md", doc_id="loose-child", title="Loose Child", parent_id="missing")
 
         try:
-            source_metadata.load_data_sharing_docs_source_context(repo_root, "strict")
+            source_context.load_data_sharing_docs_source_context(repo_root, "strict")
         except RuntimeError as exc:
             assert "Unknown parent_id" in str(exc)
         else:
             raise AssertionError("Expected strict unresolved parent to fail")
 
-        context = source_metadata.load_data_sharing_docs_source_context(repo_root, "loose")
+        context = source_context.load_data_sharing_docs_source_context(repo_root, "loose")
 
     record = context.records_by_id["loose-child"]
     assert record.parent_id == "missing"
     assert record.parent_title == ""
 
 
-def test_helper_loads_source_metadata_context() -> None:
+def test_helper_loads_source_context() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_scope_config(repo_root, [scope_config("studio")])
         write_doc(repo_root, "studio", "doc.md", doc_id="doc", title="Source Title", body="# Source Title\n\nSource body.")
 
-        context = source_metadata.load_data_sharing_docs_source_context(repo_root, "studio")
+        context = source_context.load_data_sharing_docs_source_context(repo_root, "studio")
 
     assert context.records_by_id["doc"].title == "Source Title"
-    assert source_metadata.data_sharing_doc_content_text(context, "doc") == "Source body."
+    assert rendered_content.doc_content_text(context, "doc") == "Source body."
 
 
-def test_selectable_document_records_use_source_metadata() -> None:
+def test_selectable_document_records_use_source_context() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_scope_config(repo_root, [scope_config("studio")])
@@ -268,7 +268,7 @@ def test_selectable_document_records_use_source_metadata() -> None:
         )
 
     assert payload["ok"] is True
-    assert payload["source"]["source"] == "docs_source_metadata"
+    assert payload["source"]["source"] == "docs_source_context"
     assert payload["records"] == [
         {
             "id": "doc",
@@ -289,24 +289,23 @@ def test_selectable_document_records_use_source_metadata() -> None:
     ]
 
 
-def test_active_data_sharing_metadata_services_use_source_metadata_owner() -> None:
+def test_active_data_sharing_services_use_source_context_owner() -> None:
     service_paths = {
         "package": REPO_ROOT / "docs-viewer/services/docs_data_sharing/package.py",
-        "export": REPO_ROOT / "docs-viewer/services/docs_export.py",
         "export_selection": REPO_ROOT / "docs-viewer/services/docs_export_selection.py",
         "export_transforms": REPO_ROOT / "docs-viewer/services/docs_export_transforms.py",
-        "import": REPO_ROOT / "docs-viewer/services/docs_import.py",
+        "returned_import_context": REPO_ROOT / "docs-viewer/services/docs_returned_import_context.py",
     }
     source_text_by_service = {name: path.read_text(encoding="utf-8") for name, path in service_paths.items()}
 
-    assert all(
-        "from docs_data_sharing import source_metadata" in source_text_by_service[name]
-        for name in ("package", "export_selection", "export_transforms", "import")
-    )
-    assert "source_metadata.load_data_sharing_docs_source_records" in source_text_by_service["package"]
-    assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["export_selection"]
-    assert "source_metadata.render_data_sharing_doc_html" in source_text_by_service["export_transforms"]
-    assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["import"]
+    assert "from docs_data_sharing import source_context" in source_text_by_service["package"]
+    assert "from docs_data_sharing import source_context as docs_source_context" in source_text_by_service["export_selection"]
+    assert "from docs_data_sharing import rendered_content" in source_text_by_service["export_transforms"]
+    assert "from docs_data_sharing import source_context as docs_source_context" in source_text_by_service["returned_import_context"]
+    assert "source_context.load_data_sharing_docs_source_records" in source_text_by_service["package"]
+    assert "docs_source_context.load_data_sharing_docs_source_context" in source_text_by_service["export_selection"]
+    assert "rendered_content.render_doc_html" in source_text_by_service["export_transforms"]
+    assert "docs_source_context.load_data_sharing_docs_source_context" in source_text_by_service["returned_import_context"]
 
 
 def test_unknown_doc_path_safety() -> None:
@@ -321,10 +320,10 @@ def test_unknown_doc_path_safety() -> None:
             title="Nested Doc",
         )
 
-        context = source_metadata.load_data_sharing_docs_source_context(repo_root, "nested")
+        context = source_context.load_data_sharing_docs_source_context(repo_root, "nested")
 
         try:
-            source_metadata.render_data_sharing_doc_html(context, "../nested-doc")
+            rendered_content.render_doc_html(context, "../nested-doc")
         except ValueError as exc:
             assert "unknown doc_id" in str(exc)
         else:
@@ -346,7 +345,7 @@ def test_nested_source_markdown_is_rejected() -> None:
         )
 
         try:
-            source_metadata.load_data_sharing_docs_source_context(repo_root, "nested")
+            source_context.load_data_sharing_docs_source_context(repo_root, "nested")
         except RuntimeError as exc:
             assert "Nested markdown docs are not supported" in str(exc)
             assert "section/nested-doc.md" in str(exc)
@@ -357,18 +356,18 @@ def test_nested_source_markdown_is_rejected() -> None:
 def main() -> None:
     tests = [
         test_source_records_include_locked_fields_and_rendered_text,
-        test_source_metadata_uses_scope_config_without_scope_name_branches,
+        test_source_context_uses_scope_config_without_scope_name_branches,
         test_duplicate_doc_ids_and_missing_source_roots_fail_visibly,
         test_unresolved_parent_policy_follows_scope_config,
-        test_helper_loads_source_metadata_context,
-        test_selectable_document_records_use_source_metadata,
-        test_active_data_sharing_metadata_services_use_source_metadata_owner,
+        test_helper_loads_source_context,
+        test_selectable_document_records_use_source_context,
+        test_active_data_sharing_services_use_source_context_owner,
         test_unknown_doc_path_safety,
         test_nested_source_markdown_is_rejected,
     ]
     for test in tests:
         test()
-    print("Docs Data Sharing source metadata tests OK")
+    print("Docs Data Sharing source context tests OK")
 
 
 if __name__ == "__main__":

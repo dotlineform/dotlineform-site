@@ -76,7 +76,7 @@ Local tracked scopes may still use `docs-viewer/generated/docs/<scope>/index.jso
 
 All of these are generated runtime data.
 The `site/assets/` location is the public static asset location; `docs-viewer/generated/` is a tracked non-public Docs Viewer data location served by the local Docs Viewer service for local scopes.
-Document Data Sharing does not use either public or manage generated docs indexes as metadata input; it reads Docs Viewer source metadata from scope config and source Markdown.
+Document Data Sharing does not use either public or manage generated docs indexes as metadata input; it reads Docs Viewer source context from scope config and source Markdown.
 
 ### 3. Generated per-record JSON
 

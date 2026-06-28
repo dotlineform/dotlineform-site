@@ -31,7 +31,7 @@ Current input path:
 
 Current lookup path:
 
-- `docs-viewer/source/library/`, resolved through the configured Docs Viewer scope and `docs_data_sharing/source_metadata.py`
+- `docs-viewer/source/library/`, resolved through the configured Docs Viewer scope and `docs_data_sharing/source_context.py`
 
 Current outputs:
 
@@ -51,12 +51,12 @@ Implemented now:
 - detects relationship, full-content, sparse document-change, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
-- loads current Library source metadata through Docs Viewer source parsing/rendering helpers
+- loads current Library source context through Docs Viewer source parsing/rendering helpers
 - annotates each normalized record with current Library existence, viewability, source renderability, current summary, and parent source state
 - is callable through the documents Data Sharing adapter for returned-package listing and review-row generation
 - is exposed through the `/analytics/data-sharing/review/` page for local returned-package review
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
-- reports unknown current `doc_id`, unreadable current source metadata, unrenderable current source records, missing parents, and parent records with unrenderable source
+- reports unknown current `doc_id`, unreadable current source context, unrenderable current source records, missing parents, and parent records with unrenderable source
 
 ## Commands
 
@@ -94,7 +94,7 @@ The script prints a JSON report with:
 
 The Data Sharing review endpoint returns this same report shape from `POST /analytics/api/data-sharing/review` after documents-adapter dispatch.
 
-`current_library` reports source metadata status with `source_loaded`, `source_root`, `doc_count`, and `renderable_count`.
+`current_library` reports source context status with `source_loaded`, `source_root`, `doc_count`, and `renderable_count`.
 Per-record `current_library` values report `exists`, `viewable`, `source_exists`, `source_renderable`, `current_summary`, `parent_exists`, `parent_source_exists`, and `parent_source_renderable`.
 
 `counts` includes:

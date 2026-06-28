@@ -36,7 +36,7 @@ def source_filename_timestamp(report: Dict[str, Any]) -> str:
     try:
         timestamp = dt.datetime.strptime(generated_at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
     except ValueError as exc:
-        raise ValueError(f"source metadata generated_at must be UTC YYYY-MM-DDTHH:MM:SSZ: {generated_at}") from exc
+        raise ValueError(f"package metadata generated_at must be UTC YYYY-MM-DDTHH:MM:SSZ: {generated_at}") from exc
     return local_filename_timestamp(timestamp)
 
 

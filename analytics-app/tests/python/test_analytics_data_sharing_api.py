@@ -145,7 +145,7 @@ def test_selectable_records_returns_documents_without_docs_viewer_http() -> None
     assert payload["source"] == {
         "kind": "adapter",
         "module": "documents",
-        "source": "docs_source_metadata",
+        "source": "docs_source_context",
         "scope": "library",
     }
     records_by_id = {record["id"]: record for record in payload["records"]}

@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_data_sharing import source_metadata
+from docs_data_sharing import source_context as docs_source_context
 from docs_returned_import_common import issue, normalize_text, scope_title
 
 def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -21,21 +21,21 @@ def load_current_docs_context(repo_root: Path, scope: str) -> tuple[dict[str, An
         "renderable_ids": [],
     }
     try:
-        source_context = source_metadata.load_data_sharing_docs_source_context(repo_root, scope)
+        loaded_context = docs_source_context.load_data_sharing_docs_source_context(repo_root, scope)
     except (FileNotFoundError, json.JSONDecodeError, ValueError, RuntimeError, OSError) as exc:
-        issues.append(issue("warning", "current_source_unreadable", f"current {scope} docs source metadata could not be read: {exc}"))
+        issues.append(issue("warning", "current_source_unreadable", f"current {scope} docs source context could not be read: {exc}"))
         return context, issues
 
     docs_by_id: dict[str, dict[str, Any]] = {}
     renderable_ids: list[str] = []
-    for item in source_context.records:
+    for item in loaded_context.records:
         doc_id = item.doc_id
         docs_by_id[doc_id] = item
         renderable_ids.append(doc_id)
     context.update(
         {
             "source_loaded": True,
-            "source_root": source_context.scope_config.source.as_posix(),
+            "source_root": loaded_context.scope_config.source.as_posix(),
             "doc_count": len(docs_by_id),
             "renderable_count": len(set(renderable_ids)),
             "docs_by_id": docs_by_id,
@@ -105,7 +105,7 @@ def add_current_library_report(
                 issue(
                     "warning",
                     "unknown_doc_id",
-                    f"record doc_id is not in the current {scope_title(scope)} source metadata: {doc_id}",
+                    f"record doc_id is not in the current {scope_title(scope)} source context: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -116,7 +116,7 @@ def add_current_library_report(
                 issue(
                     "warning",
                     "current_source_unrenderable",
-                    f"record exists in the current {scope_title(scope)} source metadata but could not be rendered: {doc_id}",
+                    f"record exists in the current {scope_title(scope)} source context but could not be rendered: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -133,7 +133,7 @@ def add_current_library_report(
                     issue(
                         "warning",
                         "missing_parent_id",
-                        f"parent_id is not in the current {scope_title(scope)} source metadata or staged records: {parent_id}",
+                        f"parent_id is not in the current {scope_title(scope)} source context or staged records: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,
@@ -144,7 +144,7 @@ def add_current_library_report(
                     issue(
                         "warning",
                         "parent_source_unrenderable",
-                        f"parent_id points to a current {scope_title(scope)} source metadata record that could not be rendered: {parent_id}",
+                        f"parent_id points to a current {scope_title(scope)} source context record that could not be rendered: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,

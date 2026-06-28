@@ -128,23 +128,23 @@ def parse_staged_import(
             else:
                 seen_doc_ids[doc_id] = index
 
-    source_metadata = copy.deepcopy(file_metadata)
+    package_metadata = copy.deepcopy(file_metadata)
     current_context, current_issues = load_current_docs_context(repo_root, normalized_scope)
     report["issues"].extend(current_issues)
-    source_export_id = normalize_text(source_metadata.get("export_id"))
-    source_profile_id = normalize_text(source_metadata.get("profile_id"))
+    source_export_id = normalize_text(package_metadata.get("export_id"))
+    source_profile_id = normalize_text(package_metadata.get("profile_id"))
     report["source_export_id"] = source_export_id
     report["source_profile_id"] = source_profile_id
-    report["source_scope"] = normalize_text(source_metadata.get("scope"))
-    report["generated_at"] = normalize_text(source_metadata.get("generated_at"))
-    report["source_metadata"] = source_metadata
+    report["source_scope"] = normalize_text(package_metadata.get("scope"))
+    report["generated_at"] = normalize_text(package_metadata.get("generated_at"))
+    report["source_metadata"] = package_metadata
     report["unknown_file_metadata"] = unknown_file_metadata
     report["records"] = records
-    report["detected_import_type"] = detect_import_type(source_metadata)
+    report["detected_import_type"] = detect_import_type(package_metadata)
     report["current_library"] = current_report_context(current_context)
     report["issues"].extend(add_current_library_report(records, current=current_context, scope=normalized_scope))
 
-    supports_return_import = source_metadata.get("supports_return_import") is not False
+    supports_return_import = package_metadata.get("supports_return_import") is not False
     if raw_rows and not supports_return_import:
         report["issues"].append(
             issue(

@@ -7,7 +7,7 @@ import copy
 from html.parser import HTMLParser
 from typing import Any
 
-from docs_data_sharing import source_metadata
+from docs_data_sharing import rendered_content
 from docs_export_common import collapse_blank_lines, normalize_text, trim_blank_lines
 from docs_export_config import SUPPORTED_TRANSFORMS
 from docs_export_selection import ExportContext
@@ -299,9 +299,9 @@ def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> An
     if source == "children":
         return related_document_refs(context.children_by_parent.get(doc_id, []))
     if source == "headings":
-        return source_metadata.data_sharing_doc_headings(context.source_context, doc_id)
+        return rendered_content.doc_headings(context.source_context, doc_id)
     if source == "source_text":
-        return source_metadata.render_data_sharing_doc_html(context.source_context, doc_id)
+        return rendered_content.render_doc_html(context.source_context, doc_id)
     raise ValueError(f"Unsupported field source: {source}")
 
 

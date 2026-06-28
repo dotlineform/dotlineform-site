@@ -295,6 +295,11 @@
           ]
         },
         {
+          "doc_id": "site-request-docs-import-content-review-sessions",
+          "title": "Docs Import Content Review Sessions",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-content-review-sessions.json"
+        },
+        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1229,5 +1234,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-27T20:35:51Z"
+  "generated_at": "2026-06-28T17:19:44Z"
 }

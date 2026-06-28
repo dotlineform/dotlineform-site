@@ -7,7 +7,8 @@ import dataclasses
 from pathlib import Path
 from typing import Any
 
-from docs_data_sharing import source_metadata
+from docs_data_sharing import source_context as docs_source_context
+from docs_data_sharing import source_records
 from docs_export_common import normalize_text
 
 
@@ -25,13 +26,13 @@ class ExportContext:
     scope: str
     data_domain: str
     config: dict[str, Any]
-    source_context: source_metadata.DataSharingDocsSourceContext
+    source_context: docs_source_context.DataSharingDocsSourceContext
     docs: list[dict[str, Any]]
     docs_by_id: dict[str, dict[str, Any]]
     children_by_parent: dict[str, list[dict[str, Any]]]
 
 
-def source_record_to_export_doc(record: source_metadata.DataSharingDocsSourceRecord) -> dict[str, Any]:
+def source_record_to_export_doc(record: source_records.DataSharingDocsSourceRecord) -> dict[str, Any]:
     return {
         "doc_id": record.doc_id,
         "scope": record.scope,
@@ -50,8 +51,8 @@ def source_record_to_export_doc(record: source_metadata.DataSharingDocsSourceRec
     }
 
 
-def load_source_export_context(repo_root: Path, scope: str) -> tuple[source_metadata.DataSharingDocsSourceContext, list[dict[str, Any]]]:
-    context = source_metadata.load_data_sharing_docs_source_context(repo_root, scope)
+def load_source_export_context(repo_root: Path, scope: str) -> tuple[docs_source_context.DataSharingDocsSourceContext, list[dict[str, Any]]]:
+    context = docs_source_context.load_data_sharing_docs_source_context(repo_root, scope)
     return context, [source_record_to_export_doc(record) for record in context.records]
 
 
