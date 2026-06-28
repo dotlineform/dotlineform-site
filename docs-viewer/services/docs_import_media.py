@@ -149,19 +149,10 @@ def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any],
 def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: bool) -> str:
     source_format = source_format_for_path(source_path)
     if source_format == "html":
-        from docs_import_html_parser import build_summary, extract_title, parse_with_bs4
+        from docs_html_markdown import html_to_markdown
 
         source_html = source_path.read_text(encoding="utf-8", errors="replace")
-        parsed = parse_with_bs4(source_html)
-        title = extract_title(parsed.root)
-        summary = build_summary(
-            parsed.root,
-            source_html=source_html,
-            source_filename_stem=source_path.stem,
-            title=title,
-            include_prompt_meta=include_prompt_meta,
-        )
-        return str(summary.get("markdown_preview") or "")
+        return html_to_markdown(source_html, include_prompt_meta=include_prompt_meta).markdown
     if source_format == "markdown":
         from docs_import_preview import build_markdown_summary
 

@@ -44,8 +44,10 @@ from docs_import_common import (  # noqa: E402
 )
 from docs_import_html_parser import (  # noqa: E402
     build_summary,
-    extract_title,
-    parse_with_bs4,
+)
+from docs_html_markdown import (  # noqa: E402
+    extract_html_title,
+    parse_html_document,
     sanitize_svg_source,
 )
 from docs_import_markdown_package import (  # noqa: E402
@@ -73,7 +75,7 @@ def validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, An
         "renderer": "studio/shared/python/markdown_renderer.py",
         "renderer_contract": contract,
         "sanitizer_boundary": {
-            "import_html": "docs_import_html_parser structured conversion and SVG serialization",
+            "import_html": "docs_html_markdown structured conversion and SVG serialization",
             "raw_markdown_html": "allowed by renderer contract; authored Markdown remains trusted input",
             "sanitizes_html": False,
         },
@@ -232,14 +234,15 @@ def generate_html_import_preview(
 ) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
-    parsed = parse_with_bs4(source_html)
-    title = extract_title(parsed.root)
+    parsed = parse_html_document(source_html)
+    title = extract_html_title(parsed.root)
     summary = build_summary(
         parsed.root,
         source_html=source_html,
         source_filename_stem=source_path.stem,
         title=title,
         include_prompt_meta=include_prompt_meta,
+        parsed=parsed,
     )
     summary["scope"] = normalized_scope
     summary["source_format"] = "html"

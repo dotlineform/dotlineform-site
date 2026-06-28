@@ -77,7 +77,7 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
         assert validation["ok"] is True
         assert validation["renderer"] == "studio/shared/python/markdown_renderer.py"
         assert validation["renderer_contract"]["library"] == "markdown-it-py"
-        assert validation["sanitizer_boundary"]["import_html"] == "docs_import_html_parser structured conversion and SVG serialization"
+        assert validation["sanitizer_boundary"]["import_html"] == "docs_html_markdown structured conversion and SVG serialization"
 
 def test_media_path_comes_from_scope_config() -> None:
     assert docs_import_media.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"

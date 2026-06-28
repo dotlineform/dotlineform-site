@@ -90,7 +90,8 @@ Use these ownership boundaries before adding new Docs Viewer import, export, or 
 Staged source imports:
 
 - `docs_import_preview.py` owns staged source preview dispatch and per-format preview response shape.
-- `docs_import_html_parser.py` owns HTML/SVG parsing, sanitization, Markdown rendering, and HTML-derived summaries.
+- `docs_html_markdown.py` owns reusable HTML/SVG parsing, sanitization, and HTML-to-Markdown conversion.
+- `docs_import_html_parser.py` owns import-preview HTML summaries built from the shared HTML conversion boundary.
 - `docs_import_media.py` owns media path planning, inline media extraction, media materialization, and image/file media summaries.
 - `docs_import_markdown_package.py` owns markdown package discovery, package media planning, and package link rewriting.
 - `docs_import_common.py` owns source-format constants and small shared helpers.

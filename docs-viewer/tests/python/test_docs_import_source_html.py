@@ -5,11 +5,34 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import docs_html_markdown
 import docs_import_preview
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
 
 from docs_import_test_support import handle_import_source, make_repo, stub_rebuild, write_library_doc, write_staged_html
+
+
+def test_html_to_markdown_is_available_without_import_preview_summary() -> None:
+    result = docs_html_markdown.html_to_markdown(
+        """
+        <html>
+          <head><title>Shared Converter</title></head>
+          <body>
+            <h1>Shared Converter</h1>
+            <p>Body with <strong>bold</strong> and <a href="https://example.com">a link</a>.</p>
+            <ul><li>One</li><li>Two</li></ul>
+          </body>
+        </html>
+        """
+    )
+
+    assert result.title == "Shared Converter"
+    assert result.markdown == "# Shared Converter\n\nBody with **bold** and [a link](https://example.com).\n\n- One\n- Two"
+    assert result.tag_counts["html"] == 1
+    assert result.comment_count == 0
+    assert result.warnings == []
+
 
 def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
     with make_repo() as temp:
