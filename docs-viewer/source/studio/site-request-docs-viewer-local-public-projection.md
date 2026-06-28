@@ -102,6 +102,22 @@ Anything under `site/` is public once deployed. The private `var/` output should
 
 The public copy can be produced as part of the same exporter run after the private bundle has been generated and validated.
 
+Destination folders are exclusively owned by this exporter. They are directly derived from the scope name and are wiped as the first step of every apply run before the current export is written. Do not add stale-file tracking, delete manifests, fallback reconciliation, or partial sync semantics.
+
+## Scope Lifecycle
+
+New Scope does not need export-specific bookkeeping. If a new scope is repo-backed local, the Export action can recognise it from the normal scope config and use the deterministic destination paths.
+
+Delete Scope does need export cleanup. When deleting a repo-backed local scope, the delete workflow should remove any deterministic exporter-owned outputs for that scope, such as:
+
+```text
+var/docs-offline/<scope>/
+var/docs-offline/<scope>-docs.zip
+site/<scope>-docs/
+```
+
+This cleanup should use the same path validation as the exporter. It should not look for manifests or scan arbitrary folders.
+
 ## Inputs
 
 Use existing generated Docs Viewer payloads as input:
@@ -173,7 +189,7 @@ Suggested modal controls:
   - private offline folder: `var/docs-offline/studio/`
   - public site folder: `site/studio-docs/`
   - optional zip archive: `var/docs-offline/studio-docs.zip`
-- preview button showing files that would be written, changed, and removed
+- preview button showing destination folders that will be replaced and files that will be written
 - apply button that writes the selected destinations
 - explicit public visibility warning when `site/studio-docs/` is selected
 
@@ -210,10 +226,10 @@ Responsibilities:
 - write shared CSS
 - rewrite internal Docs Viewer links to local `.html` links
 - produce a preview diff before writing
-- remove stale generated HTML pages from selected destinations
+- wipe selected destination folders before writing current output
 - optionally create a zip archive
 
-The service should generate the private bundle first, validate it, then copy the same generated files to selected secondary destinations such as `site/studio-docs/` or a zip archive. This keeps rendering and link rewriting in one path.
+The service should generate the private bundle first, validate it, then replace selected secondary destinations such as `site/studio-docs/` or a zip archive with the same generated files. This keeps rendering and link rewriting in one path.
 
 ## Implementation Tasks
 
@@ -232,8 +248,8 @@ This should be a fairly straightforward implementation: one focused exporter ser
   - rendering per-doc HTML pages
   - rendering or copying `styles.css`
   - rewriting internal Docs Viewer links
-  - computing write/remove plans
-  - applying write/remove plans
+  - computing a replace plan for selected destination folders
+  - wiping and writing selected destination folders
 - Keep the service independent from Docs Viewer frontend code.
 - Use generated payloads as input; do not parse or render source Markdown.
 - Reject public, local-external, and non-repo-backed scopes.
@@ -246,7 +262,11 @@ This should be a fairly straightforward implementation: one focused exporter ser
   - zip: `var/docs-offline/<scope>-docs.zip`
 - Allow `studio` to use `site/studio-docs/` naturally through the same pattern.
 - Validate all output paths stay inside the intended repo roots.
-- Decide whether stale destination files should be removed by default; the likely answer is yes for generated `.html` pages no longer present in the source tree.
+- Treat destination folders as exporter-owned generated output.
+- Wipe each selected destination folder before writing the new export.
+- Do not keep a manifest or track stale files.
+- Add Delete Scope cleanup for these deterministic exporter-owned outputs.
+- Do not add New Scope bookkeeping; repo-backed local scopes are recognised from scope config.
 
 ### 3. Link rewriting
 
@@ -276,13 +296,13 @@ This should be a fairly straightforward implementation: one focused exporter ser
   - scope
   - doc count
   - destination paths
-  - files to write
-  - files to remove
+  - destination folders that will be replaced
+  - files that will be written after replacement
   - warnings
   - public visibility warning when `site` is selected
 - Apply response should include:
   - written file count
-  - removed file count
+  - replaced destination folders
   - destination links/paths
   - warnings
 
@@ -309,7 +329,7 @@ This should be a fairly straightforward implementation: one focused exporter ser
   - per-doc page rendering
   - index page rendering
   - internal link rewriting
-  - stale file removal plan
+  - destination-folder replacement plan
   - output path validation
   - rejection of public/local-external scopes
 - Add route/API tests for preview and apply responses.
@@ -357,7 +377,7 @@ Automated checks should cover:
 - metadata escaping
 - `content_html` insertion
 - internal docs link rewriting
-- stale output removal
+- destination-folder replacement
 - destination path validation
 - public-output warning when `site/` is selected
 
