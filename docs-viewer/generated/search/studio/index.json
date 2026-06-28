@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-329f1c0127f29a34c2e76133a98a471b",
-    "generated_at_utc": "2026-06-28T13:44:48Z",
+    "version": "blake2b-dffc2dc97c2a60543d74de6017fc116c",
+    "generated_at_utc": "2026-06-28T16:37:16Z",
     "count": 228
   },
   "entries": [
@@ -1647,10 +1647,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-06-25",
+      "last_updated": "2026-06-28",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-25 • Dev Home",
+      "display_meta": "2026-06-28 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1659,12 +1659,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-25",
+        "2026-06-28",
         "2026",
         "06",
-        "25"
+        "28"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-25 2026 06 25"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-28 2026 06 28"
     },
     {
       "id": "development-workflow",

@@ -2,7 +2,7 @@
 doc_id: development-checklist
 title: Development Checklist
 added_date: 2026-05-23
-last_updated: 2026-06-25
+last_updated: 2026-06-28
 parent_id: dev-home
 viewable: true
 ---
@@ -82,6 +82,58 @@ When a change touches generated outputs or generated contracts:
 - update generated-output contract fixtures and projection checks when the field contract changes
 - update source docs in the owning scope, then let the docs watcher or explicit task follow-through regenerate payloads
 - do not rebuild Docs Viewer payloads unless the slice explicitly calls for that follow-through
+
+## Docs Import And Data Sharing Ownership
+
+Use these ownership boundaries before adding new Docs Viewer import, export, or data-sharing behavior.
+
+Staged source imports:
+
+- `docs_import_preview.py` owns staged source preview dispatch and per-format preview response shape.
+- `docs_import_html_parser.py` owns HTML/SVG parsing, sanitization, Markdown rendering, and HTML-derived summaries.
+- `docs_import_media.py` owns media path planning, inline media extraction, media materialization, and image/file media summaries.
+- `docs_import_markdown_package.py` owns markdown package discovery, package media planning, and package link rewriting.
+- `docs_import_common.py` owns source-format constants and small shared helpers.
+- `docs_import_source_service.py` owns the management API workflow: request interpretation, collision decisions, confirmation gates, rebuild calls, and response assembly.
+- `docs_import_source_helpers.py` owns imported source text, replacement-preview mutation, viewer URLs, and import summary text.
+- `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
+
+New staged source formats:
+
+- add substantial format-specific parsing to a dedicated module, such as a future DOCX, Word HTML, or PDF parser module
+- keep `docs_import_preview.py` as the dispatcher and response-shaping layer
+- keep media extraction and materialization in `docs_import_media.py` unless the new format needs a narrow parser-owned discovery step
+
+Returned-package imports:
+
+- `docs_import.py` is a CLI wrapper only.
+- `docs_returned_import_common.py` owns returned-package paths, report skeletons, staged file listing, scope validation, and shared issue helpers.
+- `docs_returned_import_files.py` owns JSON/JSONL parsing, returned-package headers, export metadata lookup, and envelope metadata extraction.
+- `docs_returned_import_records.py` owns normalized returned document record shape.
+- `docs_returned_import_profiles.py` owns profile-to-import-type matching and supported returned-import profile ids.
+- `docs_returned_import_context.py` owns current Docs source context and current-library/current-scope enrichment.
+- `docs_returned_import_parser.py` owns returned-package report assembly.
+
+Returned apply actions:
+
+- `docs_data_sharing/apply_common.py` owns shared apply input parsing, selected record handling, and apply identity.
+- `docs_data_sharing/apply_summaries.py` owns summary update planning and writes.
+- `docs_data_sharing/apply_hierarchy.py` owns hierarchy/parent update planning and writes.
+- add full document content import as a new action module rather than expanding summary or hierarchy action modules.
+
+Documents data-sharing adapters:
+
+- `data-sharing/adapters/documents/families/documents.py` owns adapter routing, operation validation, action selection, and adapter-context projection.
+- Docs prepare/export behavior stays under `docs_export*.py` and `docs_data_sharing/package.py`.
+- Import support is profile-driven: export-only profiles must keep `supports_return_import` false until a matching returned import type and apply action exist.
+
+When adding or changing import/export behavior:
+
+- name the profile, import type, action id, and owning module before coding
+- do not import parser or action helpers through CLI wrapper files
+- do not add compatibility facades for old module names
+- update focused tests to target the new owner module instead of preserving old import paths
+- keep UI workflow state in management service orchestration and keep parser/apply modules independent of route UI details
 
 ## Documentation
 
