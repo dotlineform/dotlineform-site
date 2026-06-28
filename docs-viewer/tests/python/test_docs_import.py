@@ -108,24 +108,30 @@ def write_sidecar_meta(root: Path, filename: str, profile_id: str, *, export_id:
     )
 
 
-def write_internal_meta(root: Path, export_id: str, profile_id: str) -> None:
+def write_internal_meta(
+    root: Path,
+    export_id: str,
+    profile_id: str,
+    *,
+    supports_return_import: bool | None = None,
+) -> None:
+    payload = {
+        "schema_version": "data_sharing_export_meta_v1",
+        "export_id": export_id,
+        "app": "docs-viewer",
+        "adapter_id": "documents",
+        "data_domain": "documents",
+        "config_id": profile_id,
+        "profile_id": profile_id,
+        "scope": "library",
+        "target_format": "jsonl",
+        "record_shape": "document_rows",
+    }
+    if supports_return_import is not None:
+        payload["supports_return_import"] = supports_return_import
     write_text(
         root / f"var/analytics/data-sharing/meta/{export_id}.meta.json",
-        json.dumps(
-            {
-                "schema_version": "data_sharing_export_meta_v1",
-                "export_id": export_id,
-                "app": "docs-viewer",
-                "adapter_id": "documents",
-                "data_domain": "documents",
-                "config_id": profile_id,
-                "profile_id": profile_id,
-                "scope": "library",
-                "target_format": "jsonl",
-                "record_shape": "document_rows",
-            }
-        )
-        + "\n",
+        json.dumps(payload) + "\n",
     )
 
 
@@ -297,6 +303,20 @@ def test_unsupported_profile_metadata_fails_closed() -> None:
     assert [item["code"] for item in report["issues"]] == ["unsupported_import_profile"]
 
 
+def test_export_only_profile_metadata_fails_before_import_action_matching() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T120006Z"
+        write_internal_meta(root, export_id, "document-content", supports_return_import=False)
+        write_staged(root, "returned.json", {"export_id": export_id, "records": [{"doc_id": "alpha", "title": "Alpha"}]})
+        report = parse(root, "returned.json")
+
+    assert report["ok"] is False
+    assert report["detected_import_type"] == "export_only"
+    assert report["counts"]["errors"] == 1
+    assert [item["code"] for item in report["issues"]] == ["export_only_profile"]
+
+
 def test_invalid_jsonl_is_a_file_level_blocker() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -341,6 +361,7 @@ def main() -> None:
         test_document_content_profile_is_sparse_document_changes,
         test_jsonl_header_export_id_loads_internal_profile_metadata,
         test_unsupported_profile_metadata_fails_closed,
+        test_export_only_profile_metadata_fails_before_import_action_matching,
         test_invalid_jsonl_is_a_file_level_blocker,
         test_parser_rejects_paths_outside_staging_root,
     ]

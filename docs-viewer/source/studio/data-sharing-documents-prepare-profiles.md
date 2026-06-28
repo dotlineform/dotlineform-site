@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-prepare-profiles
 title: Documents Prepare Profiles
 added_date: "2026-05-03 14:15"
-last_updated: 2026-06-25
+last_updated: 2026-06-28
 parent_id: data-sharing
 viewable: true
 ---
@@ -42,6 +42,7 @@ Each profile controls:
 - which source-derived document fields are written to each output record
 - whether body content is converted to plain text and how images/SVGs are represented
 - which JSON or JSONL file pattern the run writes
+- whether exported files are eligible for returned-package review/apply
 
 The config is the contract between the Analytics prepare UI, the Analytics Data Sharing API, the documents adapter, and the documents package engine.
 Any new field source, transform, output format, or record shape needs export-engine validation before use.
@@ -74,6 +75,7 @@ Each profile requires:
 - `target`: output format and record shape
 - `output`: output path pattern and optional timestamp format
 - `selection`: default document selection and filtering behavior
+- `workflow`: optional workflow flags, including returned-package import support
 - `limits`: document and character limits
 - `metadata`: export-run metadata fields to include
 - `external_context`: external task wording, response guidance, and field descriptions
@@ -100,6 +102,20 @@ External packages carry an `export_id` that review uses to find that metadata af
 A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
 External payload records should not include internal run details, row counts, checksums, source scope, or source timestamps.
 The metadata and `export_id` contract is documented in [Data Sharing Export Metadata](/docs/?scope=studio&doc=data-sharing-export-metadata).
+
+## Workflow
+
+`workflow.supports_return_import` controls whether exports from the profile are actionable in the returned-package review flow.
+
+When omitted, it defaults to `true` for compatibility with existing round-trip profiles.
+Set it to `false` for export-only profiles whose files are useful for outside reporting, analysis, or visualization but should not be accepted by review/apply.
+
+Export-only profiles still write internal `.meta.json` provenance.
+The metadata records `supports_return_import: false`, and returned-package listing keeps those staged files out of the actionable `files` list.
+They may still appear in diagnostic blocked-file data with `blocked_reason: "export_only_profile"`.
+
+Import support also requires server code for the profile.
+Changing `workflow.supports_return_import` to `true` is not sufficient on its own; the profile id must also be mapped to a supported import type and a corresponding review/apply action must exist.
 
 ## External Context
 

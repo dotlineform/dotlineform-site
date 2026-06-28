@@ -2,7 +2,7 @@
 doc_id: data-sharing-export-metadata
 title: Data Sharing Export Metadata
 added_date: "2026-06-27"
-last_updated: 2026-06-27
+last_updated: 2026-06-28
 parent_id: data-sharing
 viewable: true
 ---
@@ -83,7 +83,8 @@ The metadata file should be a JSON object with stable routing fields:
   "scope": "library",
   "target_format": "jsonl",
   "record_shape": "document_rows",
-  "generated_at": "2026-06-27T17:30:12Z"
+  "generated_at": "2026-06-27T17:30:12Z",
+  "supports_return_import": true
 }
 ```
 
@@ -116,6 +117,7 @@ The documents adapter treats `profile_id` as the same value as `config_id` until
 | `target_format` | File format written by prepare and expected by review. | `json` or `jsonl`. Must match the selected profile's supported target format and the staged file extension. |
 | `record_shape` | Structural shape of the external records inside the package. | `document_rows` for JSONL rows or JSON `records` arrays. |
 | `generated_at` | UTC timestamp for the prepare run. | `YYYY-MM-DDTHH:MM:SSZ`. This is the source of `export_id` and should not be edited. |
+| `supports_return_import` | Whether this exported package is eligible for returned-package review/apply. | Defaults to true for older metadata. Export-only profiles write false. Valid metadata with false is still provenance, but the staged file is not actionable. |
 | `config_checksum` | Optional integrity/provenance value for the prepare profile used at export time. | Present when included by the profile metadata settings. Hashes the profile config so later review can detect profile drift if needed. |
 | `selected_doc_ids` | Optional provenance list of documents selected for export. | Ordered normalized document ids after selection resolution. Useful for audit, not for routing. |
 | `source_last_updated` | Optional freshness map for selected source docs. | Object keyed by `doc_id`, with source `last_updated` values from prepare time. Apply can use this later for freshness checks. |
@@ -171,6 +173,10 @@ After metadata is loaded, the app and data domain are derived from metadata and 
 They are not user-selectable controls in the review workflow.
 Review dispatch uses the derived `data_domain`, `adapter_id`, and profile metadata.
 
+Valid metadata does not by itself make a staged file reviewable.
+The profile must both declare returned-package import support and have a corresponding server-side import type/action.
+Export-only files should be kept out of the primary actionable returned-package list and reported as blocked with `blocked_reason: "export_only_profile"` when diagnostic data is shown.
+
 ## Failure States
 
 Review should fail closed for these cases:
@@ -181,6 +187,8 @@ Review should fail closed for these cases:
 - metadata file for `export_id` is missing
 - metadata `export_id` does not match the staged file `export_id`
 - metadata references an inactive or unknown adapter/domain/profile
+- metadata marks the profile as export-only
+- metadata references a profile with no supported import action
 - staged package format does not match metadata `target_format`
 
 These failures should be shown before preview generation so the operator can fix staging or rerun prepare.

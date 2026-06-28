@@ -23,6 +23,9 @@
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },
+      "workflow": {
+        "supports_return_import": true
+      },
       "limits": {
         "max_documents": null,
         "max_chars_per_document": 50000,

@@ -114,6 +114,22 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert "activity" not in action
 
 
+def test_config_payload_publishes_prepare_profile_return_import_support() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        profile_path = root / "data-sharing/adapters/documents/config/prepare-profiles.json"
+        profile_payload = json.loads(profile_path.read_text(encoding="utf-8"))
+        profile_payload["configs"][0]["workflow"] = {"supports_return_import": False}
+        profile_path.write_text(json.dumps(profile_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+        payload = analytics_data_sharing_api.data_sharing_get_payload(root, "/config", {})
+
+    adapter = payload["adapters"][0]
+    prepare = next(item for item in adapter["capabilities"] if item["operation"] == "prepare")
+    profile = prepare["sharing_profiles"][0]
+    assert profile["workflow"] == {"supports_return_import": False}
+
+
 def test_selectable_records_returns_documents_without_docs_viewer_http() -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
@@ -251,7 +267,7 @@ def test_returned_packages_endpoint_dispatches_through_registered_handlers(monke
         {"data_domain": ["documents"]},
     )
 
-    assert payload == {"ok": True, "adapter_id": "documents", "operation": "list_returned", "files": []}
+    assert payload == {"ok": True, "adapter_id": "documents", "operation": "list_returned", "files": [], "blocked_files": []}
     assert calls[0]["data_domain"] == "documents"
 
 
@@ -312,6 +328,115 @@ def test_returned_packages_endpoint_resolves_unfiltered_staging_files_from_inter
     assert file_record["app"] == "docs-viewer"
     assert file_record["data_domain"] == "documents"
     assert file_record["scope"] == "catalogue"
+
+
+def test_returned_packages_endpoint_blocks_export_only_profiles_from_actionable_files() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        export_id = "ds_20260627T121500Z"
+        staged_path = root / "var/analytics/data-sharing/import-staging/export-only.jsonl"
+        staged_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.write_text(
+            "\n".join(
+                [
+                    json.dumps(
+                        {
+                            "record_type": "data_sharing_header",
+                            "schema_version": "data_sharing_returned_package_v1",
+                            "export_id": export_id,
+                        }
+                    ),
+                    json.dumps({"doc_id": "library", "title": "Library"}),
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        metadata_path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+        metadata_path.parent.mkdir(parents=True, exist_ok=True)
+        metadata_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "data_sharing_export_meta_v1",
+                    "export_id": export_id,
+                    "app": "docs-viewer",
+                    "data_domain": "documents",
+                    "adapter_id": "documents",
+                    "config_id": "document-content",
+                    "profile_id": "document-content",
+                    "scope": "library",
+                    "target_format": "jsonl",
+                    "record_shape": "document_rows",
+                    "supports_return_import": False,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        payload = analytics_data_sharing_api.data_sharing_get_payload(root, "/returned-packages", {})
+
+    assert payload["ok"] is True
+    assert payload["files"] == []
+    assert len(payload["blocked_files"]) == 1
+    blocked = payload["blocked_files"][0]
+    assert blocked["filename"] == "export-only.jsonl"
+    assert blocked["metadata_ok"] is True
+    assert blocked["return_import_supported"] is False
+    assert blocked["blocked_reason"] == "export_only_profile"
+
+
+def test_returned_packages_endpoint_blocks_profiles_without_import_actions() -> None:
+    with make_repo() as temp_path:
+        root = Path(temp_path)
+        export_id = "ds_20260627T121700Z"
+        staged_path = root / "var/analytics/data-sharing/import-staging/future-profile.jsonl"
+        staged_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.write_text(
+            "\n".join(
+                [
+                    json.dumps(
+                        {
+                            "record_type": "data_sharing_header",
+                            "schema_version": "data_sharing_returned_package_v1",
+                            "export_id": export_id,
+                        }
+                    ),
+                    json.dumps({"doc_id": "library", "title": "Library"}),
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        metadata_path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+        metadata_path.parent.mkdir(parents=True, exist_ok=True)
+        metadata_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "data_sharing_export_meta_v1",
+                    "export_id": export_id,
+                    "app": "docs-viewer",
+                    "data_domain": "documents",
+                    "adapter_id": "documents",
+                    "config_id": "document-tree",
+                    "profile_id": "document-tree",
+                    "scope": "library",
+                    "target_format": "jsonl",
+                    "record_shape": "document_rows",
+                    "supports_return_import": True,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        payload = analytics_data_sharing_api.data_sharing_get_payload(root, "/returned-packages", {})
+
+    assert payload["ok"] is True
+    assert payload["files"] == []
+    assert len(payload["blocked_files"]) == 1
+    blocked = payload["blocked_files"][0]
+    assert blocked["filename"] == "future-profile.jsonl"
+    assert blocked["return_import_supported"] is False
+    assert blocked["blocked_reason"] == "unsupported_import_profile"
 
 
 def test_returned_packages_endpoint_lists_documents_with_default_review_scope() -> None:

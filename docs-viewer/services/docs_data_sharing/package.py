@@ -11,6 +11,7 @@ from docs_export import (
     parse_doc_ids as parse_export_doc_ids,
     update_external_context_config,
 )
+from docs_import import supported_return_import_profile_ids
 from docs_data_sharing import source_metadata
 from services.returned_metadata import list_staged_files_with_metadata
 import docs_source_model as source_model
@@ -142,7 +143,7 @@ def list_returned_document_packages(repo_root: Path, *, scope: str, staging_root
     normalized_scope = source_model.normalize_scope(scope)
     report = list_staged_files_with_metadata(repo_root, staging_root=staging_root)
     report["scope"] = normalized_scope
-    report["files"] = [
+    staged_files = [
         item
         for item in report.get("files", [])
         if not item.get("metadata_ok")
@@ -154,4 +155,38 @@ def list_returned_document_packages(repo_root: Path, *, scope: str, staging_root
             )
         )
     ]
+    importable_profile_ids = supported_return_import_profile_ids()
+    files: list[dict[str, Any]] = []
+    blocked_files: list[dict[str, Any]] = [
+        item
+        for item in report.get("blocked_files", [])
+        if (
+            str(item.get("data_domain") or "").strip() == "documents"
+            and (
+                not str(item.get("scope") or "").strip()
+                or str(item.get("scope") or "").strip() == normalized_scope
+            )
+        )
+    ]
+    for item in staged_files:
+        if not item.get("metadata_ok"):
+            files.append(item)
+            continue
+        profile_id = str(item.get("profile_id") or "").strip()
+        if item.get("supports_return_import") is False:
+            blocked = dict(item)
+            blocked["return_import_supported"] = False
+            blocked["blocked_reason"] = "export_only_profile"
+            blocked_files.append(blocked)
+            continue
+        if profile_id not in importable_profile_ids:
+            blocked = dict(item)
+            blocked["return_import_supported"] = False
+            blocked["blocked_reason"] = "unsupported_import_profile"
+            blocked_files.append(blocked)
+            continue
+        item["return_import_supported"] = True
+        files.append(item)
+    report["files"] = files
+    report["blocked_files"] = blocked_files
     return report

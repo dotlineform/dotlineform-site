@@ -31,6 +31,7 @@ from adapters.documents import context as documents_data_sharing_context  # noqa
 from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from adapters.tags import context as tags_data_sharing_context  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
+from docs_import import supported_return_import_profile_ids  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
     from analytics_app import data_sharing_adapters  # noqa: E402
@@ -157,10 +158,19 @@ def public_sharing_profile(profile: dict[str, Any]) -> dict[str, object]:
         payload["target"] = public_profile_target(profile["target"])
     if isinstance(profile.get("selection"), dict):
         payload["selection"] = public_profile_selection(profile["selection"])
+    if isinstance(profile.get("workflow"), dict):
+        payload["workflow"] = public_profile_workflow(profile["workflow"])
     if isinstance(profile.get("external_context"), dict):
         payload["external_context"] = public_profile_external_context(profile["external_context"])
     if isinstance(profile.get("document_fields"), list):
         payload["document_fields"] = public_profile_document_fields(profile["document_fields"])
+    return payload
+
+
+def public_profile_workflow(workflow: dict[str, Any]) -> dict[str, object]:
+    payload: dict[str, object] = {}
+    if "supports_return_import" in workflow:
+        payload["supports_return_import"] = workflow.get("supports_return_import") is True
     return payload
 
 
@@ -294,6 +304,39 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
     }
 
 
+def actionable_returned_packages(payload: dict[str, object]) -> dict[str, object]:
+    files = payload.get("files") if isinstance(payload.get("files"), list) else []
+    blocked_files = list(payload.get("blocked_files") if isinstance(payload.get("blocked_files"), list) else [])
+    documents_profile_ids = supported_return_import_profile_ids()
+    actionable_files: list[dict[str, Any]] = []
+    for item in files:
+        if not isinstance(item, dict):
+            continue
+        if (
+            item.get("metadata_ok")
+            and str(item.get("data_domain") or "").strip() == "documents"
+        ):
+            profile_id = str(item.get("profile_id") or "").strip()
+            if item.get("supports_return_import") is False:
+                blocked = dict(item)
+                blocked["return_import_supported"] = False
+                blocked["blocked_reason"] = "export_only_profile"
+                blocked_files.append(blocked)
+                continue
+            if profile_id not in documents_profile_ids:
+                blocked = dict(item)
+                blocked["return_import_supported"] = False
+                blocked["blocked_reason"] = "unsupported_import_profile"
+                blocked_files.append(blocked)
+                continue
+            item["return_import_supported"] = True
+        actionable_files.append(item)
+    payload = dict(payload)
+    payload["files"] = actionable_files
+    payload["blocked_files"] = blocked_files
+    return payload
+
+
 def data_sharing_get_payload(
     repo_root: Path,
     api_path: str,
@@ -318,11 +361,11 @@ def data_sharing_get_payload(
             DATA_SHARING_HANDLERS,
         )
     if api_path == RETURNED_PACKAGES_PATH:
-        return data_sharing_service.list_returned_packages(
+        return actionable_returned_packages(data_sharing_service.list_returned_packages(
             repo_root,
             query_value(query, "data_domain"),
             DATA_SHARING_HANDLERS,
-        )
+        ))
     raise FileNotFoundError("Not found")
 
 

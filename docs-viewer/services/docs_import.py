@@ -41,6 +41,7 @@ EXPORT_METADATA_FIELDS = {
     "target_format",
     "record_shape",
     "generated_at",
+    "supports_return_import",
     "selected_doc_ids",
     "source_last_updated",
     "counts",
@@ -457,10 +458,16 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
 
 
 def detect_import_type(source_metadata: dict[str, Any]) -> str:
+    if source_metadata.get("supports_return_import") is False:
+        return "export_only"
     profile_id = normalize_text(source_metadata.get("profile_id"))
     if profile_id in PROFILE_ID_TO_IMPORT_TYPE:
         return PROFILE_ID_TO_IMPORT_TYPE[profile_id]
     return "unknown"
+
+
+def supported_return_import_profile_ids() -> set[str]:
+    return set(PROFILE_ID_TO_IMPORT_TYPE)
 
 
 def current_report_context(current: dict[str, Any]) -> dict[str, Any]:
@@ -689,7 +696,16 @@ def parse_staged_import(
     report["current_library"] = current_report_context(current_context)
     report["issues"].extend(add_current_library_report(records, current=current_context, scope=normalized_scope))
 
-    if raw_rows and not source_profile_id:
+    supports_return_import = source_metadata.get("supports_return_import") is not False
+    if raw_rows and not supports_return_import:
+        report["issues"].append(
+            issue(
+                "error",
+                "export_only_profile",
+                f"profile does not support returned-package import: {source_profile_id or '<missing>'}",
+            )
+        )
+    elif raw_rows and not source_profile_id:
         if source_export_id:
             report["issues"].append(
                 issue(

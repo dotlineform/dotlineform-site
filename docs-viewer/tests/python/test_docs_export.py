@@ -399,6 +399,33 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert context["records_path"] == "records"
 
 
+def test_export_only_profile_writes_provenance_metadata_without_import_support() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0]["workflow"] = {"supports_return_import": False}
+    fixed_generated_at = "2026-05-03T15:15:07Z"
+    fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
+    original_export_run_times = docs_export.export_run_times
+    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
+    try:
+        with make_repo(config) as temp:
+            root = Path(temp)
+            report = run_export(
+                root,
+                selected_doc_ids=["library"],
+                missing_summary_only=False,
+                write=True,
+            )
+            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+    finally:
+        docs_export.export_run_times = original_export_run_times
+
+    assert report["ok"] is True, report
+    assert report["metadata_file"] == "var/analytics/data-sharing/meta/ds_20260503T151507Z.meta.json"
+    assert metadata["export_id"] == "ds_20260503T151507Z"
+    assert metadata["profile_id"] == "document-content"
+    assert metadata["supports_return_import"] is False
+
+
 def test_existing_export_metadata_blocks_same_export_id_write() -> None:
     fixed_generated_at = "2026-05-03T15:15:07Z"
     fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
@@ -624,6 +651,7 @@ def main() -> None:
         test_output_path_rejects_export_id_placeholder,
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
         test_document_rows_json_format_override_writes_json_array,
+        test_export_only_profile_writes_provenance_metadata_without_import_support,
         test_existing_export_metadata_blocks_same_export_id_write,
         test_unsupported_format_override_blocks_export,
         test_export_run_times_use_utc_metadata_and_local_filename_time,

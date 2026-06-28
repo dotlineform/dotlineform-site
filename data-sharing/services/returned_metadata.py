@@ -77,6 +77,10 @@ def load_export_metadata(repo_root: Path, export_id: str) -> tuple[dict[str, Any
     return metadata, metadata_path
 
 
+def supports_return_import(metadata: dict[str, Any]) -> bool:
+    return metadata.get("supports_return_import") is not False
+
+
 def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
     stat = path.stat()
     record: dict[str, Any] = {
@@ -119,6 +123,7 @@ def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
             "scope": normalize_text(metadata.get("scope")),
             "target_format": normalize_text(metadata.get("target_format")),
             "record_shape": normalize_text(metadata.get("record_shape")),
+            "supports_return_import": supports_return_import(metadata),
         }
     )
     return record
@@ -128,18 +133,26 @@ def list_staged_files_with_metadata(repo_root: Path, staging_root: Path | str | 
     base_root = Path(staging_root) if staging_root else STAGING_ROOT
     resolved_staging_root = (repo_root / base_root).resolve()
     files: list[dict[str, Any]] = []
+    blocked_files: list[dict[str, Any]] = []
     if resolved_staging_root.exists():
         for path in sorted(resolved_staging_root.iterdir()):
             if path.name.endswith(".context.json") or path.name.endswith(".meta.json"):
                 continue
             if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
                 continue
-            files.append(staged_file_record(repo_root, path))
+            record = staged_file_record(repo_root, path)
+            if record.get("metadata_ok") and record.get("supports_return_import") is False:
+                record["return_import_supported"] = False
+                record["blocked_reason"] = "export_only_profile"
+                blocked_files.append(record)
+                continue
+            files.append(record)
     return {
         "ok": True,
         "staging_root": base_root.as_posix(),
         "meta_root": META_ROOT.as_posix(),
         "files": files,
+        "blocked_files": blocked_files,
     }
 
 
@@ -150,4 +163,5 @@ __all__ = [
     "export_id_from_staged_file",
     "list_staged_files_with_metadata",
     "load_export_metadata",
+    "supports_return_import",
 ]

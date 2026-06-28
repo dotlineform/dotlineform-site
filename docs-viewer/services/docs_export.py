@@ -59,6 +59,7 @@ SUPPORTED_FIELD_SOURCES = {
 SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
 SUPPORTED_RECORD_SHAPES = {"document_rows"}
 SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
+DEFAULT_SUPPORTS_RETURN_IMPORT = True
 SKIPPED_REASON_LABELS = {
     "has_summary": "already have summaries",
     "max_documents": "exceeded the configured maximum document count",
@@ -409,6 +410,13 @@ def supported_target_formats(config: dict[str, Any]) -> list[str]:
     return formats
 
 
+def supports_return_import(config: dict[str, Any]) -> bool:
+    workflow = config.get("workflow")
+    if not isinstance(workflow, dict):
+        return DEFAULT_SUPPORTS_RETURN_IMPORT
+    return workflow.get("supports_return_import") is not False
+
+
 def clean_context_text(value: Any) -> str:
     return str(value or "").replace("\r\n", "\n").replace("\r", "\n").strip()
 
@@ -560,6 +568,13 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     for key in ["include_descendants", "include_non_viewable"]:
         if not isinstance(selection.get(key), bool):
             errors.append(f"config {config_id}: selection.{key} must be true or false")
+
+    workflow = config.get("workflow")
+    if workflow is not None:
+        if not isinstance(workflow, dict):
+            errors.append(f"config {config_id}: workflow must be an object")
+        elif "supports_return_import" in workflow and not isinstance(workflow.get("supports_return_import"), bool):
+            errors.append(f"config {config_id}: workflow.supports_return_import must be true or false")
 
     limits = config.get("limits") if isinstance(config.get("limits"), dict) else {}
     for key in ["max_documents", "max_chars_per_document", "max_total_chars"]:
@@ -1007,6 +1022,7 @@ def export_metadata(
         "target_format": target_format,
         "record_shape": record_shape,
         "generated_at": generated_at,
+        "supports_return_import": supports_return_import(context.config),
     }
     optional_values = {
         "config_checksum": config_checksum(context.config),

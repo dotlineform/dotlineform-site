@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c783a910c42368a694a776cde5ad43a1",
-    "generated_at_utc": "2026-06-27T20:35:52Z",
+    "version": "blake2b-329f1c0127f29a34c2e76133a98a471b",
+    "generated_at_utc": "2026-06-28T13:44:48Z",
     "count": 228
   },
   "entries": [
@@ -1478,10 +1478,10 @@
       "kind": "doc",
       "title": "Data Sharing Export Metadata",
       "href": "/docs/?scope=studio&doc=data-sharing-export-metadata",
-      "last_updated": "2026-06-27",
+      "last_updated": "2026-06-28",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-27 • Data Sharing",
+      "display_meta": "2026-06-28 • Data Sharing",
       "search_terms": [
         "data-sharing-export-metadata",
         "data",
@@ -1490,12 +1490,12 @@
         "metadata",
         "data sharing export metadata",
         "data sharing",
-        "2026-06-27",
+        "2026-06-28",
         "2026",
         "06",
-        "27"
+        "28"
       ],
-      "search_text": "data-sharing-export-metadata data sharing export metadata data sharing export metadata data sharing 2026-06-27 2026 06 27"
+      "search_text": "data-sharing-export-metadata data sharing export metadata data sharing export metadata data sharing 2026-06-28 2026 06 28"
     },
     {
       "id": "data-sharing-documents-adapter-structure",
@@ -1527,10 +1527,10 @@
       "kind": "doc",
       "title": "Documents Prepare Profiles",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles",
-      "last_updated": "2026-06-25",
+      "last_updated": "2026-06-28",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-25 • Data Sharing",
+      "display_meta": "2026-06-28 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-prepare-profiles",
         "data",
@@ -1540,12 +1540,12 @@
         "profiles",
         "documents prepare profiles",
         "data sharing",
-        "2026-06-25",
+        "2026-06-28",
         "2026",
         "06",
-        "25"
+        "28"
       ],
-      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-25 2026 06 25"
+      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-28 2026 06 28"
     },
     {
       "id": "data-sharing-documents-returned-package-review",
