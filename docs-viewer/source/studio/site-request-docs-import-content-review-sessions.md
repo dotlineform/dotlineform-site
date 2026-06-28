@@ -264,20 +264,248 @@ Potential future capabilities:
 - controlled apply of Markdown source updates
 - session cleanup tooling
 
-## Implementation Notes
+## Implementation Architecture
 
-Likely ownership:
+The implementation should prefer a narrow, disposable review session over a broad live-scope integration. Review sessions must be added as their own management-only feature, not as branches inside normal scope config, normal generated data reads, or canonical source management.
 
-- returned file parsing stays under `docs_returned_import_*`
-- content review session creation should use a new data-sharing apply/review module rather than summary or hierarchy modules
-- session manifests and generated payload serving should be management-only
-- UI workflow state belongs to Docs Viewer management/import UI, not normal public scope runtime
+### Backend Modules
 
-Completed enabling refactor:
+Add a dedicated backend owner:
+
+- `docs-viewer/services/docs_review_sessions.py`
+
+This module should own all review-session filesystem and payload behavior:
+
+- resolve the import-preview root: `var/analytics/data-sharing/import-preview`
+- list immediate child session folders
+- read a session manifest when present
+- report built/unbuilt status for each folder
+- validate that a requested `session_id` resolves under the import-preview root
+- build or rebuild a session from its source folder
+- read session `index-tree.json`
+- read session `by-id/<doc_id>.json`
+- delete one complete session folder
+- produce structured JSON responses for list/build/read/delete operations
+
+It should not:
+
+- read or mutate `docs-viewer/config/scopes/docs_scopes.json`
+- add review sessions to scope config
+- write canonical source Markdown
+- publish public payloads
+- treat missing manually deleted folders as corruption
+- import browser/UI concerns
+
+Path safety should be explicit. A valid session id should be a folder name, not an arbitrary path. Reject empty ids, path separators, `..`, absolute paths, symlinks that escape the import-preview root, and delete/build/read targets outside the root.
+
+### Backend Routes
+
+Keep route additions thin.
+
+Add path constants in `docs-viewer/services/docs_management_routes.py`, for example:
+
+- `REVIEW_SESSIONS_PATH = "/docs/review-sessions"`
+- `REVIEW_SESSION_BUILD_PATH = "/docs/review-sessions/build"`
+- `REVIEW_SESSION_DELETE_PATH = "/docs/review-sessions/delete"`
+- `REVIEW_SESSION_INDEX_TREE_PATH = "/docs/review-sessions/index-tree"`
+- `REVIEW_SESSION_PAYLOAD_PATH = "/docs/review-sessions/payload"`
+
+Add those paths to the appropriate `GET_PATHS` and `POST_PATHS`.
+
+`docs-viewer/services/docs_management_service.py` should only dispatch to `docs_review_sessions.py`. It should not grow session business logic. The server layer in `docs-viewer/services/docs_viewer_service.py` should not need special session handling beyond its existing route dispatch and management/generation gates.
+
+The route split should be:
+
+- `GET /docs/review-sessions`: list session folders and built status
+- `POST /docs/review-sessions/build`: build or rebuild one selected session folder
+- `POST /docs/review-sessions/delete`: delete one selected session folder
+- `GET /docs/review-sessions/index-tree?session_id=...`: return built session tree
+- `GET /docs/review-sessions/payload?session_id=...&doc_id=...`: return one built session document payload
+
+Build and delete should require management mode. Session generated reads should also stay management-only; they are local review artifacts, not public generated data.
+
+### Session Build Contract
+
+The session builder should consume a session folder that already contains temporary source Markdown, for example:
+
+```text
+var/analytics/data-sharing/import-preview/<session_id>/
+  manifest.json
+  source/
+    example.md
+    child.md
+  generated/
+    index-tree.json
+    by-id/
+      example.json
+      child.json
+```
+
+Data Sharing owns creating the `source/` files from the staged returned package. Docs Viewer owns building `generated/` from that selected temporary source folder.
+
+The build path should reuse Docs Viewer source/generation concepts where practical, but it must not require the folder to be registered as a configured scope. If existing builders are too tightly tied to `DocsScopeConfig`, add a small review-session build adapter rather than broadening normal scope config.
+
+The generated payload shape should match the normal Docs Viewer payloads closely enough that the document renderer can display them. Any additional review-only metadata should be in the session manifest or a clearly namespaced payload field, not mixed into canonical source assumptions.
+
+### Frontend Modules
+
+Add dedicated frontend modules rather than expanding existing management files:
+
+- `docs-viewer/runtime/js/management/docs-viewer-review-sessions-client.js`
+- `docs-viewer/runtime/js/management/docs-viewer-review-sessions-modal.js`
+- `docs-viewer/runtime/js/management/docs-viewer-review-sessions-controller.js`
+
+Responsibilities:
+
+- `docs-viewer-review-sessions-client.js`
+  - calls the review-session management endpoints
+  - contains request/response normalization for list/build/delete/read
+  - does not know about modal DOM
+
+- `docs-viewer-review-sessions-modal.js`
+  - renders the sessions modal UI
+  - lists session folders
+  - shows built/unbuilt status
+  - exposes Build, Delete, Open, Cancel interactions
+  - does not know how to load a document payload into the viewer
+
+- `docs-viewer-review-sessions-controller.js`
+  - wires the sessions toolbar button, modal, client, and viewer callbacks
+  - owns review-session mode state
+  - asks the viewer runtime to load the selected built session
+  - exits review-session mode back to the previous configured scope
+
+Existing files should only receive narrow integration points:
+
+- `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`
+  - add the sessions icon/toggle button markup
+
+- `docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js`
+  - either add only a neutral mount point for session modal content, or delegate modal markup to the new modal module
+  - do not add a large hard-coded sessions modal block here
+
+- `docs-viewer/runtime/js/management/docs-viewer-management.js`
+  - initialize the sessions controller
+  - pass callbacks for loading/exiting review-session mode
+  - do not put session listing/build/delete logic here
+
+If the existing management shell makes adding a new modal require large markup inside `docs-viewer-management-shell-renderer.js`, split a generic management modal mount first. Review sessions should not make that renderer substantially heavier.
+
+### Runtime State
+
+Review sessions need their own runtime state. Do not overload normal scope state.
+
+Use a distinct state shape such as:
+
+```js
+{
+  mode: "review_session",
+  sessionId: "ds_20260628T120000Z-document-content",
+  previousScope: "library",
+  previousDocId: "library",
+  contentFormat: "markdown"
+}
+```
+
+Normal scope state should continue to mean configured Docs Viewer scope state:
+
+- `viewerScope`
+- scope selector value
+- configured `indexTreeUrl`
+- configured `searchIndexUrl`
+- configured `recentlyAddedUrl`
+- public route base
+- source management capabilities
+
+Review-session mode should not:
+
+- add the session to the scope selector
+- set `viewerScope` to the session id
+- use fake scope ids such as `library-review`
+- mutate route config
+- mutate docs scope config
+- imply the temporary docs are canonical
+
+The route can use:
+
+```text
+/docs/?review_session=<session_id>&doc=<doc_id>
+```
+
+The normal scope URL should remain available when exiting review mode. Toggling the sessions button while a session is active should exit review-session mode and restore the selected configured scope.
+
+### Payload Loading
+
+Normal generated-data loading currently reads configured scope payloads. Session payload loading should use a separate payload source.
+
+Preferred implementation:
+
+- introduce a small payload-provider abstraction in the viewer runtime
+- normal provider reads normal generated scope payloads
+- review-session provider reads `/docs/review-sessions/index-tree` and `/docs/review-sessions/payload`
+
+This keeps review-session logic out of `docs-viewer-generated-data-runtime.js` and avoids conditionals throughout document loading.
+
+If a payload-provider abstraction is too large for the first slice, keep the session loading branch in the sessions controller and pass loaded tree/payloads to the viewer through a narrow callback. Do not spread `if (reviewSession)` checks through the document controller, router, search controller, sidebar, and generated-data runtime.
+
+Search and recently-added can be omitted initially. The first version only needs:
+
+- session index tree
+- session document payload by id
+- sidebar tree display
+- selected document rendering
+
+### UI Behavior
+
+The sessions toolbar button is a manage-mode control. It should not appear on public routes.
+
+Expected behavior:
+
+- click Sessions while in normal scope mode: open the sessions modal
+- select a built session and Open: load that session in review mode
+- select an unbuilt session: enable Build
+- click Build: build/rebuild that session folder and refresh list state
+- click Delete: confirm, delete complete session folder, refresh list state
+- click Sessions while in review-session mode: exit review mode and return to the selected normal scope
+- if the current session was manually deleted: show a clear stale-session message and offer to return to normal scope
+
+Review mode should visually communicate that it is temporary:
+
+- show a label such as `Import review - library - document-content - markdown`
+- suppress source write/delete actions
+- suppress public links
+- suppress source config settings
+- keep ordinary read/navigation controls available where they still make sense
+
+### Preparatory Work We Can Do Now
+
+There is useful preparatory refactoring that can be done before implementing sessions, similar to the completed import HTML-to-Markdown split.
+
+1. Add a management review-session route/service skeleton.
+
+Create `docs_review_sessions.py` with path-safe list/delete/read stubs and focused tests. Wire thin route constants and dispatch. This establishes backend ownership before feature behavior grows.
+
+2. Split management shell modal mounting.
+
+`docs-viewer-management-shell-renderer.js` currently owns large hard-coded modal markup for metadata/import/settings. Before adding sessions, add a generic management modal mount or modal registry so new modals can render from their own modules.
+
+3. Add a frontend session client module with tests.
+
+Create `docs-viewer-review-sessions-client.js` around the future endpoints. Even before the modal exists, it can own path names, payload normalization, and error handling.
+
+4. Assess payload-provider extraction.
+
+Review the current document loading path and identify the smallest place to introduce a payload provider. The goal is to avoid session conditionals in normal generated-data runtime and document controller code.
+
+5. Update ownership docs before implementation.
+
+Add the review-session module boundaries to `docs-viewer/source/studio/development-checklist.md` once the first skeleton modules exist.
+
+The highest-value preparatory slice is the backend service skeleton plus tests, because it enforces that sessions are temp folders under `var/...` and not a hidden scope/config concept. The second-highest is the management modal mount split, because it prevents the sessions UI from making existing large frontend files larger.
+
+### Completed Enabling Refactor
 
 - `docs-viewer/services/docs_html_markdown.py` now owns reusable HTML/SVG parsing, sanitization helpers, and `html_to_markdown(...)`.
 - `docs_import_html_parser.py` is now import-preview-specific and builds HTML summaries from the shared converter.
 - `docs_import_preview.py` and `docs_import_media.py` use the shared conversion boundary where they need HTML-derived Markdown.
 - Data Sharing markdown export should call `docs_html_markdown.html_to_markdown(...)` rather than duplicating HTML-to-Markdown logic or depending on import-preview summaries.
-
-The initial implementation should prefer a narrow, disposable review session over a broad live-scope integration.
