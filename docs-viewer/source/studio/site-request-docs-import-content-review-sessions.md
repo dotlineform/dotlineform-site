@@ -18,9 +18,9 @@ Returned `document-content` packages can contain expanded or rewritten text for 
 
 Changing `doc_id` breaks existing parent-child relationships, links, references, and any other stable identity assumptions. If a parent document moved to a new revision id, its children and inbound links would also need coordinated changes. That turns a content review workflow into a source graph migration.
 
-The returned content also may not be canonical Docs Viewer Markdown. The current `document-content` profile exports `source_text` as plain text extracted from rendered HTML, using whitespace normalization and truncation. Links, media tokens, references, tables, details, and other Markdown semantics are not guaranteed to survive.
+The returned content also needs enough structure for review. Plain text remains useful for summary-generation workflows, but it is not a good basis for full content rewrite/review sessions because the missing structure can make returned full content ambiguous.
 
-Plain text remains useful for summary-generation workflows because the requested output is already compressed and lossy. It is not a good basis for full content rewrite/review sessions, because the missing structure can make generated or returned full content ambiguous. For content-review sessions, Markdown support is therefore a prerequisite rather than a later enhancement.
+Markdown export for `document-content` is therefore a prerequisite. That prerequisite is tracked separately in [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export).
 
 ## Decision
 
@@ -52,51 +52,19 @@ No live source docs are created, overwritten, or deleted by this action.
 
 ## Content Format
 
-Content format should be a prepare option on the `document-content` profile, not a separate profile.
+Content-review sessions consume package-level content format metadata; they do not own Markdown export.
 
-Existing summary-oriented behavior can remain:
+The Markdown export prerequisite should provide:
 
-- `content_format: "plain_text"`
-- returned row content is treated as plain text
-- suitable for summary-generation or other lossy review tasks
-- not sufficient for full content review sessions
+- `content_format: "markdown"` at package level
+- `source_markdown` on each returned record
+- no mixed formats within one package
 
-Content review sessions require:
+Full content-review sessions require `content_format: "markdown"`.
 
-- `content_format: "markdown"`
-- returned row content is rendered as Markdown in the review session
-- headings, lists, links, blockquotes, code blocks, and simple tables are preserved where the shared converter supports them
-- later apply workflows can decide whether Markdown content is safe enough for canonical source replacement
+If a staged `document-content` file declares `content_format: "plain_text"`, the UI should either block content-review session creation or label it as lower-fidelity text review rather than document-content review.
 
-The returned package metadata should identify the content format so import/review behavior is self-describing. The import side should handle whichever supported format the package declares.
-
-The exported file itself should also include `content_format` at package level. Do not support mixed content formats within one package.
-
-For JSON package exports:
-
-```json
-{
-  "export_id": "ds_20260628T120000Z",
-  "profile_id": "document-content",
-  "content_format": "markdown",
-  "records": [
-    {
-      "doc_id": "example",
-      "title": "Example",
-      "source_markdown": "# Example\n\nReturned Markdown body."
-    }
-  ]
-}
-```
-
-For JSONL package exports, put `content_format` in the header row:
-
-```json
-{"record_type":"data_sharing_header","export_id":"ds_20260628T120000Z","profile_id":"document-content","content_format":"markdown"}
-{"doc_id":"example","title":"Example","source_markdown":"# Example\n\nReturned Markdown body."}
-```
-
-Plain text versus Markdown changes review quality, not the session workflow, but full content review should be gated to Markdown packages. If a staged file only contains plain text content, the UI should either block content-review session creation or label it as a lower-fidelity text review rather than a document-content review.
+See [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export) for the export/package shape and implementation tasks.
 
 ## Temporary Review Sessions
 
@@ -139,7 +107,7 @@ The file shape is:
 
 The body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process the returned content. If the selected content field is `source_text`, the body is exactly that `source_text` value.
 
-For full content-review sessions, the selected content field should be the Markdown content field produced by the `document-content` prepare format option. Data Sharing prepares that field from the rendered source HTML using the shared Docs Viewer HTML-to-Markdown converter. The session builder still copies the staged field verbatim; conversion belongs to prepare/export, not session creation.
+For full content-review sessions, the selected content field should be the Markdown content field produced by the `document-content` Markdown export prerequisite. The session builder copies the staged field verbatim; conversion belongs to prepare/export, not session creation.
 
 Front matter should be mapping-driven rather than hard-coded. Generated/system fields are owned by the session builder. Mapped fields come from the staged row when present.
 
@@ -252,7 +220,7 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 ## Future Extension
 
-Markdown return content should be added as a `document-content` prepare formatting option before the content-review session workflow is implemented.
+Markdown return content is tracked as a prerequisite in [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export) and should be implemented before this session workflow.
 
 If Markdown return content later proves reliable enough for source replacement, that should be a separate apply action with stronger review and diff tooling. It should not reuse the plain-text content review action as an implicit live-source overwrite.
 
@@ -260,7 +228,6 @@ Potential future capabilities:
 
 - side-by-side live/current versus returned content comparison
 - content-format-aware diffing
-- Markdown source export and returned Markdown review
 - controlled apply of Markdown source updates
 - session cleanup tooling
 
@@ -535,4 +502,4 @@ HTML-to-Markdown enabling refactor:
 - `docs-viewer/services/docs_html_markdown.py` now owns reusable HTML/SVG parsing, sanitization helpers, and `html_to_markdown(...)`.
 - `docs_import_html_parser.py` is now import-preview-specific and builds HTML summaries from the shared converter.
 - `docs_import_preview.py` and `docs_import_media.py` use the shared conversion boundary where they need HTML-derived Markdown.
-- Data Sharing markdown export should call `docs_html_markdown.html_to_markdown(...)` rather than duplicating HTML-to-Markdown logic or depending on import-preview summaries.
+- Data Sharing Markdown export should call `docs_html_markdown.html_to_markdown(...)` rather than duplicating HTML-to-Markdown logic or depending on import-preview summaries; that implementation is owned by [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export).

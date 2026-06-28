@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-def680ff532945202883415c915feaaf",
-    "generated_at_utc": "2026-06-28T21:13:58Z",
-    "count": 231
+    "version": "blake2b-bc8e80bd3b7e43553d4f4e5f25404e8b",
+    "generated_at_utc": "2026-06-28T21:59:02Z",
+    "count": 232
   },
   "entries": [
     {
@@ -1232,6 +1232,35 @@
         "09"
       ],
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
+    },
+    {
+      "id": "site-request-docs-document-content-markdown-export",
+      "kind": "doc",
+      "title": "Docs Document Content Markdown Export",
+      "href": "/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export",
+      "last_updated": "2026-06-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-28 • Change Requests",
+      "search_terms": [
+        "site-request-docs-document-content-markdown-export",
+        "site",
+        "request",
+        "docs",
+        "document",
+        "content",
+        "markdown",
+        "export",
+        "docs document content markdown export",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-28",
+        "2026",
+        "06",
+        "28"
+      ],
+      "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-28 2026 06 28"
     },
     {
       "id": "site-request-docs-import-content-review-sessions",
