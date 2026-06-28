@@ -9,6 +9,7 @@ Run:
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import datetime as dt
 import json
 import sys
@@ -49,6 +50,28 @@ from docs_export_selection import (
     skipped_summary_warnings,
 )
 from docs_export_transforms import build_document_record
+
+
+ZERO_EXPORT_COUNTS = {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
+
+
+@dataclasses.dataclass(frozen=True)
+class ExportOutputPaths:
+    output_path: Path | None = None
+    output_file: str = ""
+    metadata_path: Path | None = None
+    metadata_file: str = ""
+    context_path: Path | None = None
+    context_file: str = ""
+
+
+@dataclasses.dataclass(frozen=True)
+class ExportRecordBuild:
+    records: list[dict[str, Any]]
+    warnings: list[str]
+    errors: list[str]
+    failed_count: int
+    truncated_count: int
 
 
 def detect_repo_root(explicit_root: str | None = None) -> Path:
@@ -94,180 +117,84 @@ def export_run_times(
     return utc_dt.strftime("%Y-%m-%dT%H:%M:%SZ"), filename_dt
 
 
-def build_export(
+def empty_export_report(
     *,
-    repo_root: Path,
+    write: bool,
+    export_id: str,
     config_id: str,
     scope: str,
-    selected_doc_ids: list[str],
-    select_all: bool,
-    missing_summary_only: bool | None,
-    write: bool,
-    data_domain: str = "documents",
-    config_path: str | None = None,
-    target_format: str | None = None,
-    output_root: Path | str | None = None,
+    target_format: str,
+    paths: ExportOutputPaths | None = None,
+    warnings: list[str],
+    errors: list[str],
+    supported_formats: list[str] | None = None,
 ) -> dict[str, Any]:
-    generated_at, filename_timestamp_dt = export_run_times()
-    export_id = export_id_from_generated_at(generated_at)
-    config_payload = load_config_file(repo_root, config_path)
-    payload_errors, payload_warnings = validate_config_payload(config_payload)
-    if payload_errors:
-        return {
-            "ok": False,
-            "dry_run": not write,
-            "export_id": export_id,
-            "config_id": config_id,
-            "scope": scope,
-            "target_format": "",
-            "output_file": "",
-            "metadata_file": "",
-            "context_file": "",
-            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
-            "selected_doc_ids": [],
-            "exported_doc_ids": [],
-            "skipped": [],
-            "skipped_summary": {},
-            "warnings": payload_warnings,
-            "errors": payload_errors,
-            "issue_counts": {"errors": len(payload_errors), "warnings": len(payload_warnings)},
-            "output_written": False,
-        }
+    output_paths = paths or ExportOutputPaths()
+    report: dict[str, Any] = {
+        "ok": False,
+        "dry_run": not write,
+        "export_id": export_id,
+        "config_id": config_id,
+        "scope": scope,
+        "target_format": target_format,
+        "output_file": output_paths.output_file,
+        "metadata_file": output_paths.metadata_file,
+        "context_file": output_paths.context_file,
+        "counts": dict(ZERO_EXPORT_COUNTS),
+        "selected_doc_ids": [],
+        "exported_doc_ids": [],
+        "skipped": [],
+        "skipped_summary": {},
+        "warnings": warnings,
+        "errors": errors,
+        "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
+        "output_written": False,
+    }
+    if supported_formats is not None:
+        report["supported_target_formats"] = supported_formats
+    return report
+
+
+def resolve_export_paths(
+    *,
+    repo_root: Path,
+    config: dict[str, Any],
+    config_id: str,
+    data_domain: str,
+    export_id: str,
+    timestamp: str,
+    target_format: str,
+    output_root: Path | str | None,
+) -> tuple[ExportOutputPaths, list[str]]:
     try:
-        config = find_export_config(config_payload, config_id)
+        output_path = resolve_output_path(repo_root, config, data_domain, export_id, timestamp, target_format, output_root)
+        metadata_path = package_metadata_path(repo_root, export_id)
+        context_path = package_context_sidecar_path(output_path)
     except ValueError as exc:
-        errors = [str(exc)]
-        return {
-            "ok": False,
-            "dry_run": not write,
-            "export_id": export_id,
-            "config_id": config_id,
-            "scope": scope,
-            "target_format": "",
-            "output_file": "",
-            "metadata_file": "",
-            "context_file": "",
-            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
-            "selected_doc_ids": [],
-            "exported_doc_ids": [],
-            "skipped": [],
-            "skipped_summary": {},
-            "warnings": payload_warnings,
-            "errors": errors,
-            "issue_counts": {"errors": len(errors), "warnings": len(payload_warnings)},
-            "output_written": False,
-        }
-    config_errors, config_warnings = validate_export_config(config)
-    warnings: list[str] = [*payload_warnings, *config_warnings]
-    errors: list[str] = [*config_errors]
-    if data_domain not in config.get("data_domains", []):
-        errors.append(f"config {config_id}: data_domain {data_domain} is not supported")
-    if not config.get("enabled", False):
-        errors.append(f"config {config_id}: export config is disabled")
-
-    output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
-    target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
-    supported_formats = supported_target_formats(config)
-    requested_target_format = normalize_text(target_format)
-    resolved_target_format = requested_target_format or normalize_text(target_config.get("format"))
-    if requested_target_format and requested_target_format not in supported_formats:
-        errors.append(
-            f"config {config_id}: target_format {requested_target_format!r} is not supported; "
-            f"supported formats: {', '.join(supported_formats)}"
-        )
-    timestamp_format = normalize_text(output_config.get("timestamp_format") or "%Y%m%d-%H%M%S")
-    timestamp = filename_timestamp_dt.strftime(timestamp_format)
-    output_path: Path | None = None
-    relative_output = ""
-    metadata_output_path: Path | None = None
-    relative_metadata_output = ""
-    context_output_path: Path | None = None
-    relative_context_output = ""
-    try:
-        output_path = resolve_output_path(repo_root, config, data_domain, export_id, timestamp, resolved_target_format, output_root)
-        relative_output = str(output_path.relative_to(repo_root))
-        metadata_output_path = package_metadata_path(repo_root, export_id)
-        relative_metadata_output = str(metadata_output_path.relative_to(repo_root))
-        context_output_path = package_context_sidecar_path(output_path)
-        relative_context_output = str(context_output_path.relative_to(repo_root))
-    except ValueError as exc:
-        errors.append(f"config {config_id}: {exc}")
-    if write and metadata_output_path is not None and metadata_output_path.exists():
-        errors.append(f"export_id {export_id}: metadata file already exists")
-
-    if errors:
-        return {
-            "ok": False,
-            "dry_run": not write,
-            "export_id": export_id,
-            "config_id": config_id,
-            "scope": scope,
-            "target_format": resolved_target_format,
-            "output_file": relative_output,
-            "metadata_file": relative_metadata_output,
-            "context_file": relative_context_output,
-            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
-            "selected_doc_ids": [],
-            "exported_doc_ids": [],
-            "skipped": [],
-            "skipped_summary": {},
-            "warnings": warnings,
-            "errors": errors,
-            "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
-            "output_written": False,
-        }
-
-    try:
-        source_context, docs = load_source_export_context(repo_root, scope)
-    except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
-        errors = [f"source metadata: {exc}"]
-        return {
-            "ok": False,
-            "dry_run": not write,
-            "export_id": export_id,
-            "config_id": config_id,
-            "scope": scope,
-            "target_format": resolved_target_format,
-            "supported_target_formats": supported_formats,
-            "output_file": relative_output,
-            "metadata_file": relative_metadata_output,
-            "context_file": relative_context_output,
-            "counts": {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0},
-            "selected_doc_ids": [],
-            "exported_doc_ids": [],
-            "skipped": [],
-            "skipped_summary": {},
-            "warnings": warnings,
-            "errors": errors,
-            "issue_counts": {"errors": len(errors), "warnings": len(warnings)},
-            "output_written": False,
-        }
-    docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
-    context = ExportContext(
-        repo_root=repo_root,
-        scope=scope,
-        data_domain=data_domain,
-        config=config,
-        source_context=source_context,
-        docs=docs,
-        docs_by_id=docs_by_id,
-        children_by_parent=build_children_by_parent(docs),
-    )
-    selected, skipped, selection_errors, selection_warnings = selected_docs(
-        context,
-        selected_doc_ids=selected_doc_ids,
-        select_all=select_all,
-        missing_summary_only=missing_summary_only,
+        return ExportOutputPaths(), [f"config {config_id}: {exc}"]
+    return (
+        ExportOutputPaths(
+            output_path=output_path,
+            output_file=str(output_path.relative_to(repo_root)),
+            metadata_path=metadata_path,
+            metadata_file=str(metadata_path.relative_to(repo_root)),
+            context_path=context_path,
+            context_file=str(context_path.relative_to(repo_root)),
+        ),
+        [],
     )
 
-    record_shape = normalize_text(target_config.get("record_shape"))
-    if record_shape == "document_tree":
-        selected = expand_selected_docs_for_document_tree(context, selected)
 
+def build_records_for_export(
+    *,
+    context: ExportContext,
+    selected: list[dict[str, Any]],
+    record_shape: str,
+    config_id: str,
+) -> ExportRecordBuild:
     records: list[dict[str, Any]] = []
-    warnings.extend(selection_warnings)
-    warnings.extend(skipped_summary_warnings(skipped))
-    errors = list(selection_errors)
+    warnings: list[str] = []
+    errors: list[str] = []
     failed_count = 0
     truncated_count = 0
     if record_shape == "document_rows":
@@ -293,13 +220,179 @@ def build_export(
         ]
     else:
         errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
+    return ExportRecordBuild(
+        records=records,
+        warnings=warnings,
+        errors=errors,
+        failed_count=failed_count,
+        truncated_count=truncated_count,
+    )
+
+
+def write_export_outputs(
+    *,
+    paths: ExportOutputPaths,
+    target_format: str,
+    export_id: str,
+    payload: dict[str, Any] | list[dict[str, Any]],
+    metadata: dict[str, Any],
+    external_context: dict[str, Any],
+) -> None:
+    if paths.output_path is None:
+        raise ValueError("Export output path was not resolved")
+    if target_format == "json":
+        write_json(paths.output_path, payload)
+    elif target_format == "jsonl":
+        if not isinstance(payload, list):
+            raise ValueError("JSONL document_rows payload must be an array")
+        write_jsonl(paths.output_path, [data_sharing_header_row(export_id), *payload])
+    else:
+        raise ValueError(f"Unsupported target.format: {target_format}")
+    if paths.metadata_path is not None:
+        write_json(paths.metadata_path, metadata)
+    if paths.context_path is not None:
+        write_json(paths.context_path, external_context)
+
+
+def build_export(
+    *,
+    repo_root: Path,
+    config_id: str,
+    scope: str,
+    selected_doc_ids: list[str],
+    select_all: bool,
+    missing_summary_only: bool | None,
+    write: bool,
+    data_domain: str = "documents",
+    config_path: str | None = None,
+    target_format: str | None = None,
+    output_root: Path | str | None = None,
+) -> dict[str, Any]:
+    generated_at, filename_timestamp_dt = export_run_times()
+    export_id = export_id_from_generated_at(generated_at)
+    config_payload = load_config_file(repo_root, config_path)
+    payload_errors, payload_warnings = validate_config_payload(config_payload)
+    if payload_errors:
+        return empty_export_report(
+            write=write,
+            export_id=export_id,
+            config_id=config_id,
+            scope=scope,
+            target_format="",
+            warnings=payload_warnings,
+            errors=payload_errors,
+        )
+    try:
+        config = find_export_config(config_payload, config_id)
+    except ValueError as exc:
+        return empty_export_report(
+            write=write,
+            export_id=export_id,
+            config_id=config_id,
+            scope=scope,
+            target_format="",
+            warnings=payload_warnings,
+            errors=[str(exc)],
+        )
+    config_errors, config_warnings = validate_export_config(config)
+    warnings: list[str] = [*payload_warnings, *config_warnings]
+    errors: list[str] = [*config_errors]
+    if data_domain not in config.get("data_domains", []):
+        errors.append(f"config {config_id}: data_domain {data_domain} is not supported")
+    if not config.get("enabled", False):
+        errors.append(f"config {config_id}: export config is disabled")
+
+    output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
+    target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
+    supported_formats = supported_target_formats(config)
+    requested_target_format = normalize_text(target_format)
+    resolved_target_format = requested_target_format or normalize_text(target_config.get("format"))
+    if requested_target_format and requested_target_format not in supported_formats:
+        errors.append(
+            f"config {config_id}: target_format {requested_target_format!r} is not supported; "
+            f"supported formats: {', '.join(supported_formats)}"
+        )
+    timestamp_format = normalize_text(output_config.get("timestamp_format") or "%Y%m%d-%H%M%S")
+    timestamp = filename_timestamp_dt.strftime(timestamp_format)
+    paths, path_errors = resolve_export_paths(
+        repo_root=repo_root,
+        config=config,
+        config_id=config_id,
+        data_domain=data_domain,
+        export_id=export_id,
+        timestamp=timestamp,
+        target_format=resolved_target_format,
+        output_root=output_root,
+    )
+    errors.extend(path_errors)
+    if write and paths.metadata_path is not None and paths.metadata_path.exists():
+        errors.append(f"export_id {export_id}: metadata file already exists")
+
+    if errors:
+        return empty_export_report(
+            write=write,
+            export_id=export_id,
+            config_id=config_id,
+            scope=scope,
+            target_format=resolved_target_format,
+            paths=paths,
+            warnings=warnings,
+            errors=errors,
+        )
+
+    try:
+        source_context, docs = load_source_export_context(repo_root, scope)
+    except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
+        return empty_export_report(
+            write=write,
+            export_id=export_id,
+            config_id=config_id,
+            scope=scope,
+            target_format=resolved_target_format,
+            paths=paths,
+            warnings=warnings,
+            errors=[f"source metadata: {exc}"],
+            supported_formats=supported_formats,
+        )
+    docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
+    context = ExportContext(
+        repo_root=repo_root,
+        scope=scope,
+        data_domain=data_domain,
+        config=config,
+        source_context=source_context,
+        docs=docs,
+        docs_by_id=docs_by_id,
+        children_by_parent=build_children_by_parent(docs),
+    )
+    selected, skipped, selection_errors, selection_warnings = selected_docs(
+        context,
+        selected_doc_ids=selected_doc_ids,
+        select_all=select_all,
+        missing_summary_only=missing_summary_only,
+    )
+
+    record_shape = normalize_text(target_config.get("record_shape"))
+    if record_shape == "document_tree":
+        selected = expand_selected_docs_for_document_tree(context, selected)
+
+    warnings.extend(selection_warnings)
+    warnings.extend(skipped_summary_warnings(skipped))
+    record_build = build_records_for_export(
+        context=context,
+        selected=selected,
+        record_shape=record_shape,
+        config_id=config_id,
+    )
+    warnings.extend(record_build.warnings)
+    errors = [*selection_errors, *record_build.errors]
 
     counts = {
         "selected": len(selected),
-        "exported": len(records),
+        "exported": len(record_build.records),
         "skipped": len(skipped),
-        "failed": failed_count,
-        "truncated": truncated_count,
+        "failed": record_build.failed_count,
+        "truncated": record_build.truncated_count,
     }
     report: dict[str, Any] = {
         "ok": not errors,
@@ -309,12 +402,12 @@ def build_export(
         "scope": scope,
         "target_format": resolved_target_format,
         "supported_target_formats": supported_formats,
-        "output_file": relative_output,
-        "metadata_file": relative_metadata_output,
-        "context_file": relative_context_output,
+        "output_file": paths.output_file,
+        "metadata_file": paths.metadata_file,
+        "context_file": paths.context_file,
         "counts": counts,
         "selected_doc_ids": [normalize_text(doc.get("doc_id")) for doc in selected],
-        "exported_doc_ids": [normalize_text(record.get("doc_id")) for record in records if isinstance(record, dict)],
+        "exported_doc_ids": [normalize_text(record.get("doc_id")) for record in record_build.records if isinstance(record, dict)],
         "skipped": skipped,
         "skipped_summary": skipped_reason_counts(skipped),
         "warnings": warnings,
@@ -340,25 +433,19 @@ def build_export(
         payload = build_export_payload(
             context,
             export_id=export_id,
-            records=records,
+            records=record_build.records,
             target_format=resolved_target_format,
         )
     external_context = build_external_context(config, resolved_target_format)
     if write:
-        if output_path is None:
-            raise ValueError("Export output path was not resolved")
-        if resolved_target_format == "json":
-            write_json(output_path, payload)
-        elif resolved_target_format == "jsonl":
-            if not isinstance(payload, list):
-                raise ValueError("JSONL document_rows payload must be an array")
-            write_jsonl(output_path, [data_sharing_header_row(export_id), *payload])
-        else:
-            raise ValueError(f"Unsupported target.format: {resolved_target_format}")
-        if metadata_output_path is not None:
-            write_json(metadata_output_path, metadata)
-        if context_output_path is not None:
-            write_json(context_output_path, external_context)
+        write_export_outputs(
+            paths=paths,
+            target_format=resolved_target_format,
+            export_id=export_id,
+            payload=payload,
+            metadata=metadata,
+            external_context=external_context,
+        )
         report["output_written"] = True
     else:
         report["output_written"] = False
