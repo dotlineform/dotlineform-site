@@ -1,264 +1,74 @@
 ---
 doc_id: site-request-docs-viewer-local-public-projection
-title: Docs Viewer Local To Public Projection
+title: Docs Viewer Static HTML Export
 added_date: 2026-06-28
 last_updated: 2026-06-28
 parent_id: change-requests
 viewable: true
 ---
-# Docs Viewer Local To Public Projection
+# Docs Viewer Static HTML Export
 
 ## Status
 
 Proposed.
 
+The earlier local-to-public Docs Viewer scope projection idea is cancelled. The static HTML export is enough for the current need.
+
 ## Problem
 
-Local Docs Viewer scopes such as `studio` are readable only through the local `/docs/` management app. Off the local machine, the practical options are poor:
+Repo-backed local Docs Viewer scopes are readable only through the local `/docs/` management app. Current repo-backed local scopes include `studio` and `tmp`. Off the local machine, the practical options are poor:
 
 - run the local apps in Codespaces
 - browse raw Markdown files in GitHub
 - rely on memory or local-only access
 
-Those options are slower than opening a normal read-only Docs Viewer route, especially from another machine or on unreliable connectivity.
+Those options are slower than opening a simple rendered HTML page, especially from another machine or on unreliable connectivity.
 
-The need is not remote management. The need is a convenient read-only public/static view of selected local docs.
+The need is not remote management and not a full Docs Viewer experience. The need is quick read-only access to rendered docs.
 
-## Principle
+## Decision
 
-Introduce a local-to-public projection workflow for Docs Viewer.
+Implement a static HTML export workflow.
 
-A local management scope remains local and continues to be managed through `/docs/`. A separate public read-only projection is published into `site/` so it can be served by GitHub Pages or any static host.
+The export reads existing generated Docs Viewer payloads and writes pre-rendered HTML pages:
 
-Example:
+- one root `index.html`
+- one shared `styles.css`
+- one HTML file per doc
 
-- local source/management scope: `studio`
-- local manage route: `/docs/?scope=studio`
-- public projection route: `/studio-docs/`
-- public projection payload scope: `studio-docs`
+No Docs Viewer runtime is required.
 
-The public projection should be unadvertised by default:
+No local server is required.
 
-- no main navigation link
-- no sitemap promotion unless explicitly requested
-- no public index card
+No JSON fetches are required.
 
-It is still public if deployed to `site/`. Anyone with the URL, or anyone who discovers the static files, can read it.
+No public Docs Viewer scope, route config, search index projection, or local-to-public payload projection is required.
 
-## Non-Goals
+## Cancelled Approach
 
-This request does not make `/docs/` remotely available.
+Do not implement the heavier local-to-public Docs Viewer projection for this request.
 
-It does not add authentication, remote write access, remote source editing, or a hosted management service.
+Cancelled pieces:
 
-It does not turn `studio` itself into a public scope.
+- `studio-docs` as a public Docs Viewer payload scope
+- copying/projecting `docs-viewer/generated/docs/studio/` into `site/assets/data/docs/scopes/studio-docs/`
+- projecting `docs-viewer/generated/search/studio/index.json`
+- creating public Docs Viewer route config for `/studio-docs/`
+- creating a public Docs Viewer runtime route shell for this workflow
+- rewriting generated Docs Viewer JSON payload URLs for public runtime use
+- adding a projection registry for local-to-public scope mirrors
 
-It does not copy local service APIs, management controls, source-editor controls, import controls, settings, publishing controls, or write endpoints into the public route.
+Those can be reconsidered later only if the plain HTML export proves insufficient.
 
-## Target Shape
+## Output Destinations
 
-The target user-facing result is a static read-only route such as:
+The exporter should be available to all repo-backed local Docs Viewer scopes. `studio` is the first practical target and the examples below use it, but the implementation should not hard-code `studio`.
 
-```text
-https://dotlineform.com/studio-docs/
-```
+This does not apply to external local scopes whose source and generated JSON are saved outside the repo, such as `local_external` scopes under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/`. Those scopes need a separate portability/export decision because their data ownership and filesystem boundary are different.
 
-The route loads the existing public Docs Viewer runtime, not the local management runtime.
+The exporter should support both private/offline and public static destinations.
 
-Expected static files:
-
-```text
-site/studio-docs/index.html
-site/assets/data/docs/scopes/studio-docs/index-tree.json
-site/assets/data/docs/scopes/studio-docs/recently-added.json
-site/assets/data/docs/scopes/studio-docs/by-id/<doc_id>.json
-site/assets/data/search/studio-docs/index.json
-```
-
-Source working files remain owned by the local scope:
-
-```text
-docs-viewer/source/studio/
-docs-viewer/generated/docs/studio/
-docs-viewer/generated/search/studio/index.json
-```
-
-## Copy With Projection, Not Raw Copy
-
-The workflow is conceptually a copy from local generated output to public static output, but it must not be a blind `cp -R`.
-
-Generated local payloads can contain local/manage URLs such as:
-
-```text
-/docs/?scope=studio&doc=<doc_id>
-/docs/generated/payload?scope=studio&doc_id=<doc_id>
-```
-
-The public projection must rewrite route and payload references so they point at the public route and public static assets:
-
-```text
-/studio-docs/?doc=<doc_id>
-/assets/data/docs/scopes/studio-docs/by-id/<doc_id>.json
-```
-
-The projection should also make sure browser route config, search entries, tree content URLs, recently-added content URLs, by-id metadata URLs, and internal rewritten links all agree with the public projection route.
-
-## Configuration Model
-
-The local scope should stay local:
-
-```json
-{
-  "scope_id": "studio",
-  "scope_type": "local",
-  "viewer_base_url": "/docs/",
-  "include_scope_param": true
-}
-```
-
-The public projection should be represented explicitly, either as a new projection registry or as a carefully constrained scope type.
-
-Candidate projection record:
-
-```json
-{
-  "projection_id": "studio-docs",
-  "source_scope_id": "studio",
-  "route_path": "studio-docs",
-  "public_scope_id": "studio-docs",
-  "publish_output": "site/assets/data/docs/scopes/studio-docs",
-  "publish_search_output": "site/assets/data/search/studio-docs/index.json",
-  "default_doc_id": "dev-home",
-  "advertised": false
-}
-```
-
-The important distinction is ownership:
-
-- `source_scope_id` identifies the local generated data to project.
-- `public_scope_id` identifies the public static payload namespace.
-- `route_path` identifies the static reader route.
-- `advertised: false` means the route exists but is not promoted in navigation.
-
-Avoid modelling this as “make `studio` public”. That would blur the local management scope with the public reader install.
-
-## Build And Publish Workflow
-
-The workflow should be explicit from `/docs/` management or a focused script/service command.
-
-Proposed flow:
-
-1. Rebuild the local source scope normally.
-2. Build or refresh the local search index normally.
-3. Preview projection changes from local generated data to public static output.
-4. Confirm and apply the projection.
-5. Write/sync public route shell, public route config, public docs payloads, and public search payload.
-
-For `studio -> studio-docs`, inputs are:
-
-```text
-docs-viewer/generated/docs/studio/
-docs-viewer/generated/search/studio/index.json
-```
-
-Outputs are:
-
-```text
-site/studio-docs/index.html
-site/assets/data/docs/scopes/studio-docs/
-site/assets/data/search/studio-docs/index.json
-site/docs-viewer/config/routes/docs-viewer-public-routes.json
-site/docs-viewer/config/defaults/docs-viewer-public-config.json
-```
-
-The projection should support a dry-run/preview mode before writing, similar in spirit to existing publish/status workflows.
-
-## Docs Viewer Work Needed
-
-### Backend/service
-
-Add a focused projection service, for example:
-
-```text
-docs-viewer/services/docs_public_projection.py
-```
-
-Responsibilities:
-
-- load projection config
-- validate source scope is local/manage-owned
-- validate projection output stays under `site/`
-- read local generated docs payloads and search index
-- rewrite local/manage URLs to public read-only URLs
-- compute preview diff/status
-- sync projected public files
-- remove stale public by-id payloads that no longer exist in the projection
-- update public route registry/config if needed
-
-The existing publish service for public scopes is a useful reference, but this workflow is not the same as publishing a normal public scope. It publishes a public projection of a local scope.
-
-### Route shell/config
-
-Create a public route shell from the existing public route template:
-
-```text
-site/studio-docs/index.html
-```
-
-Register it in:
-
-```text
-site/docs-viewer/config/routes/docs-viewer-public-routes.json
-```
-
-The route config must point only at public static payloads under `site/assets/data/...`.
-
-### Payload projection
-
-Projection must handle at least:
-
-- `index-tree.json`
-- `recently-added.json`
-- `by-id/*.json`
-- search index entries
-- route URLs
-- content URLs
-- internal links that currently point back to `/docs/?scope=studio`
-
-The first implementation can preserve the same document ids and tree structure.
-
-### UI
-
-Expose the workflow from local `/docs/` only if the source scope has a configured public projection.
-
-Possible management UI:
-
-- Actions menu item: `Publish public projection`
-- preview/status modal showing pending public projection changes
-- apply action with explicit confirmation
-- public route link after successful publish
-
-This should be separate from the existing public-scope `Publish` action if the semantics differ enough to avoid confusion.
-
-### Safety checks
-
-Before applying a projection:
-
-- fail if output paths resolve outside `site/`
-- fail if the source scope is already public unless that is explicitly supported later
-- fail if route path collides with an existing public route
-- fail if public scope id collides with an unrelated public scope
-- warn that unadvertised still means public
-- scan projected payloads for local generated-read URLs and local management URLs
-- optionally scan projected payloads for obvious local filesystem paths
-
-## Offline Plain HTML Option
-
-There is a simpler non-public option for the same underlying need: generate a plain HTML folder from the local generated Docs Viewer payloads.
-
-This does not use the Docs Viewer runtime, route config, JSON fetches, search runtime, or local server. It produces static HTML files that can be opened directly in a browser from the filesystem.
-
-Example output:
+Private/offline output:
 
 ```text
 var/docs-offline/studio/
@@ -267,10 +77,10 @@ var/docs-offline/studio/
   docs/
     dev-home.html
     scripts-cloud-environments.html
-    site-request-docs-viewer-local-public-projection.html
+    site-request-docs-viewer-static-html-export.html
 ```
 
-The same generated bundle can optionally be copied to the public site root:
+Public static output:
 
 ```text
 site/studio-docs/
@@ -279,72 +89,35 @@ site/studio-docs/
   docs/
     dev-home.html
     scripts-cloud-environments.html
-    site-request-docs-viewer-local-public-projection.html
+    site-request-docs-viewer-static-html-export.html
 ```
 
-That would make the plain HTML export available from:
+The public output would be available from:
 
 ```text
 https://dotlineform.com/studio-docs/
 ```
 
-This avoids the full Docs Viewer local-to-public scope projection workflow. There is no public Docs Viewer route config, no public scope config, no JSON payload publishing, no runtime asset dependency, and no search-index projection. It is simply a set of pre-rendered static HTML pages.
-
-The workflow can support both destinations:
-
-- private/offline output under `var/docs-offline/studio/`
-- public static output under `site/studio-docs/`
+Anything under `site/` is public once deployed. The private `var/` output should remain available so future non-public docs can use the same exporter without being deployed.
 
 The public copy can be produced as part of the same exporter run after the private bundle has been generated and validated.
 
-### Plain HTML Export UI
+## Inputs
 
-Expose the plain HTML workflow from the existing Docs Viewer Actions button as:
-
-```text
-Export
-```
-
-There is currently no other Docs Viewer export action, so the short label is enough. The modal should make the output format and destinations clear.
-
-Suggested modal controls:
-
-- source scope summary, such as `studio`
-- document count and default document
-- destination checkboxes:
-  - private offline folder: `var/docs-offline/studio/`
-  - public site folder: `site/studio-docs/`
-  - optional zip archive: `var/docs-offline/studio-docs.zip`
-- preview button showing files that would be written, changed, and removed
-- apply button that writes the selected destinations
-- explicit public visibility warning when `site/studio-docs/` is selected
-
-The backing service can be a single exporter, for example:
-
-```text
-docs-viewer/services/docs_static_html_export.py
-```
-
-Candidate request shape:
-
-```json
-{
-  "scope": "studio",
-  "destinations": ["offline", "site"],
-  "zip": false
-}
-```
-
-The service should generate the private bundle first, validate it, then copy the same generated files to selected secondary destinations such as `site/studio-docs/` or a zip archive. This keeps rendering and link rewriting in one path.
-
-The exporter can use existing generated payloads as input:
+Use existing generated Docs Viewer payloads as input:
 
 ```text
 docs-viewer/generated/docs/studio/index-tree.json
 docs-viewer/generated/docs/studio/by-id/<doc_id>.json
 ```
 
-Each `by-id` payload already contains rendered HTML in `content_html`. The offline exporter can read that content and insert it into a small page template:
+Each `by-id` payload already contains rendered HTML in `content_html`.
+
+The exporter should not parse Markdown or re-render Markdown. It should consume generated payloads and template them into standalone HTML pages.
+
+## Template Shape
+
+Each document page can be rendered from a small template:
 
 ```html
 <!doctype html>
@@ -380,7 +153,179 @@ or, from a document page:
 <link rel="stylesheet" href="../styles.css">
 ```
 
-This works from direct `file://` browser access because it does not rely on `fetch()` loading local JSON.
+This works from direct `file://` browser access because it does not rely on JavaScript `fetch()` loading local JSON.
+
+## Export UI
+
+Expose the workflow from the existing Docs Viewer Actions button as:
+
+```text
+Export
+```
+
+There is currently no other Docs Viewer export action, so the short label is enough. The modal should make the output format and destinations clear.
+
+Suggested modal controls:
+
+- source scope summary, such as `studio`
+- document count and default document
+- destination checkboxes:
+  - private offline folder: `var/docs-offline/studio/`
+  - public site folder: `site/studio-docs/`
+  - optional zip archive: `var/docs-offline/studio-docs.zip`
+- preview button showing files that would be written, changed, and removed
+- apply button that writes the selected destinations
+- explicit public visibility warning when `site/studio-docs/` is selected
+
+The action should be available when the active `/docs/` scope is repo-backed local. Current repo-backed local scopes are `studio` and `tmp`.
+
+The first implementation can default destination labels for `studio`, but the service should accept the active local scope explicitly.
+
+## Backend Service
+
+Add one focused exporter service:
+
+```text
+docs-viewer/services/docs_static_html_export.py
+```
+
+Candidate request shape:
+
+```json
+{
+  "scope": "studio",
+  "destinations": ["offline", "site"],
+  "zip": false
+}
+```
+
+Responsibilities:
+
+- validate scope and generated payload paths
+- reject public, local-external, and other non-repo-backed scopes unless explicitly supported later
+- read `index-tree.json`
+- read referenced `by-id/*.json` payloads
+- render root index page
+- render one document page per doc
+- write shared CSS
+- rewrite internal Docs Viewer links to local `.html` links
+- produce a preview diff before writing
+- remove stale generated HTML pages from selected destinations
+- optionally create a zip archive
+
+The service should generate the private bundle first, validate it, then copy the same generated files to selected secondary destinations such as `site/studio-docs/` or a zip archive. This keeps rendering and link rewriting in one path.
+
+## Implementation Tasks
+
+This should be a fairly straightforward implementation: one focused exporter service, one small management API surface, and one Docs Viewer Actions modal.
+
+### 1. Service core
+
+- Add `docs-viewer/services/docs_static_html_export.py`.
+- Add pure functions for:
+  - resolving repo-backed local scope input paths
+  - loading `index-tree.json`
+  - collecting doc ids from the tree
+  - loading `by-id/<doc_id>.json`
+  - validating doc ids are safe HTML filenames
+  - rendering root `index.html`
+  - rendering per-doc HTML pages
+  - rendering or copying `styles.css`
+  - rewriting internal Docs Viewer links
+  - computing write/remove plans
+  - applying write/remove plans
+- Keep the service independent from Docs Viewer frontend code.
+- Use generated payloads as input; do not parse or render source Markdown.
+- Reject public, local-external, and non-repo-backed scopes.
+
+### 2. Export paths and defaults
+
+- Define deterministic destination paths:
+  - offline: `var/docs-offline/<scope>/`
+  - site: `site/<scope>-docs/`
+  - zip: `var/docs-offline/<scope>-docs.zip`
+- Allow `studio` to use `site/studio-docs/` naturally through the same pattern.
+- Validate all output paths stay inside the intended repo roots.
+- Decide whether stale destination files should be removed by default; the likely answer is yes for generated `.html` pages no longer present in the source tree.
+
+### 3. Link rewriting
+
+- Rewrite `/docs/?scope=<scope>&doc=<doc_id>` links to local HTML links.
+- From the root index page, link to `docs/<doc_id>.html`.
+- From a document page, link to `<doc_id>.html`.
+- Preserve fragments where possible.
+- Leave external links unchanged.
+- Emit warnings for links to unknown doc ids.
+
+### 4. Preview/apply API
+
+- Add management-only endpoints, likely under existing Docs management routes:
+  - preview export plan
+  - apply export plan
+- Request shape should include:
+
+```json
+{
+  "scope": "studio",
+  "destinations": ["offline", "site"],
+  "zip": false
+}
+```
+
+- Preview response should include:
+  - scope
+  - doc count
+  - destination paths
+  - files to write
+  - files to remove
+  - warnings
+  - public visibility warning when `site` is selected
+- Apply response should include:
+  - written file count
+  - removed file count
+  - destination links/paths
+  - warnings
+
+### 5. Docs Viewer UI
+
+- Add one Actions menu item: `Export`.
+- Show it only for repo-backed local scopes.
+- Add an export modal with:
+  - source scope summary
+  - document count/default document
+  - destination checkboxes for offline, site, and optional zip
+  - preview button
+  - apply button
+  - public visibility warning when site output is selected
+  - result links/paths after apply
+- Keep this separate from existing public-scope `Publish` actions.
+
+### 6. Tests
+
+- Add Python unit tests for:
+  - tree doc-id collection
+  - doc payload loading
+  - metadata escaping
+  - per-doc page rendering
+  - index page rendering
+  - internal link rewriting
+  - stale file removal plan
+  - output path validation
+  - rejection of public/local-external scopes
+- Add route/API tests for preview and apply responses.
+- Add a small JS syntax check for new frontend modules.
+- Browser smoke is optional; use it only to verify the modal/API boundary if the implementation touches route boot or Actions wiring in a risky way.
+
+### 7. Manual verification
+
+- Export `studio` to `var/docs-offline/studio/`.
+- Open `var/docs-offline/studio/index.html` directly from the filesystem.
+- Confirm links and CSS work without a server.
+- Export `studio` to `site/studio-docs/`.
+- Run `bin/site-preview` and open `/studio-docs/`.
+- Confirm no Docs Viewer runtime, route config, JSON fetch, or local service is required.
+
+## Link Rewriting
 
 Required rewrite behavior:
 
@@ -388,77 +333,47 @@ Required rewrite behavior:
 - `/docs/?scope=studio&doc=<doc_id>` -> `<doc_id>.html` from a document page
 - links to unknown docs can remain unchanged or be flagged in an export warning
 
-Optional output:
+The first implementation should preserve doc ids as filenames where safe. If a doc id is not a safe filename, the exporter should fail rather than invent an ambiguous mapping.
 
-- `studio-docs-offline.zip`
+## Optional Output
+
+Optional outputs:
+
+- `var/docs-offline/studio-docs.zip`
 - public copy under `site/studio-docs/`
 - copied local media/assets if the rendered docs reference files that are not already browser-reachable
 - previous/next links based on tree order
 - generated timestamp and source scope summary
 
-This plain HTML option is the lowest-complexity portable format. It is not a Docs Viewer experience: no interactive tree panel, no search, no route state, no app shell, and no management context.
-
-If current `studio` content is acceptable to publish, the public static copy may be the most pragmatic first implementation. The private `var/` output should still remain available so future non-public docs can use the same exporter without being deployed.
-
-## Offline Docs Viewer Bundle Option
-
-A richer offline option would copy runtime JS/CSS and JSON into a self-contained folder. That can preserve more of the Docs Viewer experience, but browser `file://` restrictions may block JavaScript `fetch()` calls to local JSON files. It would be reliable when served by a tiny local static server, but not necessarily by double-clicking `index.html`.
-
-Because the original need is quick off-machine reading, the plain HTML option should be considered before a runtime bundle.
-
-## Visibility And Content Risk
-
-This feature is useful only if the projected source content is acceptable to publish.
-
-For `studio`, that needs a deliberate content decision. The docs contain implementation notes, local operating assumptions, and request history. That may be fine for an unadvertised public route, or it may be too much.
-
-If content is not safe to publish publicly, use one of the offline options instead of the public projection workflow.
+Media copying can be a later enhancement if current docs do not need it.
 
 ## Verification
 
 Automated checks should cover:
 
-- projection config validation
-- URL rewrite behavior
+- generated input payload loading
+- tree-to-index rendering
+- by-id page rendering
+- metadata escaping
+- `content_html` insertion
+- internal docs link rewriting
 - stale output removal
-- public route registry update
-- public config update
-- generated public payloads contain no `/docs/generated/...` URLs
-- generated public payloads do not require `scope=studio`
-- public route loads using only public runtime/config/data assets
-- management runtime/assets are not loaded by `/studio-docs/`
+- destination path validation
+- public-output warning when `site/` is selected
 
 Manual checks:
-
-- open `/studio-docs/`
-- confirm the default document loads
-- confirm tree navigation works
-- confirm search works if search is included
-- confirm internal doc links stay on `/studio-docs/`
-- confirm no management controls render
-
-Plain HTML offline checks:
 
 - open `var/docs-offline/studio/index.html` directly from the filesystem
 - confirm the generated index links open document pages
 - confirm local CSS loads
 - confirm internal doc links resolve to sibling `.html` files
 - confirm no JavaScript/runtime/server dependency is required
-
-Plain HTML public-copy checks:
-
-- open `/studio-docs/` on the public site or local static preview
-- confirm the generated index links open document pages
-- confirm local CSS loads from `site/studio-docs/styles.css`
-- confirm internal doc links stay under `/studio-docs/`
-- confirm no Docs Viewer runtime, public route config, or JSON payload fetch is required
+- open `/studio-docs/` on the public site or local static preview when `site/` output is selected
+- confirm public-copy links stay under `/studio-docs/`
 
 ## Open Questions
 
-- Should the projection include every generated `studio` doc, or only docs with `viewable: true`?
-- Should the route be `/studio-docs/`, `/dev-docs/`, or something else?
-- Should this be implemented as a projection registry or as a new constrained `scope_type`?
-- Should the publish action live beside existing public-scope publish actions or use a separate label and modal?
-- Is unadvertised public visibility acceptable for the initial `studio` docs content?
-- Should the plain HTML offline exporter be implemented first as a lower-risk step?
-- Should the first implementation write only `var/docs-offline/studio/`, or also copy the generated bundle to `site/studio-docs/` by default?
+- Should the first implementation include every generated `studio` doc, or only docs with `viewable: true`?
+- Should each repo-backed local scope get a default public folder pattern such as `site/<scope>-docs/`?
+- Should public `site/` output be opt-in every time, or remembered per local scope?
+- Should the zip archive be implemented in the first pass or left for later?

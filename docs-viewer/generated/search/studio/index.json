@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-33e3a8f061919fbc0ef5808f85657cc6",
-    "generated_at_utc": "2026-06-28T20:39:52Z",
+    "version": "blake2b-def680ff532945202883415c915feaaf",
+    "generated_at_utc": "2026-06-28T21:13:58Z",
     "count": 231
   },
   "entries": [
@@ -1291,36 +1291,6 @@
       "search_text": "site-request-docs-review-local-app site request docs review local app docs review local app change requests change requests 2026-06-28 2026 06 28"
     },
     {
-      "id": "site-request-docs-viewer-local-public-projection",
-      "kind": "doc",
-      "title": "Docs Viewer Local To Public Projection",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-local-public-projection",
-      "last_updated": "2026-06-28",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-28 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-local-public-projection",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "local",
-        "public",
-        "projection",
-        "docs viewer local to public projection",
-        "to",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-28",
-        "2026",
-        "06",
-        "28"
-      ],
-      "search_text": "site-request-docs-viewer-local-public-projection site request docs viewer local public projection docs viewer local to public projection to change requests change requests 2026-06-28 2026 06 28"
-    },
-    {
       "id": "site-request-docs-viewer-semantic-reference-editor",
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
@@ -1348,6 +1318,38 @@
         "23"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-23 2026 06 23"
+    },
+    {
+      "id": "site-request-docs-viewer-local-public-projection",
+      "kind": "doc",
+      "title": "Docs Viewer Static HTML Export",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-local-public-projection",
+      "last_updated": "2026-06-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-28 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-local-public-projection",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "local",
+        "public",
+        "projection",
+        "docs viewer static html export",
+        "static",
+        "html",
+        "export",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-28",
+        "2026",
+        "06",
+        "28"
+      ],
+      "search_text": "site-request-docs-viewer-local-public-projection site request docs viewer local public projection docs viewer static html export static html export change requests change requests 2026-06-28 2026 06 28"
     },
     {
       "id": "site-request-docs-viewer-view-mode-registry",
