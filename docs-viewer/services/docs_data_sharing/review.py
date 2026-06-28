@@ -9,7 +9,8 @@ from pathlib import Path
 import re
 from typing import Any, Dict
 
-from docs_import import parse_staged_import, scope_title
+from docs_returned_import_common import scope_title
+from docs_returned_import_parser import parse_staged_import
 import docs_source_model as source_model
 
 

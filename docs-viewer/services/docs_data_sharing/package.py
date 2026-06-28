@@ -11,7 +11,7 @@ from docs_export import (
     parse_doc_ids as parse_export_doc_ids,
 )
 from docs_export_config import update_external_context_config
-from docs_import import supported_return_import_profile_ids
+from docs_returned_import_profiles import supported_return_import_profile_ids
 from docs_data_sharing import source_metadata
 from services.returned_metadata import list_staged_files_with_metadata
 import docs_source_model as source_model

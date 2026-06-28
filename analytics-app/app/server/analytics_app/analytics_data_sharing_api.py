@@ -31,7 +31,7 @@ from adapters.documents import context as documents_data_sharing_context  # noqa
 from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from adapters.tags import context as tags_data_sharing_context  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
-from docs_import import supported_return_import_profile_ids  # noqa: E402
+from docs_returned_import_profiles import supported_return_import_profile_ids  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
     from analytics_app import data_sharing_adapters  # noqa: E402

@@ -6,11 +6,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from docs_data_sharing.apply import (
-    DocumentsApplyIdentity,
-    apply_hierarchy_updates,
-    apply_summary_updates,
-)
+from docs_data_sharing.apply_common import DocumentsApplyIdentity
+from docs_data_sharing.apply_hierarchy import apply_hierarchy_updates
+from docs_data_sharing.apply_summaries import apply_summary_updates
 from docs_data_sharing.package import (
     build_document_package,
     list_returned_document_packages,

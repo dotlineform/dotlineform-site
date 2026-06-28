@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import sys
 import tempfile
@@ -11,23 +10,12 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_IMPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_import.py"
 DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
 if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 
-def load_docs_import_module():
-    spec = importlib.util.spec_from_file_location("docs_import", DOCS_IMPORT_PATH)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load docs_import.py")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-docs_import = load_docs_import_module()
+import docs_returned_import_parser  # noqa: E402
 
 
 def write_text(path: Path, text: str) -> None:
@@ -136,7 +124,7 @@ def write_internal_meta(
 
 
 def parse(root: Path, filename: str) -> dict:
-    return docs_import.parse_staged_import(repo_root=root, scope="library", staged_file=filename)
+    return docs_returned_import_parser.parse_staged_import(repo_root=root, scope="library", staged_file=filename)
 
 
 def test_missing_export_id_fails_closed() -> None:
@@ -346,7 +334,7 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
         root = Path(temp)
         outside = root / "outside.json"
         outside.write_text("[]\n", encoding="utf-8")
-        report = docs_import.parse_staged_import(repo_root=root, scope="library", staged_file=str(outside))
+        report = docs_returned_import_parser.parse_staged_import(repo_root=root, scope="library", staged_file=str(outside))
 
     assert report["ok"] is False
     assert report["counts"]["errors"] == 1

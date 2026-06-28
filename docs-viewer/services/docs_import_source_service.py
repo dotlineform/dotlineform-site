@@ -3,17 +3,11 @@
 
 from __future__ import annotations
 
-import re
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict
 
-from docs_import_common import (
-    HTML_STAGED_SUFFIXES,
-    STAGING_REL_DIR,
-    is_interactive_html_import_asset,
-)
+from docs_import_common import is_interactive_html_import_asset
 from docs_import_markdown_package import retarget_markdown_package_media_plans
 from docs_import_media import (
     materialize_inline_raster_media,
@@ -24,26 +18,33 @@ from docs_import_preview import (
     list_staged_import_source_files,
     resolve_staged_import_source,
 )
+from docs_import_source_helpers import (
+    apply_replacement_doc_id_to_preview,
+    apply_replacement_title_to_preview,
+    imported_source_text_for_create,
+    imported_source_text_for_overwrite,
+    import_summary_text,
+    interactive_html_overwrite_summary,
+    relative_path,
+    viewer_url_for,
+)
+from docs_import_source_interactive import (
+    ensure_interactive_html_targets_available,
+    interactive_html_asset_plans,
+    materialize_interactive_html_assets,
+)
 from docs_management_mutations import metadata_search_doc_ids
-from docs_scope_config import DOCS_SCOPE_CONFIGS
 from docs_source_model import (
-    ScopeDoc,
-    current_doc_timestamp,
     default_viewable_for_scope,
-    format_source,
     load_scope_docs,
     normalize_scope,
     scope_root,
-    slugify,
     write_text_atomic,
 )
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
-
-INTERACTIVE_HTML_ASSET_REL_ROOT = Path("site/assets/docs/interactive")
-INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 
 
 @dataclass(frozen=True)
@@ -52,215 +53,11 @@ class ImportSourceDependencies:
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
 
-def relative_path(repo_root: Path, path: Path) -> str:
-    return path.resolve().relative_to(repo_root.resolve()).as_posix()
-
-
-def viewer_url_for(scope: str, doc_id: str) -> str:
-    normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
-    return f"/docs/?scope={normalized_scope}&doc={doc_id}"
-
-
 def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
     return {
         "ok": True,
         "files": list_staged_import_source_files(repo_root),
     }
-
-
-def imported_body_markdown(preview: Dict[str, Any]) -> str:
-    title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
-    markdown = str(preview.get("markdown_preview") or "").strip()
-    if markdown:
-        return markdown + "\n"
-    return f"# {title}\n"
-
-
-def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc], scope: str) -> str:
-    title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
-    timestamp = current_doc_timestamp()
-    front_matter = {
-        "doc_id": preview["proposed_doc_id"],
-        "title": title,
-        "added_date": timestamp,
-        "last_updated": timestamp,
-        "parent_id": "",
-    }
-    if not default_viewable_for_scope(scope):
-        front_matter["viewable"] = False
-    return format_source(front_matter, imported_body_markdown(preview))
-
-
-def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc) -> str:
-    title = str(preview.get("title") or target.title).strip() or target.title
-    timestamp = current_doc_timestamp()
-    front_matter = dict(target.front_matter)
-    front_matter["doc_id"] = target.doc_id
-    front_matter["title"] = title
-    front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or timestamp).strip()
-    front_matter["last_updated"] = timestamp
-    front_matter["parent_id"] = target.parent_id
-    front_matter.pop("sort_order", None)
-    front_matter.pop("viewable", None)
-    if not target.viewable:
-        front_matter["viewable"] = False
-    return format_source(front_matter, imported_body_markdown(preview))
-
-
-def apply_replacement_title_to_preview(preview: Dict[str, Any], replacement_title: str) -> None:
-    title = str(replacement_title or "").strip()
-    if not title:
-        raise ValueError("replacement_title is required when the proposed doc_id collides")
-    preview["title"] = title
-    preview["title_source"] = "replacement_title"
-    preview["proposed_doc_id"] = slugify(title)
-    preview["proposed_doc_id_source"] = "replacement_title"
-    markdown = str(preview.get("markdown_preview") or "")
-    if markdown.startswith("# "):
-        lines = markdown.splitlines()
-        if lines:
-            lines[0] = f"# {title}"
-            preview["markdown_preview"] = "\n".join(lines)
-
-
-def apply_replacement_doc_id_to_preview(preview: Dict[str, Any], replacement_doc_id: str) -> None:
-    raw_doc_id = str(replacement_doc_id or "").strip()
-    doc_id = slugify(raw_doc_id)
-    if not doc_id:
-        raise ValueError("replacement_doc_id is required when the proposed filename collides")
-    preview["proposed_doc_id"] = doc_id
-    preview["proposed_doc_id_source"] = "replacement_doc_id"
-
-
-def interactive_html_staged_paths(repo_root: Path) -> list[Path]:
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
-    if not staging_root.exists():
-        return []
-    return [
-        path
-        for path in sorted(staging_root.iterdir(), key=lambda candidate: candidate.name.lower())
-        if path.is_file()
-        and path.suffix.lower() in HTML_STAGED_SUFFIXES
-        and is_interactive_html_import_asset(path)
-    ]
-
-
-def interactive_html_asset_plan_for_path(repo_root: Path, source_path: Path, scope: str) -> Dict[str, Any]:
-    filename = f"{slugify(source_path.stem)}.html"
-    if not INTERACTIVE_HTML_FILENAME_PATTERN.fullmatch(filename):
-        raise ValueError(f"Interactive HTML asset filename must be a simple slug ending in .html: {filename}")
-
-    normalized_scope = normalize_scope(scope)
-    target_rel = INTERACTIVE_HTML_ASSET_REL_ROOT / normalized_scope / filename
-    target_root = (repo_root / INTERACTIVE_HTML_ASSET_REL_ROOT / normalized_scope).resolve()
-    target_path = (repo_root / target_rel).resolve()
-    if not target_path.is_relative_to(target_root):
-        raise ValueError(f"Interactive HTML target escapes scope asset root: {target_rel.as_posix()}")
-
-    return {
-        "source_path": relative_path(repo_root, source_path),
-        "target_path": target_rel.as_posix(),
-        "public_path": f"/assets/docs/interactive/{normalized_scope}/{filename}",
-        "token": f"[[interactive-html:{filename}]]",
-        "filename": filename,
-        "display_name": Path(filename).stem,
-        "result_type": "script file",
-        "target_exists": target_path.exists(),
-    }
-
-
-def interactive_html_asset_plans(repo_root: Path, scope: str) -> list[Dict[str, Any]]:
-    plans = [
-        interactive_html_asset_plan_for_path(repo_root, path, scope)
-        for path in interactive_html_staged_paths(repo_root)
-    ]
-    target_paths: set[str] = set()
-    for plan in plans:
-        target_path = str(plan.get("target_path") or "")
-        if target_path in target_paths:
-            raise ValueError(f"Multiple interactive HTML staged files resolve to {target_path}.")
-        target_paths.add(target_path)
-    return plans
-
-
-def ensure_interactive_html_targets_available(plans: list[Dict[str, Any]], *, allow_overwrite: bool = False) -> None:
-    for plan in plans:
-        if plan.get("target_exists") and not allow_overwrite:
-            raise FileExistsError(
-                f"Interactive HTML asset already exists: {plan.get('target_path')}. "
-                "Edit that asset directly or confirm overwrite to replace it during import."
-            )
-
-
-def materialize_interactive_html_asset(
-    repo_root: Path,
-    plan: Dict[str, Any],
-    *,
-    allow_overwrite: bool = False,
-) -> Dict[str, Any]:
-    ensure_interactive_html_targets_available([plan], allow_overwrite=allow_overwrite)
-    source_path = (repo_root / str(plan.get("source_path") or "")).resolve()
-    target_path = (repo_root / str(plan.get("target_path") or "")).resolve()
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
-    target_root = (repo_root / INTERACTIVE_HTML_ASSET_REL_ROOT / target_path.parent.name).resolve()
-    if not source_path.is_relative_to(staging_root):
-        raise ValueError("Interactive HTML asset source escapes import staging root.")
-    if not target_path.is_relative_to(target_root):
-        raise ValueError("Interactive HTML asset target escapes scope asset root.")
-    target_existed = target_path.exists()
-    if target_existed and not allow_overwrite:
-        raise FileExistsError(
-            f"Interactive HTML asset already exists: {relative_path(repo_root, target_path)}"
-        )
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source_path, target_path)
-    return {
-        "source_path": relative_path(repo_root, source_path),
-        "target_path": relative_path(repo_root, target_path),
-        "public_path": str(plan.get("public_path") or ""),
-        "token": str(plan.get("token") or ""),
-        "filename": str(plan.get("filename") or target_path.name),
-        "display_name": str(plan.get("display_name") or target_path.stem),
-        "result_type": "script file",
-        "size_bytes": target_path.stat().st_size,
-        "overwrote": target_existed,
-    }
-
-
-def materialize_interactive_html_assets(
-    repo_root: Path,
-    plans: list[Dict[str, Any]],
-    *,
-    allow_overwrite: bool = False,
-) -> list[Dict[str, Any]]:
-    if not plans:
-        return []
-    ensure_interactive_html_targets_available(plans, allow_overwrite=allow_overwrite)
-    return [
-        materialize_interactive_html_asset(repo_root, plan, allow_overwrite=allow_overwrite)
-        for plan in plans
-    ]
-
-
-def import_summary_text(
-    operation: str,
-    doc_id: str,
-    staged_filename: str,
-    interactive_html_written: list[Dict[str, Any]],
-) -> str:
-    action = "Created" if operation == "create" else "Overwrote"
-    summary = f"{action} {doc_id} from {staged_filename}."
-    if interactive_html_written:
-        count = len(interactive_html_written)
-        suffix = "" if count == 1 else "s"
-        summary += f" Copied {count} interactive HTML script file{suffix}."
-    return summary
-
-
-def interactive_html_overwrite_summary(plans: list[Dict[str, Any]]) -> str:
-    if len(plans) == 1:
-        return f"Interactive HTML asset overwrite required for {plans[0]['target_path']}."
-    return f"Interactive HTML asset overwrite required for {len(plans)} script files."
 
 
 def handle_import_source(
