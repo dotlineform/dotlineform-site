@@ -76,14 +76,23 @@ def test_review_session_routes_are_registered() -> None:
 
 def test_review_session_frontend_has_dedicated_client_and_modal_mount() -> None:
     client = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-review-sessions-client.js").read_text(encoding="utf-8")
+    modal = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-review-sessions-modal.js").read_text(encoding="utf-8")
+    controller = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-review-sessions-controller.js").read_text(encoding="utf-8")
     shell = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management-shell-renderer.js").read_text(encoding="utf-8")
+    management = (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-management.js").read_text(encoding="utf-8")
 
     assert 'from "./docs-viewer-management-client.js"' in client
     assert 'REVIEW_SESSIONS_PATH = "/docs/review-sessions"' in client
     assert 'REVIEW_SESSION_BUILD_PATH = "/docs/review-sessions/build"' in client
     assert 'REVIEW_SESSION_DELETE_PATH = "/docs/review-sessions/delete"' in client
+    assert "createDocsViewerReviewSessionsModal" in modal
+    assert "data-review-sessions-list" in modal
+    assert 'from "./docs-viewer-review-sessions-client.js"' in controller
+    assert 'from "./docs-viewer-review-sessions-modal.js"' in controller
+    assert "createDocsViewerReviewSessionsController" in controller
     assert "data-docs-viewer-management-modal-mount" in shell
     assert "managementModalMount" in shell
+    assert "docs-viewer-review-sessions" not in management
 
 
 def test_review_session_get_routes_are_management_only_in_service_layer() -> None:

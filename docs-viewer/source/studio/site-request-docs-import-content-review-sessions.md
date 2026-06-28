@@ -477,33 +477,60 @@ Review mode should visually communicate that it is temporary:
 - suppress source config settings
 - keep ordinary read/navigation controls available where they still make sense
 
-### Preparatory Work We Can Do Now
+### Completed Enabling Work
 
-There is useful preparatory refactoring that can be done before implementing sessions, similar to the completed import HTML-to-Markdown split.
+The following enabling work has been completed so implementation has clear owners and does not start by expanding existing large files.
 
-1. Add a management review-session route/service skeleton. Completed.
+Backend review-session service skeleton:
 
-Created `docs_review_sessions.py` with path-safe list/delete/read behavior, an explicit build placeholder, and focused tests. Wired thin route constants and dispatch. This establishes backend ownership before feature behavior grows.
+- `docs_review_sessions.py` owns path-safe review-session temp-folder behavior.
+- It lists session folders under `var/analytics/data-sharing/import-preview`.
+- It reads built session `index-tree.json`.
+- It reads built session `by-id/<doc_id>.json` payloads.
+- It deletes complete session folders as temp-artifact cleanup.
+- It rejects unsafe session ids, path traversal, absolute paths, and symlink session folders.
+- Its build endpoint is wired as an explicit `build_status: "not_implemented"` placeholder so later build behavior has an owner but no fake implementation.
+- Focused tests cover list, read, delete, route registration, management-only GET gating, unsafe ids, and symlink rejection.
 
-2. Split management shell modal mounting. Started.
+Thin backend route wiring:
 
-`docs-viewer-management-shell-renderer.js` currently owns large hard-coded modal markup for metadata/import/settings. A neutral `docsViewerManagementModalMount` now exists so new modals can render from their own modules. A fuller modal registry can still be added if sessions need more modal lifecycle structure.
+- `docs_management_routes.py` owns review-session route constants.
+- `docs_management_read_service.py` delegates review-session GET routes to `docs_review_sessions.py`.
+- `docs_management_service.py` delegates review-session build/delete POST routes to `docs_review_sessions.py`.
+- `docs_viewer_service.py` gates review-session GET routes as management-only while keeping business logic out of the server layer.
 
-3. Add a frontend session client module. Started.
+Frontend review-session module skeleton:
 
-Created `docs-viewer-review-sessions-client.js` around the review-session endpoints. Even before the modal exists, it owns path names and request helpers.
+- `docs-viewer-review-sessions-client.js` owns endpoint paths and request helpers.
+- `docs-viewer-review-sessions-modal.js` owns modal rendering, session list display, built/unbuilt action state, and Open/Build/Delete/Cancel interactions.
+- `docs-viewer-review-sessions-controller.js` owns client/modal orchestration and exposes `open`, `close`, `refresh`, `buildSession`, and `deleteSession`.
+- These modules are not yet wired into the live management runtime, so unfinished review-session UI is not visible.
+- Static tests assert that the client/modal/controller modules exist and that review-session behavior has not been folded into `docs-viewer-management.js`.
 
-4. Assess payload-provider extraction.
+Management shell modal mount:
 
-Review the current document loading path and identify the smallest place to introduce a payload provider. The goal is to avoid session conditionals in normal generated-data runtime and document controller code.
+- `docs-viewer-management-shell-renderer.js` now exposes a neutral `docsViewerManagementModalMount`.
+- New management modals can render from their own modules into that mount.
+- This prevents review sessions from adding another large hard-coded modal block to the shell renderer.
+- A fuller modal registry can still be added if sessions need shared modal lifecycle behavior.
 
-5. Update ownership docs before implementation.
+Payload-provider assessment:
 
-Add the review-session module boundaries to `docs-viewer/source/studio/development-checklist.md` once the first skeleton modules exist.
+- Normal document loading currently flows through configured generated-data reads.
+- Review-session loading should still use a separate payload source.
+- The smallest future implementation path is to add a payload-provider abstraction at the viewer runtime/document-loading boundary.
+- The normal provider should read configured scope payloads.
+- The review-session provider should read `/docs/review-sessions/index-tree` and `/docs/review-sessions/payload`.
+- This avoids spreading `if (reviewSession)` checks through generated-data runtime, document controller, router, sidebar, and search modules.
+- Search and recently-added remain out of scope for the first session implementation.
 
-The highest-value preparatory slice is the backend service skeleton plus tests, because it enforces that sessions are temp folders under `var/...` and not a hidden scope/config concept. The second-highest is the management modal mount split, because it prevents the sessions UI from making existing large frontend files larger.
+Ownership documentation:
 
-### Completed Enabling Refactor
+- `docs-viewer/source/studio/development-checklist.md` records `docs_review_sessions.py` as the review-session temp-folder owner.
+- The checklist records that review sessions are folder artifacts, not Docs Viewer scopes.
+- The checklist records that frontend review-session behavior should live in dedicated management modules, not normal generated-data runtime, normal scope selector code, public route runtime, or `docs_viewer_service.py`.
+
+HTML-to-Markdown enabling refactor:
 
 - `docs-viewer/services/docs_html_markdown.py` now owns reusable HTML/SVG parsing, sanitization helpers, and `html_to_markdown(...)`.
 - `docs_import_html_parser.py` is now import-preview-specific and builds HTML summaries from the shared converter.
