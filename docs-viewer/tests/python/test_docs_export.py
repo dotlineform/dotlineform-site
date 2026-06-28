@@ -30,6 +30,7 @@ def load_docs_export_module():
 
 
 docs_export = load_docs_export_module()
+import docs_export_config  # noqa: E402
 
 
 BASE_CONFIG = {
@@ -563,8 +564,8 @@ def test_export_run_times_use_utc_metadata_and_local_filename_time() -> None:
 
 
 def test_repo_documents_prepare_profiles_load_and_validate() -> None:
-    payload = docs_export.load_config_file(REPO_ROOT)
-    payload_errors, payload_warnings = docs_export.validate_config_payload(payload)
+    payload = docs_export_config.load_config_file(REPO_ROOT)
+    payload_errors, payload_warnings = docs_export_config.validate_config_payload(payload)
     assert payload_errors == []
     assert payload_warnings == []
 
@@ -575,13 +576,13 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
         "document-tree",
     ]
     for config in configs:
-        errors, warnings = docs_export.validate_export_config(config)
+        errors, warnings = docs_export_config.validate_export_config(config)
         assert errors == []
         assert warnings == []
 
     full_fields = {
         field["source"]
-        for field in docs_export.find_export_config(payload, "document-content")["document_fields"]
+        for field in docs_export_config.find_export_config(payload, "document-content")["document_fields"]
     }
     assert "source_text" in full_fields
     assert "current_summary" in full_fields
@@ -595,16 +596,16 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     assert relationship_fields <= full_fields
     assert "sort_order" not in full_fields
 
-    full_config = docs_export.find_export_config(payload, "document-content")
-    assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
-    tree_config = docs_export.find_export_config(payload, "document-tree")
+    full_config = docs_export_config.find_export_config(payload, "document-content")
+    assert docs_export_config.supported_target_formats(full_config) == ["jsonl", "json"]
+    tree_config = docs_export_config.find_export_config(payload, "document-tree")
     assert tree_config["workflow"]["supports_return_import"] is False
     assert tree_config["target"]["record_shape"] == "document_tree"
-    assert docs_export.supported_target_formats(tree_config) == ["json"]
+    assert docs_export_config.supported_target_formats(tree_config) == ["json"]
 
 
 def test_repo_full_document_content_exports_relationship_fields() -> None:
-    config = docs_export.load_config_file(REPO_ROOT)
+    config = docs_export_config.load_config_file(REPO_ROOT)
     fixed_generated_at = "2026-05-04T12:00:00Z"
     fixed_filename_dt = dt.datetime(2026, 5, 4, 13, 0, 0, tzinfo=dt.timezone(dt.timedelta(hours=1)))
     original_export_run_times = docs_export.export_run_times
@@ -649,7 +650,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
 
 
 def test_export_uses_source_metadata_for_document_content() -> None:
-    config = docs_export.load_config_file(REPO_ROOT)
+    config = docs_export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
 

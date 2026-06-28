@@ -9,8 +9,8 @@ from typing import Any, Dict
 from docs_export import (
     build_export,
     parse_doc_ids as parse_export_doc_ids,
-    update_external_context_config,
 )
+from docs_export_config import update_external_context_config
 from docs_import import supported_return_import_profile_ids
 from docs_data_sharing import source_metadata
 from services.returned_metadata import list_staged_files_with_metadata

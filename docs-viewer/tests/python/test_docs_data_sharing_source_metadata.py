@@ -293,13 +293,14 @@ def test_active_data_sharing_metadata_services_use_source_metadata_owner() -> No
     service_paths = {
         "package": REPO_ROOT / "docs-viewer/services/docs_data_sharing/package.py",
         "export": REPO_ROOT / "docs-viewer/services/docs_export.py",
+        "export_selection": REPO_ROOT / "docs-viewer/services/docs_export_selection.py",
         "import": REPO_ROOT / "docs-viewer/services/docs_import.py",
     }
     source_text_by_service = {name: path.read_text(encoding="utf-8") for name, path in service_paths.items()}
 
     assert all("from docs_data_sharing import source_metadata" in text for text in source_text_by_service.values())
     assert "source_metadata.load_data_sharing_docs_source_records" in source_text_by_service["package"]
-    assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["export"]
+    assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["export_selection"]
     assert "source_metadata.load_data_sharing_docs_source_context" in source_text_by_service["import"]
 
 
