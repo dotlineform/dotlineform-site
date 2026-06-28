@@ -10,8 +10,6 @@ trap 'die "Command failed at line ${LINENO}: ${BASH_COMMAND}"' ERR
 VENV_DIR=".venv"
 VENV_PYTHON="${VENV_DIR}/bin/python"
 VENV_PIP="${VENV_DIR}/bin/pip"
-BUNDLE_EXE="bundle"
-BUNDLE_BOOTSTRAP_ATTEMPTED=0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -30,6 +28,12 @@ can_skip_apt_packages() {
   done
 
   python3 -m venv --help >/dev/null 2>&1 || return 1
+
+  if [[ "${SETUP_INSTALL_MEDIA_PACKAGES:-0}" == "1" ]]; then
+    command -v ffmpeg >/dev/null 2>&1 || return 1
+    command -v heif-convert >/dev/null 2>&1 || return 1
+  fi
+
   return 0
 }
 
@@ -68,12 +72,9 @@ install_apt_packages() {
     curl \
     git \
     libffi-dev \
-    libgdbm-dev \
-    libreadline-dev \
     libssl-dev \
     libxml2-dev \
     libxslt1-dev \
-    libyaml-dev \
     pkg-config \
     python3 \
     python3-pip \
@@ -123,104 +124,39 @@ ensure_python_venv() {
   fi
 }
 
-ensure_ruby_runtime() {
-  command -v ruby >/dev/null 2>&1 || die "ruby is required but not available on PATH."
-  command -v gem >/dev/null 2>&1 || die "gem is required but not available on PATH."
-
-  local ruby_version_actual
-  ruby_version_actual="$(ruby -e 'print RUBY_VERSION')"
-  log "Ruby version: ${ruby_version_actual} ($(command -v ruby))"
-}
-
-run_bundler() {
-  "$BUNDLE_EXE" "$@"
-}
-
-ensure_bundler_on_path() {
-  if command -v bundle >/dev/null 2>&1; then
-    BUNDLE_EXE="$(command -v bundle)"
-    local bundler_version
-    bundler_version="$(bundle -v 2>/dev/null || true)"
-    if [[ -n "$bundler_version" ]]; then
-      log "Bundler detected: ${bundler_version} (${BUNDLE_EXE})"
-    else
-      warn "bundle exists on PATH but could not report version; will attempt to use it."
-    fi
+persist_agent_environment() {
+  if [[ "${SETUP_PERSIST_AGENT_ENV:-1}" != "1" ]]; then
+    log "SETUP_PERSIST_AGENT_ENV is not 1; skipping shell environment persistence."
     return 0
   fi
 
-  return 1
-}
+  local bashrc="${HOME}/.bashrc"
+  local marker="# dotlineform Codex setup environment"
+  local repo_venv_bin="${REPO_ROOT}/${VENV_DIR}/bin"
 
-bootstrap_bundler() {
-  local fallback_version="${BUNDLER_FALLBACK_VERSION:-}"
-  local gem_install_args=(--user-install --no-document bundler)
-
-  if [[ -n "$fallback_version" ]]; then
-    gem_install_args=(--user-install --no-document "bundler:${fallback_version}")
-    log "Installing fallback Bundler ${fallback_version} with --user-install."
-  else
-    log "Installing fallback Bundler with --user-install."
-  fi
-
-  gem install "${gem_install_args[@]}"
-
-  local gem_user_bin
-  gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
-  export PATH="${gem_user_bin}:$PATH"
-
-  BUNDLE_EXE="${gem_user_bin}/bundle"
-  [[ -x "$BUNDLE_EXE" ]] || die "Bundler installation did not produce ${BUNDLE_EXE}."
-  BUNDLE_BOOTSTRAP_ATTEMPTED=1
-  log "Bundler detected: $("$BUNDLE_EXE" -v) (${BUNDLE_EXE})"
-}
-
-ensure_bundler() {
-  if ensure_bundler_on_path; then
+  if [[ -f "$bashrc" ]] && grep -Fq "$marker" "$bashrc"; then
+    log "Shell environment already contains dotlineform Codex setup block."
     return 0
   fi
 
-  warn "bundle is not available on PATH; installing fallback bundler."
-  bootstrap_bundler
-}
-
-install_ruby_deps() {
-  if [[ -f Gemfile ]]; then
-    log "Installing Ruby gems"
-    if run_bundler config set --local path vendor/bundle && run_bundler install; then
-      return 0
-    fi
-
-    if [[ "$BUNDLE_BOOTSTRAP_ATTEMPTED" == "0" ]]; then
-      warn "Existing bundler failed for this Gemfile; installing fallback bundler and retrying once."
-      bootstrap_bundler
-      run_bundler config set --local path vendor/bundle
-      run_bundler install
-      return 0
-    fi
-
-    die "Bundler failed to install gems even after fallback install."
-  else
-    warn "Gemfile not found; skipping Ruby dependency install."
-  fi
+  log "Persisting virtualenv PATH for later cloud agent shells in ${bashrc}."
+  {
+    printf '\n%s\n' "$marker"
+    printf 'export PATH="%s:$PATH"\n' "$repo_venv_bin"
+    printf 'export SITE_PYTHON="%s"\n' "${REPO_ROOT}/${VENV_PYTHON}"
+    printf 'export PYTHON_BIN="%s"\n' "${REPO_ROOT}/${VENV_PYTHON}"
+  } >> "$bashrc"
 }
 
 verify_environment() {
   log "Versions"
   printf 'python3 path: %s\n' "$(command -v python3 || echo not-found)"
-  printf 'ruby path: %s\n' "$(command -v ruby || echo not-found)"
-  printf 'bundle path: %s\n' "$BUNDLE_EXE"
+  printf 'venv python path: %s\n' "${REPO_ROOT}/${VENV_PYTHON}"
   python3 -V
-  ruby -v
-  run_bundler -v
+  "$VENV_PYTHON" -V
 
   if command -v ffmpeg >/dev/null 2>&1; then
     ffmpeg -version | head -n 1
-  fi
-
-  if [[ -f .bundle/config ]]; then
-    log "Bundle local config"
-    sed -n '1,80p' .bundle/config
   fi
 }
 
@@ -240,9 +176,7 @@ main() {
   log "Repo root: $REPO_ROOT"
   run_phase "apt" install_apt_packages
   run_phase "python" ensure_python_venv
-  run_phase "ruby-runtime" ensure_ruby_runtime
-  run_phase "bundler-detect" ensure_bundler
-  run_phase "ruby-deps" install_ruby_deps
+  run_phase "agent-env" persist_agent_environment
   run_phase "verify" verify_environment
   log "Setup complete"
 }

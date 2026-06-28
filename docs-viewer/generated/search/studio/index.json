@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-152af68cc5bd0eb5b8b35a0ab8f544eb",
-    "generated_at_utc": "2026-06-28T19:38:57Z",
+    "version": "blake2b-0d4c3950e57f94ade10690908fe25e69",
+    "generated_at_utc": "2026-06-28T20:07:50Z",
     "count": 230
   },
   "entries": [
@@ -1679,10 +1679,10 @@
       "kind": "doc",
       "title": "Cloud Environments",
       "href": "/docs/?scope=studio&doc=scripts-cloud-environments",
-      "last_updated": "2026-06-12",
+      "last_updated": "2026-06-28",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-12 • Dev Home",
+      "display_meta": "2026-06-28 • Dev Home",
       "search_terms": [
         "scripts-cloud-environments",
         "scripts",
@@ -1692,12 +1692,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-12",
+        "2026-06-28",
         "2026",
         "06",
-        "12"
+        "28"
       ],
-      "search_text": "scripts-cloud-environments scripts cloud environments cloud environments dev home dev home 2026-06-12 2026 06 12"
+      "search_text": "scripts-cloud-environments scripts cloud environments cloud environments dev home dev home 2026-06-28 2026 06 28"
     },
     {
       "id": "development-checklist",

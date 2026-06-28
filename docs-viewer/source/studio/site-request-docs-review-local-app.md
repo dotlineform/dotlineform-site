@@ -142,6 +142,13 @@ var/analytics/data-sharing/import-preview/manual-smoke/
       review-child.json
 ```
 
+The review app does not need the normal Docs Viewer discovery payloads:
+
+- no search UI
+- no recently-added UI
+
+It also does not need to read a search index or recently-added payload. If the reused build path creates harmless unused artifacts such as `recently-added.json` or semantic-reference payloads, that is acceptable. The important boundary is that `/docs-review/` does not expose those surfaces and does not require them for correctness.
+
 The source Markdown files should be Docs Viewer-compatible, but they are not canonical source docs.
 
 Example source front matter:
@@ -173,14 +180,37 @@ Build means:
 - build `generated/by-id/<doc_id>.json`
 - refresh the review app view after successful build
 
+The likely implementation should reuse the existing Docs Viewer payload builder as a library, not through the CLI or normal scope rebuild orchestration. A review-owned backend adapter can create a synthetic review config and call `DocsDataBuilder` directly:
+
+```python
+builder = DocsDataBuilder(
+    repo_root=repo_root,
+    config=review_config,
+    source_dir=session_path / "source",
+    output_dir=session_path / "generated",
+    viewer_base_url="/docs-review/",
+)
+result = builder.run(write=True)
+```
+
+This keeps Markdown parsing, front matter handling, tree generation, HTML rendering, link rewriting, and by-id payload shape aligned with normal Docs Viewer generation without treating the review folder as a configured scope.
+
 Build does not mean:
 
 - update configured Docs Viewer scopes
 - write canonical source
 - publish public payloads
 - rebuild normal `/docs/` generated outputs
+- call `docs_write_rebuild.rebuild_scope_outputs`
+- call the `build_docs.py` CLI
+- add CLI support for review-folder builds
+- call `build_search.py`
+- require a search index
+- require a recently-added payload
 - run Data Sharing returned-package conversion
 - create or delete sessions
+
+The direct `DocsDataBuilder` call may still write unused normal-builder artifacts such as `generated/recently-added.json` or `generated/references/...`. Those are acceptable implementation byproducts. The review app should ignore them.
 
 The backend build implementation should live behind the review-session/review-folder backend owner, not in the frontend app.
 
@@ -209,6 +239,8 @@ The app should not include:
 - hierarchy drag/drop
 - publish/settings/rebuild normal-scope actions
 - public links
+- search
+- recently added
 - Data Sharing import/review controls
 - session delete/list UI
 

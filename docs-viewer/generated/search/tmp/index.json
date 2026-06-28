@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_tmp_v1",
     "scope": "tmp",
-    "version": "blake2b-3516f11b6f35c7e59206aedfaa3642a6",
-    "generated_at_utc": "2026-06-27T21:10:21Z",
-    "count": 23
+    "version": "blake2b-9fe102b96d74489079fae5ee23842e66",
+    "generated_at_utc": "2026-06-28T20:22:10Z",
+    "count": 24
   },
   "entries": [
     {
@@ -70,6 +70,22 @@
         "26"
       ],
       "search_text": "css 2026-06-26 2026 06 26"
+    },
+    {
+      "id": "devcontainer",
+      "kind": "doc",
+      "title": "devcontainer",
+      "href": "/docs/?scope=tmp&doc=devcontainer",
+      "last_updated": "2026-06-28",
+      "display_meta": "2026-06-28",
+      "search_terms": [
+        "devcontainer",
+        "2026-06-28",
+        "2026",
+        "06",
+        "28"
+      ],
+      "search_text": "devcontainer 2026-06-28 2026 06 28"
     },
     {
       "id": "docs-viewer",

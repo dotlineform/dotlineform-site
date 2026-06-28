@@ -2,155 +2,175 @@
 doc_id: scripts-cloud-environments
 title: Cloud Environments
 added_date: 2026-04-14
-last_updated: "2026-06-12"
+last_updated: "2026-06-28"
 parent_id: dev-home
 ---
-# Cloud Environments (Codex + Codespaces + R2)
+# Cloud Environments
 
-This guide defines a practical cloud-native setup for this repo while preserving the current local workflow.
+This guide records the current cloud-hosted setup for this repo across Codex Cloud and GitHub Codespaces.
 
-## Goals
+It should stay aligned with:
 
-- run the full script and publishing workflow in cloud-hosted dev environments
-- keep local and cloud command shapes consistent
-- keep source-media and remote-media boundaries explicit
-- avoid hardcoding machine-specific paths or credentials
+- `.codex/setup.sh`
+- `.devcontainer/`
+- `requirements.txt`
+- `AGENTS.md`
+- [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 
-## Scope
+## Current Repo Contract
 
-This page covers:
+The repo is currently Python-first for cloud bootstrap.
 
-- Codex Cloud setup expectations
-- GitHub Codespaces runtime/bootstrap setup
-- Cloudflare R2 environment contract for media workflows
-- compatibility checks for local versus non-local runs
+Baseline checked-in dependencies:
 
-For dependency-role guidance across local and cloud environments, including which `requirements.txt` packages are baseline versus feature-specific, see [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies).
+- Python packages: `requirements.txt`
+- local static-site validation config: `site-tools/config/site-tools.json`
+- cloud bootstrap script: `.codex/setup.sh`
+- Codespaces container config: `.devcontainer/`
 
-## Baseline Runtime Contract
+The cloud bootstrap path is intentionally Python-only.
 
-The target parity baseline for publish-sensitive checks:
+## Codex Cloud Behavior
 
-- Python `3.12.7`
-- Python package `openpyxl 3.1.5`
+Current Codex Cloud environment behavior:
 
-[needs updating]
+- Codex checks out the selected repo branch or commit in a hosted container.
+- The configured setup script runs before the agent phase.
+- Setup scripts run with internet access so dependencies can be installed.
+- Agent internet access is off by default unless enabled in the Codex environment settings.
+- Environment variables are available during setup and the agent phase.
+- Secrets are available only during setup and are removed before the agent phase.
+- The setup script runs in a separate shell from the agent phase, so plain `export` commands inside setup do not persist unless written to shell startup files or configured as environment variables.
+- Hosted containers may be cached; reset the environment cache when setup, dependency, or runtime assumptions change.
 
-Treat this as the compatibility target for local and cloud environments when you need predictable publish parity.
-
-### Runtime modes
-
-Cloud sessions can run in three practical modes:
-
-- **Fast script mode**: use preinstalled cloud runtimes and skip optional media packages.
-- **Fast + media mode**: same as fast mode, but include media packages when source conversion is needed (`ffmpeg`, `libheif` tools).
-- **Parity mode**: [needs updating for current local + GitHub Pages behavior].
-
-## Implementation Steps
-
-### 1) Add Codex instruction contract (repo root)
-
-Keep a repo-root `AGENTS.md` section specifically for cloud runs.
-
-Required guidance:
-
-- run from repo root (`dotlineform-site/`)
-- prefer project-local script entrypoints (`./scripts/...`)
-- keep generator runs dry-run by default
-- verify Python version before reporting environment issues
-- never hardcode R2 credentials; use environment variables and platform secrets stores
-
-### 2) Add Codespaces runtime files
-
-[needs updating]
-
-Commit a `.devcontainer/` setup that installs:
-
-- Python runtime at the pinned major/minor line
-- `ffmpeg`
-- `libheif` toolchain (`heif-convert` availability)
-
-Recommended bootstrap actions in `postCreateCommand`:
-
-- install Python deps from `requirements.txt`
-- print version checks
-
-### 2.1) Add a Codex setup script entrypoint
-
-Use `.codex/setup.sh` as the single setup/bootstrap script for Codex cloud sessions.
-
-Current behavior:
-
-- run an apt phase (skipped when required commands already exist, or when apt/sudo is unavailable)
-- create/reuse `.venv`, upgrade pip, and install `requirements.txt`
-- print version diagnostics (`python3`, optional `ffmpeg`)
-- avoid interactive sudo prompts (non-interactive only)
-
-Notes:
-
-- `.codex/setup.sh` does not run docs/search/site builders by default; run those explicitly as follow-up verification.
-- Optional media packages are controlled by `SETUP_INSTALL_MEDIA_PACKAGES=1` during setup apt install.
-- apt package install can be skipped with `SETUP_SKIP_APT=1`; forced with `FORCE_APT_PACKAGES=1`.
-
-### Calling setup.sh by runtime mode
-
-Always run from repo root:
+Configure Codex environments in Codex settings. Use `.codex/setup.sh` as the setup script:
 
 ```bash
 bash .codex/setup.sh
 ```
 
-Fast script mode (default):
+No Codex-specific maintenance script is currently defined in this repo.
+
+## Setup Script Contract
+
+`.codex/setup.sh` is the shared bootstrap entrypoint for Codex Cloud and Codespaces post-create setup.
+
+Current behavior:
+
+- runs from the repo root
+- optionally installs baseline apt packages when `apt-get` and non-interactive privilege are available
+- creates or reuses `.venv`
+- upgrades pip only when creating a new virtualenv
+- installs `requirements.txt` into `.venv`
+- persists `.venv/bin` plus `SITE_PYTHON` and `PYTHON_BIN` into `~/.bashrc` for later cloud agent shells
+- prints version diagnostics for Python, venv Python, and optional `ffmpeg`
+- does not run docs builders, search builders, catalogue builders, site validation, or test profiles
+
+Setup flags:
+
+| Flag | Effect |
+| --- | --- |
+| `SETUP_SKIP_APT=1` | Skip apt installation entirely. Useful when the image already has system packages. |
+| `FORCE_APT_PACKAGES=1` | Run apt installation even when baseline commands are already present. |
+| `SETUP_INSTALL_MEDIA_PACKAGES=1` | Include optional media tools: `ffmpeg` and `libheif-examples`. |
+| `SETUP_PERSIST_AGENT_ENV=0` | Do not append the `.venv` PATH block to `~/.bashrc`. |
+
+Default Codex Cloud setup:
+
+```bash
+bash .codex/setup.sh
+```
+
+Fast setup when the cloud image already has system packages:
 
 ```bash
 SETUP_SKIP_APT=1 bash .codex/setup.sh
 ```
 
-Fast + media mode (force apt + install media dependencies where apt is available):
+Media-capable setup:
 
 ```bash
-FORCE_APT_PACKAGES=1 SETUP_INSTALL_MEDIA_PACKAGES=1 bash .codex/setup.sh
+SETUP_INSTALL_MEDIA_PACKAGES=1 bash .codex/setup.sh
 ```
 
-Why force apt here:
+Use media-capable setup when a task needs source image conversion, HEIF/HEIC handling, thumbnail work, or srcset generation. The setup script treats `ffmpeg` and `heif-convert` as required commands when `SETUP_INSTALL_MEDIA_PACKAGES=1`, so it will not skip apt merely because the non-media baseline is already present.
 
-- `.codex/setup.sh` skips apt when baseline commands already exist (`can_skip_apt_packages`).
-- that baseline check currently does not validate `ffmpeg`/`libheif` tools.
-- in cloud images that already have Python/build tooling but not media tooling, using only `SETUP_INSTALL_MEDIA_PACKAGES=1` can still skip apt and leave media dependencies missing.
+## Codespaces Contract
 
-Parity mode (force apt refresh and pin fallback Bundler when needed):
+Codespaces is configured through `.devcontainer/`.
+
+Current files:
+
+- `.devcontainer/devcontainer.json`
+- `.devcontainer/Dockerfile`
+- `.devcontainer/post-create.sh`
+
+Current Codespaces behavior:
+
+- builds from `mcr.microsoft.com/devcontainers/base:ubuntu-24.04`
+- installs Python 3, `python3-venv`, `python3-pip`, build tooling, `gh`, `ffmpeg`, and `libheif-examples`
+- sets VS Code's default Python interpreter to `/workspaces/dotlineform-site/.venv/bin/python`
+- sets `DOTLINEFORM_PROJECTS_BASE_DIR=/workspaces`
+- sets `MAKE_SRCSET_JOBS=4`
+- runs `.devcontainer/post-create.sh`, which delegates to `bash .codex/setup.sh`
+
+## Runtime Modes
+
+### Fast script mode
+
+Use this for docs, search, static validation, most Python service tests, and non-media maintenance:
 
 ```bash
-FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9 bash .codex/setup.sh
+SETUP_SKIP_APT=1 bash .codex/setup.sh
 ```
 
-Codespaces post-create mode:
-
-- `.devcontainer/post-create.sh` calls `bash .codex/setup.sh` directly.
-- Ensure the image already contains system dependencies expected by setup, because post-create usually runs as non-root and setup will skip apt when sudo is unavailable.
-
-If Codex Cloud supports setup script paths in environment config, point that field to:
+Then run checks with the venv interpreter:
 
 ```bash
-bash .codex/setup.sh
+.venv/bin/python admin-app/commands/run_checks.py --profile quick
 ```
 
-### 3) Keep dependency declarations machine-readable
+### Media mode
 
-- Python deps in `requirements.txt`
+Use this when source media conversion matters:
 
-Use [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies) to record what those checked-in dependencies are used for and how critical they are in cloud sessions.
+```bash
+SETUP_INSTALL_MEDIA_PACKAGES=1 bash .codex/setup.sh
+```
 
-### 4) Define cloud-safe env vars
+Codespaces normally has media tools already because the Dockerfile installs `ffmpeg` and `libheif-examples`.
 
-Minimum shared variables for media/generation scripts:
+### Publish-sensitive mode
+
+Use the same setup as the relevant task, then run explicit validation. Setup alone is not a publish validation step.
+
+Recommended starting checks:
+
+```bash
+.venv/bin/python -m pip check
+.venv/bin/python admin-app/commands/run_checks.py --profile quick
+SITE_PYTHON="$PWD/.venv/bin/python" bin/site-validate
+```
+
+Use broader check profiles only when the change warrants them.
+
+## Environment Variables And Secrets
+
+Minimum shared variables for media/generation and external Docs Viewer scopes:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`
 - optional `MAKE_SRCSET_JOBS`
 
-Media staging and generated srcset output are repo-local under `var/catalogue/media/`.
+Codespaces currently sets:
 
-R2-related variables should be configured through cloud secret stores, for example:
+```text
+DOTLINEFORM_PROJECTS_BASE_DIR=/workspaces
+MAKE_SRCSET_JOBS=4
+```
+
+For cloud environments that need source media or external Docs Viewer scopes, make sure the configured path exists and contains the expected child roots.
+
+R2 publishing variables should be configured through platform secret stores:
 
 - `R2_ACCOUNT_ID`
 - `R2_ACCESS_KEY_ID`
@@ -158,89 +178,81 @@ R2-related variables should be configured through cloud secret stores, for examp
 - `R2_BUCKET`
 - `R2_ENDPOINT`
 
-The R2 publisher uses those values from the process environment in cloud sessions.
-The local-only `.env.local` file is for local machines and should not be used as committed cloud configuration.
+Do not commit `.env.local` or cloud credentials. `.env.local` is local-machine configuration only; cloud sessions should use configured environment variables and secret stores.
 
-### 5) Keep remote-media boundary explicit
+## Internet Access
 
-- treat canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` as separate from remote media origins
-- use `_config.yml` `media_base` values for remote URL rendering
-- publish catalogue primary derivatives through [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) when the R2 handoff should be automated
-- do not couple cleanup flows to remote storage state
+Codex Cloud setup runs with internet access for dependency installation.
 
-## Local + Cloud Compatibility Workflow
+Agent-phase internet access should remain off unless a task genuinely needs it. If it is enabled, prefer a narrow allowlist and read-only HTTP methods where possible.
 
-Use the same command sequence in both environments:
+Typical dependency domains for this repo, when setup needs them:
 
-1. environment checks
-2. dry-run source/build checks
-3. docs/search/site validation
+- `pypi.org`
+- `pythonhosted.org`
+- `github.com`
+- `githubusercontent.com`
+- `packages.microsoft.com`
+- `cli.github.com`
 
-Example check sequence:
+## Build And Verification Commands
+
+Run commands from `dotlineform-site/`.
+
+Use the venv interpreter in cloud sessions:
 
 ```bash
-$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py --strict
-$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
-$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
-./docs-viewer/build/build_docs.py
-./docs-viewer/build/build_search.py --scope studio
+.venv/bin/python -m pip check
+.venv/bin/python admin-app/commands/run_checks.py --list
+.venv/bin/python admin-app/commands/run_checks.py --profile quick
 ```
 
-## Verification Matrix
+Docs payload dry runs:
 
-### Codex-run checks
+```bash
+.venv/bin/python docs-viewer/build/build_docs.py --scope studio
+.venv/bin/python docs-viewer/build/build_search.py --scope studio
+```
 
-- verify active version for Python
-- run at least one dry-run catalogue build
-- run docs and search builders in dry-run mode where supported
+Write runs should be explicit:
 
-### Manual checks
+```bash
+.venv/bin/python docs-viewer/build/build_docs.py --scope studio --write
+.venv/bin/python docs-viewer/build/build_search.py --scope studio --write
+```
 
-- open home page and one work page in local preview
-- open `/docs/` and confirm new docs render
-- verify media URLs resolve to intended origin for the active environment
+Static-site validation:
 
-## Benefits
+```bash
+SITE_PYTHON="$PWD/.venv/bin/python" bin/site-validate
+```
 
-- faster cloud bootstrap for script-heavy work by reusing preinstalled runtimes
-- explicit parity fallback for publish-sensitive checks
-- predictable onboarding for non-local development sessions without forcing unnecessary runtime installs
+Public preview in cloud/Codespaces is optional and only useful when port forwarding is available:
 
-## Risks
+```bash
+SITE_PYTHON="$PWD/.venv/bin/python" bin/site-preview --host 0.0.0.0
+```
 
-- runtime drift can mask compatibility issues if parity checks are skipped
-- Linux cloud images may differ from macOS behavior for image conversion tooling
-- unavailable source media roots in cloud sessions can block generation commands
-- accidental credential handling in logs/docs if secret boundaries are not respected
+## Local And Cloud Parity Notes
 
-## Version-Drift and Incompatibility Handling
+Local AGENTS guidance prefers `$HOME/miniconda3/bin/python3` because that is the local machine interpreter convention.
 
-Potential future incompatibilities and how they surface:
+Cloud sessions should use `.venv/bin/python` after `.codex/setup.sh` has run. The setup script also writes `.venv/bin` into `~/.bashrc` for later Codex agent shells, but explicit `.venv/bin/python` commands are still clearer in docs and closeout notes.
 
-- **Python dependency floor changes**: pip install errors in setup python phase will fail early before generator/build commands run.
-- **Media toolchain drift**: `ffmpeg`/`heif-convert` failures appear in media generation commands; setup only verifies `ffmpeg` when present.
+Keep generator runs dry-run by default in cloud sessions unless a write was requested.
 
-Recommended response loop:
+## Current Risks
 
-1. rerun setup with parity-oriented flags (`FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9`)
-2. run full parity checks (`./docs-viewer/build/build_docs.py`, `./docs-viewer/build/build_search.py --scope studio`)
-
-## Codespaces Consistency Notes
-
-Current Codespaces wiring is consistent:
-
-- `postCreateCommand` runs `.devcontainer/post-create.sh`
-- post-create delegates to `.codex/setup.sh`
-- Dockerfile preinstalls `ffmpeg` and `libheif-examples`, so media tooling is available even when setup apt is skipped
-
-Watch-outs:
-
-- if Dockerfile package/runtime pins change, re-run setup and parity checks in Codespaces to ensure post-create still succeeds without sudo
-- if setup begins requiring new system packages, add them to Dockerfile to avoid post-create apt-skip gaps
+- Container caches can leave old dependencies in place after setup changes; reset the Codex environment cache when setup behavior changes.
+- Media workflows still need real source media roots under `DOTLINEFORM_PROJECTS_BASE_DIR`; dependency setup cannot create those private assets.
+- Agent internet access can expose the repo to prompt-injection risk if broad web access is enabled.
+- Cloud and local Python patch versions may differ; run version/dependency checks before treating a failure as a repo regression.
 
 ## Related References
 
-- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
-- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
-- [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)
+- [Local Setup Environment](/docs/?scope=studio&doc=local-setup-environment)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2)

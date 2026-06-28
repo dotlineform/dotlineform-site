@@ -3,6 +3,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "devcontainer",
+      "title": "devcontainer",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/devcontainer.json",
+      "added_date": "2026-06-28"
+    },
+    {
       "doc_id": "components",
       "title": "components",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/components.json",
@@ -57,15 +63,7 @@
       "added_date": "2026-05-31",
       "parent_id": "risks",
       "parent_title": "risks"
-    },
-    {
-      "doc_id": "risk-runtime-browser-evidence-plan",
-      "title": "Risk Runtime Browser Evidence - Plan",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/risk-runtime-browser-evidence-plan.json",
-      "added_date": "2026-05-31",
-      "parent_id": "risks",
-      "parent_title": "risks"
     }
   ],
-  "generated_at": "2026-06-26T21:40:50Z"
+  "generated_at": "2026-06-28T20:22:10Z"
 }

@@ -28,6 +28,11 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/css.json"
     },
     {
+      "doc_id": "devcontainer",
+      "title": "devcontainer",
+      "content_url": "/docs-viewer/generated/docs/tmp/by-id/devcontainer.json"
+    },
+    {
       "doc_id": "docs-viewer",
       "title": "docs viewer",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/docs-viewer.json",
@@ -133,5 +138,5 @@
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/vs-code.json"
     }
   ],
-  "generated_at": "2026-06-26T22:04:05Z"
+  "generated_at": "2026-06-28T20:22:10Z"
 }
