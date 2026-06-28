@@ -36,6 +36,8 @@ The export reads existing generated Docs Viewer payloads and writes pre-rendered
 - one shared `styles.css`
 - one HTML file per doc
 
+The export includes every generated doc for the selected repo-backed local scope. It does not filter to `viewable: true`.
+
 No Docs Viewer runtime is required.
 
 No local server is required.
@@ -50,10 +52,10 @@ Do not implement the heavier local-to-public Docs Viewer projection for this req
 
 Cancelled pieces:
 
-- `studio-docs` as a public Docs Viewer payload scope
-- copying/projecting `docs-viewer/generated/docs/studio/` into `site/assets/data/docs/scopes/studio-docs/`
+- `docs-studio` as a public Docs Viewer payload scope
+- copying/projecting `docs-viewer/generated/docs/studio/` into `site/assets/data/docs/scopes/docs-studio/`
 - projecting `docs-viewer/generated/search/studio/index.json`
-- creating public Docs Viewer route config for `/studio-docs/`
+- creating public Docs Viewer route config for `/docs-studio/`
 - creating a public Docs Viewer runtime route shell for this workflow
 - rewriting generated Docs Viewer JSON payload URLs for public runtime use
 - adding a projection registry for local-to-public scope mirrors
@@ -83,7 +85,7 @@ var/docs-offline/studio/
 Public static output:
 
 ```text
-site/studio-docs/
+site/docs-studio/
   index.html
   styles.css
   docs/
@@ -95,12 +97,17 @@ site/studio-docs/
 The public output would be available from:
 
 ```text
-https://dotlineform.com/studio-docs/
+https://dotlineform.com/docs-studio/
 ```
 
 Anything under `site/` is public once deployed. The private `var/` output should remain available so future non-public docs can use the same exporter without being deployed.
 
-The public copy can be produced as part of the same exporter run after the private bundle has been generated and validated.
+Export always writes both destinations in the same workflow:
+
+- `var/docs-offline/<scope>/`
+- `site/docs-<scope>/`
+
+There are no destination checkboxes in the first implementation. Keeping both outputs together avoids per-scope preferences and UI state.
 
 Destination folders are exclusively owned by this exporter. They are directly derived from the scope name and are wiped as the first step of every apply run before the current export is written. Do not add stale-file tracking, delete manifests, fallback reconciliation, or partial sync semantics.
 
@@ -112,8 +119,7 @@ Delete Scope does need export cleanup. When deleting a repo-backed local scope, 
 
 ```text
 var/docs-offline/<scope>/
-var/docs-offline/<scope>-docs.zip
-site/<scope>-docs/
+site/docs-<scope>/
 ```
 
 This cleanup should use the same path validation as the exporter. It should not look for manifests or scan arbitrary folders.
@@ -185,17 +191,17 @@ Suggested modal controls:
 
 - source scope summary, such as `studio`
 - document count and default document
-- destination checkboxes:
+- fixed destination summary:
   - private offline folder: `var/docs-offline/studio/`
-  - public site folder: `site/studio-docs/`
-  - optional zip archive: `var/docs-offline/studio-docs.zip`
+  - public site folder: `site/docs-studio/`
 - preview button showing destination folders that will be replaced and files that will be written
-- apply button that writes the selected destinations
-- explicit public visibility warning when `site/studio-docs/` is selected
+- export/apply button that writes both destinations
+- delete button that deletes both destinations
+- explicit public visibility warning because `site/docs-<scope>/` is always written
 
 The action should be available when the active `/docs/` scope is repo-backed local. Current repo-backed local scopes are `studio` and `tmp`.
 
-The first implementation can default destination labels for `studio`, but the service should accept the active local scope explicitly.
+The service should accept the active local scope explicitly.
 
 ## Backend Service
 
@@ -210,8 +216,7 @@ Candidate request shape:
 ```json
 {
   "scope": "studio",
-  "destinations": ["offline", "site"],
-  "zip": false
+  "action": "export"
 }
 ```
 
@@ -226,10 +231,10 @@ Responsibilities:
 - write shared CSS
 - rewrite internal Docs Viewer links to local `.html` links
 - produce a preview diff before writing
-- wipe selected destination folders before writing current output
-- optionally create a zip archive
+- wipe both destination folders before writing current output
+- delete both destination folders when requested
 
-The service should generate the private bundle first, validate it, then replace selected secondary destinations such as `site/studio-docs/` or a zip archive with the same generated files. This keeps rendering and link rewriting in one path.
+The service should generate the private bundle first, validate it, then replace the public `site/docs-<scope>/` destination with the same generated files. This keeps rendering and link rewriting in one path.
 
 ## Implementation Tasks
 
@@ -248,8 +253,9 @@ This should be a fairly straightforward implementation: one focused exporter ser
   - rendering per-doc HTML pages
   - rendering or copying `styles.css`
   - rewriting internal Docs Viewer links
-  - computing a replace plan for selected destination folders
-  - wiping and writing selected destination folders
+  - computing a replace plan for both destination folders
+  - wiping and writing both destination folders
+  - deleting both destination folders
 - Keep the service independent from Docs Viewer frontend code.
 - Use generated payloads as input; do not parse or render source Markdown.
 - Reject public, local-external, and non-repo-backed scopes.
@@ -258,12 +264,11 @@ This should be a fairly straightforward implementation: one focused exporter ser
 
 - Define deterministic destination paths:
   - offline: `var/docs-offline/<scope>/`
-  - site: `site/<scope>-docs/`
-  - zip: `var/docs-offline/<scope>-docs.zip`
-- Allow `studio` to use `site/studio-docs/` naturally through the same pattern.
+  - site: `site/docs-<scope>/`
+- Allow `studio` to use `site/docs-studio/` naturally through the same pattern.
 - Validate all output paths stay inside the intended repo roots.
 - Treat destination folders as exporter-owned generated output.
-- Wipe each selected destination folder before writing the new export.
+- Wipe both destination folders before writing the new export.
 - Do not keep a manifest or track stale files.
 - Add Delete Scope cleanup for these deterministic exporter-owned outputs.
 - Do not add New Scope bookkeeping; repo-backed local scopes are recognised from scope config.
@@ -282,13 +287,13 @@ This should be a fairly straightforward implementation: one focused exporter ser
 - Add management-only endpoints, likely under existing Docs management routes:
   - preview export plan
   - apply export plan
+  - delete export outputs
 - Request shape should include:
 
 ```json
 {
   "scope": "studio",
-  "destinations": ["offline", "site"],
-  "zip": false
+  "action": "export"
 }
 ```
 
@@ -299,12 +304,15 @@ This should be a fairly straightforward implementation: one focused exporter ser
   - destination folders that will be replaced
   - files that will be written after replacement
   - warnings
-  - public visibility warning when `site` is selected
+  - public visibility warning
 - Apply response should include:
   - written file count
   - replaced destination folders
   - destination links/paths
   - warnings
+- Delete response should include:
+  - deleted destination folders
+  - paths that were already absent
 
 ### 5. Docs Viewer UI
 
@@ -313,10 +321,11 @@ This should be a fairly straightforward implementation: one focused exporter ser
 - Add an export modal with:
   - source scope summary
   - document count/default document
-  - destination checkboxes for offline, site, and optional zip
+  - fixed offline and site destination paths
   - preview button
-  - apply button
-  - public visibility warning when site output is selected
+  - export/apply button
+  - delete button
+  - public visibility warning
   - result links/paths after apply
 - Keep this separate from existing public-scope `Publish` actions.
 
@@ -341,8 +350,8 @@ This should be a fairly straightforward implementation: one focused exporter ser
 - Export `studio` to `var/docs-offline/studio/`.
 - Open `var/docs-offline/studio/index.html` directly from the filesystem.
 - Confirm links and CSS work without a server.
-- Export `studio` to `site/studio-docs/`.
-- Run `bin/site-preview` and open `/studio-docs/`.
+- Export `studio` to `site/docs-studio/`.
+- Run `bin/site-preview` and open `/docs-studio/`.
 - Confirm no Docs Viewer runtime, route config, JSON fetch, or local service is required.
 
 ## Link Rewriting
@@ -359,13 +368,14 @@ The first implementation should preserve doc ids as filenames where safe. If a d
 
 Optional outputs:
 
-- `var/docs-offline/studio-docs.zip`
-- public copy under `site/studio-docs/`
+- public copy under `site/docs-studio/`
 - copied local media/assets if the rendered docs reference files that are not already browser-reachable
 - previous/next links based on tree order
 - generated timestamp and source scope summary
 
 Media copying can be a later enhancement if current docs do not need it.
+
+Zip output is intentionally not part of the first implementation. If a zip archive is needed, the user can create it manually from the generated `var/docs-offline/<scope>/` folder.
 
 ## Verification
 
@@ -380,6 +390,7 @@ Automated checks should cover:
 - destination-folder replacement
 - destination path validation
 - public-output warning when `site/` is selected
+- deletion of both deterministic destination folders
 
 Manual checks:
 
@@ -388,12 +399,10 @@ Manual checks:
 - confirm local CSS loads
 - confirm internal doc links resolve to sibling `.html` files
 - confirm no JavaScript/runtime/server dependency is required
-- open `/studio-docs/` on the public site or local static preview when `site/` output is selected
-- confirm public-copy links stay under `/studio-docs/`
+- open `/docs-studio/` on the public site or local static preview
+- confirm public-copy links stay under `/docs-studio/`
+- use the modal Delete button and confirm both destination folders are removed
 
 ## Open Questions
 
-- Should the first implementation include every generated `studio` doc, or only docs with `viewable: true`?
-- Should each repo-backed local scope get a default public folder pattern such as `site/<scope>-docs/`?
-- Should public `site/` output be opt-in every time, or remembered per local scope?
-- Should the zip archive be implemented in the first pass or left for later?
+- Should media copying be included in a later enhancement, or is the current linked-asset behavior enough?
