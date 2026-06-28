@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cea00ffcee31dabbd3a7dc8fc2cbf2f1",
-    "generated_at_utc": "2026-06-28T17:19:44Z",
-    "count": 229
+    "version": "blake2b-152af68cc5bd0eb5b8b35a0ab8f544eb",
+    "generated_at_utc": "2026-06-28T19:38:57Z",
+    "count": 230
   },
   "entries": [
     {
@@ -1261,6 +1261,34 @@
         "28"
       ],
       "search_text": "site-request-docs-import-content-review-sessions site request docs import content review sessions docs import content review sessions change requests change requests 2026-06-28 2026 06 28"
+    },
+    {
+      "id": "site-request-docs-review-local-app",
+      "kind": "doc",
+      "title": "Docs Review Local App",
+      "href": "/docs/?scope=studio&doc=site-request-docs-review-local-app",
+      "last_updated": "2026-06-28",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-28 • Change Requests",
+      "search_terms": [
+        "site-request-docs-review-local-app",
+        "site",
+        "request",
+        "docs",
+        "review",
+        "local",
+        "app",
+        "docs review local app",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-28",
+        "2026",
+        "06",
+        "28"
+      ],
+      "search_text": "site-request-docs-review-local-app site request docs review local app docs review local app change requests change requests 2026-06-28 2026 06 28"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",
