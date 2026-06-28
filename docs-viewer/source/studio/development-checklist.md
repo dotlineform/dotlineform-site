@@ -128,6 +128,14 @@ Documents data-sharing adapters:
 - Docs prepare/export behavior stays under `docs_export*.py` and `docs_data_sharing/package.py`.
 - Import support is profile-driven: export-only profiles must keep `supports_return_import` false until a matching returned import type and apply action exist.
 
+Review sessions:
+
+- `docs_review_sessions.py` owns management-only review-session temp folders under `var/analytics/data-sharing/import-preview/`.
+- Review sessions are folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
+- Review-session list/read/build/delete routes should stay thin route dispatch in `docs_management_routes.py`, `docs_management_read_service.py`, and `docs_management_service.py`.
+- Review-session frontend behavior should live in dedicated management modules such as `docs-viewer-review-sessions-client.js`, modal renderer, and controller modules.
+- Do not add review-session business logic to `docs_viewer_service.py`, normal generated-data runtime, normal scope selector code, or public route runtime.
+
 When adding or changing import/export behavior:
 
 - name the profile, import type, action id, and owning module before coding

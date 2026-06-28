@@ -93,6 +93,11 @@ GENERATED_READ_PATHS = {
     routes.GENERATED_REFERENCE_TARGET_PATH,
     routes.GENERATED_REFERENCE_TARGET_ALT_PATH,
 }
+REVIEW_SESSION_READ_PATHS = {
+    routes.REVIEW_SESSIONS_PATH,
+    routes.REVIEW_SESSION_INDEX_TREE_PATH,
+    routes.REVIEW_SESSION_PAYLOAD_PATH,
+}
 
 
 def runtime_static_relative_path(request_path: str) -> Path | None:
@@ -327,6 +332,13 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
         if path == routes.SOURCE_BODY_PATH:
+            if not self.config.management_enabled:
+                self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+        if path in REVIEW_SESSION_READ_PATHS:
             if not self.config.management_enabled:
                 self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)
                 return

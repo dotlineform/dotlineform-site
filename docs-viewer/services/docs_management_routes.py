@@ -20,6 +20,11 @@ SOURCE_CONFIG_PATH = "/docs/source-config"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 IMPORT_HTML_FILES_PATH = "/docs/import-html-files"
+REVIEW_SESSIONS_PATH = "/docs/review-sessions"
+REVIEW_SESSION_BUILD_PATH = "/docs/review-sessions/build"
+REVIEW_SESSION_DELETE_PATH = "/docs/review-sessions/delete"
+REVIEW_SESSION_INDEX_TREE_PATH = "/docs/review-sessions/index-tree"
+REVIEW_SESSION_PAYLOAD_PATH = "/docs/review-sessions/payload"
 
 SOURCE_BODY_PATH = "/docs/source"
 SOURCE_REBUILD_PATH = "/docs/source/rebuild"
@@ -67,6 +72,9 @@ GET_PATHS = (
     SOURCE_BODY_PATH,
     IMPORT_SOURCE_FILES_PATH,
     IMPORT_HTML_FILES_PATH,
+    REVIEW_SESSIONS_PATH,
+    REVIEW_SESSION_INDEX_TREE_PATH,
+    REVIEW_SESSION_PAYLOAD_PATH,
     PUBLISH_STATUS_PATH,
 )
 
@@ -77,6 +85,8 @@ POST_PATHS = (
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,
     IMPORT_HTML_PATH,
+    REVIEW_SESSION_BUILD_PATH,
+    REVIEW_SESSION_DELETE_PATH,
     UPDATE_METADATA_PATH,
     UPDATE_VIEWABILITY_PATH,
     UPDATE_VIEWABILITY_BULK_PATH,

@@ -44,10 +44,19 @@ def test_docs_management_routes_do_not_publish_data_sharing_endpoints() -> None:
         raise AssertionError("Docs Management routes must not publish Data Sharing endpoints")
 
 
+def test_review_session_routes_are_management_owned() -> None:
+    assert routes.REVIEW_SESSIONS_PATH in routes.GET_PATHS
+    assert routes.REVIEW_SESSION_INDEX_TREE_PATH in routes.GET_PATHS
+    assert routes.REVIEW_SESSION_PAYLOAD_PATH in routes.GET_PATHS
+    assert routes.REVIEW_SESSION_BUILD_PATH in routes.POST_PATHS
+    assert routes.REVIEW_SESSION_DELETE_PATH in routes.POST_PATHS
+
+
 def main() -> None:
     test_get_routes_are_unique()
     test_post_routes_are_unique()
     test_options_routes_are_get_and_post_routes()
+    test_review_session_routes_are_management_owned()
     print("Docs Management route tests OK")
 
 

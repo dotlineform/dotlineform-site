@@ -481,17 +481,17 @@ Review mode should visually communicate that it is temporary:
 
 There is useful preparatory refactoring that can be done before implementing sessions, similar to the completed import HTML-to-Markdown split.
 
-1. Add a management review-session route/service skeleton.
+1. Add a management review-session route/service skeleton. Completed.
 
-Create `docs_review_sessions.py` with path-safe list/delete/read stubs and focused tests. Wire thin route constants and dispatch. This establishes backend ownership before feature behavior grows.
+Created `docs_review_sessions.py` with path-safe list/delete/read behavior, an explicit build placeholder, and focused tests. Wired thin route constants and dispatch. This establishes backend ownership before feature behavior grows.
 
-2. Split management shell modal mounting.
+2. Split management shell modal mounting. Started.
 
-`docs-viewer-management-shell-renderer.js` currently owns large hard-coded modal markup for metadata/import/settings. Before adding sessions, add a generic management modal mount or modal registry so new modals can render from their own modules.
+`docs-viewer-management-shell-renderer.js` currently owns large hard-coded modal markup for metadata/import/settings. A neutral `docsViewerManagementModalMount` now exists so new modals can render from their own modules. A fuller modal registry can still be added if sessions need more modal lifecycle structure.
 
-3. Add a frontend session client module with tests.
+3. Add a frontend session client module. Started.
 
-Create `docs-viewer-review-sessions-client.js` around the future endpoints. Even before the modal exists, it can own path names, payload normalization, and error handling.
+Created `docs-viewer-review-sessions-client.js` around the review-session endpoints. Even before the modal exists, it owns path names and request helpers.
 
 4. Assess payload-provider extraction.
 

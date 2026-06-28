@@ -82,6 +82,8 @@ def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
     raw = path.read_text(encoding="utf-8")
     match = FRONT_MATTER_PATTERN.match(raw)
     if not match:
+        if raw.startswith("---"):
+            raise ValueError(f"front matter could not be parsed in {path.name}")
         return {}, raw
 
     front_matter: Dict[str, Any] = {}
