@@ -57,7 +57,7 @@ SUPPORTED_FIELD_SOURCES = {
     "viewable",
 }
 SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
-SUPPORTED_RECORD_SHAPES = {"document_rows"}
+SUPPORTED_RECORD_SHAPES = {"document_rows", "document_tree"}
 SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
 DEFAULT_SUPPORTS_RETURN_IMPORT = True
 SKIPPED_REASON_LABELS = {
@@ -541,6 +541,8 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
             errors.append(f"config {config_id}: unsupported target.supported_formats value {item_format!r}")
         if item_format == "jsonl" and record_shape != "document_rows":
             errors.append(f"config {config_id}: jsonl exports must use document_rows")
+        if record_shape == "document_tree" and item_format != "json":
+            errors.append(f"config {config_id}: document_tree exports only support json")
     if target_format and target_formats and target_format not in target_formats:
         errors.append(f"config {config_id}: target.format must be included in target.supported_formats")
     if record_shape not in SUPPORTED_RECORD_SHAPES:
@@ -568,6 +570,8 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     for key in ["include_descendants", "include_non_viewable"]:
         if not isinstance(selection.get(key), bool):
             errors.append(f"config {config_id}: selection.{key} must be true or false")
+    if record_shape == "document_tree" and selection.get("include_descendants") is not True:
+        errors.append(f"config {config_id}: document_tree exports require selection.include_descendants true")
 
     workflow = config.get("workflow")
     if workflow is not None:
@@ -593,12 +597,15 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         return errors, warnings
 
     seen_output_paths: set[str] = set()
+    seen_sources: set[str] = set()
     for index, mapping in enumerate(mappings):
         if not isinstance(mapping, dict):
             errors.append(f"config {config_id}: document_fields[{index}] must be an object")
             continue
         source = normalize_text(mapping.get("source"))
         output_path = normalize_text(mapping.get("output_path"))
+        if source:
+            seen_sources.add(source)
         transforms = [normalize_text(item) for item in mapping.get("transforms", [])]
         if source not in SUPPORTED_FIELD_SOURCES:
             errors.append(f"config {config_id}: document_fields[{index}] has unsupported source {source!r}")
@@ -622,6 +629,9 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
                 errors.append(f"config {config_id}: field {source} uses truncate_chars without a supported limit_key")
             elif not isinstance(limits.get(limit_key), int):
                 errors.append(f"config {config_id}: field {source} uses truncate_chars but limits.{limit_key} is not set")
+    if record_shape == "document_tree":
+        if seen_output_paths != {"doc_id", "title"} or seen_sources != {"doc_id", "title"}:
+            errors.append(f"config {config_id}: document_tree exports support only doc_id and title fields")
 
     external_context = config.get("external_context")
     if not isinstance(external_context, dict):
@@ -760,6 +770,33 @@ def selected_docs(
         errors.append("selection: no exportable documents remain after applying filters")
 
     return selected, skipped, errors, warnings
+
+
+def descendant_doc_ids(context: ExportContext, doc_id: str, active_ids: set[str] | None = None) -> set[str]:
+    active = set(active_ids or set())
+    if doc_id in active:
+        return set()
+    active.add(doc_id)
+    descendants: set[str] = set()
+    for child in context.children_by_parent.get(doc_id, []):
+        child_id = normalize_text(child.get("doc_id"))
+        if not child_id or child_id in descendants:
+            continue
+        descendants.add(child_id)
+        descendants.update(descendant_doc_ids(context, child_id, set(active)))
+    return descendants
+
+
+def expand_selected_docs_for_document_tree(context: ExportContext, selected: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    selected_ids = {normalize_text(doc.get("doc_id")) for doc in selected}
+    expanded_ids = set(selected_ids)
+    for doc_id in selected_ids:
+        expanded_ids.update(descendant_doc_ids(context, doc_id))
+    return [
+        doc
+        for doc in context.docs
+        if normalize_text(doc.get("doc_id")) in expanded_ids
+    ]
 
 
 def effective_missing_summary_only(config: dict[str, Any], override: bool | None) -> bool:
@@ -1096,7 +1133,10 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
         if isinstance(external_context.get("field_descriptions"), dict)
         else {}
     )
-    if target_format == "jsonl":
+    if record_shape == "document_tree":
+        record_container = "JSON object containing a nested docs tree"
+        records_path = "docs"
+    elif target_format == "jsonl":
         record_container = "JSONL header row followed by one JSON object per line"
         records_path = ""
     else:
@@ -1115,6 +1155,14 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
                 "field": output_path,
                 "type": external_field_type(field),
                 "description": normalize_text(field_descriptions.get(output_path)),
+            }
+        )
+    if record_shape == "document_tree":
+        schema.append(
+            {
+                "field": "children",
+                "type": "array<object>",
+                "description": "Nested child documents with doc_id, title, and optional children.",
             }
         )
 
@@ -1152,6 +1200,66 @@ def build_export_payload(
             }
         return records
     raise ValueError(f"Unsupported target.record_shape: {record_shape}")
+
+
+def document_tree_node(
+    doc: dict[str, Any],
+    *,
+    included_by_parent: dict[str, list[dict[str, Any]]],
+    emitted_ids: set[str],
+    active_ids: set[str] | None = None,
+) -> dict[str, Any]:
+    active = set(active_ids or set())
+    doc_id = normalize_text(doc.get("doc_id"))
+    active.add(doc_id)
+    emitted_ids.add(doc_id)
+    node: dict[str, Any] = {
+        "doc_id": doc_id,
+        "title": normalize_text(doc.get("title")),
+    }
+    children = [
+        document_tree_node(
+            child,
+            included_by_parent=included_by_parent,
+            emitted_ids=emitted_ids,
+            active_ids=active,
+        )
+        for child in included_by_parent.get(doc_id, [])
+        if normalize_text(child.get("doc_id")) not in active
+        and normalize_text(child.get("doc_id")) not in emitted_ids
+    ]
+    if children:
+        node["children"] = children
+    return node
+
+
+def build_document_tree_payload(
+    *,
+    export_id: str,
+    docs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    included_ids = {normalize_text(doc.get("doc_id")) for doc in docs}
+    included_by_parent: dict[str, list[dict[str, Any]]] = {}
+    for doc in docs:
+        parent_id = normalize_text(doc.get("parent_id"))
+        if parent_id not in included_ids:
+            parent_id = ""
+        included_by_parent.setdefault(parent_id, []).append(doc)
+
+    emitted_ids: set[str] = set()
+    tree = [
+        document_tree_node(doc, included_by_parent=included_by_parent, emitted_ids=emitted_ids)
+        for doc in included_by_parent.get("", [])
+    ]
+    for doc in docs:
+        doc_id = normalize_text(doc.get("doc_id"))
+        if doc_id not in emitted_ids:
+            tree.append(document_tree_node(doc, included_by_parent=included_by_parent, emitted_ids=emitted_ids))
+    return {
+        "schema": "docs_data_sharing_document_tree_v1",
+        "export_id": export_id,
+        "docs": tree,
+    }
 
 
 def parse_doc_ids(values: list[str]) -> list[str]:
@@ -1343,24 +1451,39 @@ def build_export(
         missing_summary_only=missing_summary_only,
     )
 
+    record_shape = normalize_text(target_config.get("record_shape"))
+    if record_shape == "document_tree":
+        selected = expand_selected_docs_for_document_tree(context, selected)
+
     records: list[dict[str, Any]] = []
     warnings.extend(selection_warnings)
     warnings.extend(skipped_summary_warnings(skipped))
     errors = list(selection_errors)
     failed_count = 0
     truncated_count = 0
-    for doc in selected:
-        record, doc_warnings, doc_errors, was_truncated = build_document_record(context, doc)
-        warnings.extend(doc_warnings)
-        errors.extend(doc_errors)
-        if not doc_errors:
-            records.append(record)
-            if was_truncated:
-                truncated_count += 1
-        else:
-            failed_count += 1
-    if truncated_count:
-        warnings.append(f"output: {truncated_count} document(s) were truncated by configured limits")
+    if record_shape == "document_rows":
+        for doc in selected:
+            record, doc_warnings, doc_errors, was_truncated = build_document_record(context, doc)
+            warnings.extend(doc_warnings)
+            errors.extend(doc_errors)
+            if not doc_errors:
+                records.append(record)
+                if was_truncated:
+                    truncated_count += 1
+            else:
+                failed_count += 1
+        if truncated_count:
+            warnings.append(f"output: {truncated_count} document(s) were truncated by configured limits")
+    elif record_shape == "document_tree":
+        records = [
+            {
+                "doc_id": normalize_text(doc.get("doc_id")),
+                "title": normalize_text(doc.get("title")),
+            }
+            for doc in selected
+        ]
+    else:
+        errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
 
     counts = {
         "selected": len(selected),
@@ -1402,12 +1525,15 @@ def build_export(
         counts=counts,
         target_format=resolved_target_format,
     )
-    payload = build_export_payload(
-        context,
-        export_id=export_id,
-        records=records,
-        target_format=resolved_target_format,
-    )
+    if record_shape == "document_tree":
+        payload = build_document_tree_payload(export_id=export_id, docs=selected)
+    else:
+        payload = build_export_payload(
+            context,
+            export_id=export_id,
+            records=records,
+            target_format=resolved_target_format,
+        )
     external_context = build_external_context(config, resolved_target_format)
     if write:
         if output_path is None:

@@ -115,7 +115,7 @@ The documents adapter treats `profile_id` as the same value as `config_id` until
 | `profile_id` | Workflow profile identity for review UI and future profile-specific behavior. | For documents, currently the same value as `config_id`. If config and UI profile concepts diverge later, this records the user-facing profile id. |
 | `scope` | Source Docs Viewer scope used during prepare. | Required for documents, for example `library`. Corresponds to `selection.docs_scope` and a configured scope in `docs-viewer/config/scopes/docs_scopes.json`. |
 | `target_format` | File format written by prepare and expected by review. | `json` or `jsonl`. Must match the selected profile's supported target format and the staged file extension. |
-| `record_shape` | Structural shape of the external records inside the package. | `document_rows` for JSONL rows or JSON `records` arrays. |
+| `record_shape` | Structural shape of the external records inside the package. | `document_rows` for JSONL rows or JSON `records` arrays; `document_tree` for JSON `docs` trees. |
 | `generated_at` | UTC timestamp for the prepare run. | `YYYY-MM-DDTHH:MM:SSZ`. This is the source of `export_id` and should not be edited. |
 | `supports_return_import` | Whether this exported package is eligible for returned-package review/apply. | Defaults to true for older metadata. Export-only profiles write false. Valid metadata with false is still provenance, but the staged file is not actionable. |
 | `config_checksum` | Optional integrity/provenance value for the prepare profile used at export time. | Present when included by the profile metadata settings. Hashes the profile config so later review can detect profile drift if needed. |
@@ -151,6 +151,27 @@ JSONL packages use a required first-line header row:
 
 For JSONL, line 1 is internal routing identity and all following lines are package records.
 External instructions in the package context should tell reviewers to preserve the first JSONL line unchanged.
+
+Export-only document-tree packages use a top-level `export_id` beside a nested `docs` tree:
+
+```json
+{
+  "schema": "docs_data_sharing_document_tree_v1",
+  "export_id": "ds_20260627T173012Z",
+  "docs": [
+    {
+      "doc_id": "library",
+      "title": "Library",
+      "children": [
+        {
+          "doc_id": "child-doc",
+          "title": "Child Doc"
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## Review Resolution
 

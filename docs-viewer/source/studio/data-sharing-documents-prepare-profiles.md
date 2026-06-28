@@ -49,10 +49,12 @@ Any new field source, transform, output format, or record shape needs export-eng
 
 ## Current Profiles
 
-The current file defines one enabled document package profile:
+The current file defines two enabled document package profiles:
 
 - `document-content`
   JSONL document rows for exporting multiple selected document bodies in one file, including current/proposed summary fields and explicitly declared parent, ancestor, and child relationship metadata
+- `document-tree`
+  JSON document tree for exporting selected document subtrees as nested `docs` / `children` nodes containing only `doc_id` and `title`; this profile is export-only and does not support returned-package import
 
 Profile ids describe package shape, not Docs Viewer scope.
 Add a new profile only when a scope or workflow needs a materially different package shape, field set, limits, or selection behavior.
@@ -95,8 +97,10 @@ When omitted, the default `target.format` is the only supported format.
 `target.record_shape` supports:
 
 - `document_rows`: one complete document record per JSONL row after the required header row, or one JSON object with a `records` array when `json` is selected
+- `document_tree`: one JSON object with a nested `docs` array; nodes contain `doc_id`, `title`, and optional `children`
 
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
+Document-tree profiles are JSON-only.
 Export-run metadata is written once to an internal metadata file under `var/analytics/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
 External packages carry an `export_id` that review uses to find that metadata after the returned file is staged.
 A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
@@ -116,6 +120,9 @@ They may still appear in diagnostic blocked-file data with `blocked_reason: "exp
 
 Import support also requires server code for the profile.
 Changing `workflow.supports_return_import` to `true` is not sufficient on its own; the profile id must also be mapped to a supported import type and a corresponding review/apply action must exist.
+
+The `document-tree` profile uses `supports_return_import: false`.
+Its exports can be staged later for traceability, but they are not listed as actionable returned packages.
 
 ## External Context
 
@@ -172,6 +179,10 @@ Selection also defines whether the prepare UI cascades parent checkbox changes t
 Current profiles use explicit document selection; Select all in Analytics or `--all` in the CLI remains available when a whole-corpus export is intentional.
 The exporter treats `selection.doc_ids` and repeated CLI `--doc-id` values as the exact document set to export.
 Relationship fields such as `children` and `ancestors` are still derived from source hierarchy metadata and are not filtered by the selected export set.
+
+`document_tree` profiles require `selection.include_descendants: true`.
+The Analytics prepare UI locks the descendant toggle on for tree profiles, and the server expands selected roots to include all descendants before writing the tree.
+If a selected document's parent is not included in the expanded set, that selected document becomes a root node in the exported tree.
 
 The current profiles do not enable missing-summary-only filtering.
 

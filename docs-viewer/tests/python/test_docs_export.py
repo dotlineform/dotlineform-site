@@ -426,6 +426,101 @@ def test_export_only_profile_writes_provenance_metadata_without_import_support()
     assert metadata["supports_return_import"] is False
 
 
+def test_document_tree_profile_exports_selected_subtree() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0].update(
+        {
+            "id": "document-tree",
+            "label": "Document tree",
+            "target": {
+                "format": "json",
+                "supported_formats": ["json"],
+                "record_shape": "document_tree",
+            },
+            "output": {
+                "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",
+                "timestamp_format": "%Y%m%d-%H%M%S",
+            },
+            "workflow": {"supports_return_import": False},
+            "external_context": {
+                "task": "review_document_tree",
+                "response_guidance": "Use the nested docs tree as read-only hierarchy context.",
+                "field_descriptions": {
+                    "doc_id": "Stable document identifier.",
+                    "title": "Document title.",
+                },
+            },
+            "document_fields": [
+                {"source": "doc_id", "output_path": "doc_id", "required": True},
+                {"source": "title", "output_path": "title", "required": True},
+            ],
+        }
+    )
+    config["configs"][0]["selection"]["include_descendants"] = True
+    fixed_generated_at = "2026-05-03T15:15:07Z"
+    fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
+    original_export_run_times = docs_export.export_run_times
+    docs_export.export_run_times = lambda: (fixed_generated_at, fixed_filename_dt)
+    try:
+        with make_repo(config) as temp:
+            root = Path(temp)
+            report = run_export(root, config_id="document-tree", selected_doc_ids=["library"], write=True)
+            payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
+            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+            context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
+    finally:
+        docs_export.export_run_times = original_export_run_times
+
+    assert report["ok"] is True, report
+    assert report["target_format"] == "json"
+    assert report["counts"]["exported"] == 2
+    assert report["exported_doc_ids"] == ["library", "child-with-summary"]
+    assert payload == {
+        "schema": "docs_data_sharing_document_tree_v1",
+        "export_id": "ds_20260503T151507Z",
+        "docs": [
+            {
+                "doc_id": "library",
+                "title": "Library",
+                "children": [
+                    {
+                        "doc_id": "child-with-summary",
+                        "title": "Child With Summary",
+                    }
+                ],
+            }
+        ],
+    }
+    assert metadata["record_shape"] == "document_tree"
+    assert metadata["supports_return_import"] is False
+    assert context["record_container"] == "JSON object containing a nested docs tree"
+    assert context["records_path"] == "docs"
+
+
+def test_document_tree_profile_requires_descendant_selection() -> None:
+    config = copy.deepcopy(BASE_CONFIG)
+    config["configs"][0]["target"] = {
+        "format": "json",
+        "supported_formats": ["json"],
+        "record_shape": "document_tree",
+    }
+    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json"
+    config["configs"][0]["selection"]["include_descendants"] = False
+    config["configs"][0]["document_fields"] = [
+        {"source": "doc_id", "output_path": "doc_id", "required": True},
+        {"source": "title", "output_path": "title", "required": True},
+    ]
+    config["configs"][0]["external_context"]["field_descriptions"] = {
+        "doc_id": "Stable document identifier.",
+        "title": "Document title.",
+    }
+    with make_repo(config) as temp:
+        report = run_export(Path(temp))
+
+    assert report["ok"] is False
+    assert "config document-content: document_tree exports require selection.include_descendants true" in report["errors"]
+
+
 def test_existing_export_metadata_blocks_same_export_id_write() -> None:
     fixed_generated_at = "2026-05-03T15:15:07Z"
     fixed_filename_dt = dt.datetime(2026, 5, 3, 16, 15, 7, tzinfo=dt.timezone(dt.timedelta(hours=1)))
@@ -477,6 +572,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
     config_ids = [config["id"] for config in configs]
     assert config_ids == [
         "document-content",
+        "document-tree",
     ]
     for config in configs:
         errors, warnings = docs_export.validate_export_config(config)
@@ -501,6 +597,10 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
 
     full_config = docs_export.find_export_config(payload, "document-content")
     assert docs_export.supported_target_formats(full_config) == ["jsonl", "json"]
+    tree_config = docs_export.find_export_config(payload, "document-tree")
+    assert tree_config["workflow"]["supports_return_import"] is False
+    assert tree_config["target"]["record_shape"] == "document_tree"
+    assert docs_export.supported_target_formats(tree_config) == ["json"]
 
 
 def test_repo_full_document_content_exports_relationship_fields() -> None:
@@ -613,6 +713,13 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
             "missing_summary_only": None,
             "target_format": "jsonl",
         },
+        {
+            "config_id": "document-tree",
+            "selected_doc_ids": ["library"],
+            "select_all": False,
+            "missing_summary_only": None,
+            "target_format": "json",
+        },
     ]
     for case in cases:
         report = docs_export.build_export(
@@ -652,6 +759,8 @@ def main() -> None:
         test_written_jsonl_output_is_deterministic_for_fixed_run_time,
         test_document_rows_json_format_override_writes_json_array,
         test_export_only_profile_writes_provenance_metadata_without_import_support,
+        test_document_tree_profile_exports_selected_subtree,
+        test_document_tree_profile_requires_descendant_selection,
         test_existing_export_metadata_blocks_same_export_id_write,
         test_unsupported_format_override_blocks_export,
         test_export_run_times_use_utc_metadata_and_local_filename_time,

@@ -86,7 +86,7 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
     assert profile["id"] == "library-smoke"
     assert profile["label"] == "Library smoke"
     assert profile["data_domains"] == ["documents"]
-    assert profile["target"] == {"format": "json", "supported_formats": ["json"]}
+    assert profile["target"] == {"format": "json", "supported_formats": ["json"], "record_shape": "document_rows"}
     assert profile["selection"] == {
         "mode": "explicit_doc_ids",
         "include_descendants": True,

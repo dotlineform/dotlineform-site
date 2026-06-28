@@ -129,6 +129,76 @@
         }
       ],
       "notes": "Designed for external review, bulk LLM upload, and internal reporting where several selected docs should travel in the same file."
+    },
+    {
+      "id": "document-tree",
+      "label": "Document tree",
+      "description": "Nested document parent-child tree with document ids and titles.",
+      "enabled": true,
+      "data_domains": ["documents"],
+      "target": {
+        "format": "json",
+        "supported_formats": ["json"],
+        "record_shape": "document_tree"
+      },
+      "output": {
+        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",
+        "timestamp_format": "%Y%m%d-%H%M%S"
+      },
+      "selection": {
+        "mode": "explicit_doc_ids",
+        "include_descendants": true,
+        "include_non_viewable": true,
+        "supports_missing_summary_only": false,
+        "default_missing_summary_only": false
+      },
+      "workflow": {
+        "supports_return_import": false
+      },
+      "limits": {
+        "max_documents": null,
+        "max_chars_per_document": null,
+        "max_total_chars": null,
+        "truncate": {
+          "enabled": false,
+          "strategy": "hard",
+          "marker": "[truncated]"
+        }
+      },
+      "metadata": {
+        "include": [
+          "export_id",
+          "config_id",
+          "config_checksum",
+          "data_domain",
+          "scope",
+          "generated_at",
+          "selected_doc_ids",
+          "source_last_updated",
+          "counts"
+        ]
+      },
+      "external_context": {
+        "task": "Review document tree",
+        "response_guidance": "Use the nested docs tree as read-only document hierarchy context.",
+        "field_descriptions": {
+          "doc_id": "Stable document identifier.",
+          "title": "Document title."
+        }
+      },
+      "document_fields": [
+        {
+          "source": "doc_id",
+          "output_path": "doc_id",
+          "required": true
+        },
+        {
+          "source": "title",
+          "output_path": "title",
+          "required": true
+        }
+      ],
+      "notes": "Export-only tree profile for sharing document hierarchy context without enabling returned-package review or apply."
     }
   ]
 }

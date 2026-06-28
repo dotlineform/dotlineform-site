@@ -215,6 +215,7 @@ def public_profile_target(target: dict[str, Any]) -> dict[str, object]:
             for item in target.get("supported_formats", [])
             if str(item).strip()
         ] if isinstance(target.get("supported_formats"), list) else [],
+        "record_shape": str(target.get("record_shape") or "").strip(),
     }
 
 

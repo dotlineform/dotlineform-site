@@ -66,8 +66,17 @@ export function defaultFormatForPrepareConfig(config, allowedFormats = []) {
   return formats.includes(preferred) ? preferred : formats[0] || "";
 }
 
+export function prepareConfigRecordShape(config) {
+  const target = config && typeof config.target === "object" ? config.target : {};
+  return normalizeText(target.record_shape);
+}
+
 export function prepareConfigSelection(config) {
   return config && typeof config.selection === "object" ? config.selection : {};
+}
+
+export function prepareConfigRequiresDescendants(config) {
+  return prepareConfigRecordShape(config) === "document_tree";
 }
 
 export function prepareSelectsAllMatching(config, usesDocumentSelection) {

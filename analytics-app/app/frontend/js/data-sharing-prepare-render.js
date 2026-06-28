@@ -4,6 +4,7 @@ import {
 } from "/shared/frontend/js/selectable-list.js";
 import {
   defaultFormatForPrepareConfig,
+  prepareConfigRequiresDescendants,
   prepareConfigSelection,
   selectedPrepareConfig,
   supportedFormatsForPrepareConfig,
@@ -169,12 +170,17 @@ export function syncDataSharingPrepareConfigOptions(state, options = {}) {
   const config = selectedDataSharingPrepareConfig(state);
   const selection = prepareConfigSelection(config);
   const supportsMissing = Boolean(selection.supports_missing_summary_only);
+  const requiresDescendants = prepareConfigRequiresDescendants(config);
   const supportsDescendantCascade = usesPrepareDocumentSelection(state.prepareCapability)
     && normalizeText(selection.mode) === "explicit_doc_ids";
   state.missingSummaryOnlyWrap.hidden = !usesPrepareDocumentSelection(state.prepareCapability) || !supportsMissing;
   if (!preserveOptions) state.missingSummaryOnly.checked = false;
   state.includeDescendantsWrap.hidden = !supportsDescendantCascade;
-  if (preserveOptions) {
+  state.includeDescendantsInput.disabled = requiresDescendants;
+  if (requiresDescendants) {
+    state.includeDescendants = true;
+    state.includeDescendantsInput.checked = true;
+  } else if (preserveOptions) {
     state.includeDescendants = state.includeDescendantsInput.checked;
   } else {
     state.includeDescendants = supportsDescendantCascade && selection.include_descendants !== false;
