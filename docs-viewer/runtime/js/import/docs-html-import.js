@@ -209,7 +209,7 @@ async function openResultSource(state, link) {
       editor: "vscode"
     }, managementOptionsForState(state));
   } catch (error) {
-    console.warn("docs_html_import: open source failed", error);
+    console.warn("docs_import_source: open source failed", error);
     setStatus(
       state.statusNode,
       "error",
@@ -406,7 +406,7 @@ export async function initDocsHtmlImport(options = {}) {
     });
 
     state.runButton.addEventListener("click", () => {
-      runImport(state).catch((error) => console.warn("docs_html_import: unexpected import failure", error));
+      runImport(state).catch((error) => console.warn("docs_import_source: unexpected import failure", error));
     });
     state.resultGridNode.addEventListener("click", (event) => {
       const target = event.target && event.target.closest
@@ -419,14 +419,14 @@ export async function initDocsHtmlImport(options = {}) {
         : null;
       if (!link || !state.resultGridNode.contains(link)) return;
       event.preventDefault();
-      openResultSource(state, link).catch((error) => console.warn("docs_html_import: unexpected open source failure", error));
+      openResultSource(state, link).catch((error) => console.warn("docs_import_source: unexpected open source failure", error));
     });
     state.confirmButton.addEventListener("click", () => {
       if (state.pendingOverwriteResolver) {
         state.pendingOverwriteResolver("confirm");
         return;
       }
-      runImport(state).catch((error) => console.warn("docs_html_import: unexpected overwrite failure", error));
+      runImport(state).catch((error) => console.warn("docs_import_source: unexpected overwrite failure", error));
     });
     state.cancelButton.addEventListener("click", () => {
       if (state.pendingOverwriteResolver) {
@@ -441,7 +441,7 @@ export async function initDocsHtmlImport(options = {}) {
       );
     });
   } catch (error) {
-    console.warn("docs_html_import: init failed", error);
+    console.warn("docs_import_source: init failed", error);
     bootStatus.hidden = false;
     setStatus(
       bootStatus,

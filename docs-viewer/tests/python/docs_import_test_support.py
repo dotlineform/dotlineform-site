@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 from pathlib import Path
@@ -30,7 +31,6 @@ for path in (DOCS_DIR, DATA_SHARING_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE
 
 
 import docs_import_source_service as import_source_service  # noqa: E402
-import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_import_service import import_source_dependencies  # noqa: E402
@@ -111,6 +111,51 @@ def write_scope_config(root: Path) -> None:
 def write_staged(root: Path, filename: str, payload: object, scope: str = "library") -> None:
     del scope
     write_staged_data_file(root, filename, payload)
+
+
+def write_returned_jsonl(
+    root: Path,
+    filename: str,
+    records: list[dict[str, object]],
+    *,
+    export_id: str = "ds_20260627T120000Z",
+    profile_id: str = "document-content",
+    scope: str = "library",
+) -> None:
+    meta_path = root / "var/analytics/data-sharing/meta" / f"{export_id}.meta.json"
+    meta_path.parent.mkdir(parents=True, exist_ok=True)
+    meta_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "data_sharing_export_meta_v1",
+                "export_id": export_id,
+                "app": "docs-viewer",
+                "adapter_id": "documents",
+                "data_domain": scope,
+                "profile_id": profile_id,
+                "config_id": profile_id,
+                "scope": scope,
+                "target_format": "jsonl",
+                "record_shape": "document_rows",
+                "supports_return_import": True,
+                "generated_at": "2026-06-27T12:00:00Z",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    write_staged_data_file(
+        root,
+        filename,
+        [
+            {
+                "record_type": "data_sharing_header",
+                "schema_version": "data_sharing_returned_package_v1",
+                "export_id": export_id,
+            },
+            *records,
+        ],
+    )
 
 
 def write_staged_html(root: Path, filename: str, html: str) -> None:

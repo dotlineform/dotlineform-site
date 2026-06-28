@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import docs_html_import
+import docs_import_media
+import docs_import_preview
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
 
@@ -39,9 +40,8 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -54,7 +54,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/inline-diagram.md").read_text(encoding="utf-8")
         media_path = root / "var/docs/import-staging/inline-diagram-image-01.png"
@@ -79,9 +79,8 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             "# Inline Note\n\n![Inline](data:image/png;base64,bWFya2Rvd24tcG5n)\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -94,7 +93,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/inline-note.md").read_text(encoding="utf-8")
         media_path = root / "var/docs/import-staging/inline-note-image-02.png"
@@ -117,9 +116,8 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             "# Mixed Inline\n\n![Broken](data:image/png;base64,abc)\n\n![Valid](data:image/png;base64,dmFsaWQtcG5n)\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -132,7 +130,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/mixed-inline.md").read_text(encoding="utf-8")
         media_path = root / "var/docs/import-staging/mixed-inline-image-01.png"
@@ -168,9 +166,8 @@ Some text.
 """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -183,7 +180,7 @@ Some text.
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/my-note.md").read_text(encoding="utf-8")
         webp_path = root / "var/docs/import-staging/my-note-image-01.webp"
@@ -215,7 +212,7 @@ def test_markdown_package_image_conversion_does_not_upscale() -> None:
         source = root / "small.png"
         target = root / "small.webp"
         write_test_image(source, (320, 160))
-        result = docs_html_import.convert_package_image_to_webp(source, target, max_width=800)
+        result = docs_import_media.convert_package_image_to_webp(source, target, max_width=800)
         from PIL import Image
 
         with Image.open(target) as converted:
@@ -236,9 +233,8 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
             "# Broken Note\n\n![Missing](images/missing.png)\n\n[Unsupported](attachments/sample-binary.exe)\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -251,7 +247,7 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
     warnings = payload["import_preview"]["warnings"]
     assert payload["ok"] is True

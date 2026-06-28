@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import docs_import_preview
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
 
@@ -25,9 +26,8 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -40,7 +40,7 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_path = root / "docs-viewer/source/library/compact-name.md"
         source_exists = source_path.exists()
@@ -93,9 +93,8 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -108,7 +107,7 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
         asset_path = root / "site/assets/docs/interactive/library/worksheet-widget.html"
@@ -147,9 +146,8 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -163,7 +161,7 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
             files = import_source_service.handle_import_source_files(root)["files"]
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         asset_exists = (root / "site/assets/docs/interactive/library/worksheet-widget.html").exists()
 
@@ -193,9 +191,8 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
         existing_asset.parent.mkdir(parents=True, exist_ok=True)
         existing_asset.write_text("existing\n", encoding="utf-8")
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -213,7 +210,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
         asset_text = existing_asset.read_text(encoding="utf-8")

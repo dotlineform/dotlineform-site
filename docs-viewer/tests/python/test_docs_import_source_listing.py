@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import docs_html_import
+import docs_import_media
+import docs_import_preview
 import docs_import_source_service as import_source_service
 
 from docs_import_test_support import (
@@ -52,9 +53,9 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
         write_staged_package_file(root, "package-note", "Note.md", "# Package Note\n\nBody.\n")
 
         previews = [
-            docs_html_import.generate_import_preview(
+            docs_import_preview.generate_import_preview(
                 root,
-                source_path=docs_html_import.resolve_staged_import_source(root, staged_filename),
+                source_path=docs_import_preview.resolve_staged_import_source(root, staged_filename),
                 scope="library",
                 include_prompt_meta=False,
             )
@@ -76,8 +77,8 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
         assert validation["ok"] is True
         assert validation["renderer"] == "studio/shared/python/markdown_renderer.py"
         assert validation["renderer_contract"]["library"] == "markdown-it-py"
-        assert validation["sanitizer_boundary"]["import_html"] == "docs_html_import structured conversion and SVG serialization"
+        assert validation["sanitizer_boundary"]["import_html"] == "docs_import_html_parser structured conversion and SVG serialization"
 
 def test_media_path_comes_from_scope_config() -> None:
-    assert docs_html_import.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"
-    assert docs_html_import.media_token("analysis", "img", "diagram.png") == "[[media:docs/analysis/img/diagram.png]]"
+    assert docs_import_media.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"
+    assert docs_import_media.media_token("analysis", "img", "diagram.png") == "[[media:docs/analysis/img/diagram.png]]"

@@ -291,7 +291,7 @@ export async function runDocsHtmlImportWorkflow(
         : normalizeText(results[0] && results[0].summary_text)
     );
   } catch (error) {
-    console.warn("docs_html_import: import failed", error);
+    console.warn("docs_import_source: import failed", error);
     if (results.length) renderDocsHtmlImportResult(state, results);
     setStatus(
       state.statusNode,

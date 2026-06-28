@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import docs_import_preview
 import docs_import_source_service as import_source_service
 import docs_write_rebuild as write_rebuild
 
@@ -28,9 +29,8 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
             "# Imported Markdown\n\nBody from staged Markdown with [a link](https://example.com).\n",
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -43,7 +43,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_path = root / "docs-viewer/source/library/markdown-note.md"
         source_text = source_path.read_text(encoding="utf-8")
@@ -65,9 +65,8 @@ def test_text_import_autolinks_plain_urls() -> None:
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_staged_text(root, "plain-note.txt", "Plain Note\n\nSee https://example.com/path.\n")
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -80,7 +79,7 @@ def test_text_import_autolinks_plain_urls() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/plain-note.md").read_text(encoding="utf-8")
 
@@ -104,9 +103,8 @@ def test_svg_import_strips_unsafe_content() -> None:
             """,
         )
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -119,7 +117,7 @@ def test_svg_import_strips_unsafe_content() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/diagram.md").read_text(encoding="utf-8")
 
@@ -137,9 +135,8 @@ def test_image_import_creates_media_path_plan_wrapper() -> None:
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_staged_bytes(root, "reference-image.png", b"fake image")
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -152,7 +149,7 @@ def test_image_import_creates_media_path_plan_wrapper() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/reference-image.md").read_text(encoding="utf-8")
 
@@ -167,9 +164,8 @@ def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -182,7 +178,7 @@ def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / "docs-viewer/source/library/reference-file.md").read_text(encoding="utf-8")
 
@@ -198,9 +194,8 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
         write_library_doc(root, "reference-file.md", {"doc_id": "reference-file", "title": "Reference File", "parent_id": ""})
         write_staged_bytes(root, "reference-file.pdf", b"fake pdf")
         original_rebuild = stub_rebuild()
-        validation_globals = import_source_service.generate_import_preview.__globals__
-        original_validation = validation_globals["validate_markdown_preview"]
-        validation_globals["validate_markdown_preview"] = lambda markdown, *, title="": {
+        original_validation = docs_import_preview.validate_markdown_preview
+        docs_import_preview.validate_markdown_preview = lambda markdown, *, title="": {
             "ok": True,
             "html_chars": len(markdown),
             "renderer": "stub",
@@ -222,7 +217,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
             )
         finally:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
-            validation_globals["validate_markdown_preview"] = original_validation
+            docs_import_preview.validate_markdown_preview = original_validation
 
         source_path = root / "docs-viewer/source/library/reference-file-2.md"
         source_exists = source_path.exists()

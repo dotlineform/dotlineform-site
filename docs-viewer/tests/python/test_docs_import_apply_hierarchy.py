@@ -13,7 +13,7 @@ from docs_import_test_support import (
     make_repo,
     stub_rebuild,
     write_library_doc,
-    write_staged,
+    write_returned_jsonl,
 )
 
 def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -> None:
@@ -21,7 +21,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
-        write_staged(
+        write_returned_jsonl(
             root,
             "hierarchy.jsonl",
             [
@@ -59,7 +59,7 @@ def test_library_import_hierarchy_apply_writes_source_placement() -> None:
                     "sort_order": 30,
                 },
             )
-            write_staged(
+            write_returned_jsonl(
                 root,
                 "hierarchy.jsonl",
                 [
@@ -98,7 +98,7 @@ def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_wri
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
-        write_staged(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
+        write_returned_jsonl(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
         payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
@@ -118,7 +118,7 @@ def test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows() -> 
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
-        write_staged(
+        write_returned_jsonl(
             root,
             "hierarchy.jsonl",
             [
