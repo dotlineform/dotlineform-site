@@ -162,7 +162,7 @@ def test_activity_append_failure_is_non_fatal() -> None:
     assert_true("append failed" in response["activity_log"].get("error", ""), "failed append error")
 
 
-def test_common_activity_helper_uses_studio_activity_append() -> None:
+def test_common_activity_helper_uses_admin_activity_log() -> None:
     calls: list[Dict[str, Any]] = []
     original_append = write_common.admin_activity_log.append_studio_activity
 
@@ -198,7 +198,7 @@ def main() -> None:
     test_tag_record_group_is_resolved_from_context()
     test_alias_record_group_is_resolved_from_context()
     test_activity_append_failure_is_non_fatal()
-    test_common_activity_helper_uses_studio_activity_append()
+    test_common_activity_helper_uses_admin_activity_log()
     print("Tag activity tests OK")
 
 

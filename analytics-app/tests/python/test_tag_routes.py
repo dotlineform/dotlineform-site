@@ -18,6 +18,10 @@ for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR, ANALYTICS_S
         sys.path.insert(0, str(path))
 
 from tag_services import tag_routes as routes  # noqa: E402
+from tag_write_api import aliases  # noqa: E402
+from tag_write_api import assignments  # noqa: E402
+from tag_write_api import promotions  # noqa: E402
+from tag_write_api import registry  # noqa: E402
 import analytics_api  # noqa: E402
 
 
@@ -45,12 +49,30 @@ def test_options_routes_cover_each_post_route() -> None:
 
 def test_local_analytics_adapter_covers_each_post_route() -> None:
     assert_equal(set(analytics_api.ANALYTICS_POST_PATHS), set(routes.POST_PATHS), "local analytics route keys")
+    assert_equal(set(analytics_api.POST_HANDLERS), set(routes.POST_PATHS), "local analytics handler keys")
+
+
+def test_tag_write_handlers_live_in_functional_modules() -> None:
+    expected_handlers = (
+        assignments.save_tags_response,
+        assignments.import_tag_assignments_response,
+        registry.import_tag_registry_response,
+        registry.mutate_tag_response,
+        aliases.import_tag_aliases_response,
+        aliases.delete_tag_alias_response,
+        aliases.mutate_tag_alias_response,
+        promotions.promote_tag_alias_response,
+        promotions.demote_tag_response,
+    )
+    if not all(callable(handler) for handler in expected_handlers):
+        raise AssertionError("tag write handlers must be callable from functional modules")
 
 
 def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_cover_each_post_route()
     test_local_analytics_adapter_covers_each_post_route()
+    test_tag_write_handlers_live_in_functional_modules()
     print("Tag route tests OK")
 
 
