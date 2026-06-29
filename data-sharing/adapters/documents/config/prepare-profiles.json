@@ -62,7 +62,7 @@
           "current_summary": "Existing document summary. Empty means a new summary may be needed.",
           "summary": "Proposed document summary.",
           "headings": "Headings extracted from the document.",
-          "source_text": "Plain-text document body extracted from source content."
+          "content": "Document body content extracted from source content. Current profile output is plain text."
         }
       },
       "document_fields": [
@@ -113,8 +113,8 @@
           "transforms": ["headings_from_rendered_html"]
         },
         {
-          "source": "source_text",
-          "output_path": "source_text",
+          "source": "content",
+          "output_path": "content",
           "required": true,
           "transforms": [
             "plain_text_from_rendered_html",

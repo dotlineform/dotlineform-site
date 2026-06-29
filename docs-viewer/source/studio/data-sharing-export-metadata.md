@@ -2,7 +2,7 @@
 doc_id: data-sharing-export-metadata
 title: Data Sharing Export Metadata
 added_date: "2026-06-27"
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 parent_id: data-sharing
 viewable: true
 ---
@@ -146,7 +146,7 @@ JSONL packages use a required first-line header row:
 
 ```jsonl
 {"record_type":"data_sharing_header","schema_version":"data_sharing_returned_package_v1","export_id":"ds_20260627T173012Z"}
-{"doc_id":"library","title":"Library","source_text":"Document body."}
+{"doc_id":"library","title":"Library","content":"Document body."}
 ```
 
 For JSONL, line 1 is internal routing identity and all following lines are package records.

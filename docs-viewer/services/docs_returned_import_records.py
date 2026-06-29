@@ -46,8 +46,8 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
             normalized["metadata"][key] = row.get(key)
     if "headings" in row:
         normalized["metadata"]["headings"] = normalize_string_list(row.get("headings"))
-    if "source_text" in row:
-        normalized["metadata"]["source_text"] = str(row.get("source_text") or "")
+    if "content" in row:
+        normalized["metadata"]["content"] = str(row.get("content") or "")
 
     for key in ["ancestors", "children"]:
         if key in row:

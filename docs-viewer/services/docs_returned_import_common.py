@@ -48,7 +48,7 @@ KNOWN_RECORD_FIELDS = {
     "summary",
     "current_summary",
     "headings",
-    "source_text",
+    "content",
     "last_updated",
     "viewable",
 }

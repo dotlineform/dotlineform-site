@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-returned-package-review
 title: Documents Returned Package Review
 added_date: "2026-06-27"
-last_updated: 2026-06-27
+last_updated: 2026-06-29
 parent_id: data-sharing
 viewable: true
 ---
@@ -40,7 +40,7 @@ Sibling `<stem>.meta.json` files and embedded `profile_id` or `config_id` fields
 
 The profile id determines the returned-package family.
 Rows are parsed after that family is known.
-Fields such as `ancestors`, `children`, or `source_text` do not decide what the file means.
+Fields such as `ancestors`, `children`, or `content` do not decide what the file means.
 
 If the staged file lacks a valid `export_id`, the metadata file is missing or mismatched, or the metadata names an unsupported profile, review fails closed with an import metadata error.
 
@@ -49,7 +49,7 @@ If the staged file lacks a valid `export_id`, the metadata file is missing or mi
 Exports may be context-rich.
 Returns should be sparse.
 
-For example, the `document-content` export can send `source_text`, headings, current summary, parent context, ancestors, and children so an external service can make a good decision.
+For example, the `document-content` export can send `content`, headings, current summary, parent context, ancestors, and children so an external service can make a good decision.
 The returned file does not need to echo that context.
 
 A returned summary proposal can be as small as:
@@ -180,7 +180,7 @@ Behavior:
 - confirmed non-dry-run updates rewrite the target source Markdown `summary`
 
 Summary text is normalized before comparison and writing.
-The action does not write `current_summary`, `source_text`, headings, relationships, or unknown fields.
+The action does not write `current_summary`, `content`, headings, relationships, or unknown fields.
 
 ## Hierarchy Apply
 

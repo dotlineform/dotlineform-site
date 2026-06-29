@@ -2,7 +2,7 @@
 doc_id: site-request-docs-document-content-markdown-export
 title: Docs Document Content Markdown Export
 added_date: 2026-06-28
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 parent_id: change-requests
 viewable: true
 ---
@@ -42,7 +42,7 @@ For JSON package exports:
     {
       "doc_id": "example",
       "title": "Example",
-      "source_text": "# Example\n\n Markdown body."
+      "content": "# Example\n\n Markdown body."
     }
   ]
 }
@@ -140,10 +140,10 @@ The session builder should copy the returned Markdown field verbatim into tempor
 
 ### 2. Markdown payload generation
 
-- Locate the current `document-content` export path that builds `source_text`.
+- Locate the current `document-content` export path that builds `content`.
 - Add a Markdown path that reads generated HTML content and calls `docs_html_markdown.html_to_markdown(...)`.
 - Emit `source_markdown` for Markdown packages.
-- Keep the current `source_text` behavior for plain-text packages.
+- Keep the current `content` behavior for plain-text packages.
 - Preserve existing record selection/tree behavior.
 
 ### 3. UI/API wiring
@@ -158,7 +158,7 @@ The session builder should copy the returned Markdown field verbatim into tempor
 - Add tests for package-level `content_format` in JSON output.
 - Add tests for package-level `content_format` in JSONL header rows.
 - Add tests that Markdown exports use `source_markdown`.
-- Add tests that plain-text exports keep existing `source_text`.
+- Add tests that plain-text exports keep existing `content`.
 - Add tests that mixed per-record content formats are not produced.
 - Add a focused converter integration test using representative generated HTML.
 

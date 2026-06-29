@@ -37,7 +37,7 @@ SUPPORTED_FIELD_SOURCES = {
     "summary",
     "current_summary",
     "headings",
-    "source_text",
+    "content",
     "last_updated",
     "viewable",
 }
@@ -311,8 +311,8 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         unsupported = [item for item in transforms if item and item not in SUPPORTED_TRANSFORMS]
         if unsupported:
             errors.append(f"config {config_id}: field {source} uses unsupported transform(s): {', '.join(unsupported)}")
-        if source == "source_text" and "plain_text_from_rendered_html" not in transforms:
-            errors.append(f"config {config_id}: source_text fields must use plain_text_from_rendered_html")
+        if source == "content" and "plain_text_from_rendered_html" not in transforms:
+            errors.append(f"config {config_id}: content fields must use plain_text_from_rendered_html")
         if "truncate_chars" in transforms:
             limit_key = normalize_text(mapping.get("limit_key"))
             if limit_key not in {"max_chars_per_document", "max_total_chars"}:

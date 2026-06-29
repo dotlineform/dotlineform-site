@@ -225,7 +225,7 @@ def test_document_content_profile_is_sparse_document_changes() -> None:
                     "summary": "New summary.",
                     "ancestors": [{"id": "library", "title": "Library"}],
                     "children": [{"id": "alpha-child", "title": "Alpha Child"}],
-                    "source_text": "Export context that should not determine import type.",
+                    "content": "Export context that should not determine import type.",
                 }
             ],
         )

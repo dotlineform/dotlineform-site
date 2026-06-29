@@ -2,7 +2,7 @@
 doc_id: site-request-docs-import-content-review-sessions
 title: Docs Import Content Review Sessions
 added_date: 2026-06-28
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 parent_id: change-requests
 viewable: true
 ---
@@ -105,7 +105,7 @@ The file shape is:
 - mapped front matter copied from the staged row
 - body copied verbatim from the staged row content field
 
-The body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process the returned content. If the selected content field is `source_text`, the body is exactly that `source_text` value.
+The body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process the returned content. If the selected content field is `content`, the body is exactly that `content` value.
 
 For full content-review sessions, the selected content field should be the Markdown content field produced by the `document-content` Markdown export prerequisite. The session builder copies the staged field verbatim; conversion belongs to prepare/export, not session creation.
 

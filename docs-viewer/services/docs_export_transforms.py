@@ -300,7 +300,7 @@ def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> An
         return related_document_refs(context.children_by_parent.get(doc_id, []))
     if source == "headings":
         return rendered_content.doc_headings(context.source_context, doc_id)
-    if source == "source_text":
+    if source == "content":
         return rendered_content.render_doc_html(context.source_context, doc_id)
     raise ValueError(f"Unsupported field source: {source}")
 

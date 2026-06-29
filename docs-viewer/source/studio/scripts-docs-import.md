@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: Documents Returned Package Script
 added_date: "2026-05-03 20:25"
-last_updated: 2026-06-06
+last_updated: 2026-06-29
 parent_id: docs-viewer
 ---
 # Documents Returned Package Script
@@ -21,7 +21,7 @@ It reads local JSON or JSONL files manually copied under the Library returned-pa
 It does not mutate source Markdown, generated docs payloads, share packages, or config files.
 The same engine is used by the documents adapter when `/analytics/data-sharing/review/` calls `POST /analytics/api/data-sharing/review`.
 Returned files may be sparse.
-For example, a service that only proposes summaries can return `doc_id`, `title`, and `summary` without echoing exported `source_text`, `ancestors`, or `children`.
+For example, a service that only proposes summaries can return `doc_id`, `title`, and `summary` without echoing exported `content`, `ancestors`, or `children`.
 
 Current input path:
 

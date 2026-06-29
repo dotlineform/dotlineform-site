@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7ab61d528cb05b7997eb4fe12a95b19b",
-    "generated_at_utc": "2026-06-29T16:06:20Z",
+    "version": "blake2b-994162d6c67bf078c90c10e67de36327",
+    "generated_at_utc": "2026-06-29T16:21:21Z",
     "count": 232
   },
   "entries": [
@@ -1238,10 +1238,10 @@
       "kind": "doc",
       "title": "Docs Document Content Markdown Export",
       "href": "/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-06-29",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-28 • Change Requests",
+      "display_meta": "2026-06-29 • Change Requests",
       "search_terms": [
         "site-request-docs-document-content-markdown-export",
         "site",
@@ -1255,22 +1255,22 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-28",
+        "2026-06-29",
         "2026",
         "06",
-        "28"
+        "29"
       ],
-      "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-28 2026 06 28"
+      "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-import-content-review-sessions",
       "kind": "doc",
       "title": "Docs Import Content Review Sessions",
       "href": "/docs/?scope=studio&doc=site-request-docs-import-content-review-sessions",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-06-29",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-28 • Change Requests",
+      "display_meta": "2026-06-29 • Change Requests",
       "search_terms": [
         "site-request-docs-import-content-review-sessions",
         "site",
@@ -1284,12 +1284,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-28",
+        "2026-06-29",
         "2026",
         "06",
-        "28"
+        "29"
       ],
-      "search_text": "site-request-docs-import-content-review-sessions site request docs import content review sessions docs import content review sessions change requests change requests 2026-06-28 2026 06 28"
+      "search_text": "site-request-docs-import-content-review-sessions site request docs import content review sessions docs import content review sessions change requests change requests 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-review-local-app",
@@ -1564,10 +1564,10 @@
       "kind": "doc",
       "title": "Data Sharing Export Metadata",
       "href": "/docs/?scope=studio&doc=data-sharing-export-metadata",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-06-29",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-28 • Data Sharing",
+      "display_meta": "2026-06-29 • Data Sharing",
       "search_terms": [
         "data-sharing-export-metadata",
         "data",
@@ -1576,12 +1576,12 @@
         "metadata",
         "data sharing export metadata",
         "data sharing",
-        "2026-06-28",
+        "2026-06-29",
         "2026",
         "06",
-        "28"
+        "29"
       ],
-      "search_text": "data-sharing-export-metadata data sharing export metadata data sharing export metadata data sharing 2026-06-28 2026 06 28"
+      "search_text": "data-sharing-export-metadata data sharing export metadata data sharing export metadata data sharing 2026-06-29 2026 06 29"
     },
     {
       "id": "data-sharing-documents-adapter-structure",
@@ -1613,10 +1613,10 @@
       "kind": "doc",
       "title": "Documents Prepare Profiles",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-06-29",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-28 • Data Sharing",
+      "display_meta": "2026-06-29 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-prepare-profiles",
         "data",
@@ -1626,22 +1626,22 @@
         "profiles",
         "documents prepare profiles",
         "data sharing",
-        "2026-06-28",
+        "2026-06-29",
         "2026",
         "06",
-        "28"
+        "29"
       ],
-      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-28 2026 06 28"
+      "search_text": "data-sharing-documents-prepare-profiles data sharing documents prepare profiles documents prepare profiles data sharing 2026-06-29 2026 06 29"
     },
     {
       "id": "data-sharing-documents-returned-package-review",
       "kind": "doc",
       "title": "Documents Returned Package Review",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-returned-package-review",
-      "last_updated": "2026-06-27",
+      "last_updated": "2026-06-29",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-27 • Data Sharing",
+      "display_meta": "2026-06-29 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-returned-package-review",
         "data",
@@ -1652,12 +1652,12 @@
         "review",
         "documents returned package review",
         "data sharing",
-        "2026-06-27",
+        "2026-06-29",
         "2026",
         "06",
-        "27"
+        "29"
       ],
-      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-06-27 2026 06 27"
+      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-06-29 2026 06 29"
     },
     {
       "id": "data-sharing-tags-adapter-structure",
@@ -2266,10 +2266,10 @@
       "kind": "doc",
       "title": "Documents Package Preparation Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-06-27",
+      "last_updated": "2026-06-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-27 • Docs Viewer",
+      "display_meta": "2026-06-29 • Docs Viewer",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
@@ -2282,22 +2282,22 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-06-27",
+        "2026-06-29",
         "2026",
         "06",
-        "27"
+        "29"
       ],
-      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-06-27 2026 06 27"
+      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-06-29 2026 06 29"
     },
     {
       "id": "scripts-docs-import",
       "kind": "doc",
       "title": "Documents Returned Package Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-06-06",
+      "last_updated": "2026-06-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-06 • Docs Viewer",
+      "display_meta": "2026-06-29 • Docs Viewer",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
@@ -2310,11 +2310,12 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-06-06",
+        "2026-06-29",
         "2026",
-        "06"
+        "06",
+        "29"
       ],
-      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-06-06 2026 06"
+      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-viewer-embedded-detail-documents",
@@ -3637,10 +3638,10 @@
       "kind": "doc",
       "title": "LLM Semantic Enrichment Spec",
       "href": "/docs/?scope=studio&doc=llm-semantic-enrichment-spec",
-      "last_updated": "2026-05-03 17:08",
+      "last_updated": "2026-06-29",
       "parent_id": "llm",
       "parent_title": "LLM",
-      "display_meta": "2026-05-03 17:08 • LLM",
+      "display_meta": "2026-06-29 • LLM",
       "search_terms": [
         "llm-semantic-enrichment-spec",
         "llm",
@@ -3648,14 +3649,12 @@
         "enrichment",
         "spec",
         "llm semantic enrichment spec",
-        "2026-05-03 17:08",
+        "2026-06-29",
         "2026",
-        "05",
-        "03",
-        "17",
-        "08"
+        "06",
+        "29"
       ],
-      "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
+      "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-06-29 2026 06 29"
     },
     {
       "id": "llm-dimension",

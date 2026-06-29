@@ -584,7 +584,7 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
         field["source"]
         for field in docs_export_config.find_export_config(payload, "document-content")["document_fields"]
     }
-    assert "source_text" in full_fields
+    assert "content" in full_fields
     assert "current_summary" in full_fields
     assert "summary" in full_fields
     relationship_fields = {
@@ -669,7 +669,7 @@ def test_export_uses_source_context_for_document_content() -> None:
     assert report["exported_doc_ids"] == ["library", "child-with-summary"]
     assert rows[0]["record_type"] == "data_sharing_header"
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
-    assert rows_by_doc_id["library"]["source_text"] == "Body text."
+    assert rows_by_doc_id["library"]["content"] == "Body text."
 
 
 def test_missing_source_context_returns_structured_export_error() -> None:

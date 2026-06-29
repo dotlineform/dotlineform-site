@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
-last_updated: 2026-06-27
+last_updated: 2026-06-29
 parent_id: docs-viewer
 ---
 # Documents Package Preparation Script
@@ -79,10 +79,10 @@ Implemented now:
 - maps supported document fields into configured output paths
 - computes parent, ancestor, and child relationship fields from source records
 - extracts heading lists from source-rendered HTML
-- extracts deterministic plain-text `source_text` from source-rendered HTML when a content package profile requests it
-- preserves paragraphs, headings, list items, and quoted text in `source_text`
+- extracts deterministic plain-text `content` from source-rendered HTML when a content package profile requests it
+- preserves paragraphs, headings, list items, and quoted text in `content`
 - omits code blocks when the selected field mapping includes `omit_code_blocks`
-- truncates `source_text` when the selected field mapping includes `truncate_chars`
+- truncates `content` when the selected field mapping includes `truncate_chars`
 - handles image/SVG text according to field-level extraction options
 - writes JSONL document-row exports with a first-line `data_sharing_header` record containing `export_id`
 - writes JSON document-row overrides as objects containing top-level `schema_version`, `export_id`, and `records`
@@ -91,7 +91,7 @@ Implemented now:
 - keeps source timestamp provenance in internal `.meta.json` rather than in external records
 - returns a structured JSON report
 
-The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestors`, and `children` alongside `current_summary`, `summary`, and `source_text`.
+The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestors`, and `children` alongside `current_summary`, `summary`, and `content`.
 Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
 
 Not implemented yet:

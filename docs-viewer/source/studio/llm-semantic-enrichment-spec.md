@@ -2,7 +2,7 @@
 doc_id: llm-semantic-enrichment-spec
 title: LLM Semantic Enrichment Spec
 added_date: 2026-04-24
-last_updated: "2026-05-03 17:08"
+last_updated: 2026-06-29
 ui_status: draft
 parent_id: llm
 viewable: true
@@ -190,9 +190,9 @@ Likely inputs:
 - parent context
 - headings
 - current summary, if present
-- plain-text `source_text` derived from rendered content
+- plain-text `content` derived from rendered content
 
-For generation runs, `source_text`, `current_summary`, and proposed `summary` values should travel through the full-content export.
+For generation runs, `content`, `current_summary`, and proposed `summary` values should travel through the full-content export.
 
 Likely outputs:
 

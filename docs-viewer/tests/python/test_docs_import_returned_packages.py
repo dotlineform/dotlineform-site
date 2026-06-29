@@ -34,7 +34,7 @@ def write_content_meta(root: Path, export_id: str, generated_at: str = "2026-06-
 def test_library_import_files_lists_json_and_jsonl_only() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "source_text": "Body."}])
+        write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "content": "Body."}])
         write_staged(root, "relationships.json", {"records": []})
         (root / "var/analytics/data-sharing/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
         payload = handle_documents_import_files(root, "library")
@@ -61,7 +61,7 @@ def test_library_import_review_writes_selected_record_document() -> None:
                     "schema_version": "data_sharing_returned_package_v1",
                     "export_id": export_id,
                 },
-                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "source_text": "Preview body."},
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "content": "Preview body."},
             ],
         )
         write_content_meta(root, export_id)

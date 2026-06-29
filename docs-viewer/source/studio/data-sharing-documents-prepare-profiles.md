@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-prepare-profiles
 title: Documents Prepare Profiles
 added_date: "2026-05-03 14:15"
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 parent_id: data-sharing
 viewable: true
 ---
@@ -203,7 +203,7 @@ Supported source fields include:
 - `summary`
 - `current_summary`
 - `headings`
-- `source_text`
+- `content`
 - `last_updated`
 - `viewable`
 
@@ -227,7 +227,7 @@ Supported transforms:
 | --- | --- |
 | `identity` | No-op marker. The value is written unchanged unless another transform changes it. |
 | `headings_from_rendered_html` | Documents that the field is heading-derived; headings are resolved from source-rendered HTML by the field source. |
-| `plain_text_from_rendered_html` | Converts rendered Docs Viewer HTML into plain text. Required for `source_text` fields. |
+| `plain_text_from_rendered_html` | Converts rendered Docs Viewer HTML into plain text. Required for `content` fields when the profile emits plain text. |
 | `normalize_whitespace` | Collapses line-level whitespace and repeated blank lines in plain-text content. |
 | `omit_code_blocks` | Used with `plain_text_from_rendered_html` to exclude `pre` and `code` content from extracted text. |
 | `truncate_chars` | Truncates text using the configured `limit_key` and `limits.truncate` strategy/marker. |
@@ -245,13 +245,13 @@ The default content export uses rendered Docs Viewer HTML as the source for plai
 - Using it keeps Markdown parsing, inline HTML, renderer behavior, generated structure, image alt text, SVG text, headings, lists, blockquotes, and optional code-block omission on the same path as the visible document.
 - Raw Markdown can contain syntax, reference definitions, comments, embedded HTML, or formatting artifacts that are not intended to be reviewed as readable document text.
 
-The tradeoff is that source-text export depends on successful Docs Viewer rendering, which is intentional: a document that cannot render should surface as an export issue rather than silently producing misleading review text.
+The tradeoff is that content export depends on successful Docs Viewer rendering, which is intentional: a document that cannot render should surface as an export issue rather than silently producing misleading review text.
 
 ## Validation Boundary
 
 Validation is implemented by the documents package engine, not by a separate schema file.
 Runtime validation checks source-dependent concerns such as unknown `doc_id` values, missing required fields, output path resolution, target format support, profile enablement, and whether a selected profile supports the requested data domain.
 
-Blocking profile errors include duplicate profile ids, unsupported target formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `source_text` mappings that would emit raw rendered HTML, and truncating mappings without configured integer limits.
+Blocking profile errors include duplicate profile ids, unsupported target formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `content` mappings that would emit raw rendered HTML, and truncating mappings without configured integer limits.
 
 Warnings are reserved for non-blocking runtime context such as expected skipped filters, ignored `doc_ids` when `select_all` is true, ignored `missing_summary_only` on unsupported profiles, truncation, and deferred `max_total_chars` enforcement.
