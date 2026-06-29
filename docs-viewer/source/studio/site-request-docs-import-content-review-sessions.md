@@ -8,6 +8,11 @@ viewable: true
 ---
 # Docs Import Content Review Sessions
 
+status:
+
+- this doc will need updating following the docs viewer request [Docs Review Local App](/docs/?scope=studio&doc=site-request-docs-review-local-app), because that will own opening sessions (not data sharing). other details in this doc are also likely out of data.
+- `session_id` identity needs clarifying. it can be export_id, but the folder name in `var/...` should be something human readable e.g. the `{timestamp}` of the staged JSON filename (this metadata is in the associated `meta.json` file).
+
 ## Status
 
 Proposed.
@@ -18,11 +23,7 @@ Returned `document-content` packages can contain expanded or rewritten text for 
 
 Changing `doc_id` breaks existing parent-child relationships, links, references, and any other stable identity assumptions. If a parent document moved to a new revision id, its children and inbound links would also need coordinated changes. That turns a content review workflow into a source graph migration.
 
-The returned content also needs enough structure for review. Plain text remains useful for summary-generation workflows, but it is not a good basis for full content rewrite/review sessions because the missing structure can make returned full content ambiguous.
-
-Markdown export for `document-content` is therefore a prerequisite. That prerequisite is tracked separately in [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export).
-
-## Decision
+## Solution
 
 Implement returned content review as temporary review sessions, not as live scope writes or permanent revision docs.
 
@@ -44,27 +45,8 @@ The workflow is content review, not document import:
 3. Docs Viewer creates a session from the selected review source folder.
 4. Docs Viewer builds the session JSON, index, and generated payloads.
 5. Docs Viewer opens the session in an explicit import-review mode.
-6. The user reviews generated temporary docs.
-7. The user manually copies useful text into canonical source Markdown.
-8. The user deletes or regenerates the review session as needed.
 
-No live source docs are created, overwritten, or deleted by this action.
-
-## Content Format
-
-Content-review sessions consume package-level content format metadata; they do not own Markdown export.
-
-The Markdown export prerequisite should provide:
-
-- `content_format: "markdown"` at package level
-- `source_markdown` on each returned record
-- no mixed formats within one package
-
-Full content-review sessions require `content_format: "markdown"`.
-
-If a staged `document-content` file declares `content_format: "plain_text"`, the UI should either block content-review session creation or label it as lower-fidelity text review rather than document-content review.
-
-See [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export) for the export/package shape and implementation tasks.
+No live source docs are created, overwritten, or deleted by this workflow.
 
 ## Temporary Review Sessions
 
@@ -107,8 +89,6 @@ The file shape is:
 
 The body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process the returned content. If the selected content field is `content`, the body is exactly that `content` value.
 
-For full content-review sessions, the selected content field should be the Markdown content field produced by the `document-content` Markdown export prerequisite. The session builder copies the staged field verbatim; conversion belongs to prepare/export, not session creation.
-
 Front matter should be mapping-driven rather than hard-coded. Generated/system fields are owned by the session builder. Mapped fields come from the staged row when present.
 
 System fields include:
@@ -133,7 +113,7 @@ The content mapping should be declared by the profile or session builder, for ex
 
 ```json
 {
-  "content_field": "source_markdown",
+  "content_field": "content",
   "content_format": "markdown",
   "front_matter_fields": ["title", "parent_id", "summary", "viewable"]
 }
@@ -496,10 +476,3 @@ Ownership documentation:
 - `docs-viewer/source/studio/development-checklist.md` records `docs_review_sessions.py` as the review-session temp-folder owner.
 - The checklist records that review sessions are folder artifacts, not Docs Viewer scopes.
 - The checklist records that frontend review-session behavior should live in dedicated management modules, not normal generated-data runtime, normal scope selector code, public route runtime, or `docs_viewer_service.py`.
-
-HTML-to-Markdown enabling refactor:
-
-- `docs-viewer/services/docs_html_markdown.py` now owns reusable HTML/SVG parsing, sanitization helpers, and `html_to_markdown(...)`.
-- `docs_import_html_parser.py` is now import-preview-specific and builds HTML summaries from the shared converter.
-- `docs_import_preview.py` and `docs_import_media.py` use the shared conversion boundary where they need HTML-derived Markdown.
-- Data Sharing Markdown export should call `docs_html_markdown.html_to_markdown(...)` rather than duplicating HTML-to-Markdown logic or depending on import-preview summaries; that implementation is owned by [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export).

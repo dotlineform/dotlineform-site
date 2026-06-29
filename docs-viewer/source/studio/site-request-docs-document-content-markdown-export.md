@@ -32,6 +32,12 @@ This request only owns Markdown export. The content-review sessions request owns
 - building review-session generated payloads
 - opening the temporary docs in a review-version of Docs Viewer.
 
+## HTML-to-Markdown enabling refactor
+
+- `docs-viewer/services/docs_html_markdown.py` now owns reusable HTML/SVG parsing, sanitization helpers, and `html_to_markdown(...)`.
+- `docs_import_html_parser.py` is now import-preview-specific and builds HTML summaries from the shared converter.
+- `docs_import_preview.py` and `docs_import_media.py` use the shared conversion boundary where they need HTML-derived Markdown.
+
 ## Package Shape
 
 The exported file should include `content_format` at package level. This is only for the benefit of the recipient external service so it knows what text format is being supplied in the `content` field.

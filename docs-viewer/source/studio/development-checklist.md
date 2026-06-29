@@ -128,7 +128,7 @@ Documents data-sharing adapters:
 - Docs prepare/export behavior stays under `docs_export*.py` and `docs_data_sharing/package.py`.
 - Import support is profile-driven: export-only profiles must keep `supports_return_import` false until a matching returned import type and apply action exist.
 
-Review sessions:
+Review sessions [not yet implemented]:
 
 - `docs_review_sessions.py` owns management-only review-session temp folders under `var/analytics/data-sharing/import-preview/`.
 - Review sessions are folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
