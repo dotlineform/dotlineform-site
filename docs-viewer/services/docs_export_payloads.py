@@ -161,14 +161,16 @@ def build_external_context(config: dict[str, Any], target_format: str, content_f
     payload = {
         "schema_version": EXTERNAL_CONTEXT_SCHEMA_VERSION,
         "task": normalize_text(external_context.get("task")),
-        "record_format": target_format,
-        "record_container": record_container,
-        "records_path": records_path,
-        "record_schema": schema,
         "response_guidance": response_guidance,
     }
     if content_format:
         payload["content_format"] = content_format
+    payload.update({
+        "record_format": target_format,
+        "record_container": record_container,
+        "records_path": records_path,
+        "record_schema": schema,
+    })
     return payload
 
 
@@ -186,10 +188,10 @@ def build_export_payload(
             payload = {
                 "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
                 "export_id": export_id,
-                "records": records,
             }
             if context.content_format:
                 payload["content_format"] = context.content_format
+            payload["records"] = records
             return payload
         return records
     raise ValueError(f"Unsupported target.record_shape: {record_shape}")

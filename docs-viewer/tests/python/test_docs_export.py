@@ -728,6 +728,12 @@ def test_document_content_json_output_declares_content_format() -> None:
     assert payload["content_format"] == "markdown"
     assert payload["records"][0]["content"] == "# Library\n\nBody text."
     assert context["content_format"] == "markdown"
+    assert list(context.keys())[:4] == [
+        "schema_version",
+        "task",
+        "response_guidance",
+        "content_format",
+    ]
 
 
 def test_missing_source_context_returns_structured_export_error() -> None:
