@@ -8,31 +8,7 @@ viewable: true
 ---
 # Docs Document Content Markdown Export
 
-## Status
-
-Proposed prerequisite.
-
-This request should be implemented before [Docs Import Content Review Sessions](/docs/?scope=studio&doc=site-request-docs-import-content-review-sessions).
-
-## Problem
-
-The current `document-content` data-sharing profile exports plain text content as `source_text`.
-
-That plain text is extracted from rendered Docs Viewer HTML using whitespace normalization and truncation. It is useful for summary-generation workflows because summaries are already compressed and lossy.
-
-Plain text is not a good source for full content rewrite/review workflows:
-
-- headings may be flattened
-- links may be lost or ambiguous
-- tables may lose structure
-- media tokens and semantic references may not survive
-- details, blockquotes, lists, and code blocks can lose useful shape
-
-For Docs Import content-review sessions, Markdown support is a prerequisite. The returned content should preserve enough structure that a user can review it as content, not just as plain text.
-
-## Decision
-
-Add Markdown as a `document-content` prepare/export formatting option.
+Add Markdown as a `document-content` profile prepare formatting option.
 
 Do not create a separate profile. The profile stays `document-content`; the package declares which content format was exported.
 
@@ -41,7 +17,7 @@ Supported package-level content formats:
 - `plain_text`
 - `markdown`
 
-The first Markdown export implementation should produce Markdown from the generated Docs Viewer HTML content using the shared HTML-to-Markdown converter:
+The implementation should produce Markdown from the generated Docs Viewer HTML content using the shared HTML-to-Markdown converter:
 
 ```text
 docs-viewer/services/docs_html_markdown.py
@@ -66,7 +42,7 @@ For JSON package exports:
     {
       "doc_id": "example",
       "title": "Example",
-      "source_markdown": "# Example\n\nReturned Markdown body."
+      "source_text": "# Example\n\n Markdown body."
     }
   ]
 }

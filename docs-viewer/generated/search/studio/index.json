@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-179a260b6e550ed8028d12842538577d",
-    "generated_at_utc": "2026-06-29T14:16:47Z",
-    "count": 233
+    "version": "blake2b-7ab61d528cb05b7997eb4fe12a95b19b",
+    "generated_at_utc": "2026-06-29T16:06:20Z",
+    "count": 232
   },
   "entries": [
     {
@@ -1347,38 +1347,6 @@
         "23"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-23 2026 06 23"
-    },
-    {
-      "id": "site-request-docs-viewer-local-public-projection",
-      "kind": "doc",
-      "title": "Docs Viewer Static HTML Export",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-local-public-projection",
-      "last_updated": "2026-06-29",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-29 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-local-public-projection",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "local",
-        "public",
-        "projection",
-        "docs viewer static html export",
-        "static",
-        "html",
-        "export",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-29",
-        "2026",
-        "06",
-        "29"
-      ],
-      "search_text": "site-request-docs-viewer-local-public-projection site request docs viewer local public projection docs viewer static html export static html export change requests change requests 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-viewer-view-mode-registry",

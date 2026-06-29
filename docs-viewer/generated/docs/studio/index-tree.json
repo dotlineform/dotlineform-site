@@ -316,11 +316,6 @@
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-docs-viewer-local-public-projection",
-          "title": "Docs Viewer Static HTML Export",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-local-public-projection.json"
-        },
-        {
           "doc_id": "site-request-docs-viewer-view-mode-registry",
           "title": "Docs Viewer View And Mode Registry",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json"
@@ -1254,5 +1249,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-29T14:16:47Z"
+  "generated_at": "2026-06-29T16:06:20Z"
 }
