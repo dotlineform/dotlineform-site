@@ -260,6 +260,7 @@ function renderRows(controller) {
   rootNode.dataset.selectableListId = controller.id;
   rootNode.dataset.selectionMode = normalizeText(options.selectionMode) || "multiple";
   rootNode.dataset.state = options.constructing ? "constructing" : (currentItems.length ? "ready" : "empty");
+  rootNode.dataset.readOnly = options.readOnly ? "true" : "false";
   rootNode.setAttribute("role", "listbox");
   rootNode.setAttribute("aria-multiselectable", options.selectionMode === "single" ? "false" : "true");
   if (options.readOnly) {
@@ -415,6 +416,7 @@ export function createSelectableList(rootNode, options = {}) {
       delete rootNode.dataset.selectableListId;
       delete rootNode.dataset.selectionMode;
       delete rootNode.dataset.state;
+      delete rootNode.dataset.readOnly;
       rootNode.removeAttribute("role");
       rootNode.removeAttribute("aria-multiselectable");
       controller.selectionListeners.clear();

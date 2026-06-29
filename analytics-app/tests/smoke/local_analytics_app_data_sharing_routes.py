@@ -394,6 +394,13 @@ def assert_review(page, base_url: str) -> None:
     expect(review_list.locator("input.sharedSelectableList__checkbox")).to_have_count(0, timeout=10_000)
     expect(review_list).to_contain_text("Library", timeout=10_000)
     expect(review_list).to_contain_text("Alpha", timeout=10_000)
+    label_layout = review_list.locator(".sharedSelectableList__label").first.evaluate(
+        "node => ({ display: getComputedStyle(node).display, gridTemplateColumns: getComputedStyle(node).gridTemplateColumns })"
+    )
+    if label_layout.get("gridTemplateColumns") not in {"none", ""}:
+        raise AssertionError(f"review list label should not reserve a checkbox column: {label_layout!r}")
+    expect(review_list).not_to_contain_text("row 1", timeout=10_000)
+    expect(review_list).not_to_contain_text("row 2", timeout=10_000)
     expect(page.locator("#dataSharingReviewRun")).to_be_enabled(timeout=10_000)
     page.locator("#dataSharingReviewRun").click()
     expect(page.locator("#dataSharingReviewMenu")).to_contain_text("Content", timeout=10_000)

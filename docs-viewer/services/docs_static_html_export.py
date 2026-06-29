@@ -28,6 +28,7 @@ from docs_scope_config import (
 EXPORT_SCHEMA_VERSION = "docs_static_html_export_v1"
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 HREF_PATTERN = re.compile(r"""(?P<prefix>\bhref\s*=\s*)(?P<quote>["'])(?P<url>.*?)(?P=quote)""", re.IGNORECASE)
+EMPTY_CONFLICT_DIR_PATTERN = re.compile(r"\A(?P<base>[A-Za-z0-9_-]+) [2-9][0-9]*\Z")
 
 
 @dataclass(frozen=True)
@@ -375,6 +376,24 @@ def wipe_and_write_destination(destination_root: Path, files: dict[Path, bytes])
         target_path.write_bytes(content)
 
 
+def remove_empty_conflict_dirs(destination_root: Path, canonical_dir_names: set[str]) -> list[str]:
+    if not destination_root.is_dir():
+        return []
+    removed: list[str] = []
+    for child in sorted(destination_root.iterdir(), key=lambda item: item.name):
+        if not child.is_dir():
+            continue
+        match = EMPTY_CONFLICT_DIR_PATTERN.fullmatch(child.name)
+        if not match or match.group("base") not in canonical_dir_names:
+            continue
+        try:
+            child.rmdir()
+        except OSError:
+            continue
+        removed.append(child.name)
+    return removed
+
+
 def destination_label(scope: str) -> str:
     return f"/docs-export/{scope}/"
 
@@ -394,6 +413,7 @@ def build_static_html_export(repo_root: Path, body: dict[str, Any]) -> dict[str,
         default_doc_id=config.default_doc_id,
     )
     wipe_and_write_destination(paths.destination_root, files)
+    cleaned_empty_conflict_dirs = remove_empty_conflict_dirs(paths.destination_root, {"docs"})
     return {
         "ok": True,
         "schema_version": EXPORT_SCHEMA_VERSION,
@@ -402,6 +422,7 @@ def build_static_html_export(repo_root: Path, body: dict[str, Any]) -> dict[str,
         "scope": scope,
         "document_count": len(doc_ids),
         "file_count": len(files),
+        "cleaned_empty_conflict_dirs": cleaned_empty_conflict_dirs,
         "default_doc_id": config.default_doc_id,
         "destination": str(paths.destination_root),
         "destination_label": destination_label(scope),

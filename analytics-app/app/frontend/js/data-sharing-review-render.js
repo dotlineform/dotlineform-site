@@ -7,20 +7,6 @@ function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function issueLabel(issue) {
-  const code = normalizeText(issue && issue.code);
-  const level = normalizeText(issue && issue.level);
-  const docId = normalizeText(issue && issue.doc_id);
-  const message = normalizeText(issue && issue.message);
-  const prefix = [level, code].filter(Boolean).join(" ");
-  const suffix = docId ? ` (${docId})` : "";
-  return `${prefix ? `${prefix}: ` : ""}${message}${suffix}`;
-}
-
-function issueItems(issues) {
-  return Array.isArray(issues) ? issues.map(issueLabel).filter(Boolean) : [];
-}
-
 function previewRowId(item, index) {
   return normalizeText(item && item.id)
     || normalizeText(item && item.path)
@@ -38,21 +24,11 @@ export function buildDataSharingReviewPreviewRows(state, payload) {
 function normalizeReviewRow(state, row, index) {
   if (!row || typeof row !== "object") return null;
   const recordIndex = Number.isInteger(row.record_index) ? row.record_index : null;
-  const issueTexts = issueItems(row.issues);
-  const metaParts = [
-    normalizeText(row.meta),
-    recordIndex === null
-      ? ""
-      : getAnalyticsText(state.config, "data_sharing_review.record_index_meta", "row {record_index}", { record_index: recordIndex + 1 }),
-    issueTexts.length
-      ? getAnalyticsText(state.config, "data_sharing_review.row_issues_meta", "{count} issue(s)", { count: issueTexts.length })
-      : ""
-  ].filter(Boolean);
   return {
     id: previewRowId(row, index),
     type: normalizeText(row.type) || getAnalyticsText(state.config, "data_sharing_review.row_type_record", "record"),
     title: normalizeText(row.title) || getAnalyticsText(state.config, "data_sharing_review.missing_title", "missing title"),
-    meta: metaParts.join(" \u00b7 "),
+    meta: "",
     recordIndex,
     selectable: row.selectable !== false && Number.isInteger(recordIndex),
     issues: Array.isArray(row.issues) ? row.issues : [],
@@ -72,7 +48,7 @@ export function renderDataSharingReviewPreviewList(state) {
       readOnly: true,
       getId: (row) => normalizeText(row && row.id),
       getLabel: (row) => normalizeText(row && row.title),
-      getMeta: (row) => row && row.meta ? [row.meta] : [],
+      getMeta: () => [],
       getIndent: (row) => `${Math.max(0, Number(row && row.depth || 0)) * 1.15}rem`,
       isDisabled: (row) => row && row.selectable === false
     });

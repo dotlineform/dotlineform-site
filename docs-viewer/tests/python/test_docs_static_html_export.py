@@ -199,6 +199,24 @@ def test_apply_export_replaces_destination_and_writes_static_files() -> None:
         assert 'href="parent.html#top"' in (destination / "docs/child.html").read_text(encoding="utf-8")
 
 
+def test_empty_conflict_dir_cleanup_is_narrow() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        destination = Path(temp_path) / "docs-export/studio"
+        (destination / "docs 2").mkdir(parents=True)
+        (destination / "docs 3").mkdir()
+        (destination / "docs 4").mkdir()
+        (destination / "docs 4/keep.txt").write_text("keep", encoding="utf-8")
+        (destination / "media 2").mkdir()
+
+        removed = exporter.remove_empty_conflict_dirs(destination, {"docs"})
+
+        assert removed == ["docs 2", "docs 3"]
+        assert not (destination / "docs 2").exists()
+        assert not (destination / "docs 3").exists()
+        assert (destination / "docs 4").exists()
+        assert (destination / "media 2").exists()
+
+
 def test_output_path_validation_requires_projects_export_root() -> None:
     with tempfile.TemporaryDirectory() as projects_path:
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_path

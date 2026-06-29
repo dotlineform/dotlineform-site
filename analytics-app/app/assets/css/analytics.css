@@ -1314,11 +1314,11 @@ select.analytics__input.dataSharingReviewPage__listbox {
 }
 
 .dataSharingReviewList .sharedSelectableList__label {
-  display: grid;
-  grid-template-columns: 1rem minmax(0, 1fr);
-  gap: 0.5rem;
+  display: flex;
+  gap: 0;
   align-items: center;
   flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
 }
 
@@ -2425,10 +2425,6 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
   .dataSharingPrepareContextModal__field {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.25rem;
-  }
-
-  .dataSharingReviewList .sharedSelectableList__label {
-    grid-template-columns: 1rem minmax(0, 1fr);
   }
 
   .analytics__buttonFeedback--editor {
