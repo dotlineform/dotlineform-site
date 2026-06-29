@@ -116,7 +116,7 @@ It is a selected-record review artifact step.
 
 ## Review Source Folder Action
 
-The Analytics review page also exposes a documents-only `Create review folder` action through the same endpoint:
+The Analytics review page also exposes a documents-only Actions menu item labeled `Create source docs` through the same endpoint:
 
 ```text
 POST /analytics/api/data-sharing/review

@@ -136,6 +136,16 @@ export function toggleDataSharingReviewApplyActionsMenu(state) {
 export function renderDataSharingReviewApplyActions(state) {
   state.applyButtons.clear();
   state.applyActionMenu.innerHTML = "";
+  const sourceDocsButton = document.createElement("button");
+  sourceDocsButton.type = "button";
+  sourceDocsButton.className = "dataSharingReviewPage__actionMenuItem";
+  sourceDocsButton.id = "dataSharingReviewCreateSourceDocs";
+  sourceDocsButton.setAttribute("role", "menuitem");
+  sourceDocsButton.dataset.dataSharingSourceFolderAction = "true";
+  sourceDocsButton.textContent = getAnalyticsText(state.config || {}, "data_sharing_review.source_folder_button", "Create source docs");
+  sourceDocsButton.disabled = true;
+  state.applyActionMenu.appendChild(sourceDocsButton);
+  state.sourceFolderButton = sourceDocsButton;
   const actions = state.applyActions.length ? state.applyActions : [];
   actions.forEach((action) => {
     const button = document.createElement("button");
@@ -212,57 +222,61 @@ function syncDataSharingReviewPrimaryActionState(state) {
   const selectedFile = selectedDataSharingReviewFile(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   state.previewButton.disabled = state.isRunning || !state.serviceAvailable || !selectedFile || !state.dataDomain || !selectedRecordCount;
-  if (state.sourceFolderButton) {
-    state.sourceFolderButton.disabled = state.isRunning || !state.serviceAvailable || !selectedFile || state.dataDomain !== "documents";
-  }
+  syncDataSharingReviewSourceFolderActionState(state);
+  syncDataSharingReviewActionMenuState(state);
 }
 
 export function setDataSharingReviewControlsDisabled(state, disabled) {
-  const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
   const selectedFile = selectedDataSharingReviewFile(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   const selectableRecordCount = selectableDataSharingReviewPreviewIds(state).length;
-  const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size || !state.reviewReady;
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !selectedFile || !state.dataDomain || !selectedRecordCount;
-  if (state.sourceFolderButton) {
-    state.sourceFolderButton.disabled = disabled || !state.serviceAvailable || !selectedFile || state.dataDomain !== "documents";
-  }
   state.selectAllButton.disabled = disabled || !selectableRecordCount;
   state.clearButton.disabled = disabled || !state.selectedPreviewIds.size;
   if (state.selectableList) state.selectableList.update({ disabled: Boolean(disabled) });
-  state.actionMenuButton.disabled = disableApplyMenu;
-  if (disableApplyMenu) hideDataSharingReviewApplyActionsMenu(state);
-  state.applyButtons.forEach((button, actionId) => {
-    const action = state.applyActions.find((item) => item.id === actionId);
-    const disabledForSelection = !selectedRecordCount;
-    const disabledForReview = !disabledForSelection && !state.reviewReady;
-    button.disabled = disabled || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection || disabledForReview;
-    button.title = disabledForSelection
-      ? (action && action.selectionRequiredMessage) || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
-      : disabledForReview
-        ? getAnalyticsText(state.config, "data_sharing_review.apply_review_required", "Generate a review for the selected documents first.")
-      : normalizeDataSharingReviewText(action && action.title);
-  });
+  syncDataSharingReviewSourceFolderActionState(state, disabled);
+  syncDataSharingReviewApplyActionState(state, disabled);
 }
 
-export function syncDataSharingReviewApplyActionState(state) {
+function sourceFolderActionAvailable(state) {
+  const selectedFile = selectedDataSharingReviewFile(state);
+  return Boolean(state.serviceAvailable && selectedFile && state.dataDomain === "documents" && selectedFile.metadata_ok);
+}
+
+function syncDataSharingReviewSourceFolderActionState(state, forceDisabled = false) {
+  if (!state.sourceFolderButton) return;
+  const available = sourceFolderActionAvailable(state);
+  state.sourceFolderButton.disabled = forceDisabled || state.isRunning || !available;
+  state.sourceFolderButton.title = available
+    ? getAnalyticsText(state.config, "data_sharing_review.source_folder_title", "Create temporary review source documents for the complete staged file.")
+    : getAnalyticsText(state.config, "data_sharing_review.source_folder_unavailable", "Select a staged documents file with valid export metadata.");
+}
+
+function syncDataSharingReviewActionMenuState(state) {
+  const sourceAvailable = sourceFolderActionAvailable(state);
+  const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
+  const applyAvailable = supportsApply && state.applyButtons.size && state.reviewReady;
+  state.actionMenuButton.disabled = state.isRunning || !state.serviceAvailable || (!sourceAvailable && !applyAvailable);
+  if (state.actionMenuButton.disabled) hideDataSharingReviewApplyActionsMenu(state);
+}
+
+export function syncDataSharingReviewApplyActionState(state, forceDisabled = false) {
   const supportsApply = dataSharingReviewDataDomainSupportsApply(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
-  const disableApplyMenu = state.isRunning || !supportsApply || !state.serviceAvailable || !state.applyButtons.size || !state.reviewReady;
-  state.actionMenuButton.disabled = disableApplyMenu;
-  if (disableApplyMenu) hideDataSharingReviewApplyActionsMenu(state);
   state.applyButtons.forEach((button, actionId) => {
     const action = state.applyActions.find((item) => item.id === actionId);
     const disabledForSelection = !selectedRecordCount;
     const disabledForReview = !disabledForSelection && !state.reviewReady;
-    button.disabled = state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection || disabledForReview;
+    button.disabled = forceDisabled || state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection || disabledForReview;
     button.title = disabledForSelection
       ? (action && action.selectionRequiredMessage) || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
       : disabledForReview
         ? getAnalyticsText(state.config, "data_sharing_review.apply_review_required", "Generate a review for the selected documents first.")
       : normalizeDataSharingReviewText(action && action.title);
   });
+  syncDataSharingReviewSourceFolderActionState(state, forceDisabled);
+  syncDataSharingReviewActionMenuState(state);
   if (state.applyActionMenu && !state.applyActionMenu.hidden) positionDataSharingReviewApplyActionsMenu(state);
 }
 

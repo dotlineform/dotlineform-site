@@ -13,7 +13,7 @@ Partially implemented.
 Implemented first slice:
 
 - Data Sharing can create or regenerate a temporary review source folder for a complete staged `document-content` returned package.
-- The action is exposed from the Analytics Data Sharing review page as `Create review folder`.
+- The action is exposed from the Analytics Data Sharing review page Actions menu as `Create source docs`.
 - The generated folder contains `manifest.json` and one `source/*.md` file per valid returned row.
 - Folder identity is derived from the staged file's `export_id` and matching internal export metadata.
 - Canonical Docs Viewer source, configured scopes, public payloads, and generated review payloads are not changed.

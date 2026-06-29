@@ -101,33 +101,20 @@ function renderResult(state, payload, failed = false) {
   updateDataSharingReviewSelectionState(state);
 }
 
-function resetSourceFolderResult(state) {
-  if (!state.sourceFolderResultNode) return;
-  state.sourceFolderResultNode.hidden = true;
-  state.sourceFolderResultNode.innerHTML = "";
+function sourceFolderStatusMessage(state, payload) {
+  const counts = payload && payload.counts && typeof payload.counts === "object" ? payload.counts : {};
+  const skipped = Number(counts.skipped_records || 0);
+  const warnings = Number(counts.warnings || 0);
+  const details = [];
+  if (skipped > 0) details.push(`${skipped} skipped`);
+  if (warnings > 0) details.push(`${warnings} ${warnings === 1 ? "warning" : "warnings"}`);
+  const message = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.source_folder_success", "Import review source folder created.");
+  return details.length ? `${message} ${details.join("; ")}.` : message;
 }
 
-function renderSourceFolderResult(state, payload) {
-  if (!state.sourceFolderResultNode) return;
+function sourceFolderStatusState(payload) {
   const counts = payload && payload.counts && typeof payload.counts === "object" ? payload.counts : {};
-  const folderId = normalizeText(payload && payload.folder_id);
-  const folderPath = normalizeText(payload && payload.folder_path);
-  const sourcePath = normalizeText(payload && payload.source_path);
-  const manifestPath = normalizeText(payload && payload.manifest_path);
-  const lines = [
-    ["folder", folderId],
-    ["path", folderPath],
-    ["source", sourcePath],
-    ["manifest", manifestPath],
-    ["records", normalizeText(counts.records)],
-    ["valid", normalizeText(counts.valid_records)],
-    ["skipped", normalizeText(counts.skipped_records)],
-    ["warnings", normalizeText(counts.warnings)]
-  ].filter(([, value]) => value !== "");
-  state.sourceFolderResultNode.innerHTML = lines.map(([label, value]) => (
-    `<p class="dataSharingReviewPage__sourceFolderField"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></p>`
-  )).join("");
-  state.sourceFolderResultNode.hidden = !lines.length;
+  return Number(counts.skipped_records || 0) > 0 || Number(counts.warnings || 0) > 0 ? "warn" : "success";
 }
 
 function selectedFileSelection(state) {
@@ -185,7 +172,6 @@ function syncSelectedFileMetadata(state) {
     setText(state.appValueNode, "");
     setText(state.dataDomainValueNode, "");
     setText(state.scopeValueNode, "");
-    resetSourceFolderResult(state);
     if (state.scopeRow) state.scopeRow.hidden = true;
     syncRouteBusyState(state);
     return;
@@ -217,7 +203,6 @@ async function loadSelectedFileRows(state) {
   if (!state.serviceAvailable || state.isRunning) return;
   const file = selectedDataSharingReviewFile(state);
   state.reviewReady = false;
-  resetSourceFolderResult(state);
   if (!file || !state.dataDomain || !file.metadata_ok) {
     renderResult(state, {}, true);
     return;
@@ -354,7 +339,6 @@ async function createSourceFolder(state) {
   state.isRunning = true;
   setDataSharingReviewControlsDisabled(state, true);
   syncRouteBusyState(state);
-  resetSourceFolderResult(state);
   setStatus(
     state.statusNode,
     "",
@@ -369,15 +353,12 @@ async function createSourceFolder(state) {
       staged_filename: file.filename,
       selection: selectedFileSelection(state)
     });
-    renderSourceFolderResult(state, payload);
     setStatus(
       state.statusNode,
-      "success",
-      payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.source_folder_success", "Import review source folder created.")
+      sourceFolderStatusState(payload),
+      sourceFolderStatusMessage(state, payload)
     );
   } catch (error) {
-    const payload = error && error.payload ? error.payload : {};
-    if (payload && Object.keys(payload).length) renderSourceFolderResult(state, payload);
     setStatus(
       state.statusNode,
       "error",
@@ -417,8 +398,7 @@ async function init() {
     filePickerNode: null,
     resolvedContextNode: document.getElementById("dataSharingReviewResolvedContext"),
     previewButton: document.getElementById("dataSharingReviewRun"),
-    sourceFolderButton: document.getElementById("dataSharingReviewCreateSourceFolder"),
-    sourceFolderResultNode: document.getElementById("dataSharingReviewSourceFolderResult"),
+    sourceFolderButton: null,
     applyActionContainer: document.getElementById("dataSharingReviewApplyActions"),
     actionMenuButton: document.getElementById("dataSharingReviewActionsButton"),
     applyActionMenu: document.getElementById("dataSharingReviewActionsMenu"),
@@ -454,8 +434,6 @@ async function init() {
     state.fileSelect,
     state.resolvedContextNode,
     state.previewButton,
-    state.sourceFolderButton,
-    state.sourceFolderResultNode,
     state.applyActionContainer,
     state.actionMenuButton,
     state.applyActionMenu,
@@ -482,14 +460,12 @@ async function init() {
     setText(state.scopeValueNode, "unresolved");
     setText(state.fileLabelNode, getAnalyticsText(state.config, "data_sharing_review.file_label", "staged file"));
     setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review selected"));
-    setText(state.sourceFolderButton, getAnalyticsText(state.config, "data_sharing_review.source_folder_button", "Create review folder"));
     setText(state.actionMenuButton, getAnalyticsText(state.config, "data_sharing_review.actions_button", "Actions"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
     setFilePickerVisible(state, false);
     syncSelectedFileMetadata(state);
     renderDataSharingReviewPreviewList(state);
-    resetSourceFolderResult(state);
     updateDataSharingReviewSelectionState(state);
     setDataSharingReviewControlsDisabled(state, true);
 
@@ -548,7 +524,6 @@ async function init() {
 
     state.fileSelect.addEventListener("change", () => {
       resetDataSharingReviewResult(state);
-      resetSourceFolderResult(state);
       syncSelectedFileMetadata(state);
       setDataSharingReviewControlsDisabled(state, false);
       const status = selectedFileIdleStatus(state);
@@ -558,9 +533,6 @@ async function init() {
     });
     state.previewButton.addEventListener("click", () => {
       runPreview(state).catch((error) => console.warn("data_sharing_review: unexpected preview failure", error));
-    });
-    state.sourceFolderButton.addEventListener("click", () => {
-      createSourceFolder(state).catch((error) => console.warn("data_sharing_review: unexpected source folder failure", error));
     });
     state.actionMenuButton.addEventListener("click", () => {
       toggleDataSharingReviewApplyActionsMenu(state);
@@ -576,6 +548,12 @@ async function init() {
     window.addEventListener("scroll", () => hideDataSharingReviewApplyActionsMenu(state), { passive: true });
     window.addEventListener("resize", () => hideDataSharingReviewApplyActionsMenu(state));
     state.applyActionContainer.addEventListener("click", (event) => {
+      const sourceTarget = event.target instanceof Element ? event.target.closest("[data-data-sharing-source-folder-action]") : null;
+      if (sourceTarget instanceof HTMLButtonElement) {
+        hideDataSharingReviewApplyActionsMenu(state);
+        createSourceFolder(state).catch((error) => console.warn("data_sharing_review: unexpected source folder failure", error));
+        return;
+      }
       const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;
       if (!(target instanceof HTMLButtonElement)) return;
       const actionId = normalizeText(target.dataset.dataSharingApplyAction);
