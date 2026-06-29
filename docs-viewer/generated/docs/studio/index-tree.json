@@ -297,7 +297,8 @@
         {
           "doc_id": "site-request-docs-document-content-markdown-export",
           "title": "Docs Document Content Markdown Export",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-document-content-markdown-export.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-document-content-markdown-export.json",
+          "ui_status": "done"
         },
         {
           "doc_id": "site-request-docs-import-content-review-sessions",
@@ -318,7 +319,8 @@
         {
           "doc_id": "site-request-docs-viewer-view-mode-registry",
           "title": "Docs Viewer View And Mode Registry",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
+          "ui_status": "review"
         },
         {
           "doc_id": "site-request-library-import-generated-parent-nodes",
@@ -1249,5 +1251,5 @@
       ]
     }
   ],
-  "generated_at": "2026-06-29T16:06:20Z"
+  "generated_at": "2026-06-29T17:55:31Z"
 }

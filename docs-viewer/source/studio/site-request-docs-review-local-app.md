@@ -2,7 +2,7 @@
 doc_id: site-request-docs-review-local-app
 title: Docs Review Local App
 added_date: 2026-06-28
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 parent_id: change-requests
 viewable: true
 ---
@@ -14,11 +14,11 @@ Proposed.
 
 ## Problem
 
-Docs Import content review sessions need a way to display temporary Docs Viewer-compatible documents generated under `var/analytics/data-sharing/import-preview/...`.
+Returned document-content review needs a safe way to display temporary Docs Viewer-compatible documents under `var/analytics/data-sharing/import-preview/...`.
 
-Loading those temporary docs into the existing `/docs/` manage-mode app is too risky. The manage app assumes a configured Docs Viewer scope, canonical source Markdown, scope config, source-editor capability, normal generated payload locations, public route links, and management actions such as source open/edit, delete, settings, rebuild, publish, drag/drop, and hierarchy mutation.
+The normal `/docs/` app is the wrong host for those temporary documents. It assumes configured Docs Viewer scopes, canonical source Markdown, normal generated payload locations, public route links, and management actions such as source open/edit, delete, settings, rebuild, publish, drag/drop, and hierarchy mutation.
 
-Review-session documents are different:
+Review folders are different:
 
 - they are temporary local artifacts
 - they are not configured scopes
@@ -27,9 +27,7 @@ Review-session documents are different:
 - their source folders may be deleted manually
 - most manage-mode actions are irrelevant or unsafe
 
-Retrofitting review-session behavior into `/docs/` would require a compensating access/context layer over an already incomplete config and capability model. That would create another layer of `if review session then ...` unless the existing Docs Viewer runtime was first redesigned around complete host-context and capability projections.
-
-The first implementation should avoid that coupling.
+The first implementation should avoid coupling this workflow to normal `/docs/`.
 
 ## Decision
 
@@ -39,35 +37,35 @@ Create a distinct local review app:
 - frontend/repo area: `docs-viewer-review/`
 - same local Docs Viewer server process
 - separate frontend entrypoint and route-specific modules
-- minimal read-only Docs Viewer experience for temporary review documents
+- minimal read-only Docs Viewer experience for temporary review folders
 
-The review app is not a new Docs Viewer scope system. It is a local app for viewing temporary folder-backed review documents.
+The review app is not a new Docs Viewer scope system. It is a local app that lists review folders under `var/analytics/data-sharing/import-preview/...`, builds generated Docs JSON from the selected folder's source Markdown, and displays the resulting tree and document payloads.
 
-Sessions are one feature this app can support later. They do not define the app. The app should first prove that an isolated Docs Viewer-like reader can load from a `var/...` review folder, build generated JSON from its source folder, and display a simple document tree plus selected document view.
+The normal `/docs/` UI should remain completely unaware of this capability.
 
-## Relationship To Content Review Sessions
+## Ownership Boundary
 
-This request is a sibling preparatory slice for [Docs Import Content Review Sessions](/docs/?scope=studio&doc=site-request-docs-import-content-review-sessions).
+Data Sharing owns returned-package parsing and temporary source Markdown creation.
 
-The content-review sessions request owns the Data Sharing workflow:
+For this workflow, Data Sharing review should only create or refresh a folder like:
 
-- returned package parsing
-- Markdown content-format requirement
-- temporary source folder generation from staged returned files
-- session manifests
-- session list/delete/build workflow
-- review-session lifecycle
+```text
+var/analytics/data-sharing/import-preview/<folder-id>/
+  manifest.json
+  source/
+    <doc-id>.md
+```
 
-This request owns the isolated local review app shell:
+Data Sharing does not own folder listing, generated Docs JSON, document rendering, folder opening, or review app navigation.
 
-- `/docs-review/` route
-- `docs-viewer-review/` frontend code
-- minimal read-only tree/document renderer
-- loading from a `var/...` review folder
-- build button for the selected/default folder
-- route-specific backend/static serving where needed
+Docs Review owns:
 
-The first version of `/docs-review/` can use one fixed or default review folder. It does not need full session handling.
+- listing subfolders under `var/analytics/data-sharing/import-preview/...`
+- showing selected folder metadata when `manifest.json` exists
+- building `generated/` from the selected folder's `source/*.md`
+- reading `generated/index-tree.json`
+- reading `generated/by-id/<doc_id>.json`
+- rendering the tree and selected document in `/docs-review/`
 
 ## Route And Repo Shape
 
@@ -77,7 +75,7 @@ Routes:
 
 - `/docs/`: existing full manage-mode Docs Viewer
 - `/docs-review/`: isolated review app
-- `/docs/review-sessions/...`: management-only review-folder API endpoints already owned by `docs_review_sessions.py`
+- `/docs-review/folders...`: local review-folder API endpoints
 
 Proposed repo area:
 
@@ -98,7 +96,7 @@ docs-viewer-review/
 
 The exact module names can change during implementation, but the ownership boundary should not: review-app frontend code belongs under `docs-viewer-review/`, not inside the existing `/docs/` manage runtime.
 
-The app may import shared read-only Docs Viewer modules from `site/docs-viewer/runtime/js/shared/` where that keeps behavior consistent and does not pull in manage-mode assumptions.
+The app may import shared read-only Docs Viewer modules where that keeps behavior consistent and does not pull in manage-mode assumptions.
 
 Allowed shared dependencies include:
 
@@ -142,12 +140,10 @@ var/analytics/data-sharing/import-preview/manual-smoke/
       review-child.json
 ```
 
-The review app does not need the normal Docs Viewer discovery payloads:
+The review app does not need normal Docs Viewer discovery payloads:
 
 - no search UI
 - no recently-added UI
-
-It also does not need to read a search index or recently-added payload. If the reused build path creates harmless unused artifacts such as `recently-added.json` or semantic-reference payloads, that is acceptable. The important boundary is that `/docs-review/` does not expose those surfaces and does not require them for correctness.
 
 The source Markdown files should be Docs Viewer-compatible, but they are not canonical source docs.
 
@@ -165,8 +161,6 @@ viewable: true
 Temporary review body.
 ```
 
-The generated payloads should be close enough to normal Docs Viewer generated payloads for the shared document renderer to display them.
-
 The first app version can load `manual-smoke` by default. Later versions can list available folders and choose one.
 
 ## Build Capability
@@ -175,19 +169,19 @@ The first version should include a Build button for the selected/default review 
 
 Build means:
 
-- read `var/analytics/data-sharing/import-preview/<folder>/source/*.md`
+- read `var/analytics/data-sharing/import-preview/<folder-id>/source/*.md`
 - build `generated/index-tree.json`
 - build `generated/by-id/<doc_id>.json`
 - refresh the review app view after successful build
 
-The likely implementation should reuse the existing Docs Viewer payload builder as a library, not through the CLI or normal scope rebuild orchestration. A review-owned backend adapter can create a synthetic review config and call `DocsDataBuilder` directly:
+The implementation should reuse the existing Docs Viewer payload builder as a library, not through the CLI or normal scope rebuild orchestration. A review-owned backend adapter can create a synthetic review config and call `DocsDataBuilder` directly:
 
 ```python
 builder = DocsDataBuilder(
     repo_root=repo_root,
     config=review_config,
-    source_dir=session_path / "source",
-    output_dir=session_path / "generated",
+    source_dir=folder_path / "source",
+    output_dir=folder_path / "generated",
     viewer_base_url="/docs-review/",
 )
 result = builder.run(write=True)
@@ -208,13 +202,9 @@ Build does not mean:
 - require a search index
 - require a recently-added payload
 - run Data Sharing returned-package conversion
-- create or delete sessions
+- create or delete source folders
 
 The direct `DocsDataBuilder` call may still write unused normal-builder artifacts such as `generated/recently-added.json` or `generated/references/...`. Those are acceptable implementation byproducts. The review app should ignore them.
-
-The backend build implementation should live behind the review-session/review-folder backend owner, not in the frontend app.
-
-The current `docs_review_sessions.py` skeleton already has an explicit build placeholder. This request can replace that placeholder for the fixed/default folder use case, while still preserving the same module ownership.
 
 ## Minimal UI
 
@@ -224,6 +214,7 @@ The first `/docs-review/` app should include:
 - current review folder id/path
 - Build button
 - Back to Docs Viewer link pointing to `/docs/`
+- folder list
 - tree/index panel
 - main document view
 - simple loading/error status
@@ -242,7 +233,7 @@ The app should not include:
 - search
 - recently added
 - Data Sharing import/review controls
-- session delete/list UI
+- folder delete UI in the first slice
 
 This keeps the first app intentionally boring and safe.
 
@@ -255,13 +246,13 @@ Server additions should remain thin:
 - serve `/docs-review/` shell HTML
 - serve `docs-viewer-review/runtime/...`
 - serve `docs-viewer-review/static/...`
-- expose management-only review-folder API endpoints through existing local service origin/CORS rules
+- expose review-folder API endpoints through the same local service origin/CORS rules
 
 Business logic should stay in focused service modules:
 
-- review-folder listing/build/read/delete stays in `docs_review_sessions.py` or a clearly named sibling if the app needs a lower-level build helper
+- review-folder listing/build/read behavior belongs in `docs_review_folders.py` or a clearly named sibling
 - normal Docs Viewer server should only route and serve static files
-- normal Docs Viewer management service should only delegate
+- normal Docs Viewer management service should only delegate where routing reuse is unavoidable
 
 `docs_viewer_service.py` should not become the owner of review app behavior.
 
@@ -295,21 +286,96 @@ The `/docs-review/` app should load review-folder payloads directly.
 
 Initial endpoints can be:
 
-- `GET /docs/review-sessions/index-tree?session_id=manual-smoke`
-- `GET /docs/review-sessions/payload?session_id=manual-smoke&doc_id=review-root`
-- `POST /docs/review-sessions/build` with `{ "session_id": "manual-smoke" }`
-
-Although these endpoint names currently say `review-sessions`, the first app can treat `manual-smoke` as a review folder. The terminology can be refined later if needed, but the backend owner remains temp review folders under `var/...`.
+- `GET /docs-review/folders`
+- `GET /docs-review/folders/index-tree?folder_id=manual-smoke`
+- `GET /docs-review/folders/payload?folder_id=manual-smoke&doc_id=review-root`
+- `POST /docs-review/folders/build` with `{ "folder_id": "manual-smoke" }`
 
 The frontend should not use normal generated-data runtime until a clean payload-provider abstraction exists.
+
+## Implementation Tasks
+
+### 1. Remove Normal Docs Viewer Review UI
+
+- Remove tentative `/docs/` management review UI modules, toolbar buttons, modal wiring, controller imports, and related CSS.
+- Remove or rewrite tests that assert normal `/docs/` management UI knows about review folders.
+- Keep normal `/docs/` UI completely unaware of the review app capability.
+- Do not add review mode, review URL state, review-folder document rendering, review buttons, or review-folder modals to the normal `/docs/` app.
+- Remove or rename legacy backend paths/modules that expose review-folder behavior under normal `/docs/` route names.
+- Update stale content-review docs that still describe opening review folders inside `/docs/`.
+
+### 2. Add Manual Smoke Fixture
+
+- Add or generate `var/analytics/data-sharing/import-preview/manual-smoke/manifest.json`.
+- Add `source/review-root.md` and `source/review-child.md` with stable `doc_id`, `title`, `parent_id`, and `viewable` front matter.
+- Keep the fixture local/temp-oriented; do not add it to Docs Viewer scope config.
+- If fixture files are intentionally tracked, keep them tiny and deterministic. If they are generated by tests, document the fixture builder instead.
+
+### 3. Implement Review-Folder Build
+
+- Add a real build operation for a selected review folder.
+- Validate the folder id before any filesystem access and reject paths outside `var/analytics/data-sharing/import-preview`.
+- Require a `source/` directory with at least one Markdown document before build.
+- Create a synthetic Docs builder config with:
+  - source root set to the selected folder's `source/`
+  - output root set to the selected folder's `generated/`
+  - viewer base URL set to `/docs-review/`
+  - no publish/search output dependency required by the app
+- Call `DocsDataBuilder` directly as a library rather than invoking `build_docs.py`, `docs_write_rebuild`, or configured-scope rebuild orchestration.
+- Return a structured build report with generated root, index-tree path, by-id count, warnings, and `summary_text`.
+
+### 4. Serve The Local App Shell
+
+- Add a `/docs-review/` route to the existing local Docs Viewer server.
+- Serve `docs-viewer-review/shell/docs-review.html` for the route.
+- Serve `docs-viewer-review/runtime/...` and `docs-viewer-review/static/...` as static local assets.
+- Keep route dispatch thin; app behavior remains in frontend modules and review-folder service code.
+- Add route tests proving `/docs-review/` serves the shell and `/docs/` behavior is unchanged.
+
+### 5. Build Review Frontend Modules
+
+- Create the `docs-viewer-review/` frontend area with client, state, renderer, and app-entry modules.
+- Default to `manual-smoke` as the selected review folder.
+- On boot, call the review-folder list endpoint, then load `manual-smoke` index tree when built.
+- Render a local-review label, folder id/path, Build button, Back to Docs Viewer link, folder list, tree panel, document panel, and status/error text.
+- Build action posts `{ "folder_id": "manual-smoke" }`, then reloads the index tree and selected/default document.
+- Tree selection loads document payloads from `/docs-review/folders/payload`.
+- Render `content_html` from the generated payload without source-edit, manage-action, publish, search, or normal-scope controls.
+
+### 6. Keep Links And Assets Review-Local
+
+- Treat generated review document links as local review links where practical.
+- Internal links to documents in the same generated review tree should navigate within `/docs-review/`.
+- Links to normal `/docs/` documents may remain normal links unless a future side-by-side comparison feature needs interception.
+- Asset URLs should be loaded only from paths that the existing local server can safely serve.
+- Missing linked docs or assets should show as ordinary document rendering issues, not as source-management failures.
+
+### 7. Add Focused Verification
+
+- Add Python tests for:
+  - path-safe review-folder resolution
+  - build endpoint writing `generated/index-tree.json`
+  - build endpoint writing `generated/by-id/<doc_id>.json`
+  - index-tree and payload read endpoints after build
+  - missing, unbuilt, invalid-id, and deleted-folder error behavior
+- Add route tests for `/docs-review/` shell/static serving.
+- Add JS syntax checks for new review frontend modules.
+- Add a small browser smoke only after the shell exists:
+  - load `/docs-review/`
+  - click Build
+  - verify folder rows render
+  - verify tree rows render
+  - select `review-child`
+  - verify document content renders
+  - verify no manage toolbar/source actions are present
 
 ## Verification Target
 
 The preparatory implementation is complete when:
 
 - `/docs-review/` loads from the local server
-- the page can load the `manual-smoke` review folder
-- Build generates or regenerates the folder's `generated/` payloads
+- the page can list and select the `manual-smoke` review folder
+- Build generates or regenerates the selected folder's `generated/` payloads
 - the tree displays at least `review-root` and `review-child`
 - selecting a tree item renders its document payload
 - no normal manage-mode toolbar/action controls are present
@@ -328,13 +394,9 @@ Browser verification can be a small smoke only after the route shell exists.
 
 After this isolated app shell works, it can grow toward the full content-review workflow:
 
-- list review folders under `var/analytics/data-sharing/import-preview`
-- open selected folder
-- delete selected folder
+- open selected folder from a returned-package review result
 - show manifest metadata
 - distinguish built and unbuilt folders
-- integrate Data Sharing returned-package session creation
-- support `review_session=<session_id>` URL state
 - add side-by-side current/live versus temporary content comparison
 
 These extensions should not change the core decision: `/docs-review/` is a separate local review app, not a mode inside `/docs/`.

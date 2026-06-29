@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-994162d6c67bf078c90c10e67de36327",
-    "generated_at_utc": "2026-06-29T16:21:21Z",
+    "version": "blake2b-b456ab3c240f5e31cc735db55217e218",
+    "generated_at_utc": "2026-06-29T17:58:42Z",
     "count": 232
   },
   "entries": [
@@ -1296,10 +1296,10 @@
       "kind": "doc",
       "title": "Docs Review Local App",
       "href": "/docs/?scope=studio&doc=site-request-docs-review-local-app",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-06-29",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-28 • Change Requests",
+      "display_meta": "2026-06-29 • Change Requests",
       "search_terms": [
         "site-request-docs-review-local-app",
         "site",
@@ -1312,12 +1312,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-28",
+        "2026-06-29",
         "2026",
         "06",
-        "28"
+        "29"
       ],
-      "search_text": "site-request-docs-review-local-app site request docs review local app docs review local app change requests change requests 2026-06-28 2026 06 28"
+      "search_text": "site-request-docs-review-local-app site request docs review local app docs review local app change requests change requests 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

@@ -3,8 +3,8 @@ doc_id: site-request-docs-viewer-view-mode-registry
 title: Docs Viewer View And Mode Registry
 added_date: 2026-06-17
 last_updated: 2026-06-18
+ui_status: review
 parent_id: change-requests
-viewable: true
 ---
 # Docs Viewer View And Mode Registry
 

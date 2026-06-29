@@ -3,8 +3,8 @@ doc_id: site-request-docs-document-content-markdown-export
 title: Docs Document Content Markdown Export
 added_date: 2026-06-28
 last_updated: 2026-06-29
+ui_status: done
 parent_id: change-requests
-viewable: true
 ---
 # Docs Document Content Markdown Export
 
