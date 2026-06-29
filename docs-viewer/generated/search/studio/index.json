@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b456ab3c240f5e31cc735db55217e218",
-    "generated_at_utc": "2026-06-29T17:58:42Z",
+    "version": "blake2b-5413dc7f04a4067ad3d951e098a56e11",
+    "generated_at_utc": "2026-06-29T18:23:56Z",
     "count": 232
   },
   "entries": [
@@ -1234,6 +1234,34 @@
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
     },
     {
+      "id": "site-request-data-sharing-import-content",
+      "kind": "doc",
+      "title": "Data Sharing Import Content",
+      "href": "/docs/?scope=studio&doc=site-request-data-sharing-import-content",
+      "last_updated": "2026-06-29",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-06-29 • Change Requests",
+      "search_terms": [
+        "site-request-data-sharing-import-content",
+        "site",
+        "request",
+        "data",
+        "sharing",
+        "import",
+        "content",
+        "data sharing import content",
+        "change requests",
+        "change",
+        "requests",
+        "2026-06-29",
+        "2026",
+        "06",
+        "29"
+      ],
+      "search_text": "site-request-data-sharing-import-content site request data sharing import content data sharing import content change requests change requests 2026-06-29 2026 06 29"
+    },
+    {
       "id": "site-request-docs-document-content-markdown-export",
       "kind": "doc",
       "title": "Docs Document Content Markdown Export",
@@ -1261,35 +1289,6 @@
         "29"
       ],
       "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
-    },
-    {
-      "id": "site-request-docs-import-content-review-sessions",
-      "kind": "doc",
-      "title": "Docs Import Content Review Sessions",
-      "href": "/docs/?scope=studio&doc=site-request-docs-import-content-review-sessions",
-      "last_updated": "2026-06-29",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-29 • Change Requests",
-      "search_terms": [
-        "site-request-docs-import-content-review-sessions",
-        "site",
-        "request",
-        "docs",
-        "import",
-        "content",
-        "review",
-        "sessions",
-        "docs import content review sessions",
-        "change requests",
-        "change",
-        "requests",
-        "2026-06-29",
-        "2026",
-        "06",
-        "29"
-      ],
-      "search_text": "site-request-docs-import-content-review-sessions site request docs import content review sessions docs import content review sessions change requests change requests 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-review-local-app",

@@ -1,19 +1,12 @@
 ---
-doc_id: site-request-docs-import-content-review-sessions
-title: Docs Import Content Review Sessions
+doc_id: site-request-data-sharing-import-content
+title: Data Sharing Import Content
 added_date: 2026-06-28
 last_updated: 2026-06-29
 parent_id: change-requests
 viewable: true
 ---
-# Docs Import Content Review Sessions
-
-status:
-
-- terminology in this request is stale where it says "session". The active boundary is: Data Sharing review creates temporary source Markdown documents under `var/analytics/data-sharing/import-preview/<folder-id>/source/`; `/docs-review/` lists those folders, builds generated Docs JSON, and renders the selected folder.
-- Data Sharing does not own review folder listing, generated Docs JSON, rendered document payloads, opening folders, or review app navigation.
-
-## Status
+# Data Sharing Import Content
 
 Proposed.
 
@@ -47,6 +40,8 @@ The workflow is content review, not document import:
 5. `/docs-review/` renders the generated tree and selected document.
 
 No live source docs are created, overwritten, or deleted by this workflow.
+
+`/docs-review/` refers to using Docs Viewer to preview the temporary Markdown files. This is a separate request [Docs Review Local App](/docs/?scope=studio&doc=site-request-docs-review-local-app) which this current request doesn't depend on.
 
 ## Temporary Review Source Folders
 
@@ -193,9 +188,7 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 ## Future Extension
 
-Markdown return content is tracked as a prerequisite in [Docs Document Content Markdown Export](/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export) and should be implemented before this source-folder workflow.
-
-If Markdown return content later proves reliable enough for source replacement, that should be a separate apply action with stronger review and diff tooling. It should not reuse the plain-text content review action as an implicit live-source overwrite.
+If Markdown return content later proves reliable enough for source replacement, that could be a separate apply action with stronger review and diff tooling. It should not reuse the plain-text content review action as an implicit live-source overwrite.
 
 Potential future capabilities:
 
