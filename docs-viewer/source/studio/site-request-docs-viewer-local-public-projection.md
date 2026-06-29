@@ -7,18 +7,6 @@ parent_id: change-requests
 ---
 # Docs Viewer Static HTML Export
 
-Repo-backed local Docs Viewer scopes are readable only through the local `/docs/` management app. Current repo-backed local scopes include `studio` and `tmp`. Off the local machine, the practical options are poor:
-
-- run the local apps in Codespaces
-- browse raw Markdown files in GitHub
-- rely on memory or local-only access
-
-Those options are slower than opening a simple rendered HTML page, especially from another machine or on unreliable connectivity.
-
-The need is not remote management and not a full Docs Viewer experience. The need is quick read-only access to rendered docs.
-
-## Approach
-
 Implement a static HTML export workflow.
 
 The export reads existing generated Docs Viewer payloads and writes pre-rendered HTML pages:
@@ -29,19 +17,11 @@ The export reads existing generated Docs Viewer payloads and writes pre-rendered
 
 The export includes every generated doc for the selected repo-backed local scope. It does not filter to `viewable: true`.
 
-No Docs Viewer runtime is required.
+## Output Destination
 
-No local server is required.
+The exporter should be available to all repo-backed local Docs Viewer scopes.
 
-No JSON fetches are required.
-
-No public Docs Viewer scope, route config, search index projection, or local-to-public payload projection is required.
-
-## Output Destinations
-
-The exporter should be available to all repo-backed local Docs Viewer scopes. `studio` is the first practical target and the examples below use it, but the implementation should not hard-code `studio`.
-
-This does not apply to external local scopes whose source and generated JSON are saved outside the repo, such as `local_external` scopes under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/`. Those scopes need a separate portability/export decision because their data ownership and filesystem boundary are different.
+This export does not apply to external local scopes whose source and generated JSON are saved outside the repo, such as `local_external` scopes under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/`. Those scopes need a separate portability/export decision because their data ownership and filesystem boundary are different.
 
 Destination: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-export/<scope>/`
 
@@ -71,6 +51,8 @@ Delete Scope does not need export cleanup. The user is responsible for deleting 
 ## Inputs
 
 Use existing generated Docs Viewer payloads as input:
+
+e.g for studio scope:
 
 ```text
 docs-viewer/generated/docs/studio/index-tree.json
@@ -125,14 +107,17 @@ Export
 
 There is currently no other Docs Viewer export action, so the short label is enough. The modal should make the output destination clear.
 
-Suggested modal controls:
+modal:
 
 - source scope, e.g. `studio`
 - document count and default document if specified
-- destination folder: `/docs-export/studio/`
-- export button
+- destination folder: e.g. `/docs-export/studio/`
+- cancel, export buttons
+- The modal should not own the action. it is closed when the response is sent (export or cancel).
+- Mouse cursor is in waiting state whilst the export is running.
 
 The action should be available when the active `/docs/` scope is repo-backed local. Export action is disabled for any other type of scope.
+
 
 ## Backend Service
 
