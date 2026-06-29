@@ -3,10 +3,12 @@ import {
   createSelectableList
 } from "/shared/frontend/js/selectable-list.js";
 import {
+  defaultContentFormatForPrepareConfig,
   defaultFormatForPrepareConfig,
   prepareConfigRequiresDescendants,
   prepareConfigSelection,
   selectedPrepareConfig,
+  supportedContentFormatsForPrepareConfig,
   supportedFormatsForPrepareConfig,
   usesPrepareDocumentSelection,
   usesPrepareRecordSelection
@@ -15,6 +17,10 @@ import {
 const FORMAT_OPTIONS = [
   { key: "json", labelKey: "format_json", fallback: "JSON" },
   { key: "jsonl", labelKey: "format_jsonl", fallback: "JSONL" }
+];
+const CONTENT_FORMAT_OPTIONS = [
+  { key: "markdown", labelKey: "content_format_markdown", fallback: "Markdown" },
+  { key: "plain_text", labelKey: "content_format_plain_text", fallback: "Plain text" }
 ];
 
 function normalizeText(value) {
@@ -76,6 +82,15 @@ export function supportedUiFormatsForDataSharingPrepareConfig(config) {
 
 export function defaultUiFormatForDataSharingPrepareConfig(config) {
   return defaultFormatForPrepareConfig(config, FORMAT_OPTIONS.map((item) => item.key));
+}
+
+export function supportedUiContentFormatsForDataSharingPrepareConfig(config) {
+  return supportedContentFormatsForPrepareConfig(config)
+    .filter((format) => CONTENT_FORMAT_OPTIONS.some((item) => item.key === format));
+}
+
+export function defaultUiContentFormatForDataSharingPrepareConfig(config) {
+  return defaultContentFormatForPrepareConfig(config, CONTENT_FORMAT_OPTIONS.map((item) => item.key));
 }
 
 export function selectableDataSharingPrepareDocIds(state) {
@@ -162,6 +177,28 @@ export function renderDataSharingPrepareFormatOptions(state) {
   state.formatOptionsNode.value = state.targetFormat;
 }
 
+export function renderDataSharingPrepareContentFormatOptions(state) {
+  const config = selectedDataSharingPrepareConfig(state);
+  const supportedContentFormats = supportedUiContentFormatsForDataSharingPrepareConfig(config);
+  state.supportedContentFormats = supportedContentFormats;
+  if (!config || !supportedContentFormats.length) {
+    state.contentFormatWrap.hidden = true;
+    state.contentFormatOptionsNode.innerHTML = "";
+    state.contentFormat = "";
+    return;
+  }
+  state.contentFormatWrap.hidden = false;
+  if (!supportedContentFormats.includes(state.contentFormat)) {
+    state.contentFormat = defaultUiContentFormatForDataSharingPrepareConfig(config);
+  }
+  state.contentFormatOptionsNode.innerHTML = CONTENT_FORMAT_OPTIONS.filter((format) => supportedContentFormats.includes(format.key)).map((format) => {
+    const selected = state.contentFormat === format.key;
+    const label = getAnalyticsText(state.config, `data_sharing_prepare.${format.labelKey}`, format.fallback);
+    return `<option value="${escapeHtml(format.key)}"${selected ? " selected" : ""}>${escapeHtml(label)}</option>`;
+  }).join("");
+  state.contentFormatOptionsNode.value = state.contentFormat;
+}
+
 export function syncDataSharingPrepareConfigOptions(state, options = {}) {
   const {
     preserveOptions = false,
@@ -188,8 +225,10 @@ export function syncDataSharingPrepareConfigOptions(state, options = {}) {
     state.targetFormat = supportedUiFormatsForDataSharingPrepareConfig(config).includes("json")
       ? "json"
       : defaultUiFormatForDataSharingPrepareConfig(config);
+    state.contentFormat = defaultUiContentFormatForDataSharingPrepareConfig(config);
   }
   renderDataSharingPrepareFormatOptions(state);
+  renderDataSharingPrepareContentFormatOptions(state);
   if (!preserveSelection) applyDataSharingPrepareSelectionFilter(state);
   syncDataSharingPrepareListActions(state);
   renderDataSharingPrepareDocList(state);

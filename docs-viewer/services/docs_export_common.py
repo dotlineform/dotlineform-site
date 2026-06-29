@@ -71,12 +71,17 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def data_sharing_header_row(export_id: str) -> dict[str, str]:
-    return {
+def data_sharing_header_row(export_id: str, *, profile_id: str = "", content_format: str = "") -> dict[str, str]:
+    row = {
         "record_type": "data_sharing_header",
         "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
         "export_id": export_id,
     }
+    if profile_id:
+        row["profile_id"] = profile_id
+    if content_format:
+        row["content_format"] = content_format
+    return row
 
 
 def export_id_from_generated_at(generated_at: str) -> str:

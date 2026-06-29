@@ -10,6 +10,7 @@ from typing import Any
 from docs_data_sharing import rendered_content
 from docs_export_common import collapse_blank_lines, normalize_text, trim_blank_lines
 from docs_export_config import SUPPORTED_TRANSFORMS
+from docs_html_markdown import html_to_markdown
 from docs_export_selection import ExportContext
 
 
@@ -239,10 +240,13 @@ def apply_transforms(
     transformed = value
     truncated = False
     transform_set = set(transforms)
+    source = normalize_text(mapping.get("source"))
     for transform in transforms:
         if transform in {"identity", "headings_from_rendered_html", "omit_code_blocks"}:
             continue
         if transform == "plain_text_from_rendered_html":
+            if source == "content" and context.content_format == "markdown":
+                continue
             transformed = plain_text_from_rendered_html(
                 str(transformed or ""),
                 title=normalize_text(doc.get("title")),
@@ -250,6 +254,8 @@ def apply_transforms(
                 options=mapping.get("options") if isinstance(mapping.get("options"), dict) else {},
             )
         elif transform == "normalize_whitespace":
+            if source == "content" and context.content_format == "markdown":
+                continue
             transformed = normalize_plain_text(str(transformed or ""))
         elif transform == "truncate_chars":
             limit_key = normalize_text(mapping.get("limit_key"))
@@ -301,7 +307,10 @@ def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> An
     if source == "headings":
         return rendered_content.doc_headings(context.source_context, doc_id)
     if source == "content":
-        return rendered_content.render_doc_html(context.source_context, doc_id)
+        html = rendered_content.render_doc_html(context.source_context, doc_id)
+        if context.content_format == "markdown":
+            return html_to_markdown(html).markdown
+        return html
     raise ValueError(f"Unsupported field source: {source}")
 
 

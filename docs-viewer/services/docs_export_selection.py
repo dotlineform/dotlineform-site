@@ -25,6 +25,7 @@ class ExportContext:
     repo_root: Path
     scope: str
     data_domain: str
+    content_format: str
     config: dict[str, Any]
     source_context: docs_source_context.DataSharingDocsSourceContext
     docs: list[dict[str, Any]]

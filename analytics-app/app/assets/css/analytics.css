@@ -1479,6 +1479,7 @@ select.analytics__input.dataSharingPreparePage__compactSelect {
 }
 
 #dataSharingPrepareFormatSelect,
+#dataSharingPrepareContentFormatSelect,
 #dataSharingPrepareDocsScopeSelect {
   flex: 0 0 var(--compact-control-width);
   width: var(--compact-control-width);

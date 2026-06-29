@@ -44,6 +44,7 @@ def test_docs_export_request_passes_target_format() -> None:
                         "missing_summary_only": False,
                     },
                     "target_format": "json",
+                    "content_format": "plain_text",
                 },
                 dry_run=True,
                 adapter=adapter,
@@ -55,4 +56,5 @@ def test_docs_export_request_passes_target_format() -> None:
     assert result["ok"] is True
     assert result["target_format"] == "json"
     assert calls[0]["target_format"] == "json"
+    assert calls[0]["content_format"] == "plain_text"
     assert calls[0]["write"] is False

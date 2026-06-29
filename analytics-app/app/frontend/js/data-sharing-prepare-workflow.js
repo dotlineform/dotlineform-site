@@ -58,11 +58,29 @@ export function supportedFormatsForPrepareConfig(config) {
   return formats.filter((format, index) => formats.indexOf(format) === index);
 }
 
+export function supportedContentFormatsForPrepareConfig(config) {
+  const contentFormat = config && typeof config.content_format === "object" ? config.content_format : {};
+  const configured = Array.isArray(contentFormat.supported_formats)
+    ? contentFormat.supported_formats.map(normalizeText).filter(Boolean)
+    : [];
+  const fallback = normalizeText(contentFormat.format);
+  const formats = configured.length ? configured : [fallback].filter(Boolean);
+  return formats.filter((format, index) => formats.indexOf(format) === index);
+}
+
 export function defaultFormatForPrepareConfig(config, allowedFormats = []) {
   const formats = supportedFormatsForPrepareConfig(config)
     .filter((format) => !allowedFormats.length || allowedFormats.includes(format));
   const target = config && typeof config.target === "object" ? config.target : {};
   const preferred = normalizeText(target.format);
+  return formats.includes(preferred) ? preferred : formats[0] || "";
+}
+
+export function defaultContentFormatForPrepareConfig(config, allowedFormats = []) {
+  const formats = supportedContentFormatsForPrepareConfig(config)
+    .filter((format) => !allowedFormats.length || allowedFormats.includes(format));
+  const contentFormat = config && typeof config.content_format === "object" ? config.content_format : {};
+  const preferred = normalizeText(contentFormat.format);
   return formats.includes(preferred) ? preferred : formats[0] || "";
 }
 
@@ -102,6 +120,7 @@ export function buildPreparePackageRequest({
   docsScope,
   config,
   targetFormat,
+  contentFormat,
   selectedIds,
   usesDocumentSelection,
   usesRecordSelection,
@@ -117,6 +136,10 @@ export function buildPreparePackageRequest({
     target_format: normalizeText(targetFormat),
     activity_context: buildPrepareActivityContext({ dataDomain, configId })
   };
+  const normalizedContentFormat = normalizeText(contentFormat);
+  if (normalizedContentFormat) {
+    request.content_format = normalizedContentFormat;
+  }
   if (usesDocumentSelection) {
     request.selection = {
       docs_scope: normalizeText(docsScope),

@@ -90,6 +90,7 @@ def build_document_package(
     dry_run: bool,
     config_path: str,
     target_format: str,
+    content_format: str,
     output_root: Path,
 ) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
@@ -114,6 +115,7 @@ def build_document_package(
         write=not dry_run,
         config_path=config_path,
         target_format=target_format or None,
+        content_format=content_format or None,
         output_root=output_root,
     )
 

@@ -50,6 +50,7 @@ Inputs:
 - a Docs Viewer scope, currently Library in v1
 - explicit document ids or `--all`
 - an optional `--format json|jsonl` override when the selected profile declares that format in `target.supported_formats`
+- an optional `--content-format markdown|plain_text` override when the selected profile declares those values in `content_format.supported_formats`
 
 Outputs:
 
@@ -125,6 +126,12 @@ Write a document-row export as JSON instead of its JSONL default when the config
 
 ```bash
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-content --all --format json --write
+```
+
+Write `document-content` with plain-text body content instead of the profile's Markdown default:
+
+```bash
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id document-content --all --content-format plain_text --write
 ```
 
 ## Verification

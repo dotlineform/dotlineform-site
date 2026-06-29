@@ -26,9 +26,12 @@ from docs_export_common import (
     write_jsonl,
 )
 from docs_export_config import (
+    SUPPORTED_CONTENT_FORMATS,
     SUPPORTED_TARGET_FORMATS,
+    default_content_format,
     find_export_config,
     load_config_file,
+    supported_content_formats,
     supported_target_formats,
     validate_config_payload,
     validate_export_config,
@@ -233,6 +236,7 @@ def write_export_outputs(
     *,
     paths: ExportOutputPaths,
     target_format: str,
+    content_format: str,
     export_id: str,
     payload: dict[str, Any] | list[dict[str, Any]],
     metadata: dict[str, Any],
@@ -245,7 +249,17 @@ def write_export_outputs(
     elif target_format == "jsonl":
         if not isinstance(payload, list):
             raise ValueError("JSONL document_rows payload must be an array")
-        write_jsonl(paths.output_path, [data_sharing_header_row(export_id), *payload])
+        write_jsonl(
+            paths.output_path,
+            [
+                data_sharing_header_row(
+                    export_id,
+                    profile_id=normalize_text(metadata.get("profile_id")),
+                    content_format=content_format,
+                ),
+                *payload,
+            ],
+        )
     else:
         raise ValueError(f"Unsupported target.format: {target_format}")
     if paths.metadata_path is not None:
@@ -266,6 +280,7 @@ def build_export(
     data_domain: str = "documents",
     config_path: str | None = None,
     target_format: str | None = None,
+    content_format: str | None = None,
     output_root: Path | str | None = None,
 ) -> dict[str, Any]:
     generated_at, filename_timestamp_dt = export_run_times()
@@ -311,6 +326,14 @@ def build_export(
         errors.append(
             f"config {config_id}: target_format {requested_target_format!r} is not supported; "
             f"supported formats: {', '.join(supported_formats)}"
+        )
+    content_formats = supported_content_formats(config)
+    requested_content_format = normalize_text(content_format)
+    resolved_content_format = requested_content_format or default_content_format(config)
+    if requested_content_format and requested_content_format not in content_formats:
+        errors.append(
+            f"config {config_id}: content_format {requested_content_format!r} is not supported; "
+            f"supported content formats: {', '.join(content_formats)}"
         )
     timestamp_format = normalize_text(output_config.get("timestamp_format") or "%Y%m%d-%H%M%S")
     timestamp = filename_timestamp_dt.strftime(timestamp_format)
@@ -359,6 +382,7 @@ def build_export(
         repo_root=repo_root,
         scope=scope,
         data_domain=data_domain,
+        content_format=resolved_content_format,
         config=config,
         source_context=source_context,
         docs=docs,
@@ -402,6 +426,8 @@ def build_export(
         "scope": scope,
         "target_format": resolved_target_format,
         "supported_target_formats": supported_formats,
+        "content_format": resolved_content_format,
+        "supported_content_formats": content_formats,
         "output_file": paths.output_file,
         "metadata_file": paths.metadata_file,
         "context_file": paths.context_file,
@@ -436,11 +462,12 @@ def build_export(
             records=record_build.records,
             target_format=resolved_target_format,
         )
-    external_context = build_external_context(config, resolved_target_format)
+    external_context = build_external_context(config, resolved_target_format, resolved_content_format)
     if write:
         write_export_outputs(
             paths=paths,
             target_format=resolved_target_format,
+            content_format=resolved_content_format,
             export_id=export_id,
             payload=payload,
             metadata=metadata,
@@ -474,6 +501,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config-path", default="", help="Override export config path")
     parser.add_argument("--repo-root", default="", help="Override repo root")
     parser.add_argument("--format", choices=sorted(SUPPORTED_TARGET_FORMATS), default="", help="Override output format when supported by the selected config")
+    parser.add_argument("--content-format", choices=sorted(SUPPORTED_CONTENT_FORMATS), default="", help="Override document content format when supported by the selected config")
     parser.add_argument("--write", action="store_true", help="Write the export file; default is dry-run")
     return parser.parse_args()
 
@@ -493,6 +521,7 @@ def main() -> int:
             write=bool(args.write),
             config_path=args.config_path or None,
             target_format=args.format or None,
+            content_format=args.content_format or None,
         )
     except Exception as exc:
         print(f"docs_export: {exc}", file=sys.stderr)

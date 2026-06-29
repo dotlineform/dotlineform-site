@@ -326,6 +326,7 @@ function setProgressiveGroups(state) {
   state.optionsGroup.hidden = !complete;
   state.configSelect.disabled = !state.dataDomain || !state.exportConfigs.length;
   state.formatOptionsNode.disabled = !complete;
+  state.contentFormatOptionsNode.disabled = !complete;
   state.docsScopeSelect.disabled = !complete || !usesPrepareDocumentSelection(state.prepareCapability);
   renderDocsScopeSelect(state);
 }
@@ -587,6 +588,9 @@ async function init() {
     formatWrap: document.getElementById("dataSharingPrepareFormatWrap"),
     formatLabelNode: document.getElementById("dataSharingPrepareFormatLabel"),
     formatOptionsNode: document.getElementById("dataSharingPrepareFormatSelect"),
+    contentFormatWrap: document.getElementById("dataSharingPrepareContentFormatWrap"),
+    contentFormatLabelNode: document.getElementById("dataSharingPrepareContentFormatLabel"),
+    contentFormatOptionsNode: document.getElementById("dataSharingPrepareContentFormatSelect"),
     filterNode: document.getElementById("dataSharingPrepareListFilters"),
     selectAllButton: document.getElementById("dataSharingPrepareSelectAll"),
     clearButton: document.getElementById("dataSharingPrepareClear"),
@@ -603,6 +607,8 @@ async function init() {
     selectedIds: new Set(),
     includeDescendants: true,
     targetFormat: "",
+    contentFormat: "",
+    supportedContentFormats: [],
     docsIndexError: false,
     serviceAvailable: false,
     isRunning: false,
@@ -632,6 +638,9 @@ async function init() {
     state.formatWrap,
     state.formatLabelNode,
     state.formatOptionsNode,
+    state.contentFormatWrap,
+    state.contentFormatLabelNode,
+    state.contentFormatOptionsNode,
     state.filterNode,
     state.selectAllButton,
     state.clearButton,
@@ -671,6 +680,7 @@ async function init() {
       getAnalyticsText(state.config, "data_sharing_prepare.include_descendants_label", "select descendants with parent")
     );
     setText(state.formatLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.format_label", "format"));
+    setText(state.contentFormatLabelNode, getAnalyticsText(state.config, "data_sharing_prepare.content_format_label", "content"));
     setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_prepare.select_all", "Select all"));
     setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_prepare.clear", "Clear"));
     setText(state.runButton, getAnalyticsText(state.config, "data_sharing_prepare.run_button", "Prepare package"));
@@ -723,6 +733,12 @@ async function init() {
       const target = event.target;
       if (!(target instanceof HTMLSelectElement)) return;
       state.targetFormat = normalizeText(target.value);
+      updateStatus(state);
+    });
+    state.contentFormatOptionsNode.addEventListener("change", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLSelectElement)) return;
+      state.contentFormat = normalizeText(target.value);
       updateStatus(state);
     });
     state.missingSummaryOnly.addEventListener("change", () => {

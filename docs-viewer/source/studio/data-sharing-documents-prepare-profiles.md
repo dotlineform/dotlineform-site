@@ -40,7 +40,7 @@ Each profile controls:
 - whether the prepare UI cascades parent checkbox changes to descendants by default
 - whether source docs marked non-viewable are included
 - which source-derived document fields are written to each output record
-- whether body content is converted to plain text and how images/SVGs are represented
+- which content format is exported for document body content
 - which JSON or JSONL file pattern the run writes
 - whether exported files are eligible for returned-package review/apply
 
@@ -75,6 +75,7 @@ Each profile requires:
 - `enabled`: whether the Analytics UI should present the profile
 - `data_domains`: allowed Data Sharing data domains, currently `documents`
 - `target`: output format and record shape
+- `content_format`: optional document body content format contract for profiles that export `content`
 - `output`: output path pattern and optional timestamp format
 - `selection`: default document selection and filtering behavior
 - `workflow`: optional workflow flags, including returned-package import support
@@ -101,6 +102,24 @@ When omitted, the default `target.format` is the only supported format.
 
 Document-row profiles may support JSONL and JSON when both are declared in `target.supported_formats`.
 Document-tree profiles are JSON-only.
+
+## Content Format
+
+Profiles that export the document body `content` field declare a package-level `content_format`.
+This is separate from `target.format`: `target.format` is the package container (`json` or `jsonl`), while `content_format` describes the string format inside each record's `content` field.
+
+Supported content formats:
+
+| Format | Description |
+| --- | --- |
+| `markdown` | Converts rendered Docs Viewer HTML into Markdown using `docs-viewer/services/docs_html_markdown.py`. This is the default for `document-content`. |
+| `plain_text` | Converts rendered Docs Viewer HTML into normalized plain text using the export transform pipeline. |
+
+`document-content` supports both formats and defaults to `markdown`.
+JSON packages include top-level `content_format`.
+JSONL packages include `content_format` in the first `data_sharing_header` row.
+The Analytics prepare page exposes the selected content format before package preparation.
+
 Export-run metadata is written once to an internal metadata file under `var/analytics/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
 External packages carry an `export_id` that review uses to find that metadata after the returned file is staged.
 A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
@@ -239,10 +258,11 @@ Supported transform options:
 | `image_text_mode` | `omit`, `marker`, `extract_text` | Controls how image/SVG text is represented during plain-text extraction. Defaults to `extract_text`; invalid values fall back to `extract_text`. |
 | `empty_image_mode` | `omit`, `marker` | Controls images with no useful text during plain-text extraction. Defaults to `omit`; invalid values fall back to `omit`. |
 
-The default content export uses rendered Docs Viewer HTML as the source for plain text extraction, not raw Markdown.
+The content export uses rendered Docs Viewer HTML as the source for both Markdown conversion and plain-text extraction, not raw source Markdown.
 
 - Rendered HTML is closer to the document that Docs Viewer actually publishes and reviews.
-- Using it keeps Markdown parsing, inline HTML, renderer behavior, generated structure, image alt text, SVG text, headings, lists, blockquotes, and optional code-block omission on the same path as the visible document.
+- Using it keeps Markdown parsing, inline HTML, renderer behavior, generated structure, image alt text, SVG text, headings, lists, and blockquotes on the same path as the visible document.
+- Plain-text output also supports optional code-block omission and image/SVG text extraction through `plain_text_from_rendered_html`.
 - Raw Markdown can contain syntax, reference definitions, comments, embedded HTML, or formatting artifacts that are not intended to be reviewed as readable document text.
 
 The tradeoff is that content export depends on successful Docs Viewer rendering, which is intentional: a document that cannot render should surface as an export issue rather than silently producing misleading review text.
@@ -252,6 +272,6 @@ The tradeoff is that content export depends on successful Docs Viewer rendering,
 Validation is implemented by the documents package engine, not by a separate schema file.
 Runtime validation checks source-dependent concerns such as unknown `doc_id` values, missing required fields, output path resolution, target format support, profile enablement, and whether a selected profile supports the requested data domain.
 
-Blocking profile errors include duplicate profile ids, unsupported target formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `content` mappings that would emit raw rendered HTML, and truncating mappings without configured integer limits.
+Blocking profile errors include duplicate profile ids, unsupported target formats, unsupported content formats, unsupported record shapes, unsupported field sources or transforms, duplicate or conflicting output paths, unsafe output paths, `content` mappings without a `content_format` contract, and truncating mappings without configured integer limits.
 
 Warnings are reserved for non-blocking runtime context such as expected skipped filters, ignored `doc_ids` when `select_all` is true, ignored `missing_summary_only` on unsupported profiles, truncation, and deferred `max_total_chars` enforcement.

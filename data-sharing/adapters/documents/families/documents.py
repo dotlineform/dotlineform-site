@@ -58,6 +58,7 @@ def prepare_package(
     docs_scope = resolve_docs_scope(adapter, selection.get("docs_scope"))
     config_id = str(body.get("config_id") or "").strip()
     target_format = str(body.get("target_format") or "").strip()
+    content_format = str(body.get("content_format") or "").strip()
     report = build_document_package(
         repo_root,
         scope=docs_scope,
@@ -69,6 +70,7 @@ def prepare_package(
         dry_run=dry_run,
         config_path=adapter.config_path("sharing_profiles_path").as_posix(),
         target_format=target_format,
+        content_format=content_format,
         output_root=adapter.path("outbound_package_root"),
     )
     report = attach_adapter_context(report, adapter)
@@ -83,6 +85,7 @@ def prepare_package(
                 "config_id": config_id,
                 "dry_run": dry_run,
                 "target_format": report.get("target_format", ""),
+                "content_format": report.get("content_format", ""),
                 "output_written": bool(report.get("output_written")),
                 "selected": int(report.get("counts", {}).get("selected") or 0),
                 "exported": int(report.get("counts", {}).get("exported") or 0),

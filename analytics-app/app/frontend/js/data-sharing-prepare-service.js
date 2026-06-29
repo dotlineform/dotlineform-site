@@ -27,7 +27,9 @@ function prepareValidationError(state, stateKey, textKey, fallback) {
 
 export function buildDataSharingPrepareSubmission(state, { config, supportedFormats } = {}) {
   const targetFormat = normalizeText(state.targetFormat);
+  const contentFormat = normalizeText(state.contentFormat);
   const formats = Array.isArray(supportedFormats) ? supportedFormats : [];
+  const contentFormats = Array.isArray(state.supportedContentFormats) ? state.supportedContentFormats : [];
   const usesDocumentSelection = usesPrepareDocumentSelection(state.prepareCapability);
   const usesRecordSelection = usesPrepareRecordSelection(state.prepareCapability, config);
   if (!formats.includes(targetFormat)) {
@@ -38,11 +40,20 @@ export function buildDataSharingPrepareSubmission(state, { config, supportedForm
       "Select a supported package format."
     );
   }
+  if (contentFormats.length && !contentFormats.includes(contentFormat)) {
+    return prepareValidationError(
+      state,
+      "error",
+      "data_sharing_prepare.content_format_required",
+      "Select a supported content format."
+    );
+  }
   const request = buildPreparePackageRequest({
     dataDomain: state.dataDomain,
     docsScope: state.docsScope,
     config,
     targetFormat,
+    contentFormat,
     selectedIds: usesRecordSelection ? currentDataSharingPrepareSelectedIds(state) : state.selectedIds,
     usesDocumentSelection,
     usesRecordSelection,

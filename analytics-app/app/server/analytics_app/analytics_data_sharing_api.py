@@ -156,6 +156,8 @@ def public_sharing_profile(profile: dict[str, Any]) -> dict[str, object]:
         payload["description"] = description
     if isinstance(profile.get("target"), dict):
         payload["target"] = public_profile_target(profile["target"])
+    if isinstance(profile.get("content_format"), dict):
+        payload["content_format"] = public_profile_content_format(profile["content_format"])
     if isinstance(profile.get("selection"), dict):
         payload["selection"] = public_profile_selection(profile["selection"])
     if isinstance(profile.get("workflow"), dict):
@@ -172,6 +174,18 @@ def public_profile_workflow(workflow: dict[str, Any]) -> dict[str, object]:
     if "supports_return_import" in workflow:
         payload["supports_return_import"] = workflow.get("supports_return_import") is True
     return payload
+
+
+def public_profile_content_format(content_format: dict[str, Any]) -> dict[str, object]:
+    supported_formats = content_format.get("supported_formats")
+    return {
+        "format": str(content_format.get("format") or "").strip(),
+        "supported_formats": [
+            str(item).strip()
+            for item in supported_formats
+            if str(item).strip()
+        ] if isinstance(supported_formats, list) else [],
+    }
 
 
 def public_profile_external_context(external_context: dict[str, Any]) -> dict[str, object]:

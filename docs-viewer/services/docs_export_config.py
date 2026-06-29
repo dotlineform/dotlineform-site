@@ -42,6 +42,7 @@ SUPPORTED_FIELD_SOURCES = {
     "viewable",
 }
 SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
+SUPPORTED_CONTENT_FORMATS = {"markdown", "plain_text"}
 SUPPORTED_RECORD_SHAPES = {"document_rows", "document_tree"}
 SUPPORTED_SELECTION_MODES = {"explicit_doc_ids", "all_matching"}
 DEFAULT_SUPPORTS_RETURN_IMPORT = True
@@ -98,6 +99,30 @@ def supported_target_formats(config: dict[str, Any]) -> list[str]:
     if not formats and default_format:
         formats.append(default_format)
     return formats
+
+
+def supported_content_formats(config: dict[str, Any]) -> list[str]:
+    content_format = config.get("content_format") if isinstance(config.get("content_format"), dict) else {}
+    raw_formats = content_format.get("supported_formats")
+    formats: list[str] = []
+    if isinstance(raw_formats, list):
+        for item in raw_formats:
+            item_format = normalize_text(item)
+            if item_format and item_format not in formats:
+                formats.append(item_format)
+    default_format = normalize_text(content_format.get("format"))
+    if not formats and default_format:
+        formats.append(default_format)
+    return formats
+
+
+def default_content_format(config: dict[str, Any]) -> str:
+    content_format = config.get("content_format") if isinstance(config.get("content_format"), dict) else {}
+    preferred = normalize_text(content_format.get("format"))
+    formats = supported_content_formats(config)
+    if preferred in formats:
+        return preferred
+    return formats[0] if formats else ""
 
 
 def supports_return_import(config: dict[str, Any]) -> bool:
@@ -237,6 +262,24 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         errors.append(f"config {config_id}: target.format must be included in target.supported_formats")
     if record_shape not in SUPPORTED_RECORD_SHAPES:
         errors.append(f"config {config_id}: unsupported target.record_shape {record_shape!r}")
+
+    content_format_config = config.get("content_format")
+    content_formats: list[str] = []
+    if content_format_config is not None:
+        if not isinstance(content_format_config, dict):
+            errors.append(f"config {config_id}: content_format must be an object")
+        else:
+            content_format = normalize_text(content_format_config.get("format"))
+            content_formats = supported_content_formats(config)
+            if content_format not in SUPPORTED_CONTENT_FORMATS:
+                errors.append(f"config {config_id}: unsupported content_format.format {content_format!r}")
+            if not content_formats:
+                errors.append(f"config {config_id}: content_format.supported_formats must include at least one format")
+            for item_format in content_formats:
+                if item_format not in SUPPORTED_CONTENT_FORMATS:
+                    errors.append(f"config {config_id}: unsupported content_format.supported_formats value {item_format!r}")
+            if content_format and content_formats and content_format not in content_formats:
+                errors.append(f"config {config_id}: content_format.format must be included in content_format.supported_formats")
     output = config.get("output") if isinstance(config.get("output"), dict) else {}
     path_pattern = normalize_text(output.get("path_pattern"))
     if not path_pattern:
@@ -311,8 +354,11 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
         unsupported = [item for item in transforms if item and item not in SUPPORTED_TRANSFORMS]
         if unsupported:
             errors.append(f"config {config_id}: field {source} uses unsupported transform(s): {', '.join(unsupported)}")
-        if source == "content" and "plain_text_from_rendered_html" not in transforms:
-            errors.append(f"config {config_id}: content fields must use plain_text_from_rendered_html")
+        if source == "content":
+            if content_format_config is None:
+                errors.append(f"config {config_id}: content fields require content_format")
+            if "plain_text" in content_formats and "plain_text_from_rendered_html" not in transforms:
+                errors.append(f"config {config_id}: plain_text content fields must use plain_text_from_rendered_html")
         if "truncate_chars" in transforms:
             limit_key = normalize_text(mapping.get("limit_key"))
             if limit_key not in {"max_chars_per_document", "max_total_chars"}:

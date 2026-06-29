@@ -329,6 +329,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
     assert lines[1].find('"doc_id"') < lines[1].find('"title"') < lines[1].find('"current_summary"')
     assert rows[0] == {
         "export_id": "ds_20260503T151507Z",
+        "profile_id": "document-content",
         "record_type": "data_sharing_header",
         "schema_version": "data_sharing_returned_package_v1",
     }
@@ -598,6 +599,8 @@ def test_repo_documents_prepare_profiles_load_and_validate() -> None:
 
     full_config = docs_export_config.find_export_config(payload, "document-content")
     assert docs_export_config.supported_target_formats(full_config) == ["jsonl", "json"]
+    assert docs_export_config.supported_content_formats(full_config) == ["markdown", "plain_text"]
+    assert docs_export_config.default_content_format(full_config) == "markdown"
     tree_config = docs_export_config.find_export_config(payload, "document-tree")
     assert tree_config["workflow"]["supports_return_import"] is False
     assert tree_config["target"]["record_shape"] == "document_tree"
@@ -629,9 +632,12 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
 
     assert report["ok"] is True, report
     assert report["output_written"] is True
+    assert report["content_format"] == "markdown"
     assert report["metadata_file"].endswith(".meta.json")
     assert rows[0]["record_type"] == "data_sharing_header"
     assert rows[0]["export_id"] == "ds_20260504T120000Z"
+    assert rows[0]["profile_id"] == "document-content"
+    assert rows[0]["content_format"] == "markdown"
     assert [row["doc_id"] for row in rows[1:]] == ["library", "child-with-summary"]
     assert "last_updated" not in rows[1]
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
@@ -649,7 +655,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
     assert "sort_order" not in child_row
 
 
-def test_export_uses_source_context_for_document_content() -> None:
+def test_export_uses_source_context_for_markdown_document_content() -> None:
     config = docs_export_config.load_config_file(REPO_ROOT)
     with make_repo(copy.deepcopy(config)) as temp:
         root = Path(temp)
@@ -666,10 +672,62 @@ def test_export_uses_source_context_for_document_content() -> None:
         rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
 
     assert report["ok"] is True, report
+    assert report["content_format"] == "markdown"
     assert report["exported_doc_ids"] == ["library", "child-with-summary"]
     assert rows[0]["record_type"] == "data_sharing_header"
+    assert rows[0]["content_format"] == "markdown"
     rows_by_doc_id = {row["doc_id"]: row for row in rows[1:]}
-    assert rows_by_doc_id["library"]["content"] == "Body text."
+    assert rows_by_doc_id["library"]["content"] == "# Library\n\nBody text."
+
+
+def test_document_content_plain_text_override_preserves_existing_content_behavior() -> None:
+    config = docs_export_config.load_config_file(REPO_ROOT)
+    with make_repo(copy.deepcopy(config)) as temp:
+        root = Path(temp)
+
+        report = docs_export.build_export(
+            repo_root=root,
+            config_id="document-content",
+            scope="library",
+            selected_doc_ids=["library"],
+            select_all=False,
+            missing_summary_only=None,
+            write=True,
+            content_format="plain_text",
+        )
+        rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
+        metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+
+    assert report["ok"] is True, report
+    assert report["content_format"] == "plain_text"
+    assert rows[0]["content_format"] == "plain_text"
+    assert rows[1]["content"] == "Body text."
+    assert metadata["content_format"] == "plain_text"
+
+
+def test_document_content_json_output_declares_content_format() -> None:
+    config = docs_export_config.load_config_file(REPO_ROOT)
+    with make_repo(copy.deepcopy(config)) as temp:
+        root = Path(temp)
+
+        report = docs_export.build_export(
+            repo_root=root,
+            config_id="document-content",
+            scope="library",
+            selected_doc_ids=["library"],
+            select_all=False,
+            missing_summary_only=None,
+            write=True,
+            target_format="json",
+            content_format="markdown",
+        )
+        payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
+        context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
+
+    assert report["ok"] is True, report
+    assert payload["content_format"] == "markdown"
+    assert payload["records"][0]["content"] == "# Library\n\nBody text."
+    assert context["content_format"] == "markdown"
 
 
 def test_missing_source_context_returns_structured_export_error() -> None:
@@ -767,7 +825,9 @@ def main() -> None:
         test_export_run_times_use_utc_metadata_and_local_filename_time,
         test_repo_documents_prepare_profiles_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
-        test_export_uses_source_context_for_document_content,
+        test_export_uses_source_context_for_markdown_document_content,
+        test_document_content_plain_text_override_preserves_existing_content_behavior,
+        test_document_content_json_output_declares_content_format,
         test_missing_source_context_returns_structured_export_error,
         test_repo_representative_library_exports_dry_run_successfully,
     ]

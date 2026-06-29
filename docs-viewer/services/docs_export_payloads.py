@@ -46,6 +46,8 @@ def export_metadata(
         "generated_at": generated_at,
         "supports_return_import": supports_return_import(context.config),
     }
+    if context.content_format:
+        metadata["content_format"] = context.content_format
     optional_values = {
         "config_checksum": config_checksum(context.config),
         "selected_doc_ids": selected_doc_ids,
@@ -109,7 +111,7 @@ def external_field_type(field: dict[str, Any]) -> str:
     return "string"
 
 
-def build_external_context(config: dict[str, Any], target_format: str) -> dict[str, Any]:
+def build_external_context(config: dict[str, Any], target_format: str, content_format: str = "") -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     record_shape = normalize_text(target.get("record_shape"))
     external_context = config.get("external_context") if isinstance(config.get("external_context"), dict) else {}
@@ -156,7 +158,7 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
         header_guidance = "Preserve the first JSONL line unchanged; it is an internal routing header."
         response_guidance = f"{response_guidance} {header_guidance}".strip()
 
-    return {
+    payload = {
         "schema_version": EXTERNAL_CONTEXT_SCHEMA_VERSION,
         "task": normalize_text(external_context.get("task")),
         "record_format": target_format,
@@ -165,6 +167,9 @@ def build_external_context(config: dict[str, Any], target_format: str) -> dict[s
         "record_schema": schema,
         "response_guidance": response_guidance,
     }
+    if content_format:
+        payload["content_format"] = content_format
+    return payload
 
 
 def build_export_payload(
@@ -178,11 +183,14 @@ def build_export_payload(
     record_shape = normalize_text(target.get("record_shape"))
     if record_shape == "document_rows":
         if target_format == "json":
-            return {
+            payload = {
                 "schema_version": RETURNED_PACKAGE_SCHEMA_VERSION,
                 "export_id": export_id,
                 "records": records,
             }
+            if context.content_format:
+                payload["content_format"] = context.content_format
+            return payload
         return records
     raise ValueError(f"Unsupported target.record_shape: {record_shape}")
 

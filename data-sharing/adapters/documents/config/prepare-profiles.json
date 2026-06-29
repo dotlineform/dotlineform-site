@@ -4,13 +4,17 @@
     {
       "id": "document-content",
       "label": "Document content",
-      "description": "Document summaries, headings, and plain text content.",
+      "description": "Document summaries, headings, and document body content.",
       "enabled": true,
       "data_domains": ["documents"],
       "target": {
         "format": "jsonl",
         "supported_formats": ["jsonl", "json"],
         "record_shape": "document_rows"
+      },
+      "content_format": {
+        "format": "markdown",
+        "supported_formats": ["markdown", "plain_text"]
       },
       "output": {
         "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl",
@@ -62,7 +66,7 @@
           "current_summary": "Existing document summary. Empty means a new summary may be needed.",
           "summary": "Proposed document summary.",
           "headings": "Headings extracted from the document.",
-          "content": "Document body content extracted from source content. Current profile output is plain text."
+          "content": "Document body content extracted from rendered Docs Viewer HTML. Package-level content_format declares whether this value is Markdown or plain text."
         }
       },
       "document_fields": [
