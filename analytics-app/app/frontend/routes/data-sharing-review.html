@@ -8,7 +8,22 @@
   <div class="analytics__panel dataSharingReviewPage__panel">
     <div class="dataSharingReviewPage__controls">
       <div class="dataSharingReviewPage__buttonGroup" id="dataSharingReviewApplyActions" aria-label="Returned package apply actions">
-        <button type="button" class="analytics__button analytics__button--defaultWidth" id="dataSharingReviewRun"></button>
+        <div class="dataSharingReviewPage__actionsMenuHost">
+          <button
+            type="button"
+            class="analytics__button analytics__button--defaultWidth"
+            id="dataSharingReviewRun"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="dataSharingReviewMenu"
+          ></button>
+          <div
+            class="dataSharingReviewPage__actionsMenu"
+            id="dataSharingReviewMenu"
+            role="menu"
+            hidden
+          ></div>
+        </div>
         <div class="dataSharingReviewPage__actionsMenuHost">
           <button
             type="button"
@@ -48,11 +63,6 @@
       </div>
     </div>
     <p class="analyticsForm__meta dataSharingReviewPage__selectionSummary" id="dataSharingReviewSelectionSummary"></p>
-
-    <div class="dataSharingReviewPage__listActions" aria-label="Returned package review selection actions">
-      <button type="button" class="analytics__keyPill analyticsFilters__groupBtn" id="dataSharingReviewSelectAll"></button>
-      <button type="button" class="analytics__keyPill analyticsFilters__groupBtn" id="dataSharingReviewClear"></button>
-    </div>
 
     <div class="analyticsList dataSharingReviewList" id="dataSharingReviewList"></div>
 

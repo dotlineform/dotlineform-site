@@ -40,6 +40,30 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
     assert payload["errors"][0]["reason"] == "missing_target_doc"
     assert payload["summary_apply_written"] is False
 
+
+def test_library_import_summary_apply_defaults_to_all_records() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "summary": "Old summary."})
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "summary": "Old root."})
+        write_returned_jsonl(
+            root,
+            "content.jsonl",
+            [
+                {"doc_id": "alpha", "title": "Alpha", "summary": "New summary."},
+                {"doc_id": "library", "title": "Library", "summary": "New root."},
+            ],
+        )
+        payload = handle_documents_import_apply(
+            root,
+            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl"},
+            dry_run=True,
+        )
+
+    assert payload["ok"] is True
+    assert payload["counts"]["selected"] == 2
+    assert payload["counts"]["updates"] == 2
+
 def test_library_import_summary_apply_writes_source() -> None:
     original_rebuild = stub_rebuild()
     try:

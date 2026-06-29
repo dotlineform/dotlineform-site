@@ -14,8 +14,7 @@ import {
 import { runDataSharingReviewApplyAction } from "./data-sharing-review-apply.js";
 import {
   buildDataSharingReviewPreviewRows,
-  renderDataSharingReviewPreviewList,
-  selectedDataSharingReviewRecordIndices
+  renderDataSharingReviewPreviewList
 } from "./data-sharing-review-render.js";
 import {
   dataSharingAppsForDomains,
@@ -115,6 +114,63 @@ function sourceFolderStatusMessage(state, payload) {
 function sourceFolderStatusState(payload) {
   const counts = payload && payload.counts && typeof payload.counts === "object" ? payload.counts : {};
   return Number(counts.skipped_records || 0) > 0 || Number(counts.warnings || 0) > 0 ? "warn" : "success";
+}
+
+const REVIEW_ACTIONS = [
+  { id: "content", label: "Content" },
+  { id: "summaries", label: "Summaries" },
+  { id: "hierarchy", label: "Hierarchy" }
+];
+
+function positionReviewMenu(state) {
+  if (!state || !state.reviewMenu || !state.previewButton) return;
+  const triggerRect = state.previewButton.getBoundingClientRect();
+  state.reviewMenu.style.left = "0px";
+  state.reviewMenu.style.top = "0px";
+  state.reviewMenu.style.minWidth = `${Math.max(triggerRect.width, 176)}px`;
+  const menuRect = state.reviewMenu.getBoundingClientRect();
+  const maxLeft = Math.max(8, window.innerWidth - menuRect.width - 8);
+  const maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
+  state.reviewMenu.style.left = `${Math.min(triggerRect.left, maxLeft)}px`;
+  state.reviewMenu.style.top = `${Math.min(triggerRect.bottom + 6, maxTop)}px`;
+}
+
+function hideReviewMenu(state) {
+  if (!state || !state.reviewMenu || !state.previewButton) return;
+  state.reviewMenu.hidden = true;
+  state.reviewMenu.style.left = "";
+  state.reviewMenu.style.top = "";
+  state.reviewMenu.style.minWidth = "";
+  state.previewButton.setAttribute("aria-expanded", "false");
+}
+
+function showReviewMenu(state) {
+  if (!state || !state.reviewMenu || !state.previewButton || state.previewButton.disabled) return;
+  state.reviewMenu.hidden = false;
+  state.previewButton.setAttribute("aria-expanded", "true");
+  positionReviewMenu(state);
+}
+
+function toggleReviewMenu(state) {
+  if (!state || !state.reviewMenu || state.reviewMenu.hidden) {
+    showReviewMenu(state);
+    return;
+  }
+  hideReviewMenu(state);
+}
+
+function renderReviewMenu(state) {
+  state.reviewMenu.innerHTML = "";
+  REVIEW_ACTIONS.forEach((action) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "dataSharingReviewPage__actionMenuItem";
+    button.setAttribute("role", "menuitem");
+    button.dataset.dataSharingReviewAction = action.id;
+    button.textContent = action.label;
+    state.reviewMenu.appendChild(button);
+  });
+  hideReviewMenu(state);
 }
 
 function selectedFileSelection(state) {
@@ -249,7 +305,7 @@ async function loadSelectedFileRows(state) {
   }
 }
 
-async function runPreview(state) {
+async function runDocumentReview(state, reviewAction) {
   if (!state.serviceAvailable || state.isRunning) return;
   const file = selectedDataSharingReviewFile(state);
   if (!file) {
@@ -268,35 +324,25 @@ async function runPreview(state) {
     );
     return;
   }
-  const recordIndices = selectedDataSharingReviewRecordIndices(state);
-  if (!recordIndices.length) {
-    setStatus(
-      state.statusNode,
-      "error",
-      getAnalyticsText(state.config, "data_sharing_review.review_selection_required", "Select at least one staged document.")
-    );
-    return;
-  }
-
   state.isRunning = true;
   setDataSharingReviewControlsDisabled(state, true);
   syncRouteBusyState(state);
   setStatus(
     state.statusNode,
     "",
-    getAnalyticsText(state.config, "data_sharing_review.running_status", "Generating selected document review...")
+    getAnalyticsText(state.config, "data_sharing_review.running_status", "Generating document review...")
   );
 
   try {
     const payload = await postJson(DATA_SHARING_ENDPOINTS.review, {
       data_domain: state.dataDomain,
       operation: "review",
+      review_action: reviewAction,
       staged_filename: file.filename,
-      record_indices: recordIndices,
       selection: selectedFileSelection(state)
     });
     state.reviewReady = true;
-    const successMessage = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.status_success", "Selected document review generated.");
+    const successMessage = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.status_success", "Document review generated.");
     setStatus(
       state.statusNode,
       "success",
@@ -349,7 +395,7 @@ async function createSourceFolder(state) {
     const payload = await postJson(DATA_SHARING_ENDPOINTS.review, {
       data_domain: state.dataDomain,
       operation: "review",
-      review_action: "source_folder",
+      review_action: "content",
       staged_filename: file.filename,
       selection: selectedFileSelection(state)
     });
@@ -398,14 +444,13 @@ async function init() {
     filePickerNode: null,
     resolvedContextNode: document.getElementById("dataSharingReviewResolvedContext"),
     previewButton: document.getElementById("dataSharingReviewRun"),
+    reviewMenu: document.getElementById("dataSharingReviewMenu"),
     sourceFolderButton: null,
     applyActionContainer: document.getElementById("dataSharingReviewApplyActions"),
     actionMenuButton: document.getElementById("dataSharingReviewActionsButton"),
     applyActionMenu: document.getElementById("dataSharingReviewActionsMenu"),
     statusNode: document.getElementById("dataSharingReviewStatus"),
     selectionSummary: document.getElementById("dataSharingReviewSelectionSummary"),
-    selectAllButton: document.getElementById("dataSharingReviewSelectAll"),
-    clearButton: document.getElementById("dataSharingReviewClear"),
     listNode: document.getElementById("dataSharingReviewList"),
     config: null,
     files: [],
@@ -434,13 +479,12 @@ async function init() {
     state.fileSelect,
     state.resolvedContextNode,
     state.previewButton,
+    state.reviewMenu,
     state.applyActionContainer,
     state.actionMenuButton,
     state.applyActionMenu,
     state.statusNode,
     state.selectionSummary,
-    state.selectAllButton,
-    state.clearButton,
     state.listNode
   ];
   if (requiredNodes.some((node) => !node)) return;
@@ -452,6 +496,7 @@ async function init() {
     state.adapterRegistry = adapterRegistry;
     state.dataDomains = dataSharingDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_DOMAINS);
     state.apps = dataSharingAppsForDomains(state.dataDomains, DATA_SHARING_REVIEW_APPS);
+    renderReviewMenu(state);
     renderDataSharingReviewApplyActions(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
@@ -459,10 +504,8 @@ async function init() {
     setText(state.dataDomainValueNode, "unresolved");
     setText(state.scopeValueNode, "unresolved");
     setText(state.fileLabelNode, getAnalyticsText(state.config, "data_sharing_review.file_label", "staged file"));
-    setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review selected"));
+    setText(state.previewButton, getAnalyticsText(state.config, "data_sharing_review.preview_button", "Review"));
     setText(state.actionMenuButton, getAnalyticsText(state.config, "data_sharing_review.actions_button", "Actions"));
-    setText(state.selectAllButton, getAnalyticsText(state.config, "data_sharing_review.select_all", "select all"));
-    setText(state.clearButton, getAnalyticsText(state.config, "data_sharing_review.clear", "clear"));
     setFilePickerVisible(state, false);
     syncSelectedFileMetadata(state);
     renderDataSharingReviewPreviewList(state);
@@ -532,26 +575,43 @@ async function init() {
       loadSelectedFileRows(state).catch((error) => console.warn("data_sharing_review: unexpected records load failure", error));
     });
     state.previewButton.addEventListener("click", () => {
-      runPreview(state).catch((error) => console.warn("data_sharing_review: unexpected preview failure", error));
+      hideDataSharingReviewApplyActionsMenu(state);
+      toggleReviewMenu(state);
     });
     state.actionMenuButton.addEventListener("click", () => {
+      hideReviewMenu(state);
       toggleDataSharingReviewApplyActionsMenu(state);
     });
     document.addEventListener("click", (event) => {
       const target = event.target instanceof Node ? event.target : null;
       if (!target || state.applyActionContainer.contains(target)) return;
       hideDataSharingReviewApplyActionsMenu(state);
+      hideReviewMenu(state);
     });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") hideDataSharingReviewApplyActionsMenu(state);
-    });
-    window.addEventListener("scroll", () => hideDataSharingReviewApplyActionsMenu(state), { passive: true });
-    window.addEventListener("resize", () => hideDataSharingReviewApplyActionsMenu(state));
-    state.applyActionContainer.addEventListener("click", (event) => {
-      const sourceTarget = event.target instanceof Element ? event.target.closest("[data-data-sharing-source-folder-action]") : null;
-      if (sourceTarget instanceof HTMLButtonElement) {
+      if (event.key === "Escape") {
         hideDataSharingReviewApplyActionsMenu(state);
-        createSourceFolder(state).catch((error) => console.warn("data_sharing_review: unexpected source folder failure", error));
+        hideReviewMenu(state);
+      }
+    });
+    window.addEventListener("scroll", () => {
+      hideDataSharingReviewApplyActionsMenu(state);
+      hideReviewMenu(state);
+    }, { passive: true });
+    window.addEventListener("resize", () => {
+      hideDataSharingReviewApplyActionsMenu(state);
+      hideReviewMenu(state);
+    });
+    state.applyActionContainer.addEventListener("click", (event) => {
+      const reviewTarget = event.target instanceof Element ? event.target.closest("[data-data-sharing-review-action]") : null;
+      if (reviewTarget instanceof HTMLButtonElement) {
+        const reviewAction = normalizeText(reviewTarget.dataset.dataSharingReviewAction);
+        hideReviewMenu(state);
+        if (reviewAction === "content") {
+          createSourceFolder(state).catch((error) => console.warn("data_sharing_review: unexpected source folder failure", error));
+        } else {
+          runDocumentReview(state, reviewAction).catch((error) => console.warn("data_sharing_review: unexpected review failure", error));
+        }
         return;
       }
       const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;

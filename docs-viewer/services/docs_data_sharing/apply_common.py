@@ -17,7 +17,17 @@ class DocumentsApplyIdentity:
     adapter_id: str
     adapter_label: str
 
-def selected_record_indices(value: Any) -> list[int]:
+def all_record_indices(records: list[Dict[str, Any]]) -> list[int]:
+    return [
+        int(record.get("record_index"))
+        for record in records
+        if isinstance(record, dict) and isinstance(record.get("record_index"), int)
+    ]
+
+
+def selected_record_indices(value: Any, records: list[Dict[str, Any]]) -> list[int]:
+    if value is None:
+        return all_record_indices(records)
     if not isinstance(value, list):
         raise ValueError("record_indices must be a list")
     selected: list[int] = []
@@ -80,15 +90,16 @@ def parse_apply_inputs(
     normalized_scope = source_model.normalize_scope(scope)
     if not staged_filename:
         raise ValueError("staged_filename is required")
-    selected_indices = selected_record_indices(record_indices)
-    if not selected_indices:
-        raise ValueError("record_indices must include at least one selected record")
     report = parse_staged_import(
         repo_root=repo_root,
         scope=normalized_scope,
         staged_file=staged_filename,
         staging_root=staging_root,
     )
+    records = [record for record in report.get("records", []) if isinstance(record, dict)]
+    selected_indices = selected_record_indices(record_indices, records)
+    if not selected_indices and report.get("ok"):
+        raise ValueError("record_indices must include at least one selected record")
     docs = source_model.load_scope_docs(repo_root, normalized_scope)
     selected_rows, skipped, selected = selected_records(report, selected_indices)
     return report, docs, selected_indices, selected_rows, skipped, selected

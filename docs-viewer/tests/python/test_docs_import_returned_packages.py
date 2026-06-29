@@ -83,6 +83,40 @@ def test_library_import_review_writes_selected_record_document() -> None:
     assert review_path.name == "20260627-215010-library-document-content.md"
     assert "| alpha | Alpha | Preview summary. | library |" in review_text
 
+
+def test_library_import_review_defaults_to_all_records_and_appends_issues() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "data_sharing_returned_package_v1",
+                    "export_id": export_id,
+                },
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary.", "content": "Preview body."},
+                {"doc_id": "", "title": "Missing", "summary": "Missing id."},
+            ],
+        )
+        write_content_meta(root, export_id)
+        payload = handle_documents_import_preview(
+            root,
+            {"data_domain": "library", "operation": "review", "review_action": "summaries", "staged_filename": "content.jsonl"},
+            dry_run=False,
+        )
+        review_text = (root / str(payload["review_file"])).read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert payload["selected_records"] == [
+        {"record_index": 0, "doc_id": "alpha"},
+        {"record_index": 1, "doc_id": ""},
+    ]
+    assert "## Issues" in review_text
+    assert "| warning | missing_doc_id | 2 |  | Missing | record is missing doc_id |" in review_text
+
 def test_documents_import_rejects_unconfigured_data_domain() -> None:
     with make_repo() as temp:
         root = Path(temp)

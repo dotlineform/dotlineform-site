@@ -188,7 +188,7 @@ def review_returned_package(
     selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
     scope = resolve_docs_scope(adapter, selection.get("docs_scope"), required=False)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
-    if review_action == "source_folder":
+    if review_action in {"content", "source_folder"}:
         report = create_review_source_folder(
             repo_root,
             scope=scope,
@@ -219,9 +219,9 @@ def review_returned_package(
                 },
             )
         return report
-    if review_action != "record_review":
-        raise ValueError("review_action must be record_review or source_folder")
-    record_indices = body.get("record_indices", [])
+    if review_action not in {"record_review", "summaries", "hierarchy"}:
+        raise ValueError("review_action must be content, summaries, hierarchy, record_review, or source_folder")
+    record_indices = body.get("record_indices")
     report = review_returned_document_package(
         repo_root,
         scope=scope,
@@ -259,9 +259,11 @@ def review_returned_package(
         action = "Validated" if dry_run else "Generated"
         row_count = len(report.get("selected_records", []))
         row_label = "document" if row_count == 1 else "documents"
-        report["summary_text"] = (
-            f"{action} {adapter.label} import review for {row_count} selected {row_label}."
-        )
+        if review_action == "record_review":
+            report["summary_text"] = f"{action} {adapter.label} import review for {row_count} selected {row_label}."
+        else:
+            review_label = "hierarchy" if review_action == "hierarchy" else "summaries"
+            report["summary_text"] = f"{action} {adapter.label} {review_label} review for {row_count} {row_label}."
     return report
 
 
@@ -335,7 +337,7 @@ def apply_returned_changes(
     common_args = {
         "scope": scope,
         "staged_filename": staged_filename,
-        "record_indices": body.get("record_indices", []),
+        "record_indices": body.get("record_indices"),
         "confirmed": confirmed,
         "dry_run": dry_run,
         "staging_root": adapter.path("returned_package_staging_root"),

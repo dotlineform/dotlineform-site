@@ -69,28 +69,20 @@ export function renderDataSharingReviewPreviewList(state) {
   if (!state.selectableList) {
     state.selectableList = createSelectableList(state.listNode, {
       id: "dataSharingReviewDocuments",
-      selectAllButton: state.selectAllButton,
-      clearButton: state.clearButton,
+      readOnly: true,
       getId: (row) => normalizeText(row && row.id),
       getLabel: (row) => normalizeText(row && row.title),
-      getMeta: () => [],
+      getMeta: (row) => row && row.meta ? [row.meta] : [],
       getIndent: (row) => `${Math.max(0, Number(row && row.depth || 0)) * 1.15}rem`,
-      isDisabled: (row) => row && row.selectable === false,
-      onSelectionChange: ({ selectedIds }) => {
-        state.selectedPreviewIds = new Set(selectedIds);
-        if (typeof state.onPreviewSelectionChange === "function") {
-          state.onPreviewSelectionChange();
-        } else {
-          updateDataSharingReviewSelectionSummary(state);
-        }
-      }
+      isDisabled: (row) => row && row.selectable === false
     });
   }
   state.selectableList.update({
     items: state.previewRows,
-    selectedIds: Array.from(state.selectedPreviewIds),
+    selectedIds: [],
     disabled: Boolean(state.isRunning),
-    emptyMessage
+    emptyMessage,
+    readOnly: true
   });
   updateDataSharingReviewSelectionSummary(state);
 }
@@ -104,19 +96,19 @@ export function selectableDataSharingReviewPreviewIds(state) {
 
 export function selectedDataSharingReviewRecordIndices(state) {
   return state.previewRows
-    .filter((row) => state.selectedPreviewIds.has(row.id) && row.selectable !== false && Number.isInteger(row.recordIndex))
+    .filter((row) => row.selectable !== false && Number.isInteger(row.recordIndex))
     .map((row) => row.recordIndex);
 }
 
 export function updateDataSharingReviewSelectionSummary(state) {
-  const count = state.selectedPreviewIds.size;
+  const count = state.previewRows.length;
   if (!state.selectionSummary) return;
   state.selectionSummary.textContent = normalizeText(getAnalyticsText(
     state.config,
     count === 1
-      ? "data_sharing_review.selection_summary_one"
-      : "data_sharing_review.selection_summary",
-    count === 1 ? "1 document selected." : "{count} documents selected.",
+      ? "data_sharing_review.records_summary_one"
+      : "data_sharing_review.records_summary",
+    count === 1 ? "1 staged document." : "{count} staged documents.",
     { count }
   ));
 }

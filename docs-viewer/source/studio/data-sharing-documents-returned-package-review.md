@@ -92,7 +92,10 @@ POST /analytics/api/data-sharing/review
 ```
 
 For documents, it dispatches to `review_returned_document_package`.
-The operation requires selected `record_indices` and writes one Markdown review document for only those selected records:
+When `record_indices` are omitted, the operation reviews every parsed record in the staged file.
+The Analytics review UI omits `record_indices`, so its Review menu actions are complete-file operations.
+The endpoint still accepts explicit `record_indices` for compatibility with lower-level callers.
+The operation writes one Markdown review document:
 
 ```text
 var/analytics/data-sharing/import-preview/{timestamp}-{data_domain}-{profile_id}.md
@@ -104,7 +107,7 @@ The Markdown document front matter includes:
 - `profile_id`
 - `scope`
 
-The body is a table with one row per selected document:
+The body is a table with one row per reviewed document:
 
 - `doc_id`
 - `title`
@@ -112,11 +115,11 @@ The body is a table with one row per selected document:
 - `parent_id`
 
 Review does not mutate source Markdown.
-It is a selected-record review artifact step.
+It is a staged-file review artifact step.
 
-## Review Source Folder Action
+## Review Content Action
 
-The Analytics review page also exposes a documents-only Actions menu item labeled `Create source docs` through the same endpoint:
+The Analytics review page also exposes a documents-only Review menu item labeled `Content` through the same endpoint:
 
 ```text
 POST /analytics/api/data-sharing/review
@@ -127,7 +130,7 @@ The request uses:
 ```json
 {
   "operation": "review",
-  "review_action": "source_folder"
+  "review_action": "content"
 }
 ```
 
@@ -178,14 +181,14 @@ Each row includes:
 The row title comes from the returned record title.
 The row metadata includes the returned `doc_id`, duplicate status, and whether the document exists in the current source context.
 
-The selectable row index is the apply input.
-Apply actions receive selected `record_indices`, not file paths.
+The row index is still included for API compatibility and diagnostics.
+When `record_indices` are omitted, apply actions use every parsed staged record.
+The Analytics review UI omits `record_indices`, so write actions are complete-file operations.
 
 The canonical apply input is still:
 
 - staged returned package filename
-- selected record indices
-- selected apply action
+- apply action
 - confirmation flag
 
 ## Write Actions
@@ -197,7 +200,7 @@ The documents adapter currently exposes these apply actions:
 
 Both actions require explicit confirmation before writing.
 Both parse the staged returned package again at apply time.
-Both operate only on selected record indices.
+Both operate on every parsed staged record when `record_indices` are omitted.
 Both write through Docs Viewer source helpers and run targeted rebuild work after successful writes.
 
 ## Summary Apply
@@ -218,8 +221,8 @@ Returned field used:
 
 Behavior:
 
-- selected records without `doc_id` are skipped
-- duplicate selected `doc_id` values are skipped after the first planned update
+- records without `doc_id` are skipped
+- duplicate `doc_id` values are skipped after the first planned update
 - records with no returned `summary` are skipped
 - empty normalized summaries are skipped
 - records whose proposed summary matches current source summary are skipped
@@ -247,8 +250,8 @@ Returned field used:
 
 Behavior:
 
-- selected records without `doc_id` are skipped
-- duplicate selected `doc_id` values are skipped after the first planned update
+- records without `doc_id` are skipped
+- duplicate `doc_id` values are skipped after the first planned update
 - `parent_id` equal to the record's own `doc_id` is skipped
 - unknown non-empty parent ids produce a warning, because unresolved parents can render at root level depending on scope rules
 - records whose proposed parent matches current source parent are unchanged
@@ -262,13 +265,13 @@ The action does not write summaries, source text, headings, ancestor lists, chil
 Confirmed writes call the shared Docs Viewer write path.
 The write path:
 
-- rewrites selected source Markdown files
-- records write metadata including staged filename, selected record indices, and updated doc ids
+- rewrites source Markdown files for changed staged records
+- records write metadata including staged filename, resolved record indices, and updated doc ids
 - runs targeted docs/search rebuild work for the changed doc ids
 
 The apply payload reports:
 
-- selected records
+- resolved records
 - updates
 - skipped rows
 - warnings

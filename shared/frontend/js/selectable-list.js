@@ -178,7 +178,11 @@ function syncRows(controller) {
     const selectedDescendantCount = descendantsForTree(treeState, id)
       .filter((descendantId) => controller.selectedIds.has(descendantId)).length;
     row.dataset.selected = selected ? "true" : "false";
-    row.setAttribute("aria-selected", selected ? "true" : "false");
+    if (controller.options.readOnly) {
+      row.removeAttribute("aria-selected");
+    } else {
+      row.setAttribute("aria-selected", selected ? "true" : "false");
+    }
     const checkbox = row.querySelector("[data-selectable-list-checkbox='true']");
     if (checkbox instanceof HTMLInputElement) {
       checkbox.checked = selected;
@@ -258,6 +262,10 @@ function renderRows(controller) {
   rootNode.dataset.state = options.constructing ? "constructing" : (currentItems.length ? "ready" : "empty");
   rootNode.setAttribute("role", "listbox");
   rootNode.setAttribute("aria-multiselectable", options.selectionMode === "single" ? "false" : "true");
+  if (options.readOnly) {
+    rootNode.setAttribute("role", "list");
+    rootNode.removeAttribute("aria-multiselectable");
+  }
 
   if (options.constructing) {
     renderStatus(rootNode, "sharedSelectableList__status", options.constructingMessage || "Building list...", "constructing");
@@ -289,6 +297,10 @@ function renderRows(controller) {
     row.setAttribute("role", "option");
     row.setAttribute("aria-disabled", disabled ? "true" : "false");
     row.setAttribute("aria-selected", "false");
+    if (options.readOnly) {
+      row.setAttribute("role", "listitem");
+      row.removeAttribute("aria-selected");
+    }
     const indent = treeEnabled(options)
       ? `${((entry.depth || 0) * Number(options.treeIndentRem || 1.35)).toFixed(2)}rem`
       : itemIndent(options, item, index);
@@ -323,15 +335,17 @@ function renderRows(controller) {
       }
     }
 
-    const label = document.createElement("label");
+    const label = document.createElement(options.readOnly ? "div" : "label");
     label.className = "sharedSelectableList__label";
-    const checkbox = document.createElement("input");
-    checkbox.className = "sharedSelectableList__checkbox";
-    checkbox.type = "checkbox";
-    checkbox.value = id;
-    checkbox.disabled = disabled;
-    checkbox.dataset.selectableListCheckbox = "true";
-    label.appendChild(checkbox);
+    if (!options.readOnly) {
+      const checkbox = document.createElement("input");
+      checkbox.className = "sharedSelectableList__checkbox";
+      checkbox.type = "checkbox";
+      checkbox.value = id;
+      checkbox.disabled = disabled;
+      checkbox.dataset.selectableListCheckbox = "true";
+      label.appendChild(checkbox);
+    }
 
     const text = document.createElement("span");
     text.className = "sharedSelectableList__title";

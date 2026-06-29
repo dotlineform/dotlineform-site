@@ -53,7 +53,20 @@ def record_summary(record: Dict[str, Any]) -> str:
     return str(metadata.get("summary") or "")
 
 
-def selected_record_indices(value: Any) -> list[int]:
+def all_record_indices(records: list[Dict[str, Any]]) -> list[int]:
+    return [
+        int(record.get("record_index"))
+        for record in records
+        if isinstance(record, dict) and isinstance(record.get("record_index"), int)
+    ]
+
+
+def selected_record_indices(value: Any, records: list[Dict[str, Any]]) -> list[int]:
+    if value is None:
+        selected = all_record_indices(records)
+        if not selected:
+            raise ValueError("record_indices must include at least one selected record")
+        return selected
     if not isinstance(value, list):
         raise ValueError("record_indices must be a list")
     selected: list[int] = []
@@ -190,6 +203,7 @@ def review_markdown(
     profile_id: str,
     scope: str,
     records: list[Dict[str, Any]],
+    issues: list[Dict[str, Any]],
 ) -> str:
     lines = [
         "---",
@@ -214,6 +228,38 @@ def review_markdown(
             )
             + " |"
         )
+    if issues:
+        lines.extend([
+            "",
+            "## Issues",
+            "",
+            "| level | code | row | doc_id | title | message |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ])
+        records_by_index = {
+            int(record.get("record_index")): record
+            for record in records
+            if isinstance(record.get("record_index"), int)
+        }
+        for item in issues:
+            if not isinstance(item, dict):
+                continue
+            record_index = item.get("record_index") if isinstance(item.get("record_index"), int) else None
+            record = records_by_index.get(record_index) if record_index is not None else {}
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        markdown_table_cell(item.get("level")),
+                        markdown_table_cell(item.get("code")),
+                        markdown_table_cell(record_index + 1 if record_index is not None else ""),
+                        markdown_table_cell(item.get("doc_id") or record.get("doc_id")),
+                        markdown_table_cell(record.get("title")),
+                        markdown_table_cell(item.get("message")),
+                    ]
+                )
+                + " |"
+            )
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -249,19 +295,21 @@ def review_returned_document_package(
     record_indices: Any,
 ) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
-    selected_indices = selected_record_indices(record_indices)
     report = parse_returned_document_records(
         repo_root=repo_root,
         scope=normalized_scope,
         staged_filename=staged_filename,
         staging_root=staging_root,
     )
-    report["selected_record_indices"] = selected_indices
+    report_records = [record for record in report.get("records", []) if isinstance(record, dict)]
     if not report.get("ok"):
+        report["selected_record_indices"] = []
         report["selected_records"] = []
         report["review_file"] = ""
         report["review_written"] = False
         return report
+    selected_indices = selected_record_indices(record_indices, report_records)
+    report["selected_record_indices"] = selected_indices
 
     records = selected_records(report, selected_indices)
     profile_id = normalize_text(report.get("source_profile_id"))
@@ -279,6 +327,7 @@ def review_returned_document_package(
         profile_id=profile_id,
         scope=source_scope,
         records=records,
+        issues=[issue for issue in report.get("issues", []) if isinstance(issue, dict)],
     )
     if not dry_run and report.get("ok"):
         output_path.parent.mkdir(parents=True, exist_ok=True)

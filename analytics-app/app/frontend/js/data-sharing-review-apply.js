@@ -7,9 +7,6 @@ import {
 import {
   confirmDataSharingReviewApply
 } from "./data-sharing-review-modals.js";
-import {
-  selectedDataSharingReviewRecordIndices
-} from "./data-sharing-review-render.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -64,12 +61,11 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
   const action = state.applyActions.find((item) => item.id === actionId);
   if (!action || action.status !== "active") return;
   const stagedFilename = selectedFileName(state);
-  const recordIndices = selectedDataSharingReviewRecordIndices(state);
-  if (!stagedFilename || !recordIndices.length) {
+  if (!stagedFilename) {
     setStatus(
       state.statusNode,
       "error",
-      action.selectionRequiredMessage || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
+      action.selectionRequiredMessage || getAnalyticsText(state.config, "data_sharing_review.apply_selection_required", "Select a staged file first.")
     );
     return;
   }
@@ -80,7 +76,7 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
   setStatus(
     state.statusNode,
     "",
-    action.preflightStatus || getAnalyticsText(state.config, "data_sharing_review.apply_preflight_status", "Checking selected rows...")
+    action.preflightStatus || getAnalyticsText(state.config, "data_sharing_review.apply_preflight_status", "Checking staged records...")
   );
 
   try {
@@ -89,7 +85,6 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
       operation: "apply",
       apply_action: action.id,
       staged_filename: stagedFilename,
-      record_indices: recordIndices,
       confirm: false
     });
     const countsTextValue = actionCountsText(action, preflight.counts);
@@ -111,14 +106,13 @@ export async function runDataSharingReviewApplyAction(state, actionId, lifecycle
     setStatus(
       state.statusNode,
       "",
-      action.runningStatus || getAnalyticsText(state.config, "data_sharing_review.apply_running_status", "Applying selected changes...")
+      action.runningStatus || getAnalyticsText(state.config, "data_sharing_review.apply_running_status", "Applying staged changes...")
     );
     const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.dataDomain,
       operation: "apply",
       apply_action: action.id,
       staged_filename: stagedFilename,
-      record_indices: recordIndices,
       confirm: true,
       activity_context: actionActivityContext(state, action, stagedFilename)
     });

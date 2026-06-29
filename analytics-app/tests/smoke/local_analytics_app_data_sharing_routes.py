@@ -129,7 +129,20 @@ def config_payload() -> dict[str, object]:
                         "status": "active",
                         "message": "",
                         "selection_model": "records",
-                        "apply_actions": [],
+                        "apply_actions": [
+                            {
+                                "id": "summary_apply",
+                                "label": "Update summaries",
+                                "status": "active",
+                                "title": "Update source document summaries from returned rows.",
+                            },
+                            {
+                                "id": "hierarchy_apply",
+                                "label": "Apply hierarchy",
+                                "status": "active",
+                                "title": "Update source document hierarchy from returned rows.",
+                            },
+                        ],
                     },
                 ],
             }
@@ -268,6 +281,9 @@ def install_mock_data_sharing_api(page, returned_payload: dict[str, object] | No
             payload = review_payload()
         elif parsed.path == "/analytics/api/data-sharing/review":
             payload = review_payload()
+            body = call.get("body") if isinstance(call.get("body"), dict) else {}
+            if body.get("review_action") == "summaries":
+                payload["summary_text"] = "Generated Library summaries review."
         else:
             payload = {"ok": False, "error": f"Unexpected Data Sharing API route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
@@ -375,19 +391,25 @@ def assert_review(page, base_url: str) -> None:
     if not review_list.evaluate("node => node.classList.contains('sharedSelectableList')"):
         raise AssertionError("review list should use the shared selectable list component")
     expect(review_list.locator("[data-selectable-list-row='true']")).to_have_count(2, timeout=10_000)
+    expect(review_list.locator("input.sharedSelectableList__checkbox")).to_have_count(0, timeout=10_000)
     expect(review_list).to_contain_text("Library", timeout=10_000)
     expect(review_list).to_contain_text("Alpha", timeout=10_000)
-    expect(page.locator("#dataSharingReviewActionsButton")).to_be_enabled(timeout=10_000)
-    page.locator("#dataSharingReviewActionsButton").click()
-    expect(page.locator("#dataSharingReviewActionsMenu")).to_contain_text("Create source docs", timeout=10_000)
-    page.keyboard.press("Escape")
-    expect(page.locator("#dataSharingReviewRun")).to_be_disabled(timeout=10_000)
-    page.locator("#dataSharingReviewSelectAll").click()
-    expect(page.locator("#dataSharingReviewSelectionSummary")).to_contain_text("2 documents selected.", timeout=10_000)
     expect(page.locator("#dataSharingReviewRun")).to_be_enabled(timeout=10_000)
     page.locator("#dataSharingReviewRun").click()
+    expect(page.locator("#dataSharingReviewMenu")).to_contain_text("Content", timeout=10_000)
+    expect(page.locator("#dataSharingReviewMenu")).to_contain_text("Summaries", timeout=10_000)
+    expect(page.locator("#dataSharingReviewMenu")).to_contain_text("Hierarchy", timeout=10_000)
+    page.keyboard.press("Escape")
+    expect(page.locator("#dataSharingReviewActionsButton")).to_be_enabled(timeout=10_000)
+    page.locator("#dataSharingReviewActionsButton").click()
+    expect(page.locator("#dataSharingReviewActionsMenu")).to_contain_text("Update summaries", timeout=10_000)
+    expect(page.locator("#dataSharingReviewActionsMenu")).to_contain_text("Apply hierarchy", timeout=10_000)
+    expect(page.locator("#dataSharingReviewActionsMenu")).not_to_contain_text("Create source docs", timeout=10_000)
+    page.keyboard.press("Escape")
+    page.locator("#dataSharingReviewRun").click()
+    page.locator("#dataSharingReviewMenu [data-data-sharing-review-action='summaries']").click()
     expect(page.locator("#dataSharingReviewStatus")).to_contain_text(
-        "Generated Library returned package review.",
+        "Generated Library summaries review.",
         timeout=10_000,
     )
 
