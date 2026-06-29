@@ -42,7 +42,7 @@ data-sharing/adapters/documents/
 `returned.py` delegates returned-package list, review, and apply operations to the document-record family.
 
 `families/documents.py` owns document-record implementation.
-It calls Docs Viewer data-sharing helpers for selectable records, package preparation, returned package listing, returned package review, and source apply actions.
+It calls Docs Viewer data-sharing helpers for selectable records, package preparation, returned package listing, returned package review, temporary review source-folder creation, and source apply actions.
 
 ## Scope And Selectable Records
 
@@ -72,10 +72,22 @@ The adapter adds Data Sharing context and summary text, and logs a `docs-export`
 ## Returned Packages
 
 Returned packages are staged under the shared Data Sharing import-staging root.
-The documents adapter delegates parsing and review-document generation to Docs Viewer returned-package helpers.
+The documents adapter delegates parsing, review-document generation, and temporary review source-folder generation to Docs Viewer returned-package helpers.
 
 Returned-record loading produces document-oriented review rows from the selected staged file.
 Review produces one Markdown review document for the selected rows.
+
+The documents review handler also supports `review_action: "source_folder"` for returned `document-content` packages.
+That action validates the complete staged file, derives a safe folder id from internal export metadata, and writes:
+
+```text
+var/analytics/data-sharing/import-preview/<folder_id>/
+  manifest.json
+  source/*.md
+```
+
+Those folders are disposable review inputs for the separate review app path.
+They are not Docs Viewer scopes, are not registered in scope config, and do not mutate canonical source Markdown.
 
 Current apply actions are:
 

@@ -212,6 +212,9 @@ function syncDataSharingReviewPrimaryActionState(state) {
   const selectedFile = selectedDataSharingReviewFile(state);
   const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   state.previewButton.disabled = state.isRunning || !state.serviceAvailable || !selectedFile || !state.dataDomain || !selectedRecordCount;
+  if (state.sourceFolderButton) {
+    state.sourceFolderButton.disabled = state.isRunning || !state.serviceAvailable || !selectedFile || state.dataDomain !== "documents";
+  }
 }
 
 export function setDataSharingReviewControlsDisabled(state, disabled) {
@@ -222,6 +225,9 @@ export function setDataSharingReviewControlsDisabled(state, disabled) {
   const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size || !state.reviewReady;
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !selectedFile || !state.dataDomain || !selectedRecordCount;
+  if (state.sourceFolderButton) {
+    state.sourceFolderButton.disabled = disabled || !state.serviceAvailable || !selectedFile || state.dataDomain !== "documents";
+  }
   state.selectAllButton.disabled = disabled || !selectableRecordCount;
   state.clearButton.disabled = disabled || !state.selectedPreviewIds.size;
   if (state.selectableList) state.selectableList.update({ disabled: Boolean(disabled) });

@@ -15,6 +15,7 @@ Related config:
 - `data-sharing/config/adapters.json`
 - `docs-viewer/services/docs_import.py`
 - `docs-viewer/services/docs_data_sharing/review.py`
+- `docs-viewer/services/docs_data_sharing/review_sources.py`
 - `docs-viewer/services/docs_data_sharing/apply.py`
 
 The prepare/export side is covered by [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles).
@@ -112,6 +113,52 @@ The body is a table with one row per selected document:
 
 Review does not mutate source Markdown.
 It is a selected-record review artifact step.
+
+## Review Source Folder Action
+
+The Analytics review page also exposes a documents-only `Create review folder` action through the same endpoint:
+
+```text
+POST /analytics/api/data-sharing/review
+```
+
+The request uses:
+
+```json
+{
+  "operation": "review",
+  "review_action": "source_folder"
+}
+```
+
+For `document-content` packages, this action creates or regenerates one temporary source folder for the complete staged returned file:
+
+```text
+var/analytics/data-sharing/import-preview/<folder_id>/
+  manifest.json
+  source/
+    <doc_id>.md
+```
+
+The folder id is derived only from the staged file's `export_id` and matching internal metadata:
+
+```text
+<metadata generated_at as YYYYMMDD-HHMMSS>-<metadata data_domain>-<metadata profile_id>
+```
+
+There is no fallback to staged filename, returned filename, row shape, or embedded profile fields. Missing or mismatched metadata fails closed.
+
+The source-folder action:
+
+- validates `doc_id`, `title`, and string `content` for each returned row
+- writes one Markdown file per valid row
+- records invalid rows in the manifest and response
+- copies only allowed front matter fields from returned rows: `title`, `parent_id`, `summary`, and `viewable`
+- writes the returned `content` field as the Markdown body without content normalization or conversion
+- treats `content_format` as manifest metadata only
+- replaces an existing folder with the same metadata-derived id when the user explicitly runs the action
+
+It does not build generated review payloads, register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown.
 
 ## Review Rows
 

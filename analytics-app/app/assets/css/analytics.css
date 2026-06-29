@@ -1109,6 +1109,34 @@ textarea.analytics__input:disabled {
   font-size: var(--font-small);
 }
 
+.dataSharingReviewPage__sourceFolderResult {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.35rem 0.8rem;
+  font-size: var(--font-small);
+  line-height: var(--line-snug, 1.25);
+}
+
+.dataSharingReviewPage__sourceFolderResult[hidden] {
+  display: none;
+}
+
+.dataSharingReviewPage__sourceFolderField {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+  min-width: 0;
+}
+
+.dataSharingReviewPage__sourceFolderField span {
+  color: var(--muted, var(--analytics-muted-body));
+}
+
+.dataSharingReviewPage__sourceFolderField strong {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
 .dataSharingReviewPage__controls {
   display: flex;
   flex-direction: column;

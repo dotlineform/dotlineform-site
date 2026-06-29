@@ -34,6 +34,7 @@ EXPORT_METADATA_FIELDS = {
     "record_shape",
     "generated_at",
     "supports_return_import",
+    "content_format",
     "selected_doc_ids",
     "source_last_updated",
     "counts",

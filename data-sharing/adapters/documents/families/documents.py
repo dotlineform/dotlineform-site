@@ -17,6 +17,7 @@ from docs_data_sharing.package import (
 )
 from docs_data_sharing.review import review_returned_document_package
 from docs_data_sharing.review import parse_returned_document_records
+from docs_data_sharing.review_sources import create_review_source_folder
 
 from ..context import (
     DocumentsDataSharingDependencies,
@@ -183,9 +184,43 @@ def review_returned_package(
     if operation != "review":
         raise ValueError("operation must be review")
     adapter = require_documents_adapter(adapter)
+    review_action = str(body.get("review_action") or body.get("action") or "record_review").strip()
     selection = body.get("selection") if isinstance(body.get("selection"), dict) else {}
     scope = resolve_docs_scope(adapter, selection.get("docs_scope"), required=False)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
+    if review_action == "source_folder":
+        report = create_review_source_folder(
+            repo_root,
+            scope=scope,
+            staged_filename=staged_filename,
+            dry_run=dry_run,
+            staging_root=adapter.path("returned_package_staging_root"),
+            preview_root=adapter.path("review_output_root"),
+        )
+        report = attach_adapter_context(report, adapter)
+        if dependencies is not None:
+            dependencies.log_event(
+                repo_root,
+                "docs-import-review-source-folder",
+                {
+                    "data_domain": adapter.data_domain,
+                    "adapter_id": adapter.adapter_id,
+                    "scope": scope,
+                    "staged_filename": staged_filename,
+                    "dry_run": dry_run,
+                    "source_export_id": str(report.get("source_export_id") or ""),
+                    "folder_id": str(report.get("folder_id") or ""),
+                    "records": int(report.get("counts", {}).get("records") or 0),
+                    "valid_records": int(report.get("counts", {}).get("valid_records") or 0),
+                    "skipped_records": int(report.get("counts", {}).get("skipped_records") or 0),
+                    "errors": int(report.get("counts", {}).get("errors") or 0),
+                    "warnings": int(report.get("counts", {}).get("warnings") or 0),
+                    "written": bool(report.get("review_source_folder_written")),
+                },
+            )
+        return report
+    if review_action != "record_review":
+        raise ValueError("review_action must be record_review or source_folder")
     record_indices = body.get("record_indices", [])
     report = review_returned_document_package(
         repo_root,
