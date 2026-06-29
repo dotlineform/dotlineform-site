@@ -25,11 +25,18 @@ docs-viewer/services/docs_html_markdown.py
 
 Data Sharing should call `docs_html_markdown.html_to_markdown(...)`. It should not duplicate HTML-to-Markdown logic and should not depend on import-preview summary helpers.
 
+This request only owns Markdown export. The content-review sessions request owns:
+
+- creating temporary review source Markdown from a staged returned package
+- copying returned `content` verbatim into review session source files
+- building review-session generated payloads
+- opening the temporary docs in a review-version of Docs Viewer.
+
 ## Package Shape
 
-The exported file should include `content_format` at package level.
+The exported file should include `content_format` at package level. This is only for the benefit of the recipient external service so it knows what text format is being supplied in the `content` field.
 
-Do not support mixed content formats within one package.
+There is no requirement to support mixed content formats within one package.
 
 For JSON package exports:
 
@@ -42,7 +49,7 @@ For JSON package exports:
     {
       "doc_id": "example",
       "title": "Example",
-      "content": "# Example\n\n Markdown body."
+      "content": "# Example\n\n Markdown or plain text body."
     }
   ]
 }
@@ -52,7 +59,7 @@ For JSONL package exports, put `content_format` in the header row:
 
 ```json
 {"record_type":"data_sharing_header","export_id":"ds_20260628T120000Z","profile_id":"document-content","content_format":"markdown"}
-{"doc_id":"example","title":"Example","source_markdown":"# Example\n\nReturned Markdown body."}
+{"doc_id":"example","title":"Example","content":"# Example\n\nReturned Markdown body."}
 ```
 
 Plain-text exports should continue to declare:
@@ -63,35 +70,9 @@ Plain-text exports should continue to declare:
 }
 ```
 
-and should continue to use the existing plain-text content field.
-
-## Record Fields
-
-For Markdown packages, each record should include:
-
-- `doc_id`
-- `title`
-- `source_markdown`
-
-When already exported by the profile, fields intended for review-session front matter should remain available, for example:
-
-- `parent_id`
-- `summary`
-- `viewable`
-
-Relationship/context fields can still be exported for review context, but they should not automatically become review-session front matter:
-
-- `children`
-- `ancestors`
-- `parent_title`
-- `current_summary`
-- operational metadata
-
-Front matter mapping belongs to the later content-review session builder.
-
 ## Conversion Source
 
-The Markdown content should be derived from the same rendered/generated document content used by the current plain-text export path.
+The Markdown content should be derived from the same generated document content used by the current plain-text export path.
 
 Expected source flow:
 
@@ -112,31 +93,13 @@ The converter should preserve what it currently supports, including:
 - simple tables where supported
 - sanitized inline SVG handling where applicable
 
-The export should not promise perfect canonical Docs Viewer Markdown. It only needs to provide materially better structured content than plain text for review-session workflows.
-
-## Import/Returned Package Behavior
-
-The returned package metadata should identify the content format so import/review behavior is self-describing.
-
-Import/review code should handle whichever supported format the package declares.
-
-For full content-review sessions, only `content_format: "markdown"` should be accepted.
-
-If a staged `document-content` file declares `content_format: "plain_text"`, the content-review sessions UI should either:
-
-- block full content-review session creation, or
-- label the result as lower-fidelity text review rather than document-content review
-
-The session builder should copy the returned Markdown field verbatim into temporary review source Markdown. It should not convert, normalize, wrap, enrich, or linkify returned content.
-
 ## Implementation Tasks
 
 ### 1. Profile/config surface
 
 - Add a prepare/export option for `document-content` content format.
-- Keep the default existing behavior as plain text unless the UI or caller explicitly selects Markdown.
+- Default selection is Markdown.
 - Add package-level `content_format` to JSON and JSONL exports.
-- Ensure package-level format is not mixed per record.
 
 ### 2. Markdown payload generation
 
@@ -150,16 +113,12 @@ The session builder should copy the returned Markdown field verbatim into tempor
 
 - Add a prepare/export formatting control where `document-content` is prepared.
 - Make the chosen format visible before export.
-- Ensure returned-package preview/review surfaces show `content_format`.
-- Keep wording clear that Markdown is required for full content-review sessions.
 
 ### 4. Tests
 
 - Add tests for package-level `content_format` in JSON output.
 - Add tests for package-level `content_format` in JSONL header rows.
-- Add tests that Markdown exports use `source_markdown`.
-- Add tests that plain-text exports keep existing `content`.
-- Add tests that mixed per-record content formats are not produced.
+- Add tests that Markdown and plain-text exports use `content`.
 - Add a focused converter integration test using representative generated HTML.
 
 ## Verification
@@ -170,17 +129,4 @@ Manual verification:
 - prepare a `document-content` package with `content_format: "markdown"`
 - confirm JSON and JSONL outputs declare package-level `content_format`
 - confirm Markdown records contain `source_markdown`
-- confirm returned-package staging can read and display the declared content format
-
-## Relationship To Content Review Sessions
-
-This request owns Markdown export.
-
-The content-review sessions request owns:
-
-- creating temporary review source Markdown from a staged returned package
-- copying returned `source_markdown` verbatim into review session source files
-- building review-session generated payloads
-- opening the temporary docs in review UI
-
-Sessions should not implement HTML-to-Markdown conversion themselves. They should require this export capability first.
+- confirm returned-package staging can read and display the declared content format.
