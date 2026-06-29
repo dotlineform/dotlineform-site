@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 import docs_scope_manifest
 import docs_source_config_settings
+import docs_static_html_export
 import docs_source_model as source_model
 from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS, is_public_readonly_scope, path_label, resolve_scope_path
 
@@ -96,6 +97,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "published_docs_root": config.publish_output.as_posix(),
                 "published_search_index": config.publish_search_output.as_posix(),
             },
+            "static_html_export": docs_static_html_export.scope_static_html_export_capability(repo_root, scope, config),
         }
     return {
         "ok": True,
@@ -126,6 +128,10 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "status": True,
                 "confirm": True,
                 "apply": True,
+            },
+            "static_html_export": {
+                "apply": True,
+                "delete": True,
             },
             "scopes": scopes,
         },

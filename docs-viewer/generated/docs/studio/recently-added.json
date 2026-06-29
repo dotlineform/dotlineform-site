@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "docs-viewer-export",
+      "title": "Export",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-export.json",
+      "added_date": "2026-06-29",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "site-request-docs-document-content-markdown-export",
       "title": "Docs Document Content Markdown Export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-document-content-markdown-export.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "route-ready-state",
-      "title": "Route Ready State",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
-      "added_date": "2026-06-25",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-06-28T21:59:02Z"
+  "generated_at": "2026-06-29T14:16:47Z"
 }

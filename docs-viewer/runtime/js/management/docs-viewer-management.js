@@ -7,6 +7,7 @@ import {
   scopeCreateSupported,
   scopeDeleteSupported,
   scopePublishSupported,
+  scopeStaticHtmlExportSupported,
   scopeLifecycleDeleteTargets,
   subScopeCreateSupported,
   subScopeDeleteSupported,
@@ -124,6 +125,7 @@ export function initDocsViewerManagement(context) {
   var manageNewSubScopeButton = document.getElementById("docsViewerManageNewSubScopeButton");
   var manageDeleteSubScopeButton = document.getElementById("docsViewerManageDeleteSubScopeButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
+  var manageExportButton = document.getElementById("docsViewerManageExportButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
@@ -454,6 +456,11 @@ export function initDocsViewerManagement(context) {
     if (managePublishButton) {
       var publishAvailable = state.managementAvailable && scopePublishSupported(state.managementCapabilities, viewerScope());
       managePublishButton.disabled = state.managementBusy || !publishAvailable;
+    }
+    if (manageExportButton) {
+      var exportAvailable = state.managementAvailable && scopeStaticHtmlExportSupported(state.managementCapabilities, viewerScope());
+      manageExportButton.hidden = !exportAvailable;
+      manageExportButton.disabled = state.managementBusy || !exportAvailable;
     }
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
@@ -816,6 +823,13 @@ export function initDocsViewerManagement(context) {
         actionController.handlePublishDocs();
       });
     }
+    if (manageExportButton) {
+      manageExportButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        actionController.handleExportDocs();
+      });
+    }
     if (manageActionsButton) {
       manageActionsButton.addEventListener("click", function () {
         toggleManageActionsMenu();
@@ -941,7 +955,8 @@ export function initDocsViewerManagement(context) {
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       setManagementBusy: setManagementBusy,
-      setManagementMessage: setManagementMessage
+      setManagementMessage: setManagementMessage,
+      viewerScope: viewerScope
     }
   });
 

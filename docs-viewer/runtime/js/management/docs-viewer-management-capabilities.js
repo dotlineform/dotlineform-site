@@ -80,6 +80,24 @@ export function scopePublishSupported(capabilities, scope) {
   );
 }
 
+export function scopeStaticHtmlExportSupported(capabilities, scope) {
+  var scopeCaps = scopeManagementCapabilities(capabilities, scope);
+  var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"
+    ? capabilities.static_html_export
+    : null;
+  var scopeExport = scopeCaps && scopeCaps.static_html_export && typeof scopeCaps.static_html_export === "object"
+    ? scopeCaps.static_html_export
+    : null;
+  return Boolean(
+    exportCapabilities &&
+    exportCapabilities.apply &&
+    scopeCaps &&
+    scopeCaps.available &&
+    scopeExport &&
+    scopeExport.apply
+  );
+}
+
 export function scopeLifecycleDeleteTargets(capabilities) {
   var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
     ? capabilities.scopes

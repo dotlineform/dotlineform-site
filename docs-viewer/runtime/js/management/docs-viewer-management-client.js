@@ -93,6 +93,12 @@ export function applyManagedDocsPublish(options) {
   }, options), options);
 }
 
+export function applyManagedDocsStaticHtmlExport(options) {
+  return fetchManagementJson("/docs/export/static-html/apply", "POST", scopedPayload({
+    action: "export"
+  }, options), options);
+}
+
 export function readManagedDocSource(docId, options) {
   var settings = options || {};
   var scope = encodeURIComponent(String(settings.scope || "").trim());

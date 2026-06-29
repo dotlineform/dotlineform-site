@@ -52,6 +52,13 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Publish"
   },
   {
+    id: "docsViewerManageExportButton",
+    action: "export-docs",
+    emoji: "⬇️",
+    label: "Export",
+    hidden: true
+  },
+  {
     id: "docsViewerManageSettingsButton",
     action: "settings",
     emoji: "⚙️",

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bc8e80bd3b7e43553d4f4e5f25404e8b",
-    "generated_at_utc": "2026-06-28T21:59:02Z",
-    "count": 232
+    "version": "blake2b-179a260b6e550ed8028d12842538577d",
+    "generated_at_utc": "2026-06-29T14:16:47Z",
+    "count": 233
   },
   "entries": [
     {
@@ -1353,10 +1353,10 @@
       "kind": "doc",
       "title": "Docs Viewer Static HTML Export",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-local-public-projection",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-06-29",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-28 • Change Requests",
+      "display_meta": "2026-06-29 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-local-public-projection",
         "site",
@@ -1373,12 +1373,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-28",
+        "2026-06-29",
         "2026",
         "06",
-        "28"
+        "29"
       ],
-      "search_text": "site-request-docs-viewer-local-public-projection site request docs viewer local public projection docs viewer static html export static html export change requests change requests 2026-06-28 2026 06 28"
+      "search_text": "site-request-docs-viewer-local-public-projection site request docs viewer local public projection docs viewer static html export static html export change requests change requests 2026-06-29 2026 06 29"
     },
     {
       "id": "site-request-docs-viewer-view-mode-registry",
@@ -2374,6 +2374,28 @@
         "24"
       ],
       "search_text": "site-request-docs-viewer-embedded-detail-documents site request docs viewer embedded detail documents embedded detail documents docs viewer 2026-06-24 2026 06 24"
+    },
+    {
+      "id": "docs-viewer-export",
+      "kind": "doc",
+      "title": "Export",
+      "href": "/docs/?scope=studio&doc=docs-viewer-export",
+      "last_updated": "2026-06-29",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-06-29 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-export",
+        "docs",
+        "viewer",
+        "export",
+        "docs viewer",
+        "2026-06-29",
+        "2026",
+        "06",
+        "29"
+      ],
+      "search_text": "docs-viewer-export docs viewer export docs viewer 2026-06-29 2026 06 29"
     },
     {
       "id": "docs-viewer-import-source-registry-spec",

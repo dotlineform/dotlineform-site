@@ -2,10 +2,19 @@
 doc_id: site-request-docs-viewer-local-public-projection
 title: Docs Viewer Static HTML Export
 added_date: 2026-06-28
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 parent_id: change-requests
 ---
 # Docs Viewer Static HTML Export
+
+Status: implemented 2026-06-29.
+
+Implemented owner surfaces:
+
+- exporter service: `docs-viewer/services/docs_static_html_export.py`
+- management apply endpoint: `POST /docs/export/static-html/apply`
+- management delete endpoint: `POST /docs/export/static-html/delete`
+- Docs Viewer Actions menu item: `Export` for repo-backed local scopes with static export capability
 
 Implement a static HTML export workflow.
 
@@ -78,14 +87,13 @@ Each document page can be rendered from a small template:
 <body>
   <nav><a href="../index.html">Index</a></nav>
   <main>
-    <h1>{{ title }}</h1>
     {{ content_html }}
   </main>
 </body>
 </html>
 ```
 
-Metadata such as `title` must be HTML-escaped. `content_html` can be inserted as generated HTML from the existing Docs Viewer builder.
+Metadata such as `<title>` must be HTML-escaped. `content_html` can be inserted as generated HTML from the existing Docs Viewer builder and already includes the source document heading.
 
 The root `index.html` should render a simple nested tree from `index-tree.json`, with links to `docs/<doc_id>.html`.
 

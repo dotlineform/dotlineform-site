@@ -29,6 +29,7 @@ import docs_review_sessions  # noqa: E402
 import docs_scope_manifest  # noqa: E402
 import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
+import docs_static_html_export  # noqa: E402
 import docs_sub_scope_lifecycle  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
@@ -167,5 +168,9 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_publish_gate.publish_confirm(repo_root, body)
     if path == routes.PUBLISH_APPLY_PATH:
         return HTTPStatus.OK, docs_publish_gate.publish_apply(repo_root, body)
+    if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:
+        return HTTPStatus.OK, docs_static_html_export.build_static_html_export(repo_root, body)
+    if path == routes.STATIC_HTML_EXPORT_DELETE_PATH:
+        return HTTPStatus.OK, docs_static_html_export.delete_static_html_export(repo_root, body)
 
     raise FileNotFoundError("Not found")
