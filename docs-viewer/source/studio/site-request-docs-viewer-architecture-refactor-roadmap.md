@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-architecture-refactor-roadmap
 title: Docs Viewer Architecture Assessment And Refactor Roadmap
 added_date: 2026-07-10
-last_updated: 2026-07-10
+last_updated: 2026-07-11
 ui_status: planned
 parent_id: change-requests
 viewable: true
@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap proposed.
+Assessment complete; roadmap proposed, documentation workstream identified, and legacy documentation-scope separation added as the first functional documentation task.
 
 Implementation should be planned as behavior-preserving refactor slices before work resumes on [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow).
 
@@ -23,15 +23,16 @@ Docs Review is a useful pressure test because it needs the existing tree, docume
 
 The sequence is:
 
-1. establish current contracts and baseline checks
-2. replace the binary public/manage model with explicit app context and capabilities
-3. introduce a generated-data/source provider boundary
-4. make route features and startup phases explicit
-5. centralize view, display-mode, and toolbar-control projection
-6. reduce only the coordinator responsibilities touched by those changes
-7. reassess Docs Review against the new contracts
-8. implement Docs Review as a separate product slice
-9. continue broader non-blocking maintainability work independently
+1. establish a documentation authority map, current contracts, and baseline checks
+2. separate the legacy `studio` documentation corpus into intentional product and shared-development scopes
+3. replace the binary public/manage model with explicit app context and capabilities
+4. introduce a generated-data/source provider boundary
+5. make route features and startup phases explicit
+6. centralize view, display-mode, and toolbar-control projection
+7. reduce only the coordinator responsibilities touched by those changes
+8. reassess Docs Review against the new contracts
+9. implement Docs Review as a separate product slice
+10. continue the broader documentation rewrite and non-blocking maintainability work as separately tracked workstreams
 
 Do not mix review-folder endpoints, review UI, promotion behavior, or new chapter creation into the foundation refactor.
 
@@ -49,7 +50,8 @@ This assessment covers:
 - local service routing and capability projection
 - scope lifecycle and canonical mutation planning
 - config ownership
-- test architecture and durable documentation
+- test architecture
+- user, operator, architecture, reference, and change-request documentation
 
 It does not propose a whole-system rewrite.
 
@@ -86,7 +88,8 @@ The highest-value refactors are not determined by file size alone. They are the 
 | 6 | management coordinator | `docs-viewer-management.js` still coordinates several independent workflows | partial |
 | 7 | state-domain enforcement | named domains exist, but fields and mutable facades still overlap | partial |
 | 8 | management/backend lifecycle structure | scope lifecycle, manifest, mutation, and HTTP dispatch have broad surfaces | no, except clean promotion handoff |
-| 9 | config/test/docs consolidation | several declarative layers and durable docs describe overlapping models | no, but should follow each slice |
+| cross-cutting | documentation authority and information architecture | 63 directly related Docs Viewer/request documents have no clear user-guide entrypoint and mix current behavior, implementation inventory, future design, and historical decisions | the authority map is required; the full rewrite is not |
+| 9 | config/test/CSS consolidation | several declarative layers and tests describe overlapping models | no |
 
 ## Finding 1: Binary Public/Manage Context
 
@@ -403,9 +406,21 @@ Refactor testing should prefer:
 
 Do not expand permanent tests around modal timing, control copy, focus choreography, or internal implementation strings.
 
-## Finding 12: Durable Docs Need Reconciliation
+## Finding 12: Documentation Needs Its Own Workstream
 
 The runtime boundary, module ownership, panel hosts, toolbar model, info panel, view capability contract, JavaScript inventory, and view/mode registry request describe different stages of the ongoing extraction.
+
+This is larger than identifying a few stale requests. The current cluster contains 63 directly related Docs Viewer and Docs Viewer request documents. Several current-state documents exceed 300 lines, the overview includes a long implementation inventory, and there is no obvious task-oriented Docs Viewer user-guide entrypoint.
+
+The documents currently serve several legitimate but poorly separated purposes:
+
+- user guidance: how to browse, search, edit, import, export, rebuild, and manage documents
+- operator workflow: routes, services, setup, publishing, troubleshooting, and safe local operations
+- architecture: current boundaries, ownership, state, data flow, authority, and invariants
+- reference and inventory: files, fields, endpoints, generated payloads, and module catalogues
+- change requests and history: proposed behavior, implementation sequence, tradeoffs, and superseded decisions
+
+These purposes should not be collapsed into one large guide. They need explicit entrypoints and cross-links, with one current owner for each subject.
 
 Examples of likely drift include:
 
@@ -415,7 +430,56 @@ Examples of likely drift include:
 - how public/manage access relates to backend authority
 - whether a future registry is code-owned or config-owned
 
-Each refactor slice must update the durable owner docs in the same change. Historical requests should not remain the only explanation of current architecture.
+Each refactor slice must update the affected user guidance and durable architecture owner in the same change. Historical requests should not remain the only explanation of current architecture.
+
+The first deliverable is an inventory and authority map, not a bulk rewrite. It should record, for every related document:
+
+- document type and intended audience
+- whether it describes current behavior, a proposal, or history
+- the subject for which it is authoritative, if any
+- overlapping or contradictory documents
+- disposition: keep, focus, split, merge, supersede, or remove
+- user-facing task coverage and known gaps
+
+The companion subject map should answer `subject -> current durable owner -> user workflow guide -> relevant historical request`. This gives Codex and maintainers a reliable starting point while the longer rewrite proceeds.
+
+### Legacy `studio` Scope
+
+The `studio` scope is a historical container rather than a coherent documentation boundary. The applications originally ran as Studio routes and their documentation remained in `docs-viewer/source/studio/` after Docs Viewer and Analytics became standalone local applications.
+
+The current Studio index exposes 13 top-level subject roots, including Docs Viewer, Analytics, Data Sharing, Admin, shared architecture, search, testing, UI, local setup, and change requests. Keeping all of these under `studio` obscures product ownership and makes the scope name misleading.
+
+The target scope model should be confirmed by D0, with this starting structure:
+
+| scope | intended ownership |
+| --- | --- |
+| `docs-viewer` | Docs Viewer runtime, services, document workflows, and related change requests |
+| `studio` | Local Studio and catalogue-management workflows |
+| `analytics` | Analytics, tags, and Data Sharing |
+| `development` or `platform` | shared architecture, setup, testing, UI conventions, search infrastructure, and development workflow |
+| `admin` | a likely separate scope because Admin is already a standalone app with a substantial documentation subtree |
+
+The exact neutral shared-scope name and the Admin boundary should be resolved from the D0 inventory rather than leaving ambiguous documents in `studio` by default.
+
+This separation does not require separate documentation applications or routes. The existing `/docs/` management app and scope selector already support multiple local committed scopes. The work is primarily source/config migration, link correction, generated-output setup, and validation.
+
+### Search Consequence
+
+Docs Viewer search indexes and recently-added lists are scope-specific. Splitting the legacy corpus therefore improves local relevance but removes the accidental appearance of one searchable development corpus.
+
+The current docs search is not literally title-only, but its indexed search terms are limited to document ID, title, parent title, and last-updated value. The builder does not currently include the existing front-matter `summary`, headings, or document body text in the docs search index.
+
+Cross-scope and content-aware documentation search should be a separate change request, not hidden inside the scope migration. Its minimum requirements should include:
+
+- an all-local-scopes search option while preserving isolated public-scope search behavior
+- scope identity and canonical scope-aware URLs on every result
+- explicit current-scope versus all-scopes filtering
+- `summary` as a first-class indexed and ranked field, below title matches but above broad body matches
+- a decision on heading and body-text indexing, index size, result excerpts, and ranking
+- summary coverage and quality reporting so missing or weak summaries are visible
+- a summary backfill workflow that can use the documentation rewrite, Data Sharing round trips, or the search upgrade itself without making scope migration depend on complete summaries
+
+Data Sharing already provides a route for externally enriching documents and populating summary fields. The documentation rewrite can improve summaries at source, while the search change request should own how those summaries are indexed, ranked, displayed, and handled when absent.
 
 ## Target Architecture
 
@@ -447,7 +511,9 @@ Ownership rules:
 
 | phase | title | relationship to Docs Review |
 | --- | --- | --- |
-| 0 | baseline and contract reconciliation | prerequisite assessment |
+| D0 | documentation inventory and authority map | prerequisite to foundation planning; not a full rewrite |
+| D1 | documentation scope separation | first functional documentation task; not a Docs Review runtime prerequisite |
+| 0 | runtime baseline and prerequisite contract reconciliation | prerequisite assessment |
 | 1 | app context and authority | required |
 | 2 | provider boundary | required |
 | 3 | route feature/startup projection | required |
@@ -457,17 +523,44 @@ Ownership rules:
 | 6 | Docs Review implementation | separate feature project |
 | 7 | management coordinator roadmap | general maintainability |
 | 8 | backend lifecycle roadmap | general maintainability |
-| 9 | config/test/CSS/docs cleanup | ongoing/general maintainability |
+| 9 | config/test/CSS cleanup | ongoing/general maintainability |
+| D2-D5 | documentation entrypoints, restructure, and rewrite | separate cross-cutting workstream; only affected current-state docs gate a code slice |
+| search request | cross-scope, summary-aware documentation search | separate follow-up; scope migration records the requirement but does not implement it |
 
-## Phase 0: Baseline And Contract Reconciliation
+## Documentation Workstream D0: Inventory And Authority Map
 
-Purpose: establish the behavior that refactors must preserve and remove contradictory architecture instructions before code changes.
+Purpose: create reliable navigation through the current material before rewriting it.
+
+Tasks:
+
+- create a Docs Viewer documentation register covering durable docs and related change requests
+- classify each document as user guide, operator workflow, architecture, reference/inventory, or change request/history
+- record current/proposed/historical status separately from `ui_status`
+- create the subject-to-owner map described in Finding 12
+- assign a proposed `destination_scope` to every document in the legacy `studio` corpus
+- flag contradictions, mixed audiences, excessive scope, missing user workflows, and stale request decisions
+- record summary presence and obvious summary-quality gaps for the later search/rewrite work
+- identify the small set of current owner documents needed for phases 1-5
+- propose focused batches for keep/split/merge/supersede/remove actions without performing the rewrite in this task
+
+Acceptance:
+
+- a maintainer or Codex can find the current owner for every phase 1-5 architecture subject without deriving it from a historical request
+- user-facing workflow gaps are explicit rather than hidden inside technical notes
+- every audited document has a proposed disposition
+- every legacy Studio document has a proposed destination scope or an explicit unresolved classification
+- no broad code refactor or documentation rewrite is mixed into the inventory task
+
+## Phase 0: Runtime Baseline And Prerequisite Contract Reconciliation
+
+Purpose: establish the behavior that refactors must preserve and reconcile only the architecture contracts required for phases 1-5.
 
 Tasks:
 
 - inventory current public and manage entrypoint module graphs
 - record current route, startup, controller, service, state-domain, and toolbar contracts
-- identify stale request docs and current durable owner docs
+- use the D0 authority map to name the current durable owner for every prerequisite contract
+- correct contradictions in those prerequisite owner docs; leave unrelated consolidation to D2-D5
 - define baseline public and manage checks
 - rewrite the view/mode registry request into the target projection model or create a child implementation task and retire the request
 - document which changes are prerequisites for Docs Review
@@ -476,6 +569,7 @@ Tasks:
 Acceptance:
 
 - public/manage runtime boundaries are described consistently
+- phase 1-5 work does not depend on deriving current behavior from a historical request
 - baseline checks pass
 - implementation tasks have named owners and no review feature behavior
 
@@ -666,7 +760,7 @@ Candidate slices:
 
 These are general maintainability improvements. Implement them according to churn, feature pressure, and failure risk rather than file length alone.
 
-## Phase 9: Config, Tests, CSS, And Docs
+## Phase 9: Config, Tests, And CSS
 
 Ongoing work:
 
@@ -676,25 +770,91 @@ Ongoing work:
 - replace source-string tests with owner-contract tests where practical
 - retain public import-graph tests
 - prefer pure module/service checks over browser choreography
-- reconcile durable docs after every completed slice
 - audit base/manage/report CSS after toolbar and view ownership stabilizes
 - consolidate CSS only around clear component ownership
+
+## Documentation Workstream D1-D5: Separate, Restructure, And Rewrite
+
+This workstream follows D0 in separately reviewable documentation batches. It spans the architecture roadmap but is not a single gate on Docs Review.
+
+### D1: Documentation Scope Separation
+
+This is the first functional documentation task after D0.
+
+- create the agreed local committed scopes without creating new apps or public routes
+- create a concise home document and valid default document for every new scope
+- move complete subject trees rather than isolated children
+- move subject-specific change requests with their product scope and give each scope an appropriate change-request parent where needed
+- update scope-local `parent_id` relationships; do not attempt cross-scope parents
+- update all affected explicit `/docs/?scope=...&doc=...` links in the same migration batch
+- update scope configuration, UI statuses, media paths, generated/search output paths, exports, audits, tests, default-document assumptions, and repository guidance
+- retain `studio` only for documents intentionally owned by Local Studio; do not use it as the fallback for unresolved classifications
+- rebuild every affected scope and validate document IDs, parents, links, generated payloads, and search indexes
+- avoid editorial rewriting except for ownership, navigation, and link corrections required by the move
+
+The initial audit found 151 Studio source documents containing explicit `scope=studio` links. This makes link rewriting and broken-link validation part of the migration contract, not optional cleanup.
+
+Do not preserve duplicate documents or compatibility aliases at old scope URLs. Move current ownership and update tracked callers together. If a migration batch cannot move a complete parent/child subject tree safely, defer that tree rather than splitting it across scopes with invalid hierarchy.
+
+The scope-specific search limitation must be recorded prominently in the D1 handoff and linked to the separate search change request. It does not block D1 provided that each scope has a useful home page and cross-scope navigation.
+
+### D2: Entry Points And Information Architecture
+
+- create a short user-facing Docs Viewer entrypoint organized by tasks rather than modules
+- create a short maintainer entrypoint that points to current architecture owners
+- separate user guidance, operator workflow, architecture, reference, and history in navigation
+- add a concise scope statement to each retained document
+
+### D3: User And Operator Guidance
+
+- document actual user workflows independently of implementation notes
+- cover browsing, search, source editing, rebuilding, import, export, scope management, and troubleshooting as applicable
+- link to architecture only where it helps an operator understand a constraint
+- keep planned Docs Review behavior out of current user guidance until it ships
+
+### D4: Current Architecture Consolidation
+
+- keep the overview short and move file-by-file detail to focused reference documents
+- consolidate overlapping runtime, panel, view/mode/control, service, and config explanations around named owners
+- split documents that serve multiple audiences or unrelated responsibilities
+- remove superseded current-state prose only after its replacement owner is present and linked
+
+### D5: Change-Request Hygiene And Automated Checks
+
+- distinguish proposed, active, completed, and superseded requests
+- transfer implemented decisions into current owner docs before closing a request
+- link requests to their durable outcome without making the request the current authority
+- add mechanical checks for duplicate IDs, invalid parents, broken internal doc links, and required classification metadata if D0 proves metadata is useful
+- treat document length and heading breadth as review signals, not hard failure limits
+
+Broad documentation batches should be separate from code refactor slices. A code slice still owns the narrow user and architecture updates caused by that slice; D2-D5 owns wider consolidation and rewriting.
+
+### Separate Change Request: Documentation Search Discovery And Relevance
+
+Create a dedicated change request after D0 has confirmed the scope model. It should own cross-scope local search, summary-aware indexing and ranking, result presentation, and the possible later use of headings or body text.
+
+This request should coordinate with D3 summary rewriting and Data Sharing summary enrichment, but it must not make search correctness depend on every document already having a summary. Scope migration, summary creation, and search consumption are related contracts with separate implementation and verification boundaries.
 
 ## Recommended Implementation Sequence
 
 Recommended order of work:
 
-1. create an implementation tracker for phases 0-5
-2. complete baseline and documentation reconciliation
-3. implement explicit app context and authority
-4. implement the configured-scope provider boundary
-5. implement explicit route features and startup
-6. implement the code-owned view/mode/control projection
-7. reduce only coordinator bridges made obsolete by steps 3-6
-8. run the Docs Review readiness checkpoint
-9. update the Docs Review spec only if the platform contracts materially changed
-10. implement Docs Review in its own tracker
-11. prioritize phases 7-9 separately based on current risk and feature demand
+1. create the D0 documentation register and authority map as a dedicated assessment task
+2. complete D1 documentation scope separation using the inventory's destination map
+3. create the separate Documentation Search Discovery And Relevance change request and record the scope-specific search limitation in the D1 handoff
+4. create an implementation tracker for phases 0-5 using the mapped current owners
+5. complete the runtime baseline and reconcile only prerequisite contracts
+6. begin D2 user/maintainer entrypoint work as a separate documentation batch
+7. implement explicit app context and authority
+8. implement the configured-scope provider boundary
+9. implement explicit route features and startup
+10. implement the code-owned view/mode/control projection
+11. reduce only coordinator bridges made obsolete by steps 7-10
+12. update affected user guidance and architecture owners with each slice
+13. run the Docs Review readiness checkpoint
+14. update the Docs Review spec only if the platform contracts materially changed
+15. implement Docs Review in its own tracker
+16. continue D3-D5, the search request, and phases 7-9 according to current risk and feature demand
 
 ## What Not To Refactor Yet
 
@@ -739,8 +899,11 @@ Do not use a full browser smoke as the default proof for pure refactor contracts
 - Do not let browser config grant backend write authority.
 - Do not turn hosted views or control definitions into a plugin system.
 - Do not mix Docs Review product behavior into phases 0-5.
+- Do not combine a broad documentation rewrite with a code refactor slice.
+- Do not delete or supersede a document until its current responsibilities have a named replacement owner.
+- Keep user instructions about shipped behavior separate from proposals and architecture rationale.
 - Keep each slice independently reviewable and reversible through ordinary version control.
-- Update durable owner docs with each completed slice.
+- Update affected user guidance and durable architecture owners with each completed slice.
 
 ## Success Criteria
 
@@ -753,6 +916,7 @@ The foundation roadmap is complete when:
 - views, document modes, and active toolbar controls use one code-owned projection model
 - public/manage behavior and asset boundaries remain intact
 - touched callback bridges and duplicate state authority are removed
+- the D0 authority map identifies the current documentation owners for the foundation contracts
 - Docs Review can begin without adding review behavior to the private runtime or management coordinator
 
-The broader roadmap remains active after that checkpoint; it is not a gate on the Docs Review feature.
+The broader architecture, D2-D5 documentation, and documentation-search workstreams remain active after that checkpoint; they are not blanket gates on the Docs Review feature.
