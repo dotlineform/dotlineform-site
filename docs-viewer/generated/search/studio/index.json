@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8da33ef5e88e87b8f7404b116962e6d1",
-    "generated_at_utc": "2026-07-10T21:55:59Z",
-    "count": 232
+    "version": "blake2b-61c7b996a7371042adb3014985fa8fec",
+    "generated_at_utc": "2026-07-10T22:20:28Z",
+    "count": 233
   },
   "entries": [
     {
@@ -1316,6 +1316,37 @@
         "10"
       ],
       "search_text": "site-request-docs-review-workflow site request docs review workflow docs review workflow change requests change requests 2026-07-10 2026 07 10"
+    },
+    {
+      "id": "site-request-docs-viewer-architecture-refactor-roadmap",
+      "kind": "doc",
+      "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap",
+      "last_updated": "2026-07-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-10 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-architecture-refactor-roadmap",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "architecture",
+        "refactor",
+        "roadmap",
+        "docs viewer architecture assessment and refactor roadmap",
+        "assessment",
+        "and",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-10",
+        "2026",
+        "07",
+        "10"
+      ],
+      "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer architecture assessment and refactor roadmap assessment and change requests change requests 2026-07-10 2026 07 10"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

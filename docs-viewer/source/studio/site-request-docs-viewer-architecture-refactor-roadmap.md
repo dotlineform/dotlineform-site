@@ -1,0 +1,758 @@
+---
+doc_id: site-request-docs-viewer-architecture-refactor-roadmap
+title: Docs Viewer Architecture Assessment And Refactor Roadmap
+added_date: 2026-07-10
+last_updated: 2026-07-10
+ui_status: planned
+parent_id: change-requests
+viewable: true
+---
+# Docs Viewer Architecture Assessment And Refactor Roadmap
+
+## Status
+
+Assessment complete; roadmap proposed.
+
+Implementation should be planned as behavior-preserving refactor slices before work resumes on [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow).
+
+## Decision
+
+Pause Docs Review implementation while Docs Viewer receives a standalone architecture assessment and a limited foundation refactor.
+
+Docs Review is a useful pressure test because it needs the existing tree, document renderer, source editor, parent picker, route state, build pipeline, and local services without inheriting all canonical management behavior. Those requirements expose real architectural constraints, but the fixes should be implemented and verified as Docs Viewer platform work rather than hidden inside a review feature branch.
+
+The sequence is:
+
+1. establish current contracts and baseline checks
+2. replace the binary public/manage model with explicit app context and capabilities
+3. introduce a generated-data/source provider boundary
+4. make route features and startup phases explicit
+5. centralize view, display-mode, and toolbar-control projection
+6. reduce only the coordinator responsibilities touched by those changes
+7. reassess Docs Review against the new contracts
+8. implement Docs Review as a separate product slice
+9. continue broader non-blocking maintainability work independently
+
+Do not mix review-folder endpoints, review UI, promotion behavior, or new chapter creation into the foundation refactor.
+
+## Scope
+
+This assessment covers:
+
+- public, manage, and future review app contexts
+- boot, app composition, app session, and private runtime coordination
+- route/access/service context
+- generated-data and source-service authority
+- panel views, document display modes, and toolbar controls
+- controller construction and state-domain boundaries
+- management orchestration
+- local service routing and capability projection
+- scope lifecycle and canonical mutation planning
+- config ownership
+- test architecture and durable documentation
+
+It does not propose a whole-system rewrite.
+
+## Current Strengths
+
+Docs Viewer already has useful architectural foundations:
+
+- separate public and manage entrypoints
+- a shared app boot and shell contract
+- route-config and access projection
+- named app-session state domains
+- a generated-data runtime owner
+- focused route, document, search, bookmark, sidebar, info-panel, and panel-layout controllers
+- lazy management loading that protects public routes
+- hosted-view records and lifecycle helpers
+- document display-mode hosting
+- explicit public/manage import-boundary tests
+- backend source revision checks and write/rebuild helpers
+- focused services for many import, export, report, data-sharing, and source operations
+
+The problem is not absence of structure. The runtime is midway through a transition from large coordinators and broad shared state to focused owners and explicit contracts.
+
+## Assessment Summary
+
+The highest-value refactors are not determined by file size alone. They are the areas where one decision currently controls several unrelated concerns or where a feature must receive broader authority than it needs.
+
+| priority | area | evidence | Docs Review prerequisite |
+| --- | --- | --- | --- |
+| 1 | app context and capability model | public/manage behavior is derived mainly from `allowManagement` | yes |
+| 2 | data/source provider boundary | generated reads and source services assume configured scopes and management | yes |
+| 3 | explicit route features and startup | config, search, recent, bookmarks, and scope startup are broadly constructed | yes |
+| 4 | view/mode/control projection | availability and toolbar decisions are split across registries, hosts, renderers, and controllers | yes |
+| 5 | private runtime coordinator | `docs-viewer-app-runtime.js` remains a large callback bridge and feature assembler | partial |
+| 6 | management coordinator | `docs-viewer-management.js` still coordinates several independent workflows | partial |
+| 7 | state-domain enforcement | named domains exist, but fields and mutable facades still overlap | partial |
+| 8 | management/backend lifecycle structure | scope lifecycle, manifest, mutation, and HTTP dispatch have broad surfaces | no, except clean promotion handoff |
+| 9 | config/test/docs consolidation | several declarative layers and durable docs describe overlapping models | no, but should follow each slice |
+
+## Finding 1: Binary Public/Manage Context
+
+The current runtime treats `allowManagement` as the main dividing line for:
+
+- app mode
+- service base URLs
+- local generated-read authority
+- source-editor service availability
+- management controller loading
+- hosted-view access
+- visibility of manage-oriented metadata
+- route behavior
+
+Relevant owners include:
+
+- `site/docs-viewer/runtime/js/shared/docs-viewer-access.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js`
+
+This produces a false choice:
+
+```text
+public static reader
+or
+full local management
+```
+
+Docs Review needs a third combination:
+
+```text
+local generated reads
++ temporary source writes
++ review build
++ controlled promotion
+- general canonical management
+```
+
+The target is an explicit app-context and service-capability model. Route identity controls composition and presentation; backend capability responses control actual authority.
+
+## Finding 2: Service Authority Is Coupled To Presentation
+
+`docs-viewer-service-context.js` currently exposes the local generated-read base URL only when management is allowed. Source-editor services are similarly projected only through management-capable view contexts.
+
+This couples:
+
+- local service reachability
+- local generated reads
+- source reads and writes
+- canonical management UI
+
+These should be separate named service surfaces.
+
+Suggested service-context shape:
+
+```text
+generatedData
+source
+management
+review
+reports
+```
+
+Each surface may be absent. Its presence does not imply that another surface is available.
+
+## Finding 3: Configured Scope Is Too Central To Startup
+
+The config controller expects a browser config with at least one scope and normal index, recent, and search URLs. It also owns scope selection, route projection, UI status policy, recently-added limits, and some management config handoff.
+
+This makes temporary or non-scope collections harder than necessary and gives config loading several responsibilities:
+
+- collection discovery
+- active collection projection
+- UI text/settings
+- route state
+- scope picker presentation
+- feature defaults
+
+The target should distinguish:
+
+- route/app configuration
+- active collection identity
+- data provider
+- optional viewer settings
+- configured-scope discovery, when the route supports it
+
+Public and manage routes should continue to behave identically after this separation.
+
+## Finding 4: Shared Startup Constructs Too Much By Default
+
+The private runtime constructs search, recent, bookmarks, configuration, document, route, info-panel, main-view, display-mode, sidebar, management-lazy, and status behavior in one startup path.
+
+Several features tolerate missing controls, but tolerance is not the same as an explicit feature contract.
+
+The target is a route feature projection such as:
+
+```text
+scopeSelection
+search
+recentlyAdded
+bookmarks
+reports
+sourceEditing
+management
+```
+
+Only enabled features should be constructed, initialized, bound, and given required payload URLs.
+
+## Finding 5: View, Mode, And Toolbar Decisions Are Split
+
+The current concepts are valid:
+
+- panels host views
+- the document main view has display modes
+- active view/mode determines relevant toolbar controls
+- access and backend capabilities determine availability
+- route policy may narrow public presentation
+
+The decisions are spread across:
+
+- `docs-viewer-hosted-views.js`
+- `docs-viewer-main-view-host.js`
+- `docs-viewer-document-display-mode-host.js`
+- `docs-viewer-panel-layout.js`
+- `docs-viewer-main-view-renderer.js`
+- bookmark and info controllers
+- management document-action renderers
+- management coordinator state
+- source-editor state
+- route config
+
+The existing [Docs Viewer View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) request correctly identifies this problem.
+
+## View And Mode Registry Assessment
+
+Retain these requirements from the current request:
+
+- one normalization and lookup owner
+- document display modes registered under the document view
+- central eligibility and toolbar projection
+- management contributions merged only through the manage entrypoint
+- public runtime rejects management-only modes
+- route policy can hide known public controls
+- executable handlers remain runtime-owned
+- no generic plugin/module-loader behavior
+
+Change these parts of the proposed approach:
+
+- Do not add a browser JSON registry as a second definition authority for built-in views, modes, and controls.
+- Do not place executable handler ids in browser config.
+- Do not make route config responsible for registering lifecycle implementations.
+- Do not model live states such as pressed, dirty, busy, or pending as registry availability.
+- Do not implement the registry before app context and capability inputs are explicit, or it will encode the current binary public/manage limitation.
+
+Preferred target:
+
+```text
+code-owned definitions
++ entrypoint contributions
++ route feature policy
++ app context
++ backend capabilities
++ active view/mode state
+= view/mode/control projection
+```
+
+Definitions answer what exists and where it belongs.
+Policy can hide or narrow known definitions.
+Controllers own handlers and live interaction state.
+Renderers consume projected control records.
+
+The view/mode registry request should become a focused child slice of this roadmap or be retired after its accepted requirements are transferred into an implementation task.
+
+## Finding 6: Private Runtime Coordinator Remains Broad
+
+`site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` is currently about 996 lines and contains roughly 73 local construction or bridge functions.
+
+Its legitimate responsibility is private application coordination:
+
+- construct focused controllers
+- connect their explicit command/service contracts
+- bind top-level route events
+- apply route-global changes
+- return the small app handle
+
+It also currently owns or constructs bridges for:
+
+- source-editor services
+- generated reload behavior
+- status and busy projection
+- pane switching
+- bookmark/search command adapters
+- toolbar/mode coordination
+- management lazy context
+- config route globals
+
+Do not split the file mechanically. Extract complete responsibilities only when a named owner and stable contract are clear.
+
+High-value extraction candidates:
+
+- route feature/controller factory
+- source-service composition
+- status/busy controller
+- main-view/display-mode toolbar coordinator
+- service-adapter composition
+
+New Docs Review lifecycle must not be added directly to this file.
+
+## Finding 7: Management Coordinator Remains Broad
+
+`docs-viewer/runtime/js/management/docs-viewer-management.js` is currently about 1,027 lines and contains roughly 67 local functions.
+
+It already delegates capability, interaction, modal, and action work to child controllers, but it still coordinates:
+
+- import initialization
+- settings and metadata modal handoff
+- capability and action projection
+- route reloads
+- scope and sub-scope lifecycle lazy loading
+- draft/viewability state
+- keyboard/root bindings
+- context-menu behavior
+- broad management-state facade construction
+
+Further work should split by workflow ownership, not by helper size.
+
+Priority candidates:
+
+- import workflow controller
+- metadata/settings workflow composition
+- scope lifecycle controller
+- management shell event router
+- management view-model/projection owner
+
+`docs-viewer-management-actions.js` may remain the command owner until individual command families gain independent state or lifecycle.
+
+## Finding 8: State Domains Are Descriptive More Than Enforced
+
+`docs-viewer-app-session.js` provides useful named domains, but several fields are reachable through more than one domain or are remapped into a broad management facade.
+
+Examples include:
+
+- management capabilities used by management and generated-read logic
+- reload nonce/expected document used by selected-document and generated-data behavior
+- expanded document ids used by document-index and panel-view behavior
+- management context projected through route-session and management behavior
+
+The next state refactor should:
+
+- assign one owner per mutable field
+- expose queries or commands to consumers instead of duplicating field authority
+- remove facade fields when child controllers receive narrow domains
+- keep browser-only view state separate from data and backend capability state
+- avoid a global event bus or generic store rewrite
+
+## Finding 9: Backend Hotspots Exist But Are Not All Review Blockers
+
+Significant backend surfaces include:
+
+- `docs_viewer_service.py`: local service config, static serving, HTTP dispatch, capability shaping, and server lifecycle
+- `docs_scope_manifest.py`: manifest storage, create/delete planning, path policy, apply, build commands, and publish sync
+- `docs_management_mutations.py`: canonical mutation planning
+- `docs_write_rebuild.py`: source-write/rebuild orchestration and targeted/full fallback
+- `docs_scope_config.py`: source config parsing, path resolution, external roots, publishing paths, and sub-scope config
+
+Recommended priorities:
+
+1. keep HTTP route dispatch thin and move feature behavior to focused services
+2. split scope-manifest storage from create/delete workflow planning and apply
+3. keep canonical mutations plan-first and centralize batch mutation execution
+4. retain source write/rebuild as the single canonical rebuild boundary
+5. narrow capability payload construction into feature-owned projections
+
+Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, provider, and promotion handoff.
+
+## Finding 10: Config Has Multiple Legitimate But Overlapping Layers
+
+Current configuration includes:
+
+- canonical scope config
+- generated browser scope config
+- local/manage route config
+- public route config
+- service config
+- report registry
+- hosted-view records and capability metadata
+
+These layers have different security and deployment purposes, so consolidation should not mean putting everything in one file.
+
+The goal is instead to define projection ownership:
+
+- canonical scope config owns source/output/publish/build paths
+- browser scope config owns browser-safe generated-data and presentation metadata
+- route config owns route identity, app context, feature policy, panels, and browser-safe config URLs
+- service config owns loopback service availability and server features
+- code-owned definitions own lifecycle implementations and handlers
+
+Avoid copying derivable data across layers when the owning builder or service can project it.
+
+## Finding 11: Test Coverage Is Broad But Uneven
+
+Docs Viewer has extensive Python and browser smoke coverage, including important public import-boundary tests. Some tests still prove architecture by reading source text or asserting hardcoded strings rather than exercising pure owner contracts.
+
+Refactor testing should prefer:
+
+- pure JavaScript module checks for access, feature, view/mode/control, state, and provider projections
+- direct Python service tests for capability, path, mutation, and rebuild contracts
+- static module-graph tests for public/manage/review asset boundaries
+- route/service smokes only for boot and network integration boundaries
+- minimal browser workflow coverage
+
+Do not expand permanent tests around modal timing, control copy, focus choreography, or internal implementation strings.
+
+## Finding 12: Durable Docs Need Reconciliation
+
+The runtime boundary, module ownership, panel hosts, toolbar model, info panel, view capability contract, JavaScript inventory, and view/mode registry request describe different stages of the ongoing extraction.
+
+Examples of likely drift include:
+
+- whether Markdown source is a main view or a document display mode
+- whether hosted-view records represent lifecycle modules or renderer metadata
+- which toolbar owns the index view toggle
+- how public/manage access relates to backend authority
+- whether a future registry is code-owned or config-owned
+
+Each refactor slice must update the durable owner docs in the same change. Historical requests should not remain the only explanation of current architecture.
+
+## Target Architecture
+
+The target remains a small modular application, not a framework or plugin system.
+
+```text
+route config
+  -> app context and route feature policy
+  -> service context and backend capabilities
+  -> data/source provider
+  -> app composition
+  -> focused controllers and hosts
+  -> view/mode/control projection
+  -> shell renderers
+```
+
+Ownership rules:
+
+- route config describes; it does not execute
+- entrypoints contribute code-owned local capabilities and modules
+- backend capabilities authorize; browser visibility does not authorize
+- providers adapt data/source authorities to viewer-facing methods
+- controllers own workflow and live interaction state
+- registries normalize definitions and availability
+- renderers consume projections and emit refs/events
+- coordinators connect owners but do not acquire feature behavior
+
+## Roadmap Overview
+
+| phase | title | relationship to Docs Review |
+| --- | --- | --- |
+| 0 | baseline and contract reconciliation | prerequisite assessment |
+| 1 | app context and authority | required |
+| 2 | provider boundary | required |
+| 3 | route feature/startup projection | required |
+| 4 | view/mode/control projection | required |
+| 5 | touched coordinator reduction | required only where phases 1-4 expose ownership |
+| checkpoint | Docs Review readiness reassessment | required before feature implementation |
+| 6 | Docs Review implementation | separate feature project |
+| 7 | management coordinator roadmap | general maintainability |
+| 8 | backend lifecycle roadmap | general maintainability |
+| 9 | config/test/CSS/docs cleanup | ongoing/general maintainability |
+
+## Phase 0: Baseline And Contract Reconciliation
+
+Purpose: establish the behavior that refactors must preserve and remove contradictory architecture instructions before code changes.
+
+Tasks:
+
+- inventory current public and manage entrypoint module graphs
+- record current route, startup, controller, service, state-domain, and toolbar contracts
+- identify stale request docs and current durable owner docs
+- define baseline public and manage checks
+- rewrite the view/mode registry request into the target projection model or create a child implementation task and retire the request
+- document which changes are prerequisites for Docs Review
+- remove no code unless an already-orphaned compatibility/prototype path has an unambiguous current owner
+
+Acceptance:
+
+- public/manage runtime boundaries are described consistently
+- baseline checks pass
+- implementation tasks have named owners and no review feature behavior
+
+## Phase 1: Explicit App Context And Authority
+
+Purpose: replace binary access inference with an explicit context that can later support review without granting management.
+
+Proposed context shape:
+
+```text
+kind: public | manage | review
+routeAccess
+featurePolicy
+serviceAvailability
+backendCapabilities
+```
+
+The behavior-preserving implementation should introduce the model while exercising only current public and manage routes.
+
+Tasks:
+
+- separate app kind from `allowManagement`
+- separate visibility/access projection from backend capability truth
+- separate local generated-read availability from management availability
+- replace `publicReadOnly: !allowManagement` assumptions with explicit context queries
+- preserve manage-only lazy loading and public asset isolation
+- provide compatibility-free current APIs and update all callers in the same slice
+
+Acceptance:
+
+- public and manage behavior is unchanged
+- local generated-read authority is not structurally tied to general management
+- contexts can express a future local non-management route without adding a new boolean combination
+- public entrypoint module graph remains free of local write modules
+
+## Phase 2: Data And Source Provider Boundary
+
+Purpose: let the viewer consume a collection without assuming it is a configured scope.
+
+Initial configured-scope provider methods should cover:
+
+```text
+readIndex
+readDocument
+readSearch
+readRecentlyAdded
+readReferences
+readSource, when supplied by a local source service
+writeSource, when supplied by an authorized local source service
+```
+
+Tasks:
+
+- define the smallest provider interface from current call sites
+- implement the existing configured-scope provider
+- route feature-facing reads through the generated-data runtime/provider owner
+- remove direct assumptions about management fallback paths from feature controllers
+- keep source write methods absent unless explicitly supplied
+- retain current retry, reload, and targeted capability behavior
+
+Acceptance:
+
+- existing public/manage routes use the configured-scope provider with unchanged behavior
+- document, index, search, recent, and source consumers depend on named provider methods
+- no review-folder provider exists yet
+- provider presence does not grant backend authority
+
+## Phase 3: Route Feature And Startup Projection
+
+Purpose: construct only the controllers and payload requirements a route needs.
+
+Tasks:
+
+- define normalized route features
+- separate configured-scope discovery from general app settings loading
+- make search, recent, bookmarks, reports, scope selection, source editing, and management initialization explicit
+- skip disabled startup phases and bindings
+- make route config reject unknown feature ids
+- preserve current public/manage defaults
+
+Acceptance:
+
+- current routes behave unchanged through explicit feature projections
+- a route can omit search/recent/bookmarks/scope selection without fake URLs or hidden controller initialization
+- startup authority records reflect actual enabled features
+
+## Phase 4: View, Mode, And Control Projection
+
+Purpose: implement the useful core of the current view/mode registry request without introducing a second config authority.
+
+Tasks:
+
+- add a shared code-owned definition/normalization owner
+- register panel views and document display modes with their owning relationships
+- accept shared definitions plus entrypoint contributions
+- combine definitions with app context, backend capabilities, route policy, and active state
+- project eligible toolbar controls for the active view/mode
+- migrate `bookmark`, `info`, `edit`, `markdown-source`, and `save-markdown-source` first
+- keep control handlers and live state in current focused controllers
+- keep management toolbar/admin actions outside the document-view control registry
+
+Acceptance:
+
+- Markdown source remains a display mode of the document view
+- public contexts cannot resolve management-only modes or controls
+- manage mode retains current controls
+- route policy can hide known public controls without runtime view-id branches
+- no config file can invent handlers or modules
+- no empty toolbar is rendered when no projected controls remain
+
+## Phase 5: Coordinator Reduction For Touched Areas
+
+Purpose: prevent phases 1-4 from adding more callback bridges to large coordinators.
+
+Only extract responsibilities directly exposed by the foundation work.
+
+Likely tasks:
+
+- move service/provider construction into app composition or a focused service-composition owner
+- move feature-controller construction into a focused factory
+- move view/mode toolbar coordination into a focused controller
+- give status/busy projection one owner if multiple new contexts need it
+- remove obsolete function-scoped bridges after callers use named commands
+- narrow management state facade fields used by migrated control projection
+
+Acceptance:
+
+- no review-specific code exists
+- new app context/provider/feature/registry behavior is not owned by `docs-viewer-app-runtime.js`
+- removed bridges have no aliases
+- public/manage baseline behavior remains unchanged
+
+## Docs Review Readiness Checkpoint
+
+Before resuming Docs Review, confirm:
+
+- `review` can be expressed as an app context without `allowManagement`
+- a route can supply a non-scope provider
+- local generated reads and temporary source services can be supplied independently
+- search/recent/bookmarks/scope selection can be omitted cleanly
+- Markdown source and its toolbar controls can be registered for an authorized non-manage context
+- public routes do not load review or management assets
+- adding the review route requires no new lifecycle behavior in the private runtime coordinator
+
+If these are true, the foundation refactor is sufficient. Do not delay Docs Review for unrelated scope lifecycle, CSS, report, or import cleanup.
+
+## Phase 6: Docs Review
+
+Implement [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) as its own feature project after the readiness checkpoint.
+
+Its implementation should consume:
+
+- review app context
+- review route feature policy
+- review-folder provider
+- shared view/mode/control projection
+- shared tree, document, source-editor, and parent-picker primitives
+- focused review-folder and promotion backend services
+
+Docs Review must not be used as an excuse to complete unrelated roadmap items.
+
+## Phase 7: Broader Management Coordinator Work
+
+This phase is not a Docs Review prerequisite unless a touched workflow blocks a clean integration.
+
+Candidate slices:
+
+- extract import initialization and modal handoff
+- separate metadata and settings workflow composition
+- give scope/sub-scope lifecycle a focused controller
+- narrow the management event router
+- replace remaining broad management facade fields with explicit domains/queries
+- split action command families only when they have independent state or lifecycle
+
+Each slice should preserve behavior and have its own task definition and verification set.
+
+## Phase 8: Backend Lifecycle And Mutation Work
+
+Candidate slices:
+
+- split `docs_scope_manifest.py` into manifest repository, create plan/apply, and delete plan/apply owners
+- split scope/sub-scope frontend lifecycle by create/delete workflow
+- project management capabilities from feature-owned helpers
+- separate local static serving and API family dispatch where that reduces service-handler branching
+- centralize batch canonical mutation execution around existing plan-first models
+- keep rebuild orchestration in `docs_write_rebuild.py`
+- review source-config and manifest duplication only after owner contracts are explicit
+
+These are general maintainability improvements. Implement them according to churn, feature pressure, and failure risk rather than file length alone.
+
+## Phase 9: Config, Tests, CSS, And Docs
+
+Ongoing work:
+
+- document canonical, browser, route, service, and code-definition config ownership
+- remove duplicated derived fields when one owner can project them
+- keep public browser config allowlisted
+- replace source-string tests with owner-contract tests where practical
+- retain public import-graph tests
+- prefer pure module/service checks over browser choreography
+- reconcile durable docs after every completed slice
+- audit base/manage/report CSS after toolbar and view ownership stabilizes
+- consolidate CSS only around clear component ownership
+
+## Recommended Implementation Sequence
+
+Recommended order of work:
+
+1. create an implementation tracker for phases 0-5
+2. complete baseline and documentation reconciliation
+3. implement explicit app context and authority
+4. implement the configured-scope provider boundary
+5. implement explicit route features and startup
+6. implement the code-owned view/mode/control projection
+7. reduce only coordinator bridges made obsolete by steps 3-6
+8. run the Docs Review readiness checkpoint
+9. update the Docs Review spec only if the platform contracts materially changed
+10. implement Docs Review in its own tracker
+11. prioritize phases 7-9 separately based on current risk and feature demand
+
+## What Not To Refactor Yet
+
+Avoid broad rewrites of these areas without a separate demonstrated need:
+
+- `DocsDataBuilder` and its mixin pipeline
+- self-contained report implementations
+- tree rendering
+- established document URL/history behavior
+- focused import/export modules
+- semantic-reference helpers
+- public route shells beyond the context/feature changes required above
+- CSS before toolbar/view ownership stabilizes
+
+Large files are review signals, not automatic rewrite targets.
+
+## Verification Strategy
+
+Baseline checks should be recorded in the implementation tracker and run only where the slice touches their contract.
+
+Likely focused checks:
+
+- pure module checks for access/app context
+- pure module checks for view/mode/control projection
+- provider contract checks using current generated payload fixtures
+- route-config normalization checks
+- public module-graph boundary tests
+- management capability and route tests
+- current Docs Viewer route/router module checks
+- focused `/docs/` service smoke after local route composition changes
+- public `/library/`, `/analysis/`, and `/moments/` checks after public config/runtime changes
+- `bin/site-validate` after tracked public assets change
+
+Do not use a full browser smoke as the default proof for pure refactor contracts.
+
+## Refactor Guardrails
+
+- Preserve public/manage behavior unless a separate product request changes it.
+- Do not add compatibility aliases for moved modules, routes, fields, or config keys.
+- Move callers and tests with the current owner in the same slice.
+- Do not add new feature lifecycle ownership to either large coordinator.
+- Do not let browser config grant backend write authority.
+- Do not turn hosted views or control definitions into a plugin system.
+- Do not mix Docs Review product behavior into phases 0-5.
+- Keep each slice independently reviewable and reversible through ordinary version control.
+- Update durable owner docs with each completed slice.
+
+## Success Criteria
+
+The foundation roadmap is complete when:
+
+- app context is not a synonym for `allowManagement`
+- local read and write service surfaces are independently expressible
+- configured scopes are one provider implementation rather than a viewer-wide assumption
+- route features control startup and payload requirements explicitly
+- views, document modes, and active toolbar controls use one code-owned projection model
+- public/manage behavior and asset boundaries remain intact
+- touched callback bridges and duplicate state authority are removed
+- Docs Review can begin without adding review behavior to the private runtime or management coordinator
+
+The broader roadmap remains active after that checkpoint; it is not a gate on the Docs Review feature.

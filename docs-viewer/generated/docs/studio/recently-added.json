@@ -11,6 +11,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
+      "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
+      "added_date": "2026-07-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "docs-viewer-export",
       "title": "Export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-export.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "route-ready-state",
-      "title": "Route Ready State",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json",
-      "added_date": "2026-06-25",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-07-10T21:55:28Z"
+  "generated_at": "2026-07-10T22:20:28Z"
 }

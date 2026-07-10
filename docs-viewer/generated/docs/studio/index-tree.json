@@ -311,6 +311,12 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-workflow.json"
         },
         {
+          "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
+          "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
+          "ui_status": "planned"
+        },
+        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1251,5 +1257,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-10T21:55:28Z"
+  "generated_at": "2026-07-10T22:20:28Z"
 }
