@@ -6,25 +6,18 @@ last_updated: 2026-06-26
 ---
 
 
+a spac has been written: [Docs Review Local App](/docs/?scope=studio&doc=site-request-docs-review-local-app)
 
+I am now questioning the decision to create this review capability as a separate app. my concerns are:
+- stripping out the functionality needed is actually going to be more complicated than simply creating a new 'mode' in the existing docs-viewer app.
+- especially since the 'stripped' functionality will then likely grow and end up replicating existing functionality anyway e.g. source code view.
 
+please review the spec and clarify the best way of implementing this 'docs-review'.
 
 ---
 
 we are refining the behaviour of `/analytics/data-sharing/review/`.
 
-
-
----
-
-Docs Index Table
-viewer_report: docs_index_table
-viewer_report_access: public
-
-
-we are looking at the data sharing workflow and UI at `/analytics/data-sharing/prepare/`
-
-on `/analytics/data-sharing/review/`, staged 
 
 ---
 

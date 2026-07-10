@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-returned-package-review
 title: Documents Returned Package Review
 added_date: "2026-06-27"
-last_updated: 2026-06-29
+last_updated: 2026-07-10
 parent_id: data-sharing
 viewable: true
 ---
@@ -163,6 +163,8 @@ The source-folder action:
 
 It does not build generated review payloads, register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown.
 
+The handoff after folder creation is specified by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow). Docs Review may edit and rebuild the temporary source, then promote reviewed bodies and hierarchy through a separate validated service. That later promotion does not widen the Data Sharing review action's write authority.
+
 ## Review Rows
 
 `review_rows` are UI-facing records for the returned package list.
@@ -286,5 +288,5 @@ It checks package shape, metadata, current-source context, and write-action prec
 
 It does not infer file meaning from row fields.
 It does not apply unrecognized fields.
-It does not treat review Markdown as canonical apply input.
-It does not automatically create missing documents or parent documents.
+The Analytics returned-package apply actions do not treat review Markdown as canonical apply input.
+The current implementation does not automatically create missing documents or parent documents. New chapter creation is a required version 2 Docs Review promotion capability.

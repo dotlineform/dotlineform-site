@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-docs-review-workflow",
+      "title": "Docs Review Workflow",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-workflow.json",
+      "added_date": "2026-07-10",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "docs-viewer-export",
       "title": "Export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-export.json",
@@ -22,14 +30,6 @@
       "doc_id": "site-request-docs-document-content-markdown-export",
       "title": "Docs Document Content Markdown Export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-document-content-markdown-export.json",
-      "added_date": "2026-06-28",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "site-request-docs-review-local-app",
-      "title": "Docs Review Local App",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-local-app.json",
       "added_date": "2026-06-28",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
@@ -83,5 +83,5 @@
       "parent_title": "Dev Home"
     }
   ],
-  "generated_at": "2026-06-29T18:23:55Z"
+  "generated_at": "2026-07-10T21:55:28Z"
 }

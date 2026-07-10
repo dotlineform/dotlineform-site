@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5413dc7f04a4067ad3d951e098a56e11",
-    "generated_at_utc": "2026-06-29T18:23:56Z",
+    "version": "blake2b-8da33ef5e88e87b8f7404b116962e6d1",
+    "generated_at_utc": "2026-07-10T21:55:59Z",
     "count": 232
   },
   "entries": [
@@ -1238,10 +1238,10 @@
       "kind": "doc",
       "title": "Data Sharing Import Content",
       "href": "/docs/?scope=studio&doc=site-request-data-sharing-import-content",
-      "last_updated": "2026-06-29",
+      "last_updated": "2026-07-10",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-29 • Change Requests",
+      "display_meta": "2026-07-10 • Change Requests",
       "search_terms": [
         "site-request-data-sharing-import-content",
         "site",
@@ -1254,12 +1254,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-06-29",
+        "2026-07-10",
         "2026",
-        "06",
-        "29"
+        "07",
+        "10"
       ],
-      "search_text": "site-request-data-sharing-import-content site request data sharing import content data sharing import content change requests change requests 2026-06-29 2026 06 29"
+      "search_text": "site-request-data-sharing-import-content site request data sharing import content data sharing import content change requests change requests 2026-07-10 2026 07 10"
     },
     {
       "id": "site-request-docs-document-content-markdown-export",
@@ -1291,32 +1291,31 @@
       "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
     },
     {
-      "id": "site-request-docs-review-local-app",
+      "id": "site-request-docs-review-workflow",
       "kind": "doc",
-      "title": "Docs Review Local App",
-      "href": "/docs/?scope=studio&doc=site-request-docs-review-local-app",
-      "last_updated": "2026-06-29",
+      "title": "Docs Review Workflow",
+      "href": "/docs/?scope=studio&doc=site-request-docs-review-workflow",
+      "last_updated": "2026-07-10",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-29 • Change Requests",
+      "display_meta": "2026-07-10 • Change Requests",
       "search_terms": [
-        "site-request-docs-review-local-app",
+        "site-request-docs-review-workflow",
         "site",
         "request",
         "docs",
         "review",
-        "local",
-        "app",
-        "docs review local app",
+        "workflow",
+        "docs review workflow",
         "change requests",
         "change",
         "requests",
-        "2026-06-29",
+        "2026-07-10",
         "2026",
-        "06",
-        "29"
+        "07",
+        "10"
       ],
-      "search_text": "site-request-docs-review-local-app site request docs review local app docs review local app change requests change requests 2026-06-29 2026 06 29"
+      "search_text": "site-request-docs-review-workflow site request docs review workflow docs review workflow change requests change requests 2026-07-10 2026 07 10"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",
@@ -1637,10 +1636,10 @@
       "kind": "doc",
       "title": "Documents Returned Package Review",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-returned-package-review",
-      "last_updated": "2026-06-29",
+      "last_updated": "2026-07-10",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-29 • Data Sharing",
+      "display_meta": "2026-07-10 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-returned-package-review",
         "data",
@@ -1651,12 +1650,12 @@
         "review",
         "documents returned package review",
         "data sharing",
-        "2026-06-29",
+        "2026-07-10",
         "2026",
-        "06",
-        "29"
+        "07",
+        "10"
       ],
-      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-06-29 2026 06 29"
+      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-07-10 2026 07 10"
     },
     {
       "id": "data-sharing-tags-adapter-structure",
@@ -1732,10 +1731,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-06-28",
+      "last_updated": "2026-07-10",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-28 • Dev Home",
+      "display_meta": "2026-07-10 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1744,12 +1743,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-28",
+        "2026-07-10",
         "2026",
-        "06",
-        "28"
+        "07",
+        "10"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-06-28 2026 06 28"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-10 2026 07 10"
     },
     {
       "id": "development-workflow",

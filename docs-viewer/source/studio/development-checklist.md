@@ -2,7 +2,7 @@
 doc_id: development-checklist
 title: Development Checklist
 added_date: 2026-05-23
-last_updated: 2026-06-28
+last_updated: 2026-07-10
 parent_id: dev-home
 viewable: true
 ---
@@ -128,13 +128,18 @@ Documents data-sharing adapters:
 - Docs prepare/export behavior stays under `docs_export*.py` and `docs_data_sharing/package.py`.
 - Import support is profile-driven: export-only profiles must keep `supports_return_import` false until a matching returned import type and apply action exist.
 
-Review sessions [not yet implemented]:
+Docs Review [not yet implemented]:
 
-- `docs_review_sessions.py` owns management-only review-session temp folders under `var/analytics/data-sharing/import-preview/`.
-- Review sessions are folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
-- Review-session list/read/build/delete routes should stay thin route dispatch in `docs_management_routes.py`, `docs_management_read_service.py`, and `docs_management_service.py`.
-- Review-session frontend behavior should live in dedicated management modules such as `docs-viewer-review-sessions-client.js`, modal renderer, and controller modules.
-- Do not add review-session business logic to `docs_viewer_service.py`, normal generated-data runtime, normal scope selector code, or public route runtime.
+- [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) owns the planned `/docs-review/` product and implementation boundary.
+- Review folders are temporary folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
+- Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
+- Reuse shared tree, routing, rendering, panel, source-editor, parent-picker, and CSS primitives through explicit review app context, provider, and capability contracts.
+- Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
+- `docs_review_folders.py` should own safe temporary folder list/read/write/build behavior, while a focused promotion service owns canonical promotion planning and apply.
+- Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
+- Temporary review edits and the named promotion action require separate backend capabilities. Review route visibility must not imply general canonical management authority.
+- Public entrypoints must not import review assets, receive review service URLs, or probe review capabilities.
+- Replace the tentative `docs_review_sessions.py`, `/docs/review-sessions...` routes, and `docs-viewer-review-sessions-*` modules during implementation; do not retain compatibility aliases.
 
 When adding or changing import/export behavior:
 

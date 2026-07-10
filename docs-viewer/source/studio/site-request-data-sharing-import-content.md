@@ -2,7 +2,7 @@
 doc_id: site-request-data-sharing-import-content
 title: Data Sharing Import Content
 added_date: 2026-06-28
-last_updated: 2026-06-29
+last_updated: 2026-07-10
 parent_id: change-requests
 viewable: true
 ---
@@ -18,9 +18,9 @@ Implemented first slice:
 - Folder identity is derived from the staged file's `export_id` and matching internal export metadata.
 - Canonical Docs Viewer source, configured scopes, public payloads, and generated review payloads are not changed.
 
-Still separate:
+Still separate and specified by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow):
 
-- `/docs-review/` listing, build, generated-payload serving, and rendering.
+- `/docs-review/` listing, build, generated-payload serving, temporary editing, and canonical promotion.
 
 ## Problem
 
@@ -43,17 +43,15 @@ The folder should be disposable:
 - excluded from public generated payloads
 - excluded from canonical source lifecycle rules
 
-The workflow is content review, not document import:
+This Data Sharing slice ends at the temporary review-folder handoff:
 
 1. A user stages a returned `document-content` file.
 2. Data Sharing creates or regenerates temporary review source Markdown documents for the complete file from the Review menu's `Content` action.
-3. `/docs-review/` lists the review source folder.
-4. `/docs-review/` builds generated Docs JSON from the selected folder's `source/*.md`.
-5. `/docs-review/` renders the generated tree and selected document.
+3. `/docs-review/` takes ownership of listing, building, rendering, temporary editing, hierarchy review, and controlled canonical promotion.
 
-No live source docs are created, overwritten, or deleted by this workflow.
+No live source docs are created, overwritten, or deleted by the Data Sharing source-folder action.
 
-`/docs-review/` refers to using Docs Viewer to preview the temporary Markdown files. This is a separate request [Docs Review Local App](/docs/?scope=studio&doc=site-request-docs-review-local-app) which this current request doesn't depend on.
+The review and promotion implementation is a separate request. Data Sharing does not acquire canonical write authority because Docs Review later promotes a reviewed folder.
 
 ## Temporary Review Source Folders
 
@@ -184,7 +182,7 @@ Review folders are temporary artifacts. The folder tree under `var/analytics/dat
 
 Manual deletion is valid. If a user deletes a review folder outside the UI, the system should not complain. The next list operation should simply omit that folder, and an already-open stale folder can report that the folder no longer exists.
 
-Data Sharing backend support should be limited to source-folder creation/regeneration from returned staged packages. `/docs-review/` owns folder listing, building generated payloads, and rendering.
+Data Sharing backend support should be limited to source-folder creation/regeneration from returned staged packages. `/docs-review/` owns folder listing, building generated payloads, rendering, temporary edits, promotion validation, and controlled canonical promotion.
 
 Data Sharing operations:
 
@@ -193,21 +191,15 @@ Data Sharing operations:
 - write one source Markdown file per valid returned row
 - report skipped/error records
 
-## Frontend Boundary
+## Docs Review Handoff
 
 The normal `/docs/` app should not list or open review folders.
 
-Review folders should be opened in `/docs-review/`. The review app should make the mode visible with a label such as:
+Review folders should be opened in `/docs-review/`. The review route should make the context visible with a label such as:
 
 `Import review - library - document-content - <content_format>`
 
-The review app should be read-only:
-
-- no source write action
-- no source delete action
-- no public links
-- no assumption that links, references, or the full tree are complete
-- no implication that the temporary docs are canonical source docs
+The review route may edit temporary source, rebuild the temporary folder, and run the controlled canonical promotion defined by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow). Those capabilities do not belong to Data Sharing and do not make the temporary folder canonical source.
 
 The route should be distinct from normal scope navigation:
 
@@ -221,6 +213,9 @@ Initial review UI shape:
 - show whether the selected folder has generated payloads
 - provide a Build action for the selected folder
 - load generated docs from the selected built folder
+- edit temporary Markdown and `parent_id` values
+- open canonical counterparts in `/docs/`
+- validate and promote reviewed content and hierarchy through a named action
 - keep delete/cleanup out of the first slice unless explicitly added later
 
 Loading a review folder must not mutate the active configured scope.
@@ -235,20 +230,13 @@ The first implementation should:
 - show the staged filename, source export id, source scope, content format, record count, and warnings before opening
 - block or report rows with missing `doc_id`, missing `title`, or missing content
 - warn when content was truncated during prepare
-- keep all canonical source writes out of this workflow
+- keep all canonical source writes out of the Data Sharing source-folder action
 
 Filtering, searching, and reviewing smaller groups should happen inside the review UI, not by creating partial source folders.
 
-## Future Extension
+## Follow-On Workflow
 
-If returned content later proves reliable enough for source replacement, that could be a separate apply action with stronger review and diff tooling. It should not reuse the content review action as an implicit live-source overwrite.
-
-Potential future capabilities:
-
-- side-by-side live/current versus returned content comparison
-- content-format-aware diffing
-- controlled apply of Markdown source updates
-- review folder cleanup tooling
+Docs Review owns temporary editing and controlled promotion after this Data Sharing handoff. Version 1 promotes Markdown bodies and `parent_id` changes for existing canonical documents without a comprehensive diff interface. Version 2 must create explicit new reviewed chapter documents and apply new and existing nodes as one validated hierarchy batch.
 
 ## Implementation Architecture
 
@@ -293,6 +281,8 @@ The folder id should be a display-safe folder name derived from the staged file'
 - build `generated/` from `source/*.md`
 - read generated index and payload files
 - render the temporary docs
+- edit and rebuild temporary source
+- validate and promote reviewed content and hierarchy through its own service boundary
 - handle stale or manually deleted folders
 
 The normal `/docs/` app remains unaware of this workflow.
