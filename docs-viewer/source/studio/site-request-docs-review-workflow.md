@@ -2,7 +2,7 @@
 doc_id: site-request-docs-review-workflow
 title: Docs Review Workflow
 added_date: 2026-07-10
-last_updated: 2026-07-10
+last_updated: 2026-07-11
 parent_id: change-requests
 viewable: true
 ---
@@ -196,12 +196,41 @@ The promotion service owns:
 
 The route/server layer should only validate transport concerns and delegate to these services.
 
+## External Workspace Root Contract
+
+Returned-package staging, review source, and generated review payloads are user-workspace artifacts. They must live outside the application repository under `DOTLINEFORM_PROJECTS_BASE_DIR`.
+
+Target Data Sharing workspace:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
+  exports/
+  import-staging/
+  import-preview/
+  meta/
+```
+
+The current repo-local `var/analytics/data-sharing/...` contract must be retired before Docs Review folder services become the implemented review authority. `var/` is untracked but still checkout-relative, leaving user workflow state coupled to an application checkout without source-control persistence or lifecycle guarantees.
+
+Rules:
+
+- one shared workspace-root resolver owns `DOTLINEFORM_PROJECTS_BASE_DIR` validation and marker-path projection
+- Data Sharing and Docs Review services receive resolved workflow roots explicitly; they do not derive artifact roots from `repo_root`
+- config and metadata store artifact-relative or `$DOTLINEFORM_PROJECTS_BASE_DIR` marker-rooted paths, never user-specific absolute paths
+- a missing, invalid, unreadable, or unwritable workspace root disables the affected Data Sharing/review capabilities with actionable setup guidance
+- there is no fallback read, compatibility alias, or duplicate write to the retired repo-local path
+- path traversal, symlink, filename, suffix, and containment checks are enforced against the resolved external workflow root
+- canonical Docs Viewer source and tracked config remain repository-owned
+- promotion is the explicit boundary that reads reviewed source from the external workspace and writes validated changes to configured canonical repository roots
+
+Tests should provide an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR` rather than creating production-shaped review folders beneath a temporary repository.
+
 ## Review Folder Contract
 
 Review folders remain temporary artifacts outside configured scope lifecycle:
 
 ```text
-var/analytics/data-sharing/import-preview/<folder_id>/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   manifest.json
   source/
     <doc-id>.md
@@ -239,7 +268,7 @@ Build reads the selected folder's `source/*.md` and writes its `generated/` fold
 
 Use `DocsDataBuilder` directly as a library with a synthetic configuration. Do not invoke the CLI, add the folder to configured scope data, or use normal scope rebuild orchestration.
 
-The review provider owns index and document reads. It must not depend on generated `content_url` values resolving as public static paths under `var/...`.
+The review provider owns index and document reads. It must not depend on generated `content_url` values resolving as public static paths under the external workspace root.
 
 Build must:
 

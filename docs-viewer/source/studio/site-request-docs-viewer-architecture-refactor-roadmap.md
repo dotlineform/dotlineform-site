@@ -50,6 +50,7 @@ This assessment covers:
 - local service routing and capability projection
 - scope lifecycle and canonical mutation planning
 - config ownership
+- runtime, staging, preview, and user-workspace path authority
 - test architecture
 - user, operator, architecture, reference, and change-request documentation
 
@@ -89,6 +90,7 @@ The highest-value refactors are not determined by file size alone. They are the 
 | 7 | state-domain enforcement | named domains exist, but fields and mutable facades still overlap | partial |
 | 8 | management/backend lifecycle structure | scope lifecycle, manifest, mutation, and HTTP dispatch have broad surfaces | no, except clean promotion handoff |
 | cross-cutting | documentation authority and information architecture | 63 directly related Docs Viewer/request documents have no clear user-guide entrypoint and mix current behavior, implementation inventory, future design, and historical decisions | the authority map is required; the full rewrite is not |
+| cross-cutting | user-workspace artifact roots | Data Sharing, Docs import, review-session, and media-preview paths are currently contracted under repo-local `var/` | external Data Sharing/review roots are required before Docs Review |
 | 9 | config/test/CSS consolidation | several declarative layers and tests describe overlapping models | no |
 
 ## Finding 1: Binary Public/Manage Context
@@ -481,6 +483,60 @@ Cross-scope and content-aware documentation search should be a separate change r
 
 Data Sharing already provides a route for externally enriching documents and populating summary fields. The documentation rewrite can improve summaries at source, while the search change request should own how those summaries are indexed, ranked, displayed, and handled when absent.
 
+## Finding 13: User Workspace Artifacts Are Repo-Rooted
+
+Several user-facing workflow artifacts are currently hardcoded or schema-contracted beneath the repository's untracked `var/` tree:
+
+- Data Sharing exports, returned-package staging, metadata, and review output under `var/analytics/data-sharing/`
+- Docs source-import staging under `var/docs/import-staging/`
+- Docs Review sessions under `var/analytics/data-sharing/import-preview/`
+- catalogue source-media and generated-derivative previews under `var/catalogue/media/`
+
+This is not just a display-path issue. Data Sharing's schema currently fixes its runtime roots to repo-relative `var/analytics/data-sharing/...` values, adapter validation repeats those exact paths, and several services resolve them with `repo_root / configured_path`.
+
+Because `var/` is untracked, these artifacts are caught between two ownership models:
+
+- repository-relative paths make them appear application-owned and couple them to a checkout
+- source control provides no persistence, migration, backup, or cleanup lifecycle for them
+- moving or recreating the checkout can strand user work
+- multiple checkouts can create separate, conflicting copies of the same user workflow state
+- a true installed local app would not normally store user staging and preview files inside its application directory
+
+The target boundary is:
+
+| artifact class | target authority |
+| --- | --- |
+| canonical source and tracked config | repository |
+| tracked generated/public output | repository where the existing publish contract requires it |
+| user-facing exports, imports, staging, review folders, and preview media | `$DOTLINEFORM_PROJECTS_BASE_DIR` workspace roots |
+| short-lived process state, logs, locks, test runs, and operational reports | separately classified runtime/cache roots; not automatically part of this migration |
+
+Use a shared workspace-root resolver rather than allowing each feature to join paths onto `repo_root`. Configuration should store marker-rooted or logical workspace paths, never user-specific absolute paths. Services should receive resolved roots explicitly and validate containment against the resolved workflow root.
+
+The first required migration slice is Data Sharing and Docs Review:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
+  exports/
+  import-staging/
+  import-preview/
+  meta/
+```
+
+The exact later roots for Docs import staging and catalogue media staging should follow the same resolver contract and be defined by the workspace-path change request.
+
+Rules:
+
+- do not fall back to old repo-local `var/` paths when the workspace root is unavailable
+- advertise affected capabilities as unavailable with actionable setup guidance when `DOTLINEFORM_PROJECTS_BASE_DIR` is missing, invalid, unreadable, or unwritable
+- preserve traversal, suffix, symlink, and containment checks against the external workflow root
+- store artifact-relative filenames or marker-rooted display paths in manifests and metadata rather than checkout-relative or absolute user paths
+- keep canonical promotion writes explicitly repo-authorized even though reviewed source is read from an external workspace
+- use temporary project-base roots in tests instead of treating a temporary repository's `var/` directory as the production contract
+- treat old `var/` workflow artifacts as disposable/manual-migration input; do not add compatibility reads or duplicate writes
+
+This is a cross-app path-authority change involving Analytics, Data Sharing, Docs Viewer, Studio, and later media workflows. It should have a separate change request and implementation tracker. The Data Sharing/review slice is a Docs Review prerequisite; the complete audit of remaining `var/` usage is not.
+
 ## Target Architecture
 
 The target remains a small modular application, not a framework or plugin system.
@@ -513,6 +569,7 @@ Ownership rules:
 | --- | --- | --- |
 | D0 | documentation inventory and authority map | prerequisite to foundation planning; not a full rewrite |
 | D1 | documentation scope separation | first functional documentation task; not a Docs Review runtime prerequisite |
+| W0 | external user-workspace artifact roots | separate cross-app change; Data Sharing/review slice required before Docs Review backend work |
 | 0 | runtime baseline and prerequisite contract reconciliation | prerequisite assessment |
 | 1 | app context and authority | required |
 | 2 | provider boundary | required |
@@ -550,6 +607,33 @@ Acceptance:
 - every audited document has a proposed disposition
 - every legacy Studio document has a proposed destination scope or an explicit unresolved classification
 - no broad code refactor or documentation rewrite is mixed into the inventory task
+
+## Workspace Workstream W0: External User-Workspace Artifact Roots
+
+Purpose: remove checkout-relative authority from user-facing staging, preview, and exchange artifacts before Docs Review relies on those paths.
+
+This work must have its own cross-app change request and implementation tracker. It may proceed in parallel with the browser/runtime foundation refactor, but its Data Sharing/review slice must complete before Docs Review folder services are implemented.
+
+First-slice tasks:
+
+- define one shared `DOTLINEFORM_PROJECTS_BASE_DIR` workspace-root resolver and marker-path convention
+- migrate Data Sharing exports, returned staging, metadata, and review folders to `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
+- remove schema constants and adapter validation that require repo-local `var/analytics/data-sharing/...`
+- update Analytics, Data Sharing, and Docs Viewer services to consume explicit resolved workspace roots instead of joining runtime paths onto `repo_root`
+- update capability projection and UI guidance for missing or invalid workspace roots
+- update manifests, metadata, activity summaries, and API responses to use artifact-relative or marker-rooted paths
+- update tests to provide isolated temporary project-base roots
+- update current user/operator and architecture documents when the runtime contract changes
+- inventory Docs import staging, catalogue media staging, and other preview folders as later slices
+
+Acceptance:
+
+- the complete export -> external edit -> returned staging -> review-folder workflow operates without writing user artifacts inside the repository
+- Docs Review can list, build, edit, and promote a folder resolved from the external workspace root
+- canonical promotion remains constrained to configured repository source roots
+- a missing workspace root disables only the affected capabilities and produces actionable guidance
+- services have no fallback reads or duplicate writes to the retired repo-local Data Sharing/review paths
+- remaining `var/` paths are explicitly classified rather than assumed to share one lifecycle
 
 ## Phase 0: Runtime Baseline And Prerequisite Contract Reconciliation
 
@@ -842,19 +926,21 @@ Recommended order of work:
 1. create the D0 documentation register and authority map as a dedicated assessment task
 2. complete D1 documentation scope separation using the inventory's destination map
 3. create the separate Documentation Search Discovery And Relevance change request and record the scope-specific search limitation in the D1 handoff
-4. create an implementation tracker for phases 0-5 using the mapped current owners
-5. complete the runtime baseline and reconcile only prerequisite contracts
-6. begin D2 user/maintainer entrypoint work as a separate documentation batch
-7. implement explicit app context and authority
-8. implement the configured-scope provider boundary
-9. implement explicit route features and startup
-10. implement the code-owned view/mode/control projection
-11. reduce only coordinator bridges made obsolete by steps 7-10
-12. update affected user guidance and architecture owners with each slice
-13. run the Docs Review readiness checkpoint
-14. update the Docs Review spec only if the platform contracts materially changed
-15. implement Docs Review in its own tracker
-16. continue D3-D5, the search request, and phases 7-9 according to current risk and feature demand
+4. create the W0 external user-workspace artifact roots change request and tracker
+5. create an implementation tracker for phases 0-5 using the mapped current owners
+6. complete the runtime baseline and reconcile only prerequisite contracts
+7. begin D2 user/maintainer entrypoint work as a separate documentation batch
+8. implement explicit app context and authority
+9. implement the configured-scope provider boundary
+10. implement explicit route features and startup
+11. implement the code-owned view/mode/control projection
+12. reduce only coordinator bridges made obsolete by steps 8-11
+13. update affected user guidance and architecture owners with each slice
+14. complete the W0 Data Sharing/review path slice, which may run in parallel with phases 0-5
+15. run the Docs Review readiness checkpoint
+16. update the Docs Review spec only if the platform contracts materially changed
+17. implement Docs Review in its own tracker
+18. continue D3-D5, the search request, later W0 slices, and phases 7-9 according to current risk and feature demand
 
 ## What Not To Refactor Yet
 
@@ -897,6 +983,8 @@ Do not use a full browser smoke as the default proof for pure refactor contracts
 - Move callers and tests with the current owner in the same slice.
 - Do not add new feature lifecycle ownership to either large coordinator.
 - Do not let browser config grant backend write authority.
+- Do not let a repo-relative `var/` path stand in for user-workspace authority merely because the path is ignored by Git.
+- Do not let review providers or workflow services derive external artifact roots by joining paths onto `repo_root`.
 - Do not turn hosted views or control definitions into a plugin system.
 - Do not mix Docs Review product behavior into phases 0-5.
 - Do not combine a broad documentation rewrite with a code refactor slice.
@@ -917,6 +1005,7 @@ The foundation roadmap is complete when:
 - public/manage behavior and asset boundaries remain intact
 - touched callback bridges and duplicate state authority are removed
 - the D0 authority map identifies the current documentation owners for the foundation contracts
+- the W0 Data Sharing/review slice provides an explicit external workspace-root contract for Docs Review
 - Docs Review can begin without adding review behavior to the private runtime or management coordinator
 
-The broader architecture, D2-D5 documentation, and documentation-search workstreams remain active after that checkpoint; they are not blanket gates on the Docs Review feature.
+The broader architecture, D2-D5 documentation, documentation-search, and later W0 workspace-path workstreams remain active after that checkpoint; they are not blanket gates on the Docs Review feature.

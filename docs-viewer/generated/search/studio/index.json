@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ad945f8fff5db2a70f4a9c8268b8bb75",
-    "generated_at_utc": "2026-07-10T23:10:22Z",
+    "version": "blake2b-a0379fd7c0b461b91ceab762a5b44c8f",
+    "generated_at_utc": "2026-07-10T23:23:05Z",
     "count": 233
   },
   "entries": [
@@ -1295,10 +1295,10 @@
       "kind": "doc",
       "title": "Docs Review Workflow",
       "href": "/docs/?scope=studio&doc=site-request-docs-review-workflow",
-      "last_updated": "2026-07-10",
+      "last_updated": "2026-07-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-07-10 • Change Requests",
+      "display_meta": "2026-07-11 • Change Requests",
       "search_terms": [
         "site-request-docs-review-workflow",
         "site",
@@ -1310,12 +1310,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-07-10",
+        "2026-07-11",
         "2026",
         "07",
-        "10"
+        "11"
       ],
-      "search_text": "site-request-docs-review-workflow site request docs review workflow docs review workflow change requests change requests 2026-07-10 2026 07 10"
+      "search_text": "site-request-docs-review-workflow site request docs review workflow docs review workflow change requests change requests 2026-07-11 2026 07 11"
     },
     {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
