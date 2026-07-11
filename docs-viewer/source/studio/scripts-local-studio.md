@@ -127,6 +127,9 @@ If `.env.local` is absent, the runner falls back to process environment variable
 - `DOCS_VIEWER_BASE_URL`
   default: `http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT`
   printed by `bin/local-all` and used by Studio links
+- `DOCS_VIEWER_REVIEW_ENABLED`
+  default in `bin/local-all`: `1`
+  enables the sibling `/docs-review/` route and temporary returned-package services; set to `0` to suppress Docs Review
 
 Example:
 
@@ -156,7 +159,7 @@ After preflight, `bin/local-all` starts:
 4. `bin/local-analytics` when `ANALYTICS_APP_ENABLED` is not `0`
 5. `docs-viewer/bin/docs-viewer`
 
-The runner prints the public-site preview, Local Studio app, Local Admin app, Local Analytics app, and Docs Viewer web service URLs, or the disabled reason for skipped optional children.
+The runner prints the public-site preview, Local Studio app, Local Admin app, Local Analytics app, Docs Viewer, and Docs Review URLs, or the disabled reason for skipped optional children.
 If any child process exits, `bin/local-all` prints which service exited, stops the remaining children, and exits with a non-zero status for clean early exits or the failing child status otherwise.
 
 ### Local Studio

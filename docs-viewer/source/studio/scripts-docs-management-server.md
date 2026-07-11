@@ -52,6 +52,8 @@ DOCS_VIEWER_WATCH_ENABLED
 
 `DOCS_VIEWER_REVIEW_ENABLED` independently enables `/docs-review/` package listing, package-local builds and generated reads, inventoried asset reads, and temporary returned Markdown/hierarchy writes. It does not enable canonical management. `DOCS_VIEWER_MANAGEMENT_ENABLED` continues to govern `/docs/` canonical management and does not grant review-package access.
 
+`bin/local-all` enables Docs Review by default because that runner explicitly starts the complete local application set. Set `DOCS_VIEWER_REVIEW_ENABLED=0` to suppress it. Launching `docs-viewer/bin/docs-viewer` directly retains the safer disabled default unless the variable is set explicitly.
+
 ## Reference
 
 - [Endpoint Overview](/docs/?scope=studio&doc=scripts-docs-management-endpoints) lists all GET and POST management endpoints and links to focused endpoint contracts.
