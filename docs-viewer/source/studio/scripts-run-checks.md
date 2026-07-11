@@ -46,7 +46,7 @@ $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
 - `docs`
   Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management service, Docs routes, Docs Broken Links behavior, and Docs Viewer contract fixtures from `docs-viewer/tests/python/`, plus Analytics-owned Data Sharing checks; then rebuilds generated Studio docs payloads and Studio docs search payloads.
 - `docs-viewer-smoke`
-  Validates `site/` and runs retained Docs Viewer route, standalone service, and public read-only smoke checks. Browser module-contract suites are not required smoke targets.
+  Validates `site/` and runs retained Docs Viewer route, standalone manage/review service, and public read-only smoke checks. Browser module-contract suites are not required smoke targets.
 - `studio-smoke`
   Validates `site/` and runs retained Studio-owned browser smoke checks, including public-site theme behavior and catalogue route/module checks. Docs Viewer smoke checks live only in `docs-viewer-smoke`; Analytics smoke checks live only in `analytics-smoke`.
 - `admin-smoke`

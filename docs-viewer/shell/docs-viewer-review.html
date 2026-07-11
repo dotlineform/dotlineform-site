@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="dlf-asset-version" content="docs-viewer-review-static">
+  <title>Docs Review</title>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer.css?v=docs-viewer-review-static">
+  <link rel="stylesheet" href="/docs-viewer/static/css/docs-viewer-manage.css?v=docs-viewer-review-static">
+</head>
+<body class="docs-viewer-service docs-viewer-review">
+  <main class="docs-viewer-service__main">
+    <section
+      class="docsViewer"
+      id="docsViewerRoot"
+      data-route-id="docs-review"
+      data-route-config-url="/docs-viewer/config/routes/docs-viewer-routes.json"
+      data-allow-management="false"
+      data-include-scope-param="false"
+      data-docs-viewer-ready="false"
+      data-docs-viewer-busy="false"
+    >
+      <div class="docsViewer__controls">
+        <div
+          id="docsViewerHeaderControlsMount"
+          data-docs-viewer-header-controls-mount
+          data-enable-search="false"
+        ></div>
+        <div id="docsViewerReviewControlsMount" class="docsViewer__reviewControls"></div>
+        <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
+        <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
+      </div>
+
+      <div id="docsViewerIndexPanelMount" data-docs-viewer-index-panel-mount></div>
+      <div id="docsViewerMainViewMount" data-docs-viewer-main-view-mount>
+        <noscript>This docs viewer requires JavaScript to load a review package.</noscript>
+      </div>
+      <div id="docsViewerInfoPanelMount" data-docs-viewer-info-panel-mount></div>
+    </section>
+
+    <script type="module" src="/docs-viewer/runtime/js/review/docs-viewer-review.js?v=docs-viewer-review-static"></script>
+  </main>
+</body>
+</html>

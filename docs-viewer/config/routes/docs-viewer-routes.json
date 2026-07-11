@@ -3,6 +3,54 @@
   "routes": [
     {
       "schema_version": "docs_viewer_route_config_v4",
+      "app_kind": "review",
+      "route_id": "docs-review",
+      "route_path": "/docs-review/",
+      "default_scope_id": "review",
+      "include_scope_param": false,
+      "preserve_query_params": ["package", "view"],
+      "viewer_base_url": "/docs-review/",
+      "features": [
+        "source-editing"
+      ],
+      "access": {
+        "allow_scope_query": false,
+        "management_ui": false
+      },
+      "services": {
+        "generated_data": { "base_url": "" },
+        "source": { "base_url": "" },
+        "management": { "base_url": "" }
+      },
+      "docs_paths": {
+        "index_tree_url": "/docs-review/packages/index-tree",
+        "recently_added_url": "",
+        "search_index_url": ""
+      },
+      "config_urls": {
+        "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
+        "report_registry": ""
+      },
+      "panels": {
+        "index": {
+          "enabled": true,
+          "default_state": "normal"
+        },
+        "main": {
+          "enabled": true,
+          "default_view": "rendered-document"
+        },
+        "info": {
+          "enabled": true,
+          "default_view": "metadata-info"
+        }
+      },
+      "view_policy": {
+        "hidden_controls": ["bookmark"]
+      }
+    },
+    {
+      "schema_version": "docs_viewer_route_config_v4",
       "app_kind": "manage",
       "route_id": "docs-manage",
       "route_path": "/docs/",

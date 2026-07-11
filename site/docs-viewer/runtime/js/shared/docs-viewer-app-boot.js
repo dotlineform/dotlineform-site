@@ -198,6 +198,7 @@ export function resolveDocsViewerAppBootContext(options) {
         routeContext: routeContext,
         viewRegistry: viewRegistry,
         infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
+        renderDocumentControls: settings.renderDocumentControls,
         mountDocumentExtras: settings.mountDocumentExtras,
         appShellReady: Promise.resolve(appShellResult),
         appShellResult: appShellResult,
@@ -288,5 +289,11 @@ export function startDocsViewerPublicApp(options) {
 export function startDocsViewerManageApp(options) {
   return startDocsViewerApp(Object.assign({}, options || {}, {
     appKind: "manage"
+  }));
+}
+
+export function startDocsViewerReviewApp(options) {
+  return startDocsViewerApp(Object.assign({}, options || {}, {
+    appKind: "review"
   }));
 }

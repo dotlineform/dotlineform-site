@@ -87,7 +87,6 @@ export function startDocsViewerRuntime(options) {
   var configuredScopeDiscoveryEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery");
   var managementEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "management");
   var recentlyAddedEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recently-added");
-  var reportsEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "reports");
   var searchEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "search");
   var sourceEditingEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "source-editing");
   var allowScopeQuery = routeAccess.allowScopeQuery;
@@ -96,6 +95,7 @@ export function startDocsViewerRuntime(options) {
   var viewerBaseUrl = routeContext.viewerBaseUrl;
   var viewerScope = routeContext.viewerScope;
   var includeScopeParam = routeContext.includeScopeParam;
+  var preserveQueryParams = routeContext.preserveQueryParams || [];
   var defaultRouteDocId = routeContext.defaultRouteDocId;
   var viewerPathname = routeContext.viewerPathname;
   var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
@@ -177,6 +177,7 @@ export function startDocsViewerRuntime(options) {
     renderDocumentControls: function () {
       renderBookmarkControl();
       renderManagementUi();
+      renderDocumentControlsContribution();
     },
     root: root,
     scopeConfig: appSession.domains.scopeConfig,
@@ -198,7 +199,7 @@ export function startDocsViewerRuntime(options) {
     collectionProvider: collectionProvider,
     hasActiveQuery: hasActiveQuery,
     managementService: managementService,
-    mountDocumentExtras: reportsEnabled ? settings.mountDocumentExtras : null,
+    mountDocumentExtras: settings.mountDocumentExtras,
     more: more,
     projectDocumentShell: panelLayout.projectMainView,
     renderBookmarkToggle: renderBookmarkToggle,
@@ -241,6 +242,7 @@ export function startDocsViewerRuntime(options) {
     hideDocPane: hideDocPane,
     collectionProvider: collectionProvider,
     includeScopeParam: function () { return includeScopeParam; },
+    preserveQueryParams: function () { return preserveQueryParams; },
     more: more,
     renderBookmarkUi: renderBookmarkUi,
     renderDocLoadingState: renderDocLoadingState,
@@ -411,6 +413,7 @@ export function startDocsViewerRuntime(options) {
     defaultRouteDocId = routeContext.defaultRouteDocId;
     viewerBaseUrl = routeContext.viewerBaseUrl;
     includeScopeParam = routeContext.includeScopeParam;
+    preserveQueryParams = routeContext.preserveQueryParams || preserveQueryParams;
     viewerPathname = routeContext.viewerPathname;
     bookmarkScope = routeContext.bookmarkScope;
     state.indexPanelState = panelLayout.setStorageScope(bookmarkScope);
@@ -527,6 +530,25 @@ export function startDocsViewerRuntime(options) {
       setStatus: statusController.setStatus,
       startBusy: statusController.startBusy
     };
+  }
+
+  function renderDocumentControlsContribution() {
+    if (typeof settings.renderDocumentControls !== "function") return;
+    settings.renderDocumentControls({
+      activeViewState: documentViewCoordinator ? documentViewCoordinator.activeViewState() : {
+        activeViewId: "rendered-document",
+        activeModeId: "rendered-document"
+      },
+      document: document,
+      requestDocumentMode: function (modeId, requestOptions) {
+        return documentViewCoordinator
+          ? documentViewCoordinator.requestDocumentMode(modeId, requestOptions)
+          : false;
+      },
+      root: root,
+      viewRegistry: viewRegistry,
+      window: window
+    });
   }
 
   function renderBookmarkUi() {

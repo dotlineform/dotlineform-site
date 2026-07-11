@@ -93,6 +93,17 @@ export function initDocsViewerRouteWorkflow(context) {
     return Boolean(currentValue(context.includeScopeParam));
   }
 
+  function preservedQueryParams() {
+    var names = currentValue(context.preserveQueryParams);
+    var current = new URLSearchParams(window.location.search);
+    var preserved = {};
+    (Array.isArray(names) ? names : []).forEach(function (name) {
+      var value = current.get(name);
+      if (value) preserved[name] = value;
+    });
+    return preserved;
+  }
+
   function defaultRouteDocId() {
     return currentValue(context.defaultRouteDocId) || "";
   }
@@ -160,6 +171,7 @@ export function initDocsViewerRouteWorkflow(context) {
       hash: hash,
       includeScopeParam: includeScopeParam(),
       origin: window.location.origin,
+      preservedQueryParams: preservedQueryParams(),
       query: query,
       viewerBaseUrl: viewerBaseUrl(),
       viewerScope: viewerScope()
@@ -187,6 +199,7 @@ export function initDocsViewerRouteWorkflow(context) {
       includeScopeParam: includeScopeParam(),
       mode: mode,
       origin: window.location.origin,
+      preservedQueryParams: preservedQueryParams(),
       query: query,
       reportParams: reportParams || currentReportRouteParams(docId),
       viewerBaseUrl: viewerBaseUrl(),

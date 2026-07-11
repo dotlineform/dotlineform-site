@@ -22,6 +22,7 @@ It provides:
 Current live scopes:
 
 - Studio docs at `/docs/` through the standalone Docs Viewer service
+- validated returned-package review at `/docs-review/` when the independent review capability is enabled
 - Library docs at `/library/`
 - Analysis docs at `/analysis/`
 - Moments docs at `/moments/`
@@ -38,7 +39,7 @@ Use [Docs Viewer Static Route Template](/docs/?scope=studio&doc=docs-viewer-stat
 ### 1. Scope-owned route shells and service shell
 
 Public route pages identify the active Docs Viewer route through `data-route-id` or the current path and locate the browser-safe route-config registry through `data-route-config-url`.
-The local `/docs/` management route is served by the standalone Docs Viewer service from the static `docs-viewer/shell/docs-viewer-manage.html` route shell.
+The local `/docs/` management route and `/docs-review/` returned-package route are served by the standalone Docs Viewer service from separate static route shells.
 
 The registry defines scope-specific values such as:
 
@@ -61,6 +62,10 @@ Current management service shell:
 
 - `docs-viewer/shell/docs-viewer-manage.html`
 
+Current review service shell:
+
+- `docs-viewer/shell/docs-viewer-review.html`
+
 ### 2. Shared shell contract
 
 Public route shells and the management service shell expose the stable mount points that the app shell fills before the runtime binds route behavior.
@@ -73,12 +78,13 @@ The public route shell template renders:
 
 The management service shell renders the same app-owned mount contract plus management-only mounts and local-service context when enabled.
 
-### 3. Public And Manage Entrypoints
+### 3. Public, Manage, And Review Entrypoints
 
 The viewer behavior starts from route-specific entrypoints:
 
 - `site/docs-viewer/runtime/js/public/docs-viewer-public.js` for public read-only routes
 - `docs-viewer/runtime/js/management/docs-viewer-manage.js` for the local `/docs/` management shell
+- `docs-viewer/runtime/js/review/docs-viewer-review.js` for the local `/docs-review/` returned-package shell
 
 The entry modules delegate boot to `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
 The private app runtime coordinator delegates app composition and startup sequencing to `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
@@ -91,10 +97,11 @@ Current helper modules:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-status-controller.js` owns viewer status/error display and nested busy-state projection
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` owns remaining private runtime wiring for focused controllers, config handoff, event handlers, private management/startup callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
-- `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js` owns explicit `public`/`manage` app kind, route context, feature-policy slot, service-availability projection, and the backend-capability input slot
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js` owns explicit `public`/`manage`/`review` app kind, route context, preserved route-query identity, feature-policy slot, service-availability projection, and the backend-capability input slot
 - `site/docs-viewer/runtime/js/shared/docs-viewer-access.js` owns scope-query and management-UI route access plus hosted-view/mode access checks
 - `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js` owns independent `generatedData`, `source`, `management`, and browser-safe `config` service surfaces
 - `site/docs-viewer/runtime/js/shared/docs-viewer-configured-scope-provider.js` owns feature-facing collection reads for index, document, search, recently added, references, and explicitly supplied source methods
+- `docs-viewer/runtime/js/review/docs-viewer-returned-package-provider.js` owns package-selected index, document, source, manifest, inventory, and build reads/writes through the focused review service
 - `docs-viewer/runtime/js/management/docs-viewer-management-source-adapter.js` is the manage-entrypoint-owned optional source endpoint adapter; backend capabilities still authorize operations
 - `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js` owns generated-data transport option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, payload normalization, and static/local reads behind the provider
 - `site/docs-viewer/runtime/js/shared/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior
@@ -160,6 +167,8 @@ Current URL state:
 - `scope` selects the active docs scope on `/docs/`
 - `q` activates inline docs search for the current scope
 - `/docs/` is the local manage route when the Docs Viewer service is available
+- `package` selects the validated external package on `/docs-review/` and is preserved by internal history writes
+- `view=source` selects temporary returned Markdown editing on `/docs-review/`
 - `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document
 

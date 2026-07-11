@@ -111,6 +111,16 @@ function normalizeViewPolicy(rawPolicy) {
   };
 }
 
+function normalizePreservedQueryParams(value) {
+  if (!Array.isArray(value)) return [];
+  var seen = new Set();
+  return value.map(cleanString).filter(function (name) {
+    if (!/^[a-z][a-z0-9_-]*$/i.test(name) || seen.has(name)) return false;
+    seen.add(name);
+    return true;
+  });
+}
+
 function routeConfigSource(settings) {
   if (settings.routeConfig) {
     return {
@@ -269,6 +279,7 @@ export function resolveDocsViewerRouteConfig(options) {
     isDocsManagementRoute: docsManagementRoute,
     defaultScopeId: requireRouteConfigField(rawConfig.default_scope_id, "default_scope_id"),
     includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
+    preserveQueryParams: normalizePreservedQueryParams(rawConfig.preserve_query_params),
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
     reportRegistryUrl: reportsEnabled

@@ -32,6 +32,8 @@ if str(SERVICE_DIR) not in sys.path:
 
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
+import docs_review_routes as review_routes  # noqa: E402
+import docs_review_service as review_service  # noqa: E402
 from local_env import SITE_ENV_REL_PATH  # noqa: E402
 
 
@@ -39,7 +41,9 @@ ENABLED_VALUES = {"1", "on", "true", "yes"}
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
 DEFAULT_SERVICE_CONFIG = REPO_ROOT / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json"
 MANAGE_PAGE_TEMPLATE = REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-manage.html"
+REVIEW_PAGE_TEMPLATE = REPO_ROOT / "docs-viewer" / "shell" / "docs-viewer-review.html"
 MANAGE_ROUTE = "/docs/"
+REVIEW_ROUTE = "/docs-review/"
 STATIC_PREFIXES = (
     "/assets/data/",
     "/assets/docs/",
@@ -51,6 +55,7 @@ RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/js/public/", Path("site/docs-viewer/runtime/js/public")),
     ("/docs-viewer/runtime/js/shared/", Path("site/docs-viewer/runtime/js/shared")),
     ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),
+    ("/docs-viewer/runtime/js/review/", Path("docs-viewer/runtime/js/review")),
     ("/docs-viewer/runtime/js/import/", Path("docs-viewer/runtime/js/import")),
     ("/docs-viewer/runtime/js/reports/", Path("docs-viewer/runtime/js/reports")),
     ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
@@ -123,6 +128,7 @@ class DocsViewerServiceConfig:
     management_enabled: bool
     generated_reads_enabled: bool
     watch_enabled: bool
+    review_enabled: bool = False
 
 
 def parse_site_env(path: Path) -> dict[str, str]:
@@ -168,6 +174,7 @@ def service_defaults(repo_root: Path) -> dict[str, bool]:
         "management_enabled": capabilities.get("management_enabled_default") is True,
         "generated_reads_enabled": capabilities.get("generated_reads_enabled_default") is not False,
         "watch_enabled": capabilities.get("watch_enabled_default") is not False,
+        "review_enabled": capabilities.get("review_enabled_default") is True,
     }
 
 
@@ -195,6 +202,7 @@ def load_service_config(
         management_enabled=env_bool(env, "DOCS_VIEWER_MANAGEMENT_ENABLED", defaults["management_enabled"]),
         generated_reads_enabled=env_bool(env, "DOCS_VIEWER_GENERATED_READS_ENABLED", defaults["generated_reads_enabled"]),
         watch_enabled=env_bool(env, "DOCS_VIEWER_WATCH_ENABLED", defaults["watch_enabled"]),
+        review_enabled=env_bool(env, "DOCS_VIEWER_REVIEW_ENABLED", defaults["review_enabled"]),
     )
     validate_service_config(config)
     return config
@@ -219,6 +227,7 @@ def asset_version(repo_root: Path) -> str:
     runtime_candidates.extend((repo_root / "docs-viewer/runtime/js").rglob("*.js"))
     candidates = [
         repo_root / "docs-viewer" / "shell" / "docs-viewer-manage.html",
+        repo_root / "docs-viewer" / "shell" / "docs-viewer-review.html",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
@@ -236,31 +245,43 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
     routes_payload = payload.get("routes")
     routes_list = routes_payload if isinstance(routes_payload, list) else []
     for route in routes_list:
-        if not isinstance(route, dict) or route.get("route_id") != "docs-manage":
+        if not isinstance(route, dict):
+            continue
+        route_id = route.get("route_id")
+        if route_id not in {"docs-manage", "docs-review"}:
             continue
         services = route.get("services")
         if not isinstance(services, dict):
             services = {}
             route["services"] = services
-        services["generated_data"] = {
-            "base_url": config.base_url if config.generated_reads_enabled else "",
-        }
-        services["source"] = {
-            "base_url": config.base_url if config.management_enabled else "",
-        }
-        services["management"] = {
-            "base_url": config.base_url if config.management_enabled else "",
-        }
+        if route_id == "docs-review":
+            services["generated_data"] = {"base_url": config.base_url if config.review_enabled else ""}
+            services["source"] = {"base_url": config.base_url if config.review_enabled else ""}
+            services["management"] = {"base_url": ""}
+        else:
+            services["generated_data"] = {
+                "base_url": config.base_url if config.generated_reads_enabled else "",
+            }
+            services["source"] = {
+                "base_url": config.base_url if config.management_enabled else "",
+            }
+            services["management"] = {
+                "base_url": config.base_url if config.management_enabled else "",
+            }
         access = route.get("access")
         if not isinstance(access, dict):
             access = {}
             route["access"] = access
-        access["management_ui"] = bool(config.management_enabled)
+        access["management_ui"] = bool(config.management_enabled) if route_id == "docs-manage" else False
     return payload
 
 
 def manage_page_path(repo_root: Path) -> Path:
     return repo_root / MANAGE_PAGE_TEMPLATE.relative_to(REPO_ROOT)
+
+
+def review_page_path(repo_root: Path) -> Path:
+    return repo_root / REVIEW_PAGE_TEMPLATE.relative_to(REPO_ROOT)
 
 
 def apply_capability_flags(payload: dict[str, object], config: DocsViewerServiceConfig) -> dict[str, object]:
@@ -323,6 +344,9 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         if path in {"/docs", MANAGE_ROUTE}:
             self.send_static_html(manage_page_path(self.repo_root))
             return
+        if path in {"/docs-review", REVIEW_ROUTE}:
+            self.send_static_html(review_page_path(self.repo_root))
+            return
         if path == "/docs-viewer/config/routes/docs-viewer-routes.json":
             self.send_json(render_route_config_registry(self.repo_root, self.config))
             return
@@ -333,6 +357,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
                     "service": "docs_viewer",
                     "management_enabled": self.config.management_enabled,
                     "generated_reads_enabled": self.config.generated_reads_enabled,
+                    "review_enabled": self.config.review_enabled,
                 }
             )
             return
@@ -356,6 +381,24 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
             if not self.origin_allowed_for_local_api():
                 self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
                 return
+        if path in review_routes.GET_PATHS:
+            if not self.config.review_enabled:
+                self.send_json({"ok": False, "error": "Docs Review is disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_review_api_json(path, query)
+            return
+        if path.startswith(review_routes.ASSET_CONTENT_PREFIX):
+            if not self.config.review_enabled:
+                self.send_json({"ok": False, "error": "Docs Review is disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_review_asset(path)
+            return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
             return
@@ -368,6 +411,15 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
+        if path in review_routes.POST_PATHS:
+            if not self.config.review_enabled:
+                self.send_json({"ok": False, "error": "Docs Review is disabled"}, HTTPStatus.FORBIDDEN)
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_review_api_post_json(path)
+            return
         if path not in routes.POST_PATHS:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
@@ -382,7 +434,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path not in routes.OPTIONS_PATHS:
+        if path not in routes.OPTIONS_PATHS and path not in review_routes.OPTIONS_PATHS:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -448,6 +500,53 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_review_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
+        try:
+            self.send_json(review_service.docs_review_get_payload(self.repo_root, api_path, query))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_review_api_post_json(self, api_path: str) -> None:
+        try:
+            status, payload = review_service.docs_review_post_response(
+                self.repo_root,
+                api_path,
+                self.read_json_body(),
+            )
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_review_asset(self, request_path: str) -> None:
+        try:
+            path = review_service.docs_review_asset_path_from_route(self.repo_root, request_path)
+            body = path.read_bytes()
+            self.send_response(HTTPStatus.OK)
+            self.send_cors_headers()
+            self.send_header("Content-Type", mimetypes.guess_type(path.name)[0] or "application/octet-stream")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            if path.suffix.lower() in {".htm", ".html"}:
+                self.send_header(
+                    "Content-Security-Policy",
+                    "sandbox allow-scripts; default-src 'self' data: blob:; connect-src 'none'",
+                )
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
 
     def read_json_body(self) -> dict[str, object]:
         content_length = self.headers.get("Content-Length", "").strip()
@@ -577,6 +676,7 @@ def main(argv: list[str] | None = None) -> int:
     host, port = server.server_address
     print(f"Docs Viewer service: http://{host}:{port}/docs/", flush=True)
     print(f"Docs Viewer management: {'enabled' if config.management_enabled else 'disabled'}", flush=True)
+    print(f"Docs Review: {'enabled' if config.review_enabled else 'disabled'}", flush=True)
     print(f"Docs Viewer generated reads: {'enabled' if config.generated_reads_enabled else 'disabled'}", flush=True)
     try:
         server.serve_forever()

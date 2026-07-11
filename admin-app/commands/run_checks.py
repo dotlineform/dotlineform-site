@@ -343,6 +343,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/python/test_docs_data_sharing_export.py",
                 "docs-viewer/tests/python/test_docs_source_model.py",
                 "docs-viewer/tests/python/test_docs_broken_links.py",
+                "docs-viewer/tests/python/test_docs_review_packages.py",
                 "docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py",
                 "docs-viewer/tests/python/test_docs_viewer_service_config.py",
                 "docs-viewer/tests/python/test_docs_viewer_static_assets.py",
@@ -385,6 +386,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/tests/smoke/docs_viewer_service_manage.py",
             ),
             "Smoke-check the standalone Docs Viewer service manage route boundary and API base.",
+        ),
+        CheckCommand(
+            "docs-viewer-service-review-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_service_review.py",
+            ),
+            "Smoke-check the standalone Docs Review route, provider, temporary source write, and API authority boundary.",
         ),
         CheckCommand(
             "public-docs-viewer-readonly-smoke",

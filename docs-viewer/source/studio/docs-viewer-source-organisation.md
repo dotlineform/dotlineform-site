@@ -130,6 +130,8 @@ At a high level, each scope currently has:
 
 This is why the shared runtime can stay generic: it consumes the same kind of scope-owned output for each docs scope.
 
+Validated returned-package source and generated previews are not repository source or configured scopes. They live under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/`, with temporary Markdown in `source/`, inventoried files in `assets/`, and review output in `generated/`. Data Sharing creates the validated handoff; Docs Review may edit and rebuild only within that package folder and cannot promote it into canonical source.
+
 Detailed payload shape and rationale are intentionally left out of this section.
 
 ## Practical Documentation Rule

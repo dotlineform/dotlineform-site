@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ed185900439fc5ef0fac6a7542a8692d",
-    "generated_at_utc": "2026-07-11T16:20:42Z",
+    "version": "blake2b-1e99c798b86cb0b3cc0dd9b6e719a3f8",
+    "generated_at_utc": "2026-07-11T17:45:22Z",
     "count": 236
   },
   "entries": [
@@ -2580,10 +2580,10 @@
       "kind": "doc",
       "title": "Management Services",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-07 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2594,12 +2594,12 @@
         "services",
         "docs viewer",
         "viewer",
-        "2026-06-07",
+        "2026-07-11",
         "2026",
-        "06",
-        "07"
+        "07",
+        "11"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server management services services docs viewer viewer 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-server scripts docs management server management services services docs viewer viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-management-endpoints",
@@ -3043,10 +3043,10 @@
       "kind": "doc",
       "title": "Service Entrypoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-scripts-service-entrypoints",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-11",
       "parent_id": "scripts-docs-management-scripts",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-06-07 • Scripts Overview",
+      "display_meta": "2026-07-11 • Scripts Overview",
       "search_terms": [
         "scripts-docs-management-scripts-service-entrypoints",
         "scripts",
@@ -3057,12 +3057,12 @@
         "service entrypoints",
         "scripts overview",
         "overview",
-        "2026-06-07",
+        "2026-07-11",
         "2026",
-        "06",
-        "07"
+        "07",
+        "11"
       ],
-      "search_text": "scripts-docs-management-scripts-service-entrypoints scripts docs management service entrypoints service entrypoints scripts overview overview 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-scripts-service-entrypoints scripts docs management service entrypoints service entrypoints scripts overview overview 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-management-scripts-source-editor",

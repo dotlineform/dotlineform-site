@@ -22,6 +22,7 @@ def test_load_service_config_reads_env_local() -> None:
             {
                 "capabilities": {
                     "management_enabled_default": False,
+                    "review_enabled_default": False,
                     "generated_reads_enabled_default": True,
                     "watch_enabled_default": True,
                 },
@@ -35,6 +36,7 @@ def test_load_service_config_reads_env_local() -> None:
                     'export DOCS_VIEWER_PORT="8899"',
                     'export DOCS_VIEWER_BASE_URL="http://127.0.0.1:8899"',
                     'export DOCS_VIEWER_MANAGEMENT_ENABLED="1"',
+                    'export DOCS_VIEWER_REVIEW_ENABLED="1"',
                     'export DOCS_VIEWER_GENERATED_READS_ENABLED="0"',
                     'export DOCS_VIEWER_WATCH_ENABLED="0"',
                 ]
@@ -48,6 +50,7 @@ def test_load_service_config_reads_env_local() -> None:
     assert config.port == 8899
     assert config.base_url == "http://127.0.0.1:8899"
     assert config.management_enabled is True
+    assert config.review_enabled is True
     assert config.generated_reads_enabled is False
     assert config.watch_enabled is False
 
@@ -117,6 +120,29 @@ def test_manage_route_config_separates_generated_reads_from_management_services(
     assert manage_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"
     assert manage_route["services"]["source"]["base_url"] == ""
     assert manage_route["services"]["management"]["base_url"] == ""
+
+
+def test_review_route_config_has_independent_temporary_write_services() -> None:
+    config = docs_viewer_service.DocsViewerServiceConfig(
+        host="127.0.0.1",
+        port=8776,
+        base_url="http://127.0.0.1:8776",
+        management_enabled=False,
+        generated_reads_enabled=False,
+        watch_enabled=True,
+        review_enabled=True,
+    )
+
+    route_registry = docs_viewer_service.render_route_config_registry(REPO_ROOT, config)
+    review_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-review")
+
+    assert review_route["app_kind"] == "review"
+    assert review_route["viewer_base_url"] == "/docs-review/"
+    assert review_route["preserve_query_params"] == ["package", "view"]
+    assert review_route["access"]["management_ui"] is False
+    assert review_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"
+    assert review_route["services"]["source"]["base_url"] == "http://127.0.0.1:8776"
+    assert review_route["services"]["management"]["base_url"] == ""
 
 def test_apply_capability_flags_respects_local_service_flags() -> None:
     payload = {

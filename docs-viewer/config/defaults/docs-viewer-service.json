@@ -3,24 +3,36 @@
   "service": {
     "bind_policy": "loopback_only",
     "manage_route": "/docs/",
+    "review_route": "/docs-review/",
     "api_base_path": "",
     "env": {
       "host": "DOCS_VIEWER_HOST",
       "port": "DOCS_VIEWER_PORT",
       "base_url": "DOCS_VIEWER_BASE_URL",
       "management_enabled": "DOCS_VIEWER_MANAGEMENT_ENABLED",
+      "review_enabled": "DOCS_VIEWER_REVIEW_ENABLED",
       "generated_reads_enabled": "DOCS_VIEWER_GENERATED_READS_ENABLED",
       "watch_enabled": "DOCS_VIEWER_WATCH_ENABLED"
     }
   },
   "capabilities": {
     "management_enabled_default": false,
+    "review_enabled_default": false,
     "generated_reads_enabled_default": true,
     "watch_enabled_default": true
   },
   "routes": {
     "health": "/health",
     "capabilities": "/capabilities",
+    "review_capabilities": "/docs-review/capabilities",
+    "review_packages": "/docs-review/packages",
+    "review_manifest": "/docs-review/packages/manifest",
+    "review_assets": "/docs-review/packages/assets",
+    "review_asset_content": "/docs-review/packages/assets-content/",
+    "review_index_tree": "/docs-review/packages/index-tree",
+    "review_payload": "/docs-review/packages/payload",
+    "review_source": "/docs-review/packages/source",
+    "review_build": "/docs-review/packages/build",
     "generated_index_tree": "/docs/generated/index-tree",
     "generated_payload": "/docs/generated/payload",
     "generated_search": "/docs/generated/search",

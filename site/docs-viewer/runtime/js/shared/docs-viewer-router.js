@@ -1,6 +1,11 @@
 export function buildViewerUrl(options) {
   var settings = options || {};
   var url = new URL(settings.viewerBaseUrl || "/docs/", settings.origin || window.location.origin);
+  Object.entries(settings.preservedQueryParams || {}).forEach(function (entry) {
+    var key = String(entry[0] || "").trim();
+    var value = String(entry[1] == null ? "" : entry[1]).trim();
+    if (key && value) url.searchParams.set(key, value);
+  });
   if (settings.includeScopeParam && settings.viewerScope) {
     url.searchParams.set("scope", settings.viewerScope);
   }

@@ -879,8 +879,8 @@ Checkpoint evidence:
 | non-scope provider | pass | app composition accepts a code-owned `createCollectionProvider` factory and retains the configured-scope provider as its default |
 | independent generated/source services | pass | review context can expose local generated reads and source service access while omitting the management service |
 | optional route features | pass | an empty feature policy omits configured-scope discovery, search, recent, bookmarks, reports, scope selection, and management startup |
-| review source mode and controls | pass | the view registry admits review-only Markdown mode and save controls, including backend capability requirements |
-| public asset isolation | pass | public entrypoints retain public/shared imports only; review contributions remain code-owned by the future review entrypoint |
+| review source mode and controls | pass | the view registry admits review-only Markdown mode and save controls while the focused review backend authorizes temporary writes |
+| public asset isolation | pass | public entrypoints retain public/shared imports only; review contributions are owned by the local review entrypoint |
 | coordinator boundary | pass | provider, view, source, and shell contributions enter through existing boot/composition seams; no review lifecycle is added to the private runtime coordinator |
 | package dependency | pass with sequencing clarification | preview may start from a representative package fixture; the real Data Sharing producer remains required before round-trip acceptance |
 
@@ -892,17 +892,13 @@ Verification evidence:
 - the four-check `docs-viewer-smoke` profile passed at `var/admin/test-runs/docs-review-readiness-checkpoint/summary.md`
 - the three-check docs test/build/search profile passed at `var/admin/test-runs/docs-review-readiness-checkpoint-docs/summary.md`
 
-Expected phase 6 work, not checkpoint blockers:
-
-- add the `/docs-review/` entrypoint, route record, returned-package provider, and focused backend services
-- replace or isolate the old management review-session build stub
-- create a representative external-workspace package fixture for the first source-only build
-- add package-aware asset resolution after the source-only vertical slice
-- connect real Data Sharing export/intake before declaring the complete round trip done
+The fixture-backed Phase 6 consumer work identified at this checkpoint is now complete. Connecting the real Data Sharing export/intake producer remains the only round-trip dependency recorded here.
 
 ## Phase 6: Docs Review
 
 Implement [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) as its own feature project after the readiness checkpoint.
+
+Status: complete for the fixture-backed validated-package consumer and local review application. The real Data Sharing full-package producer remains a separate active dependency for the first real round trip.
 
 Its implementation should consume:
 
@@ -910,12 +906,28 @@ Its implementation should consume:
 - review route feature policy
 - returned-package provider
 - shared view/mode/control projection
-- shared tree, document, source-editor, and parent-picker primitives
+- shared tree, document, and source-editor primitives plus a review-focused package parent selector
 - focused package-listing, manifest/asset-read, build, generated-read, and temporary source services
 
 Docs Review must not receive canonical import or promotion services. Any future automated transition from a returned package into canonical source remains a separate Data Sharing workflow.
 
 Docs Review must not be used as an excuse to complete unrelated roadmap items.
+
+Delivered outcomes:
+
+- independent review service authority and `/docs-review/` shell
+- focused package, manifest, inventory, build, generated-read, asset-read, and temporary source services
+- a returned-package provider selected by package identity rather than configured scope
+- package-preserving navigation, rendered/source modes, revision-checked edits, hierarchy edits, Build, inventory visibility, and canonical comparison
+- package-aware inventoried media rendering and sandboxed interactive HTML
+- no canonical management, import, promotion, publish, or configured-scope mutation authority
+
+Verification evidence:
+
+- returned-package Python contract tests cover validation, containment, builds, generated reads, source revision/write, hierarchy cycles, media, and sandboxed interactive HTML
+- the focused `/docs-review/` browser smoke covers route boot, automatic build, package identity, rendered/source switching, source save/rebuild, and canonical comparison
+- the existing `/docs/` manage browser smoke remains green
+- public runtime import-boundary tests exclude review and management modules
 
 ## Phase 7: Broader Management Coordinator Work
 
@@ -1016,7 +1028,7 @@ Recommended order of work (to be reviewed after each step):
 14. approve the validated-package consumer interface; continue the real full-package producer independently — consumer interface complete, producer active
 15. run the Docs Review readiness checkpoint — complete
 16. update the Docs Review spec only if the platform or package contracts materially changed — checkpoint sequencing clarified
-17. implement Docs Review through its active request, beginning with a fixture-backed preview vertical slice
+17. implement Docs Review through its active request, beginning with a fixture-backed preview vertical slice — complete for the validated-package consumer
 18. continue D1-4, the search request, later W0 slices, and phases 7-9 according to current risk and feature demand
 
 ## What Not To Refactor Yet

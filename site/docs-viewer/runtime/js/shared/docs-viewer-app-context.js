@@ -73,6 +73,7 @@ export function createDocsViewerRouteContext(options) {
     viewerBaseUrl: viewerBaseUrl,
     viewerScope: routeConfig.defaultScopeId,
     includeScopeParam: Boolean(routeConfig.includeScopeParam),
+    preserveQueryParams: routeConfig.preserveQueryParams || [],
     defaultRouteDocId: "",
     viewerPathname: resolvedViewerPathname,
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),

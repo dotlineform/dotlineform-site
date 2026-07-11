@@ -15,7 +15,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 ## Ownership Rules
 
 - Extracted helper modules must not import route entrypoints or mutate private runtime coordinator state directly.
-- Public-safe modules must not import manage-owned modules, management service clients, report registries, source editors, import workflows, settings, scope lifecycle, or manage-only CSS assumptions.
+- Public-safe modules must not import manage- or review-owned modules, local service clients, report registries, source editors, import workflows, settings, scope lifecycle, or local-only CSS assumptions.
 - The management controller receives a narrow context API through the neutral lazy-controller adapter so public read-only viewers do not download or execute management-only orchestration.
 - Route workflow commands are exposed only through the private route workflow command contract, backed by explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs.
 - The returned app handle stays intentionally small: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`.
@@ -29,6 +29,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | --- | --- | --- |
 | Public entrypoint | `docs-viewer-public.js` | Starts the public app boot path and does not import manage-owned hosted views, shell renderers, reports, source editor, import, settings, or scope lifecycle modules. |
 | Manage entrypoint | `docs-viewer-manage.js` | Supplies manage-owned document extras, hosted views, shell composition, and starts the manage app boot path. |
+| Review entrypoint | `docs-viewer-review.js` | Supplies the returned-package provider, review hosted views and controls, package workflow controller, and starts the review app boot path without management authority. |
 | App boot | `docs-viewer-app-boot.js` | Root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
 | App composition | `docs-viewer-app-composition.js` | Runtime defaults, service/provider/session construction, feature-filtered hosted-view registration, startup authority records, and feature-aware startup sequencing. |
 | App session | `docs-viewer-app-session.js` | State defaults, single-owner named state-domain facades, public/manage route-session projection, and runtime-internal state object. |
@@ -41,11 +42,12 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Route workflow | `docs-viewer-route-workflow.js` | Current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, payload load orchestration, route-link handling, popstate coordination, and private route command contract. |
-| App context, route access, and route config | `docs-viewer-app-context.js`, `docs-viewer-route-config.js`, `docs-viewer-access.js` | Explicit `public`/`manage` app kind, entrypoint/route validation, route visibility/composition policy, browser-safe registry resolution, route context, and scope projection. |
+| App context, route access, and route config | `docs-viewer-app-context.js`, `docs-viewer-route-config.js`, `docs-viewer-access.js` | Explicit `public`/`manage`/`review` app kind, entrypoint/route validation, route visibility/composition policy, browser-safe registry resolution, preserved route-query identity, route context, and scope projection. |
 | Route features | `docs-viewer-route-features.js` | Allowlisted feature ids, dependency validation, normalized feature policy, feature queries, and code-owned record filtering. Route config cannot register implementations. |
 | Service context | `docs-viewer-service-context.js` | Independent `generatedData`, `source`, `management`, and browser-safe `config` service surfaces. Presence and URLs do not grant backend capability. |
 | Config controller/service | `docs-viewer-config-controller.js`, `docs-viewer-config-service.js` | Shared config-envelope fetch/retry, independently callable configured-scope discovery and viewer-settings loading, scope route/picker projection, and UI-text/settings projection. |
 | Configured-scope provider | `docs-viewer-configured-scope-provider.js` | Feature-facing `readIndex`, `readDocument`, `readSearch`, `readRecentlyAdded`, and `readReferences` methods, configured-scope URL resolution, reference-target projection, and optional source-method projection. |
+| Returned-package provider | `docs-viewer-returned-package-provider.js`, `docs-viewer-review-client.js` | Package-selected index, document, source, manifest, inventory, and build transport for `/docs-review/`; wrapper normalization keeps external generated paths out of the shared viewer. |
 | Source-service adapter | `docs-viewer-management-source-adapter.js` | Manage-entrypoint-owned optional source endpoint delegation. Its explicit contribution supplies provider methods but does not grant backend authority. |
 | Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data transport shaping, separately owned generated-read capability caching, selected-document reload projection, generated-search capability checks, payload normalization, and static/local generated JSON reads behind the provider. |
 | Low-level data primitives | `docs-viewer-data.js` | Low-level JSON fetch/retry and generated-read reload path primitives reserved for generated-data runtime and config-service owners. |
@@ -84,8 +86,15 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Management client | `docs-viewer-management-client.js` | Docs Viewer service transport helpers used by management controller workflows. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |
-| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Manage-only source-body document display mode rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. |
+| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Local source-body document display mode rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. Manage and review entrypoints may supply different providers; public entrypoints never import it. |
 | Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. |
+
+## Review-Only Runtime And Service
+
+| Owner | Modules | Responsibility |
+| --- | --- | --- |
+| Review package workflow | `docs-viewer-review-controller.js`, `docs-viewer-review-document-controls.js`, `docs-viewer-review-hosted-views.js` | Package selection, explicit build, inventory visibility, canonical comparison, package-local hierarchy editing, and review source-mode/control projection. |
+| Review package services | `docs_review_packages.py`, `docs_review_build.py`, `docs_review_service.py`, `docs_review_routes.py` | Validated package-root containment, trusted manifest and inventory reads, synthetic builds, package-aware assets, generated reads, temporary Markdown and hierarchy writes, and focused route dispatch. |
 
 ## Public Index Slimming Ownership
 

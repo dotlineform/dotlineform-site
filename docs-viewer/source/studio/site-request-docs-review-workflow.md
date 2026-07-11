@@ -3,7 +3,7 @@ doc_id: site-request-docs-review-workflow
 title: Docs Review Workflow
 added_date: 2026-07-10
 last_updated: 2026-07-11
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,9 +11,20 @@ viewable: true
 
 ## Status
 
-Approved product boundary; readiness checkpoint passed. Implementation may begin with a fixture-backed preview package while the real full-package Data Sharing export/intake producer continues independently.
+The validated-package consumer and `/docs-review/` application are implemented and verified with a fixture-backed complete package. The real full-package Data Sharing export/intake producer continues independently and remains required for the first real round trip.
 
-The preview builder consumes the validated-package interface; it does not depend on how the package was produced. The real Data Sharing round trip remains required before this workflow is complete.
+The preview builder consumes the validated-package interface and does not depend on how the package was produced. The real Data Sharing round trip remains required before this workflow is complete.
+
+Implemented in this slice:
+
+- independent `DOCS_VIEWER_REVIEW_ENABLED` service authority and `/docs-review/` route
+- validated external package listing, manifest and inventory reads, source revision checks, builds, generated reads, and inventoried asset reads
+- a synthetic `DocsDataBuilder` configuration that writes only package-local `generated/`
+- package-aware media URLs and sandboxed package-local interactive HTML
+- the returned-package collection provider, package selector, Build and asset-inventory controls, rendered/source modes, temporary parent editing, and canonical comparison link
+- focused Python, module-boundary, manage-regression, and browser-route verification
+
+The fixture consumer manifest is `docs_review_validated_package_v1`; Data Sharing intake must emit that trusted handoff record when its full-package producer is completed.
 
 This request replaces the retired `Docs Review Local App` proposal. Docs Review is a local review route of the existing Docs Viewer application, not a copied viewer application and not a canonical import tool.
 
@@ -350,7 +361,7 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 - approve the validated-package consumer contract — complete; full export/intake producer continues independently
 - retire or isolate any stub review-session behavior that assumes repo-local, rendered-content source folders
 
-### 2. Complete Returned-Package Services
+### 2. Complete Returned-Package Services — complete
 
 - list validated package folders
 - read manifests and inventories
@@ -358,7 +369,7 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 - report missing, malformed, or manually deleted packages cleanly
 - expose only package-rooted paths and data
 
-### 3. Implement Review Builds
+### 3. Implement Review Builds — complete for the validated consumer contract
 
 - construct a synthetic builder configuration from the validated manifest
 - resolve package-local asset mappings
@@ -366,20 +377,20 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 - expose generated index and payload reads
 - verify interactive content remains sandboxed
 
-### 4. Add Review App Context And Provider Seam
+### 4. Add Review App Context And Provider Seam — complete
 
 - add explicit `review` context without granting management
 - implement the returned-package provider
 - make startup features explicit
 - preserve public/manage behavior and module-graph isolation
 
-### 5. Serve `/docs-review/`
+### 5. Serve `/docs-review/` — complete
 
 - add the local shell/route
 - add the review entrypoint and controller
 - implement package selection, tree navigation, rendered/source modes, Build, asset inventory, and canonical counterpart links
 
-### 6. Add Temporary Markdown And Parent Editing
+### 6. Add Temporary Markdown And Parent Editing — complete
 
 - reuse source-editor interaction primitives
 - add package-specific source endpoints
@@ -387,7 +398,7 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 - rebuild and refresh after edits
 - keep every write inside the selected package
 
-### 7. Focused Verification
+### 7. Focused Verification — complete for fixture-backed Docs Review
 
 - pure app-context and provider tests
 - public/manage/review import-boundary tests
@@ -398,7 +409,7 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 - route/service API tests
 - one focused browser smoke for review route boot and package switching
 
-### 8. Documentation And Closeout
+### 8. Documentation And Closeout — complete for the Docs Review consumer
 
 - update runtime boundary, module ownership, source organisation, Data Sharing, and user/operator guidance
 - record the manual canonical handoff explicitly

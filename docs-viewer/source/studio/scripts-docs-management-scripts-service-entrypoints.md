@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-scripts-service-entrypoints
 title: Service Entrypoints
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-11
 parent_id: scripts-docs-management-scripts
 ---
 # Docs Viewer Service Entrypoints
@@ -31,13 +31,16 @@ Not responsible for:
 
 Purpose: HTTP transport and static/runtime host for the standalone Docs Viewer service.
 
-Ownership: owns the local HTTP server boundary for `/docs/`, Docs Viewer assets/config, generated read passthroughs, and management API transport.
+Ownership: owns the local HTTP server boundary for `/docs/` and `/docs-review/`, Docs Viewer assets/config, generated read passthroughs, management API transport, and independently gated review API transport.
 
 Responsibilities:
 
 - loads local Docs Viewer service config from `.env.local`
 - enforces loopback service binding
 - serves `/docs/` management shell HTML
+- serves `/docs-review/` returned-package shell HTML
+- gates returned-package review through `DOCS_VIEWER_REVIEW_ENABLED` independently of canonical management
+- dispatches package-rooted review reads, builds, assets, temporary Markdown, and hierarchy writes without canonical mutation routes
 - serves Docs Viewer runtime, static assets, and route config
 - applies CORS and request-size handling for management API calls
 - forwards allowlisted GET and POST API paths to management dispatch modules

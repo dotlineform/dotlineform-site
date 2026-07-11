@@ -285,6 +285,8 @@ Validation includes:
 
 Successful intake materializes each validated `canonical_markdown` row as temporary `source/<doc-id>.md` inside `import-preview/<package_id>/`, copies validated asset files, and writes regenerated manifests for Docs Review. This materialization is a review-workspace projection; it does not write canonical source or public assets.
 
+The Docs Review consumer now requires the trusted handoff `manifest.json` to use `schema_version: docs_review_validated_package_v1`, carry the matching safe `package_id`, set `status: validated`, identify `source_scope`, and optionally identify `default_doc_id` and a display `title`. Its regenerated `inventories/assets.json` uses asset records with `kind`, the source `token_path`, and a safe `package_path` under `assets/`. These are handoff fields owned by Data Sharing intake, not external-service assertions.
+
 ## Review Rendering And Script Safety
 
 Docs Review renders the validated package through a synthetic Docs Viewer builder configuration and a package-aware asset resolver.

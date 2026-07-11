@@ -61,6 +61,7 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_owned_modules() -
     blocked_prefixes = (
         "docs-viewer/runtime/js/management/docs-viewer-management-",
         "docs-viewer/runtime/js/reports/",
+        "docs-viewer/runtime/js/review/",
     )
 
     assert sorted(graph_paths & blocked_exact) == []

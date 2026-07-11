@@ -77,7 +77,7 @@ Profile roles:
 | `quick` | whitespace, Python syntax, core pytest checks, projection contract, route ready-state audit, and key JSON parsing. |
 | `catalogue` | focused catalogue pytest checks plus a narrow field-aware build preview. |
 | `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
-| `docs-viewer-smoke` | `site/` validation plus Docs Viewer public read-only and standalone manage-service smoke checks. |
+| `docs-viewer-smoke` | `site/` validation plus Docs Viewer public read-only, standalone manage-service, and fixture-backed Docs Review route smoke checks. |
 | `admin-smoke` | local Admin home and operations route smoke checks. |
 | `analytics-smoke` | local Analytics tag APIs, route shells, ready-state, and Data Sharing route/API boundary smoke checks. |
 | `studio-smoke` | `site/` validation plus public-site and Studio-owned catalogue smoke checks. |

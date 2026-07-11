@@ -12,7 +12,7 @@
     "service": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["bind_policy", "manage_route", "api_base_path", "env"],
+      "required": ["bind_policy", "manage_route", "review_route", "api_base_path", "env"],
       "properties": {
         "bind_policy": {
           "const": "loopback_only"
@@ -20,6 +20,9 @@
         "manage_route": {
           "type": "string",
           "pattern": "^/.*/$"
+        },
+        "review_route": {
+          "const": "/docs-review/"
         },
         "api_base_path": {
           "type": "string",
@@ -33,6 +36,7 @@
             "port",
             "base_url",
             "management_enabled",
+            "review_enabled",
             "generated_reads_enabled",
             "watch_enabled"
           ],
@@ -41,6 +45,7 @@
             "port": { "const": "DOCS_VIEWER_PORT" },
             "base_url": { "const": "DOCS_VIEWER_BASE_URL" },
             "management_enabled": { "const": "DOCS_VIEWER_MANAGEMENT_ENABLED" },
+            "review_enabled": { "const": "DOCS_VIEWER_REVIEW_ENABLED" },
             "generated_reads_enabled": { "const": "DOCS_VIEWER_GENERATED_READS_ENABLED" },
             "watch_enabled": { "const": "DOCS_VIEWER_WATCH_ENABLED" }
           }
@@ -52,11 +57,13 @@
       "additionalProperties": false,
       "required": [
         "management_enabled_default",
+        "review_enabled_default",
         "generated_reads_enabled_default",
         "watch_enabled_default"
       ],
       "properties": {
         "management_enabled_default": { "type": "boolean" },
+        "review_enabled_default": { "type": "boolean" },
         "generated_reads_enabled_default": { "type": "boolean" },
         "watch_enabled_default": { "type": "boolean" }
       }

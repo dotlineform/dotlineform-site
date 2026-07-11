@@ -16,7 +16,7 @@ Risk themes:
 - import workflow ownership
 - scope lifecycle
 - search/bookmark controller boundaries
-- future feature panels that must attach to focused owners instead of the app runtime coordinator.
+- review-package composition that must remain outside the app runtime and management coordinators.
 
 | File                                                | Focus                                                                                                                                                                                                                       |
 |-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -67,6 +67,12 @@ Risk themes:
 | docs-viewer-metadata-info-view.js                   | Public-safe read-only metadata info hosted view.                                                                                                                                                                            |
 | docs-viewer-panel-layout.js                         | App-shell-owned panel projection handoff for index state, current main-view visibility, and the view-state skeleton.                                                                                                        |
 | docs-viewer-public.js                               | Public entrypoint wrapper that imports and starts the public app boot owner.                                                                                                                                                |
+| review/docs-viewer-returned-package-provider.js     | Returned-package collection provider for package-selected generated, source, manifest, inventory, and build operations.                                                                                                   |
+| review/docs-viewer-review-client.js                 | Focused JSON transport and error normalization for Docs Review endpoints.                                                                                                                                                    |
+| review/docs-viewer-review-controller.js             | Review package selection, build, inventory, hierarchy, and canonical-comparison workflow owner.                                                                                                                            |
+| review/docs-viewer-review-document-controls.js      | Review-owned Markdown source/save control rendering and `view=source` route projection.                                                                                                                                     |
+| review/docs-viewer-review-hosted-views.js           | Review-owned source-mode and document-control definitions supplied by the review entrypoint.                                                                                                                               |
+| review/docs-viewer-review.js                        | Review entrypoint that contributes the returned-package provider, review controller, hosted views, and document controls to shared app boot.                                                                               |
 | docs-viewer-render.js                               | rendering helper.                                                                                                                                                                                                           |
 | docs-viewer-report-service.js                       | Focused local report endpoint adapter for source-config and broken-links audit reports.                                                                                                                                     |
 | docs-viewer-reports.js                              | runtime support module.                                                                                                                                                                                                     |
