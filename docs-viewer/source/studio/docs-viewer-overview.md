@@ -86,8 +86,10 @@ Current helper modules:
 
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js` owns runtime defaults, foundational owner construction, feature-filtered hosted-view registration, startup authority records, and feature-aware startup sequencing
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-features.js` owns allowlisted route-feature normalization, dependency checks, queries, and code-record filtering
-- `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
-- `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` owns private app runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js` owns app-session creation, state defaults, single-owner named state-domain facades, and public/manage route-session projection
+- `site/docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js` owns main-view/display-mode/info host construction, active view/mode/control projection, info defaults, and document/search/recent view transitions
+- `site/docs-viewer/runtime/js/shared/docs-viewer-status-controller.js` owns viewer status/error display and nested busy-state projection
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` owns remaining private runtime wiring for focused controllers, config handoff, event handlers, private management/startup callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js` owns explicit `public`/`manage` app kind, route context, feature-policy slot, service-availability projection, and the backend-capability input slot
 - `site/docs-viewer/runtime/js/shared/docs-viewer-access.js` owns scope-query and management-UI route access plus hosted-view/mode access checks

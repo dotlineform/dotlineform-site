@@ -46,7 +46,11 @@ def install_fixture(page: Page) -> None:
             const configController = await import('/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js');
             const viewRegistry = await import('/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js');
             const mainViewRenderer = await import('/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer };
+            const appSession = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-session.js');
+            const documentViewCoordinator = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js');
+            const generatedDataRuntime = await import('/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js');
+            const statusController = await import('/docs-viewer/runtime/js/shared/docs-viewer-status-controller.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController };
         }"""
     )
 
@@ -123,7 +127,7 @@ def assert_missing_doc_history(page: Page) -> None:
 
 def assert_route_config_scope_default(page: Page) -> None:
     result = page.evaluate(
-        """() => {
+        """async () => {
             const { routeConfig } = window.__docsViewerRouterModuleSmoke;
             const rawRouteConfig = {
                 schema_version: 'docs_viewer_route_config_v4',
@@ -660,6 +664,170 @@ def assert_configured_scope_provider(page: Page) -> None:
         raise AssertionError(f"configured-scope provider source delegation changed: {result!r}")
 
 
+def assert_phase_five_runtime_owners(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const modules = window.__docsViewerRouterModuleSmoke;
+            const session = modules.appSession.createDocsViewerAppSession({
+                defaultRecentLimit: 10,
+                panelLayout: {
+                    indexPanelState: () => 'normal',
+                    projectViewState: () => ({})
+                },
+                routeContext: {
+                    appContext: { kind: 'manage', routeAccess: { managementUi: true } }
+                },
+                searchBatchSize: 50,
+                window: {}
+            });
+            const removedFacadeFields = {
+                panelExpanded: session.domains.panelView.has('expandedDocIds'),
+                panelRegistry: session.domains.panelView.has('viewRegistry'),
+                documentStatusMap: session.domains.documentIndex.has('uiStatusByValue'),
+                managementContext: session.domains.management.has('managementContext'),
+                managementEmoji: session.domains.management.has('docNonViewableEmoji'),
+                generatedCapabilities: session.domains.generatedData.has('managementCapabilities'),
+                generatedOwnCapabilities: session.domains.generatedData.has('generatedDataCapabilities'),
+                generatedReload: session.domains.generatedData.has('reloadNonce'),
+                busyMessage: session.domains.busyStatus.has('managementMessage')
+            };
+
+            const statusRoot = document.createElement('div');
+            const status = document.createElement('p');
+            const statusState = { pendingBusyCount: 0 };
+            const statusOwner = modules.statusController.createDocsViewerStatusController({
+                root: statusRoot,
+                state: statusState,
+                status
+            });
+            statusOwner.setStatus('Working', true);
+            const stopFirst = statusOwner.startBusy();
+            const stopSecond = statusOwner.startBusy();
+            stopFirst();
+            stopFirst();
+            const nestedBusyCount = statusState.pendingBusyCount;
+            stopSecond();
+
+            const generatedOwner = modules.generatedDataRuntime.createDocsViewerGeneratedDataRuntime({
+                generatedBaseUrl: 'http://127.0.0.1:9999',
+                generatedData: session.domains.generatedData,
+                management: session.domains.management,
+                selectedDocument: session.domains.selectedDocument,
+                viewerScope: 'studio',
+                window: {
+                    fetch: () => Promise.resolve({
+                        ok: true,
+                        json: () => Promise.resolve({
+                            capabilities: {
+                                generated_data_reads: true,
+                                scopes: { studio: { available: true, generated_data_reads: true } }
+                            }
+                        })
+                    }),
+                    setTimeout
+                }
+            });
+            const generatedReadAvailable = await generatedOwner.checkGeneratedDataReadCapability('studio');
+
+            const featurePolicy = modules.routeFeatures.normalizeDocsViewerRouteFeatures([
+                'bookmarks', 'source-editing', 'management'
+            ]);
+            const registry = modules.viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: [
+                    modules.viewRegistry.createDocsViewerSharedViewDefinitions(),
+                    {
+                        modes: [{
+                            id: 'markdown-source',
+                            ownerViewId: 'rendered-document',
+                            appKinds: ['manage'],
+                            features: ['source-editing']
+                        }],
+                        controls: [{
+                            id: 'save-markdown-source',
+                            ownerViewId: 'rendered-document',
+                            modeIds: ['markdown-source'],
+                            appKinds: ['manage'],
+                            features: ['source-editing']
+                        }]
+                    }
+                ],
+                projectionInputs: { appContext: { kind: 'manage', featurePolicy } }
+            });
+            const viewState = { panels: { main: { activeViewId: 'rendered-document' } } };
+            let controlProjectionCount = 0;
+            const coordinator = modules.documentViewCoordinator.createDocsViewerDocumentViewCoordinator({
+                appContext: { kind: 'manage', featurePolicy },
+                buildTrail: () => [],
+                collectionProvider: {},
+                documentIndex: { allDocsById: new Map(), docsById: new Map() },
+                infoPanelRefs: { body: document.createElement('div') },
+                infoToggle: null,
+                mount: document.createElement('div'),
+                panelLayout: {
+                    projectInfoPanel: () => {},
+                    projectViewState: () => viewState,
+                    setActiveMainView: () => ({ id: 'rendered-document' })
+                },
+                panelView: { viewState },
+                projectMainView: () => {},
+                renderDocumentControls: () => { controlProjectionCount += 1; },
+                root: document.createElement('div'),
+                scopeConfig: { uiStatusByValue: new Map() },
+                selectedDocument: { payloadCache: new Map(), selectedDocId: '' },
+                showWarning: () => {},
+                sourceEditorServices: null,
+                viewRegistry: registry,
+                viewerScope: 'studio',
+                viewerTargetDocId: (docId) => docId,
+                viewerUrl: () => ''
+            });
+            coordinator.requestDocumentMode('markdown-source', { warn: false });
+
+            return {
+                activeMode: coordinator.activeViewState().activeModeId,
+                busyAfterStop: statusState.pendingBusyCount,
+                busyDataset: statusRoot.dataset.docsViewerBusy,
+                controlProjectionCount,
+                generatedReadAvailable,
+                generatedStateSeparated: Boolean(
+                    session.domains.generatedData.generatedDataCapabilities
+                    && session.domains.management.managementCapabilities === null
+                ),
+                nestedBusyCount,
+                removedFacadeFields,
+                saveControlActive: coordinator.controlActive('save-markdown-source'),
+                statusError: status.classList.contains('is-error'),
+                statusText: status.textContent
+            };
+        }"""
+    )
+    expected = {
+        "activeMode": "markdown-source",
+        "busyAfterStop": 0,
+        "busyDataset": "false",
+        "controlProjectionCount": 3,
+        "generatedReadAvailable": True,
+        "generatedStateSeparated": True,
+        "nestedBusyCount": 1,
+        "removedFacadeFields": {
+            "panelExpanded": False,
+            "panelRegistry": False,
+            "documentStatusMap": False,
+            "managementContext": False,
+            "managementEmoji": False,
+            "generatedCapabilities": False,
+            "generatedOwnCapabilities": True,
+            "generatedReload": False,
+            "busyMessage": False,
+        },
+        "saveControlActive": True,
+        "statusError": True,
+        "statusText": "Working",
+    }
+    if result != expected:
+        raise AssertionError(f"Phase 5 runtime owner contract changed: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/404.html"), wait_until="domcontentloaded")
     install_fixture(page)
@@ -669,6 +837,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_explicit_app_and_service_context(page)
     assert_view_mode_control_registry(page)
     assert_configured_scope_provider(page)
+    assert_phase_five_runtime_owners(page)
 
 
 def main() -> None:

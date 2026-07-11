@@ -180,7 +180,6 @@ export function createDocsViewerAppComposition(options) {
   });
   var appSession = createDocsViewerAppSession({
     defaultRecentLimit: constants.defaultRecentLimit,
-    viewRegistry: viewRegistry,
     panelLayout: panelLayout,
     routeContext: routeContext,
     searchBatchSize: constants.searchBatchSize,
@@ -201,7 +200,9 @@ export function createDocsViewerAppComposition(options) {
     generatedBaseUrl: serviceContext.generatedData.baseUrl,
     reloadRetryAttempts: constants.reloadRetryAttempts,
     reloadRetryDelayMs: constants.reloadRetryDelayMs,
-    state: state,
+    generatedData: appSession.domains.generatedData,
+    management: appSession.domains.management,
+    selectedDocument: appSession.domains.selectedDocument,
     viewerScope: settings.viewerScope,
     window: window
   });

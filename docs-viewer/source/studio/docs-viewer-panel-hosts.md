@@ -41,6 +41,7 @@ Core ownership:
 | view-state skeleton | `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js` |
 | current panel projection | `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js` |
 | view/mode/control definitions and eligibility | `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js` |
+| document view/mode/info coordination | `site/docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js` |
 | main-view host state and switch validation | `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` |
 | selected-document hosted-view context | `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js` |
 | info-panel lifecycle | `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` |
@@ -155,6 +156,12 @@ Improvement needed:
 - management-only views may receive additional services, but only through explicit capability-gated inputs
 - public contexts must continue to omit source-editor service handles even if a caller accidentally supplies them
 
+### Document-View Coordination
+
+`docs-viewer-document-view-coordinator.js` constructs the main-view host, document display-mode host, and info-panel controller from the shared registry and explicit document context inputs.
+It owns active view/mode projection, control eligibility queries, mode-specific info defaults, and transitions among rendered-document, search-results, and recent-results.
+Focused hosts retain lifecycle loading and focused controllers retain rendering, handlers, dirty state, pressed state, and busy/disabled workflow state.
+
 ### Info-Panel Lifecycle And Chrome
 
 `docs-viewer-info-panel-host.js` is the only implemented lifecycle host for actual load/mount/update/unmount/dispose view modules.
@@ -247,7 +254,7 @@ Current lifecycle implementation:
 - info-panel views can load, mount, update, unmount, and dispose through `docs-viewer-info-panel-host.js`
 - `metadata-info` is the only real mounted hosted-view module
 - index hosted-view records drive renderer selection and layout capabilities, but the actual tree and placeholder renderers are app-shell/index-panel render paths rather than mounted lifecycle modules
-- main-view hosted-view records exist for `rendered-document`, `search-results`, `recent-results`, and manage-only `markdown-source`; `docs-viewer-main-view-host.js` validates switch requests, projects active main-view state, and builds explicit main-view module contexts, while existing document/search/recent controllers still own rendering
+- main-view records exist for `rendered-document`, `search-results`, and `recent-results`; `markdown-source` remains a document display mode under rendered-document. The coordinator sequences host requests while existing document/search/recent controllers still own rendering
 - `report-host` is not part of the main-view migration yet
 
 The implemented lifecycle shape for info-panel hosted views is:
@@ -364,7 +371,7 @@ Current state:
 - rendered-document, search, and recent are represented as main-view hosted-view records and active main-view state
 - actual rendering still flows through existing document, search, recent, and report controllers
 - `docs-viewer-main-view-host.js` owns switch validation, active main-view projection, toolbar projection, unavailable warnings, and explicit main-view module context creation
-- the manage-only `markdown-source` module mounts through the main-view host while existing rendered/search/recent views continue to use their controllers
+- the manage-only `markdown-source` module mounts through the document display-mode host while existing rendered/search/recent views continue to use their controllers
 
 What this means:
 
@@ -376,7 +383,7 @@ What this means:
 
 Current state:
 
-- `markdown-source` is implemented as a manage-only main-view hosted module under `docs-viewer/runtime/js/management/source-editor/`
+- `markdown-source` is implemented as a manage-only document display-mode module under `docs-viewer/runtime/js/management/source-editor/`
 - the editor reads and writes only the Markdown body, preserving existing front matter
 - source read/write/rebuild endpoints and revision checks are backend-owned and are not part of the panel host
 

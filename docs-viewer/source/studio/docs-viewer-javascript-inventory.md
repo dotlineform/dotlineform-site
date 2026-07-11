@@ -28,8 +28,8 @@ Risk themes:
 | docs-viewer-app-boot.js                             | App boot owner for route/config context, code-owned view-registry assembly, app-shell initialization, shell-ref handoff, theme loading, and runtime startup.                                                               |
 | docs-viewer-app-composition.js                      | App-composition owner for runtime defaults, foundational owner creation, view-registry capability-input handoff, startup records, authority records, and feature-aware startup sequencing.                                |
 | docs-viewer-app-context.js                          | Explicit app-context and route-context assembly, service-availability projection, and mutable scope route-context projection.                                                                                               |
-| docs-viewer-app-runtime.js                          | Private runtime coordination after route workflow and runtime-owner extraction; controller construction, config handoff, event binding, initial load sequencing, private callback handoffs, and returned app handle remain. |
-| docs-viewer-app-session.js                          | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection.                                                                                                               |
+| docs-viewer-app-runtime.js                          | Private runtime wiring after document-view/status extraction; remaining focused controller construction, config handoff, event binding, startup callbacks, and returned app handle.                                      |
+| docs-viewer-app-session.js                          | App-session owner for state defaults, single-owner named state-domain facades, and public/manage route-session projection.                                                                                                |
 | docs-viewer-asset-url.js                            | Focused asset-version URL projection helper for static browser assets.                                                                                                                                                      |
 | docs-viewer-bookmarks.js                            | bookmark/favourite support.                                                                                                                                                                                                 |
 | docs-viewer-config-controller.js                    | config/scope setup.                                                                                                                                                                                                         |
@@ -38,9 +38,10 @@ Risk themes:
 | docs-viewer-data.js                                 | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-document-controller.js                  | document rendering/controller support.                                                                                                                                                                                      |
 | docs-viewer-document-index-state.js                 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection.                            |
+| docs-viewer-document-view-coordinator.js            | Document main-view coordination owner for host construction, active view/mode/control projection, info defaults, and rendered/search/recent transitions.                                                                  |
 | docs-viewer-drag-drop.js                            | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-favourites.js                           | bookmark/favourite support.                                                                                                                                                                                                 |
-| docs-viewer-generated-data-runtime.js               | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods.                  |
+| docs-viewer-generated-data-runtime.js               | Generated-data request owner using explicit generated-data, management, and selected-document domains with separate generated-read capability state and named JSON read methods.                                         |
 | docs-viewer-document-display-mode-host.js           | Document-view display-mode lifecycle owner for rendered/source modes inside the rendered-document main view.                                                                                                               |
 | docs-viewer-index-panel-renderer.js                 | App-shell-owned index panel chrome renderer and projection applier.                                                                                                                                                         |
 | docs-viewer-index-panel.js                          | index panel state, current-key persistence, toggle projection, and document-pane visibility helper.                                                                                                                         |
@@ -82,6 +83,7 @@ Risk themes:
 | docs-viewer-service-context.js                      | Independent generated-data, source, management, and browser-safe config service-surface projection.                                                                                                                        |
 | docs-viewer-management-source-adapter.js            | Manage-entrypoint-owned optional source-service transport adapter supplied to the configured-scope provider; backend capabilities remain authoritative.                                                                  |
 | docs-viewer-sidebar.js                              | runtime support module.                                                                                                                                                                                                     |
+| docs-viewer-status-controller.js                    | Viewer status text/error projection and nested route busy-state owner.                                                                                                                                                     |
 | docs-viewer-tree.js                                 | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-view-context.js                         | Selected-document hosted-view context projector plus main-view module context shaping for future central-panel views.                                                                                                       |
 | docs-viewer-view-state.js                           | App-shell-owned index/document/info view-state skeleton and projection helper.                                                                                                                                              |
@@ -110,6 +112,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js`
 
 - This file remains the private app coordinator for focused controller construction, callback handoff, route-global updates, private management startup callbacks, and the small returned app handle.
+- Document-view host construction, active control queries, mode/info synchronization, repeated view-transition chains, and status/busy projection moved to focused Phase 5 owners.
 - Do not add new feature lifecycle ownership here; future controller work should narrow complete controller families to explicit state-domain and service inputs.
 - Next risk-reduction slices should focus on complete new owner boundaries for future features, not restore route/document/search/bookmark/info/generated-data/visibility/management workflow behavior here.
 
@@ -122,9 +125,23 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js`
 
-- Keep this module limited to app-session creation, state defaults, named domain facades, route-session projection, and the runtime-internal state object needed by remaining controller handoffs.
+- Keep this module limited to app-session creation, state defaults, single-owner named domain facades, route-session projection, and the runtime-internal state object needed by remaining controller handoffs.
+- Phase 5 removed duplicate facade exposure for panel expansion, status labels, non-viewable presentation, management route identity, backend capability/reload state, management messages, and the view registry.
 - Do not move controller construction, event binding, generated reads, URL history, document rendering, bookmark persistence, or management writes into it.
 - Future slices should narrow complete controller families to the relevant domain facade and remove their broad-state dependency from runtime handoff.
+
+### `site/docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js`
+
+- Own main-view host, document display-mode host, and info-panel controller construction from explicit registry and document-context inputs.
+- Own active view/mode projection, control eligibility queries, mode-specific info defaults, and rendered/search/recent transition sequencing.
+- Keep lifecycle implementations in the focused hosts and keep document/search/info rendering plus live interaction state in their controllers.
+- Do not add route loading, payload transport, source writes, bookmark persistence, management commands, or generic event-bus behavior.
+
+### `site/docs-viewer/runtime/js/shared/docs-viewer-status-controller.js`
+
+- Own viewer status text/error projection and nested busy-state accounting against the narrow `busyStatus` domain.
+- Keep management message state in the management domain; the status controller receives only display commands and a busy counter.
+- Do not add workflow messages, backend capability state, request orchestration, or controller lifecycle.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js`
 

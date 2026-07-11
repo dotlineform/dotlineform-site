@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0 and phases 0-4 are complete. Phase 5 coordinator reduction is next.
+Assessment complete; roadmap accepted for implementation, D0 and phases 0-5 are complete. The Docs Review readiness checkpoint is next.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -800,6 +800,18 @@ Acceptance:
 - new app context/provider/feature/registry behavior is not owned by `docs-viewer-app-runtime.js`
 - removed bridges have no aliases
 - public/manage baseline behavior remains unchanged
+
+### Phase 5 Outcome
+
+Implemented on 2026-07-11.
+
+- `docs-viewer-document-view-coordinator.js` now constructs and coordinates the main-view host, document display-mode host, info-panel controller, active view/mode state, control eligibility queries, info defaults, and rendered/search/recent view transitions.
+- `docs-viewer-status-controller.js` owns viewer status text/error projection and nested busy-state accounting.
+- `docs-viewer-app-runtime.js` no longer owns Phase 4 host construction, active control projection, mode/default-info synchronization, status DOM mutation, busy counting, or repeated mode-to-view transition chains. Its size fell from about 996 lines at assessment to about 834 lines.
+- App-session domains no longer expose `expandedDocIds`, `uiStatusByValue`, `docNonViewableEmoji`, `managementContext`, management capabilities, reload state, management messages, or the view registry through duplicate facades. Generated-read capability payloads now live in `generatedDataCapabilities`, separate from management capability state.
+- The management state facade now reads route identity only from `routeSession` and reload state only from `selectedDocument`; the removed fallbacks have no aliases.
+- Service/provider construction remains in app composition because Phase 2 had already established the correct owner.
+- No review-specific code or generic event/store rewrite was added.
 
 ## Docs Review Readiness Checkpoint
 

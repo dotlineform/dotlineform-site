@@ -31,14 +31,8 @@ import {
   updateDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";
 import {
-  createDocsViewerInfoPanelController
-} from "./docs-viewer-info-panel-controller.js";
-import {
-  createDocsViewerDocumentDisplayModeHost
-} from "./docs-viewer-document-display-mode-host.js";
-import {
-  createDocsViewerMainViewHost
-} from "./docs-viewer-main-view-host.js";
+  createDocsViewerDocumentViewCoordinator
+} from "./docs-viewer-document-view-coordinator.js";
 import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
@@ -50,20 +44,9 @@ import {
 import {
   docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
-
-function infoPanelDefaultViewIdForMode(settings, modeId) {
-  var map = settings && settings.infoPanelDefaultViewByDocumentMode;
-  if (!map || typeof map !== "object") return "";
-  return String(map[String(modeId || "").trim()] || "").trim();
-}
-
-function configuredInfoPanelDefaultViewIds(settings) {
-  var map = settings && settings.infoPanelDefaultViewByDocumentMode;
-  if (!map || typeof map !== "object") return [];
-  return Object.keys(map)
-    .map(function (modeId) { return String(map[modeId] || "").trim(); })
-    .filter(Boolean);
-}
+import {
+  createDocsViewerStatusController
+} from "./docs-viewer-status-controller.js";
 
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
@@ -84,7 +67,6 @@ export function startDocsViewerRuntime(options) {
   var sidebarExpand = indexPanelRefs.sidebarExpand;
   var mainViewRefs = appShellRefs.mainView;
   var infoPanelRefs = appShellRefs.infoPanel;
-  var status = appShellRefs.status;
   var mainViewToolbar = mainViewRefs.toolbar;
   var pathEl = mainViewRefs.pathEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
@@ -151,22 +133,8 @@ export function startDocsViewerRuntime(options) {
   var documentController = null;
   var routeWorkflow = null;
   var documentIndex = null;
-  var infoPanelController = null;
-  var documentDisplayModeHost = null;
-  var mainViewHost = null;
+  var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
-
-  function activeViewState() {
-    return {
-      activeViewId: mainViewHost ? mainViewHost.activeViewId() : "rendered-document",
-      activeModeId: documentDisplayModeHost ? documentDisplayModeHost.activeModeId() : "rendered-document"
-    };
-  }
-
-  function controlActive(controlId) {
-    var resolved = viewRegistry.resolveControl(controlId, activeViewState());
-    return Boolean(resolved.available && resolved.active);
-  }
 
   var appSession = composition.appSession;
   var state = appSession.state;
@@ -174,58 +142,10 @@ export function startDocsViewerRuntime(options) {
   var generatedDataRuntime = composition.generatedDataRuntime;
   var collectionProvider = composition.collectionProvider;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
-
-  function documentViewContextOptions() {
-    return {
-      allDocsById: appSession.domains.documentIndex.allDocsById,
-      docsById: appSession.domains.documentIndex.docsById,
-      payloadCache: appSession.domains.selectedDocument.payloadCache,
-      appContext: appContext,
-      collectionProvider: collectionProvider,
-      selectedDocId: appSession.domains.selectedDocument.selectedDocId,
-      sourceEditorServices: sourceEditingEnabled && sourceService ? sourceEditorServices() : null,
-      uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
-      viewerScope: viewerScope,
-      viewerTargetDocId: documentIndex.viewerTargetDocId,
-      viewerUrl: viewerUrl
-    };
-  }
-
-  mainViewHost = createDocsViewerMainViewHost({
-    contextOptions: function () {
-      return {
-        allDocsById: appSession.domains.documentIndex.allDocsById,
-        docsById: appSession.domains.documentIndex.docsById,
-        payloadCache: appSession.domains.selectedDocument.payloadCache,
-        appContext: appContext,
-        selectedDocId: appSession.domains.selectedDocument.selectedDocId,
-        uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
-        viewerScope: viewerScope,
-        viewerTargetDocId: documentIndex.viewerTargetDocId,
-        viewerUrl: viewerUrl
-      };
-    },
-    defaultViewId: "rendered-document",
-    mount: content,
-    panelLayout: panelLayout,
-    projectToolbar: projectMainView,
-    projectViewState: function () { return panelLayout.projectViewState(); },
-    registry: viewRegistry,
-    showWarning: setStatus,
-    updatePanelViewState: function (viewState) { appSession.domains.panelView.viewState = viewState; }
-  });
-  documentDisplayModeHost = createDocsViewerDocumentDisplayModeHost({
-    contextOptions: documentViewContextOptions,
-    defaultModeId: "rendered-document",
-    mount: content,
-    onModeChange: function () {
-      renderBookmarkToggle();
-      renderManagementUi();
-    },
-    projectToolbar: projectMainView,
+  var statusController = createDocsViewerStatusController({
     root: root,
-    showWarning: setStatus,
-    viewRegistry: viewRegistry
+    state: appSession.domains.busyStatus,
+    status: appShellRefs.status
   });
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
@@ -241,27 +161,30 @@ export function startDocsViewerRuntime(options) {
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
-  infoPanelController = createDocsViewerInfoPanelController({
-    buildTrail: buildTrail,
-    documentIndex: appSession.domains.documentIndex,
-    infoToggle: infoToggle,
-    controlActive: controlActive,
-    panelView: appSession.domains.panelView,
-    projectMainView: projectMainView,
-    projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
-    projectViewState: function () { return panelLayout.projectViewState(); },
-    refs: infoPanelRefs,
-    registry: viewRegistry,
+  documentViewCoordinator = createDocsViewerDocumentViewCoordinator({
     appContext: function () { return appContext; },
+    buildTrail: buildTrail,
+    collectionProvider: collectionProvider,
+    documentIndex: appSession.domains.documentIndex,
+    infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
+    infoPanelRefs: infoPanelRefs,
+    infoToggle: infoToggle,
+    mount: content,
+    panelLayout: panelLayout,
+    panelView: appSession.domains.panelView,
+    projectMainView: panelLayout.projectMainView,
+    renderDocumentControls: function () {
+      renderBookmarkControl();
+      renderManagementUi();
+    },
+    root: root,
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,
-    defaultViewId: function () {
-      var modeId = documentDisplayModeHost ? documentDisplayModeHost.activeModeId() : "";
-      return infoPanelDefaultViewIdForMode(settings, modeId) || "metadata-info";
-    },
     sourceEditorServices: function () {
       return sourceEditingEnabled && sourceService ? sourceEditorServices() : null;
     },
+    showWarning: statusController.setStatus,
+    viewRegistry: viewRegistry,
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
@@ -276,7 +199,7 @@ export function startDocsViewerRuntime(options) {
     managementService: managementService,
     mountDocumentExtras: reportsEnabled ? settings.mountDocumentExtras : null,
     more: more,
-    projectDocumentShell: projectMainView,
+    projectDocumentShell: panelLayout.projectMainView,
     renderBookmarkToggle: renderBookmarkToggle,
     renderBookmarkUi: renderBookmarkUi,
     renderManagementUi: renderManagementUi,
@@ -290,7 +213,7 @@ export function startDocsViewerRuntime(options) {
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     statusCommands: {
-      setStatus: setStatus
+      setStatus: statusController.setStatus
     },
     toolbar: mainViewToolbar,
     viewerScope: function () { return viewerScope; },
@@ -338,13 +261,13 @@ export function startDocsViewerRuntime(options) {
     selectedDocument: appSession.domains.selectedDocument,
     searchRecent: appSession.domains.searchRecent,
     statusCommands: {
-      setStatus: setStatus,
-      startBusy: startBusy
+      setStatus: statusController.setStatus,
+      startBusy: statusController.startBusy
     },
     syncNonViewableVisibilityForRequestedDoc: function () {
       documentIndex.syncNonViewableVisibilityForRequestedDoc(getCurrentDocId);
     },
-    updateInfoPanel: updateInfoPanel,
+    updateInfoPanel: documentViewCoordinator.updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
     viewerScope: function () { return viewerScope; },
@@ -380,8 +303,8 @@ export function startDocsViewerRuntime(options) {
     searchInput: searchInput,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
-    setStatus: setStatus,
-    startBusy: startBusy
+    setStatus: statusController.setStatus,
+    startBusy: statusController.startBusy
   }) : null;
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
@@ -438,7 +361,6 @@ export function startDocsViewerRuntime(options) {
       managementState: {
         domains: {
           documentIndex: appSession.domains.documentIndex,
-          generatedData: appSession.domains.generatedData,
           management: appSession.domains.management,
           routeSession: appSession.domains.routeSession,
           scopeConfig: appSession.domains.scopeConfig,
@@ -448,7 +370,7 @@ export function startDocsViewerRuntime(options) {
       },
       managementShellRefs: appShellRefs.managementShell || {},
       viewRegistry: viewRegistry,
-      activeViewState: activeViewState,
+      activeViewState: documentViewCoordinator.activeViewState,
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,
@@ -460,9 +382,9 @@ export function startDocsViewerRuntime(options) {
         routeCommands: routeWorkflowCommands
       },
       searchInput: searchInput,
-      setStatus: setStatus,
-      requestMainView: function (viewId) { return mainViewHost.requestView(viewId); },
-      requestDocumentMode: requestDocumentMode,
+      setStatus: statusController.setStatus,
+      requestMainView: documentViewCoordinator.requestMainView,
+      requestDocumentMode: documentViewCoordinator.requestDocumentMode,
       markdownDocLink: markdownDocLink,
       viewerScope: function () { return viewerScope; }
     },
@@ -587,15 +509,11 @@ export function startDocsViewerRuntime(options) {
         if (!adapter || activeSourceEditorContextAdapter === adapter) {
           activeSourceEditorContextAdapter = null;
         }
-        var activeViewId = infoPanelController ? infoPanelController.activeViewId() : "";
-        var sourceEditorDefaultViewActive = configuredInfoPanelDefaultViewIds(settings)
-          .some(function (viewId) {
-            return viewId !== "metadata-info" && viewId === activeViewId;
-          });
-        if (infoPanelController && sourceEditorDefaultViewActive) {
-          infoPanelController.openView("metadata-info");
-        } else if (infoPanelController) {
-          infoPanelController.renderToggleState();
+        var activeViewId = documentViewCoordinator ? documentViewCoordinator.activeInfoViewId() : "";
+        if (documentViewCoordinator && documentViewCoordinator.isConfiguredInfoView(activeViewId)) {
+          documentViewCoordinator.openInfoView("metadata-info");
+        } else if (documentViewCoordinator) {
+          documentViewCoordinator.renderInfoToggle();
         }
       },
       getActiveSourceEditorContextAdapter: function () {
@@ -603,10 +521,10 @@ export function startDocsViewerRuntime(options) {
       },
       setActiveSourceEditorContextAdapter: function (adapter) {
         activeSourceEditorContextAdapter = adapter || null;
-        if (infoPanelController) infoPanelController.renderToggleState();
+        if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();
       },
-      setStatus: setStatus,
-      startBusy: startBusy
+      setStatus: statusController.setStatus,
+      startBusy: statusController.startBusy
     };
   }
 
@@ -618,17 +536,16 @@ export function startDocsViewerRuntime(options) {
   }
 
   function renderBookmarkToggle() {
+    renderBookmarkControl();
+    if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();
+  }
+
+  function renderBookmarkControl() {
     if (bookmarkController) {
       bookmarkController.renderToggle();
-      if (infoPanelController) infoPanelController.renderToggleState();
       return;
     }
     if (bookmarkToggle) bookmarkToggle.hidden = true;
-    if (infoPanelController) infoPanelController.renderToggleState();
-  }
-
-  function updateInfoPanel() {
-    infoPanelController.update();
   }
 
   function initializeBookmarks() {
@@ -673,41 +590,12 @@ export function startDocsViewerRuntime(options) {
     sidebarRenderer.renderMeta(doc);
   }
 
-  function setStatus(message, isError) {
-    status.textContent = message;
-    status.hidden = !message;
-    status.classList.toggle("is-error", Boolean(isError));
-  }
-
   function clearResultsStatus() {
-    projectMainView({
+    panelLayout.projectMainView({
       resultsStatusText: "",
       resultsStatusHidden: true,
       resultsStatusError: false
     });
-  }
-
-  function projectMainView(projection) {
-    panelLayout.projectMainView(projection || {});
-  }
-
-  function syncBusyState() {
-    var isBusy = state.pendingBusyCount > 0;
-    root.classList.toggle("is-busy", isBusy);
-    root.setAttribute("aria-busy", isBusy ? "true" : "false");
-    if (root.dataset) root.dataset.docsViewerBusy = isBusy ? "true" : "false";
-  }
-
-  function startBusy() {
-    state.pendingBusyCount += 1;
-    syncBusyState();
-    var stopped = false;
-    return function stopBusy() {
-      if (stopped) return;
-      stopped = true;
-      state.pendingBusyCount = Math.max(0, state.pendingBusyCount - 1);
-      syncBusyState();
-    };
   }
 
   function hideContextMenu() {
@@ -727,26 +615,6 @@ export function startDocsViewerRuntime(options) {
   function canDragCurrentDoc(doc) {
     var controller = managementRuntime ? managementRuntime.controller() : null;
     return Boolean(controller && controller.canDragCurrentDoc(doc));
-  }
-
-  function syncInfoPanelDefaultForDocumentMode(modeId) {
-    if (!infoPanelController || !infoPanelController.isOpen()) return;
-    var defaultViewId = infoPanelDefaultViewIdForMode(settings, modeId) || "metadata-info";
-    if (infoPanelController.activeViewId() === defaultViewId) {
-      infoPanelController.update();
-      return;
-    }
-    infoPanelController.openView(defaultViewId);
-  }
-
-  function requestDocumentMode(modeId, options) {
-    var requestSettings = Object.assign({}, options || {});
-    var onAccepted = requestSettings.onAccepted;
-    requestSettings.onAccepted = function (mode) {
-      if (typeof onAccepted === "function") onAccepted(mode);
-      syncInfoPanelDefaultForDocumentMode(mode && mode.id ? mode.id : modeId);
-    };
-    return documentDisplayModeHost.requestMode(modeId, requestSettings);
   }
 
   function renderManagementUi() {
@@ -773,56 +641,28 @@ export function startDocsViewerRuntime(options) {
   }
 
   function hideDocPane() {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      onAccepted: function () {
-        mainViewHost.requestView("rendered-document", {
-          onAccepted: function () { documentController.hideDocPane(); }
-        });
-      }
-    });
-    updateInfoPanel();
+    documentViewCoordinator.showRenderedDocument(documentController.hideDocPane);
+    documentViewCoordinator.updateInfoPanel();
   }
 
   function showDocPane() {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      onAccepted: function () {
-        mainViewHost.requestView("rendered-document", {
-          onAccepted: function () { documentController.showDocPane(); }
-        });
-      }
-    });
+    documentViewCoordinator.showRenderedDocument(documentController.showDocPane);
   }
 
   function showSearchPane() {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      onAccepted: function () {
-        mainViewHost.requestView("search-results", {
-          onAccepted: function () { documentController.showSearchPane(); }
-        });
-      }
-    });
-    updateInfoPanel();
+    documentViewCoordinator.showView("search-results", documentController.showSearchPane);
+    documentViewCoordinator.updateInfoPanel();
   }
 
   function showRecentPane() {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      onAccepted: function () {
-        mainViewHost.requestView("recent-results", {
-          onAccepted: function () { documentController.showRecentPane(); }
-        });
-      }
-    });
-    updateInfoPanel();
+    documentViewCoordinator.showView("recent-results", documentController.showRecentPane);
+    documentViewCoordinator.updateInfoPanel();
   }
 
   function renderPayload(doc, payload, hash) {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      warn: false,
-      onAccepted: function () {
-        mainViewHost.requestView("rendered-document", { warn: false });
-        documentController.renderPayload(doc, payload, hash);
-        updateInfoPanel();
-      }
+    documentViewCoordinator.showRenderedDocument(function () {
+      documentController.renderPayload(doc, payload, hash);
+      documentViewCoordinator.updateInfoPanel();
     });
   }
 
@@ -834,35 +674,23 @@ export function startDocsViewerRuntime(options) {
   }
 
   function handleMissingDoc() {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      warn: false,
-      onAccepted: function () {
-        mainViewHost.requestView("rendered-document", { warn: false });
-        documentController.handleMissingDoc();
-        updateInfoPanel();
-      }
+    documentViewCoordinator.showRenderedDocument(function () {
+      documentController.handleMissingDoc();
+      documentViewCoordinator.updateInfoPanel();
     });
   }
 
   function renderDocLoadingState(doc) {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      warn: false,
-      onAccepted: function () {
-        mainViewHost.requestView("rendered-document", { warn: false });
-        documentController.renderDocLoadingState(doc);
-        updateInfoPanel();
-      }
+    documentViewCoordinator.showRenderedDocument(function () {
+      documentController.renderDocLoadingState(doc);
+      documentViewCoordinator.updateInfoPanel();
     });
   }
 
   function handlePayloadError(error) {
-    documentDisplayModeHost.requestMode("rendered-document", {
-      warn: false,
-      onAccepted: function () {
-        mainViewHost.requestView("rendered-document", { warn: false });
-        documentController.handlePayloadError(error);
-        updateInfoPanel();
-      }
+    documentViewCoordinator.showRenderedDocument(function () {
+      documentController.handlePayloadError(error);
+      documentViewCoordinator.updateInfoPanel();
     });
   }
 
@@ -887,7 +715,7 @@ export function startDocsViewerRuntime(options) {
       });
     }
 
-    infoPanelController.bind();
+    documentViewCoordinator.bind();
 
     if (featurePolicy.scopeSelection && scopeSelect) {
       scopeSelect.addEventListener("change", function () {
@@ -905,7 +733,7 @@ export function startDocsViewerRuntime(options) {
         return;
       }
       if (event.key === "Escape") {
-        infoPanelController.closeIfOpen();
+        documentViewCoordinator.closeInfoIfOpen();
       }
     });
 
@@ -954,7 +782,7 @@ export function startDocsViewerRuntime(options) {
       bookmarkRow: bookmarkRow,
       bookmarkScope: function () { return bookmarkScope; },
       bookmarkToggle: bookmarkToggle,
-      controlActive: controlActive,
+      controlActive: documentViewCoordinator.controlActive,
       cssEscape: cssEscape,
       dbName: BOOKMARK_DB_NAME,
       dbVersion: BOOKMARK_DB_VERSION,
@@ -964,14 +792,14 @@ export function startDocsViewerRuntime(options) {
       searchRecent: appSession.domains.searchRecent,
       searchResetCommand: bookmarkSearchResetCommand,
       selectedDocument: appSession.domains.selectedDocument,
-      setStatus: setStatus,
+      setStatus: statusController.setStatus,
       storeName: BOOKMARK_STORE_NAME
     });
   }
   var initialLoadPromise = startDocsViewerStartupPhases({
     composition: composition,
     bindEvents: bindLinkInterception,
-    startBusy: startBusy,
+    startBusy: statusController.startBusy,
     loadConfiguredScopes: loadConfiguredScopes,
     renderIndexPanelState: renderIndexPanelState,
     loadViewerSettings: loadViewerSettings,
@@ -983,7 +811,7 @@ export function startDocsViewerRuntime(options) {
         if (controller) controller.openImportModal();
       });
     },
-    setStatus: setStatus,
+    setStatus: statusController.setStatus,
     hideDocPane: hideDocPane,
     content: content,
     results: results,

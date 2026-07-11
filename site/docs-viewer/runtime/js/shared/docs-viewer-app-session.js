@@ -96,6 +96,7 @@ function createStateDefaults(settings) {
     generatedDataReadChecked: false,
     generatedDataReadAvailable: false,
     generatedDataReadRequestPromise: null,
+    generatedDataCapabilities: null,
     showNonViewable: true,
     docNonViewableEmoji: "\uD83D\uDEAB",
     reloadNonce: "",
@@ -105,7 +106,6 @@ function createStateDefaults(settings) {
     metadataRestoreFocusId: "",
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
-    viewRegistry: options.viewRegistry || null,
     indexPanelState: panelLayout && typeof panelLayout.indexPanelState === "function"
       ? panelLayout.indexPanelState()
       : null,
@@ -167,8 +167,7 @@ function createStateDomains(state, settings) {
       "expandedDocIds",
       "nonLoadableDocIds",
       "manageOnlyTreeRootIds",
-      "showNonViewable",
-      "uiStatusByValue"
+      "showNonViewable"
     ]),
     selectedDocument: stateDomain("selectedDocument", "generated static data or local generated-read service", state, [
       "selectedDocId",
@@ -200,12 +199,9 @@ function createStateDomains(state, settings) {
     ]),
     panelView: stateDomain("panelView", "browser-only UI state", state, [
       "indexPanelState",
-      "viewState",
-      "viewRegistry",
-      "expandedDocIds"
+      "viewState"
     ]),
     management: stateDomain("management", "management backend capability and write flow", state, [
-      "managementContext",
       "managementChecked",
       "managementAvailable",
       "managementBusy",
@@ -216,22 +212,16 @@ function createStateDomains(state, settings) {
       "managementMessageIsError",
       "managementStatusOwnsViewerStatus",
       "metadataEditingDocId",
-      "metadataRestoreFocusId",
-      "docNonViewableEmoji"
+      "metadataRestoreFocusId"
     ]),
     generatedData: stateDomain("generatedData", "local generated-read service capability", state, [
       "generatedDataReadChecked",
       "generatedDataReadAvailable",
       "generatedDataReadRequestPromise",
-      "managementCapabilities",
-      "reloadNonce",
-      "reloadExpectedDocId"
+      "generatedDataCapabilities"
     ]),
     busyStatus: stateDomain("busyStatus", "browser-only UI state", state, [
-      "pendingBusyCount",
-      "managementStatusOwnsViewerStatus",
-      "managementMessage",
-      "managementMessageIsError"
+      "pendingBusyCount"
     ])
   };
 }

@@ -13,7 +13,9 @@ import {
 
 export function createDocsViewerGeneratedDataRuntime(options) {
   var settings = options || {};
-  var state = settings.state;
+  var generatedData = settings.generatedData || {};
+  var management = settings.management || {};
+  var selectedDocument = settings.selectedDocument || {};
   var window = settings.window;
   var assetVersion = settings.assetVersion || "";
   var generatedBaseUrl = settings.generatedBaseUrl || "";
@@ -54,53 +56,53 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     var viewerScope = currentViewerScope();
     var targetScope = String(scope || viewerScope || "").trim();
     if (!generatedBaseUrl) {
-      state.generatedDataReadChecked = true;
-      state.generatedDataReadAvailable = false;
+      generatedData.generatedDataReadChecked = true;
+      generatedData.generatedDataReadAvailable = false;
       return Promise.resolve(false);
     }
-    if (state.generatedDataReadChecked) {
-      if (state.managementCapabilities && targetScope) {
-        return Promise.resolve(scopeGeneratedCapability(state.managementCapabilities, targetScope, "generated_data_reads"));
+    if (generatedData.generatedDataReadChecked) {
+      if (generatedData.generatedDataCapabilities && targetScope) {
+        return Promise.resolve(scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope, "generated_data_reads"));
       }
-      return Promise.resolve(state.generatedDataReadAvailable);
+      return Promise.resolve(generatedData.generatedDataReadAvailable);
     }
-    if (state.generatedDataReadRequestPromise) {
-      return state.generatedDataReadRequestPromise;
+    if (generatedData.generatedDataReadRequestPromise) {
+      return generatedData.generatedDataReadRequestPromise;
     }
 
-    state.generatedDataReadRequestPromise = readGeneratedCapabilities()
+    generatedData.generatedDataReadRequestPromise = readGeneratedCapabilities()
       .then(function (payload) {
         if (!payload) {
-          state.generatedDataReadAvailable = false;
-          state.generatedDataReadChecked = true;
+          generatedData.generatedDataReadAvailable = false;
+          generatedData.generatedDataReadChecked = true;
           return false;
         }
-        state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeGeneratedCapability(state.managementCapabilities, viewerScope, "generated_data_reads");
-        state.generatedDataReadChecked = true;
-        return scopeGeneratedCapability(state.managementCapabilities, targetScope || viewerScope, "generated_data_reads");
+        generatedData.generatedDataCapabilities = payload.capabilities || null;
+        generatedData.generatedDataReadAvailable = scopeGeneratedCapability(generatedData.generatedDataCapabilities, viewerScope, "generated_data_reads");
+        generatedData.generatedDataReadChecked = true;
+        return scopeGeneratedCapability(generatedData.generatedDataCapabilities, targetScope || viewerScope, "generated_data_reads");
       })
       .catch(function () {
-        state.generatedDataReadAvailable = false;
-        state.generatedDataReadChecked = true;
+        generatedData.generatedDataReadAvailable = false;
+        generatedData.generatedDataReadChecked = true;
         return false;
       })
       .finally(function () {
-        state.generatedDataReadRequestPromise = null;
+        generatedData.generatedDataReadRequestPromise = null;
       });
 
-    return state.generatedDataReadRequestPromise;
+    return generatedData.generatedDataReadRequestPromise;
   }
 
   function dataRequestOptions(overrides) {
     var requestSettings = overrides || {};
     return Object.assign({
       assetVersion: assetVersion,
-      reloadNonce: state.reloadNonce,
-      reloadExpectedDocId: state.reloadExpectedDocId,
+      reloadNonce: selectedDocument.reloadNonce,
+      reloadExpectedDocId: selectedDocument.reloadExpectedDocId,
       reloadRetryAttempts: reloadRetryAttempts,
       reloadRetryDelayMs: reloadRetryDelayMs,
-      managementAvailable: state.managementAvailable,
+      managementAvailable: management.managementAvailable,
       managementBaseUrl: generatedBaseUrl,
       fetch: function (url, fetchOptions) {
         return window.fetch(url, fetchOptions);
@@ -113,7 +115,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       },
       scopeSupportsGeneratedSearchReads: function () {
         return scopeGeneratedCapability(
-          state.managementCapabilities || {},
+          generatedData.generatedDataCapabilities || {},
           requestSettings.viewerScope || currentViewerScope(),
           "generated_search_reads"
         );

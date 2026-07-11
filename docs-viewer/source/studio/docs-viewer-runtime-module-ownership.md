@@ -31,8 +31,10 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Manage entrypoint | `docs-viewer-manage.js` | Supplies manage-owned document extras, hosted views, shell composition, and starts the manage app boot path. |
 | App boot | `docs-viewer-app-boot.js` | Root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
 | App composition | `docs-viewer-app-composition.js` | Runtime defaults, service/provider/session construction, feature-filtered hosted-view registration, startup authority records, and feature-aware startup sequencing. |
-| App session | `docs-viewer-app-session.js` | State defaults, named state-domain facades, public/manage route-session projection, and runtime-internal state object while remaining controller handoffs are narrowed. |
-| Private runtime coordinator | `docs-viewer-app-runtime.js` | Focused controller construction, callback handoff, config/controller bridges, event handler definitions, private management/startup route callbacks, and the small returned app handle. |
+| App session | `docs-viewer-app-session.js` | State defaults, single-owner named state-domain facades, public/manage route-session projection, and runtime-internal state object. |
+| Private runtime coordinator | `docs-viewer-app-runtime.js` | Remaining focused controller wiring, config/controller handoff, event handler definitions, private management/startup callbacks, and the small returned app handle. |
+| Document-view coordinator | `docs-viewer-document-view-coordinator.js` | Main-view/display-mode/info host construction, active view/mode/control queries, mode-specific info defaults, and rendered/search/recent transitions. |
+| Status controller | `docs-viewer-status-controller.js` | Viewer status text/error projection and nested busy-state accounting. |
 
 ## Route, Data, And Config
 
@@ -45,7 +47,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Config controller/service | `docs-viewer-config-controller.js`, `docs-viewer-config-service.js` | Shared config-envelope fetch/retry, independently callable configured-scope discovery and viewer-settings loading, scope route/picker projection, and UI-text/settings projection. |
 | Configured-scope provider | `docs-viewer-configured-scope-provider.js` | Feature-facing `readIndex`, `readDocument`, `readSearch`, `readRecentlyAdded`, and `readReferences` methods, configured-scope URL resolution, reference-target projection, and optional source-method projection. |
 | Source-service adapter | `docs-viewer-management-source-adapter.js` | Manage-entrypoint-owned optional source endpoint delegation. Its explicit contribution supplies provider methods but does not grant backend authority. |
-| Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data transport option shaping, generated-read capability caching, reload/retry projection, generated-search read capability checks, payload normalization, and static/local generated JSON reads behind the provider. |
+| Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data transport shaping, separately owned generated-read capability caching, selected-document reload projection, generated-search capability checks, payload normalization, and static/local generated JSON reads behind the provider. |
 | Low-level data primitives | `docs-viewer-data.js` | Low-level JSON fetch/retry and generated-read reload path primitives reserved for generated-data runtime and config-service owners. |
 | Asset URL projection | `docs-viewer-asset-url.js` | Asset-version URL projection shared by boot, route config, route context, report registry, config-service, and generated-data runtime owners. |
 | Document index state | `docs-viewer-document-index-state.js` | Document visibility/loadability projection, non-viewable/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection. |

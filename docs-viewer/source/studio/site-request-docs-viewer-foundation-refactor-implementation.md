@@ -12,9 +12,9 @@ viewable: true
 
 ## Status
 
-Phases 0-4 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, route-feature policy, startup sequence, and code-owned view/mode/control projection are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
+Phases 0-5 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, route-feature policy, startup sequence, code-owned view/mode/control projection, and touched coordinator reductions are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
 
-Phase 5, coordinator reduction for the touched areas, is next.
+The foundation implementation is ready for the Docs Review readiness checkpoint.
 
 This tracker implements phases 0-5 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap). It contains no Docs Review feature behavior.
 
@@ -336,10 +336,22 @@ management
 
 ### Phase 5
 
-- new foundation ownership is not implemented by additional callback bridges in `docs-viewer-app-runtime.js`
-- extracted owners have complete responsibilities and narrow inputs
-- obsolete bridges and duplicate facade fields are removed without aliases
-- no Docs Review code exists
+- complete: new foundation ownership is not implemented by additional callback bridges in `docs-viewer-app-runtime.js`
+- complete: `docs-viewer-document-view-coordinator.js` owns view/mode/info/control coordination and transitions
+- complete: `docs-viewer-status-controller.js` owns status and nested busy projection
+- complete: obsolete view/mode/status bridges and duplicate facade fields are removed without aliases
+- complete: management facade route and reload fallbacks were narrowed to their named owners
+- complete: generated-read capability state is separate from management capability state and the generated-data runtime consumes explicit generated-data, management, and selected-document domains
+- complete: no Docs Review code exists
+
+### Phase 5 Verification
+
+- focused route/lifecycle/site tests: 30 passed
+- focused router/runtime-owner browser module smoke: passed
+- manage route smoke: passed
+- public read-only route smoke: passed
+- full `docs-viewer-smoke` profile: 4/4 checks passed
+- final check summary: `var/admin/test-runs/docs-viewer-phase5-coordinator-reduction-final/summary.md`
 
 ## Docs Review Prerequisite Classification
 
