@@ -430,6 +430,95 @@ The initial Docs Review release is complete when:
 - no Docs Review capability, route, or service writes canonical repository source
 - the manual canonical handoff is documented
 
+## Next-Session Handoff — 2026-07-11
+
+### Current State
+
+The fixture-backed Docs Review consumer is complete, but the live Data Sharing handoff is not yet connected to its manifest contract.
+
+The local service startup issue found during the first manual run was addressed in `bin/local-all`: it now enables `DOCS_VIEWER_REVIEW_ENABLED` by default. A running older local process must be restarted to receive that setting.
+
+The user then completed the current live workflow:
+
+1. exported a Documents `document-content` package
+2. copied the returned export into the external `data-sharing/import-staging/` root
+3. ran **Review Returned Package → Content**
+
+That action created:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/20260711-192251-documents-document-content/
+  manifest.json
+  source/*.md
+```
+
+All materialized Markdown files passed the new Docs Review source parser. The package was nevertheless rejected because its generated manifest still uses:
+
+```text
+schema_version: data_sharing_import_review_source_v1
+profile_id: document-content
+```
+
+It does not contain the new consumer fields `package_id` or `status: validated`.
+
+### Verified Cause
+
+This is an implementation gap, not a copying, workspace-root, or user-workflow error.
+
+- `docs-viewer/services/docs_data_sharing/review_sources.py` still defines `SCHEMA_VERSION = "data_sharing_import_review_source_v1"`.
+- `data-sharing/adapters/documents/families/documents.py` routes the Content/source-folder review action to that legacy materializer.
+- `docs-viewer/services/docs_review_packages.py` intentionally accepts only `docs_review_validated_package_v1` packages.
+- The Docs Review implementation completed the consumer against a fixture; it did not update the existing Data Sharing producer.
+
+Do not solve this by accepting the old schema in Docs Review. Compatibility aliases remain prohibited, and the validated status must be asserted by Data Sharing only after the returned materialized source passes the agreed handoff checks.
+
+### Next Change Set
+
+Connect the existing text-oriented `document-content` review action to the new validated-package handoff:
+
+1. Make Data Sharing validate the complete materialized source folder before publishing it to Docs Review.
+2. On success, write a trusted `docs_review_validated_package_v1` manifest with at least:
+   - `package_id` matching the folder name
+   - `status: validated`
+   - `source_scope`
+   - optional `title` and `default_doc_id`
+3. Preserve useful provenance and validation diagnostics from the current response without retaining an obsolete runtime manifest contract.
+4. Keep the current explicit replacement behavior: rerunning the action may replace the same preview folder and any manual review edits, so the UI/result must continue to make that consequence clear.
+5. Do not describe the `document-content` projection as exact canonical Markdown. It remains a rendered-derived, text-only preview source. The later `document-full-source` producer remains responsible for exact `canonical_markdown`, assets, dependency inventories, and full returned-package validation.
+6. Improve the `/docs-review/` empty state to surface package rejection diagnostics returned by the package-list endpoint instead of showing only “No validated Docs Review packages are available.”
+
+Likely implementation and test files:
+
+```text
+docs-viewer/services/docs_data_sharing/review_sources.py
+data-sharing/adapters/documents/families/documents.py
+docs-viewer/services/docs_review_packages.py
+docs-viewer/tests/python/test_docs_import_review_sources.py
+docs-viewer/tests/python/test_docs_review_packages.py
+analytics-app/app/frontend/js/data-sharing-review.js
+docs-viewer/runtime/js/review/
+```
+
+Update the maintained Data Sharing returned-package and adapter documents after the producer contract changes. Do not rebuild generated Docs Viewer payloads unless explicitly requested or the local watcher does so.
+
+### Focused Verification
+
+Start with the smallest checks that prove the producer/consumer boundary:
+
+```bash
+$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_import_review_sources.py docs-viewer/tests/python/test_docs_review_packages.py -q
+$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_data_sharing/review_sources.py data-sharing/adapters/documents/families/documents.py
+git diff --check
+```
+
+Then restart `bin/local-all`, rerun **Review Returned Package → Content** on the staged `document-content` file, and verify that:
+
+- the preview manifest uses `docs_review_validated_package_v1`
+- `/docs-review/` lists the package
+- Build produces package-local `generated/` output
+- rendered and source views open successfully
+- no canonical source or public assets are written
+
 ## Non-Goals
 
 - implementing automatic promotion, import, replacement, or commit inside Docs Review; any future automation belongs to Data Sharing
