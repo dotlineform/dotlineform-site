@@ -6,13 +6,28 @@ last_updated: 2026-06-26
 ---
 
 
-
-
-
 ---
 
-we are refining the behaviour of `/analytics/data-sharing/review/`.
+> [docs-watch] studio targeted search fallback; affected ids unavailable: changed file count 7 exceeds targeted threshold 5
 
+It’s an informational fallback, not an error.
+
+The docs watcher noticed **7 Studio source Markdown files changed** within one debounced batch. Its default limit for a targeted rebuild is **5 files**. Because `7 > 5`, it skipped calculating individual affected document IDs and safely performed:
+
+- a full rebuild of the **Studio docs payload**
+- a full rebuild of the **Studio search index**
+
+Other scopes such as Analysis and Library were not rebuilt. The wording “affected ids unavailable” means “not calculated because the batch exceeded the threshold,” not that document IDs were corrupt or missing.
+
+This often happens after a branch switch, merge, bulk edit, or another operation touching several source documents. You would normally see the next line say:
+
+```text
+[docs-watch] Rebuilding studio docs and full docs search.
+```
+
+Only subsequent `rebuild failed` output would indicate a real problem.
+
+The threshold defaults to `5` in [docs_live_rebuild_watcher.py](/Users/dlf/Developer/dotlineform/dotlineform-site/docs-viewer/services/docs_live_rebuild_watcher.py:353). It can be changed with `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD`, but the occasional full rebuild is expected and safer than attempting a questionable partial update.
 
 ---
 
