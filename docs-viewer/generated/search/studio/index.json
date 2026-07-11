@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9904ba3f51b34c199781d0f3d4d19ff9",
-    "generated_at_utc": "2026-07-11T20:46:13Z",
-    "count": 237
+    "version": "blake2b-3cc5b5dca4391caa8da7bed485778191",
+    "generated_at_utc": "2026-07-11T20:58:56Z",
+    "count": 236
   },
   "entries": [
     {
@@ -1399,38 +1399,6 @@
         "23"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-23 2026 06 23"
-    },
-    {
-      "id": "site-request-docs-viewer-view-mode-registry",
-      "kind": "doc",
-      "title": "Docs Viewer View, Mode, And Control Projection",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry",
-      "last_updated": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-view-mode-registry",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "view",
-        "mode",
-        "registry",
-        "docs viewer view, mode, and control projection",
-        "and",
-        "control",
-        "projection",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-11",
-        "2026",
-        "07",
-        "11"
-      ],
-      "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view, mode, and control projection and control projection change requests change requests 2026-07-11 2026 07 11"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",

@@ -171,10 +171,8 @@ The first summary batch should cover the Docs Viewer entry point, the phase 1-5 
 | --- | --- | --- | --- | --- | --- |
 | `site-request-data-sharing-full-document-package` | change request | proposed | Exact Markdown package and validated-return prerequisite | Keep active and separate from the runtime foundation refactor. | missing |
 | `site-request-docs-document-content-markdown-export` | change request | historical | Completed Markdown-export decision and outcome | Transfer durable package behavior to export owners, then retain as superseded history. | missing |
-| `site-request-docs-review-workflow` | change request | complete | Historical implementation request; durable behavior transferred to `docs-viewer-review` and `scripts-docs-management-endpoints-review` | Eligible for deletion after the durable-doc migration is reviewed. | present |
 | `site-request-docs-viewer-architecture-refactor-roadmap` | change request | active | Foundation refactor sequence and guardrails | Keep durable outcomes and verification evidence directly in the roadmap. | missing |
 | `site-request-docs-viewer-semantic-reference-editor` | change request | mixed | Draft V2 goals beside implemented V1 behavior | Reconcile with current editor/implementation owners, then retain only genuinely proposed work. | missing |
-| `site-request-docs-viewer-view-mode-registry` | change request | implemented | Phase 4 code-owned view, mode, and control projection task | Outcomes are retained in the architecture roadmap; eligible for later retirement. | present |
 
 ## Proposed Documentation Batches
 
