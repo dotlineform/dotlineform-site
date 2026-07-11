@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-238842a2ad0dff50fc7f05fae38a067e",
-    "generated_at_utc": "2026-07-11T20:33:19Z",
-    "count": 238
+    "version": "blake2b-9904ba3f51b34c199781d0f3d4d19ff9",
+    "generated_at_utc": "2026-07-11T20:46:13Z",
+    "count": 237
   },
   "entries": [
     {
@@ -1339,33 +1339,6 @@
         "29"
       ],
       "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
-    },
-    {
-      "id": "site-request-docs-review-workflow",
-      "kind": "doc",
-      "title": "Docs Review Workflow",
-      "href": "/docs/?scope=studio&doc=site-request-docs-review-workflow",
-      "last_updated": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
-      "search_terms": [
-        "site-request-docs-review-workflow",
-        "site",
-        "request",
-        "docs",
-        "review",
-        "workflow",
-        "docs review workflow",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-11",
-        "2026",
-        "07",
-        "11"
-      ],
-      "search_text": "site-request-docs-review-workflow site request docs review workflow docs review workflow change requests change requests 2026-07-11 2026 07 11"
     },
     {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",

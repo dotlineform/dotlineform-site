@@ -317,12 +317,6 @@
           "ui_status": "done"
         },
         {
-          "doc_id": "site-request-docs-review-workflow",
-          "title": "Docs Review Workflow",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-workflow.json",
-          "ui_status": "complete"
-        },
-        {
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
           "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
@@ -1285,5 +1279,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T20:29:04Z"
+  "generated_at": "2026-07-11T20:46:13Z"
 }
