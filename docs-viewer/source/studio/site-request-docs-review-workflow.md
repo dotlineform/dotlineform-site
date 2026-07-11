@@ -21,7 +21,7 @@ Implemented in this slice:
 - validated external package listing, manifest and inventory reads, source revision checks, builds, generated reads, and inventoried asset reads
 - a synthetic `DocsDataBuilder` configuration that writes only package-local `generated/`
 - package-aware media URLs and sandboxed package-local interactive HTML
-- the returned-package collection provider, package selector, Build and asset-inventory controls, rendered/source modes, and canonical comparison link
+- the returned-package collection provider, package selector, Build and asset-inventory controls, rendered/source modes, and canonical comparison link in the shared single-row Docs Viewer toolbar
 - Data Sharing validation and timestamped-folder publication for the compact `document-content` projection
 - rejected-package diagnostics in the `/docs-review/` empty state
 - focused Python, module-boundary, manage-regression, and browser-route verification

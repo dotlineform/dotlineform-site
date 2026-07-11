@@ -1,7 +1,7 @@
 function createButton(documentRef, label) {
   var button = documentRef.createElement("button");
   button.type = "button";
-  button.className = "button button--secondary";
+  button.className = "docsViewer__actionButton";
   button.textContent = label;
   return button;
 }
@@ -39,13 +39,21 @@ export function createDocsViewerReviewController(options) {
   function start() {
     var mount = documentRef.getElementById("docsViewerReviewControlsMount");
     if (!mount || !provider) return Promise.resolve(null);
+    var viewerToolbar = documentRef.getElementById("docsViewerViewerToolbar");
+    var panelControls = documentRef.getElementById("docsViewerPanelControls");
+    if (viewerToolbar && mount.parentElement !== viewerToolbar) {
+      viewerToolbar.insertBefore(mount, panelControls && panelControls.parentElement === viewerToolbar ? panelControls : null);
+    }
     mount.textContent = "";
+    mount.setAttribute("role", "group");
+    mount.setAttribute("aria-label", "Review package controls");
     var select = documentRef.createElement("select");
+    select.className = "docsViewer__searchInput docsViewer__reviewPackageSelect";
     select.setAttribute("aria-label", "Review package");
     var buildButton = createButton(documentRef, "Build");
     var assetsButton = createButton(documentRef, "Assets");
     canonicalLink = documentRef.createElement("a");
-    canonicalLink.className = "button button--secondary";
+    canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
     canonicalLink.textContent = "Open canonical";
     canonicalLink.target = "_blank";
     canonicalLink.rel = "noopener";

@@ -1376,12 +1376,42 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
 
 .docsViewer__reviewControls{
   display: flex;
-  flex-wrap: wrap;
+  flex: 0 1 auto;
+  min-width: 0;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
 }
 
-.docsViewer__reviewControls select,
-.docsViewer__reviewControls .button{
-  min-height: 2.25rem;
+.docs-viewer-review .docsViewer__topBar{
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+  overflow-x: auto;
+}
+
+.docs-viewer-review .docsViewer__viewerToolbar{
+  flex: 0 1 auto;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.docsViewer__reviewPackageSelect{
+  flex: 0 1 var(--docs-viewer-index-width);
+  width: var(--docs-viewer-index-width);
+  max-width: 100%;
+  min-width: 12rem;
+}
+
+.docsViewer__reviewControls .docsViewer__actionButton,
+.docsViewer__reviewCanonicalLink{
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.docsViewer__reviewCanonicalLink{
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
