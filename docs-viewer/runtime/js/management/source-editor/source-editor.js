@@ -151,20 +151,20 @@ function createSemanticTokenAdapter(state) {
 }
 
 function loadSource(context, state) {
-  var services = context.sourceEditorServices || {};
+  var provider = context.collectionProvider || {};
   var doc = context.selectedDoc || null;
   if (!doc || !doc.doc_id) {
     setStatus(state, "Select a document before opening Markdown source.", true);
     return Promise.resolve(null);
   }
-  if (typeof services.readSource !== "function") {
+  if (typeof provider.readSource !== "function") {
     setStatus(state, "Markdown source editing is unavailable on this route.", true);
     return Promise.resolve(null);
   }
 
   setBusy(state, true);
   setStatus(state, "Loading source...", false);
-  return services.readSource(doc.doc_id)
+  return provider.readSource(doc.doc_id)
     .then(function (payload) {
       state.docId = cleanString(payload.doc_id || doc.doc_id);
       state.revision = cleanString(payload.source_revision);
@@ -188,14 +188,15 @@ function loadSource(context, state) {
 }
 
 function rebuildSource(context, state) {
+  var provider = context.collectionProvider || {};
   var services = context.sourceEditorServices || {};
-  if (!state.loaded || typeof services.rebuildSource !== "function") return Promise.resolve(false);
+  if (!state.loaded || typeof provider.writeSource !== "function") return Promise.resolve(false);
 
   setBusy(state, true);
   setStatus(state, "Rebuilding doc...", false);
   var nextBody = normalizeBody(state.textarea ? state.textarea.value : "");
   var switchedToRendered = false;
-  return services.rebuildSource({
+  return provider.writeSource({
     doc_id: state.docId,
     source_revision: state.revision,
     source_body: nextBody

@@ -120,6 +120,7 @@
         "shared/docs-viewer-bookmarks.js",
         "shared/docs-viewer-config-controller.js",
         "shared/docs-viewer-config-service.js",
+        "shared/docs-viewer-configured-scope-provider.js",
         "shared/docs-viewer-data.js",
         "shared/docs-viewer-document-controller.js",
         "shared/docs-viewer-document-display-mode-host.js",

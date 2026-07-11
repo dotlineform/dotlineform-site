@@ -18,72 +18,25 @@ function scopeConfigs(context) {
   return Array.isArray(scopeConfig.scopeConfigs) ? scopeConfig.scopeConfigs : [];
 }
 
-function scopeConfigFor(context, scope) {
-  var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
-  var scopeConfig = context && context.scopeConfigState ? context.scopeConfigState : {};
-  return scopeConfig.scopeConfigsById ? scopeConfig.scopeConfigsById.get(targetScope) : null;
-}
-
-function docsScopeDataBaseUrl(context, scope) {
-  var targetConfig = scopeConfigFor(context, scope);
-  var indexUrl = targetConfig ? cleanString(targetConfig.indexTreeUrl) : "";
-  return indexUrl.replace(/\/(?:index|index-tree)\.json(?:[?#].*)?$/, "");
-}
-
-function referenceTargetSlug(target) {
-  var bucketUrl = cleanString(target && target.bucket_url);
-  if (bucketUrl) {
-    try {
-      var url = new URL(bucketUrl, window.location.origin);
-      var filename = url.pathname.split("/").pop() || "";
-      if (filename.slice(-5) === ".json") return filename.slice(0, -5);
-    } catch (error) {
-      // Fall through to target id encoding.
-    }
-  }
-  return encodeURIComponent(cleanString(target && target.target_id));
-}
-
 function fetchDocsIndexTreeForScope(context, scope) {
   var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
-  var targetConfig = scopeConfigFor(context, targetScope);
-  if (!targetConfig || !targetConfig.indexTreeUrl) {
-    return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-  }
-  return context.generatedData.readDocsIndexTree({
-    indexTreeUrl: targetConfig.indexTreeUrl,
-    viewerScope: targetScope,
-    reloadNonce: "",
-    reloadExpectedDocId: ""
+  return context.collectionProvider.readIndex({
+    scope: targetScope
   });
 }
 
 function fetchDocsReferencesIndexForScope(context, scope) {
   var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
-  var baseUrl = docsScopeDataBaseUrl(context, targetScope);
-  if (!baseUrl) {
-    return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-  }
-  return context.generatedData.readReferencesIndex({
-    baseUrl: baseUrl,
-    viewerScope: targetScope
+  return context.collectionProvider.readReferences({
+    scope: targetScope
   });
 }
 
 function fetchDocsReferenceTargetForScope(context, scope, target) {
   var targetScope = cleanString(scope || currentViewerScope(context)).toLowerCase();
-  var targetKind = cleanString(target && target.target_kind);
-  var targetSlug = referenceTargetSlug(target);
-  var staticUrl = cleanString(target && target.bucket_url);
-  if (!staticUrl) {
-    var baseUrl = docsScopeDataBaseUrl(context, targetScope);
-    staticUrl = baseUrl + "/references/by-target/" + encodeURIComponent(targetKind) + "/" + targetSlug + ".json";
-  }
-  return context.generatedData.readReferenceTarget({
-    staticUrl: staticUrl,
-    targetKind: targetKind,
-    targetSlug: targetSlug,
-    viewerScope: targetScope
+  return context.collectionProvider.readReferences({
+    scope: targetScope,
+    target: target
   });
 }
 

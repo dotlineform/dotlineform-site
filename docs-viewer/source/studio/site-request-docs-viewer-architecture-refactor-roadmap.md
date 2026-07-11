@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0 and phases 0-1 are complete. Phase 2 configured-scope provider boundary is next.
+Assessment complete; roadmap accepted for implementation, D0 and phases 0-2 are complete. Phase 3 route feature and startup projection is next.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -703,6 +703,16 @@ Acceptance:
 - document, index, search, recent, and source consumers depend on named provider methods
 - no returned-package provider exists yet
 - provider presence does not grant backend authority
+
+### Phase 2 Outcome
+
+Implemented on 2026-07-11.
+
+- Current public and manage collection reads use `docs-viewer-configured-scope-provider.js`.
+- Route, document, search/recent, manage-report, and Markdown source consumers use named provider methods.
+- The provider owns configured-scope URL and reference-target projection; `docs-viewer-generated-data-runtime.js` retains static/local transport, retry, reload, capability, and payload-normalization behavior.
+- Read-only providers omit `readSource` and `writeSource`. A source-service adapter may explicitly supply either method, while backend capabilities remain authoritative.
+- No returned-package provider or Docs Review behavior was added.
 
 ## Phase 3: Route Feature And Startup Projection
 

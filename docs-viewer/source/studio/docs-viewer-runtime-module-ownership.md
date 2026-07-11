@@ -21,7 +21,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 - The returned app handle stays intentionally small: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`.
 - [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the current graph counts and phase owner changes. This document remains the durable current-owner map and must be updated in the same slice whenever responsibility moves.
 - `docs-viewer-app-context.js` owns explicit app context plus route context; `docs-viewer-access.js` owns route visibility/composition projection; `docs-viewer-service-context.js` owns independent named service surfaces.
-- There is no configured-scope provider or normalized route-feature owner yet; phases 2 and 3 add those boundaries without moving feature lifecycle into the private runtime coordinator.
+- `docs-viewer-configured-scope-provider.js` owns the current configured-scope collection contract. There is no normalized route-feature owner yet; Phase 3 adds that boundary without moving feature lifecycle into the private runtime coordinator.
 
 ## Entrypoints And Boot
 
@@ -30,7 +30,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Public entrypoint | `docs-viewer-public.js` | Starts the public app boot path and does not import manage-owned hosted views, shell renderers, reports, source editor, import, settings, or scope lifecycle modules. |
 | Manage entrypoint | `docs-viewer-manage.js` | Supplies manage-owned document extras, hosted views, shell composition, and starts the manage app boot path. |
 | App boot | `docs-viewer-app-boot.js` | Root discovery, asset-version read, route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup. |
-| App composition | `docs-viewer-app-composition.js` | Runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime creation, config-service creation, document-index state creation, startup authority records, and initial startup sequencing. |
+| App composition | `docs-viewer-app-composition.js` | Runtime defaults, service-context handoff, hosted-view registry creation, panel layout creation, app-session creation, generated-data runtime, source-service adapter, configured-scope provider, config-service and document-index creation, startup authority records, and initial startup sequencing. |
 | App session | `docs-viewer-app-session.js` | State defaults, named state-domain facades, public/manage route-session projection, and runtime-internal state object while remaining controller handoffs are narrowed. |
 | Private runtime coordinator | `docs-viewer-app-runtime.js` | Focused controller construction, callback handoff, config/controller bridges, event handler definitions, private management/startup route callbacks, and the small returned app handle. |
 
@@ -42,7 +42,9 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | App context, route access, and route config | `docs-viewer-app-context.js`, `docs-viewer-route-config.js`, `docs-viewer-access.js` | Explicit `public`/`manage` app kind, entrypoint/route validation, route visibility/composition policy, browser-safe registry resolution, route context, and scope projection. |
 | Service context | `docs-viewer-service-context.js` | Independent `generatedData`, `source`, `management`, and browser-safe `config` service surfaces. Presence and URLs do not grant backend capability. |
 | Config controller/service | `docs-viewer-config-controller.js`, `docs-viewer-config-service.js` | Browser-safe config/UI-text loading, scope route projection, scope picker projection, UI-text merge, recent-limit/status-label projection, and config fetch/retry behavior. |
-| Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data request option shaping, generated-read capability caching, reload/retry option projection, generated-search read capability checks, and named read methods for generated JSON payloads. |
+| Configured-scope provider | `docs-viewer-configured-scope-provider.js` | Feature-facing `readIndex`, `readDocument`, `readSearch`, `readRecentlyAdded`, and `readReferences` methods, configured-scope URL resolution, reference-target projection, and optional source-method projection. |
+| Source-service adapter | `docs-viewer-management-source-adapter.js` | Manage-entrypoint-owned optional source endpoint delegation. Its explicit contribution supplies provider methods but does not grant backend authority. |
+| Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data transport option shaping, generated-read capability caching, reload/retry projection, generated-search read capability checks, payload normalization, and static/local generated JSON reads behind the provider. |
 | Low-level data primitives | `docs-viewer-data.js` | Low-level JSON fetch/retry and generated-read reload path primitives reserved for generated-data runtime and config-service owners. |
 | Asset URL projection | `docs-viewer-asset-url.js` | Asset-version URL projection shared by boot, route config, route context, report registry, config-service, and generated-data runtime owners. |
 | Document index state | `docs-viewer-document-index-state.js` | Document visibility/loadability projection, non-viewable/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection. |
@@ -86,10 +88,11 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 
 The current payload-loading ownership after public index slimming is:
 
-- `docs-viewer-generated-data-runtime.js` owns named reads for docs index tree, selected by-id payloads, recently-added payloads, search indexes, references indexes, and reference-target buckets.
+- `docs-viewer-configured-scope-provider.js` owns feature-facing reads for index, selected document, search, recently added, references, and explicitly supplied source methods.
+- `docs-viewer-generated-data-runtime.js` owns the static/local generated-data transport, capability, retry, reload, and normalization behavior behind that provider.
 - `docs-viewer-tree-payload-adapter.js` owns normalizing nested `index-tree.json` and `recently-added.json` payloads into the runtime record shape, including deriving in-memory child `parent_id` values from nested tree position.
 - `docs-viewer-document-index-state.js` owns public/manage visibility filtering, manage-only tree-root omission, non-loadable fallback resolution, default-doc selection, and index status projection after the normalized tree payload is loaded.
 - `docs-viewer-route-workflow.js` owns route application, `index-tree.json` loading orchestration, selected-document payload loading, URL/history writes, and missing/error projection through its private route command contract.
-- `docs-viewer-search-controller.js` owns search and recently-added rendering while delegating generated search/recent payload reads to `docs-viewer-generated-data-runtime.js`.
+- `docs-viewer-search-controller.js` owns search and recently-added rendering while delegating collection reads to the configured-scope provider.
 - `docs-viewer-view-context.js` and `docs-viewer-metadata-info-view.js` hydrate and render info-panel metadata from selected by-id payloads rather than tree rows or public `index.json`.
 - Public-safe modules must not import manage-owned metadata, report, source-editor, import, settings, scope lifecycle, or management client modules.

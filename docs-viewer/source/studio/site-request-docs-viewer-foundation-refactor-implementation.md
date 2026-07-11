@@ -12,9 +12,9 @@ viewable: true
 
 ## Status
 
-Phases 0 and 1 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
+Phases 0-2 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
 
-Phase 2, the configured-scope provider boundary, is next.
+Phase 3, route feature and startup projection, is next.
 
 This tracker implements phases 0-5 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap). It contains no Docs Review feature behavior.
 
@@ -170,7 +170,7 @@ Slice-specific checks must add the lowest-layer contract proof described below. 
 | phase | target owner after the slice | primary change | focused proof |
 | --- | --- | --- | --- |
 | 1. App context and authority — complete | `docs-viewer-app-context.js` for normalized app context; `docs-viewer-access.js` for route visibility; `docs-viewer-service-context.js` for named service presence | Explicit `kind: public | manage | review`, feature policy, service availability, and backend capability inputs; old binary browser APIs removed. | Direct module projection checks plus public static graph, service-config, lifecycle, and route smokes pass. |
-| 2. Configured-scope provider | new `docs-viewer-configured-scope-provider.js`; `docs-viewer-generated-data-runtime.js` remains transport/retry owner | Supply named index/document/search/recent/reference reads and optional source methods without granting authority. | Pure provider contract tests using current generated fixtures; focused source-service tests. |
+| 2. Configured-scope provider — complete | `docs-viewer-configured-scope-provider.js`; `docs-viewer-generated-data-runtime.js` remains transport/retry owner | Named index/document/search/recent/reference reads and optional source methods without granting authority. | Pure provider module smoke, focused source-service pytest, and public/manage smoke profile pass. |
 | 3. Route features and startup | new `docs-viewer-route-features.js`; `docs-viewer-app-composition.js` consumes the normalized projection | Validate known feature ids, preserve current defaults, and construct/initialize only enabled search, recent, bookmark, report, scope-selection, source-edit, and management surfaces. | Pure feature normalization and startup-record tests; route-config module check. |
 | 4. View/mode/control projection | new shared `docs-viewer-view-registry.js` for code-owned definition normalization and eligibility projection | Combine shared definitions, manage entrypoint contributions, app context, backend capabilities, route policy, and active view/mode state. | Pure registry/projection tests; public graph proof; narrow renderer DOM proof. |
 | 5. Touched coordinator reduction | focused `docs-viewer-service-composition.js`, route-feature factory, or view-toolbar coordinator only where phases 1-4 establish a complete contract | Move construction and coordination out of the private runtime without mechanical splitting; remove obsolete bridges and broad facade fields. | Owner-contract tests plus unchanged baseline checks for affected boundaries. |
@@ -244,14 +244,45 @@ Removed browser contract fields include the former management/read-only booleans
 | Metadata hosted-view context module smoke | pass |
 | `docs-viewer-smoke` profile | pass: 4 checks; see `var/admin/test-runs/docs-viewer-foundation-phase-1-final/summary.md` |
 
+## Phase 2 Outcome
+
+The current configured-scope implementation now exposes one collection-facing contract:
+
+```text
+readIndex
+readDocument
+readSearch
+readRecentlyAdded
+readReferences
+readSource       optional
+writeSource      optional
+```
+
+- `docs-viewer-configured-scope-provider.js` owns active/explicit scope resolution, configured payload URLs, reference-index paths, and targeted reference-bucket paths.
+- `docs-viewer-generated-data-runtime.js` remains the static/local generated-read transport, capability-cache, retry, reload, and payload-normalization owner.
+- App composition constructs the provider and an optional source-service adapter; no provider lifecycle was added to the private runtime coordinator.
+- Route workflow, search/recent, document extras, manage reports, and Markdown source editing consume named provider methods.
+- Providers without an explicit source adapter do not contain `readSource` or `writeSource` keys.
+- Supplying a source adapter creates callable methods, not authority. Backend capability and endpoint validation remain authoritative.
+- No returned-package provider, review route, or Docs Review behavior exists in this phase.
+
+### Phase 2 Checks
+
+| check | result |
+| --- | --- |
+| Focused public-boundary, static-asset, service-config, and source-service pytest set | pass: 22 tests |
+| Configured-scope provider/router module smoke | pass |
+| `docs-viewer-smoke` profile | pass: 4 checks; see `var/admin/test-runs/docs-viewer-foundation-phase-2-final-entrypoint/summary.md` |
+| Studio docs and search dry-run | clean: 0 writes, 0 removals, 0 warnings |
+
 ## Later Phase Acceptance
 
 ### Phase 2
 
-- current routes read through the configured-scope provider
-- consumers call named provider methods rather than reconstructing payload/service fallbacks
-- source methods are absent unless explicitly supplied
-- provider presence grants no write or management authority
+- complete: current routes read through the configured-scope provider
+- complete: consumers call named provider methods rather than reconstructing payload/service fallbacks
+- complete: source methods are absent unless explicitly supplied
+- complete: provider presence grants no write or management authority
 
 ### Phase 3
 

@@ -11,8 +11,12 @@ import {
 import {
   createDocsViewerManagementShellRenderers
 } from "./docs-viewer-management-shell-composition.js";
+import {
+  createDocsViewerManagementSourceAdapter
+} from "./docs-viewer-management-source-adapter.js";
 
 startDocsViewerManageApp({
+  createSourceAdapter: createDocsViewerManagementSourceAdapter,
   documentDisplayModes: createDocsViewerManagementDocumentDisplayModes(),
   entrypointHostedViews: createDocsViewerManagementHostedViews(),
   infoPanelDefaultViewByDocumentMode: {

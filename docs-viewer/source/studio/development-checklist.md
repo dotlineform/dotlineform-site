@@ -69,7 +69,7 @@ When changing Docs Viewer runtime/app architecture:
 - pair frontend app concepts with backend/service/generated-data contracts when the change crosses that boundary
 - preserve public read-only behavior without management assets, backend capability probes, local generated-read URLs, write-capable handles, or management services
 - preserve manage-mode backend authority for writes, imports, settings, scope lifecycle, rebuilds, source opening, and local-only data
-- send feature-facing generated reads through `docs-viewer-generated-data-runtime.js`
+- send feature-facing collection reads through a named provider; the configured-scope provider delegates transport, retry, reload, and generated-read capability behavior to `docs-viewer-generated-data-runtime.js`
 - send management writes through `docs-viewer-management-client.js` and server-side management endpoints with validation
 - do not add new feature lifecycle ownership to `docs-viewer-app-runtime.js`
 

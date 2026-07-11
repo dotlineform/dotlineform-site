@@ -16,10 +16,19 @@ It separates public read-only route data from local/manage route data so payload
 - Public routes load only public-reader data needed for navigation, selected-document rendering, search, recently-added, and reader-facing metadata.
 - Manage routes may load manage generated data and local-service data, but manage needs should not force public payloads to carry management/tooling metadata.
 - Public and manage payload names and shapes should be explicit route contracts, not incidental current renderer requirements.
-- Generated-data runtime helpers are read owners only; backend writes and management capability truth remain in management services.
+- The configured-scope provider is the feature-facing collection-read owner. The generated-data runtime remains the read transport/retry owner; backend writes and management capability truth remain in management services.
 - There should be no compatibility fallback to retired public payloads once a route contract has moved.
 - Data Sharing document source-context reads are not generated-data runtime reads; they use Docs Viewer-owned helpers over scope config and source Markdown.
-- The current generated-data runtime is the transport/retry owner, not a collection-provider abstraction. Phase 2 adds a configured-scope provider over its named reads; provider presence does not grant backend or write authority.
+- `docs-viewer-configured-scope-provider.js` resolves current configured-scope URLs and delegates `readIndex`, `readDocument`, `readSearch`, `readRecentlyAdded`, and `readReferences` to the generated-data runtime.
+- `readSource` and `writeSource` are absent from a provider unless a source adapter explicitly supplies them. Method or provider presence does not grant backend or write authority; the source endpoint remains capability-gated.
+
+## Configured-Scope Provider Contract
+
+The current public and manage routes use one configured-scope provider implementation. It adapts current scope config to collection-facing methods so route, document, search/recent, report, and source-editor consumers do not reconstruct generated-data fallback paths.
+
+`readReferences` owns both reference-index and targeted reference-bucket URL projection. `docs-viewer-generated-data-runtime.js` continues to own static-versus-local reads, targeted generated-read capability checks, retry delays, reload paths, and payload normalization.
+
+This phase does not add a returned-package or other non-scope provider.
 
 ## Current Payload Roots
 

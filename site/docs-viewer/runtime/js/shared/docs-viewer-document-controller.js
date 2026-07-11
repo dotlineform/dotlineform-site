@@ -31,7 +31,7 @@ export function initDocsViewerDocumentController(context) {
       checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
       content: content,
       doc: doc,
-      generatedData: context.generatedData,
+      collectionProvider: context.collectionProvider,
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
       payload: payload,

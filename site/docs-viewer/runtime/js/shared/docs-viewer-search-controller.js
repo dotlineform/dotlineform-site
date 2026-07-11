@@ -54,10 +54,6 @@ export function initDocsViewerSearchController(context) {
     return typeof context.recentlyAddedUrl === "function" ? context.recentlyAddedUrl() : context.recentlyAddedUrl;
   }
 
-  function currentViewerScope() {
-    return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
-  }
-
   function searchIsEnabled() {
     return Boolean(searchInput && results && more && currentSearchIndexUrl());
   }
@@ -129,10 +125,7 @@ export function initDocsViewerSearchController(context) {
 
     var stopBusy = typeof context.startBusy === "function" ? context.startBusy() : function () {};
 
-    searchRecent.searchRequestPromise = context.generatedData.readSearchIndex({
-      searchIndexUrl: currentSearchIndexUrl(),
-      viewerScope: currentViewerScope()
-    })
+    searchRecent.searchRequestPromise = context.collectionProvider.readSearch()
       .then(function (payload) {
         searchRecent.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
         searchRecent.searchLoaded = true;
@@ -163,10 +156,7 @@ export function initDocsViewerSearchController(context) {
 
     var stopBusy = typeof context.startBusy === "function" ? context.startBusy() : function () {};
 
-    searchRecent.recentRequestPromise = context.generatedData.readRecentlyAdded({
-      recentlyAddedUrl: currentRecentlyAddedUrl(),
-      viewerScope: currentViewerScope()
-    })
+    searchRecent.recentRequestPromise = context.collectionProvider.readRecentlyAdded()
       .then(function (payload) {
         searchRecent.recentEntries = normalizeRecentEntries(payload && Array.isArray(payload.docs) ? payload.docs : []);
         searchRecent.recentLoaded = true;

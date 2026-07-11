@@ -39,7 +39,8 @@ def install_fixture(page: Page) -> None:
             const routeConfig = await import('/docs-viewer/runtime/js/shared/docs-viewer-route-config.js');
             const appContext = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-context.js');
             const serviceContext = await import('/docs-viewer/runtime/js/shared/docs-viewer-service-context.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext };
+            const configuredScopeProvider = await import('/docs-viewer/runtime/js/shared/docs-viewer-configured-scope-provider.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider };
         }"""
     )
 
@@ -244,12 +245,115 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
         raise AssertionError(f"app/service context authority projection changed: {result!r}")
 
 
+def assert_configured_scope_provider(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { configuredScopeProvider } = window.__docsViewerRouterModuleSmoke;
+            const calls = [];
+            const generatedData = {
+                readDocsIndexTree: (options) => { calls.push(['index', options]); return Promise.resolve({ docs: [] }); },
+                readDocumentPayload: (doc, options) => { calls.push(['document', doc.doc_id, options]); return Promise.resolve({ doc_id: doc.doc_id }); },
+                readSearchIndex: (options) => { calls.push(['search', options]); return Promise.resolve({ entries: [] }); },
+                readRecentlyAdded: (options) => { calls.push(['recent', options]); return Promise.resolve({ docs: [] }); },
+                readReferencesIndex: (options) => { calls.push(['references-index', options]); return Promise.resolve({ targets: [] }); },
+                readReferenceTarget: (options) => { calls.push(['reference-target', options]); return Promise.resolve({ docs: [] }); }
+            };
+            let viewerScope = 'alpha';
+            const scopeConfig = {
+                scopeConfigsById: new Map([
+                    ['alpha', {
+                        scopeId: 'alpha',
+                        indexTreeUrl: '/data/alpha/index-tree.json',
+                        recentlyAddedUrl: '/data/alpha/recently-added.json',
+                        searchIndexUrl: '/search/alpha/index.json'
+                    }],
+                    ['beta', {
+                        scopeId: 'beta',
+                        indexTreeUrl: '/data/beta/index-tree.json',
+                        recentlyAddedUrl: '/data/beta/recently-added.json',
+                        searchIndexUrl: '/search/beta/index.json'
+                    }]
+                ])
+            };
+            const readOnly = configuredScopeProvider.createDocsViewerConfiguredScopeProvider({
+                generatedData,
+                scopeConfig,
+                viewerScope: () => viewerScope,
+                window
+            });
+            await readOnly.readIndex();
+            await readOnly.readDocument({ doc_id: 'doc-a', content_url: '/data/alpha/by-id/doc-a.json' });
+            await readOnly.readSearch();
+            await readOnly.readRecentlyAdded();
+            await readOnly.readReferences({ scope: 'beta' });
+            await readOnly.readReferences({
+                scope: 'beta',
+                target: { target_kind: 'work', target_id: 'a b' }
+            });
+            viewerScope = 'beta';
+            await readOnly.readIndex();
+
+            const sourceCalls = [];
+            const withSource = configuredScopeProvider.createDocsViewerConfiguredScopeProvider({
+                generatedData,
+                scopeConfig,
+                viewerScope: () => viewerScope,
+                window,
+                source: {
+                    readSource: (docId, options) => { sourceCalls.push(['read', docId, options]); return Promise.resolve({ doc_id: docId }); },
+                    writeSource: (payload, options) => { sourceCalls.push(['write', payload.doc_id, options]); return Promise.resolve({ doc_id: payload.doc_id }); }
+                }
+            });
+            await withSource.readSource('doc-b');
+            await withSource.writeSource({ doc_id: 'doc-b', source_body: '# B' });
+            return {
+                calls,
+                readOnlyKeys: Object.keys(readOnly).sort(),
+                sourceCalls,
+                withSourceKeys: Object.keys(withSource).sort()
+            };
+        }"""
+    )
+    expected_read_only_keys = [
+        "readDocument",
+        "readIndex",
+        "readRecentlyAdded",
+        "readReferences",
+        "readSearch",
+    ]
+    if result["readOnlyKeys"] != expected_read_only_keys:
+        raise AssertionError(f"read-only provider exposed optional source methods: {result!r}")
+    if result["withSourceKeys"] != expected_read_only_keys + ["readSource", "writeSource"]:
+        raise AssertionError(f"source provider method projection changed: {result!r}")
+    if result["calls"] != [
+        ["index", {"indexTreeUrl": "/data/alpha/index-tree.json", "viewerScope": "alpha"}],
+        ["document", "doc-a", {"docId": "doc-a", "viewerScope": "alpha"}],
+        ["search", {"searchIndexUrl": "/search/alpha/index.json", "viewerScope": "alpha"}],
+        ["recent", {"recentlyAddedUrl": "/data/alpha/recently-added.json", "viewerScope": "alpha"}],
+        ["references-index", {"baseUrl": "/data/beta", "viewerScope": "beta"}],
+        ["reference-target", {
+            "staticUrl": "/data/beta/references/by-target/work/a%20b.json",
+            "targetKind": "work",
+            "targetSlug": "a%20b",
+            "viewerScope": "beta",
+        }],
+        ["index", {"indexTreeUrl": "/data/beta/index-tree.json", "viewerScope": "beta"}],
+    ]:
+        raise AssertionError(f"configured-scope provider transport delegation changed: {result!r}")
+    if result["sourceCalls"] != [
+        ["read", "doc-b", {"scope": "beta"}],
+        ["write", "doc-b", {"scope": "beta"}],
+    ]:
+        raise AssertionError(f"configured-scope provider source delegation changed: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/404.html"), wait_until="domcontentloaded")
     install_fixture(page)
     assert_missing_doc_history(page)
     assert_route_config_scope_default(page)
     assert_explicit_app_and_service_context(page)
+    assert_configured_scope_provider(page)
 
 
 def main() -> None:

@@ -105,10 +105,6 @@ export function initDocsViewerRouteWorkflow(context) {
     return Boolean(currentValue(context.allowScopeQuery));
   }
 
-  function indexTreeUrl() {
-    return currentValue(context.indexTreeUrl);
-  }
-
   function scopeConfigsById() {
     return scopeConfig.scopeConfigsById || new Map();
   }
@@ -217,9 +213,8 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function fetchDocPayload(doc, docId) {
     var stopBusy = startBusy();
-    return context.generatedData.readDocumentPayload(doc, {
-      docId: docId,
-      viewerScope: viewerScope()
+    return context.collectionProvider.readDocument(doc, {
+      docId: docId
     }).finally(stopBusy);
   }
 
@@ -309,10 +304,7 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function loadIndex() {
     var stopBusy = startBusy();
-    return context.generatedData.readDocsIndexTree({
-      indexTreeUrl: indexTreeUrl(),
-      viewerScope: viewerScope()
-    })
+    return context.collectionProvider.readIndex()
       .then(function (payload) {
         initializeIndex(payload);
       })

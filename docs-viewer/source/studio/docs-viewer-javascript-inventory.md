@@ -34,6 +34,7 @@ Risk themes:
 | docs-viewer-bookmarks.js                            | bookmark/favourite support.                                                                                                                                                                                                 |
 | docs-viewer-config-controller.js                    | config/scope setup.                                                                                                                                                                                                         |
 | docs-viewer-config-service.js                       | Focused browser-safe config and UI-text fetch/retry owner consumed by the config controller.                                                                                                                                |
+| docs-viewer-configured-scope-provider.js            | Configured-scope collection provider for named index, document, search, recent, reference, and optional source reads/writes without granting backend authority.                                                            |
 | docs-viewer-data.js                                 | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-document-controller.js                  | document rendering/controller support.                                                                                                                                                                                      |
 | docs-viewer-document-index-state.js                 | Focused document-index projection owner for public/manage visibility filtering, manage-only tree omission, non-loadable fallback resolution, default-doc selection, and index status projection.                            |
@@ -78,6 +79,7 @@ Risk themes:
 | docs-viewer-search-controller.js                    | search helper or controller.                                                                                                                                                                                                |
 | docs-viewer-search.js                               | search helper or controller.                                                                                                                                                                                                |
 | docs-viewer-service-context.js                      | Independent generated-data, source, management, and browser-safe config service-surface projection.                                                                                                                        |
+| docs-viewer-management-source-adapter.js            | Manage-entrypoint-owned optional source-service transport adapter supplied to the configured-scope provider; backend capabilities remain authoritative.                                                                  |
 | docs-viewer-sidebar.js                              | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-tree.js                                 | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-view-context.js                         | Selected-document hosted-view context projector plus main-view module context shaping for future central-panel views.                                                                                                       |
@@ -112,7 +114,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`
 
-- This module owns startup phase sequencing and authority records, including the public/manage split between browser route/config context, browser-safe config assets, generated reads, browser storage, management capability checks, and management write endpoints.
+- This module owns foundational provider/service construction plus startup phase sequencing and authority records, including the public/manage split between browser route/config context, browser-safe config assets, generated reads, browser storage, management capability checks, and management write endpoints.
 - Keep this module limited to runtime defaults, foundational owner creation, startup phase records, startup authority records, public/manage startup gating, and initial startup sequence orchestration.
 - Do not move rendering, validation, generated-read internals, config normalization, bookmark storage, management writes, report behavior, or controller-specific UI behavior into it.
 - The private app runtime coordinator still constructs focused controllers until a later slice narrows remaining controller families away from function-scoped bridge callbacks.
@@ -125,10 +127,23 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js`
 
-- This module owns named reads for `index-tree.json`, selected by-id payloads, recently-added payloads, search indexes, references indexes, and reference-target buckets. Public route reads must not fall back to public docs `index.json`.
-- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, generated-search read capability checks, and named generated JSON read methods.
-- Low-level generated-data fetch/retry helpers in `site/docs-viewer/runtime/js/shared/docs-viewer-data.js` are allowed here because this module is the feature-facing generated-data owner.
+- This module owns transport reads for `index-tree.json`, selected by-id payloads, recently-added payloads, search indexes, references indexes, and reference-target buckets. Public route reads must not fall back to public docs `index.json`.
+- Keep this module limited to data request option shaping, generated-read capability caching, retry/reload option projection, generated-search read capability checks, payload normalization, and static/local generated JSON transport behind the configured-scope provider.
+- Low-level generated-data fetch/retry helpers in `site/docs-viewer/runtime/js/shared/docs-viewer-data.js` are allowed here because this module is the generated-read transport owner.
 - Do not move config loading, payload rendering, backend write authority, or management capability UI projection into it.
+
+### `site/docs-viewer/runtime/js/shared/docs-viewer-configured-scope-provider.js`
+
+- This module owns the feature-facing collection contract for configured scopes: `readIndex`, `readDocument`, `readSearch`, `readRecentlyAdded`, and `readReferences`.
+- It resolves active or explicitly requested configured-scope URLs and reference targets, then delegates generated transport to `docs-viewer-generated-data-runtime.js`.
+- `readSource` and `writeSource` must be absent unless the corresponding source adapter methods are explicitly supplied. Provider or method presence does not grant backend authority.
+- Do not add returned-package behavior, UI lifecycle, retry loops, capability truth, DOM work, or management workflow orchestration here.
+
+### `docs-viewer/runtime/js/management/docs-viewer-management-source-adapter.js`
+
+- This manage-entrypoint-owned module supplies optional source-service delegation to the provider's `readSource` and `writeSource` methods.
+- It does not infer capability from a base URL; the backend endpoint remains authoritative and may reject an operation.
+- Do not move source-editor UI lifecycle, generated document reload, management capability projection, or canonical import/promotion behavior into it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-config-service.js`
 
@@ -195,7 +210,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js`
 
 - search/recent route command bundling moved into this focused owner through `createDocsViewerSearchRouteCommands(...)`. The controller now consumes explicit `searchRecent`, `documentIndex`, `selectedDocument`, `routeCommands`, and `paneCommands` inputs for route application, history writes, current-doc resolution, default-doc fallback, result URL creation, loadable-doc target resolution, and pane projection requests.
-- recently-added rendering remains here, while generated recently-added payload reads are delegated through `docs-viewer-generated-data-runtime.js`.
+- recently-added rendering remains here, while search and recent collection reads are delegated through the configured-scope provider.
 - Keep this module focused on generated search-index loading, result/recent rendering, debounce handoff, search/recent route activation, more-results behavior, route command consumption, and pane command requests.
 - Do not move low-level URL construction, browser history primitives, document payload rendering, config loading, management writes, or panel toolbar/view switching into it.
 
@@ -207,7 +222,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js`
 
-- this controller now consumes explicit route-session, scope-config, selected-document, generated-data, and status command inputs instead of `context.state`.
+- this controller now consumes explicit route-session, scope-config, selected-document, collection-provider, and status command inputs instead of `context.state`.
 - report metadata interpretation, generated-data report reads, and local report-service handoff moved to manage-owned `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`; this shared controller now calls only an optional document-extras hook supplied by the entrypoint.
 - Keep this module focused on document pane projection, payload rendering, loading/missing/error states, selected-document updates, and optional document-extras hook invocation.
 - Do not move URL/history primitives, tree visibility projection, sidebar DOM rendering, search/recent rendering, report runtime imports, local report endpoint ownership, backend writes, or management action behavior into it.
@@ -284,7 +299,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - the manage-owned document report mounting module.
 - Keep this module loaded only through `docs-viewer/runtime/js/management/docs-viewer-manage.js`; public entrypoints must not import it statically or expose the report registry route-config field.
-- Keep report metadata detection, report-context construction, generated-data report reads, report registry URL handoff, and local report-service creation here before delegating to `docs-viewer/runtime/js/reports/docs-viewer-reports.js`.
+- Keep report metadata detection, report-context construction, configured-scope provider reads, report registry URL handoff, and local report-service creation here before delegating to `docs-viewer/runtime/js/reports/docs-viewer-reports.js`.
 - Do not move report runtime imports or local report-service construction back into shared public-safe document rendering.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js`

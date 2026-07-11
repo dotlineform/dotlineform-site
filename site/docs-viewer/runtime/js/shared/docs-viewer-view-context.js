@@ -74,6 +74,7 @@ export function createDocsViewerHostedViewContext(options = {}) {
   return {
     appContext: appContext,
     canonicalUrl: canonicalUrl,
+    collectionProvider: options.collectionProvider || null,
     parentTrail: trail,
     payload: payload,
     selectedDoc: selectedDoc,

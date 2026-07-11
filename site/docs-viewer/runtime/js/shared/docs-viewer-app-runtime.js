@@ -126,6 +126,7 @@ export function startDocsViewerRuntime(options) {
     routeContext: routeContext,
     appShellRefs: appShellRefs,
     assetVersion: assetVersion,
+    createSourceAdapter: settings.createSourceAdapter,
     entrypointHostedViews: settings.entrypointHostedViews,
     viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable
@@ -136,7 +137,6 @@ export function startDocsViewerRuntime(options) {
   var sourceService = serviceContext.source;
   var managementUiEnabled = Boolean(routeAccess.managementUi && managementService);
   var managementBaseUrl = managementService ? managementService.baseUrl : "";
-  var sourceBaseUrl = sourceService ? sourceService.baseUrl : "";
   var panelLayout = composition.panelLayout;
   var managementRuntime = null;
   var bookmarkController = null;
@@ -152,6 +152,7 @@ export function startDocsViewerRuntime(options) {
   var state = appSession.state;
   documentIndex = composition.documentIndex;
   var generatedDataRuntime = composition.generatedDataRuntime;
+  var collectionProvider = composition.collectionProvider;
   var checkGeneratedDataReadCapability = generatedDataRuntime.checkGeneratedDataReadCapability;
 
   function documentViewContextOptions() {
@@ -160,6 +161,7 @@ export function startDocsViewerRuntime(options) {
       docsById: appSession.domains.documentIndex.docsById,
       payloadCache: appSession.domains.selectedDocument.payloadCache,
       appContext: appContext,
+      collectionProvider: collectionProvider,
       selectedDocId: appSession.domains.selectedDocument.selectedDocId,
       sourceEditorServices: sourceService ? sourceEditorServices() : null,
       uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
@@ -246,7 +248,7 @@ export function startDocsViewerRuntime(options) {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     clearResultsStatus: clearResultsStatus,
     content: content,
-    generatedData: generatedDataRuntime,
+    collectionProvider: collectionProvider,
     hasActiveQuery: hasActiveQuery,
     managementService: managementService,
     mountDocumentExtras: settings.mountDocumentExtras,
@@ -290,9 +292,8 @@ export function startDocsViewerRuntime(options) {
     hasActiveQuery: hasActiveQuery,
     hideContextMenu: hideContextMenu,
     hideDocPane: hideDocPane,
-    generatedData: generatedDataRuntime,
+    collectionProvider: collectionProvider,
     includeScopeParam: function () { return includeScopeParam; },
-    indexTreeUrl: function () { return indexTreeUrl; },
     more: more,
     renderBookmarkUi: renderBookmarkUi,
     renderDocLoadingState: renderDocLoadingState,
@@ -338,7 +339,7 @@ export function startDocsViewerRuntime(options) {
     showSearchPane: showSearchPane
   };
   var searchController = initDocsViewerSearchController({
-    generatedData: generatedDataRuntime,
+    collectionProvider: collectionProvider,
     hideContextMenu: hideContextMenu,
     hasActiveQuery: hasActiveQuery,
     documentIndex: appSession.domains.documentIndex,
@@ -357,8 +358,7 @@ export function startDocsViewerRuntime(options) {
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     setStatus: setStatus,
-    startBusy: startBusy,
-    viewerScope: function () { return viewerScope; }
+    startBusy: startBusy
   });
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
@@ -530,16 +530,6 @@ export function startDocsViewerRuntime(options) {
     return configController.loadViewerConfig();
   }
 
-  function sourceEditorClientOptions() {
-    return {
-      baseUrl: sourceBaseUrl,
-      scope: viewerScope,
-      fetch: function (url, options) {
-        return window.fetch(url, options);
-      }
-    };
-  }
-
   function reloadGeneratedDoc(targetDocId) {
     var selectedDocument = appSession.domains.selectedDocument;
     var searchRecent = appSession.domains.searchRecent;
@@ -564,20 +554,7 @@ export function startDocsViewerRuntime(options) {
   }
 
   function sourceEditorServices() {
-    function managementClient() {
-      return import("../management/docs-viewer-management-client.js");
-    }
     return {
-      readSource: function (docId) {
-        return managementClient().then(function (module) {
-          return module.readManagedDocSource(docId, sourceEditorClientOptions());
-        });
-      },
-      rebuildSource: function (payload) {
-        return managementClient().then(function (module) {
-          return module.rebuildManagedDocSource(payload, sourceEditorClientOptions());
-        });
-      },
       reloadRenderedDoc: function (docId) {
         return reloadGeneratedDoc(docId);
       },

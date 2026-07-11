@@ -174,6 +174,7 @@ export function resolveDocsViewerAppBootContext(options) {
         document: documentRef,
         window: windowRef,
         assetVersion: assetVersion,
+        createSourceAdapter: settings.createSourceAdapter,
         routeContext: routeContext,
         documentDisplayModes: settings.documentDisplayModes,
         entrypointHostedViews: settings.entrypointHostedViews,

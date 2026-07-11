@@ -11,6 +11,9 @@ import {
   createDocsViewerGeneratedDataRuntime
 } from "./docs-viewer-generated-data-runtime.js";
 import {
+  createDocsViewerConfiguredScopeProvider
+} from "./docs-viewer-configured-scope-provider.js";
+import {
   createDocsViewerConfigService
 } from "./docs-viewer-config-service.js";
 import {
@@ -202,6 +205,21 @@ export function createDocsViewerAppComposition(options) {
     viewerScope: settings.viewerScope,
     window: window
   });
+  var sourceServiceAdapter = serviceContext.source && typeof settings.createSourceAdapter === "function"
+    ? settings.createSourceAdapter({
+        sourceService: serviceContext.source,
+        viewerScope: settings.viewerScope,
+        window: window
+      })
+    : null;
+  var collectionProvider = createDocsViewerConfiguredScopeProvider({
+    generatedData: generatedDataRuntime,
+    routeSession: appSession.domains.routeSession,
+    scopeConfig: appSession.domains.scopeConfig,
+    source: sourceServiceAdapter,
+    viewerScope: settings.viewerScope,
+    window: window
+  });
   var configService = createDocsViewerConfigService({
     dataRequestOptions: generatedDataRuntime.dataRequestOptions,
     docsViewerConfigUrl: serviceContext.config.docsViewerConfigUrl
@@ -223,6 +241,7 @@ export function createDocsViewerAppComposition(options) {
     appSession: appSession,
     documentIndex: documentIndex,
     configService: configService,
+    collectionProvider: collectionProvider,
     generatedDataRuntime: generatedDataRuntime,
     startupPhases: startupPhaseRecords(appContext),
     startupAuthorities: startupAuthorityRecords(routeContext, serviceContext),

@@ -19,7 +19,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     appContext: settings.appContext,
     content: settings.content,
     doc: settings.doc,
-    generatedData: settings.generatedData,
+    collectionProvider: settings.collectionProvider,
     managementContext: false,
     managementService: null,
     payload: payload,
