@@ -3,7 +3,7 @@ doc_id: site-request-data-sharing-full-document-package
 title: Data Sharing Full Document Package
 added_date: 2026-07-11
 last_updated: 2026-07-11
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,9 @@ viewable: true
 
 ## Status
 
-Proposed prerequisite for [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow).
+In progress as the producer for the complete [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) round trip. Its validated-package interface is ready for fixture-backed preview work; the real export/intake producer is not a gate on starting that preview vertical slice.
+
+The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export and returned-package services, and Docs Review sessions now use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. Full-package schema, export, intake, and validation remain to be implemented.
 
 Phase 1 owns full-fidelity export, returned-package intake, validation, and review-workspace handoff. Automated canonical import/promotion is explicitly deferred, but remains a future Data Sharing responsibility rather than a Docs Review responsibility.
 
@@ -322,7 +324,7 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 
 - define the JSONL header, document-row, context, and inventory schemas
 - define trusted export metadata
-- implement external workspace-root resolution
+- implement external workspace-root resolution — complete
 - define JSONL-plus-assets transport and optional archive rules
 
 ### 3. Source-Faithful Export

@@ -81,7 +81,7 @@ The documents review handler also supports `review_action: "source_folder"` for 
 That action validates the complete staged file, derives a safe folder id from internal export metadata, and writes:
 
 ```text
-var/analytics/data-sharing/import-preview/<folder_id>/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   manifest.json
   source/*.md
 ```

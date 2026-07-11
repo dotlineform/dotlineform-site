@@ -193,6 +193,7 @@ export function resolveDocsViewerAppBootContext(options) {
         document: documentRef,
         window: windowRef,
         assetVersion: assetVersion,
+        createCollectionProvider: settings.createCollectionProvider,
         createSourceAdapter: settings.createSourceAdapter,
         routeContext: routeContext,
         viewRegistry: viewRegistry,

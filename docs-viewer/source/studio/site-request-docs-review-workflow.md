@@ -11,7 +11,9 @@ viewable: true
 
 ## Status
 
-Approved product boundary; implementation paused until the limited Docs Viewer foundation refactor and the full-package Data Sharing request are ready.
+Approved product boundary; readiness checkpoint passed. Implementation may begin with a fixture-backed preview package while the real full-package Data Sharing export/intake producer continues independently.
+
+The preview builder consumes the validated-package interface; it does not depend on how the package was produced. The real Data Sharing round trip remains required before this workflow is complete.
 
 This request replaces the retired `Docs Review Local App` proposal. Docs Review is a local review route of the existing Docs Viewer application, not a copied viewer application and not a canonical import tool.
 
@@ -187,7 +189,7 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
   meta/
 ```
 
-The repo-local `var/analytics/data-sharing/...` contract must be retired before Docs Review uses returned packages as its data authority.
+The repo-local `var/analytics/data-sharing/...` contract has been retired. Docs Review uses the external Data Sharing workspace for returned packages and preview sessions.
 
 Rules:
 
@@ -343,9 +345,9 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 
 ### 1. Complete Prerequisite Contracts
 
-- complete the limited Docs Viewer app-context, provider, route-feature, and view/mode/control refactors
-- complete the external Data Sharing/review workspace-root slice
-- approve and implement the full-package Data Sharing contract
+- complete the limited Docs Viewer app-context, provider, route-feature, and view/mode/control refactors — complete
+- complete the external Data Sharing/review workspace-root slice — complete
+- approve the validated-package consumer contract — complete; full export/intake producer continues independently
 - retire or isolate any stub review-session behavior that assumes repo-local, rendered-content source folders
 
 ### 2. Complete Returned-Package Services

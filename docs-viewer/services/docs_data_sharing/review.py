@@ -12,6 +12,7 @@ from typing import Any, Dict
 from docs_returned_import_common import scope_title
 from docs_returned_import_parser import parse_staged_import
 import docs_source_model as source_model
+from services.paths import marker_path
 
 
 FILENAME_RE = re.compile(r"[^a-z0-9-]+")
@@ -167,6 +168,7 @@ def parse_returned_document_records(
     scope: str,
     staged_filename: str,
     staging_root: Path,
+    metadata_root: Path,
 ) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
     if not staged_filename:
@@ -177,6 +179,7 @@ def parse_returned_document_records(
         scope=normalized_scope,
         staged_file=staged_filename,
         staging_root=staging_root,
+        metadata_root=metadata_root,
     )
     report["review_rows"] = build_review_rows(report, normalized_scope)
     return report
@@ -271,12 +274,13 @@ def resolve_review_output_path(
     data_domain: str,
     profile_id: str,
 ) -> Path:
+    del repo_root
     filename = (
         f"{filename_slug(timestamp, 'review')}-"
         f"{filename_slug(data_domain, 'data')}-"
         f"{filename_slug(profile_id, 'profile')}.md"
     )
-    root = (repo_root / preview_root).resolve()
+    root = preview_root.resolve()
     path = (root / filename).resolve()
     if path != root and root not in path.parents:
         raise ValueError("review output path must stay under preview root")
@@ -290,6 +294,7 @@ def review_returned_document_package(
     staged_filename: str,
     dry_run: bool,
     staging_root: Path,
+    metadata_root: Path,
     preview_root: Path,
     data_domain: str,
     record_indices: Any,
@@ -300,6 +305,7 @@ def review_returned_document_package(
         scope=normalized_scope,
         staged_filename=staged_filename,
         staging_root=staging_root,
+        metadata_root=metadata_root,
     )
     report_records = [record for record in report.get("records", []) if isinstance(record, dict)]
     if not report.get("ok"):
@@ -336,6 +342,6 @@ def review_returned_document_package(
         {"record_index": index, "doc_id": normalize_text(record.get("doc_id"))}
         for index, record in zip(selected_indices, records)
     ]
-    report["review_file"] = output_path.resolve().relative_to(repo_root.resolve()).as_posix()
+    report["review_file"] = marker_path(output_path)
     report["review_written"] = bool(not dry_run and report.get("ok"))
     return report

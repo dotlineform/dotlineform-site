@@ -32,6 +32,7 @@ from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from adapters.tags import context as tags_data_sharing_context  # noqa: E402
 from docs_data_sharing import activity as documents_data_sharing_activity  # noqa: E402
 from docs_returned_import_profiles import supported_return_import_profile_ids  # noqa: E402
+from services.paths import workspace_status  # noqa: E402
 try:
     from analytics_app import data_sharing_service  # noqa: E402
     from analytics_app import data_sharing_adapters  # noqa: E402
@@ -257,6 +258,7 @@ def public_apply_action(action: dict[str, Any]) -> dict[str, object]:
 
 def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
     registry = data_sharing_adapters.load_registry(repo_root)
+    workspace = workspace_status(repo_root)
     documents_profiles = documents_sharing_profiles(repo_root, registry)
     docs_scopes = docs_scope_options(repo_root)
     public_adapters: list[dict[str, object]] = []
@@ -297,6 +299,9 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
                 "message": str(capability.get("message") or "").strip(),
                 "selection_model": str(capability.get("selection_model") or "").strip(),
             }
+            if public_capability["status"] == "active" and not workspace["available"]:
+                public_capability["status"] = "disabled"
+                public_capability["message"] = workspace["message"]
             if isinstance(capability.get("sharing_profiles"), list):
                 public_capability["sharing_profiles"] = [
                     public_sharing_profile(item) for item in capability["sharing_profiles"] if isinstance(item, dict)
@@ -315,6 +320,7 @@ def public_data_sharing_config(repo_root: Path) -> dict[str, object]:
         "ok": True,
         "schema_version": registry.get("schema_version"),
         "docs_scopes": docs_scopes,
+        "workspace": workspace,
         "adapters": public_adapters,
     }
 
@@ -365,6 +371,7 @@ def data_sharing_get_payload(
             "service": "analytics_data_sharing",
             "dry_run": dry_run,
             "endpoints": service_endpoints(),
+            "workspace": workspace_status(repo_root),
         }
     if api_path == CONFIG_PATH:
         return public_data_sharing_config(repo_root)

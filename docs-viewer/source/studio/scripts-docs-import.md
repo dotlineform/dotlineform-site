@@ -25,9 +25,9 @@ For example, a service that only proposes summaries can return `doc_id`, `title`
 
 Current input path:
 
-- `var/analytics/data-sharing/import-staging/<filename>.json`
-- `var/analytics/data-sharing/import-staging/<filename>.jsonl`
-- optional `var/analytics/data-sharing/import-staging/<stem>.context.json` sidecar for external task/schema context
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.json`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.jsonl`
+- optional `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<stem>.context.json` sidecar for external task/schema context
 
 Current lookup path:
 
@@ -41,12 +41,12 @@ Current outputs:
 
 Implemented now:
 
-- enforces that parsed files stay under `var/analytics/data-sharing/import-staging/`
+- enforces that parsed files stay under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 - reads `.json` and `.jsonl`
 - parses JSON package envelopes with a `records` array
 - parses JSON arrays of document-like records
 - parses JSONL document-row packages
-- reads canonical metadata from `var/analytics/data-sharing/meta/<export_id>.meta.json`
+- reads trusted export metadata from `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/<export_id>.meta.json`
 - excludes `.meta.json` and `.context.json` sidecars from staged package listings
 - detects relationship, full-content, sparse document-change, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
@@ -134,7 +134,7 @@ It blocks only concerns that prevent useful parsing:
 - unsupported file extension
 - unreadable or missing staged file
 - invalid JSON or JSONL
-- staged path outside `var/analytics/data-sharing/import-staging/`
+- staged path outside `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.

@@ -17,7 +17,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py
 
 `docs_export.py` is the read-only package-preparation engine used by the documents Data Sharing adapter.
 
-It reads Docs Viewer source context and source-controlled document sharing profiles, then writes an ephemeral share package under `var/analytics/data-sharing/exports/`.
+It reads Docs Viewer source context and source-controlled document sharing profiles, then writes an ephemeral share package under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
@@ -28,10 +28,10 @@ Current input paths:
 
 Current output pattern:
 
-- `var/analytics/data-sharing/exports/<data_domain>-<profile_id>-<timestamp>.json`
-- `var/analytics/data-sharing/exports/<data_domain>-<profile_id>-<timestamp>.jsonl`
-- `var/analytics/data-sharing/exports/<data_domain>-<profile_id>-<timestamp>.context.json` for external task and schema context
-- `var/analytics/data-sharing/meta/<export_id>.meta.json` for internal export provenance and review routing
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.json`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.jsonl`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.context.json` for external task and schema context
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/<export_id>.meta.json` for internal export provenance and review routing
 
 The filename timestamp is formatted in the local runtime timezone.
 Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
@@ -57,7 +57,7 @@ Outputs:
 - a structured JSON report on stdout
 - no file in dry-run mode
 - one JSON or JSONL external share package in write mode
-- one internal `.meta.json` metadata file under `var/analytics/data-sharing/meta/`
+- one internal `.meta.json` metadata file under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/`
 - one sibling `.context.json` external task/schema sidecar
 
 Export preparation is read-only with respect to docs source and generated docs/search payloads.
@@ -87,7 +87,7 @@ Implemented now:
 - handles image/SVG text according to field-level extraction options
 - writes JSONL document-row exports with a first-line `data_sharing_header` record containing `export_id`
 - writes JSON document-row overrides as objects containing top-level `schema_version`, `export_id`, and `records`
-- writes internal `.meta.json` files under `var/analytics/data-sharing/meta/` and external `.context.json` sidecars
+- writes internal `.meta.json` files under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/` and external `.context.json` sidecars
 - derives external task wording and field descriptions from profile `external_context`
 - keeps source timestamp provenance in internal `.meta.json` rather than in external records
 - returns a structured JSON report
@@ -198,7 +198,8 @@ The engine validates runtime concerns that the static config schema cannot know:
 - required mapped fields are present
 - source-text mappings use plain-text conversion rather than raw rendered HTML
 - truncating mappings have configured integer limits
-- output paths stay under `var/analytics/data-sharing/` by default
+- output and metadata paths stay under the resolved `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` workspace
+- `DOTLINEFORM_PROJECTS_BASE_DIR` must be an absolute path and `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` must already exist as a readable and writable directory
 - unsupported sources, transforms, target formats, and record shapes are reported before writing
 
 Warnings report non-blocking context:

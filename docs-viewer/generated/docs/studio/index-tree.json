@@ -303,7 +303,7 @@
           "doc_id": "site-request-data-sharing-full-document-package",
           "title": "Data Sharing Full Document Package",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
-          "ui_status": "planned"
+          "ui_status": "in-progress"
         },
         {
           "doc_id": "site-request-data-sharing-import-content",
@@ -1275,5 +1275,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T16:20:42Z"
+  "generated_at": "2026-07-11T16:47:55Z"
 }

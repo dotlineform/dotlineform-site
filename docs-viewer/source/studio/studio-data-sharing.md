@@ -44,7 +44,7 @@ Recovery for changed source records relies on Git history, host/filesystem backu
 Runtime packages, returned-package staging, and review artifacts use:
 
 ```text
-var/analytics/data-sharing/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
 ```
 
 The adapter registry validates the shared `exports/`, `import-staging/`, and `import-preview/` roots so active adapters cannot silently fall back to older package folders.
@@ -138,7 +138,7 @@ The 2026-05 split moved the durable Data Sharing boundary to:
 - Analytics-owned pages and `/analytics/api/data-sharing/...` endpoints
 - `data-sharing/` owned registry/config, path contracts, package I/O, workflow dispatch, and documents/tags adapters
 - Docs Viewer-owned docs-domain helpers under `docs-viewer/services/docs_data_sharing/`
-- runtime artifacts under `var/analytics/data-sharing/exports/`, `import-staging/`, and `import-preview/`
+- user-workspace artifacts under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/`, `import-staging/`, `import-preview/`, and `meta/`
 
 The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config or Local Studio runtime config.
 Generated Docs Viewer payloads are not the source of this documentation slice; source docs are updated first.

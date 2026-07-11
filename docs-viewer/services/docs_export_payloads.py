@@ -6,9 +6,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from docs_export_common import OUTPUT_ROOT, RETURNED_PACKAGE_SCHEMA_VERSION, normalize_text
+from docs_export_common import RETURNED_PACKAGE_SCHEMA_VERSION, normalize_text
 from docs_export_config import EXPORT_META_SCHEMA_VERSION, config_checksum, supports_return_import
 from docs_export_selection import ExportContext
+from services.paths import configured_workspace_paths, path_is_relative_to
 
 
 EXTERNAL_CONTEXT_SCHEMA_VERSION = "documents_external_context_v1"
@@ -84,10 +85,13 @@ def resolve_output_path(
         raise ValueError(f"Unsafe export output path: {relative}")
     if target_format:
         relative = relative.with_suffix(f".{target_format}")
-    allowed_root = Path(output_root) if output_root else OUTPUT_ROOT
-    if relative.parts[:len(allowed_root.parts)] != allowed_root.parts:
-        raise ValueError(f"Export output path must stay under {allowed_root}: {relative}")
-    return repo_root / relative
+    allowed_root = (
+        Path(output_root) if output_root else configured_workspace_paths(repo_root).exports
+    ).resolve()
+    resolved = (allowed_root / relative).resolve()
+    if not path_is_relative_to(resolved, allowed_root):
+        raise ValueError(f"Export output path must stay under the configured outbound package root: {relative}")
+    return resolved
 
 
 def external_field_type(field: dict[str, Any]) -> str:

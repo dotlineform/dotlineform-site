@@ -463,6 +463,10 @@ def assert_view_mode_control_registry(page: Page) -> None:
                 kind: 'manage',
                 featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['bookmarks', 'source-editing', 'management'])
             };
+            const reviewContext = {
+                kind: 'review',
+                featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['source-editing'])
+            };
             const manageDefinitions = {
                 modes: [{
                     id: 'markdown-source', ownerViewId: 'rendered-document', appKinds: ['manage'], features: ['source-editing']
@@ -481,6 +485,28 @@ def assert_view_mode_control_registry(page: Page) -> None:
             const manageRegistry = viewRegistry.createDocsViewerViewRegistry({
                 definitionSets,
                 projectionInputs: { appContext: manageContext }
+            });
+            const reviewRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: [
+                    viewRegistry.createDocsViewerSharedViewDefinitions(),
+                    {
+                        modes: [{
+                            id: 'markdown-source', ownerViewId: 'rendered-document', appKinds: ['review'], features: ['source-editing']
+                        }],
+                        controls: [
+                            {
+                                id: 'markdown-source', ownerViewId: 'rendered-document', modeIds: ['rendered-document', 'markdown-source'], appKinds: ['review'], features: ['source-editing']
+                            },
+                            {
+                                id: 'save-markdown-source', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['review'], features: ['source-editing'], requiredCapabilities: ['review.source.write']
+                            }
+                        ]
+                    }
+                ],
+                projectionInputs: {
+                    appContext: reviewContext,
+                    backendCapabilities: { review: { source: { write: true } } }
+                }
             });
             const narrowedRegistry = viewRegistry.createDocsViewerViewRegistry({
                 definitionSets,
@@ -543,6 +569,10 @@ def assert_view_mode_control_registry(page: Page) -> None:
                     activeViewId: 'rendered-document', activeModeId: 'rendered-document'
                 }).available,
                 publicMarkdownMode: publicRegistry.resolveMode('markdown-source').available,
+                reviewMarkdownMode: reviewRegistry.resolveMode('markdown-source').available,
+                reviewSourceControls: reviewRegistry.projectControls({
+                    activeViewId: 'rendered-document', activeModeId: 'markdown-source'
+                }).map((control) => control.id).sort(),
                 unknownPolicyRejected
             };
         }"""
@@ -556,6 +586,8 @@ def assert_view_mode_control_registry(page: Page) -> None:
         "manageSourceControls": ["info", "markdown-source", "save-markdown-source"],
         "publicEdit": False,
         "publicMarkdownMode": False,
+        "reviewMarkdownMode": True,
+        "reviewSourceControls": ["info", "markdown-source", "save-markdown-source"],
         "unknownPolicyRejected": True,
     }
     if result != expected:
@@ -565,7 +597,7 @@ def assert_view_mode_control_registry(page: Page) -> None:
 def assert_configured_scope_provider(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const { configuredScopeProvider } = window.__docsViewerRouterModuleSmoke;
+            const { appComposition, configuredScopeProvider } = window.__docsViewerRouterModuleSmoke;
             const calls = [];
             const generatedData = {
                 readDocsIndexTree: (options) => { calls.push(['index', options]); return Promise.resolve({ docs: [] }); },
@@ -623,8 +655,43 @@ def assert_configured_scope_provider(page: Page) -> None:
             });
             await withSource.readSource('doc-b');
             await withSource.writeSource({ doc_id: 'doc-b', source_body: '# B' });
+            const packageProvider = {
+                readIndex: () => Promise.resolve({ docs: [] }),
+                readDocument: () => Promise.resolve({ doc_id: 'package-doc' })
+            };
+            let providerContext = null;
+            const injected = appComposition.createDocsViewerCollectionProvider({
+                createCollectionProvider: (context) => {
+                    providerContext = context;
+                    return packageProvider;
+                },
+                generatedData,
+                routeContext: { appContext: { kind: 'review' } },
+                routeSession: {},
+                scopeConfig,
+                serviceContext: { generatedData: { available: true } },
+                source: null,
+                viewerScope: () => 'package-001',
+                window
+            });
+            let invalidProviderRejected = false;
+            try {
+                appComposition.createDocsViewerCollectionProvider({
+                    createCollectionProvider: () => ({ readIndex: () => Promise.resolve({ docs: [] }) })
+                });
+            } catch (error) {
+                invalidProviderRejected = /requires readDocument/.test(String(error && error.message || ''));
+            }
             return {
                 calls,
+                injectedProvider: injected === packageProvider,
+                invalidProviderRejected,
+                providerContext: {
+                    appKind: providerContext.routeContext.appContext.kind,
+                    generatedData: providerContext.generatedData === generatedData,
+                    serviceContext: providerContext.serviceContext.generatedData.available,
+                    viewerScope: providerContext.viewerScope()
+                },
                 readOnlyKeys: Object.keys(readOnly).sort(),
                 sourceCalls,
                 withSourceKeys: Object.keys(withSource).sort()
@@ -642,6 +709,15 @@ def assert_configured_scope_provider(page: Page) -> None:
         raise AssertionError(f"read-only provider exposed optional source methods: {result!r}")
     if result["withSourceKeys"] != expected_read_only_keys + ["readSource", "writeSource"]:
         raise AssertionError(f"source provider method projection changed: {result!r}")
+    if result["injectedProvider"] is not True or result["invalidProviderRejected"] is not True:
+        raise AssertionError(f"code-owned collection provider injection changed: {result!r}")
+    if result["providerContext"] != {
+        "appKind": "review",
+        "generatedData": True,
+        "serviceContext": True,
+        "viewerScope": "package-001",
+    }:
+        raise AssertionError(f"collection provider context projection changed: {result!r}")
     if result["calls"] != [
         ["index", {"indexTreeUrl": "/data/alpha/index-tree.json", "viewerScope": "alpha"}],
         ["document", "doc-a", {"docId": "doc-a", "viewerScope": "alpha"}],

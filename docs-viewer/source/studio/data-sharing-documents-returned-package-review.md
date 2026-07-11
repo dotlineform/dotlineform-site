@@ -25,7 +25,7 @@ The prepare/export side is covered by [Documents Prepare Profiles](/docs/?scope=
 Returned packages are staged under:
 
 ```text
-var/analytics/data-sharing/import-staging/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 ```
 
 The parser requires a staged-file `export_id` and canonical import metadata.
@@ -33,7 +33,7 @@ There is no fallback detection from row shape or filename.
 
 Metadata comes from:
 
-- an internal metadata file under `var/analytics/data-sharing/meta/<export_id>.meta.json`, referenced by the staged file's `export_id`
+- an internal metadata file under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/<export_id>.meta.json`, referenced by the staged file's `export_id`
 
 JSONL staged files must put the `export_id` in the first non-empty row as a `data_sharing_header`.
 JSON staged files must include the `export_id` on the top-level object.
@@ -98,7 +98,7 @@ The endpoint still accepts explicit `record_indices` for compatibility with lowe
 The operation writes one Markdown review document:
 
 ```text
-var/analytics/data-sharing/import-preview/{timestamp}-{data_domain}-{profile_id}.md
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/{timestamp}-{data_domain}-{profile_id}.md
 ```
 
 The Markdown document front matter includes:
@@ -137,7 +137,7 @@ The request uses:
 For `document-content` packages, this action creates or regenerates one temporary source folder for the complete staged returned file:
 
 ```text
-var/analytics/data-sharing/import-preview/<folder_id>/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   manifest.json
   source/
     <doc_id>.md

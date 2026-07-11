@@ -120,7 +120,7 @@ JSON packages include top-level `content_format`.
 JSONL packages include `content_format` in the first `data_sharing_header` row.
 The Analytics prepare page exposes the selected content format before package preparation.
 
-Export-run metadata is written once to an internal metadata file under `var/analytics/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
+Export-run metadata is written once to an internal metadata file under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/` instead of being included in the external JSON or JSONL payload.
 External packages carry an `export_id` that review uses to find that metadata after the returned file is staged.
 A sibling `.context.json` sidecar describes the external task, record container, record schema, and response guidance without internal provenance.
 External payload records should not include internal run details, row counts, checksums, source scope, or source timestamps.
@@ -168,9 +168,9 @@ Saving from the modal rewrites the profile config after validating the full prep
 `output.path_pattern` must stay under the shared Data Sharing export root:
 
 ```text
-var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json
-var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl
-var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.context.json
+{timestamp}-{data_domain}-{profile_id}.json
+{timestamp}-{data_domain}-{profile_id}.jsonl
+{timestamp}-{data_domain}-{profile_id}.context.json
 ```
 
 The placeholders are resolved by the export engine.
@@ -179,7 +179,7 @@ Other placeholders are only valid when supported by the export engine and still 
 External filenames must not include `{export_id}`; that id is reserved for package content and the internal metadata filename.
 When an operator chooses a non-default supported format, the export engine keeps the configured directory, profile id, and timestamp, then switches the output file extension to the selected format.
 The `.context.json` pattern is derived from the output filename; it is not configured as a separate profile path.
-The internal `.meta.json` file is stored separately under `var/analytics/data-sharing/meta/` and keyed by the package `export_id`.
+The filename patterns are logical paths beneath the configured `paths.outbound_package_root`. The internal `.meta.json` file is stored separately beneath configured `paths.metadata_root` and keyed by the package `export_id`. Both roots resolve under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`.
 
 `timestamp_format` defaults to `%Y%m%d-%H%M%S`.
 It formats the filename timestamp in the local runtime timezone.

@@ -148,6 +148,32 @@ function startupAuthorityRecords(routeContext, serviceContext) {
   return output;
 }
 
+function requireCollectionProviderMethod(provider, methodName) {
+  if (!provider || typeof provider[methodName] !== "function") {
+    throw new Error("Docs Viewer collection provider requires " + methodName + "().");
+  }
+}
+
+export function createDocsViewerCollectionProvider(options) {
+  var settings = options || {};
+  var providerContext = {
+    generatedData: settings.generatedData,
+    routeContext: settings.routeContext,
+    routeSession: settings.routeSession,
+    scopeConfig: settings.scopeConfig,
+    serviceContext: settings.serviceContext,
+    source: settings.source,
+    viewerScope: settings.viewerScope,
+    window: settings.window
+  };
+  var provider = typeof settings.createCollectionProvider === "function"
+    ? settings.createCollectionProvider(providerContext)
+    : createDocsViewerConfiguredScopeProvider(providerContext);
+  requireCollectionProviderMethod(provider, "readIndex");
+  requireCollectionProviderMethod(provider, "readDocument");
+  return provider;
+}
+
 export function createDocsViewerAppComposition(options) {
   var settings = options || {};
   var root = settings.root;
@@ -217,10 +243,13 @@ export function createDocsViewerAppComposition(options) {
         window: window
       })
     : null;
-  var collectionProvider = createDocsViewerConfiguredScopeProvider({
+  var collectionProvider = createDocsViewerCollectionProvider({
+    createCollectionProvider: settings.createCollectionProvider,
     generatedData: generatedDataRuntime,
+    routeContext: routeContext,
     routeSession: appSession.domains.routeSession,
     scopeConfig: appSession.domains.scopeConfig,
+    serviceContext: serviceContext,
     source: sourceServiceAdapter,
     viewerScope: settings.viewerScope,
     window: window

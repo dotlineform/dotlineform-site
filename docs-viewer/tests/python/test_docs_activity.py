@@ -151,7 +151,7 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
             "output_written": True,
             "data_domain": "library",
             "config_id": "document-content",
-            "output_file": "var/analytics/data-sharing/library/exports/export.jsonl",
+            "output_file": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/export.jsonl",
             "counts": {"exported": 3, "failed": 0},
             "issue_counts": {"warnings": 0},
         }

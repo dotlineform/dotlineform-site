@@ -12,10 +12,12 @@ from docs_import_test_support import (
     make_repo,
     write_staged,
 )
+from repo_factory import data_sharing_workspace_root, resolve_data_sharing_marker
 
 
 def write_content_meta(root: Path, export_id: str, generated_at: str = "2026-06-27T20:50:10Z") -> None:
-    path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+    del root
+    path = data_sharing_workspace_root() / f"meta/{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         (
@@ -36,12 +38,12 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         root = Path(temp)
         write_staged(root, "content.jsonl", [{"doc_id": "alpha", "title": "Alpha", "content": "Body."}])
         write_staged(root, "relationships.json", {"records": []})
-        (root / "var/analytics/data-sharing/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
+        (data_sharing_workspace_root() / "import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
         payload = handle_documents_import_files(root, "library")
 
     assert payload["ok"] is True
     assert payload["scope"] == "library"
-    assert payload["staging_root"] == "var/analytics/data-sharing/import-staging"
+    assert payload["staging_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging"
     assert [item["filename"] for item in payload["files"]] == ["content.jsonl", "relationships.json"]
     assert {item["filename"]: item["format"] for item in payload["files"]} == {
         "content.jsonl": "jsonl",
@@ -70,7 +72,7 @@ def test_library_import_review_writes_selected_record_document() -> None:
             {"data_domain": "library", "operation": "review", "staged_filename": "content.jsonl", "record_indices": [0]},
             dry_run=False,
         )
-        review_path = root / str(payload["review_file"])
+        review_path = resolve_data_sharing_marker(str(payload["review_file"]))
         review_text = review_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
@@ -107,7 +109,7 @@ def test_library_import_review_defaults_to_all_records_and_appends_issues() -> N
             {"data_domain": "library", "operation": "review", "review_action": "summaries", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
-        review_text = (root / str(payload["review_file"])).read_text(encoding="utf-8")
+        review_text = resolve_data_sharing_marker(str(payload["review_file"])).read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["selected_records"] == [

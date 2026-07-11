@@ -38,7 +38,7 @@ A review source folder represents a complete staged returned file. It is not a s
 
 The folder should be disposable:
 
-- generated under `var/analytics/data-sharing/import-preview/...`
+- generated under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/...`
 - safe to delete casually
 - safe to regenerate from the staged file
 - excluded from live Docs Viewer scope config
@@ -94,8 +94,8 @@ Example:
 The folder id shape intentionally mirrors the visible export filename stem, for example:
 
 ```text
-var/analytics/data-sharing/exports/20260629-184807-documents-document-content.json
-var/analytics/data-sharing/exports/20260629-184807-documents-document-content.context.json
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260629-184807-documents-document-content.json
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260629-184807-documents-document-content.context.json
 ```
 
 Using an export-shaped stem makes the review folder easy to correlate with the outbound package. The staged or returned filename is still not identity; identity starts with the staged file's `export_id` and the matching export metadata.
@@ -104,7 +104,7 @@ Derive `folder_id` only through export metadata:
 
 1. Read `export_id` from the staged returned file.
 2. If `export_id` is missing or invalid, the staged file is invalid and must not be processed.
-3. Load `var/analytics/data-sharing/meta/<export_id>.meta.json`.
+3. Load `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/<export_id>.meta.json`.
 4. If the metadata file is missing or its `export_id` does not match, the staged file is invalid and must not be processed.
 5. Derive `folder_id` from metadata:
    - metadata `generated_at` formatted as `YYYYMMDD-HHMMSS`
@@ -123,7 +123,7 @@ Data Sharing owns conversion from the returned staged file into temporary review
 
 The source folder should live under the review folder output, for example:
 
-`var/analytics/data-sharing/import-preview/<folder_id>/source/`
+`$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/source/`
 
 Each valid returned row should produce one Markdown file in that folder. The file is Docs Viewer-compatible source, but it is not canonical source.
 
@@ -171,7 +171,7 @@ The content mapping should be declared by the profile or source-folder builder, 
 
 ## Backend Boundary
 
-Review source folders live under `var/analytics/data-sharing/import-preview/...`.
+Review source folders live under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/...`.
 
 They must not be added to:
 
@@ -180,7 +180,7 @@ They must not be added to:
 - regular generated scope outputs
 - canonical source roots
 
-Review folders are temporary artifacts. The folder tree under `var/analytics/data-sharing/import-preview/...` is the source of truth for what review source folders exist. There should be no config registration, durable registry, or source-control lifecycle for these folders.
+Review folders are temporary artifacts. The folder tree under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/...` is the source of truth for what review source folders exist. There should be no config registration, durable registry, or source-control lifecycle for these folders.
 
 Manual deletion is valid. If a user deletes a review folder outside the UI, the system should not complain. The next list operation should simply omit that folder, and an already-open stale folder can report that the folder no longer exists.
 
@@ -213,7 +213,7 @@ Avoid URLs that imply the review folder is a normal scope, such as `scope=librar
 
 Initial review UI shape:
 
-- list review folders under `var/analytics/data-sharing/import-preview/...`
+- list review folders under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/...`
 - show whether the selected folder has generated payloads
 - provide a Build action for the selected folder
 - load generated docs from the selected built folder
@@ -251,7 +251,7 @@ Data Sharing implementation should stay narrow.
 It should own only:
 
 - validating staged returned `document-content` packages
-- creating or replacing one review source folder under `var/analytics/data-sharing/import-preview/...`
+- creating or replacing one review source folder under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/...`
 - writing `manifest.json`
 - writing one source Markdown file per valid returned row under `source/`
 - reporting skipped/error rows
@@ -271,7 +271,7 @@ It should not:
 The resulting folder contract is:
 
 ```text
-var/analytics/data-sharing/import-preview/<folder_id>/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   manifest.json
   source/
     example.md
@@ -282,7 +282,7 @@ The folder id should be a display-safe folder name derived from the staged file'
 
 `/docs-review/` owns everything after that point:
 
-- list subfolders under `var/analytics/data-sharing/import-preview/...`
+- list subfolders under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/...`
 - validate selected folder ids
 - build `generated/` from `source/*.md`
 - read generated index and payload files
@@ -306,7 +306,7 @@ The normal `/docs/` app remains unaware of this workflow.
 
 ### 2. Resolve Export Metadata And Folder Id
 
-- Load `var/analytics/data-sharing/meta/<export_id>.meta.json` using the staged file's `export_id`.
+- Load `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/<export_id>.meta.json` using the staged file's `export_id`.
 - Reject the staged file if the metadata file is missing, unreadable, or has a mismatched `export_id`.
 - Derive `folder_id` from metadata `generated_at`, `data_domain`, and `profile_id`.
 - Format the metadata timestamp as `YYYYMMDD-HHMMSS`.
@@ -315,7 +315,7 @@ The normal `/docs/` app remains unaware of this workflow.
 
 ### 3. Write Review Source Folder
 
-- Create or replace `var/analytics/data-sharing/import-preview/<folder_id>/` through an explicit user action.
+- Create or replace `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/` through an explicit user action.
 - Write `manifest.json` with source package metadata, content metadata, counts, warnings, and skipped/error summaries.
 - Write one Markdown source file under `source/` for each valid returned row.
 - Generate system front matter for `doc_id`, title fallback, date fields, and review-folder metadata.

@@ -59,7 +59,9 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
         payload = analytics_data_sharing_api.data_sharing_get_payload(root, "/config", {})
 
     assert payload["ok"] is True
-    assert payload["schema_version"] == "data_sharing_adapters_v2"
+    assert payload["schema_version"] == "data_sharing_adapters_v3"
+    assert payload["workspace"]["available"] is True
+    assert payload["workspace"]["root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
     adapter = payload["adapters"][0]
     assert adapter["id"] == "documents"
     assert payload["docs_scopes"] == [
@@ -128,6 +130,18 @@ def test_config_payload_publishes_prepare_profile_return_import_support() -> Non
     prepare = next(item for item in adapter["capabilities"] if item["operation"] == "prepare")
     profile = prepare["sharing_profiles"][0]
     assert profile["workflow"] == {"supports_return_import": False}
+
+
+def test_config_disables_workspace_capabilities_with_setup_guidance(monkeypatch) -> None:
+    monkeypatch.delenv("DOTLINEFORM_PROJECTS_BASE_DIR", raising=False)
+    with make_repo() as temp_path:
+        payload = analytics_data_sharing_api.data_sharing_get_payload(Path(temp_path), "/config", {})
+
+    assert payload["workspace"]["available"] is False
+    assert "DOTLINEFORM_PROJECTS_BASE_DIR is required for Data Sharing" in payload["workspace"]["message"]
+    active_capabilities = payload["adapters"][0]["capabilities"]
+    assert {item["status"] for item in active_capabilities} == {"disabled"}
+    assert all("create $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing" in item["message"] for item in active_capabilities)
 
 
 def test_selectable_records_returns_documents_without_docs_viewer_http() -> None:
@@ -271,11 +285,11 @@ def test_returned_packages_endpoint_dispatches_through_registered_handlers(monke
     assert calls[0]["data_domain"] == "documents"
 
 
-def test_returned_packages_endpoint_resolves_unfiltered_staging_files_from_internal_meta() -> None:
+def test_returned_packages_endpoint_resolves_unfiltered_staging_files_from_internal_meta(external_data_sharing_workspace: Path) -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
         export_id = "ds_20260627T120000Z"
-        staged_path = root / "var/analytics/data-sharing/import-staging/renamed-by-user.jsonl"
+        staged_path = external_data_sharing_workspace / "import-staging/renamed-by-user.jsonl"
         staged_path.parent.mkdir(parents=True, exist_ok=True)
         staged_path.write_text(
             "\n".join(
@@ -293,7 +307,7 @@ def test_returned_packages_endpoint_resolves_unfiltered_staging_files_from_inter
             + "\n",
             encoding="utf-8",
         )
-        metadata_path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+        metadata_path = external_data_sharing_workspace / f"meta/{export_id}.meta.json"
         metadata_path.parent.mkdir(parents=True, exist_ok=True)
         metadata_path.write_text(
             json.dumps(
@@ -317,24 +331,24 @@ def test_returned_packages_endpoint_resolves_unfiltered_staging_files_from_inter
         payload = analytics_data_sharing_api.data_sharing_get_payload(root, "/returned-packages", {})
 
     assert payload["ok"] is True
-    assert payload["staging_root"] == "var/analytics/data-sharing/import-staging"
-    assert payload["meta_root"] == "var/analytics/data-sharing/meta"
+    assert payload["staging_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging"
+    assert payload["meta_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta"
     assert len(payload["files"]) == 1
     file_record = payload["files"][0]
     assert file_record["filename"] == "renamed-by-user.jsonl"
     assert file_record["metadata_ok"] is True
     assert file_record["export_id"] == export_id
-    assert file_record["metadata_file"] == f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+    assert file_record["metadata_file"] == f"$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/{export_id}.meta.json"
     assert file_record["app"] == "docs-viewer"
     assert file_record["data_domain"] == "documents"
     assert file_record["scope"] == "catalogue"
 
 
-def test_returned_packages_endpoint_blocks_export_only_profiles_from_actionable_files() -> None:
+def test_returned_packages_endpoint_blocks_export_only_profiles_from_actionable_files(external_data_sharing_workspace: Path) -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
         export_id = "ds_20260627T121500Z"
-        staged_path = root / "var/analytics/data-sharing/import-staging/export-only.jsonl"
+        staged_path = external_data_sharing_workspace / "import-staging/export-only.jsonl"
         staged_path.parent.mkdir(parents=True, exist_ok=True)
         staged_path.write_text(
             "\n".join(
@@ -352,7 +366,7 @@ def test_returned_packages_endpoint_blocks_export_only_profiles_from_actionable_
             + "\n",
             encoding="utf-8",
         )
-        metadata_path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+        metadata_path = external_data_sharing_workspace / f"meta/{export_id}.meta.json"
         metadata_path.parent.mkdir(parents=True, exist_ok=True)
         metadata_path.write_text(
             json.dumps(
@@ -385,11 +399,11 @@ def test_returned_packages_endpoint_blocks_export_only_profiles_from_actionable_
     assert blocked["blocked_reason"] == "export_only_profile"
 
 
-def test_returned_packages_endpoint_blocks_profiles_without_import_actions() -> None:
+def test_returned_packages_endpoint_blocks_profiles_without_import_actions(external_data_sharing_workspace: Path) -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
         export_id = "ds_20260627T121700Z"
-        staged_path = root / "var/analytics/data-sharing/import-staging/future-profile.jsonl"
+        staged_path = external_data_sharing_workspace / "import-staging/future-profile.jsonl"
         staged_path.parent.mkdir(parents=True, exist_ok=True)
         staged_path.write_text(
             "\n".join(
@@ -407,7 +421,7 @@ def test_returned_packages_endpoint_blocks_profiles_without_import_actions() -> 
             + "\n",
             encoding="utf-8",
         )
-        metadata_path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+        metadata_path = external_data_sharing_workspace / f"meta/{export_id}.meta.json"
         metadata_path.parent.mkdir(parents=True, exist_ok=True)
         metadata_path.write_text(
             json.dumps(
@@ -439,10 +453,10 @@ def test_returned_packages_endpoint_blocks_profiles_without_import_actions() -> 
     assert blocked["blocked_reason"] == "unsupported_import_profile"
 
 
-def test_returned_packages_endpoint_lists_documents_with_default_review_scope() -> None:
+def test_returned_packages_endpoint_lists_documents_with_default_review_scope(external_data_sharing_workspace: Path) -> None:
     with make_repo() as temp_path:
         root = Path(temp_path)
-        path = root / "var/analytics/data-sharing/import-staging/documents-document-content-20260627-120000.jsonl"
+        path = external_data_sharing_workspace / "import-staging/documents-document-content-20260627-120000.jsonl"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
             json.dumps({"doc_id": "library", "title": "Library", "source_text": "Document body."}) + "\n",

@@ -7,13 +7,20 @@ from pathlib import Path
 
 from adapters.tags import returned
 
-from tags_data_sharing_adapter_test_support import dependencies, make_repo, read_json, resolve_tags_adapter, write_json
+from tags_data_sharing_adapter_test_support import (
+    data_sharing_workspace_path,
+    dependencies,
+    make_repo,
+    read_json,
+    resolve_tags_adapter,
+    write_json,
+)
 
 def test_list_returned_packages_finds_json_files() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        write_json(root / "var/analytics/data-sharing/import-staging/registry.json", {"import_registry": {"tags": []}})
-        (root / "var/analytics/data-sharing/import-staging/documents-document-content-20260627-120000.jsonl").write_text(
+        write_json(data_sharing_workspace_path("import-staging/registry.json"), {"import_registry": {"tags": []}})
+        data_sharing_workspace_path("import-staging/documents-document-content-20260627-120000.jsonl").write_text(
             '{"doc_id":"alpha","title":"Alpha","source_text":"Document body."}\n',
             encoding="utf-8",
         )
@@ -32,7 +39,7 @@ def test_registry_review_and_confirmed_apply_writes_source() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/import-staging/registry.json",
+            data_sharing_workspace_path("import-staging/registry.json"),
             {
                 "mode": "merge",
                 "import_registry": {
@@ -93,7 +100,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/import-staging/aliases.json",
+            data_sharing_workspace_path("import-staging/aliases.json"),
             {
                 "mode": "merge",
                 "import_aliases": {

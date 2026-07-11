@@ -49,11 +49,11 @@ Source and generated artifacts:
   - `data-sharing/config/adapters.json`
   - `data-sharing/config/adapters.schema.json`
 - local generated export artifacts:
-  - `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
-  - `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
+  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.json`
+  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.jsonl`
 - local import staging artifacts:
-  - `var/analytics/data-sharing/<scope>/import-staging/<filename>.json`
-  - `var/analytics/data-sharing/<scope>/import-staging/<filename>.jsonl`
+  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.json`
+  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.jsonl`
 ## Source Model
 
 ### `site/<route>/index.html`
@@ -204,8 +204,8 @@ Config files:
 
 Generated output:
 
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.json`
-- `var/analytics/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.json`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.jsonl`
 
 Current model:
 
@@ -234,8 +234,8 @@ Import files are local working artifacts copied into a staging folder for previe
 
 Staged input:
 
-- `var/analytics/data-sharing/<scope>/import-staging/<filename>.json`
-- `var/analytics/data-sharing/<scope>/import-staging/<filename>.jsonl`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.json`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.jsonl`
 
 Preview output:
 

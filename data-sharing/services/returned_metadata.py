@@ -8,18 +8,10 @@ import re
 from pathlib import Path
 from typing import Any
 
+from services.paths import configured_workspace_paths, marker_path
 
-STAGING_ROOT = Path("var/analytics/data-sharing/import-staging")
-META_ROOT = Path("var/analytics/data-sharing/meta")
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 EXPORT_ID_RE = re.compile(r"^ds_\d{8}T\d{6}Z$")
-
-
-def relative_path(repo_root: Path, path: Path) -> str:
-    try:
-        return path.resolve().relative_to(repo_root.resolve()).as_posix()
-    except ValueError:
-        return path.as_posix()
 
 
 def modified_utc(path: Path) -> str:
@@ -66,8 +58,8 @@ def export_id_from_staged_file(path: Path) -> str:
     return export_id
 
 
-def load_export_metadata(repo_root: Path, export_id: str) -> tuple[dict[str, Any], Path]:
-    metadata_path = repo_root / META_ROOT / f"{export_id}.meta.json"
+def load_export_metadata(export_id: str, *, metadata_root: Path) -> tuple[dict[str, Any], Path]:
+    metadata_path = metadata_root / f"{export_id}.meta.json"
     if not metadata_path.exists():
         raise FileNotFoundError(f"metadata file not found for export_id {export_id}")
     metadata = parse_json_object(metadata_path)
@@ -81,11 +73,11 @@ def supports_return_import(metadata: dict[str, Any]) -> bool:
     return metadata.get("supports_return_import") is not False
 
 
-def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
+def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path) -> dict[str, Any]:
     stat = path.stat()
     record: dict[str, Any] = {
         "filename": path.name,
-        "path": relative_path(repo_root, path),
+        "path": marker_path(path, workspace_root=workspace_root),
         "format": path.suffix.lower().lstrip("."),
         "size_bytes": stat.st_size,
         "modified_utc": modified_utc(path),
@@ -93,7 +85,7 @@ def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
     }
     try:
         export_id = export_id_from_staged_file(path)
-        metadata, metadata_path = load_export_metadata(repo_root, export_id)
+        metadata, metadata_path = load_export_metadata(export_id, metadata_root=metadata_root)
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         record["metadata_error"] = str(exc)
         return record
@@ -104,7 +96,7 @@ def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
         record.update(
             {
                 "export_id": export_id,
-                "metadata_file": relative_path(repo_root, metadata_path),
+                "metadata_file": marker_path(metadata_path, workspace_root=workspace_root),
                 "metadata_error": f"metadata missing required fields: {', '.join(missing_fields)}",
             }
         )
@@ -113,7 +105,7 @@ def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
     record.update(
         {
             "metadata_ok": True,
-            "metadata_file": relative_path(repo_root, metadata_path),
+            "metadata_file": marker_path(metadata_path, workspace_root=workspace_root),
             "export_id": export_id,
             "app": normalize_text(metadata.get("app")),
             "data_domain": normalize_text(metadata.get("data_domain")),
@@ -129,9 +121,14 @@ def staged_file_record(repo_root: Path, path: Path) -> dict[str, Any]:
     return record
 
 
-def list_staged_files_with_metadata(repo_root: Path, staging_root: Path | str | None = None) -> dict[str, Any]:
-    base_root = Path(staging_root) if staging_root else STAGING_ROOT
-    resolved_staging_root = (repo_root / base_root).resolve()
+def list_staged_files_with_metadata(
+    repo_root: Path,
+    staging_root: Path | str | None = None,
+    metadata_root: Path | str | None = None,
+) -> dict[str, Any]:
+    defaults = configured_workspace_paths(repo_root)
+    resolved_staging_root = (Path(staging_root) if staging_root else defaults.import_staging).resolve()
+    resolved_metadata_root = (Path(metadata_root) if metadata_root else defaults.meta).resolve()
     files: list[dict[str, Any]] = []
     blocked_files: list[dict[str, Any]] = []
     if resolved_staging_root.exists():
@@ -140,7 +137,11 @@ def list_staged_files_with_metadata(repo_root: Path, staging_root: Path | str | 
                 continue
             if not path.is_file() or path.suffix.lower() not in SUPPORTED_EXTENSIONS:
                 continue
-            record = staged_file_record(repo_root, path)
+            record = staged_file_record(
+                path,
+                metadata_root=resolved_metadata_root,
+                workspace_root=defaults.root,
+            )
             if record.get("metadata_ok") and record.get("supports_return_import") is False:
                 record["return_import_supported"] = False
                 record["blocked_reason"] = "export_only_profile"
@@ -149,8 +150,8 @@ def list_staged_files_with_metadata(repo_root: Path, staging_root: Path | str | 
             files.append(record)
     return {
         "ok": True,
-        "staging_root": base_root.as_posix(),
-        "meta_root": META_ROOT.as_posix(),
+        "staging_root": marker_path(resolved_staging_root, workspace_root=defaults.root),
+        "meta_root": marker_path(resolved_metadata_root, workspace_root=defaults.root),
         "files": files,
         "blocked_files": blocked_files,
     }
@@ -158,8 +159,6 @@ def list_staged_files_with_metadata(repo_root: Path, staging_root: Path | str | 
 
 __all__ = [
     "EXPORT_ID_RE",
-    "META_ROOT",
-    "STAGING_ROOT",
     "export_id_from_staged_file",
     "list_staged_files_with_metadata",
     "load_export_metadata",

@@ -9,10 +9,9 @@ from pathlib import Path
 from typing import Any
 
 from docs_scope_config import load_docs_scope_configs
+from services.paths import configured_workspace_paths, marker_path
 
 
-WORKFLOW_ROOT = Path("var/analytics/data-sharing")
-STAGING_DIR_NAME = "import-staging"
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 EXPORT_ID_RE = re.compile(r"^ds_\d{8}T\d{6}Z$")
@@ -95,14 +94,16 @@ def normalize_id_title_pairs(value: Any) -> list[dict[str, str]]:
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
+    del repo_root
     try:
-        return path.resolve().relative_to(repo_root.resolve()).as_posix()
+        return marker_path(path)
     except ValueError:
         return path.as_posix()
 
 
-def default_staging_root(scope: str) -> Path:
-    return WORKFLOW_ROOT / normalize_text(scope).lower() / STAGING_DIR_NAME
+def default_staging_root(repo_root: Path, scope: str) -> Path:
+    del scope
+    return configured_workspace_paths(repo_root).import_staging
 
 
 def supported_scopes(repo_root: Path) -> set[str]:
@@ -164,11 +165,11 @@ def empty_report(repo_root: Path, scope: str, staged_file: str) -> dict[str, Any
 
 def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_root: Path | str | None = None) -> Path:
     normalized_scope = validate_scope(repo_root, scope)
-    base_root = Path(staging_root) if staging_root else default_staging_root(normalized_scope)
+    base_root = Path(staging_root) if staging_root else default_staging_root(repo_root, normalized_scope)
     raw_path = Path(staged_file)
-    path = raw_path if raw_path.is_absolute() else repo_root / base_root / raw_path
+    path = raw_path if raw_path.is_absolute() else base_root / raw_path
     resolved = path.resolve()
-    allowed_root = (repo_root / base_root).resolve()
+    allowed_root = base_root.resolve()
     if resolved != allowed_root and allowed_root not in resolved.parents:
         raise ValueError(f"staged file must stay under {base_root}")
     return resolved
@@ -176,8 +177,8 @@ def resolve_staged_path(repo_root: Path, scope: str, staged_file: str, staging_r
 
 def list_staged_import_files(repo_root: Path, scope: str, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
     normalized_scope = validate_scope(repo_root, scope)
-    base_root = Path(staging_root) if staging_root else default_staging_root(normalized_scope)
-    resolved_staging_root = (repo_root / base_root).resolve()
+    base_root = Path(staging_root) if staging_root else default_staging_root(repo_root, normalized_scope)
+    resolved_staging_root = base_root.resolve()
     if not resolved_staging_root.exists():
         return []
     files: list[dict[str, Any]] = []

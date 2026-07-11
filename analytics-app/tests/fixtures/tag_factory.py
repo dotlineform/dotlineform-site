@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -28,6 +29,21 @@ def write_json(path: Path, payload: object) -> None:
 
 def read_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def data_sharing_workspace_path(relative: str = "") -> Path:
+    root = Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "data-sharing"
+    return root / relative if relative else root
+
+
+def resolve_data_sharing_marker(value: str) -> Path:
+    marker = "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
+    if value == marker:
+        return data_sharing_workspace_path()
+    prefix = f"{marker}/"
+    if not value.startswith(prefix):
+        raise ValueError(f"not a Data Sharing marker path: {value}")
+    return data_sharing_workspace_path(value[len(prefix):])
 
 
 def tag_row(tag_id: str, description: str = "") -> dict[str, str]:
@@ -98,11 +114,12 @@ def promotion_assignments_payload() -> dict[str, object]:
 
 def make_registry_payload() -> dict[str, object]:
     return {
-        "schema_version": "data_sharing_adapters_v2",
+        "schema_version": "data_sharing_adapters_v3",
         "paths": {
-            "outbound_package_root": "var/analytics/data-sharing/exports",
-            "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-            "review_output_root": "var/analytics/data-sharing/import-preview",
+            "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+            "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+            "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+            "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
         },
         "dispatch": [
             {"data_domain": "tags", "operation": "prepare", "adapter_id": "analytics-tags"},
@@ -331,7 +348,7 @@ def make_tags_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_activity_contract(root)
-    (root / "var/analytics/data-sharing/import-staging").mkdir(parents=True, exist_ok=True)
+    data_sharing_workspace_path("import-staging").mkdir(parents=True, exist_ok=True)
     return temp_dir
 
 

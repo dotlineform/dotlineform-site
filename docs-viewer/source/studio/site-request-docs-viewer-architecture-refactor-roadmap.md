@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0 and phases 0-5 are complete. The Docs Review readiness checkpoint is next.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, and the Docs Review readiness checkpoint are complete. Docs Review phase 6 may begin with a fixture-backed preview vertical slice.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -463,14 +463,14 @@ Data Sharing already provides a route for externally enriching documents and pop
 
 ## Finding 13: User Workspace Artifacts Are Repo-Rooted
 
-Several user-facing workflow artifacts are currently hardcoded or schema-contracted beneath the repository's untracked `var/` tree:
+At assessment time, several user-facing workflow artifacts were hardcoded or schema-contracted beneath the repository's untracked `var/` tree:
 
 - Data Sharing exports, returned-package staging, metadata, and review output under `var/analytics/data-sharing/`
 - Docs source-import staging under `var/docs/import-staging/`
 - Docs Review sessions under `var/analytics/data-sharing/import-preview/`
 - catalogue source-media and generated-derivative previews under `var/catalogue/media/`
 
-This is not just a display-path issue. Data Sharing's schema currently fixes its runtime roots to repo-relative `var/analytics/data-sharing/...` values, adapter validation repeats those exact paths, and several services resolve them with `repo_root / configured_path`.
+This was not just a display-path issue. Data Sharing's schema fixed its runtime roots to repo-relative `var/analytics/data-sharing/...` values, adapter validation repeated those exact paths, and several services resolved them with `repo_root / configured_path`. The completed Data Sharing/review W0 slice replaces that contract with registry v3 marker paths and one shared external workspace resolver.
 
 Because `var/` is untracked, these artifacts are caught between two ownership models:
 
@@ -513,7 +513,7 @@ Rules:
 - use temporary project-base roots in tests instead of treating a temporary repository's `var/` directory as the production contract
 - treat old `var/` workflow artifacts as disposable/manual-migration input; do not add compatibility reads or duplicate writes
 
-This is a cross-app path-authority change involving Analytics, Data Sharing, Docs Viewer, Studio, and later media workflows. It should have a separate change request and implementation tracker. The Data Sharing/review slice is a Docs Review prerequisite; the complete audit of remaining `var/` usage is not.
+This is a cross-app path-authority change involving Analytics, Data Sharing, Docs Viewer, Studio, and later media workflows. The completed Data Sharing/review slice is recorded in the active full-document-package work instead of a separate historical tracker. The complete audit of remaining `var/` usage is not a Docs Review prerequisite.
 
 ## Target Architecture
 
@@ -547,14 +547,14 @@ Ownership rules:
 | --- | --- | --- |
 | D0 | documentation inventory and authority map | prerequisite to foundation planning; not a full rewrite |
 | W0 | external user-workspace artifact roots | separate cross-app change; Data Sharing/review slice required before Docs Review backend work |
-| P0 | Data Sharing full document package | separate Data Sharing project; exact-source package and validated return required before Docs Review |
+| P0 | Data Sharing full document package | separate Data Sharing project; consumer package interface required before Docs Review, real export/intake required before end-to-end completion |
 | 0 | runtime baseline and prerequisite contract reconciliation | prerequisite assessment |
 | 1 | app context and authority | required |
 | 2 | provider boundary | required |
 | 3 | route feature/startup projection | required |
 | 4 | view/mode/control projection | required |
 | 5 | touched coordinator reduction | required only where phases 1-4 expose ownership |
-| checkpoint | Docs Review readiness reassessment | required before feature implementation |
+| checkpoint | Docs Review readiness reassessment | complete; foundation sufficient |
 | 6 | Docs Review implementation | separate feature project |
 | 7 | management coordinator roadmap | general maintainability |
 | 8 | backend lifecycle roadmap | general maintainability |
@@ -590,7 +590,9 @@ Acceptance:
 
 Purpose: remove checkout-relative authority from user-facing staging, preview, and exchange artifacts before Docs Review relies on those paths.
 
-This work must have its own cross-app change request and implementation tracker. It may proceed in parallel with the browser/runtime foundation refactor, but its Data Sharing/review slice must complete before Docs Review returned-package services are implemented.
+The Data Sharing/review slice is implemented inside the active full-document-package work so completed path work does not require another historical tracker. Later workspace-root slices remain separate cross-app work. The Data Sharing/review slice had to complete before Docs Review returned-package services could be implemented.
+
+Data Sharing/review slice status: complete.
 
 First-slice tasks:
 
@@ -854,6 +856,8 @@ Implemented on 2026-07-11.
 
 ## Docs Review Readiness Checkpoint
 
+Checkpoint completed on 2026-07-11: passed.
+
 Before resuming Docs Review, confirm:
 
 - `review` can be expressed as an app context without `allowManagement`
@@ -863,9 +867,38 @@ Before resuming Docs Review, confirm:
 - Markdown source and its toolbar controls can be registered for an authorized non-manage context
 - public routes do not load review or management assets
 - adding the review route requires no new lifecycle behavior in the private runtime coordinator
-- Data Sharing can provide a validated full package containing exact Markdown and package-local asset inventories
+- Docs Review has an agreed validated-package consumer interface containing package-rooted Markdown, a trusted manifest, and optional package-local asset inventories; a fixture or manually seeded package may exercise that interface before the full export/intake producer exists
 
 If these are true, the foundation refactor is sufficient. Do not delay Docs Review for unrelated scope lifecycle, CSS, report, or import cleanup.
+
+Checkpoint evidence:
+
+| criterion | result | evidence |
+| --- | --- | --- |
+| review context without management authority | pass | `review` is a first-class app kind; access projection forces `managementUi: false` outside `manage` |
+| non-scope provider | pass | app composition accepts a code-owned `createCollectionProvider` factory and retains the configured-scope provider as its default |
+| independent generated/source services | pass | review context can expose local generated reads and source service access while omitting the management service |
+| optional route features | pass | an empty feature policy omits configured-scope discovery, search, recent, bookmarks, reports, scope selection, and management startup |
+| review source mode and controls | pass | the view registry admits review-only Markdown mode and save controls, including backend capability requirements |
+| public asset isolation | pass | public entrypoints retain public/shared imports only; review contributions remain code-owned by the future review entrypoint |
+| coordinator boundary | pass | provider, view, source, and shell contributions enter through existing boot/composition seams; no review lifecycle is added to the private runtime coordinator |
+| package dependency | pass with sequencing clarification | preview may start from a representative package fixture; the real Data Sharing producer remains required before round-trip acceptance |
+
+The checkpoint exposed and closed one foundation gap: app composition previously instantiated `createDocsViewerConfiguredScopeProvider` unconditionally. The new provider-factory seam is deliberately code-owned and validates the minimal `readIndex` and `readDocument` interface. It is not configured through browser JSON and grants no backend authority.
+
+Verification evidence:
+
+- focused router module smoke passed with custom-provider injection, provider-interface rejection, optional-feature startup, independent service surfaces, and review-only Markdown control projection
+- the four-check `docs-viewer-smoke` profile passed at `var/admin/test-runs/docs-review-readiness-checkpoint/summary.md`
+- the three-check docs test/build/search profile passed at `var/admin/test-runs/docs-review-readiness-checkpoint-docs/summary.md`
+
+Expected phase 6 work, not checkpoint blockers:
+
+- add the `/docs-review/` entrypoint, route record, returned-package provider, and focused backend services
+- replace or isolate the old management review-session build stub
+- create a representative external-workspace package fixture for the first source-only build
+- add package-aware asset resolution after the source-only vertical slice
+- connect real Data Sharing export/intake before declaring the complete round trip done
 
 ## Phase 6: Docs Review
 
@@ -969,21 +1002,21 @@ Recommended order of work (to be reviewed after each step):
 
 1. create the D0 documentation register and authority map as a dedicated assessment task — initial register complete and ready for review
 2. create the separate Documentation Search Discovery And Relevance change request
-3. create the W0 external user-workspace artifact roots change request and tracker
+3. implement the W0 Data Sharing/review root slice inside the active full-document-package work — complete
 4. record the phases 0-5 baseline, outcomes, and verification evidence directly in this roadmap — complete
 5. complete the runtime baseline and reconcile only prerequisite contracts — complete
 6. begin D2 user/maintainer entrypoint work as a separate documentation batch
 7. implement explicit app context and authority — complete
-8. implement the configured-scope provider boundary
-9. implement explicit route features and startup
-10. implement the code-owned view/mode/control projection
-11. reduce only coordinator bridges made obsolete by steps 8-11
+8. implement the configured-scope provider boundary — complete
+9. implement explicit route features and startup — complete
+10. implement the code-owned view/mode/control projection — complete
+11. reduce only coordinator bridges made obsolete by steps 8-11 — complete
 12. update affected user guidance and architecture owners with each slice
-13. complete the W0 Data Sharing/review path slice, which may run in parallel with phases 0-5
-14. implement phase 1 of [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which may also run in parallel with phases 0-5
-15. run the Docs Review readiness checkpoint
-16. update the Docs Review spec only if the platform or full-package contracts materially changed
-17. implement Docs Review in its own tracker
+13. complete the W0 Data Sharing/review path slice, which may run in parallel with phases 0-5 — complete
+14. approve the validated-package consumer interface; continue the real full-package producer independently — consumer interface complete, producer active
+15. run the Docs Review readiness checkpoint — complete
+16. update the Docs Review spec only if the platform or package contracts materially changed — checkpoint sequencing clarified
+17. implement Docs Review through its active request, beginning with a fixture-backed preview vertical slice
 18. continue D1-4, the search request, later W0 slices, and phases 7-9 according to current risk and feature demand
 
 ## What Not To Refactor Yet

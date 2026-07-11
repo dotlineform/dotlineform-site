@@ -43,12 +43,13 @@ def expect_value_error(callback, expected: str) -> None:
     assert expected in message, message
 
 
-def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
+def test_active_documents_adapter_resolves_with_v3_workspace_paths(external_data_sharing_workspace: Path) -> None:
     with registry_repo(registry_payload()) as repo_root:
         resolution = adapters.resolve_adapter(repo_root, data_domain="documents", operation="prepare")
 
         assert resolution.adapter_id == "documents"
-        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/exports"
+        assert resolution.path("outbound_package_root") == external_data_sharing_workspace / "exports"
+        assert resolution.path_marker("outbound_package_root") == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports"
         assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/adapters/documents/config/prepare-profiles.json"
         assert resolution.capability["selection_model"] == "documents"
         assert resolution.capability["output_formats"] == ["json"]
@@ -102,14 +103,29 @@ def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
     with registry_repo(payload) as repo_root:
         expect_value_error(
             lambda: adapters.load_registry(repo_root),
-            "must be var/analytics/data-sharing/import-staging",
+            "must be under $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing",
         )
+
+
+def test_registry_accepts_editable_marker_rooted_artifact_paths(external_data_sharing_workspace: Path) -> None:
+    payload = registry_payload()
+    payload["paths"] = {
+        "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/outbound",
+        "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/returned",
+        "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/reviews",
+        "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/provenance",
+    }
+    with registry_repo(payload) as repo_root:
+        resolution = adapters.resolve_adapter(repo_root, data_domain="documents", operation="prepare")
+
+    assert resolution.path("outbound_package_root") == external_data_sharing_workspace / "outbound"
+    assert resolution.path("metadata_root") == external_data_sharing_workspace / "provenance"
 
 
 def test_registry_rejects_domain_level_runtime_paths() -> None:
     payload = registry_payload()
     payload["adapters"][0]["data_domains"]["documents"]["paths"] = {
-        "outbound_package_root": "var/analytics/data-sharing/exports",
+        "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports-alt",
     }
     with registry_repo(payload) as repo_root:
         expect_value_error(
@@ -140,7 +156,7 @@ def test_registry_rejects_unknown_operation_names() -> None:
         )
 
 
-def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
+def test_repo_registry_loads_and_resolves_documents_and_tags(external_data_sharing_workspace: Path) -> None:
     payload = adapters.load_registry(REPO_ROOT)
 
     operations = {item["operation"] for item in payload["dispatch"]}
@@ -148,9 +164,10 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
     document_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="documents", operation="apply")
     tags_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="tags", operation="review", require_active=False)
     for resolution in (document_resolution, tags_resolution):
-        assert resolution.path("outbound_package_root").as_posix() == "var/analytics/data-sharing/exports"
-        assert resolution.path("returned_package_staging_root").as_posix() == "var/analytics/data-sharing/import-staging"
-        assert resolution.path("review_output_root").as_posix() == "var/analytics/data-sharing/import-preview"
+        assert resolution.path("outbound_package_root") == external_data_sharing_workspace / "exports"
+        assert resolution.path("returned_package_staging_root") == external_data_sharing_workspace / "import-staging"
+        assert resolution.path("review_output_root") == external_data_sharing_workspace / "import-preview"
+        assert resolution.path("metadata_root") == external_data_sharing_workspace / "meta"
     assert document_resolution.capability["apply_actions"][0]["id"] == "summary_apply"
     assert tags_resolution.adapter_id == "analytics-tags"
 
@@ -167,7 +184,7 @@ def test_repo_documents_adapter_declares_docs_scope_config_not_generated_docs_so
 
 def main() -> None:
     tests = [
-        test_active_documents_adapter_resolves_with_v2_metadata,
+        test_active_documents_adapter_resolves_with_v3_workspace_paths,
         test_tags_adapter_definition_resolves_for_inspection,
         test_stub_tags_adapter_fails_closed_for_service_resolution,
         test_registry_rejects_duplicate_domain_operation_dispatch,

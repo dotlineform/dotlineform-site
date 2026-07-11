@@ -135,7 +135,7 @@ A narrow first slice could support:
 - one Analytics-owned workflow for tag summary text
 - extraction from saved Docs Viewer Markdown source
 - package creation through Data Sharing
-- returned text staged under `var/analytics/data-sharing/`
+- returned text staged under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - diff review before writeback
 - writeback limited to replacing the body between unchanged start/end markers
 - rebuild through the existing Docs Viewer management rebuild path

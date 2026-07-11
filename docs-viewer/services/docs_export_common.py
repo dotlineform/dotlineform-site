@@ -8,9 +8,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from services.paths import configured_workspace_paths
 
-OUTPUT_ROOT = Path("var/analytics/data-sharing")
-EXPORT_META_ROOT = Path("var/analytics/data-sharing/meta")
 RETURNED_PACKAGE_SCHEMA_VERSION = "data_sharing_returned_package_v1"
 TEXT_WHITESPACE_RE = re.compile(r"\s+")
 PUNCTUATION_SPACING_RE = re.compile(r"\s+([,.;:!?])")
@@ -95,11 +94,12 @@ def export_id_from_generated_at(generated_at: str) -> str:
     return export_id
 
 
-def package_metadata_path(repo_root: Path, export_id: str) -> Path:
+def package_metadata_path(repo_root: Path, export_id: str, metadata_root: Path | None = None) -> Path:
     normalized = normalize_text(export_id)
     if not EXPORT_ID_RE.fullmatch(normalized):
         raise ValueError(f"invalid export_id: {export_id}")
-    return repo_root / EXPORT_META_ROOT / f"{normalized}.meta.json"
+    root = metadata_root or configured_workspace_paths(repo_root).meta
+    return root / f"{normalized}.meta.json"
 
 
 def package_context_sidecar_path(path: Path) -> Path:

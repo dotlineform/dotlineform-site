@@ -106,14 +106,15 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     write_json(
         repo_root / "data-sharing/config/adapters.json",
         {
-            "schema_version": "data_sharing_adapters_v2",
+            "schema_version": "data_sharing_adapters_v3",
             "dispatch": [
                 {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
             ],
             "paths": {
-                "outbound_package_root": "var/analytics/data-sharing/exports",
-                "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-                "review_output_root": "var/analytics/data-sharing/import-preview",
+                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
             },
             "adapters": [
                 {

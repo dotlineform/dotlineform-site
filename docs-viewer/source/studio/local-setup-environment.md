@@ -33,7 +33,7 @@ Do not duplicate these repo-specific values in shell startup files.
 
 What the shared variables mean:
 
-- `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
+- `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory for source-media trees and external local application workspaces
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
 
 Docs Viewer external local scopes also use `DOTLINEFORM_PROJECTS_BASE_DIR`.
@@ -41,10 +41,13 @@ For those scopes, create the external Docs Viewer data root before using the New
 
 ```bash
 mkdir -p "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+mkdir -p "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
 ```
 
 Docs Viewer then derives external local source and generated JSON paths below that fixed directory.
 The New scope modal does not accept a custom external path.
+
+Data Sharing and Docs Review use the fixed `data-sharing/` workspace for exports, returned-package staging, metadata, and preview sessions. Active Data Sharing capabilities are unavailable with setup guidance when this directory is missing, unreadable, or unwritable.
 
 Common local app runner variables:
 

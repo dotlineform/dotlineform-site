@@ -27,7 +27,7 @@ See [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-ada
 
 The root object contains:
 
-- `schema_version`: currently `data_sharing_adapters_v2`
+- `schema_version`: currently `data_sharing_adapters_v3`
 - `paths`: shared runtime artifact roots
 - `dispatch`: operation routing from data domain to adapter id
 - `adapters`: adapter declarations and their per-domain capability metadata
@@ -35,16 +35,20 @@ The root object contains:
 The active runtime artifact roots are shared by all adapters:
 
 ```text
-var/analytics/data-sharing/exports
-var/analytics/data-sharing/import-staging
-var/analytics/data-sharing/import-preview
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta
 ```
 
 The validator requires:
 
-- `paths.outbound_package_root`: `var/analytics/data-sharing/exports`
-- `paths.returned_package_staging_root`: `var/analytics/data-sharing/import-staging`
-- `paths.review_output_root`: `var/analytics/data-sharing/import-preview`
+- `paths.outbound_package_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports`
+- `paths.returned_package_staging_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging`
+- `paths.review_output_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview`
+- `paths.metadata_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta`
+
+These marker paths are editable but must remain distinct descendants of `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`. Runtime services resolve them through the shared workspace resolver and never store user-specific absolute paths in checked-in config.
 
 Do not add per-domain runtime package roots or fallback reads for retired locations such as `var/studio/data-sharing/...` or `var/studio/export-import/...`.
 

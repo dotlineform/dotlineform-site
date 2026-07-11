@@ -10,6 +10,7 @@ import docs_source_config_settings
 import docs_static_html_export
 import docs_source_model as source_model
 from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS, is_public_readonly_scope, path_label, resolve_scope_path
+from services.paths import workspace_status
 
 
 def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
@@ -43,6 +44,7 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
 
 
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
+    data_sharing_workspace = workspace_status(repo_root)
     scopes: Dict[str, Any] = {}
     try:
         manifest = docs_scope_manifest.load_manifest(repo_root)
@@ -111,6 +113,12 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "html_import": True,
             "docs_export": True,
             "library_import": True,
+            "docs_review": {
+                "available": data_sharing_workspace["available"],
+                "message": data_sharing_workspace["message"],
+                "workspace_root": data_sharing_workspace["root"],
+                "review_sessions": data_sharing_workspace["available"],
+            },
             "scope_lifecycle": {
                 "manifest": True,
                 "create_preview": True,

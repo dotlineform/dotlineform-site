@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 from repo_factory import (
+    data_sharing_workspace_root,
     make_docs_import_repo,
     write_docs_scope_config,
     write_library_doc as write_fixture_library_doc,
@@ -122,7 +123,7 @@ def write_returned_jsonl(
     profile_id: str = "document-content",
     scope: str = "library",
 ) -> None:
-    meta_path = root / "var/analytics/data-sharing/meta" / f"{export_id}.meta.json"
+    meta_path = data_sharing_workspace_root() / "meta" / f"{export_id}.meta.json"
     meta_path.parent.mkdir(parents=True, exist_ok=True)
     meta_path.write_text(
         json.dumps(

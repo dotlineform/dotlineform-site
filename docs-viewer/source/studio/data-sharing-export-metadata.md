@@ -55,13 +55,13 @@ Profile identity belongs in the internal metadata file.
 Internal metadata files live under:
 
 ```text
-var/analytics/data-sharing/meta/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/
 ```
 
 The internal metadata filename is derived from `export_id`:
 
 ```text
-var/analytics/data-sharing/meta/ds_20260627T173012Z.meta.json
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260627T173012Z.meta.json
 ```
 
 This file is local Studio metadata.
@@ -182,7 +182,7 @@ Export-only document-tree packages use a top-level `export_id` beside a nested `
 The review page lists staged files from:
 
 ```text
-var/analytics/data-sharing/import-staging/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 ```
 
 It ignores context files such as `.context.json`.
@@ -223,7 +223,7 @@ These failures should be shown before preview generation so the operator can fix
 `.context.json` remains external task guidance.
 It can be sent with the package to explain the requested response shape.
 
-`.meta.json` is internal routing metadata under `var/analytics/data-sharing/meta/`.
+`.meta.json` is internal routing metadata under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/`.
 It must not be confused with context.
 
 The external package should contain only the `export_id` needed to find the internal metadata after the returned file is staged.

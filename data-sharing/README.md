@@ -7,7 +7,7 @@ The subsystem owns shared Data Sharing concerns:
 - adapter registry and config loading
 - adapter implementations by data domain
 - workflow dispatch for `prepare`, `list_returned`, `review`, and `apply`
-- path contracts for `var/analytics/data-sharing/exports`, `import-staging`, and `import-preview`
+- marker-rooted path contracts under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - package I/O and schema contracts
 
 It must not own:

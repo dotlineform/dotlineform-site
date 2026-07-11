@@ -8,17 +8,19 @@ import json
 from pathlib import Path
 from typing import Any
 
+from services.paths import resolve_marker_path, resolve_workspace_root, safe_workspace_marker_path
+
 
 REGISTRY_REL_PATH = Path("data-sharing/config/adapters.json")
-SCHEMA_VERSION = "data_sharing_adapters_v2"
+SCHEMA_VERSION = "data_sharing_adapters_v3"
 CANONICAL_OPERATIONS = {"prepare", "list_returned", "review", "apply"}
 STATUS_VALUES = {"active", "planned", "stub", "disabled"}
-RUNTIME_ARTIFACT_ROOT = Path("var/analytics/data-sharing")
-RUNTIME_PATH_KEYS = {
-    "outbound_package_root": "exports",
-    "returned_package_staging_root": "import-staging",
-    "review_output_root": "import-preview",
-}
+RUNTIME_PATH_KEYS = (
+    "outbound_package_root",
+    "returned_package_staging_root",
+    "review_output_root",
+    "metadata_root",
+)
 
 
 def normalize_id(value: Any) -> str:
@@ -93,13 +95,11 @@ def _validate_optional_path_object(value: Any, *, field: str) -> dict[str, Any]:
 
 
 def _validate_runtime_artifact_roots(paths: dict[str, Any], *, field: str) -> None:
-    for key, leaf in RUNTIME_PATH_KEYS.items():
-        actual = safe_relative_path(paths.get(key), field=f"{field}.{key}")
-        expected = RUNTIME_ARTIFACT_ROOT / leaf
-        if actual != expected:
-            raise ValueError(
-                f"adapter config field {field}.{key} must be {expected.as_posix()}"
-            )
+    resolved: dict[str, Path] = {}
+    for key in RUNTIME_PATH_KEYS:
+        resolved[key] = safe_workspace_marker_path(paths.get(key), field=f"{field}.{key}")
+    if len(set(resolved.values())) != len(resolved):
+        raise ValueError("Data Sharing runtime artifact roots must resolve to distinct workspace paths")
 
 
 @dataclass(frozen=True)
@@ -111,6 +111,7 @@ class AdapterResolution:
     adapter: dict[str, Any]
     domain: dict[str, Any]
     capability: dict[str, Any]
+    workspace_root: Path | None = None
 
     @property
     def label(self) -> str:
@@ -121,7 +122,16 @@ class AdapterResolution:
         return normalize_id(self.domain.get("app"))
 
     def path(self, key: str) -> Path:
-        return safe_relative_path(self.paths.get(key), field=f"paths.{key}")
+        return resolve_marker_path(
+            self.paths.get(key),
+            field=f"paths.{key}",
+            workspace_root=self.workspace_root,
+        )
+
+    def path_marker(self, key: str) -> str:
+        value = str(self.paths.get(key) or "").strip()
+        safe_workspace_marker_path(value, field=f"paths.{key}")
+        return value
 
     def config_path(self, key: str) -> Path:
         config = self.domain.get("config") if isinstance(self.domain.get("config"), dict) else {}
@@ -366,6 +376,7 @@ def resolve_adapter(
             adapter=adapter,
             domain=domain,
             capability=capability,
+            workspace_root=None,
         )
 
     if resolved_adapter_status != "active":
@@ -379,6 +390,8 @@ def resolve_adapter(
             f"adapter {adapter_id!r} capability {resolved_operation!r} is {resolved_capability_status}{detail}"
         )
 
+    workspace_root = resolve_workspace_root()
+
     return AdapterResolution(
         data_domain=resolved_data_domain,
         operation=resolved_operation,
@@ -387,4 +400,5 @@ def resolve_adapter(
         adapter=adapter,
         domain=domain,
         capability=capability,
+        workspace_root=workspace_root,
     )

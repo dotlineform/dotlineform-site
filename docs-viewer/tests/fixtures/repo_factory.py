@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import tempfile
 from pathlib import Path
 from typing import Callable
@@ -20,6 +21,21 @@ def write_json(path: Path, payload: object, *, indent: int | None = None) -> Non
 
 def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def data_sharing_workspace_root() -> Path:
+    projects_base = Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"])
+    return projects_base / "data-sharing"
+
+
+def resolve_data_sharing_marker(value: str) -> Path:
+    marker = "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
+    if value == marker:
+        return data_sharing_workspace_root()
+    prefix = f"{marker}/"
+    if not value.startswith(prefix):
+        raise ValueError(f"not a Data Sharing marker path: {value}")
+    return data_sharing_workspace_root() / value[len(prefix):]
 
 
 def write_site_tools_config(root: Path, *, media_base: str = "https://media.example.test") -> None:
@@ -75,7 +91,8 @@ def write_library_doc(
 
 
 def write_staged_data_file(root: Path, filename: str, payload: object) -> Path:
-    path = root / "var/analytics/data-sharing/import-staging" / filename
+    del root
+    path = data_sharing_workspace_root() / "import-staging" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     if filename.endswith(".jsonl"):
         rows = payload if isinstance(payload, list) else [payload]
@@ -145,7 +162,7 @@ def write_documents_prepare_profiles(root: Path) -> None:
                         "record_shape": "document_rows",
                     },
                     "output": {
-                        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl",
+                        "path_pattern": "{timestamp}-{data_domain}-{profile_id}.jsonl",
                         "timestamp_format": "%Y%m%d-%H%M%S",
                     },
                     "selection": {
@@ -191,11 +208,12 @@ def write_documents_data_sharing_registry(root: Path) -> None:
     write_json(
         root / "data-sharing/config/adapters.json",
         {
-            "schema_version": "data_sharing_adapters_v2",
+            "schema_version": "data_sharing_adapters_v3",
             "paths": {
-                "outbound_package_root": "var/analytics/data-sharing/exports",
-                "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-                "review_output_root": "var/analytics/data-sharing/import-preview",
+                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
             },
             "dispatch": [
                 {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
@@ -303,7 +321,7 @@ def make_docs_import_repo(format_value: Callable[[object], str] = str) -> tempfi
     temp_dir: tempfile.TemporaryDirectory[str] = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     write_json(root / "site-tools/config/site-tools.json", {"schema_version": "site_tools_config_v1"}, indent=2)
-    (root / "var/analytics/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
+    (data_sharing_workspace_root() / "import-staging").mkdir(parents=True, exist_ok=True)
     write_library_scope_config(root)
     write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""}, format_value=format_value)
     write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"}, format_value=format_value)

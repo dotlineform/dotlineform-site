@@ -35,7 +35,7 @@ Default local APIs:
 - `POST /analytics/api/data-sharing/review`
 - `POST /analytics/api/data-sharing/apply`
 
-Runtime packages, returned-package staging, and review artifacts continue to use the shared `var/analytics/data-sharing/exports`, `import-staging`, and `import-preview` roots as the local artifact contract.
+Runtime packages, returned-package staging, metadata, and review artifacts use marker-rooted paths beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`. The shared resolver validates that workspace before active capabilities run; there is no repo-local fallback.
 Retired Studio paths under `/studio/data-sharing/...` and `/studio/api/data-sharing/...` should not be recreated.
 
 Data Sharing is a first-class canonical-data workflow.

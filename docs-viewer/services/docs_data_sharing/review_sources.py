@@ -79,8 +79,9 @@ def derive_folder_id(metadata: dict[str, Any]) -> str:
 
 
 def resolve_review_folder(repo_root: Path, preview_root: Path, folder_id: str) -> Path:
+    del repo_root
     normalized_folder_id = validate_folder_id(folder_id)
-    root = (repo_root / preview_root).resolve()
+    root = preview_root.resolve()
     path = root / normalized_folder_id
     if path.is_symlink():
         raise ValueError("review source folders must not be symlinks")
@@ -285,6 +286,7 @@ def create_review_source_folder(
     staged_filename: str,
     dry_run: bool,
     staging_root: Path,
+    metadata_root: Path,
     preview_root: Path,
 ) -> dict[str, Any]:
     path, export_id, raw_rows, package_metadata, parse_issues = read_staged_rows(
@@ -297,7 +299,11 @@ def create_review_source_folder(
     metadata: dict[str, Any] = {}
     metadata_path: Path | None = None
     if export_id and not any(item.get("level") == "error" for item in issues):
-        metadata, unknown, metadata_issues, metadata_path = metadata_from_internal_export_meta(repo_root, export_id)
+        metadata, unknown, metadata_issues, metadata_path = metadata_from_internal_export_meta(
+            repo_root,
+            export_id,
+            metadata_root,
+        )
         del unknown
         issues.extend(metadata_issues)
 
@@ -373,7 +379,7 @@ def create_review_source_folder(
                 shutil.rmtree(folder_path)
             (folder_path / "source").mkdir(parents=True, exist_ok=True)
             for row, file_record in zip(valid_rows, source_files):
-                output_path = repo_root / file_record["path"]
+                output_path = folder_path / "source" / Path(str(file_record["path"])).name
                 front_matter = review_front_matter(row, metadata=metadata, folder_id=folder_id, date_value=date_value)
                 output_path.write_text(source_markdown(row, front_matter), encoding="utf-8")
             (folder_path / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

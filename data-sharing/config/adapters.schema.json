@@ -7,21 +7,24 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "data_sharing_adapters_v2"
+      "const": "data_sharing_adapters_v3"
     },
     "paths": {
       "type": "object",
-      "required": ["outbound_package_root", "returned_package_staging_root", "review_output_root"],
+      "required": ["outbound_package_root", "returned_package_staging_root", "review_output_root", "metadata_root"],
       "additionalProperties": false,
       "properties": {
         "outbound_package_root": {
-          "const": "var/analytics/data-sharing/exports"
+          "$ref": "#/$defs/workspacePath"
         },
         "returned_package_staging_root": {
-          "const": "var/analytics/data-sharing/import-staging"
+          "$ref": "#/$defs/workspacePath"
         },
         "review_output_root": {
-          "const": "var/analytics/data-sharing/import-preview"
+          "$ref": "#/$defs/workspacePath"
+        },
+        "metadata_root": {
+          "$ref": "#/$defs/workspacePath"
         }
       }
     },
@@ -232,6 +235,10 @@
     }
   },
   "$defs": {
+    "workspacePath": {
+      "type": "string",
+      "pattern": "^\\$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/[A-Za-z0-9._/-]+$"
+    },
     "operation": {
       "type": "string",
       "enum": ["prepare", "list_returned", "review", "apply"]

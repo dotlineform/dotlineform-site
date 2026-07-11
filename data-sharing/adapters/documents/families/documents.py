@@ -73,6 +73,7 @@ def prepare_package(
         target_format=target_format,
         content_format=content_format,
         output_root=adapter.path("outbound_package_root"),
+        metadata_root=adapter.path("metadata_root"),
     )
     report = attach_adapter_context(report, adapter)
     if dependencies is not None:
@@ -157,6 +158,7 @@ def list_returned_packages(
         repo_root,
         scope=docs_scope,
         staging_root=adapter.path("returned_package_staging_root"),
+        metadata_root=adapter.path("metadata_root"),
     )
     report = attach_adapter_context(report, adapter)
     if dependencies is not None:
@@ -195,6 +197,7 @@ def review_returned_package(
             staged_filename=staged_filename,
             dry_run=dry_run,
             staging_root=adapter.path("returned_package_staging_root"),
+            metadata_root=adapter.path("metadata_root"),
             preview_root=adapter.path("review_output_root"),
         )
         report = attach_adapter_context(report, adapter)
@@ -228,6 +231,7 @@ def review_returned_package(
         staged_filename=staged_filename,
         dry_run=dry_run,
         staging_root=adapter.path("returned_package_staging_root"),
+        metadata_root=adapter.path("metadata_root"),
         preview_root=adapter.path("review_output_root"),
         data_domain=adapter.data_domain,
         record_indices=record_indices,
@@ -284,6 +288,7 @@ def returned_records(
         scope=scope,
         staged_filename=staged_filename,
         staging_root=adapter.path("returned_package_staging_root"),
+        metadata_root=adapter.path("metadata_root"),
     )
     report = attach_adapter_context(report, adapter)
     if dependencies is not None:
@@ -341,6 +346,7 @@ def apply_returned_changes(
         "confirmed": confirmed,
         "dry_run": dry_run,
         "staging_root": adapter.path("returned_package_staging_root"),
+        "metadata_root": adapter.path("metadata_root"),
         "identity": identity,
         "dependencies": dependencies.write_dependencies(),
     }

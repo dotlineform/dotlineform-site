@@ -53,6 +53,7 @@ from docs_export_selection import (
     skipped_summary_warnings,
 )
 from docs_export_transforms import build_document_record
+from services.paths import configured_workspace_paths, marker_path
 
 
 ZERO_EXPORT_COUNTS = {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
@@ -168,21 +169,36 @@ def resolve_export_paths(
     timestamp: str,
     target_format: str,
     output_root: Path | str | None,
+    metadata_root: Path | str | None,
 ) -> tuple[ExportOutputPaths, list[str]]:
     try:
-        output_path = resolve_output_path(repo_root, config, data_domain, export_id, timestamp, target_format, output_root)
-        metadata_path = package_metadata_path(repo_root, export_id)
+        roots = configured_workspace_paths(repo_root)
+        resolved_output_root = Path(output_root) if output_root else roots.exports
+        output_path = resolve_output_path(
+            repo_root,
+            config,
+            data_domain,
+            export_id,
+            timestamp,
+            target_format,
+            resolved_output_root,
+        )
+        metadata_path = package_metadata_path(
+            repo_root,
+            export_id,
+            Path(metadata_root) if metadata_root else roots.meta,
+        )
         context_path = package_context_sidecar_path(output_path)
     except ValueError as exc:
         return ExportOutputPaths(), [f"config {config_id}: {exc}"]
     return (
         ExportOutputPaths(
             output_path=output_path,
-            output_file=str(output_path.relative_to(repo_root)),
+            output_file=marker_path(output_path, workspace_root=roots.root),
             metadata_path=metadata_path,
-            metadata_file=str(metadata_path.relative_to(repo_root)),
+            metadata_file=marker_path(metadata_path, workspace_root=roots.root),
             context_path=context_path,
-            context_file=str(context_path.relative_to(repo_root)),
+            context_file=marker_path(context_path, workspace_root=roots.root),
         ),
         [],
     )
@@ -282,6 +298,7 @@ def build_export(
     target_format: str | None = None,
     content_format: str | None = None,
     output_root: Path | str | None = None,
+    metadata_root: Path | str | None = None,
 ) -> dict[str, Any]:
     generated_at, filename_timestamp_dt = export_run_times()
     export_id = export_id_from_generated_at(generated_at)
@@ -346,6 +363,7 @@ def build_export(
         timestamp=timestamp,
         target_format=resolved_target_format,
         output_root=output_root,
+        metadata_root=metadata_root,
     )
     errors.extend(path_errors)
     if write and paths.metadata_path is not None and paths.metadata_path.exists():

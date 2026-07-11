@@ -16,6 +16,7 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 
 
 import docs_returned_import_parser  # noqa: E402
+from services.paths import workspace_paths  # noqa: E402
 
 
 def write_text(path: Path, text: str) -> None:
@@ -72,7 +73,8 @@ def write_source_doc(root: Path, doc_id: str, title: str, *, parent_id: str = ""
 
 
 def write_staged(root: Path, filename: str, payload: object | str) -> None:
-    path = root / "var/analytics/data-sharing/library/import-staging" / filename
+    del root
+    path = workspace_paths().import_staging / filename
     if isinstance(payload, str):
         write_text(path, payload)
     elif filename.endswith(".jsonl"):
@@ -118,13 +120,20 @@ def write_internal_meta(
     if supports_return_import is not None:
         payload["supports_return_import"] = supports_return_import
     write_text(
-        root / f"var/analytics/data-sharing/meta/{export_id}.meta.json",
+        workspace_paths().meta / f"{export_id}.meta.json",
         json.dumps(payload) + "\n",
     )
 
 
 def parse(root: Path, filename: str) -> dict:
-    return docs_returned_import_parser.parse_staged_import(repo_root=root, scope="library", staged_file=filename)
+    paths = workspace_paths()
+    return docs_returned_import_parser.parse_staged_import(
+        repo_root=root,
+        scope="library",
+        staged_file=filename,
+        staging_root=paths.import_staging,
+        metadata_root=paths.meta,
+    )
 
 
 def test_missing_export_id_fails_closed() -> None:
@@ -169,7 +178,7 @@ def test_config_id_is_not_a_profile_id_fallback() -> None:
         root = Path(temp)
         export_id = "ds_20260627T120005Z"
         write_text(
-            root / f"var/analytics/data-sharing/meta/{export_id}.meta.json",
+            workspace_paths().meta / f"{export_id}.meta.json",
             json.dumps(
                 {
                     "schema_version": "data_sharing_export_meta_v1",
@@ -274,7 +283,7 @@ def test_jsonl_header_export_id_loads_internal_profile_metadata() -> None:
     assert report["detected_import_type"] == "document_changes"
     assert report["source_export_id"] == export_id
     assert report["source_profile_id"] == "document-content"
-    assert report["source_metadata_file"] == f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+    assert report["source_metadata_file"] == f"$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/{export_id}.meta.json"
 
 
 def test_unsupported_profile_metadata_fails_closed() -> None:
@@ -334,7 +343,14 @@ def test_parser_rejects_paths_outside_staging_root() -> None:
         root = Path(temp)
         outside = root / "outside.json"
         outside.write_text("[]\n", encoding="utf-8")
-        report = docs_returned_import_parser.parse_staged_import(repo_root=root, scope="library", staged_file=str(outside))
+        paths = workspace_paths()
+        report = docs_returned_import_parser.parse_staged_import(
+            repo_root=root,
+            scope="library",
+            staged_file=str(outside),
+            staging_root=paths.import_staging,
+            metadata_root=paths.meta,
+        )
 
     assert report["ok"] is False
     assert report["counts"]["errors"] == 1

@@ -33,6 +33,7 @@ def parse_staged_import(
     scope: str,
     staged_file: str,
     staging_root: Path | str | None = None,
+    metadata_root: Path | None = None,
 ) -> dict[str, Any]:
     normalized_scope = normalize_text(scope).lower()
     report = empty_report(repo_root, normalized_scope, staged_file)
@@ -76,6 +77,7 @@ def parse_staged_import(
             internal_metadata, internal_unknown_metadata, internal_issues, internal_metadata_path = metadata_from_internal_export_meta(
                 repo_root,
                 export_id_for_metadata,
+                metadata_root,
             )
             if internal_metadata_path is not None:
                 report["source_metadata_file"] = relative_path(repo_root, internal_metadata_path)

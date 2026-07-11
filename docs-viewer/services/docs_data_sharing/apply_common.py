@@ -86,6 +86,7 @@ def parse_apply_inputs(
     staged_filename: str,
     record_indices: Any,
     staging_root: Path,
+    metadata_root: Path,
 ) -> tuple[Dict[str, Any], list[source_model.ScopeDoc], list[int], list[Dict[str, Any]], list[Dict[str, Any]], list[tuple[int, Dict[str, Any], str]]]:
     normalized_scope = source_model.normalize_scope(scope)
     if not staged_filename:
@@ -95,6 +96,7 @@ def parse_apply_inputs(
         scope=normalized_scope,
         staged_file=staged_filename,
         staging_root=staging_root,
+        metadata_root=metadata_root,
     )
     records = [record for record in report.get("records", []) if isinstance(record, dict)]
     selected_indices = selected_record_indices(record_indices, records)

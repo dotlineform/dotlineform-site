@@ -52,7 +52,7 @@ Analytics tag registry, aliases, assignments, and groups are local Analytics sou
 | Scope | Canonical Source | Public Projection | Local Docs Viewer Projection | Owner |
 | --- | --- | --- | --- | --- |
 | Studio docs | `docs-viewer/source/studio/*.md` | none by default | `docs-viewer/generated/docs/studio/`, `docs-viewer/generated/search/studio/index.json`, `<DOCS_VIEWER_BASE_URL>/docs/` manage payload reads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
-| Library docs | `docs-viewer/source/library/*.md` | `site/assets/data/docs/scopes/library/`, `site/assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/analytics/data-sharing/` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) |
+| Library docs | `docs-viewer/source/library/*.md` | `site/assets/data/docs/scopes/library/`, `site/assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus Data Sharing working output under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) |
 | Analysis docs | `docs-viewer/source/analysis/*.md` | `site/assets/data/docs/scopes/analysis/`, `site/assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) |
 
 Docs source files are the canonical authored content. Generated Docs Viewer payloads are projections of that source.

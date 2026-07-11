@@ -28,6 +28,7 @@ if str(ANALYTICS_APP_SERVER_DIR) not in sys.path:
 
 from tag_services import tag_source_model
 from data_sharing_adapters import AdapterResolution, safe_relative_path
+from services.paths import marker_path
 from studio_activity import append_studio_activity, normalize_activity_context_from_contract, studio_activity_entry
 
 
@@ -63,7 +64,7 @@ def relative_path(repo_root: Path, path: Path) -> str:
     try:
         return path.resolve().relative_to(repo_root.resolve()).as_posix()
     except ValueError:
-        return path.as_posix()
+        return marker_path(path)
 
 
 def require_tags_adapter(adapter: Optional[AdapterResolution]) -> AdapterResolution:
@@ -81,11 +82,13 @@ def adapter_source_path(repo_root: Path, adapter: AdapterResolution, key: str) -
 
 
 def resolve_staging_root(repo_root: Path, adapter: AdapterResolution) -> Path:
-    return (repo_root / adapter.path("returned_package_staging_root")).resolve()
+    del repo_root
+    return adapter.path("returned_package_staging_root").resolve()
 
 
 def resolve_outbound_root(repo_root: Path, adapter: AdapterResolution) -> Path:
-    return (repo_root / adapter.path("outbound_package_root")).resolve()
+    del repo_root
+    return adapter.path("outbound_package_root").resolve()
 
 
 def resolve_outbound_package_path(repo_root: Path, adapter: AdapterResolution, config_id: str, target_format: str) -> Path:

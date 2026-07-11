@@ -116,6 +116,7 @@ export function startDocsViewerRuntime(options) {
     routeContext: routeContext,
     appShellRefs: appShellRefs,
     assetVersion: assetVersion,
+    createCollectionProvider: settings.createCollectionProvider,
     createSourceAdapter: settings.createSourceAdapter,
     viewRegistry: settings.viewRegistry,
     viewerScope: function () { return viewerScope; },

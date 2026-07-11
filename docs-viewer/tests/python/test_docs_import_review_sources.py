@@ -8,6 +8,7 @@ from pathlib import Path
 
 from docs_import_test_support import handle_documents_import_preview, make_repo, write_staged
 import docs_source_model as source_model
+from repo_factory import data_sharing_workspace_root, resolve_data_sharing_marker
 
 
 def write_content_meta(
@@ -20,7 +21,8 @@ def write_content_meta(
     profile_id: str = "document-content",
     content_format: str = "markdown",
 ) -> None:
-    path = root / f"var/analytics/data-sharing/meta/{export_id}.meta.json"
+    del root
+    path = data_sharing_workspace_root() / f"meta/{export_id}.meta.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(
@@ -46,7 +48,8 @@ def write_content_meta(
 
 
 def source_folder_body(root: Path, payload: dict[str, object], filename: str) -> str:
-    source_path = root / str(payload["source_path"]) / filename
+    del root
+    source_path = resolve_data_sharing_marker(str(payload["source_path"])) / filename
     _, body = source_model.parse_source(source_path)
     return body
 
@@ -172,8 +175,8 @@ def test_review_source_folder_writes_manifest_and_verbatim_markdown_body() -> No
             {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "renamed-return.jsonl"},
             dry_run=False,
         )
-        manifest = json.loads((root / str(payload["manifest_path"])).read_text(encoding="utf-8"))
-        source_path = root / str(payload["source_files"][0]["path"])
+        manifest = json.loads(resolve_data_sharing_marker(str(payload["manifest_path"])).read_text(encoding="utf-8"))
+        source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
         front_matter, _ = source_model.parse_source(source_path)
         raw_body = raw_source_body(source_path)
 
@@ -247,7 +250,7 @@ def test_review_source_folder_replaces_existing_folder_explicitly() -> None:
             {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
-        stale_path = root / str(first["folder_path"]) / "source" / "stale.md"
+        stale_path = resolve_data_sharing_marker(str(first["folder_path"])) / "source" / "stale.md"
         stale_path.write_text("stale\n", encoding="utf-8")
         write_staged(
             root,
@@ -271,7 +274,7 @@ def test_review_source_folder_replaces_existing_folder_explicitly() -> None:
         {
             "record_index": 0,
             "doc_id": "beta",
-            "path": "var/analytics/data-sharing/import-preview/20260627-215010-documents-document-content/source/beta.md",
+            "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/20260627-215010-documents-document-content/source/beta.md",
         }
     ]
     assert stale_path.exists() is False

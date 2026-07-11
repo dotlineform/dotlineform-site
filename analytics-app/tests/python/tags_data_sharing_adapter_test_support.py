@@ -14,9 +14,11 @@ for path in (FIXTURES_DIR,):
         sys.path.insert(0, text)
 
 from tag_factory import (  # noqa: E402,F401
+    data_sharing_workspace_path,
     make_registry_payload,
     make_tags_repo as make_repo,
     read_json,
+    resolve_data_sharing_marker,
     resolve_tags_adapter,
     tags_dependencies as dependencies,
     write_activity_contract,

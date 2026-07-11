@@ -12,10 +12,10 @@ from docs_returned_import_common import (
     EXPORT_ID_RE,
     EXPORT_METADATA_FIELDS,
     KNOWN_RECORD_FIELDS,
-    WORKFLOW_ROOT,
     issue,
     normalize_text,
 )
+from services.paths import configured_workspace_paths
 
 def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
     try:
@@ -24,11 +24,11 @@ def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
         return None, [issue("error", "invalid_json", f"invalid JSON: {exc.msg}", line=exc.lineno)]
 
 
-def internal_metadata_path(repo_root: Path, export_id: str) -> Path | None:
+def internal_metadata_path(repo_root: Path, export_id: str, metadata_root: Path | None = None) -> Path | None:
     normalized = normalize_text(export_id)
     if not EXPORT_ID_RE.fullmatch(normalized):
         return None
-    return repo_root / WORKFLOW_ROOT / "meta" / f"{normalized}.meta.json"
+    return (metadata_root or configured_workspace_paths(repo_root).meta) / f"{normalized}.meta.json"
 
 
 def export_id_from_jsonl_header(path: Path) -> tuple[str, list[dict[str, Any]]]:
@@ -60,8 +60,12 @@ def export_id_from_jsonl_header(path: Path) -> tuple[str, list[dict[str, Any]]]:
     return "", [issue("error", "missing_export_id", "JSONL file is empty")]
 
 
-def metadata_from_internal_export_meta(repo_root: Path, export_id: str) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
-    metadata_path = internal_metadata_path(repo_root, export_id)
+def metadata_from_internal_export_meta(
+    repo_root: Path,
+    export_id: str,
+    metadata_root: Path | None = None,
+) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], Path | None]:
+    metadata_path = internal_metadata_path(repo_root, export_id, metadata_root)
     if metadata_path is None:
         return {}, {}, [issue("error", "invalid_export_id", f"invalid export_id: {export_id}")], None
     if not metadata_path.exists():

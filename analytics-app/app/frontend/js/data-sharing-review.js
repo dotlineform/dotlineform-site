@@ -542,7 +542,7 @@ async function init() {
         getAnalyticsText(
           state.config,
           "data_sharing_review.no_files",
-          "No staged returned package files found under var/analytics/data-sharing/import-staging/."
+          "No staged returned package files found under $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/."
         )
       );
       markRouteReady(state, true);

@@ -69,7 +69,7 @@ def selectable_records_payload() -> dict[str, object]:
 def config_payload() -> dict[str, object]:
     return {
         "ok": True,
-        "schema_version": "data_sharing_adapters_v2",
+        "schema_version": "data_sharing_adapters_v3",
         "docs_scopes": [
             {
                 "id": "library",
@@ -163,7 +163,7 @@ def prepare_payload() -> dict[str, object]:
             "truncated": 0,
         },
         "output_files": [
-            "var/analytics/data-sharing/exports/local-smoke.jsonl",
+            "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/local-smoke.jsonl",
         ],
         "warnings": [],
         "summary_text": "Package prepared.",
@@ -174,12 +174,12 @@ def returned_packages_payload(files: list[dict[str, object]] | None = None) -> d
     staged_files = files if files is not None else [
         {
             "filename": "content.jsonl",
-            "path": "var/analytics/data-sharing/import-staging/content.jsonl",
+            "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/content.jsonl",
             "format": "jsonl",
             "size_bytes": 512,
             "modified_utc": "2026-05-04T12:00:00Z",
             "metadata_ok": True,
-            "metadata_file": "var/analytics/data-sharing/meta/ds_20260504T120000Z.meta.json",
+            "metadata_file": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260504T120000Z.meta.json",
             "export_id": "ds_20260504T120000Z",
             "app": "docs-viewer",
             "data_domain": "documents",
@@ -193,8 +193,8 @@ def returned_packages_payload(files: list[dict[str, object]] | None = None) -> d
     ]
     return {
         "ok": True,
-        "staging_root": "var/analytics/data-sharing/import-staging",
-        "meta_root": "var/analytics/data-sharing/meta",
+        "staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+        "meta_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
         "files": staged_files,
     }
 
@@ -429,7 +429,7 @@ def assert_review_empty(page, base_url: str) -> None:
     expect(root).to_have_attribute("data-analytics-record-loaded", "false", timeout=10_000)
     status = page.locator("#dataSharingReviewStatus")
     expect(status).to_contain_text(
-        "No staged returned package files found under var/analytics/data-sharing/import-staging/.",
+        "No staged returned package files found under $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/.",
         timeout=10_000,
     )
     status_text = status.inner_text()

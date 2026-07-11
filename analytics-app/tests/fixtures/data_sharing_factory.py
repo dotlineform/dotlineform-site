@@ -173,11 +173,12 @@ def adapter_payload(
 
 def registry_payload() -> dict[str, object]:
     return {
-        "schema_version": "data_sharing_adapters_v2",
+        "schema_version": "data_sharing_adapters_v3",
         "paths": {
-            "outbound_package_root": "var/analytics/data-sharing/exports",
-            "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-            "review_output_root": "var/analytics/data-sharing/import-preview",
+            "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+            "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+            "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+            "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
         },
         "dispatch": [
             {"data_domain": "documents", "operation": "prepare", "adapter_id": "documents"},
@@ -293,7 +294,7 @@ def write_prepare_profiles(root: Path) -> None:
                         "record_shape": "document_rows",
                     },
                     "output": {
-                        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",
+                        "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
                     },
                     "selection": {
                         "mode": "explicit_doc_ids",

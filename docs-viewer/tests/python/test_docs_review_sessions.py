@@ -22,6 +22,7 @@ import docs_management_read_service  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service  # noqa: E402
 import docs_review_sessions  # noqa: E402
+from services.paths import workspace_paths  # noqa: E402
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -33,11 +34,24 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp = tempfile.TemporaryDirectory()
     root = Path(temp.name)
     write_json(root / "site-tools/config/site-tools.json", {"schema_version": "site_tools_config_v1"})
+    write_json(
+        root / "data-sharing/config/adapters.json",
+        {
+            "schema_version": "data_sharing_adapters_v3",
+            "paths": {
+                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
+            },
+        },
+    )
     return temp
 
 
 def write_built_session(root: Path, session_id: str = "session-001") -> Path:
-    session = root / "var/analytics/data-sharing/import-preview" / session_id
+    del root
+    session = workspace_paths().import_preview / session_id
     write_json(
         session / "manifest.json",
         {
@@ -72,6 +86,22 @@ def test_review_session_routes_are_registered() -> None:
     assert routes.REVIEW_SESSION_PAYLOAD_PATH in routes.GET_PATHS
     assert routes.REVIEW_SESSION_BUILD_PATH in routes.POST_PATHS
     assert routes.REVIEW_SESSION_DELETE_PATH in routes.POST_PATHS
+
+
+def test_review_sessions_use_configured_external_preview_root() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        registry_path = root / "data-sharing/config/adapters.json"
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+        registry["paths"]["review_output_root"] = "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/custom-reviews"
+        write_json(registry_path, registry)
+        session = workspace_paths().root / "custom-reviews/session-custom"
+        (session / "source").mkdir(parents=True)
+
+        payload = docs_review_sessions.list_review_sessions(root)
+
+    assert payload["root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/custom-reviews"
+    assert [item["session_id"] for item in payload["sessions"]] == ["session-custom"]
 
 
 def test_review_session_frontend_has_dedicated_client_and_modal_mount() -> None:
@@ -109,7 +139,7 @@ def test_list_review_sessions_reports_built_state_from_temp_folders() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_built_session(root)
-        unbuilt = root / "var/analytics/data-sharing/import-preview/session-002"
+        unbuilt = workspace_paths().import_preview / "session-002"
         (unbuilt / "source").mkdir(parents=True)
 
         payload = docs_review_sessions.list_review_sessions(root)
@@ -173,7 +203,7 @@ def test_review_session_delete_is_temp_folder_cleanup() -> None:
 def test_review_session_build_placeholder_is_explicit() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        session = root / "var/analytics/data-sharing/import-preview/session-003"
+        session = workspace_paths().import_preview / "session-003"
         (session / "source").mkdir(parents=True)
 
         status, payload = docs_management_service.docs_management_post_response(
@@ -202,7 +232,7 @@ def test_review_session_symlink_escape_is_rejected() -> None:
         root = Path(temp)
         outside = root / "outside"
         outside.mkdir()
-        session_root = root / "var/analytics/data-sharing/import-preview"
+        session_root = workspace_paths().import_preview
         session_root.mkdir(parents=True)
         symlink = session_root / "session-escape"
         symlink.symlink_to(outside, target_is_directory=True)

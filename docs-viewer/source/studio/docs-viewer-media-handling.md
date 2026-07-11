@@ -27,7 +27,7 @@ It does not cover:
 - automatic remote upload
 - raster-to-SVG conversion
 - catalogue media generation
-- Library returned-package Data Sharing imports under `var/analytics/data-sharing/`
+- Library returned-package Data Sharing imports under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - browser runtime asset loading outside generated Docs Viewer content
 
 ## Scope Configuration

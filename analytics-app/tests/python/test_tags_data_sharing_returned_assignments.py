@@ -8,13 +8,20 @@ from pathlib import Path
 
 from adapters.tags import returned
 
-from tags_data_sharing_adapter_test_support import dependencies, make_repo, read_json, resolve_tags_adapter, write_json
+from tags_data_sharing_adapter_test_support import (
+    data_sharing_workspace_path,
+    dependencies,
+    make_repo,
+    read_json,
+    resolve_tags_adapter,
+    write_json,
+)
 
 def test_assignments_review_reports_applicable_conflict_invalid_and_missing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/import-staging/assignments.json",
+            data_sharing_workspace_path("import-staging/assignments.json"),
             {
                 "import_assignments": {
                     "series": {
@@ -65,7 +72,7 @@ def test_assignments_confirmed_apply_writes_source_and_activity_groups() -> None
     with make_repo() as temp:
         root = Path(temp)
         write_json(
-            root / "var/analytics/data-sharing/import-staging/assignments.json",
+            data_sharing_workspace_path("import-staging/assignments.json"),
             {
                 "import_assignments": {
                     "series": {

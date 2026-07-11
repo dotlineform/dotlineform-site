@@ -92,6 +92,7 @@ def build_document_package(
     target_format: str,
     content_format: str,
     output_root: Path,
+    metadata_root: Path,
 ) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
     if not config_id:
@@ -117,6 +118,7 @@ def build_document_package(
         target_format=target_format or None,
         content_format=content_format or None,
         output_root=output_root,
+        metadata_root=metadata_root,
     )
 
 
@@ -141,9 +143,19 @@ def update_document_prepare_context(
     return report
 
 
-def list_returned_document_packages(repo_root: Path, *, scope: str, staging_root: Path) -> Dict[str, Any]:
+def list_returned_document_packages(
+    repo_root: Path,
+    *,
+    scope: str,
+    staging_root: Path,
+    metadata_root: Path,
+) -> Dict[str, Any]:
     normalized_scope = source_model.normalize_scope(scope)
-    report = list_staged_files_with_metadata(repo_root, staging_root=staging_root)
+    report = list_staged_files_with_metadata(
+        repo_root,
+        staging_root=staging_root,
+        metadata_root=metadata_root,
+    )
     report["scope"] = normalized_scope
     staged_files = [
         item

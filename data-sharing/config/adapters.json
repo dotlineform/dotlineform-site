@@ -1,9 +1,10 @@
 {
-  "schema_version": "data_sharing_adapters_v2",
+  "schema_version": "data_sharing_adapters_v3",
   "paths": {
-    "outbound_package_root": "var/analytics/data-sharing/exports",
-    "returned_package_staging_root": "var/analytics/data-sharing/import-staging",
-    "review_output_root": "var/analytics/data-sharing/import-preview"
+    "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+    "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+    "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+    "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta"
   },
   "dispatch": [
     {

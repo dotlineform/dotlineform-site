@@ -9,7 +9,13 @@ from pathlib import Path
 from adapters.tags import adapter, prepare
 import data_sharing_service
 
-from tags_data_sharing_adapter_test_support import dependencies, make_repo, read_json, resolve_tags_adapter
+from tags_data_sharing_adapter_test_support import (
+    dependencies,
+    make_repo,
+    read_json,
+    resolve_data_sharing_marker,
+    resolve_tags_adapter,
+)
 
 def test_prepare_registry_package_dry_run_does_not_write() -> None:
     with make_repo() as temp:
@@ -23,7 +29,7 @@ def test_prepare_registry_package_dry_run_does_not_write() -> None:
             dependencies=dependencies(),
         )
 
-        output_path = root / payload["output_file"]
+        output_path = resolve_data_sharing_marker(payload["output_file"])
 
     assert payload["ok"] is True
     assert payload["output_written"] is False
@@ -68,7 +74,7 @@ def test_prepare_registry_package_uses_selected_tag_records() -> None:
             adapter=resolve_tags_adapter(root, "prepare"),
             dependencies=dependencies(),
         )
-        package = read_json(root / payload["output_file"])
+        package = read_json(resolve_data_sharing_marker(payload["output_file"]))
 
     assert payload["ok"] is True
     assert payload["counts"]["selected"] == 3
@@ -120,14 +126,14 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
             adapter=resolve_tags_adapter(root, "prepare"),
             dependencies=dependencies(),
         )
-        output_path = root / payload["output_file"]
+        output_path = resolve_data_sharing_marker(payload["output_file"])
         package = read_json(output_path)
         activity_line = (root / "var/admin/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
         activity = json.loads(activity_line)
 
     assert payload["ok"] is True
     assert payload["output_written"] is True
-    assert payload["output_file"].startswith("var/analytics/data-sharing/exports/")
+    assert payload["output_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/")
     assert payload["output_file"].endswith("-tags-bundle.json")
     assert package["package_metadata"]["package_family"] == "bundle"
     assert set(package["families"]) == {"registry", "aliases", "assignments"}

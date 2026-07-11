@@ -17,7 +17,7 @@
         "supported_formats": ["markdown", "plain_text"]
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl",
+        "path_pattern": "{timestamp}-{data_domain}-{profile_id}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -146,7 +146,7 @@
         "record_shape": "document_tree"
       },
       "output": {
-        "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",
+        "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {

@@ -31,6 +31,11 @@ def load_docs_export_module():
 
 docs_export = load_docs_export_module()
 import docs_export_config  # noqa: E402
+from services.paths import resolve_marker_path  # noqa: E402
+
+
+def artifact_path(value: str) -> Path:
+    return resolve_marker_path(value, field="test artifact")
 
 
 BASE_CONFIG = {
@@ -48,7 +53,7 @@ BASE_CONFIG = {
                 "record_shape": "document_rows",
             },
             "output": {
-                "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.jsonl",
+                "path_pattern": "{timestamp}-{data_domain}-{profile_id}.jsonl",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "selection": {
@@ -161,6 +166,18 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     root = Path(temp_dir.name)
     (root / "site-tools/config").mkdir(parents=True, exist_ok=True); (root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
     write_json(root / "data-sharing/adapters/documents/config/prepare-profiles.json", config or BASE_CONFIG)
+    write_json(
+        root / "data-sharing/config/adapters.json",
+        {
+            "schema_version": "data_sharing_adapters_v3",
+            "paths": {
+                "outbound_package_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports",
+                "returned_package_staging_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging",
+                "review_output_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview",
+                "metadata_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta",
+            },
+        },
+    )
     write_scope_config(root)
     write_doc(root, "library.md", doc_id="library", title="Library", body="# Library\n\nBody text.")
     write_doc(
@@ -264,7 +281,7 @@ def test_unknown_config_returns_structured_validation_report() -> None:
 
 def test_jsonl_config_requires_jsonl_output_extension() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json"
+    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{data_domain}-{profile_id}.json"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
@@ -273,7 +290,7 @@ def test_jsonl_config_requires_jsonl_output_extension() -> None:
 
 def test_output_path_rejects_export_id_placeholder() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{export_id}.jsonl"
+    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{data_domain}-{export_id}.jsonl"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
@@ -290,9 +307,9 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             root = Path(temp)
             selected_doc_ids = ["library", "child-with-summary"]
             first_report = run_export(root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
-            first_output = root / first_report["output_file"]
-            first_metadata_output = root / first_report["metadata_file"]
-            first_context_output = root / first_report["context_file"]
+            first_output = artifact_path(first_report["output_file"])
+            first_metadata_output = artifact_path(first_report["metadata_file"])
+            first_context_output = artifact_path(first_report["context_file"])
             first_text = first_output.read_text(encoding="utf-8")
             first_metadata_text = first_metadata_output.read_text(encoding="utf-8")
             first_context_text = first_context_output.read_text(encoding="utf-8")
@@ -300,22 +317,22 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
             with make_repo() as second_temp:
                 second_root = Path(second_temp)
                 second_report = run_export(second_root, selected_doc_ids=selected_doc_ids, missing_summary_only=False, write=True)
-                second_text = (second_root / second_report["output_file"]).read_text(encoding="utf-8")
-                second_metadata_text = (second_root / second_report["metadata_file"]).read_text(encoding="utf-8")
-                second_context_text = (second_root / second_report["context_file"]).read_text(encoding="utf-8")
+                second_text = artifact_path(second_report["output_file"]).read_text(encoding="utf-8")
+                second_metadata_text = artifact_path(second_report["metadata_file"]).read_text(encoding="utf-8")
+                second_context_text = artifact_path(second_report["context_file"]).read_text(encoding="utf-8")
     finally:
         docs_export.export_run_times = original_export_run_times
 
     assert first_report["ok"] is True
     assert first_report["export_id"] == "ds_20260503T151507Z"
     assert first_report["output_file"] == (
-        "var/analytics/data-sharing/exports/20260503-161507-documents-document-content.jsonl"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-documents-document-content.jsonl"
     )
     assert first_report["metadata_file"] == (
-        "var/analytics/data-sharing/meta/ds_20260503T151507Z.meta.json"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260503T151507Z.meta.json"
     )
     assert first_report["context_file"] == (
-        "var/analytics/data-sharing/exports/20260503-161507-documents-document-content.context.json"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-documents-document-content.context.json"
     )
     assert first_text == second_text
     assert first_metadata_text == second_metadata_text
@@ -377,9 +394,9 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
                 write=True,
                 target_format="json",
             )
-            payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
-            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
-            context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
+            payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
+            metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
+            context = json.loads(artifact_path(report["context_file"]).read_text(encoding="utf-8"))
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -387,7 +404,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["target_format"] == "json"
     assert report["export_id"] == "ds_20260503T151507Z"
     assert report["output_file"] == (
-        "var/analytics/data-sharing/exports/20260503-161507-documents-document-content.json"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/20260503-161507-documents-document-content.json"
     )
     assert payload["schema_version"] == "data_sharing_returned_package_v1"
     assert payload["export_id"] == "ds_20260503T151507Z"
@@ -417,12 +434,12 @@ def test_export_only_profile_writes_provenance_metadata_without_import_support()
                 missing_summary_only=False,
                 write=True,
             )
-            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+            metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
     finally:
         docs_export.export_run_times = original_export_run_times
 
     assert report["ok"] is True, report
-    assert report["metadata_file"] == "var/analytics/data-sharing/meta/ds_20260503T151507Z.meta.json"
+    assert report["metadata_file"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_20260503T151507Z.meta.json"
     assert metadata["export_id"] == "ds_20260503T151507Z"
     assert metadata["profile_id"] == "document-content"
     assert metadata["supports_return_import"] is False
@@ -440,7 +457,7 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
                 "record_shape": "document_tree",
             },
             "output": {
-                "path_pattern": "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json",
+                "path_pattern": "{timestamp}-{data_domain}-{profile_id}.json",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "workflow": {"supports_return_import": False},
@@ -467,9 +484,9 @@ def test_document_tree_profile_exports_selected_subtree() -> None:
         with make_repo(config) as temp:
             root = Path(temp)
             report = run_export(root, config_id="document-tree", selected_doc_ids=["library"], write=True)
-            payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
-            metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
-            context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
+            payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
+            metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
+            context = json.loads(artifact_path(report["context_file"]).read_text(encoding="utf-8"))
     finally:
         docs_export.export_run_times = original_export_run_times
 
@@ -506,7 +523,7 @@ def test_document_tree_profile_requires_descendant_selection() -> None:
         "supported_formats": ["json"],
         "record_shape": "document_tree",
     }
-    config["configs"][0]["output"]["path_pattern"] = "var/analytics/data-sharing/exports/{timestamp}-{data_domain}-{profile_id}.json"
+    config["configs"][0]["output"]["path_pattern"] = "{timestamp}-{data_domain}-{profile_id}.json"
     config["configs"][0]["selection"]["include_descendants"] = False
     config["configs"][0]["document_fields"] = [
         {"source": "doc_id", "output_path": "doc_id", "required": True},
@@ -625,7 +642,7 @@ def test_repo_full_document_content_exports_relationship_fields() -> None:
                 missing_summary_only=None,
                 write=True,
             )
-            output = root / report["output_file"]
+            output = artifact_path(report["output_file"])
             rows = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
     finally:
         docs_export.export_run_times = original_export_run_times
@@ -669,7 +686,7 @@ def test_export_uses_source_context_for_markdown_document_content() -> None:
             missing_summary_only=None,
             write=True,
         )
-        rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
+        rows = [json.loads(line) for line in artifact_path(report["output_file"]).read_text(encoding="utf-8").splitlines()]
 
     assert report["ok"] is True, report
     assert report["content_format"] == "markdown"
@@ -695,8 +712,8 @@ def test_document_content_plain_text_override_preserves_existing_content_behavio
             write=True,
             content_format="plain_text",
         )
-        rows = [json.loads(line) for line in (root / report["output_file"]).read_text(encoding="utf-8").splitlines()]
-        metadata = json.loads((root / report["metadata_file"]).read_text(encoding="utf-8"))
+        rows = [json.loads(line) for line in artifact_path(report["output_file"]).read_text(encoding="utf-8").splitlines()]
+        metadata = json.loads(artifact_path(report["metadata_file"]).read_text(encoding="utf-8"))
 
     assert report["ok"] is True, report
     assert report["content_format"] == "plain_text"
@@ -721,8 +738,8 @@ def test_document_content_json_output_declares_content_format() -> None:
             target_format="json",
             content_format="markdown",
         )
-        payload = json.loads((root / report["output_file"]).read_text(encoding="utf-8"))
-        context = json.loads((root / report["context_file"]).read_text(encoding="utf-8"))
+        payload = json.loads(artifact_path(report["output_file"]).read_text(encoding="utf-8"))
+        context = json.loads(artifact_path(report["context_file"]).read_text(encoding="utf-8"))
 
     assert report["ok"] is True, report
     assert payload["content_format"] == "markdown"
@@ -803,10 +820,10 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["counts"]["failed"] == 0
         assert report["output_written"] is False
         assert report["export_id"].startswith("ds_")
-        assert report["output_file"].startswith("var/analytics/data-sharing/exports/")
+        assert report["output_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/")
         assert f"-documents-{case['config_id']}" in report["output_file"]
         assert report["output_file"].endswith(f".{case['target_format']}")
-        assert report["metadata_file"].startswith("var/analytics/data-sharing/meta/ds_")
+        assert report["metadata_file"].startswith("$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/ds_")
         assert report["metadata_file"].endswith(".meta.json")
         assert report["context_file"].endswith(".context.json")
 

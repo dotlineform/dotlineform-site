@@ -50,6 +50,7 @@ def apply_summary_updates(
     confirmed: bool,
     dry_run: bool,
     staging_root: Path,
+    metadata_root: Path,
     identity: DocumentsApplyIdentity,
     dependencies: DocsDataSharingWriteDependencies,
 ) -> Dict[str, Any]:
@@ -60,6 +61,7 @@ def apply_summary_updates(
         staged_filename=staged_filename,
         record_indices=record_indices,
         staging_root=staging_root,
+        metadata_root=metadata_root,
     )
     docs_by_id = {doc.doc_id: doc for doc in docs}
     errors: list[Dict[str, Any]] = []

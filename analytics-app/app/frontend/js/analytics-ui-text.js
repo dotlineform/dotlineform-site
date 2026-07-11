@@ -71,7 +71,7 @@ export const DEFAULT_ANALYTICS_UI_TEXT = {
     running_status: "Generating document review...",
     data_domain_unsupported: "{data_domain_label} returned-package review is not implemented yet.",
     load_failed: "Failed to load {data_domain_label} returned package data.",
-    no_files: "No staged returned package files found under var/analytics/data-sharing/import-staging/.",
+    no_files: "No staged returned package files found under $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/.",
     empty_state: "Select a staged file to list documents.",
     file_required: "Select a staged data file first.",
     missing_title: "missing title",

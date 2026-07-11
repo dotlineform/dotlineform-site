@@ -9,21 +9,22 @@ import re
 import shutil
 from typing import Any
 
+from services.paths import configured_workspace_paths, marker_path
 
-IMPORT_PREVIEW_REL_ROOT = Path("var/analytics/data-sharing/import-preview")
 SAFE_SESSION_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[A-Za-z0-9_-]+\Z")
 
 
 def repo_relative(repo_root: Path, path: Path) -> str:
+    del repo_root
     try:
-        return path.resolve().relative_to(repo_root.resolve()).as_posix()
+        return marker_path(path)
     except ValueError:
         return str(path)
 
 
 def import_preview_root(repo_root: Path) -> Path:
-    return (repo_root / IMPORT_PREVIEW_REL_ROOT).resolve()
+    return configured_workspace_paths(repo_root).import_preview.resolve()
 
 
 def validate_session_id(session_id: Any) -> str:
@@ -130,7 +131,7 @@ def list_review_sessions(repo_root: Path) -> dict[str, Any]:
     return {
         "ok": True,
         "schema_version": "docs_review_sessions_v1",
-        "root": IMPORT_PREVIEW_REL_ROOT.as_posix(),
+        "root": marker_path(root),
         "sessions": sessions,
     }
 
