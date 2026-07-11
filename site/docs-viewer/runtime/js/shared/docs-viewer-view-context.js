@@ -10,10 +10,10 @@ function objectRecord(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : null;
 }
 
-function selectedPayloadMetadata(payload, access, docId) {
+function selectedPayloadMetadata(payload, appContext, docId) {
   var record = objectRecord(payload);
   if (!record) return null;
-  if (access && access.publicReadOnly) {
+  if (appContext && appContext.kind === "public") {
     return {
       doc_id: cleanString(record.doc_id) || cleanString(docId),
       title: cleanString(record.title),
@@ -58,13 +58,9 @@ export function docsViewerStatusLabel(value, uiStatusByValue) {
 export function createDocsViewerHostedViewContext(options = {}) {
   const selectedDoc = options.selectedDoc || resolveDocsViewerSelectedDoc(options);
   const docId = selectedDoc ? cleanString(selectedDoc.doc_id) : "";
-  const routeAccess = options.routeAccess || {};
-  const access = {
-    allowManagement: Boolean(routeAccess.allowManagement),
-    publicReadOnly: Boolean(routeAccess.publicReadOnly)
-  };
+  const appContext = options.appContext || {};
   const payload = docId ? mapGet(options.payloadCache, docId) || null : null;
-  const selectedMetadata = selectedPayloadMetadata(payload, access, docId);
+  const selectedMetadata = selectedPayloadMetadata(payload, appContext, docId);
   const trail = selectedDoc && typeof options.buildTrail === "function"
     ? options.buildTrail(docId).slice(0, -1)
     : [];
@@ -76,13 +72,15 @@ export function createDocsViewerHostedViewContext(options = {}) {
     : "";
 
   return {
-    access: access,
+    appContext: appContext,
     canonicalUrl: canonicalUrl,
     parentTrail: trail,
     payload: payload,
     selectedDoc: selectedDoc,
     selectedMetadata: selectedMetadata,
-    sourceEditorServices: access.allowManagement ? options.sourceEditorServices || null : null,
+    sourceEditorServices: appContext.serviceAvailability && appContext.serviceAvailability.source && appContext.serviceAvailability.source.available
+      ? options.sourceEditorServices || null
+      : null,
     statusLabel: docsViewerStatusLabel(selectedMetadata && selectedMetadata.ui_status, options.uiStatusByValue),
     viewerScope: cleanString(options.viewerScope)
   };
@@ -92,7 +90,6 @@ function noop() {}
 
 export function createDocsViewerMainViewModuleContext(options = {}) {
   const base = createDocsViewerHostedViewContext(options);
-  const routeAccess = options.routeAccess || {};
   const mainView = options.mainView && typeof options.mainView === "object" ? options.mainView : {};
 
   const context = Object.assign({}, base, {
@@ -105,15 +102,11 @@ export function createDocsViewerMainViewModuleContext(options = {}) {
     },
     requestedViewId: cleanString(options.requestedViewId)
   });
-  if (routeAccess.allowManagement) {
-    context.sourceEditorServices = options.sourceEditorServices || null;
-  }
   return context;
 }
 
 export function createDocsViewerDocumentDisplayModeContext(options = {}) {
   const base = createDocsViewerHostedViewContext(options);
-  const routeAccess = options.routeAccess || {};
   const documentView = options.documentView && typeof options.documentView === "object" ? options.documentView : {};
 
   const context = Object.assign({}, base, {
@@ -126,8 +119,5 @@ export function createDocsViewerDocumentDisplayModeContext(options = {}) {
     },
     requestedModeId: cleanString(options.requestedModeId)
   });
-  if (routeAccess.allowManagement) {
-    context.sourceEditorServices = options.sourceEditorServices || null;
-  }
   return context;
 }

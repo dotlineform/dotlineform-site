@@ -119,7 +119,9 @@ def manage_route_state(page: Page) -> dict[str, object]:
             const payload = await fetch(routeConfigUrl).then(response => response.json());
             const routeConfig = (payload.routes || []).find(record => record.route_id === root.dataset.routeId) || {};
             return {
-                allowManagement: root.dataset.allowManagement || "",
+                appKind: root.dataset.docsViewerAppKind || "",
+                managementUi: root.dataset.managementUi || "",
+                sourceService: root.dataset.sourceService || "",
                 ready: root.dataset.docsViewerReady || "",
                 busy: root.dataset.docsViewerBusy || "",
                 includeScopeParam: root.dataset.includeScopeParam || "",
@@ -127,8 +129,9 @@ def manage_route_state(page: Page) -> dict[str, object]:
                 routeConfigUrl,
                 docsPaths: routeConfig.docs_paths || {},
                 viewerBaseUrl: routeConfig.viewer_base_url || "",
-                managementBaseUrl: routeConfig.access?.management_base_url || "",
-                generatedBaseUrl: routeConfig.generated_base_url || ""
+                generatedBaseUrl: routeConfig.services?.generated_data?.base_url || "",
+                sourceBaseUrl: routeConfig.services?.source?.base_url || "",
+                managementBaseUrl: routeConfig.services?.management?.base_url || ""
             };
         }"""
     )
@@ -136,8 +139,10 @@ def manage_route_state(page: Page) -> dict[str, object]:
 
 def assert_manage_route_contract(state: dict[str, object], base_url: str) -> None:
     docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
-    if state["allowManagement"] != "true" or state["viewerBaseUrl"] != "/docs/":
-        raise AssertionError(f"manage route did not expose management access: {state!r}")
+    if state["appKind"] != "manage" or state["managementUi"] != "true" or state["sourceService"] != "true":
+        raise AssertionError(f"manage route did not expose the manage app/service context: {state!r}")
+    if state["viewerBaseUrl"] != "/docs/":
+        raise AssertionError(f"manage route did not use the manage route: {state!r}")
     if state["ready"] != "true" or state["busy"] == "true":
         raise AssertionError(f"manage route did not expose ready route state: {state!r}")
     if state["includeScopeParam"] != "true":
@@ -146,7 +151,11 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         raise AssertionError(f"manage route used unexpected route id: {state!r}")
     if state["routeConfigUrl"] != "/docs-viewer/config/routes/docs-viewer-routes.json":
         raise AssertionError(f"manage route used unexpected route config: {state!r}")
-    if state["managementBaseUrl"] != base_url or state["generatedBaseUrl"] != base_url:
+    if (
+        state["managementBaseUrl"] != base_url
+        or state["generatedBaseUrl"] != base_url
+        or state["sourceBaseUrl"] != base_url
+    ):
         raise AssertionError(f"manage route did not receive service base URL: {state!r}")
     if docs_paths.get("index_tree_url") != "/docs-viewer/generated/docs/studio/index-tree.json":
         raise AssertionError(f"manage route config missing index_tree_url: {state!r}")

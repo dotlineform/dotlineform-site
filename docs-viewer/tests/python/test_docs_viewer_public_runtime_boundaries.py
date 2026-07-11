@@ -83,6 +83,24 @@ def test_public_route_config_uses_public_report_registry_projection() -> None:
             if route["route_id"] in {"library", "analysis"}:
                 assert route["config_urls"]["report_registry"] == "/assets/data/docs/public-reports.json"
 
+def test_route_configs_separate_app_kind_from_service_presence() -> None:
+    public_payload = json.loads(
+        (REPO_ROOT / "site/docs-viewer/config/routes/docs-viewer-public-routes.json").read_text(encoding="utf-8")
+    )
+    manage_payload = json.loads(
+        (REPO_ROOT / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8")
+    )
+
+    for route in public_payload["routes"]:
+        assert route["app_kind"] == "public"
+        assert route["access"] == {"allow_scope_query": False, "management_ui": False}
+        assert all(not surface["base_url"] for surface in route["services"].values())
+
+    manage_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-manage")
+    assert manage_route["app_kind"] == "manage"
+    assert manage_route["access"] == {"allow_scope_query": True, "management_ui": True}
+    assert set(manage_route["services"]) == {"generated_data", "source", "management"}
+
 def test_public_browser_config_projects_public_readonly_scope_routes() -> None:
     source_payload = json.loads((REPO_ROOT / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
     public_payload = json.loads((REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-public-config.json").read_text(encoding="utf-8"))

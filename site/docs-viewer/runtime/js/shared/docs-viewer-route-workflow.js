@@ -97,8 +97,8 @@ export function initDocsViewerRouteWorkflow(context) {
     return currentValue(context.defaultRouteDocId) || "";
   }
 
-  function allowManagement() {
-    return Boolean(currentValue(context.allowManagement));
+  function managementUiEnabled() {
+    return Boolean(currentValue(context.managementUiEnabled));
   }
 
   function allowScopeQuery() {
@@ -145,10 +145,6 @@ export function initDocsViewerRouteWorkflow(context) {
     return subdoc ? { subdoc: subdoc } : {};
   }
 
-  function isManagementContext() {
-    return allowManagement();
-  }
-
   function hasCanonicalScopeInUrl() {
     if (!includeScopeParam() || !viewerScope()) return true;
     return new URLSearchParams(window.location.search).get("scope") === viewerScope();
@@ -176,9 +172,8 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function viewerUrlForScope(scope, docId, options) {
     return buildViewerUrlForScope({
-      allowManagement: allowManagement(),
       docId: docId,
-      manage: Boolean(options && options.manage),
+      manageRoute: Boolean(options && options.manage && managementUiEnabled()),
       origin: window.location.origin,
       routeViewerBaseUrl: routeViewerBaseUrl(),
       scope: scope,
@@ -270,7 +265,7 @@ export function initDocsViewerRouteWorkflow(context) {
       hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
       loadDoc: loadDoc,
-      managementContextActive: isManagementContext,
+      managementContextActive: managementUiEnabled,
       renderBookmarkUi: context.renderBookmarkUi,
       renderManagementUi: context.renderManagementUi,
       renderSearchMode: context.renderSearchMode,
@@ -291,7 +286,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function initializeIndex(payload) {
-    state.managementContext = isManagementContext();
+    state.managementContext = managementUiEnabled();
     var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
       ? payload.viewer_options
       : {};
@@ -335,7 +330,6 @@ export function initDocsViewerRouteWorkflow(context) {
 
   function routeFromAnchor(anchor) {
     return routeFromAnchorHref(anchor.href, {
-      allowManagement: allowManagement(),
       allowScopeQuery: allowScopeQuery(),
       currentHref: window.location.href,
       includeScopeParam: includeScopeParam(),
@@ -434,7 +428,7 @@ export function initDocsViewerRouteWorkflow(context) {
     hasDisallowedModeInUrl: hasDisallowedModeInUrl,
     hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
     initializeIndex: initializeIndex,
-    isManagementContext: isManagementContext,
+    managementUiEnabled: managementUiEnabled,
     routeFromAnchor: routeFromAnchor,
     shouldUseNativeNavigation: shouldUseNativeNavigation,
     viewerUrl: viewerUrl,

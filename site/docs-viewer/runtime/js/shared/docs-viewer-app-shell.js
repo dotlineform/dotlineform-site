@@ -27,6 +27,7 @@ function routeContextFor(settings) {
   if (settings.routeContext) return settings.routeContext;
   if (!settings.routeConfig) return null;
   return createDocsViewerRouteContext({
+    appKind: settings.appKind,
     root: settings.root,
     document: settings.document,
     routeConfig: settings.routeConfig,
@@ -35,7 +36,12 @@ function routeContextFor(settings) {
 }
 
 function managementAllowed(routeContext) {
-  return Boolean(routeContext && routeContext.access && routeContext.access.canLoadManagementUi);
+  return Boolean(
+    routeContext
+    && routeContext.appContext
+    && routeContext.appContext.routeAccess
+    && routeContext.appContext.routeAccess.managementUi
+  );
 }
 
 function mainViewToolbarEnabled(routeContext) {

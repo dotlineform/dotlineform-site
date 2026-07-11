@@ -29,8 +29,8 @@ export function createDocsViewerInfoPanelController(options) {
     return typeof settings.viewerScope === "function" ? settings.viewerScope() : settings.viewerScope;
   }
 
-  function routeAccess() {
-    return typeof settings.routeAccess === "function" ? settings.routeAccess() : settings.routeAccess;
+  function appContext() {
+    return typeof settings.appContext === "function" ? settings.appContext() : settings.appContext;
   }
 
   function currentSelectedDoc() {
@@ -47,7 +47,7 @@ export function createDocsViewerInfoPanelController(options) {
       buildTrail: settings.buildTrail,
       docsById: documentIndex.docsById,
       payloadCache: selectedDocument.payloadCache,
-      routeAccess: routeAccess(),
+      appContext: appContext(),
       selectedDocId: selectedDocument.selectedDocId,
       sourceEditorServices: typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : settings.sourceEditorServices,
       uiStatusByValue: scopeConfig.uiStatusByValue,

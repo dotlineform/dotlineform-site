@@ -80,12 +80,12 @@ function cloneRuntimeDefaults(overrides) {
   return Object.assign({}, DOCS_VIEWER_RUNTIME_DEFAULTS, overrides || {});
 }
 
-function startupContextName(access) {
-  return access && access.allowManagement ? "manage" : "public";
+function startupContextName(appContext) {
+  return appContext && appContext.kind ? appContext.kind : "";
 }
 
-function startupPhaseRecords(access) {
-  var contextName = startupContextName(access);
+function startupPhaseRecords(appContext) {
+  var contextName = startupContextName(appContext);
   return STARTUP_PHASES.filter(function (phase) {
     return phase.contexts.indexOf(contextName) !== -1;
   }).map(function (phase) {
@@ -97,7 +97,8 @@ function startupPhaseRecords(access) {
 }
 
 function startupAuthorityRecords(routeContext, serviceContext) {
-  var access = routeContext.access || {};
+  var appContext = routeContext.appContext || {};
+  var routeAccess = appContext.routeAccess || {};
   var output = [
     {
       phase: "root/app-shell input validation",
@@ -117,7 +118,7 @@ function startupAuthorityRecords(routeContext, serviceContext) {
     },
     {
       phase: "generated data reads",
-      authority: serviceContext.generatedRead.authority
+      authority: serviceContext.generatedData.authority
     },
     {
       phase: "bookmark initialization",
@@ -125,7 +126,7 @@ function startupAuthorityRecords(routeContext, serviceContext) {
     }
   ];
 
-  if (access.allowManagement) {
+  if (routeAccess.managementUi && serviceContext.management) {
     output.push({
       phase: "management initialization",
       authority: "management backend capability endpoint"
@@ -145,9 +146,10 @@ export function createDocsViewerAppComposition(options) {
   var window = settings.window || {};
   var routeContext = settings.routeContext || {};
   var routeConfig = routeContext.routeConfig || {};
+  var appContext = routeContext.appContext || {};
   var constants = cloneRuntimeDefaults(settings.constants);
   var appShellRefs = settings.appShellRefs || {};
-  var access = routeContext.access || {};
+  var routeAccess = appContext.routeAccess || {};
   var bookmarkScope = routeContext.bookmarkScope;
   var routeHostedViews = routeConfig.hostedViews && Array.isArray(routeConfig.hostedViews.records)
     ? routeConfig.hostedViews.records
@@ -158,7 +160,7 @@ export function createDocsViewerAppComposition(options) {
   var defaultHostedViews = createDocsViewerDefaultHostedViews().concat(entrypointHostedViews);
 
   var hostedViewRegistry = registerDocsViewerHostedViews(
-    createDocsViewerHostedViewRegistry({ accessProjection: access }),
+    createDocsViewerHostedViewRegistry({ accessProjection: routeAccess }),
     defaultHostedViews.concat(createDocsViewerRouteHostedViews(routeHostedViews, {
       reservedRecords: defaultHostedViews
     }))
@@ -193,7 +195,7 @@ export function createDocsViewerAppComposition(options) {
   });
   var generatedDataRuntime = createDocsViewerGeneratedDataRuntime({
     assetVersion: settings.assetVersion || "",
-    generatedBaseUrl: serviceContext.generatedRead.baseUrl,
+    generatedBaseUrl: serviceContext.generatedData.baseUrl,
     reloadRetryAttempts: constants.reloadRetryAttempts,
     reloadRetryDelayMs: constants.reloadRetryDelayMs,
     state: state,
@@ -206,7 +208,7 @@ export function createDocsViewerAppComposition(options) {
   });
 
   function shouldInitializeManagement() {
-    return Boolean(access.allowManagement);
+    return Boolean(routeAccess.managementUi && serviceContext.management);
   }
 
   function shouldOpenImportOnLoad() {
@@ -222,9 +224,7 @@ export function createDocsViewerAppComposition(options) {
     documentIndex: documentIndex,
     configService: configService,
     generatedDataRuntime: generatedDataRuntime,
-    managementBaseUrl: serviceContext.management ? serviceContext.management.baseUrl : "",
-    generatedBaseUrl: serviceContext.generatedRead.baseUrl,
-    startupPhases: startupPhaseRecords(access),
+    startupPhases: startupPhaseRecords(appContext),
     startupAuthorities: startupAuthorityRecords(routeContext, serviceContext),
     shouldInitializeManagement: shouldInitializeManagement,
     shouldOpenImportOnLoad: shouldOpenImportOnLoad

@@ -20,7 +20,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 - Route workflow commands are exposed only through the private route workflow command contract, backed by explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs.
 - The returned app handle stays intentionally small: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`.
 - [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the current graph counts and phase owner changes. This document remains the durable current-owner map and must be updated in the same slice whenever responsibility moves.
-- The current `docs-viewer-app-context.js` is primarily a route-context owner. Phase 1 will make app kind explicit rather than continuing to infer it from `allowManagement`.
+- `docs-viewer-app-context.js` owns explicit app context plus route context; `docs-viewer-access.js` owns route visibility/composition projection; `docs-viewer-service-context.js` owns independent named service surfaces.
 - There is no configured-scope provider or normalized route-feature owner yet; phases 2 and 3 add those boundaries without moving feature lifecycle into the private runtime coordinator.
 
 ## Entrypoints And Boot
@@ -39,7 +39,8 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Route workflow | `docs-viewer-route-workflow.js` | Current URL/query helpers, current-doc resolution, route application, canonical URL correction, document index load orchestration, payload load orchestration, route-link handling, popstate coordination, and private route command contract. |
-| Route context/config | `docs-viewer-app-context.js`, `docs-viewer-route-config.js`, `docs-viewer-access.js` | Route context, explicit route config shape, browser-safe registry resolution, route/scope projection, and static public/manage/manage-local access projection. |
+| App context, route access, and route config | `docs-viewer-app-context.js`, `docs-viewer-route-config.js`, `docs-viewer-access.js` | Explicit `public`/`manage` app kind, entrypoint/route validation, route visibility/composition policy, browser-safe registry resolution, route context, and scope projection. |
+| Service context | `docs-viewer-service-context.js` | Independent `generatedData`, `source`, `management`, and browser-safe `config` service surfaces. Presence and URLs do not grant backend capability. |
 | Config controller/service | `docs-viewer-config-controller.js`, `docs-viewer-config-service.js` | Browser-safe config/UI-text loading, scope route projection, scope picker projection, UI-text merge, recent-limit/status-label projection, and config fetch/retry behavior. |
 | Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data request option shaping, generated-read capability caching, reload/retry option projection, generated-search read capability checks, and named read methods for generated JSON payloads. |
 | Low-level data primitives | `docs-viewer-data.js` | Low-level JSON fetch/retry and generated-read reload path primitives reserved for generated-data runtime and config-service owners. |

@@ -41,19 +41,36 @@ Current model:
 - public route shells render only public-safe mounts and config
 - the local manage shell renders management-capable mounts and receives manage-owned renderer bundles from the manage entrypoint
 
-## Foundation Baseline And Target
+## App Context And Authority
 
-The Phase 0 baseline is recorded in [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
+The Phase 0 baseline and Phase 1 outcome are recorded in [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
 
-In the current pre-refactor runtime, `allowManagement` still controls several distinct decisions: public/read-only projection, management UI loading, local generated-read service selection, management service presence, source-service exposure, and some hosted-view/mode access. Public and manage app-start helpers pass an app-kind option, but the current route context does not retain it as independent authority.
+Current app context is explicit:
 
-That coupling is current behavior to preserve during Phase 1, not the durable target. The target separates:
+```text
+kind: public | manage | review
+routeAccess
+featurePolicy
+serviceAvailability
+backendCapabilities
+```
 
-- app kind and route composition
-- route visibility/access policy
-- named service presence
-- backend capability truth
-- feature and view/mode/control eligibility
+The public and manage entrypoints supply the expected app kind. Route config declares `app_kind`, and boot rejects an entrypoint/route mismatch. `review` is accepted by the context model for the future local non-management route, but no review entrypoint, route, provider, or feature behavior exists yet.
+
+Route access owns presentation and composition only:
+
+- scope-query availability
+- management UI composition
+- hosted-view and display-mode access requirements
+
+Service context projects independent named surfaces:
+
+- `generatedData`: always present, using either static generated assets or an optional local generated-read base URL
+- `source`: absent unless a source service URL is supplied
+- `management`: absent unless a management service URL is supplied
+- `config`: browser-safe config asset access
+
+Local generated reads no longer depend on management UI or management service presence. Source services no longer derive from management app identity. The current service happens to advertise source and management together when management is enabled, but the browser contract does not require that coupling.
 
 Backend capabilities authorize operations. Route config, registered views, visible controls, and service URLs do not.
 

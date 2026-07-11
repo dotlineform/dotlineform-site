@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0 is complete, and Phase 0 baseline reconciliation is complete. Phase 1 explicit app context and authority is next.
+Assessment complete; roadmap accepted for implementation, D0 and phases 0-1 are complete. Phase 2 configured-scope provider boundary is next.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -642,6 +642,8 @@ Acceptance:
 
 Purpose: replace binary access inference with an explicit context that can later support review without granting management.
 
+Implementation complete. [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the v2 route config, explicit app context, independent service surfaces, removed APIs, and focused checks.
+
 Proposed context shape:
 
 ```text
@@ -888,7 +890,7 @@ Recommended order of work (to be reviewed after each step):
 4. create an implementation tracker for phases 0-5 using the mapped current owners — complete
 5. complete the runtime baseline and reconcile only prerequisite contracts — complete
 6. begin D2 user/maintainer entrypoint work as a separate documentation batch
-7. implement explicit app context and authority
+7. implement explicit app context and authority — complete
 8. implement the configured-scope provider boundary
 9. implement explicit route features and startup
 10. implement the code-owned view/mode/control projection

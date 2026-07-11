@@ -151,7 +151,15 @@ function canMountReport(meta, reportMeta, context) {
     return Promise.resolve({ ok: true, access });
   }
   if (access === "local") {
-    return Promise.resolve({ ok: Boolean(context.managementContext || context.allowManagement), access });
+    return Promise.resolve({
+      ok: Boolean(
+        context.managementContext
+        && context.managementService
+        && context.appContext
+        && context.appContext.kind === "manage"
+      ),
+      access
+    });
   }
   return Promise.resolve({ ok: false, access });
 }

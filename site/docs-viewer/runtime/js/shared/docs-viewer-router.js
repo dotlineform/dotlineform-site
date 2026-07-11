@@ -21,7 +21,7 @@ export function buildViewerUrlForScope(options) {
   var settings = options || {};
   var targetScope = String(settings.scope || settings.viewerScope || "").trim().toLowerCase();
   var targetConfig = settings.scopeConfigsById ? settings.scopeConfigsById.get(targetScope) : null;
-  var useManage = Boolean(settings.manage && settings.allowManagement);
+  var useManage = Boolean(settings.manageRoute);
   var baseUrl = useManage
     ? (settings.routeViewerBaseUrl || settings.viewerBaseUrl || "/docs/")
     : ((targetConfig && targetConfig.viewerBaseUrl) || settings.viewerBaseUrl || "/docs/");
@@ -45,7 +45,7 @@ export function routeFromAnchorHref(href, options) {
   var scope = String(url.searchParams.get("scope") || "").trim();
   url.searchParams.delete("mode");
   if (settings.includeScopeParam && scope && scope !== settings.viewerScope) {
-    if (!settings.allowScopeQuery || !settings.allowManagement) {
+    if (!settings.allowScopeQuery) {
       return null;
     }
     url.searchParams.delete("mode");

@@ -56,17 +56,20 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | Config surface | Public | Manage |
 | --- | --- | --- |
 | Registry shape | `docs_viewer_route_config_registry_v1` with `routes` array | `docs_viewer_route_config_registry_v1` with `routes` array |
-| Route record shape | `docs_viewer_route_config_v1` snake_case | `docs_viewer_route_config_v1` snake_case |
+| Route record shape | `docs_viewer_route_config_v2` snake_case | `docs_viewer_route_config_v2` snake_case |
 | Route config resolver | `docs-viewer-route-config.js` | `docs-viewer-route-config.js` |
 | Local `/docs/` route present | no | yes |
 | Manage-only hosted views | omitted | allowed |
-| Generated-read base URL | blank/static | injected by service config |
-| Management base URL | blank | injected by service config |
+| App kind | `public` | `manage` |
+| Route access | scope query and management UI disabled | scope query enabled; management UI projected independently of service URLs |
+| Generated-data service | static generated assets; local URL blank | local URL injected when generated reads are enabled, independently of management |
+| Source service | absent | URL injected when source services are enabled |
+| Management service | absent | URL injected when management services are enabled |
 
 Route config resolution no longer reads inline config scripts, legacy `#docsViewerRoot` data attributes, camelCase field aliases, or object-map route registries.
-Backend reachability and write availability are not browser-side route-config authority; they remain in the local management capability flow.
+Route records declare `app_kind`, narrow `access` policy, and `services.generated_data`, `services.source`, and `services.management` surfaces. Backend reachability and write availability are not browser-side route-config authority; they remain in the owning capability flow.
 
-The current pre-refactor service projection still exposes a local generated-read base URL only when route access allows management. Phase 1 separates named generated-data service presence from management UI composition while preserving all current public URLs and network isolation.
+Route config resolution rejects entrypoint/route app-kind mismatches. Public route records contain no local service URLs. The local service injects each enabled loopback surface independently when it serves the manage route registry.
 
 There is no explicit route-feature list in the current registry. Search, recently added, bookmarks, reports, scope selection, source editing, and management startup are inferred from current route/access/config shapes or tolerate missing controls. Phase 3 introduces an allowlisted feature projection; until then, this absence is part of the baseline rather than a config extension point.
 

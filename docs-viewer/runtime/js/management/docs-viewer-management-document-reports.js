@@ -97,9 +97,10 @@ export function mountDocsViewerManageDocumentExtras(context) {
   var routeContext = settings.routeContext || {};
   if (!payloadHasReport(payload)) return Promise.resolve(false);
 
-  var reportManagementBaseUrl = cleanString(settings.managementBaseUrl);
+  var managementService = settings.managementService || null;
+  var reportManagementBaseUrl = cleanString(managementService && managementService.baseUrl);
   return mountDocsViewerReport({
-    allowManagement: settings.allowManagement,
+    appContext: settings.appContext,
     checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
     content: settings.content,
     doc: settings.doc,
@@ -113,6 +114,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       return fetchDocsIndexTreeForScope(settings, scope);
     },
     managementContext: Boolean(settings.managementContext),
+    managementService: managementService,
     payload: payload,
     reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
     reportService: reportManagementBaseUrl

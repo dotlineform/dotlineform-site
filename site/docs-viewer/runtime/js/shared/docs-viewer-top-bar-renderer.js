@@ -3,8 +3,12 @@ import {
 } from "./docs-viewer-viewer-toolbar-renderer.js";
 
 function routeAllowsManagement(routeContext) {
-  if (routeContext && routeContext.access) return Boolean(routeContext.access.canLoadManagementUi);
-  return false;
+  return Boolean(
+    routeContext
+    && routeContext.appContext
+    && routeContext.appContext.routeAccess
+    && routeContext.appContext.routeAccess.managementUi
+  );
 }
 
 function appendManageToolbarMount(documentRef, topBar) {

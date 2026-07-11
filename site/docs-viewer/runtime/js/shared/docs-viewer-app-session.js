@@ -115,27 +115,28 @@ function createStateDefaults(settings) {
 
 function createStateDomains(state, settings) {
   var routeContext = settings.routeContext || {};
-  var accessProjection = routeContext.access || {};
+  var appContext = routeContext.appContext || {};
+  var routeAccess = appContext.routeAccess || {};
 
   return {
     routeSession: {
       name: "routeSession",
       authority: "route config and current browser URL",
       routeContext: routeContext,
-      accessProjection: accessProjection,
+      appContext: appContext,
       get managementContext() {
         return Boolean(state.managementContext);
       },
       set managementContext(value) {
         state.managementContext = Boolean(value);
       },
-      publicReadOnly: Boolean(accessProjection.publicReadOnly),
-      canLoadManagementUi: Boolean(accessProjection.canLoadManagementUi),
+      appKind: appContext.kind || "",
+      managementUi: Boolean(routeAccess.managementUi),
       updateRouteContext: function (nextRouteContext) {
         this.routeContext = nextRouteContext || {};
-        this.accessProjection = this.routeContext.access || {};
-        this.publicReadOnly = Boolean(this.accessProjection.publicReadOnly);
-        this.canLoadManagementUi = Boolean(this.accessProjection.canLoadManagementUi);
+        this.appContext = this.routeContext.appContext || {};
+        this.appKind = this.appContext.kind || "";
+        this.managementUi = Boolean(this.appContext.routeAccess && this.appContext.routeAccess.managementUi);
       }
     },
     scopeConfig: stateDomain("scopeConfig", "generated static config", state, [

@@ -81,13 +81,15 @@ def public_route_state(page: Page) -> dict[str, object]:
                 : {};
             const scopeConfig = (docsViewerConfig.scopes || []).find(record => record.scope_id === root.dataset.viewerScope) || {};
             return {
-                allowManagement: root.dataset.allowManagement || "",
+                appKind: root.dataset.docsViewerAppKind || "",
+                managementUi: root.dataset.managementUi || "",
+                sourceService: root.dataset.sourceService || "",
                 ready: root.dataset.docsViewerReady || "",
                 busy: root.dataset.docsViewerBusy || "",
-                managementBaseUrl: root.dataset.managementBaseUrl || "",
                 routeId: root.dataset.routeId || "",
                 routeConfigUrl,
                 docsPaths: routeConfig.docs_paths || {},
+                services: routeConfig.services || {},
                 scopeConfig,
                 viewerBaseUrl: routeConfig.viewer_base_url || "",
                 managementControls: document.querySelectorAll(
@@ -102,8 +104,11 @@ def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
     route_id = route.strip("/").split("/", 1)[0] or route.strip("/?")
     docs_paths = state.get("docsPaths") if isinstance(state.get("docsPaths"), dict) else {}
     scope_config = state.get("scopeConfig") if isinstance(state.get("scopeConfig"), dict) else {}
-    if state["allowManagement"] == "true" or state["managementBaseUrl"]:
-        raise AssertionError(f"{route} exposed management access: {state!r}")
+    services = state.get("services") if isinstance(state.get("services"), dict) else {}
+    if state["appKind"] != "public" or state["managementUi"] != "false" or state["sourceService"] != "false":
+        raise AssertionError(f"{route} exposed the wrong app/service context: {state!r}")
+    if any(str(surface.get("base_url") or "") for surface in services.values() if isinstance(surface, dict)):
+        raise AssertionError(f"{route} exposed local service URLs: {state!r}")
     if state["ready"] != "true" or state["busy"] == "true":
         raise AssertionError(f"{route} did not expose ready route state: {state!r}")
     if state["viewerBaseUrl"] == "/docs/":

@@ -88,13 +88,15 @@ def test_management_service_api_base_lives_in_route_config() -> None:
     manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
     assert manage_route["viewer_base_url"] == "/docs/"
+    assert manage_route["app_kind"] == "manage"
     assert manage_route["include_scope_param"] is True
     assert manage_route["access"]["allow_scope_query"] is True
-    assert manage_route["access"]["allow_management"] is True
-    assert manage_route["generated_base_url"] == "http://127.0.0.1:8776"
-    assert manage_route["access"]["management_base_url"] == "http://127.0.0.1:8776"
+    assert manage_route["access"]["management_ui"] is True
+    assert manage_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"
+    assert manage_route["services"]["source"]["base_url"] == "http://127.0.0.1:8776"
+    assert manage_route["services"]["management"]["base_url"] == "http://127.0.0.1:8776"
 
-def test_manage_route_config_can_disable_management_access_by_capability_flag() -> None:
+def test_manage_route_config_separates_generated_reads_from_management_services() -> None:
     config = docs_viewer_service.DocsViewerServiceConfig(
         host="127.0.0.1",
         port=8776,
@@ -108,8 +110,11 @@ def test_manage_route_config_can_disable_management_access_by_capability_flag() 
     manage_route = next(route for route in route_registry["routes"] if route["route_id"] == "docs-manage")
 
     assert manage_route["viewer_base_url"] == "/docs/"
-    assert manage_route["access"]["allow_management"] is False
-    assert manage_route["access"]["management_base_url"] == ""
+    assert manage_route["app_kind"] == "manage"
+    assert manage_route["access"]["management_ui"] is False
+    assert manage_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"
+    assert manage_route["services"]["source"]["base_url"] == ""
+    assert manage_route["services"]["management"]["base_url"] == ""
 
 def test_apply_capability_flags_respects_local_service_flags() -> None:
     payload = {

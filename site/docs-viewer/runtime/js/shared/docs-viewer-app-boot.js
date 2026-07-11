@@ -97,18 +97,24 @@ function applyBodyClass(documentRef, bodyClass) {
 
 function applyResolvedRouteDataset(root, documentRef, routeContext) {
   var routeConfig = routeContext && routeContext.routeConfig ? routeContext.routeConfig : {};
-  var access = routeContext && routeContext.access ? routeContext.access : {};
   var ui = routeConfig.ui && typeof routeConfig.ui === "object" ? routeConfig.ui : {};
   var routeShell = ui.routeShell && typeof ui.routeShell === "object" ? ui.routeShell : {};
   var viewerSearch = ui.viewerSearch && typeof ui.viewerSearch === "object" ? ui.viewerSearch : {};
   var headerMount = headerControlsMount(root);
 
   if (root && root.dataset) {
+    var appContext = routeContext && routeContext.appContext ? routeContext.appContext : {};
+    var routeAccess = appContext.routeAccess || {};
+    var serviceAvailability = appContext.serviceAvailability || {};
     root.dataset.routeId = routeConfig.routeId || "";
     root.dataset.docsViewerRoute = routeConfig.routeId || "";
-    root.dataset.docsViewerMode = access.allowManagement ? "manage" : "public";
-    root.dataset.docsViewerService = access.allowManagement ? "available" : "static";
-    setDatasetBoolean(root, "allowManagement", access.allowManagement);
+    root.dataset.docsViewerMode = appContext.kind || "";
+    root.dataset.docsViewerAppKind = appContext.kind || "";
+    root.dataset.docsViewerService = serviceAvailability.management && serviceAvailability.management.available
+      ? "available"
+      : (serviceAvailability.generatedData && serviceAvailability.generatedData.local ? "read-only" : "static");
+    setDatasetBoolean(root, "managementUi", routeAccess.managementUi);
+    setDatasetBoolean(root, "sourceService", serviceAvailability.source && serviceAvailability.source.available);
     setDatasetBoolean(root, "includeScopeParam", routeContext && routeContext.includeScopeParam);
     root.dataset.viewerBaseUrl = routeContext && routeContext.viewerBaseUrl ? routeContext.viewerBaseUrl : "";
     root.dataset.viewerScope = routeContext && routeContext.viewerScope ? routeContext.viewerScope : "";
@@ -145,12 +151,14 @@ export function resolveDocsViewerAppBootContext(options) {
     routeConfigSource: settings.routeConfigSource,
     routeConfigUrl: settings.routeConfigUrl,
     routeId: settings.routeId,
+    appKind: settings.appKind,
     fetch: settings.fetch
   }).then(function (resolvedRouteConfig) {
     var routeContext = createDocsViewerRouteContext({
       root: root,
       window: windowRef,
       assetVersion: assetVersion,
+      appKind: settings.appKind,
       resolvedRouteConfig: resolvedRouteConfig
     });
     applyResolvedRouteDataset(root, documentRef, routeContext);
@@ -185,7 +193,8 @@ export function resolveDocsViewerAppBootContext(options) {
 export function initDocsViewerBootThemeToggle(bootContext) {
   var context = bootContext || {};
   var routeContext = context.routeContext || {};
-  if (!routeContext.access || !routeContext.access.allowManagement) {
+  var appContext = routeContext.appContext || {};
+  if (!appContext.routeAccess || !appContext.routeAccess.managementUi) {
     return Promise.resolve(null);
   }
   return (context.appShellReady || Promise.resolve())

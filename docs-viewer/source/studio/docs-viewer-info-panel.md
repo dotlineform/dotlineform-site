@@ -2,7 +2,7 @@
 doc_id: docs-viewer-info-panel
 title: Info Panel
 added_date: 2026-06-23
-last_updated: 2026-06-23
+last_updated: 2026-07-11
 parent_id: docs-viewer
 viewable: true
 ---
@@ -87,7 +87,7 @@ Current field policy:
 | Public read-only | `Summary`, `Updated` |
 | Manage/local | `Doc ID`, `Summary`, `Date`, `Added`, `Updated` |
 
-The view chooses the field policy from `context.access.publicReadOnly`.
+The view chooses the field policy from explicit `context.appContext.kind`.
 Public route tests should assert that public metadata does not leak manage-oriented fields such as `Doc ID`, `Date`, `Added`, `Scope`, `Parent path`, `UI status`, `Visibility`, or `Route`.
 
 Manage/local routes can show more operational metadata because they are local authoring and maintenance surfaces.

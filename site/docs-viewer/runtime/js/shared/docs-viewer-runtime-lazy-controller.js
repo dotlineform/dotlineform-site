@@ -8,7 +8,7 @@ export function createDocsViewerManagementRuntimeAdapter(options) {
   }
 
   function load() {
-    if (!settings.allowManagement) return Promise.resolve(null);
+    if (!settings.managementUi) return Promise.resolve(null);
     if (managementController) return Promise.resolve(managementController);
     if (managementControllerRequestPromise) return managementControllerRequestPromise;
     var importManagement = settings.importManagement || function () {

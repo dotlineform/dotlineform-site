@@ -95,8 +95,9 @@ export function startDocsViewerRuntime(options) {
   var results = mainViewRefs.results;
   var more = mainViewRefs.more;
 
-  var allowManagement = routeContext.access.allowManagement;
-  var allowScopeQuery = routeContext.access.allowScopeQuery;
+  var appContext = routeContext.appContext || {};
+  var routeAccess = appContext.routeAccess || {};
+  var allowScopeQuery = routeAccess.allowScopeQuery;
   var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
   var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
   var indexTreeUrl = routeContext.indexTreeUrl;
@@ -107,7 +108,6 @@ export function startDocsViewerRuntime(options) {
   var defaultRouteDocId = routeContext.defaultRouteDocId;
   var viewerPathname = routeContext.viewerPathname;
   var searchIndexUrl = routeContext.searchIndexUrl;
-  var managementBaseUrl = routeContext.managementBaseUrl;
   var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
   var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
   var SEARCH_DEBOUNCE_MS = runtimeDefaults.searchDebounceMs;
@@ -131,7 +131,12 @@ export function startDocsViewerRuntime(options) {
     indexPanelAvailable: sidebarCollapseAvailable
   });
   var hostedViewRegistry = composition.hostedViewRegistry;
-  managementBaseUrl = composition.managementBaseUrl;
+  var serviceContext = composition.serviceContext;
+  var managementService = serviceContext.management;
+  var sourceService = serviceContext.source;
+  var managementUiEnabled = Boolean(routeAccess.managementUi && managementService);
+  var managementBaseUrl = managementService ? managementService.baseUrl : "";
+  var sourceBaseUrl = sourceService ? sourceService.baseUrl : "";
   var panelLayout = composition.panelLayout;
   var managementRuntime = null;
   var bookmarkController = null;
@@ -154,9 +159,9 @@ export function startDocsViewerRuntime(options) {
       allDocsById: appSession.domains.documentIndex.allDocsById,
       docsById: appSession.domains.documentIndex.docsById,
       payloadCache: appSession.domains.selectedDocument.payloadCache,
-      routeAccess: routeContext.access,
+      appContext: appContext,
       selectedDocId: appSession.domains.selectedDocument.selectedDocId,
-      sourceEditorServices: allowManagement ? sourceEditorServices() : null,
+      sourceEditorServices: sourceService ? sourceEditorServices() : null,
       uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
       viewerScope: viewerScope,
       viewerTargetDocId: documentIndex.viewerTargetDocId,
@@ -170,7 +175,7 @@ export function startDocsViewerRuntime(options) {
         allDocsById: appSession.domains.documentIndex.allDocsById,
         docsById: appSession.domains.documentIndex.docsById,
         payloadCache: appSession.domains.selectedDocument.payloadCache,
-        routeAccess: routeContext.access,
+        appContext: appContext,
         selectedDocId: appSession.domains.selectedDocument.selectedDocId,
         uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
         viewerScope: viewerScope,
@@ -188,7 +193,7 @@ export function startDocsViewerRuntime(options) {
     updatePanelViewState: function (viewState) { appSession.domains.panelView.viewState = viewState; }
   });
   documentDisplayModeHost = createDocsViewerDocumentDisplayModeHost({
-    accessProjection: routeContext.access,
+    accessProjection: routeAccess,
     contextOptions: documentViewContextOptions,
     defaultModeId: "rendered-document",
     modes: settings.documentDisplayModes,
@@ -222,7 +227,7 @@ export function startDocsViewerRuntime(options) {
     projectViewState: function () { return panelLayout.projectViewState(); },
     refs: infoPanelRefs,
     registry: hostedViewRegistry,
-    routeAccess: function () { return routeContext.access; },
+    appContext: function () { return appContext; },
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,
     defaultViewId: function () {
@@ -230,20 +235,20 @@ export function startDocsViewerRuntime(options) {
       return infoPanelDefaultViewIdForMode(settings, modeId) || "metadata-info";
     },
     sourceEditorServices: function () {
-      return allowManagement ? sourceEditorServices() : null;
+      return sourceService ? sourceEditorServices() : null;
     },
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
   documentController = initDocsViewerDocumentController({
-    allowManagement: allowManagement,
+    appContext: appContext,
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     clearResultsStatus: clearResultsStatus,
     content: content,
     generatedData: generatedDataRuntime,
     hasActiveQuery: hasActiveQuery,
-    managementBaseUrl: function () { return managementBaseUrl; },
+    managementService: managementService,
     mountDocumentExtras: settings.mountDocumentExtras,
     more: more,
     projectDocumentShell: projectMainView,
@@ -267,7 +272,7 @@ export function startDocsViewerRuntime(options) {
     viewerUrlForScope: viewerUrlForScope
   });
   routeWorkflow = initDocsViewerRouteWorkflow({
-    allowManagement: function () { return allowManagement; },
+    managementUiEnabled: function () { return managementUiEnabled; },
     allowScopeQuery: function () { return allowScopeQuery; },
     applyDocVisibility: documentIndex.applyDocVisibility,
     cancelSearchDebounce: cancelSearchDebounce,
@@ -381,7 +386,7 @@ export function startDocsViewerRuntime(options) {
   });
 
   managementRuntime = createDocsViewerManagementRuntimeAdapter({
-    allowManagement: allowManagement,
+    managementUi: managementUiEnabled,
     appShellReady: appShellReady,
     constants: {
       MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS: MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS,
@@ -401,7 +406,7 @@ export function startDocsViewerRuntime(options) {
       formatText: formatText,
       getConfigText: getConfigText,
       getConfigValue: getConfigValue,
-      isManagementContext: function () { return routeWorkflow.isManagementContext(); },
+      isManagementContext: function () { return routeWorkflow.managementUiEnabled(); },
       serviceClient: {
         docsViewerConfigUrl: docsViewerConfigUrl,
         managementBaseUrl: managementBaseUrl
@@ -527,7 +532,7 @@ export function startDocsViewerRuntime(options) {
 
   function sourceEditorClientOptions() {
     return {
-      baseUrl: managementBaseUrl,
+      baseUrl: sourceBaseUrl,
       scope: viewerScope,
       fetch: function (url, options) {
         return window.fetch(url, options);
@@ -757,8 +762,8 @@ export function startDocsViewerRuntime(options) {
   }
 
   function initializeManagement() {
-    if (!allowManagement) return;
-    state.managementContext = routeWorkflow.isManagementContext();
+    if (!managementUiEnabled) return;
+    state.managementContext = routeWorkflow.managementUiEnabled();
     if (!state.managementContext) return;
     loadManagementController().then(function (controller) {
       if (controller) controller.initialize();

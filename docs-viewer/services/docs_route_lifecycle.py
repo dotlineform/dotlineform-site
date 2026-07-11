@@ -77,17 +77,21 @@ def public_route_record(
 ) -> dict[str, Any]:
     search_label = f"search {title.lower()}"
     return {
-        "schema_version": "docs_viewer_route_config_v1",
+        "schema_version": "docs_viewer_route_config_v2",
+        "app_kind": "public",
         "route_id": scope_id,
         "route_path": public_route_path,
         "default_scope_id": scope_id,
         "include_scope_param": False,
-        "allow_scope_query": False,
         "viewer_base_url": public_route_path,
-        "generated_base_url": "",
         "access": {
             "allow_scope_query": False,
-            "management_base_url": "",
+            "management_ui": False,
+        },
+        "services": {
+            "generated_data": {"base_url": ""},
+            "source": {"base_url": ""},
+            "management": {"base_url": ""},
         },
         "docs_paths": {
             "index_tree_url": f"/assets/data/docs/scopes/{scope_id}/index-tree.json",

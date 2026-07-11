@@ -88,7 +88,9 @@ Current helper modules:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` owns private app runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
-- `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js` owns public/manage service context projection so public routes receive only static generated/config/report reads while manage routes can receive local generated-read and management backend base URLs
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js` owns explicit `public`/`manage` app kind, route context, feature-policy slot, service-availability projection, and the backend-capability input slot
+- `site/docs-viewer/runtime/js/shared/docs-viewer-access.js` owns scope-query and management-UI route access plus hosted-view/mode access checks
+- `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js` owns independent `generatedData`, `source`, `management`, and browser-safe `config` service surfaces
 - `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js` owns generated-data request option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, and named read methods for docs indexes, payloads, search indexes, references indexes, and reference-target JSON
 - `site/docs-viewer/runtime/js/shared/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior
 - `site/docs-viewer/runtime/js/shared/docs-viewer-asset-url.js` owns asset-version URL projection for static browser assets
@@ -113,9 +115,9 @@ Current helper modules:
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.
 
-When a management-capable route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, docs-search index, and generated reference JSON through that server.
-Local Studio uses this path because generated docs/search reads are served by the Python app.
-Public/static builds leave `data-generated-base-url` blank, and the service context also strips any local generated-read service base URL from public read-only contexts, so `/library/` and `/analysis/` use generated JSON asset URLs directly without backend probes.
+When route config supplies a local `services.generated_data.base_url` and that server advertises generated-data read capability, the runtime reads the active scope index, document payloads, docs-search index, and generated reference JSON through that server.
+Local Studio uses this path because generated docs/search reads are served by the Python app. The generated-data URL is projected independently of source and management service URLs.
+Public route records contain blank local service surfaces, so `/library/`, `/analysis/`, and `/moments/` use generated JSON asset URLs directly without backend probes.
 The returned app handle is not a feature-module escape hatch: it does not expose broad app/session state, composition/session internals, management service handles, backend capability probes, the management lazy loader, or route workflow bridge methods.
 Management reload and selected-document refresh still use private callbacks inside the app runtime coordinator and management controller context.
 

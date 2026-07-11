@@ -68,7 +68,7 @@ var MANAGE_METADATA_FIELD_ORDER = ["doc_id", "summary", "date", "added", "update
 var PUBLIC_METADATA_FIELD_ORDER = ["summary", "updated"];
 
 function metadataFieldOrder(context) {
-  return context.access && context.access.publicReadOnly
+  return context.appContext && context.appContext.kind === "public"
     ? PUBLIC_METADATA_FIELD_ORDER
     : MANAGE_METADATA_FIELD_ORDER;
 }

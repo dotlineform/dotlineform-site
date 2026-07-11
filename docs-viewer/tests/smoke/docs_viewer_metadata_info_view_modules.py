@@ -103,13 +103,19 @@ def assert_context_hydrates_from_payload(page: Page) -> None:
             const publicContext = viewContext.createDocsViewerHostedViewContext({
                 docsById: new Map([['selected', selectedDoc]]),
                 payloadCache: new Map([['selected', payload]]),
-                routeAccess: { publicReadOnly: true },
+                appContext: {
+                    kind: 'public',
+                    serviceAvailability: { source: { available: false } }
+                },
                 selectedDocId: 'selected'
             });
             const manageContext = viewContext.createDocsViewerHostedViewContext({
                 docsById: new Map([['selected', selectedDoc]]),
                 payloadCache: new Map([['selected', payload]]),
-                routeAccess: { allowManagement: true },
+                appContext: {
+                    kind: 'manage',
+                    serviceAvailability: { source: { available: true } }
+                },
                 selectedDocId: 'selected',
                 uiStatusByValue: new Map([['done', { ui_status: 'done', label: 'Done' }]])
             });
@@ -172,7 +178,10 @@ def assert_public_reader_metadata(page: Page) -> None:
     result = render_context(
         page,
         """{
-            access: { publicReadOnly: true },
+            appContext: {
+                kind: 'public',
+                serviceAvailability: { source: { available: false } }
+            },
             canonicalUrl: '/library/?doc=payload-doc',
             parentTrail: [{ doc_id: 'parent', title: 'Parent' }],
             selectedDoc: {
@@ -215,7 +224,10 @@ def assert_manage_metadata(page: Page) -> None:
     result = render_context(
         page,
         """{
-            access: { allowManagement: true, publicReadOnly: false },
+            appContext: {
+                kind: 'manage',
+                serviceAvailability: { source: { available: true } }
+            },
             canonicalUrl: '/docs/?scope=studio&doc=payload-doc',
             parentTrail: [{ doc_id: 'parent', title: 'Parent' }],
             selectedDoc: {

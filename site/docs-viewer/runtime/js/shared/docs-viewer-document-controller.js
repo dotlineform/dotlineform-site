@@ -12,10 +12,6 @@ export function initDocsViewerDocumentController(context) {
     return typeof context.viewerScope === "function" ? context.viewerScope() : context.viewerScope;
   }
 
-  function currentManagementBaseUrl() {
-    return typeof context.managementBaseUrl === "function" ? context.managementBaseUrl() : context.managementBaseUrl;
-  }
-
   function managementContextActive() {
     return Boolean(routeSession && routeSession.managementContext);
   }
@@ -31,12 +27,12 @@ export function initDocsViewerDocumentController(context) {
   function mountDocumentExtras(doc, payload) {
     if (typeof context.mountDocumentExtras !== "function") return;
     Promise.resolve(context.mountDocumentExtras({
-      allowManagement: context.allowManagement,
+      appContext: context.appContext || {},
       checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
       content: content,
       doc: doc,
       generatedData: context.generatedData,
-      managementBaseUrl: currentManagementBaseUrl(),
+      managementService: context.managementService || null,
       managementContext: managementContextActive(),
       payload: payload,
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,

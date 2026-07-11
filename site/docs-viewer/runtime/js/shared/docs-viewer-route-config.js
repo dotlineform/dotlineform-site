@@ -5,7 +5,7 @@ import {
   normalizeHostedViewCapabilities
 } from "./docs-viewer-hosted-view-capabilities.js";
 
-export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v1";
+export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v2";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";
 export const DOCS_VIEWER_MANAGEMENT_ROUTE_PATH = "/docs/";
 
@@ -19,11 +19,6 @@ function cleanBaseUrl(value) {
 
 function normalizeBoolean(value) {
   return value === true || value === "true";
-}
-
-function configuredValue(primary, secondary) {
-  if (primary !== undefined && primary !== null) return primary;
-  return secondary;
 }
 
 function normalizePath(value) {
@@ -216,17 +211,48 @@ function requireRouteConfigField(value, fieldName) {
   return cleaned;
 }
 
+function normalizeAppKind(value) {
+  var kind = cleanString(value).toLowerCase();
+  if (kind !== "public" && kind !== "manage" && kind !== "review") {
+    throw new Error("Docs Viewer route config requires app_kind to be public, manage, or review.");
+  }
+  return kind;
+}
+
+function normalizeServiceSurface(rawSurface) {
+  var surface = rawSurface && typeof rawSurface === "object" && !Array.isArray(rawSurface)
+    ? rawSurface
+    : {};
+  return {
+    baseUrl: cleanBaseUrl(surface.base_url)
+  };
+}
+
+function normalizeServiceSurfaces(rawServices) {
+  var services = rawServices && typeof rawServices === "object" && !Array.isArray(rawServices)
+    ? rawServices
+    : {};
+  return {
+    generatedData: normalizeServiceSurface(services.generated_data),
+    source: normalizeServiceSurface(services.source),
+    management: normalizeServiceSurface(services.management)
+  };
+}
+
 export function resolveDocsViewerRouteConfig(options) {
   var settings = options || {};
   var resolvedSource = routeConfigSource(settings);
   var rawConfig = resolvedSource.config || {};
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
-  var allowScopeQuery = normalizeBoolean(configuredValue(access.allow_scope_query, rawConfig.allow_scope_query));
+  var appKind = normalizeAppKind(rawConfig.app_kind);
+  var requestedAppKind = cleanString(settings.appKind).toLowerCase();
+  if (requestedAppKind && requestedAppKind !== appKind) {
+    throw new Error("Docs Viewer entrypoint app kind does not match route config app_kind.");
+  }
+  var allowScopeQuery = normalizeBoolean(access.allow_scope_query);
   var docsManagementRoute = isDocsManagementRoutePath(routeConfigPath(rawConfig));
-  var managementBaseUrl = docsManagementRoute
-    ? cleanBaseUrl(access.management_base_url)
-    : "";
-  var allowManagement = docsManagementRoute && normalizeBoolean(configuredValue(access.allow_management, Boolean(managementBaseUrl)));
+  var managementUi = appKind === "manage" && normalizeBoolean(access.management_ui);
+  var services = normalizeServiceSurfaces(rawConfig.services);
   var docsPaths = rawConfig.docs_paths && typeof rawConfig.docs_paths === "object" ? rawConfig.docs_paths : {};
   var configUrls = rawConfig.config_urls && typeof rawConfig.config_urls === "object" ? rawConfig.config_urls : {};
   var schemaVersion = cleanString(rawConfig.schema_version) || DOCS_VIEWER_ROUTE_CONFIG_SCHEMA;
@@ -236,23 +262,22 @@ export function resolveDocsViewerRouteConfig(options) {
   return {
     schemaVersion: schemaVersion,
     source: resolvedSource.source,
+    appKind: appKind,
     routeId: requireRouteConfigField(rawConfig.route_id, "route_id"),
+    isDocsManagementRoute: docsManagementRoute,
     defaultScopeId: requireRouteConfigField(rawConfig.default_scope_id, "default_scope_id"),
     includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
-    allowScopeQuery: allowScopeQuery,
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
-    generatedBaseUrl: cleanString(rawConfig.generated_base_url),
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
     reportRegistryUrl: cleanString(configUrls.report_registry),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
     recentlyAddedUrl: normalizePath(requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")),
     searchIndexUrl: normalizePath(requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")),
     access: {
-      isDocsManagementRoute: docsManagementRoute,
-      allowManagement: allowManagement,
       allowScopeQuery: allowScopeQuery,
-      managementBaseUrl: allowManagement ? managementBaseUrl : ""
+      managementUi: managementUi
     },
+    services: services,
     panels: normalizePanelDefaults(rawConfig.panels),
     ui: normalizeRouteUi(rawConfig.ui),
     hostedViews: normalizeHostedViews(rawConfig.hosted_views)

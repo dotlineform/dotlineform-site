@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-06-17
+last_updated: 2026-07-11
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer JavaScript Inventory
@@ -24,10 +24,10 @@ Risk themes:
 | docs-html-import-render.js                          | Docs import result rendering helper.                                                                                                                                                                                        |
 | docs-html-import-workflow.js                        | Docs import preview/write workflow helper.                                                                                                                                                                                  |
 | docs-html-import.js                                 | Docs import controller after explicit workflow handoff and focused module-smoke coverage.                                                                                                                                   |
-| docs-viewer-access.js                               | App-shell-owned static public/manage/manage-local access projection and hosted-view access check.                                                                                                                           |
+| docs-viewer-access.js                               | Explicit public/manage/review app-kind normalization, narrow route-access projection, and hosted-view/mode access checks.                                                                                                  |
 | docs-viewer-app-boot.js                             | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup.                                          |
 | docs-viewer-app-composition.js                      | App-composition owner for runtime defaults, foundational owner creation, public/manage startup phase records, startup authority records, and initial startup sequencing.                                                    |
-| docs-viewer-app-context.js                          | App-shell-owned route context assembly from route config/access projection and mutable route-context projection.                                                                                                            |
+| docs-viewer-app-context.js                          | Explicit app-context and route-context assembly, service-availability projection, and mutable scope route-context projection.                                                                                               |
 | docs-viewer-app-runtime.js                          | Private runtime coordination after route workflow and runtime-owner extraction; controller construction, config handoff, event binding, initial load sequencing, private callback handoffs, and returned app handle remain. |
 | docs-viewer-app-session.js                          | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection.                                                                                                               |
 | docs-viewer-asset-url.js                            | Focused asset-version URL projection helper for static browser assets.                                                                                                                                                      |
@@ -77,7 +77,7 @@ Risk themes:
 | docs-viewer-scope-select-menu.js                    | Focused custom scope select-menu projection and interaction owner consumed by the config controller.                                                                                                                        |
 | docs-viewer-search-controller.js                    | search helper or controller.                                                                                                                                                                                                |
 | docs-viewer-search.js                               | search helper or controller.                                                                                                                                                                                                |
-| docs-viewer-service-context.js                      | Focused public/manage service-context projection owner; public contexts omit management and local generated-read backend surfaces.                                                                                          |
+| docs-viewer-service-context.js                      | Independent generated-data, source, management, and browser-safe config service-surface projection.                                                                                                                        |
 | docs-viewer-sidebar.js                              | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-tree.js                                 | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-view-context.js                         | Selected-document hosted-view context projector plus main-view module context shaping for future central-panel views.                                                                                                       |
@@ -147,8 +147,9 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-service-context.js`
 
-- Keep this module limited to projecting static route context into generated-read, config, and management service surfaces.
-- Public contexts must continue to omit report registry loads, management base URLs, local generated-read service base URLs, backend probes, and management service adapters. Do not move capability truth or write authority into this module.
+- Keep this module limited to projecting normalized route service records into independent `generatedData`, `source`, `management`, and browser-safe `config` surfaces.
+- `generatedData` may use static assets or a local base URL without implying that source or management services exist.
+- Service presence and URLs do not grant backend capability or write authority. Public route config must keep every local base URL blank.
 
 ### `docs-viewer/runtime/js/reports/docs-viewer-report-service.js`
 
@@ -162,7 +163,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`
 
-- This controller now consumes explicit document-index, selected-document, scope-config, panel-view, route-access, URL, and trail inputs instead of broad `state`.
+- This controller now consumes explicit document-index, selected-document, scope-config, panel-view, app-context, URL, and trail inputs instead of broad `state`.
 - Keep this module limited to selected-document hosted-view context, configured default-view opening, toggle projection, update-on-document-change, close behavior, view-state projection sync, and public-safe availability.
 - Do not move info-panel chrome rendering, hosted-view registration, metadata presentation, document payload rendering, URL history, or management writes into it.
 
@@ -295,8 +296,8 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js`
 
-- the focused route-context owner for the app shell.
-- Keep this module limited to assembling route context from route config/access projection, current URL management/import intent, viewer pathname, and bookmark storage scope.
+- the focused app-context and route-context owner for the app shell.
+- Keep this module limited to explicit app kind, route-access projection, feature-policy slot, service-availability projection, backend-capability input slot, current URL import intent, viewer pathname, and bookmark storage scope.
 - Do not move route application, config loading, generated-data fetching, backend capability checks, or write behavior into it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js`
@@ -311,13 +312,14 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - the focused route config resolver and route/scope projection helper.
 - Keep this module limited to the durable route config shape, browser-safe route-config registry loading/resolution, explicit route-config normalization for tests/boot callers, and projection of scope config into route globals.
 - inline route-config scripts and legacy `#docsViewerRoot` route data-attribute fallback were removed. Route shells must use the registry contract; focused tests must pass explicit route config or route context rather than relying on shell data as a synthetic config source.
-- route-config camelCase field aliases and object-map route registries were removed. The module now resolves only the `docs_viewer_route_config_v1` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
+- route-config camelCase field aliases and object-map route registries were removed. The module resolves only the `docs_viewer_route_config_v2` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
+- v2 requires explicit `app_kind`, narrow access policy, and named `generated_data`, `source`, and `management` service records; entrypoint app kind must match the selected route record.
 - Do not add config fetching, URL history changes, payload loading, or backend capability checks to it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-access.js`
 
-- the focused static access projection helper.
-- Keep this module limited to public/manage/manage-local route intent, hosted-view access defaults, and access checks.
+- the focused explicit app-kind and route-access projection helper.
+- Keep this module limited to `public`/`manage`/`review` app-kind normalization, scope-query and management-UI composition policy, and hosted-view/mode access checks.
 - Do not add browser-side write authority, per-click permission checks, or backend reachability probing to it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js`
@@ -367,10 +369,10 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js`
 
 - the focused selected-document hosted-view context projector.
-- public-safe hosted views should receive explicit selected-document, route/access, payload, viewer-scope, URL, trail, and display-label inputs from this helper rather than reading broad runtime state.
-- main-view module contexts add generic `mainView` helpers for active-view id, switch requests, toolbar projection, and local warnings. Document display mode contexts add `documentView` helpers and source-editor service slots that are omitted unless route access allows management.
+- public-safe hosted views should receive explicit selected-document, app-context, payload, viewer-scope, URL, trail, and display-label inputs from this helper rather than reading broad runtime state.
+- main-view module contexts add generic `mainView` helpers for active-view id, switch requests, toolbar projection, and local warnings. Document display mode contexts add `documentView` helpers. Source-editor service slots are present only when the explicit source service surface is available.
 - selected metadata comes from the selected by-id payload cache; public contexts project only reader metadata while manage contexts can retain richer selected-document metadata.
-- Keep this module limited to resolving the selected doc, cached payload, parent trail, route access flags, canonical URL, viewer scope, display labels, and generic main-view/document-view helper slots from explicit inputs.
+- Keep this module limited to resolving the selected doc, cached payload, parent trail, app context, canonical URL, viewer scope, display labels, and generic main-view/document-view helper slots from explicit inputs.
 - Future info views should extend or consume this helper
 - Do not add DOM rendering, hosted-view lifecycle, URL history mutation, source-editor service implementation, or backend writes to it.
 

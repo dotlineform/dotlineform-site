@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer
 title: Config
 added_date: 2026-05-12
-last_updated: 2026-06-25
+last_updated: 2026-07-11
 parent_id: docs-viewer
 viewable: true
 ---
@@ -186,17 +186,20 @@ The public registry is served at `/docs-viewer/config/routes/docs-viewer-public-
 Each route record owns:
 
 - route id and route path
-- route type, such as `public` or `manage`
+- explicit `app_kind`: current `public` or `manage`, with `review` reserved for the future local non-management route
 - default scope
 - viewer base URL and scope-query policy
 - generated docs/search URL defaults
 - Docs Viewer config and report registry URLs
-- static access intent, panel defaults, and hosted-view records
+- narrow access intent (`allow_scope_query` and `management_ui`), panel defaults, and hosted-view records
+- independent `generated_data`, `source`, and `management` service surfaces
 
 Static public route config must not contain credentials, local filesystem paths, or write authority.
-For the local `/docs/` shell, `docs-viewer/services/docs_viewer_service.py` serves the manage/local registry URL with loopback management and generated-read base URLs injected from service config.
+Route records use `docs_viewer_route_config_v2`. Public and manage entrypoints provide their expected app kind, and route normalization rejects a mismatch.
+
+For the local `/docs/` shell, `docs-viewer/services/docs_viewer_service.py` serves the manage/local registry URL with enabled loopback generated-data, source, and management base URLs injected independently from service config.
 The same service maps the public route registry URL to the site-owned public registry so `/docs/` and public routes see the same public config owner.
-Backend reachability and write availability still come from the service capability flow, not from static route config.
+`management_ui` controls manage-shell composition; it does not grant backend authority. Backend reachability and write availability still come from the service capability flow, not from static route config or service URL presence.
 
 ## Browser Config
 

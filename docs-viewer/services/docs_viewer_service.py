@@ -238,13 +238,24 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
     for route in routes_list:
         if not isinstance(route, dict) or route.get("route_id") != "docs-manage":
             continue
-        route["generated_base_url"] = config.base_url if config.generated_reads_enabled else ""
+        services = route.get("services")
+        if not isinstance(services, dict):
+            services = {}
+            route["services"] = services
+        services["generated_data"] = {
+            "base_url": config.base_url if config.generated_reads_enabled else "",
+        }
+        services["source"] = {
+            "base_url": config.base_url if config.management_enabled else "",
+        }
+        services["management"] = {
+            "base_url": config.base_url if config.management_enabled else "",
+        }
         access = route.get("access")
         if not isinstance(access, dict):
             access = {}
             route["access"] = access
-        access["allow_management"] = bool(config.management_enabled)
-        access["management_base_url"] = config.base_url if config.management_enabled else ""
+        access["management_ui"] = bool(config.management_enabled)
     return payload
 
 

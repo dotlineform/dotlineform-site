@@ -16,11 +16,12 @@ export function mountDocsViewerPublicDocumentExtras(context) {
   if (!payloadHasReport(payload)) return Promise.resolve(false);
 
   return mountDocsViewerPublicReport({
-    allowManagement: false,
+    appContext: settings.appContext,
     content: settings.content,
     doc: settings.doc,
     generatedData: settings.generatedData,
     managementContext: false,
+    managementService: null,
     payload: payload,
     reportRegistryUrl: cleanString(settings.routeContext && settings.routeContext.reportRegistryUrl),
     routeContext: settings.routeContext,

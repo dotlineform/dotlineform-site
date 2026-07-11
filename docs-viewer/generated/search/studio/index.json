@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b862df0b1d81bce507f4bd684845f302",
-    "generated_at_utc": "2026-07-11T14:03:59Z",
+    "version": "blake2b-90119819c47675bbcf04d12d20e44578",
+    "generated_at_utc": "2026-07-11T14:24:07Z",
     "count": 237
   },
   "entries": [
@@ -2180,22 +2180,22 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-06-25",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-25 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-06-25",
+        "2026-07-11",
         "2026",
-        "06",
-        "25"
+        "07",
+        "11"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-06-25 2026 06 25"
+      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-css-cascade-design",
@@ -2536,10 +2536,10 @@
       "kind": "doc",
       "title": "Info Panel",
       "href": "/docs/?scope=studio&doc=docs-viewer-info-panel",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-23 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-info-panel",
         "docs",
@@ -2548,12 +2548,12 @@
         "panel",
         "info panel",
         "docs viewer",
-        "2026-06-23",
+        "2026-07-11",
         "2026",
-        "06",
-        "23"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-info-panel docs viewer info panel info panel docs viewer 2026-06-23 2026 06 23"
+      "search_text": "docs-viewer-info-panel docs viewer info panel info panel docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "library-documents",
@@ -3442,10 +3442,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-06-17",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-17 • Runtime",
+      "display_meta": "2026-07-11 • Runtime",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3454,12 +3454,12 @@
         "inventory",
         "javascript inventory",
         "runtime",
-        "2026-06-17",
+        "2026-07-11",
         "2026",
-        "06",
-        "17"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-06-17 2026 06 17"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-runtime-module-ownership",

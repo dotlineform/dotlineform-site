@@ -369,6 +369,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Validate the checked-in static site root before browser smoke tests.",
         ),
         CheckCommand(
+            "docs-viewer-app-context-module-smoke",
+            (
+                sys.executable,
+                "docs-viewer/tests/smoke/docs_viewer_router_modules.py",
+                "--site-root",
+                str(PUBLIC_SITE_ROOT),
+            ),
+            "Smoke-check explicit app context, route access, service surfaces, and router module contracts.",
+        ),
+        CheckCommand(
             "docs-viewer-service-manage-smoke",
             (
                 sys.executable,

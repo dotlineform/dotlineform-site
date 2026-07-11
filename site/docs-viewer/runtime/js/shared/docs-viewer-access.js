@@ -2,35 +2,32 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
+export const DOCS_VIEWER_APP_KINDS = Object.freeze({
+  PUBLIC: "public",
+  MANAGE: "manage",
+  REVIEW: "review"
+});
+
+export function normalizeDocsViewerAppKind(value) {
+  var kind = cleanString(value).toLowerCase();
+  if (
+    kind === DOCS_VIEWER_APP_KINDS.PUBLIC
+    || kind === DOCS_VIEWER_APP_KINDS.MANAGE
+    || kind === DOCS_VIEWER_APP_KINDS.REVIEW
+  ) {
+    return kind;
+  }
+  throw new Error("Docs Viewer app kind must be public, manage, or review.");
+}
+
 export function createDocsViewerAccessProjection(options) {
   var settings = options || {};
-  var routeConfig = settings.routeConfig || {};
-  var routeAccess = routeConfig.access || {};
-  var isDocsManagementRoute = Boolean(
-    settings.isDocsManagementRoute != null
-      ? settings.isDocsManagementRoute
-      : routeAccess.isDocsManagementRoute
-  );
-  var allowManagement = routeAccess.allowManagement != null
-    ? Boolean(routeAccess.allowManagement)
-    : isDocsManagementRoute;
-  var allowScopeQuery = Boolean(
-    settings.allowScopeQuery != null ? settings.allowScopeQuery : routeAccess.allowScopeQuery
-  );
+  var appKind = normalizeDocsViewerAppKind(settings.appKind);
+  var routeAccess = settings.routeAccess || {};
   return {
-    isDocsManagementRoute: isDocsManagementRoute,
-    allowManagement: allowManagement,
-    allowScopeQuery: allowScopeQuery,
-    publicReadOnly: !allowManagement,
-    managementRequested: allowManagement,
-    canLoadManagementUi: allowManagement,
-    backendReachability: allowManagement ? "unknown" : "unavailable",
-    writeAvailability: allowManagement ? "backend-gated" : "unavailable",
-    hostedViewDefaults: {
-      public: true,
-      manage: allowManagement,
-      manageLocal: allowManagement
-    }
+    appKind: appKind,
+    allowScopeQuery: Boolean(routeAccess.allowScopeQuery),
+    managementUi: appKind === DOCS_VIEWER_APP_KINDS.MANAGE && Boolean(routeAccess.managementUi)
   };
 }
 
@@ -38,7 +35,8 @@ export function hostedViewAccessAllowed(accessProjection, requirement) {
   var access = accessProjection || {};
   var required = cleanString(requirement || "public").toLowerCase();
   if (!required || required === "public") return true;
-  if (required === "manage") return Boolean(access.allowManagement);
-  if (required === "manage-local") return Boolean(access.allowManagement);
+  if (required === "manage" || required === "manage-local") {
+    return access.appKind === DOCS_VIEWER_APP_KINDS.MANAGE && access.managementUi === true;
+  }
   return false;
 }

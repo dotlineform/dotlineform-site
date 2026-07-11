@@ -12,9 +12,9 @@ viewable: true
 
 ## Status
 
-Phase 0 complete. The public/manage baseline, current authority coupling, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused public and manage checks pass.
+Phases 0 and 1 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
 
-Phase 1, explicit app context and authority, is next.
+Phase 2, the configured-scope provider boundary, is next.
 
 This tracker implements phases 0-5 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap). It contains no Docs Review feature behavior.
 
@@ -84,16 +84,16 @@ route path + route config
   -> management startup and lazy loading
 ```
 
-`startDocsViewerPublicApp()` and `startDocsViewerManageApp()` currently pass an `appKind` option, but route-context creation does not retain it. Current effective app kind is therefore inferred from `access.allowManagement`.
+At the Phase 0 baseline, `startDocsViewerPublicApp()` and `startDocsViewerManageApp()` passed an `appKind` option, but route-context creation did not retain it. Effective app kind was inferred from `access.allowManagement`.
 
-`docs-viewer-service-context.js` currently exposes:
+At that baseline, `docs-viewer-service-context.js` exposed:
 
 - browser-safe config for every route
 - generated reads as static assets for public routes
 - local generated-read base URL only when `allowManagement` is true
 - a management service surface only when `allowManagement` is true
 
-This is the preserved baseline, not the Phase 1 target. Phase 1 separates app kind, route visibility, service presence, and backend capability truth.
+This is the preserved pre-refactor baseline. The implemented Phase 1 contract is recorded below.
 
 ### Startup And Construction
 
@@ -169,7 +169,7 @@ Slice-specific checks must add the lowest-layer contract proof described below. 
 
 | phase | target owner after the slice | primary change | focused proof |
 | --- | --- | --- | --- |
-| 1. App context and authority | `docs-viewer-app-context.js` for normalized app context; `docs-viewer-access.js` for route visibility; `docs-viewer-service-context.js` for named service presence | Introduce explicit `kind: public | manage`, feature policy, service availability, and backend capability inputs; remove `publicReadOnly: !allowManagement` APIs and update all callers. | Pure app/access/service projection tests plus public static graph and service-config tests. |
+| 1. App context and authority — complete | `docs-viewer-app-context.js` for normalized app context; `docs-viewer-access.js` for route visibility; `docs-viewer-service-context.js` for named service presence | Explicit `kind: public | manage | review`, feature policy, service availability, and backend capability inputs; old binary browser APIs removed. | Direct module projection checks plus public static graph, service-config, lifecycle, and route smokes pass. |
 | 2. Configured-scope provider | new `docs-viewer-configured-scope-provider.js`; `docs-viewer-generated-data-runtime.js` remains transport/retry owner | Supply named index/document/search/recent/reference reads and optional source methods without granting authority. | Pure provider contract tests using current generated fixtures; focused source-service tests. |
 | 3. Route features and startup | new `docs-viewer-route-features.js`; `docs-viewer-app-composition.js` consumes the normalized projection | Validate known feature ids, preserve current defaults, and construct/initialize only enabled search, recent, bookmark, report, scope-selection, source-edit, and management surfaces. | Pure feature normalization and startup-record tests; route-config module check. |
 | 4. View/mode/control projection | new shared `docs-viewer-view-registry.js` for code-owned definition normalization and eligibility projection | Combine shared definitions, manage entrypoint contributions, app context, backend capabilities, route policy, and active view/mode state. | Pure registry/projection tests; public graph proof; narrow renderer DOM proof. |
@@ -211,6 +211,38 @@ Acceptance:
 - app kind is not inferred from service reachability or one management boolean
 - a future local non-management composition is representable without adding behavior for it
 - public routes receive no management/review modules, source services, capability probes, or local base URLs
+
+## Phase 1 Outcome
+
+Implemented on 2026-07-11.
+
+### Current Contract
+
+- Route records use `docs_viewer_route_config_v2`.
+- Every route record declares `app_kind` and narrow `access.allow_scope_query` / `access.management_ui` policy.
+- Public and manage entrypoints provide their expected app kind; route normalization rejects mismatches.
+- App context supports `public`, `manage`, and future `review` kinds. No review route, entrypoint, provider, or product behavior was added.
+- App context exposes `kind`, `routeAccess`, `featurePolicy`, `serviceAvailability`, and a `backendCapabilities` slot initialized to `null`.
+- Service context exposes independent `generatedData`, `source`, `management`, and browser-safe `config` surfaces.
+- `generatedData` always exists and chooses static assets or an optional local generated-read URL.
+- `source` and `management` are absent unless their own service records provide base URLs.
+- Management shell/lazy startup requires explicit manage UI composition and an available management surface.
+- Source-editor service slots depend on source-service presence, not on app kind or management-service presence.
+- Hosted-view and document-mode access consume explicit app kind and route composition policy.
+- Public versus richer metadata projection consumes `appContext.kind`.
+- Backend capability responses remain the authority for operations; service URL presence does not authorize writes.
+
+Removed browser contract fields include the former management/read-only booleans and combined generated/management URL fields. No aliases remain.
+
+### Phase 1 Checks
+
+| check | result |
+| --- | --- |
+| Focused public-boundary, static-asset, and service-config pytest set | pass: 18 tests |
+| Scope lifecycle and management-route pytest set | pass: 25 tests |
+| Direct app/route/service-context module smoke | pass |
+| Metadata hosted-view context module smoke | pass |
+| `docs-viewer-smoke` profile | pass: 4 checks; see `var/admin/test-runs/docs-viewer-foundation-phase-1-final/summary.md` |
 
 ## Later Phase Acceptance
 

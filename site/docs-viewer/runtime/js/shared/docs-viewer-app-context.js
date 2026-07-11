@@ -2,19 +2,19 @@ import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
 import {
-  createDocsViewerAccessProjection
+  createDocsViewerAccessProjection,
+  normalizeDocsViewerAppKind
 } from "./docs-viewer-access.js";
 import {
   isDocsManagementRoutePath,
   resolveDocsViewerRouteConfig
 } from "./docs-viewer-route-config.js";
+import {
+  createDocsViewerServiceAvailability
+} from "./docs-viewer-service-context.js";
 
 function cleanString(value) {
   return String(value || "").trim();
-}
-
-function cleanBaseUrl(value) {
-  return cleanString(value).replace(/\/+$/, "");
 }
 
 function locationSearch(windowRef) {
@@ -49,6 +49,7 @@ export function createDocsViewerRouteContext(options) {
   var routeConfig = settings.resolvedRouteConfig || resolveDocsViewerRouteConfig({
     root: root,
     document: settings.document,
+    appKind: settings.appKind,
     routeConfig: settings.routeConfig,
     routeConfigSource: settings.routeConfigSource
   });
@@ -56,20 +57,15 @@ export function createDocsViewerRouteContext(options) {
   var viewerBaseUrl = routeViewerBaseUrl || locationPathname(windowRef);
   var resolvedViewerPathname = viewerPathname(viewerBaseUrl, windowRef);
   var docsManagementRoute = isDocsManagementRoutePath(resolvedViewerPathname);
-  var access = createDocsViewerAccessProjection({
-    routeConfig: routeConfig,
-    isDocsManagementRoute: docsManagementRoute
+  var appContext = createDocsViewerAppContext({
+    appKind: settings.appKind || routeConfig.appKind,
+    routeConfig: routeConfig
   });
-  var allowManagement = access.allowManagement;
-  var managementBaseUrl = allowManagement ? cleanBaseUrl(routeConfig.access.managementBaseUrl) : "";
-  var generatedBaseUrl = allowManagement ? (cleanBaseUrl(routeConfig.generatedBaseUrl) || managementBaseUrl) : "";
   var context = {
     root: root,
     routeConfig: routeConfig,
-    access: access,
+    appContext: appContext,
     isDocsManagementRoute: docsManagementRoute,
-    allowManagement: allowManagement,
-    allowScopeQuery: access.allowScopeQuery,
     docsViewerConfigUrl: routeConfig.docsViewerConfigUrl,
     routeViewerBaseUrl: routeViewerBaseUrl,
     indexTreeUrl: appendAssetVersion(routeConfig.indexTreeUrl, assetVersion),
@@ -82,13 +78,28 @@ export function createDocsViewerRouteContext(options) {
     searchIndexUrl: appendAssetVersion(routeConfig.searchIndexUrl, assetVersion),
     subScopes: [],
     subScopesById: new Map(),
-    reportRegistryUrl: routeConfig.reportRegistryUrl,
-    managementBaseUrl: managementBaseUrl,
-    generatedBaseUrl: generatedBaseUrl
+    reportRegistryUrl: routeConfig.reportRegistryUrl
   };
   context.bookmarkScope = context.viewerScope || context.viewerPathname || "docs";
   context.openImportOnLoad = context.isDocsManagementRoute && new URLSearchParams(locationSearch(windowRef)).get("import") === "1";
   return context;
+}
+
+export function createDocsViewerAppContext(options) {
+  var settings = options || {};
+  var routeConfig = settings.routeConfig || {};
+  var kind = normalizeDocsViewerAppKind(settings.appKind || routeConfig.appKind);
+  var routeAccess = createDocsViewerAccessProjection({
+    appKind: kind,
+    routeAccess: routeConfig.access
+  });
+  return {
+    kind: kind,
+    routeAccess: routeAccess,
+    featurePolicy: routeConfig.featurePolicy || {},
+    serviceAvailability: createDocsViewerServiceAvailability(routeConfig.services),
+    backendCapabilities: null
+  };
 }
 
 export function updateDocsViewerRouteContext(context, values, options) {
