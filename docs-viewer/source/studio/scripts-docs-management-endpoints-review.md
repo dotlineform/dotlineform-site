@@ -186,3 +186,5 @@ These routes do not accept:
 - publish, promotion, import, delete, or general management actions
 
 See [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) for the durable workflow and ownership contract.
+
+The planned [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) flow remains a managed `/docs/` import capability. Docs Review may hand off safe package/document identities, but this endpoint family must not gain configured-source apply authority.

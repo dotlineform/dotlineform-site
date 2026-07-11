@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3cc5b5dca4391caa8da7bed485778191",
-    "generated_at_utc": "2026-07-11T20:58:56Z",
-    "count": 236
+    "version": "blake2b-8735e700b66dfef7121fa94e82d1f924",
+    "generated_at_utc": "2026-07-11T21:32:05Z",
+    "count": 237
   },
   "entries": [
     {
@@ -1341,6 +1341,34 @@
       "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
     },
     {
+      "id": "site-request-docs-import-reviewed-package",
+      "kind": "doc",
+      "title": "Docs Import Reviewed Package",
+      "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package",
+      "last_updated": "2026-07-11",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-11 • Change Requests",
+      "search_terms": [
+        "site-request-docs-import-reviewed-package",
+        "site",
+        "request",
+        "docs",
+        "import",
+        "reviewed",
+        "package",
+        "docs import reviewed package",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "site-request-docs-import-reviewed-package site request docs import reviewed package docs import reviewed package change requests change requests 2026-07-11 2026 07 11"
+    },
+    {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
       "kind": "doc",
       "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
@@ -2444,10 +2472,10 @@
       "kind": "doc",
       "title": "Import Source Registry Spec",
       "href": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
-      "last_updated": "2026-05-18 00:00",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-18 00:00 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-import-source-registry-spec",
         "docs",
@@ -2458,13 +2486,12 @@
         "spec",
         "import source registry spec",
         "docs viewer",
-        "2026-05-18 00:00",
+        "2026-07-11",
         "2026",
-        "05",
-        "18",
-        "00"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-05-18 00:00 2026 05 18 00"
+      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-info-panel",
@@ -2597,10 +2624,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-11",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-07 • Endpoint Overview",
+      "display_meta": "2026-07-11 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-create-import",
         "scripts",
@@ -2614,12 +2641,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-07",
+        "2026-07-11",
         "2026",
-        "06",
-        "07"
+        "07",
+        "11"
       ],
-      "search_text": "scripts-docs-management-endpoints-create-import scripts docs management endpoints create import create and import endpoints and endpoint overview endpoint overview 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-endpoints-create-import scripts docs management endpoints create import create and import endpoints and endpoint overview endpoint overview 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-management-endpoints-review",
@@ -2929,10 +2956,10 @@
       "kind": "doc",
       "title": "Import Scripts",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-scripts-import",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-11",
       "parent_id": "scripts-docs-management-scripts",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-06-07 • Scripts Overview",
+      "display_meta": "2026-07-11 • Scripts Overview",
       "search_terms": [
         "scripts-docs-management-scripts-import",
         "scripts",
@@ -2942,12 +2969,12 @@
         "import scripts",
         "scripts overview",
         "overview",
-        "2026-06-07",
+        "2026-07-11",
         "2026",
-        "06",
-        "07"
+        "07",
+        "11"
       ],
-      "search_text": "scripts-docs-management-scripts-import scripts docs management import import scripts scripts overview overview 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-scripts-import scripts docs management import import scripts scripts overview overview 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-management-scripts-read-config",
@@ -3113,10 +3140,10 @@
       "kind": "doc",
       "title": "Media Handling",
       "href": "/docs/?scope=studio&doc=docs-viewer-media-handling",
-      "last_updated": "2026-05-18",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-18 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-media-handling",
         "docs",
@@ -3125,12 +3152,12 @@
         "handling",
         "media handling",
         "docs viewer",
-        "2026-05-18",
+        "2026-07-11",
         "2026",
-        "05",
-        "18"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-05-18 2026 05 18"
+      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-new-scopes-builder",
@@ -3573,10 +3600,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-05 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-source-organisation",
         "docs",
@@ -3585,12 +3612,12 @@
         "organisation",
         "source organisation",
         "docs viewer",
-        "2026-06-05",
+        "2026-07-11",
         "2026",
-        "06",
-        "05"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-06-05 2026 06 05"
+      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-toolbar-model",

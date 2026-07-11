@@ -169,7 +169,7 @@ It does not build generated review payloads automatically, register the folder a
 
 The current Content/source-folder action is a text-oriented preview handoff only. Its manifest records `source_projection: rendered_derived_text_only`. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
 
-[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the later exact-Markdown and asset producer for the same validated-package handoff. Docs Review may edit and rebuild either validated projection, but it does not promote canonical source. Any future automated canonical import remains a Data Sharing responsibility.
+[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the later exact-Markdown and asset producer for the same validated-package handoff. Docs Review may edit and rebuild either validated projection, but it does not write configured source. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns the separate create-only import of selected reviewed files as new Docs Viewer documents.
 
 ## Review Rows
 
@@ -295,4 +295,4 @@ It checks package shape, metadata, current-source context, and write-action prec
 It does not infer file meaning from row fields.
 It does not apply unrecognized fields.
 The Analytics returned-package apply actions do not treat review Markdown as canonical apply input.
-The current implementation does not automatically create missing documents or parent documents. The planned full-package workflow may preview explicit new chapter files, while any future canonical creation/import remains a Data Sharing responsibility.
+The current implementation does not automatically create missing documents or parent documents. The planned full-package workflow may preview explicit new chapter files, while their configured-scope creation belongs to the create-only Docs Viewer reviewed-package import.

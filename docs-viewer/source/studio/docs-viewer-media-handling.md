@@ -2,7 +2,7 @@
 doc_id: docs-viewer-media-handling
 title: Media Handling
 added_date: 2026-05-14
-last_updated: 2026-05-18
+last_updated: 2026-07-11
 parent_id: docs-viewer
 viewable: true
 ---
@@ -22,13 +22,15 @@ Docs Viewer media handling covers:
 - scope-specific media path generation
 - media-copy handoff information shown in the Docs Import result
 
-It does not cover:
+It does not currently cover:
 
 - automatic remote upload
 - raster-to-SVG conversion
 - catalogue media generation
 - Library returned-package Data Sharing imports under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - browser runtime asset loading outside generated Docs Viewer content
+
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) plans to reuse the existing inline raster data-URL path for selected reviewed-package Markdown. Package-specific code will resolve and normalize the validated source; Docs Import will continue to plan, retarget, decode, and materialize supported PNG, JPEG, WebP, and GIF data URLs. Non-embedded package assets need explicit import mappings and are not automatically promoted from the Data Sharing workspace.
 
 ## Scope Configuration
 

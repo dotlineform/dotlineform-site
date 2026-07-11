@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints-create-import
 title: Create And Import Endpoints
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-11
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Create And Import Endpoints
@@ -109,3 +109,11 @@ Actions:
 Returned data can include preview Markdown, proposed doc identity, operation type, collision information, media plans, interactive HTML plans, written media records, created or overwritten source path, rebuild diagnostics, summary text, and `dry_run`.
 
 `POST /docs/import-html` is a compatibility alias that delegates to the same source import handler.
+
+## Planned Reviewed-Package Import
+
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will extend the managed import family with a validated-package source provider and create-only batch preview/apply flow.
+
+It will not pass external workspace paths as `staged_filename`, and it will not feed front-matter-bearing package Markdown directly to the body-only Markdown preview. The provider will resolve safe package/document identities and normalize front matter plus body content before shared import validation, media planning, source creation, and rebuild work.
+
+Reviewed-package collisions require replacement target IDs. The reviewed-package endpoint must not expose the existing document-overwrite controls.

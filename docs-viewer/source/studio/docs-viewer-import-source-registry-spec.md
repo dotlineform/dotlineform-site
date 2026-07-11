@@ -2,7 +2,7 @@
 doc_id: docs-viewer-import-source-registry-spec
 title: Import Source Registry Spec
 added_date: 2026-05-14
-last_updated: "2026-05-18 00:00"
+last_updated: 2026-07-11
 parent_id: docs-viewer
 viewable: true
 ---
@@ -27,6 +27,16 @@ The registry must:
 
 The registry is intentionally small.
 It describes supported formats and dispatch metadata; it is not a plugin loader or an open-ended import execution surface.
+
+## Planned Reviewed-Package Source
+
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) adds a second source family without turning external package paths into ordinary staged filenames.
+
+The current staging flow resolves one body-only source under `var/docs/import-staging/`. A reviewed package instead contains several front-matter-bearing Markdown files under a validated external package root. The planned implementation will introduce a source-provider/normalized-candidate boundary above the existing Markdown preview, media planning, write, and rebuild behavior.
+
+The reviewed-package provider will resolve trusted package and document identities, split validated front matter from body Markdown, and supply allowed metadata and package context. Shared lower-level import services will continue to own renderer validation, data-URL image extraction, collision handling, source formatting, atomic writes, and rebuilds.
+
+Reviewed-package apply is create-only. A target collision requires a replacement `doc_id`; it never enables the existing overwrite path.
 
 ## Registry Shape
 
@@ -263,3 +273,4 @@ Keep writes in the service layer so source-write, rebuild, and search behavior r
 - [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer)
+- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package)

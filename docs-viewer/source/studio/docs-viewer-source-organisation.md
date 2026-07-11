@@ -2,7 +2,7 @@
 doc_id: docs-viewer-source-organisation
 title: Source Organisation
 added_date: 2026-04-23
-last_updated: 2026-06-05
+last_updated: 2026-07-11
 parent_id: docs-viewer
 ---
 # Docs Viewer Source Organisation
@@ -130,7 +130,7 @@ At a high level, each scope currently has:
 
 This is why the shared runtime can stay generic: it consumes the same kind of scope-owned output for each docs scope.
 
-Validated returned-package source and generated previews are not repository source or configured scopes. They live under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/`, with temporary Markdown in `source/`, inventoried files in `assets/`, and review output in `generated/`. Data Sharing creates the validated handoff; Docs Review may edit and rebuild only within that package folder and cannot promote it into canonical source.
+Validated returned-package source and generated previews are not repository source or configured scopes. They live under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/`, with temporary Markdown in `source/`, inventoried files in `assets/`, and review output in `generated/`. Data Sharing creates the validated handoff; Docs Review may edit and rebuild only within that package folder. The planned Docs Viewer import flow can read selected files from that validated package as create-only new-document candidates without moving them into repo import staging.
 
 Detailed payload shape and rationale are intentionally left out of this section.
 

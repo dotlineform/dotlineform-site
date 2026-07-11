@@ -9,7 +9,9 @@ parent_id: ""
 
 ## Knowledge Lifecycle Role
 
-Data Sharing supports repeated knowledge-development cycles, not only one-way export or conventional import. It owns portable packages, trusted provenance, returned-package validation, and any future automated transition into the next accepted source version.
+Data Sharing supports repeated knowledge-development cycles, not only one-way export or conventional import. It owns portable packages, trusted provenance, returned-package validation, and the validated handoff to downstream consumers.
+
+For full reviewed documents, that boundary now ends at the validated package. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns the planned create-only admission into a configured Docs Viewer scope. It treats selected reviewed files as new documents and does not replace or promote an existing canonical document. Existing Data Sharing summary and hierarchy apply actions remain narrow field-update workflows and do not establish ownership of that new-document import.
 
 See [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) for the planned source-and-asset-complete round trip.
 See [Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision) for the cross-system purpose of that loop.

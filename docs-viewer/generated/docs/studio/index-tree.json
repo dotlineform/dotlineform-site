@@ -317,6 +317,12 @@
           "ui_status": "done"
         },
         {
+          "doc_id": "site-request-docs-import-reviewed-package",
+          "title": "Docs Import Reviewed Package",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package.json",
+          "ui_status": "proposed"
+        },
+        {
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
           "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
@@ -1273,5 +1279,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T20:58:56Z"
+  "generated_at": "2026-07-11T21:29:21Z"
 }

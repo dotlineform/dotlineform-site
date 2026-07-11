@@ -370,7 +370,7 @@ Recommended priorities:
 4. retain source write/rebuild as the single canonical rebuild boundary
 5. narrow capability payload construction into feature-owned projections
 
-Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, returned-package provider, and isolated build/source services. Any future canonical import or promotion belongs to Data Sharing rather than Docs Review.
+Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, returned-package provider, and isolated build/source services. The planned create-only transition from a validated package belongs to managed Docs Viewer Import rather than Docs Review or Data Sharing.
 
 ## Finding 10: Config Has Multiple Legitimate But Overlapping Layers
 
@@ -509,7 +509,7 @@ Rules:
 - advertise affected capabilities as unavailable with actionable setup guidance when `DOTLINEFORM_PROJECTS_BASE_DIR` is missing, invalid, unreadable, or unwritable
 - preserve traversal, suffix, symlink, and containment checks against the external workflow root
 - store artifact-relative filenames or marker-rooted display paths in manifests and metadata rather than checkout-relative or absolute user paths
-- keep any future Data Sharing canonical import explicitly repo-authorized even though reviewed source is read from an external workspace
+- keep reviewed-package Docs Import explicitly repo-authorized even though its source provider reads from an external workspace
 - use temporary project-base roots in tests instead of treating a temporary repository's `var/` directory as the production contract
 - treat old `var/` workflow artifacts as disposable/manual-migration input; do not add compatibility reads or duplicate writes
 
@@ -909,7 +909,7 @@ Its implementation should consume:
 - shared tree, document, and source-editor primitives
 - focused package-listing, manifest/asset-read, build, generated-read, and temporary source services
 
-Docs Review must not receive canonical import or promotion services. Any future automated transition from a returned package into canonical source remains a separate Data Sharing workflow.
+Docs Review must not receive configured-source import or promotion services. The planned transition from a returned package is a separate managed Docs Viewer create-only import workflow.
 
 Docs Review must not be used as an excuse to complete unrelated roadmap items.
 

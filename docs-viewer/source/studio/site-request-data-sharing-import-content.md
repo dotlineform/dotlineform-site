@@ -53,7 +53,7 @@ This Data Sharing slice ends at the temporary review-folder handoff:
 
 No live source docs are created, overwritten, or deleted by the Data Sharing source-folder action.
 
-This implemented text-oriented folder is not source-faithful enough for canonical import. The superseding full-package request keeps any future canonical import/promotion under Data Sharing ownership; Docs Review does not acquire canonical write authority.
+This implemented text-oriented folder is not source-faithful enough for configured-source import. The superseding full-package request provides exact source and validation; the separate [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) request owns create-only admission as new documents. Docs Review does not acquire canonical write authority.
 
 ## Temporary Review Source Folders
 
@@ -203,7 +203,7 @@ Review folders should be opened in `/docs-review/`. The review route should make
 
 The review route may edit and rebuild temporary source. It does not write canonical source.
 
-Any future automated canonical import/promotion belongs to Data Sharing because Data Sharing owns trusted export provenance, returned-package validation, and source/asset mappings. It requires a separate preview/apply request after full-package export and review are proven.
+Any later configured-source creation belongs to managed Docs Viewer Import. Data Sharing provenance and validation establish a trusted package handoff; they do not make Data Sharing the owner of target-scope source creation. The new flow requires separate preview/apply work after full-package export and review are proven.
 
 The route should be distinct from normal scope navigation:
 
@@ -219,7 +219,7 @@ Initial review UI shape:
 - load generated docs from the selected built folder
 - edit temporary Markdown while preserving the validated package hierarchy
 - open canonical counterparts in `/docs/`
-- retain package provenance for a later manual handoff or separately specified Data Sharing import action
+- retain package provenance for a later handoff to the separately specified Docs Viewer import action
 - keep delete/cleanup out of the first slice unless explicitly added later
 
 Loading a review folder must not mutate the active configured scope.
@@ -242,7 +242,7 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 The next workflow is [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which exports exact Markdown and supporting assets, validates the returned package, and hands it to Docs Review for preview and temporary editing.
 
-Any later automated canonical import/promotion requires a separate Data Sharing request with source/asset mapping, revision checks, complete hierarchy validation, preview/apply, and rebuild contracts.
+Any later configured-source creation follows [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package), with source normalization, create-only collision policy, hierarchy/link mapping, preview/apply, media handling, and rebuild contracts.
 
 ## Implementation Architecture
 
@@ -288,8 +288,9 @@ The folder id should be a display-safe folder name derived from the staged file'
 - read generated index and payload files
 - render the temporary docs
 - edit and rebuild temporary source
-- validate and promote reviewed content and hierarchy through its own service boundary
 - handle stale or manually deleted folders
+
+Managed `/docs/` may later accept a safe package/document identity handoff for create-only import. That does not add configured-source authority to `/docs-review/`.
 
 The normal `/docs/` app remains unaware of this workflow.
 

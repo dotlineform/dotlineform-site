@@ -29,7 +29,8 @@ Data Sharing owns:
 - export provenance and portable package contracts
 - returned-package staging and validation
 - materializing validated source and asset files under the external workspace root
-- any future plan/apply workflow that imports reviewed content into canonical source
+
+Docs Viewer Import owns the planned create-only admission of selected reviewed-package documents into a configured scope. That workflow treats them as new documents; it does not promote or replace an existing canonical document.
 
 Docs Review owns only:
 
@@ -40,7 +41,7 @@ Docs Review owns only:
 - package inventory visibility
 - links to canonical counterparts for manual comparison
 
-Canonical source remains outside Docs Review authority. The route exposes no canonical write, management, publish, or promotion capability.
+Canonical source remains outside Docs Review authority. The route exposes no canonical write, management, publish, promotion, or import-apply capability. A future review control may hand safe package/document identities to the managed `/docs/` import flow without granting that authority to the review app context.
 
 ## Enablement And Route
 
@@ -73,7 +74,7 @@ The single Docs Viewer toolbar row contains:
 - the Markdown source/rendered-mode control
 - the document information control
 
-The index panel renders the hierarchy supplied by the validated package. Docs Review does not provide parent or hierarchy editing. Hierarchy changes belong before the validated-package handoff or in a separate Data Sharing workflow.
+The index panel renders the hierarchy supplied by the validated package. Docs Review does not provide parent or hierarchy editing. The planned Docs Viewer import preflight will map selected package parents to the new target documents without making the review route a hierarchy editor.
 
 `Build` writes a fresh package-local generated preview. Opening an unbuilt package also triggers the required initial build before its index is read.
 
@@ -211,5 +212,5 @@ These checks cover validated package discovery, package-root containment, build 
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
 - [Returned Package Review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review)
 - [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
+- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package)
 - [Local Setup Environment](/docs/?scope=studio&doc=local-setup-environment)
-

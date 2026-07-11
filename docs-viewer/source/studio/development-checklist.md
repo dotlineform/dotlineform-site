@@ -122,7 +122,7 @@ Returned apply actions:
 - `docs_data_sharing/apply_common.py` owns shared apply input parsing, selected record handling, and apply identity.
 - `docs_data_sharing/apply_summaries.py` owns summary update planning and writes.
 - `docs_data_sharing/apply_hierarchy.py` owns hierarchy/parent update planning and writes.
-- add full document content import as a new action module rather than expanding summary or hierarchy action modules.
+- keep returned apply actions limited to their named field-update contracts; do not add full reviewed-document creation as a Data Sharing action. Hand validated packages to managed Docs Viewer Import instead.
 
 Documents data-sharing adapters:
 
@@ -133,14 +133,15 @@ Documents data-sharing adapters:
 Docs Review:
 
 - [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) owns the durable `/docs-review/` product, package, editing, and authority boundary.
-- [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export, asset/dependency packaging, returned-package validation, and any future canonical import/promotion.
+- [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export, asset/dependency packaging, returned-package validation, and the validated review handoff.
+- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns the planned create-only import of selected reviewed files as new configured-scope documents.
 - Returned review packages are temporary folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
 - Reuse shared tree, routing, rendering, panel, source-editor, and CSS primitives through explicit review app context, provider, and capability contracts.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
 - `docs_review_packages.py` owns safe validated-package list/read behavior; focused review build and source services own generated output and temporary Markdown writes.
 - Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
-- Temporary review edits require explicit package-rooted backend capabilities. Docs Review must not receive canonical import, promotion, or general management authority.
+- Temporary review edits require explicit package-rooted backend capabilities. Docs Review must not receive canonical import apply, promotion, or general management authority; it may only hand safe identities to managed Docs Import.
 - Docs Review preserves validated package hierarchy but does not edit it; keep `parent_id` and hierarchy changes outside the review route.
 - Public entrypoints must not import review assets, receive review service URLs, or probe review capabilities.
 

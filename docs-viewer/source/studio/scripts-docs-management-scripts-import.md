@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-scripts-import
 title: Import Scripts
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-11
 parent_id: scripts-docs-management-scripts
 ---
 # Docs Viewer Import Scripts
@@ -50,6 +50,8 @@ Not responsible for:
 - HTTP routing
 - source-config settings
 - builder implementation
+
+Planned extension: [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will separate source resolution/normalization from the shared preview and apply machinery. The current staged-file behavior should become one source provider; a validated reviewed-package provider should become another. Create-only reviewed-package policy belongs in its orchestration layer, while Markdown validation, inline-media planning/materialization, source writes, and rebuild follow-through remain shared.
 
 ## `docs-viewer/services/docs_html_import.py`
 

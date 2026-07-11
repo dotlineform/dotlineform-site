@@ -84,7 +84,7 @@ It is both a reading surface and a way to gather otherwise scattered outputs int
 
 ### Data Sharing
 
-Data Sharing makes selected knowledge portable. It owns packages, manifests, provenance, external task context, returned-package validation, and any future automated transition from returned work into canonical domain source.
+Data Sharing makes selected knowledge portable. It owns packages, manifests, provenance, external task context, returned-package validation, and the trusted handoff to review and import consumers.
 
 ### Analysis Scope
 
@@ -104,8 +104,8 @@ catalogue and registry data
   -> external AI analysis and editing
   -> returned-package validation
   -> isolated Docs Review preview and manual editing
-  -> manual acceptance or future Data Sharing import
-  -> next canonical version
+  -> selected files enter Docs Viewer Import as new documents
+  -> accepted documents join a configured collection
 ```
 
 This is a loop, not a one-time publication pipeline.
@@ -132,8 +132,8 @@ The complete vision is not implemented yet. Current and planned work moves towar
 - source-aware semantic token expansion
 - full source-and-asset Data Sharing packages
 - isolated returned-package preview in Docs Review
+- create-only Docs Viewer import for selected reviewed-package documents
 - summary-aware and later broader content-aware search
-- a possible future Data Sharing canonical import/promotion workflow
 
 Each project should remain independently reviewable. The vision explains why the projects connect; it does not justify mixing their implementation responsibilities.
 

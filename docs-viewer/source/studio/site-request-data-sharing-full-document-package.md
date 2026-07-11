@@ -15,7 +15,7 @@ In progress as the producer for the complete [Docs Review](/docs/?scope=studio&d
 
 The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export and returned-package services, and Docs Review sessions now use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. Full-package schema, export, intake, and validation remain to be implemented.
 
-Phase 1 owns full-fidelity export, returned-package intake, validation, and review-workspace handoff. Automated canonical import/promotion is explicitly deferred, but remains a future Data Sharing responsibility rather than a Docs Review responsibility.
+Phase 1 owns full-fidelity export, returned-package intake, validation, and review-workspace handoff. It does not own the later configured-source write. That work is now specified by [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) as a create-only Docs Viewer import.
 
 ## Product Context: Iterative Knowledge Creation
 
@@ -73,6 +73,8 @@ JSONL is the default and primary format. A single JSON file containing the same 
 
 Images and other binary assets accompany the JSONL separately and are mapped through embedded and package-level manifests. A folder is the local workspace form. An archive may be offered as an optional transport convenience only when the target service is known to support it; ZIP support is not a requirement for the core workflow.
 
+For reviewed documents intended for create-only import, prefer embedding new or replaced raster images directly in returned Markdown as supported data URLs when the external editing surface can supply them. Data Sharing must validate their package size and content shape, but it does not need to promote them into canonical media paths. The downstream Docs Viewer importer already has a preview/materialization path for PNG, JPEG, WebP, and GIF data URLs. Separate asset files remain necessary for existing packaged dependencies, attachments, interactive content, and unsupported inline forms.
+
 ## Ownership Boundary
 
 ### Data Sharing
@@ -90,7 +92,6 @@ Data Sharing owns:
 - returned source, hierarchy, asset, link, and embed validation
 - regenerated returned-package inventories
 - handoff to Docs Review
-- any future canonical import/promotion workflow
 
 ### Docs Review
 
@@ -104,19 +105,20 @@ Docs Review owns only:
 
 Docs Review does not discover export dependencies, validate transport archives, or write canonical source.
 
-### Future Canonical Import/Promotion
+### Docs Viewer Import Handoff
 
-If automated import is added, it must be a separate Data Sharing phase with explicit preview/apply semantics.
+Selected reviewed-package documents may later be handed to managed Docs Viewer Import as new-document candidates.
 
-Data Sharing is the correct owner because it has:
+Data Sharing supplies:
 
-- the trusted export record and original file hashes
-- the returned-package validator
-- mappings from package source/assets to canonical domain paths
-- domain adapters for canonical document and media changes
-- the ability to classify create, update, move, replace, and delete operations
+- a trusted validated package identity
+- safe package document identities
+- validated source and inventory files
+- provenance and validation diagnostics
 
-Docs Review may link to a Data Sharing import plan or display its result, but it must not acquire canonical mutation endpoints.
+Docs Viewer Import owns target-scope selection, front-matter normalization, collision handling, parent/link mapping, embedded-image materialization, source creation, and rebuilds. The workflow never classifies reviewed files as updates, replacements, promotions, or deletes. A collision requires a new target `doc_id`.
+
+Docs Review may link to that managed import flow, but it must not acquire canonical mutation endpoints. The detailed reuse boundary is specified in [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
 
 ## External Workspace Root
 
@@ -366,11 +368,12 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 - provide package-aware source and asset roots to the review builder
 - verify representative original and modified packages render correctly
 
-### 8. Future Data Sharing Import/Promotion
+### 8. Docs Viewer Import Handoff
 
-- create a separate request only after full-package export/review is proven
-- define canonical source/media mapping, revision checks, preview/apply, rollback, and rebuild contracts
-- keep canonical mutation entirely behind Data Sharing domain adapters
+- hand safe package and document identities to the separate managed Docs Viewer flow
+- keep package-specific resolution and normalization above the shared Docs Import preview/write machinery
+- treat reviewed files as create-only candidates and require replacement IDs for collisions
+- reuse Docs Import data-URL media planning and materialization
 
 ## Acceptance Criteria
 
@@ -388,12 +391,13 @@ Phase 1 is complete when:
 - a validated returned package builds successfully in Docs Review
 - the entire workflow uses `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - no phase writes canonical source or public assets
-- ownership of any future automated import/promotion is explicitly Data Sharing
+- the validated package exposes enough safe identity and inventory context for the separate Docs Viewer import request
 
 ## Non-Goals
 
 - replacing the compact `document-content` profile
-- automatic canonical import/promotion in phase 1
+- configured-scope import in this request
+- replacing, promoting, merging, or deleting existing canonical documents
 - implementing canonical mutation inside Docs Review
 - silently fetching remote assets
 - guaranteeing portability for unresolved dynamic script dependencies
