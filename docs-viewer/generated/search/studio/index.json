@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d2c0bb35525a5465ab659eb193064ee9",
-    "generated_at_utc": "2026-07-11T00:04:14Z",
-    "count": 235
+    "version": "blake2b-10723d6fcc2185c2ee1df5ace0cd6f28",
+    "generated_at_utc": "2026-07-11T13:49:39Z",
+    "count": 236
   },
   "entries": [
     {
@@ -2340,6 +2340,33 @@
         "25"
       ],
       "search_text": "docs-viewer-static-route-template docs viewer static route template docs viewer static route template docs viewer 2026-06-25 2026 06 25"
+    },
+    {
+      "id": "docs-viewer-documentation-register",
+      "kind": "doc",
+      "title": "Documentation Register And Authority Map",
+      "href": "/docs/?scope=studio&doc=docs-viewer-documentation-register",
+      "last_updated": "2026-07-11",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-documentation-register",
+        "docs",
+        "viewer",
+        "documentation",
+        "register",
+        "documentation register and authority map",
+        "and",
+        "authority",
+        "map",
+        "docs viewer",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "docs-viewer-documentation-register docs viewer documentation register documentation register and authority map and authority map docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-export",

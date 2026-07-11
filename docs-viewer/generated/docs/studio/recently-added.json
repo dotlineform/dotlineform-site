@@ -11,6 +11,14 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "docs-viewer-documentation-register",
+      "title": "Documentation Register And Authority Map",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
+      "added_date": "2026-07-11",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
       "doc_id": "knowledge-system-vision",
       "title": "Knowledge System Vision",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/knowledge-system-vision.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-27",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "ui-selectable-list-component",
-      "title": "Selectable List Component",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-selectable-list-component.json",
-      "added_date": "2026-06-27",
-      "parent_id": "ui",
-      "parent_title": "UI"
     }
   ],
-  "generated_at": "2026-07-11T00:03:43Z"
+  "generated_at": "2026-07-11T13:49:39Z"
 }

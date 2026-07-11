@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-architecture-refactor-roadmap
 title: Docs Viewer Architecture Assessment And Refactor Roadmap
 added_date: 2026-07-10
 last_updated: 2026-07-11
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,7 +11,9 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap proposed, documentation workstream identified, and legacy documentation-scope separation added as the first functional documentation task.
+Assessment complete; roadmap accepted for implementation, and the initial D0 documentation register and authority map are ready for review.
+
+The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
 Implementation should be planned as behavior-preserving refactor slices before work resumes on [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow).
 
@@ -24,7 +26,7 @@ Docs Review is a useful pressure test because it needs the existing tree, docume
 The sequence is:
 
 1. establish a documentation authority map, current contracts, and baseline checks
-2. separate the legacy `studio` documentation corpus into intentional product and shared-development scopes
+2. separate user, operator, architecture, reference, and historical concerns through ownership and entry points within the existing `studio` scope
 3. replace the binary public/manage model with explicit app context and capabilities
 4. introduce a generated-data/source provider boundary
 5. make route features and startup phases explicit
@@ -451,7 +453,7 @@ The current Studio index exposes 13 top-level subject roots, including Docs View
 
 The current docs search is not literally title-only, but its indexed search terms are limited to document ID, title, parent title, and last-updated value. The builder does not currently include the existing front-matter `summary`, headings, or document body text in the docs search index.
 
-Content-aware documentation search should be a separate change request, not hidden inside the scope migration. Its minimum requirements should include:
+Content-aware documentation search should be a separate change request, not hidden inside the documentation reorganisation. Its minimum requirements should include:
 
 - `summary` as a first-class indexed and ranked field, below title matches but above broad body matches
 - a decision on heading and body-text indexing, index size, result excerpts, and ranking
@@ -557,12 +559,14 @@ Ownership rules:
 | 7 | management coordinator roadmap | general maintainability |
 | 8 | backend lifecycle roadmap | general maintainability |
 | 9 | config/test/CSS cleanup | ongoing/general maintainability |
-| D2-D5 | documentation entrypoints, restructure, and rewrite | separate cross-cutting workstream |
-| search request | cross-scope, summary-aware documentation search | separate follow-up; scope migration records the requirement but does not implement it |
+| D1-D4 | documentation entrypoints, restructure, and rewrite | separate cross-cutting workstream within the `studio` reference scope |
+| search request | summary-aware documentation search | separate follow-up; D0 records the requirement but does not implement it |
 
 ## Documentation Workstream D0: Inventory And Authority Map
 
 Purpose: create reliable navigation through the current material before rewriting it.
+
+Initial deliverable: [Docs Viewer Documentation Register And Authority Map](/docs/?scope=studio&doc=docs-viewer-documentation-register).
 
 Tasks:
 
@@ -619,7 +623,7 @@ Tasks:
 - inventory current public and manage entrypoint module graphs
 - record current route, startup, controller, service, state-domain, and toolbar contracts
 - use the D0 authority map to name the current durable owner for every prerequisite contract
-- correct contradictions in those prerequisite owner docs; leave unrelated consolidation to D2-D5
+- correct contradictions in those prerequisite owner docs; leave unrelated consolidation to D1-D4
 - define baseline public and manage checks
 - rewrite the view/mode registry request into the target projection model or create a child implementation task and retire the request
 - document which changes are prerequisites for Docs Review
@@ -876,7 +880,7 @@ Create a dedicated change request after D0 has confirmed the scope model. It sho
 
 Recommended order of work (to be reviewed after each step):
 
-1. create the D0 documentation register and authority map as a dedicated assessment task
+1. create the D0 documentation register and authority map as a dedicated assessment task — initial register complete and ready for review
 2. create the separate Documentation Search Discovery And Relevance change request
 3. create the W0 external user-workspace artifact roots change request and tracker
 4. create an implementation tracker for phases 0-5 using the mapped current owners
@@ -960,4 +964,4 @@ The foundation roadmap is complete when:
 - the W0 Data Sharing/review slice provides an explicit external workspace-root contract for Docs Review
 - Docs Review can begin without adding review behavior to the private runtime or management coordinator
 
-The broader architecture, D2-D4 documentation, documentation-search, and later W0 workspace-path workstreams remain active after that checkpoint; they are not blanket gates on the Docs Review feature.
+The broader architecture, D1-D4 documentation, documentation-search, and later W0 workspace-path workstreams remain active after that checkpoint; they are not blanket gates on the Docs Review feature.

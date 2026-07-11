@@ -326,7 +326,7 @@
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
           "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
-          "ui_status": "planned"
+          "ui_status": "in-progress"
         },
         {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
@@ -532,6 +532,12 @@
           "doc_id": "docs-viewer-static-route-template",
           "title": "Docs Viewer Static Route Template",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json"
+        },
+        {
+          "doc_id": "docs-viewer-documentation-register",
+          "title": "Documentation Register And Authority Map",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
+          "ui_status": "review"
         },
         {
           "doc_id": "scripts-docs-export",
@@ -1269,5 +1275,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T00:03:43Z"
+  "generated_at": "2026-07-11T13:50:30Z"
 }
