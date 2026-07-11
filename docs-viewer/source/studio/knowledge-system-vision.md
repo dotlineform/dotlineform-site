@@ -142,6 +142,6 @@ Each project should remain independently reviewable. The vision explains why the
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Data Sharing](/docs/?scope=studio&doc=data-sharing)
 - [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
-- [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow)
+- [Docs Review](/docs/?scope=studio&doc=docs-viewer-review)
 - [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)
 - [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap)

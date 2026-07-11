@@ -18,7 +18,7 @@ Implemented first slice:
 - Folder identity is derived from the staged file's `export_id` and matching internal export metadata.
 - Canonical Docs Viewer source, configured scopes, public payloads, and generated review payloads are not changed.
 
-Still separate and specified by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow):
+Still separate and durably owned by [Docs Review](/docs/?scope=studio&doc=docs-viewer-review):
 
 - `/docs-review/` listing, build, generated-payload serving, and temporary editing.
 

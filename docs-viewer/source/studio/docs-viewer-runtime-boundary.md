@@ -3,14 +3,14 @@ doc_id: docs-viewer-runtime-boundary
 title: Runtime
 added_date: 2026-03-31
 last_updated: 2026-07-11
-summary: Durable public, manage, shared-runtime, service-authority, and asset-boundary contract for Docs Viewer installations.
+summary: Durable public, manage, review, shared-runtime, service-authority, and asset-boundary contract for Docs Viewer installations.
 parent_id: docs-viewer
 ---
 # Docs Viewer Runtime
 
 ## Purpose
 
-This document records the durable boundary between public read-only Docs Viewer installs, the local/manage Docs Viewer install, and shared lower-level runtime code.
+This document records the durable boundary between public read-only Docs Viewer installs, the local/manage Docs Viewer install, the local returned-package review install, and shared lower-level runtime code.
 
 Detailed route, payload, and module ownership tables live in:
 
@@ -25,21 +25,24 @@ The boundary exists so the repo can keep adding scope-specific docs behavior wit
 
 Public read-only installs should be lightweight deliverables that import only the data, JavaScript, CSS, and browser-visible config they need.
 Local/manage installs can keep the full management surface, local-service workflows, report tooling, source editing, imports, settings, and scope lifecycle behavior.
+Local/review installs receive only package-rooted generated reads, temporary Markdown body editing, package builds, inventory reads, and canonical comparison links.
 
 The durable boundary is:
 
 - public surface is only what the public entrypoint imports, the public shell renders, and public route/config records expose
 - manage surface is only what the manage entrypoint imports, the manage shell renders, and management capability checks plus server-side endpoints authorize
+- review surface is only what the review entrypoint imports, the review shell renders, and independently gated review endpoints authorize
 - shared core is not public surface by itself
 - route config, hosted-view records, and generated-data payload names are visibility and composition metadata, not proof that a module, stylesheet, report, service, or data payload belongs in public
 
 Current model:
 
-- public and manage routes load separate entrypoint assets
-- public and manage routes may diverge at the route-shell and shell-composition level
-- public and manage routes share lower-level core modules only when those modules have no local-service, write-authority, management UI, or manage-only CSS/config dependency
+- public, manage, and review routes load separate entrypoint assets
+- route families may diverge at the route-shell and shell-composition level
+- all three route families share lower-level core modules only when those modules do not grant authority beyond the receiving route
 - public route shells render only public-safe mounts and config
 - the local manage shell renders management-capable mounts and receives manage-owned renderer bundles from the manage entrypoint
+- the local review shell renders the shared viewer mounts and receives review-owned provider, source-mode, and package-control contributions without general management UI
 
 ## App Context And Authority
 
@@ -53,7 +56,7 @@ serviceAvailability
 backendCapabilities
 ```
 
-The public and manage entrypoints supply the expected app kind. Route config declares `app_kind`, and boot rejects an entrypoint/route mismatch. `review` is accepted by the context model for the future local non-management route, but no review entrypoint, route, provider, or feature behavior exists yet.
+The public, manage, and review entrypoints supply the expected app kind. Route config declares `app_kind`, and boot rejects an entrypoint/route mismatch. The implemented `review` context is the local non-management `/docs-review/` route described by [Docs Review](/docs/?scope=studio&doc=docs-viewer-review).
 
 Route access owns presentation and composition only:
 
@@ -72,9 +75,10 @@ Local generated reads no longer depend on management UI or management service pr
 
 Backend capabilities authorize operations. Route config, registered views, visible controls, and service URLs do not.
 
-## Public And Manage Install Policy
+## Public, Manage, And Review Install Policy
 
 Docs Viewer should split public and local/manage deliverables at the entrypoint and shell-composition level, while keeping genuinely shared lower-level primitives.
+The review route follows the same rule: it reuses public-safe viewer primitives and imports its source editor and package workflow only through the review entrypoint.
 
 Shared modules remain appropriate for:
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1e99c798b86cb0b3cc0dd9b6e719a3f8",
-    "generated_at_utc": "2026-07-11T17:45:22Z",
-    "count": 236
+    "version": "blake2b-238842a2ad0dff50fc7f05fae38a067e",
+    "generated_at_utc": "2026-07-11T20:33:19Z",
+    "count": 238
   },
   "entries": [
     {
@@ -2293,6 +2293,29 @@
       "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-05-18 00:00 2026 05 18 00"
     },
     {
+      "id": "docs-viewer-review",
+      "kind": "doc",
+      "title": "Docs Review",
+      "href": "/docs/?scope=studio&doc=docs-viewer-review",
+      "last_updated": "2026-07-11",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-review",
+        "docs",
+        "viewer",
+        "review",
+        "docs review",
+        "docs viewer",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "docs-viewer-review docs viewer review docs review docs viewer 2026-07-11 2026 07 11"
+    },
+    {
       "id": "docs-viewer-public-route-shell-template",
       "kind": "doc",
       "title": "Docs Viewer Public Route Shell Template",
@@ -2606,10 +2629,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints",
-      "last_updated": "2026-06-24",
+      "last_updated": "2026-07-11",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Services",
-      "display_meta": "2026-06-24 • Management Services",
+      "display_meta": "2026-07-11 • Management Services",
       "search_terms": [
         "scripts-docs-management-endpoints",
         "scripts",
@@ -2621,12 +2644,12 @@
         "overview",
         "management services",
         "services",
-        "2026-06-24",
+        "2026-07-11",
         "2026",
-        "06",
-        "24"
+        "07",
+        "11"
       ],
-      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-06-24 2026 06 24"
+      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-management-endpoints-create-import",
@@ -2656,6 +2679,33 @@
         "07"
       ],
       "search_text": "scripts-docs-management-endpoints-create-import scripts docs management endpoints create import create and import endpoints and endpoint overview endpoint overview 2026-06-07 2026 06 07"
+    },
+    {
+      "id": "scripts-docs-management-endpoints-review",
+      "kind": "doc",
+      "title": "Docs Review Endpoints",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-review",
+      "last_updated": "2026-07-11",
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Endpoint Overview",
+      "display_meta": "2026-07-11 • Endpoint Overview",
+      "search_terms": [
+        "scripts-docs-management-endpoints-review",
+        "scripts",
+        "docs",
+        "management",
+        "endpoints",
+        "review",
+        "docs review endpoints",
+        "endpoint overview",
+        "endpoint",
+        "overview",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "scripts-docs-management-endpoints-review scripts docs management endpoints review docs review endpoints endpoint overview endpoint overview 2026-07-11 2026 07 11"
     },
     {
       "id": "scripts-docs-management-endpoints-generated-reads",

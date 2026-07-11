@@ -29,7 +29,7 @@ Current live scopes:
 
 Catalogue pages do not use the Docs Viewer.
 
-This page is a system overview, not a row-level module inventory. Use [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) for the durable public/manage boundary and [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for current owners.
+This page is a system overview, not a row-level module inventory. Use [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) for the durable public/manage/review boundary, [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) for the returned-package workflow, and [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for current owners.
 
 ## Shared Module Model
 
@@ -292,6 +292,7 @@ The rule for when this should and should not fork is recorded in [Docs Viewer Ru
 ## Related References
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
+- [Docs Review](/docs/?scope=studio&doc=docs-viewer-review)
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)

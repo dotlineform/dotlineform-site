@@ -93,8 +93,8 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
-| Review package workflow | `docs-viewer-review-controller.js`, `docs-viewer-review-document-controls.js`, `docs-viewer-review-hosted-views.js` | Package selection, explicit build, inventory visibility, canonical comparison, package-local hierarchy editing, and review source-mode/control projection. |
-| Review package services | `docs_review_packages.py`, `docs_review_build.py`, `docs_review_service.py`, `docs_review_routes.py` | Validated package-root containment, trusted manifest and inventory reads, synthetic builds, package-aware assets, generated reads, temporary Markdown and hierarchy writes, and focused route dispatch. |
+| Review package workflow | `docs-viewer-review-controller.js`, `docs-viewer-review-document-controls.js`, `docs-viewer-review-hosted-views.js` | Package selection, explicit build, inventory visibility, canonical comparison, and review source-mode/control projection. |
+| Review package services | `docs_review_packages.py`, `docs_review_build.py`, `docs_review_service.py`, `docs_review_routes.py` | Validated package-root containment, trusted manifest and inventory reads, synthetic builds, package-aware assets, generated reads, body-only temporary Markdown writes, parent-update rejection, and focused route dispatch. |
 
 ## Public Index Slimming Ownership
 

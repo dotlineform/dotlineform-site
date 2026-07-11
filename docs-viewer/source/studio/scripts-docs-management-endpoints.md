@@ -2,12 +2,12 @@
 doc_id: scripts-docs-management-endpoints
 title: Endpoint Overview
 added_date: 2026-06-07
-last_updated: 2026-06-24
+last_updated: 2026-07-11
 parent_id: scripts-docs-management-server
 ---
-# Docs Viewer Management Endpoint Overview
+# Docs Viewer Endpoint Overview
 
-Docs Viewer management endpoints are local-only JSON APIs served by the standalone Docs Viewer service. Endpoint constants live in `docs-viewer/services/docs_management_routes.py`.
+Docs Viewer local endpoints are JSON APIs served by the standalone Docs Viewer service. Canonical management endpoint constants live in `docs-viewer/services/docs_management_routes.py`; independently gated returned-package review constants live in `docs-viewer/services/docs_review_routes.py`.
 
 ## GET Endpoints
 
@@ -34,6 +34,21 @@ Docs Viewer management endpoints are local-only JSON APIs served by the standalo
 | `GET /docs/import-html-files` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | Compatibility alias for staged import listing. |
 | `GET /docs/publish/status` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Report pending public-scope working-to-published changes. |
 
+## Docs Review GET Endpoints
+
+The complete independently gated contract lives in [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review).
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /docs-review/capabilities` | Report review workspace availability and review-only authority. |
+| `GET /docs-review/packages` | List validated packages and rejected-package diagnostics. |
+| `GET /docs-review/packages/manifest` | Read one trusted validated manifest. |
+| `GET /docs-review/packages/assets` | Read optional package inventories. |
+| `GET /docs-review/packages/assets-content/<package>/<path>` | Serve one safe inventoried package asset. |
+| `GET /docs-review/packages/index-tree` | Read one package-local generated tree. |
+| `GET /docs-review/packages/payload` | Read one package-local generated document payload. |
+| `GET /docs-review/packages/source` | Read one temporary Markdown body and revision token. |
+
 ## POST Endpoints
 
 | Endpoint | Child doc | Action |
@@ -58,5 +73,12 @@ Docs Viewer management endpoints are local-only JSON APIs served by the standalo
 | `POST /docs/scopes/delete-apply` | [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) | Delete a manifest-owned scope after confirmation. |
 | `POST /docs/publish/confirm` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Confirm the working-to-site-asset diff for one public scope without writing. |
 | `POST /docs/publish/apply` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Copy working docs/search to public route site assets after `confirm: true`. |
+
+## Docs Review POST Endpoints
+
+| Endpoint | Child doc | Action |
+| --- | --- | --- |
+| `POST /docs-review/packages/build` | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review) | Build generated output inside one validated package. |
+| `POST /docs-review/packages/source` | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review) | Replace one temporary Markdown body with revision checking and rebuild the package. |
 
 All JSON responses are sent with `Cache-Control: no-store`.

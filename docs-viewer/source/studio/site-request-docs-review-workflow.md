@@ -11,7 +11,9 @@ viewable: true
 
 ## Status
 
-Complete. The validated-package consumer and `/docs-review/` application are implemented, and the live Data Sharing `document-content` Content action now publishes its rendered-derived text projection through the trusted handoff contract.
+Complete and retirement-ready. Durable current behavior now lives in [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) and [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review); this document retains the completed implementation history only.
+
+The validated-package consumer and `/docs-review/` application are implemented, and the live Data Sharing `document-content` Content action now publishes its rendered-derived text projection through the trusted handoff contract.
 
 The preview builder consumes `docs_review_validated_package_v1` and does not depend on how the package was produced. The exact-Markdown, asset-complete `document-full-source` producer continues as the separate [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) request.
 

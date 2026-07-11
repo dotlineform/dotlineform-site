@@ -524,6 +524,11 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json"
         },
         {
+          "doc_id": "docs-viewer-review",
+          "title": "Docs Review",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-review.json"
+        },
+        {
           "doc_id": "docs-viewer-public-route-shell-template",
           "title": "Docs Viewer Public Route Shell Template",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
@@ -594,6 +599,11 @@
                   "doc_id": "scripts-docs-management-endpoints-create-import",
                   "title": "Create And Import Endpoints",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json"
+                },
+                {
+                  "doc_id": "scripts-docs-management-endpoints-review",
+                  "title": "Docs Review Endpoints",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-review.json"
                 },
                 {
                   "doc_id": "scripts-docs-management-endpoints-generated-reads",
@@ -1275,5 +1285,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T18:44:20Z"
+  "generated_at": "2026-07-11T20:29:04Z"
 }

@@ -186,7 +186,7 @@ The public registry is served at `/docs-viewer/config/routes/docs-viewer-public-
 Each route record owns:
 
 - route id and route path
-- explicit `app_kind`: current `public` or `manage`, with `review` reserved for the future local non-management route
+- explicit `app_kind`: current `public`, `manage`, or local non-management `review`
 - an allowlisted `features` array controlling configured-scope discovery, scope selection, search, recently added, bookmarks, reports, source editing, and management
 - default scope
 - viewer base URL and scope-query policy

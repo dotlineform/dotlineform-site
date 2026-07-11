@@ -11,6 +11,22 @@
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "docs-viewer-review",
+      "title": "Docs Review",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-review.json",
+      "added_date": "2026-07-11",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "scripts-docs-management-endpoints-review",
+      "title": "Docs Review Endpoints",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-review.json",
+      "added_date": "2026-07-11",
+      "parent_id": "scripts-docs-management-endpoints",
+      "parent_title": "Endpoint Overview"
+    },
+    {
       "doc_id": "docs-viewer-documentation-register",
       "title": "Documentation Register And Authority Map",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
@@ -65,23 +81,7 @@
       "added_date": "2026-06-28",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "data-sharing-export-metadata",
-      "title": "Data Sharing Export Metadata",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json",
-      "added_date": "2026-06-27",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "data-sharing-documents-returned-package-review",
-      "title": "Documents Returned Package Review",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-returned-package-review.json",
-      "added_date": "2026-06-27",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-07-11T16:20:42Z"
+  "generated_at": "2026-07-11T20:29:04Z"
 }

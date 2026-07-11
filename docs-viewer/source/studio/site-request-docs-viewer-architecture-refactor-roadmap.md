@@ -11,11 +11,11 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, and the Docs Review readiness checkpoint are complete. Docs Review phase 6 may begin with a fixture-backed preview vertical slice.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
-Implementation should be planned as behavior-preserving refactor slices before work resumes on [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow).
+Implementation should be planned as behavior-preserving refactor slices before work resumes on [Docs Review](/docs/?scope=studio&doc=docs-viewer-review).
 
 ## Decision
 
@@ -688,7 +688,7 @@ Acceptance:
 
 - public and manage behavior is unchanged
 - local generated-read authority is not structurally tied to general management
-- contexts can express a future local non-management route without adding a new boolean combination
+- contexts express the local non-management Docs Review route without adding a new boolean combination
 - public entrypoint module graph remains free of local write modules
 
 ### Phase 1 Outcome
@@ -896,7 +896,7 @@ The fixture-backed Phase 6 consumer work identified at this checkpoint is now co
 
 ## Phase 6: Docs Review
 
-Implement [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) as its own feature project after the readiness checkpoint.
+Implement [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) as its own feature project after the readiness checkpoint.
 
 Status: complete for the fixture-backed validated-package consumer and local review application. The real Data Sharing full-package producer remains a separate active dependency for the first real round trip.
 

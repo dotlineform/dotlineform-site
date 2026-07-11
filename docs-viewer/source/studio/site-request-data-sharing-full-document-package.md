@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-In progress as the producer for the complete [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) round trip. Its validated-package interface is ready for fixture-backed preview work; the real export/intake producer is not a gate on starting that preview vertical slice.
+In progress as the producer for the complete [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) round trip. Its validated-package interface is implemented by the review consumer; the remaining work is the real full-source export/intake producer.
 
 The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export and returned-package services, and Docs Review sessions now use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. Full-package schema, export, intake, and validation remain to be implemented.
 
