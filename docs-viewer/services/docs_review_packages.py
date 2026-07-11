@@ -21,7 +21,6 @@ PACKAGE_SCHEMA_VERSION = "docs_review_validated_package_v1"
 PACKAGES_SCHEMA_VERSION = "docs_review_packages_v1"
 SAFE_PACKAGE_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
-FRONT_MATTER_FIELD_PATTERN = re.compile(r"^(?P<indent>[ \t]*)(?P<key>[A-Za-z0-9_-]+)[ \t]*:", re.MULTILINE)
 INVENTORY_FILENAMES = (
     "assets.json",
     "links.json",
@@ -136,41 +135,6 @@ def _source_records(package_path: Path) -> dict[str, dict[str, Any]]:
             raise ValueError(f"duplicate review source doc_id: {doc_id}")
         records[doc_id] = record
     return records
-
-
-def _replace_front_matter_parent(front_matter_source: str, parent_id: str) -> str:
-    lines = front_matter_source.splitlines(keepends=True)
-    replacement = f"parent_id: {source_model.format_front_matter_value(parent_id)}\n" if parent_id else ""
-    for index, line in enumerate(lines):
-        match = FRONT_MATTER_FIELD_PATTERN.match(line)
-        if match and match.group("key") == "parent_id":
-            lines[index:index + 1] = [replacement] if replacement else []
-            return "".join(lines)
-    if replacement:
-        closing_index = len(lines) - 1
-        while closing_index >= 0 and not re.match(r"^---[ \t]*(?:\r?\n)?$", lines[closing_index]):
-            closing_index -= 1
-        if closing_index <= 0:
-            raise ValueError("existing review source front matter could not be updated")
-        lines.insert(closing_index, replacement)
-    return "".join(lines)
-
-
-def _validate_parent_change(records: dict[str, dict[str, Any]], doc_id: str, parent_id: str) -> None:
-    if not parent_id:
-        return
-    if parent_id == doc_id:
-        raise ValueError("review document cannot be its own parent")
-    if parent_id not in records:
-        raise ValueError(f"review parent_id does not identify a package document: {parent_id}")
-    current = parent_id
-    visited = {doc_id}
-    while current:
-        if current in visited:
-            raise ValueError("review parent_id change would create a hierarchy cycle")
-        visited.add(current)
-        record = records.get(current)
-        current = str(record["front_matter"].get("parent_id") or "").strip() if record else ""
 
 
 def _package_context(repo_root: Path, package_id: Any) -> tuple[Path, dict[str, Any], dict[str, dict[str, Any]]]:
@@ -394,8 +358,10 @@ def write_source(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     source_revision = str(body.get("source_revision") or "").strip()
     if not source_revision:
         raise ValueError("source_revision is required")
-    if "source_body" not in body and "parent_id" not in body:
-        raise ValueError("source_body or parent_id is required")
+    if "parent_id" in body:
+        raise ValueError("Docs Review does not support parent updates")
+    if "source_body" not in body:
+        raise ValueError("source_body is required")
     record = records.get(doc_id)
     if record is None:
         raise FileNotFoundError(f"review package document not found: {doc_id}")
@@ -404,17 +370,7 @@ def write_source(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     front_matter_source, front_matter, _source_body = split_source_exact(record["source_text"])
     if str(front_matter.get("doc_id") or "").strip() != doc_id:
         raise ValueError("existing review source doc_id does not match requested document")
-    if "parent_id" in body:
-        parent_id = str(body.get("parent_id") or "").strip()
-        if parent_id:
-            validate_doc_id(parent_id)
-        _validate_parent_change(records, doc_id, parent_id)
-        front_matter_source = _replace_front_matter_parent(front_matter_source, parent_id)
-    next_source_body = (
-        normalize_source_body(body.get("source_body"))
-        if "source_body" in body
-        else record["source_body"]
-    )
+    next_source_body = normalize_source_body(body.get("source_body"))
     next_source_text = front_matter_source + next_source_body
     source_model.write_text_atomic(record["path"], next_source_text)
     try:

@@ -98,7 +98,7 @@ Docs Review owns only:
 
 - listing validated returned package folders
 - rendering and building a package in isolation
-- temporary Markdown editing and parent editing
+- temporary Markdown editing while preserving the validated package hierarchy
 - package asset-inventory display
 - canonical counterpart links and manual comparison
 

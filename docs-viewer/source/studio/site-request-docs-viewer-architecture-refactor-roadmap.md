@@ -21,7 +21,7 @@ Implementation should be planned as behavior-preserving refactor slices before w
 
 Pause Docs Review implementation while Docs Viewer receives a standalone architecture assessment and a limited foundation refactor.
 
-Docs Review is a useful pressure test because it needs the existing tree, document renderer, source editor, parent picker, route state, build pipeline, and local services without inheriting all canonical management behavior. Those requirements expose real architectural constraints, but the fixes should be implemented and verified as Docs Viewer platform work rather than hidden inside a review feature branch.
+Docs Review is a useful pressure test because it needs the existing tree, document renderer, source editor, route state, build pipeline, and local services without inheriting all canonical management behavior. Those requirements expose real architectural constraints, but the fixes should be implemented and verified as Docs Viewer platform work rather than hidden inside a review feature branch.
 
 The sequence is:
 
@@ -906,7 +906,7 @@ Its implementation should consume:
 - review route feature policy
 - returned-package provider
 - shared view/mode/control projection
-- shared tree, document, and source-editor primitives plus a review-focused package parent selector
+- shared tree, document, and source-editor primitives
 - focused package-listing, manifest/asset-read, build, generated-read, and temporary source services
 
 Docs Review must not receive canonical import or promotion services. Any future automated transition from a returned package into canonical source remains a separate Data Sharing workflow.

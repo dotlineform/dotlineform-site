@@ -217,7 +217,7 @@ Initial review UI shape:
 - show whether the selected folder has generated payloads
 - provide a Build action for the selected folder
 - load generated docs from the selected built folder
-- edit temporary Markdown and `parent_id` values
+- edit temporary Markdown while preserving the validated package hierarchy
 - open canonical counterparts in `/docs/`
 - retain package provenance for a later manual handoff or separately specified Data Sharing import action
 - keep delete/cleanup out of the first slice unless explicitly added later

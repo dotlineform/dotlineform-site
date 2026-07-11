@@ -105,14 +105,6 @@ export function createDocsViewerReturnedPackageProvider(options) {
     });
   }
 
-  function writeParent(docId, revision, parentId) {
-    return writeSource({
-      doc_id: docId,
-      source_revision: revision,
-      parent_id: parentId
-    });
-  }
-
   function build() {
     return ensurePackage().then(function (packageId) {
       return request("/docs-review/packages/build", {
@@ -152,7 +144,6 @@ export function createDocsViewerReturnedPackageProvider(options) {
     readIndex: readIndex,
     readManifest: readManifest,
     readSource: readSource,
-    writeParent: writeParent,
     writeSource: writeSource
   };
 }

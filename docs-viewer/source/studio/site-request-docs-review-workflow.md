@@ -21,7 +21,7 @@ Implemented in this slice:
 - validated external package listing, manifest and inventory reads, source revision checks, builds, generated reads, and inventoried asset reads
 - a synthetic `DocsDataBuilder` configuration that writes only package-local `generated/`
 - package-aware media URLs and sandboxed package-local interactive HTML
-- the returned-package collection provider, package selector, Build and asset-inventory controls, rendered/source modes, temporary parent editing, and canonical comparison link
+- the returned-package collection provider, package selector, Build and asset-inventory controls, rendered/source modes, and canonical comparison link
 - Data Sharing validation and timestamped-folder publication for the compact `document-content` projection
 - rejected-package diagnostics in the `/docs-review/` empty state
 - focused Python, module-boundary, manage-regression, and browser-route verification
@@ -183,12 +183,12 @@ Feature-facing generated reads must continue through `docs-viewer-generated-data
 
 Review route features are explicit:
 
-- enabled: package selection, tree, rendered document, source editing, parent editing, Build, asset inventory, canonical counterpart link
+- enabled: package selection, tree, rendered document, source editing, Build, asset inventory, canonical counterpart link
 - disabled initially: scope selector, search, recently added, bookmarks, reports, public links, canonical management toolbar, package deletion
 
 Startup should skip disabled feature controllers and payload requirements. A missing search or recently-added URL must not force the package to include unused placeholder files.
 
-The review entrypoint may import local source-editor and parent-picker primitives because `/docs-review/` is a local temporary-write route. Public entrypoints must never import review or management assets.
+The review entrypoint may import local source-editor primitives because `/docs-review/` is a local temporary-write route. Public entrypoints must never import review or management assets.
 
 ## External Workspace Root Contract
 
@@ -288,7 +288,7 @@ Source writes still require:
 - ordinary parse/build validation
 - no canonical path supplied by the browser
 
-`parent_id` should be editable using existing parent-picker/metadata primitives where practical. The package may contain new chapter documents and new parent relationships because preview does not write canonical source.
+Docs Review preserves and renders the hierarchy supplied by the validated package, but it does not edit `parent_id`. Hierarchy changes belong before the validated-package handoff or in a separate Data Sharing workflow outside review.
 
 Docs Review does not provide an asset editor in v1. Replacing or adding files may be done in the package workspace or by the external service; the asset inventory and build results make those changes visible.
 
@@ -392,11 +392,10 @@ Data Sharing full-package export/intake code remains under `data-sharing/` and i
 - add the review entrypoint and controller
 - implement package selection, tree navigation, rendered/source modes, Build, asset inventory, and canonical counterpart links
 
-### 6. Add Temporary Markdown And Parent Editing — complete
+### 6. Add Temporary Markdown Editing — complete
 
 - reuse source-editor interaction primitives
 - add package-specific source endpoints
-- reuse parent-selection primitives where appropriate
 - rebuild and refresh after edits
 - keep every write inside the selected package
 
@@ -442,6 +441,7 @@ The follow-up producer/consumer gap is closed without accepting the obsolete sch
 - Repeating Content for the same metadata-derived timestamp is rejected; timestamped package folders are not replaced.
 - When no valid package is available, `/docs-review/` now includes the package-list rejection diagnostics in its empty-state error.
 - The returned-package provider normalizes the nested package index through the shared tree-payload adapter before handing it to the app runtime, so nested review documents and expansion controls appear in the Docs Review index.
+- The follow-up simplification removes parent editing from Docs Review: the Parent control and provider method are gone, and the source-write service rejects `parent_id` updates while continuing to preserve validated package hierarchy.
 - Focused tests cover row/materialization rejection, partial-selection parent projection, trusted publication, immutable timestamp conflicts, package discovery, Build, generated payload reads, and rejection diagnostics.
 - The live staged Studio package was republished with the trusted manifest: six documents, one external-parent warning, no errors. `/docs-review/` listed it, Build emitted six package-local payloads, and rendered/source reads succeeded without repository source or public-asset writes.
 

@@ -104,7 +104,7 @@ def test_source_write_is_revision_checked_package_local_and_rebuilds() -> None:
         )
 
 
-def test_parent_edit_updates_only_review_front_matter_and_rebuilds_hierarchy() -> None:
+def test_source_write_rejects_parent_updates() -> None:
     package = write_package("parent-review")
     (package / "source/fixture-child.md").write_text(
         """---
@@ -120,42 +120,18 @@ last_updated: 2026-07-11
     )
     source = docs_review_packages.read_source(REPO_ROOT, package.name, "fixture-child")
 
-    docs_review_packages.write_source(
-        REPO_ROOT,
-        {
-            "package_id": package.name,
-            "doc_id": "fixture-child",
-            "source_revision": source["source_revision"],
-            "parent_id": "",
-        },
-    )
-
-    source_text = (package / "source/fixture-child.md").read_text(encoding="utf-8")
-    tree = docs_review_packages.read_index_tree(REPO_ROOT, package.name)["index_tree"]
-    assert "parent_id:" not in source_text
-    assert [doc["doc_id"] for doc in tree["docs"]] == ["fixture-child", "fixture-root"]
-
-    child_source = docs_review_packages.read_source(REPO_ROOT, package.name, "fixture-child")
-    docs_review_packages.write_source(
-        REPO_ROOT,
-        {
-            "package_id": package.name,
-            "doc_id": "fixture-child",
-            "source_revision": child_source["source_revision"],
-            "parent_id": "fixture-root",
-        },
-    )
-    next_source = docs_review_packages.read_source(REPO_ROOT, package.name, "fixture-root")
-    with pytest.raises(ValueError, match="cycle"):
+    with pytest.raises(ValueError, match="does not support parent updates"):
         docs_review_packages.write_source(
             REPO_ROOT,
             {
                 "package_id": package.name,
-                "doc_id": "fixture-root",
-                "source_revision": next_source["source_revision"],
-                "parent_id": "fixture-child",
+                "doc_id": "fixture-child",
+                "source_revision": source["source_revision"],
+                "parent_id": "",
             },
         )
+
+    assert "parent_id: fixture-root" in (package / "source/fixture-child.md").read_text(encoding="utf-8")
 
 
 def test_package_asset_inventory_drives_media_and_sandboxed_interactive_rendering() -> None:

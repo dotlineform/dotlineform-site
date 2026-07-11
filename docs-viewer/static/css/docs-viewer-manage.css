@@ -1385,15 +1385,3 @@ html[data-theme="dark"] .docsViewerSourceEditor__editor{
 .docsViewer__reviewControls .button{
   min-height: 2.25rem;
 }
-
-.docsViewer__reviewParentDialog form{
-  display: grid;
-  gap: 1rem;
-  min-width: min(30rem, 80vw);
-}
-
-.docsViewer__reviewParentActions{
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}

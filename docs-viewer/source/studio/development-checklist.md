@@ -136,7 +136,7 @@ Docs Review:
 - [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export, asset/dependency packaging, returned-package validation, and any future canonical import/promotion.
 - Returned review packages are temporary folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
-- Reuse shared tree, routing, rendering, panel, source-editor, parent-picker, and CSS primitives through explicit review app context, provider, and capability contracts.
+- Reuse shared tree, routing, rendering, panel, source-editor, and CSS primitives through explicit review app context, provider, and capability contracts.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
 - `docs_review_packages.py` owns safe validated-package list/read behavior; focused review build and source services own generated output and temporary Markdown writes.
 - Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
