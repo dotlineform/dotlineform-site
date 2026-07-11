@@ -2,7 +2,7 @@
 doc_id: docs-viewer-documentation-register
 title: Documentation Register And Authority Map
 added_date: 2026-07-11
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 ui_status: review
 summary: Audit register, authority map, overlap findings, and proposed dispositions for the Docs Viewer documentation set and its active change requests.
 parent_id: docs-viewer
@@ -172,6 +172,7 @@ The first summary batch should cover the Docs Viewer entry point, the phase 1-5 
 | --- | --- | --- | --- | --- | --- |
 | `site-request-data-sharing-full-document-package` | change request | proposed | Exact Markdown package and validated-return prerequisite | Keep active and separate from the runtime foundation refactor. | missing |
 | `site-request-docs-import-reviewed-package` | change request | proposed | W0 shared drop-zone migration, staged-JSONL collection import, and read-only persistent review projection | Keep active under Docs Viewer Import after the validated-package producer. | present |
+| `site-request-docs-import-reviewed-package-implementation` | child change request / checklist | proposed | Implementation and verification tracking for reviewed-package import | Keep as the execution tracker; product and architecture authority remains in its parent. | present |
 | `site-request-docs-document-content-markdown-export` | change request | historical | Completed Markdown-export decision and outcome | Transfer durable package behavior to export owners, then retain as superseded history. | missing |
 | `site-request-docs-viewer-architecture-refactor-roadmap` | change request | active | Foundation refactor sequence and guardrails | Keep durable outcomes and verification evidence directly in the roadmap. | missing |
 | `site-request-docs-viewer-semantic-reference-editor` | change request | mixed | Draft V2 goals beside implemented V1 behavior | Reconcile with current editor/implementation owners, then retain only genuinely proposed work. | missing |

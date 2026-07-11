@@ -424,83 +424,11 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - Do not execute returned scripts or grant package HTML same-origin authority.
 - Do not treat persistent preview Markdown as trusted import input.
 
-## Implementation Tasks
+## Implementation Tracking
 
-### 1. Move Docs Import To The W0 Drop-Zone Adapter
+Execution tasks and verification evidence are tracked in [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation).
 
-- replace `STAGING_REL_DIR` and `repo_root / var/docs/import-staging` assumptions with `configured_workspace_paths(repo_root).import_staging`
-- reuse `marker_path()` and the W0 availability/status contract
-- update file listing, source resolution, Markdown packages, interactive companions, and `staging_manual` media output
-- keep existing suffix, direct-child, traversal, symlink, and containment protections
-- remove all production fallback reads and duplicate writes to `var/docs/import-staging/`
-- update tests to provide an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR`
-
-### 2. Extract The Data Sharing Collection Adapter And Shared Content Contract
-
-- define supported Data Sharing document-collection schema detection
-- parse trusted header/export metadata and document records
-- normalize compact content and full `canonical_markdown` through explicit Data Sharing mappings
-- define a generic `ImportContent` record without mandatory Data Sharing provenance
-- support Markdown, HTML, and plain-text body dispatch through content-based import entrypoints
-- return stable record identities, content, front matter, hierarchy, asset data, and diagnostics
-- leave standalone collection schema detection as a future adapter rather than implementing it in this slice
-
-### 3. Use The Parser For Persistent Preview Materialization
-
-- keep the timestamped `import-preview/<package_id>/` identity
-- write the trusted manifest association
-- materialize read-only `source/*.md`
-- build and retain package-local `generated/`
-- make normal Docs Review reads use the persistent generated output
-- preserve repair/regeneration only for missing or damaged derived output
-
-### 4. Remove Docs Review Source Editing
-
-- remove source mode and its control
-- remove source-read/source-write capabilities and endpoints
-- remove revision and save/rebuild services
-- remove review source-editor modules and bindings
-- update route contracts, runtime ownership docs, and focused tests
-
-### 5. Register The JSONL Collection Import Format
-
-- detect supported Data Sharing headers before generic JSON/JSONL file import
-- list the staged package as a collection import source
-- parse records through the shared normalizer
-- keep unsupported JSON/JSONL behavior unchanged
-
-### 6. Add Collection Import Planning And Apply
-
-- allow record selection
-- compute create, overwrite, skip, collision, parent, link, and media plans
-- resolve collisions through `Overwrite`, `Overwrite all`, `Skip`, `Skip all`, or `Cancel import`
-- do not expose replacement IDs or `Create as new` for collection collisions
-- reuse lower-level source formatting, media materialization, writes, and rebuilds
-- return precise per-record and batch results
-
-### 7. Add The Review-To-Import Handoff
-
-- identify the staged file through the immutable package association
-- open managed Docs Import with that package selected
-- keep review and configured-source authority separate
-- report import unavailable when the associated staged file has been deleted
-
-### 8. Verify
-
-- keep ordinary single-file import behavior green
-- verify every existing Docs Import format is discovered from the W0 external drop-zone
-- verify missing workspace configuration disables import cleanly without affecting ordinary Docs viewing
-- verify responses expose marker-rooted paths and never user-specific absolute paths
-- verify repo-local `var/docs/import-staging/` is not read or written
-- test schema detection before generic JSON/JSONL fallback
-- test shared parsing produces equivalent preview and import records
-- test persistent preview viewing without repeated JSONL conversion
-- test absence of review source-edit capabilities and UI
-- test non-colliding create, `Overwrite`, `Overwrite all`, `Skip`, `Skip all`, and cancel-with-no-writes
-- test parent/link mapping across selected records
-- test embedded data-URL media planning and materialization
-- test deleted staged-file import unavailability while persistent preview remains readable
-- verify Docs Review and Data Sharing expose no configured-source mutation capability
+This parent document remains the authority for product decisions, architecture boundaries, acceptance criteria, and non-goals. The child document may track progress but must not redefine these contracts.
 
 ## Acceptance Criteria
 
@@ -534,6 +462,7 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 
 ## Related References
 
+- [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation)
 - [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
 - [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import)
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling)

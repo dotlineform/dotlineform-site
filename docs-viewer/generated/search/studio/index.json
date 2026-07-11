@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3a76f96cd29ddbab0312a2168f6acb19",
-    "generated_at_utc": "2026-07-11T23:13:11Z",
-    "count": 237
+    "version": "blake2b-a5f99a88b932bdcfbaf2891d76325245",
+    "generated_at_utc": "2026-07-11T23:42:19Z",
+    "count": 238
   },
   "entries": [
     {
@@ -1369,6 +1369,33 @@
       "search_text": "site-request-docs-import-reviewed-package site request docs import reviewed package docs import reviewed package change requests change requests 2026-07-12 2026 07 12"
     },
     {
+      "id": "site-request-docs-import-reviewed-package-implementation",
+      "kind": "doc",
+      "title": "Docs Import Reviewed Package Implementation",
+      "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation",
+      "last_updated": "2026-07-12",
+      "parent_id": "site-request-docs-import-reviewed-package",
+      "parent_title": "Docs Import Reviewed Package",
+      "display_meta": "2026-07-12 • Docs Import Reviewed Package",
+      "search_terms": [
+        "site-request-docs-import-reviewed-package-implementation",
+        "site",
+        "request",
+        "docs",
+        "import",
+        "reviewed",
+        "package",
+        "implementation",
+        "docs import reviewed package implementation",
+        "docs import reviewed package",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "site-request-docs-import-reviewed-package-implementation site request docs import reviewed package implementation docs import reviewed package implementation docs import reviewed package 2026-07-12 2026 07 12"
+    },
+    {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
       "kind": "doc",
       "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
@@ -2340,10 +2367,10 @@
       "kind": "doc",
       "title": "Documentation Register And Authority Map",
       "href": "/docs/?scope=studio&doc=docs-viewer-documentation-register",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-documentation-register",
         "docs",
@@ -2355,12 +2382,12 @@
         "authority",
         "map",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-documentation-register docs viewer documentation register documentation register and authority map and authority map docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-documentation-register docs viewer documentation register documentation register and authority map and authority map docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-export",
