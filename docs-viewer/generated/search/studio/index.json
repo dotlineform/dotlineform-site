@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a0379fd7c0b461b91ceab762a5b44c8f",
-    "generated_at_utc": "2026-07-10T23:23:05Z",
-    "count": 233
+    "version": "blake2b-d2c0bb35525a5465ab659eb193064ee9",
+    "generated_at_utc": "2026-07-11T00:04:14Z",
+    "count": 235
   },
   "entries": [
     {
@@ -462,16 +462,16 @@
       "kind": "doc",
       "title": "Analytics",
       "href": "/docs/?scope=studio&doc=analytics",
-      "last_updated": "2026-06-22",
-      "display_meta": "2026-06-22",
+      "last_updated": "2026-07-11",
+      "display_meta": "2026-07-11",
       "search_terms": [
         "analytics",
-        "2026-06-22",
+        "2026-07-11",
         "2026",
-        "06",
-        "22"
+        "07",
+        "11"
       ],
-      "search_text": "analytics 2026-06-22 2026 06 22"
+      "search_text": "analytics 2026-07-11 2026 07 11"
     },
     {
       "id": "config-analytics-config-json",
@@ -782,18 +782,39 @@
       "kind": "doc",
       "title": "Architecture",
       "href": "/docs/?scope=studio&doc=architecture",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-07-11",
+      "display_meta": "2026-07-11",
       "search_terms": [
         "architecture",
-        "2026-05-06 20:49",
+        "2026-07-11",
         "2026",
-        "05",
-        "06",
-        "20",
-        "49"
+        "07",
+        "11"
       ],
-      "search_text": "architecture 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "architecture 2026-07-11 2026 07 11"
+    },
+    {
+      "id": "knowledge-system-vision",
+      "kind": "doc",
+      "title": "Knowledge System Vision",
+      "href": "/docs/?scope=studio&doc=knowledge-system-vision",
+      "last_updated": "2026-07-11",
+      "parent_id": "architecture",
+      "parent_title": "Architecture",
+      "display_meta": "2026-07-11 • Architecture",
+      "search_terms": [
+        "knowledge-system-vision",
+        "knowledge",
+        "system",
+        "vision",
+        "knowledge system vision",
+        "architecture",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "knowledge-system-vision knowledge system vision knowledge system vision architecture 2026-07-11 2026 07 11"
     },
     {
       "id": "data-models-projection-contract",
@@ -1234,14 +1255,43 @@
       "search_text": "site-request-report-tests site request report tests tests report admin checks reports admin checks reports 2026-06-09 2026 06 09"
     },
     {
+      "id": "site-request-data-sharing-full-document-package",
+      "kind": "doc",
+      "title": "Data Sharing Full Document Package",
+      "href": "/docs/?scope=studio&doc=site-request-data-sharing-full-document-package",
+      "last_updated": "2026-07-11",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-11 • Change Requests",
+      "search_terms": [
+        "site-request-data-sharing-full-document-package",
+        "site",
+        "request",
+        "data",
+        "sharing",
+        "full",
+        "document",
+        "package",
+        "data sharing full document package",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "site-request-data-sharing-full-document-package site request data sharing full document package data sharing full document package change requests change requests 2026-07-11 2026 07 11"
+    },
+    {
       "id": "site-request-data-sharing-import-content",
       "kind": "doc",
       "title": "Data Sharing Import Content",
       "href": "/docs/?scope=studio&doc=site-request-data-sharing-import-content",
-      "last_updated": "2026-07-10",
+      "last_updated": "2026-07-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-07-10 • Change Requests",
+      "display_meta": "2026-07-11 • Change Requests",
       "search_terms": [
         "site-request-data-sharing-import-content",
         "site",
@@ -1254,12 +1304,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-07-10",
+        "2026-07-11",
         "2026",
         "07",
-        "10"
+        "11"
       ],
-      "search_text": "site-request-data-sharing-import-content site request data sharing import content data sharing import content change requests change requests 2026-07-10 2026 07 10"
+      "search_text": "site-request-data-sharing-import-content site request data sharing import content data sharing import content change requests change requests 2026-07-11 2026 07 11"
     },
     {
       "id": "site-request-docs-document-content-markdown-export",
@@ -1499,19 +1549,19 @@
       "kind": "doc",
       "title": "Data Sharing",
       "href": "/docs/?scope=studio&doc=data-sharing",
-      "last_updated": "2026-06-21",
-      "display_meta": "2026-06-21",
+      "last_updated": "2026-07-11",
+      "display_meta": "2026-07-11",
       "search_terms": [
         "data-sharing",
         "data",
         "sharing",
         "data sharing",
-        "2026-06-21",
+        "2026-07-11",
         "2026",
-        "06",
-        "21"
+        "07",
+        "11"
       ],
-      "search_text": "data-sharing data sharing data sharing 2026-06-21 2026 06 21"
+      "search_text": "data-sharing data sharing data sharing 2026-07-11 2026 07 11"
     },
     {
       "id": "studio-data-sharing",
@@ -1667,10 +1717,10 @@
       "kind": "doc",
       "title": "Documents Returned Package Review",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-returned-package-review",
-      "last_updated": "2026-07-10",
+      "last_updated": "2026-07-11",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-07-10 • Data Sharing",
+      "display_meta": "2026-07-11 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-returned-package-review",
         "data",
@@ -1681,12 +1731,12 @@
         "review",
         "documents returned package review",
         "data sharing",
-        "2026-07-10",
+        "2026-07-11",
         "2026",
         "07",
-        "10"
+        "11"
       ],
-      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-07-10 2026 07 10"
+      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-07-11 2026 07 11"
     },
     {
       "id": "data-sharing-tags-adapter-structure",
@@ -1762,10 +1812,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-07-10",
+      "last_updated": "2026-07-11",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-10 • Dev Home",
+      "display_meta": "2026-07-11 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1774,12 +1824,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-10",
+        "2026-07-11",
         "2026",
         "07",
-        "10"
+        "11"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-10 2026 07 10"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-11 2026 07 11"
     },
     {
       "id": "development-workflow",
@@ -2008,18 +2058,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-06-06",
-      "display_meta": "2026-06-06",
+      "last_updated": "2026-07-11",
+      "display_meta": "2026-07-11",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-06-06",
+        "2026-07-11",
         "2026",
-        "06"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-06-06 2026 06"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-broken-links",
@@ -4419,15 +4470,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-06-06",
-      "display_meta": "2026-06-06",
+      "last_updated": "2026-07-11",
+      "display_meta": "2026-07-11",
       "search_terms": [
         "studio",
-        "2026-06-06",
+        "2026-07-11",
         "2026",
-        "06"
+        "07",
+        "11"
       ],
-      "search_text": "studio 2026-06-06 2026 06"
+      "search_text": "studio 2026-07-11 2026 07 11"
     },
     {
       "id": "bulk-add-work",

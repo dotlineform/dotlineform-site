@@ -193,6 +193,11 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/architecture.json",
       "children": [
         {
+          "doc_id": "knowledge-system-vision",
+          "title": "Knowledge System Vision",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/knowledge-system-vision.json"
+        },
+        {
           "doc_id": "data-models-projection-contract",
           "title": "Projection Contract",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json"
@@ -295,6 +300,12 @@
           ]
         },
         {
+          "doc_id": "site-request-data-sharing-full-document-package",
+          "title": "Data Sharing Full Document Package",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
+          "ui_status": "planned"
+        },
+        {
           "doc_id": "site-request-data-sharing-import-content",
           "title": "Data Sharing Import Content",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-import-content.json"
@@ -308,7 +319,8 @@
         {
           "doc_id": "site-request-docs-review-workflow",
           "title": "Docs Review Workflow",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-workflow.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-workflow.json",
+          "ui_status": "planned"
         },
         {
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
@@ -1257,5 +1269,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-10T22:20:28Z"
+  "generated_at": "2026-07-11T00:03:43Z"
 }

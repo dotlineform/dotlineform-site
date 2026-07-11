@@ -34,7 +34,7 @@ The sequence is:
 9. implement Docs Review as a separate product slice
 10. continue the broader documentation rewrite and non-blocking maintainability work as separately tracked workstreams
 
-Do not mix review-folder endpoints, review UI, promotion behavior, or new chapter creation into the foundation refactor.
+Do not mix full-package export/intake, review-package endpoints, review UI, or returned-package editing into the foundation refactor.
 
 ## Scope
 
@@ -88,7 +88,7 @@ The highest-value refactors are not determined by file size alone. They are the 
 | 5 | private runtime coordinator | `docs-viewer-app-runtime.js` remains a large callback bridge and feature assembler | partial |
 | 6 | management coordinator | `docs-viewer-management.js` still coordinates several independent workflows | partial |
 | 7 | state-domain enforcement | named domains exist, but fields and mutable facades still overlap | partial |
-| 8 | management/backend lifecycle structure | scope lifecycle, manifest, mutation, and HTTP dispatch have broad surfaces | no, except clean promotion handoff |
+| 8 | management/backend lifecycle structure | scope lifecycle, manifest, mutation, and HTTP dispatch have broad surfaces | no |
 | cross-cutting | documentation authority and information architecture | 63 directly related Docs Viewer/request documents have no clear user-guide entrypoint and mix current behavior, implementation inventory, future design, and historical decisions | the authority map is required; the full rewrite is not |
 | cross-cutting | user-workspace artifact roots | Data Sharing, Docs import, review-session, and media-preview paths are currently contracted under repo-local `var/` | external Data Sharing/review roots are required before Docs Review |
 | 9 | config/test/CSS consolidation | several declarative layers and tests describe overlapping models | no |
@@ -129,7 +129,7 @@ Docs Review needs a third combination:
 local generated reads
 + temporary source writes
 + review build
-+ controlled promotion
++ package manifest and asset reads
 - general canonical management
 ```
 
@@ -368,7 +368,7 @@ Recommended priorities:
 4. retain source write/rebuild as the single canonical rebuild boundary
 5. narrow capability payload construction into feature-owned projections
 
-Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, provider, and promotion handoff.
+Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, returned-package provider, and isolated build/source services. Any future canonical import or promotion belongs to Data Sharing rather than Docs Review.
 
 ## Finding 10: Config Has Multiple Legitimate But Overlapping Layers
 
@@ -508,7 +508,7 @@ The target boundary is:
 | --- | --- |
 | canonical source and tracked config | repository |
 | tracked generated/public output | repository where the existing publish contract requires it |
-| user-facing exports, imports, staging, review folders, and preview media | `$DOTLINEFORM_PROJECTS_BASE_DIR` workspace roots |
+| user-facing exports, imports, staging, returned review packages, and preview media | `$DOTLINEFORM_PROJECTS_BASE_DIR` workspace roots |
 | short-lived process state, logs, locks, test runs, and operational reports | separately classified runtime/cache roots; not automatically part of this migration |
 
 Use a shared workspace-root resolver rather than allowing each feature to join paths onto `repo_root`. Configuration should store marker-rooted or logical workspace paths, never user-specific absolute paths. Services should receive resolved roots explicitly and validate containment against the resolved workflow root.
@@ -531,7 +531,7 @@ Rules:
 - advertise affected capabilities as unavailable with actionable setup guidance when `DOTLINEFORM_PROJECTS_BASE_DIR` is missing, invalid, unreadable, or unwritable
 - preserve traversal, suffix, symlink, and containment checks against the external workflow root
 - store artifact-relative filenames or marker-rooted display paths in manifests and metadata rather than checkout-relative or absolute user paths
-- keep canonical promotion writes explicitly repo-authorized even though reviewed source is read from an external workspace
+- keep any future Data Sharing canonical import explicitly repo-authorized even though reviewed source is read from an external workspace
 - use temporary project-base roots in tests instead of treating a temporary repository's `var/` directory as the production contract
 - treat old `var/` workflow artifacts as disposable/manual-migration input; do not add compatibility reads or duplicate writes
 
@@ -570,6 +570,7 @@ Ownership rules:
 | D0 | documentation inventory and authority map | prerequisite to foundation planning; not a full rewrite |
 | D1 | documentation scope separation | first functional documentation task; not a Docs Review runtime prerequisite |
 | W0 | external user-workspace artifact roots | separate cross-app change; Data Sharing/review slice required before Docs Review backend work |
+| P0 | Data Sharing full document package | separate Data Sharing project; exact-source package and validated return required before Docs Review |
 | 0 | runtime baseline and prerequisite contract reconciliation | prerequisite assessment |
 | 1 | app context and authority | required |
 | 2 | provider boundary | required |
@@ -612,12 +613,12 @@ Acceptance:
 
 Purpose: remove checkout-relative authority from user-facing staging, preview, and exchange artifacts before Docs Review relies on those paths.
 
-This work must have its own cross-app change request and implementation tracker. It may proceed in parallel with the browser/runtime foundation refactor, but its Data Sharing/review slice must complete before Docs Review folder services are implemented.
+This work must have its own cross-app change request and implementation tracker. It may proceed in parallel with the browser/runtime foundation refactor, but its Data Sharing/review slice must complete before Docs Review returned-package services are implemented.
 
 First-slice tasks:
 
 - define one shared `DOTLINEFORM_PROJECTS_BASE_DIR` workspace-root resolver and marker-path convention
-- migrate Data Sharing exports, returned staging, metadata, and review folders to `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
+- migrate Data Sharing exports, returned staging, metadata, and returned review packages to `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - remove schema constants and adapter validation that require repo-local `var/analytics/data-sharing/...`
 - update Analytics, Data Sharing, and Docs Viewer services to consume explicit resolved workspace roots instead of joining runtime paths onto `repo_root`
 - update capability projection and UI guidance for missing or invalid workspace roots
@@ -628,9 +629,9 @@ First-slice tasks:
 
 Acceptance:
 
-- the complete export -> external edit -> returned staging -> review-folder workflow operates without writing user artifacts inside the repository
-- Docs Review can list, build, edit, and promote a folder resolved from the external workspace root
-- canonical promotion remains constrained to configured repository source roots
+- the complete export -> external edit -> returned staging -> validated package workflow operates without writing user artifacts inside the repository
+- Docs Review can list, build, and edit a validated folder resolved from the external workspace root
+- Docs Review exposes no canonical source-write or promotion capability
 - a missing workspace root disables only the affected capabilities and produces actionable guidance
 - services have no fallback reads or duplicate writes to the retired repo-local Data Sharing/review paths
 - remaining `var/` paths are explicitly classified rather than assumed to share one lifecycle
@@ -718,7 +719,7 @@ Acceptance:
 
 - existing public/manage routes use the configured-scope provider with unchanged behavior
 - document, index, search, recent, and source consumers depend on named provider methods
-- no review-folder provider exists yet
+- no returned-package provider exists yet
 - provider presence does not grant backend authority
 
 ## Phase 3: Route Feature And Startup Projection
@@ -797,6 +798,7 @@ Before resuming Docs Review, confirm:
 - Markdown source and its toolbar controls can be registered for an authorized non-manage context
 - public routes do not load review or management assets
 - adding the review route requires no new lifecycle behavior in the private runtime coordinator
+- Data Sharing can provide a validated full package containing exact Markdown and package-local asset inventories
 
 If these are true, the foundation refactor is sufficient. Do not delay Docs Review for unrelated scope lifecycle, CSS, report, or import cleanup.
 
@@ -808,10 +810,12 @@ Its implementation should consume:
 
 - review app context
 - review route feature policy
-- review-folder provider
+- returned-package provider
 - shared view/mode/control projection
 - shared tree, document, source-editor, and parent-picker primitives
-- focused review-folder and promotion backend services
+- focused package-listing, manifest/asset-read, build, generated-read, and temporary source services
+
+Docs Review must not receive canonical import or promotion services. Any future automated transition from a returned package into canonical source remains a separate Data Sharing workflow.
 
 Docs Review must not be used as an excuse to complete unrelated roadmap items.
 
@@ -937,10 +941,11 @@ Recommended order of work:
 12. reduce only coordinator bridges made obsolete by steps 8-11
 13. update affected user guidance and architecture owners with each slice
 14. complete the W0 Data Sharing/review path slice, which may run in parallel with phases 0-5
-15. run the Docs Review readiness checkpoint
-16. update the Docs Review spec only if the platform contracts materially changed
-17. implement Docs Review in its own tracker
-18. continue D3-D5, the search request, later W0 slices, and phases 7-9 according to current risk and feature demand
+15. implement phase 1 of [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which may also run in parallel with phases 0-5
+16. run the Docs Review readiness checkpoint
+17. update the Docs Review spec only if the platform or full-package contracts materially changed
+18. implement Docs Review in its own tracker
+19. continue D3-D5, the search request, later W0 slices, and phases 7-9 according to current risk and feature demand
 
 ## What Not To Refactor Yet
 

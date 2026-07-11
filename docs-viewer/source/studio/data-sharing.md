@@ -2,10 +2,17 @@
 doc_id: data-sharing
 title: Data Sharing
 added_date: "2026-05-13 17:16"
-last_updated: 2026-06-21
+last_updated: 2026-07-11
 parent_id: ""
 ---
 # Data Sharing
+
+## Knowledge Lifecycle Role
+
+Data Sharing supports repeated knowledge-development cycles, not only one-way export or conventional import. It owns portable packages, trusted provenance, returned-package validation, and any future automated transition into the next accepted source version.
+
+See [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) for the planned source-and-asset-complete round trip.
+See [Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision) for the cross-system purpose of that loop.
 
 Data Sharing is now hosted by the standalone Local Analytics app.
 Run it with:

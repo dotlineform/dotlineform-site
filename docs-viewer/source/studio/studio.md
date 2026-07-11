@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-06-06
+last_updated: 2026-07-11
 parent_id: ""
 ---
 # Studio
@@ -31,6 +31,7 @@ The same page owns Studio helper, route inventory, and audit guidance so the con
 
 ## Key Documents
 
+- **[Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision)** for the shared purpose of Studio, Analytics, Docs Viewer, Data Sharing, and the Analysis scope
 - **[Development Workflow](/docs/?scope=studio&doc=development-workflow)**
   end-to-end lifecycle guidance for human and Codex implementation work.
 - **[Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)**

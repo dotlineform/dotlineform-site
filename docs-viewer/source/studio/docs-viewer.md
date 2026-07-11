@@ -2,13 +2,19 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-06-06
+last_updated: 2026-07-11
 parent_id: ""
 viewable: true
 ---
 # Docs Viewer
 
 The Docs Viewer is the shared documentation module used by the site's docs-domain routes.
+
+## Knowledge Workspace Role
+
+Docs Viewer gathers human-, data-, and AI-developed material into navigable knowledge collections. In this system, `canonical` means the currently accepted source used to build and render a scope; it does not imply exclusively human authorship or finality.
+
+[Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision) owns the broader Studio + Analytics + Docs Viewer model, including the hybrid `/analysis/` ambition and repeated AI-assisted knowledge-development loop.
 
 It currently serves these scopes:
 

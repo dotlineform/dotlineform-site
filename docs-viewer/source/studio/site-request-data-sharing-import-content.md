@@ -2,13 +2,13 @@
 doc_id: site-request-data-sharing-import-content
 title: Data Sharing Import Content
 added_date: 2026-06-28
-last_updated: 2026-07-10
+last_updated: 2026-07-11
 parent_id: change-requests
 viewable: true
 ---
 # Data Sharing Import Content
 
-Partially implemented.
+Partially implemented; remaining full-source direction superseded by [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package).
 
 Implemented first slice:
 
@@ -20,7 +20,9 @@ Implemented first slice:
 
 Still separate and specified by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow):
 
-- `/docs-review/` listing, build, generated-payload serving, temporary editing, and canonical promotion.
+- `/docs-review/` listing, build, generated-payload serving, and temporary editing.
+
+The implemented `document-content` source-folder action remains useful for text-oriented review, but it is not a source-faithful package and must not be treated as canonical replacement input. Exact Markdown, media, links, interactive assets, and returned-package intake now belong to the separate full-package request.
 
 ## Problem
 
@@ -47,11 +49,11 @@ This Data Sharing slice ends at the temporary review-folder handoff:
 
 1. A user stages a returned `document-content` file.
 2. Data Sharing creates or regenerates temporary review source Markdown documents for the complete file from the Review menu's `Content` action.
-3. `/docs-review/` takes ownership of listing, building, rendering, temporary editing, hierarchy review, and controlled canonical promotion.
+3. `/docs-review/` takes ownership of listing, building, rendering, temporary editing, and hierarchy review.
 
 No live source docs are created, overwritten, or deleted by the Data Sharing source-folder action.
 
-The review and promotion implementation is a separate request. Data Sharing does not acquire canonical write authority because Docs Review later promotes a reviewed folder.
+This implemented text-oriented folder is not source-faithful enough for canonical import. The superseding full-package request keeps any future canonical import/promotion under Data Sharing ownership; Docs Review does not acquire canonical write authority.
 
 ## Temporary Review Source Folders
 
@@ -182,7 +184,7 @@ Review folders are temporary artifacts. The folder tree under `var/analytics/dat
 
 Manual deletion is valid. If a user deletes a review folder outside the UI, the system should not complain. The next list operation should simply omit that folder, and an already-open stale folder can report that the folder no longer exists.
 
-Data Sharing backend support should be limited to source-folder creation/regeneration from returned staged packages. `/docs-review/` owns folder listing, building generated payloads, rendering, temporary edits, promotion validation, and controlled canonical promotion.
+For this implemented slice, Data Sharing backend support remains limited to source-folder creation/regeneration from returned staged packages. `/docs-review/` owns folder listing, generated-payload builds, rendering, and temporary edits only.
 
 Data Sharing operations:
 
@@ -199,7 +201,9 @@ Review folders should be opened in `/docs-review/`. The review route should make
 
 `Import review - library - document-content - <content_format>`
 
-The review route may edit temporary source, rebuild the temporary folder, and run the controlled canonical promotion defined by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow). Those capabilities do not belong to Data Sharing and do not make the temporary folder canonical source.
+The review route may edit and rebuild temporary source. It does not write canonical source.
+
+Any future automated canonical import/promotion belongs to Data Sharing because Data Sharing owns trusted export provenance, returned-package validation, and source/asset mappings. It requires a separate preview/apply request after full-package export and review are proven.
 
 The route should be distinct from normal scope navigation:
 
@@ -215,7 +219,7 @@ Initial review UI shape:
 - load generated docs from the selected built folder
 - edit temporary Markdown and `parent_id` values
 - open canonical counterparts in `/docs/`
-- validate and promote reviewed content and hierarchy through a named action
+- retain package provenance for a later manual handoff or separately specified Data Sharing import action
 - keep delete/cleanup out of the first slice unless explicitly added later
 
 Loading a review folder must not mutate the active configured scope.
@@ -236,7 +240,9 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 ## Follow-On Workflow
 
-Docs Review owns temporary editing and controlled promotion after this Data Sharing handoff. Version 1 promotes Markdown bodies and `parent_id` changes for existing canonical documents without a comprehensive diff interface. Version 2 must create explicit new reviewed chapter documents and apply new and existing nodes as one validated hierarchy batch.
+The next workflow is [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which exports exact Markdown and supporting assets, validates the returned package, and hands it to Docs Review for preview and temporary editing.
+
+Any later automated canonical import/promotion requires a separate Data Sharing request with source/asset mapping, revision checks, complete hierarchy validation, preview/apply, and rebuild contracts.
 
 ## Implementation Architecture
 

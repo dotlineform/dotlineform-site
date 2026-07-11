@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-returned-package-review
 title: Documents Returned Package Review
 added_date: "2026-06-27"
-last_updated: 2026-07-10
+last_updated: 2026-07-11
 parent_id: data-sharing
 viewable: true
 ---
@@ -163,7 +163,9 @@ The source-folder action:
 
 It does not build generated review payloads, register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown.
 
-The handoff after folder creation is specified by [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow). Docs Review may edit and rebuild the temporary source, then promote reviewed bodies and hierarchy through a separate validated service. That later promotion does not widen the Data Sharing review action's write authority.
+The current source-folder action is a text-oriented preview handoff only. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
+
+[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the planned exact-Markdown and asset package that [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) will consume. Docs Review may edit and rebuild that validated package, but it does not promote canonical source. Any future automated canonical import remains a Data Sharing responsibility.
 
 ## Review Rows
 
@@ -289,4 +291,4 @@ It checks package shape, metadata, current-source context, and write-action prec
 It does not infer file meaning from row fields.
 It does not apply unrecognized fields.
 The Analytics returned-package apply actions do not treat review Markdown as canonical apply input.
-The current implementation does not automatically create missing documents or parent documents. New chapter creation is a required version 2 Docs Review promotion capability.
+The current implementation does not automatically create missing documents or parent documents. The planned full-package workflow may preview explicit new chapter files, while any future canonical creation/import remains a Data Sharing responsibility.

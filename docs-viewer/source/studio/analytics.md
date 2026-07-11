@@ -2,12 +2,14 @@
 doc_id: analytics
 title: Analytics
 added_date: "2026-05-06 18:19"
-last_updated: 2026-06-22
+last_updated: 2026-07-11
 parent_id: ""
 ---
 # Analytics
 
 Analytics is a standalone local app boundary.
+
+Its role in the broader knowledge-development system is described by [Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision).
 
 Run Analytics with:
 

@@ -3,6 +3,22 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-data-sharing-full-document-package",
+      "title": "Data Sharing Full Document Package",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
+      "added_date": "2026-07-11",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
+      "doc_id": "knowledge-system-vision",
+      "title": "Knowledge System Vision",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/knowledge-system-vision.json",
+      "added_date": "2026-07-11",
+      "parent_id": "architecture",
+      "parent_title": "Architecture"
+    },
+    {
       "doc_id": "site-request-docs-review-workflow",
       "title": "Docs Review Workflow",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-review-workflow.json",
@@ -65,23 +81,7 @@
       "added_date": "2026-06-27",
       "parent_id": "ui",
       "parent_title": "UI"
-    },
-    {
-      "doc_id": "test-contract-discipline",
-      "title": "Test Contract Discipline",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/test-contract-discipline.json",
-      "added_date": "2026-06-27",
-      "parent_id": "testing",
-      "parent_title": "Testing"
-    },
-    {
-      "doc_id": "docs-viewer-static-route-template",
-      "title": "Docs Viewer Static Route Template",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json",
-      "added_date": "2026-06-25",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-10T22:20:28Z"
+  "generated_at": "2026-07-11T00:03:43Z"
 }

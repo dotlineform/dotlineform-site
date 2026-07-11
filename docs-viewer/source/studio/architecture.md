@@ -2,7 +2,7 @@
 doc_id: architecture
 title: Architecture
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:49"
+last_updated: 2026-07-11
 parent_id: ""
 ---
 # Architecture
@@ -19,6 +19,7 @@ Use this section for:
 
 ## References
 
+- **[Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision)** for the cross-system purpose of Studio, Analytics, Docs Viewer, Data Sharing, semantic tokens, and the hybrid Analysis scope
 - **[Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)** for the maintained boundary between Studio source, Docs Viewer source, public source, generated output, and local working output
 - **[Data Flow](/docs/?scope=studio&doc=data-flow)** for which generated artifacts each public route reads at runtime
 - **[Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)** for the shared shell, scope split, and docs-viewer shell boundary
