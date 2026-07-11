@@ -2,7 +2,7 @@
 doc_id: site-request-docs-import-reviewed-package
 title: Docs Import Reviewed Package
 added_date: 2026-07-11
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 ui_status: proposed
 summary: Move Docs Import to the W0-resolved shared drop-zone, import immutable staged Data Sharing JSONL as a collection, and retain a persistent read-only review projection.
 parent_id: change-requests
@@ -114,6 +114,65 @@ The current import implementation derives paths from `STAGING_REL_DIR` and `repo
 
 External source paths cannot be displayed with repo-relative helpers. API results and activity diagnostics should use marker-rooted paths or artifact-relative filenames.
 
+## Targeted Import Refactoring Boundary
+
+The current importer is already modular enough at the service level. This request does not authorize a general import architecture rewrite.
+
+Retain the existing layers:
+
+- `docs_management_import_service.py` as the thin dependency adapter
+- `docs_import_source_service.py` as the single-document workflow orchestrator
+- `docs_import_preview.py` as the current format dispatcher and internal conversion/validation contract
+- `docs_import_common.py` as the suffix-to-`source_format` metadata registry
+- focused Markdown-package, media, interactive-asset, source-formatting, and write/rebuild helpers
+
+Only four targeted changes are required.
+
+### 1. Externalize The Existing Staging Root
+
+Replace `STAGING_REL_DIR` and `repo_root` joins with an explicit W0-resolved staging root. This changes path authority, not format orchestration.
+
+### 2. Add Schema-Aware JSON/JSONL Detection
+
+Keep suffix detection for existing formats. Before generic `.json` or `.jsonl` file-media fallback, inspect supported Data Sharing header and trusted metadata contracts and select a new collection `source_format` when they match.
+
+### 3. Add A Collection Orchestrator
+
+Keep `handle_import_source()` for the existing one-source-to-one-document flow. Add a focused collection workflow for the one-JSONL-to-many-document case. A suitable focused module is `docs_import_data_sharing_documents.py`; exact names can follow current service conventions.
+
+The collection workflow owns:
+
+- record selection
+- create, overwrite, or skip decisions
+- cross-record identity, parent, link, and media mapping
+- batch result and failure reporting
+
+It should call shared lower-level import services rather than invoke the single-document HTTP/service entrypoint once per record.
+
+### 4. Extract Reusable Per-Document Plan And Apply Helpers
+
+Extract only the common document operation currently embedded in `handle_import_source()`:
+
+- collision lookup and action validation
+- create/overwrite source formatting
+- inline and package media materialization
+- target-path writes
+- rebuild follow-through
+- logging and result shaping
+
+The existing single-document orchestrator should use the extracted helpers too. This proves that ordinary import behavior remains on the same path while allowing the collection orchestrator to plan and apply several records.
+
+### Explicitly Not Required
+
+- no plugin framework or open-ended handler loader
+- no conversion of `SourceImporter` into a callable-handler registry
+- no wholesale replacement of the `generate_import_preview()` dispatcher
+- no requirement to move every format function into a separate module
+- no rewrite of existing HTML, Markdown, text, SVG, image, file, or Markdown-package behavior
+- no change to existing single-document create/overwrite semantics beyond the staging-root migration
+
+The implementation should prefer the smallest extraction that supports collection plans. Broader cleanup belongs in a separate request with independent evidence.
+
 ## Immutable Package Identity
 
 A staged return and its preview folder form one immutable pair identified by export metadata and the timestamped package identity.
@@ -177,34 +236,60 @@ If the staged file does not match a supported document-collection schema, retain
 
 The collection importer should support both the compact returned-document format and the full-source format only where their field contracts are explicitly mapped. It must not infer a document package merely from arbitrary row fields.
 
-## Shared Parser And Normalizer
+## Future Standalone JSON/JSONL Collections
 
-Use one parser/normalizer for preview materialization and import.
+Data Sharing is the first collection wrapper, not a permanent prerequisite for collection import.
+
+A future ChatGPT or other external workflow may create a new document collection directly as JSON or JSONL without receiving an exported Data Sharing seed. Docs Viewer should be able to support such a file through a separately declared standalone collection schema, for example `docs_import_collection_v1`.
+
+That future format is not implemented by this request. The current design must nevertheless avoid assumptions that would prevent it:
+
+- the shared normalized record must not require `export_id`, original canonical hashes, a Data Sharing profile, or trusted export metadata
+- Data Sharing provenance belongs to the Data Sharing collection adapter, not the core Docs Import record
+- a future standalone adapter can validate its own explicit schema and emit the same normalized records
+- arbitrary JSON/JSONL must continue to use the generic downloadable-file fallback unless it declares a supported collection schema
+- standalone collections use the same external import drop-zone and the same create/overwrite/skip workflow
+- the wrapper may contain Markdown, HTML, or plain-text document bodies through an explicit `content_format`
+
+Because JSONL is not convenient to read, a future standalone collection may also use the persistent read-only Docs Review projection. Its preview identity and validation contract would be defined by that collection schema rather than fabricated Data Sharing provenance.
+
+## Collection Adapters And Normalized Import Content
+
+Use wrapper-specific adapters that emit one shared Docs Import content contract.
 
 ```text
-staged JSONL
-  -> validate header and trusted metadata
-  -> parse document records
-  -> normalize identity, front matter, Markdown, hierarchy, and assets
-     -> persistent preview materializer
-     -> configured-scope collection importer
+ordinary .md/.html/.txt reader ───────────────┐
+Data Sharing JSON/JSONL adapter ──────────────┼─> ImportContent record(s)
+future standalone collection adapter ─────────┘
+                                                  -> body-format conversion
+                                                  -> persistent review materializer when applicable
+                                                  -> configured-scope import planning/apply
 ```
 
-The normalized record should carry at least:
+The generic `ImportContent` record should carry at least:
 
-- source export/package identity
-- record index or stable record identity
+- source kind and stable source/record identity
+- optional adapter-specific provenance
 - proposed `doc_id`
 - title
-- body Markdown or exact `canonical_markdown`
+- body content
+- `content_format`: `markdown`, `html`, or `plain_text`
 - allowed front matter
 - `parent_id`
 - link and asset information
 - source format/profile diagnostics
 
-For `canonical_markdown`, parse front matter once and keep it out of the body supplied to standard source formatting. For compact `content`, use the declared profile mapping rather than treating arbitrary JSON fields as source.
+Body-format conversion then reuses the normal Docs Import paths:
 
-The persistent preview materializer and Docs Import may apply different output policies, but they must not interpret the JSONL record shape differently.
+- `markdown` uses the Markdown normalization/validation path
+- `html` uses the HTML-to-Markdown conversion path
+- `plain_text` uses the text path
+
+These paths need content-based entrypoints beneath their current file-based wrappers so JSON/JSONL adapters can pass unwrapped strings without writing temporary files.
+
+For Data Sharing `canonical_markdown`, parse front matter once and keep it out of the body supplied to standard source formatting. For compact `content`, use the declared profile mapping rather than treating arbitrary JSON fields as source.
+
+The Data Sharing preview materializer and importer must call the same Data Sharing adapter. Future standalone schemas may use a different wrapper adapter, but all adapters converge on the same `ImportContent` contract and downstream conversion/write behavior.
 
 ## Reuse Of Existing Docs Import
 
@@ -232,13 +317,23 @@ Do not invoke the ordinary staged-filename endpoint once per record, copy previe
 
 ## Import Actions
 
-For each selected record, the user can choose:
+Each selected record has one of these actions:
 
-- `create`: create a new configured-scope document
-- `overwrite`: replace an explicitly selected existing document
+- `create`: create a new configured-scope document when no identity or filename collision exists
+- `overwrite`: replace the existing document that caused the collision
 - `skip`: leave the record unimported
 
-A proposed `doc_id` with no collision defaults naturally to create. A collision must not silently choose an action. The UI should ask whether to overwrite the matching document, create under a replacement `doc_id`, or skip it.
+A proposed `doc_id` with no collision creates normally unless the record is unselected. A collision must not silently choose an action and must never offer `Create as new` or replacement-`doc_id` handling in the collection workflow.
+
+Resolve all collision choices before any writes. The collision UI provides:
+
+- `Overwrite`: overwrite this colliding document
+- `Overwrite all`: overwrite every remaining document collision in this import
+- `Skip`: skip this colliding record
+- `Skip all`: skip every remaining document collision in this import
+- `Cancel import`: abort the complete apply with no writes
+
+`Overwrite all` and `Skip all` apply only to remaining document collisions in the current import operation. They are not persistent preferences and do not authorize media, attachment, or interactive-asset overwrites.
 
 Overwrite is a user decision, not a Data Sharing promotion operation. It does not require the preview file to be compared with canonical source or classified as a new revision.
 
@@ -251,7 +346,8 @@ Overwrite is a user decision, not a Data Sharing promotion operation. It does no
 
 ### Overwrite
 
-- require explicit target identity and confirmation
+- target only the existing document identified by the collision
+- require explicit `Overwrite` or `Overwrite all` confirmation
 - preserve the target `doc_id`, filename, and `added_date`
 - refresh `last_updated`
 - apply the imported body and explicitly allowed front matter
@@ -269,13 +365,13 @@ The import plan should show:
 - target scope
 - selected records
 - create, overwrite, or skip action
-- proposed and final target identities
+- imported identities and matching collision targets
 - parent mapping
 - supported internal link rewrites
 - media plans and manual-copy requirements
 - blockers and warnings
 
-Use the record-to-target mapping to update parents and supported internal links when a created document receives a replacement ID or an overwrite targets a different explicit identity.
+Because the collection workflow does not rename colliding records, imported identities remain stable. Use the selected create/overwrite/skip set to validate parents and supported internal links against the documents that will exist after apply. A skipped parent or link target must produce the documented blocker or warning rather than an implicit identity rewrite.
 
 The implementation must decide and document:
 
@@ -294,7 +390,7 @@ Inline raster data URLs inside returned Markdown should use the existing Docs Im
 1. parse the selected JSONL record
 2. detect supported PNG, JPEG, WebP, or GIF data URLs
 3. plan target-scope media references
-4. retarget filenames when the final target `doc_id` differs
+4. derive filenames from the stable record/target `doc_id`
 5. decode and materialize through the shared media service during import
 
 Current scopes use `staging_manual`, so results must continue to report the required media-store copy step.
@@ -339,12 +435,15 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - remove all production fallback reads and duplicate writes to `var/docs/import-staging/`
 - update tests to provide an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR`
 
-### 2. Extract The Shared JSONL Parser
+### 2. Extract The Data Sharing Collection Adapter And Shared Content Contract
 
 - define supported Data Sharing document-collection schema detection
 - parse trusted header/export metadata and document records
-- normalize compact content and full `canonical_markdown` through explicit mappings
+- normalize compact content and full `canonical_markdown` through explicit Data Sharing mappings
+- define a generic `ImportContent` record without mandatory Data Sharing provenance
+- support Markdown, HTML, and plain-text body dispatch through content-based import entrypoints
 - return stable record identities, content, front matter, hierarchy, asset data, and diagnostics
+- leave standalone collection schema detection as a future adapter rather than implementing it in this slice
 
 ### 3. Use The Parser For Persistent Preview Materialization
 
@@ -373,8 +472,9 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 ### 6. Add Collection Import Planning And Apply
 
 - allow record selection
-- compute create, overwrite, skip, ID, parent, link, and media plans
-- require explicit overwrite decisions
+- compute create, overwrite, skip, collision, parent, link, and media plans
+- resolve collisions through `Overwrite`, `Overwrite all`, `Skip`, `Skip all`, or `Cancel import`
+- do not expose replacement IDs or `Create as new` for collection collisions
 - reuse lower-level source formatting, media materialization, writes, and rebuilds
 - return precise per-record and batch results
 
@@ -396,7 +496,7 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - test shared parsing produces equivalent preview and import records
 - test persistent preview viewing without repeated JSONL conversion
 - test absence of review source-edit capabilities and UI
-- test create, confirmed overwrite, replacement-ID create, and skip
+- test non-colliding create, `Overwrite`, `Overwrite all`, `Skip`, `Skip all`, and cancel-with-no-writes
 - test parent/link mapping across selected records
 - test embedded data-URL media planning and materialization
 - test deleted staged-file import unavailability while persistent preview remains readable
@@ -413,7 +513,7 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - a newer staged return creates a separate preview package and does not stale the older pair
 - Docs Import recognizes supported Data Sharing JSONL as a document collection
 - the importer reads the staged JSONL, never preview `source/*.md`
-- the user can create, explicitly overwrite, or skip selected records
+- non-colliding records can create, while collisions can only be explicitly overwritten or skipped
 - supported hierarchy, links, and embedded raster images are mapped through shared import services
 - configured source writes and rebuilds remain owned by managed Docs Import
 
@@ -423,7 +523,9 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - importing from preview Markdown
 - reparsing the complete JSONL on every Docs Review navigation
 - staged-file staleness or revision management
+- implementing the future standalone document-collection schema
 - automatic overwrite based only on matching `doc_id`
+- replacement-ID or `Create as new` handling for collection collisions
 - diff, merge, delete, or promotion semantics
 - moving staged Data Sharing JSONL into repo-local Docs Import staging
 - introducing a second Docs-specific staging root or external-workspace resolver

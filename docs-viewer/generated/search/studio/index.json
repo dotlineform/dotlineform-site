@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6f5c0c422d9623c9e39c44f218d648a2",
-    "generated_at_utc": "2026-07-11T22:44:13Z",
+    "version": "blake2b-3a76f96cd29ddbab0312a2168f6acb19",
+    "generated_at_utc": "2026-07-11T23:13:11Z",
     "count": 237
   },
   "entries": [
@@ -1345,10 +1345,10 @@
       "kind": "doc",
       "title": "Docs Import Reviewed Package",
       "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
+      "display_meta": "2026-07-12 • Change Requests",
       "search_terms": [
         "site-request-docs-import-reviewed-package",
         "site",
@@ -1361,12 +1361,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "site-request-docs-import-reviewed-package site request docs import reviewed package docs import reviewed package change requests change requests 2026-07-11 2026 07 11"
+      "search_text": "site-request-docs-import-reviewed-package site request docs import reviewed package docs import reviewed package change requests change requests 2026-07-12 2026 07 12"
     },
     {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
@@ -2472,10 +2472,10 @@
       "kind": "doc",
       "title": "Import Source Registry Spec",
       "href": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-import-source-registry-spec",
         "docs",
@@ -2486,12 +2486,12 @@
         "spec",
         "import source registry spec",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-info-panel",

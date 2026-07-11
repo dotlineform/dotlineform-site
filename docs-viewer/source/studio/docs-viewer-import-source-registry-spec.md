@@ -2,7 +2,7 @@
 doc_id: docs-viewer-import-source-registry-spec
 title: Import Source Registry Spec
 added_date: 2026-05-14
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -46,9 +46,30 @@ The folder is application-neutral staging despite its existing `data-sharing/` n
 
 The current registry treats `.json` and `.jsonl` as generic downloadable files and imports one primary source at a time. The planned implementation will detect supported Data Sharing headers and trusted export metadata before that generic fallback, parse the immutable staged file into normalized document records, and apply it as a collection.
 
-The same JSONL parser/normalizer will feed both the persistent read-only Docs Review projection and Docs Import. Import reads the staged JSONL, never `import-preview/<package_id>/source/*.md`. Shared lower-level services continue to own renderer validation, data-URL image extraction, collision handling, source formatting, writes, and rebuilds.
+The same Data Sharing collection adapter will feed both the persistent read-only Docs Review projection and Docs Import. Import reads the staged JSONL, never `import-preview/<package_id>/source/*.md`. Shared lower-level services continue to own renderer validation, data-URL image extraction, collision handling, source formatting, writes, and rebuilds.
 
-Each selected record can create, explicitly overwrite, or skip. A collision must require a user choice rather than silently selecting an action.
+Each selected non-colliding record can create. A collision can only be explicitly overwritten or skipped; the collection workflow does not offer a replacement `doc_id` or `Create as new`. Batch choices are `Overwrite`, `Overwrite all`, `Skip`, `Skip all`, and `Cancel import`, resolved before any writes.
+
+### Future Standalone Collection Compatibility
+
+The shared downstream contract must not require Data Sharing provenance. Data Sharing JSON/JSONL is the first collection adapter, but a future explicitly versioned standalone documents JSON/JSONL schema may be produced directly by ChatGPT or another source without an export seed.
+
+Wrapper adapters should emit generic import-content records containing identity, title, body content, `content_format`, allowed metadata, hierarchy, and asset diagnostics. `content_format` can dispatch to the existing Markdown, HTML-to-Markdown, or plain-text behavior through content-based entrypoints beneath the current file wrappers.
+
+That standalone schema is not part of the current implementation request. Arbitrary JSON/JSONL must keep the generic downloadable-file behavior unless a supported collection schema is explicitly declared.
+
+### Targeted Refactoring Boundary
+
+The current registry and dispatcher remain valid for existing one-document formats. `SourceImporter` may remain a metadata record, and `generate_import_preview()` may retain its explicit format dispatch.
+
+The collection extension requires only:
+
+1. the W0 external staging-root substitution;
+2. content-aware Data Sharing JSON/JSONL detection before generic file fallback;
+3. a focused collection orchestrator for one staged source producing several document actions; and
+4. extraction of reusable per-document collision, create/overwrite, media, write, and rebuild helpers from the current single-document orchestrator.
+
+The existing `handle_import_source()` must continue to own ordinary one-source-to-one-document workflow and call the same extracted helpers. Do not introduce a plugin framework, callable-handler registry, wholesale dispatcher replacement, or migration of every format into a separate module as part of this request.
 
 ## Registry Shape
 
