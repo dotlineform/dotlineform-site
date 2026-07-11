@@ -55,6 +55,21 @@ Original review text.
 """
     (package / "source").mkdir(parents=True)
     (package / "source/fixture-root.md").write_text(source, encoding="utf-8")
+    (package / "source/fixture-child.md").write_text(
+        """---
+doc_id: fixture-child
+title: Fixture child
+parent_id: fixture-root
+added_date: 2026-07-11
+last_updated: 2026-07-11
+viewable: true
+---
+# Fixture child
+
+Nested review text.
+""",
+        encoding="utf-8",
+    )
     write_json(package / "inventories/assets.json", {"schema_version": "asset_inventory_v1", "assets": []})
     return package
 
@@ -98,6 +113,11 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     page.wait_for_selector("#docsViewerContent h1", state="visible", timeout=timeout_ms)
     if page.locator("#docsViewerContent h1").inner_text().strip() != "Fixture root":
         raise AssertionError("Docs Review did not render the fixture document")
+    if page.locator('[data-toggle-doc-id="fixture-root"]').count() != 1:
+        raise AssertionError("Docs Review did not render the nested fixture tree toggle")
+    child_link = page.locator('#docsViewerNav [data-doc-id="fixture-child"]')
+    if child_link.count() != 1 or not child_link.is_visible():
+        raise AssertionError("Docs Review did not render the nested fixture document")
     state = page.locator("#docsViewerRoot").evaluate(
         """root => ({
             appKind: root.dataset.docsViewerAppKind,

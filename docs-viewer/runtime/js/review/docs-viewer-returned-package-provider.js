@@ -1,6 +1,9 @@
 import {
   requestDocsReviewJson
 } from "./docs-viewer-review-client.js";
+import {
+  normalizeDocsIndexTreePayload
+} from "../shared/docs-viewer-tree-payload-adapter.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -65,7 +68,9 @@ export function createDocsViewerReturnedPackageProvider(options) {
       function read() {
         return request("/docs-review/packages/index-tree", {
           query: { package_id: packageId }
-        }).then(function (payload) { return payload.index_tree; });
+        }).then(function (payload) {
+          return normalizeDocsIndexTreePayload(payload.index_tree);
+        });
       }
       return read().catch(function (error) {
         if (!error || error.status !== 404) throw error;

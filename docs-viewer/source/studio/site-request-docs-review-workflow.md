@@ -441,6 +441,7 @@ The follow-up producer/consumer gap is closed without accepting the obsolete sch
 - The manifest records `source_projection: rendered_derived_text_only`. Exact `canonical_markdown`, binary assets, dependency inventories, and full returned-package validation remain owned by `document-full-source`.
 - Repeating Content for the same metadata-derived timestamp is rejected; timestamped package folders are not replaced.
 - When no valid package is available, `/docs-review/` now includes the package-list rejection diagnostics in its empty-state error.
+- The returned-package provider normalizes the nested package index through the shared tree-payload adapter before handing it to the app runtime, so nested review documents and expansion controls appear in the Docs Review index.
 - Focused tests cover row/materialization rejection, partial-selection parent projection, trusted publication, immutable timestamp conflicts, package discovery, Build, generated payload reads, and rejection diagnostics.
 - The live staged Studio package was republished with the trusted manifest: six documents, one external-parent warning, no errors. `/docs-review/` listed it, Build emitted six package-local payloads, and rendered/source reads succeeded without repository source or public-asset writes.
 
