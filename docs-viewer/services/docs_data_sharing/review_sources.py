@@ -7,10 +7,10 @@ import datetime as dt
 import json
 from pathlib import Path
 import re
-import shutil
 from typing import Any
 
 import docs_source_model as source_model
+from docs_management_source_service import split_source_exact
 from docs_returned_import_common import (
     SUPPORTED_EXTENSIONS,
     issue,
@@ -28,9 +28,10 @@ from docs_returned_import_files import (
 )
 
 
-SCHEMA_VERSION = "data_sharing_import_review_source_v1"
+SCHEMA_VERSION = "docs_review_validated_package_v1"
 FOLDER_ID_SOURCE = "export_metadata"
 SAFE_FOLDER_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
+SAFE_DOC_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 SAFE_FILENAME_RE = re.compile(r"[^A-Za-z0-9._-]+")
 FRONT_MATTER_FIELDS = ("title", "parent_id", "summary", "viewable")
 CONTENT_FIELD = "content"
@@ -193,6 +194,17 @@ def validate_returned_rows(raw_rows: list[Any]) -> tuple[list[dict[str, Any]], l
         row_issues: list[dict[str, Any]] = []
         if not doc_id:
             row_issues.append(issue("error", "missing_doc_id", "record is missing doc_id", record_index=index, line=line))
+        elif not SAFE_DOC_ID_RE.fullmatch(doc_id):
+            row_issues.append(
+                issue(
+                    "error",
+                    "invalid_doc_id",
+                    f"record doc_id must be a safe single path segment: {doc_id}",
+                    record_index=index,
+                    line=line,
+                    doc_id=doc_id,
+                )
+            )
         if not title:
             row_issues.append(issue("error", "missing_title", "record is missing title", record_index=index, line=line, doc_id=doc_id))
         if CONTENT_FIELD not in row or row.get(CONTENT_FIELD) is None:
@@ -223,6 +235,31 @@ def validate_returned_rows(raw_rows: list[Any]) -> tuple[list[dict[str, Any]], l
         clean_row["_record_index"] = index
         valid.append(clean_row)
     return valid, skipped
+
+
+def project_package_local_hierarchy(
+    valid_rows: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Root compact-profile documents whose canonical parent is outside the returned selection."""
+    package_doc_ids = {clean_text(row.get("doc_id")) for row in valid_rows}
+    projected_rows: list[dict[str, Any]] = []
+    warnings: list[dict[str, Any]] = []
+    for row in valid_rows:
+        projected = dict(row)
+        parent_id = clean_text(projected.get("parent_id"))
+        if parent_id and parent_id not in package_doc_ids:
+            projected.pop("parent_id", None)
+            warning = issue(
+                "warning",
+                "parent_outside_materialized_package",
+                f"materialized review document was rooted because parent_id is outside the package: {parent_id}",
+                record_index=int(row["_record_index"]),
+                doc_id=clean_text(row.get("doc_id")),
+            )
+            warning["parent_id"] = parent_id
+            warnings.append(warning)
+        projected_rows.append(projected)
+    return projected_rows, warnings
 
 
 def review_front_matter(
@@ -279,6 +316,99 @@ def skipped_record_count(items: list[dict[str, Any]]) -> int:
     return len(indices)
 
 
+def validate_materialized_sources(source_records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Validate the exact Markdown projection before it becomes discoverable by Docs Review."""
+    if not source_records:
+        return [issue("error", "missing_materialized_sources", "review package must contain at least one source document")]
+    issues: list[dict[str, Any]] = []
+    parsed: dict[str, dict[str, Any]] = {}
+    for record in source_records:
+        filename = clean_text(record.get("filename"))
+        expected_doc_id = clean_text(record.get("doc_id"))
+        try:
+            _front_matter_source, front_matter, _source_body = split_source_exact(str(record.get("source_text") or ""))
+        except ValueError as exc:
+            issues.append(
+                issue(
+                    "error",
+                    "invalid_materialized_source",
+                    f"materialized review source could not be parsed: {filename}: {exc}",
+                    doc_id=expected_doc_id,
+                )
+            )
+            continue
+        doc_id = clean_text(front_matter.get("doc_id"))
+        title = clean_text(front_matter.get("title"))
+        parent_id = clean_text(front_matter.get("parent_id"))
+        if not doc_id or not SAFE_DOC_ID_RE.fullmatch(doc_id):
+            issues.append(
+                issue(
+                    "error",
+                    "invalid_materialized_doc_id",
+                    f"materialized review source has an invalid doc_id: {filename}",
+                    doc_id=doc_id or expected_doc_id,
+                )
+            )
+            continue
+        if doc_id != expected_doc_id or filename != f"{doc_id}.md":
+            issues.append(
+                issue(
+                    "error",
+                    "materialized_source_identity_mismatch",
+                    f"materialized review filename and doc_id must match: {filename}",
+                    doc_id=doc_id,
+                )
+            )
+            continue
+        if not title:
+            issues.append(
+                issue(
+                    "error",
+                    "missing_materialized_title",
+                    f"materialized review source is missing title: {filename}",
+                    doc_id=doc_id,
+                )
+            )
+            continue
+        if doc_id in parsed:
+            issues.append(issue("error", "duplicate_materialized_doc_id", f"duplicate materialized doc_id: {doc_id}", doc_id=doc_id))
+            continue
+        parsed[doc_id] = {"parent_id": parent_id}
+
+    if issues:
+        return issues
+
+    for doc_id, record in parsed.items():
+        parent_id = record["parent_id"]
+        if parent_id and parent_id not in parsed:
+            issues.append(
+                issue(
+                    "error",
+                    "unknown_materialized_parent_id",
+                    f"materialized review parent_id does not identify a package document: {parent_id}",
+                    doc_id=doc_id,
+                )
+            )
+
+    for doc_id in parsed:
+        current = doc_id
+        visited: set[str] = set()
+        while current:
+            if current in visited:
+                issues.append(
+                    issue(
+                        "error",
+                        "materialized_hierarchy_cycle",
+                        f"materialized review hierarchy contains a cycle involving: {doc_id}",
+                        doc_id=doc_id,
+                    )
+                )
+                break
+            visited.add(current)
+            current = clean_text(parsed.get(current, {}).get("parent_id"))
+    return issues
+
+
 def create_review_source_folder(
     repo_root: Path,
     *,
@@ -318,19 +448,76 @@ def create_review_source_folder(
 
     valid_rows, skipped_records = validate_returned_rows(raw_rows)
     issues.extend(skipped_records)
-    issue_counts = count_issues(issues)
-    ok = issue_counts["errors"] == 0
+    materialized_rows, hierarchy_warnings = project_package_local_hierarchy(valid_rows)
+    issues.extend(hierarchy_warnings)
     content_format = content_format_from_package(metadata, package_metadata, raw_rows)
     source_scope = clean_text(metadata.get("scope")) if metadata else ""
     generated_at = clean_text(metadata.get("generated_at")) if metadata else ""
+    source_files: list[dict[str, Any]] = []
+    materialized_sources: list[dict[str, Any]] = []
+    if not any(item.get("level") == "error" for item in issues) and folder_path is not None:
+        used_filenames: set[str] = set()
+        date_value = current_review_date()
+        for row in materialized_rows:
+            doc_id = clean_text(row.get("doc_id"))
+            filename = markdown_filename(doc_id, used_filenames)
+            output_path = folder_path / "source" / filename
+            source_text = source_markdown(
+                row,
+                review_front_matter(row, metadata=metadata, folder_id=folder_id, date_value=date_value),
+            )
+            source_files.append(
+                {
+                    "record_index": int(row["_record_index"]),
+                    "doc_id": doc_id,
+                    "path": relative_path(repo_root, output_path),
+                }
+            )
+            materialized_sources.append(
+                {
+                    "doc_id": doc_id,
+                    "filename": filename,
+                    "source_text": source_text,
+                }
+            )
+        issues.extend(validate_materialized_sources(materialized_sources))
+
+    if folder_path is not None and folder_path.exists():
+        issues.append(
+            issue(
+                "error",
+                "review_package_exists",
+                f"timestamped Docs Review package already exists: {folder_id}",
+            )
+        )
+
+    issue_counts = count_issues(issues)
+    ok = issue_counts["errors"] == 0
+    counts = {
+        "records": len(raw_rows),
+        "valid_records": len(valid_rows),
+        "skipped_records": skipped_record_count(skipped_records),
+        **issue_counts,
+    }
+    default_doc_id = next(
+        (
+            clean_text(row.get("doc_id"))
+            for row in materialized_rows
+            if not clean_text(row.get("parent_id"))
+        ),
+        clean_text(materialized_rows[0].get("doc_id")) if materialized_rows else "",
+    )
     manifest: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
-        "folder_id": folder_id,
-        "folder_id_source": FOLDER_ID_SOURCE if folder_id else "",
+        "package_id": folder_id,
+        "status": "validated" if ok else "",
         "data_domain": clean_text(metadata.get("data_domain")) if metadata else "",
         "source_scope": source_scope,
+        "default_doc_id": default_doc_id,
         "profile_id": clean_text(metadata.get("profile_id")) if metadata else "",
+        "source_projection": "rendered_derived_text_only",
         "source_export_id": export_id,
+        "package_id_source": FOLDER_ID_SOURCE if folder_id else "",
         "staged_filename": clean_text(staged_filename),
         "staged_file": relative_path(repo_root, path) if path is not None else clean_text(staged_filename),
         "content_format": content_format,
@@ -341,50 +528,47 @@ def create_review_source_folder(
         },
         "generated_at": generated_at,
         "created_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "counts": {
-            "records": len(raw_rows),
-            "valid_records": len(valid_rows),
-            "skipped_records": skipped_record_count(skipped_records),
-            **issue_counts,
+        "validation": {
+            "counts": counts,
+            "issues": issues,
+            "skipped_records": skipped_records,
         },
-        "issues": issues,
-        "skipped_records": skipped_records,
         "delete_safe": True,
+        "source_files": [
+            {
+                "record_index": record["record_index"],
+                "doc_id": record["doc_id"],
+                "path": f"source/{Path(str(record['path'])).name}",
+            }
+            for record in source_files
+        ],
     }
     if metadata_path is not None:
         manifest["source_metadata_file"] = relative_path(repo_root, metadata_path)
-    if folder_path is not None:
-        manifest["folder_path"] = relative_path(repo_root, folder_path)
-        manifest["source_path"] = relative_path(repo_root, folder_path / "source")
 
-    source_files: list[dict[str, Any]] = []
     if ok and folder_path is not None:
-        used_filenames: set[str] = set()
-        date_value = current_review_date()
-        for row in valid_rows:
-            filename = markdown_filename(clean_text(row.get("doc_id")), used_filenames)
-            output_path = folder_path / "source" / filename
-            source_files.append(
-                {
-                    "record_index": int(row["_record_index"]),
-                    "doc_id": clean_text(row.get("doc_id")),
-                    "path": relative_path(repo_root, output_path),
-                }
-            )
-        manifest["source_files"] = source_files
         if not dry_run:
-            if folder_path.exists():
-                if not folder_path.is_dir() or folder_path.is_symlink():
-                    raise ValueError(f"review source folder is not a directory: {relative_path(repo_root, folder_path)}")
-                shutil.rmtree(folder_path)
-            (folder_path / "source").mkdir(parents=True, exist_ok=True)
-            for row, file_record in zip(valid_rows, source_files):
-                output_path = folder_path / "source" / Path(str(file_record["path"])).name
-                front_matter = review_front_matter(row, metadata=metadata, folder_id=folder_id, date_value=date_value)
-                output_path.write_text(source_markdown(row, front_matter), encoding="utf-8")
-            (folder_path / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            (folder_path / "source").mkdir(parents=True, exist_ok=False)
+            for source_record in materialized_sources:
+                (folder_path / "source" / source_record["filename"]).write_text(
+                    source_record["source_text"],
+                    encoding="utf-8",
+                )
+            (folder_path / "manifest.json").write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+    package_path = relative_path(repo_root, folder_path) if folder_path is not None else ""
+    source_path = relative_path(repo_root, folder_path / "source") if folder_path is not None else ""
+    if ok:
+        action = "Validated" if dry_run else "Published"
+        summary_text = (
+            f"{action} Docs Review package {folder_id} with {len(source_files)} "
+            "rendered-derived text documents."
+        )
     else:
-        manifest["source_files"] = []
+        summary_text = "Docs Review package was not published because validation failed."
 
     return {
         "ok": ok,
@@ -395,20 +579,15 @@ def create_review_source_folder(
         "source_profile_id": clean_text(metadata.get("profile_id")) if metadata else "",
         "content_format": content_format,
         "folder_id": folder_id,
-        "folder_path": manifest.get("folder_path", ""),
-        "source_path": manifest.get("source_path", ""),
+        "folder_path": package_path,
+        "source_path": source_path,
         "manifest_path": relative_path(repo_root, folder_path / "manifest.json") if folder_path is not None else "",
         "staged_filename": clean_text(staged_filename),
-        "counts": manifest["counts"],
+        "counts": counts,
         "issues": issues,
         "skipped_records": skipped_records,
         "source_files": source_files,
         "manifest": manifest,
         "review_source_folder_written": bool(ok and not dry_run),
-        "summary_text": (
-            f"{'Validated' if dry_run else 'Created'} import review source folder {folder_id} "
-            f"with {len(source_files)} documents."
-            if ok
-            else "Import review source folder was not created."
-        ),
+        "summary_text": summary_text,
     }

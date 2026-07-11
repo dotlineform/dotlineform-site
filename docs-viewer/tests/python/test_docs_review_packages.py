@@ -229,6 +229,24 @@ def test_package_contract_rejects_unvalidated_nested_and_symlink_sources() -> No
         docs_review_packages.read_manifest(REPO_ROOT, package.name)
 
 
+def test_package_listing_reports_rejection_diagnostics_for_empty_state() -> None:
+    package = write_package("rejected-review")
+    manifest = json.loads((package / "manifest.json").read_text(encoding="utf-8"))
+    manifest["schema_version"] = "data_sharing_import_review_source_v1"
+    write_json(package / "manifest.json", manifest)
+
+    listed = docs_review_packages.list_packages(REPO_ROOT)
+
+    assert listed["packages"] == []
+    assert listed["rejected"] == [
+        {
+            "package_id": package.name,
+            "path": f"$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/{package.name}",
+            "error": "review package manifest schema_version must be docs_review_validated_package_v1",
+        }
+    ]
+
+
 def test_review_dispatcher_keeps_routes_outside_management_dispatch() -> None:
     package = write_package()
 

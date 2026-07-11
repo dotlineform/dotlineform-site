@@ -134,7 +134,7 @@ The request uses:
 }
 ```
 
-For `document-content` packages, this action creates or regenerates one temporary source folder for the complete staged returned file:
+For `document-content` packages, this action validates and publishes one temporary Docs Review package for the complete staged returned file:
 
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
@@ -151,21 +151,25 @@ The folder id is derived only from the staged file's `export_id` and matching in
 
 There is no fallback to staged filename, returned filename, row shape, or embedded profile fields. Missing or mismatched metadata fails closed.
 
-The source-folder action:
+The Content/source-folder action:
 
 - validates `doc_id`, `title`, and string `content` for each returned row
-- writes one Markdown file per valid row
-- records invalid rows in the manifest and response
+- materializes one Markdown file per valid row in the timestamped package folder
+- strictly parses the materialized front matter and validates safe filename/`doc_id` agreement, unique identities, package-local parent references, and hierarchy cycles
+- roots a compact-package document when its original parent is outside the returned selection and records the original parent as a validation warning, so partial text projections remain buildable
+- writes the folder only when the complete in-memory materialized source set passes validation
+- writes a trusted `docs_review_validated_package_v1` manifest with matching `package_id`, `status: validated`, `source_scope`, `default_doc_id`, provenance, and validation diagnostics
+- reports invalid rows and materialization failures in the Data Sharing response without publishing a discoverable package
 - copies only allowed front matter fields from returned rows: `title`, `parent_id`, `summary`, and `viewable`
 - writes the returned `content` field as the Markdown body without content normalization or conversion
 - treats `content_format` as manifest metadata only
-- replaces an existing folder with the same metadata-derived id when the user explicitly runs the action
+- rejects publication when the metadata-derived timestamped package folder already exists
 
-It does not build generated review payloads, register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown.
+It does not build generated review payloads automatically, register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown. The published folder is immediately discoverable by `/docs-review/`, where Build creates package-local generated output.
 
-The current source-folder action is a text-oriented preview handoff only. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
+The current Content/source-folder action is a text-oriented preview handoff only. Its manifest records `source_projection: rendered_derived_text_only`. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
 
-[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the planned exact-Markdown and asset package that [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) will consume. Docs Review may edit and rebuild that validated package, but it does not promote canonical source. Any future automated canonical import remains a Data Sharing responsibility.
+[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the later exact-Markdown and asset producer for the same validated-package handoff. Docs Review may edit and rebuild either validated projection, but it does not promote canonical source. Any future automated canonical import remains a Data Sharing responsibility.
 
 ## Review Rows
 

@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from docs_import_test_support import handle_documents_import_preview, make_repo, write_staged
+import docs_review_packages
 import docs_source_model as source_model
 from repo_factory import data_sharing_workspace_root, resolve_data_sharing_marker
 
@@ -161,7 +162,6 @@ def test_review_source_folder_writes_manifest_and_verbatim_markdown_body() -> No
                 {
                     "doc_id": "alpha",
                     "title": "Alpha",
-                    "parent_id": "library",
                     "summary": "Returned summary.",
                     "viewable": False,
                     "content": returned_content,
@@ -179,13 +179,22 @@ def test_review_source_folder_writes_manifest_and_verbatim_markdown_body() -> No
         source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
         front_matter, _ = source_model.parse_source(source_path)
         raw_body = raw_source_body(source_path)
+        listed = docs_review_packages.list_packages(root)
+        built = docs_review_packages.build_package(root, {"package_id": payload["folder_id"]})
+        generated = docs_review_packages.read_payload(root, payload["folder_id"], "alpha")
 
     assert payload["ok"] is True
     assert payload["folder_id"] == "20260627-215010-documents-document-content"
     assert payload["content_format"] == "markdown"
     assert payload["counts"] == {"records": 1, "valid_records": 1, "skipped_records": 0, "errors": 0, "warnings": 0}
     assert payload["review_source_folder_written"] is True
-    assert manifest["folder_id_source"] == "export_metadata"
+    assert manifest["schema_version"] == "docs_review_validated_package_v1"
+    assert manifest["package_id"] == payload["folder_id"]
+    assert manifest["package_id_source"] == "export_metadata"
+    assert manifest["status"] == "validated"
+    assert manifest["source_scope"] == "library"
+    assert manifest["default_doc_id"] == "alpha"
+    assert manifest["source_projection"] == "rendered_derived_text_only"
     assert manifest["source_export_id"] == export_id
     assert manifest["staged_filename"] == "renamed-return.jsonl"
     assert manifest["delete_safe"] is True
@@ -196,11 +205,81 @@ def test_review_source_folder_writes_manifest_and_verbatim_markdown_body() -> No
     }
     assert front_matter["doc_id"] == "alpha"
     assert front_matter["title"] == "Alpha"
-    assert front_matter["parent_id"] == "library"
+    assert "parent_id" not in front_matter
     assert front_matter["summary"] == "Returned summary."
     assert front_matter["viewable"] is False
     assert "children" not in front_matter
     assert raw_body == returned_content
+    assert listed["packages"][0]["package_id"] == payload["folder_id"]
+    assert listed["rejected"] == []
+    assert built["document_count"] == 1
+    assert generated["payload"]["doc_id"] == "alpha"
+
+
+def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "missing", "content": "Body."},
+            ],
+        )
+        write_content_meta(root, export_id)
+
+        payload = handle_documents_import_preview(
+            root,
+            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            dry_run=False,
+        )
+        source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
+        front_matter, _ = source_model.parse_source(source_path)
+        built = docs_review_packages.build_package(root, {"package_id": payload["folder_id"]})
+
+    assert payload["ok"] is True
+    assert payload["review_source_folder_written"] is True
+    assert payload["counts"]["warnings"] == 1
+    assert payload["issues"] == [
+        {
+            "level": "warning",
+            "code": "parent_outside_materialized_package",
+            "message": "materialized review document was rooted because parent_id is outside the package: missing",
+            "record_index": 0,
+            "doc_id": "alpha",
+            "parent_id": "missing",
+        }
+    ]
+    assert "parent_id" not in front_matter
+    assert built["document_count"] == 1
+
+
+def test_review_source_folder_rejects_package_local_hierarchy_cycle() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "beta", "content": "Alpha body."},
+                {"doc_id": "beta", "title": "Beta", "parent_id": "alpha", "content": "Beta body."},
+            ],
+        )
+        write_content_meta(root, export_id)
+
+        payload = handle_documents_import_preview(
+            root,
+            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            dry_run=False,
+        )
+
+    assert payload["ok"] is False
+    assert payload["review_source_folder_written"] is False
+    assert {item["code"] for item in payload["issues"]} == {"materialized_hierarchy_cycle"}
 
 
 def test_review_source_folder_skips_invalid_rows_and_does_not_write() -> None:
@@ -232,7 +311,7 @@ def test_review_source_folder_skips_invalid_rows_and_does_not_write() -> None:
     assert [item["code"] for item in payload["skipped_records"]] == ["missing_doc_id", "missing_title", "missing_content"]
 
 
-def test_review_source_folder_replaces_existing_folder_explicitly() -> None:
+def test_review_source_folder_rejects_existing_timestamped_package() -> None:
     with make_repo() as temp:
         root = Path(temp)
         export_id = "ds_20260627T205010Z"
@@ -266,16 +345,14 @@ def test_review_source_folder_replaces_existing_folder_explicitly() -> None:
             {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
             dry_run=False,
         )
-        second_body = source_folder_body(root, second, "beta.md")
+        first_body = source_folder_body(root, first, "alpha.md")
+        beta_path = resolve_data_sharing_marker(str(second["source_path"])) / "beta.md"
 
     assert first["folder_id"] == second["folder_id"]
-    assert second["ok"] is True
-    assert second["source_files"] == [
-        {
-            "record_index": 0,
-            "doc_id": "beta",
-            "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/20260627-215010-documents-document-content/source/beta.md",
-        }
-    ]
-    assert stale_path.exists() is False
-    assert second_body == "Second body."
+    assert second["ok"] is False
+    assert second["review_source_folder_written"] is False
+    assert second["counts"]["errors"] == 1
+    assert [item["code"] for item in second["issues"]] == ["review_package_exists"]
+    assert stale_path.exists() is True
+    assert first_body == "First body."
+    assert beta_path.exists() is False

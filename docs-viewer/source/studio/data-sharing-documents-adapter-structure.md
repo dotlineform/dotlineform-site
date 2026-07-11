@@ -77,8 +77,8 @@ The documents adapter delegates parsing, review-document generation, and tempora
 Returned-record loading produces document-oriented review rows from the selected staged file.
 Review produces one Markdown review document for the selected rows.
 
-The documents review handler also supports `review_action: "source_folder"` for returned `document-content` packages.
-That action validates the complete staged file, derives a safe folder id from internal export metadata, and writes:
+The documents review handler routes `review_action: "content"` and `review_action: "source_folder"` for returned `document-content` packages to the same Data Sharing producer.
+That producer validates the complete staged file and materialized Markdown set, derives a safe package id from internal export metadata, and publishes:
 
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
@@ -86,8 +86,12 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   source/*.md
 ```
 
-Those folders are disposable review inputs for the separate review app path.
-They are not Docs Viewer scopes, are not registered in scope config, and do not mutate canonical source Markdown.
+The manifest uses `docs_review_validated_package_v1`, a matching `package_id`, `status: validated`, and `source_scope`. The package is written to its timestamped folder only after safe document identities and package-local hierarchy pass in-memory validation. Because compact exports may contain only selected documents, a parent outside the package is removed from the temporary projection and preserved as a validation warning; package-local cycles remain fatal.
+
+Those folders are disposable inputs for `/docs-review/`.
+They are not Docs Viewer scopes, are not registered in scope config, and do not mutate canonical source Markdown. Timestamped package folders are immutable; repeating the action for the same export is rejected.
+
+This `document-content` package remains a rendered-derived, text-only projection. `document-full-source` remains the owner of exact `canonical_markdown`, asset/dependency inventories, and full returned-package validation.
 
 Current apply actions are:
 

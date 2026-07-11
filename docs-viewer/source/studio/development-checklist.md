@@ -130,19 +130,18 @@ Documents data-sharing adapters:
 - Docs prepare/export behavior stays under `docs_export*.py` and `docs_data_sharing/package.py`.
 - Import support is profile-driven: export-only profiles must keep `supports_return_import` false until a matching returned import type and apply action exist.
 
-Docs Review [not yet implemented]:
+Docs Review:
 
-- [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) owns the planned `/docs-review/` product and implementation boundary.
+- [Docs Review Workflow](/docs/?scope=studio&doc=site-request-docs-review-workflow) owns the `/docs-review/` product and implementation boundary.
 - [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export, asset/dependency packaging, returned-package validation, and any future canonical import/promotion.
 - Returned review packages are temporary folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
 - Reuse shared tree, routing, rendering, panel, source-editor, parent-picker, and CSS primitives through explicit review app context, provider, and capability contracts.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
-- `docs_review_packages.py` should own safe validated-package list/read behavior; focused review build and source services own generated output and temporary Markdown writes.
+- `docs_review_packages.py` owns safe validated-package list/read behavior; focused review build and source services own generated output and temporary Markdown writes.
 - Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
 - Temporary review edits require explicit package-rooted backend capabilities. Docs Review must not receive canonical import, promotion, or general management authority.
 - Public entrypoints must not import review assets, receive review service URLs, or probe review capabilities.
-- Replace the tentative `docs_review_sessions.py`, `/docs/review-sessions...` routes, and `docs-viewer-review-sessions-*` modules during implementation; do not retain compatibility aliases.
 
 When adding or changing import/export behavior:
 

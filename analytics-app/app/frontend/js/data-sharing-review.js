@@ -107,7 +107,7 @@ function sourceFolderStatusMessage(state, payload) {
   const details = [];
   if (skipped > 0) details.push(`${skipped} skipped`);
   if (warnings > 0) details.push(`${warnings} ${warnings === 1 ? "warning" : "warnings"}`);
-  const message = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.source_folder_success", "Import review source folder created.");
+  const message = payload.summary_text || getAnalyticsText(state.config, "data_sharing_review.source_folder_success", "Validated Docs Review package published.");
   return details.length ? `${message} ${details.join("; ")}.` : message;
 }
 
@@ -117,7 +117,11 @@ function sourceFolderStatusState(payload) {
 }
 
 const REVIEW_ACTIONS = [
-  { id: "content", label: "Content" },
+  {
+    id: "content",
+    label: "Content",
+    title: "Publish a validated text-only Docs Review package."
+  },
   { id: "summaries", label: "Summaries" },
   { id: "hierarchy", label: "Hierarchy" }
 ];
@@ -168,6 +172,7 @@ function renderReviewMenu(state) {
     button.setAttribute("role", "menuitem");
     button.dataset.dataSharingReviewAction = action.id;
     button.textContent = action.label;
+    if (action.title) button.title = action.title;
     state.reviewMenu.appendChild(button);
   });
   hideReviewMenu(state);
@@ -388,7 +393,7 @@ async function createSourceFolder(state) {
   setStatus(
     state.statusNode,
     "",
-    getAnalyticsText(state.config, "data_sharing_review.source_folder_running_status", "Creating import review source folder...")
+    getAnalyticsText(state.config, "data_sharing_review.source_folder_running_status", "Validating and publishing Docs Review package...")
   );
 
   try {
@@ -408,7 +413,7 @@ async function createSourceFolder(state) {
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || getAnalyticsText(state.config, "data_sharing_review.source_folder_failed", "Import review source folder creation failed.")
+      normalizeText(error && error.message) || getAnalyticsText(state.config, "data_sharing_review.source_folder_failed", "Docs Review package validation or publication failed.")
     );
   } finally {
     state.isRunning = false;

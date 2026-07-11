@@ -33,7 +33,20 @@ export function createDocsViewerReturnedPackageProvider(options) {
 
   function listCollections() {
     return request("/docs-review/packages").then(function (payload) {
-      return Array.isArray(payload.packages) ? payload.packages : [];
+      var packages = Array.isArray(payload.packages) ? payload.packages : [];
+      var rejected = Array.isArray(payload.rejected) ? payload.rejected : [];
+      if (!packages.length && rejected.length) {
+        var diagnostics = rejected.slice(0, 3).map(function (record) {
+          var packageId = cleanString(record && record.package_id) || "unknown package";
+          var message = cleanString(record && record.error) || "validation failed";
+          return packageId + ": " + message;
+        });
+        if (rejected.length > diagnostics.length) {
+          diagnostics.push((rejected.length - diagnostics.length) + " more rejected package(s)");
+        }
+        throw new Error("No validated Docs Review packages are available. Rejected: " + diagnostics.join("; "));
+      }
+      return packages;
     });
   }
 
