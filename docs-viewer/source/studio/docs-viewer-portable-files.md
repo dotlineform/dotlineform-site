@@ -61,7 +61,7 @@ Copy the shared viewer runtime files:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`

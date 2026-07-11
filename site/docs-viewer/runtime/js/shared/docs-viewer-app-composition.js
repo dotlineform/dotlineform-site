@@ -2,12 +2,6 @@ import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
 import {
-  createDocsViewerDefaultHostedViews,
-  createDocsViewerHostedViewRegistry,
-  createDocsViewerRouteHostedViews,
-  registerDocsViewerHostedViews
-} from "./docs-viewer-hosted-views.js";
-import {
   createDocsViewerGeneratedDataRuntime
 } from "./docs-viewer-generated-data-runtime.js";
 import {
@@ -26,8 +20,7 @@ import {
   createDocsViewerAppSession
 } from "./docs-viewer-app-session.js";
 import {
-  docsViewerRouteFeatureEnabled,
-  projectDocsViewerFeatureRecords
+  docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
 
 export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
@@ -167,23 +160,8 @@ export function createDocsViewerAppComposition(options) {
   var routeAccess = appContext.routeAccess || {};
   var featurePolicy = appContext.featurePolicy || {};
   var bookmarkScope = routeContext.bookmarkScope;
-  var routeHostedViews = routeConfig.hostedViews && Array.isArray(routeConfig.hostedViews.records)
-    ? routeConfig.hostedViews.records
-    : [];
-  var entrypointHostedViews = Array.isArray(settings.entrypointHostedViews)
-    ? settings.entrypointHostedViews
-    : [];
-  var defaultHostedViews = projectDocsViewerFeatureRecords(
-    createDocsViewerDefaultHostedViews().concat(entrypointHostedViews),
-    featurePolicy
-  );
-
-  var hostedViewRegistry = registerDocsViewerHostedViews(
-    createDocsViewerHostedViewRegistry({ accessProjection: routeAccess }),
-    defaultHostedViews.concat(createDocsViewerRouteHostedViews(routeHostedViews, {
-      reservedRecords: defaultHostedViews
-    }))
-  );
+  var viewRegistry = settings.viewRegistry;
+  if (!viewRegistry) throw new Error("Docs Viewer app composition requires a view registry.");
   var serviceContext = createDocsViewerServiceContext({
     routeContext: routeContext
   });
@@ -197,18 +175,24 @@ export function createDocsViewerAppComposition(options) {
     indexViewToggleRefs: appShellRefs.viewerToolbar,
     mainViewRefs: appShellRefs.mainView,
     infoPanelRefs: appShellRefs.infoPanel,
-    hostedViewRegistry: hostedViewRegistry,
+    viewRegistry: viewRegistry,
     indexPanelAvailable: settings.indexPanelAvailable
   });
   var appSession = createDocsViewerAppSession({
     defaultRecentLimit: constants.defaultRecentLimit,
-    hostedViewRegistry: hostedViewRegistry,
+    viewRegistry: viewRegistry,
     panelLayout: panelLayout,
     routeContext: routeContext,
     searchBatchSize: constants.searchBatchSize,
     window: window
   });
   var state = appSession.state;
+  viewRegistry.setProjectionInputs(function () {
+    return {
+      appContext: appContext,
+      backendCapabilities: state.managementCapabilities
+    };
+  });
   var documentIndex = createDocsViewerDocumentIndexState({
     state: state
   });
@@ -260,7 +244,7 @@ export function createDocsViewerAppComposition(options) {
   return {
     constants: constants,
     serviceContext: serviceContext,
-    hostedViewRegistry: hostedViewRegistry,
+    viewRegistry: viewRegistry,
     panelLayout: panelLayout,
     appSession: appSession,
     documentIndex: documentIndex,

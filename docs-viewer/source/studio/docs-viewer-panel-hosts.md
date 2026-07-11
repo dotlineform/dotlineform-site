@@ -40,7 +40,7 @@ Core ownership:
 | current route/app context | `site/docs-viewer/runtime/js/shared/docs-viewer-app-context.js` |
 | view-state skeleton | `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js` |
 | current panel projection | `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js` |
-| hosted-view records and access checks | `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js` |
+| view/mode/control definitions and eligibility | `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js` |
 | main-view host state and switch validation | `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` |
 | selected-document hosted-view context | `site/docs-viewer/runtime/js/shared/docs-viewer-view-context.js` |
 | info-panel lifecycle | `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` |
@@ -117,13 +117,12 @@ Improvement needed:
 - preserve capability-driven layout decisions rather than checking view ids directly
 - define persistence/URL policy before expanding panel-state behavior
 
-### Hosted-View Registry
+### View, Mode, And Control Registry
 
-`docs-viewer-hosted-views.js` normalizes hosted-view records, applies access/availability checks, lists views by panel, and registers built-in and repo-owned hosted views.
-Built-in records currently include `index-tree`, `rendered-document`, `search-results`, `recent-results`, and `metadata-info`.
-Repo-owned main-view records currently include the manage-only `markdown-source` source editor.
-`createDocsViewerDefaultHostedViews()` is the code-owned default registration surface.
-`createDocsViewerRouteHostedViews(...)` admits route-config records only as non-reserved metadata records, strips `module` strings, and prevents route config from overriding built-in or repo-owned ids.
+`docs-viewer-view-registry.js` normalizes code-owned panel-view, document-mode, and document-control definitions; applies app-kind, feature, capability, route-policy, and active-state eligibility; and lists or resolves records for focused hosts and renderers.
+Shared definitions include `index-tree`, `rendered-document`, `search-results`, `recent-results`, `metadata-info`, the rendered-document mode, bookmark, and info.
+The manage entrypoint contributes index graph, semantic-token picker, Markdown source, edit, source-toggle, and source-save definitions.
+Route config cannot register definitions or executable module paths. Its v4 `view_policy` can only hide known ids.
 
 Current limitation:
 
@@ -237,11 +236,11 @@ unmount()
 dispose()
 ```
 
-The normalized record shape exists today in `docs-viewer-hosted-views.js`.
-Access and availability checks also exist today.
+The normalized view, mode, and control shapes exist in `docs-viewer-view-registry.js`.
+App-kind, feature, capability, route-policy, and active-state eligibility checks also exist there.
 Capabilities for index layout are implemented and documented in [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract).
-Default records are code-owned by `createDocsViewerDefaultHostedViews()`.
-Route-config records are filtered through `createDocsViewerRouteHostedViews(...)`; they cannot override default ids and cannot carry module-loader strings into the runtime registry.
+Shared defaults are code-owned by `createDocsViewerSharedViewDefinitions()` and manage definitions are explicit entrypoint contributions.
+Route config cannot add records and cannot carry module-loader strings into the runtime registry.
 
 Current lifecycle implementation:
 

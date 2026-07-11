@@ -34,12 +34,12 @@ Current route config lives in:
 Runtime normalization currently flows through:
 
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-config.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js`
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-index-panel.js`
 
-Built-in hosted-view defaults may still be defined in code, but they should use the same normalized record shape as config-provided hosted views.
+View definitions are code-owned. Shared defaults and entrypoint contributions use one normalized record shape; route config may only narrow known ids.
 The renderer should consume projected controls and should not know why a capability is available.
 
 ## Hosted View Shape
@@ -117,9 +117,9 @@ These should be added as explicit fields rather than inferred from a view id.
 
 ## Runtime Responsibilities
 
-`docs-viewer-route-config.js` normalizes hosted-view capability records from route config.
+`docs-viewer-route-config.js` normalizes route-only view policy and cannot define view capabilities.
 
-`docs-viewer-hosted-views.js` carries the normalized capability object for built-in and config-provided views.
+`docs-viewer-view-registry.js` carries the normalized capability object for code-owned shared and entrypoint-contributed views.
 
 `docs-viewer-view-state.js` exposes the active view id for each panel.
 It does not decide view-specific behavior by id.

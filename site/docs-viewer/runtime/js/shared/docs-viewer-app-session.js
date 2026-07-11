@@ -105,7 +105,7 @@ function createStateDefaults(settings) {
     metadataRestoreFocusId: "",
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
-    hostedViews: options.hostedViewRegistry || null,
+    viewRegistry: options.viewRegistry || null,
     indexPanelState: panelLayout && typeof panelLayout.indexPanelState === "function"
       ? panelLayout.indexPanelState()
       : null,
@@ -201,7 +201,7 @@ function createStateDomains(state, settings) {
     panelView: stateDomain("panelView", "browser-only UI state", state, [
       "indexPanelState",
       "viewState",
-      "hostedViews",
+      "viewRegistry",
       "expandedDocIds"
     ]),
     management: stateDomain("management", "management backend capability and write flow", state, [

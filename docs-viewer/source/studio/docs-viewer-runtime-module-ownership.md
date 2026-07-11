@@ -50,14 +50,14 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Asset URL projection | `docs-viewer-asset-url.js` | Asset-version URL projection shared by boot, route config, route context, report registry, config-service, and generated-data runtime owners. |
 | Document index state | `docs-viewer-document-index-state.js` | Document visibility/loadability projection, non-viewable/manage-only tree filtering, non-loadable fallback resolution, default-doc selection, and index status projection. |
 
-## Shell, Panels, And Hosted Views
+## Shell, Panels, Views, And Document Controls
 
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Shared app shell | `docs-viewer-app-shell.js` | Public-safe JavaScript-owned shell composition before route behavior wiring; manage renderers are supplied by the manage entrypoint. |
 | Manage shell composition | `docs-viewer-management-shell-composition.js`, `docs-viewer-management-shell-renderer.js`, `docs-viewer-management-document-actions-renderer.js` | Manage-owned renderer bundle, context menu, metadata modal, import modal, settings modal, import host refs, and selected-document `Edit` / `Markdown source` controls. |
 | Panel layout/view state | `docs-viewer-panel-layout.js`, `docs-viewer-view-state.js` | App-shell panel projection and index/main/info view-state skeleton. |
-| Hosted-view registry | `docs-viewer-hosted-views.js`, `docs-viewer-management-hosted-views.js` | Minimal hosted-view registration, public-safe built-in records, access/availability checks, graceful absence, and manage-owned records for true panel views. |
+| View registry | `docs-viewer-view-registry.js`, `docs-viewer-management-hosted-views.js` | Code-owned shared definitions plus manage entrypoint contributions, view/mode/control lookup, app/feature/capability eligibility, route narrowing, and active control projection. |
 | Main-view host | `docs-viewer-main-view-host.js`, `docs-viewer-view-context.js` | Main-view availability checks, active view projection, switch-intent handling, toolbar handoff, and selected-document context projection. |
 | Document display modes | `docs-viewer-document-display-mode-host.js`, `docs-viewer-management-hosted-views.js`, `docs-viewer-view-context.js` | Rendered/source display-mode lifecycle inside the document main view, including capability-gated source-editor service slots. |
 | Info-panel host | `docs-viewer-info-panel-controller.js`, `docs-viewer-info-panel-renderer.js`, `docs-viewer-info-panel-host.js`, `docs-viewer-metadata-info-view.js` | Info toggle binding, selected-document hosted-view context, outside-context view selection, open/close/update behavior, public-safe metadata rendering, and graceful absence. |

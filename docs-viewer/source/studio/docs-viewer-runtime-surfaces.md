@@ -38,7 +38,7 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | Manage shell composition | absent | `docs-viewer-management-shell-composition.js` | no | Supplied by the manage entrypoint only. |
 | Management shell renderer | absent | `docs-viewer-management-shell-renderer.js` | no | Context menu, metadata modal, import modal, settings modal, and import host refs stay manage-owned. |
 | Selected-document management actions | absent | `docs-viewer-management-document-actions-renderer.js` | no | Status/edit/source controls stay manage-owned. |
-| Manage hosted views | absent | `docs-viewer-management-hosted-views.js` | no | Source editor and other manage-only hosted views stay out of public imports. |
+| Manage registry contributions | absent | `docs-viewer-management-hosted-views.js` | no | Source editor mode, semantic info view, and manage document controls stay out of public imports. |
 
 ## CSS Surface
 
@@ -56,10 +56,10 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | Config surface | Public | Manage |
 | --- | --- | --- |
 | Registry shape | `docs_viewer_route_config_registry_v1` with `routes` array | `docs_viewer_route_config_registry_v1` with `routes` array |
-| Route record shape | `docs_viewer_route_config_v3` snake_case | `docs_viewer_route_config_v3` snake_case |
+| Route record shape | `docs_viewer_route_config_v4` snake_case | `docs_viewer_route_config_v4` snake_case |
 | Route config resolver | `docs-viewer-route-config.js` | `docs-viewer-route-config.js` |
 | Local `/docs/` route present | no | yes |
-| Manage-only hosted views | omitted | allowed |
+| Manage-only code definitions | omitted | supplied by manage entrypoint |
 | App kind | `public` | `manage` |
 | Route access | scope query and management UI disabled | scope query enabled; management UI projected independently of service URLs |
 | Route features | configured-scope discovery, search, recently added, bookmarks, reports | configured-scope discovery, scope selection, search, recently added, bookmarks, reports, source editing, management |

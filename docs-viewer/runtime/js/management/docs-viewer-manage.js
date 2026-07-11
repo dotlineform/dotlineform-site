@@ -5,8 +5,7 @@ import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";
 import {
-  createDocsViewerManagementDocumentDisplayModes,
-  createDocsViewerManagementHostedViews
+  createDocsViewerManagementViewDefinitions
 } from "./docs-viewer-management-hosted-views.js";
 import {
   createDocsViewerManagementShellRenderers
@@ -17,8 +16,7 @@ import {
 
 startDocsViewerManageApp({
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
-  documentDisplayModes: createDocsViewerManagementDocumentDisplayModes(),
-  entrypointHostedViews: createDocsViewerManagementHostedViews(),
+  viewRegistryContributions: createDocsViewerManagementViewDefinitions(),
   infoPanelDefaultViewByDocumentMode: {
     "markdown-source": "semantic-token-picker",
     "rendered-document": "metadata-info"

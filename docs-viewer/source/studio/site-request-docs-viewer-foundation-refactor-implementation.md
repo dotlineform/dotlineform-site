@@ -12,9 +12,9 @@ viewable: true
 
 ## Status
 
-Phases 0-3 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, route-feature policy, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
+Phases 0-4 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, route-feature policy, startup sequence, and code-owned view/mode/control projection are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
 
-Phase 4, view, mode, and control projection, is next.
+Phase 5, coordinator reduction for the touched areas, is next.
 
 This tracker implements phases 0-5 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap). It contains no Docs Review feature behavior.
 
@@ -139,9 +139,9 @@ document main view -> document display mode
 active view/mode -> relevant toolbar controls
 ```
 
-Current decisions are split:
+Before Phase 4, decisions were split:
 
-- `docs-viewer-hosted-views.js` normalizes panel views and checks access/availability
+- `docs-viewer-hosted-views.js` normalized panel views and checked access/availability
 - `docs-viewer-document-display-mode-host.js` separately normalizes and resolves document modes
 - `docs-viewer-main-view-renderer.js` creates shared `bookmark` and `info` controls
 - bookmark and info controllers independently project visibility and live state
@@ -218,7 +218,7 @@ Implemented on 2026-07-11.
 
 ### Current Contract
 
-- Route records use `docs_viewer_route_config_v3`; Phase 3 added explicit allowlisted features to the Phase 1 app-kind/access/service contract.
+- Phase 3 introduced `docs_viewer_route_config_v3` for explicit features; Phase 4 moved current records to v4 for code-owned definitions and route-only narrowing.
 - Every route record declares `app_kind` and narrow `access.allow_scope_query` / `access.management_ui` policy.
 - Public and manage entrypoints provide their expected app kind; route normalization rejects mismatches.
 - App context supports `public`, `manage`, and future `review` kinds. No review route, entrypoint, provider, or product behavior was added.
@@ -277,7 +277,7 @@ writeSource      optional
 
 ## Phase 3 Outcome
 
-Route records now use `docs_viewer_route_config_v3` and declare only known feature ids:
+Phase 3 established the v3 feature contract. Current v4 route records retain the same feature array and declare only known feature ids:
 
 ```text
 configured-scope-discovery
@@ -327,12 +327,12 @@ management
 
 ### Phase 4
 
-- one code-owned projection resolves views, document modes, and eligible controls
-- shared definitions and manage entrypoint contributions remain separate at import boundaries
-- route policy can only narrow known definitions
-- Markdown source remains a document display mode
-- control handlers and live state remain controller-owned
-- no empty toolbar renders when every eligible control is hidden
+- complete: one code-owned projection resolves views, document modes, and eligible controls
+- complete: shared definitions and manage entrypoint contributions remain separate at import boundaries
+- complete: route policy can only narrow known definitions
+- complete: Markdown source remains a document display mode
+- complete: control handlers and live state remain controller-owned
+- complete: no empty toolbar renders when every eligible control is hidden
 
 ### Phase 5
 

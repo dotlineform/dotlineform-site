@@ -29,31 +29,27 @@ export function renderDocsViewerManagementDocumentActions(options) {
   var mount = settings.mount || mainViewToolbarActionsMount(root);
   if (!mount) return null;
 
-  var editButton = renderDocumentActionButton(documentRef, {
-    id: "docsViewerManageEditButton",
-    action: "edit",
-    emoji: "✏️",
-    label: "Edit"
+  var controls = settings.viewRegistry
+    ? settings.viewRegistry.listControls({ ownerViewId: "rendered-document" }).filter(function (control) {
+        return control.available;
+      })
+    : [];
+  var buttonsByRenderer = new Map();
+  controls.forEach(function (control) {
+    var optionsByRenderer = {
+      "manage-edit": { id: "docsViewerManageEditButton", action: "edit", emoji: "✏️" },
+      "markdown-source-toggle": { id: "docsViewerManageSourceButton", action: "markdown-source", emoji: "☰" },
+      "markdown-source-save": { id: "docsViewerManageSourceSaveButton", action: "markdown-save", emoji: "💾" }
+    };
+    var buttonOptions = optionsByRenderer[control.renderer];
+    if (!buttonOptions) return;
+    buttonsByRenderer.set(control.renderer, renderDocumentActionButton(documentRef, Object.assign({}, buttonOptions, {
+      label: control.label
+    })));
   });
-
-  var sourceEditingEnabled = settings.featurePolicy && settings.featurePolicy.sourceEditing === true;
-  var sourceButton = sourceEditingEnabled
-    ? renderDocumentActionButton(documentRef, {
-        id: "docsViewerManageSourceButton",
-        action: "markdown-source",
-        emoji: "☰",
-        label: "Markdown source"
-      })
-    : null;
-
-  var sourceSaveButton = sourceEditingEnabled
-    ? renderDocumentActionButton(documentRef, {
-        id: "docsViewerManageSourceSaveButton",
-        action: "markdown-save",
-        emoji: "💾",
-        label: "Save Markdown source"
-      })
-    : null;
+  var editButton = buttonsByRenderer.get("manage-edit") || null;
+  var sourceButton = buttonsByRenderer.get("markdown-source-toggle") || null;
+  var sourceSaveButton = buttonsByRenderer.get("markdown-source-save") || null;
 
   var buttons = [editButton, sourceSaveButton, sourceButton].filter(Boolean);
 

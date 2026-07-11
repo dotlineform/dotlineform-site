@@ -2,14 +2,11 @@ import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
 import {
-  normalizeHostedViewCapabilities
-} from "./docs-viewer-hosted-view-capabilities.js";
-import {
   docsViewerRouteFeatureEnabled,
   normalizeDocsViewerRouteFeatures
 } from "./docs-viewer-route-features.js";
 
-export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v3";
+export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v4";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";
 export const DOCS_VIEWER_MANAGEMENT_ROUTE_PATH = "/docs/";
 
@@ -83,7 +80,6 @@ function normalizeRouteUi(rawUi) {
     ? ui.viewer_search
     : {};
   return {
-    mainViewToolbar: ui.main_view_toolbar !== false,
     routeShell: {
       configured: Boolean(ui.route_shell),
       pageTitle: cleanString(routeShell.page_title),
@@ -97,28 +93,21 @@ function normalizeRouteUi(rawUi) {
   };
 }
 
-function normalizeHostedViews(rawHostedViews) {
-  var hostedViews = rawHostedViews && typeof rawHostedViews === "object" && !Array.isArray(rawHostedViews)
-    ? rawHostedViews
-    : {};
-  var records = Array.isArray(hostedViews.records) ? hostedViews.records : [];
+function normalizeViewPolicy(rawPolicy) {
+  var policy = rawPolicy && typeof rawPolicy === "object" && !Array.isArray(rawPolicy) ? rawPolicy : {};
+  function ids(value) {
+    if (!Array.isArray(value)) return [];
+    var seen = new Set();
+    return value.map(cleanString).filter(function (id) {
+      if (!id || seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+  }
   return {
-    records: records.map(function (record) {
-      if (!record || typeof record !== "object") return null;
-      var id = cleanString(record.id);
-      if (!id) return null;
-      return {
-        id: id,
-        label: cleanString(record.label) || id,
-        panel: cleanString(record.panel) || "main",
-        access: cleanString(record.access) || "public",
-        availability: cleanString(record.availability) || "available",
-        module: cleanString(record.module),
-        renderer: cleanString(record.renderer),
-        placeholderText: cleanString(record.placeholder_text),
-        capabilities: normalizeHostedViewCapabilities(record.capabilities)
-      };
-    }).filter(Boolean)
+    hiddenViews: ids(policy.hidden_views),
+    hiddenModes: ids(policy.hidden_modes),
+    hiddenControls: ids(policy.hidden_controls)
   };
 }
 
@@ -246,6 +235,12 @@ export function resolveDocsViewerRouteConfig(options) {
   var settings = options || {};
   var resolvedSource = routeConfigSource(settings);
   var rawConfig = resolvedSource.config || {};
+  if (Object.prototype.hasOwnProperty.call(rawConfig, "hosted_views")) {
+    throw new Error("Docs Viewer route config cannot define hosted_views; views are code-owned.");
+  }
+  if (rawConfig.ui && Object.prototype.hasOwnProperty.call(rawConfig.ui, "main_view_toolbar")) {
+    throw new Error("Docs Viewer route config cannot define main_view_toolbar; hide known controls through view_policy.");
+  }
   var access = rawConfig.access && typeof rawConfig.access === "object" ? rawConfig.access : {};
   var appKind = normalizeAppKind(rawConfig.app_kind);
   var requestedAppKind = cleanString(settings.appKind).toLowerCase();
@@ -294,7 +289,7 @@ export function resolveDocsViewerRouteConfig(options) {
     features: features,
     panels: normalizePanelDefaults(rawConfig.panels),
     ui: normalizeRouteUi(rawConfig.ui),
-    hostedViews: normalizeHostedViews(rawConfig.hosted_views)
+    viewPolicy: normalizeViewPolicy(rawConfig.view_policy)
   };
 }
 

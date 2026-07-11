@@ -352,21 +352,27 @@ export function initDocsViewerManagement(context) {
     var actionsDisabled = Boolean(disabled);
     var documentMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
     var markdownMode = documentMode === "markdown-source";
+    var activeControlIds = new Set();
+    if (context.viewRegistry && typeof context.viewRegistry.projectControls === "function") {
+      context.viewRegistry.projectControls(
+        typeof context.activeViewState === "function" ? context.activeViewState() : {}
+      ).forEach(function (control) { activeControlIds.add(control.id); });
+    }
     if (manageEditButton) {
-      manageEditButton.hidden = actionsHidden || markdownMode;
-      manageEditButton.disabled = actionsDisabled || markdownMode;
+      manageEditButton.hidden = actionsHidden || !activeControlIds.has("edit");
+      manageEditButton.disabled = actionsDisabled || !activeControlIds.has("edit");
     }
     if (manageSourceButton) {
-      manageSourceButton.hidden = actionsHidden;
-      manageSourceButton.disabled = actionsDisabled;
+      manageSourceButton.hidden = actionsHidden || !activeControlIds.has("markdown-source");
+      manageSourceButton.disabled = actionsDisabled || !activeControlIds.has("markdown-source");
       manageSourceButton.setAttribute("aria-pressed", markdownMode ? "true" : "false");
       manageSourceButton.setAttribute("aria-label", markdownMode ? "Show rendered document" : "Show Markdown source");
       manageSourceButton.title = markdownMode ? "Show rendered document" : "Show Markdown source";
       manageSourceButton.textContent = markdownMode ? "📄" : "☰";
     }
     if (manageSourceSaveButton) {
-      manageSourceSaveButton.hidden = actionsHidden || !markdownMode;
-      manageSourceSaveButton.disabled = actionsDisabled || !markdownMode;
+      manageSourceSaveButton.hidden = actionsHidden || !activeControlIds.has("save-markdown-source");
+      manageSourceSaveButton.disabled = actionsDisabled || !activeControlIds.has("save-markdown-source");
     }
   }
 

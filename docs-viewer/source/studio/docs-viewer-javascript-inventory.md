@@ -24,9 +24,9 @@ Risk themes:
 | docs-html-import-render.js                          | Docs import result rendering helper.                                                                                                                                                                                        |
 | docs-html-import-workflow.js                        | Docs import preview/write workflow helper.                                                                                                                                                                                  |
 | docs-html-import.js                                 | Docs import controller after explicit workflow handoff and focused module-smoke coverage.                                                                                                                                   |
-| docs-viewer-access.js                               | Explicit public/manage/review app-kind normalization, narrow route-access projection, and hosted-view/mode access checks.                                                                                                  |
-| docs-viewer-app-boot.js                             | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup.                                          |
-| docs-viewer-app-composition.js                      | App-composition owner for runtime defaults, foundational owner creation, feature-filtered hosted views, startup phase records, authority records, and feature-aware startup sequencing.                                   |
+| docs-viewer-access.js                               | Explicit public/manage/review app-kind normalization and narrow route-access projection.                                                                                                                                  |
+| docs-viewer-app-boot.js                             | App boot owner for route/config context, code-owned view-registry assembly, app-shell initialization, shell-ref handoff, theme loading, and runtime startup.                                                               |
+| docs-viewer-app-composition.js                      | App-composition owner for runtime defaults, foundational owner creation, view-registry capability-input handoff, startup records, authority records, and feature-aware startup sequencing.                                |
 | docs-viewer-app-context.js                          | Explicit app-context and route-context assembly, service-availability projection, and mutable scope route-context projection.                                                                                               |
 | docs-viewer-app-runtime.js                          | Private runtime coordination after route workflow and runtime-owner extraction; controller construction, config handoff, event binding, initial load sequencing, private callback handoffs, and returned app handle remain. |
 | docs-viewer-app-session.js                          | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection.                                                                                                               |
@@ -41,7 +41,6 @@ Risk themes:
 | docs-viewer-drag-drop.js                            | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-favourites.js                           | bookmark/favourite support.                                                                                                                                                                                                 |
 | docs-viewer-generated-data-runtime.js               | Focused generated-data request/capability owner for data request options, generated-read checks, retry/reload options, generated-search read capability projection, and named generated JSON read methods.                  |
-| docs-viewer-hosted-views.js                         | App-shell-owned hosted-view registration shape, public-safe built-in records, route-record filtering, availability/access checks, and graceful absence.                                                                     |
 | docs-viewer-document-display-mode-host.js           | Document-view display-mode lifecycle owner for rendered/source modes inside the rendered-document main view.                                                                                                               |
 | docs-viewer-index-panel-renderer.js                 | App-shell-owned index panel chrome renderer and projection applier.                                                                                                                                                         |
 | docs-viewer-index-panel.js                          | index panel state, current-key persistence, toggle projection, and document-pane visibility helper.                                                                                                                         |
@@ -57,7 +56,7 @@ Risk themes:
 | docs-viewer-management-client.js                    | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-config.js                    | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-document-actions-renderer.js | Manage-owned selected-document edit/source controls rendered into the shared main-view toolbar action area.                                                                                                                 |
-| docs-viewer-management-hosted-views.js              | Manage-owned hosted-view and document display mode records supplied by the manage entrypoint.                                                                                                                              |
+| docs-viewer-management-hosted-views.js              | Manage-owned view, document-mode, and document-control definitions supplied by the manage entrypoint.                                                                                                                      |
 | docs-viewer-management-interactions.js              | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-modals.js                    | management modal controller after transient modal shell and metadata parent-picker extraction.                                                                                                                              |
 | docs-viewer-management-render.js                    | management support module.                                                                                                                                                                                                  |
@@ -72,6 +71,7 @@ Risk themes:
 | docs-viewer-reports.js                              | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-route-config.js                         | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper.                                                                                                                     |
 | docs-viewer-route-features.js                       | Allowlisted route-feature normalization, dependency validation, feature queries, and feature filtering for code-owned runtime records.                                                                                     |
+| docs-viewer-view-registry.js                        | Sole code-owned normalization, lookup, and eligibility projection for panel views, document modes, and document controls.                                                                                                  |
 | docs-viewer-route-workflow.js                       | Focused route/document workflow owner for URL/query helpers, current-doc resolution, route application, index and payload loading, route-link handling, and popstate coordination.                                          |
 | docs-viewer-router.js                               | routing and history helper.                                                                                                                                                                                                 |
 | docs-viewer-runtime-lazy-controller.js              | Neutral lazy-controller adapter used to keep management controller imports gated without loading management-only JS on public routes.                                                                                       |
@@ -115,7 +115,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`
 
-- This module owns foundational provider/service construction, feature-filtered hosted-view registration, and feature-aware startup phase sequencing and authority records.
+- This module owns foundational provider/service construction, dynamic backend-capability inputs for the boot-owned view registry, and feature-aware startup phase sequencing and authority records.
 - Keep this module limited to runtime defaults, foundational owner creation, startup phase records, startup authority records, public/manage startup gating, and initial startup sequence orchestration.
 - Do not move rendering, validation, generated-read internals, config normalization, bookmark storage, management writes, report behavior, or controller-specific UI behavior into it.
 - The private app runtime coordinator still constructs focused controllers until a later slice narrows remaining controller families away from function-scoped bridge callbacks.
@@ -335,15 +335,16 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - the focused route config resolver and route/scope projection helper.
 - Keep this module limited to the durable route config shape, browser-safe route-config registry loading/resolution, explicit route-config normalization for tests/boot callers, and projection of scope config into route globals.
 - inline route-config scripts and legacy `#docsViewerRoot` route data-attribute fallback were removed. Route shells must use the registry contract; focused tests must pass explicit route config or route context rather than relying on shell data as a synthetic config source.
-- route-config camelCase field aliases and object-map route registries were removed. The module resolves only the `docs_viewer_route_config_v3` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
-- v3 requires explicit `app_kind`, allowlisted `features`, narrow access policy, and named `generated_data`, `source`, and `management` service records; entrypoint app kind must match the selected route record.
+- route-config camelCase field aliases and object-map route registries were removed. The module resolves only the `docs_viewer_route_config_v4` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
+- v4 requires explicit `app_kind`, allowlisted `features`, narrow access policy, and named `generated_data`, `source`, and `management` service records; entrypoint app kind must match the selected route record.
+- v4 rejects route-owned hosted-view records and the retired whole-toolbar switch. Its `view_policy` can only narrow registered view, mode, and control ids.
 - Search, recently-added, and report URLs are required only when their features are enabled.
 - Do not add config fetching, URL history changes, payload loading, or backend capability checks to it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-access.js`
 
 - the focused explicit app-kind and route-access projection helper.
-- Keep this module limited to `public`/`manage`/`review` app-kind normalization, scope-query and management-UI composition policy, and hosted-view/mode access checks.
+- Keep this module limited to `public`/`manage`/`review` app-kind normalization plus scope-query and management-UI composition policy.
 - Do not add browser-side write authority, per-click permission checks, or backend reachability probing to it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-view-state.js`
@@ -352,23 +353,20 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - Keep this module pure and projection-oriented so later info-panel work can consume explicit state without reading broad route/controller state.
 - Do not add DOM rendering, storage, toolbar event handling, or payload loading to it.
 
-### `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js`
+### `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js`
 
-- the focused hosted-view registration shape for ordinary repo JavaScript modules.
-- panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
-- hosted-view records may define `load`, `mount`, `update`, `unmount`, and `dispose`, but registration and visibility do not imply backend authority or write capability.
-- built-in hosted-view records are current architecture and are exposed through `createDocsViewerBuiltInHostedViews()`. The old `createDocsViewerCompatibilityHostedViews()` alias was removed during architecture cleanup after active runtime callers and focused smokes had moved to the built-in factory.
-- `createDocsViewerDefaultHostedViews()` is now the explicit code-owned registration surface for public-safe built-in records; `createDocsViewerRouteHostedViews(...)` strips route `module` strings and prevents route config from overriding default ids.
-- manage-only `markdown-source` is not a hosted main view; it is a document display mode supplied by `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`, which is imported by the manage entrypoint.
-- Keep this module limited to records, lifecycle method names, public-safe built-in hosted-view records, route-record filtering, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering, panel state, source editing, or management services.
-- Do not turn it into a plugin system, arbitrary dependency loader, panel toolbar renderer, route-config module loader, or third-party visualization owner.
+- the sole normalization, duplicate-id validation, lookup, and eligibility owner for panel views, document modes, and document controls.
+- shared public-safe definitions and entrypoint contributions are combined before route narrowing; routes cannot register definitions or executable module paths.
+- eligibility consumes app kind, route features, backend capability inputs, route policy, and active view/mode state.
+- lifecycle loading, DOM creation, handlers, and live pressed/dirty/busy/disabled state remain outside this module.
+- Do not turn it into a plugin system, arbitrary dependency loader, service caller, renderer, or mutable interaction-state owner.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`
 
-- the manage-owned hosted-view and document display mode record owner.
-- This module currently defines the `markdown-source` document display mode and lazy-loads `docs-viewer/runtime/js/management/source-editor/source-editor.js`.
+- the manage-owned view, document-mode, and document-control definition owner.
+- This module defines index graph, semantic-token-picker, the `markdown-source` display mode, and manage document controls; its lifecycle functions lazy-load the source editor and semantic picker.
 - Keep this module loaded only through `docs-viewer/runtime/js/management/docs-viewer-manage.js`; public entrypoints must not import it or the source-editor module.
-- Do not move public hosted-view registration, route-config hosted-view filtering, panel state, or source-editor service implementation into it.
+- Do not move public definitions, route-policy normalization, panel state, or source-editor service implementation into it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`
 

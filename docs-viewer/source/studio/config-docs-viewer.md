@@ -192,11 +192,11 @@ Each route record owns:
 - viewer base URL and scope-query policy
 - generated docs/search URL defaults
 - Docs Viewer config and report registry URLs
-- narrow access intent (`allow_scope_query` and `management_ui`), panel defaults, and hosted-view records
+- narrow access intent (`allow_scope_query` and `management_ui`), panel defaults, and optional `view_policy` lists that hide known registered ids
 - independent `generated_data`, `source`, and `management` service surfaces
 
 Static public route config must not contain credentials, local filesystem paths, or write authority.
-Route records use `docs_viewer_route_config_v3`. Public and manage entrypoints provide their expected app kind, and route normalization rejects app-kind mismatches, unknown feature ids, and invalid feature dependencies. Search, recently-added, and report URLs are required only when their features are enabled.
+Route records use `docs_viewer_route_config_v4`. Public and manage entrypoints provide their expected app kind, and route normalization rejects app-kind mismatches, unknown feature ids, invalid feature dependencies, route-owned `hosted_views`, and the retired whole-toolbar switch. Search, recently-added, and report URLs are required only when their features are enabled. `view_policy` may hide registered view, mode, or control ids, but registry construction rejects unknown ids and route config cannot add executable definitions.
 
 For the local `/docs/` shell, `docs-viewer/services/docs_viewer_service.py` serves the manage/local registry URL with enabled loopback generated-data, source, and management base URLs injected independently from service config.
 The same service maps the public route registry URL to the site-owned public registry so `/docs/` and public routes see the same public config owner.

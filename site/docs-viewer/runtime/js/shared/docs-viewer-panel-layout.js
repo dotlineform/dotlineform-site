@@ -7,9 +7,6 @@ import {
   readIndexPanelState
 } from "./docs-viewer-index-panel.js";
 import {
-  listDocsViewerHostedViewsForPanel
-} from "./docs-viewer-hosted-views.js";
-import {
   renderDocsViewerAppShellMainViewState,
   renderDocsViewerAppShellIndexViewToggleState,
   renderDocsViewerAppShellInfoPanelState,
@@ -44,7 +41,7 @@ export function createDocsViewerPanelLayout(options) {
   var mainViewRefs = settings.mainViewRefs || {};
   var infoPanelRefs = settings.infoPanelRefs || {};
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
-  var hostedViewRegistry = settings.hostedViewRegistry || null;
+  var viewRegistry = settings.viewRegistry || null;
   var storageScope = normalizeScope(settings.storageScope);
   var storageKey = buildIndexPanelStorageKey(storageScope);
   var indexPanelState = readStoredIndexPanelState();
@@ -56,7 +53,7 @@ export function createDocsViewerPanelLayout(options) {
   var infoPanelProjection = {};
 
   function indexViews() {
-    return listDocsViewerHostedViewsForPanel(hostedViewRegistry, "index");
+    return viewRegistry ? viewRegistry.listViews("index") : [];
   }
 
   function availableIndexViews() {
@@ -66,7 +63,7 @@ export function createDocsViewerPanelLayout(options) {
   }
 
   function mainViews() {
-    return listDocsViewerHostedViewsForPanel(hostedViewRegistry, "main");
+    return viewRegistry ? viewRegistry.listViews("main") : [];
   }
 
   function availableMainViews() {
@@ -87,8 +84,8 @@ export function createDocsViewerPanelLayout(options) {
     var activeViewId = viewState && viewState.panels && viewState.panels.index
       ? viewState.panels.index.activeViewId
       : "";
-    var resolved = hostedViewRegistry && typeof hostedViewRegistry.resolve === "function"
-      ? hostedViewRegistry.resolve(activeViewId)
+    var resolved = viewRegistry && typeof viewRegistry.resolveView === "function"
+      ? viewRegistry.resolveView(activeViewId)
       : null;
     if (resolved && resolved.view) return resolved.view;
     return fallbackIndexView();
@@ -262,8 +259,8 @@ export function createDocsViewerPanelLayout(options) {
 
   function setActiveIndexView(viewId) {
     var targetViewId = String(viewId || "").trim();
-    var resolved = hostedViewRegistry && typeof hostedViewRegistry.resolve === "function"
-      ? hostedViewRegistry.resolve(targetViewId)
+    var resolved = viewRegistry && typeof viewRegistry.resolveView === "function"
+      ? viewRegistry.resolveView(targetViewId)
       : null;
     if (!resolved || !resolved.view) return activeIndexView();
     viewState = updateDocsViewerViewState(viewState, {
@@ -275,8 +272,8 @@ export function createDocsViewerPanelLayout(options) {
 
   function setActiveMainView(viewId) {
     var targetViewId = String(viewId || "").trim();
-    var resolved = hostedViewRegistry && typeof hostedViewRegistry.resolve === "function"
-      ? hostedViewRegistry.resolve(targetViewId)
+    var resolved = viewRegistry && typeof viewRegistry.resolveView === "function"
+      ? viewRegistry.resolveView(targetViewId)
       : null;
     if (!resolved || !resolved.view) {
       return fallbackMainView();

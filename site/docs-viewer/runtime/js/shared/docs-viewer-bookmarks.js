@@ -99,7 +99,8 @@ export function initDocsViewerBookmarks(context) {
   function renderToggle() {
     if (!bookmarkToggle) return;
     var doc = documentIndex.docsById.get(selectedDocument.selectedDocId);
-    var canShow = Boolean(doc) && bookmarkState.bookmarksLoaded && bookmarkState.bookmarkSupport && !searchRecent.searchRouteActive;
+    var eligible = typeof context.controlActive !== "function" || context.controlActive("bookmark");
+    var canShow = eligible && Boolean(doc) && bookmarkState.bookmarksLoaded && bookmarkState.bookmarkSupport && !searchRecent.searchRouteActive;
     bookmarkToggle.hidden = !canShow;
     if (!canShow) return;
 

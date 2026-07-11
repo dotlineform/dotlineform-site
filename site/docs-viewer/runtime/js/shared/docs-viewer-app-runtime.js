@@ -48,8 +48,7 @@ import {
   startDocsViewerStartupPhases
 } from "./docs-viewer-app-composition.js";
 import {
-  docsViewerRouteFeatureEnabled,
-  projectDocsViewerFeatureRecords
+  docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
 
 function infoPanelDefaultViewIdForMode(settings, modeId) {
@@ -136,11 +135,11 @@ export function startDocsViewerRuntime(options) {
     appShellRefs: appShellRefs,
     assetVersion: assetVersion,
     createSourceAdapter: settings.createSourceAdapter,
-    entrypointHostedViews: settings.entrypointHostedViews,
+    viewRegistry: settings.viewRegistry,
     viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable
   });
-  var hostedViewRegistry = composition.hostedViewRegistry;
+  var viewRegistry = composition.viewRegistry;
   var serviceContext = composition.serviceContext;
   var managementService = serviceContext.management;
   var sourceService = serviceContext.source;
@@ -156,6 +155,18 @@ export function startDocsViewerRuntime(options) {
   var documentDisplayModeHost = null;
   var mainViewHost = null;
   var activeSourceEditorContextAdapter = null;
+
+  function activeViewState() {
+    return {
+      activeViewId: mainViewHost ? mainViewHost.activeViewId() : "rendered-document",
+      activeModeId: documentDisplayModeHost ? documentDisplayModeHost.activeModeId() : "rendered-document"
+    };
+  }
+
+  function controlActive(controlId) {
+    var resolved = viewRegistry.resolveControl(controlId, activeViewState());
+    return Boolean(resolved.available && resolved.active);
+  }
 
   var appSession = composition.appSession;
   var state = appSession.state;
@@ -199,20 +210,22 @@ export function startDocsViewerRuntime(options) {
     panelLayout: panelLayout,
     projectToolbar: projectMainView,
     projectViewState: function () { return panelLayout.projectViewState(); },
-    registry: hostedViewRegistry,
+    registry: viewRegistry,
     showWarning: setStatus,
     updatePanelViewState: function (viewState) { appSession.domains.panelView.viewState = viewState; }
   });
   documentDisplayModeHost = createDocsViewerDocumentDisplayModeHost({
-    accessProjection: routeAccess,
     contextOptions: documentViewContextOptions,
     defaultModeId: "rendered-document",
-    modes: projectDocsViewerFeatureRecords(settings.documentDisplayModes, featurePolicy),
     mount: content,
-    onModeChange: renderManagementUi,
+    onModeChange: function () {
+      renderBookmarkToggle();
+      renderManagementUi();
+    },
     projectToolbar: projectMainView,
     root: root,
-    showWarning: setStatus
+    showWarning: setStatus,
+    viewRegistry: viewRegistry
   });
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
@@ -232,12 +245,13 @@ export function startDocsViewerRuntime(options) {
     buildTrail: buildTrail,
     documentIndex: appSession.domains.documentIndex,
     infoToggle: infoToggle,
+    controlActive: controlActive,
     panelView: appSession.domains.panelView,
     projectMainView: projectMainView,
     projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
     projectViewState: function () { return panelLayout.projectViewState(); },
     refs: infoPanelRefs,
-    registry: hostedViewRegistry,
+    registry: viewRegistry,
     appContext: function () { return appContext; },
     scopeConfig: appSession.domains.scopeConfig,
     selectedDocument: appSession.domains.selectedDocument,
@@ -433,6 +447,8 @@ export function startDocsViewerRuntime(options) {
         }
       },
       managementShellRefs: appShellRefs.managementShell || {},
+      viewRegistry: viewRegistry,
+      activeViewState: activeViewState,
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,
@@ -604,11 +620,11 @@ export function startDocsViewerRuntime(options) {
   function renderBookmarkToggle() {
     if (bookmarkController) {
       bookmarkController.renderToggle();
-      infoPanelController.renderToggleState();
+      if (infoPanelController) infoPanelController.renderToggleState();
       return;
     }
     if (bookmarkToggle) bookmarkToggle.hidden = true;
-    infoPanelController.renderToggleState();
+    if (infoPanelController) infoPanelController.renderToggleState();
   }
 
   function updateInfoPanel() {
@@ -938,6 +954,7 @@ export function startDocsViewerRuntime(options) {
       bookmarkRow: bookmarkRow,
       bookmarkScope: function () { return bookmarkScope; },
       bookmarkToggle: bookmarkToggle,
+      controlActive: controlActive,
       cssEscape: cssEscape,
       dbName: BOOKMARK_DB_NAME,
       dbVersion: BOOKMARK_DB_VERSION,

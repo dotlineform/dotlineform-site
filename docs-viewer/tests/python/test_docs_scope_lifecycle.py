@@ -602,7 +602,7 @@ def test_scope_delete_preview_blocks_manage_route_default_scope() -> None:
                 "schema_version": "docs_viewer_route_config_registry_v1",
                 "routes": [
                     {
-                        "schema_version": "docs_viewer_route_config_v3",
+                        "schema_version": "docs_viewer_route_config_v4",
                         "route_id": "docs-manage",
                         "route_path": "/docs/",
                         "default_scope_id": "notes",

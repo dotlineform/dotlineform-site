@@ -110,7 +110,7 @@ Current helper modules:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js` owns bookmark storage, bookmark row/toggle rendering, selected-document bookmark projection, explicit document-load route command consumption, and search-reset command consumption when opening a bookmark
 - `site/docs-viewer/runtime/js/shared/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
 - `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, collection-provider report handoff, and report mount context
-- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js` owns hosted-view registration, access/availability checks, panel-specific listing, and graceful missing/disabled/access-blocked states
+- `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js` owns code-defined view, document-mode, and document-control normalization, lookup, eligibility, and active control projection
 - `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` owns info hosted-view option projection, lifecycle, switching, close behavior, update handoff, and graceful absence
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns report lookup and access checks
 - `docs-viewer/runtime/js/reports/docs-index-table-report.js` owns the reusable docs-index table report

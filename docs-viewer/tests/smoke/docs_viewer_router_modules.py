@@ -44,7 +44,9 @@ def install_fixture(page: Page) -> None:
             const appComposition = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js');
             const toolbarRenderer = await import('/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js');
             const configController = await import('/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController };
+            const viewRegistry = await import('/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js');
+            const mainViewRenderer = await import('/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer };
         }"""
     )
 
@@ -124,7 +126,7 @@ def assert_route_config_scope_default(page: Page) -> None:
         """() => {
             const { routeConfig } = window.__docsViewerRouterModuleSmoke;
             const rawRouteConfig = {
-                schema_version: 'docs_viewer_route_config_v3',
+                schema_version: 'docs_viewer_route_config_v4',
                 app_kind: 'public',
                 route_id: 'library',
                 route_path: '/library/',
@@ -223,7 +225,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
             const resolvedMinimalRoute = routeConfig.resolveDocsViewerRouteConfig({
                 appKind: 'review',
                 routeConfig: {
-                    schema_version: 'docs_viewer_route_config_v3',
+                    schema_version: 'docs_viewer_route_config_v4',
                     app_kind: 'review',
                     route_id: 'minimal-review-shape',
                     route_path: '/minimal-review/',
@@ -445,6 +447,117 @@ def assert_explicit_app_and_service_context(page: Page) -> None:
         raise AssertionError(f"app/service context authority projection changed: {result!r}")
 
 
+def assert_view_mode_control_registry(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const { viewRegistry, mainViewRenderer, routeFeatures } = window.__docsViewerRouterModuleSmoke;
+            const publicContext = {
+                kind: 'public',
+                featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['bookmarks'])
+            };
+            const manageContext = {
+                kind: 'manage',
+                featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['bookmarks', 'source-editing', 'management'])
+            };
+            const manageDefinitions = {
+                modes: [{
+                    id: 'markdown-source', ownerViewId: 'rendered-document', appKinds: ['manage'], features: ['source-editing']
+                }],
+                controls: [
+                    { id: 'edit', ownerViewId: 'rendered-document', modeIds: ['rendered-document'], appKinds: ['manage'], features: ['management'] },
+                    { id: 'markdown-source', ownerViewId: 'rendered-document', modeIds: ['rendered-document', 'markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
+                    { id: 'save-markdown-source', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['manage'], features: ['source-editing'] }
+                ]
+            };
+            const definitionSets = [viewRegistry.createDocsViewerSharedViewDefinitions(), manageDefinitions];
+            const publicRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets,
+                projectionInputs: { appContext: publicContext }
+            });
+            const manageRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets,
+                projectionInputs: { appContext: manageContext }
+            });
+            const narrowedRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets,
+                projectionInputs: { appContext: publicContext },
+                routePolicy: { hiddenControls: ['bookmark', 'info'] }
+            });
+            const capabilityRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: [
+                    viewRegistry.createDocsViewerSharedViewDefinitions(),
+                    { controls: [{
+                        id: 'capability-control',
+                        ownerViewId: 'rendered-document',
+                        requiredCapabilities: ['documents.write']
+                    }] }
+                ],
+                projectionInputs: {
+                    appContext: publicContext,
+                    backendCapabilities: { documents: { write: false } }
+                }
+            });
+            const mount = document.createElement('div');
+            const toolbarMount = document.createElement('div');
+            mainViewRenderer.renderDocsViewerMainView({ document, mount, toolbarMount, viewRegistry: narrowedRegistry });
+            let duplicateRejected = false;
+            let unknownPolicyRejected = false;
+            try {
+                viewRegistry.createDocsViewerViewRegistry({
+                    definitionSets: [
+                        viewRegistry.createDocsViewerSharedViewDefinitions(),
+                        { views: [{ id: 'rendered-document', panel: 'main' }] }
+                    ],
+                    projectionInputs: { appContext: publicContext }
+                });
+            } catch (error) {
+                duplicateRejected = /Duplicate Docs Viewer view/.test(String(error && error.message || ''));
+            }
+            try {
+                viewRegistry.createDocsViewerViewRegistry({
+                    definitionSets,
+                    projectionInputs: { appContext: publicContext },
+                    routePolicy: { hiddenControls: ['invented-control'] }
+                });
+            } catch (error) {
+                unknownPolicyRejected = /Unknown Docs Viewer route-policy control/.test(String(error && error.message || ''));
+            }
+            return {
+                capabilityDenied: !capabilityRegistry.resolveControl('capability-control', {
+                    activeViewId: 'rendered-document', activeModeId: 'rendered-document'
+                }).available,
+                duplicateRejected,
+                emptyToolbar: toolbarMount.querySelector('#docsViewerMainViewToolbar') === null,
+                manageMarkdownMode: manageRegistry.resolveMode('markdown-source').available,
+                manageRenderedControls: manageRegistry.projectControls({
+                    activeViewId: 'rendered-document', activeModeId: 'rendered-document'
+                }).map((control) => control.id).sort(),
+                manageSourceControls: manageRegistry.projectControls({
+                    activeViewId: 'rendered-document', activeModeId: 'markdown-source'
+                }).map((control) => control.id).sort(),
+                publicEdit: publicRegistry.resolveControl('edit', {
+                    activeViewId: 'rendered-document', activeModeId: 'rendered-document'
+                }).available,
+                publicMarkdownMode: publicRegistry.resolveMode('markdown-source').available,
+                unknownPolicyRejected
+            };
+        }"""
+    )
+    expected = {
+        "capabilityDenied": True,
+        "duplicateRejected": True,
+        "emptyToolbar": True,
+        "manageMarkdownMode": True,
+        "manageRenderedControls": ["bookmark", "edit", "info", "markdown-source"],
+        "manageSourceControls": ["info", "markdown-source", "save-markdown-source"],
+        "publicEdit": False,
+        "publicMarkdownMode": False,
+        "unknownPolicyRejected": True,
+    }
+    if result != expected:
+        raise AssertionError(f"view/mode/control registry projection changed: {result!r}")
+
+
 def assert_configured_scope_provider(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -554,6 +667,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_route_config_scope_default(page)
     assert_route_feature_projection_and_startup(page)
     assert_explicit_app_and_service_context(page)
+    assert_view_mode_control_registry(page)
     assert_configured_scope_provider(page)
 
 

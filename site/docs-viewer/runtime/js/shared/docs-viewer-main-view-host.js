@@ -1,7 +1,4 @@
 import {
-  listDocsViewerHostedViewsForPanel
-} from "./docs-viewer-hosted-views.js";
-import {
   createDocsViewerMainViewModuleContext
 } from "./docs-viewer-view-context.js";
 
@@ -39,7 +36,7 @@ export function createDocsViewerMainViewHost(options) {
   var activeLifecycle = null;
 
   function viewOptions() {
-    return listDocsViewerHostedViewsForPanel(registry, "main").map(function (view) {
+    return (registry ? registry.listViews("main") : []).map(function (view) {
       return {
         id: view.id,
         label: view.label,
@@ -51,14 +48,14 @@ export function createDocsViewerMainViewHost(options) {
 
   function resolve(viewId) {
     var targetViewId = cleanString(viewId);
-    if (!registry || typeof registry.resolve !== "function") {
+    if (!registry || typeof registry.resolveView !== "function") {
       return {
         available: false,
         reason: "missing",
         view: null
       };
     }
-    return registry.resolve(targetViewId);
+    return registry.resolveView(targetViewId);
   }
 
   function projectState() {

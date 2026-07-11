@@ -128,7 +128,7 @@
         "shared/docs-viewer-favourites.js",
         "shared/docs-viewer-generated-data-runtime.js",
         "shared/docs-viewer-hosted-view-capabilities.js",
-        "shared/docs-viewer-hosted-views.js",
+        "shared/docs-viewer-view-registry.js",
         "shared/docs-viewer-index-panel-renderer.js",
         "shared/docs-viewer-index-panel.js",
         "shared/docs-viewer-info-panel-controller.js",

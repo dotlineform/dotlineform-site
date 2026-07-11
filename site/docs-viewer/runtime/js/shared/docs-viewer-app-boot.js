@@ -17,6 +17,10 @@ import {
 import {
   docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
+import {
+  createDocsViewerSharedViewDefinitions,
+  createDocsViewerViewRegistry
+} from "./docs-viewer-view-registry.js";
 
 function defaultWindowRef() {
   return typeof window !== "undefined" ? window : null;
@@ -165,12 +169,23 @@ export function resolveDocsViewerAppBootContext(options) {
       appKind: settings.appKind,
       resolvedRouteConfig: resolvedRouteConfig
     });
+    var viewRegistry = createDocsViewerViewRegistry({
+      definitionSets: [
+        createDocsViewerSharedViewDefinitions(),
+        settings.viewRegistryContributions || {}
+      ],
+      projectionInputs: {
+        appContext: routeContext.appContext
+      },
+      routePolicy: resolvedRouteConfig.viewPolicy
+    });
     applyResolvedRouteDataset(root, documentRef, routeContext);
     var appShellReady = initDocsViewerAppShell({
       root: root,
       document: documentRef,
       managementShellRenderers: settings.managementShellRenderers,
-      routeContext: routeContext
+      routeContext: routeContext,
+      viewRegistry: viewRegistry
     });
     return appShellReady.then(function (appShellResult) {
       return {
@@ -180,8 +195,7 @@ export function resolveDocsViewerAppBootContext(options) {
         assetVersion: assetVersion,
         createSourceAdapter: settings.createSourceAdapter,
         routeContext: routeContext,
-        documentDisplayModes: settings.documentDisplayModes,
-        entrypointHostedViews: settings.entrypointHostedViews,
+        viewRegistry: viewRegistry,
         infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
         mountDocumentExtras: settings.mountDocumentExtras,
         appShellReady: Promise.resolve(appShellResult),

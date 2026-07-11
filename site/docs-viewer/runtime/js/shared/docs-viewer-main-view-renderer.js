@@ -9,7 +9,11 @@ export function renderDocsViewerMainView(options = {}) {
   const documentRef = options.document || document;
   const mount = options.mount || null;
   const toolbarMount = options.toolbarMount || null;
-  const toolbarDisabled = options.showToolbar === false;
+  const controls = options.viewRegistry
+    ? options.viewRegistry.listControls({ ownerViewId: "rendered-document" }).filter(function (control) {
+        return control.available;
+      })
+    : [];
   if (!mount) return findDocsViewerMainViewRefs({ document: documentRef, root: options.root });
 
   const main = documentRef.createElement("article");
@@ -17,14 +21,13 @@ export function renderDocsViewerMainView(options = {}) {
   main.setAttribute("aria-live", "polite");
   main.setAttribute("data-docs-viewer-panel", "main");
 
-  const toolbar = documentRef.createElement("div");
-  toolbar.className = "docsViewer__mainViewToolbar";
-  toolbar.id = "docsViewerMainViewToolbar";
-  toolbar.hidden = true;
-  toolbar.setAttribute("role", "toolbar");
-  toolbar.setAttribute("aria-label", "Document controls");
-  if (toolbarDisabled) {
-    toolbar.setAttribute("data-docs-viewer-toolbar-disabled", "");
+  const toolbar = controls.length ? documentRef.createElement("div") : null;
+  if (toolbar) {
+    toolbar.className = "docsViewer__mainViewToolbar";
+    toolbar.id = "docsViewerMainViewToolbar";
+    toolbar.hidden = true;
+    toolbar.setAttribute("role", "toolbar");
+    toolbar.setAttribute("aria-label", "Document controls");
   }
 
   const path = renderParagraph(documentRef, "docsViewerPath", "docsViewer__path small");
@@ -33,30 +36,33 @@ export function renderDocsViewerMainView(options = {}) {
   const actions = documentRef.createElement("div");
   actions.className = "docsViewer__mainViewToolbarActions";
 
-  const infoToggle = documentRef.createElement("button");
-  infoToggle.className = "docsViewer__infoToggle";
-  infoToggle.id = "docsViewerInfoToggle";
-  infoToggle.type = "button";
-  infoToggle.hidden = true;
-  infoToggle.setAttribute("aria-label", "Show document info");
-  infoToggle.setAttribute("aria-expanded", "false");
-  infoToggle.title = "Show document info";
-  infoToggle.textContent = "i";
+  controls.forEach(function (control) {
+    var button = null;
+    if (control.renderer === "info-toggle") {
+      button = renderControlButton(documentRef, {
+        className: "docsViewer__infoToggle",
+        id: "docsViewerInfoToggle",
+        label: "Show document info",
+        text: "i"
+      });
+      button.setAttribute("aria-expanded", "false");
+    } else if (control.renderer === "bookmark-toggle") {
+      button = renderControlButton(documentRef, {
+        className: "docsViewer__bookmarkToggle",
+        id: "docsViewerBookmarkToggle",
+        label: "Add bookmark",
+        text: "☆"
+      });
+      button.setAttribute("aria-pressed", "false");
+    }
+    if (button) actions.append(button);
+  });
 
-  const bookmarkToggle = documentRef.createElement("button");
-  bookmarkToggle.className = "docsViewer__bookmarkToggle";
-  bookmarkToggle.id = "docsViewerBookmarkToggle";
-  bookmarkToggle.type = "button";
-  bookmarkToggle.hidden = true;
-  bookmarkToggle.setAttribute("aria-label", "Add bookmark");
-  bookmarkToggle.setAttribute("aria-pressed", "false");
-  bookmarkToggle.title = "Add bookmark";
-  bookmarkToggle.textContent = "☆";
-
-  actions.append(bookmarkToggle, infoToggle);
-  toolbar.append(path, actions);
-  if (toolbarMount) {
+  if (toolbar) toolbar.append(path, actions);
+  if (toolbarMount && toolbar) {
     toolbarMount.replaceChildren(toolbar);
+  } else if (toolbarMount) {
+    toolbarMount.replaceChildren();
   }
 
   const content = documentRef.createElement("div");
@@ -78,7 +84,7 @@ export function renderDocsViewerMainView(options = {}) {
   more.id = "docsViewerMore";
   more.hidden = true;
 
-  if (!toolbarMount) {
+  if (!toolbarMount && toolbar) {
     main.appendChild(toolbar);
   }
   main.append(content, resultsStatus, results, more);
@@ -150,6 +156,18 @@ function renderParagraph(documentRef, id, className) {
   return paragraph;
 }
 
+function renderControlButton(documentRef, options) {
+  const button = documentRef.createElement("button");
+  button.className = options.className;
+  button.id = options.id;
+  button.type = "button";
+  button.hidden = true;
+  button.setAttribute("aria-label", options.label);
+  button.title = options.label;
+  button.textContent = options.text;
+  return button;
+}
+
 function applyHidden(element, projection, key) {
   if (!element || !Object.prototype.hasOwnProperty.call(projection, key)) return;
   element.hidden = Boolean(projection[key]);
@@ -157,5 +175,5 @@ function applyHidden(element, projection, key) {
 
 function applyToolbarHidden(element, projection, key) {
   if (!element || !Object.prototype.hasOwnProperty.call(projection, key)) return;
-  element.hidden = element.hasAttribute("data-docs-viewer-toolbar-disabled") || Boolean(projection[key]);
+  element.hidden = Boolean(projection[key]);
 }

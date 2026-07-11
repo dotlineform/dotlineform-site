@@ -337,8 +337,6 @@ export function createDocsViewerSourceEditorMode() {
     mount: function (context) {
       context.documentView.projectToolbar({
         toolbarHidden: false,
-        infoToggleHidden: false,
-        bookmarkToggleHidden: true,
         metaHidden: true,
         contentHidden: false,
         resultsHidden: true,

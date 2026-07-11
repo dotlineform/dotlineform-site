@@ -92,7 +92,7 @@ def test_route_configs_separate_app_kind_from_service_presence() -> None:
     )
 
     for route in public_payload["routes"]:
-        assert route["schema_version"] == "docs_viewer_route_config_v3"
+        assert route["schema_version"] == "docs_viewer_route_config_v4"
         assert route["app_kind"] == "public"
         assert route["features"] == [
             "configured-scope-discovery",
@@ -106,7 +106,8 @@ def test_route_configs_separate_app_kind_from_service_presence() -> None:
 
     manage_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-manage")
     assert manage_route["app_kind"] == "manage"
-    assert manage_route["schema_version"] == "docs_viewer_route_config_v3"
+    assert manage_route["schema_version"] == "docs_viewer_route_config_v4"
+    assert "hosted_views" not in manage_route
     assert manage_route["features"] == [
         "configured-scope-discovery",
         "scope-selection",

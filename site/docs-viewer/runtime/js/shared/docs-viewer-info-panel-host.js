@@ -1,7 +1,3 @@
-import {
-  listDocsViewerHostedViewsForPanel
-} from "./docs-viewer-hosted-views.js";
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -26,7 +22,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   let open = false;
 
   function viewOptions() {
-    return listDocsViewerHostedViewsForPanel(registry, "info").map(function (view) {
+    return (registry ? registry.listViews("info") : []).map(function (view) {
       return {
         id: view.id,
         label: view.label,
@@ -85,7 +81,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   function openView(viewId, context) {
     const nextViewId = cleanString(viewId);
     activeViewId = nextViewId;
-    if (!registry || typeof registry.resolve !== "function") {
+    if (!registry || typeof registry.resolveView !== "function") {
       open = true;
       projectPanel({
         statusText: "Info views are unavailable.",
@@ -96,7 +92,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
       return Promise.resolve(false);
     }
 
-    const resolved = registry.resolve(nextViewId);
+    const resolved = registry.resolveView(nextViewId);
     open = true;
     if (!resolved.available || !resolved.view) {
       unmountActive();

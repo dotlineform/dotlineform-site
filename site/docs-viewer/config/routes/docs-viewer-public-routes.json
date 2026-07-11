@@ -2,7 +2,7 @@
   "schema_version": "docs_viewer_route_config_registry_v1",
   "routes": [
     {
-      "schema_version": "docs_viewer_route_config_v3",
+      "schema_version": "docs_viewer_route_config_v4",
       "app_kind": "public",
       "route_id": "library",
       "route_path": "/library/",
@@ -47,13 +47,10 @@
           "enabled": true,
           "default_view": "metadata-info"
         }
-      },
-      "hosted_views": {
-        "records": []
       }
     },
     {
-      "schema_version": "docs_viewer_route_config_v3",
+      "schema_version": "docs_viewer_route_config_v4",
       "app_kind": "public",
       "route_id": "analysis",
       "route_path": "/analysis/",
@@ -98,13 +95,10 @@
           "enabled": true,
           "default_view": "metadata-info"
         }
-      },
-      "hosted_views": {
-        "records": []
       }
     },
     {
-      "schema_version": "docs_viewer_route_config_v3",
+      "schema_version": "docs_viewer_route_config_v4",
       "app_kind": "public",
       "route_id": "moments",
       "route_path": "/moments/",
@@ -150,11 +144,8 @@
           "default_view": "metadata-info"
         }
       },
-      "ui": {
-        "main_view_toolbar": false
-      },
-      "hosted_views": {
-        "records": []
+      "view_policy": {
+        "hidden_controls": ["bookmark", "info"]
       }
     }
   ]

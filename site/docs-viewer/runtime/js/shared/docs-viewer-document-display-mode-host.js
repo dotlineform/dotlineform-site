@@ -1,7 +1,4 @@
 import {
-  hostedViewAccessAllowed
-} from "./docs-viewer-access.js";
-import {
   createDocsViewerDocumentDisplayModeContext
 } from "./docs-viewer-view-context.js";
 
@@ -10,23 +7,6 @@ function cleanString(value) {
 }
 
 function noop() {}
-
-function normalizeMode(record) {
-  var mode = record && typeof record === "object" ? record : {};
-  var id = cleanString(mode.id);
-  if (!id) return null;
-  return {
-    id: id,
-    label: cleanString(mode.label) || id,
-    access: cleanString(mode.access) || "public",
-    availability: cleanString(mode.availability) || "available",
-    load: typeof mode.load === "function" ? mode.load : null,
-    mount: typeof mode.mount === "function" ? mode.mount : noop,
-    update: typeof mode.update === "function" ? mode.update : noop,
-    unmount: typeof mode.unmount === "function" ? mode.unmount : noop,
-    dispose: typeof mode.dispose === "function" ? mode.dispose : noop
-  };
-}
 
 function lifecycleFromLoaded(loaded, fallback) {
   if (loaded && typeof loaded === "object") return loaded;
@@ -45,20 +25,9 @@ function unavailableStatus(reason) {
   return "This document mode is unavailable.";
 }
 
-function builtInModes() {
-  return [
-    {
-      id: "rendered-document",
-      label: "Rendered document",
-      access: "public",
-      availability: "available"
-    }
-  ];
-}
-
 export function createDocsViewerDocumentDisplayModeHost(options) {
   var settings = options || {};
-  var accessProjection = settings.accessProjection || {};
+  var viewRegistry = settings.viewRegistry || null;
   var onModeChange = typeof settings.onModeChange === "function" ? settings.onModeChange : noop;
   var projectToolbar = typeof settings.projectToolbar === "function" ? settings.projectToolbar : noop;
   var showWarning = typeof settings.showWarning === "function" ? settings.showWarning : noop;
@@ -66,12 +35,6 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
   var mount = settings.mount || null;
   var activeModeId = cleanString(settings.defaultModeId) || "rendered-document";
   var activeLifecycle = null;
-  var modes = new Map();
-
-  builtInModes().concat(settings.modes || []).forEach(function (record) {
-    var mode = normalizeMode(record);
-    if (mode) modes.set(mode.id, mode);
-  });
 
   function projectModeState() {
     if (root && root.dataset) {
@@ -80,24 +43,12 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
     onModeChange(activeModeId);
   }
 
-  function statusFor(mode) {
-    if (!mode) return { available: false, reason: "missing" };
-    if (mode.availability !== "available") return { available: false, reason: mode.availability };
-    if (!hostedViewAccessAllowed(accessProjection, mode.access)) return { available: false, reason: "access" };
-    return { available: true, reason: "" };
-  }
-
   function resolve(modeId) {
     var id = cleanString(modeId);
-    var mode = modes.get(id) || null;
-    var status = statusFor(mode);
-    return {
-      id: id,
-      mode: status.available ? mode : null,
-      registered: Boolean(mode),
-      available: status.available,
-      reason: status.reason
-    };
+    if (!viewRegistry || typeof viewRegistry.resolveMode !== "function") {
+      return { id: id, mode: null, registered: false, available: false, reason: "missing" };
+    }
+    return viewRegistry.resolveMode(id);
   }
 
   function contextOptions(overrides) {

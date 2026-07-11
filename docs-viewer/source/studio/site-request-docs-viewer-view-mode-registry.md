@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-view-mode-registry
 title: Docs Viewer View, Mode, And Control Projection
 added_date: 2026-06-17
 last_updated: 2026-07-11
-ui_status: planned
+ui_status: implemented
 summary: Phase 4 implementation task for code-owned Docs Viewer view, document-mode, and toolbar-control definitions and eligibility projection.
 parent_id: change-requests
 viewable: true
@@ -12,11 +12,11 @@ viewable: true
 
 ## Status
 
-Accepted as the Phase 4 child task of [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
+Implemented as Phase 4 of [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
 
 This task replaces the earlier proposal for a browser JSON view registry. Built-in views, document modes, controls, lifecycle implementations, and handlers will be code-owned. Route policy may hide or narrow known definitions but cannot invent modules, lifecycles, handlers, or control ids.
 
-Implementation starts only after explicit app context, service authority, provider, and route-feature inputs exist in phases 1-3.
+The implementation uses the explicit app context, service authority, provider, and route-feature inputs established in phases 1-3.
 
 ## Outcome
 
@@ -113,7 +113,6 @@ It does not own:
 
 Existing hosts continue to own lifecycle behavior while consuming normalized/projection results:
 
-- `docs-viewer-hosted-views.js`
 - `docs-viewer-main-view-host.js`
 - `docs-viewer-document-display-mode-host.js`
 - `docs-viewer-info-panel-host.js`
@@ -137,10 +136,7 @@ Definitions must not carry string handler ids or arbitrary module paths. Executa
 
 ### Panel Views
 
-Current owners:
-
-- `docs-viewer-hosted-views.js`
-- `docs-viewer-app-composition.js`
+Former decision owners included `docs-viewer-hosted-views.js` and `docs-viewer-app-composition.js`.
 - `docs-viewer-panel-layout.js`
 - `docs-viewer-main-view-host.js`
 
@@ -148,7 +144,7 @@ Migration:
 
 - retain current built-in and entrypoint-contribution behavior
 - normalize panel-view definitions through the new owner
-- keep route hosted-view records descriptive and unable to override reserved code-owned definitions
+- remove route hosted-view records so route config cannot register definitions
 - do not create a second panel-view list
 
 ### Document Display Modes
@@ -244,3 +240,22 @@ Do not add permanent tests for button copy, focus choreography, hover state, mod
 - Management toolbar actions remain in their existing workflow owners.
 - No review-specific behavior or generic plugin/module-loader surface is added.
 - Public/manage baseline checks remain green.
+
+## Implementation Outcome
+
+Implemented on 2026-07-11.
+
+- `docs-viewer-view-registry.js` is the sole normalization, lookup, and eligibility owner for panel views, document modes, and document controls.
+- Shared definitions register the current public-safe views, the rendered-document mode, bookmark, and info. The manage entrypoint contributes index graph, semantic-token picker, Markdown source, edit, source-toggle, and source-save definitions.
+- Route records use `docs_viewer_route_config_v4`. `view_policy` may hide known view, mode, or control ids; unknown ids fail registry construction. Route-owned `hosted_views` and `ui.main_view_toolbar` are rejected.
+- Hosts resolve through the shared registry. The display-mode host no longer owns a second mode normalizer or access engine.
+- Main and manage renderers construct only projected controls. The Moments route hides bookmark and info and therefore renders no document toolbar.
+- Bookmark, info, management, and source-editor controllers retain handlers and pressed, open, busy, disabled, and dirty state.
+- The superseded `docs-viewer-hosted-views.js` registry and hosted-view access helper were removed without aliases.
+
+Verification evidence:
+
+- focused route/lifecycle tests: 25 passed
+- focused router/registry browser module smoke: passed
+- `docs-viewer-smoke` profile: passed all four checks
+- final check summary: `var/admin/test-runs/docs-viewer-phase4-view-registry-final/summary.md`

@@ -30,13 +30,3 @@ export function createDocsViewerAccessProjection(options) {
     managementUi: appKind === DOCS_VIEWER_APP_KINDS.MANAGE && Boolean(routeAccess.managementUi)
   };
 }
-
-export function hostedViewAccessAllowed(accessProjection, requirement) {
-  var access = accessProjection || {};
-  var required = cleanString(requirement || "public").toLowerCase();
-  if (!required || required === "public") return true;
-  if (required === "manage" || required === "manage-local") {
-    return access.appKind === DOCS_VIEWER_APP_KINDS.MANAGE && access.managementUi === true;
-  }
-  return false;
-}

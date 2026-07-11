@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0 and phases 0-3 are complete. Phase 4 view, mode, and control projection is next.
+Assessment complete; roadmap accepted for implementation, D0 and phases 0-4 are complete. Phase 5 coordinator reduction is next.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -737,7 +737,7 @@ Acceptance:
 
 Implemented on 2026-07-11.
 
-- Route records use `docs_viewer_route_config_v3` with an explicit allowlisted `features` array.
+- Phase 3 introduced `docs_viewer_route_config_v3` with an explicit allowlisted `features` array; Phase 4 subsequently moved current records to v4 for route-only view policy.
 - Current public routes enable configured-scope discovery, search, recently added, bookmarks, and reports. The manage route additionally enables scope selection, source editing, and management.
 - Unknown features and invalid scope-selection dependencies fail normalization.
 - Disabled search, recently-added, and report features do not require placeholder URLs.
@@ -768,6 +768,16 @@ Acceptance:
 - route policy can hide known public controls without runtime view-id branches
 - no config file can invent handlers or modules
 - no empty toolbar is rendered when no projected controls remain
+
+### Phase 4 Outcome
+
+Implemented on 2026-07-11.
+
+- One code-owned registry now normalizes and resolves panel views, document modes, and document controls from shared definitions, manage entrypoint contributions, app context, features, backend capability inputs, route narrowing, and active view/mode state.
+- Route records moved to `docs_viewer_route_config_v4`. Route policy can hide only registered ids and cannot define modules, handlers, views, modes, or controls.
+- `bookmark`, `info`, `edit`, `markdown-source`, and `save-markdown-source` consume the shared eligibility projection while their focused controllers retain live behavior state.
+- Markdown source remains a document mode under `rendered-document`; public contexts cannot resolve manage-only contributions.
+- The superseded hosted-view registry and access helper were removed. Renderers omit the document toolbar when no projected controls remain.
 
 ## Phase 5: Coordinator Reduction For Touched Areas
 

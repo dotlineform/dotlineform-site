@@ -65,7 +65,8 @@ export function createDocsViewerInfoPanelController(options) {
 
   function renderToggleState() {
     if (!settings.infoToggle) return;
-    var canShow = Boolean(currentSelectedDoc() && metadataInfoAvailable());
+    var eligible = typeof settings.controlActive !== "function" || settings.controlActive("info");
+    var canShow = eligible && Boolean(currentSelectedDoc() && metadataInfoAvailable());
     var open = host.isOpen();
     var label = open ? "Hide document info" : "Show document info";
     settings.projectMainView({
