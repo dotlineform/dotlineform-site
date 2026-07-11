@@ -2,6 +2,7 @@ export function createDocsViewerManagementHostedViews() {
   return [
     {
       id: "semantic-token-picker",
+      feature: "source-editing",
       label: "Semantic ref",
       panel: "info",
       access: "manage",
@@ -21,6 +22,7 @@ export function createDocsViewerManagementDocumentDisplayModes() {
   return [
     {
       id: "markdown-source",
+      feature: "source-editing",
       label: "Markdown source",
       access: "manage",
       availability: "available",

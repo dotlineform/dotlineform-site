@@ -14,6 +14,9 @@ import {
 import {
   startDocsViewerRuntime
 } from "./docs-viewer-app-runtime.js";
+import {
+  docsViewerRouteFeatureEnabled
+} from "./docs-viewer-route-features.js";
 
 function defaultWindowRef() {
   return typeof window !== "undefined" ? window : null;
@@ -105,6 +108,7 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
   if (root && root.dataset) {
     var appContext = routeContext && routeContext.appContext ? routeContext.appContext : {};
     var routeAccess = appContext.routeAccess || {};
+    var featurePolicy = appContext.featurePolicy || {};
     var serviceAvailability = appContext.serviceAvailability || {};
     root.dataset.routeId = routeConfig.routeId || "";
     root.dataset.docsViewerRoute = routeConfig.routeId || "";
@@ -113,8 +117,9 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
     root.dataset.docsViewerService = serviceAvailability.management && serviceAvailability.management.available
       ? "available"
       : (serviceAvailability.generatedData && serviceAvailability.generatedData.local ? "read-only" : "static");
-    setDatasetBoolean(root, "managementUi", routeAccess.managementUi);
-    setDatasetBoolean(root, "sourceService", serviceAvailability.source && serviceAvailability.source.available);
+    root.dataset.docsViewerFeatures = Array.isArray(featurePolicy.ids) ? featurePolicy.ids.join(" ") : "";
+    setDatasetBoolean(root, "managementUi", routeAccess.managementUi && featurePolicy.management);
+    setDatasetBoolean(root, "sourceService", featurePolicy.sourceEditing && serviceAvailability.source && serviceAvailability.source.available);
     setDatasetBoolean(root, "includeScopeParam", routeContext && routeContext.includeScopeParam);
     root.dataset.viewerBaseUrl = routeContext && routeContext.viewerBaseUrl ? routeContext.viewerBaseUrl : "";
     root.dataset.viewerScope = routeContext && routeContext.viewerScope ? routeContext.viewerScope : "";
@@ -123,7 +128,6 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
   }
 
   if (headerMount && headerMount.dataset && viewerSearch.configured) {
-    setDatasetBoolean(headerMount, "enableSearch", viewerSearch.enabled !== false);
     headerMount.dataset.searchPlaceholder = viewerSearch.placeholder || "search docs";
     headerMount.dataset.searchAriaLabel = viewerSearch.ariaLabel || "Search docs";
   }
@@ -195,7 +199,11 @@ export function initDocsViewerBootThemeToggle(bootContext) {
   var context = bootContext || {};
   var routeContext = context.routeContext || {};
   var appContext = routeContext.appContext || {};
-  if (!appContext.routeAccess || !appContext.routeAccess.managementUi) {
+  if (
+    !appContext.routeAccess
+    || !appContext.routeAccess.managementUi
+    || !docsViewerRouteFeatureEnabled(appContext.featurePolicy, "management")
+  ) {
     return Promise.resolve(null);
   }
   return (context.appShellReady || Promise.resolve())

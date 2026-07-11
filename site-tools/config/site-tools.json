@@ -140,6 +140,7 @@
         "shared/docs-viewer-panel-layout.js",
         "shared/docs-viewer-render.js",
         "shared/docs-viewer-route-config.js",
+        "shared/docs-viewer-route-features.js",
         "shared/docs-viewer-route-workflow.js",
         "shared/docs-viewer-router.js",
         "shared/docs-viewer-runtime-lazy-controller.js",

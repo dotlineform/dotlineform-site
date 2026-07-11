@@ -84,7 +84,8 @@ The entry modules delegate boot to `site/docs-viewer/runtime/js/shared/docs-view
 The private app runtime coordinator delegates app composition and startup sequencing to `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
 Current helper modules:
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js` owns runtime defaults, service-context projection handoff, hosted-view registry creation, panel layout creation, app-session creation, document-index, generated-data runtime, source-service adapter, configured-scope provider, and config-service creation, public/manage startup phase descriptions, startup authority records, and initial startup phase sequencing
+- `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js` owns runtime defaults, foundational owner construction, feature-filtered hosted-view registration, startup authority records, and feature-aware startup sequencing
+- `site/docs-viewer/runtime/js/shared/docs-viewer-route-features.js` owns allowlisted route-feature normalization, dependency checks, queries, and code-record filtering
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-session.js` owns app-session creation, state defaults, named state-domain facades, and public/manage route-session projection
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-runtime.js` owns private app runtime coordination for focused controller construction, config handoff, callback bridges, event handler definitions, private management/startup route callbacks, and the intentionally small returned app handle: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js` owns route/document workflow orchestration: URL/query helpers, current-doc resolution, route application, index and payload loading, canonical route correction, route-link handling, and popstate coordination
@@ -95,6 +96,7 @@ Current helper modules:
 - `docs-viewer/runtime/js/management/docs-viewer-management-source-adapter.js` is the manage-entrypoint-owned optional source endpoint adapter; backend capabilities still authorize operations
 - `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js` owns generated-data transport option shaping, generated-read capability caching, retry/reload options, generated-search read capability checks, payload normalization, and static/local reads behind the provider
 - `site/docs-viewer/runtime/js/shared/docs-viewer-config-service.js` owns browser-safe Docs Viewer config and UI-text fetch/retry behavior
+- `site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js` exposes configured-scope discovery and general viewer-settings loading as separate operations over the shared config envelope
 - `site/docs-viewer/runtime/js/shared/docs-viewer-asset-url.js` owns asset-version URL projection for static browser assets
 - `site/docs-viewer/runtime/js/shared/docs-viewer-data.js` owns low-level JSON fetch/retry primitives only behind the generated-data runtime and config service
 - `docs-viewer/runtime/js/reports/docs-viewer-report-service.js` owns local report endpoint access for source-config and broken-links audit reports in management-capable contexts

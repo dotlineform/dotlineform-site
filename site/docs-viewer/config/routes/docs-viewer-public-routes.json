@@ -2,13 +2,20 @@
   "schema_version": "docs_viewer_route_config_registry_v1",
   "routes": [
     {
-      "schema_version": "docs_viewer_route_config_v2",
+      "schema_version": "docs_viewer_route_config_v3",
       "app_kind": "public",
       "route_id": "library",
       "route_path": "/library/",
       "default_scope_id": "library",
       "include_scope_param": false,
       "viewer_base_url": "/library/",
+      "features": [
+        "configured-scope-discovery",
+        "search",
+        "recently-added",
+        "bookmarks",
+        "reports"
+      ],
       "access": {
         "allow_scope_query": false,
         "management_ui": false
@@ -46,13 +53,20 @@
       }
     },
     {
-      "schema_version": "docs_viewer_route_config_v2",
+      "schema_version": "docs_viewer_route_config_v3",
       "app_kind": "public",
       "route_id": "analysis",
       "route_path": "/analysis/",
       "default_scope_id": "analysis",
       "include_scope_param": false,
       "viewer_base_url": "/analysis/",
+      "features": [
+        "configured-scope-discovery",
+        "search",
+        "recently-added",
+        "bookmarks",
+        "reports"
+      ],
       "access": {
         "allow_scope_query": false,
         "management_ui": false
@@ -90,13 +104,20 @@
       }
     },
     {
-      "schema_version": "docs_viewer_route_config_v2",
+      "schema_version": "docs_viewer_route_config_v3",
       "app_kind": "public",
       "route_id": "moments",
       "route_path": "/moments/",
       "default_scope_id": "moments",
       "include_scope_param": false,
       "viewer_base_url": "/moments/",
+      "features": [
+        "configured-scope-discovery",
+        "search",
+        "recently-added",
+        "bookmarks",
+        "reports"
+      ],
       "access": {
         "allow_scope_query": false,
         "management_ui": false

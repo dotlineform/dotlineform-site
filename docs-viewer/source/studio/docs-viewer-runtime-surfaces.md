@@ -56,12 +56,13 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | Config surface | Public | Manage |
 | --- | --- | --- |
 | Registry shape | `docs_viewer_route_config_registry_v1` with `routes` array | `docs_viewer_route_config_registry_v1` with `routes` array |
-| Route record shape | `docs_viewer_route_config_v2` snake_case | `docs_viewer_route_config_v2` snake_case |
+| Route record shape | `docs_viewer_route_config_v3` snake_case | `docs_viewer_route_config_v3` snake_case |
 | Route config resolver | `docs-viewer-route-config.js` | `docs-viewer-route-config.js` |
 | Local `/docs/` route present | no | yes |
 | Manage-only hosted views | omitted | allowed |
 | App kind | `public` | `manage` |
 | Route access | scope query and management UI disabled | scope query enabled; management UI projected independently of service URLs |
+| Route features | configured-scope discovery, search, recently added, bookmarks, reports | configured-scope discovery, scope selection, search, recently added, bookmarks, reports, source editing, management |
 | Generated-data service | static generated assets; local URL blank | local URL injected when generated reads are enabled, independently of management |
 | Source service | absent | URL injected when source services are enabled |
 | Management service | absent | URL injected when management services are enabled |
@@ -71,7 +72,9 @@ Route records declare `app_kind`, narrow `access` policy, and `services.generate
 
 Route config resolution rejects entrypoint/route app-kind mismatches. Public route records contain no local service URLs. The local service injects each enabled loopback surface independently when it serves the manage route registry.
 
-There is no explicit route-feature list in the current registry. Search, recently added, bookmarks, reports, scope selection, source editing, and management startup are inferred from current route/access/config shapes or tolerate missing controls. Phase 3 introduces an allowlisted feature projection; until then, this absence is part of the baseline rather than a config extension point.
+`docs-viewer-route-features.js` normalizes the explicit route `features` array and rejects unknown ids. Disabled search, recently-added, and report features do not require their payload URLs. Disabled feature controllers, bindings, hosted views/modes, shell controls, and startup phases are omitted rather than initialized against missing elements.
+
+Configured-scope discovery is a separate startup operation from general viewer-settings loading. Both current route families enable discovery; a future non-scope provider may omit it while still loading browser-safe viewer settings.
 
 ## Scope-Owned Data Roots
 

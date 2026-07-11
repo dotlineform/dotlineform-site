@@ -8,6 +8,18 @@ from urllib.parse import urlparse
 from .config import SiteToolsConfig
 
 
+DOCS_VIEWER_ROUTE_FEATURE_IDS = {
+    "configured-scope-discovery",
+    "scope-selection",
+    "search",
+    "recently-added",
+    "bookmarks",
+    "reports",
+    "source-editing",
+    "management",
+}
+
+
 @dataclass(frozen=True)
 class ValidationResult:
     site_root: Path
@@ -105,6 +117,31 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
             raise RuntimeError(f"Docs Viewer route {route_id} must define route_path")
 
         _check_route_file(site_root, route_id, route_path, checked_files, missing_files)
+        raw_features = route.get("features")
+        if not isinstance(raw_features, list) or not all(isinstance(item, str) for item in raw_features):
+            raise RuntimeError(f"Docs Viewer route {route_id} must define a features string array")
+        features = set(raw_features)
+        unknown_features = sorted(features - DOCS_VIEWER_ROUTE_FEATURE_IDS)
+        if unknown_features:
+            raise RuntimeError(f"Docs Viewer route {route_id} has unknown features: {', '.join(unknown_features)}")
+        if "scope-selection" in features and "configured-scope-discovery" not in features:
+            raise RuntimeError(
+                f"Docs Viewer route {route_id} scope-selection requires configured-scope-discovery"
+            )
+        required_fields = {
+            ("docs_paths", "index_tree_url"),
+            ("config_urls", "docs_viewer"),
+        }
+        if "search" in features:
+            required_fields.add(("docs_paths", "search_index_url"))
+        if "recently-added" in features:
+            required_fields.add(("docs_paths", "recently_added_url"))
+        if "reports" in features:
+            required_fields.add(("config_urls", "report_registry"))
+        for section_name, field_name in required_fields:
+            section = route.get(section_name)
+            if not isinstance(section, dict) or not isinstance(section.get(field_name), str) or not section[field_name]:
+                raise RuntimeError(f"Docs Viewer route {route_id} must define {section_name}.{field_name}")
         for section_name in ("docs_paths", "config_urls"):
             section = route.get(section_name)
             if section is None:
@@ -112,8 +149,12 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
             if not isinstance(section, dict):
                 raise RuntimeError(f"Docs Viewer route {route_id} {section_name} must be an object")
             for field_name, url in section.items():
-                if not isinstance(url, str) or not url:
+                if not isinstance(url, str):
                     raise RuntimeError(f"Docs Viewer route {route_id} {section_name}.{field_name} must be a URL string")
+                if not url:
+                    if (section_name, field_name) in required_fields:
+                        raise RuntimeError(f"Docs Viewer route {route_id} {section_name}.{field_name} must be a URL string")
+                    continue
                 relative = _site_relative_url_path(
                     url,
                     context=f"Docs Viewer route {route_id} {section_name}.{field_name}",

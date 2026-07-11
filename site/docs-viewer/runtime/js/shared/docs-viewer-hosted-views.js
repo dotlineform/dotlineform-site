@@ -156,6 +156,7 @@ export function createDocsViewerBuiltInHostedViews() {
     },
     {
       id: "search-results",
+      feature: "search",
       label: "Search results",
       panel: "main",
       access: "public",
@@ -163,6 +164,7 @@ export function createDocsViewerBuiltInHostedViews() {
     },
     {
       id: "recent-results",
+      feature: "recently-added",
       label: "Recently added",
       panel: "main",
       access: "public",

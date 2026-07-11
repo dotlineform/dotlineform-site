@@ -108,8 +108,8 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId, summaryText) : Promise.resolve();
   }
 
-  function reloadDocsViewerConfig() {
-    return callbacks.reloadDocsViewerConfig ? callbacks.reloadDocsViewerConfig() : Promise.resolve(null);
+  function reloadViewerConfiguration() {
+    return callbacks.reloadViewerConfiguration ? callbacks.reloadViewerConfiguration() : Promise.resolve(null);
   }
 
   async function viewabilityTargetDocIds(doc) {
@@ -446,7 +446,7 @@ export function createDocsViewerManagementActionController(options) {
         var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
         var targetDocId = state.selectedDocId || proposedDefaultDocId || context.defaultDocId();
         if (payload && payload.changed) {
-          return reloadDocsViewerConfig().then(function () {
+          return reloadViewerConfiguration().then(function () {
             return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId) : null;
           });
         }

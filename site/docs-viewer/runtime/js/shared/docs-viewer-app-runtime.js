@@ -47,6 +47,10 @@ import {
   createDocsViewerAppComposition,
   startDocsViewerStartupPhases
 } from "./docs-viewer-app-composition.js";
+import {
+  docsViewerRouteFeatureEnabled,
+  projectDocsViewerFeatureRecords
+} from "./docs-viewer-route-features.js";
 
 function infoPanelDefaultViewIdForMode(settings, modeId) {
   var map = settings && settings.infoPanelDefaultViewByDocumentMode;
@@ -97,17 +101,22 @@ export function startDocsViewerRuntime(options) {
 
   var appContext = routeContext.appContext || {};
   var routeAccess = appContext.routeAccess || {};
+  var featurePolicy = appContext.featurePolicy || {};
+  var bookmarksEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks");
+  var configuredScopeDiscoveryEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery");
+  var managementEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "management");
+  var recentlyAddedEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recently-added");
+  var reportsEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "reports");
+  var searchEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "search");
+  var sourceEditingEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "source-editing");
   var allowScopeQuery = routeAccess.allowScopeQuery;
   var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
   var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
-  var indexTreeUrl = routeContext.indexTreeUrl;
-  var recentlyAddedUrl = routeContext.recentlyAddedUrl;
   var viewerBaseUrl = routeContext.viewerBaseUrl;
   var viewerScope = routeContext.viewerScope;
   var includeScopeParam = routeContext.includeScopeParam;
   var defaultRouteDocId = routeContext.defaultRouteDocId;
   var viewerPathname = routeContext.viewerPathname;
-  var searchIndexUrl = routeContext.searchIndexUrl;
   var runtimeDefaults = DOCS_VIEWER_RUNTIME_DEFAULTS;
   var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
   var SEARCH_DEBOUNCE_MS = runtimeDefaults.searchDebounceMs;
@@ -135,7 +144,7 @@ export function startDocsViewerRuntime(options) {
   var serviceContext = composition.serviceContext;
   var managementService = serviceContext.management;
   var sourceService = serviceContext.source;
-  var managementUiEnabled = Boolean(routeAccess.managementUi && managementService);
+  var managementUiEnabled = Boolean(managementEnabled && routeAccess.managementUi && managementService);
   var managementBaseUrl = managementService ? managementService.baseUrl : "";
   var panelLayout = composition.panelLayout;
   var managementRuntime = null;
@@ -163,7 +172,7 @@ export function startDocsViewerRuntime(options) {
       appContext: appContext,
       collectionProvider: collectionProvider,
       selectedDocId: appSession.domains.selectedDocument.selectedDocId,
-      sourceEditorServices: sourceService ? sourceEditorServices() : null,
+      sourceEditorServices: sourceEditingEnabled && sourceService ? sourceEditorServices() : null,
       uiStatusByValue: appSession.domains.scopeConfig.uiStatusByValue,
       viewerScope: viewerScope,
       viewerTargetDocId: documentIndex.viewerTargetDocId,
@@ -198,7 +207,7 @@ export function startDocsViewerRuntime(options) {
     accessProjection: routeAccess,
     contextOptions: documentViewContextOptions,
     defaultModeId: "rendered-document",
-    modes: settings.documentDisplayModes,
+    modes: projectDocsViewerFeatureRecords(settings.documentDisplayModes, featurePolicy),
     mount: content,
     onModeChange: renderManagementUi,
     projectToolbar: projectMainView,
@@ -237,7 +246,7 @@ export function startDocsViewerRuntime(options) {
       return infoPanelDefaultViewIdForMode(settings, modeId) || "metadata-info";
     },
     sourceEditorServices: function () {
-      return sourceService ? sourceEditorServices() : null;
+      return sourceEditingEnabled && sourceService ? sourceEditorServices() : null;
     },
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
@@ -251,7 +260,7 @@ export function startDocsViewerRuntime(options) {
     collectionProvider: collectionProvider,
     hasActiveQuery: hasActiveQuery,
     managementService: managementService,
-    mountDocumentExtras: settings.mountDocumentExtras,
+    mountDocumentExtras: reportsEnabled ? settings.mountDocumentExtras : null,
     more: more,
     projectDocumentShell: projectMainView,
     renderBookmarkToggle: renderBookmarkToggle,
@@ -338,7 +347,7 @@ export function startDocsViewerRuntime(options) {
     showRecentPane: showRecentPane,
     showSearchPane: showSearchPane
   };
-  var searchController = initDocsViewerSearchController({
+  var searchController = searchEnabled || recentlyAddedEnabled ? initDocsViewerSearchController({
     collectionProvider: collectionProvider,
     hideContextMenu: hideContextMenu,
     hasActiveQuery: hasActiveQuery,
@@ -351,18 +360,19 @@ export function startDocsViewerRuntime(options) {
     routeCommands: searchRouteCommands,
     searchBatchSize: SEARCH_BATCH_SIZE,
     searchDebounceMs: SEARCH_DEBOUNCE_MS,
+    searchEnabled: searchEnabled,
     searchRecent: appSession.domains.searchRecent,
-    searchIndexUrl: function () { return searchIndexUrl; },
-    recentlyAddedUrl: function () { return recentlyAddedUrl; },
+    recentlyAddedEnabled: recentlyAddedEnabled,
     searchInput: searchInput,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     setStatus: setStatus,
     startBusy: startBusy
-  });
+  }) : null;
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
     configService: composition.configService,
+    featurePolicy: featurePolicy,
     defaultRecentLimit: DEFAULT_RECENT_LIMIT,
     documentIndex: appSession.domains.documentIndex,
     managementController: function () {
@@ -385,7 +395,7 @@ export function startDocsViewerRuntime(options) {
     viewerScope: function () { return viewerScope; }
   });
 
-  managementRuntime = createDocsViewerManagementRuntimeAdapter({
+  managementRuntime = managementEnabled ? createDocsViewerManagementRuntimeAdapter({
     managementUi: managementUiEnabled,
     appShellReady: appShellReady,
     constants: {
@@ -430,7 +440,7 @@ export function startDocsViewerRuntime(options) {
       renderSidebar: renderSidebar,
       root: root,
       routeReload: {
-        reloadDocsViewerConfig: function () { return configController.reloadDocsViewerConfig(); },
+        reloadViewerConfiguration: function () { return configController.reloadViewerConfiguration(); },
         routeCommands: routeWorkflowCommands
       },
       searchInput: searchInput,
@@ -444,13 +454,14 @@ export function startDocsViewerRuntime(options) {
     onLoaded: function () {
       renderSidebar();
     }
-  });
+  }) : null;
 
   function loadManagementController() {
-    return managementRuntime.load();
+    return managementRuntime ? managementRuntime.load() : Promise.resolve(null);
   }
 
   function routeScopeFromUrl() {
+    if (!configuredScopeDiscoveryEnabled) return viewerScope;
     return configController.routeScopeFromUrl();
   }
 
@@ -458,9 +469,6 @@ export function startDocsViewerRuntime(options) {
     routeContext = updateDocsViewerRouteContext(routeContext, values, { window: window });
     appSession.domains.routeSession.updateRouteContext(routeContext);
     viewerScope = routeContext.viewerScope;
-    indexTreeUrl = routeContext.indexTreeUrl;
-    recentlyAddedUrl = routeContext.recentlyAddedUrl;
-    searchIndexUrl = routeContext.searchIndexUrl;
     defaultRouteDocId = routeContext.defaultRouteDocId;
     viewerBaseUrl = routeContext.viewerBaseUrl;
     includeScopeParam = routeContext.includeScopeParam;
@@ -469,8 +477,8 @@ export function startDocsViewerRuntime(options) {
     state.indexPanelState = panelLayout.setStorageScope(bookmarkScope);
   }
 
-  function loadDocsViewerConfig() {
-    return configController.loadDocsViewerConfig();
+  function loadConfiguredScopes() {
+    return configController.loadConfiguredScopes();
   }
 
   function handleScopeChange() {
@@ -486,6 +494,7 @@ export function startDocsViewerRuntime(options) {
   }
 
   function hasActiveQuery(query) {
+    if (!searchEnabled) return false;
     var searchRecent = appSession.domains.searchRecent;
     return Boolean(normalizeSearchText(typeof query === "string" ? query : searchRecent.searchQuery));
   }
@@ -526,8 +535,8 @@ export function startDocsViewerRuntime(options) {
     state.viewState = panelLayout.projectViewState();
   }
 
-  function loadViewerConfig() {
-    return configController.loadViewerConfig();
+  function loadViewerSettings() {
+    return configController.loadViewerSettings();
   }
 
   function reloadGeneratedDoc(targetDocId) {
@@ -864,7 +873,7 @@ export function startDocsViewerRuntime(options) {
 
     infoPanelController.bind();
 
-    if (scopeSelect) {
+    if (featurePolicy.scopeSelection && scopeSelect) {
       scopeSelect.addEventListener("change", function () {
         handleScopeChange();
       });
@@ -884,19 +893,19 @@ export function startDocsViewerRuntime(options) {
       }
     });
 
-    searchController.bind();
+    if (searchController) searchController.bind();
   }
 
   function renderRecentMode() {
-    searchController.renderRecentMode();
+    if (searchController) searchController.renderRecentMode();
   }
 
   function renderSearchPendingState() {
-    searchController.renderSearchPendingState();
+    if (searchController) searchController.renderSearchPendingState();
   }
 
   function renderSearchMode() {
-    searchController.renderSearchMode();
+    if (searchController) searchController.renderSearchMode();
   }
 
   routeWorkflow.bindPopstate();
@@ -912,41 +921,43 @@ export function startDocsViewerRuntime(options) {
     }
   });
 
-  var bookmarkRouteCommands = createDocsViewerBookmarkRouteCommands({
-    routeCommands: routeWorkflowCommands
-  });
-  var bookmarkSearchResetCommand = {
-    resetForBookmarkOpen: function () {
-      cancelSearchDebounce();
-      appSession.domains.searchRecent.searchQuery = "";
-      appSession.domains.searchRecent.searchVisibleCount = SEARCH_BATCH_SIZE;
-      if (searchInput) searchInput.value = "";
-    }
-  };
-  bookmarkController = initDocsViewerBookmarks({
-    bookmarks: appSession.domains.bookmarks,
-    bookmarkRow: bookmarkRow,
-    bookmarkScope: function () { return bookmarkScope; },
-    bookmarkToggle: bookmarkToggle,
-    cssEscape: cssEscape,
-    dbName: BOOKMARK_DB_NAME,
-    dbVersion: BOOKMARK_DB_VERSION,
-    documentIndex: appSession.domains.documentIndex,
-    hideContextMenu: hideContextMenu,
-    routeCommands: bookmarkRouteCommands,
-    searchRecent: appSession.domains.searchRecent,
-    searchResetCommand: bookmarkSearchResetCommand,
-    selectedDocument: appSession.domains.selectedDocument,
-    setStatus: setStatus,
-    storeName: BOOKMARK_STORE_NAME
-  });
+  if (bookmarksEnabled) {
+    var bookmarkRouteCommands = createDocsViewerBookmarkRouteCommands({
+      routeCommands: routeWorkflowCommands
+    });
+    var bookmarkSearchResetCommand = {
+      resetForBookmarkOpen: function () {
+        cancelSearchDebounce();
+        appSession.domains.searchRecent.searchQuery = "";
+        appSession.domains.searchRecent.searchVisibleCount = SEARCH_BATCH_SIZE;
+        if (searchInput) searchInput.value = "";
+      }
+    };
+    bookmarkController = initDocsViewerBookmarks({
+      bookmarks: appSession.domains.bookmarks,
+      bookmarkRow: bookmarkRow,
+      bookmarkScope: function () { return bookmarkScope; },
+      bookmarkToggle: bookmarkToggle,
+      cssEscape: cssEscape,
+      dbName: BOOKMARK_DB_NAME,
+      dbVersion: BOOKMARK_DB_VERSION,
+      documentIndex: appSession.domains.documentIndex,
+      hideContextMenu: hideContextMenu,
+      routeCommands: bookmarkRouteCommands,
+      searchRecent: appSession.domains.searchRecent,
+      searchResetCommand: bookmarkSearchResetCommand,
+      selectedDocument: appSession.domains.selectedDocument,
+      setStatus: setStatus,
+      storeName: BOOKMARK_STORE_NAME
+    });
+  }
   var initialLoadPromise = startDocsViewerStartupPhases({
     composition: composition,
     bindEvents: bindLinkInterception,
     startBusy: startBusy,
-    loadDocsViewerConfig: loadDocsViewerConfig,
+    loadConfiguredScopes: loadConfiguredScopes,
     renderIndexPanelState: renderIndexPanelState,
-    loadViewerConfig: loadViewerConfig,
+    loadViewerSettings: loadViewerSettings,
     initializeBookmarks: initializeBookmarks,
     initializeManagement: initializeManagement,
     loadIndex: routeWorkflowCommands.loadIndex,

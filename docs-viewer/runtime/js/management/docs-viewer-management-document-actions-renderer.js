@@ -36,27 +36,34 @@ export function renderDocsViewerManagementDocumentActions(options) {
     label: "Edit"
   });
 
-  var sourceButton = renderDocumentActionButton(documentRef, {
-    id: "docsViewerManageSourceButton",
-    action: "markdown-source",
-    emoji: "☰",
-    label: "Markdown source"
-  });
+  var sourceEditingEnabled = settings.featurePolicy && settings.featurePolicy.sourceEditing === true;
+  var sourceButton = sourceEditingEnabled
+    ? renderDocumentActionButton(documentRef, {
+        id: "docsViewerManageSourceButton",
+        action: "markdown-source",
+        emoji: "☰",
+        label: "Markdown source"
+      })
+    : null;
 
-  var sourceSaveButton = renderDocumentActionButton(documentRef, {
-    id: "docsViewerManageSourceSaveButton",
-    action: "markdown-save",
-    emoji: "💾",
-    label: "Save Markdown source"
-  });
+  var sourceSaveButton = sourceEditingEnabled
+    ? renderDocumentActionButton(documentRef, {
+        id: "docsViewerManageSourceSaveButton",
+        action: "markdown-save",
+        emoji: "💾",
+        label: "Save Markdown source"
+      })
+    : null;
+
+  var buttons = [editButton, sourceSaveButton, sourceButton].filter(Boolean);
 
   var bookmark = bookmarkToggle(root);
   if (bookmark && bookmark.parentElement === mount) {
-    mount.insertBefore(editButton, bookmark);
-    mount.insertBefore(sourceSaveButton, bookmark);
-    mount.insertBefore(sourceButton, bookmark);
+    buttons.forEach(function (button) {
+      mount.insertBefore(button, bookmark);
+    });
   } else {
-    mount.prepend(editButton, sourceSaveButton, sourceButton);
+    mount.prepend.apply(mount, buttons);
   }
 
   return {

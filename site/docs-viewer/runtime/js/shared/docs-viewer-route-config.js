@@ -4,8 +4,12 @@ import {
 import {
   normalizeHostedViewCapabilities
 } from "./docs-viewer-hosted-view-capabilities.js";
+import {
+  docsViewerRouteFeatureEnabled,
+  normalizeDocsViewerRouteFeatures
+} from "./docs-viewer-route-features.js";
 
-export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v2";
+export const DOCS_VIEWER_ROUTE_CONFIG_SCHEMA = "docs_viewer_route_config_v3";
 export const DOCS_VIEWER_ROUTE_CONFIG_REGISTRY_SCHEMA = "docs_viewer_route_config_registry_v1";
 export const DOCS_VIEWER_MANAGEMENT_ROUTE_PATH = "/docs/";
 
@@ -87,7 +91,6 @@ function normalizeRouteUi(rawUi) {
     },
     viewerSearch: {
       configured: Boolean(ui.viewer_search),
-      enabled: viewerSearch.enabled !== false,
       placeholder: cleanString(viewerSearch.placeholder) || "search docs",
       ariaLabel: cleanString(viewerSearch.aria_label) || "Search docs"
     }
@@ -253,12 +256,16 @@ export function resolveDocsViewerRouteConfig(options) {
   var docsManagementRoute = isDocsManagementRoutePath(routeConfigPath(rawConfig));
   var managementUi = appKind === "manage" && normalizeBoolean(access.management_ui);
   var services = normalizeServiceSurfaces(rawConfig.services);
+  var features = normalizeDocsViewerRouteFeatures(rawConfig.features);
   var docsPaths = rawConfig.docs_paths && typeof rawConfig.docs_paths === "object" ? rawConfig.docs_paths : {};
   var configUrls = rawConfig.config_urls && typeof rawConfig.config_urls === "object" ? rawConfig.config_urls : {};
   var schemaVersion = cleanString(rawConfig.schema_version) || DOCS_VIEWER_ROUTE_CONFIG_SCHEMA;
   if (schemaVersion !== DOCS_VIEWER_ROUTE_CONFIG_SCHEMA) {
     throw new Error("Docs Viewer route config has an unsupported schema.");
   }
+  var searchEnabled = docsViewerRouteFeatureEnabled(features, "search");
+  var recentlyAddedEnabled = docsViewerRouteFeatureEnabled(features, "recently-added");
+  var reportsEnabled = docsViewerRouteFeatureEnabled(features, "reports");
   return {
     schemaVersion: schemaVersion,
     source: resolvedSource.source,
@@ -269,15 +276,22 @@ export function resolveDocsViewerRouteConfig(options) {
     includeScopeParam: normalizeBoolean(rawConfig.include_scope_param),
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
-    reportRegistryUrl: cleanString(configUrls.report_registry),
+    reportRegistryUrl: reportsEnabled
+      ? requireRouteConfigField(configUrls.report_registry, "config_urls.report_registry")
+      : cleanString(configUrls.report_registry),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
-    recentlyAddedUrl: normalizePath(requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")),
-    searchIndexUrl: normalizePath(requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")),
+    recentlyAddedUrl: normalizePath(recentlyAddedEnabled
+      ? requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")
+      : docsPaths.recently_added_url),
+    searchIndexUrl: normalizePath(searchEnabled
+      ? requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")
+      : docsPaths.search_index_url),
     access: {
       allowScopeQuery: allowScopeQuery,
       managementUi: managementUi
     },
     services: services,
+    features: features,
     panels: normalizePanelDefaults(rawConfig.panels),
     ui: normalizeRouteUi(rawConfig.ui),
     hostedViews: normalizeHostedViews(rawConfig.hosted_views)

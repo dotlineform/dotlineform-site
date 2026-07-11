@@ -12,9 +12,9 @@ viewable: true
 
 ## Status
 
-Phases 0-2 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
+Phases 0-3 complete. The public/manage baseline, explicit app-context contract, independent service surfaces, configured-scope provider, route-feature policy, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused module, service, lifecycle, public, and manage checks pass.
 
-Phase 3, route feature and startup projection, is next.
+Phase 4, view, mode, and control projection, is next.
 
 This tracker implements phases 0-5 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap). It contains no Docs Review feature behavior.
 
@@ -171,7 +171,7 @@ Slice-specific checks must add the lowest-layer contract proof described below. 
 | --- | --- | --- | --- |
 | 1. App context and authority — complete | `docs-viewer-app-context.js` for normalized app context; `docs-viewer-access.js` for route visibility; `docs-viewer-service-context.js` for named service presence | Explicit `kind: public | manage | review`, feature policy, service availability, and backend capability inputs; old binary browser APIs removed. | Direct module projection checks plus public static graph, service-config, lifecycle, and route smokes pass. |
 | 2. Configured-scope provider — complete | `docs-viewer-configured-scope-provider.js`; `docs-viewer-generated-data-runtime.js` remains transport/retry owner | Named index/document/search/recent/reference reads and optional source methods without granting authority. | Pure provider module smoke, focused source-service pytest, and public/manage smoke profile pass. |
-| 3. Route features and startup | new `docs-viewer-route-features.js`; `docs-viewer-app-composition.js` consumes the normalized projection | Validate known feature ids, preserve current defaults, and construct/initialize only enabled search, recent, bookmark, report, scope-selection, source-edit, and management surfaces. | Pure feature normalization and startup-record tests; route-config module check. |
+| 3. Route features and startup — complete | `docs-viewer-route-features.js`; app composition and focused constructors consume the normalized projection | Validate known feature ids, preserve current behavior, and construct/initialize only enabled search, recent, bookmark, report, scope-selection, source-edit, and management surfaces. | Feature/config/startup module smoke, focused lifecycle/config pytest, and public/manage smoke profile pass. |
 | 4. View/mode/control projection | new shared `docs-viewer-view-registry.js` for code-owned definition normalization and eligibility projection | Combine shared definitions, manage entrypoint contributions, app context, backend capabilities, route policy, and active view/mode state. | Pure registry/projection tests; public graph proof; narrow renderer DOM proof. |
 | 5. Touched coordinator reduction | focused `docs-viewer-service-composition.js`, route-feature factory, or view-toolbar coordinator only where phases 1-4 establish a complete contract | Move construction and coordination out of the private runtime without mechanical splitting; remove obsolete bridges and broad facade fields. | Owner-contract tests plus unchanged baseline checks for affected boundaries. |
 
@@ -218,7 +218,7 @@ Implemented on 2026-07-11.
 
 ### Current Contract
 
-- Route records use `docs_viewer_route_config_v2`.
+- Route records use `docs_viewer_route_config_v3`; Phase 3 added explicit allowlisted features to the Phase 1 app-kind/access/service contract.
 - Every route record declares `app_kind` and narrow `access.allow_scope_query` / `access.management_ui` policy.
 - Public and manage entrypoints provide their expected app kind; route normalization rejects mismatches.
 - App context supports `public`, `manage`, and future `review` kinds. No review route, entrypoint, provider, or product behavior was added.
@@ -275,6 +275,40 @@ writeSource      optional
 | `docs-viewer-smoke` profile | pass: 4 checks; see `var/admin/test-runs/docs-viewer-foundation-phase-2-final-entrypoint/summary.md` |
 | Studio docs and search dry-run | clean: 0 writes, 0 removals, 0 warnings |
 
+## Phase 3 Outcome
+
+Route records now use `docs_viewer_route_config_v3` and declare only known feature ids:
+
+```text
+configured-scope-discovery
+scope-selection
+search
+recently-added
+bookmarks
+reports
+source-editing
+management
+```
+
+- `docs-viewer-route-features.js` owns normalization, unknown-id rejection, the scope-selection dependency, feature queries, and filtering of code-owned hosted-view/mode records.
+- Public routes declare configured-scope discovery, search, recently added, bookmarks, and reports. The manage route adds scope selection, source editing, and management.
+- Route config requires search, recently-added, and report URLs only when the corresponding feature is enabled.
+- App composition filters search/recent hosted views and startup records. The runtime omits disabled search/recent, bookmark, and management controller construction and binding.
+- Shell composition omits disabled search/recent controls, scope selection, management shell/theme startup, and source-editing controls. Source display modes are filtered before host construction.
+- Document extras are supplied only when reports are enabled.
+- `loadConfiguredScopes` and `loadViewerSettings` are independent config-controller commands over one cached browser-safe envelope. Viewer settings can load from a payload without `scopes`.
+- No route config can register executable modules or handlers, and feature presence does not grant backend authority.
+- No review route, returned-package provider, or Docs Review behavior exists in this phase.
+
+### Phase 3 Checks
+
+| check | result |
+| --- | --- |
+| Focused public-boundary, static-asset, service-config, and scope-lifecycle pytest set | pass: 37 tests |
+| Route feature/config/startup/toolbar module smoke | pass |
+| `docs-viewer-smoke` profile | pass: 4 checks; see `var/admin/test-runs/docs-viewer-foundation-phase-3-final/summary.md` |
+| Studio docs and search dry-run | clean: 0 writes, 0 removals, 0 warnings |
+
 ## Later Phase Acceptance
 
 ### Phase 2
@@ -286,10 +320,10 @@ writeSource      optional
 
 ### Phase 3
 
-- current route behavior is reproduced by explicit feature projections
-- unknown feature ids fail route normalization
-- disabled features have no controller, binding, startup phase, or required URL
-- configured-scope discovery is distinct from general viewer settings
+- complete: current route behavior is reproduced by explicit feature projections
+- complete: unknown feature ids fail route normalization
+- complete: disabled features have no controller, binding, startup phase, or required URL
+- complete: configured-scope discovery is distinct from general viewer settings
 
 ### Phase 4
 

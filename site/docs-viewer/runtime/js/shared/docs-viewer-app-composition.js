@@ -25,6 +25,10 @@ import {
 import {
   createDocsViewerAppSession
 } from "./docs-viewer-app-session.js";
+import {
+  docsViewerRouteFeatureEnabled,
+  projectDocsViewerFeatureRecords
+} from "./docs-viewer-route-features.js";
 
 export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchBatchSize: 50,
@@ -44,38 +48,35 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
 var STARTUP_PHASES = [
   {
     id: "bind-events",
-    authority: "browser route/config context",
-    contexts: ["public", "manage"]
+    authority: "browser route/config context"
   },
   {
-    id: "load-docs-viewer-config",
+    id: "load-configured-scope-discovery",
     authority: "browser-safe config asset",
-    contexts: ["public", "manage"]
+    feature: "configured-scope-discovery"
   },
   {
-    id: "load-viewer-config-ui-text",
-    authority: "browser-safe config asset",
-    contexts: ["public", "manage"]
+    id: "load-viewer-settings-ui-text",
+    authority: "browser-safe config asset"
   },
   {
     id: "initialize-bookmarks",
     authority: "browser storage",
-    contexts: ["public", "manage"]
+    feature: "bookmarks"
   },
   {
     id: "initialize-management",
     authority: "management backend capability endpoint",
-    contexts: ["manage"]
+    feature: "management"
   },
   {
     id: "load-initial-index-route",
-    authority: "generated static asset or local generated-read service",
-    contexts: ["public", "manage"]
+    authority: "generated static asset or local generated-read service"
   },
   {
     id: "open-import-on-load",
     authority: "management backend write endpoint",
-    contexts: ["manage"]
+    feature: "management"
   }
 ];
 
@@ -83,14 +84,15 @@ function cloneRuntimeDefaults(overrides) {
   return Object.assign({}, DOCS_VIEWER_RUNTIME_DEFAULTS, overrides || {});
 }
 
-function startupContextName(appContext) {
-  return appContext && appContext.kind ? appContext.kind : "";
-}
-
-function startupPhaseRecords(appContext) {
-  var contextName = startupContextName(appContext);
+function startupPhaseRecords(appContext, serviceContext) {
+  var featurePolicy = appContext && appContext.featurePolicy ? appContext.featurePolicy : {};
+  var routeAccess = appContext && appContext.routeAccess ? appContext.routeAccess : {};
   return STARTUP_PHASES.filter(function (phase) {
-    return phase.contexts.indexOf(contextName) !== -1;
+    if (phase.feature && !docsViewerRouteFeatureEnabled(featurePolicy, phase.feature)) return false;
+    if (phase.feature === "management") {
+      return Boolean(routeAccess.managementUi && serviceContext && serviceContext.management);
+    }
+    return true;
   }).map(function (phase) {
     return {
       id: phase.id,
@@ -102,6 +104,7 @@ function startupPhaseRecords(appContext) {
 function startupAuthorityRecords(routeContext, serviceContext) {
   var appContext = routeContext.appContext || {};
   var routeAccess = appContext.routeAccess || {};
+  var featurePolicy = appContext.featurePolicy || {};
   var output = [
     {
       phase: "root/app-shell input validation",
@@ -116,20 +119,29 @@ function startupAuthorityRecords(routeContext, serviceContext) {
       authority: "browser route/config context"
     },
     {
-      phase: "config and UI text load",
+      phase: "viewer settings and UI text load",
       authority: serviceContext.config.authority
     },
     {
       phase: "generated data reads",
       authority: serviceContext.generatedData.authority
-    },
-    {
-      phase: "bookmark initialization",
-      authority: "browser storage"
     }
   ];
 
-  if (routeAccess.managementUi && serviceContext.management) {
+  if (docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery")) {
+    output.splice(3, 0, {
+      phase: "configured-scope discovery",
+      authority: serviceContext.config.authority
+    });
+  }
+  if (docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks")) {
+    output.push({
+      phase: "bookmark initialization",
+      authority: "browser storage"
+    });
+  }
+
+  if (docsViewerRouteFeatureEnabled(featurePolicy, "management") && routeAccess.managementUi && serviceContext.management) {
     output.push({
       phase: "management initialization",
       authority: "management backend capability endpoint"
@@ -153,6 +165,7 @@ export function createDocsViewerAppComposition(options) {
   var constants = cloneRuntimeDefaults(settings.constants);
   var appShellRefs = settings.appShellRefs || {};
   var routeAccess = appContext.routeAccess || {};
+  var featurePolicy = appContext.featurePolicy || {};
   var bookmarkScope = routeContext.bookmarkScope;
   var routeHostedViews = routeConfig.hostedViews && Array.isArray(routeConfig.hostedViews.records)
     ? routeConfig.hostedViews.records
@@ -160,7 +173,10 @@ export function createDocsViewerAppComposition(options) {
   var entrypointHostedViews = Array.isArray(settings.entrypointHostedViews)
     ? settings.entrypointHostedViews
     : [];
-  var defaultHostedViews = createDocsViewerDefaultHostedViews().concat(entrypointHostedViews);
+  var defaultHostedViews = projectDocsViewerFeatureRecords(
+    createDocsViewerDefaultHostedViews().concat(entrypointHostedViews),
+    featurePolicy
+  );
 
   var hostedViewRegistry = registerDocsViewerHostedViews(
     createDocsViewerHostedViewRegistry({ accessProjection: routeAccess }),
@@ -205,7 +221,11 @@ export function createDocsViewerAppComposition(options) {
     viewerScope: settings.viewerScope,
     window: window
   });
-  var sourceServiceAdapter = serviceContext.source && typeof settings.createSourceAdapter === "function"
+  var sourceServiceAdapter = (
+    docsViewerRouteFeatureEnabled(featurePolicy, "source-editing")
+    && serviceContext.source
+    && typeof settings.createSourceAdapter === "function"
+  )
     ? settings.createSourceAdapter({
         sourceService: serviceContext.source,
         viewerScope: settings.viewerScope,
@@ -226,7 +246,11 @@ export function createDocsViewerAppComposition(options) {
   });
 
   function shouldInitializeManagement() {
-    return Boolean(routeAccess.managementUi && serviceContext.management);
+    return Boolean(
+      docsViewerRouteFeatureEnabled(featurePolicy, "management")
+      && routeAccess.managementUi
+      && serviceContext.management
+    );
   }
 
   function shouldOpenImportOnLoad() {
@@ -242,8 +266,9 @@ export function createDocsViewerAppComposition(options) {
     documentIndex: documentIndex,
     configService: configService,
     collectionProvider: collectionProvider,
+    featurePolicy: featurePolicy,
     generatedDataRuntime: generatedDataRuntime,
-    startupPhases: startupPhaseRecords(appContext),
+    startupPhases: startupPhaseRecords(appContext, serviceContext),
     startupAuthorities: startupAuthorityRecords(routeContext, serviceContext),
     shouldInitializeManagement: shouldInitializeManagement,
     shouldOpenImportOnLoad: shouldOpenImportOnLoad
@@ -253,6 +278,7 @@ export function createDocsViewerAppComposition(options) {
 export function startDocsViewerStartupPhases(options) {
   var settings = options || {};
   var composition = settings.composition || {};
+  var featurePolicy = composition.featurePolicy || {};
   var stopInitialBusy = function () {};
 
   function callPhase(name) {
@@ -268,13 +294,20 @@ export function startDocsViewerStartupPhases(options) {
     stopInitialBusy = settings.startBusy();
   }
 
-  return callPhase("loadDocsViewerConfig")
+  var configuredScopeDiscovery = docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery")
+    ? callPhase("loadConfiguredScopes")
+    : Promise.resolve(null);
+
+  return configuredScopeDiscovery
     .then(function () {
       if (typeof settings.renderIndexPanelState === "function") settings.renderIndexPanelState();
-      return callPhase("loadViewerConfig");
+      return callPhase("loadViewerSettings");
     })
     .then(function () {
-      if (typeof settings.initializeBookmarks === "function") settings.initializeBookmarks();
+      if (
+        docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks")
+        && typeof settings.initializeBookmarks === "function"
+      ) settings.initializeBookmarks();
       var shouldInitializeManagement = typeof composition.shouldInitializeManagement === "function"
         ? composition.shouldInitializeManagement()
         : true;

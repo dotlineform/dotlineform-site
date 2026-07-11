@@ -46,24 +46,16 @@ export function initDocsViewerSearchController(context) {
   var paneCommands = context.paneCommands || {};
   var routeCommands = context.routeCommands || {};
 
-  function currentSearchIndexUrl() {
-    return typeof context.searchIndexUrl === "function" ? context.searchIndexUrl() : context.searchIndexUrl;
-  }
-
-  function currentRecentlyAddedUrl() {
-    return typeof context.recentlyAddedUrl === "function" ? context.recentlyAddedUrl() : context.recentlyAddedUrl;
-  }
-
   function searchIsEnabled() {
-    return Boolean(searchInput && results && more && currentSearchIndexUrl());
+    return Boolean(context.searchEnabled && searchInput && results && more);
   }
 
   function searchControlsAvailable() {
-    return Boolean(searchInput && results && more);
+    return Boolean(results && more);
   }
 
   function recentIsEnabled() {
-    return Boolean(searchInput && results && more && currentRecentlyAddedUrl());
+    return Boolean(context.recentlyAddedEnabled && context.recentButton && results && more);
   }
 
   function applyCurrentRoute(options) {
@@ -365,6 +357,8 @@ export function initDocsViewerSearchController(context) {
       searchRecent.searchVisibleCount += context.searchBatchSize;
       renderSearchMode();
     });
+
+    if (!searchIsEnabled()) return;
 
     searchInput.addEventListener("input", function () {
       var nextQuery = String(searchInput.value || "").trim();

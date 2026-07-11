@@ -26,7 +26,7 @@ Risk themes:
 | docs-html-import.js                                 | Docs import controller after explicit workflow handoff and focused module-smoke coverage.                                                                                                                                   |
 | docs-viewer-access.js                               | Explicit public/manage/review app-kind normalization, narrow route-access projection, and hosted-view/mode access checks.                                                                                                  |
 | docs-viewer-app-boot.js                             | App boot owner for route-config resolution, route-context creation, app-shell initialization, shell-ref handoff, theme-toggle loading, single-start guarding, and runtime startup.                                          |
-| docs-viewer-app-composition.js                      | App-composition owner for runtime defaults, foundational owner creation, public/manage startup phase records, startup authority records, and initial startup sequencing.                                                    |
+| docs-viewer-app-composition.js                      | App-composition owner for runtime defaults, foundational owner creation, feature-filtered hosted views, startup phase records, authority records, and feature-aware startup sequencing.                                   |
 | docs-viewer-app-context.js                          | Explicit app-context and route-context assembly, service-availability projection, and mutable scope route-context projection.                                                                                               |
 | docs-viewer-app-runtime.js                          | Private runtime coordination after route workflow and runtime-owner extraction; controller construction, config handoff, event binding, initial load sequencing, private callback handoffs, and returned app handle remain. |
 | docs-viewer-app-session.js                          | App-session owner for state defaults, named state-domain facades, and public/manage route-session projection.                                                                                                               |
@@ -71,6 +71,7 @@ Risk themes:
 | docs-viewer-report-service.js                       | Focused local report endpoint adapter for source-config and broken-links audit reports.                                                                                                                                     |
 | docs-viewer-reports.js                              | runtime support module.                                                                                                                                                                                                     |
 | docs-viewer-route-config.js                         | App-shell-owned route config resolver, browser-safe registry loader, and route/scope projection helper.                                                                                                                     |
+| docs-viewer-route-features.js                       | Allowlisted route-feature normalization, dependency validation, feature queries, and feature filtering for code-owned runtime records.                                                                                     |
 | docs-viewer-route-workflow.js                       | Focused route/document workflow owner for URL/query helpers, current-doc resolution, route application, index and payload loading, route-link handling, and popstate coordination.                                          |
 | docs-viewer-router.js                               | routing and history helper.                                                                                                                                                                                                 |
 | docs-viewer-runtime-lazy-controller.js              | Neutral lazy-controller adapter used to keep management controller imports gated without loading management-only JS on public routes.                                                                                       |
@@ -114,7 +115,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`
 
-- This module owns foundational provider/service construction plus startup phase sequencing and authority records, including the public/manage split between browser route/config context, browser-safe config assets, generated reads, browser storage, management capability checks, and management write endpoints.
+- This module owns foundational provider/service construction, feature-filtered hosted-view registration, and feature-aware startup phase sequencing and authority records.
 - Keep this module limited to runtime defaults, foundational owner creation, startup phase records, startup authority records, public/manage startup gating, and initial startup sequence orchestration.
 - Do not move rendering, validation, generated-read internals, config normalization, bookmark storage, management writes, report behavior, or controller-specific UI behavior into it.
 - The private app runtime coordinator still constructs focused controllers until a later slice narrows remaining controller families away from function-scoped bridge callbacks.
@@ -149,6 +150,12 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - Keep this module limited to Docs Viewer config and UI-text fetch/retry behavior using generated-data runtime request projection.
 - Do not move config normalization, scope route projection, UI rendering, generated JSON read methods, backend writes, or management capability UI projection into it.
+
+### `site/docs-viewer/runtime/js/shared/docs-viewer-route-features.js`
+
+- This module owns the allowlist for `configured-scope-discovery`, `scope-selection`, `search`, `recently-added`, `bookmarks`, `reports`, `source-editing`, and `management`.
+- It rejects unknown ids and invalid feature dependencies, projects camelCase feature policy, and filters code-owned records by their required feature.
+- It does not register controllers, modules, handlers, routes, or backend authority.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-asset-url.js`
 
@@ -203,8 +210,9 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js`
 
 - this controller now consumes explicit scope-config, document-index, search/recent, route-session, config-service, and route-command inputs instead of broad `state`.
+- configured-scope discovery and general viewer-settings loading are separate commands over one cached browser-config envelope; viewer settings do not require a scopes array.
 - the scope picker now projects custom select-menu option rows with `emoji`, scope id label, and config-backed `meta` while preserving the hidden native select as the existing value/change bridge for route workflow handoff.
-- Keep this module focused on browser-safe Docs Viewer config loading, route-scope resolution, scope-picker projection, route-global/root-dataset projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates.
+- Keep this module focused on browser-safe config-envelope loading, configured-scope discovery, viewer-settings loading, route-scope resolution, scope-picker projection, route-global/root-dataset projection, UI-text merge, recent-limit/status-label projection, and management/status copy updates.
 - Do not move document index loading, payload rendering, URL history primitives, generated-read capability checks, backend writes, management actions, or route shell boot into it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js`
@@ -327,8 +335,9 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - the focused route config resolver and route/scope projection helper.
 - Keep this module limited to the durable route config shape, browser-safe route-config registry loading/resolution, explicit route-config normalization for tests/boot callers, and projection of scope config into route globals.
 - inline route-config scripts and legacy `#docsViewerRoot` route data-attribute fallback were removed. Route shells must use the registry contract; focused tests must pass explicit route config or route context rather than relying on shell data as a synthetic config source.
-- route-config camelCase field aliases and object-map route registries were removed. The module resolves only the `docs_viewer_route_config_v2` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
-- v2 requires explicit `app_kind`, narrow access policy, and named `generated_data`, `source`, and `management` service records; entrypoint app kind must match the selected route record.
+- route-config camelCase field aliases and object-map route registries were removed. The module resolves only the `docs_viewer_route_config_v3` snake_case route record shape from a `docs_viewer_route_config_registry_v1` registry whose `routes` value is an array.
+- v3 requires explicit `app_kind`, allowlisted `features`, narrow access policy, and named `generated_data`, `source`, and `management` service records; entrypoint app kind must match the selected route record.
+- Search, recently-added, and report URLs are required only when their features are enabled.
 - Do not add config fetching, URL history changes, payload loading, or backend capability checks to it.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-access.js`

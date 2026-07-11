@@ -40,7 +40,11 @@ def install_fixture(page: Page) -> None:
             const appContext = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-context.js');
             const serviceContext = await import('/docs-viewer/runtime/js/shared/docs-viewer-service-context.js');
             const configuredScopeProvider = await import('/docs-viewer/runtime/js/shared/docs-viewer-configured-scope-provider.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider };
+            const routeFeatures = await import('/docs-viewer/runtime/js/shared/docs-viewer-route-features.js');
+            const appComposition = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js');
+            const toolbarRenderer = await import('/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js');
+            const configController = await import('/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController };
         }"""
     )
 
@@ -120,13 +124,20 @@ def assert_route_config_scope_default(page: Page) -> None:
         """() => {
             const { routeConfig } = window.__docsViewerRouterModuleSmoke;
             const rawRouteConfig = {
-                schema_version: 'docs_viewer_route_config_v2',
+                schema_version: 'docs_viewer_route_config_v3',
                 app_kind: 'public',
                 route_id: 'library',
                 route_path: '/library/',
                 default_scope_id: 'library',
                 include_scope_param: false,
                 viewer_base_url: '/library/',
+                features: [
+                    'configured-scope-discovery',
+                    'search',
+                    'recently-added',
+                    'bookmarks',
+                    'reports'
+                ],
                 access: {
                     allow_scope_query: false,
                     management_ui: false
@@ -142,7 +153,8 @@ def assert_route_config_scope_default(page: Page) -> None:
                     search_index_url: '/assets/data/search/library/index.json'
                 },
                 config_urls: {
-                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json'
+                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                    report_registry: '/assets/data/docs/public-reports.json'
                 }
             };
             const resolved = routeConfig.resolveDocsViewerRouteConfig({
@@ -184,6 +196,194 @@ def assert_route_config_scope_default(page: Page) -> None:
         "defaultRouteDocId": "library-root",
     }:
         raise AssertionError(f"route config scope-default projection changed: {result!r}")
+
+
+def assert_route_feature_projection_and_startup(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { routeConfig, routeFeatures, appComposition, toolbarRenderer, configController } = window.__docsViewerRouterModuleSmoke;
+            const minimal = routeFeatures.normalizeDocsViewerRouteFeatures([]);
+            const selected = routeFeatures.normalizeDocsViewerRouteFeatures([
+                'configured-scope-discovery',
+                'search',
+                'bookmarks'
+            ]);
+            let unknownRejected = false;
+            let dependencyRejected = false;
+            try {
+                routeFeatures.normalizeDocsViewerRouteFeatures(['not-a-feature']);
+            } catch (error) {
+                unknownRejected = /Unknown Docs Viewer route feature/.test(String(error && error.message || ''));
+            }
+            try {
+                routeFeatures.normalizeDocsViewerRouteFeatures(['scope-selection']);
+            } catch (error) {
+                dependencyRejected = /requires configured-scope-discovery/.test(String(error && error.message || ''));
+            }
+            const resolvedMinimalRoute = routeConfig.resolveDocsViewerRouteConfig({
+                appKind: 'review',
+                routeConfig: {
+                    schema_version: 'docs_viewer_route_config_v3',
+                    app_kind: 'review',
+                    route_id: 'minimal-review-shape',
+                    route_path: '/minimal-review/',
+                    default_scope_id: 'temporary',
+                    include_scope_param: false,
+                    viewer_base_url: '/minimal-review/',
+                    features: [],
+                    access: { allow_scope_query: false, management_ui: false },
+                    services: {
+                        generated_data: { base_url: '' },
+                        source: { base_url: '' },
+                        management: { base_url: '' }
+                    },
+                    docs_paths: { index_tree_url: '/temporary/index-tree.json' },
+                    config_urls: { docs_viewer: '/temporary/viewer-settings.json' }
+                }
+            });
+
+            const calls = [];
+            await appComposition.startDocsViewerStartupPhases({
+                composition: {
+                    featurePolicy: selected,
+                    shouldInitializeManagement: () => false,
+                    shouldOpenImportOnLoad: () => false
+                },
+                bindEvents: () => calls.push('bind-events'),
+                startBusy: () => { calls.push('start-busy'); return () => calls.push('stop-busy'); },
+                loadConfiguredScopes: () => { calls.push('configured-scopes'); },
+                loadViewerSettings: () => { calls.push('viewer-settings'); },
+                initializeBookmarks: () => calls.push('bookmarks'),
+                initializeManagement: () => calls.push('management'),
+                loadIndex: () => { calls.push('index'); }
+            });
+            const minimalCalls = [];
+            await appComposition.startDocsViewerStartupPhases({
+                composition: {
+                    featurePolicy: minimal,
+                    shouldInitializeManagement: () => false,
+                    shouldOpenImportOnLoad: () => false
+                },
+                bindEvents: () => minimalCalls.push('bind-events'),
+                loadConfiguredScopes: () => minimalCalls.push('configured-scopes'),
+                loadViewerSettings: () => minimalCalls.push('viewer-settings'),
+                initializeBookmarks: () => minimalCalls.push('bookmarks'),
+                initializeManagement: () => minimalCalls.push('management'),
+                loadIndex: () => minimalCalls.push('index')
+            });
+            const minimalToolbarMount = document.createElement('div');
+            toolbarRenderer.renderDocsViewerViewerToolbar({
+                document,
+                mount: minimalToolbarMount,
+                routeContext: { appContext: { featurePolicy: minimal } }
+            });
+            const searchToolbarMount = document.createElement('div');
+            toolbarRenderer.renderDocsViewerViewerToolbar({
+                document,
+                mount: searchToolbarMount,
+                routeContext: { appContext: { featurePolicy: selected } }
+            });
+            const recentOnly = routeFeatures.normalizeDocsViewerRouteFeatures(['recently-added']);
+            const recentToolbarMount = document.createElement('div');
+            toolbarRenderer.renderDocsViewerViewerToolbar({
+                document,
+                mount: recentToolbarMount,
+                routeContext: { appContext: { featurePolicy: recentOnly } }
+            });
+            const viewerSettingsState = {
+                scopeConfig: {},
+                searchRecent: {},
+                documentIndex: { docs: [] }
+            };
+            const settingsController = configController.initDocsViewerConfigController({
+                allowScopeQuery: false,
+                configService: {
+                    fetchDocsViewerConfig: () => Promise.resolve({
+                        schema_version: 'docs_viewer_config_v1',
+                        docs_viewer: { recently_added_limit: 7 }
+                    })
+                },
+                defaultRecentLimit: 10,
+                documentIndex: viewerSettingsState.documentIndex,
+                featurePolicy: minimal,
+                managementController: () => null,
+                renderRecentMode: () => {},
+                renderSidebar: () => {},
+                root: document.createElement('div'),
+                routeCommands: {},
+                routeSession: {},
+                scopeConfig: viewerSettingsState.scopeConfig,
+                searchRecent: viewerSettingsState.searchRecent,
+                uiStatusEmojiMaxLength: 8,
+                viewerBaseUrl: () => '/minimal-review/',
+                viewerScope: () => 'temporary'
+            });
+            await settingsController.loadViewerSettings();
+            let scopeDiscoveryRejectedMissingScopes = false;
+            try {
+                await settingsController.loadConfiguredScopes();
+            } catch (error) {
+                scopeDiscoveryRejectedMissingScopes = /requires a scopes array/.test(String(error && error.message || ''));
+            }
+            return {
+                calls,
+                dependencyRejected,
+                minimal,
+                minimalCalls,
+                optionalUrls: {
+                    recent: resolvedMinimalRoute.recentlyAddedUrl,
+                    report: resolvedMinimalRoute.reportRegistryUrl,
+                    search: resolvedMinimalRoute.searchIndexUrl
+                },
+                selected,
+                settingsOnly: {
+                    recentLimit: viewerSettingsState.searchRecent.recentLimit,
+                    scopeDiscoveryRejectedMissingScopes
+                },
+                toolbarControls: {
+                    minimalRecent: Boolean(minimalToolbarMount.querySelector('#docsViewerRecentButton')),
+                    minimalSearch: Boolean(minimalToolbarMount.querySelector('#docsViewerSearchInput')),
+                    recentOnlyRecent: Boolean(recentToolbarMount.querySelector('#docsViewerRecentButton')),
+                    recentOnlySearch: Boolean(recentToolbarMount.querySelector('#docsViewerSearchInput')),
+                    searchRecent: Boolean(searchToolbarMount.querySelector('#docsViewerRecentButton')),
+                    searchSearch: Boolean(searchToolbarMount.querySelector('#docsViewerSearchInput'))
+                },
+                unknownRejected
+            };
+        }"""
+    )
+    if result["unknownRejected"] is not True or result["dependencyRejected"] is not True:
+        raise AssertionError(f"route feature validation changed: {result!r}")
+    if result["optionalUrls"] != {"recent": "", "report": "", "search": ""}:
+        raise AssertionError(f"disabled features still require payload URLs: {result!r}")
+    if result["calls"] != [
+        "bind-events",
+        "start-busy",
+        "configured-scopes",
+        "viewer-settings",
+        "bookmarks",
+        "index",
+        "stop-busy",
+    ]:
+        raise AssertionError(f"feature-aware startup order changed: {result!r}")
+    if result["minimalCalls"] != ["bind-events", "viewer-settings", "index"]:
+        raise AssertionError(f"disabled startup features still ran: {result!r}")
+    if result["selected"]["search"] is not True or result["selected"]["recentlyAdded"] is not False:
+        raise AssertionError(f"selected feature projection changed: {result!r}")
+    if result["settingsOnly"] != {
+        "recentLimit": 7,
+        "scopeDiscoveryRejectedMissingScopes": True,
+    }:
+        raise AssertionError(f"viewer settings still depend on configured-scope discovery: {result!r}")
+    if result["toolbarControls"] != {
+        "minimalRecent": False,
+        "minimalSearch": False,
+        "recentOnlyRecent": True,
+        "recentOnlySearch": False,
+        "searchRecent": False,
+        "searchSearch": True,
+    }:
+        raise AssertionError(f"feature toolbar construction changed: {result!r}")
 
 
 def assert_explicit_app_and_service_context(page: Page) -> None:
@@ -352,6 +552,7 @@ def run_smoke(page: Page, base_url: str) -> None:
     install_fixture(page)
     assert_missing_doc_history(page)
     assert_route_config_scope_default(page)
+    assert_route_feature_projection_and_startup(page)
     assert_explicit_app_and_service_context(page)
     assert_configured_scope_provider(page)
 

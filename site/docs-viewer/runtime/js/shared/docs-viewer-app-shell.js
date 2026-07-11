@@ -22,6 +22,14 @@ import {
 import {
   createDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";
+import {
+  docsViewerRouteFeatureEnabled
+} from "./docs-viewer-route-features.js";
+
+function routeFeatureEnabled(routeContext, featureId) {
+  var appContext = routeContext && routeContext.appContext ? routeContext.appContext : {};
+  return docsViewerRouteFeatureEnabled(appContext.featurePolicy, featureId);
+}
 
 function routeContextFor(settings) {
   if (settings.routeContext) return settings.routeContext;
@@ -41,6 +49,7 @@ function managementAllowed(routeContext) {
     && routeContext.appContext
     && routeContext.appContext.routeAccess
     && routeContext.appContext.routeAccess.managementUi
+    && routeFeatureEnabled(routeContext, "management")
   );
 }
 
@@ -164,6 +173,7 @@ export function initDocsViewerAppShell(options) {
       var row = actionMount && typeof renderers.renderActions === "function"
         ? renderers.renderActions({
         document: documentRef,
+        featurePolicy: routeContext.appContext.featurePolicy,
         mount: actionMount
         })
         : null;
@@ -177,6 +187,7 @@ export function initDocsViewerAppShell(options) {
       if (typeof renderers.renderDocumentActions === "function") {
         renderers.renderDocumentActions({
           document: documentRef,
+          featurePolicy: routeContext.appContext.featurePolicy,
           root: root
         });
         mainView = findDocsViewerMainViewRefs({

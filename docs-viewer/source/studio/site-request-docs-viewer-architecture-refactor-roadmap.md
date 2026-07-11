@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0 and phases 0-2 are complete. Phase 3 route feature and startup projection is next.
+Assessment complete; roadmap accepted for implementation, D0 and phases 0-3 are complete. Phase 4 view, mode, and control projection is next.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -732,6 +732,18 @@ Acceptance:
 - current routes behave unchanged through explicit feature projections
 - a route can omit search/recent/bookmarks/scope selection without fake URLs or hidden controller initialization
 - startup authority records reflect actual enabled features
+
+### Phase 3 Outcome
+
+Implemented on 2026-07-11.
+
+- Route records use `docs_viewer_route_config_v3` with an explicit allowlisted `features` array.
+- Current public routes enable configured-scope discovery, search, recently added, bookmarks, and reports. The manage route additionally enables scope selection, source editing, and management.
+- Unknown features and invalid scope-selection dependencies fail normalization.
+- Disabled search, recently-added, and report features do not require placeholder URLs.
+- Disabled search/recent, bookmark, and management controllers are not constructed or bound; related hosted views, source modes, shell controls, startup phases, and theme loading are filtered by the same policy.
+- Configured-scope discovery and general viewer-settings loading are independent operations over the browser-safe config envelope.
+- No review route, returned-package provider, or Docs Review behavior was added.
 
 ## Phase 4: View, Mode, And Control Projection
 

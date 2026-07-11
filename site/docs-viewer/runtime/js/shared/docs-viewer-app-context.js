@@ -96,7 +96,7 @@ export function createDocsViewerAppContext(options) {
   return {
     kind: kind,
     routeAccess: routeAccess,
-    featurePolicy: routeConfig.featurePolicy || {},
+    featurePolicy: routeConfig.features || {},
     serviceAvailability: createDocsViewerServiceAvailability(routeConfig.services),
     backendCapabilities: null
   };

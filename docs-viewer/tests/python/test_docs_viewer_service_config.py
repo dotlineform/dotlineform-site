@@ -90,6 +90,8 @@ def test_management_service_api_base_lives_in_route_config() -> None:
     assert manage_route["viewer_base_url"] == "/docs/"
     assert manage_route["app_kind"] == "manage"
     assert manage_route["include_scope_param"] is True
+    assert "management" in manage_route["features"]
+    assert "source-editing" in manage_route["features"]
     assert manage_route["access"]["allow_scope_query"] is True
     assert manage_route["access"]["management_ui"] is True
     assert manage_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"

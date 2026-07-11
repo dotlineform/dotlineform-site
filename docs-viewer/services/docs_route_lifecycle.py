@@ -77,13 +77,20 @@ def public_route_record(
 ) -> dict[str, Any]:
     search_label = f"search {title.lower()}"
     return {
-        "schema_version": "docs_viewer_route_config_v2",
+        "schema_version": "docs_viewer_route_config_v3",
         "app_kind": "public",
         "route_id": scope_id,
         "route_path": public_route_path,
         "default_scope_id": scope_id,
         "include_scope_param": False,
         "viewer_base_url": public_route_path,
+        "features": [
+            "configured-scope-discovery",
+            "search",
+            "recently-added",
+            "bookmarks",
+            "reports",
+        ],
         "access": {
             "allow_scope_query": False,
             "management_ui": False,
@@ -113,7 +120,6 @@ def public_route_record(
                 "body_class": public_route_body_class(scope_id, public_route_path),
             },
             "viewer_search": {
-                "enabled": True,
                 "placeholder": search_label,
                 "aria_label": f"Search {title}",
             },

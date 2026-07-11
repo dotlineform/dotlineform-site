@@ -1,5 +1,10 @@
-function routeEnablesSearch(mount) {
-  return !mount || mount.dataset.enableSearch !== "false";
+import {
+  docsViewerRouteFeatureEnabled
+} from "./docs-viewer-route-features.js";
+
+function routeFeatureEnabled(routeContext, featureId) {
+  var appContext = routeContext && routeContext.appContext ? routeContext.appContext : {};
+  return docsViewerRouteFeatureEnabled(appContext.featurePolicy, featureId);
 }
 
 function appendRecentButton(documentRef, toolbar) {
@@ -72,9 +77,10 @@ export function renderDocsViewerViewerToolbar(options) {
   toolbar.setAttribute("role", "toolbar");
   toolbar.setAttribute("aria-label", "Viewer controls");
 
-  var enableSearch = routeEnablesSearch(controlMount);
-  if (enableSearch) {
+  if (routeFeatureEnabled(settings.routeContext, "recently-added")) {
     appendRecentButton(documentRef, toolbar);
+  }
+  if (routeFeatureEnabled(settings.routeContext, "search")) {
     appendSearchInput(documentRef, toolbar, controlMount);
   }
   appendPanelControls(documentRef, toolbar);

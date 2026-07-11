@@ -107,7 +107,10 @@ function renderScopeSelect() {
   ].join("");
 }
 
-var MANAGEMENT_ACTIONS_MARKUP = [
+function managementActionsMarkup(options) {
+  var settings = options || {};
+  var featurePolicy = settings.featurePolicy || {};
+  return [
   '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
   '  <div class="docsViewer__manageActions" role="toolbar" aria-label="Management actions">',
   '    <div class="docsViewer__actionsMenuHost">',
@@ -121,7 +124,7 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox" aria-label="Show non-viewable docs">',
   '      <span class="docsViewer__draftLabel">Show non-viewable</span>',
   '    </label>',
-  renderScopeSelect(),
+  featurePolicy.scopeSelection === true ? renderScopeSelect() : "",
   '  </div>',
   '  <button class="docsViewer__themeToggle" type="button" data-docs-viewer-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">',
   '    <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">',
@@ -140,7 +143,8 @@ var MANAGEMENT_ACTIONS_MARKUP = [
   '    </svg>',
   '  </button>',
   '</div>'
-].join("");
+  ].join("");
+}
 
 export function renderDocsViewerManagementActions(options) {
   var settings = options || {};
@@ -151,7 +155,7 @@ export function renderDocsViewerManagementActions(options) {
   mount.replaceChildren();
 
   var template = documentRef.createElement("template");
-  template.innerHTML = MANAGEMENT_ACTIONS_MARKUP;
+  template.innerHTML = managementActionsMarkup(settings);
   var row = template.content.firstElementChild;
   if (!row) return null;
 

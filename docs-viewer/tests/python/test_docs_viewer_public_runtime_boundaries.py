@@ -92,12 +92,31 @@ def test_route_configs_separate_app_kind_from_service_presence() -> None:
     )
 
     for route in public_payload["routes"]:
+        assert route["schema_version"] == "docs_viewer_route_config_v3"
         assert route["app_kind"] == "public"
+        assert route["features"] == [
+            "configured-scope-discovery",
+            "search",
+            "recently-added",
+            "bookmarks",
+            "reports",
+        ]
         assert route["access"] == {"allow_scope_query": False, "management_ui": False}
         assert all(not surface["base_url"] for surface in route["services"].values())
 
     manage_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-manage")
     assert manage_route["app_kind"] == "manage"
+    assert manage_route["schema_version"] == "docs_viewer_route_config_v3"
+    assert manage_route["features"] == [
+        "configured-scope-discovery",
+        "scope-selection",
+        "search",
+        "recently-added",
+        "bookmarks",
+        "reports",
+        "source-editing",
+        "management",
+    ]
     assert manage_route["access"] == {"allow_scope_query": True, "management_ui": True}
     assert set(manage_route["services"]) == {"generated_data", "source", "management"}
 

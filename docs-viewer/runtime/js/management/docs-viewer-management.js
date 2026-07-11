@@ -107,7 +107,7 @@ export function initDocsViewerManagement(context) {
   context = Object.assign({}, context, {
     docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
     managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
-    reloadDocsViewerConfig: routeReload.reloadDocsViewerConfig || context.reloadDocsViewerConfig,
+    reloadViewerConfiguration: routeReload.reloadViewerConfiguration || context.reloadViewerConfiguration,
     routeCommands: routeReload.routeCommands || context.routeCommands
   });
   var shellRefs = context.managementShellRefs || {};
@@ -492,12 +492,12 @@ export function initDocsViewerManagement(context) {
     if (capabilityController) capabilityController.refresh();
   }
 
-  function reloadDocsViewerConfig() {
-    if (typeof routeReload.reloadDocsViewerConfig === "function") {
-      return routeReload.reloadDocsViewerConfig();
+  function reloadViewerConfiguration() {
+    if (typeof routeReload.reloadViewerConfiguration === "function") {
+      return routeReload.reloadViewerConfiguration();
     }
-    if (typeof context.reloadDocsViewerConfig === "function") {
-      return context.reloadDocsViewerConfig();
+    if (typeof context.reloadViewerConfiguration === "function") {
+      return context.reloadViewerConfiguration();
     }
     return Promise.resolve(null);
   }
@@ -594,7 +594,7 @@ export function initDocsViewerManagement(context) {
   function scopeLifecycleCallbacks() {
     return {
       onApplied: function () {
-        var reloadConfig = reloadDocsViewerConfig();
+        var reloadConfig = reloadViewerConfiguration();
         refreshManagementCapabilities();
         Promise.resolve(reloadConfig)
           .then(refreshManagementCapabilities)
@@ -951,7 +951,7 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
       reloadDocsIndex: reloadDocsIndex,
-      reloadDocsViewerConfig: reloadDocsViewerConfig,
+      reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       setManagementBusy: setManagementBusy,

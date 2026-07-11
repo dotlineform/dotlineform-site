@@ -101,18 +101,29 @@ export function initDocsViewerConfigController(context) {
     };
   }
 
-  function normalizeBrowserConfig(payload) {
+  function normalizeConfigEnvelope(payload) {
     if (!payload || typeof payload !== "object") {
       throw new Error("Docs Viewer config must be a JSON object.");
     }
     if (payload.schema_version !== "docs_viewer_config_v1") {
       throw new Error("Docs Viewer config has an unsupported schema.");
     }
-    if (!Array.isArray(payload.scopes)) {
+    return {
+      rawScopes: payload.scopes,
+      defaultScopeId: String(payload.default_scope_id || "").trim().toLowerCase(),
+      docsViewerSettings: payload.docs_viewer && typeof payload.docs_viewer === "object" && !Array.isArray(payload.docs_viewer)
+        ? payload.docs_viewer
+        : {}
+    };
+  }
+
+  function normalizeConfiguredScopes(envelope) {
+    var configEnvelope = envelope || {};
+    if (!Array.isArray(configEnvelope.rawScopes)) {
       throw new Error("Docs Viewer config requires a scopes array.");
     }
     var seen = new Set();
-    var scopes = payload.scopes.map(normalizeBrowserScopeConfig).filter(Boolean).filter(function (config) {
+    var scopes = configEnvelope.rawScopes.map(normalizeBrowserScopeConfig).filter(Boolean).filter(function (config) {
       if (seen.has(config.scopeId)) return false;
       seen.add(config.scopeId);
       return true;
@@ -123,19 +134,22 @@ export function initDocsViewerConfigController(context) {
       throw new Error("Docs Viewer config does not define any scopes.");
     }
     scopes.forEach(function (config) {
-      if (!config.indexTreeUrl || !config.recentlyAddedUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing index_tree_url or recently_added_url.");
+      if (!config.indexTreeUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing index_tree_url.");
+      }
+      if (context.featurePolicy && context.featurePolicy.recentlyAdded && !config.recentlyAddedUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing recently_added_url.");
+      }
+      if (context.featurePolicy && context.featurePolicy.search && !config.searchIndexUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing search_index_url.");
       }
     });
     return {
-      defaultScopeId: String(payload.default_scope_id || scopes[0].scopeId || "").trim().toLowerCase(),
+      defaultScopeId: configEnvelope.defaultScopeId || scopes[0].scopeId,
       scopes: scopes,
       scopesById: new Map(scopes.map(function (config) {
         return [config.scopeId, config];
-      })),
-      docsViewerSettings: payload.docs_viewer && typeof payload.docs_viewer === "object" && !Array.isArray(payload.docs_viewer)
-        ? payload.docs_viewer
-        : {}
+      }))
     };
   }
 
@@ -226,7 +240,7 @@ export function initDocsViewerConfigController(context) {
     renderScopeOptions();
   }
 
-  function loadDocsViewerConfig(options) {
+  function loadConfigEnvelope(options) {
     var settings = options || {};
     if (settings.force) {
       scopeConfig.docsViewerConfigLoaded = false;
@@ -240,13 +254,9 @@ export function initDocsViewerConfigController(context) {
 
     scopeConfig.docsViewerConfigRequestPromise = configService.fetchDocsViewerConfig(settings)
       .then(function (payload) {
-        var config = normalizeBrowserConfig(payload);
+        var config = normalizeConfigEnvelope(payload);
         scopeConfig.docsViewerConfig = config;
-        scopeConfig.scopeConfigs = config.scopes;
-        scopeConfig.scopeConfigsById = config.scopesById;
-        scopeConfig.defaultScopeId = config.defaultScopeId;
         scopeConfig.docsViewerConfigLoaded = true;
-        applyRouteScopeConfig(routeScopeFromUrl());
         return config;
       })
       .finally(function () {
@@ -254,6 +264,31 @@ export function initDocsViewerConfigController(context) {
       });
 
     return scopeConfig.docsViewerConfigRequestPromise;
+  }
+
+  function loadConfiguredScopes(options) {
+    var settings = options || {};
+    if (settings.force) {
+      scopeConfig.configuredScopesLoaded = false;
+      scopeConfig.configuredScopesRequestPromise = null;
+    }
+    if (scopeConfig.configuredScopesLoaded) return Promise.resolve(scopeConfig.scopeConfigs);
+    if (scopeConfig.configuredScopesRequestPromise) return scopeConfig.configuredScopesRequestPromise;
+
+    scopeConfig.configuredScopesRequestPromise = loadConfigEnvelope(settings)
+      .then(function (envelope) {
+        var config = normalizeConfiguredScopes(envelope);
+        scopeConfig.scopeConfigs = config.scopes;
+        scopeConfig.scopeConfigsById = config.scopesById;
+        scopeConfig.defaultScopeId = config.defaultScopeId;
+        scopeConfig.configuredScopesLoaded = true;
+        applyRouteScopeConfig(routeScopeFromUrl());
+        return config.scopes;
+      })
+      .finally(function () {
+        scopeConfig.configuredScopesRequestPromise = null;
+      });
+    return scopeConfig.configuredScopesRequestPromise;
   }
 
   function handleScopeChange() {
@@ -328,7 +363,7 @@ export function initDocsViewerConfigController(context) {
     }
   }
 
-  function loadViewerConfig(options) {
+  function loadViewerSettings(options) {
     var settings = options || {};
     if (settings.force) {
       scopeConfig.viewerConfigLoaded = false;
@@ -341,11 +376,11 @@ export function initDocsViewerConfigController(context) {
       return Promise.resolve(null);
     }
 
-    scopeConfig.viewerConfigRequestPromise = loadDocsViewerConfig(settings)
-      .then(function (browserConfig) {
-        browserConfig = browserConfig || {};
+    scopeConfig.viewerConfigRequestPromise = loadConfigEnvelope(settings)
+      .then(function (configEnvelope) {
+        configEnvelope = configEnvelope || {};
         var config = {
-          docs_viewer: browserConfig.docsViewerSettings || {}
+          docs_viewer: configEnvelope.docsViewerSettings || {}
         };
         applyViewerConfig(config);
         return config;
@@ -360,18 +395,26 @@ export function initDocsViewerConfigController(context) {
     return scopeConfig.viewerConfigRequestPromise;
   }
 
-  function reloadDocsViewerConfig() {
-    return loadViewerConfig({
+  function reloadViewerConfiguration() {
+    var reloadOptions = {
       force: true,
       reloadNonce: String(Date.now())
+    };
+    scopeConfig.viewerConfigLoaded = false;
+    scopeConfig.viewerConfigRequestPromise = null;
+    var reloadDiscovery = context.featurePolicy && context.featurePolicy.configuredScopeDiscovery
+      ? loadConfiguredScopes(reloadOptions)
+      : loadConfigEnvelope(reloadOptions);
+    return reloadDiscovery.then(function () {
+      return loadViewerSettings();
     });
   }
 
   return {
     handleScopeChange: handleScopeChange,
-    loadDocsViewerConfig: loadDocsViewerConfig,
-    loadViewerConfig: loadViewerConfig,
-    reloadDocsViewerConfig: reloadDocsViewerConfig,
+    loadConfiguredScopes: loadConfiguredScopes,
+    loadViewerSettings: loadViewerSettings,
+    reloadViewerConfiguration: reloadViewerConfiguration,
     routeScopeFromUrl: routeScopeFromUrl
   };
 }
