@@ -114,6 +114,8 @@ Returned data can include preview Markdown, proposed doc identity, operation typ
 
 [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will extend the managed import family with schema-aware Data Sharing JSON/JSONL collection import.
 
+The same request first moves `GET /docs/import-source-files` and `POST /docs/import-source` to the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. Endpoint services will resolve it through `configured_workspace_paths(repo_root).import_staging`, return marker-rooted paths, and report import unavailable through the W0 workspace capability contract when the root cannot be used. They will not fall back to `var/docs/import-staging/`.
+
 It will resolve a safe immutable staged-file identity through Data Sharing metadata, detect supported package headers before the generic JSON/JSONL file fallback, and normalize document records before shared validation, media planning, source writes, and rebuild work. It will not import from the derived Docs Review `source/*.md` projection.
 
 For each selected record, the user can create, explicitly overwrite, or skip. Collisions must require an explicit choice rather than silently selecting overwrite or a replacement ID.

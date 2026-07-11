@@ -134,7 +134,7 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
 
 No phase falls back to repo-local `var/analytics/data-sharing/...` paths.
 
-The shared workspace resolver validates `DOTLINEFORM_PROJECTS_BASE_DIR`, projects marker-rooted display paths, and supplies explicit resolved roots to Data Sharing and Docs Review services.
+The shared workspace resolver validates `DOTLINEFORM_PROJECTS_BASE_DIR`, projects marker-rooted display paths, and supplies explicit resolved roots to Data Sharing and Docs Review services. The planned Docs Import slice will reuse the same adapter and its existing `import_staging` root for every supported import format.
 
 ## Proposed Package Layout
 

@@ -28,6 +28,18 @@ The registry must:
 The registry is intentionally small.
 It describes supported formats and dispatch metadata; it is not a plugin loader or an open-ended import execution surface.
 
+## Planned External Staging Root
+
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will move every registered Docs Import format from `var/docs/import-staging/` to the existing shared user drop-zone:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
+```
+
+Docs Import will reuse the W0 adapter already consumed by Docs Review: `configured_workspace_paths(repo_root).import_staging` from `data-sharing/services/paths.py`. Listing, source resolution, direct-child Markdown packages, interactive companions, and `staging_manual` media materialization must all use that resolved root. Responses use `marker_path()` rather than absolute paths.
+
+The folder is application-neutral staging despite its existing `data-sharing/` namespace. Which workflow consumes a file depends on supported format/schema and the user action. There will be no Docs-specific external resolver and no fallback or compatibility reads from `var/docs/import-staging/`.
+
 ## Planned Data Sharing Collection Source
 
 [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) adds supported Data Sharing documents JSON/JSONL as a collection source format.

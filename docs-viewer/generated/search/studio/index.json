@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8735e700b66dfef7121fa94e82d1f924",
-    "generated_at_utc": "2026-07-11T21:32:05Z",
+    "version": "blake2b-6f5c0c422d9623c9e39c44f218d648a2",
+    "generated_at_utc": "2026-07-11T22:44:13Z",
     "count": 237
   },
   "entries": [
@@ -1588,10 +1588,10 @@
       "kind": "doc",
       "title": "Data Sharing Adapter Registry",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
-      "last_updated": "2026-06-21",
+      "last_updated": "2026-07-11",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-06-21 • Data Sharing",
+      "display_meta": "2026-07-11 • Data Sharing",
       "search_terms": [
         "config-data-sharing-adapters",
         "config",
@@ -1602,12 +1602,12 @@
         "adapter",
         "registry",
         "data sharing",
-        "2026-06-21",
+        "2026-07-11",
         "2026",
-        "06",
-        "21"
+        "07",
+        "11"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapter registry adapter registry data sharing 2026-06-21 2026 06 21"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapter registry adapter registry data sharing 2026-07-11 2026 07 11"
     },
     {
       "id": "data-sharing-export-metadata",

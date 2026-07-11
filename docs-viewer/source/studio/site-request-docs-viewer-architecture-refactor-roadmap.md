@@ -501,7 +501,7 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
   meta/
 ```
 
-The exact later roots for Docs import staging and catalogue media staging should follow the same resolver contract and be defined by the workspace-path change request.
+The next Docs import staging slice is now defined by [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package): every Docs Import format will reuse `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` through the same W0 workspace adapter. Catalogue media staging remains a later separately defined root.
 
 Rules:
 
@@ -592,7 +592,7 @@ Purpose: remove checkout-relative authority from user-facing staging, preview, a
 
 The Data Sharing/review slice is implemented inside the active full-document-package work so completed path work does not require another historical tracker. Later workspace-root slices remain separate cross-app work. The Data Sharing/review slice had to complete before Docs Review returned-package services could be implemented.
 
-Data Sharing/review slice status: complete.
+Data Sharing/review slice status: complete. The follow-on Docs Import staging migration is proposed in [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
 
 First-slice tasks:
 
@@ -606,6 +606,14 @@ First-slice tasks:
 - update tests to provide isolated temporary project-base roots
 - update current user/operator and architecture documents when the runtime contract changes
 - inventory Docs import staging, catalogue media staging, and other preview folders as later slices
+
+Follow-on Docs Import slice:
+
+- treat `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` as the consistent user drop-zone for every Docs Import format
+- reuse `configured_workspace_paths(repo_root).import_staging` and marker-path projection from `data-sharing/services/paths.py`
+- migrate staged-file listing, containment, Markdown packages, interactive companions, and `staging_manual` media output together
+- disable Docs Import cleanly when the workspace root is unavailable
+- do not add a Docs-specific resolver, config path, repo-local fallback, or duplicate writes
 
 Acceptance:
 

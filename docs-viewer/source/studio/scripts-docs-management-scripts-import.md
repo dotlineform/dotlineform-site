@@ -51,7 +51,7 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-Planned extension: [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will add schema-aware Data Sharing JSON/JSONL collection parsing before the generic file fallback. A shared record normalizer will feed both persistent read-only review materialization and import, while Markdown validation, inline-media planning/materialization, create/overwrite formatting, source writes, and rebuild follow-through remain shared lower-level services.
+Planned extension: [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will first move all Docs Import formats to `configured_workspace_paths(repo_root).import_staging`, the W0-resolved `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. It will then add schema-aware Data Sharing JSON/JSONL collection parsing before the generic file fallback. A shared record normalizer will feed both persistent read-only review materialization and import, while Markdown validation, inline-media planning/materialization, create/overwrite formatting, source writes, and rebuild follow-through remain shared lower-level services.
 
 ## `docs-viewer/services/docs_html_import.py`
 

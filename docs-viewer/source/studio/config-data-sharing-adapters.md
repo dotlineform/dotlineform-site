@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapter Registry
 added_date: "2026-05-06 11:35"
-last_updated: 2026-06-21
+last_updated: 2026-07-11
 parent_id: data-sharing
 viewable: true
 ---
@@ -49,6 +49,8 @@ The validator requires:
 - `paths.metadata_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta`
 
 These marker paths are editable but must remain distinct descendants of `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`. Runtime services resolve them through the shared workspace resolver and never store user-specific absolute paths in checked-in config.
+
+`import-staging/` is the consistent user-facing drop-zone, not an application-exclusive inbox. Data Sharing currently uses it for returned packages. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) plans to make every Docs Viewer import format consume the same resolved `DataSharingWorkspacePaths.import_staging` root. The applicable app is determined by the file format/schema and user action. Do not add another Docs-specific staging path to this registry.
 
 Do not add per-domain runtime package roots or fallback reads for retired locations such as `var/studio/data-sharing/...` or `var/studio/export-import/...`.
 

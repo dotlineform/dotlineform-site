@@ -4,7 +4,7 @@ title: Docs Import Reviewed Package
 added_date: 2026-07-11
 last_updated: 2026-07-11
 ui_status: proposed
-summary: Import immutable staged Data Sharing JSONL as a document collection while retaining a persistent, read-only Docs Review projection.
+summary: Move Docs Import to the W0-resolved shared drop-zone, import immutable staged Data Sharing JSONL as a collection, and retain a persistent read-only review projection.
 parent_id: change-requests
 viewable: true
 ---
@@ -19,6 +19,14 @@ The current workflow already proves the persistent Docs Review package and rende
 ## Decision
 
 Treat the staged Data Sharing JSON/JSONL file as another Docs Import source format.
+
+As a prerequisite, move every Docs Viewer import format to the existing shared drop-zone:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
+```
+
+This folder is not exclusive to the Data Sharing application. It is the consistent user-facing import drop-zone. Which application or workflow uses a file depends on the file format, schema, trusted metadata, and the action the user invokes.
 
 Keep the persistent preview package because JSONL is not convenient for a person to review and the review and import decisions may happen at different times. The preview package is a durable, read-only view projection; it is not the import source.
 
@@ -40,13 +48,71 @@ The staged file remains the authoritative returned package. Docs Import reads th
 
 | Artifact | Role | Write authority |
 | --- | --- | --- |
-| `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<timestamped-file>.jsonl` | immutable returned package and import input | Data Sharing staging only |
+| `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` | shared user drop-zone for all supported imports | user placement and Data Sharing staging producers |
+| `<timestamped-file>.jsonl` inside that drop-zone | immutable returned package and collection import input | Data Sharing staging contract |
 | `import-preview/<package_id>/manifest.json` | trusted association between the staged package and its view projection | preview producer only |
 | `import-preview/<package_id>/source/*.md` | durable, human-readable, read-only build input | preview producer only |
 | `import-preview/<package_id>/generated/` | durable Docs Review tree and document payloads | package-local builder only |
 | configured Docs Viewer scope source | accepted import output | managed Docs Import only |
 
 The preview `source/*.md` files must never become an alternative import authority. They exist to reuse the Docs Viewer builder and make the projection inspectable.
+
+## Shared Import Drop-Zone
+
+Retire Docs Viewer’s repo-local `var/docs/import-staging/` contract. HTML, Markdown, Markdown packages, text, SVG, images, downloadable files, interactive HTML companions, and supported Data Sharing JSON/JSONL collections should all be listed and resolved from:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
+```
+
+The folder name reflects the existing workspace layout, not exclusive application ownership.
+
+- A user can place an ordinary HTML, Markdown, media, or package source there for Docs Import.
+- A user can place a returned JSON/JSONL file there for the appropriate Data Sharing validation/review workflow.
+- Docs Import may list any file or direct-child package supported by its format registry.
+- Data Sharing should list only files that satisfy its metadata and adapter contracts.
+- Supported Data Sharing document JSON/JSONL can later be consumed by both the review workflow and Docs Import, each through its named action.
+- Files without an applicable handler remain ordinary drop-zone files; their presence does not assign them to an application.
+
+Do not copy files between a Data Sharing staging root and a Docs Viewer staging root. There is one configured root.
+
+### Reuse The W0 Workspace Adapter
+
+Use the external workspace adapter delivered by W0 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap):
+
+```python
+from services.paths import configured_workspace_paths, marker_path
+
+staging_root = configured_workspace_paths(repo_root).import_staging
+```
+
+This is the same `data-sharing/services/paths.py` contract already used by Docs Review to resolve `import_preview`.
+
+Docs Import must:
+
+- resolve the root through `configured_workspace_paths(repo_root).import_staging`
+- honor the editable marker-rooted path in `data-sharing/config/adapters.json`
+- expose `$DOTLINEFORM_PROJECTS_BASE_DIR/...` marker paths through `marker_path()` rather than absolute user paths
+- use the W0 workspace status/error contract when the root is missing, invalid, unreadable, or unwritable
+- disable only import-related capabilities when the external workspace is unavailable
+- preserve filename, direct-child package, traversal, symlink, suffix, and containment checks against the resolved external root
+- use isolated temporary project-base roots in tests
+
+Do not add a second environment-variable reader, another staging-root setting, a Docs-specific path adapter, or a fallback to `var/docs/import-staging/`.
+
+### Import Service Changes
+
+The current import implementation derives paths from `STAGING_REL_DIR` and `repo_root`. Replace that assumption with an explicit resolved staging root shared across:
+
+- staged source listing
+- primary-source resolution
+- Markdown package discovery and containment
+- interactive HTML companion discovery
+- inline raster output for `staging_manual`
+- converted Markdown-package images and copied attachments
+- preview/result path projection
+
+External source paths cannot be displayed with repo-relative helpers. API results and activity diagnostics should use marker-rooted paths or artifact-relative filenames.
 
 ## Immutable Package Identity
 
@@ -98,7 +164,7 @@ The preview `source/*.md` files should be treated like other generated workspace
 
 ## Data Sharing JSONL Import Format
 
-Register a schema-aware document-collection format before the current generic `.json`/`.jsonl` downloadable-file fallback.
+Register a schema-aware document-collection format before the current generic `.json`/`.jsonl` downloadable-file fallback. It uses the same resolved drop-zone as every other Docs Import format.
 
 Extension alone is insufficient because Docs Import already accepts JSON and JSONL as ordinary downloadable files. Detection must inspect the package header and trusted metadata, for example:
 
@@ -264,14 +330,23 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 
 ## Implementation Tasks
 
-### 1. Extract The Shared JSONL Parser
+### 1. Move Docs Import To The W0 Drop-Zone Adapter
+
+- replace `STAGING_REL_DIR` and `repo_root / var/docs/import-staging` assumptions with `configured_workspace_paths(repo_root).import_staging`
+- reuse `marker_path()` and the W0 availability/status contract
+- update file listing, source resolution, Markdown packages, interactive companions, and `staging_manual` media output
+- keep existing suffix, direct-child, traversal, symlink, and containment protections
+- remove all production fallback reads and duplicate writes to `var/docs/import-staging/`
+- update tests to provide an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR`
+
+### 2. Extract The Shared JSONL Parser
 
 - define supported Data Sharing document-collection schema detection
 - parse trusted header/export metadata and document records
 - normalize compact content and full `canonical_markdown` through explicit mappings
 - return stable record identities, content, front matter, hierarchy, asset data, and diagnostics
 
-### 2. Use The Parser For Persistent Preview Materialization
+### 3. Use The Parser For Persistent Preview Materialization
 
 - keep the timestamped `import-preview/<package_id>/` identity
 - write the trusted manifest association
@@ -280,7 +355,7 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - make normal Docs Review reads use the persistent generated output
 - preserve repair/regeneration only for missing or damaged derived output
 
-### 3. Remove Docs Review Source Editing
+### 4. Remove Docs Review Source Editing
 
 - remove source mode and its control
 - remove source-read/source-write capabilities and endpoints
@@ -288,14 +363,14 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - remove review source-editor modules and bindings
 - update route contracts, runtime ownership docs, and focused tests
 
-### 4. Register The JSONL Collection Import Format
+### 5. Register The JSONL Collection Import Format
 
 - detect supported Data Sharing headers before generic JSON/JSONL file import
 - list the staged package as a collection import source
 - parse records through the shared normalizer
 - keep unsupported JSON/JSONL behavior unchanged
 
-### 5. Add Collection Import Planning And Apply
+### 6. Add Collection Import Planning And Apply
 
 - allow record selection
 - compute create, overwrite, skip, ID, parent, link, and media plans
@@ -303,16 +378,20 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - reuse lower-level source formatting, media materialization, writes, and rebuilds
 - return precise per-record and batch results
 
-### 6. Add The Review-To-Import Handoff
+### 7. Add The Review-To-Import Handoff
 
 - identify the staged file through the immutable package association
 - open managed Docs Import with that package selected
 - keep review and configured-source authority separate
 - report import unavailable when the associated staged file has been deleted
 
-### 7. Verify
+### 8. Verify
 
 - keep ordinary single-file import behavior green
+- verify every existing Docs Import format is discovered from the W0 external drop-zone
+- verify missing workspace configuration disables import cleanly without affecting ordinary Docs viewing
+- verify responses expose marker-rooted paths and never user-specific absolute paths
+- verify repo-local `var/docs/import-staging/` is not read or written
 - test schema detection before generic JSON/JSONL fallback
 - test shared parsing produces equivalent preview and import records
 - test persistent preview viewing without repeated JSONL conversion
@@ -326,6 +405,9 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 ## Acceptance Criteria
 
 - a timestamped staged JSONL file produces one persistent, read-only Docs Review package
+- every Docs Import format uses the configured `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone
+- Docs Import resolves that root through the existing W0 workspace adapter
+- no production import path falls back to repo-local `var/docs/import-staging/`
 - repeated review reads use package-local generated output rather than reparsing the JSONL
 - Docs Review cannot read or write editable source bodies
 - a newer staged return creates a separate preview package and does not stale the older pair
@@ -344,6 +426,7 @@ Docs Review retains no configured-source mutation authority. Data Sharing retain
 - automatic overwrite based only on matching `doc_id`
 - diff, merge, delete, or promotion semantics
 - moving staged Data Sharing JSONL into repo-local Docs Import staging
+- introducing a second Docs-specific staging root or external-workspace resolver
 - automatic remote media upload
 - executing returned content
 
