@@ -57,8 +57,8 @@ Dispositions are proposals for later focused batches. `Focus` means narrow the d
 | Route config and configured-scope discovery | [Config](/docs/?scope=studio&doc=config-docs-viewer) | [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces), [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) | architecture roadmap | Canonical, browser, route, and service config purposes need a concise projection-ownership table. |
 | Startup phases and route features | [Overview](/docs/?scope=studio&doc=docs-viewer-overview) | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) | architecture roadmap | No focused current owner explains enabled features, constructed controllers, and required payloads. Phase 3 must create or focus one. |
 | App-session state domains | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview) | architecture roadmap | Named domains are described inside broader documents; mutable-field ownership is not a focused contract. |
-| Panel hosts and hosted views | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) | [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel), [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) | View And Mode Registry request | Panel ownership is current, but registry and capability prose overlap. |
-| Document display modes and toolbar controls | [Toolbar Model](/docs/?scope=studio&doc=docs-viewer-toolbar-model) | [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract), [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel) | [View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry), architecture roadmap | There is no single current projection owner. The request's accepted requirements must move into a phase 4 task before it is superseded. |
+| Panel hosts and hosted views | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) | [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel), [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) | View, Mode, And Control Projection task | Panel ownership is current, but registry and capability prose overlap. |
+| Document display modes and toolbar controls | [Toolbar Model](/docs/?scope=studio&doc=docs-viewer-toolbar-model) | [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract), [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel) | [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry), architecture roadmap | There is no single current projection owner yet; the accepted target is now the Phase 4 child task. |
 | Runtime and management coordinator ownership | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview), [Management Scripts Overview](/docs/?scope=studio&doc=scripts-docs-management-scripts) | architecture roadmap | Phase 5 should update module ownership only for responsibilities actually extracted. |
 | CSS surfaces | [CSS Cascade Design](/docs/?scope=studio&doc=docs-viewer-css-cascade-design) | [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) | architecture roadmap phase 9 | Current owner exists; no broad CSS consolidation is a phase 1-5 prerequisite. |
 | Refactor checks and public isolation | [Development Checklist](/docs/?scope=studio&doc=development-checklist) and [Testing](/docs/?scope=studio&doc=testing) | [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | architecture roadmap | Use pure module contracts, static module graphs, and focused service checks; avoid UI choreography coverage. |
@@ -70,7 +70,7 @@ Dispositions are proposals for later focused batches. `Focus` means narrow the d
 
 - `docs-viewer-overview` mixes a user-facing overview with a long runtime module inventory. Runtime detail should resolve through `docs-viewer-runtime-boundary`, `docs-viewer-runtime-module-ownership`, and `docs-viewer-runtime-surfaces`.
 - `docs-viewer-panel-hosts` records current owners and the history of several extraction slices. Its current panel/app-session contract needs separating from implementation chronology.
-- `docs-viewer-view-capability-contract`, `docs-viewer-toolbar-model`, and the View And Mode Registry request overlap on availability and control placement. The target is code-owned definitions plus explicit app context, capabilities, route policy, and active state; browser config must not invent lifecycle modules or handler ids.
+- `docs-viewer-view-capability-contract` and `docs-viewer-toolbar-model` overlap on current availability and control placement. Phase 0 converted the old registry request into the code-owned Phase 4 projection task; browser config cannot invent lifecycle modules or handler ids.
 - Current service documentation describes local generated reads and source services mainly through the management route. Phase 1 must distinguish service presence from management UI composition and backend authorization.
 - Generated payloads have a durable owner, but no current document owns the configured-scope provider interface proposed for phase 2.
 - Startup construction is described in overview and module-inventory prose, but no current contract maps route features to controllers, bindings, and required URLs.
@@ -85,7 +85,9 @@ Dispositions are proposals for later focused batches. `Focus` means narrow the d
 
 ### Summary Coverage
 
-Only 2 of the 70 audited documents have a front-matter `summary`: `docs-viewer-dependencies` and `docs-viewer-public-route-shell-template`.
+At the start of D0, only 2 of the 70 audited documents had a front-matter `summary`: `docs-viewer-dependencies` and `docs-viewer-public-route-shell-template`.
+
+Phase 0 added summaries to eight prerequisite owner documents and the converted view/mode/control child task. Current audited-set coverage is therefore 11 of 70. The new D0 register and foundation implementation tracker also have summaries but are outside the original 70-document baseline.
 
 The first summary batch should cover the Docs Viewer entry point, the phase 1-5 durable owners in the subject map, user guides, and active change requests. Endpoint and file-inventory summaries can follow as a mechanical reference batch. Summary writing alone does not change search until the separate search request implements summary indexing and ranking.
 
@@ -172,11 +174,11 @@ The first summary batch should cover the Docs Viewer entry point, the phase 1-5 
 | `site-request-docs-review-workflow` | change request | proposed | Planned Docs Review product boundary | Keep paused until the roadmap readiness checkpoint. | missing |
 | `site-request-docs-viewer-architecture-refactor-roadmap` | change request | proposed / active | Foundation refactor sequence and guardrails | Keep as active roadmap; link implementation trackers and durable outcomes. | missing |
 | `site-request-docs-viewer-semantic-reference-editor` | change request | mixed | Draft V2 goals beside implemented V1 behavior | Reconcile with current editor/implementation owners, then retain only genuinely proposed work. | missing |
-| `site-request-docs-viewer-view-mode-registry` | change request | proposed | Registry requirements and earlier config-owned design | Transfer accepted requirements to the phase 4 implementation task, reject config-owned handlers/modules, then supersede. | missing |
+| `site-request-docs-viewer-view-mode-registry` | change request | proposed | Phase 4 code-owned view, mode, and control projection task | Keep planned as the Phase 4 child task; the earlier browser-JSON registry design is superseded inside the document. | present |
 
 ## Proposed Documentation Batches
 
-1. **Phase 0 prerequisite owners**: add summaries and reconcile `docs-viewer`, runtime boundary, module ownership, runtime surfaces, generated-data contracts, panel hosts, toolbar model, and view capability prose.
+1. **Phase 0 prerequisite owners**: initial baseline reconciliation and summaries are complete for runtime boundary, module ownership, runtime surfaces, generated-data contracts, overview, panel hosts, toolbar model, and view capability prose; later entry-point work still needs to focus `docs-viewer` itself.
 2. **User and operator entry points**: create task-oriented navigation for reading/search/bookmarks and for source edit/rebuild/import/export/scope operations/troubleshooting.
 3. **Route and setup overlap**: focus config, static/public shell templates, portable setup, public scopes, and new-scope builder around distinct owners.
 4. **Import/export/media**: separate workflow guidance from package, service, parser, and path/security reference.
@@ -193,4 +195,4 @@ The first summary batch should cover the Docs Viewer entry point, the phase 1-5 
 - The documentation corpus stays in the `studio` reference scope.
 - No broad documentation rewrite or runtime refactor is included in this task.
 
-The next roadmap step is Phase 0 baseline reconciliation and a focused implementation tracker for phases 0-5. The documentation-search and external workspace-path requests remain separate workstreams and do not require a documentation-scope migration.
+Phase 0 baseline reconciliation and the phases 1-5 implementation tracker are complete. The next foundation slice is Phase 1 explicit app context and authority. The documentation-search and external workspace-path requests remain separate workstreams and do not require a documentation-scope migration.

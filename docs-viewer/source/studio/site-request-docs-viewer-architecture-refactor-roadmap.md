@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, and the initial D0 documentation register and authority map are ready for review.
+Assessment complete; roadmap accepted for implementation, D0 is complete, and Phase 0 baseline reconciliation is complete. Phase 1 explicit app context and authority is next.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -228,9 +228,9 @@ The decisions are spread across:
 - source-editor state
 - route config
 
-The existing [Docs Viewer View And Mode Registry](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) request correctly identifies this problem.
+The Phase 4 [Docs Viewer View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) task carries the accepted solution to this problem.
 
-## View And Mode Registry Assessment
+## View, Mode, And Control Projection Assessment
 
 Retain these requirements from the current request:
 
@@ -268,7 +268,7 @@ Policy can hide or narrow known definitions.
 Controllers own handlers and live interaction state.
 Renderers consume projected control records.
 
-The view/mode registry request should become a focused child slice of this roadmap or be retired after its accepted requirements are transferred into an implementation task.
+The former view/mode registry request is now the focused Phase 4 child task. Its earlier browser-JSON registry and handler-id design is superseded.
 
 ## Finding 6: Private Runtime Coordinator Remains Broad
 
@@ -618,6 +618,8 @@ Acceptance:
 
 Purpose: establish the behavior that refactors must preserve and reconcile only the architecture contracts required for phases 1-5.
 
+Implementation record: [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation). Phase 0 is complete; the tracker owns the preserved baseline, checks, and phase tasks.
+
 Tasks:
 
 - inventory current public and manage entrypoint module graphs
@@ -625,7 +627,7 @@ Tasks:
 - use the D0 authority map to name the current durable owner for every prerequisite contract
 - correct contradictions in those prerequisite owner docs; leave unrelated consolidation to D1-D4
 - define baseline public and manage checks
-- rewrite the view/mode registry request into the target projection model or create a child implementation task and retire the request
+- rewrite the view/mode registry request into the target projection model or create a child implementation task and retire the request — complete
 - document which changes are prerequisites for Docs Review
 - remove no code unless an already-orphaned compatibility/prototype path has an unambiguous current owner
 
@@ -721,7 +723,7 @@ Acceptance:
 
 ## Phase 4: View, Mode, And Control Projection
 
-Purpose: implement the useful core of the current view/mode registry request without introducing a second config authority.
+Purpose: implement the code-owned [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) child task without introducing a second config authority.
 
 Tasks:
 
@@ -883,8 +885,8 @@ Recommended order of work (to be reviewed after each step):
 1. create the D0 documentation register and authority map as a dedicated assessment task — initial register complete and ready for review
 2. create the separate Documentation Search Discovery And Relevance change request
 3. create the W0 external user-workspace artifact roots change request and tracker
-4. create an implementation tracker for phases 0-5 using the mapped current owners
-5. complete the runtime baseline and reconcile only prerequisite contracts
+4. create an implementation tracker for phases 0-5 using the mapped current owners — complete
+5. complete the runtime baseline and reconcile only prerequisite contracts — complete
 6. begin D2 user/maintainer entrypoint work as a separate documentation batch
 7. implement explicit app context and authority
 8. implement the configured-scope provider boundary

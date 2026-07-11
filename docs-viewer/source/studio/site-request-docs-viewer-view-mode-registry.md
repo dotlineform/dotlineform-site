@@ -1,310 +1,246 @@
 ---
 doc_id: site-request-docs-viewer-view-mode-registry
-title: Docs Viewer View And Mode Registry
+title: Docs Viewer View, Mode, And Control Projection
 added_date: 2026-06-17
-last_updated: 2026-06-18
-ui_status: review
+last_updated: 2026-07-11
+ui_status: planned
+summary: Phase 4 implementation task for code-owned Docs Viewer view, document-mode, and toolbar-control definitions and eligibility projection.
 parent_id: change-requests
+viewable: true
 ---
-# Docs Viewer View And Mode Registry
+# Docs Viewer View, Mode, And Control Projection
 
-This needs reviewing. The useful core was the original doc:
+## Status
 
-- create site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js
-- use it as the shared owner for normalization and lookup
-- centralize the decisions currently split across hosted views, display modes, and toolbar rendering
-- keep runtime implementations where they are
-- make config answer “is this view/mode/control available here?”
+Accepted as the Phase 4 child task of [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
 
-## Request
+This task replaces the earlier proposal for a browser JSON view registry. Built-in views, document modes, controls, lifecycle implementations, and handlers will be code-owned. Route policy may hide or narrow known definitions but cannot invent modules, lifecycles, handlers, or control ids.
 
-Centralize Docs Viewer decisions about views, display modes, and view toolbar controls.
+Implementation starts only after explicit app context, service authority, provider, and route-feature inputs exist in phases 1-3.
 
-This request is not a rewrite of Docs Viewer architecture.
-It is a targeted cleanup of decisions that are currently spread across route config, hosted-view records, display-mode setup, toolbar renderers, and management-only modules.
+## Outcome
 
-The first implementation should keep current behavior but make the source of truth easier to find and change.
+Create one shared normalization, lookup, and eligibility owner for:
 
-## Problem
+- panel views
+- document display modes registered under the document main view
+- toolbar controls associated with a view or display mode
 
-Docs Viewer already has a view/mode structure:
+The projection combines code-owned definitions with current runtime inputs:
 
-- a panel hosts a view
-- a view can have display modes
-- the active view or mode should determine which toolbar controls are visible
-- public and manage access decide which views, modes, and controls are available
-- scope config should be able to hide additional public controls for that scope
+```text
+shared definitions
++ entrypoint contributions
++ app context
++ backend capabilities
++ route feature policy
++ active view and document mode
+= eligible views, modes, and toolbar controls
+```
 
-Markdown source is a document display mode inside the document view.
-It is not a peer main view.
-The current code can support this, but the decisions are not centralized.
-That makes simple changes expensive, such as:
+Controllers keep executable handlers and live interaction state. Renderers consume projected records.
 
-- make `bookmark` manage-only everywhere
-- hide both `bookmark` and `info` on the public `moments` scope
-- add a new mode to an existing view and define its toolbar controls without adding view-specific conditionals
+## Scope
 
-## Scope And Authority
+First slice:
 
-There is no higher authority than `/docs/` in manage mode.
-The `/docs/` route can inspect every scope with management access and should see the full views, modes, and controls available to the active view/mode.
+- normalize and resolve built-in panel views
+- normalize and resolve `rendered-document` and `markdown-source` document modes
+- project `bookmark`, `info`, `edit`, `markdown-source`, and `save-markdown-source` controls
+- keep manage toolbar/admin actions outside this projection
+- preserve current public and manage behavior
 
-Public scopes get the public presentation their config allows.
-In practice, a public scope has one public route:
+This task does not add a generic plugin system, browser module loader, review route, new public policy, or new control behavior.
 
-- `library` -> `/library/`
-- `analysis` -> `/analysis/`
-- `moments` -> `/moments/`
+## Authority Model
 
-Do not design this registry around one scope being surfaced through multiple public routes.
-`/moments-copy/` could be hardcoded to use the `moments` scope, but that is not a supported product requirement and should not shape this work.
+Definitions answer what exists and where it belongs.
 
-## Current Decision Points
+Entrypoints answer which executable contributions are available to an app installation:
 
-The implementation should not start with a new audit.
-The decisions that need to be centralized are currently split across these code areas:
+- shared/public-safe definitions are imported through the shared/public graph
+- manage-only definitions and lifecycles are contributed by the manage entrypoint
+- a future review entrypoint may contribute only review-authorized definitions after the readiness checkpoint
+
+App context and backend capabilities answer which known definitions are eligible.
+
+Route feature policy may hide or narrow an eligible definition. It cannot:
+
+- add an unknown definition id
+- name a JavaScript module
+- name or select an executable handler
+- grant service or backend authority
+- override an app-context or backend-capability denial
+
+Active view and document mode answer which eligible controls are relevant now.
+
+Controllers own:
+
+- event handlers
+- bookmark pressed state
+- info-panel pressed/open state
+- dirty state
+- pending/busy state
+- disabled state derived from workflow readiness
+- source-editor before-leave behavior
+
+## Target Owner
+
+Add a small shared code owner at:
+
+```text
+site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js
+```
+
+It owns:
+
+- definition normalization
+- duplicate/reserved-id handling
+- view-to-panel lookup
+- document-mode-to-view lookup
+- control-to-view/mode lookup
+- eligibility projection from explicit context/capability/policy inputs
+- active control projection
+
+It does not own:
+
+- lifecycle loading or mounting
+- DOM creation
+- event binding
+- service calls
+- mutable controller state
+- route-config loading
+
+Existing hosts continue to own lifecycle behavior while consuming normalized/projection results:
+
+- `docs-viewer-hosted-views.js`
+- `docs-viewer-main-view-host.js`
+- `docs-viewer-document-display-mode-host.js`
+- `docs-viewer-info-panel-host.js`
+
+## Definition Shape
+
+The exact object syntax may follow current JavaScript patterns, but definitions must preserve these relationships:
+
+```text
+panel: index | main | info
+view: id + panel + allowed app kinds/features/capabilities
+mode: id + owner view + allowed app kinds/features/capabilities
+control: id + owner view/mode + allowed app kinds/features/capabilities
+```
+
+Definitions may carry presentation metadata such as a stable label or renderer role when that metadata is code-owned and not live state.
+
+Definitions must not carry string handler ids or arbitrary module paths. Executable functions remain in entrypoint contributions or focused controllers.
+
+## Current Decision Points To Migrate
 
 ### Panel Views
 
-Current owner:
+Current owners:
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-hosted-views.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-panel-layout.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js`
+- `docs-viewer-hosted-views.js`
+- `docs-viewer-app-composition.js`
+- `docs-viewer-panel-layout.js`
+- `docs-viewer-main-view-host.js`
 
-Current behavior:
+Migration:
 
-- built-in panel views are declared in `createDocsViewerBuiltInHostedViews()`
-- route-config hosted-view records are merged in app composition
-- panel layout and main-view host resolve views through the hosted-view registry
-
-Required change:
-
-- keep this behavior but make it part of the same view/mode/control availability projection used by toolbar controls
-- do not create a second, parallel list of supported main views
+- retain current built-in and entrypoint-contribution behavior
+- normalize panel-view definitions through the new owner
+- keep route hosted-view records descriptive and unable to override reserved code-owned definitions
+- do not create a second panel-view list
 
 ### Document Display Modes
 
-Current owner:
+Current owners:
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-document-display-mode-host.js`
-- `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`
-- `docs-viewer/runtime/js/management/docs-viewer-manage.js`
+- `docs-viewer-document-display-mode-host.js`
+- `docs-viewer-management-hosted-views.js`
+- `docs-viewer-manage.js`
 
-Current behavior:
+Migration:
 
-- `rendered-document` is a built-in display mode inside the display-mode host
-- `markdown-source` is supplied separately through the management entrypoint
-- display modes are not currently part of the panel hosted-view registry
+- register `rendered-document` under the document main view as shared/public-safe
+- contribute `markdown-source` through the manage entrypoint
+- resolve mode eligibility through explicit app context, features, and capabilities
+- keep direct requests for unavailable modes rejected by the display-mode host
+- keep Markdown source as a mode, not a peer main view
 
-Required change:
+### Document Toolbar Controls
 
-- register document display modes under the document view in the central projection
-- keep `markdown-source` management-only
-- keep direct mode requests rejected when the mode is unavailable in the current access context
+Current owners:
 
-### Document View Toolbar Controls
+- `docs-viewer-main-view-renderer.js`
+- `docs-viewer-bookmarks.js`
+- `docs-viewer-info-panel-controller.js`
+- `docs-viewer-management-document-actions-renderer.js`
+- `docs-viewer-management.js`
+- `source-editor/source-editor.js`
 
-Current owner:
+Migration:
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js`
-- `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`
-- `docs-viewer/runtime/js/management/docs-viewer-management.js`
-- `docs-viewer/runtime/js/management/source-editor/source-editor.js`
+- define `bookmark` and `info` as shared document-view controls
+- contribute `edit`, `markdown-source`, and `save-markdown-source` through the manage entrypoint
+- project which controls belong to the active view/mode before rendering
+- preserve bookmark, info, management, and source-editor handlers in their focused owners
+- preserve pressed, dirty, busy, pending, and disabled projection as live controller state
+- remove old scattered eligibility branches only after all callers consume the central projection
 
-Current behavior:
+## Route Policy
 
-- `bookmark` and `info` buttons are created in the shared main-view renderer
-- bookmark visibility is controlled by bookmark runtime state
-- info visibility is controlled by info-panel/controller state
-- `edit`, `markdown-source`, and `save-markdown-source` are injected by the management document-actions renderer
-- management runtime separately hides/disables edit/source/source-save based on selected document, busy state, and active Markdown mode
-- source-editor runtime separately hides bookmark/info while Markdown source is active
+Phase 4 may normalize a route feature-policy section that hides known controls. The policy is an allowlisted narrowing layer.
 
-Required change:
+Examples the model must be capable of expressing:
 
-- define document-view toolbar controls in one central projection: at minimum `bookmark`, `info`, `edit`, `markdown-source`, and `save-markdown-source`
-- keep each existing runtime handler where it is unless moving the handler is mechanically simpler
-- move visibility eligibility into the projection layer so adding or removing a control does not require hardcoded view-specific show/hide branches
-- preserve runtime state updates that are not pure availability decisions, such as bookmark active state, info pressed state, and disabled state while management is busy
+- hide `bookmark` on a named public route
+- hide both `bookmark` and `info` on a minimal public route
+- omit the toolbar mount when no projected controls remain
+- keep the same scope's full eligible controls when viewed through a manage context
 
-### Shared View Registry Config And Public Shell Attributes
+No new product policy is introduced by the behavior-preserving first slice. Existing whole-toolbar route policy must continue to work until it is replaced in the same slice by equivalent projected-control policy.
 
-Current owner:
+## Implementation Sequence
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js`
-- `docs-viewer/templates/public-route/index.html`
-- `site/library/index.html`
-- `site/analysis/index.html`
-- `site/moments/index.html`
-- `docs-viewer/shell/docs-viewer-manage.html`
-- `site/docs-viewer/config/views/docs-viewer-view-registry.json`
-- `site/docs-viewer/config/defaults/docs-viewer-public-config.json`
-- `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
+1. Add pure definition normalization and duplicate/reserved-id checks.
+2. Add pure eligibility projection from app context, backend capabilities, route policy, and active state.
+3. Register current shared panel views and `rendered-document` mode as code-owned definitions.
+4. Move manage view, Markdown mode, and management document-control contributions to the manage entrypoint input.
+5. Project shared `bookmark` and `info` controls for the rendered-document mode.
+6. Project manage `edit`, `markdown-source`, and `save-markdown-source` controls.
+7. Make existing renderers consume projected records while retaining their handlers and live state inputs.
+8. Remove superseded normalization/eligibility branches and broad toolbar callback bridges; add no aliases.
+9. Update toolbar, panel-host, view-capability, runtime-module, and user guidance documents.
 
-Current behavior:
+## Verification
 
-- search placeholder and aria label are shell data attributes
-- public routes map one-to-one to public scopes through route config
-- there is no shared browser-visible config that defines supported views, modes, and toolbar controls
-- public runtime and manage mode both need to know which public-safe views and modes are defined
+Prefer pure JavaScript module checks for:
 
-Required change:
+- definition normalization
+- duplicate/reserved-id behavior
+- public versus manage eligibility
+- capability denial
+- route-policy narrowing
+- active view/mode control projection
+- empty projected-control sets
+- rejection of unknown policy ids
 
-- add `site/docs-viewer/config/views/docs-viewer-view-registry.json` as the shared source of truth for public-safe view, mode, toolbar-control, and public toolbar-policy definitions
-- have both public runtime and manage mode read this same `site/` config file
-- keep management-only view, mode, and control contributions in `docs-viewer/runtime/js/management/` and merge them only when manage mode starts
-- add only the minimum policy fields needed for global public toolbar policy and per-scope public toolbar policy
-- do not put public-safe view/mode/control definitions in `docs-viewer/` only, because public runtime cannot depend on manage-mode files
-- do not require the browser to read `docs-viewer/config/scopes/docs_scopes.json`
-- avoid adding display decisions to public route shells
-- keep public routes one-to-one with public scopes
+Use a narrow DOM/component check to prove projected controls render without an empty toolbar. Keep the static public import-boundary test. Run route/browser smokes only if boot, route config, or network/module boundaries change.
 
-### Tests
+Do not add permanent tests for button copy, focus choreography, hover state, modal timing, or source-editor interaction feel.
 
-Current owners that should be updated with the implementation:
+## Acceptance
 
-- `docs-viewer/tests/python/test_docs_viewer_service.py`
-- `docs-viewer/tests/smoke/public_docs_viewer_readonly.py`
-- `docs-viewer/tests/smoke/docs_viewer_service_manage.py`
-
-Required change:
-
-- replace assertions that only prove hardcoded button strings with assertions that prove registry/config-driven presence and absence
-- keep static import boundary assertions proving public entrypoints do not import management modules
-- add focused coverage for global public policy hiding `bookmark`
-- add focused coverage for `moments` public policy hiding `bookmark` and `info` without affecting `/docs/?scope=moments`
-
-## Target Model
-
-Introduce a small central runtime owner for view/mode/control availability.
-The exact file and shape can follow existing Docs Viewer patterns, but the model should preserve these relationships:
-
-```text
-panel -> view -> display mode
-view or display mode -> toolbar controls
-toolbar control -> runtime handler or target
-global public policy -> public defaults
-scope public policy -> public scope-specific overrides
-management contribution -> manage-only modes and controls
-manage mode -> full active-view controls unless explicitly restricted
-```
-
-The registry should answer:
-
-- is this view available here?
-- is this mode available here?
-- which toolbar controls should this active view/mode render here?
-- is this control available, hidden, disabled, or relabelled by global public policy or scope public policy?
-- what handler or target should run when this control is invoked?
-
-Config can hide or narrow registered controls.
-Config must not invent executable handlers or module loaders.
-Runtime code still provides the implementation.
-The shared `site/` registry can name a lifecycle or handler id, but the JavaScript runtime must still own the actual implementation.
-Public runtime must ignore or reject unavailable management-only modes such as Markdown source.
-
-## Toolbar Policy
-
-The first useful policy layers are:
-
-1. built-in registered defaults
-2. management contributions, when manage mode is active
-3. global public defaults
-4. scope public overrides
-5. active view/mode toolbar definition
-
-Current behavior should be expressible as config:
-
-- only manage mode sees the manage toolbar and Actions menu
-- all scopes can use the docs-view toolbar shape for the active view/mode
-- public scopes currently see public document-view controls such as `bookmark` and `info`
-- manage mode sees management document-view controls such as `edit` and `markdown-source`
-
-New behavior should also be expressible as config:
-
-- hide `bookmark` for all public scopes
-- hide `bookmark` and `info` for the public `moments` scope
-- if every docs-view toolbar control is hidden for a public scope, do not render an empty docs-view toolbar
-- still show the `moments` scope with full active-view controls in `/docs/` manage mode
-
-Initial shared registry config shape:
-
-```js
-{
-  panels: {
-    main: {
-      views: {
-        "rendered-document": {
-          modes: {
-            "rendered-document": { access: "public" }
-          },
-          toolbarControls: ["bookmark", "info"]
-        }
-      }
-    }
-  },
-  controls: {
-    bookmark: { access: "public", handler: "runtime:bookmark-toggle" },
-    info: { access: "public", handler: "runtime:toggle-info-panel" }
-  },
-  publicToolbarPolicy: {
-    controls: {
-      bookmark: { hidden: true }
-    }
-  },
-  scopes: {
-    moments: {
-      publicToolbarPolicy: {
-        controls: {
-          bookmark: { hidden: true },
-          info: { hidden: true }
-        }
-      }
-    }
-  }
-}
-```
-
-## Implementation Direction
-
-Implementation steps:
-
-- add `site/docs-viewer/config/views/docs-viewer-view-registry.json`
-- add `site/docs-viewer/runtime/js/shared/docs-viewer-view-registry.js`
-- have public boot and manage boot load the shared `site/` registry config
-- have manage boot merge management-only contributions for `edit`, `markdown-source`, and `save-markdown-source`
-- add a central lookup/projection layer used by existing modules for availability decisions
-- migrate document-view controls first: `bookmark`, `info`, `edit`, `markdown-source`
-- keep management toolbar commands such as Actions, New, Import, Delete, Settings, Rebuild, Publish, New Scope, Delete Scope, scope selector, and theme toggle in their existing workflow unless they are already controls for an active view/mode
-- keep route config declarative; it may carry policy but must not become a plugin/module-loader surface
-- move public shell display attributes into config where they are part of the same availability/visibility decision
-
-## Required Behavior
-
-- Current public scopes continue to render as they do now unless config says otherwise.
-- Current manage mode continues to render management controls.
-- Public runtime and manage mode both read the same shared `site/` view registry config.
-- Public runtime rejects or omits unavailable management-only modes such as Markdown source.
-- The document-view toolbar is projected from registry/config rather than hardcoded per control.
-- Global public policy can hide `bookmark` across public scopes.
-- `moments` public policy can hide both `bookmark` and `info`, causing `/moments/` to render no docs-view toolbar if no controls remain.
-- `/docs/?scope=moments` can still show the `moments` scope with full controls for the active view/mode.
-- Adding a new view or mode should require adding its supported controls to the registry/config, not adding scattered toolbar visibility conditionals.
-
-## Acceptance Checks
-
-- Public `/library/` and `/analysis/` render without management action buttons and without source-editor imports.
-- Document-view toolbar controls are rendered from central projection, including `edit`, `bookmark`, `info`, and `markdown-source`.
-- Global public policy can hide `bookmark` from public scopes without adding a hardcoded runtime branch.
-- Public `moments` policy can hide `bookmark` and `info` so `/moments/` has no empty docs-view toolbar.
-- `/docs/?scope=moments` still shows full active-view controls.
-- Clicking Markdown source changes document display mode, not main view.
-- Toolbar controls can be hidden by global or scope policy without view-specific runtime conditionals.
-- Existing management toolbar actions still render and execute through their current workflows, including New Scope and Delete Scope.
-- Existing static import boundary tests still prove public entrypoints do not import management modules.
-- Tests assert registry/config-driven absence and presence instead of hardcoded button strings only.
-- `bin/site-validate` passes after any public runtime file changes.
+- One code-owned owner normalizes and resolves views, document modes, and toolbar controls.
+- Shared definitions and manage entrypoint contributions preserve the public/manage import boundary.
+- Browser config cannot invent handlers, modules, views, modes, or controls.
+- Markdown source remains a display mode of the document main view.
+- Public contexts cannot resolve manage-only modes or controls.
+- Manage mode retains current document controls and workflows.
+- Route policy can hide only known controls and cannot widen app/capability access.
+- `bookmark`, `info`, `edit`, `markdown-source`, and `save-markdown-source` are migrated in the first slice.
+- Handlers and live state remain in focused controllers.
+- No empty toolbar renders when no projected controls remain.
+- Management toolbar actions remain in their existing workflow owners.
+- No review-specific behavior or generic plugin/module-loader surface is added.
+- Public/manage baseline checks remain green.

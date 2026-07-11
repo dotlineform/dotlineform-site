@@ -2,7 +2,8 @@
 doc_id: docs-viewer-runtime-module-ownership
 title: Runtime Module Ownership
 added_date: 2026-06-05
-last_updated: 2026-06-05
+last_updated: 2026-07-11
+summary: Grouped owner map for Docs Viewer entrypoints, boot, routes, data, state, panels, controllers, and manage-only runtime modules.
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer Runtime Module Ownership
@@ -18,6 +19,9 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 - The management controller receives a narrow context API through the neutral lazy-controller adapter so public read-only viewers do not download or execute management-only orchestration.
 - Route workflow commands are exposed only through the private route workflow command contract, backed by explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs.
 - The returned app handle stays intentionally small: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`.
+- [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the current graph counts and phase owner changes. This document remains the durable current-owner map and must be updated in the same slice whenever responsibility moves.
+- The current `docs-viewer-app-context.js` is primarily a route-context owner. Phase 1 will make app kind explicit rather than continuing to infer it from `allowManagement`.
+- There is no configured-scope provider or normalized route-feature owner yet; phases 2 and 3 add those boundaries without moving feature lifecycle into the private runtime coordinator.
 
 ## Entrypoints And Boot
 

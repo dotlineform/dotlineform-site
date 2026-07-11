@@ -1,0 +1,273 @@
+---
+doc_id: site-request-docs-viewer-foundation-refactor-implementation
+title: Docs Viewer Foundation Refactor Implementation
+added_date: 2026-07-11
+last_updated: 2026-07-11
+ui_status: in-progress
+summary: Implementation tracker, preserved-behavior baseline, owner map, and focused checks for Docs Viewer architecture roadmap phases 0-5.
+parent_id: change-requests
+viewable: true
+---
+# Docs Viewer Foundation Refactor Implementation
+
+## Status
+
+Phase 0 complete. The public/manage baseline, current authority coupling, startup sequence, state-domain overlaps, and view/mode/control decision points are recorded below. Focused public and manage checks pass.
+
+Phase 1, explicit app context and authority, is next.
+
+This tracker implements phases 0-5 of [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap). It contains no Docs Review feature behavior.
+
+## Scope And Guardrails
+
+The foundation work is behavior-preserving for current public and manage routes.
+
+- Public routes remain static readers without management imports, service URLs, capability probes, write handles, or manage-only UI.
+- The manage route retains current scope selection, local generated reads, management capability checks, source editing, imports, reports, settings, and scope lifecycle behavior.
+- Each phase replaces its old API in the same slice. No compatibility aliases or duplicate config fields remain.
+- Route config describes route identity and policy; it does not register executable modules or handlers.
+- Backend capability responses authorize operations. Browser visibility and code registration do not authorize them.
+- New provider, feature, and projection behavior must not become lifecycle code in `docs-viewer-app-runtime.js`.
+- Tests protect owner contracts, service responses, module boundaries, and boot integration rather than UI choreography.
+
+## Phase 0 Preserved-Behavior Baseline
+
+### Entrypoint And Module Graph
+
+The browser URL `/docs-viewer/runtime/js/shared/` is served from `site/docs-viewer/runtime/js/shared/` for both public and manage routes. The manage source tree therefore imports the shared boot URL even though there is no duplicate `docs-viewer/runtime/js/shared/` directory.
+
+Current static graph snapshot:
+
+| graph | modules | contract |
+| --- | ---: | --- |
+| Public entry shim rooted at `site/docs-viewer/runtime/js/public/docs-viewer-public.js` | 4 | Imports asset-version projection and public document-report contributions, then dynamically imports shared app boot. |
+| Shared app-boot graph rooted at `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js` | 43 | Contains shared boot, composition, session, route, controller, panel, view, data, config, search, bookmark, and renderer modules. It has no static manage-owned import. |
+| Effective public graph after dynamic boot | 46 unique modules | Public entry contributions plus shared app boot; the shared asset-URL module is the one overlap. |
+| Manage entry contributions rooted at `docs-viewer/runtime/js/management/docs-viewer-manage.js` | 9 | Adds manage document actions, hosted views, shell composition/rendering, and report services. |
+| Effective manage boot graph before later lazy workflows | 52 unique modules | Shared app-boot graph plus the nine manage entry contributions. |
+
+Current dynamic boundaries:
+
+- public entry dynamically loads shared app boot after applying the asset version
+- the shared metadata-info hosted view loads only when requested
+- shared boot can load the manage theme module only when route access allows management
+- the neutral runtime lazy controller loads `docs-viewer-management.js` only when management initialization is allowed
+- the private runtime loads the management client only for management source-service composition
+- manage hosted-view contributions lazy-load Markdown source and semantic-token-picker lifecycles
+- manage orchestration lazy-loads Docs Import and scope lifecycle workflows
+- manage report definitions lazy-load individual report modules
+
+The permanent public import-boundary test currently follows the public entry's static graph. The baseline also records the separately resolved shared app-boot graph so later changes do not hide manage imports behind the public entry's intentional dynamic boot boundary.
+
+### Route, Access, And Service Context
+
+Current routes:
+
+| route | route id | scope selection | current access projection | generated reads | management |
+| --- | --- | --- | --- | --- | --- |
+| `/library/` | `library` | fixed `library`; scope query disabled | public/read-only | static public payloads | absent |
+| `/analysis/` | `analysis` | fixed `analysis`; scope query disabled | public/read-only | static public payloads | absent |
+| `/moments/` | `moments` | fixed `moments`; scope query disabled | public/read-only | static public payloads | absent |
+| `/docs/` | `docs-manage` | configured scopes; scope query enabled | manage when route config enables management | local generated-read service when configured, otherwise generated asset URL | capability-gated local backend |
+
+The current pre-refactor authority chain is:
+
+```text
+route path + route config
+  -> allowManagement
+  -> publicReadOnly / canLoadManagementUi
+  -> app dataset mode and service label
+  -> local generated-read base URL
+  -> management service context
+  -> source-service exposure
+  -> manage hosted-view access
+  -> management startup and lazy loading
+```
+
+`startDocsViewerPublicApp()` and `startDocsViewerManageApp()` currently pass an `appKind` option, but route-context creation does not retain it. Current effective app kind is therefore inferred from `access.allowManagement`.
+
+`docs-viewer-service-context.js` currently exposes:
+
+- browser-safe config for every route
+- generated reads as static assets for public routes
+- local generated-read base URL only when `allowManagement` is true
+- a management service surface only when `allowManagement` is true
+
+This is the preserved baseline, not the Phase 1 target. Phase 1 separates app kind, route visibility, service presence, and backend capability truth.
+
+### Startup And Construction
+
+Current declared startup phases:
+
+| order | phase | public | manage | authority |
+| ---: | --- | :---: | :---: | --- |
+| 1 | bind events | yes | yes | browser route/config context |
+| 2 | load Docs Viewer config | yes | yes | browser-safe config asset |
+| 3 | load UI text/viewer config | yes | yes | browser-safe config asset |
+| 4 | initialize bookmarks | yes | yes | browser storage |
+| 5 | initialize management | no | yes | management capability endpoint |
+| 6 | load initial index and route | yes | yes | generated asset or local generated-read service |
+| 7 | open import requested by URL | no | yes | management write endpoint |
+
+Before these phases run, app composition constructs the service context, hosted-view registry, panel layout, app session, document-index state, generated-data runtime, and config service. The private runtime then constructs the current route, config, search/recent, bookmark, document, main-view, display-mode, info-panel, sidebar, management-lazy, and status coordination surfaces.
+
+Several features tolerate missing DOM controls, but there is no normalized route-feature contract. Search, recent, bookmarks, scope discovery, and their state/controller surfaces are still broadly constructed for current routes.
+
+### State Domains
+
+Current app-session domains are useful descriptive boundaries, but these fields have more than one mutable facade:
+
+| field or concern | current domains | Phase 1-5 treatment |
+| --- | --- | --- |
+| `expandedDocIds` | `documentIndex`, `panelView` | Assign expansion mutation to one owner and expose a query/command to the other consumer. |
+| `uiStatusByValue` | `scopeConfig`, `documentIndex` | Keep config authority in `scopeConfig`; document index consumes a read-only query/input. |
+| `docNonViewableEmoji` | `scopeConfig`, `management` | Keep presentation config authority outside management state. |
+| `managementContext` | `routeSession`, `management` | Replace route-derived management identity with explicit app context; management owns backend lifecycle state only. |
+| `managementCapabilities` | `management`, `generatedData` | Split generated-read capability from general management capability state. |
+| `reloadNonce`, `reloadExpectedDocId` | `selectedDocument`, `generatedData` | Keep reload request state with generated-data/provider workflow and expose selected-document commands. |
+| management message/status fields | `management`, `busyStatus` | Give status/busy projection one owner if touched by the new contexts. |
+
+No global store or event-bus rewrite is planned.
+
+### View, Display Mode, And Toolbar Contract
+
+Current relationships are valid:
+
+```text
+panel -> hosted view
+document main view -> document display mode
+active view/mode -> relevant toolbar controls
+```
+
+Current decisions are split:
+
+- `docs-viewer-hosted-views.js` normalizes panel views and checks access/availability
+- `docs-viewer-document-display-mode-host.js` separately normalizes and resolves document modes
+- `docs-viewer-main-view-renderer.js` creates shared `bookmark` and `info` controls
+- bookmark and info controllers independently project visibility and live state
+- the manage document-action renderer injects `edit`, `markdown-source`, and `save-markdown-source`
+- management orchestration projects selection, capability, busy, and active-mode visibility/disabled state
+- the source-editor lifecycle separately projects bookmark/info/source control changes
+- route UI policy can hide the whole main-view toolbar, as used by the public Moments route
+
+Markdown source is a display mode of the rendered-document view, not a peer main view. Handlers, dirty state, pressed state, busy state, and pending state remain owned by the focused runtime controllers.
+
+[Docs Viewer View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) is the Phase 4 child task. It replaces the earlier browser-JSON registry design with code-owned definitions and explicit projection inputs.
+
+## Baseline Checks
+
+Baseline recorded on 2026-07-11:
+
+| check | purpose | result |
+| --- | --- | --- |
+| `$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py docs-viewer/tests/python/test_docs_viewer_static_assets.py docs-viewer/tests/python/test_docs_viewer_service_config.py` | Public static-import isolation, static route mapping, route/service config projection | pass: 17 tests |
+| `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke --run-id docs-viewer-foundation-phase-0-baseline` | Static-site validation, manage route boot/service boundary, public Library/Analysis read-only boundary | pass: 3 checks; `var/admin/test-runs/docs-viewer-foundation-phase-0-baseline/summary.md` |
+
+Slice-specific checks must add the lowest-layer contract proof described below. The browser profile is required only when a slice changes route boot, module mapping, or public/manage network boundaries.
+
+## Implementation Slices
+
+| phase | target owner after the slice | primary change | focused proof |
+| --- | --- | --- | --- |
+| 1. App context and authority | `docs-viewer-app-context.js` for normalized app context; `docs-viewer-access.js` for route visibility; `docs-viewer-service-context.js` for named service presence | Introduce explicit `kind: public | manage`, feature policy, service availability, and backend capability inputs; remove `publicReadOnly: !allowManagement` APIs and update all callers. | Pure app/access/service projection tests plus public static graph and service-config tests. |
+| 2. Configured-scope provider | new `docs-viewer-configured-scope-provider.js`; `docs-viewer-generated-data-runtime.js` remains transport/retry owner | Supply named index/document/search/recent/reference reads and optional source methods without granting authority. | Pure provider contract tests using current generated fixtures; focused source-service tests. |
+| 3. Route features and startup | new `docs-viewer-route-features.js`; `docs-viewer-app-composition.js` consumes the normalized projection | Validate known feature ids, preserve current defaults, and construct/initialize only enabled search, recent, bookmark, report, scope-selection, source-edit, and management surfaces. | Pure feature normalization and startup-record tests; route-config module check. |
+| 4. View/mode/control projection | new shared `docs-viewer-view-registry.js` for code-owned definition normalization and eligibility projection | Combine shared definitions, manage entrypoint contributions, app context, backend capabilities, route policy, and active view/mode state. | Pure registry/projection tests; public graph proof; narrow renderer DOM proof. |
+| 5. Touched coordinator reduction | focused `docs-viewer-service-composition.js`, route-feature factory, or view-toolbar coordinator only where phases 1-4 establish a complete contract | Move construction and coordination out of the private runtime without mechanical splitting; remove obsolete bridges and broad facade fields. | Owner-contract tests plus unchanged baseline checks for affected boundaries. |
+
+Names for new owner modules may change only if the implementation establishes a clearer single responsibility before editing. A different name must not change the ownership boundary or introduce a compatibility alias.
+
+## Phase 1 Task: Explicit App Context And Authority
+
+Target context:
+
+```text
+kind
+routeAccess
+featurePolicy
+serviceAvailability
+backendCapabilities
+```
+
+Current public and manage routes exercise only `public` and `manage`. The shape must be capable of expressing a future local non-management context without adding a boolean matrix, but no `review` route or behavior is added in this slice.
+
+Tasks:
+
+- retain route identity and path normalization in route config/context
+- make entrypoint app kind explicit and validate it against route composition
+- project public/manage visibility from named route-access rules rather than from backend reachability
+- project `generatedData`, `source`, and `management` service presence independently
+- keep backend capabilities absent/unknown until the owning service response supplies them
+- update hosted-view and display-mode access checks to consume named app kinds or access requirements
+- update app session, view context, route workflow, runtime lazy loading, boot datasets, and report access callers in the same slice
+- preserve management-only dynamic loading and public graph isolation
+- remove `allowManagement` and derived `publicReadOnly` from current browser APIs after callers move; do not keep aliases
+
+Acceptance:
+
+- current public and manage behavior and checks remain unchanged
+- local generated-read availability is not structurally conditional on general management UI
+- service presence does not authorize backend operations
+- app kind is not inferred from service reachability or one management boolean
+- a future local non-management composition is representable without adding behavior for it
+- public routes receive no management/review modules, source services, capability probes, or local base URLs
+
+## Later Phase Acceptance
+
+### Phase 2
+
+- current routes read through the configured-scope provider
+- consumers call named provider methods rather than reconstructing payload/service fallbacks
+- source methods are absent unless explicitly supplied
+- provider presence grants no write or management authority
+
+### Phase 3
+
+- current route behavior is reproduced by explicit feature projections
+- unknown feature ids fail route normalization
+- disabled features have no controller, binding, startup phase, or required URL
+- configured-scope discovery is distinct from general viewer settings
+
+### Phase 4
+
+- one code-owned projection resolves views, document modes, and eligible controls
+- shared definitions and manage entrypoint contributions remain separate at import boundaries
+- route policy can only narrow known definitions
+- Markdown source remains a document display mode
+- control handlers and live state remain controller-owned
+- no empty toolbar renders when every eligible control is hidden
+
+### Phase 5
+
+- new foundation ownership is not implemented by additional callback bridges in `docs-viewer-app-runtime.js`
+- extracted owners have complete responsibilities and narrow inputs
+- obsolete bridges and duplicate facade fields are removed without aliases
+- no Docs Review code exists
+
+## Docs Review Prerequisite Classification
+
+Required before the Docs Review readiness checkpoint:
+
+- explicit app context and independent service surfaces: phases 1 and 2
+- non-scope provider support: phase 2
+- optional route features/startup: phase 3
+- authorized non-manage Markdown mode and control projection: phase 4
+- only coordinator reductions needed to keep those responsibilities out of the private runtime: phase 5
+- external returned-package workspace roots and validated exact-source package support: separate W0 and Data Sharing workstreams
+
+Not required for Docs Review:
+
+- broad management coordinator decomposition
+- scope lifecycle or canonical mutation refactors
+- general CSS consolidation
+- unrelated report/import cleanup
+- a split of the `studio` documentation corpus into additional documentation scopes
+
+## Phase 0 Completion
+
+- Public and manage entry/module boundaries are inventoried.
+- Route, access, service, startup, controller, state, and toolbar contracts are recorded.
+- Current durable owner documents are linked from the D0 authority map and this tracker.
+- The view/mode request has been converted to the accepted code-owned projection task.
+- Focused public/manage baseline checks pass.
+- No code or compatibility path was removed in Phase 0.

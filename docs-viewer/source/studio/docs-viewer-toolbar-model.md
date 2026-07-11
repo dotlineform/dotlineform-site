@@ -2,13 +2,16 @@
 doc_id: docs-viewer-toolbar-model
 title: Toolbar Model
 added_date: 2026-05-31
-last_updated: 2026-06-17
+last_updated: 2026-07-11
+summary: Docs Viewer toolbar-region ownership and the distinction between viewer, manage, active-view, and context-panel controls.
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer Toolbar Model
 
 This is Docs Viewer-specific UI guidance, not a generic Studio toolbar primitive.
+
+This document owns toolbar regions and layout semantics. Current control eligibility is split across renderers and controllers; the Phase 4 [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) task will centralize eligibility while keeping handlers and live pressed, dirty, busy, pending, and disabled state in focused controllers.
 
 ## Purpose
 

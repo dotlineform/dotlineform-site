@@ -2,8 +2,9 @@
 doc_id: docs-viewer-view-capability-contract
 title: View Capability Contract
 added_date: 2026-05-29
-last_updated: 2026-05-29
+last_updated: 2026-07-11
 ui_status: ""
+summary: Current hosted-view layout capability fields and their route-config, registry, and panel-layout consumers.
 parent_id: docs-viewer
 viewable: true
 ---
@@ -14,6 +15,8 @@ This is the model for Docs Viewer panel views, layout rules, and extensible view
 - capabilities normalize from hosted views,
 - panel layout uses the active index view’s capabilities, and
 - management-enabled Docs Viewer routes get a placeholder graph view plus a single toolbar toggle.
+
+This contract is limited to current hosted-view layout capabilities such as supported index-panel states and toolbar presence. It does not own the planned combined view, document-mode, or toolbar-control eligibility model. That work is code-owned by the Phase 4 [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) task; browser route config cannot invent executable definitions or widen app/capability access.
 
 ## Purpose
 

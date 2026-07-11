@@ -329,6 +329,12 @@
           "ui_status": "in-progress"
         },
         {
+          "doc_id": "site-request-docs-viewer-foundation-refactor-implementation",
+          "title": "Docs Viewer Foundation Refactor Implementation",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-foundation-refactor-implementation.json",
+          "ui_status": "in-progress"
+        },
+        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -336,9 +342,9 @@
         },
         {
           "doc_id": "site-request-docs-viewer-view-mode-registry",
-          "title": "Docs Viewer View And Mode Registry",
+          "title": "Docs Viewer View, Mode, And Control Projection",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-view-mode-registry.json",
-          "ui_status": "review"
+          "ui_status": "planned"
         },
         {
           "doc_id": "site-request-library-import-generated-parent-nodes",
@@ -1275,5 +1281,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T13:50:30Z"
+  "generated_at": "2026-07-11T14:02:58Z"
 }

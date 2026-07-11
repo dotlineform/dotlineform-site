@@ -2,8 +2,9 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-06-13
+last_updated: 2026-07-11
 ui_status: urgent
+summary: Current Docs Viewer route-shell, shared runtime, controller lifecycle, URL, and generated-read overview, with links to focused architecture owners.
 parent_id: docs-viewer
 ---
 # Docs Viewer Overview
@@ -23,8 +24,11 @@ Current live scopes:
 - Studio docs at `/docs/` through the standalone Docs Viewer service
 - Library docs at `/library/`
 - Analysis docs at `/analysis/`
+- Moments docs at `/moments/`
 
 Catalogue pages do not use the Docs Viewer.
+
+This page is a system overview, not the authority for the foundation refactor or a row-level module inventory. Use [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) for the durable public/manage boundary, [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for current owners, and [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) for the preserved Phase 0 baseline and phase tasks.
 
 ## Shared Module Model
 

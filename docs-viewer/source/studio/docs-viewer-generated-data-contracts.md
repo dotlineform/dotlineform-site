@@ -2,7 +2,8 @@
 doc_id: docs-viewer-generated-data-contracts
 title: Generated Data Contracts
 added_date: 2026-06-05
-last_updated: 2026-06-10
+last_updated: 2026-07-11
+summary: Public and manage generated Docs Viewer payload roots, schemas, read authority, publishing, and builder ownership contracts.
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer Generated Data Contracts
@@ -18,6 +19,7 @@ It separates public read-only route data from local/manage route data so payload
 - Generated-data runtime helpers are read owners only; backend writes and management capability truth remain in management services.
 - There should be no compatibility fallback to retired public payloads once a route contract has moved.
 - Data Sharing document source-context reads are not generated-data runtime reads; they use Docs Viewer-owned helpers over scope config and source Markdown.
+- The current generated-data runtime is the transport/retry owner, not a collection-provider abstraction. Phase 2 adds a configured-scope provider over its named reads; provider presence does not grant backend or write authority.
 
 ## Current Payload Roots
 

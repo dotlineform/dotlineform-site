@@ -2,7 +2,8 @@
 doc_id: docs-viewer-runtime-surfaces
 title: Runtime Surfaces
 added_date: 2026-06-05
-last_updated: 2026-06-13
+last_updated: 2026-07-11
+summary: Current Docs Viewer route, shell, entrypoint, config, CSS, generated-data, and public/manage surface matrix.
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer Runtime Surfaces
@@ -24,6 +25,8 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 | Report runtime | absent unless explicitly public-promoted | absent unless explicitly public-promoted | available through manage-owned report mounting |
 | Scope query | ignored/normalized away | ignored/normalized away | allowed |
 | Management query | ignored/normalized away | ignored/normalized away | normalized away; `/docs/` owns management |
+
+Public `/moments/` uses the same public entrypoint, route registry, static generated-data authority, and read-only boundary as Library and Analysis. Its route config currently narrows the main-view toolbar through UI policy. The route is part of the Phase 0 public baseline even though the compact matrix above uses Library and Analysis as the two representative public installs covered by the focused browser smoke.
 
 ## Entrypoint And Shell Surface
 
@@ -62,6 +65,10 @@ It is the current-state surface map; fine-grained browser module risk lives in [
 
 Route config resolution no longer reads inline config scripts, legacy `#docsViewerRoot` data attributes, camelCase field aliases, or object-map route registries.
 Backend reachability and write availability are not browser-side route-config authority; they remain in the local management capability flow.
+
+The current pre-refactor service projection still exposes a local generated-read base URL only when route access allows management. Phase 1 separates named generated-data service presence from management UI composition while preserving all current public URLs and network isolation.
+
+There is no explicit route-feature list in the current registry. Search, recently added, bookmarks, reports, scope selection, source editing, and management startup are inferred from current route/access/config shapes or tolerate missing controls. Phase 3 introduces an allowlisted feature projection; until then, this absence is part of the baseline rather than a config extension point.
 
 ## Scope-Owned Data Roots
 

@@ -2,7 +2,8 @@
 doc_id: docs-viewer-runtime-boundary
 title: Runtime
 added_date: 2026-03-31
-last_updated: 2026-06-05
+last_updated: 2026-07-11
+summary: Durable public, manage, shared-runtime, service-authority, and asset-boundary contract for Docs Viewer installations.
 parent_id: docs-viewer
 ---
 # Docs Viewer Runtime
@@ -39,6 +40,22 @@ Current model:
 - public and manage routes share lower-level core modules only when those modules have no local-service, write-authority, management UI, or manage-only CSS/config dependency
 - public route shells render only public-safe mounts and config
 - the local manage shell renders management-capable mounts and receives manage-owned renderer bundles from the manage entrypoint
+
+## Foundation Baseline And Target
+
+The Phase 0 baseline is recorded in [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
+
+In the current pre-refactor runtime, `allowManagement` still controls several distinct decisions: public/read-only projection, management UI loading, local generated-read service selection, management service presence, source-service exposure, and some hosted-view/mode access. Public and manage app-start helpers pass an app-kind option, but the current route context does not retain it as independent authority.
+
+That coupling is current behavior to preserve during Phase 1, not the durable target. The target separates:
+
+- app kind and route composition
+- route visibility/access policy
+- named service presence
+- backend capability truth
+- feature and view/mode/control eligibility
+
+Backend capabilities authorize operations. Route config, registered views, visible controls, and service URLs do not.
 
 ## Public And Manage Install Policy
 

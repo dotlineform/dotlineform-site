@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-10723d6fcc2185c2ee1df5ace0cd6f28",
-    "generated_at_utc": "2026-07-11T13:49:39Z",
-    "count": 236
+    "version": "blake2b-b862df0b1d81bce507f4bd684845f302",
+    "generated_at_utc": "2026-07-11T14:03:59Z",
+    "count": 237
   },
   "entries": [
     {
@@ -1399,6 +1399,35 @@
       "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer architecture assessment and refactor roadmap assessment and change requests change requests 2026-07-11 2026 07 11"
     },
     {
+      "id": "site-request-docs-viewer-foundation-refactor-implementation",
+      "kind": "doc",
+      "title": "Docs Viewer Foundation Refactor Implementation",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation",
+      "last_updated": "2026-07-11",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-11 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-foundation-refactor-implementation",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "foundation",
+        "refactor",
+        "implementation",
+        "docs viewer foundation refactor implementation",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-11",
+        "2026",
+        "07",
+        "11"
+      ],
+      "search_text": "site-request-docs-viewer-foundation-refactor-implementation site request docs viewer foundation refactor implementation docs viewer foundation refactor implementation change requests change requests 2026-07-11 2026 07 11"
+    },
+    {
       "id": "site-request-docs-viewer-semantic-reference-editor",
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
@@ -1430,12 +1459,12 @@
     {
       "id": "site-request-docs-viewer-view-mode-registry",
       "kind": "doc",
-      "title": "Docs Viewer View And Mode Registry",
+      "title": "Docs Viewer View, Mode, And Control Projection",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry",
-      "last_updated": "2026-06-18",
+      "last_updated": "2026-07-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-18 • Change Requests",
+      "display_meta": "2026-07-11 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-view-mode-registry",
         "site",
@@ -1445,17 +1474,19 @@
         "view",
         "mode",
         "registry",
-        "docs viewer view and mode registry",
+        "docs viewer view, mode, and control projection",
         "and",
+        "control",
+        "projection",
         "change requests",
         "change",
         "requests",
-        "2026-06-18",
+        "2026-07-11",
         "2026",
-        "06",
-        "18"
+        "07",
+        "11"
       ],
-      "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view and mode registry and change requests change requests 2026-06-18 2026 06 18"
+      "search_text": "site-request-docs-viewer-view-mode-registry site request docs viewer view mode registry docs viewer view, mode, and control projection and control projection change requests change requests 2026-07-11 2026 07 11"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -3169,32 +3200,32 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-13 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-06-13",
+        "2026-07-11",
         "2026",
-        "06",
-        "13"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-panel-hosts",
       "kind": "doc",
       "title": "Panel Hosts",
       "href": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-03 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-panel-hosts",
         "docs",
@@ -3203,12 +3234,12 @@
         "hosts",
         "panel hosts",
         "docs viewer",
-        "2026-06-03",
+        "2026-07-11",
         "2026",
-        "06",
-        "03"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-panel-hosts docs viewer panel hosts panel hosts docs viewer 2026-06-03 2026 06 03"
+      "search_text": "docs-viewer-panel-hosts docs viewer panel hosts panel hosts docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-portable-setup",
@@ -3363,10 +3394,10 @@
       "kind": "doc",
       "title": "Runtime",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-05 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -3374,22 +3405,22 @@
         "runtime",
         "boundary",
         "docs viewer",
-        "2026-06-05",
+        "2026-07-11",
         "2026",
-        "06",
-        "05"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer 2026-06-05 2026 06 05"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-generated-data-contracts",
       "kind": "doc",
       "title": "Generated Data Contracts",
       "href": "/docs/?scope=studio&doc=docs-viewer-generated-data-contracts",
-      "last_updated": "2026-06-10",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-10 • Runtime",
+      "display_meta": "2026-07-11 • Runtime",
       "search_terms": [
         "docs-viewer-generated-data-contracts",
         "docs",
@@ -3399,12 +3430,12 @@
         "contracts",
         "generated data contracts",
         "runtime",
-        "2026-06-10",
+        "2026-07-11",
         "2026",
-        "06",
-        "10"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-generated-data-contracts docs viewer generated data contracts generated data contracts runtime 2026-06-10 2026 06 10"
+      "search_text": "docs-viewer-generated-data-contracts docs viewer generated data contracts generated data contracts runtime 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-javascript-inventory",
@@ -3435,10 +3466,10 @@
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-05 • Runtime",
+      "display_meta": "2026-07-11 • Runtime",
       "search_terms": [
         "docs-viewer-runtime-module-ownership",
         "docs",
@@ -3447,22 +3478,22 @@
         "module",
         "ownership",
         "runtime module ownership",
-        "2026-06-05",
+        "2026-07-11",
         "2026",
-        "06",
-        "05"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-runtime-module-ownership docs viewer runtime module ownership runtime module ownership 2026-06-05 2026 06 05"
+      "search_text": "docs-viewer-runtime-module-ownership docs viewer runtime module ownership runtime module ownership 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-runtime-surfaces",
       "kind": "doc",
       "title": "Runtime Surfaces",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-surfaces",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-06-13 • Runtime",
+      "display_meta": "2026-07-11 • Runtime",
       "search_terms": [
         "docs-viewer-runtime-surfaces",
         "docs",
@@ -3470,12 +3501,12 @@
         "runtime",
         "surfaces",
         "runtime surfaces",
-        "2026-06-13",
+        "2026-07-11",
         "2026",
-        "06",
-        "13"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-semantic-references",
@@ -3604,10 +3635,10 @@
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=docs-viewer-toolbar-model",
-      "last_updated": "2026-06-17",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-17 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-toolbar-model",
         "docs",
@@ -3616,12 +3647,12 @@
         "model",
         "toolbar model",
         "docs viewer",
-        "2026-06-17",
+        "2026-07-11",
         "2026",
-        "06",
-        "17"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model toolbar model docs viewer 2026-06-17 2026 06 17"
+      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model toolbar model docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "doc-ui-status",
@@ -3655,10 +3686,10 @@
       "kind": "doc",
       "title": "View Capability Contract",
       "href": "/docs/?scope=studio&doc=docs-viewer-view-capability-contract",
-      "last_updated": "2026-05-29",
+      "last_updated": "2026-07-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-29 • Docs Viewer",
+      "display_meta": "2026-07-11 • Docs Viewer",
       "search_terms": [
         "docs-viewer-view-capability-contract",
         "docs",
@@ -3668,12 +3699,12 @@
         "contract",
         "view capability contract",
         "docs viewer",
-        "2026-05-29",
+        "2026-07-11",
         "2026",
-        "05",
-        "29"
+        "07",
+        "11"
       ],
-      "search_text": "docs-viewer-view-capability-contract docs viewer view capability contract view capability contract docs viewer 2026-05-29 2026 05 29"
+      "search_text": "docs-viewer-view-capability-contract docs viewer view capability contract view capability contract docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-viewable-field",

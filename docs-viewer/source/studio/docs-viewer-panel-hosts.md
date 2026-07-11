@@ -2,7 +2,8 @@
 doc_id: docs-viewer-panel-hosts
 title: Panel Hosts
 added_date: 2026-05-28
-last_updated: 2026-06-03
+last_updated: 2026-07-11
+summary: Current Docs Viewer app-shell panel, hosted-view, app-session, display-mode, and view-context ownership boundaries.
 parent_id: docs-viewer
 viewable: true
 ---
@@ -11,6 +12,8 @@ viewable: true
 Docs Viewer now has a JavaScript-owned app-shell foundation for coordinated panel regions and hosted views.
 
 This document records the durable design and implemented ownership boundaries.
+
+This document owns the current panel/host boundary, not the planned combined eligibility model. [Docs Viewer View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) owns the Phase 4 task. Route config may describe panels and narrow known presentation policy, but it must not register executable lifecycle modules or handlers.
 
 ## Current Shape
 
