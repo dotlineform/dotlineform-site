@@ -11,14 +11,6 @@
       "parent_title": "Change Requests"
     },
     {
-      "doc_id": "site-request-docs-viewer-foundation-refactor-implementation",
-      "title": "Docs Viewer Foundation Refactor Implementation",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-foundation-refactor-implementation.json",
-      "added_date": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
       "doc_id": "docs-viewer-documentation-register",
       "title": "Documentation Register And Authority Map",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-27",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
+    },
+    {
+      "doc_id": "data-sharing-documents-returned-package-review",
+      "title": "Documents Returned Package Review",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-returned-package-review.json",
+      "added_date": "2026-06-27",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-07-11T14:02:00Z"
+  "generated_at": "2026-07-11T16:20:42Z"
 }

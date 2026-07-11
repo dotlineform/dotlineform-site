@@ -329,12 +329,6 @@
           "ui_status": "in-progress"
         },
         {
-          "doc_id": "site-request-docs-viewer-foundation-refactor-implementation",
-          "title": "Docs Viewer Foundation Refactor Implementation",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-foundation-refactor-implementation.json",
-          "ui_status": "in-progress"
-        },
-        {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
@@ -1281,5 +1275,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-11T15:38:56Z"
+  "generated_at": "2026-07-11T16:20:42Z"
 }

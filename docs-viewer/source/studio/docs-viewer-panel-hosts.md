@@ -13,7 +13,7 @@ Docs Viewer now has a JavaScript-owned app-shell foundation for coordinated pane
 
 This document records the durable design and implemented ownership boundaries.
 
-This document owns the current panel/host boundary, not the planned combined eligibility model. [Docs Viewer View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) owns the Phase 4 task. Route config may describe panels and narrow known presentation policy, but it must not register executable lifecycle modules or handlers.
+This document owns the current panel/host boundary. `docs-viewer-view-registry.js` owns combined view, mode, and control eligibility. Route config may describe panels and narrow known presentation policy, but it must not register executable lifecycle modules or handlers.
 
 ## Current Shape
 

@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Implemented as Phase 4 of [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
+Implemented as Phase 4 of the Docs Viewer architecture refactor.
 
 This task replaces the earlier proposal for a browser JSON view registry. Built-in views, document modes, controls, lifecycle implementations, and handlers will be code-owned. Route policy may hide or narrow known definitions but cannot invent modules, lifecycles, handlers, or control ids.
 

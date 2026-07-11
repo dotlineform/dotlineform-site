@@ -228,7 +228,7 @@ The decisions are spread across:
 - source-editor state
 - route config
 
-The Phase 4 [Docs Viewer View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) task carries the accepted solution to this problem.
+Phase 4 implemented the accepted code-owned projection described below.
 
 ## View, Mode, And Control Projection Assessment
 
@@ -618,7 +618,7 @@ Acceptance:
 
 Purpose: establish the behavior that refactors must preserve and reconcile only the architecture contracts required for phases 1-5.
 
-Implementation record: [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation). Phase 0 is complete; the tracker owns the preserved baseline, checks, and phase tasks.
+Phase 0 is complete. Its preserved baseline and checks are recorded here so later maintenance does not depend on a separate completed-work tracker.
 
 Tasks:
 
@@ -638,11 +638,28 @@ Acceptance:
 - baseline checks pass
 - implementation tasks have named owners and no review feature behavior
 
+### Phase 0 Preserved Baseline
+
+Recorded on 2026-07-11 before the foundation changes:
+
+- the public entry shim had four modules; the shared app-boot graph had 43 modules and no static manage-owned import
+- the effective public graph had 46 unique modules; the effective manage boot graph had 52 before later lazy workflows
+- `/library/`, `/analysis/`, and `/moments/` were fixed-scope public readers; `/docs/` was the scope-selecting local manage route
+- app kind, generated reads, management UI, source-service exposure, and manage view access were inferred through a combined management-oriented authority chain
+- startup declared event binding, config loading, viewer settings, bookmark initialization, optional management initialization, initial index/route loading, and optional import opening
+- the state-domain audit identified duplicated panel expansion, UI-status lookup, non-viewable presentation, route identity, capability, reload, and management status fields
+
+Baseline verification:
+
+- focused public-boundary, static-asset, and service-config tests: 17 passed
+- `docs-viewer-smoke`: three baseline checks passed
+- baseline summary: `var/admin/test-runs/docs-viewer-foundation-phase-0-baseline/summary.md`
+
 ## Phase 1: Explicit App Context And Authority
 
 Purpose: replace binary access inference with an explicit context that can later support review without granting management.
 
-Implementation complete. [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the v2 route config, explicit app context, independent service surfaces, removed APIs, and focused checks.
+Implementation complete.
 
 Proposed context shape:
 
@@ -671,6 +688,17 @@ Acceptance:
 - local generated-read authority is not structurally tied to general management
 - contexts can express a future local non-management route without adding a new boolean combination
 - public entrypoint module graph remains free of local write modules
+
+### Phase 1 Outcome
+
+Implemented on 2026-07-11.
+
+- route records and entrypoints use explicit matching `public`, `manage`, or future `review` app kinds
+- app context exposes named route access, feature policy, service availability, and an initially empty backend-capability slot
+- generated-data, source, management, and browser-safe config service surfaces are independent; URL presence does not authorize operations
+- management shell and lazy startup require manage UI composition plus a management surface; source-editor services depend on the source surface rather than a combined management boolean
+- public metadata projection remains narrow and public graphs contain no management or review modules
+- the former binary management/read-only browser fields and combined generated/management URL fields were removed without aliases
 
 ## Phase 2: Data And Source Provider Boundary
 
@@ -747,7 +775,7 @@ Implemented on 2026-07-11.
 
 ## Phase 4: View, Mode, And Control Projection
 
-Purpose: implement the code-owned [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) child task without introducing a second config authority.
+Purpose: implement code-owned view, mode, and control projection without introducing a second config authority.
 
 Tasks:
 
@@ -812,6 +840,17 @@ Implemented on 2026-07-11.
 - The management state facade now reads route identity only from `routeSession` and reload state only from `selectedDocument`; the removed fallbacks have no aliases.
 - Service/provider construction remains in app composition because Phase 2 had already established the correct owner.
 - No review-specific code or generic event/store rewrite was added.
+
+### Foundation Verification Record
+
+| phase | focused proof | integration proof |
+| --- | --- | --- |
+| 0 | 17 public-boundary, static-asset, and service-config tests | baseline profile passed; `var/admin/test-runs/docs-viewer-foundation-phase-0-baseline/summary.md` |
+| 1 | app/route/service-context and metadata-context module smokes; focused test sets passed | 4-check profile passed; `var/admin/test-runs/docs-viewer-foundation-phase-1-final/summary.md` |
+| 2 | 22 focused tests and configured-scope provider/router smoke | 4-check profile passed; `var/admin/test-runs/docs-viewer-foundation-phase-2-final-entrypoint/summary.md` |
+| 3 | 37 focused tests and route feature/config/startup/toolbar smoke | 4-check profile passed; `var/admin/test-runs/docs-viewer-foundation-phase-3-final/summary.md` |
+| 4 | 25 focused tests and registry/router browser module smoke | 4-check profile passed; `var/admin/test-runs/docs-viewer-phase4-view-registry-final/summary.md` |
+| 5 | 30 focused tests and router/runtime-owner browser module smoke | 4-check profile passed; `var/admin/test-runs/docs-viewer-phase5-coordinator-reduction-final/summary.md` |
 
 ## Docs Review Readiness Checkpoint
 
@@ -931,7 +970,7 @@ Recommended order of work (to be reviewed after each step):
 1. create the D0 documentation register and authority map as a dedicated assessment task — initial register complete and ready for review
 2. create the separate Documentation Search Discovery And Relevance change request
 3. create the W0 external user-workspace artifact roots change request and tracker
-4. create an implementation tracker for phases 0-5 using the mapped current owners — complete
+4. record the phases 0-5 baseline, outcomes, and verification evidence directly in this roadmap — complete
 5. complete the runtime baseline and reconcile only prerequisite contracts — complete
 6. begin D2 user/maintainer entrypoint work as a separate documentation batch
 7. implement explicit app context and authority — complete
@@ -963,7 +1002,7 @@ Avoid broad rewrites of these areas until after the docs-preview work:
 
 ## Verification Strategy
 
-Baseline checks should be recorded in an implementation tracker and run only where the slice touches their contract.
+Baseline and phase checks are recorded above and should run only where a slice touches their contract.
 
 Potential focused checks:
 

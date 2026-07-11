@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-90119819c47675bbcf04d12d20e44578",
-    "generated_at_utc": "2026-07-11T14:24:07Z",
-    "count": 237
+    "version": "blake2b-ed185900439fc5ef0fac6a7542a8692d",
+    "generated_at_utc": "2026-07-11T16:20:42Z",
+    "count": 236
   },
   "entries": [
     {
@@ -1397,35 +1397,6 @@
         "11"
       ],
       "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer architecture assessment and refactor roadmap assessment and change requests change requests 2026-07-11 2026 07 11"
-    },
-    {
-      "id": "site-request-docs-viewer-foundation-refactor-implementation",
-      "kind": "doc",
-      "title": "Docs Viewer Foundation Refactor Implementation",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation",
-      "last_updated": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-foundation-refactor-implementation",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "foundation",
-        "refactor",
-        "implementation",
-        "docs viewer foundation refactor implementation",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-11",
-        "2026",
-        "07",
-        "11"
-      ],
-      "search_text": "site-request-docs-viewer-foundation-refactor-implementation site request docs viewer foundation refactor implementation docs viewer foundation refactor implementation change requests change requests 2026-07-11 2026 07 11"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",

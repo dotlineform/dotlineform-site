@@ -28,7 +28,7 @@ Current live scopes:
 
 Catalogue pages do not use the Docs Viewer.
 
-This page is a system overview, not the authority for the foundation refactor or a row-level module inventory. Use [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) for the durable public/manage boundary, [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for current owners, and [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) for the preserved Phase 0 baseline and phase tasks.
+This page is a system overview, not a row-level module inventory. Use [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) for the durable public/manage boundary and [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for current owners.
 
 ## Shared Module Model
 

@@ -19,7 +19,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 - The management controller receives a narrow context API through the neutral lazy-controller adapter so public read-only viewers do not download or execute management-only orchestration.
 - Route workflow commands are exposed only through the private route workflow command contract, backed by explicit route-session, scope-config, document-index, selected-document, search/recent, and status inputs.
 - The returned app handle stays intentionally small: `root`, `routeContext()`, `appShellRefs`, and `initialLoadPromise`.
-- [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the current graph counts and phase owner changes. This document remains the durable current-owner map and must be updated in the same slice whenever responsibility moves.
+- This document is the durable current-owner map and must be updated in the same slice whenever responsibility moves.
 - `docs-viewer-app-context.js` owns explicit app context plus route context; `docs-viewer-access.js` owns route visibility/composition projection; `docs-viewer-service-context.js` owns independent named service surfaces.
 - `docs-viewer-configured-scope-provider.js` owns the current configured-scope collection contract. `docs-viewer-route-features.js` owns allowlisted feature normalization and code-record filtering without owning feature lifecycle.
 

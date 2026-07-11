@@ -43,8 +43,6 @@ Current model:
 
 ## App Context And Authority
 
-The Phase 0 baseline and Phase 1 outcome are recorded in [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation).
-
 Current app context is explicit:
 
 ```text

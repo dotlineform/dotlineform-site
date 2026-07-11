@@ -11,7 +11,7 @@ viewable: true
 
 This is Docs Viewer-specific UI guidance, not a generic Studio toolbar primitive.
 
-This document owns toolbar regions and layout semantics. Current control eligibility is split across renderers and controllers; the Phase 4 [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) task will centralize eligibility while keeping handlers and live pressed, dirty, busy, pending, and disabled state in focused controllers.
+This document owns toolbar regions and layout semantics. `docs-viewer-view-registry.js` centralizes control eligibility while focused controllers retain handlers and live pressed, dirty, busy, pending, and disabled state.
 
 ## Purpose
 

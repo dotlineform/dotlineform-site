@@ -65,7 +65,6 @@ Those boundaries are intentional:
 
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the route-shell, runtime, and URL/state model.
 - [Documentation Register And Authority Map](/docs/?scope=studio&doc=docs-viewer-documentation-register) identifies current documentation owners, overlaps, workflow gaps, and proposed cleanup batches. The `studio` corpus remains the single reference scope for development and maintenance documentation.
-- [Docs Viewer Foundation Refactor Implementation](/docs/?scope=studio&doc=site-request-docs-viewer-foundation-refactor-implementation) records the Phase 0 public/manage baseline, focused checks, and implementation tasks for roadmap phases 1-5.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains source roots, parent/child structure, and generated ordering.
 - [Docs Viewer Static Route Template](/docs/?scope=studio&doc=docs-viewer-static-route-template) explains public/manage route shell ownership, stable mount points, and runtime entrypoint boundaries.
 - [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template) explains how new public route shells are rendered from the canonical template into tracked `site/` HTML.

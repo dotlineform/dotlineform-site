@@ -16,7 +16,7 @@ This is the model for Docs Viewer panel views, layout rules, and extensible view
 - panel layout uses the active index view’s capabilities, and
 - management-enabled Docs Viewer routes get a placeholder graph view plus a single toolbar toggle.
 
-This contract is limited to current hosted-view layout capabilities such as supported index-panel states and toolbar presence. It does not own the planned combined view, document-mode, or toolbar-control eligibility model. That work is code-owned by the Phase 4 [View, Mode, And Control Projection](/docs/?scope=studio&doc=site-request-docs-viewer-view-mode-registry) task; browser route config cannot invent executable definitions or widen app/capability access.
+This contract is limited to hosted-view layout capabilities such as supported index-panel states and toolbar presence. Combined view, document-mode, and toolbar-control eligibility is code-owned by `docs-viewer-view-registry.js`; browser route config cannot invent executable definitions or widen app/capability access.
 
 ## Purpose
 
