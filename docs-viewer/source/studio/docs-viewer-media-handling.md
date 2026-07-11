@@ -30,7 +30,7 @@ It does not currently cover:
 - Library returned-package Data Sharing imports under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - browser runtime asset loading outside generated Docs Viewer content
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) plans to reuse the existing inline raster data-URL path for selected reviewed-package Markdown. Package-specific code will resolve and normalize the validated source; Docs Import will continue to plan, retarget, decode, and materialize supported PNG, JPEG, WebP, and GIF data URLs. Non-embedded package assets need explicit import mappings and are not automatically promoted from the Data Sharing workspace.
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) plans to reuse the existing inline raster data-URL path for document records parsed from immutable staged Data Sharing JSONL. Docs Import will continue to plan, retarget, decode, and materialize supported PNG, JPEG, WebP, and GIF data URLs. Non-embedded package assets need explicit import mappings and are not automatically promoted from the Data Sharing workspace.
 
 ## Scope Configuration
 

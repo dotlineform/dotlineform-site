@@ -112,8 +112,8 @@ Returned data can include preview Markdown, proposed doc identity, operation typ
 
 ## Planned Reviewed-Package Import
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will extend the managed import family with a validated-package source provider and create-only batch preview/apply flow.
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will extend the managed import family with schema-aware Data Sharing JSON/JSONL collection import.
 
-It will not pass external workspace paths as `staged_filename`, and it will not feed front-matter-bearing package Markdown directly to the body-only Markdown preview. The provider will resolve safe package/document identities and normalize front matter plus body content before shared import validation, media planning, source creation, and rebuild work.
+It will resolve a safe immutable staged-file identity through Data Sharing metadata, detect supported package headers before the generic JSON/JSONL file fallback, and normalize document records before shared validation, media planning, source writes, and rebuild work. It will not import from the derived Docs Review `source/*.md` projection.
 
-Reviewed-package collisions require replacement target IDs. The reviewed-package endpoint must not expose the existing document-overwrite controls.
+For each selected record, the user can create, explicitly overwrite, or skip. Collisions must require an explicit choice rather than silently selecting overwrite or a replacement ID.

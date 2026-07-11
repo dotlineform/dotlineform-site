@@ -103,9 +103,10 @@ catalogue and registry data
   -> complete Data Sharing package
   -> external AI analysis and editing
   -> returned-package validation
-  -> isolated Docs Review preview and manual editing
-  -> selected files enter Docs Viewer Import as new documents
-  -> accepted documents join a configured collection
+  -> persistent read-only Docs Review projection
+  -> staged package enters Docs Viewer collection import
+  -> selected records are created, overwritten, or skipped by the user
+  -> accepted documents join or update a configured collection
 ```
 
 This is a loop, not a one-time publication pipeline.
@@ -132,7 +133,7 @@ The complete vision is not implemented yet. Current and planned work moves towar
 - source-aware semantic token expansion
 - full source-and-asset Data Sharing packages
 - isolated returned-package preview in Docs Review
-- create-only Docs Viewer import for selected reviewed-package documents
+- schema-aware Docs Viewer collection import from immutable staged JSONL
 - summary-aware and later broader content-aware search
 
 Each project should remain independently reviewable. The vision explains why the projects connect; it does not justify mixing their implementation responsibilities.

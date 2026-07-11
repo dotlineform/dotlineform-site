@@ -51,7 +51,7 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-Planned extension: [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will separate source resolution/normalization from the shared preview and apply machinery. The current staged-file behavior should become one source provider; a validated reviewed-package provider should become another. Create-only reviewed-package policy belongs in its orchestration layer, while Markdown validation, inline-media planning/materialization, source writes, and rebuild follow-through remain shared.
+Planned extension: [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will add schema-aware Data Sharing JSON/JSONL collection parsing before the generic file fallback. A shared record normalizer will feed both persistent read-only review materialization and import, while Markdown validation, inline-media planning/materialization, create/overwrite formatting, source writes, and rebuild follow-through remain shared lower-level services.
 
 ## `docs-viewer/services/docs_html_import.py`
 

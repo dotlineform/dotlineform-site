@@ -53,7 +53,7 @@ This Data Sharing slice ends at the temporary review-folder handoff:
 
 No live source docs are created, overwritten, or deleted by the Data Sharing source-folder action.
 
-This implemented text-oriented folder is not source-faithful enough for configured-source import. The superseding full-package request provides exact source and validation; the separate [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) request owns create-only admission as new documents. Docs Review does not acquire canonical write authority.
+This implemented text-oriented folder is not source-faithful enough for complete configured-source import. The superseding full-package request provides exact source and validation; the separate [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) request owns schema-aware import from the immutable staged JSONL. Docs Review does not acquire canonical write authority.
 
 ## Temporary Review Source Folders
 
@@ -240,9 +240,9 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 ## Follow-On Workflow
 
-The next workflow is [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which exports exact Markdown and supporting assets, validates the returned package, and hands it to Docs Review for preview and temporary editing.
+The next workflow is [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which exports exact Markdown and supporting assets, validates the returned package, and materializes a persistent read-only Docs Review projection.
 
-Any later configured-source creation follows [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package), with source normalization, create-only collision policy, hierarchy/link mapping, preview/apply, media handling, and rebuild contracts.
+Any later configured-source import follows [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package), with shared JSONL normalization, explicit create/overwrite/skip choices, hierarchy/link mapping, media handling, and rebuild contracts.
 
 ## Implementation Architecture
 
@@ -290,7 +290,7 @@ The folder id should be a display-safe folder name derived from the staged file'
 - edit and rebuild temporary source
 - handle stale or manually deleted folders
 
-Managed `/docs/` may later accept a safe package/document identity handoff for create-only import. That does not add configured-source authority to `/docs-review/`.
+Managed `/docs/` may later accept a safe immutable-package handoff and import the associated staged JSONL. That does not add configured-source authority to `/docs-review/`.
 
 The normal `/docs/` app remains unaware of this workflow.
 

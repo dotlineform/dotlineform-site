@@ -15,7 +15,7 @@ In progress as the producer for the complete [Docs Review](/docs/?scope=studio&d
 
 The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export and returned-package services, and Docs Review sessions now use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. Full-package schema, export, intake, and validation remain to be implemented.
 
-Phase 1 owns full-fidelity export, returned-package intake, validation, and review-workspace handoff. It does not own the later configured-source write. That work is now specified by [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) as a create-only Docs Viewer import.
+Phase 1 owns full-fidelity export, returned-package intake, validation, and the persistent read-only review projection. It does not own the later configured-source write. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) specifies schema-aware collection import from the immutable staged JSONL.
 
 ## Product Context: Iterative Knowledge Creation
 
@@ -73,7 +73,7 @@ JSONL is the default and primary format. A single JSON file containing the same 
 
 Images and other binary assets accompany the JSONL separately and are mapped through embedded and package-level manifests. A folder is the local workspace form. An archive may be offered as an optional transport convenience only when the target service is known to support it; ZIP support is not a requirement for the core workflow.
 
-For reviewed documents intended for create-only import, prefer embedding new or replaced raster images directly in returned Markdown as supported data URLs when the external editing surface can supply them. Data Sharing must validate their package size and content shape, but it does not need to promote them into canonical media paths. The downstream Docs Viewer importer already has a preview/materialization path for PNG, JPEG, WebP, and GIF data URLs. Separate asset files remain necessary for existing packaged dependencies, attachments, interactive content, and unsupported inline forms.
+For reviewed documents intended for import, prefer embedding new or replaced raster images directly in returned Markdown as supported data URLs when the external editing surface can supply them. Data Sharing must validate their package size and content shape, but it does not need to promote them into canonical media paths. The downstream Docs Viewer importer already has a planning/materialization path for PNG, JPEG, WebP, and GIF data URLs. Separate asset files remain necessary for existing packaged dependencies, attachments, interactive content, and unsupported inline forms.
 
 ## Ownership Boundary
 
@@ -98,25 +98,25 @@ Data Sharing owns:
 Docs Review owns only:
 
 - listing validated returned package folders
-- rendering and building a package in isolation
-- temporary Markdown editing while preserving the validated package hierarchy
+- rendering the persistent package-local projection
+- initial build or repair of missing derived output
 - package asset-inventory display
 - canonical counterpart links and manual comparison
 
-Docs Review does not discover export dependencies, validate transport archives, or write canonical source.
+Docs Review does not discover export dependencies, validate transport archives, edit preview source, or write configured source.
 
 ### Docs Viewer Import Handoff
 
-Selected reviewed-package documents may later be handed to managed Docs Viewer Import as new-document candidates.
+The immutable staged JSONL associated with a reviewed package may later be handed to managed Docs Viewer Import as a document collection.
 
 Data Sharing supplies:
 
 - a trusted validated package identity
-- safe package document identities
-- validated source and inventory files
+- the immutable staged JSONL identity
+- validated record and inventory contracts
 - provenance and validation diagnostics
 
-Docs Viewer Import owns target-scope selection, front-matter normalization, collision handling, parent/link mapping, embedded-image materialization, source creation, and rebuilds. The workflow never classifies reviewed files as updates, replacements, promotions, or deletes. A collision requires a new target `doc_id`.
+Docs Viewer Import owns target-scope selection, record selection, front-matter normalization, explicit create/overwrite/skip choices, parent/link mapping, embedded-image materialization, configured source writes, and rebuilds. It reads the staged JSONL rather than the derived preview Markdown.
 
 Docs Review may link to that managed import flow, but it must not acquire canonical mutation endpoints. The detailed reuse boundary is specified in [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
 
@@ -285,11 +285,11 @@ Validation includes:
 - no execution of returned scripts during intake
 - concise errors, warnings, and package counts
 
-Successful intake materializes each validated `canonical_markdown` row as temporary `source/<doc-id>.md` inside `import-preview/<package_id>/`, copies validated asset files, and writes regenerated manifests for Docs Review. This materialization is a review-workspace projection; it does not write canonical source or public assets.
+Successful intake materializes each validated `canonical_markdown` row as persistent read-only `source/<doc-id>.md` inside `import-preview/<package_id>/`, copies validated asset files, and writes regenerated manifests for Docs Review. This materialization is a review-workspace projection; it does not write canonical source or public assets and is not the later import input.
 
 The Docs Review consumer requires the trusted handoff `manifest.json` to use `schema_version: docs_review_validated_package_v1`, carry the matching safe `package_id`, set `status: validated`, identify `source_scope`, and optionally identify `default_doc_id` and a display `title`. Its regenerated `inventories/assets.json` uses asset records with `kind`, the source `token_path`, and a safe `package_path` under `assets/`. These are handoff fields owned by Data Sharing intake, not external-service assertions.
 
-The compact `document-content` Content review action now exercises this handoff for a rendered-derived, text-only package: it validates the materialized Markdown set in memory, then writes the timestamped package and trusted manifest. Existing timestamped package folders are rejected rather than replaced. A document whose parent is outside a partial compact selection is rooted in the temporary projection with a preserved validation warning so the package remains buildable. This proves the live producer/consumer seam, but it does not satisfy the full-package contract. `document-full-source` must still provide exact `canonical_markdown`, copied and regenerated asset/dependency inventories, and the complete returned-package checks described here; its hierarchy validation remains complete and strict.
+The compact `document-content` Content review action now exercises this handoff for a rendered-derived, text-only package: it validates the materialized Markdown set in memory, then writes the timestamped package and trusted manifest. Existing timestamped package folders are rejected rather than replaced. A document whose parent is outside a partial compact selection is rooted in the derived projection with a preserved validation warning so the package remains buildable. This proves the live producer/consumer seam, but it does not satisfy the full-package contract. `document-full-source` must still provide exact `canonical_markdown`, copied and regenerated asset/dependency inventories, and the complete returned-package checks described here; its hierarchy validation remains complete and strict.
 
 ## Review Rendering And Script Safety
 
@@ -357,7 +357,7 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 ### 6. Returned Intake And Validation
 
 - accept returned JSONL plus separate asset files, with optional safe archive intake
-- parse complete returned document rows and materialize temporary Markdown source files
+- parse complete returned document rows and materialize persistent read-only preview Markdown
 - regenerate inventories from returned JSONL and actual asset files
 - validate canonical Markdown, hierarchy, assets, links, and embeds
 - create the Docs Review handoff folder
@@ -370,9 +370,10 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 
 ### 8. Docs Viewer Import Handoff
 
-- hand safe package and document identities to the separate managed Docs Viewer flow
-- keep package-specific resolution and normalization above the shared Docs Import preview/write machinery
-- treat reviewed files as create-only candidates and require replacement IDs for collisions
+- hand the immutable staged JSONL identity to the separate managed Docs Viewer flow
+- share the JSONL parser/normalizer between preview materialization and import
+- keep persistent preview Markdown read-only and outside import authority
+- support explicit create, overwrite, or skip decisions for records
 - reuse Docs Import data-URL media planning and materialization
 
 ## Acceptance Criteria
@@ -386,7 +387,7 @@ Phase 1 is complete when:
 - the JSONL can be sent to ChatGPT as the single textual corpus while mapped asset files are supplied separately
 - optional archive transport is capability-gated rather than required
 - returned packages are safely extracted and validated without executing content
-- returned JSONL is materialized into temporary Markdown only after validation
+- returned JSONL is materialized into persistent read-only preview Markdown only after validation
 - changed/new Markdown and assets are reflected in regenerated inventories
 - a validated returned package builds successfully in Docs Review
 - the entire workflow uses `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
@@ -397,7 +398,7 @@ Phase 1 is complete when:
 
 - replacing the compact `document-content` profile
 - configured-scope import in this request
-- replacing, promoting, merging, or deleting existing canonical documents
+- configured-source create, overwrite, skip, merge, or delete behavior
 - implementing canonical mutation inside Docs Review
 - silently fetching remote assets
 - guaranteeing portability for unresolved dynamic script dependencies

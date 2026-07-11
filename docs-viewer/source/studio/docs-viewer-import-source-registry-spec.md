@@ -28,15 +28,15 @@ The registry must:
 The registry is intentionally small.
 It describes supported formats and dispatch metadata; it is not a plugin loader or an open-ended import execution surface.
 
-## Planned Reviewed-Package Source
+## Planned Data Sharing Collection Source
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) adds a second source family without turning external package paths into ordinary staged filenames.
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) adds supported Data Sharing documents JSON/JSONL as a collection source format.
 
-The current staging flow resolves one body-only source under `var/docs/import-staging/`. A reviewed package instead contains several front-matter-bearing Markdown files under a validated external package root. The planned implementation will introduce a source-provider/normalized-candidate boundary above the existing Markdown preview, media planning, write, and rebuild behavior.
+The current registry treats `.json` and `.jsonl` as generic downloadable files and imports one primary source at a time. The planned implementation will detect supported Data Sharing headers and trusted export metadata before that generic fallback, parse the immutable staged file into normalized document records, and apply it as a collection.
 
-The reviewed-package provider will resolve trusted package and document identities, split validated front matter from body Markdown, and supply allowed metadata and package context. Shared lower-level import services will continue to own renderer validation, data-URL image extraction, collision handling, source formatting, atomic writes, and rebuilds.
+The same JSONL parser/normalizer will feed both the persistent read-only Docs Review projection and Docs Import. Import reads the staged JSONL, never `import-preview/<package_id>/source/*.md`. Shared lower-level services continue to own renderer validation, data-URL image extraction, collision handling, source formatting, writes, and rebuilds.
 
-Reviewed-package apply is create-only. A target collision requires a replacement `doc_id`; it never enables the existing overwrite path.
+Each selected record can create, explicitly overwrite, or skip. A collision must require a user choice rather than silently selecting an action.
 
 ## Registry Shape
 

@@ -134,8 +134,8 @@ Docs Review:
 
 - [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) owns the durable `/docs-review/` product, package, editing, and authority boundary.
 - [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export, asset/dependency packaging, returned-package validation, and the validated review handoff.
-- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns the planned create-only import of selected reviewed files as new configured-scope documents.
-- Returned review packages are temporary folder artifacts, not Docs Viewer scopes, and must not be registered in scope config.
+- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns the planned staged-JSONL collection import, with explicit create, overwrite, or skip decisions in managed Docs Import.
+- Returned review packages are persistent derived workspace artifacts, not Docs Viewer scopes, and must not be registered in scope config.
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
 - Reuse shared tree, routing, rendering, panel, source-editor, and CSS primitives through explicit review app context, provider, and capability contracts.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.

@@ -30,7 +30,7 @@ Data Sharing owns:
 - returned-package staging and validation
 - materializing validated source and asset files under the external workspace root
 
-Docs Viewer Import owns the planned create-only admission of selected reviewed-package documents into a configured scope. That workflow treats them as new documents; it does not promote or replace an existing canonical document.
+Docs Viewer Import owns the planned import of the immutable staged JSONL associated with a review package. Managed import will let the user create, explicitly overwrite, or skip records; it will not treat the derived preview Markdown as import input.
 
 Docs Review owns only:
 

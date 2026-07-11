@@ -4,7 +4,7 @@ title: Docs Import Reviewed Package
 added_date: 2026-07-11
 last_updated: 2026-07-11
 ui_status: proposed
-summary: Create-only import of validated reviewed-package Markdown through a reusable Docs Import source-provider and normalized-candidate boundary.
+summary: Import immutable staged Data Sharing JSONL as a document collection while retaining a persistent, read-only Docs Review projection.
 parent_id: change-requests
 viewable: true
 ---
@@ -12,292 +12,340 @@ viewable: true
 
 ## Status
 
-Proposed follow-on to [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) and [Docs Review](/docs/?scope=studio&doc=docs-viewer-review).
+Proposed follow-on to [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) and the current [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) implementation.
 
-This request owns the remaining transition from a validated reviewed package into configured Docs Viewer source. The transition is a create-only Docs Viewer import, not Data Sharing promotion and not replacement of an existing canonical document.
+The current workflow already proves the persistent Docs Review package and renderer. This request simplifies the remaining import path and removes source editing from Docs Review.
 
 ## Decision
 
-Treat selected reviewed-package documents as new Docs Viewer import candidates.
+Treat the staged Data Sharing JSON/JSONL file as another Docs Import source format.
 
-- Data Sharing produces and validates the returned package.
-- Docs Review renders and temporarily edits the package in isolation.
-- Docs Viewer Import previews and creates new configured-scope documents.
-- The reviewed package remains unchanged and available as the import source.
-- Existing canonical documents are never overwritten, merged, promoted, or deleted by this workflow.
-
-When a proposed `doc_id` already exists in the target scope, the user must choose a new `doc_id`. The collision is not an overwrite opportunity.
-
-## Why A New Import Source Is Needed
-
-The current Docs Viewer import flow reads one primary candidate from `var/docs/import-staging/`:
-
-- a body-only Markdown file
-- one Markdown package directory containing exactly one Markdown file and local attachments
-- or another registered single-file format
-
-A validated Docs Review package has a different shape:
+Keep the persistent preview package because JSONL is not convenient for a person to review and the review and import decisions may happen at different times. The preview package is a durable, read-only view projection; it is not the import source.
 
 ```text
-$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/
-  manifest.json
-  source/
-    <doc-id>.md
-  assets/
-  inventories/
-  generated/
+immutable staged JSONL
+  -> persistent read-only Docs Review projection
+     -> import-preview/<package_id>/source/*.md
+     -> import-preview/<package_id>/generated/...
+
+immutable staged JSONL
+  -> Docs Viewer collection import
+     -> create, overwrite, or skip
+     -> configured-scope Markdown
 ```
 
-Its source files:
+The staged file remains the authoritative returned package. Docs Import reads that file directly when the user later chooses to import it.
 
-- live outside the repository staging root
-- already contain validated Docs Viewer front matter
-- may form a multi-document hierarchy
-- may link to other documents in the same package
-- may contain inline raster data URLs
-- may refer to package-inventoried assets
+## Artifact Roles
 
-Copying these files into `var/docs/import-staging/` would discard trusted package identity and encourage a second, divergent import path. Passing them unchanged to the current Markdown preview would also treat their front matter as body content.
+| Artifact | Role | Write authority |
+| --- | --- | --- |
+| `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<timestamped-file>.jsonl` | immutable returned package and import input | Data Sharing staging only |
+| `import-preview/<package_id>/manifest.json` | trusted association between the staged package and its view projection | preview producer only |
+| `import-preview/<package_id>/source/*.md` | durable, human-readable, read-only build input | preview producer only |
+| `import-preview/<package_id>/generated/` | durable Docs Review tree and document payloads | package-local builder only |
+| configured Docs Viewer scope source | accepted import output | managed Docs Import only |
 
-## Reuse Boundary
+The preview `source/*.md` files must never become an alternative import authority. They exist to reuse the Docs Viewer builder and make the projection inspectable.
 
-Refactor the import flow around a normalized candidate contract rather than duplicating the importer.
+## Immutable Package Identity
 
-Illustrative shape:
+A staged return and its preview folder form one immutable pair identified by export metadata and the timestamped package identity.
+
+- Normal workflow never edits or replaces a staged JSONL file.
+- A later return produces a new timestamped staged file and a new preview folder.
+- The older pair does not become stale when a newer pair exists.
+- Preview source is read-only and therefore cannot diverge through Docs Review edits.
+- If the staged file is deleted, its persistent preview may remain viewable but import from that package is unavailable.
+- A staged-file hash may be retained for provenance or corruption detection; it is not a lifecycle revision or staleness mechanism.
+
+Do not add refresh polling, source revisions, stale-preview states, or preview/apply drift logic for the staged file.
+
+## Why The Preview Package Remains
+
+Ordinary staged Markdown and HTML are already human-readable outside Docs Viewer, so the current import flow can convert and save them without a separate user-facing content preview.
+
+JSONL is different. It is an efficient multi-document transport but a poor reading surface. Docs Review provides the readable hierarchy, document renderer, media projection, and canonical comparison needed before the user decides whether to import.
+
+That decision may happen much later. Materialize and build the preview once, then serve the persistent package-local generated tree on every later view. Do not parse and rebuild the complete JSONL each time a document is opened.
+
+## Docs Review Changes
+
+Docs Review becomes a read-only package viewer.
+
+Remove:
+
+- source mode and its toolbar control
+- source reads and writes
+- revision tokens and stale-revision handling
+- Markdown save/rebuild behavior
+- `review_source_read` and `review_source_write` capabilities
+- source-editing endpoints, service methods, browser modules, and tests
+
+Retain:
+
+- validated package listing and selection
+- the persistent package-local hierarchy and generated document reads
+- rendered document navigation
+- inventoried asset rendering
+- canonical counterpart links
+- package information and validation diagnostics
+- initial package build or explicit repair when generated output is absent
+
+Ordinary viewing must read the existing package-local generated output. Building is not part of every view request.
+
+The preview `source/*.md` files should be treated like other generated workspace artifacts: inspectable and reproducible, but not editable through the product.
+
+## Data Sharing JSONL Import Format
+
+Register a schema-aware document-collection format before the current generic `.json`/`.jsonl` downloadable-file fallback.
+
+Extension alone is insufficient because Docs Import already accepts JSON and JSONL as ordinary downloadable files. Detection must inspect the package header and trusted metadata, for example:
+
+- `record_type: data_sharing_header`
+- supported package `schema_version`
+- supported documents profile/import type
+- matching trusted `export_id` metadata
+
+If the staged file does not match a supported document-collection schema, retain the existing generic file-import behavior.
+
+The collection importer should support both the compact returned-document format and the full-source format only where their field contracts are explicitly mapped. It must not infer a document package merely from arbitrary row fields.
+
+## Shared Parser And Normalizer
+
+Use one parser/normalizer for preview materialization and import.
 
 ```text
-ImportSourceProvider
-  -> resolve candidate identity inside an allowed root
-  -> read and normalize source
-  -> DocsImportCandidate
-  -> existing preview, validation, media planning, write, and rebuild services
+staged JSONL
+  -> validate header and trusted metadata
+  -> parse document records
+  -> normalize identity, front matter, Markdown, hierarchy, and assets
+     -> persistent preview materializer
+     -> configured-scope collection importer
 ```
 
-The exact Python names can be chosen during implementation. The boundary must preserve these responsibilities.
+The normalized record should carry at least:
 
-### Source Providers
+- source export/package identity
+- record index or stable record identity
+- proposed `doc_id`
+- title
+- body Markdown or exact `canonical_markdown`
+- allowed front matter
+- `parent_id`
+- link and asset information
+- source format/profile diagnostics
 
-The existing staging provider owns:
+For `canonical_markdown`, parse front matter once and keep it out of the body supplied to standard source formatting. For compact `content`, use the declared profile mapping rather than treating arbitrary JSON fields as source.
 
-- listing safe direct children of `var/docs/import-staging/`
-- resolving the current staged filename contract
-- choosing a registered source format
-- supplying one candidate at a time
+The persistent preview materializer and Docs Import may apply different output policies, but they must not interpret the JSONL record shape differently.
 
-The reviewed-package provider owns:
-
-- resolving a safe `package_id` through the existing validated-package service
-- requiring the trusted validated manifest
-- listing selectable package document identities
-- resolving only direct `source/<doc-id>.md` children
-- parsing validated front matter and separating it from body Markdown
-- supplying package and inventory context without accepting browser-supplied filesystem paths
-
-Neither provider writes configured-scope source.
-
-### Normalized Candidate
-
-A normalized candidate should carry at least:
-
-- source kind, such as `staged_file` or `review_package_document`
-- stable source identity and display label
-- source format
-- proposed title and `doc_id`
-- body Markdown
-- allowed imported metadata
-- source/package context needed for safe media materialization
-- warnings and provenance for the preview
-
-Path values remain server-derived diagnostics. The browser sends package and document identities, never arbitrary source paths.
-
-### Existing Import Functions To Reuse
+## Reuse Of Existing Docs Import
 
 Keep one implementation of:
 
-- Markdown preview construction and renderer validation
-- inline raster data-URL detection and media planning
-- media-plan retargeting when the final `doc_id` changes
-- inline raster materialization
+- Markdown validation through the shared renderer
 - configured-scope validation
-- collision detection
-- standard source formatting and atomic writes
-- targeted Docs payload and search rebuilds
+- `doc_id` and filename collision detection
+- standard source formatting
+- inline raster data-URL detection, planning, retargeting, and materialization
+- atomic source writes
+- Docs payload and search rebuild follow-through
 - activity logging and result summaries
 
-The current `generate_import_preview()` and `handle_import_source()` APIs may need to be split so source resolution is no longer fused to conversion and apply. The reviewed-package adapter must call shared lower-level services rather than simulate a staged filename or invoke the staging-only endpoint internally.
+The existing importer handles one primary source at a time. Add a collection orchestration layer that converts normalized JSONL records into the same lower-level document write plans used by ordinary imports.
 
-The practical extraction should include content-based cores with path-based wrappers:
+Useful extractions include:
 
-- a Markdown preview function that accepts normalized Markdown text, a source label, a proposed identity, and target scope
-- an inline-media materializer that verifies against the normalized candidate content instead of rereading only a staging path
-- a create-source formatter that accepts the preflighted target identity, mapped parent, and allowed metadata instead of always forcing `parent_id: ""`
-- an apply function that accepts preflighted candidate/create plans, while the existing `handle_import_source()` continues to adapt the current request body into one such plan
+- a content-based Markdown validation/media-planning function beneath path-based import wrappers
+- a standard create-source formatter that accepts mapped parent and allowed metadata
+- an overwrite-source formatter with explicit preservation rules
+- a batch write/rebuild boundary accepting several planned target paths
 
-This is needed because the current media materializer rereads `source_path` and the current create formatter always produces root documents. Those staging-era assumptions cannot represent a front-matter-bearing, hierarchical reviewed package, but the underlying parsing, planning, media decoding, write, and rebuild logic remains reusable.
+Do not invoke the ordinary staged-filename endpoint once per record, copy preview Markdown into repo staging, or make the importer read `import-preview/<package_id>/source/`.
 
-## Create-Only Policy
+## Import Actions
 
-This workflow always returns `operation: create` when it writes.
+For each selected record, the user can choose:
 
-- Do not accept `overwrite_doc_id` or `confirm_overwrite` as document-overwrite controls.
-- A target `doc_id` or filename-stem collision blocks apply until a replacement `doc_id` is supplied.
-- Re-run validation and collision checks immediately before writing.
-- Do not compare package source hashes in order to classify update or replacement operations.
-- Do not mutate or delete the reviewed package after a successful import.
-- Preserve import provenance in diagnostics or activity records without making temporary workspace paths canonical metadata.
+- `create`: create a new configured-scope document
+- `overwrite`: replace an explicitly selected existing document
+- `skip`: leave the record unimported
 
-The ordinary staged-file importer may retain its existing overwrite behavior. Create-only is a policy of the reviewed-package source flow, not necessarily a global import change.
+A proposed `doc_id` with no collision defaults naturally to create. A collision must not silently choose an action. The UI should ask whether to overwrite the matching document, create under a replacement `doc_id`, or skip it.
 
-## Batch Preflight And Mapping
+Overwrite is a user decision, not a Data Sharing promotion operation. It does not require the preview file to be compared with canonical source or classified as a new revision.
 
-Reviewed packages may contain several related documents, so preview the complete selected set before writing any document.
+### Create
 
-The preview must show:
+- validate the final `doc_id` and filename
+- map allowed title, summary, visibility, and parent fields
+- use normal target-scope date defaults
+- create standard Docs Viewer source
+
+### Overwrite
+
+- require explicit target identity and confirmation
+- preserve the target `doc_id`, filename, and `added_date`
+- refresh `last_updated`
+- apply the imported body and explicitly allowed front matter
+- validate the imported parent in the target scope
+- retain target-only metadata unless the import contract explicitly allows replacement
+
+Follow the ordinary importer’s explicit overwrite model where possible. Do not introduce staged-package revision or stale-source checks that the existing import workflow does not otherwise require.
+
+## Collection Mapping
+
+Resolve the complete selected set before writing so related records remain coherent.
+
+The import plan should show:
 
 - target scope
-- selected source documents
-- proposed and final target `doc_id` values
-- title and allowed front matter
-- collision status
+- selected records
+- create, overwrite, or skip action
+- proposed and final target identities
 - parent mapping
-- internal link rewrites
+- supported internal link rewrites
 - media plans and manual-copy requirements
-- warnings and blockers
+- blockers and warnings
 
-Build a package-document-to-target-document mapping before apply. Use it to:
+Use the record-to-target mapping to update parents and supported internal links when a created document receives a replacement ID or an overwrite targets a different explicit identity.
 
-- retain a package `parent_id` when its target is known and valid
-- rewrite it when a selected parent receives a replacement target `doc_id`
-- rewrite supported internal Docs Viewer links between selected package documents
-- identify parents or links that point outside the selected set
+The implementation must decide and document:
 
-The implementation must explicitly decide and document:
-
-- whether selection must be hierarchy-complete or may import a partial set
-- whether an unresolved package parent becomes root, can be mapped to an existing target parent, or blocks apply
+- whether partial package selection is allowed
+- how parents outside the selected set are resolved
 - which internal link syntaxes are rewritten
-- whether one invalid candidate blocks the whole batch
-- how a write or rebuild failure avoids leaving a misleading partial result
+- whether one invalid record blocks the complete batch
+- how partial write failure is reported if the current mutation boundary cannot be fully atomic
 
-Prefer complete preflight and one mutation/rebuild boundary for the batch. If the current source-write service cannot provide a safe atomic batch, the UI and result must report partial completion precisely rather than implying transactionality.
-
-## Front Matter Policy
-
-Reviewed-package files are already Docs Viewer-shaped source, but importing them as new documents must not blindly preserve every field.
-
-The normalizer should:
-
-- use the validated source `doc_id` and title as proposals
-- map package-local `parent_id` through the batch mapping
-- preserve allowed descriptive fields such as `summary` when valid
-- set target-scope date and visibility defaults through the normal import/create policy unless the target scope explicitly allows an imported value
-- reject or omit package-only operational metadata
-- write standard target source front matter once, without nesting the original front matter in the Markdown body
-
-The allowlist belongs to Docs Viewer Import. Data Sharing validation proves package shape; it does not authorize every returned field for configured source.
+This planning is an import-action summary, not a second content-review surface. Docs Review already supplies the readable content review.
 
 ## Images And Other Assets
 
-Inline raster data URLs in Markdown should use the current Docs Import path:
+Inline raster data URLs inside returned Markdown should use the existing Docs Import path:
 
-1. preview detects supported PNG, JPEG, WebP, or GIF data URLs
-2. media plans replace the data URLs with target-scope media references
-3. replacement target IDs retarget the planned filenames
-4. apply decodes and materializes the images through `materialize_inline_raster_media()`
+1. parse the selected JSONL record
+2. detect supported PNG, JPEG, WebP, or GIF data URLs
+3. plan target-scope media references
+4. retarget filenames when the final target `doc_id` differs
+5. decode and materialize through the shared media service during import
 
-Current scopes use `staging_manual`, so the preview and result must still explain the final manual media-store copy step. This request does not create a new Data Sharing asset-promotion system.
+Current scopes use `staging_manual`, so results must continue to report the required media-store copy step.
 
-Package-inventoried binary files that are not embedded data URLs require an explicit supported import mapping. Unsupported or unresolved package assets remain blockers or warnings; they must not be copied into canonical paths merely because Data Sharing validated their package containment.
+Package binary files that are not embedded data URLs still require an explicit supported mapping. Validation of a preview asset proves safe package containment; it does not by itself authorize copying that file into a configured media store.
 
-## UI And Service Ownership
+## UI And Authority
 
-The apply surface belongs to managed `/docs/`, where configured-scope import and canonical write capabilities already exist.
+Docs Review may expose an `Import` handoff for the selected immutable package. That handoff passes a safe package/staged-file identity to managed `/docs/`.
 
-Docs Review may provide an `Import as new docs` handoff that opens the managed Docs Import flow with a safe `package_id` and optional selected document identities. It must not receive canonical mutation capabilities or call a general canonical-write endpoint from the review app context.
+Managed Docs Import owns:
 
-The Docs management service should expose focused reviewed-package preview/apply operations or a source-provider-aware import operation. The endpoint contract must keep normal import authorization, configured-scope checks, dry-run/preview behavior, and write/rebuild ownership.
+- target scope selection
+- record selection
+- create/overwrite/skip choices
+- collision and mapping summary
+- confirmation
+- configured source and media writes
+- rebuild and result reporting
+
+Docs Review retains no configured-source mutation authority. Data Sharing retains no general Docs Viewer source-creation or overwrite authority.
 
 ## Security
 
-- Resolve package and document identities through the validated-package provider.
-- Never accept absolute paths, workspace-relative paths, or source text supplied as a substitute for the selected package file.
-- Repeat containment and symlink checks at preview and apply.
-- Enforce per-document and total batch size limits, including decoded data-URL media.
-- Revalidate front matter, hierarchy, links, media plans, target scope, and collisions at apply time.
+- Resolve staged identities through Data Sharing’s safe staging and trusted metadata contracts.
+- Never accept arbitrary filesystem paths from the browser.
+- Require the staged file to match the preview package’s recorded export/package identity.
+- Revalidate the JSONL schema, record shape, target scope, front matter, hierarchy, media plans, and collisions at import time.
+- Enforce record, file, batch, and decoded-data limits.
+- Reject symlink and containment escapes.
 - Do not execute returned scripts or grant package HTML same-origin authority.
-- Do not let a validated Data Sharing manifest bypass Docs Viewer import validation.
+- Do not treat persistent preview Markdown as trusted import input.
 
 ## Implementation Tasks
 
-### 1. Extract The Reusable Candidate Boundary
+### 1. Extract The Shared JSONL Parser
 
-- separate staging resolution from format preview and apply orchestration
-- define a normalized candidate/context contract
-- wrap current staged-file behavior in the first provider without changing its UI contract
-- keep format conversion and media helpers independent of provider type
+- define supported Data Sharing document-collection schema detection
+- parse trusted header/export metadata and document records
+- normalize compact content and full `canonical_markdown` through explicit mappings
+- return stable record identities, content, front matter, hierarchy, asset data, and diagnostics
 
-### 2. Add The Reviewed-Package Provider
+### 2. Use The Parser For Persistent Preview Materialization
 
-- reuse validated package discovery and manifest/source containment helpers
-- list safe package document candidates by identity
-- split front matter from Markdown body
-- project only allowed metadata into normalized candidates
-- preserve provenance and inventory context for diagnostics
+- keep the timestamped `import-preview/<package_id>/` identity
+- write the trusted manifest association
+- materialize read-only `source/*.md`
+- build and retain package-local `generated/`
+- make normal Docs Review reads use the persistent generated output
+- preserve repair/regeneration only for missing or damaged derived output
 
-### 3. Add Batch Preview
+### 3. Remove Docs Review Source Editing
 
-- accept package identity, target scope, and selected document identities
-- compute final ID, parent, internal-link, and media mappings
-- report collisions as replacement-ID requirements only
-- expose blockers and warnings before apply
+- remove source mode and its control
+- remove source-read/source-write capabilities and endpoints
+- remove revision and save/rebuild services
+- remove review source-editor modules and bindings
+- update route contracts, runtime ownership docs, and focused tests
 
-### 4. Add Create-Only Apply
+### 4. Register The JSONL Collection Import Format
 
-- reject overwrite controls
-- repeat preflight against current target source
-- materialize supported inline media through existing helpers
-- create standard Docs Viewer source files
-- rebuild affected Docs and search payloads through the existing write/rebuild boundary
-- return precise per-document and batch results
+- detect supported Data Sharing headers before generic JSON/JSONL file import
+- list the staged package as a collection import source
+- parse records through the shared normalizer
+- keep unsupported JSON/JSONL behavior unchanged
 
-### 5. Add The Managed Handoff
+### 5. Add Collection Import Planning And Apply
 
-- add a safe Docs Review link/handoff without adding review write authority
-- open the reviewed-package import state in `/docs/`
-- show selection, target scope, mapping, media handoff, warnings, and apply result
+- allow record selection
+- compute create, overwrite, skip, ID, parent, link, and media plans
+- require explicit overwrite decisions
+- reuse lower-level source formatting, media materialization, writes, and rebuilds
+- return precise per-record and batch results
 
-### 6. Verify
+### 6. Add The Review-To-Import Handoff
 
-- keep the existing staged-file import checks green after extracting the provider boundary
-- test reviewed front-matter normalization without front-matter leakage into body Markdown
-- test package containment and browser path rejection
-- test create-only collision and replacement-ID behavior
-- test batch parent and internal-link mapping
-- test embedded data-URL image planning, ID retargeting, and materialization
-- test preflight/apply drift and failure reporting
-- verify Docs Review still exposes no canonical mutation capability
+- identify the staged file through the immutable package association
+- open managed Docs Import with that package selected
+- keep review and configured-source authority separate
+- report import unavailable when the associated staged file has been deleted
+
+### 7. Verify
+
+- keep ordinary single-file import behavior green
+- test schema detection before generic JSON/JSONL fallback
+- test shared parsing produces equivalent preview and import records
+- test persistent preview viewing without repeated JSONL conversion
+- test absence of review source-edit capabilities and UI
+- test create, confirmed overwrite, replacement-ID create, and skip
+- test parent/link mapping across selected records
+- test embedded data-URL media planning and materialization
+- test deleted staged-file import unavailability while persistent preview remains readable
+- verify Docs Review and Data Sharing expose no configured-source mutation capability
 
 ## Acceptance Criteria
 
-- a validated package document can be previewed and created in a configured Docs Viewer scope without copying it into repo staging
-- reviewed front matter is normalized into standard new-document source rather than imported as body text
-- several selected package documents can be mapped before any write
-- collisions require new target IDs and cannot overwrite existing docs
-- supported internal parents and links follow replacement target IDs
-- supported embedded raster images reuse the existing import media pipeline
-- apply uses the existing Docs source-write/rebuild authority
-- Data Sharing and Docs Review gain no canonical source-write responsibility
-- the original reviewed package remains unchanged
+- a timestamped staged JSONL file produces one persistent, read-only Docs Review package
+- repeated review reads use package-local generated output rather than reparsing the JSONL
+- Docs Review cannot read or write editable source bodies
+- a newer staged return creates a separate preview package and does not stale the older pair
+- Docs Import recognizes supported Data Sharing JSONL as a document collection
+- the importer reads the staged JSONL, never preview `source/*.md`
+- the user can create, explicitly overwrite, or skip selected records
+- supported hierarchy, links, and embedded raster images are mapped through shared import services
+- configured source writes and rebuilds remain owned by managed Docs Import
 
 ## Non-Goals
 
-- promoting a reviewed version over an existing canonical document
-- merging, diffing, replacing, deleting, or revising existing docs
-- using Data Sharing apply adapters for configured-source creation
-- moving the reviewed package into `var/docs/import-staging/`
-- automatically publishing or uploading media in `staging_manual` mode
-- importing unsupported package binaries or executing returned content
-- changing the full-package transport contract in this request
+- editing the persistent preview projection
+- importing from preview Markdown
+- reparsing the complete JSONL on every Docs Review navigation
+- staged-file staleness or revision management
+- automatic overwrite based only on matching `doc_id`
+- diff, merge, delete, or promotion semantics
+- moving staged Data Sharing JSONL into repo-local Docs Import staging
+- automatic remote media upload
+- executing returned content
 
 ## Related References
 
