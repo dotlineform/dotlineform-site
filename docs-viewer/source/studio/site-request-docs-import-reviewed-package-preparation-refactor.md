@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0 and P1 are complete; P2 is the next bounded phase.
+Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P2 are complete; P3 is the next bounded phase.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -182,11 +182,37 @@ Verification completed on 2026-07-12:
 
 No known P1 blocker remains. P2 should define the generic normalized content record and content-based adapter entrypoints without reintroducing path resolution into format adapters.
 
-### P2. Normalized Content And Adapter Boundary
+### P2. Normalized Content And Adapter Boundary — Complete 2026-07-12
 
-- define the generic `ImportContent` record, including replace, preserve-existing, and empty-new content intent
-- add content-based Markdown, HTML, and plain-text entrypoints beneath file wrappers
-- implement the Data Sharing documents adapter without making Data Sharing provenance mandatory in the generic record
+- `docs_import_content.py` owns the wrapper-neutral `ImportContent` record and validates `replace`, `preserve-existing`, and `empty-new` intent
+- the generic record carries stable source/record identities, optional content, explicit body format, allowed front matter, hierarchy, links, assets, diagnostics, and optional provenance
+- `docs_import_preview.py` exposes content-based Markdown, HTML, and plain-text entrypoints; the existing file wrappers call those same entrypoints
+- `data-sharing/adapters/documents/import_content.py` maps only the declared `document-content` and `document-full-source` contracts
+- compact packages use only the explicit `content` mapping and declared package content format
+- full-source packages parse `canonical_markdown` front matter once, require matching `doc_id`, prefer parsed title/hierarchy over duplicated row metadata, and pass only the body to standard content conversion
+- omitted content becomes `preserve-existing` for current trusted records or `empty-new` for valid new structural records; it never becomes replacement content
+- adapter provenance remains optional on the generic record, so a future standalone collection adapter can emit the same contract without fabricated Data Sharing identity
+- persistent compact/full-source review materialization now consumes the same documents adapter, rehydrates current body only for the read-only preserve-existing projection, and records content intent in the trusted manifest
+
+#### P2 Verification And Handoff
+
+Focused coverage proves:
+
+- generic records do not require Data Sharing provenance and reject ambiguous intent/content combinations
+- file-based Markdown, HTML, and text previews match their content-based entrypoints
+- compact Markdown/plain-text and full canonical-source mappings remain explicit
+- arbitrary wrapper fields are diagnostics, not inferred source content
+- canonical front matter identity and duplicate-field failures are blocking
+- existing omitted-content rows retain their current projection body while new structural rows materialize an empty body
+- compact and full-source persistent review packages use the shared adapter and retain content intent
+
+Verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 70 passed
+- adjacent Docs Review, Docs Data Sharing, Analytics Data Sharing API, adapter, and service checks — 52 passed
+- focused Python compilation and `git diff --check` passed
+
+P3 should consume `ImportContent` records when extracting the shared per-document plan/apply boundary. It must not move Data Sharing provenance checks, content-format conversion, or collection state into the generic record or the management coordinator.
 
 ### P3. Shared Per-Document Plan And Apply
 

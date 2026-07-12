@@ -180,6 +180,14 @@ The service adds collision and write-flow fields after loading the target scope:
 - `replacement_doc_id_required`
 - `replacement_title_required`
 
+## Normalized Content Boundary
+
+`docs-viewer/services/docs_import_content.py` defines the wrapper-neutral `ImportContent` record used by collection adapters. It does not require Data Sharing provenance. Its explicit `content_intent` is one of `replace`, `preserve-existing`, or `empty-new`, and `content_format` is one of `markdown`, `html`, or `plain_text`.
+
+`generate_markdown_content_import_preview()`, `generate_html_content_import_preview()`, and `generate_plain_text_content_import_preview()` sit beneath the existing file wrappers. `generate_content_import_preview()` dispatches normalized string content without requiring a temporary staged file, and `generate_normalized_import_content_preview()` accepts a content-bearing `ImportContent` record. The ordinary Markdown, HTML, and text file wrappers call the same entrypoints, preserving one conversion and validation path.
+
+The Data Sharing documents adapter owns wrapper/schema/provenance checks and emits `ImportContent` records. It maps only declared compact `content` and full-source `canonical_markdown` contracts; arbitrary JSON fields do not become body or front matter. A future standalone collection requires a separate explicit wrapper adapter but can emit the same generic record.
+
 ## Format Behavior
 
 HTML imports parse the source with Beautiful Soup, convert supported structures to Markdown, optionally keep identifiable prompt/meta blocks, preserve safe inline SVG, and extract Markdown-image-form inline raster data URLs into planned media files.

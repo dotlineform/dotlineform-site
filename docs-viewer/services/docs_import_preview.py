@@ -44,6 +44,7 @@ from docs_import_common import (  # noqa: E402
 from docs_import_html_parser import (  # noqa: E402
     build_summary,
 )
+from docs_import_content import CONTENT_INTENT_REPLACE, ImportContent  # noqa: E402
 from docs_html_markdown import (  # noqa: E402
     extract_html_title,
     parse_html_document,
@@ -220,6 +221,7 @@ def generate_import_preview(
     if source_format == "text":
         return generate_text_import_preview(
             repo_root,
+            staging_root=staging_root,
             workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
@@ -264,22 +266,61 @@ def generate_html_import_preview(
     scope: str,
     include_prompt_meta: bool,
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
+    summary = generate_html_content_import_preview(
+        source_html=source_html,
+        source_identity=source_path.stem,
+        scope=scope,
+        include_prompt_meta=include_prompt_meta,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+    )
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary["source_html"] = summary["source_path"]
+    return summary
+
+
+def apply_content_identity_hints(
+    summary: dict[str, Any],
+    *,
+    title: str = "",
+    doc_id: str = "",
+) -> None:
+    normalized_title = normalize_space(title)
+    normalized_doc_id = str(doc_id or "").strip()
+    if normalized_title:
+        summary["title"] = normalized_title
+        summary["title_source"] = "record"
+    if normalized_doc_id:
+        summary["proposed_doc_id"] = normalized_doc_id
+        summary["proposed_doc_id_source"] = "record"
+
+
+def generate_html_content_import_preview(
+    *,
+    source_html: str,
+    source_identity: str,
+    scope: str,
+    include_prompt_meta: bool,
+    staging_root: Path,
+    workspace_root: Path,
+    title: str = "",
+    doc_id: str = "",
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
     parsed = parse_html_document(source_html)
-    title = extract_html_title(parsed.root)
+    parsed_title = extract_html_title(parsed.root)
     summary = build_summary(
         parsed.root,
         source_html=source_html,
-        source_filename_stem=source_path.stem,
-        title=title,
+        source_filename_stem=source_identity,
+        title=parsed_title,
         include_prompt_meta=include_prompt_meta,
         parsed=parsed,
     )
+    apply_content_identity_hints(summary, title=title, doc_id=doc_id)
     summary["scope"] = normalized_scope
     summary["source_format"] = "html"
-    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
-    summary["source_html"] = summary["source_path"]
     summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
@@ -367,13 +408,34 @@ def generate_markdown_import_preview(
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
     source_markdown = source_path.read_text(encoding="utf-8", errors="replace")
-    summary = build_markdown_summary(source_markdown, source_path.stem)
-    summary["scope"] = normalized_scope
-    summary["source_format"] = "markdown"
+    summary = generate_markdown_content_import_preview(
+        source_markdown=source_markdown,
+        source_identity=source_path.stem,
+        scope=scope,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+    )
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_markdown"] = summary["source_path"]
+    return summary
+
+
+def generate_markdown_content_import_preview(
+    *,
+    source_markdown: str,
+    source_identity: str,
+    scope: str,
+    staging_root: Path,
+    workspace_root: Path,
+    title: str = "",
+    doc_id: str = "",
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    summary = build_markdown_summary(source_markdown, source_identity)
+    apply_content_identity_hints(summary, title=title, doc_id=doc_id)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "markdown"
     summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
@@ -422,22 +484,110 @@ def generate_markdown_package_import_preview(
 def generate_text_import_preview(
     repo_root: Path,
     *,
+    staging_root: Path,
     workspace_root: Path,
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
-    normalized_scope = normalize_scope(scope)
     source_text = source_path.read_text(encoding="utf-8", errors="replace")
-    summary = build_text_summary(source_text, source_path.stem)
-    summary["scope"] = normalized_scope
-    summary["source_format"] = "text"
+    summary = generate_plain_text_content_import_preview(
+        source_text=source_text,
+        source_identity=source_path.stem,
+        scope=scope,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+    )
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_text"] = summary["source_path"]
-    summary["staging_root"] = marker_path(source_path.parent, workspace_root=workspace_root)
+    return summary
+
+
+def generate_plain_text_content_import_preview(
+    *,
+    source_text: str,
+    source_identity: str,
+    scope: str,
+    staging_root: Path,
+    workspace_root: Path,
+    title: str = "",
+    doc_id: str = "",
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    summary = build_text_summary(source_text, source_identity)
+    apply_content_identity_hints(summary, title=title, doc_id=doc_id)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "text"
+    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
+
+
+def generate_content_import_preview(
+    *,
+    content: str,
+    content_format: str,
+    source_identity: str,
+    scope: str,
+    staging_root: Path,
+    workspace_root: Path,
+    title: str = "",
+    doc_id: str = "",
+) -> dict[str, Any]:
+    if content_format == "markdown":
+        return generate_markdown_content_import_preview(
+            source_markdown=content,
+            source_identity=source_identity,
+            scope=scope,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+            title=title,
+            doc_id=doc_id,
+        )
+    if content_format == "html":
+        return generate_html_content_import_preview(
+            source_html=content,
+            source_identity=source_identity,
+            scope=scope,
+            include_prompt_meta=False,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+            title=title,
+            doc_id=doc_id,
+        )
+    if content_format == "plain_text":
+        return generate_plain_text_content_import_preview(
+            source_text=content,
+            source_identity=source_identity,
+            scope=scope,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+            title=title,
+            doc_id=doc_id,
+        )
+    raise ValueError("content_format must be one of: html, markdown, plain_text")
+
+
+def generate_normalized_import_content_preview(
+    record: ImportContent,
+    *,
+    scope: str,
+    staging_root: Path,
+    workspace_root: Path,
+) -> dict[str, Any]:
+    if record.content_intent != CONTENT_INTENT_REPLACE or not isinstance(record.content, str):
+        raise ValueError("only replace ImportContent records have body content to preview")
+    return generate_content_import_preview(
+        content=record.content,
+        content_format=record.content_format,
+        source_identity=record.record_identity,
+        scope=scope,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+        title=record.title,
+        doc_id=record.doc_id,
+    )
 
 
 def generate_svg_import_preview(

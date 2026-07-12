@@ -19,6 +19,7 @@ from docs_data_sharing.review import review_returned_document_package
 from docs_data_sharing.review import parse_returned_document_records
 from docs_data_sharing.review_sources import create_review_source_folder
 
+from ..import_content import normalize_documents_import_content
 from ..context import (
     DocumentsDataSharingDependencies,
     attach_adapter_context,
@@ -199,6 +200,7 @@ def review_returned_package(
             staging_root=adapter.path("returned_package_staging_root"),
             metadata_root=adapter.path("metadata_root"),
             preview_root=adapter.path("review_output_root"),
+            normalize_import_content=normalize_documents_import_content,
         )
         report = attach_adapter_context(report, adapter)
         if dependencies is not None:

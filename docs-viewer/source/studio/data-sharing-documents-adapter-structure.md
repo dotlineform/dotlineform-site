@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-adapter-structure
 title: Documents Data Sharing Adapter Structure
 added_date: "2026-06-21 00:00"
-last_updated: 2026-06-21
+last_updated: 2026-07-12
 parent_id: data-sharing
 viewable: true
 ---
@@ -17,6 +17,7 @@ It follows the shared [Data Sharing Adapter Architecture](/docs/?scope=studio&do
 data-sharing/adapters/documents/
   adapter.py
   context.py
+  import_content.py
   prepare.py
   returned.py
 
@@ -39,7 +40,9 @@ data-sharing/adapters/documents/
 
 `prepare.py` delegates prepare operations to the document-record family.
 
-`returned.py` delegates returned-package list, review, and apply operations to the document-record family.
+`import_content.py` owns the explicit compact/full-source wrapper mapping into the generic Docs Import `ImportContent` record. Data Sharing identity is adapter provenance and is not required by the generic record.
+
+`returned.py` delegates returned-package list, review, and apply operations to the document-record family and exposes the documents import-content normalizer.
 
 `families/documents.py` owns document-record implementation.
 It calls Docs Viewer data-sharing helpers for selectable records, package preparation, returned package listing, returned package review, temporary review source-folder creation, and source apply actions.
@@ -72,7 +75,7 @@ The adapter adds Data Sharing context and summary text, and logs a `docs-export`
 ## Returned Packages
 
 Returned packages are staged under the shared Data Sharing import-staging root.
-The documents adapter delegates parsing, review-document generation, and temporary review source-folder generation to Docs Viewer returned-package helpers.
+The documents adapter delegates staged-file parsing and persistent review-package generation to Docs Viewer returned-package helpers. Both compact and full-source review materialization normalize rows through `import_content.py` before producing read-only Markdown.
 
 Returned-record loading produces document-oriented review rows from the selected staged file.
 Review produces one Markdown review document for the selected rows.
@@ -86,12 +89,12 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   source/*.md
 ```
 
-The manifest uses `docs_review_validated_package_v1`, a matching `package_id`, `status: validated`, and `source_scope`. The package is written to its timestamped folder only after safe document identities and package-local hierarchy pass in-memory validation. Because compact exports may contain only selected documents, a parent outside the package is removed from the temporary projection and preserved as a validation warning; package-local cycles remain fatal.
+The manifest uses `docs_review_validated_package_v1`, a matching `package_id`, `status: validated`, and `source_scope`. Each source record retains its `replace`, `preserve-existing`, or `empty-new` intent. The package is written to its timestamped folder only after safe document identities and package-local hierarchy pass in-memory validation. Because compact exports may contain only selected documents, a parent outside the package is removed from the temporary projection and preserved as a validation warning; package-local cycles remain fatal.
 
 Those folders are disposable inputs for `/docs-review/`.
 They are not Docs Viewer scopes, are not registered in scope config, and do not mutate canonical source Markdown. Timestamped package folders are immutable; repeating the action for the same export is rejected.
 
-This `document-content` package remains a rendered-derived, text-only projection. `document-full-source` remains the owner of exact `canonical_markdown`, asset/dependency inventories, and full returned-package validation.
+The `document-content` package remains a rendered-derived, text-only projection. The same adapter also maps the declared `document-full-source` schema by parsing exact `canonical_markdown` front matter once and keeping it out of downstream body content. The full-package producer remains responsible for asset/dependency inventories and the complete intake validation contract.
 
 Current apply actions are:
 

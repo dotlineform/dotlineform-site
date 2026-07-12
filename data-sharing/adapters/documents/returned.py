@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional
 
 from .context import DocumentsDataSharingDependencies
 from .families import documents
+from .import_content import DocumentsImportContentBatch, normalize_documents_import_content
 
 
 def list_returned_packages(
@@ -47,3 +48,13 @@ def apply_returned_changes(
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     return documents.apply_returned_changes(repo_root, body, dry_run, adapter, dependencies)
+
+
+__all__ = [
+    "DocumentsImportContentBatch",
+    "apply_returned_changes",
+    "list_returned_packages",
+    "normalize_documents_import_content",
+    "returned_records",
+    "review_returned_package",
+]

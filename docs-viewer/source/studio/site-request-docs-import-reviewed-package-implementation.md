@@ -40,18 +40,18 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 
 ## 2. Extract The Data Sharing Collection Adapter And Shared Content Contract
 
-- [ ] Define supported Data Sharing document-collection schema detection.
-- [ ] Parse trusted header/export metadata and document records.
-- [ ] Normalize compact content through explicit Data Sharing mappings.
-- [ ] Normalize full `canonical_markdown` through explicit Data Sharing mappings.
-- [ ] Accept omitted returned content for trusted existing records and valid new structural records.
-- [ ] Preserve replace, preserve-existing, and empty-new content intent through preview and import planning.
-- [ ] Define a generic `ImportContent` record without mandatory Data Sharing provenance.
-- [ ] Add content-based Markdown import entrypoints beneath the file wrapper.
-- [ ] Add content-based HTML-to-Markdown entrypoints beneath the file wrapper.
-- [ ] Add content-based plain-text import entrypoints beneath the file wrapper.
-- [ ] Return stable record identities, optional content, content intent, front matter, hierarchy, asset data, and diagnostics.
-- [ ] Leave standalone collection schema detection as a future adapter rather than implementing it in this slice.
+- [x] Define supported Data Sharing document-collection schema detection.
+- [x] Parse trusted header/export metadata and document records.
+- [x] Normalize compact content through explicit Data Sharing mappings.
+- [x] Normalize full `canonical_markdown` through explicit Data Sharing mappings.
+- [x] Accept omitted returned content for trusted existing records and valid new structural records.
+- [x] Preserve replace, preserve-existing, and empty-new content intent through preview and import planning.
+- [x] Define a generic `ImportContent` record without mandatory Data Sharing provenance.
+- [x] Add content-based Markdown import entrypoints beneath the file wrapper.
+- [x] Add content-based HTML-to-Markdown entrypoints beneath the file wrapper.
+- [x] Add content-based plain-text import entrypoints beneath the file wrapper.
+- [x] Return stable record identities, optional content, content intent, front matter, hierarchy, asset data, and diagnostics.
+- [x] Leave standalone collection schema detection as a future adapter rather than implementing it in this slice.
 
 ## 3. Use The Adapter For Persistent Preview Materialization
 
@@ -148,7 +148,7 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 - [x] Verify repo-local `var/docs/import-staging/` is not read or written.
 - [ ] Test schema detection before generic JSON/JSONL fallback.
 - [ ] Test shared parsing produces equivalent preview and import records.
-- [ ] Test Markdown, HTML, and plain-text body dispatch through content-based entrypoints.
+- [x] Test Markdown, HTML, and plain-text body dispatch through content-based entrypoints.
 - [ ] Test persistent preview viewing without repeated JSONL conversion.
 - [ ] Test absence of review source-edit capabilities and UI.
 - [ ] Test non-colliding create.

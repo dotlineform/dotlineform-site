@@ -149,7 +149,7 @@ def test_review_source_folder_rejects_unsafe_metadata_derived_folder_id() -> Non
     assert [item["code"] for item in payload["issues"]] == ["invalid_folder_id"]
 
 
-def test_review_source_folder_writes_manifest_and_verbatim_markdown_body() -> None:
+def test_review_source_folder_uses_shared_markdown_content_normalization() -> None:
     with make_repo() as temp:
         root = Path(temp)
         export_id = "ds_20260627T205010Z"
@@ -209,11 +209,68 @@ def test_review_source_folder_writes_manifest_and_verbatim_markdown_body() -> No
     assert front_matter["summary"] == "Returned summary."
     assert front_matter["viewable"] is False
     assert "children" not in front_matter
-    assert raw_body == returned_content
+    assert raw_body == returned_content.strip()
     assert listed["packages"][0]["package_id"] == payload["folder_id"]
     assert listed["rejected"] == []
     assert built["document_count"] == 1
     assert generated["payload"]["doc_id"] == "alpha"
+
+
+def test_review_source_folder_uses_full_source_adapter_mapping() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        canonical = """---
+doc_id: alpha
+title: Canonical Alpha
+parent_id: ""
+summary: Returned full source.
+---
+# Canonical Alpha
+
+Full-source body.
+"""
+        write_staged(
+            root,
+            "full-source.jsonl",
+            [
+                {
+                    "record_type": "data_sharing_header",
+                    "schema_version": "documents_full_package_v1",
+                    "export_id": export_id,
+                    "profile_id": "document-full-source",
+                },
+                {
+                    "record_type": "document",
+                    "doc_id": "alpha",
+                    "document": {"title": "Duplicated title", "parent_id": ""},
+                    "canonical_markdown": canonical,
+                },
+            ],
+        )
+        write_content_meta(root, export_id, profile_id="document-full-source")
+
+        payload = handle_documents_import_preview(
+            root,
+            {
+                "data_domain": "library",
+                "operation": "review",
+                "review_action": "source_folder",
+                "staged_filename": "full-source.jsonl",
+            },
+            dry_run=False,
+        )
+        manifest = json.loads(resolve_data_sharing_marker(str(payload["manifest_path"])).read_text(encoding="utf-8"))
+        source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
+        front_matter, body = source_model.parse_source(source_path)
+
+    assert payload["ok"] is True
+    assert front_matter["title"] == "Canonical Alpha"
+    assert front_matter["summary"] == "Returned full source."
+    assert body == "# Canonical Alpha\n\nFull-source body."
+    assert manifest["source_projection"] == "canonical_full_source"
+    assert manifest["content_mapping"]["content_field"] == "canonical_markdown"
+    assert manifest["source_files"][0]["content_intent"] == "replace"
 
 
 def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -> None:
@@ -229,7 +286,6 @@ def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -
             ],
         )
         write_content_meta(root, export_id)
-
         payload = handle_documents_import_preview(
             root,
             {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
@@ -254,6 +310,50 @@ def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -
     ]
     assert "parent_id" not in front_matter
     assert built["document_count"] == 1
+
+
+def test_review_source_folder_preserves_existing_body_and_materializes_empty_new_record() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "hierarchy-only.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "new-parent", "title": "New Parent", "parent_id": ""},
+                {"doc_id": "alpha", "title": "Alpha", "parent_id": "new-parent"},
+            ],
+        )
+        write_content_meta(root, export_id)
+        _current_front_matter, current_alpha_body = source_model.parse_source(
+            root / "docs-viewer/source/library/alpha.md"
+        )
+
+        payload = handle_documents_import_preview(
+            root,
+            {
+                "data_domain": "library",
+                "operation": "review",
+                "review_action": "source_folder",
+                "staged_filename": "hierarchy-only.jsonl",
+            },
+            dry_run=False,
+        )
+        manifest = json.loads(resolve_data_sharing_marker(str(payload["manifest_path"])).read_text(encoding="utf-8"))
+        alpha_path = resolve_data_sharing_marker(str(payload["source_path"])) / "alpha.md"
+        alpha_front_matter, alpha_body = source_model.parse_source(alpha_path)
+        new_body = source_folder_body(root, payload, "new-parent.md")
+
+    assert payload["ok"] is True
+    assert payload["counts"] == {"records": 2, "valid_records": 2, "skipped_records": 0, "errors": 0, "warnings": 0}
+    assert alpha_front_matter["parent_id"] == "new-parent"
+    assert alpha_body == current_alpha_body
+    assert new_body == ""
+    assert [record["content_intent"] for record in manifest["source_files"]] == [
+        "empty-new",
+        "preserve-existing",
+    ]
 
 
 def test_review_source_folder_rejects_package_local_hierarchy_cycle() -> None:
@@ -307,8 +407,8 @@ def test_review_source_folder_skips_invalid_rows_and_does_not_write() -> None:
 
     assert payload["ok"] is False
     assert payload["review_source_folder_written"] is False
-    assert payload["counts"] == {"records": 4, "valid_records": 1, "skipped_records": 3, "errors": 3, "warnings": 0}
-    assert [item["code"] for item in payload["skipped_records"]] == ["missing_doc_id", "missing_title", "missing_content"]
+    assert payload["counts"] == {"records": 4, "valid_records": 2, "skipped_records": 2, "errors": 2, "warnings": 0}
+    assert [item["code"] for item in payload["skipped_records"]] == ["missing_doc_id", "missing_title"]
 
 
 def test_review_source_folder_rejects_existing_timestamped_package() -> None:

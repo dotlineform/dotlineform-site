@@ -3,13 +3,20 @@
 
 from __future__ import annotations
 
+import copy
 import datetime as dt
 import json
 from pathlib import Path
 import re
-from typing import Any
+from typing import Any, Callable
 
 import docs_source_model as source_model
+from docs_import_content import (
+    CONTENT_INTENT_EMPTY_NEW,
+    CONTENT_INTENT_PRESERVE_EXISTING,
+    CONTENT_INTENT_REPLACE,
+)
+from docs_import_preview import generate_normalized_import_content_preview
 from docs_management_source_service import split_source_exact
 from docs_returned_import_common import (
     SUPPORTED_EXTENSIONS,
@@ -26,6 +33,7 @@ from docs_returned_import_files import (
     parse_jsonl_file,
     rows_from_payload,
 )
+from services.paths import configured_workspace_paths
 
 
 SCHEMA_VERSION = "docs_review_validated_package_v1"
@@ -139,7 +147,7 @@ def read_staged_rows(
                     header_metadata = {
                         key: value
                         for key, value in header.items()
-                        if key not in {"record_type", "schema_version"}
+                        if key != "record_type"
                     }
                 break
         except (OSError, json.JSONDecodeError):
@@ -190,7 +198,8 @@ def validate_returned_rows(raw_rows: list[Any]) -> tuple[list[dict[str, Any]], l
             skipped.append(issue("error", "non_object_record", "record is not a JSON object", record_index=index, line=line))
             continue
         doc_id = clean_text(row.get("doc_id"))
-        title = clean_text(row.get("title"))
+        document = row.get("document") if isinstance(row.get("document"), dict) else {}
+        title = clean_text(row.get("title") or document.get("title"))
         row_issues: list[dict[str, Any]] = []
         if not doc_id:
             row_issues.append(issue("error", "missing_doc_id", "record is missing doc_id", record_index=index, line=line))
@@ -207,12 +216,6 @@ def validate_returned_rows(raw_rows: list[Any]) -> tuple[list[dict[str, Any]], l
             )
         if not title:
             row_issues.append(issue("error", "missing_title", "record is missing title", record_index=index, line=line, doc_id=doc_id))
-        if CONTENT_FIELD not in row or row.get(CONTENT_FIELD) is None:
-            row_issues.append(issue("error", "missing_content", "record is missing content", record_index=index, line=line, doc_id=doc_id))
-        elif not isinstance(row.get(CONTENT_FIELD), str):
-            row_issues.append(issue("error", "invalid_content", "record content must be a string", record_index=index, line=line, doc_id=doc_id))
-        elif row.get(CONTENT_FIELD) == "":
-            row_issues.append(issue("error", "missing_content", "record content is empty", record_index=index, line=line, doc_id=doc_id))
         if doc_id:
             first_index = seen_doc_ids.get(doc_id)
             if first_index is not None:
@@ -285,7 +288,7 @@ def review_front_matter(
     return front_matter
 
 
-def source_markdown(row: dict[str, Any], front_matter: dict[str, Any]) -> str:
+def source_markdown(body: str, front_matter: dict[str, Any]) -> str:
     preferred_order = [
         "doc_id",
         "title",
@@ -301,7 +304,7 @@ def source_markdown(row: dict[str, Any], front_matter: dict[str, Any]) -> str:
     for key in ordered_keys:
         lines.append(f"{key}: {source_model.format_front_matter_value(front_matter[key])}")
     lines.append("---")
-    return "\n".join(lines) + "\n" + row[CONTENT_FIELD]
+    return "\n".join(lines) + "\n" + body
 
 
 def count_issues(items: list[dict[str, Any]]) -> dict[str, int]:
@@ -418,6 +421,7 @@ def create_review_source_folder(
     staging_root: Path,
     metadata_root: Path,
     preview_root: Path,
+    normalize_import_content: Callable[..., Any],
 ) -> dict[str, Any]:
     path, export_id, raw_rows, package_metadata, parse_issues = read_staged_rows(
         repo_root,
@@ -452,24 +456,104 @@ def create_review_source_folder(
     issues.extend(hierarchy_warnings)
     content_format = content_format_from_package(metadata, package_metadata, raw_rows)
     source_scope = clean_text(metadata.get("scope")) if metadata else ""
+    source_profile_id = clean_text(metadata.get("profile_id")) if metadata else ""
+    full_source_package = source_profile_id == "document-full-source"
     generated_at = clean_text(metadata.get("generated_at")) if metadata else ""
+    current_docs = source_model.load_scope_docs(repo_root, scope)
+    current_docs_by_id = {doc.doc_id: doc for doc in current_docs}
+    normalized_batch = None
+    if metadata and materialized_rows and folder_path is not None:
+        adapter_metadata = {**package_metadata, **metadata}
+        wrapper_schema = clean_text(package_metadata.get("schema_version"))
+        if wrapper_schema:
+            adapter_metadata["schema_version"] = wrapper_schema
+        else:
+            adapter_metadata.pop("schema_version", None)
+        adapter_metadata["export_id"] = export_id
+        adapter_metadata["content_format"] = content_format
+        try:
+            normalized_batch = normalize_import_content(
+                materialized_rows,
+                package_metadata=adapter_metadata,
+                current_doc_ids=set(current_docs_by_id),
+                staged_filename=staged_filename,
+            )
+        except ValueError as exc:
+            issues.append(issue("error", "invalid_import_content", str(exc)))
+    normalized_records = list(normalized_batch.records) if normalized_batch is not None else []
+    for record in normalized_records:
+        record_index = int(record.provenance.get("record_index") or 0)
+        for diagnostic in record.diagnostics:
+            if diagnostic.get("level") != "warning":
+                continue
+            diagnostic_issue = issue(
+                "warning",
+                clean_text(diagnostic.get("code")) or "import_content_warning",
+                clean_text(diagnostic.get("message")) or "Import content adapter warning.",
+                record_index=record_index,
+                doc_id=record.doc_id,
+            )
+            for key, value in diagnostic.items():
+                if key not in {"level", "code", "message"}:
+                    diagnostic_issue[key] = copy.deepcopy(value)
+            issues.append(diagnostic_issue)
     source_files: list[dict[str, Any]] = []
     materialized_sources: list[dict[str, Any]] = []
     if not any(item.get("level") == "error" for item in issues) and folder_path is not None:
         used_filenames: set[str] = set()
         date_value = current_review_date()
-        for row in materialized_rows:
-            doc_id = clean_text(row.get("doc_id"))
+        workspace_paths = configured_workspace_paths(repo_root)
+        for record in normalized_records:
+            doc_id = record.doc_id
             filename = markdown_filename(doc_id, used_filenames)
             output_path = folder_path / "source" / filename
+            projection_row = {
+                **record.front_matter,
+                "doc_id": doc_id,
+                "title": record.title,
+            }
+            if record.parent_id or "parent_id" in record.front_matter:
+                projection_row["parent_id"] = record.parent_id
+            if record.content_intent == CONTENT_INTENT_REPLACE:
+                preview = generate_normalized_import_content_preview(
+                    record,
+                    scope=scope,
+                    staging_root=staging_root,
+                    workspace_root=workspace_paths.root,
+                )
+                body = str(preview.get("markdown_preview") or "")
+            elif record.content_intent == CONTENT_INTENT_PRESERVE_EXISTING:
+                current_doc = current_docs_by_id.get(record.doc_id)
+                if current_doc is None:
+                    issues.append(
+                        issue(
+                            "error",
+                            "missing_preserve_existing_source",
+                            f"current canonical source is unavailable for preserve-existing record: {record.doc_id}",
+                            record_index=int(record.provenance.get("record_index") or 0),
+                            doc_id=record.doc_id,
+                        )
+                    )
+                    continue
+                _front_matter_source, _current_front_matter, body = split_source_exact(current_doc.source_text)
+            elif record.content_intent == CONTENT_INTENT_EMPTY_NEW:
+                body = ""
+            else:
+                raise RuntimeError(f"unsupported import content intent: {record.content_intent}")
             source_text = source_markdown(
-                row,
-                review_front_matter(row, metadata=metadata, folder_id=folder_id, date_value=date_value),
+                body,
+                review_front_matter(
+                    projection_row,
+                    metadata=metadata,
+                    folder_id=folder_id,
+                    date_value=date_value,
+                ),
             )
             source_files.append(
                 {
-                    "record_index": int(row["_record_index"]),
+                    "record_index": int(record.provenance.get("record_index") or 0),
                     "doc_id": doc_id,
+                    "content_intent": record.content_intent,
                     "path": relative_path(repo_root, output_path),
                 }
             )
@@ -495,17 +579,17 @@ def create_review_source_folder(
     ok = issue_counts["errors"] == 0
     counts = {
         "records": len(raw_rows),
-        "valid_records": len(valid_rows),
+        "valid_records": len(normalized_records),
         "skipped_records": skipped_record_count(skipped_records),
         **issue_counts,
     }
     default_doc_id = next(
         (
-            clean_text(row.get("doc_id"))
-            for row in materialized_rows
-            if not clean_text(row.get("parent_id"))
+            record.doc_id
+            for record in normalized_records
+            if not record.parent_id
         ),
-        clean_text(materialized_rows[0].get("doc_id")) if materialized_rows else "",
+        normalized_records[0].doc_id if normalized_records else "",
     )
     manifest: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
@@ -514,15 +598,15 @@ def create_review_source_folder(
         "data_domain": clean_text(metadata.get("data_domain")) if metadata else "",
         "source_scope": source_scope,
         "default_doc_id": default_doc_id,
-        "profile_id": clean_text(metadata.get("profile_id")) if metadata else "",
-        "source_projection": "rendered_derived_text_only",
+        "profile_id": source_profile_id,
+        "source_projection": "canonical_full_source" if full_source_package else "rendered_derived_text_only",
         "source_export_id": export_id,
         "package_id_source": FOLDER_ID_SOURCE if folder_id else "",
         "staged_filename": clean_text(staged_filename),
         "staged_file": relative_path(repo_root, path) if path is not None else clean_text(staged_filename),
         "content_format": content_format,
         "content_mapping": {
-            "content_field": CONTENT_FIELD,
+            "content_field": "canonical_markdown" if full_source_package else CONTENT_FIELD,
             "content_format_field": CONTENT_FORMAT_FIELD,
             "front_matter_fields": list(FRONT_MATTER_FIELDS),
         },
@@ -538,6 +622,7 @@ def create_review_source_folder(
             {
                 "record_index": record["record_index"],
                 "doc_id": record["doc_id"],
+                "content_intent": record["content_intent"],
                 "path": f"source/{Path(str(record['path'])).name}",
             }
             for record in source_files

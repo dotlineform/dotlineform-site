@@ -51,7 +51,7 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. The planned reviewed-package extension will next add schema-aware Data Sharing JSON/JSONL collection parsing before the generic file fallback. A shared record normalizer will feed both persistent read-only review materialization and import, while Markdown validation, inline-media planning/materialization, create/overwrite formatting, source writes, and rebuild follow-through remain shared lower-level services.
+The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` now defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Collection planning/import registration remains a later phase, while Markdown validation, inline-media planning/materialization, create/overwrite formatting, source writes, and rebuild follow-through remain shared lower-level services.
 
 ## `docs-viewer/services/docs_import_preview.py`
 
@@ -67,6 +67,7 @@ Responsibilities:
 - rewrites package-local images and attachments to docs media links
 - materializes inline raster media plans
 - applies SVG safety rules used by imports
+- exposes content-based Markdown, HTML-to-Markdown, and plain-text entrypoints beneath the existing file wrappers
 
 Not responsible for:
 
