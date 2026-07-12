@@ -1,5 +1,4 @@
 import {
-  buildChildrenMap,
   isDocNonViewable
 } from "../shared/docs-viewer-tree.js";
 import {
@@ -23,25 +22,16 @@ import {
   createDocsViewerManagementImportController
 } from "./docs-viewer-management-import-controller.js";
 import {
-  createDocsViewerManagementModalController
-} from "./docs-viewer-management-modals.js";
+  createDocsViewerManagementModalComposition
+} from "./docs-viewer-management-modal-composition.js";
 import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
-import {
-  collectDescendantDocIds
-} from "./docs-viewer-management-action-workflow.js";
-import {
-  readSourceConfigSettings
-} from "./docs-viewer-management-client.js";
 
 var MANAGEMENT_TEXT = {
   checkingNote: "Checking manage mode...",
   clearSearchNote: "Clear search to manage the current doc.",
-  unavailableNote: "Docs management service unavailable.",
-  metadataParentRootOption: "Root",
-  metadataParentInvalid: "Select a parent from the search field suggestions or enter Root.",
-  settingsLoadFailed: "Settings unavailable."
+  unavailableNote: "Docs management service unavailable."
 };
 
 function createDocsViewerManagementStateFacade(domains) {
@@ -137,41 +127,15 @@ export function initDocsViewerManagement(context) {
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
-  var metadataModal = shellRef("metadataModal", "docsViewerMetadataModal");
-  var metadataForm = shellRef("metadataForm", "docsViewerMetadataForm");
-  var metadataDocId = shellRef("metadataDocId", "docsViewerMetadataDocId");
-  var metadataTitleInput = shellRef("metadataTitleInput", "docsViewerMetadataTitleInput");
-  var metadataSummaryInput = shellRef("metadataSummaryInput", "docsViewerMetadataSummaryInput");
-  var metadataDateInput = shellRef("metadataDateInput", "docsViewerMetadataDateInput");
-  var metadataDateDisplayInput = shellRef("metadataDateDisplayInput", "docsViewerMetadataDateDisplayInput");
-  var metadataStatusInput = shellRef("metadataStatusInput", "docsViewerMetadataStatusInput");
-  var metadataNonViewableInput = shellRef("metadataNonViewableInput", "docsViewerMetadataNonViewableInput");
-  var metadataParentInput = shellRef("metadataParentInput", "docsViewerMetadataParentInput");
-  var metadataParentPopup = shellRef("metadataParentPopup", "docsViewerMetadataParentPopup");
-  var metadataCancelButton = shellRef("metadataCancelButton", "docsViewerMetadataCancelButton");
-  var metadataSaveButton = shellRef("metadataSaveButton", "docsViewerMetadataSaveButton");
-  var importModal = shellRef("importModal", "docsViewerImportModal");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
-  var settingsModal = shellRef("settingsModal", "docsViewerSettingsModal");
-  var settingsForm = shellRef("settingsForm", "docsViewerSettingsForm");
-  var settingsScope = shellRef("settingsScope", "docsViewerSettingsScope");
-  var settingsBooleanField = shellRef("settingsBooleanField", "docsViewerSettingsBooleanField");
-  var settingsBooleanInput = shellRef("settingsBooleanInput", "docsViewerSettingsBooleanInput");
-  var settingsBooleanLabel = shellRef("settingsBooleanLabel", "docsViewerSettingsBooleanLabel");
-  var settingsTextField = shellRef("settingsTextField", "docsViewerSettingsTextField");
-  var settingsTextInput = shellRef("settingsTextInput", "docsViewerSettingsTextInput");
-  var settingsTextLabel = shellRef("settingsTextLabel", "docsViewerSettingsTextLabel");
-  var settingsDescription = shellRef("settingsDescription", "docsViewerSettingsDescription");
-  var settingsWarnings = shellRef("settingsWarnings", "docsViewerSettingsWarnings");
-  var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
-  var settingsCancelButton = shellRef("settingsCancelButton", "docsViewerSettingsCancelButton");
-  var settingsSaveButton = shellRef("settingsSaveButton", "docsViewerSettingsSaveButton");
   var scopeLifecycleRequestPromise = null;
   var capabilityController = null;
   var importController = null;
   var interactionController = null;
+  var metadataWorkflow = null;
   var modalController = null;
+  var settingsWorkflow = null;
   var actionController = null;
 
   function viewerScope() {
@@ -204,10 +168,6 @@ export function initDocsViewerManagement(context) {
     if (interactionController) interactionController.clearDragState();
   }
 
-  function settingsModalOpen() {
-    return Boolean(modalController && modalController.settingsModalOpen());
-  }
-
   function hideContextMenu() {
     if (interactionController) interactionController.hideContextMenu();
   }
@@ -233,55 +193,6 @@ export function initDocsViewerManagement(context) {
     if (root) {
       root.dataset.managementBusy = state.managementBusy ? "true" : "false";
     }
-  }
-
-  function metadataParentOptions(doc) {
-    var blockedIds = collectDescendantDocIds(state.allDocs, doc.doc_id, new Set([doc.doc_id]));
-    var options = [{ value: "", label: MANAGEMENT_TEXT.metadataParentRootOption }];
-    var docsByParent = buildChildrenMap(state.allDocs, {
-      managementContext: state.managementContext,
-      showNonViewable: state.showNonViewable
-    });
-    function pushChildren(parentId, depth) {
-      (docsByParent.get(parentId) || []).forEach(function (candidate) {
-        if (!blockedIds.has(candidate.doc_id)) {
-          options.push({
-            value: candidate.doc_id,
-            label: (depth > 0 ? new Array(depth + 1).join("- ") : "") + candidate.title
-          });
-        }
-        pushChildren(candidate.doc_id, depth + 1);
-      });
-    }
-    pushChildren("", 0);
-    return options;
-  }
-
-  function openSettingsModal() {
-    if (!modalController || !modalController.openSettingsModalShell()) return;
-    readSourceConfigSettings(managementClientOptions())
-      .then(function (payload) {
-        var scopes = Array.isArray(payload && payload.scopes) ? payload.scopes : [];
-        var fields = scopes[0] && Array.isArray(scopes[0].fields) ? scopes[0].fields : [];
-        modalController.setSettingsField(fields.find(function (field) {
-          return field && field.editable !== false;
-        }) || null);
-      })
-      .catch(function (error) {
-        modalController.setSettingsLoadError(error && error.message ? error.message : MANAGEMENT_TEXT.settingsLoadFailed);
-      });
-  }
-
-  function openMetadataModalForDoc(doc) {
-    return modalController ? modalController.openMetadataModal(doc) : Promise.resolve(null);
-  }
-
-  function openMetadataModal() {
-    return openMetadataModalForDoc(currentSelectedDoc());
-  }
-
-  function openMetadataModalForDocId(docId) {
-    return openMetadataModalForDoc(state.docsById.get(docId) || null);
   }
 
   function updateNavDragState() {
@@ -440,12 +351,8 @@ export function initDocsViewerManagement(context) {
       draftToggle.disabled = !state.managementAvailable || state.managementBusy;
       draftToggle.checked = state.showNonViewable;
     }
-    if (metadataSaveButton) {
-      metadataSaveButton.disabled = state.managementBusy;
-    }
-    if (settingsSaveButton && settingsModalOpen()) {
-      settingsSaveButton.disabled = state.managementBusy || !modalController.getSettingsFieldState();
-    }
+    if (metadataWorkflow) metadataWorkflow.render();
+    if (settingsWorkflow) settingsWorkflow.render();
   }
 
   function initializeManagement() {
@@ -518,41 +425,6 @@ export function initDocsViewerManagement(context) {
     state.managementMessage = String(message || "");
     state.managementMessageIsError = Boolean(isError);
     renderManagementUi();
-  }
-
-  function metadataPayloadFromModal() {
-    var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataDateInput || !metadataDateDisplayInput || !metadataStatusInput || !metadataNonViewableInput || !metadataParentInput) return null;
-
-    var title = String(metadataTitleInput.value || "").trim();
-    if (!title) {
-      metadataTitleInput.focus();
-      return null;
-    }
-
-    var parentId = modalController.resolveMetadataParentId(doc);
-    if (parentId === null) {
-      setManagementMessage(MANAGEMENT_TEXT.metadataParentInvalid, true);
-      metadataParentInput.focus();
-      return null;
-    }
-    var selectedStatus = String(metadataStatusInput.value || "").trim();
-    return {
-      doc_id: doc.doc_id,
-      title: title,
-      summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
-      date: String(metadataDateInput.value || "").trim(),
-      date_display: String(metadataDateDisplayInput.value || "").trim(),
-      ui_status: selectedStatus,
-      viewable: !metadataNonViewableInput.checked,
-      parent_id: parentId
-    };
-  }
-
-  function confirmMetadataModal() {
-    var payload = metadataPayloadFromModal();
-    if (!payload) return;
-    modalController.closeMetadataModal(payload);
   }
 
   function scopeLifecycleCallbacks() {
@@ -701,10 +573,7 @@ export function initDocsViewerManagement(context) {
       config: config,
       context: context,
       state: state,
-      refs: {
-        metadataStatusInput: metadataStatusInput
-      },
-      modalController: modalController
+      metadataWorkflow: metadataWorkflow
     });
   }
 
@@ -745,9 +614,7 @@ export function initDocsViewerManagement(context) {
     }
     if (manageSettingsButton) {
       manageSettingsButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        openSettingsModal();
+        settingsWorkflow.open();
       });
     }
     if (manageNewScopeButton) {
@@ -807,7 +674,7 @@ export function initDocsViewerManagement(context) {
     if (manageEditButton) {
       manageEditButton.addEventListener("click", function () {
         hideManageActionsMenu();
-        openMetadataModal().then(actionController.handleEditMetadataSave);
+        metadataWorkflow.openCurrent();
       });
     }
     if (manageSourceButton) {
@@ -890,7 +757,7 @@ export function initDocsViewerManagement(context) {
       onEditDoc: function (docId) {
         if (!actionController) return;
         hideManageActionsMenu();
-        openMetadataModalForDocId(docId).then(actionController.handleEditMetadataSave);
+        metadataWorkflow.openForDocId(docId);
       },
       onMoveDoc: function (movingDocId, parentId) {
         if (actionController) actionController.handleMoveDoc(movingDocId, parentId);
@@ -907,8 +774,8 @@ export function initDocsViewerManagement(context) {
       clearDragState: clearDragState,
       currentContextMenuDoc: currentContextMenuDoc,
       currentSelectedDoc: currentSelectedDoc,
-      getModalController: function () {
-        return modalController;
+      getSettingsWorkflow: function () {
+        return settingsWorkflow;
       },
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
@@ -942,55 +809,30 @@ export function initDocsViewerManagement(context) {
     }
   });
 
-  modalController = createDocsViewerManagementModalController({
+  var modalComposition = createDocsViewerManagementModalComposition({
     nav: nav,
     state: state,
     context: context,
-    refs: {
-      importModal: importModal,
-      importRoot: importRoot,
-      manageActionsButton: manageActionsButton,
-      manageImportButton: manageImportButton,
-      metadataCancelButton: metadataCancelButton,
-      metadataDocId: metadataDocId,
-      metadataForm: metadataForm,
-      metadataDateDisplayInput: metadataDateDisplayInput,
-      metadataDateInput: metadataDateInput,
-      metadataNonViewableInput: metadataNonViewableInput,
-      metadataModal: metadataModal,
-      metadataParentInput: metadataParentInput,
-      metadataParentPopup: metadataParentPopup,
-      metadataStatusInput: metadataStatusInput,
-      metadataSummaryInput: metadataSummaryInput,
-      metadataTitleInput: metadataTitleInput,
-      settingsCancelButton: settingsCancelButton,
-      settingsForm: settingsForm,
-      settingsModal: settingsModal,
-      settingsSaveButton: settingsSaveButton,
-      settingsScope: settingsScope,
-      settingsBooleanField: settingsBooleanField,
-      settingsBooleanInput: settingsBooleanInput,
-      settingsBooleanLabel: settingsBooleanLabel,
-      settingsTextField: settingsTextField,
-      settingsTextInput: settingsTextInput,
-      settingsTextLabel: settingsTextLabel,
-      settingsDescription: settingsDescription,
-      settingsStatus: settingsStatus,
-      settingsWarnings: settingsWarnings,
-      manageSettingsButton: manageSettingsButton
-    },
+    shellRefs: shellRefs,
+    manageActionsButton: manageActionsButton,
+    manageImportButton: manageImportButton,
+    manageSettingsButton: manageSettingsButton,
     callbacks: {
       currentSelectedDoc: currentSelectedDoc,
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: hideManageActionsMenu,
       isDocNonViewable: isDocNonViewable,
-      metadataParentOptions: metadataParentOptions,
       onImportOpen: importController.initialize,
-      onMetadataSubmit: confirmMetadataModal,
+      onMetadataSave: actionController.handleEditMetadataSave,
       onSettingsSubmit: actionController.handleSettingsSubmit,
+      managementClientOptions: managementClientOptions,
+      setManagementMessage: setManagementMessage,
       viewerScope: viewerScope
     }
   });
+  metadataWorkflow = modalComposition.metadataWorkflow;
+  modalController = modalComposition.modalController;
+  settingsWorkflow = modalComposition.settingsWorkflow;
 
   bind();
   applyConfig(context.currentViewerConfig());

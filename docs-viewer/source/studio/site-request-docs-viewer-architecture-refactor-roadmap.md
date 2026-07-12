@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import-initialization and modal-handoff slice complete.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import and metadata/settings workflow-composition slices complete.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -941,12 +941,12 @@ Verification evidence:
 
 This phase is not a Docs Review prerequisite unless a touched workflow blocks a clean integration.
 
-Status: active. Slice 7.1 is complete; later slices remain demand-driven.
+Status: active. Slices 7.1 and 7.2 are complete; later slices remain demand-driven.
 
 Candidate slices:
 
 - extract import initialization and modal handoff — Slice 7.1 complete
-- separate metadata and settings workflow composition
+- separate metadata and settings workflow composition — Slice 7.2 complete
 - give scope/sub-scope lifecycle a focused controller
 - narrow the management event router
 - replace remaining broad management facade fields with explicit domains/queries
@@ -975,6 +975,31 @@ Verification set:
 - JavaScript syntax checks for the focused owner and changed coordinator
 - public runtime import-boundary tests
 - focused manage-route smoke covering lazy management boot, import-module handoff, and service authority
+- `git diff --check`
+
+### Slice 7.2: Metadata And Settings Workflow Composition
+
+Task definition:
+
+- move metadata parent projection, form validation, payload shaping, and confirmed-save handoff out of `docs-viewer-management.js`
+- move settings service loading, editable-field selection, and modal load/error handoff out of the coordinator
+- compose metadata and settings workflow owners with the existing modal UI-state controller through explicit callbacks
+- replace the action controller's broad modal-controller access with a narrow settings field/change/close contract
+- preserve existing metadata and settings writes, route reloads, modal focus/visibility behavior, service authority, and import-modal behavior
+
+Delivered outcome:
+
+- `docs-viewer-management-metadata-workflow.js` owns metadata selection, validation, payload shaping, config refresh, and action delegation
+- `docs-viewer-management-settings-workflow.js` owns the settings read/load boundary and exposes only the field-state, changes, and close commands required by settings writes
+- `docs-viewer-management-modal-composition.js` resolves management shell refs and assembles the focused workflows with `docs-viewer-management-modals.js`
+- `docs-viewer-management-actions.js` no longer receives a general modal controller; settings writes and post-write reloads remain with the existing action owner
+- `docs-viewer-management.js` no longer owns metadata/settings refs or workflow behavior and is reduced from 1,009 to 851 lines across Slices 7.1 and 7.2
+
+Verification set:
+
+- JavaScript syntax checks for the new workflow/composition owners and changed management modules
+- focused manage-route smoke covering metadata selection and settings service-read handoff without writes
+- public runtime import-boundary and static-asset tests
 - `git diff --check`
 
 ## Phase 8: Backend Lifecycle And Mutation Work

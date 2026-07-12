@@ -98,10 +98,13 @@ For management mode, also copy:
 - `docs-viewer/runtime/js/management/docs-viewer-management-config.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-interactions.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-modal-composition.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-modal-shell.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-modals.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-parent-picker.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-render.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-settings-workflow.js`
 - `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js`
 - `docs-viewer/runtime/js/management/docs-viewer-drag-drop.js`
 

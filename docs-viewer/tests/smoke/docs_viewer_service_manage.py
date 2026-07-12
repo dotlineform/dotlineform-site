@@ -202,6 +202,32 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         }""",
         timeout=timeout_ms,
     )
+    page.locator("#docsViewerImportCancelButton").evaluate("button => button.click()")
+
+    page.locator("#docsViewerManageEditButton").evaluate("button => button.click()")
+    page.wait_for_function(
+        """() => {
+            const modal = document.querySelector("#docsViewerMetadataModal");
+            const title = document.querySelector("#docsViewerMetadataTitleInput");
+            return modal && !modal.hidden && title && title.value.trim();
+        }""",
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerMetadataCancelButton").evaluate("button => button.click()")
+
+    page.locator("#docsViewerManageSettingsButton").evaluate("button => button.click()")
+    page.wait_for_function(
+        """() => {
+            const modal = document.querySelector("#docsViewerSettingsModal");
+            const save = document.querySelector("#docsViewerSettingsSaveButton");
+            const textInput = document.querySelector("#docsViewerSettingsTextInput");
+            const booleanInput = document.querySelector("#docsViewerSettingsBooleanInput");
+            return modal && !modal.hidden && save && !save.disabled &&
+                ((textInput && !textInput.disabled) || (booleanInput && !booleanInput.disabled));
+        }""",
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerSettingsCancelButton").evaluate("button => button.click()")
     return request_paths(generated_requests), request_paths(import_module_requests), page.url
 
 

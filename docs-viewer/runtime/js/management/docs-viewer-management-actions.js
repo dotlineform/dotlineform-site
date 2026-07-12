@@ -80,8 +80,8 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.managementClientOptions ? callbacks.managementClientOptions() : {};
   }
 
-  function getModalController() {
-    return callbacks.getModalController ? callbacks.getModalController() : null;
+  function getSettingsWorkflow() {
+    return callbacks.getSettingsWorkflow ? callbacks.getSettingsWorkflow() : null;
   }
 
   function hideContextMenu() {
@@ -425,18 +425,18 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleSettingsSave() {
-    var modalController = getModalController();
-    var settingsFieldState = modalController ? modalController.getSettingsFieldState() : null;
+    var settingsWorkflow = getSettingsWorkflow();
+    var settingsFieldState = settingsWorkflow ? settingsWorkflow.fieldState() : null;
     if (!settingsFieldState) {
-      if (modalController) modalController.closeSettingsModal();
+      if (settingsWorkflow) settingsWorkflow.close();
       return;
     }
-    var changes = typeof modalController.getSettingsChanges === "function" ? modalController.getSettingsChanges() : null;
+    var changes = settingsWorkflow.changes();
     if (!changes) {
-      modalController.closeSettingsModal();
+      settingsWorkflow.close();
       return;
     }
-    modalController.closeSettingsModal();
+    settingsWorkflow.close();
     setManagementBusy(true);
     setManagementMessage(ACTION_TEXT.settingsSaving, false);
     updateSourceConfigSettings(changes, managementClientOptions())

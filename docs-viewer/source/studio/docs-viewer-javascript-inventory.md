@@ -60,8 +60,11 @@ Risk themes:
 | docs-viewer-management-hosted-views.js              | Manage-owned view, document-mode, and document-control definitions supplied by the manage entrypoint.                                                                                                                      |
 | docs-viewer-management-interactions.js              | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-import-controller.js         | Lazy Docs Import initialization, retry/error state, and management-modal host handoff.                                                                                                                                      |
+| docs-viewer-management-metadata-workflow.js          | Metadata parent projection, validation, payload shaping, and save handoff.                                                                                                                                                   |
+| docs-viewer-management-modal-composition.js          | Focused metadata/settings workflow and shared management-modal controller composition.                                                                                                                                      |
 | docs-viewer-management-modals.js                    | management modal controller after transient modal shell and metadata parent-picker extraction.                                                                                                                              |
 | docs-viewer-management-render.js                    | management support module.                                                                                                                                                                                                  |
+| docs-viewer-management-settings-workflow.js          | Settings service loading and narrow field/change/close workflow contract.                                                                                                                                                    |
 | docs-viewer-management-shell-composition.js         | Manage-owned shell renderer composition supplied by the manage entrypoint so public-safe app shell code does not import management renderers.                                                                               |
 | docs-viewer-management-shell-renderer.js            | Manage-owned management context-menu, metadata modal, import modal, settings modal, and import host renderer.                                                                                                               |
 | docs-viewer-management.js                           | management coordinator after shared action workflow helper extraction.                                                                                                                                                      |
@@ -228,6 +231,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - This controller now receives named `managementState`, `serviceClient`, and `routeReload` contracts from the lazy runtime boundary instead of broad runtime `state`. It builds a management-local state facade from explicit route-session, scope-config, document-index, selected-document, search/recent, generated-data, and management domains for existing management child modules.
 - action menu markup is design-time record rendering in `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`; this controller preserves binding, capability projection, and command workflow handoff for the rendered stable ids.
+- metadata and settings shell refs, validation/loading behavior, and modal handoffs are composed by focused workflow owners rather than this coordinator.
 - Keep service access behind the management service-client contract and post-write reloads behind the route-reload contract.
 - Do not move new backend writes, generated-read behavior, public hosted-view behavior, route shell boot, or route URL primitives into this file.
 
@@ -236,6 +240,21 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - Owns the management-side Docs Import lifecycle boundary: lazy module loading, single in-flight initialization, retry after a failed load, boot-error projection, and the action-to-modal handoff.
 - Receives explicit import host refs, service/config URLs, and scope/modal callbacks; it does not own import preview/write behavior or general management modal behavior.
 - Keep Docs Import preview and write orchestration in `docs-viewer/runtime/js/import/docs-html-import.js` and its child modules.
+
+### `docs-viewer/runtime/js/management/docs-viewer-management-modal-composition.js`
+
+- Resolves the metadata/import/settings shell refs and composes the shared modal UI-state controller with the focused metadata and settings workflow owners.
+- It connects explicit selected-document, service-read, message, and action callbacks; it does not own write execution, capability projection, or route reloads.
+
+### `docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js`
+
+- Owns metadata parent-option projection, form validation and payload shaping, selected-document modal opening, config-time option refresh, and delegation of confirmed payloads to the action controller.
+- Metadata writes and post-write index reloads remain in `docs-viewer-management-actions.js`.
+
+### `docs-viewer/runtime/js/management/docs-viewer-management-settings-workflow.js`
+
+- Owns settings service loading, editable-field selection, load-error projection, and the explicit field-state/change/close methods used by the action controller.
+- Settings writes and post-write viewer reloads remain in `docs-viewer-management-actions.js`; service transport remains in `docs-viewer-management-client.js`.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js`
 
@@ -442,7 +461,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - Keep preview/write orchestration in `docs-viewer/runtime/js/import/docs-html-import-workflow.js`.
 - Keep import writes behind `docs-viewer/runtime/js/management/docs-viewer-management-client.js` and management endpoints such as `/docs/import-source`.
 - Keep management-only workflows behind the lazy management boundary.
-- management initialization, capability refresh, action/menu/modal binding, settings, scope lifecycle, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; lazy import initialization and modal handoff belong to `docs-viewer-management-import-controller.js`; hosted-view visibility must not imply write authority.
+- management initialization, capability refresh, action/menu binding, scope lifecycle, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; lazy import initialization belongs to `docs-viewer-management-import-controller.js`, while metadata/settings composition belongs to their focused workflow owners; hosted-view visibility must not imply write authority.
 - Keep make-viewable target resolution in `docs-viewer/runtime/js/management/docs-viewer-management-action-workflow.js`.
 - Move command-specific write behavior to `docs-viewer/runtime/js/management/docs-viewer-management-actions.js` or a workflow-specific module when it gains independent state.
 
