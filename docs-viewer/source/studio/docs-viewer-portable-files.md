@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-06-22
+last_updated: 2026-07-12
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -96,6 +96,7 @@ For management mode, also copy:
 - `docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-config.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-interactions.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-modal-shell.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-modals.js`

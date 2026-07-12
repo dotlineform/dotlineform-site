@@ -171,19 +171,38 @@ def assert_generated_requests(paths: set[str]) -> None:
             raise AssertionError(f"expected generated service request {expected!r}; saw {sorted(paths)!r}")
 
 
-def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], str]:
+def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], set[str], str]:
     generated_requests: list[str] = []
+    import_module_requests: list[str] = []
     page.on(
         "request",
         lambda request: generated_requests.append(request.url)
         if "/docs/generated/" in request.url
         else None,
     )
+    page.on(
+        "request",
+        lambda request: import_module_requests.append(request.url)
+        if "/docs-viewer/runtime/js/import/" in request.url
+        else None,
+    )
 
     page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     assert_manage_route_contract(manage_route_state(page), base_url)
-    return request_paths(generated_requests), page.url
+    if import_module_requests:
+        raise AssertionError(f"Docs Import modules loaded before the import action: {import_module_requests!r}")
+
+    page.locator("#docsViewerManageImportButton").evaluate("button => button.click()")
+    page.wait_for_function(
+        """() => {
+            const modal = document.querySelector("#docsViewerImportModal");
+            const root = document.querySelector("#docsHtmlImportRoot");
+            return modal && !modal.hidden && root && root.dataset.studioReady === "true";
+        }""",
+        timeout=timeout_ms,
+    )
+    return request_paths(generated_requests), request_paths(import_module_requests), page.url
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -202,11 +221,13 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 page = browser.new_page()
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
-                generated_paths, final_url = exercise_manage_route(page, base_url, args.timeout_ms)
+                generated_paths, import_module_paths, final_url = exercise_manage_route(page, base_url, args.timeout_ms)
             finally:
                 browser.close()
 
         assert_generated_requests(generated_paths)
+        if "/docs-viewer/runtime/js/import/docs-html-import.js" not in import_module_paths:
+            raise AssertionError(f"expected lazy Docs Import module request; saw {sorted(import_module_paths)!r}")
         if query_value(final_url, "mode"):
             raise AssertionError(f"expected clean manage URL without mode query, got {final_url}")
         if errors:

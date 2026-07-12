@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a5f99a88b932bdcfbaf2891d76325245",
-    "generated_at_utc": "2026-07-11T23:42:19Z",
+    "version": "blake2b-e006b1cdfc7e8c7370ef9aae0d6b760a",
+    "generated_at_utc": "2026-07-12T05:13:31Z",
     "count": 238
   },
   "entries": [
@@ -1400,10 +1400,10 @@
       "kind": "doc",
       "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
+      "display_meta": "2026-07-12 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-architecture-refactor-roadmap",
         "site",
@@ -1419,12 +1419,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer architecture assessment and refactor roadmap assessment and change requests change requests 2026-07-11 2026 07 11"
+      "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer architecture assessment and refactor roadmap assessment and change requests change requests 2026-07-12 2026 07 12"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",
@@ -3286,10 +3286,10 @@
       "kind": "doc",
       "title": "Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-06-22 • Portable Setup",
+      "display_meta": "2026-07-12 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -3301,12 +3301,12 @@
         "manifest",
         "portable setup",
         "setup",
-        "2026-06-22",
+        "2026-07-12",
         "2026",
-        "06",
-        "22"
+        "07",
+        "12"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-06-22 2026 06 22"
+      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-portable-scope-setup",
@@ -3458,10 +3458,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-11 • Runtime",
+      "display_meta": "2026-07-12 • Runtime",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3470,22 +3470,22 @@
         "inventory",
         "javascript inventory",
         "runtime",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-runtime-module-ownership",
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-11 • Runtime",
+      "display_meta": "2026-07-12 • Runtime",
       "search_terms": [
         "docs-viewer-runtime-module-ownership",
         "docs",
@@ -3494,12 +3494,12 @@
         "module",
         "ownership",
         "runtime module ownership",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-runtime-module-ownership docs viewer runtime module ownership runtime module ownership 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-runtime-module-ownership docs viewer runtime module ownership runtime module ownership 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-runtime-surfaces",

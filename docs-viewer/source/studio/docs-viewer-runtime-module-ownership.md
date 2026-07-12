@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-module-ownership
 title: Runtime Module Ownership
 added_date: 2026-06-05
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 summary: Grouped owner map for Docs Viewer entrypoints, boot, routes, data, state, panels, controllers, and manage-only runtime modules.
 parent_id: docs-viewer-runtime-boundary
 ---
@@ -82,12 +82,13 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Lazy management boundary | `docs-viewer-runtime-lazy-controller.js` | Neutral lazy-controller loading, named management state-domain, service-client, and route-reload contracts, and gated management controller import. |
-| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability checks, action/menu/modal coordination, imports, settings, scope lifecycle, and write orchestration. |
+| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability checks, action/menu/modal coordination, settings, scope lifecycle, and write orchestration. |
+| Management import workflow | `docs-viewer-management-import-controller.js` | Lazy Docs Import initialization, retry state, boot-error projection, and handoff from the management action to the import modal host. |
 | Management client | `docs-viewer-management-client.js` | Docs Viewer service transport helpers used by management controller workflows. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |
 | Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Local source-body document display mode rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. Manage and review entrypoints may supply different providers; public entrypoints never import it. |
-| Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. |
+| Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Initialized Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. The management import workflow owns lazy initialization and host handoff. |
 
 ## Review-Only Runtime And Service
 

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer JavaScript Inventory
@@ -59,6 +59,7 @@ Risk themes:
 | docs-viewer-management-document-actions-renderer.js | Manage-owned selected-document edit/source controls rendered into the shared main-view toolbar action area.                                                                                                                 |
 | docs-viewer-management-hosted-views.js              | Manage-owned view, document-mode, and document-control definitions supplied by the manage entrypoint.                                                                                                                      |
 | docs-viewer-management-interactions.js              | management support module.                                                                                                                                                                                                  |
+| docs-viewer-management-import-controller.js         | Lazy Docs Import initialization, retry/error state, and management-modal host handoff.                                                                                                                                      |
 | docs-viewer-management-modals.js                    | management modal controller after transient modal shell and metadata parent-picker extraction.                                                                                                                              |
 | docs-viewer-management-render.js                    | management support module.                                                                                                                                                                                                  |
 | docs-viewer-management-shell-composition.js         | Manage-owned shell renderer composition supplied by the manage entrypoint so public-safe app shell code does not import management renderers.                                                                               |
@@ -229,6 +230,12 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - action menu markup is design-time record rendering in `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`; this controller preserves binding, capability projection, and command workflow handoff for the rendered stable ids.
 - Keep service access behind the management service-client contract and post-write reloads behind the route-reload contract.
 - Do not move new backend writes, generated-read behavior, public hosted-view behavior, route shell boot, or route URL primitives into this file.
+
+### `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
+
+- Owns the management-side Docs Import lifecycle boundary: lazy module loading, single in-flight initialization, retry after a failed load, boot-error projection, and the action-to-modal handoff.
+- Receives explicit import host refs, service/config URLs, and scope/modal callbacks; it does not own import preview/write behavior or general management modal behavior.
+- Keep Docs Import preview and write orchestration in `docs-viewer/runtime/js/import/docs-html-import.js` and its child modules.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js`
 
@@ -429,13 +436,13 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### Docs Import And Management
 
-- Current boundary: Docs Import is a Docs Viewer management-modal app, not a standalone route surface. `docs-viewer/runtime/js/management/docs-viewer-management.js` lazily initializes `docs-viewer/runtime/js/import/docs-html-import.js` only from the management modal host.
+- Current boundary: Docs Import is a Docs Viewer management-modal app, not a standalone route surface. `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js` lazily initializes `docs-viewer/runtime/js/import/docs-html-import.js` only from the management modal host.
 - Keep modal app state, scope/file selection, service availability display, and `studio:ready` route-ready dataset projection in `docs-viewer/runtime/js/import/docs-html-import.js`.
 - Keep import result rendering in `docs-viewer/runtime/js/import/docs-html-import-render.js`.
 - Keep preview/write orchestration in `docs-viewer/runtime/js/import/docs-html-import-workflow.js`.
 - Keep import writes behind `docs-viewer/runtime/js/management/docs-viewer-management-client.js` and management endpoints such as `/docs/import-source`.
 - Keep management-only workflows behind the lazy management boundary.
-- management initialization, capability refresh, action/menu/modal binding, imports, settings, scope lifecycle, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; hosted-view visibility must not imply write authority.
+- management initialization, capability refresh, action/menu/modal binding, settings, scope lifecycle, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; lazy import initialization and modal handoff belong to `docs-viewer-management-import-controller.js`; hosted-view visibility must not imply write authority.
 - Keep make-viewable target resolution in `docs-viewer/runtime/js/management/docs-viewer-management-action-workflow.js`.
 - Move command-specific write behavior to `docs-viewer/runtime/js/management/docs-viewer-management-actions.js` or a workflow-specific module when it gains independent state.
 

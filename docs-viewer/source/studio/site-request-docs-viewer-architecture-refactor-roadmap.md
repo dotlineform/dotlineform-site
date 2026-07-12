@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-architecture-refactor-roadmap
 title: Docs Viewer Architecture Assessment And Refactor Roadmap
 added_date: 2026-07-10
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import-initialization and modal-handoff slice complete.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -941,9 +941,11 @@ Verification evidence:
 
 This phase is not a Docs Review prerequisite unless a touched workflow blocks a clean integration.
 
+Status: active. Slice 7.1 is complete; later slices remain demand-driven.
+
 Candidate slices:
 
-- extract import initialization and modal handoff
+- extract import initialization and modal handoff — Slice 7.1 complete
 - separate metadata and settings workflow composition
 - give scope/sub-scope lifecycle a focused controller
 - narrow the management event router
@@ -951,6 +953,29 @@ Candidate slices:
 - split action command families only when they have independent state or lifecycle
 
 Each slice should preserve behavior and have its own task definition and verification set.
+
+### Slice 7.1: Import Initialization And Modal Handoff
+
+Task definition:
+
+- move lazy Docs Import initialization state, module validation, retry handling, and boot-error projection out of `docs-viewer-management.js`
+- give the management-side import action and modal handoff one focused controller
+- preserve the existing import host, initial-scope projection, service/config URLs, first-open focus timing, and import preview/write owners
+- do not widen import authority or move preview/write behavior out of the existing `docs-html-import*` modules
+
+Delivered outcome:
+
+- `docs-viewer-management-import-controller.js` owns the single in-flight lazy initialization and post-failure retry boundary
+- the management coordinator supplies explicit host refs, service/config values, and scope/modal callbacks instead of retaining import lifecycle state
+- the generic management modal controller remains the import modal-shell owner, while the focused import controller owns the management action-to-modal handoff
+- public startup remains isolated because the new owner is reachable only through the lazy manage entrypoint graph
+
+Verification set:
+
+- JavaScript syntax checks for the focused owner and changed coordinator
+- public runtime import-boundary tests
+- focused manage-route smoke covering lazy management boot, import-module handoff, and service authority
+- `git diff --check`
 
 ## Phase 8: Backend Lifecycle And Mutation Work
 

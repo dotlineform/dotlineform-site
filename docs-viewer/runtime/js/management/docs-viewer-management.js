@@ -20,6 +20,9 @@ import {
   createDocsViewerManagementInteractionController
 } from "./docs-viewer-management-interactions.js";
 import {
+  createDocsViewerManagementImportController
+} from "./docs-viewer-management-import-controller.js";
+import {
   createDocsViewerManagementModalController
 } from "./docs-viewer-management-modals.js";
 import {
@@ -164,10 +167,9 @@ export function initDocsViewerManagement(context) {
   var settingsStatus = shellRef("settingsStatus", "docsViewerSettingsStatus");
   var settingsCancelButton = shellRef("settingsCancelButton", "docsViewerSettingsCancelButton");
   var settingsSaveButton = shellRef("settingsSaveButton", "docsViewerSettingsSaveButton");
-  var docsImportRequestPromise = null;
-  var docsImportInitialized = false;
   var scopeLifecycleRequestPromise = null;
   var capabilityController = null;
+  var importController = null;
   var interactionController = null;
   var modalController = null;
   var actionController = null;
@@ -253,50 +255,6 @@ export function initDocsViewerManagement(context) {
     }
     pushChildren("", 0);
     return options;
-  }
-
-  function initializeImportModal(scope) {
-    if (!importRoot || !importBootStatus || docsImportInitialized) return Promise.resolve();
-    if (docsImportRequestPromise) return docsImportRequestPromise;
-
-    docsImportRequestPromise = import("../import/docs-html-import.js")
-      .then(function (module) {
-        if (!module || typeof module.initDocsHtmlImport !== "function") {
-          throw new Error("Docs Import module did not expose initDocsHtmlImport().");
-        }
-        return module.initDocsHtmlImport({
-          root: importRoot,
-          bootStatus: importBootStatus,
-          initialScope: scope || viewerScope(),
-          docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl || root.dataset.docsViewerConfigUrl || "/docs-viewer/config/defaults/docs-viewer-config.json",
-          managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
-          routePath: "/docs/"
-        });
-      })
-      .then(function () {
-        docsImportInitialized = true;
-      })
-      .catch(function (error) {
-        console.warn("docs_viewer: docs import modal failed to initialize", error);
-        if (importBootStatus) {
-          importBootStatus.hidden = false;
-          importBootStatus.textContent = error && error.message ? error.message : "Failed to initialize docs import.";
-          importBootStatus.dataset.state = "error";
-        }
-      })
-      .finally(function () {
-        docsImportRequestPromise = null;
-      });
-
-    return docsImportRequestPromise;
-  }
-
-  function openImportModal() {
-    if (modalController) modalController.openImportModal();
-  }
-
-  function closeImportModal() {
-    if (modalController) modalController.closeImportModal();
   }
 
   function openSettingsModal() {
@@ -782,9 +740,7 @@ export function initDocsViewerManagement(context) {
     }
     if (manageImportButton) {
       manageImportButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        openImportModal();
+        importController.open();
       });
     }
     if (manageSettingsButton) {
@@ -966,6 +922,26 @@ export function initDocsViewerManagement(context) {
     }
   });
 
+  importController = createDocsViewerManagementImportController({
+    refs: {
+      root: importRoot,
+      bootStatus: importBootStatus
+    },
+    context: {
+      root: root,
+      docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
+      managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl
+    },
+    callbacks: {
+      getModalController: function () {
+        return modalController;
+      },
+      hideContextMenu: hideContextMenu,
+      hideManageActionsMenu: hideManageActionsMenu,
+      viewerScope: viewerScope
+    }
+  });
+
   modalController = createDocsViewerManagementModalController({
     nav: nav,
     state: state,
@@ -1009,7 +985,7 @@ export function initDocsViewerManagement(context) {
       hideManageActionsMenu: hideManageActionsMenu,
       isDocNonViewable: isDocNonViewable,
       metadataParentOptions: metadataParentOptions,
-      onImportOpen: initializeImportModal,
+      onImportOpen: importController.initialize,
       onMetadataSubmit: confirmMetadataModal,
       onSettingsSubmit: actionController.handleSettingsSubmit,
       viewerScope: viewerScope
@@ -1026,7 +1002,7 @@ export function initDocsViewerManagement(context) {
     handleRootClick: handleRootClick,
     hideContextMenu: hideContextMenu,
     initialize: initializeManagement,
-    openImportModal: openImportModal,
+    openImportModal: importController.open,
     render: renderManagementUi,
     updateNavDragState: updateNavDragState
   };
