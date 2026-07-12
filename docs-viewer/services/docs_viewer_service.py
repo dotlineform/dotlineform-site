@@ -65,6 +65,9 @@ SHARED_STATIC_ROUTES = {
     "/docs-viewer/static/css/docs-viewer-reports.css": Path(
         "site/docs-viewer/static/css/docs-viewer-reports.css"
     ),
+    "/docs-viewer/static/css/docs-viewer-moments.css": Path(
+        "site/docs-viewer/static/css/docs-viewer-moments.css"
+    ),
     "/docs-viewer/config/routes/docs-viewer-public-routes.json": Path(
         "site/docs-viewer/config/routes/docs-viewer-public-routes.json"
     ),
@@ -229,6 +232,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "shell" / "docs-viewer-manage.html",
         repo_root / "docs-viewer" / "shell" / "docs-viewer-review.html",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
+        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-moments.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-source-editor.css",

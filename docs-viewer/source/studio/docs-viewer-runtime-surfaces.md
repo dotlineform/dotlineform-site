@@ -46,6 +46,7 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | --- | --- | --- | --- | --- |
 | `site/assets/css/main.css` | inherited from the public site layout | absent from standalone shell | absent from standalone shell | Host public-site CSS is not a Docs Viewer runtime dependency. |
 | `site/docs-viewer/static/css/docs-viewer.css` | loaded via `/docs-viewer/static/css/docs-viewer.css` | loaded via service mapping for the same URL | loaded via service mapping for the same URL | Basic/public viewer styling and portable Docs Viewer tokens. |
+| `site/docs-viewer/static/css/docs-viewer-moments.css` | loaded by `/moments/`; absent from unrelated public routes | loaded via service mapping; active only when `data-viewer-scope="moments"` | absent | Moments measure, prose typography, and opt-in word-axis composition follow the scope across public and management shells. |
 | `docs-viewer/static/css/docs-viewer-reports.css` | absent unless explicitly public-promoted | loaded | absent | Report styling is manage-only until a report is promoted. |
 | `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | absent | Shared management shell, mutation, modal, menu, and scope-control styling stays local. |
 | `docs-viewer/static/css/docs-viewer-source-editor.css` | absent | loaded | absent | Markdown source editor and semantic-picker styling is feature-owned and manage-only. |

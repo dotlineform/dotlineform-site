@@ -14,6 +14,7 @@ viewable: true
 - Public host routes should provide page layout, prose defaults, and public-site chrome.
 - Docs Viewer should provide its own portable base contract plus shell, navigation, search, result, bookmark, status, report, and management component styles.
 - Public read-only routes intentionally inherit the public host stylesheet so `/library/` and `/analysis/` continue to belong to the public site.
+- Scope-owned presentation stays outside the basic stylesheet and selects the active scope rather than a particular route shell.
 - Docs Viewer does not require the public host stylesheet to function.
 - The Docs Viewer include adds only Docs Viewer-owned stylesheets.
 
@@ -23,15 +24,17 @@ The intended cascade for public routes is:
 
 1. host layout stylesheet, currently `site/assets/css/main.css`
 2. Docs Viewer basic/public stylesheet, served at `/docs-viewer/static/css/docs-viewer.css` from `site/docs-viewer/static/css/docs-viewer.css`
+3. an installed scope stylesheet when needed; `/moments/` loads `/docs-viewer/static/css/docs-viewer-moments.css`
 
 The intended cascade for local or standalone management routes is:
 
 1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
 2. Docs Viewer basic/public stylesheet, served at `/docs-viewer/static/css/docs-viewer.css` from `site/docs-viewer/static/css/docs-viewer.css`
 3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
-4. Docs Viewer management shell stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
-5. source editor and semantic picker stylesheet, `docs-viewer/static/css/docs-viewer-source-editor.css`
-6. Docs Import stylesheet, `docs-viewer/static/css/docs-viewer-import.css`
+4. scope-owned stylesheets available to the management scope selector, currently `site/docs-viewer/static/css/docs-viewer-moments.css`
+5. Docs Viewer management shell stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
+6. source editor and semantic picker stylesheet, `docs-viewer/static/css/docs-viewer-source-editor.css`
+7. Docs Import stylesheet, `docs-viewer/static/css/docs-viewer-import.css`
 
 ## Host Stylesheet Responsibilities
 
@@ -74,7 +77,20 @@ The public static site serves it directly from the `site/` deploy root, and the 
 - rendered Markdown code blocks should preserve code whitespace and use horizontal overflow when needed
 - tables may still scroll horizontally when needed
 
-It should not restyle public host page chrome, override public `site/assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report, import, source-editor, scope-lifecycle, settings, management-shell, or status mutation/menu selectors.
+It should not restyle public host page chrome, override public `site/assets/css/main.css` tokens on `/library/` and `/analysis/`, or define report, import, source-editor, scope-owned presentation, scope-lifecycle, settings, management-shell, or status mutation/menu selectors.
+
+## Moments Scope Stylesheet Responsibilities
+
+`site/docs-viewer/static/css/docs-viewer-moments.css` owns presentation that is meaningful only for the `moments` scope:
+
+- the compact Moments document measure
+- Moments title and date spacing
+- inherited prose typography for `pre.moment-text`
+- the opt-in `moment-text--axis` word-axis composition and its narrow-screen flowing-text fallback
+
+Its selectors use `.docsViewer[data-viewer-scope="moments"]`, not the public route id. The runtime projects the active scope onto that attribute, so the same rules apply on `/moments/` and `/docs/?scope=moments` while remaining inactive for other management scopes.
+
+The public Moments shell and the management shell both load the stylesheet. Keeping it available in the local management shell is preferred to adding a dynamic stylesheet loader; only the matching scope activates its rules.
 
 ## Rendered Table Defaults
 
@@ -179,6 +195,10 @@ Management-only styles are split by owner:
 - `docs-viewer/static/css/docs-viewer-source-editor.css`: source editor and semantic picker
 - `docs-viewer/static/css/docs-viewer-import.css`: Docs Import and reviewed-collection workflow
 
+Scope-owned public styles are also split from the basic viewer:
+
+- `site/docs-viewer/static/css/docs-viewer-moments.css`: Moments measure, typography, and opt-in composed-text treatments shared by the public and management views of that scope
+
 ## Verification
 
 After changing the cascade:
@@ -186,8 +206,10 @@ After changing the cascade:
 - build the site
 - smoke `/docs/?scope=studio`
 - smoke `/docs/?scope=library`
+- smoke `/docs/?scope=moments`
 - smoke `/library/`
 - smoke `/analysis/`
+- smoke `/moments/`
 - open `/docs/?scope=studio&import=1` and verify the import modal still has usable form controls
 - confirm public routes do not load Studio CSS
 - confirm generated docs content still uses host prose and responsive image styling

@@ -30,6 +30,17 @@ def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> N
         shell.index(stylesheet) for stylesheet in stylesheets
     )
 
+
+def test_moments_css_is_loaded_by_public_and_manage_shells() -> None:
+    public_shell = (REPO_ROOT / "site/moments/index.html").read_text(encoding="utf-8")
+    manage_shell = (REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert "docs-viewer-moments.css" in public_shell
+    assert "docs-viewer-moments.css" in manage_shell
+
+
 def test_static_path_policy_is_docs_viewer_scoped() -> None:
     def allowed(path: str) -> bool:
         return docs_viewer_service.DocsViewerRequestHandler.is_allowed_static_path(object(), path)
@@ -44,6 +55,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-reports.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-moments.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
@@ -87,6 +99,9 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-reports.css"
     ) == Path("site/docs-viewer/static/css/docs-viewer-reports.css")
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/docs-viewer-moments.css"
+    ) == Path("site/docs-viewer/static/css/docs-viewer-moments.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-manage.css"
     ) is None

@@ -56,6 +56,8 @@ The rendered shell must include:
   - `data-search-aria-label`
 - public runtime entrypoint: `/docs-viewer/runtime/js/public/docs-viewer-public.js`
 
+An installed route may load an additional scope-owned stylesheet when its presentation cannot belong to the portable viewer contract. `/moments/` loads `/docs-viewer/static/css/docs-viewer-moments.css`; the generic New Scope template does not add scope CSS automatically.
+
 The shell must not load or expose:
 
 - management runtime modules

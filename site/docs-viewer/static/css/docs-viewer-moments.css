@@ -1,0 +1,88 @@
+/* Moments scope typography */
+
+.docsViewer[data-viewer-scope="moments"]{
+  --docs-viewer-doc-width: 50ch;
+  --docs-viewer-measure: var(--docs-viewer-doc-width);
+}
+
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content > h1:first-child{
+  margin: 0 0 0.375rem;
+  font-size: var(--docs-viewer-font-heading-2);
+  line-height: 1.25;
+}
+
+.docsViewer[data-viewer-scope="moments"] .momentDate{
+  margin: 0 0 1.5rem;
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content pre.moment-text{
+  margin-block-end: 1.5rem;
+  padding: 0;
+  overflow-x: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  white-space: pre-wrap;
+}
+
+/* Opt-in word-axis composition for deliberately line-broken Moments. */
+
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content pre.moment-text--axis{
+  --moment-axis: 47%;
+  font-size: clamp(0.94rem, 2.1vw, 1.08rem);
+  white-space: normal;
+}
+
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-group{
+  display: block;
+  margin-block-end: 1.65rem;
+}
+
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-group:last-child{
+  margin-block-end: 0;
+}
+
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line{
+  display: grid;
+  grid-template-columns:
+    minmax(0, var(--moment-axis))
+    minmax(0, calc(100% - var(--moment-axis)));
+  white-space: nowrap;
+}
+
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before,
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-after{
+  min-width: 0;
+}
+
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before{
+  padding-right: 0.28em;
+  text-align: right;
+}
+
+.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-after{
+  text-align: left;
+}
+
+@media (max-width: 40rem){
+  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line{
+    display: inline;
+    white-space: normal;
+  }
+
+  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before,
+  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-after{
+    display: inline;
+    padding: 0;
+    text-align: left;
+  }
+
+  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before::after,
+  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line:not(:last-child)::after{
+    content: " ";
+  }
+}

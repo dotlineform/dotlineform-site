@@ -61,6 +61,7 @@ Before changing browser JavaScript:
 - create or extend a focused owner for complete responsibilities such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, route-state projection, or domain logic
 - prefer shared JS/CSS behavior over duplicated inline route logic
 - when modifying CSS, check whether shared styles can be consolidated rather than adding another one-off rule
+- select scope-owned CSS with `data-viewer-scope` when it must work on both a public scope route and `/docs/?scope=<scope>`; `data-route-id` identifies the shell, not the selected management scope
 - do not keep compatibility paths, old runtime fields, broad callbacks, or legacy handoffs as an end state
 - retarget tests and helpers to the current owner contract instead of preserving old fields for fixture convenience
 
