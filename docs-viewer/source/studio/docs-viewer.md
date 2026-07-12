@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: ""
 viewable: true
 ---
@@ -64,7 +64,7 @@ Those boundaries are intentional:
 ## Key Documents
 
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the route-shell, runtime, and URL/state model.
-- [Documentation Register And Authority Map](/docs/?scope=studio&doc=docs-viewer-documentation-register) identifies current documentation owners, overlaps, workflow gaps, and proposed cleanup batches. The `studio` corpus remains the single reference scope for development and maintenance documentation.
+- [Docs Viewer Documentation Cleanup](/docs/?scope=studio&doc=docs-viewer-documentation-register) tracks focused entrypoint, owner, workflow, and request cleanup. The `studio` corpus remains the single reference scope for development and maintenance documentation.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains source roots, parent/child structure, and generated ordering.
 - [Docs Viewer Static Route Template](/docs/?scope=studio&doc=docs-viewer-static-route-template) explains public/manage route shell ownership, stable mount points, and runtime entrypoint boundaries.
 - [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template) explains how new public route shells are rendered from the canonical template into tracked `site/` HTML.

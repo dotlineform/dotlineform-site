@@ -1,197 +1,162 @@
 ---
 doc_id: docs-viewer-documentation-register
-title: Documentation Register And Authority Map
+title: Docs Viewer Documentation Cleanup
 added_date: 2026-07-11
 last_updated: 2026-07-12
-ui_status: review
-summary: Audit register, authority map, overlap findings, and proposed dispositions for the Docs Viewer documentation set and its active change requests.
-parent_id: docs-viewer
+ui_status: in-progress
+summary: Focused work to improve Docs Viewer entry points, current owner documents, workflow guidance, request hygiene, and navigation.
+parent_id: change-requests
 viewable: true
 ---
-# Docs Viewer Documentation Register And Authority Map
+# Docs Viewer Documentation Cleanup
 
-## Purpose
+## Status
 
-This is the D0 documentation authority map for the [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap).
+Active documentation work for the `studio` corpus.
 
-It identifies the current owner documents needed by refactor phases 1-5, classifies the existing Docs Viewer material, and records focused follow-up dispositions. It is an assessment and navigation aid, not a rewrite of the audited documents.
+The initial authority audit is complete. This request keeps only the current owner map and the remaining cleanup batches; it is not a historical inventory of every reviewed document.
 
-The `studio` corpus remains the single reference scope for development and maintenance documentation. The documentation workstream will improve classification, entry points, and ownership within that scope; it will not create separate product and shared-development documentation scopes.
+## Outcome
 
-## Audit Boundary And Vocabulary
+Make the Docs Viewer documentation easier to enter, trust, and maintain:
 
-The baseline set contains 70 documents:
+- short task-oriented entry points for users and maintainers
+- one clear current owner for each architecture and workflow contract
+- user guidance separated from implementation reference
+- active requests limited to genuinely proposed or in-progress work
+- completed outcomes transferred to durable owners without retaining execution chronology
+- concise summaries and navigation where they materially improve discovery
 
-- the `docs-viewer` root and its 63 pre-existing descendants in the Studio index
-- six adjacent Docs Viewer or Docs Review change requests under `change-requests`
+The `studio` corpus remains the single reference scope for development and maintenance documentation. This request does not create another docs scope or navigation system.
 
-This register is not counted in that baseline. Repo-wide owners such as [Development Checklist](/docs/?scope=studio&doc=development-checklist), [Testing](/docs/?scope=studio&doc=testing), [Public Route Model](/docs/?scope=studio&doc=public-route-model), and [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) appear in the subject map where they constrain Docs Viewer work, but are not reclassified here.
+## Current Owner Map
 
-Document types:
+| subject | current owner | supporting reference |
+| --- | --- | --- |
+| Docs Viewer entry and routing | [Docs Viewer](/docs/?scope=studio&doc=docs-viewer) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview) |
+| public/manage/review runtime boundary | [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) |
+| browser module responsibilities | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) | [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) |
+| generated payloads and provider reads | [Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) | [Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
+| source roots and hierarchy | [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) | [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer) |
+| hosted views and toolbar placement | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) | [Toolbar Model](/docs/?scope=studio&doc=docs-viewer-toolbar-model) |
+| Docs Review | [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) | [Returned Package Review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review) |
+| Docs Import | [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) | [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) |
+| Data Sharing document export | [Data Sharing](/docs/?scope=studio&doc=data-sharing) | [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles) |
+| management HTTP and Python owners | [Management Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints) | [Management Scripts](/docs/?scope=studio&doc=scripts-docs-management-scripts) |
+| development and verification rules | [Development Checklist](/docs/?scope=studio&doc=development-checklist) | [Testing](/docs/?scope=studio&doc=testing) |
 
-- **user guide**: task-oriented product usage
-- **operator workflow**: setup, commands, services, publishing, and troubleshooting
-- **architecture**: current boundaries, ownership, state, authority, and invariants
-- **reference**: fields, files, endpoints, generated payloads, reports, or inventories
-- **change request**: proposed work, implementation decisions, or retained history
+If a cleanup batch changes one of these boundaries, update the owner map in the same change.
 
-Status describes the prose, independently of `ui_status`:
+## Batch 1: Entry Points
 
-- **current**: intended to describe the implemented system
-- **proposed**: describes unimplemented or not-yet-accepted behavior
-- **historical**: retained outcome or superseded design context
-- **mixed**: combines more than one of those states or more than one audience
+Focus the primary entry documents around reader tasks:
 
-Dispositions are proposals for later focused batches. `Focus` means narrow the document to one audience or subject. `Split` and `merge` require a replacement owner before prose is removed. `Supersede` retains history through a change-request link after current decisions are transferred.
+- make [Docs Viewer](/docs/?scope=studio&doc=docs-viewer) a short router for reading, managing, importing, exporting, reviewing, setup, architecture, and reference
+- keep [Overview](/docs/?scope=studio&doc=docs-viewer-overview) concise and architectural rather than a file inventory
+- create or focus a maintainer path through current owners instead of linking through completed requests
+- remove implementation chronology once current owners are linked
 
-## Phase 1-5 Subject Authority Map
+The entrypoint should help a reader choose the next document without requiring knowledge of internal module names.
 
-| subject | current durable owner | workflow or reference support | historical or proposed context | D0 finding |
-| --- | --- | --- | --- | --- |
-| Docs Viewer entry point | [Docs Viewer](/docs/?scope=studio&doc=docs-viewer) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview) | architecture roadmap | Current entry is maintainer-oriented; no short task-oriented user entry exists. |
-| Public/manage entrypoints and import boundary | [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership), [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces), [Static Route Template](/docs/?scope=studio&doc=docs-viewer-static-route-template) | architecture roadmap | These are the phase 0 baseline owners. Keep the public graph free of local service and write modules. |
-| App kind, route access, and visibility | [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts), [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) | architecture roadmap | Current prose still derives several decisions from public/manage access. Phase 1 needs an explicit app-context owner. |
-| Service availability and backend authority | [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | [Health And Capabilities Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-health-capabilities), [Generated Read Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-generated-reads) | architecture roadmap | Browser visibility, service reachability, and backend capability truth are not yet described by one focused contract. |
-| Generated-data reads and provider boundary | [Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership), [Builder](/docs/?scope=studio&doc=scripts-docs-builder) | architecture roadmap | Payload authority is documented; the phase 2 viewer-facing provider contract does not exist yet. |
-| Source reads and writes | [Source Editor Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-editor) | [Source Editor Scripts](/docs/?scope=studio&doc=scripts-docs-management-scripts-source-editor) | provider and endpoint contracts | Source methods are manage-only; Docs Review exposes no source provider methods, capabilities, endpoints, or UI. |
-| Route config and configured-scope discovery | [Config](/docs/?scope=studio&doc=config-docs-viewer) | [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces), [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) | architecture roadmap | Canonical, browser, route, and service config purposes need a concise projection-ownership table. |
-| Startup phases and route features | [Overview](/docs/?scope=studio&doc=docs-viewer-overview) | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) | architecture roadmap | No focused current owner explains enabled features, constructed controllers, and required payloads. Phase 3 must create or focus one. |
-| App-session state domains | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview) | architecture roadmap | Named domains are described inside broader documents; mutable-field ownership is not a focused contract. |
-| Panel hosts and hosted views | [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) | [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel), [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) | `docs-viewer-view-registry.js` | Panel/layout and eligibility owners are explicit; keep capability prose scoped to layout. |
-| Document display modes and toolbar controls | [Toolbar Model](/docs/?scope=studio&doc=docs-viewer-toolbar-model) | [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract), [Info Panel](/docs/?scope=studio&doc=docs-viewer-info-panel) | `docs-viewer-view-registry.js`, architecture roadmap | The code-owned registry is the current projection owner. |
-| Runtime and management coordinator ownership | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview), [Management Scripts Overview](/docs/?scope=studio&doc=scripts-docs-management-scripts) | architecture roadmap | Phase 5 should update module ownership only for responsibilities actually extracted. |
-| CSS surfaces | [CSS Cascade Design](/docs/?scope=studio&doc=docs-viewer-css-cascade-design) | [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) | architecture roadmap phase 9 | Current owner exists; no broad CSS consolidation is a phase 1-5 prerequisite. |
-| Refactor checks and public isolation | [Development Checklist](/docs/?scope=studio&doc=development-checklist) and [Testing](/docs/?scope=studio&doc=testing) | [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | architecture roadmap | Use pure module contracts, static module graphs, and focused service checks; avoid UI choreography coverage. |
-| Docs Review product boundary | [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review), [Returned Package Review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review) | review app context and returned-package service | Current local workflow; configured-source apply remains outside Docs Review. |
-| Reviewed-package admission | [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import), [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) | current staged-JSONL collection import with persistent read-only review | Docs Viewer Import owns explicit create/overwrite/skip actions; Data Sharing ends at staging, validation, and review projection. |
+## Batch 2: User And Operator Workflows
 
-## Contradictions, Overlaps, And Gaps
+Separate task steps from service and parser detail for:
 
-### Prerequisite Contract Issues
+- browsing, search, recent documents, bookmarks, display modes, and information panels
+- source editing, rebuilds, reports, and troubleshooting
+- Docs Import and reviewed-package collection import
+- Data Sharing preparation and export
+- scope creation, deletion, and portable setup
+- image, attachment, and interactive asset handling
 
-- `docs-viewer-overview` mixes a user-facing overview with a long runtime module inventory. Runtime detail should resolve through `docs-viewer-runtime-boundary`, `docs-viewer-runtime-module-ownership`, and `docs-viewer-runtime-surfaces`.
-- `docs-viewer-panel-hosts` records current owners and the history of several extraction slices. Its current panel/app-session contract needs separating from implementation chronology.
-- `docs-viewer-view-capability-contract` and `docs-viewer-toolbar-model` overlap on current availability and control placement. Phase 0 converted the old registry request into the code-owned Phase 4 projection task; browser config cannot invent lifecycle modules or handler ids.
-- Current service documentation describes local generated reads and source services mainly through the management route. Phase 1 must distinguish service presence from management UI composition and backend authorization.
-- Generated payloads have a durable owner, but no current document owns the configured-scope provider interface proposed for phase 2.
-- Startup construction is described in overview and module-inventory prose, but no current contract maps route features to controllers, bindings, and required URLs.
+User guides should describe shipped UI and decisions. Endpoint, script, schema, parser, and security detail should live in the linked reference owner.
 
-### Audience And Navigation Gaps
+## Batch 3: Architecture And Setup Overlap
 
-- There is no short Docs Viewer user guide organized around browse, navigate, search, recent, bookmarks, display modes, and information panels.
-- Source editing, rebuild, import, export, scope management, reports, and troubleshooting are distributed across user, endpoint, script, and architecture documents without an operator entry point.
-- Portable setup, new-scope creation, public scopes, config, and shell-template documents overlap on route and scope setup.
-- Semantic references are described by a report, editor guide, implementation document, and draft request; their current versus proposed boundaries need explicit cross-links.
-- The completed Markdown-export request and existing export/import reference documents do not yet point to one concise durable package-contract owner.
+Reconcile the remaining groups that describe the same boundary from different angles:
 
-### Summary Coverage
+### Runtime, Panels, And Controls
 
-At the start of D0, only 2 of the 70 audited documents had a front-matter `summary`: `docs-viewer-dependencies` and `docs-viewer-public-route-shell-template`.
+- keep current app-context and session-domain behavior in runtime owners
+- remove extraction chronology from Panel Hosts
+- keep placement in Toolbar Model and availability in the code-owned view/mode/control projection
+- retire overlapping capability prose only after the retained owner states the current rule
 
-Phase 0 added summaries to eight prerequisite owner documents and the converted view/mode/control child task. Current audited-set coverage is therefore 11 of 70. The D0 register and architecture roadmap also have summaries but are outside the original 70-document baseline.
+### Config, Routes, And Portable Setup
 
-The first summary batch should cover the Docs Viewer entry point, the phase 1-5 durable owners in the subject map, user guides, and active change requests. Endpoint and file-inventory summaries can follow as a mechanical reference batch. Summary writing alone does not change search until the separate search request implements summary indexing and ranking.
+- distinguish canonical app config, route records, browser-safe projection, local service config, and code-owned definitions
+- keep setup procedures in portable setup documents
+- keep route-shell contracts in the static/public template owners
+- keep public-scope architecture separate from step-by-step scope creation
+- remove repeated file lists when a focused manifest or inventory already owns them
 
-## Register: Entry Points, User Workflows, Architecture, And Reference
+### Import, Export, And Media
 
-| document | type | status | present authority | disposition | summary |
-| --- | --- | --- | --- | --- | --- |
-| `docs-viewer` | architecture / entry point | mixed | Docs Viewer section entry and high-level boundaries | Focus as a short user/maintainer router; move runtime inventory to existing owners. | missing |
-| `docs-broken-links` | reference / report | current | Generated broken-links report surface | Keep as generated report; link to the script/operator owner. | missing |
-| `scripts-docs-broken-links` | operator workflow / reference | current | Broken-links command and report data source | Keep and add a concise summary. | missing |
-| `scripts-docs-builder` | operator workflow / reference | mixed | Build mechanics and generated outputs | Focus command usage and builder contract; move broad payload explanation to generated-data contracts. | missing |
-| `config-docs-viewer` | reference / architecture | current | Docs Viewer config layers | Focus around projection ownership and browser/server boundaries. | missing |
-| `docs-viewer-css-cascade-design` | architecture | current | Stylesheet order and host responsibilities | Keep; defer consolidation work to phase 9. | missing |
-| `docs-viewer-dependencies` | reference | current | Docs Viewer-specific dependency boundary | Keep. | present |
-| `docs-data` | reference | mixed | Studio docs search data notes | Merge current payload facts into generated-data/search owners; retain only a focused data reference if distinct content remains. | missing |
-| `user-guide-docs-images` | user guide | current | Docs images and asset workflows | Keep and add entry-point links. | missing |
-| `user-guide-docs-html-import` | user guide / operator workflow | mixed | Import modal workflow and implementation detail | Focus on user workflow; move service/parser detail to import reference owners. | missing |
-| `docs-viewer-public-route-shell-template` | architecture / reference | current | Generated public shell template contract | Keep. | present |
-| `docs-viewer-static-route-template` | architecture / reference | current | Public/manage shell and ready-state contract | Focus on shared mount and entrypoint boundaries; cross-link the generated public template owner. | missing |
-| `scripts-docs-export` | operator workflow / reference | current | Documents package preparation command | Keep; align terminology with the durable package contract. | missing |
-| `scripts-docs-import` | operator workflow / reference | current | Returned package parser command | Keep; state clearly that parsing is not canonical apply/promotion. | missing |
-| `site-request-docs-viewer-embedded-detail-documents` | change request / architecture | mixed | Implemented sub-scope detail behavior and retained decisions | Focus current behavior into a durable owner, then move or supersede the request-shaped document. | missing |
-| `docs-viewer-export` | operator workflow / reference | mixed | Static HTML export and package inputs | Split user/operator steps from payload/file reference, or focus around one contract. | missing |
-| `docs-viewer-import-source-registry-spec` | architecture / reference | current | Import format registry, normalized content, collection plan/apply, and security boundaries | Keep as the durable import architecture owner. | missing |
-| `docs-viewer-info-panel` | architecture | current | Info-panel hosted-view behavior and context | Keep; narrow availability prose to the future shared projection owner. | missing |
-| `library-documents` | reference / report | current | Generated Library documents report | Keep as generated report. | missing |
-| `docs-viewer-media-handling` | operator workflow / architecture | mixed | Docs media paths, import staging, and copy behavior | Split workflow guidance from path/security architecture when the external workspace-path slice changes it. | missing |
-| `docs-viewer-new-scopes-builder` | operator workflow / architecture | mixed | New scope creation and route/publish decisions | Split into task workflow plus focused config/route reference; no new documentation scope is implied. | missing |
-| `docs-viewer-overview` | architecture / entry point | mixed | Current runtime overview and large module inventory | Split/trim; make runtime owners authoritative and leave a concise system overview. | missing |
-| `docs-viewer-panel-hosts` | architecture | mixed | Panel hosts, app context, session domains, and extraction history | Focus on current panel/view/state contracts; remove chronology after replacements are linked. | missing |
-| `docs-viewer-portable-setup` | operator workflow | current | Portable setup entry point | Keep as a short task router. | missing |
-| `docs-viewer-portable-files` | reference | current | Portable file manifest | Keep; reconcile with current tracked/static ownership. | missing |
-| `docs-viewer-portable-scope-setup` | operator workflow | current | Public and managed scope setup procedures | Focus around supported route types and config-driven paths. | missing |
-| `docs-viewer-portable-source-shape` | reference | current | Minimum portable source document shape | Keep. | missing |
-| `docs-viewer-public-scopes` | architecture / operator workflow | mixed | Public scope model and setup details | Focus on public scope architecture; move procedures to portable setup. | missing |
-| `docs-viewer-reports` | architecture / reference | current | Report metadata, access, modules, and rendering | Keep; update capability terms with phase 1. | missing |
-| `docs-viewer-runtime-boundary` | architecture | current | Public/manage install and shared-runtime boundary | Keep as the primary phase 0-1 runtime authority. | missing |
-| `docs-viewer-generated-data-contracts` | architecture / reference | current | Generated payload ownership and schemas | Keep as primary payload authority; add provider links in phase 2. | missing |
-| `docs-viewer-javascript-inventory` | reference | current | File-level browser module inventory | Keep as reference; do not use it as behavior authority. | missing |
-| `docs-viewer-runtime-module-ownership` | architecture / reference | current | Grouped browser runtime owner map | Keep and update with each ownership-moving slice. | missing |
-| `docs-viewer-runtime-surfaces` | architecture / reference | current | Route, shell, config, CSS, and payload surface matrix | Keep; add explicit app-context and route-feature rows in phases 1 and 3. | missing |
-| `docs-viewer-semantic-references` | reference / report | current | Generated semantic references report | Keep as generated report. | missing |
-| `docs-viewer-semantic-references-editor` | user guide / architecture | mixed | Current editor behavior and integration | Focus user workflow; move implementation ownership to the implementation document. | missing |
-| `docs-viewer-semantic-references-implementation` | architecture / reference | current | Semantic-reference source, registry, builder, and runtime ownership | Keep as current implementation owner. | missing |
-| `docs-viewer-source-config-report` | reference / report | current | Generated source-config report | Keep as generated report. | missing |
-| `docs-viewer-source-organisation` | architecture / reference | current | Source roots, hierarchy, and ordering | Keep; preserve `studio` as the reference development/maintenance scope. | missing |
-| `docs-viewer-toolbar-model` | architecture | current | Toolbar regions and present control placement | Focus on layout/ownership; transfer eligibility projection to the phase 4 owner. | missing |
-| `doc-ui-status` | user guide / reference | current | UI-status options and config owner | Keep; shorten generated-config implementation detail where possible. | missing |
-| `docs-viewer-view-capability-contract` | architecture | mixed | Hosted-view availability fields and route config | Merge accepted current rules into panel and phase 4 projection owners, then supersede this overlapping contract. | missing |
-| `docs-viewer-viewable-field` | user guide / reference | current | Source `viewable` field and build/runtime effects | Keep. | missing |
+- keep operator steps in workflow guides
+- keep package shapes in Data Sharing/export references
+- keep import normalization, planning, and apply contracts in the import architecture owner
+- keep media path, containment, transformation, and manual-copy rules in one focused media reference
 
-## Register: Management Services, Endpoints, And Script Inventory
+## Batch 4: Request Hygiene
 
-| document | type | status | present authority | disposition | summary |
-| --- | --- | --- | --- | --- | --- |
-| `scripts-docs-live-rebuild-watcher` | operator workflow / reference | current | Live rebuild watcher behavior and commands | Keep. | missing |
-| `scripts-docs-management-server` | operator workflow / reference | current | Management service entry and reference router | Keep as a concise router. | missing |
-| `scripts-docs-management-endpoints` | reference | current | Management endpoint family index | Keep as endpoint router. | missing |
-| `scripts-docs-management-endpoints-create-import` | reference | current | Create/import HTTP contracts | Keep; link user workflows separately. | missing |
-| `scripts-docs-management-endpoints-generated-reads` | reference | current | Local generated-read HTTP contracts | Keep; update service-surface terms in phase 1. | missing |
-| `scripts-docs-management-endpoints-health-capabilities` | reference | current | Health and capability payload contracts | Keep; distinguish backend authorization from browser projection in phase 1. | missing |
-| `scripts-docs-management-endpoints-rebuild-audit` | reference | current | Rebuild and audit HTTP contracts | Keep. | missing |
-| `scripts-docs-management-endpoints-scope-lifecycle` | reference | current | Scope create/delete HTTP contracts | Keep; not a phase 1-5 refactor prerequisite. | missing |
-| `scripts-docs-management-endpoints-source-config` | reference | current | Source-config HTTP contracts | Keep. | missing |
-| `scripts-docs-management-endpoints-source-editor` | reference | current | Source read/write/open HTTP contracts | Keep; link the optional source-provider methods in phase 2. | missing |
-| `scripts-docs-management-endpoints-source-mutations` | reference | current | Metadata/viewability/mutation HTTP contracts | Keep. | missing |
-| `scripts-docs-management-server-operations` | operator workflow | current | Security and operational service guidance | Keep and expose through the future operator entry point. | missing |
-| `scripts-docs-management-scripts` | reference | current | Management Python module family index | Keep as a concise router. | missing |
-| `scripts-docs-management-scripts-audit` | reference | current | Audit module ownership | Keep. | missing |
-| `scripts-docs-management-scripts-import` | reference | current | Import module ownership | Keep. | missing |
-| `scripts-docs-management-scripts-read-config` | reference | current | Read/config/capability module ownership | Keep; update capability projection ownership in phase 1. | missing |
-| `scripts-docs-management-scripts-rebuild-follow-through` | reference | current | Write/rebuild/build/search boundary | Keep. | missing |
-| `scripts-docs-management-scripts-route-dispatch` | reference | current | HTTP dispatch and service context modules | Keep; maintain thin dispatch. | missing |
-| `scripts-docs-management-scripts-service-entrypoints` | reference | current | CLI/service entrypoints | Keep. | missing |
-| `scripts-docs-management-scripts-source-editor` | reference | current | Source service module ownership | Keep; update provider linkage in phase 2. | missing |
-| `scripts-docs-management-scripts-source-mutations` | reference | current | Mutation and scope-manifest module ownership | Keep; broader lifecycle cleanup belongs to phase 8. | missing |
+For every request-shaped document:
 
-## Register: Related Change Requests
+- keep it active only while proposed or implementation work remains
+- transfer shipped behavior and durable decisions to current owner documents
+- remove completed checklists, verification logs, phase history, and superseded alternatives
+- retain a short link to the durable outcome only when it aids navigation
+- delete or supersede the request when it no longer owns work
 
-| document | type | status | present authority | disposition | summary |
-| --- | --- | --- | --- | --- | --- |
-| `site-request-data-sharing-full-document-package` | change request | active | Exact Markdown and asset/dependency export | Keep active as export-only work, separate from Docs Review and configured-source import. | missing |
-| `site-request-docs-document-content-markdown-export` | change request | historical | Completed Markdown-export decision and outcome | Transfer durable package behavior to export owners, then retain as superseded history. | missing |
-| `site-request-docs-viewer-architecture-refactor-roadmap` | change request | active | Foundation refactor sequence and guardrails | Keep durable outcomes and verification evidence directly in the roadmap. | missing |
-| `site-request-docs-viewer-semantic-reference-editor` | change request | mixed | Draft V2 goals beside implemented V1 behavior | Reconcile with current editor/implementation owners, then retain only genuinely proposed work. | missing |
+Priority candidates:
 
-## Proposed Documentation Batches
+- [Docs Viewer Remaining Architecture Work](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap) — keep only trigger-based architecture candidates
+- [Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) — separate implemented behavior from any remaining editor proposal
+- [Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents) — transfer shipped behavior and retain only unresolved work
+- [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) — keep export-only implementation work focused
 
-1. **Phase 0 prerequisite owners**: initial baseline reconciliation and summaries are complete for runtime boundary, module ownership, runtime surfaces, generated-data contracts, overview, panel hosts, toolbar model, and view capability prose; later entry-point work still needs to focus `docs-viewer` itself.
-2. **User and operator entry points**: create task-oriented navigation for reading/search/bookmarks and for source edit/rebuild/import/export/scope operations/troubleshooting.
-3. **Route and setup overlap**: focus config, static/public shell templates, portable setup, public scopes, and new-scope builder around distinct owners.
-4. **Import/export/media**: separate workflow guidance from package, service, parser, and path/security reference.
-5. **Semantic references**: reconcile report, editor, implementation, and request status.
-6. **Management reference summaries**: add concise summaries to endpoint and script-inventory documents after their owner boundaries stabilize.
-7. **Change-request hygiene**: transfer implemented outcomes, mark superseded requests, and keep Docs Review and full-package export work explicitly separate from phases 1-5.
+Do not preserve completed requests merely as historical reading material. Git history remains the implementation record.
 
-## D0 Completion Check
+## Batch 5: Summaries And Discovery
 
-- The audit set and proposed disposition for every document are recorded above.
-- The current owners and gaps for every phase 1-5 architecture subject are explicit.
-- User and operator workflow gaps are listed separately from architecture contradictions.
-- Summary coverage is measured without assuming that summaries are already searchable.
-- The documentation corpus stays in the `studio` reference scope.
-- No broad documentation rewrite or runtime refactor is included in this task.
+Add summaries first to documents that appear as entry points, high-level architecture owners, user workflows, or active requests. A summary should say what the document helps the reader do or decide; it should not repeat the title.
 
-Foundation phases 0-5, the Docs Review readiness checkpoint, and the validated-package review consumer are complete. Durable Docs Review behavior now lives in `docs-viewer-review` and `scripts-docs-management-endpoints-review`; the completed implementation request is retirement-ready. Documentation-search and later external workspace-path work remain separate workstreams and do not require a documentation-scope migration.
+Do not treat summary coverage across every endpoint or file inventory as a goal by itself. Mechanical reference summaries can follow only when they improve search or navigation.
+
+If current search behavior still makes the corpus difficult to use after entrypoint and summary work, create a separate Documentation Search Discovery And Relevance request with an explicit ranking and result-presentation outcome.
+
+## Working Method
+
+Use small batches:
+
+1. name the current owner and the overlapping documents
+2. transfer current behavior and durable constraints to that owner
+3. focus user/operator guidance on the task
+4. update inbound links and navigation
+5. remove redundant or historical prose in the same batch
+6. run the docs and search dry-run checks
+
+When a document mixes unrelated responsibilities, split only if both resulting owners are clear. Otherwise focus it around the strongest existing owner.
+
+## Non-Goals
+
+- creating another documentation scope
+- preserving completed requests as a history archive
+- rewriting the whole corpus in one batch
+- changing runtime behavior while reorganizing prose
+- duplicating endpoint or module inventories in overview documents
+- adding classification metadata without a consumer
+- using document length as an automatic failure condition
+
+## Completion Criteria
+
+This request is complete when:
+
+- the Docs Viewer entry documents route users and maintainers by task
+- each retained current contract has one clear owner
+- user workflows no longer carry unnecessary service or parser inventories
+- overlapping runtime, setup, import/export/media, and request prose has been focused or removed
+- active requests contain only remaining work
+- key entry points and active requests have useful summaries
+- internal links and generated docs/search payloads validate cleanly
+
+Completed batch chronology should not accumulate in this request. Update the remaining batch list, transfer durable outcomes, and keep moving toward closure.
