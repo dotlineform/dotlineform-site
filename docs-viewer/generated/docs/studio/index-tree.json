@@ -317,26 +317,6 @@
           "ui_status": "done"
         },
         {
-          "doc_id": "site-request-docs-import-reviewed-package",
-          "title": "Docs Import Reviewed Package",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package.json",
-          "ui_status": "done",
-          "children": [
-            {
-              "doc_id": "site-request-docs-import-reviewed-package-implementation",
-              "title": "Docs Import Reviewed Package Implementation",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package-implementation.json",
-              "ui_status": "done"
-            },
-            {
-              "doc_id": "site-request-docs-import-reviewed-package-preparation-refactor",
-              "title": "Docs Import Reviewed Package Preparation And Refactor",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package-preparation-refactor.json",
-              "ui_status": "done"
-            }
-          ]
-        },
-        {
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
           "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
@@ -346,12 +326,6 @@
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
           "title": "Docs Viewer Semantic Reference Editor Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
-          "ui_status": "draft"
-        },
-        {
-          "doc_id": "site-request-library-import-generated-parent-nodes",
-          "title": "Library Import Generated Parent Nodes Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-library-import-generated-parent-nodes.json",
           "ui_status": "draft"
         },
         {
@@ -1293,5 +1267,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-12T13:32:41Z"
+  "generated_at": "2026-07-12T13:52:48Z"
 }

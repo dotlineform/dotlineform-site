@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6cffbb8356755340163cd25ce30a7462",
-    "generated_at_utc": "2026-07-12T13:18:50Z",
-    "count": 239
+    "version": "blake2b-4c3bf9228a943809609b27af58ed0a11",
+    "generated_at_utc": "2026-07-12T13:52:49Z",
+    "count": 235
   },
   "entries": [
     {
@@ -1341,90 +1341,6 @@
       "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
     },
     {
-      "id": "site-request-docs-import-reviewed-package",
-      "kind": "doc",
-      "title": "Docs Import Reviewed Package",
-      "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package",
-      "last_updated": "2026-07-12",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-12 • Change Requests",
-      "search_terms": [
-        "site-request-docs-import-reviewed-package",
-        "site",
-        "request",
-        "docs",
-        "import",
-        "reviewed",
-        "package",
-        "docs import reviewed package",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "site-request-docs-import-reviewed-package site request docs import reviewed package docs import reviewed package change requests change requests 2026-07-12 2026 07 12"
-    },
-    {
-      "id": "site-request-docs-import-reviewed-package-implementation",
-      "kind": "doc",
-      "title": "Docs Import Reviewed Package Implementation",
-      "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation",
-      "last_updated": "2026-07-12",
-      "parent_id": "site-request-docs-import-reviewed-package",
-      "parent_title": "Docs Import Reviewed Package",
-      "display_meta": "2026-07-12 • Docs Import Reviewed Package",
-      "search_terms": [
-        "site-request-docs-import-reviewed-package-implementation",
-        "site",
-        "request",
-        "docs",
-        "import",
-        "reviewed",
-        "package",
-        "implementation",
-        "docs import reviewed package implementation",
-        "docs import reviewed package",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "site-request-docs-import-reviewed-package-implementation site request docs import reviewed package implementation docs import reviewed package implementation docs import reviewed package 2026-07-12 2026 07 12"
-    },
-    {
-      "id": "site-request-docs-import-reviewed-package-preparation-refactor",
-      "kind": "doc",
-      "title": "Docs Import Reviewed Package Preparation And Refactor",
-      "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-preparation-refactor",
-      "last_updated": "2026-07-12",
-      "parent_id": "site-request-docs-import-reviewed-package",
-      "parent_title": "Docs Import Reviewed Package",
-      "display_meta": "2026-07-12 • Docs Import Reviewed Package",
-      "search_terms": [
-        "site-request-docs-import-reviewed-package-preparation-refactor",
-        "site",
-        "request",
-        "docs",
-        "import",
-        "reviewed",
-        "package",
-        "preparation",
-        "refactor",
-        "docs import reviewed package preparation and refactor",
-        "and",
-        "docs import reviewed package",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "site-request-docs-import-reviewed-package-preparation-refactor site request docs import reviewed package preparation refactor docs import reviewed package preparation and refactor and docs import reviewed package 2026-07-12 2026 07 12"
-    },
-    {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
       "kind": "doc",
       "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
@@ -1483,35 +1399,6 @@
         "23"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-23 2026 06 23"
-    },
-    {
-      "id": "site-request-library-import-generated-parent-nodes",
-      "kind": "doc",
-      "title": "Library Import Generated Parent Nodes Request",
-      "href": "/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes",
-      "last_updated": "2026-07-12",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-12 • Change Requests",
-      "search_terms": [
-        "site-request-library-import-generated-parent-nodes",
-        "site",
-        "request",
-        "library",
-        "import",
-        "generated",
-        "parent",
-        "nodes",
-        "library import generated parent nodes request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-07-12 2026 07 12"
     },
     {
       "id": "site-request-r2-media-upload-automation",

@@ -370,7 +370,7 @@ Recommended priorities:
 4. retain source write/rebuild as the single canonical rebuild boundary
 5. narrow capability payload construction into feature-owned projections
 
-Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, returned-package provider, and isolated build/source services. The planned staged-JSONL collection import belongs to managed Docs Viewer Import rather than Docs Review or Data Sharing.
+Docs Review does not require all backend cleanup first. It requires a clean review route family, capability surface, returned-package provider, and isolated build/source services. The staged-JSONL collection import belongs to managed Docs Viewer Import rather than Docs Review or Data Sharing.
 
 ## Finding 10: Config Has Multiple Legitimate But Overlapping Layers
 
@@ -501,7 +501,7 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
   meta/
 ```
 
-The next Docs import staging slice is now defined by [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package): every Docs Import format will reuse `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` through the same W0 workspace adapter. Catalogue media staging remains a later separately defined root.
+The Docs Import staging slice is complete and documented by [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec): every Docs Import format reuses `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` through the same W0 workspace adapter. Catalogue media staging remains a later separately defined root.
 
 Rules:
 
@@ -592,7 +592,7 @@ Purpose: remove checkout-relative authority from user-facing staging, preview, a
 
 The Data Sharing/review slice is implemented inside the active full-document-package work so completed path work does not require another historical tracker. Later workspace-root slices remain separate cross-app work. The Data Sharing/review slice had to complete before Docs Review returned-package services could be implemented.
 
-Data Sharing/review slice status: complete. The follow-on Docs Import staging migration is proposed in [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
+Data Sharing/review slice status: complete. The follow-on Docs Import staging migration is also complete and documented by [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec).
 
 First-slice tasks:
 

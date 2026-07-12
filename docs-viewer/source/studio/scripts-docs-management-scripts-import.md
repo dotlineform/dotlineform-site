@@ -52,11 +52,11 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Collection route registration and confirmed apply remain later phases.
+The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Supported collection requests dispatch to the focused collection planning or apply owners.
 
 ## `docs-viewer/services/docs_import_data_sharing_documents.py`
 
-Purpose: trusted Data Sharing documents collection dry-run orchestration.
+Purpose: trusted Data Sharing documents collection orchestration.
 
 Ownership: thin public composition of Data Sharing package intake and wrapper-neutral collection planning.
 
@@ -66,6 +66,7 @@ Responsibilities:
 - calls `docs_import_data_sharing_package.py` for trusted wrapper intake
 - calls `docs_import_collection_plan.py` for complete write-free planning
 - shapes the safe package identity projection supplied to the planner
+- dispatches confirmed requests through `docs_import_collection_apply.py`
 
 Not responsible for:
 
@@ -73,7 +74,7 @@ Not responsible for:
 - collision, hierarchy, media, or response-planning details
 - collection UI or decision state
 - configured-source or media writes
-- apply revalidation and partial-failure handling
+- apply revalidation and partial-failure implementation
 - Docs/search rebuild invocation
 - result-report writing
 
@@ -110,7 +111,7 @@ Responsibilities:
 - resolves existing parents and supplied multi-level new-parent chains
 - blocks malformed identity and hierarchy states
 - reports inline media and declared-asset handling without materializing either
-- exposes a body-free API projection plus internal per-document plans for later confirmed apply
+- exposes a body-free API projection plus internal per-document plans for confirmed apply
 
 Not responsible for:
 
@@ -144,6 +145,75 @@ Not responsible for:
 - content-format conversion
 - collection collision state or package ordering
 - Docs/search rebuild invocation
+
+## `docs-viewer/services/docs_import_collection_decisions.py`
+
+Purpose: collection apply request validation and target-state revalidation.
+
+Ownership: owns the collection apply allowlist, explicit record decisions, immutable package confirmation, decision drift, and refreshed-plan response.
+
+Responsibilities:
+
+- accepts only scope, safe staged identity, `preview_only`, confirmation, decisions, package identity, and ordinary activity context
+- accepts only `overwrite` or `skip` record actions
+- validates collision targets and permits notes only for skipped invalid records
+- recomputes current package and target facts before mutation
+- returns a write-free refreshed plan when package identity, collision target, target identity, parent resolution, hierarchy state, blocker state, or required decisions have changed
+- prevents a skipped supplied parent while a dependent child remains planned
+
+Not responsible for:
+
+- package parsing or write-free plan construction
+- source/media mutation
+- generation or result-report writing
+
+## `docs-viewer/services/docs_import_collection_apply.py`
+
+Purpose: synchronous package-order collection mutation and generation.
+
+Ownership: owns confirmed collection apply after decision revalidation.
+
+Responsibilities:
+
+- applies records strictly in package order through `docs_import_document.py`
+- treats asset materialization as best effort while keeping trusted intake and unsafe-path failures blocking
+- preserves completed per-document writes and stops on the first source-write failure
+- reports later records as not attempted rather than rolling back the batch
+- invokes the managed Docs/search rebuild owner once with all affected paths and ids
+- reports generation failure separately without undoing successful source mutations
+- records collection apply activity and delegates final response/report shaping
+
+Not responsible for:
+
+- collection UI or browser decision expansion
+- batch rollback, jobs, polling, cancellation after mutation begins, or generation retry
+
+## `docs-viewer/services/docs_import_collection_result.py`
+
+Purpose: body-free collection result and report shaping.
+
+Ownership: owns safe grouped collection outcomes and marker-rooted result-report output.
+
+Responsibilities:
+
+- groups records as created, overwritten, skipped, failed, or not attempted while preserving package order
+- projects generation status without commands, process output, diagnostics, or local paths
+- includes warnings, optional invalid-record notes, and manual-copy instructions
+- writes confirmed-apply Markdown reports below the configured staging root's `results/` child directory
+- treats report-write failure as a non-blocking warning
+
+Not responsible for:
+
+- import planning, decisions, mutation, or generation
+- selecting the staging root or changing import outcomes
+
+## `studio/shared/python/json_markdown_report.py`
+
+Purpose: deterministic Markdown rendering and atomic writing for JSON-compatible report data.
+
+Ownership: shared formatting and caller-path write helper with no Docs Import dependency.
+
+It preserves supplied order unless the caller provides section order, escapes Markdown, and owns no output-root resolution, marker projection, app-specific grouping, templates, plugins, or report registry.
 
 ## `docs-viewer/services/docs_import_preview.py`
 

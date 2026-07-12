@@ -15,7 +15,7 @@ In progress as the producer for the complete [Docs Review](/docs/?scope=studio&d
 
 The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export and returned-package services, and Docs Review sessions now use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. Full-package schema, export, intake, and validation remain to be implemented.
 
-Phase 1 owns full-fidelity export, returned-package intake, validation, and the persistent read-only review projection. It does not own the later configured-source write. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) specifies schema-aware collection import from the immutable staged JSONL.
+Phase 1 owns full-fidelity export, returned-package intake, validation, and the persistent read-only review projection. It does not own the configured-source write. [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) specifies schema-aware collection import from the immutable staged JSONL.
 
 ## Product Context: Iterative Knowledge Creation
 
@@ -116,9 +116,9 @@ Data Sharing supplies:
 - validated record and inventory contracts
 - provenance and validation diagnostics
 
-Docs Viewer Import owns target-scope selection, record selection, front-matter normalization, explicit create/overwrite/skip choices, parent mapping, body-link pass-through, embedded-image materialization, configured source writes, and rebuilds. It reads the staged JSONL rather than the derived preview Markdown.
+Docs Viewer Import owns target-scope selection, complete-package planning, front-matter normalization, explicit create/overwrite/skip choices, parent mapping, body-link pass-through, embedded-image materialization, configured source writes, and rebuilds. It reads the staged JSONL rather than the derived preview Markdown.
 
-Docs Review may link to that managed import flow, but it must not acquire canonical mutation endpoints. The detailed reuse boundary is specified in [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
+Docs Review may link to that managed import flow, but it must not acquire canonical mutation endpoints. The detailed reuse boundary is specified in [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec).
 
 ## External Workspace Root
 

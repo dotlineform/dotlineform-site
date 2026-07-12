@@ -27,10 +27,11 @@ It does not currently cover:
 - automatic remote upload
 - raster-to-SVG conversion
 - catalogue media generation
-- Library returned-package Data Sharing imports under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
 - browser runtime asset loading outside generated Docs Viewer content
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) plans to reuse the existing inline raster data-URL path for document records parsed from immutable staged Data Sharing JSONL. Docs Import will continue to plan, retarget, decode, and materialize supported PNG, JPEG, WebP, and GIF data URLs. Non-embedded package assets need explicit import mappings and are not automatically promoted from the Data Sharing workspace.
+Reviewed Data Sharing document collections reuse the existing inline raster data-URL path. Docs Import plans, retargets, decodes, and materializes supported PNG, JPEG, WebP, and GIF data URLs from normalized collection records. Non-embedded package assets require an explicit import mapping and are not automatically promoted from the Data Sharing workspace.
+
+Collection asset handling is best effort after trusted intake. An unsupported, missing, unauthorized-collision, or failed asset operation preserves the returned source reference, warns, and allows the document and later records to continue. Document-level `Overwrite` and `Apply to all` never authorize asset overwrite. Unsafe paths, containment or symlink escapes, size failures, and execution-safety failures remain blocking and are never attempted.
 
 ## Scope Configuration
 

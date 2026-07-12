@@ -8,7 +8,7 @@ viewable: true
 ---
 # Data Sharing Import Content
 
-> Superseded review boundary: this request records the earlier temporary source-editing slice. The current implemented contract is a persistent read-only projection with managed collection import; see [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) and [Docs Review](/docs/?scope=studio&doc=docs-viewer-review).
+> Superseded review boundary: this request records the earlier temporary source-editing slice. The current implemented contract is a persistent read-only projection with managed collection import; see [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) and [Docs Review](/docs/?scope=studio&doc=docs-viewer-review).
 
 Partially implemented; remaining full-source direction superseded by [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package).
 
@@ -55,7 +55,7 @@ This Data Sharing slice ends at the temporary review-folder handoff:
 
 No live source docs are created, overwritten, or deleted by the Data Sharing source-folder action.
 
-This implemented text-oriented folder is not source-faithful enough for complete configured-source import. The superseding full-package request provides exact source and validation; the separate [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) request owns schema-aware import from the immutable staged JSONL. Docs Review does not acquire canonical write authority.
+This implemented text-oriented folder is not source-faithful enough for complete configured-source import. The superseding full-package request provides exact source and validation; [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) owns schema-aware import from the immutable staged JSONL. Docs Review does not acquire canonical write authority.
 
 ## Temporary Review Source Folders
 
@@ -249,7 +249,7 @@ Filtering, searching, and reviewing smaller groups should happen inside the revi
 
 The next workflow is [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package), which exports exact Markdown and supporting assets, validates the returned package, and materializes a persistent read-only Docs Review projection.
 
-Any later configured-source import follows [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package), with shared JSONL normalization, explicit create/overwrite/skip choices, hierarchy/link mapping, media handling, and rebuild contracts.
+Configured-source import follows [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec), with shared JSONL normalization, explicit create/overwrite/skip choices, hierarchy/link mapping, media handling, and rebuild contracts.
 
 ## Implementation Architecture
 

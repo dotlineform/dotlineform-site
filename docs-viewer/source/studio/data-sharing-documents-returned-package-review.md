@@ -175,7 +175,7 @@ It does not register the folder as a Docs Viewer scope, open `/docs-review/`, or
 
 The current Content/source-folder action is a text-oriented preview handoff only. Its manifest records `source_projection: rendered_derived_text_only`. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
 
-[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the exact-Markdown and asset producer for the same validated-package handoff. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) now keeps the persistent projection read-only and imports the associated staged JSONL through managed Docs Import instead.
+[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the exact-Markdown and asset producer for the same validated-package handoff. [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) keeps the persistent projection read-only and imports the associated staged JSONL through managed Docs Import instead.
 
 ## Review Rows
 

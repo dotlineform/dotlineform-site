@@ -111,10 +111,47 @@ Returned data can include preview Markdown, proposed doc identity, operation typ
 
 ## Reviewed-Package Collection Import
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) extends this route family with schema-aware Data Sharing JSON/JSONL collection planning and synchronous apply. Both phases reuse `POST /docs/import-source`; the review handoff uses only the safe server-listed staged identity.
+Schema-aware Data Sharing JSON/JSONL collection planning and synchronous apply reuse `POST /docs/import-source`. The review handoff uses only the safe server-listed staged identity.
 
 The endpoints now use the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. Endpoint services resolve it through `configured_workspace_paths(repo_root).import_staging`, return marker-rooted paths, and report import unavailable through the W0 workspace capability contract when the root cannot be used. They do not fall back to repo-local staging.
 
-It will resolve a safe immutable staged-file identity through Data Sharing metadata, detect supported package headers before the generic JSON/JSONL file fallback, and normalize document records before shared validation, media planning, source writes, and rebuild work. It will not import from the derived Docs Review `source/*.md` projection.
+The service resolves a safe immutable staged-file identity through Data Sharing metadata, detects supported package headers before the generic JSON/JSONL file fallback, and normalizes document records before shared validation, media planning, source writes, and rebuild work. It never imports from the derived Docs Review `source/*.md` projection.
 
-For each selected record, the user can create, explicitly overwrite, or skip. Collisions must require an explicit choice rather than silently selecting overwrite or a replacement ID.
+Collection planning uses the ordinary request identity with `preview_only: true`:
+
+```json
+{
+  "scope": "library",
+  "staged_filename": "returned-documents.jsonl",
+  "preview_only": true
+}
+```
+
+The body-free response covers every package record and includes package identity, create or decision-required actions, collisions, allowed decisions, content intent, parent resolution, new-parent dependencies, media summaries, blockers, warnings, and confirmation readiness. Planning never writes source or media and never invokes generation.
+
+Confirmed apply uses `preview_only: false`, explicit confirmation, the package identity returned by planning, and explicit decisions:
+
+```json
+{
+  "scope": "library",
+  "staged_filename": "returned-documents.jsonl",
+  "preview_only": false,
+  "confirm": true,
+  "export_id": "ds_...",
+  "source_sha256": "...",
+  "decisions": [
+    {
+      "record_index": 0,
+      "action": "overwrite",
+      "target_doc_id": "existing-doc",
+      "note": ""
+    }
+  ]
+}
+```
+
+Decision actions are `overwrite` or `skip`. A note is accepted only when skipping an invalid record. Collection apply rejects browser-authored target paths, generated source, plans, and other fields outside the request allowlist.
+
+Apply rereads the staged package and recomputes the current plan. Changed package identity, collision target, target identity, parent resolution, hierarchy validity, or blocker state returns `preview_only: true`, `reconfirmation_required: true`, and a refreshed plan without writes. If the confirmed plan remains valid, records are written synchronously in package order. A source-write failure preserves earlier writes, stops later writes, and marks remaining records not attempted; asset failures warn and continue. Docs and search generation runs once after mutation and is reported separately from source outcomes.
+
+The final response includes `outcome`, `source_mutation`, `generation`, ordered `records`, grouped and counted created/overwritten/skipped/failed/not-attempted records, warnings, manual-copy instructions, and a marker-rooted `report_path`. Confirmed applies write the report under `import-staging/results/`; report-write failure adds a warning without changing the import result.

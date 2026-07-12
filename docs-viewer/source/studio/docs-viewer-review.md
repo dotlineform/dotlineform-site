@@ -188,5 +188,6 @@ These checks cover validated package discovery, package-root containment, persis
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
 - [Returned Package Review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review)
 - [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
-- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package)
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
 - [Local Setup Environment](/docs/?scope=studio&doc=local-setup-environment)

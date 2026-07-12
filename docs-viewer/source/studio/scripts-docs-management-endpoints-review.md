@@ -139,4 +139,4 @@ The endpoint family contains no package source-read or source-write route. `sour
 
 See [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) for the durable workflow and ownership contract.
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains a managed `/docs/` import capability. Docs Review hands off only a safe package identity; this endpoint family has no configured-source apply authority.
+[Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) remains the managed `/docs/` import capability. Docs Review hands off only a safe package identity; this endpoint family has no configured-source apply authority.

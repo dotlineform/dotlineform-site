@@ -53,6 +53,7 @@ The import modal:
 - imports standalone `.svg` files as wrapper docs with sanitized inline SVG
 - imports raster images as wrapper docs that point at the configured `<media_path_prefix>/img/<filename>` media path
 - imports supported downloadable files as wrapper docs that point at the configured `<media_path_prefix>/files/<filename>` media path
+- recognizes trusted returned Data Sharing JSON/JSONL as complete reviewed-document collections before generic file fallback
 - extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
 - hides role-marked interactive HTML files from the staged file picker and copies each one into `site/assets/docs/interactive/<scope>/` for manual iframe-token embedding
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
@@ -80,6 +81,26 @@ Markdown imports use the first `# H1` as the title when present and otherwise hu
 Text, SVG, image, and file-media imports humanize the staged filename stem unless the source format contains a better title.
 
 New `library` and `analysis` imports use the same default import behavior: they are generated and opened for review through manage-mode viewer links before becoming normal public tree items.
+
+## Reviewed-Package Collection Workflow
+
+A validated package in Docs Review can open managed Docs Import with its matching staged JSON/JSONL collection preselected. The handoff carries only the safe package identity; Docs Import resolves it against the server-listed staged file. If that staged file has been deleted, the persistent review remains readable but import is unavailable.
+
+Collection import always plans the complete package before writing:
+
+1. Choose the target scope and review every package record, parent mapping, warning, and blocker.
+2. Resolve document collisions one at a time with `Overwrite`, `Skip`, or `Cancel`.
+3. Leave `Apply to all` unchecked to decide only the current collision, or check it to apply the chosen action to remaining document collisions.
+4. Resolve invalid-front-matter or unsupported-content records individually with `Skip` or `Cancel`; an optional note may accompany a skipped invalid record.
+5. Review the final read-only plan and confirm apply.
+
+The collection workflow does not offer replacement ids, `Create as new`, ordinary per-record selection, or automatic overwrite. `Apply to all` does not affect invalid-record decisions or authorize media and attachment overwrites. `Cancel` is available before apply and writes nothing; once confirmed apply begins, the synchronous operation runs to completion or failure.
+
+Existing target parents are reused. A missing parent is created only when the package supplies a complete explicit document record for that identity; missing undeclared parents and hierarchy cycles block confirmation. Multi-level supplied parent chains are supported. Hierarchy-only existing records preserve their current body and unrelated front matter, while a new structural record without supplied content receives an empty body.
+
+Apply rereads the immutable staged package and recomputes target state. A changed collision target, target identity, parent resolution, hierarchy state, blocker state, or package identity returns a refreshed plan without writes. Successful writes run in package order. If a source write fails, earlier writes remain and later records are reported as not attempted; there is no collection rollback. Generation failure is reported separately and does not undo successful source writes.
+
+The result groups records as created, overwritten, skipped, failed, or not attempted and includes generation status, warnings, manual-copy instructions, and a marker-rooted Markdown report path under `import-staging/results/`.
 
 ## Prompt / Meta Option
 
@@ -284,3 +305,4 @@ They are still validated through the shared Python Docs Viewer Markdown renderer
 
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)

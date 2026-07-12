@@ -40,15 +40,13 @@ Docs Import reuses the W0 adapter already consumed by Docs Review: `configured_w
 
 The folder is application-neutral staging despite its existing `data-sharing/` namespace. Which workflow consumes a file depends on supported format/schema and the user action. There is no Docs-specific external resolver and no fallback or compatibility read from the retired repo-local staging folder.
 
-## Planned Data Sharing Collection Source
+## Data Sharing Collection Source
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) adds supported Data Sharing documents JSON/JSONL as a collection source format.
+Supported Data Sharing documents JSON/JSONL is a current collection source format. The registry detects supported Data Sharing headers and trusted export metadata before the generic `.json`/`.jsonl` downloadable-file fallback, parses the immutable staged file into normalized document records, and applies it as a collection.
 
-The current registry treats `.json` and `.jsonl` as generic downloadable files and imports one primary source at a time. The planned implementation will detect supported Data Sharing headers and trusted export metadata before that generic fallback, parse the immutable staged file into normalized document records, and apply it as a collection.
+The same Data Sharing collection adapter feeds both the persistent read-only Docs Review projection and Docs Import. Import reads the staged JSONL, never `import-preview/<package_id>/source/*.md`. Shared lower-level services continue to own renderer validation, data-URL image extraction, collision handling, source formatting, writes, and rebuilds.
 
-The same Data Sharing collection adapter will feed both the persistent read-only Docs Review projection and Docs Import. Import reads the staged JSONL, never `import-preview/<package_id>/source/*.md`. Shared lower-level services continue to own renderer validation, data-URL image extraction, collision handling, source formatting, writes, and rebuilds.
-
-Each selected non-colliding record can create. A collision can only be explicitly overwritten or skipped; the collection workflow does not offer a replacement `doc_id` or `Create as new`. Batch choices are `Overwrite`, `Overwrite all`, `Skip`, `Skip all`, and `Cancel import`, resolved before any writes.
+Each non-colliding record creates. A collision can only be explicitly overwritten or skipped; the collection workflow does not offer a replacement `doc_id` or `Create as new`. The UI resolves collisions sequentially with `Overwrite`, `Skip`, or `Cancel` and an unchecked `Apply to all` checkbox before showing one read-only final confirmation. `Apply to all` affects only remaining document collisions, not invalid-record decisions or asset overwrite authority.
 
 ### Future Standalone Collection Compatibility
 
@@ -56,20 +54,20 @@ The shared downstream contract must not require Data Sharing provenance. Data Sh
 
 Wrapper adapters should emit generic import-content records containing identity, title, body content, `content_format`, allowed metadata, hierarchy, and asset diagnostics. `content_format` can dispatch to the existing Markdown, HTML-to-Markdown, or plain-text behavior through content-based entrypoints beneath the current file wrappers.
 
-That standalone schema is not part of the current implementation request. Arbitrary JSON/JSONL must keep the generic downloadable-file behavior unless a supported collection schema is explicitly declared.
+That standalone schema is not implemented. Arbitrary JSON/JSONL keeps the generic downloadable-file behavior unless a supported collection schema is explicitly declared.
 
 ### Targeted Refactoring Boundary
 
 The current registry and dispatcher remain valid for existing one-document formats. `SourceImporter` may remain a metadata record, and `generate_import_preview()` may retain its explicit format dispatch.
 
-The collection extension requires only:
+The implemented collection extension retains this boundary:
 
 1. the W0 external staging-root substitution;
 2. content-aware Data Sharing JSON/JSONL detection before generic file fallback;
 3. a focused collection orchestrator for one staged source producing several document actions; and
 4. extraction of reusable per-document collision, create/overwrite, media, write, and rebuild helpers from the current single-document orchestrator.
 
-The existing `handle_import_source()` must continue to own ordinary one-source-to-one-document workflow and call the same extracted helpers. Do not introduce a plugin framework, callable-handler registry, wholesale dispatcher replacement, or migration of every format into a separate module as part of this request.
+The existing `handle_import_source()` continues to own ordinary one-source-to-one-document workflow and calls the same extracted helpers. Do not introduce a plugin framework, callable-handler registry, wholesale dispatcher replacement, or migration of every format into a separate module without a separate requirement and evidence.
 
 ## Registry Shape
 
@@ -194,7 +192,7 @@ The Data Sharing documents adapter owns wrapper/schema/provenance checks and emi
 
 The plan applies only `title`, `parent_id`, `summary`, and `viewable` from returned front matter. `preserve-existing` overwrites format the current configured canonical source with its existing body and unrelated front matter intact; `empty-new` creates the standard empty body. Replacement content continues through the normalized preview/conversion boundary before planning.
 
-`apply_import_document()` materializes the plan's per-document media and interactive assets through the existing focused services, then performs the atomic source write. It does not run Docs/search rebuilds. The single-source workflow now creates an `ImportContent` record, uses this shared plan/apply boundary, and supplies its changed path and ids to the existing `perform_source_write_and_rebuild()` owner. A future collection orchestrator can therefore apply package records in order inside one managed batch write/rebuild callback without invoking the single-source endpoint per record.
+`apply_import_document()` materializes the plan's per-document media and interactive assets through the existing focused services, then performs the atomic source write. It does not run Docs/search rebuilds. The single-source workflow creates an `ImportContent` record, uses this shared plan/apply boundary, and supplies its changed path and ids to the existing `perform_source_write_and_rebuild()` owner. The collection orchestrator applies package records in order inside one managed batch write/rebuild callback without invoking the single-source endpoint per record.
 
 ## Data Sharing Collection Dry-Run Plan
 
@@ -207,6 +205,16 @@ The planner calls `generate_normalized_import_content_preview()` only for replac
 Collision records expose only `Overwrite`, `Skip`, and `Cancel` as allowed decisions. Invalid front matter and unsupported content formats expose only `Skip` and `Cancel`; they are record errors rather than implicit skips. Malformed package/schema data, unsafe or duplicate identities, mismatched collision targets, missing parents, and cycles remain package blockers.
 
 Planning computes inline data-URL media summaries through the existing content preview path. Declared package assets without an authorized materialization mapping remain non-blocking warnings with their source references preserved. The response contains no source body or generated source text. Planning never calls the per-document apply helper, materializes media, writes configured source, or invokes rebuilds.
+
+## Data Sharing Collection Decisions And Apply
+
+Planning covers every package record; the collection UI does not provide ordinary subset selection. Malformed package/schema data, unsafe or duplicate identities, missing parents, and hierarchy cycles block the complete plan. Invalid front matter and unsupported supplied content require an explicit per-record `Skip` or complete `Cancel`; an optional note is retained only for a skipped invalid record.
+
+Confirmed apply rereads the immutable staged package, recomputes the target plan, and validates explicit record decisions. The browser submits safe staged identity, package identity, actions, optional invalid-record notes, and activity context. It does not submit target paths, generated source, hierarchy/media plans, or an authoritative write plan. A changed package identity, collision target, target identity, parent resolution, hierarchy state, or blocker state returns a write-free refreshed plan for reconfirmation. Unrelated current body or metadata changes do not force reconfirmation for `preserve-existing` records.
+
+Writes run synchronously and strictly in package JSONL order. Each record uses the shared per-document atomic apply boundary; the collection is not a transaction and has no batch rollback. A source-write failure stops the batch, preserves completed writes, and reports later records as not attempted. Asset materialization failures remain record warnings and do not stop source writes. After mutation, the managed write/rebuild owner runs once for all affected paths and ids. Generation failure does not roll back or reclassify successful source mutations.
+
+The final body-free result groups records as created, overwritten, skipped, failed, or not attempted and reports generation separately. Confirmed applies write a deterministic Markdown report below `import-staging/results/`; planning, rejected plans, and pre-write cancellation do not. Report-write failure is a non-blocking warning. Collection import remains synchronous and has no stored plan, plan token, job, polling, progress, or result-retrieval route.
 
 ## Format Behavior
 
@@ -333,4 +341,3 @@ Keep writes in the service layer so source-write, rebuild, and search behavior r
 - [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer)
-- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package)

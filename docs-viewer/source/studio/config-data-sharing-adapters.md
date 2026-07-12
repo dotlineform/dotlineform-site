@@ -50,7 +50,7 @@ The validator requires:
 
 These marker paths are editable but must remain distinct descendants of `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`. Runtime services resolve them through the shared workspace resolver and never store user-specific absolute paths in checked-in config.
 
-`import-staging/` is the consistent user-facing drop-zone, not an application-exclusive inbox. Data Sharing currently uses it for returned packages. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) plans to make every Docs Viewer import format consume the same resolved `DataSharingWorkspacePaths.import_staging` root. The applicable app is determined by the file format/schema and user action. Do not add another Docs-specific staging path to this registry.
+`import-staging/` is the consistent user-facing drop-zone, not an application-exclusive inbox. Data Sharing uses it for returned packages, and every Docs Viewer import format consumes the same resolved `DataSharingWorkspacePaths.import_staging` root. The applicable app is determined by the file format/schema and user action. Do not add another Docs-specific staging path to this registry. See [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec).
 
 Do not add per-domain runtime package roots or fallback reads for retired locations such as `var/studio/data-sharing/...` or `var/studio/export-import/...`.
 
