@@ -17,7 +17,7 @@ Studio-owned integration tests stay under `studio/tests/`.
 Required Docs Viewer smoke entrypoints:
 
 - `docs_viewer_service_manage.py`: standalone manage route boot, service generated reads, and one representative management action.
-- `public_docs_viewer_readonly.py`: public Library and Analysis route boot, read-only state, and compact payload requests.
+- `public_docs_viewer_readonly.py`: public Library, Analysis, and no-toolbar Moments route boot, read-only state, document-control policy, and compact payload requests.
 
 Focused route slice scripts such as `docs_viewer_routes.py` remain available for targeted route work when `/docs/` is served by an appropriate local target, but they are not part of the default Docs Viewer smoke profile.
 

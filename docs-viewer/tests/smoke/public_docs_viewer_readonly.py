@@ -184,7 +184,16 @@ def exercise_search(page: Page, route: str, query: str, timeout_ms: int) -> None
     )
 
 
-def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, title: str, timeout_ms: int) -> None:
+def exercise_public_route(
+    page: Page,
+    base_url: str,
+    route: str,
+    doc_id: str,
+    title: str,
+    timeout_ms: int,
+    *,
+    expect_document_controls: bool = True,
+) -> None:
     request_urls: list[str] = []
     page.on("request", lambda request: request_urls.append(request.url))
     page.goto(route_url(base_url, route), wait_until="domcontentloaded")
@@ -192,7 +201,14 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
     if query_value(page.url, "mode"):
         raise AssertionError(f"{route} should remove mode query state, got {page.url}")
     assert_public_route_contract(route, public_route_state(page))
-    assert_public_info_panel(page, route, title, timeout_ms)
+    if expect_document_controls:
+        assert_public_info_panel(page, route, title, timeout_ms)
+    else:
+        unexpected_controls = page.locator(
+            "#docsViewerMainViewToolbar, #docsViewerPath, #docsViewerInfoToggle, #docsViewerBookmarkToggle"
+        ).count()
+        if unexpected_controls:
+            raise AssertionError(f"{route} rendered intentionally hidden document controls")
     page.locator("#docsViewerRecentButton").click()
     page.wait_for_function(
         """() => {
@@ -202,7 +218,8 @@ def exercise_public_route(page: Page, base_url: str, route: str, doc_id: str, ti
         timeout=timeout_ms,
     )
     exercise_search(page, route, title, timeout_ms)
-    assert_payload_requests(route, request_paths(request_urls), doc_id, doc_id)
+    route_scope = urlparse(route).path.strip("/").split("/", 1)[0]
+    assert_payload_requests(route, request_paths(request_urls), route_scope, doc_id)
 
 
 def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) -> None:
@@ -340,6 +357,15 @@ def main() -> int:
                 )
                 exercise_public_route(page, base_url, "/analysis/?doc=analysis", "analysis", "Analysis", args.timeout_ms)
                 exercise_public_subscope_report(page, base_url, args.timeout_ms)
+                exercise_public_route(
+                    page,
+                    base_url,
+                    "/moments/?doc=a-feeling-of-free-will",
+                    "a-feeling-of-free-will",
+                    "a feeling of free will",
+                    args.timeout_ms,
+                    expect_document_controls=False,
+                )
             finally:
                 browser.close()
 
@@ -349,7 +375,10 @@ def main() -> int:
             raise AssertionError(f"request failures during public Docs Viewer read-only smoke: {request_failures!r}")
         if http_failures:
             raise AssertionError(f"HTTP failures during public Docs Viewer read-only smoke: {http_failures!r}")
-        print(f"public Docs Viewer read-only OK: {base_url}/library/ and {base_url}/analysis/")
+        print(
+            "public Docs Viewer read-only OK: "
+            f"{base_url}/library/, {base_url}/analysis/, and {base_url}/moments/"
+        )
         return 0
     finally:
         static_server.shutdown()
