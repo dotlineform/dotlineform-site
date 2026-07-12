@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a71597a1fac19d8330271795fb5e68b5",
-    "generated_at_utc": "2026-07-12T14:53:27Z",
+    "version": "blake2b-3afec7bc4c1c76da675e1e2f6e985850",
+    "generated_at_utc": "2026-07-12T15:32:42Z",
     "count": 233
   },
   "entries": [
@@ -1285,9 +1285,36 @@
       "search_text": "site-request-data-sharing-full-document-package site request data sharing full document package data sharing full document export package export change requests change requests 2026-07-12 2026 07 12"
     },
     {
+      "id": "docs-viewer-documentation-register",
+      "kind": "doc",
+      "title": "Docs Viewer Documentation Cleanup",
+      "href": "/docs/?scope=studio&doc=docs-viewer-documentation-register",
+      "last_updated": "2026-07-12",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-12 • Change Requests",
+      "search_terms": [
+        "docs-viewer-documentation-register",
+        "docs",
+        "viewer",
+        "documentation",
+        "register",
+        "docs viewer documentation cleanup",
+        "cleanup",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "docs-viewer-documentation-register docs viewer documentation register docs viewer documentation cleanup cleanup change requests change requests 2026-07-12 2026 07 12"
+    },
+    {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
       "kind": "doc",
-      "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
+      "title": "Docs Viewer Remaining Architecture Work",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap",
       "last_updated": "2026-07-12",
       "parent_id": "change-requests",
@@ -1302,9 +1329,9 @@
         "architecture",
         "refactor",
         "roadmap",
-        "docs viewer architecture assessment and refactor roadmap",
-        "assessment",
-        "and",
+        "docs viewer remaining architecture work",
+        "remaining",
+        "work",
         "change requests",
         "change",
         "requests",
@@ -1313,7 +1340,7 @@
         "07",
         "12"
       ],
-      "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer architecture assessment and refactor roadmap assessment and change requests change requests 2026-07-12 2026 07 12"
+      "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer remaining architecture work remaining work change requests change requests 2026-07-12 2026 07 12"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",
@@ -1914,19 +1941,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-07-11",
-      "display_meta": "2026-07-11",
+      "last_updated": "2026-07-12",
+      "display_meta": "2026-07-12",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-broken-links",
@@ -2218,33 +2245,6 @@
         "25"
       ],
       "search_text": "docs-viewer-static-route-template docs viewer static route template docs viewer static route template docs viewer 2026-06-25 2026 06 25"
-    },
-    {
-      "id": "docs-viewer-documentation-register",
-      "kind": "doc",
-      "title": "Documentation Register And Authority Map",
-      "href": "/docs/?scope=studio&doc=docs-viewer-documentation-register",
-      "last_updated": "2026-07-12",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-documentation-register",
-        "docs",
-        "viewer",
-        "documentation",
-        "register",
-        "documentation register and authority map",
-        "and",
-        "authority",
-        "map",
-        "docs viewer",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "docs-viewer-documentation-register docs viewer documentation register documentation register and authority map and authority map docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-export",

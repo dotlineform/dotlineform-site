@@ -306,8 +306,14 @@
           "ui_status": "in-progress"
         },
         {
+          "doc_id": "docs-viewer-documentation-register",
+          "title": "Docs Viewer Documentation Cleanup",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
+          "ui_status": "in-progress"
+        },
+        {
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
-          "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
+          "title": "Docs Viewer Remaining Architecture Work",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
           "ui_status": "in-progress"
         },
@@ -508,12 +514,6 @@
           "doc_id": "docs-viewer-static-route-template",
           "title": "Docs Viewer Static Route Template",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-static-route-template.json"
-        },
-        {
-          "doc_id": "docs-viewer-documentation-register",
-          "title": "Documentation Register And Authority Map",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
-          "ui_status": "review"
         },
         {
           "doc_id": "scripts-docs-export",
@@ -1256,5 +1256,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-12T14:51:39Z"
+  "generated_at": "2026-07-12T15:31:17Z"
 }

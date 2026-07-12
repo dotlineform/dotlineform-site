@@ -91,7 +91,10 @@ def snapshot_scope(root: Path, scope: str) -> Dict[str, tuple[int, int]]:
         config = DOCS_SCOPE_CONFIGS.get(scope)
         if config and path_is_under_configured_sub_scope_source(path, root, config):
             continue
-        stat = path.stat()
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            continue
         snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
     return snapshot
 
@@ -102,7 +105,10 @@ def snapshot_markdown_root(root: Path) -> Dict[str, tuple[int, int]]:
 
     snapshot: Dict[str, tuple[int, int]] = {}
     for path in sorted(root.glob("**/*.md")):
-        stat = path.stat()
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            continue
         snapshot[path.relative_to(root).as_posix()] = (stat.st_mtime_ns, stat.st_size)
     return snapshot
 

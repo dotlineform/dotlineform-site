@@ -28,11 +28,11 @@
     },
     {
       "doc_id": "docs-viewer-documentation-register",
-      "title": "Documentation Register And Authority Map",
+      "title": "Docs Viewer Documentation Cleanup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
       "added_date": "2026-07-11",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
     },
     {
       "doc_id": "knowledge-system-vision",
@@ -44,7 +44,7 @@
     },
     {
       "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
-      "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
+      "title": "Docs Viewer Remaining Architecture Work",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
       "added_date": "2026-07-10",
       "parent_id": "change-requests",
@@ -83,5 +83,5 @@
       "parent_title": "UI"
     }
   ],
-  "generated_at": "2026-07-12T14:51:39Z"
+  "generated_at": "2026-07-12T15:31:17Z"
 }

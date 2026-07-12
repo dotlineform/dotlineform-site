@@ -47,6 +47,23 @@ def test_watcher_accumulates_changed_files_during_debounce() -> None:
     ]
 
 
+def test_watcher_snapshot_tolerates_file_removed_after_discovery(tmp_path: Path, monkeypatch) -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    disappearing_path = tmp_path / "disappearing.md"
+    disappearing_path.write_text("# Disappearing\n", encoding="utf-8")
+    original_stat = module.Path.stat
+
+    def disappearing_stat(path, *args, **kwargs):
+        if path == disappearing_path:
+            raise FileNotFoundError(path)
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(module.Path, "stat", disappearing_stat)
+
+    assert module.snapshot_scope(tmp_path, "unconfigured-test-scope") == {}
+    assert module.snapshot_markdown_root(tmp_path) == {}
+
+
 def test_watcher_formats_affected_doc_ids_for_logs() -> None:
     module = load_docs_live_rebuild_watcher_module()
 
