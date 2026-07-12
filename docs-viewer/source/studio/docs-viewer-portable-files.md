@@ -122,7 +122,7 @@ For Docs Import inside the management modal, also copy:
 Copy:
 
 - `site/docs-viewer/static/css/docs-viewer.css`
-- `docs-viewer/static/css/docs-viewer-reports.css`
+- `site/docs-viewer/static/css/docs-viewer-reports.css`
 - `docs-viewer/static/css/docs-viewer-manage.css`
 - `docs-viewer/static/css/docs-viewer-source-editor.css`
 - `docs-viewer/static/css/docs-viewer-import.css`

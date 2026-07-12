@@ -234,7 +234,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "docs-viewer" / "shell" / "docs-viewer-review.html",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer.css",
         repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-moments.css",
-        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
+        repo_root / "site" / "docs-viewer" / "static" / "css" / "docs-viewer-reports.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-manage.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-source-editor.css",
         repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-import.css",

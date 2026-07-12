@@ -69,4 +69,4 @@ If this document is opened in a public read-only Docs Viewer route, the document
 - `docs-viewer/source/studio/library-documents.md`
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/reports/docs-index-table-report.js`
-- `docs-viewer/static/css/docs-viewer-reports.css`
+- `site/docs-viewer/static/css/docs-viewer-reports.css`

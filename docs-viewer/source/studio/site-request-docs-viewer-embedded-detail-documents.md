@@ -354,5 +354,4 @@ Manage behavior:
 - `site/docs-viewer/runtime/js/shared/docs-subscope-report.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-router.js`
 - `site/docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js`
-- `docs-viewer/static/css/docs-viewer-reports.css`
 - `site/docs-viewer/static/css/docs-viewer-reports.css`

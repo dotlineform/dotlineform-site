@@ -176,5 +176,4 @@ Poor report candidates are workflows with writes, long-running operations, broad
 - `site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js`
 - `site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js`
 - `docs-viewer/runtime/js/reports/`
-- `docs-viewer/static/css/docs-viewer-reports.css`
 - `site/docs-viewer/static/css/docs-viewer-reports.css`

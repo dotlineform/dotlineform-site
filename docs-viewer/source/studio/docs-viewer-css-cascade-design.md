@@ -30,7 +30,7 @@ The intended cascade for local or standalone management routes is:
 
 1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
 2. Docs Viewer basic/public stylesheet, served at `/docs-viewer/static/css/docs-viewer.css` from `site/docs-viewer/static/css/docs-viewer.css`
-3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
+3. Docs Viewer shared report stylesheet, `site/docs-viewer/static/css/docs-viewer-reports.css`
 4. scope-owned stylesheets available to the management scope selector, currently `site/docs-viewer/static/css/docs-viewer-moments.css`
 5. Docs Viewer management shell stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
 6. source editor and semantic picker stylesheet, `docs-viewer/static/css/docs-viewer-source-editor.css`

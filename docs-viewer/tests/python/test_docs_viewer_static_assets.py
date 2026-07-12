@@ -8,14 +8,19 @@ from pathlib import Path
 
 from docs_viewer_service_test_support import REPO_ROOT, docs_viewer_service
 
-def test_asset_version_uses_canonical_shared_css() -> None:
-    with tempfile.TemporaryDirectory() as temp_dir:
-        repo_root = Path(temp_dir)
-        shared_css = repo_root / "site/docs-viewer/static/css/docs-viewer.css"
-        shared_css.parent.mkdir(parents=True)
-        shared_css.write_text("/* shared css */\n", encoding="utf-8")
+def test_asset_version_uses_canonical_site_css() -> None:
+    for filename in (
+        "docs-viewer.css",
+        "docs-viewer-reports.css",
+        "docs-viewer-moments.css",
+    ):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            shared_css = repo_root / "site/docs-viewer/static/css" / filename
+            shared_css.parent.mkdir(parents=True)
+            shared_css.write_text("/* shared css */\n", encoding="utf-8")
 
-        assert docs_viewer_service.asset_version(repo_root) != "1"
+            assert docs_viewer_service.asset_version(repo_root) != "1"
 
 
 def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> None:
