@@ -162,6 +162,10 @@ After preflight, `bin/local-all` starts:
 The runner prints the public-site preview, Local Studio app, Local Admin app, Local Analytics app, Docs Viewer, and Docs Review URLs, or the disabled reason for skipped optional children.
 If any child process exits, `bin/local-all` prints which service exited, stops the remaining children, and exits with a non-zero status for clean early exits or the failing child status otherwise.
 
+Studio, Admin, Analytics, and Docs Viewer share `studio/shared/python/local_http_logging.py`.
+With normal access logging disabled, successful requests stay quiet while 4xx/5xx responses retain the service name, request method, path, and response status.
+This prevents an interleaved `bin/local-all` terminal from reducing an error to an unidentified `code 404, message Not found` line.
+
 ### Local Studio
 
 Before it starts long-running processes, `bin/local-studio` checks that the Local Studio app port is available when the app server is enabled.
@@ -201,7 +205,8 @@ Explicit public-site preview command:
 bin/site-preview
 ```
 
-It validates `site/`, then serves that checked-in static root with Python's HTTP server.
+It validates `site/`, then serves that checked-in static root through `site-tools/site_preview.py` and Python's HTTP server classes.
+The preview handler ignores only `BrokenPipeError` and `ConnectionResetError` raised when a browser abandons an in-flight static response during navigation or redirect; other I/O errors still surface.
 
 Explicit public-site validation command:
 

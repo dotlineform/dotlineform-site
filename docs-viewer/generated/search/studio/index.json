@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-636c619fd858c468eab9c5f3d19af9f0",
-    "generated_at_utc": "2026-07-12T16:05:29Z",
+    "version": "blake2b-8a30f66a630a5d2f10457deb8a6c4bb3",
+    "generated_at_utc": "2026-07-12T17:32:33Z",
     "count": 232
   },
   "entries": [
@@ -3757,10 +3757,10 @@
       "kind": "doc",
       "title": "Local Setup Public Site Preview",
       "href": "/docs/?scope=studio&doc=local-setup-public-site-preview",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-07-12",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-13 • Local Setup",
+      "display_meta": "2026-07-12 • Local Setup",
       "search_terms": [
         "local-setup-public-site-preview",
         "local",
@@ -3770,12 +3770,12 @@
         "preview",
         "local setup public site preview",
         "local setup",
-        "2026-06-13",
+        "2026-07-12",
         "2026",
-        "06",
-        "13"
+        "07",
+        "12"
       ],
-      "search_text": "local-setup-public-site-preview local setup public site preview local setup public site preview local setup 2026-06-13 2026 06 13"
+      "search_text": "local-setup-public-site-preview local setup public site preview local setup public site preview local setup 2026-07-12 2026 07 12"
     },
     {
       "id": "local-setup-recovery",

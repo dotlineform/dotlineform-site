@@ -78,4 +78,7 @@ echo "Starting static site preview from $SITE_ROOT_DISPLAY"
 echo "Public site: http://$SITE_HOST:$SITE_PORT"
 echo
 
-exec "$SITE_PYTHON" -m http.server "$SITE_PORT" --bind "$SITE_HOST" --directory "$SITE_ROOT"
+exec "$SITE_PYTHON" "$ROOT_DIR/site-tools/site_preview.py" \
+  --host "$SITE_HOST" \
+  --port "$SITE_PORT" \
+  --directory "$SITE_ROOT"

@@ -22,6 +22,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
+from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
@@ -323,8 +324,9 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
     return payload
 
 
-class DocsViewerRequestHandler(BaseHTTPRequestHandler):
+class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
     server_version = "DocsViewerService/0.1"
+    service_log_name = "docs-viewer"
 
     @property
     def repo_root(self) -> Path:
@@ -337,10 +339,6 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     @property
     def version(self) -> str:
         return self.server.asset_version  # type: ignore[attr-defined]
-
-    def log_request(self, code: int | str = "-", size: int | str = "-") -> None:
-        if self.server.access_log_enabled:  # type: ignore[attr-defined]
-            super().log_request(code, size)
 
     def do_GET(self) -> None:
         request = urlsplit(self.path)

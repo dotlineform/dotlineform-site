@@ -2,7 +2,7 @@
 doc_id: local-setup-public-site-preview
 title: Local Setup Public Site Preview
 added_date: 2026-05-23
-last_updated: 2026-06-13
+last_updated: 2026-07-12
 parent_id: local-setup
 ---
 # Local Setup Public Site Preview
@@ -14,7 +14,7 @@ Use `bin/site-preview` for public-site static preview work and `bin/site-validat
 
 ## Preview versus validation
 
-`bin/site-preview` validates the checked-in static site root and serves `site/` with Python's HTTP server.
+`bin/site-preview` validates the checked-in static site root and serves `site/` with the small `site-tools/site_preview.py` wrapper around Python's HTTP server.
 It is the normal command when you want to open the public site in a browser while editing public route HTML, CSS, JavaScript, public assets, generated public payloads, or public Docs Viewer runtime/config files.
 
 ```bash
@@ -71,6 +71,7 @@ bin/site-preview --no-validate
 ```
 
 The preview server is a static HTTP server. It does not watch files, run LiveReload, or start Local Studio services.
+It suppresses only client-disconnect exceptions caused when a browser abandons an in-flight response during navigation or redirect. Unexpected file and socket errors continue to surface in the terminal.
 
 ## Related References
 
