@@ -3,12 +3,6 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "all-the-little-cracks-edit",
-      "title": "all the little cracks (edit)",
-      "content_url": "/assets/data/docs/scopes/moments/by-id/all-the-little-cracks-edit.json",
-      "added_date": "2026-07-12 18:48"
-    },
-    {
       "doc_id": "4-stories",
       "title": "4 stories",
       "content_url": "/assets/data/docs/scopes/moments/by-id/4-stories.json",
@@ -61,7 +55,13 @@
       "title": "a poem about love",
       "content_url": "/assets/data/docs/scopes/moments/by-id/a-poem-about-love.json",
       "added_date": "2026-02-15"
+    },
+    {
+      "doc_id": "a-poem-about-purity",
+      "title": "a poem about purity",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/a-poem-about-purity.json",
+      "added_date": "2026-02-15"
     }
   ],
-  "generated_at": "2026-07-12T17:48:27Z"
+  "generated_at": "2026-07-12T19:18:45Z"
 }

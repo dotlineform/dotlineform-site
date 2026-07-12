@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_moments_v1",
     "scope": "moments",
-    "version": "blake2b-9cd6b52b2e316aa73600f17e8425d95f",
-    "generated_at_utc": "2026-07-12T18:13:10Z",
-    "count": 57
+    "version": "blake2b-299373cc433a7667d07139c923c83192",
+    "generated_at_utc": "2026-07-12T19:18:45Z",
+    "count": 56
   },
   "entries": [
     {
@@ -192,30 +192,6 @@
         "all the little cracks"
       ],
       "search_text": "all-the-little-cracks all the little cracks all the little cracks"
-    },
-    {
-      "id": "all-the-little-cracks-edit",
-      "kind": "doc",
-      "title": "all the little cracks (edit)",
-      "href": "/moments/?doc=all-the-little-cracks-edit",
-      "last_updated": "2026-07-12 19:13",
-      "display_meta": "2026-07-12 19:13",
-      "search_terms": [
-        "all-the-little-cracks-edit",
-        "all",
-        "the",
-        "little",
-        "cracks",
-        "edit",
-        "all the little cracks (edit)",
-        "2026-07-12 19:13",
-        "2026",
-        "07",
-        "12",
-        "19",
-        "13"
-      ],
-      "search_text": "all-the-little-cracks-edit all the little cracks edit all the little cracks (edit) 2026-07-12 19:13 2026 07 12 19 13"
     },
     {
       "id": "angels",

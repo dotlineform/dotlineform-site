@@ -7,20 +7,29 @@ added_date: 2026-02-15
 parent_id: ""
 viewable: true
 ---
+<h1 class="moment-axis-line">
+<span class="axis-before">all the</span><span class="axis-after">little cracks</span>
+</h1>
 
-# all the little cracks
+<p class="momentDate moment-axis-line">
+<span class="axis-before">c.</span><span class="axis-after">2015</span>
+</p>
 
-<p class="momentDate">c. 2015</p>
+<pre class="moment-text moment-text--axis">
+<span class="axis-group">
+<span class="axis-line"><span class="axis-before">all these little</span><span class="axis-after">cracks</span></span>
+<span class="axis-line"><span class="axis-before">they seem to</span><span class="axis-after">come from nowhere</span></span>
+<span class="axis-line"><span class="axis-before">i can see</span><span class="axis-after">them coming</span></span>
+</span>
 
-<pre class="moment-text">
-all these little cracks
-they seem to come from nowhere
-i can see them coming
- 
-these cracks aren’t the world falling apart
-all the little cracks are inside
- 
-they are just showing little patterns
-which if we could read them
-would tell our stories
+<span class="axis-group">
+<span class="axis-line"><span class="axis-before">these cracks</span><span class="axis-after">aren’t the world falling apart</span></span>
+<span class="axis-line"><span class="axis-before">all the little cracks</span><span class="axis-after">are inside</span></span>
+</span>
+
+<span class="axis-group">
+<span class="axis-line"><span class="axis-before">they are just showing</span><span class="axis-after">little patterns</span></span>
+<span class="axis-line"><span class="axis-before">which if we could</span><span class="axis-after">read them</span></span>
+<span class="axis-line"><span class="axis-before">would</span><span class="axis-after">tell our stories</span></span>
+</span>
 </pre>

@@ -3,6 +3,28 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-moments-composition-workspace",
+      "title": "Moments Composition Workspace",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-moments-composition-workspace.json",
+      "added_date": "2026-07-12",
+      "parent_id": "workspaces",
+      "parent_title": "Workspaces"
+    },
+    {
+      "doc_id": "site-request-moments-composition-workspace-roadmap",
+      "title": "Moments Composition Workspace Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-moments-composition-workspace-roadmap.json",
+      "added_date": "2026-07-12",
+      "parent_id": "site-request-moments-composition-workspace",
+      "parent_title": "Moments Composition Workspace"
+    },
+    {
+      "doc_id": "workspaces",
+      "title": "Workspaces",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/workspaces.json",
+      "added_date": "2026-07-12"
+    },
+    {
       "doc_id": "site-request-data-sharing-full-document-package",
       "title": "Data Sharing Full Document Export Package",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
@@ -57,31 +79,7 @@
       "added_date": "2026-06-27",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "data-sharing-documents-returned-package-review",
-      "title": "Documents Returned Package Review",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-returned-package-review.json",
-      "added_date": "2026-06-27",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "ui-selectable-list-component",
-      "title": "Selectable List Component",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-selectable-list-component.json",
-      "added_date": "2026-06-27",
-      "parent_id": "ui",
-      "parent_title": "UI"
-    },
-    {
-      "doc_id": "test-contract-discipline",
-      "title": "Test Contract Discipline",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/test-contract-discipline.json",
-      "added_date": "2026-06-27",
-      "parent_id": "testing",
-      "parent_title": "Testing"
     }
   ],
-  "generated_at": "2026-07-12T16:05:29Z"
+  "generated_at": "2026-07-12T20:27:26Z"
 }

@@ -1,6 +1,7 @@
 /* Moments scope typography */
 
 .docsViewer[data-viewer-scope="moments"]{
+  --moment-axis: 47%;
   --docs-viewer-doc-width: 50ch;
   --docs-viewer-measure: var(--docs-viewer-doc-width);
 }
@@ -32,7 +33,6 @@
 /* Opt-in word-axis composition for deliberately line-broken Moments. */
 
 .docsViewer[data-viewer-scope="moments"] .docsViewer__content pre.moment-text--axis{
-  --moment-axis: 47%;
   white-space: normal;
 }
 
@@ -45,7 +45,8 @@
   margin-block-end: 0;
 }
 
-.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line{
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  :is(.moment-axis-line, .moment-text--axis .axis-line){
   display: grid;
   grid-template-columns:
     minmax(0, var(--moment-axis))
@@ -53,34 +54,38 @@
   white-space: nowrap;
 }
 
-.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before,
-.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-after{
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  :is(.moment-axis-line, .moment-text--axis .axis-line) > :is(.axis-before, .axis-after){
   min-width: 0;
 }
 
-.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before{
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-before{
   padding-right: 0.28em;
   text-align: right;
 }
 
-.docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-after{
+.docsViewer[data-viewer-scope="moments"] .docsViewer__content
+  :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-after{
   text-align: left;
 }
 
 @media (max-width: 40rem){
-  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line{
+  .docsViewer[data-viewer-scope="moments"] .docsViewer__content
+    :is(.moment-axis-line, .moment-text--axis .axis-line){
     display: inline;
     white-space: normal;
   }
 
-  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before,
-  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-after{
+  .docsViewer[data-viewer-scope="moments"] .docsViewer__content
+    :is(.moment-axis-line, .moment-text--axis .axis-line) > :is(.axis-before, .axis-after){
     display: inline;
     padding: 0;
     text-align: left;
   }
 
-  .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-before::after,
+  .docsViewer[data-viewer-scope="moments"] .docsViewer__content
+    :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-before::after,
   .docsViewer[data-viewer-scope="moments"] .moment-text--axis .axis-line:not(:last-child)::after{
     content: " ";
   }

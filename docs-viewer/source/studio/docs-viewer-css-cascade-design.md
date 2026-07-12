@@ -86,7 +86,7 @@ It should not restyle public host page chrome, override public `site/assets/css/
 - the compact Moments document measure
 - Moments title and date spacing
 - inherited prose typography for `pre.moment-text`
-- the opt-in `moment-text--axis` word-axis composition and its narrow-screen flowing-text fallback
+- the opt-in `moment-text--axis` word-axis composition, reusable `moment-axis-line` alignment for titles or dates, and their narrow-screen flowing-text fallback
 
 Its selectors use `.docsViewer[data-viewer-scope="moments"]`, not the public route id. The runtime projects the active scope onto that attribute, so the same rules apply on `/moments/` and `/docs/?scope=moments` while remaining inactive for other management scopes.
 

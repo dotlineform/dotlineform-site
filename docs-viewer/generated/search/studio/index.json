@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8a30f66a630a5d2f10457deb8a6c4bb3",
-    "generated_at_utc": "2026-07-12T17:32:33Z",
-    "count": 232
+    "version": "blake2b-5ef4bbfbf3b0ea43866059f78975eb64",
+    "generated_at_utc": "2026-07-12T20:27:26Z",
+    "count": 235
   },
   "entries": [
     {
@@ -5626,6 +5626,73 @@
         "27"
       ],
       "search_text": "ui-selectable-list-component ui selectable list component selectable list component 2026-06-27 2026 06 27"
+    },
+    {
+      "id": "workspaces",
+      "kind": "doc",
+      "title": "Workspaces",
+      "href": "/docs/?scope=studio&doc=workspaces",
+      "last_updated": "2026-07-12",
+      "display_meta": "2026-07-12",
+      "search_terms": [
+        "workspaces",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "workspaces 2026-07-12 2026 07 12"
+    },
+    {
+      "id": "site-request-moments-composition-workspace",
+      "kind": "doc",
+      "title": "Moments Composition Workspace",
+      "href": "/docs/?scope=studio&doc=site-request-moments-composition-workspace",
+      "last_updated": "2026-07-12",
+      "parent_id": "workspaces",
+      "parent_title": "Workspaces",
+      "display_meta": "2026-07-12 • Workspaces",
+      "search_terms": [
+        "site-request-moments-composition-workspace",
+        "site",
+        "request",
+        "moments",
+        "composition",
+        "workspace",
+        "moments composition workspace",
+        "workspaces",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "site-request-moments-composition-workspace site request moments composition workspace moments composition workspace workspaces 2026-07-12 2026 07 12"
+    },
+    {
+      "id": "site-request-moments-composition-workspace-roadmap",
+      "kind": "doc",
+      "title": "Moments Composition Workspace Roadmap",
+      "href": "/docs/?scope=studio&doc=site-request-moments-composition-workspace-roadmap",
+      "last_updated": "2026-07-12",
+      "parent_id": "site-request-moments-composition-workspace",
+      "parent_title": "Moments Composition Workspace",
+      "display_meta": "2026-07-12 • Moments Composition Workspace",
+      "search_terms": [
+        "site-request-moments-composition-workspace-roadmap",
+        "site",
+        "request",
+        "moments",
+        "composition",
+        "workspace",
+        "roadmap",
+        "moments composition workspace roadmap",
+        "moments composition workspace",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "site-request-moments-composition-workspace-roadmap site request moments composition workspace roadmap moments composition workspace roadmap moments composition workspace 2026-07-12 2026 07 12"
     }
   ]
 }
