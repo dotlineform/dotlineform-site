@@ -109,7 +109,6 @@ For every request-shaped document:
 
 Priority candidates:
 
-- [Docs Viewer Remaining Architecture Work](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap) — keep only trigger-based architecture candidates
 - [Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) — separate implemented behavior from any remaining editor proposal
 - [Embedded Detail Documents Request](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents) — transfer shipped behavior and retain only unresolved work
 - [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) — keep export-only implementation work focused

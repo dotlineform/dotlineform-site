@@ -2,7 +2,7 @@
 doc_id: docs-viewer-public-route-shell-template
 title: Docs Viewer Public Route Shell Template
 added_date: 2026-06-13
-last_updated: 2026-06-13
+last_updated: 2026-07-12
 summary: describes the lifecycle-generated public site shell
 parent_id: docs-viewer
 ---
@@ -24,7 +24,7 @@ After creation, the rendered `site/<route>/index.html` file is a normal tracked 
 The template is owned by Docs Viewer because Docs Viewer owns public scope creation, route config, runtime boot, and the public shell contract.
 Static-site validation checks the deploy root, but it does not own the template and does not render route shells.
 
-The lifecycle renderer lives in `docs-viewer/services/docs_scope_manifest.py`.
+The lifecycle renderer is used by the create planner/apply owner in `docs-viewer/services/docs_scope_create.py`.
 New Scope public-readonly creation renders the template during the local write action, not during deploy.
 
 ## Render Inputs

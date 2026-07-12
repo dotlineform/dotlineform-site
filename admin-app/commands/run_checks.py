@@ -118,6 +118,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "docs-viewer/services/docs_management_source_service.py",
                 "docs-viewer/services/docs_management_service.py",
                 "docs-viewer/services/docs_management_mutations.py",
+                "docs-viewer/services/docs_scope_create.py",
+                "docs-viewer/services/docs_scope_delete.py",
                 "docs-viewer/services/docs_scope_manifest.py",
                 "docs-viewer/services/docs_viewer_service.py",
                 "analytics-app/app/server/analytics_app/tag_services/tag_routes.py",

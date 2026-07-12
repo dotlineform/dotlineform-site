@@ -124,12 +124,14 @@ Copy:
 - `site/docs-viewer/static/css/docs-viewer.css`
 - `docs-viewer/static/css/docs-viewer-reports.css`
 - `docs-viewer/static/css/docs-viewer-manage.css`
+- `docs-viewer/static/css/docs-viewer-source-editor.css`
+- `docs-viewer/static/css/docs-viewer-import.css`
 
 The host site should still load its own base stylesheet for tokens, prose rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
 
 The public viewer include loads Docs Viewer-owned CSS for the portable base contract, public shell, controls, index, search, results, and bookmarks through `/docs-viewer/static/css/docs-viewer.css`, backed by `site/docs-viewer/static/css/docs-viewer.css`.
 
-The local manage shell loads the basic viewer stylesheet, report stylesheet, management stylesheet, and transitional Docs Import form/control primitives.
+The local manage shell loads the basic viewer, report, shared management, source-editor, and Docs Import stylesheets.
 
 Public read-only routes may intentionally inherit public host CSS; standalone/local Docs Viewer shells should not require public `site/assets/css/main.css`.
 

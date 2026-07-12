@@ -43,14 +43,6 @@
       "parent_title": "Architecture"
     },
     {
-      "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
-      "title": "Docs Viewer Remaining Architecture Work",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-architecture-refactor-roadmap.json",
-      "added_date": "2026-07-10",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
       "doc_id": "docs-viewer-export",
       "title": "Export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-export.json",
@@ -81,7 +73,15 @@
       "added_date": "2026-06-27",
       "parent_id": "ui",
       "parent_title": "UI"
+    },
+    {
+      "doc_id": "test-contract-discipline",
+      "title": "Test Contract Discipline",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/test-contract-discipline.json",
+      "added_date": "2026-06-27",
+      "parent_id": "testing",
+      "parent_title": "Testing"
     }
   ],
-  "generated_at": "2026-07-12T15:31:17Z"
+  "generated_at": "2026-07-12T16:05:29Z"
 }

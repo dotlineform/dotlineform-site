@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-scripts-source-mutations
 title: Source Mutation Scripts
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-12
 parent_id: scripts-docs-management-scripts
 ---
 # Docs Viewer Source Mutation Scripts
@@ -54,21 +54,44 @@ Not responsible for:
 
 ## `docs-viewer/services/docs_scope_manifest.py`
 
-Purpose: scope ownership manifest and scope lifecycle planner/apply helper.
+Purpose: shared top-level scope ownership manifest and lifecycle policy support.
 
-Ownership: owns manifest schema, lifecycle validation, and scope create/delete file plans.
+Ownership: owns the manifest schema, backfill/loading, shared identity and publishing-mode validation, storage-path policy, and manifest/config record helpers.
 
 Responsibilities:
 
 - loads or backfills `docs-viewer/config/scopes/docs_scope_manifest.json`
 - records ownership for user-created scopes
 - validates scope ids, default doc ids, publishing modes, and route paths
-- previews create and delete file/config changes
-- applies scope creation and deletion after confirmation
 - blocks deletion of system-owned scopes
 
 Not responsible for:
 
 - general source doc mutations inside existing scopes
+- top-level scope create planning or apply
+- top-level scope delete planning or apply
 - HTTP dispatch
 - browser rendering
+
+## `docs-viewer/services/docs_scope_create.py`
+
+Purpose: top-level scope creation planner and apply owner.
+
+Responsibilities:
+
+- validates the requested publishing and storage contract through manifest policy helpers
+- plans source, config, generated, route, and public-publish files
+- writes the initial source/config/manifest/route records after confirmation
+- runs scoped rebuild and initial public-publish follow-through
+
+## `docs-viewer/services/docs_scope_delete.py`
+
+Purpose: top-level scope deletion planner and apply owner.
+
+Responsibilities:
+
+- validates manifest ownership and management-route protection
+- resolves manifest-recorded delete and missing paths
+- plans config, manifest, and public-route record changes
+- deletes only the confirmed manifest-owned paths
+- runs all-scope rebuild follow-through after removal

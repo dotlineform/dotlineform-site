@@ -17,6 +17,19 @@ def test_asset_version_uses_canonical_shared_css() -> None:
 
         assert docs_viewer_service.asset_version(repo_root) != "1"
 
+
+def test_manage_shell_loads_feature_owned_css_after_shared_management_css() -> None:
+    shell = (REPO_ROOT / "docs-viewer/shell/docs-viewer-manage.html").read_text(encoding="utf-8")
+    stylesheets = [
+        "docs-viewer-manage.css",
+        "docs-viewer-source-editor.css",
+        "docs-viewer-import.css",
+    ]
+
+    assert [shell.index(stylesheet) for stylesheet in stylesheets] == sorted(
+        shell.index(stylesheet) for stylesheet in stylesheets
+    )
+
 def test_static_path_policy_is_docs_viewer_scoped() -> None:
     def allowed(path: str) -> bool:
         return docs_viewer_service.DocsViewerRequestHandler.is_allowed_static_path(object(), path)
@@ -32,6 +45,8 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-reports.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-manage.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-source-editor.css") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-import.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-review.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-management.css") is False
@@ -74,6 +89,12 @@ def test_shared_static_routes_resolve_to_owning_roots() -> None:
     ) == Path("site/docs-viewer/static/css/docs-viewer-reports.css")
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/static/css/docs-viewer-manage.css"
+    ) is None
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/docs-viewer-source-editor.css"
+    ) is None
+    assert docs_viewer_service.shared_static_relative_path(
+        "/docs-viewer/static/css/docs-viewer-import.css"
     ) is None
     assert docs_viewer_service.shared_static_relative_path(
         "/docs-viewer/config/routes/docs-viewer-public-routes.json"

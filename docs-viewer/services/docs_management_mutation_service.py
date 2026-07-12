@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_management_mutations as mutations
+import docs_scope_create
+import docs_scope_delete
 import docs_scope_manifest
 import docs_sub_scope_lifecycle
 import docs_source_model as source_model
@@ -87,8 +89,8 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
 def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id"))
     docs_scope_manifest.require_confirmed(body)
-    docs_scope_manifest.plan_create_scope_preview(repo_root, body)
-    payload = docs_scope_manifest.apply_create_scope(
+    docs_scope_create.plan_create_scope_preview(repo_root, body)
+    payload = docs_scope_create.apply_create_scope(
         repo_root,
         body,
         dry_run=dry_run,
@@ -110,11 +112,11 @@ def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
 def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id") or body.get("scope"))
     docs_scope_manifest.require_confirmed(body)
-    preview = docs_scope_manifest.plan_delete_scope_preview(repo_root, body)
+    preview = docs_scope_delete.plan_delete_scope_preview(repo_root, body)
     if not preview.get("allowed"):
         blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
-    payload = docs_scope_manifest.apply_delete_scope(
+    payload = docs_scope_delete.apply_delete_scope(
         repo_root,
         body,
         dry_run=dry_run,

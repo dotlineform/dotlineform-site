@@ -2,7 +2,7 @@
 doc_id: docs-viewer-css-cascade-design
 title: CSS Cascade Design
 added_date: 2026-05-11
-last_updated: 2026-06-17
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -29,7 +29,9 @@ The intended cascade for local or standalone management routes is:
 1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
 2. Docs Viewer basic/public stylesheet, served at `/docs-viewer/static/css/docs-viewer.css` from `site/docs-viewer/static/css/docs-viewer.css`
 3. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
-4. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
+4. Docs Viewer management shell stylesheet, `docs-viewer/static/css/docs-viewer-manage.css`
+5. source editor and semantic picker stylesheet, `docs-viewer/static/css/docs-viewer-source-editor.css`
+6. Docs Import stylesheet, `docs-viewer/static/css/docs-viewer-import.css`
 
 ## Host Stylesheet Responsibilities
 
@@ -101,7 +103,7 @@ Use the wrapper only where a table needs local width behavior; do not replace or
 ## Docs Viewer Management Stylesheet Responsibilities
 
 `docs-viewer/static/css/docs-viewer-manage.css` should only load in the local `/docs/` service shell when management markup is enabled.
-It should own management-only surfaces:
+It owns the shared management shell surfaces:
 
 - management toolbar row
 - scope selector controls
@@ -111,13 +113,15 @@ It should own management-only surfaces:
 - undo move button
 - context menu
 - metadata modal
-- import modal frame
 - management notes and unavailable/error states
-- transitional Docs Import form/control styles copied from Studio CSS
+
+Feature-owned management styles are separate:
+
+- `docs-viewer/static/css/docs-viewer-source-editor.css` owns Markdown source editor and semantic-target picker selectors
+- `docs-viewer/static/css/docs-viewer-import.css` owns Docs Import controls, collection decisions, result/warning states, and import-modal layout
 
 Management mode should not depend on Studio CSS for Docs Viewer controls, modals, or import surfaces.
-If Docs Import still uses `tagStudio*` class names, copy only the narrow required rules into Docs Viewer management CSS as a transitional compatibility layer.
-Rename or refactor those classes later after the dependency is contained.
+Feature selectors should stay in their owning stylesheet instead of accumulating in the shared management shell file.
 
 ## Custom Property Contract
 
@@ -169,10 +173,11 @@ The public site stylesheet still owns:
 - generic responsive image rules
 - unrelated Studio, Catalogue, and public-site UI
 
-Management-only styles live in `docs-viewer/static/css/docs-viewer-manage.css`:
+Management-only styles are split by owner:
 
-- management-only `.docsViewer*` rules
-- only the `tagStudio*` form/control rules required by the Docs Import modal
+- `docs-viewer/static/css/docs-viewer-manage.css`: shared management shell, navigation mutation, menus, modals, scope selector, and actions
+- `docs-viewer/static/css/docs-viewer-source-editor.css`: source editor and semantic picker
+- `docs-viewer/static/css/docs-viewer-import.css`: Docs Import and reviewed-collection workflow
 
 ## Verification
 

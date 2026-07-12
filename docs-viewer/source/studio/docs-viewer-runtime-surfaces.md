@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-surfaces
 title: Runtime Surfaces
 added_date: 2026-06-05
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 summary: Current Docs Viewer route, shell, entrypoint, config, CSS, generated-data, and public/manage/review surface matrix.
 parent_id: docs-viewer-runtime-boundary
 ---
@@ -47,7 +47,9 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | `site/assets/css/main.css` | inherited from the public site layout | absent from standalone shell | absent from standalone shell | Host public-site CSS is not a Docs Viewer runtime dependency. |
 | `site/docs-viewer/static/css/docs-viewer.css` | loaded via `/docs-viewer/static/css/docs-viewer.css` | loaded via service mapping for the same URL | loaded via service mapping for the same URL | Basic/public viewer styling and portable Docs Viewer tokens. |
 | `docs-viewer/static/css/docs-viewer-reports.css` | absent unless explicitly public-promoted | loaded | absent | Report styling is manage-only until a report is promoted. |
-| `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | absent | Local write-capable styling stays in the management route. |
+| `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | absent | Shared management shell, mutation, modal, menu, and scope-control styling stays local. |
+| `docs-viewer/static/css/docs-viewer-source-editor.css` | absent | loaded | absent | Markdown source editor and semantic-picker styling is feature-owned and manage-only. |
+| `docs-viewer/static/css/docs-viewer-import.css` | absent | loaded | absent | Docs Import and reviewed-collection styling is feature-owned and manage-only. |
 | `docs-viewer/static/css/docs-viewer-review.css` | absent | absent | loaded | Review toolbar layout is isolated without importing management/source-editor CSS. |
 
 `site/docs-viewer/static/css/docs-viewer.css` supplies portable Docs Viewer tokens, shell utilities such as `visually-hidden`, `muted`, `small`, hidden-state handling inside `.docsViewer`, and viewer component tokens with Docs Viewer theme-token and host-token fallbacks.

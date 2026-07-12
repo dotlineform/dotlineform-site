@@ -141,7 +141,9 @@ This mode is useful for private planning notes, local drafts, or internal review
 The scope lifecycle workflow has server-side preview/apply endpoints and a management UI entry point:
 
 - `docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
-- `docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
+- `docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, and shared lifecycle policy
+- `docs-viewer/services/docs_scope_create.py` owns top-level scope create preview/apply
+- `docs-viewer/services/docs_scope_delete.py` owns top-level scope delete preview/apply
 - `GET /capabilities` advertises scope lifecycle preview and apply support
 - `POST /docs/scopes/create-preview` reports a validated create write set
 - `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation

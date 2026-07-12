@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3afec7bc4c1c76da675e1e2f6e985850",
-    "generated_at_utc": "2026-07-12T15:32:42Z",
-    "count": 233
+    "version": "blake2b-636c619fd858c468eab9c5f3d19af9f0",
+    "generated_at_utc": "2026-07-12T16:05:29Z",
+    "count": 232
   },
   "entries": [
     {
@@ -1312,37 +1312,6 @@
       "search_text": "docs-viewer-documentation-register docs viewer documentation register docs viewer documentation cleanup cleanup change requests change requests 2026-07-12 2026 07 12"
     },
     {
-      "id": "site-request-docs-viewer-architecture-refactor-roadmap",
-      "kind": "doc",
-      "title": "Docs Viewer Remaining Architecture Work",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap",
-      "last_updated": "2026-07-12",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-12 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-architecture-refactor-roadmap",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "architecture",
-        "refactor",
-        "roadmap",
-        "docs viewer remaining architecture work",
-        "remaining",
-        "work",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "site-request-docs-viewer-architecture-refactor-roadmap site request docs viewer architecture refactor roadmap docs viewer remaining architecture work remaining work change requests change requests 2026-07-12 2026 07 12"
-    },
-    {
       "id": "site-request-docs-viewer-semantic-reference-editor",
       "kind": "doc",
       "title": "Docs Viewer Semantic Reference Editor Request",
@@ -2054,10 +2023,10 @@
       "kind": "doc",
       "title": "CSS Cascade Design",
       "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
-      "last_updated": "2026-06-17",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-17 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-css-cascade-design",
         "docs",
@@ -2067,12 +2036,12 @@
         "design",
         "css cascade design",
         "docs viewer",
-        "2026-06-17",
+        "2026-07-12",
         "2026",
-        "06",
-        "17"
+        "07",
+        "12"
       ],
-      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-06-17 2026 06 17"
+      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-dependencies",
@@ -2200,10 +2169,10 @@
       "kind": "doc",
       "title": "Docs Viewer Public Route Shell Template",
       "href": "/docs/?scope=studio&doc=docs-viewer-public-route-shell-template",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-13 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-public-route-shell-template",
         "docs",
@@ -2214,12 +2183,12 @@
         "template",
         "docs viewer public route shell template",
         "docs viewer",
-        "2026-06-13",
+        "2026-07-12",
         "2026",
-        "06",
-        "13"
+        "07",
+        "12"
       ],
-      "search_text": "docs-viewer-public-route-shell-template docs viewer public route shell template docs viewer public route shell template docs viewer 2026-06-13 2026 06 13"
+      "search_text": "docs-viewer-public-route-shell-template docs viewer public route shell template docs viewer public route shell template docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-static-route-template",
@@ -2997,10 +2966,10 @@
       "kind": "doc",
       "title": "Source Mutation Scripts",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-scripts-source-mutations",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-12",
       "parent_id": "scripts-docs-management-scripts",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-06-07 • Scripts Overview",
+      "display_meta": "2026-07-12 • Scripts Overview",
       "search_terms": [
         "scripts-docs-management-scripts-source-mutations",
         "scripts",
@@ -3012,12 +2981,12 @@
         "mutation",
         "scripts overview",
         "overview",
-        "2026-06-07",
+        "2026-07-12",
         "2026",
-        "06",
-        "07"
+        "07",
+        "12"
       ],
-      "search_text": "scripts-docs-management-scripts-source-mutations scripts docs management source mutations source mutation scripts mutation scripts overview overview 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-scripts-source-mutations scripts docs management source mutations source mutation scripts mutation scripts overview overview 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-media-handling",
@@ -3363,10 +3332,10 @@
       "kind": "doc",
       "title": "Runtime Surfaces",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-surfaces",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-11 • Runtime",
+      "display_meta": "2026-07-12 • Runtime",
       "search_terms": [
         "docs-viewer-runtime-surfaces",
         "docs",
@@ -3374,12 +3343,12 @@
         "runtime",
         "surfaces",
         "runtime surfaces",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-semantic-references",
@@ -3410,10 +3379,10 @@
       "kind": "doc",
       "title": "Semantic References Editor",
       "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references-editor",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-23 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-semantic-references-editor",
         "docs",
@@ -3423,12 +3392,12 @@
         "editor",
         "semantic references editor",
         "docs viewer",
-        "2026-06-23",
+        "2026-07-12",
         "2026",
-        "06",
-        "23"
+        "07",
+        "12"
       ],
-      "search_text": "docs-viewer-semantic-references-editor docs viewer semantic references editor semantic references editor docs viewer 2026-06-23 2026 06 23"
+      "search_text": "docs-viewer-semantic-references-editor docs viewer semantic references editor semantic references editor docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-semantic-references-implementation",

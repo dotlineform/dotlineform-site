@@ -1,0 +1,464 @@
+.docsViewerImport{
+  --docs-viewer-import-radius-sm: 0.35rem;
+  --docs-viewer-import-radius-md: 0.45rem;
+  --docs-viewer-import-radius-lg: 0.5rem;
+  --docs-viewer-import-control-height: 2rem;
+  --docs-viewer-import-button-width: 5.75rem;
+  --docs-viewer-import-default-value: color-mix(in srgb, var(--docs-viewer-muted, var(--muted, #555)) 78%, transparent);
+  --docs-viewer-import-focus-ring: color-mix(in srgb, var(--docs-viewer-border-strong, var(--border-strong, #777)) 18%, transparent);
+  --docs-viewer-import-success: #1d6a3b;
+  --docs-viewer-import-warn: #9d5a00;
+  --docs-viewer-import-danger: #a22a2a;
+  max-width: none;
+  margin: 0;
+}
+
+
+.docsViewerImport__panel{
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-lg);
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  padding: 0.9rem;
+}
+
+.docsViewerImport__input{
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-sm);
+  padding: 0.48rem 0.55rem;
+  font: inherit;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+  color: inherit;
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+}
+
+.docsViewerImport__input::placeholder{
+  color: var(--docs-viewer-import-default-value);
+  opacity: 1;
+}
+
+.docsViewerImport__input:is(input, select){
+  min-height: var(--docs-viewer-import-control-height);
+  height: var(--docs-viewer-import-control-height);
+}
+
+.docsViewerImport__input:disabled{
+  color: var(--docs-viewer-import-default-value);
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  cursor: not-allowed;
+}
+
+.docsViewerImport__input:focus{
+  outline: none;
+  border-color: var(--docs-viewer-border-strong, var(--border-strong, #777));
+  box-shadow: 0 0 0 2px var(--docs-viewer-import-focus-ring);
+}
+
+.docsViewerImport__field{
+  --field-width: 18rem;
+  display: grid;
+  gap: 0.22rem;
+  width: fit-content;
+  max-width: 100%;
+  min-inline-size: 0;
+}
+
+.docsViewerImport__fieldLabel{
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  text-transform: lowercase;
+}
+
+.docsViewerImport__fieldControl{
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.docsViewerImport__fieldControl > .docsViewerImport__input{
+  flex: 0 1 var(--field-width);
+  width: min(100%, var(--field-width));
+  min-width: 0;
+}
+
+.docsViewerImport__field--inline{
+  align-items: center;
+  grid-template-columns: max-content auto;
+  gap: 0.45rem;
+}
+
+.docsViewerImport__field--inline .docsViewerImport__fieldControl{
+  grid-column: 2;
+}
+
+.docsViewerImport__button{
+  box-sizing: border-box;
+  --button-height: var(--docs-viewer-import-control-height);
+  --button-font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  --button-default-width: var(--docs-viewer-import-button-width);
+  border: 1px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  color: inherit;
+  border-radius: var(--docs-viewer-import-radius-sm);
+  padding: 0.42rem 0.7rem;
+  font: inherit;
+  font-size: var(--button-font-size);
+  font-weight: 400;
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+  min-height: var(--button-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.docsViewerImport__button--defaultWidth{
+  min-inline-size: var(--button-default-width);
+}
+
+.docsViewerImport__button:disabled{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  cursor: not-allowed;
+}
+
+.docsViewerImport__meta{
+  margin: 0.25rem 0 0.75rem;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  color: var(--docs-viewer-muted, var(--muted, #555));
+}
+
+.docsViewerImport__status{
+  display: block;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: 1.4;
+}
+
+.docsViewerImport__status:empty{
+  display: none;
+}
+
+.docsViewerImport__status[data-state="success"]{
+  color: var(--docs-viewer-import-success);
+}
+
+.docsViewerImport__status[data-state="warn"]{
+  color: var(--docs-viewer-import-warn);
+}
+
+.docsViewerImport__status[data-state="error"]{
+  color: var(--docs-viewer-import-danger);
+}
+
+.docsViewerImport__intro,
+.docsViewerImport__warning > p,
+.docsViewerImport__warnings ul{
+  margin: 0;
+}
+
+.docsViewerImport__intro,
+.docsViewerImport__toggleHint,
+.docsViewerImport__warning > p{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewerImport__controls{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.8rem;
+}
+
+.docsViewerImport__field--file{
+  flex: 0 1 calc(50% - 0.4rem);
+}
+
+.docsViewerImport__field--file .docsViewerImport__fieldControl > .docsViewerImport__input{
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.docsViewerImport__field--scope{
+  flex: 0 0 auto;
+}
+
+.docsViewerImport__toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewerImport__actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.8rem;
+}
+
+.docsViewerImport__warning,
+.docsViewerImport__result{
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: 1rem;
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+}
+
+.docsViewerImport__warning[hidden],
+.docsViewerImport__result[hidden],
+.docsViewerImport__warnings[hidden]{
+  display: none;
+}
+
+.docsViewerImport__warning > h3,
+.docsViewerImport__result > h3,
+.docsViewerImport__warnings > h4{
+  margin: 0;
+}
+
+.docsViewerImport__warning > h3{
+  color: var(--docs-viewer-import-warn);
+}
+
+.docsViewerImport__resultGrid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.docsViewerImport__resultGrid > div{
+  min-width: 0;
+  display: contents;
+}
+
+.docsViewerImport__resultGrid dd{
+  margin: 0;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  overflow-wrap: anywhere;
+}
+
+.docsViewerImport__result > .docsViewerImport__meta,
+.docsViewerImport__warnings ul{
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewerImport__warnings ul{
+  padding-left: 1.1rem;
+}
+
+.docsViewerImport__collection{
+  display: grid;
+  gap: 0.8rem;
+}
+
+.docsViewerImport__collection[hidden]{
+  display: none;
+}
+
+.docsViewerImport__collectionSummary,
+.docsViewerImport__collectionIssues,
+.docsViewerImport__collectionDecision{
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-md);
+}
+
+.docsViewerImport__collectionSummary > h3,
+.docsViewerImport__collectionSummary > p,
+.docsViewerImport__collectionIssues > h4,
+.docsViewerImport__collectionIssues > ul,
+.docsViewerImport__collectionDecision > h4,
+.docsViewerImport__collectionDecision > p{
+  margin: 0;
+}
+
+.docsViewerImport__collectionSummary > p,
+.docsViewerImport__collectionIssues,
+.docsViewerImport__collectionRecords,
+.docsViewerImport__collectionDecision{
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewerImport__collectionIssues > ul{
+  padding-left: 1.1rem;
+}
+
+.docsViewerImport__collectionRecords{
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.docsViewerImport__collectionRecords > li{
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-sm);
+}
+
+.docsViewerImport__collectionRecordTitle,
+.docsViewerImport__collectionRecordAction,
+.docsViewerImport__collectionRecordMeta{
+  display: block;
+}
+
+.docsViewerImport__collectionRecordTitle{
+  font-weight: 600;
+}
+
+.docsViewerImport__collectionRecordAction{
+  color: var(--docs-viewer-import-warn);
+  text-transform: capitalize;
+}
+
+.docsViewerImport__collectionRecordMeta{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+}
+
+.docsViewerImport__collectionDecisionActions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+@media (max-width: 700px){
+  .docsViewerImport__field,
+  .docsViewerImport__fieldControl{
+    width: 100%;
+  }
+
+  .docsViewerImport__field--inline{
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.22rem;
+  }
+
+  .docsViewerImport__field--inline .docsViewerImport__fieldControl{
+    grid-column: auto;
+  }
+
+  .docsViewerImport__controls{
+    align-items: stretch;
+  }
+
+  .docsViewerImport__field--file,
+  .docsViewerImport__field--scope{
+    flex: 1 1 100%;
+  }
+}
+
+
+.docsViewer__actionButton--defaultWidth{
+  min-inline-size: 5.75rem;
+}
+
+.docsViewer__importBody{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: min(72vh, 48rem);
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.docsViewer__importBody .docsViewerImport{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__panel{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__scrollRegion{
+  display: grid;
+  flex: 1 1 auto;
+  gap: 0.8rem;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 0.35rem;
+  scrollbar-gutter: stable;
+}
+
+.docsViewer__importBody .docsViewerImport__controls{
+  display: grid;
+  gap: 0.9rem;
+}
+
+.docsViewer__importBody .docsViewerImport__field{
+  width: 100%;
+}
+
+.docsViewer__importBody .docsViewerImport__field--inline{
+  grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.docsViewer__importBody .docsViewerImport__field--inline .docsViewerImport__fieldControl{
+  grid-column: 2;
+}
+
+.docsViewer__importBody .docsViewerImport__fieldLabel{
+  color: var(--docs-viewer-text, var(--text, #111));
+}
+
+.docsViewer__importBody .docsViewerImport__fieldControl{
+  width: 100%;
+}
+
+.docsViewer__importBody .docsViewerImport__fieldControl > .docsViewerImport__input{
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.docsViewer__importBody .docsViewerImport__actions{
+  justify-content: flex-end;
+}
+
+.docsViewer__importBody .docsViewerImport__footer{
+  flex: 0 0 auto;
+  display: grid;
+  gap: 0.55rem;
+  padding-top: 0.75rem;
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+}
+
+@media (max-width: 700px){
+  .docsViewer__importBody .docsViewerImport__field--inline{
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.22rem;
+  }
+
+  .docsViewer__importBody .docsViewerImport__field--inline .docsViewerImport__fieldControl{
+    grid-column: auto;
+  }
+}

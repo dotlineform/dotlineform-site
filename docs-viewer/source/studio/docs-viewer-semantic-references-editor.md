@@ -2,7 +2,7 @@
 doc_id: docs-viewer-semantic-references-editor
 title: Semantic References Editor
 added_date: 2026-06-23
-last_updated: 2026-06-23
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -206,9 +206,9 @@ Shared generic panel/context plumbing:
 
 Styling:
 
-- `docs-viewer/static/css/docs-viewer-manage.css`
+- `docs-viewer/static/css/docs-viewer-source-editor.css`
 
-Semantic picker CSS belongs in the management stylesheet.
+Semantic picker CSS belongs in the manage-only source-editor stylesheet.
 It should not be added to the public/shared Docs Viewer stylesheet.
 
 ## Boundaries

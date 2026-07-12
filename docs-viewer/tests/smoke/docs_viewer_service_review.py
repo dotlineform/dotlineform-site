@@ -240,7 +240,15 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         raise AssertionError("ordinary Docs Review reads invoked the explicit repair endpoint")
     if any("/management/source-editor/" in url for url in requests):
         raise AssertionError("Docs Review loaded management source-editor modules")
-    if any("docs-viewer-manage.css" in url for url in requests):
+    if any(
+        stylesheet in url
+        for url in requests
+        for stylesheet in (
+            "docs-viewer-manage.css",
+            "docs-viewer-source-editor.css",
+            "docs-viewer-import.css",
+        )
+    ):
         raise AssertionError("Docs Review loaded management-only CSS")
     if not any("docs-viewer-review.css" in url for url in requests):
         raise AssertionError("Docs Review did not load its focused read-only route CSS")

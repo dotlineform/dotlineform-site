@@ -34,7 +34,7 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
-        payload = docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+        payload = docs_management_service.docs_scope_create.plan_create_scope_preview(
             repo_root,
             {
                 "scope_id": "research",
@@ -64,7 +64,7 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
-        payload = docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+        payload = docs_management_service.docs_scope_create.plan_create_scope_preview(
             repo_root,
             {
                 "scope_id": "notes",
@@ -166,7 +166,7 @@ def test_sub_scope_delete_apply_removes_config_source_generated_and_published_pa
         write_json(repo_root / "docs-viewer/generated/docs/studio/tags/by-id/scale.json", {"doc_id": "scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/manifest.json", {"doc_ids": "scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/studio/tags/by-id/scale.json", {"doc_id": "scale"})
-        preview = docs_management_service.docs_scope_manifest.plan_delete_sub_scope_preview(
+        preview = docs_management_service.docs_sub_scope_lifecycle.plan_delete_sub_scope_preview(
             repo_root,
             {
                 "parent_scope": "studio",
@@ -211,7 +211,7 @@ def test_scope_create_preview_blocks_local_tracked_assets_regression() -> None:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
             try:
-                docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+                docs_management_service.docs_scope_create.plan_create_scope_preview(
                     repo_root,
                     {
                         "scope_id": "notes",
@@ -293,7 +293,7 @@ def test_scope_create_preview_requires_existing_external_docs_viewer_root() -> N
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
             try:
-                docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+                docs_management_service.docs_scope_create.plan_create_scope_preview(
                     repo_root,
                     {
                         "scope_id": "research",
@@ -396,6 +396,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "docs-viewer/runtime/js/docs-viewer-manage.js" not in recorded_paths
     assert "docs-viewer/static/css/docs-viewer.css" not in recorded_paths
     assert "docs-viewer/static/css/docs-viewer-manage.css" not in recorded_paths
+    assert "docs-viewer/static/css/docs-viewer-source-editor.css" not in recorded_paths
+    assert "docs-viewer/static/css/docs-viewer-import.css" not in recorded_paths
     assert "docs-viewer/config/routes/docs-viewer-public-routes.json" not in recorded_paths
 
 def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> None:
@@ -520,7 +522,7 @@ def test_scope_delete_preview_blocks_system_scopes() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
+        payload = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
             repo_root,
             {
                 "scope_id": "studio",
@@ -558,7 +560,7 @@ def test_scope_delete_preview_allows_public_user_created_scopes() -> None:
                 ],
             },
         )
-        payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
+        payload = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
             repo_root,
             {
                 "scope_id": "research",
@@ -610,7 +612,7 @@ def test_scope_delete_preview_blocks_manage_route_default_scope() -> None:
                 ],
             },
         )
-        payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
+        payload = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
             repo_root,
             {
                 "scope_id": "notes",
@@ -642,7 +644,7 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
                 },
                 dry_run=False,
             )
-            payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
+            payload = docs_management_service.docs_scope_delete.plan_delete_scope_preview(
                 repo_root,
                 {
                     "scope_id": "notes",
