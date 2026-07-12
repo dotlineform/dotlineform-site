@@ -33,7 +33,6 @@
 
 .docsViewer[data-viewer-scope="moments"] .docsViewer__content pre.moment-text--axis{
   --moment-axis: 47%;
-  font-size: clamp(0.94rem, 2.1vw, 1.08rem);
   white-space: normal;
 }
 
