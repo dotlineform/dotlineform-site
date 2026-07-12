@@ -52,7 +52,74 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Collection planning/import registration remains a later phase.
+The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Collection route registration and confirmed apply remain later phases.
+
+## `docs-viewer/services/docs_import_data_sharing_documents.py`
+
+Purpose: trusted Data Sharing documents collection dry-run orchestration.
+
+Ownership: thin public composition of Data Sharing package intake and wrapper-neutral collection planning.
+
+Responsibilities:
+
+- validates the target scope
+- calls `docs_import_data_sharing_package.py` for trusted wrapper intake
+- calls `docs_import_collection_plan.py` for complete write-free planning
+- shapes the safe package identity projection supplied to the planner
+
+Not responsible for:
+
+- package parsing or per-row normalization details
+- collision, hierarchy, media, or response-planning details
+- collection UI or decision state
+- configured-source or media writes
+- apply revalidation and partial-failure handling
+- Docs/search rebuild invocation
+- result-report writing
+
+## `docs-viewer/services/docs_import_data_sharing_package.py`
+
+Purpose: Data Sharing documents wrapper intake and normalization.
+
+Ownership: owns safe staged-package resolution, trusted export association, raw-row identity validation, and conversion to normalized collection record state.
+
+Responsibilities:
+
+- resolves a safe direct-child JSON/JSONL staged identity and matching trusted export metadata
+- normalizes compact and full-source rows through the Data Sharing documents adapter
+- preserves package order and represents every raw package record in typed planning state
+- distinguishes wrapper/schema blockers from explicit per-record contract errors
+
+Not responsible for:
+
+- configured-scope collisions or hierarchy planning
+- body conversion or media planning
+- API response projection
+
+## `docs-viewer/services/docs_import_collection_plan.py`
+
+Purpose: wrapper-neutral write-free collection planning over normalized `ImportContent` records.
+
+Ownership: owns typed collection record state and complete collision, hierarchy, parent-dependency, media-summary, blocker, warning, record-error, and body-free response planning.
+
+Responsibilities:
+
+- generates replacement previews through the shared content conversion boundary
+- obtains candidate source targets and Docs/search ids from `docs_import_document.py`
+- distinguishes collision decisions from invalid-record decisions
+- resolves existing parents and supplied multi-level new-parent chains
+- blocks malformed identity and hierarchy states
+- reports inline media and declared-asset handling without materializing either
+- exposes a body-free API projection plus internal per-document plans for later confirmed apply
+
+Not responsible for:
+
+- wrapper schema or provenance rules
+- collection UI or decision state
+- configured-source or media writes
+- apply revalidation and partial-failure handling
+- Docs/search rebuild invocation
+- result-report writing
 
 ## `docs-viewer/services/docs_import_document.py`
 

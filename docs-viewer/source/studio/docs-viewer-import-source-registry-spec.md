@@ -196,6 +196,18 @@ The plan applies only `title`, `parent_id`, `summary`, and `viewable` from retur
 
 `apply_import_document()` materializes the plan's per-document media and interactive assets through the existing focused services, then performs the atomic source write. It does not run Docs/search rebuilds. The single-source workflow now creates an `ImportContent` record, uses this shared plan/apply boundary, and supplies its changed path and ids to the existing `perform_source_write_and_rebuild()` owner. A future collection orchestrator can therefore apply package records in order inside one managed batch write/rebuild callback without invoking the single-source endpoint per record.
 
+## Data Sharing Collection Dry-Run Plan
+
+`docs-viewer/services/docs_import_data_sharing_documents.py` is the thin orchestration entrypoint. It composes wrapper-specific intake from `docs_import_data_sharing_package.py` with the wrapper-neutral collection planner in `docs_import_collection_plan.py`.
+
+`docs_import_data_sharing_package.py` reads a safe direct-child JSON/JSONL staged identity, validates its trusted export metadata, represents every raw row, and normalizes supported rows through the Data Sharing documents adapter. `docs_import_collection_plan.py` then retains package order and produces the complete body-free collection projection with candidate document actions, collision targets, content intent, parent resolution, new-parent dependencies, media summaries, record errors, blockers, and warnings. Its typed `CollectionRecordState` is internal planning state rather than browser-authored or stored plan authority.
+
+The planner calls `generate_normalized_import_content_preview()` only for replacement content, then calls `plan_import_document()` for each normalized record. `preserve-existing` and `empty-new` records remain explicit without fabricated replacement bodies. Existing parents are reused, supplied new-parent chains are resolved without reordering rows, and missing parents or hierarchy cycles block confirmation. Body links are not resolved, rewritten, or diagnosed.
+
+Collision records expose only `Overwrite`, `Skip`, and `Cancel` as allowed decisions. Invalid front matter and unsupported content formats expose only `Skip` and `Cancel`; they are record errors rather than implicit skips. Malformed package/schema data, unsafe or duplicate identities, mismatched collision targets, missing parents, and cycles remain package blockers.
+
+Planning computes inline data-URL media summaries through the existing content preview path. Declared package assets without an authorized materialization mapping remain non-blocking warnings with their source references preserved. The response contains no source body or generated source text. Planning never calls the per-document apply helper, materializes media, writes configured source, or invokes rebuilds.
+
 ## Format Behavior
 
 HTML imports parse the source with Beautiful Soup, convert supported structures to Markdown, optionally keep identifiable prompt/meta blocks, preserve safe inline SVG, and extract Markdown-image-form inline raster data URLs into planned media files.

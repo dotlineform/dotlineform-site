@@ -23,6 +23,7 @@ Before editing:
 - prefer shared modules, UI primitives, JS, and CSS over one-off route-local or duplicated inline patterns
 - keep UI copy such as labels and status text in the appropriate config or UI-text file
 - keep generated data flowing from source records through scripts; do not edit generated payloads as source
+- after a working slice creates a sizeable new module, review its responsibility map and likely next-phase growth before continuing; allow straightforward first-pass implementation, then split stable responsibilities when later work would otherwise accumulate in the same owner
 
 When pruning, moving, or widening checked-in config or browser-visible payloads:
 
@@ -99,6 +100,9 @@ Staged source imports:
 - `docs_import_common.py` owns source-format constants and small shared helpers.
 - `docs_import_source_service.py` owns the management API workflow: request interpretation, collision discovery, confirmation gates, rebuild calls, and response assembly.
 - `docs_import_document.py` owns reusable `ImportContent` create/overwrite validation, allowed front-matter application, canonical source formatting, per-document media/source apply, target/search ids, and document result/activity shaping.
+- `docs_import_data_sharing_documents.py` is the thin Data Sharing collection orchestration entrypoint.
+- `docs_import_data_sharing_package.py` owns safe Data Sharing staged-package intake, trusted export association, raw-row identity checks, and adapter normalization.
+- `docs_import_collection_plan.py` owns wrapper-neutral typed collection state and complete write-free collision, parent dependency, hierarchy, record-error, media-summary, blocker, warning, and response planning.
 - `docs_import_source_helpers.py` owns replacement-preview mutation, viewer URLs, import path display, and import summary text.
 - `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
 

@@ -23,7 +23,7 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 - [x] Resolve the preparation request's open batch decisions and copy approved product outcomes into the parent request.
 - [x] Adopt the approved frontend, adapter, service, plan/apply, rebuild, and result owner contracts.
 - [x] Confirm the ordinary single-source importer uses the shared per-document boundary without behavior change.
-- [ ] Confirm collection dry-run planning is complete and write-free before implementing confirmed apply.
+- [x] Confirm collection dry-run planning is complete and write-free before implementing confirmed apply.
 
 ## 1. Move Docs Import To The W0 Drop-Zone Adapter
 

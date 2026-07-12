@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P3 are complete; P4 is the next bounded phase.
+Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P4 are complete; P5 is the next bounded phase.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -237,11 +237,29 @@ Verification completed on 2026-07-12:
 
 P4 should compose these write-free per-document plans across every normalized package record, adding complete collision, hierarchy, new-parent dependency, media, blocker, and warning planning without calling `apply_import_document()`.
 
-### P4. Collection Dry-Run Orchestrator
+### P4. Collection Dry-Run Orchestrator — Complete 2026-07-12
 
 - normalize every package record
 - produce collision, hierarchy, new-parent dependency, media, blocker, and warning plans
 - prove complete planning performs no configured-source or media writes
+
+#### P4 Verification And Handoff
+
+- `docs_import_data_sharing_documents.py` is a thin orchestration entrypoint over the wrapper-specific `docs_import_data_sharing_package.py` intake/normalization owner and wrapper-neutral `docs_import_collection_plan.py` planner
+- typed `CollectionRecordState` replaces the first-pass cross-phase state dictionary; every raw row remains represented in package order while normalized rows retain internal `ImportContent` and P3 document plans and the API projection omits source bodies and generated source text
+- non-colliding rows produce candidate create plans, collisions expose only `Overwrite`, `Skip`, and `Cancel`, and invalid front matter or unsupported content formats expose only explicit `Skip` or `Cancel`
+- existing parents and supplied new-parent chains resolve without row reordering; missing parents, cycles, malformed schemas, unsafe/duplicate identities, and mismatched collision targets are blockers
+- body links pass through the internal planned source unchanged without link diagnostics
+- embedded data-URL media uses the shared preview planner; declared package assets without an authorized materialization mapping remain non-blocking warnings
+- planning calls the P3 per-document planner but never calls apply, materializes media, writes configured sources, or invokes rebuilds
+
+Verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import_collection_plan.py -q` — 9 passed
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 89 passed
+- focused Python compilation, write-surface scans, sanitization scans, and `git diff --check` passed
+
+P5 should register supported collection files ahead of the generic JSON/JSONL file fallback, connect `preview_only: true` to this planner through the existing import POST, and add a focused collection controller/view state without moving package records or decisions into the management coordinator.
 
 ### P5. Collection Frontend Boundary
 
