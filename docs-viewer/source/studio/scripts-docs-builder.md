@@ -58,7 +58,7 @@ Public route asset outputs after the `/docs/` Publish action:
 - `site/assets/data/search/library/index.json`
 
 The builder writes the working generated outputs only.
-For public scopes, the `/docs/` Actions menu exposes `Publish` while viewing that public scope.
+For public scopes, the `/docs/` toolbar exposes `Publish` while viewing that public scope, with the same command retained in the Actions menu.
 That button is a local copy/promote step: it copies the reviewed working docs/search JSON from `docs-viewer/generated/` into the `site/assets/data/` roots that `/library/`, `/analysis/`, and other public routes read.
 It does not deploy the site or upload data anywhere.
 For local scopes such as Studio, the same menu item is visible but disabled because there is no public route asset target to copy into.

@@ -65,6 +65,7 @@ Top-bar layout owner: `docs-viewer-top-bar-renderer.js`
 The manage toolbar owns controls that imply management mode, write capability, or local admin behavior:
 
 - Actions menu
+- capability-gated direct Publish shortcut for public scopes; it invokes the same command as the Actions-menu item
 - create, import, delete, settings, rebuild, and scope actions
 - viewability controls such as Show / non-viewable
 - scope selector for management-enabled docs routes

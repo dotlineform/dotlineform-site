@@ -98,7 +98,7 @@ It renders `site/<route>/index.html` from `docs-viewer/templates/public-route/in
 It does not write Markdown route stubs or Python source.
 
 Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>`.
-Their `/docs/` Actions menu `Publish` command copies reviewed working JSON from `docs-viewer/generated/` into the tracked `site/assets/data/` files that public routes read.
+Their `/docs/` toolbar `Publish` command, also retained in the Actions menu, copies reviewed working JSON from `docs-viewer/generated/` into the tracked `site/assets/data/` files that public routes read.
 
 ### Local Tracked Scope
 

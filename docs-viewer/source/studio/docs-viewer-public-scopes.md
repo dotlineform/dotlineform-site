@@ -105,10 +105,10 @@ Public routes read only the site asset copies under `site/assets/data/`.
 New Scope public-readonly creation writes the initial working generated output and syncs that initial output to the public route asset roots so the new route can load.
 After the scope exists, normal source edits rebuild the working output first.
 
-Publishing is the local `/docs/` Actions menu `Publish` command for public scopes.
+Publishing is the local `/docs/` toolbar `Publish` command for public scopes; the Actions menu retains the same command as a second entry point.
 In this Docs Viewer context, publish means copy reviewed working docs/search JSON into tracked site assets.
 It does not deploy the site, upload data, or run a remote release.
-When viewing a local scope such as Studio in `/docs/`, the Publish menu item is visible but disabled because that scope has no public route asset target.
+When viewing a local scope such as Studio in `/docs/`, the direct Publish shortcut is hidden and the Publish menu item is disabled because that scope has no public route asset target.
 
 The Publish command uses these local endpoints:
 

@@ -240,7 +240,8 @@ export async function runDocsHtmlImportWorkflow(
     includePromptMeta = false,
     routePath = "/docs/",
     managementBaseUrl = "",
-    onRunningChange = () => {}
+    onRunningChange = () => {},
+    onTerminalResult = () => {}
   } = {}
 ) {
   const workflowContext = {
@@ -290,6 +291,11 @@ export async function runDocsHtmlImportWorkflow(
         ? importText("importAllSuccess", { count: results.length })
         : normalizeText(results[0] && results[0].summary_text)
     );
+    try {
+      onTerminalResult();
+    } catch (error) {
+      console.warn("docs_import_source: terminal result projection failed", error);
+    }
   } catch (error) {
     console.warn("docs_import_source: import failed", error);
     if (results.length) renderDocsHtmlImportResult(state, results);

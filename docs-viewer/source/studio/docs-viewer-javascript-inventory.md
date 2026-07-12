@@ -240,7 +240,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
 
 - Owns the management-side Docs Import lifecycle boundary: lazy module loading, single in-flight initialization, retry after a failed load, boot-error projection, and the action-to-modal handoff.
-- Receives explicit import host refs, service/config URLs, and scope/modal callbacks; it does not own import preview/write behavior or general management modal behavior.
+- Receives explicit import host refs, service/config URLs, and scope/modal callbacks; it forwards terminal-result notification to the modal owner but does not own import preview/write behavior or general management modal behavior.
 - Keep Docs Import preview and write orchestration in `docs-viewer/runtime/js/import/docs-html-import.js` and its child modules.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-event-router.js`
@@ -330,9 +330,9 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`
 
-- the focused renderer for management toolbar markup, including the Actions menu, viewability controls, and scope picker shell.
+- the focused renderer for management toolbar markup, including the Actions menu, capability-gated direct Publish shortcut, viewability controls, and scope picker shell.
 - the scope picker shell renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
-- the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; command behavior remains outside this renderer.
+- the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; the direct and menu Publish controls share one projected state and command owner outside this renderer.
 - selected-document `Edit` and `Markdown source` controls moved to the rendered-document main-view toolbar; this renderer keeps broader management/admin Actions such as create, import, delete, settings, rebuild, and scope lifecycle commands.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
 
@@ -473,6 +473,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - Keep modal app state, scope/file selection, service availability display, and `studio:ready` route-ready dataset projection in `docs-viewer/runtime/js/import/docs-html-import.js`.
 - Keep import result rendering in `docs-viewer/runtime/js/import/docs-html-import-render.js`.
 - Keep preview/write orchestration in `docs-viewer/runtime/js/import/docs-html-import-workflow.js`.
+- Single-source and collection workflows signal terminal results without changing management-modal controls directly; `docs-viewer-management-modals.js` owns replacing `Import`/`Cancel` with `Close` and restoring normal actions when the modal reopens.
 - Keep import writes behind `docs-viewer/runtime/js/management/docs-viewer-management-client.js` and management endpoints such as `/docs/import-source`.
 - Keep management-only workflows behind the lazy management boundary.
 - management initialization, capability refresh, event routing, and write orchestration remain behind `docs-viewer/runtime/js/management/docs-viewer-management.js`, management child modules, and `docs-viewer/runtime/js/management/docs-viewer-management-client.js`; control/root/keyboard routing belongs to `docs-viewer-management-event-router.js`, lazy import initialization belongs to `docs-viewer-management-import-controller.js`, metadata/settings composition belongs to their focused workflow owners, and scope/sub-scope lifecycle composition belongs to `docs-viewer-management-scope-lifecycle-controller.js`; hosted-view visibility must not imply write authority.

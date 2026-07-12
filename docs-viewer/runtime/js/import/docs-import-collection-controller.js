@@ -61,6 +61,7 @@ export function createDocsImportCollectionController(options = {}) {
   const host = options.host || null;
   const statusNode = options.statusNode || null;
   const onBusyChange = typeof options.onBusyChange === "function" ? options.onBusyChange : () => {};
+  const onTerminalResult = typeof options.onTerminalResult === "function" ? options.onTerminalResult : () => {};
   const state = {
     active: false,
     phase: "idle",
@@ -258,6 +259,11 @@ export function createDocsImportCollectionController(options = {}) {
         setStatus(statusNode, payload.outcome === "completed" ? "success" : "warn", importText("collectionResultStatus", {
           outcome: normalizeText(payload.outcome) || "unknown"
         }));
+        try {
+          onTerminalResult();
+        } catch (error) {
+          console.warn("docs_import_collection: terminal result projection failed", error);
+        }
       } else {
         throw new Error(importText("collectionUnsupportedPreview"));
       }

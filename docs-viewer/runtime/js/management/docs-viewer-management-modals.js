@@ -22,6 +22,7 @@ var MODAL_TEXT = {
   metadataStatusNoneOption: "<none>",
   metadataStatusSelectedSuffix: " (selected)",
   importCancelButton: "Cancel",
+  importCloseButton: "Close",
   settingsLoading: "Loading settings...",
   settingsEmpty: "No editable settings are available for this scope.",
   settingsLoadFailed: "Settings unavailable.",
@@ -224,10 +225,27 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
   }
 
+  function projectImportTerminalResult() {
+    var cancelButton = ensureImportModalCancelButton();
+    var runButton = document.getElementById("docsHtmlImportRun");
+    if (runButton) runButton.hidden = true;
+    if (!cancelButton) return;
+    cancelButton.textContent = MODAL_TEXT.importCloseButton;
+    focusWithoutScroll(cancelButton);
+  }
+
+  function resetImportModalActions() {
+    var cancelButton = ensureImportModalCancelButton();
+    var runButton = document.getElementById("docsHtmlImportRun");
+    if (runButton) runButton.hidden = false;
+    if (cancelButton) cancelButton.textContent = MODAL_TEXT.importCancelButton;
+  }
+
   function openImportModal() {
     if (!refs.importModal || !refs.importRoot) return;
     var scope = viewerScope();
     refs.importModal.hidden = false;
+    resetImportModalActions();
     var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(scope) : null;
     if (initResult && typeof initResult.then === "function") {
       initResult.then(focusImportModalEntry).catch(focusImportModalEntry);
@@ -526,6 +544,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     renderMetadataStatusOptions: renderMetadataStatusOptions,
     renderSettingsWarnings: renderSettingsWarnings,
     resolveMetadataParentId: resolveMetadataParentId,
+    projectImportTerminalResult: projectImportTerminalResult,
     setSettingsField: setSettingsField,
     setSettingsLoadError: setSettingsLoadError,
     setSettingsSaveError: setSettingsSaveError,

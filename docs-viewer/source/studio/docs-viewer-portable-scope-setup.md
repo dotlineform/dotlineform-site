@@ -219,7 +219,7 @@ Build the working search JSON if search is enabled:
 ./docs-viewer/build/build_search.py --scope research --write
 ```
 
-Use the `/docs/` Actions menu `Publish` command while viewing this public scope to copy the reviewed working outputs to the public route asset roots under `site/assets/data/`.
+Use the `/docs/` toolbar `Publish` command, or its matching Actions-menu item, while viewing this public scope to copy the reviewed working outputs to the public route asset roots under `site/assets/data/`.
 After that local copy step, the public route should be able to fetch:
 
 - `/assets/data/docs/scopes/research/index-tree.json`

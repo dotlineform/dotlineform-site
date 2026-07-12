@@ -27,6 +27,13 @@ export function createDocsViewerManagementImportController(options = {}) {
     refs.bootStatus.dataset.state = "error";
   }
 
+  function projectTerminalResult() {
+    var modalController = typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
+    if (modalController && typeof modalController.projectImportTerminalResult === "function") {
+      modalController.projectImportTerminalResult();
+    }
+  }
+
   function initialize(scope) {
     if (!refs.root || !refs.bootStatus || initialized) return Promise.resolve();
     if (importRequestPromise) return importRequestPromise;
@@ -45,7 +52,8 @@ export function createDocsViewerManagementImportController(options = {}) {
           reviewPackageId: context.root && context.root.dataset
             ? context.root.dataset.docsImportReviewPackageId || ""
             : "",
-          routePath: IMPORT_ROUTE_PATH
+          routePath: IMPORT_ROUTE_PATH,
+          onTerminalResult: projectTerminalResult
         });
       })
       .then(function () {

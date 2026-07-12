@@ -119,6 +119,7 @@ function managementActionsMarkup(options) {
   MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
   '      </div>',
   '    </div>',
+  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageToolbarPublishButton" data-docs-viewer-action="publish-docs" aria-label="Publish" title="Publish" hidden>Publish</button>',
   '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton" aria-label="Show" title="Show">Show</button>',
   '    <label class="docsViewer__draftToggle">',
   '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox" aria-label="Show non-viewable docs">',

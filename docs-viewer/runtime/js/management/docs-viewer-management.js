@@ -64,6 +64,8 @@ export function initDocsViewerManagement(context) {
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
+  var manageToolbarPublishButton = document.getElementById("docsViewerManageToolbarPublishButton");
+  var managePublishButtons = [managePublishButton, manageToolbarPublishButton].filter(Boolean);
   var manageExportButton = document.getElementById("docsViewerManageExportButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
@@ -238,10 +240,11 @@ export function initDocsViewerManagement(context) {
       }
     }
     if (scopeLifecycleController) scopeLifecycleController.render();
-    if (managePublishButton) {
-      var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
-      managePublishButton.disabled = management.managementBusy || !publishAvailable;
-    }
+    var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
+    managePublishButtons.forEach(function (button) {
+      button.disabled = management.managementBusy || !publishAvailable;
+    });
+    if (manageToolbarPublishButton) manageToolbarPublishButton.hidden = !publishAvailable;
     if (manageExportButton) {
       var exportAvailable = management.managementAvailable && scopeStaticHtmlExportSupported(management.managementCapabilities, viewerScope());
       manageExportButton.hidden = !exportAvailable;
@@ -463,7 +466,7 @@ export function initDocsViewerManagement(context) {
       manageActionsButton: manageActionsButton,
       manageActionsMenu: manageActionsMenu,
       newButton: manageNewButton,
-      publishButton: managePublishButton,
+      publishButtons: managePublishButtons,
       rebuildButton: manageRebuildButton,
       settingsButton: manageSettingsButton,
       sourceButton: manageSourceButton,

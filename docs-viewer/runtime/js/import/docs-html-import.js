@@ -293,7 +293,8 @@ async function runImport(state) {
     includePromptMeta: Boolean(state.includePromptMeta.checked),
     routePath: state.routePath,
     managementBaseUrl: state.managementBaseUrl,
-    onRunningChange: () => syncRouteBusyState(state)
+    onRunningChange: () => syncRouteBusyState(state),
+    onTerminalResult: state.onTerminalResult
   });
 }
 
@@ -342,12 +343,14 @@ export async function initDocsHtmlImport(options = {}) {
     isRunning: false,
     files: [],
     docsScopeIds: [],
-    reviewPackageId: normalizeText(options.reviewPackageId)
+    reviewPackageId: normalizeText(options.reviewPackageId),
+    onTerminalResult: typeof options.onTerminalResult === "function" ? options.onTerminalResult : () => {}
   };
   state.collectionController = createDocsImportCollectionController({
     host: state.collectionView,
     statusNode: state.statusNode,
     routePath: state.routePath,
+    onTerminalResult: state.onTerminalResult,
     onBusyChange: (busy) => {
       state.isRunning = busy;
       state.runButton.disabled = busy;

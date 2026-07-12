@@ -81,9 +81,11 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     });
     bind(refs.importButton, "click", "openImport");
     bind(refs.settingsButton, "click", "openSettings");
-    bind(refs.publishButton, "click", "publish", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
+    (refs.publishButtons || []).forEach(function (publishButton) {
+      bind(publishButton, "click", "publish", {
+        hideContextMenu: true,
+        hideManageActionsMenu: true
+      });
     });
     bind(refs.exportButton, "click", "exportDocs", {
       hideContextMenu: true,
