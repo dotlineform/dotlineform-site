@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P2 are complete; P3 is the next bounded phase.
+Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P3 are complete; P4 is the next bounded phase.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -214,12 +214,28 @@ Verification completed on 2026-07-12:
 
 P3 should consume `ImportContent` records when extracting the shared per-document plan/apply boundary. It must not move Data Sharing provenance checks, content-format conversion, or collection state into the generic record or the management coordinator.
 
-### P3. Shared Per-Document Plan And Apply
+### P3. Shared Per-Document Plan And Apply — Complete 2026-07-12
 
 - extract reusable document planning and apply helpers
 - support surgical metadata/hierarchy-only updates against current canonical source without replacing existing bodies or unrelated front matter
 - move the existing single-source orchestrator onto them without behavior change
 - keep rebuild orchestration in the existing write/rebuild owner
+
+#### P3 Verification And Handoff
+
+- `docs_import_document.py` owns wrapper-neutral per-document create/overwrite validation, allowed front-matter application, source formatting, media/source apply, changed target ids, and result/activity shaping
+- plans consume `ImportContent` records and reject unsafe target ids, create/overwrite collisions, and content intents that do not match the target action
+- `preserve-existing` reads the current configured canonical source, applies only allowed returned metadata, and preserves its current body plus unrelated front matter
+- `empty-new` creates an empty body; `replace` continues to use the normalized preview/conversion result
+- the ordinary staged-source orchestrator now maps its preview to `ImportContent`, calls the shared plan/apply helpers, and passes their changed path and ids to the existing one-document managed rebuild boundary
+- package provenance checks, content conversion, collection state/order, and rebuild invocation remain outside the per-document owner
+
+Verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 80 passed
+- focused Python compilation and `git diff --check` passed
+
+P4 should compose these write-free per-document plans across every normalized package record, adding complete collision, hierarchy, new-parent dependency, media, blocker, and warning planning without calling `apply_import_document()`.
 
 ### P4. Collection Dry-Run Orchestrator
 

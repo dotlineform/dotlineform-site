@@ -7,13 +7,8 @@ from pathlib import Path
 from typing import Any, Dict
 
 from docs_scope_config import DOCS_SCOPE_CONFIGS
-from docs_source_model import (
-    ScopeDoc,
-    current_doc_timestamp,
-    default_viewable_for_scope,
-    format_source,
-    slugify,
-)
+from docs_source_model import slugify
+
 
 def relative_path(repo_root: Path, path: Path) -> str:
     return path.resolve().relative_to(repo_root.resolve()).as_posix()
@@ -22,44 +17,6 @@ def relative_path(repo_root: Path, path: Path) -> str:
 def viewer_url_for(scope: str, doc_id: str) -> str:
     normalized_scope = scope if scope in DOCS_SCOPE_CONFIGS else next(iter(DOCS_SCOPE_CONFIGS))
     return f"/docs/?scope={normalized_scope}&doc={doc_id}"
-
-def imported_body_markdown(preview: Dict[str, Any]) -> str:
-    title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
-    markdown = str(preview.get("markdown_preview") or "").strip()
-    if markdown:
-        return markdown + "\n"
-    return f"# {title}\n"
-
-
-def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc], scope: str) -> str:
-    title = str(preview.get("title") or "Imported Doc").strip() or "Imported Doc"
-    timestamp = current_doc_timestamp()
-    front_matter = {
-        "doc_id": preview["proposed_doc_id"],
-        "title": title,
-        "added_date": timestamp,
-        "last_updated": timestamp,
-        "parent_id": "",
-    }
-    if not default_viewable_for_scope(scope):
-        front_matter["viewable"] = False
-    return format_source(front_matter, imported_body_markdown(preview))
-
-
-def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc) -> str:
-    title = str(preview.get("title") or target.title).strip() or target.title
-    timestamp = current_doc_timestamp()
-    front_matter = dict(target.front_matter)
-    front_matter["doc_id"] = target.doc_id
-    front_matter["title"] = title
-    front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or timestamp).strip()
-    front_matter["last_updated"] = timestamp
-    front_matter["parent_id"] = target.parent_id
-    front_matter.pop("sort_order", None)
-    front_matter.pop("viewable", None)
-    if not target.viewable:
-        front_matter["viewable"] = False
-    return format_source(front_matter, imported_body_markdown(preview))
 
 
 def apply_replacement_title_to_preview(preview: Dict[str, Any], replacement_title: str) -> None:
@@ -85,6 +42,7 @@ def apply_replacement_doc_id_to_preview(preview: Dict[str, Any], replacement_doc
         raise ValueError("replacement_doc_id is required when the proposed filename collides")
     preview["proposed_doc_id"] = doc_id
     preview["proposed_doc_id_source"] = "replacement_doc_id"
+
 
 def import_summary_text(
     operation: str,

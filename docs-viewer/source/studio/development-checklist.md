@@ -97,8 +97,9 @@ Staged source imports:
 - `docs_import_media.py` owns media path planning, inline media extraction, media materialization, and image/file media summaries.
 - `docs_import_markdown_package.py` owns markdown package discovery, package media planning, and package link rewriting.
 - `docs_import_common.py` owns source-format constants and small shared helpers.
-- `docs_import_source_service.py` owns the management API workflow: request interpretation, collision decisions, confirmation gates, rebuild calls, and response assembly.
-- `docs_import_source_helpers.py` owns imported source text, replacement-preview mutation, viewer URLs, and import summary text.
+- `docs_import_source_service.py` owns the management API workflow: request interpretation, collision discovery, confirmation gates, rebuild calls, and response assembly.
+- `docs_import_document.py` owns reusable `ImportContent` create/overwrite validation, allowed front-matter application, canonical source formatting, per-document media/source apply, target/search ids, and document result/activity shaping.
+- `docs_import_source_helpers.py` owns replacement-preview mutation, viewer URLs, import path display, and import summary text.
 - `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
 
 New staged source formats:

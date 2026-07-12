@@ -188,6 +188,14 @@ The service adds collision and write-flow fields after loading the target scope:
 
 The Data Sharing documents adapter owns wrapper/schema/provenance checks and emits `ImportContent` records. It maps only declared compact `content` and full-source `canonical_markdown` contracts; arbitrary JSON fields do not become body or front matter. A future standalone collection requires a separate explicit wrapper adapter but can emit the same generic record.
 
+## Shared Per-Document Plan And Apply
+
+`docs-viewer/services/docs_import_document.py` is the shared lower-level owner for one normalized document action. `plan_import_document()` consumes an `ImportContent` record plus current scope state and returns a write-free create or overwrite plan with the target source text, target path, Docs/search ids, and normalized result metadata. It rejects unsafe target identities and content intents that do not match the create/overwrite target.
+
+The plan applies only `title`, `parent_id`, `summary`, and `viewable` from returned front matter. `preserve-existing` overwrites format the current configured canonical source with its existing body and unrelated front matter intact; `empty-new` creates the standard empty body. Replacement content continues through the normalized preview/conversion boundary before planning.
+
+`apply_import_document()` materializes the plan's per-document media and interactive assets through the existing focused services, then performs the atomic source write. It does not run Docs/search rebuilds. The single-source workflow now creates an `ImportContent` record, uses this shared plan/apply boundary, and supplies its changed path and ids to the existing `perform_source_write_and_rebuild()` owner. A future collection orchestrator can therefore apply package records in order inside one managed batch write/rebuild callback without invoking the single-source endpoint per record.
+
 ## Format Behavior
 
 HTML imports parse the source with Beautiful Soup, convert supported structures to Markdown, optionally keep identifiable prompt/meta blocks, preserve safe inline SVG, and extract Markdown-image-form inline raster data URLs into planned media files.

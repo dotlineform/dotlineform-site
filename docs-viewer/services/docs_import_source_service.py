@@ -8,11 +8,19 @@ from pathlib import Path
 from typing import Any, Callable, Dict
 
 from docs_import_common import is_interactive_html_import_asset
-from docs_import_markdown_package import retarget_markdown_package_media_plans
-from docs_import_media import (
-    materialize_inline_raster_media,
-    retarget_inline_raster_media_plans,
+from docs_import_content import CONTENT_FORMAT_MARKDOWN, CONTENT_INTENT_REPLACE, ImportContent
+from docs_import_document import (
+    IMPORT_DOCUMENT_CREATE,
+    IMPORT_DOCUMENT_OVERWRITE,
+    ImportDocumentApplyResult,
+    ImportDocumentMediaContext,
+    apply_import_document,
+    import_document_activity,
+    import_document_result,
+    plan_import_document,
 )
+from docs_import_markdown_package import retarget_markdown_package_media_plans
+from docs_import_media import retarget_inline_raster_media_plans
 from docs_import_preview import (
     generate_import_preview,
     list_staged_import_source_files,
@@ -21,25 +29,16 @@ from docs_import_preview import (
 from docs_import_source_helpers import (
     apply_replacement_doc_id_to_preview,
     apply_replacement_title_to_preview,
-    imported_source_text_for_create,
-    imported_source_text_for_overwrite,
-    import_summary_text,
     interactive_html_overwrite_summary,
     relative_path,
-    viewer_url_for,
 )
 from docs_import_source_interactive import (
     ensure_interactive_html_targets_available,
     interactive_html_asset_plans,
-    materialize_interactive_html_assets,
 )
-from docs_management_mutations import metadata_search_doc_ids
 from docs_source_model import (
-    default_viewable_for_scope,
     load_scope_docs,
     normalize_scope,
-    scope_root,
-    write_text_atomic,
 )
 from services.paths import configured_workspace_paths, marker_path, workspace_status
 
@@ -216,138 +215,71 @@ def handle_import_source(
             "dry_run": dry_run,
         }
 
-    rebuild = None
-    inline_media_written: list[dict[str, Any]] = []
-    interactive_html_written: list[Dict[str, Any]] = []
     ensure_interactive_html_targets_available(interactive_plans, allow_overwrite=confirm_overwrite)
-    if collision_doc is not None:
-        source_text = imported_source_text_for_overwrite(preview, collision_doc)
-        overwrite_title = str(preview.get("title") or collision_doc.title).strip() or collision_doc.title
-        search_doc_ids = metadata_search_doc_ids(
-            docs,
-            collision_doc.doc_id,
-            title_changed=overwrite_title != collision_doc.title,
-        )
-        if not dry_run:
-            def write_import_artifacts() -> None:
-                nonlocal inline_media_written, interactive_html_written
-                inline_media_written = materialize_inline_raster_media(
-                    repo_root,
-                    staging_root=staging_root,
-                    workspace_root=workspace_root,
-                    source_path=source_path,
-                    import_preview=preview,
-                    include_prompt_meta=include_prompt_meta,
-                )
-                interactive_html_written = materialize_interactive_html_assets(
-                    repo_root,
-                    staging_root,
-                    interactive_plans,
-                    allow_overwrite=confirm_overwrite,
-                )
-                write_text_atomic(collision_doc.path, source_text)
-
-            rebuild = dependencies.perform_source_write_and_rebuild(
-                repo_root,
-                scope,
-                [collision_doc.path],
-                write_import_artifacts,
-                suppression_reason="docs-import-source-overwrite",
-                docs_doc_ids=[collision_doc.doc_id],
-                search_doc_ids=search_doc_ids,
-            )
-        dependencies.log_event(
-            repo_root,
-            "docs-import-source-overwrite",
-            {
-                "scope": scope,
-                "staged_filename": staged_filename,
-                "source_format": preview.get("source_format"),
-                "inline_media_count": len(preview.get("media_plans") or []),
-                "interactive_html_asset_count": len(interactive_plans),
-                "doc_id": collision_doc.doc_id,
-                "path": relative_path(repo_root, collision_doc.path),
-                "include_prompt_meta": include_prompt_meta,
-            },
-        )
-        return {
-            "ok": True,
-            "scope": scope,
-            "staged_filename": staged_filename,
-            "include_prompt_meta": include_prompt_meta,
-            "preview_only": False,
-            "requires_overwrite_confirmation": False,
-            "requires_doc_overwrite_confirmation": False,
-            "requires_interactive_html_confirmation": False,
-            "operation": "overwrite",
-            "doc_id": collision_doc.doc_id,
-            "path": relative_path(repo_root, collision_doc.path),
-            "viewer_url": viewer_url_for(scope, collision_doc.doc_id),
-            "title": preview["title"],
-            "record": {
-                "doc_id": collision_doc.doc_id,
-                "title": preview["title"],
-                "parent_id": collision_doc.parent_id,
-                "viewable": collision_doc.viewable,
-            },
-            "collision": collision,
-            "import_preview": preview,
-            "inline_media_written": inline_media_written,
-            "interactive_html_written": interactive_html_written,
-            "rebuild": rebuild,
-            "summary_text": import_summary_text(
-                "overwrite",
-                collision_doc.doc_id,
-                staged_filename,
-                interactive_html_written,
-            ),
-            "dry_run": dry_run,
-        }
-
-    doc_id = preview["proposed_doc_id"]
-    target_path = scope_root(repo_root, scope) / f"{doc_id}.md"
-    source_text = imported_source_text_for_create(preview, docs, scope)
-    if not dry_run:
-        def write_import_artifacts() -> None:
-            nonlocal inline_media_written, interactive_html_written
-            inline_media_written = materialize_inline_raster_media(
-                repo_root,
-                staging_root=staging_root,
-                workspace_root=workspace_root,
-                source_path=source_path,
-                import_preview=preview,
-                include_prompt_meta=include_prompt_meta,
-            )
-            interactive_html_written = materialize_interactive_html_assets(
-                repo_root,
-                staging_root,
-                interactive_plans,
-                allow_overwrite=confirm_overwrite,
-            )
-            write_text_atomic(target_path, source_text)
-
-        rebuild = dependencies.perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [target_path],
-            write_import_artifacts,
-            suppression_reason="docs-import-source-create",
-            docs_doc_ids=[doc_id],
-            search_doc_ids=[doc_id],
-        )
-    dependencies.log_event(
+    operation = IMPORT_DOCUMENT_OVERWRITE if collision_doc is not None else IMPORT_DOCUMENT_CREATE
+    doc_id = collision_doc.doc_id if collision_doc is not None else proposed_doc_id
+    title = str(preview.get("title") or (collision_doc.title if collision_doc else "Imported Doc")).strip()
+    record = ImportContent(
+        source_kind="staged-source",
+        source_identity=staged_filename,
+        record_identity=staged_filename,
+        doc_id=doc_id,
+        title=title,
+        content_intent=CONTENT_INTENT_REPLACE,
+        content_format=CONTENT_FORMAT_MARKDOWN,
+        content=str(preview.get("markdown_preview") or ""),
+        parent_id=collision_doc.parent_id if collision_doc is not None else "",
+    )
+    plan = plan_import_document(
         repo_root,
-        "docs-import-source-create",
-        {
-            "scope": scope,
-            "staged_filename": staged_filename,
-            "source_format": preview.get("source_format"),
-            "inline_media_count": len(preview.get("media_plans") or []),
-            "interactive_html_asset_count": len(interactive_plans),
-            "doc_id": doc_id,
-            "path": relative_path(repo_root, target_path),
-            "include_prompt_meta": include_prompt_meta,
-        },
+        scope,
+        record,
+        operation=operation,
+        docs=docs,
+        target=collision_doc,
+        import_preview=preview,
+    )
+    media_context = ImportDocumentMediaContext(
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+        source_path=source_path,
+        include_prompt_meta=include_prompt_meta,
+        interactive_html_plans=tuple(interactive_plans),
+        allow_interactive_html_overwrite=confirm_overwrite,
+    )
+    apply_result = ImportDocumentApplyResult()
+
+    def write_import_document() -> None:
+        nonlocal apply_result
+        apply_result = apply_import_document(
+            repo_root,
+            plan,
+            media_context=media_context,
+        )
+
+    rebuild = dependencies.perform_source_write_and_rebuild(
+        repo_root,
+        scope,
+        plan.changed_paths,
+        write_import_document,
+        suppression_reason=plan.suppression_reason,
+        docs_doc_ids=plan.docs_doc_ids,
+        search_doc_ids=list(plan.search_doc_ids),
+    )
+    event_name, event_details = import_document_activity(
+        repo_root,
+        plan,
+        staged_filename,
+        include_prompt_meta=include_prompt_meta,
+    )
+    dependencies.log_event(repo_root, event_name, event_details)
+    result = import_document_result(
+        repo_root,
+        plan,
+        source_label=staged_filename,
+        apply_result=apply_result,
+        rebuild=rebuild,
+        dry_run=dry_run,
     )
     return {
         "ok": True,
@@ -358,22 +290,7 @@ def handle_import_source(
         "requires_overwrite_confirmation": False,
         "requires_doc_overwrite_confirmation": False,
         "requires_interactive_html_confirmation": False,
-        "operation": "create",
-        "doc_id": doc_id,
-        "path": relative_path(repo_root, target_path),
-        "viewer_url": viewer_url_for(scope, doc_id),
-        "title": preview["title"],
-        "record": {
-            "doc_id": doc_id,
-            "title": preview["title"],
-            "parent_id": "",
-            "viewable": default_viewable_for_scope(scope),
-        },
         "collision": collision,
         "import_preview": preview,
-        "inline_media_written": inline_media_written,
-        "interactive_html_written": interactive_html_written,
-        "rebuild": rebuild,
-        "summary_text": import_summary_text("create", doc_id, staged_filename, interactive_html_written),
-        "dry_run": dry_run,
+        **result,
     }

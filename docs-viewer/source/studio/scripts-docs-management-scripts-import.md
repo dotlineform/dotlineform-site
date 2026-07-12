@@ -31,7 +31,7 @@ Not responsible for:
 
 Purpose: staged source import workflow for the Docs Viewer import modal.
 
-Ownership: owns import preview, collision handling, source creation/overwrite, media materialization, and import response contracts.
+Ownership: owns ordinary single-source request interpretation, preview orchestration, collision discovery, confirmation gates, rebuild invocation, and response assembly.
 
 Responsibilities:
 
@@ -39,10 +39,11 @@ Responsibilities:
 - imports HTML, Markdown, Markdown packages, text, SVG, image files, and downloadable files
 - converts imported content to Markdown source
 - derives proposed titles, doc ids, and filename stems
-- plans media tokens and materializes import media on writes
+- plans media tokens through focused preview/media services
 - handles replacement ids and confirmed overwrites
-- preserves existing doc identity, parent, added date, and viewability during overwrites
 - validates generated Markdown before returning success
+- maps the ordinary staged source to one normalized `ImportContent` record
+- delegates per-document source/media planning and apply to `docs_import_document.py`
 - calls supplied source-write and rebuild follow-through helpers after successful writes
 
 Not responsible for:
@@ -51,7 +52,31 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` now defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Collection planning/import registration remains a later phase, while Markdown validation, inline-media planning/materialization, create/overwrite formatting, source writes, and rebuild follow-through remain shared lower-level services.
+The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Collection planning/import registration remains a later phase.
+
+## `docs-viewer/services/docs_import_document.py`
+
+Purpose: shared per-document Docs Import plan and apply boundary.
+
+Ownership: owns one normalized record's create/overwrite validation, allowed front-matter application, canonical source formatting, target/search ids, media/source apply, and document result/activity shaping.
+
+Responsibilities:
+
+- consumes `ImportContent` records without requiring Data Sharing provenance
+- plans create, overwrite, `replace`, `preserve-existing`, and `empty-new` behavior without writing
+- preserves the current canonical body and unrelated front matter for metadata/hierarchy-only updates
+- keeps the ordinary single-source replacement formatting contract unchanged
+- rejects unsafe target ids and content intents that do not match the target action
+- delegates media bytes and interactive asset materialization to their focused services
+- atomically writes the planned document source
+- returns changed paths and Docs/search ids to a caller-owned rebuild boundary
+
+Not responsible for:
+
+- package provenance or schema validation
+- content-format conversion
+- collection collision state or package ordering
+- Docs/search rebuild invocation
 
 ## `docs-viewer/services/docs_import_preview.py`
 
