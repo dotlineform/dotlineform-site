@@ -52,7 +52,7 @@ Not responsible for:
 - source-config settings
 - builder implementation
 
-The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for compact and full-source packages. Persistent read-only review materialization consumes the same adapter. Supported collection requests dispatch to the focused collection planning or apply owners.
+The service resolves `configured_workspace_paths(repo_root).import_staging`, passes that explicit root through the workflow, and reports the marker-rooted drop-zone path without exposing user-specific absolute paths. `docs_import_content.py` defines the wrapper-neutral normalized record, and the documents Data Sharing adapter emits that record for import-supported returned packages. Persistent read-only review materialization consumes the same adapter. The active reviewed collection contract is `document-content`; the planned `document-full-source` profile is export-only. Supported collection requests dispatch to the focused collection planning or apply owners.
 
 ## `docs-viewer/services/docs_import_data_sharing_documents.py`
 
@@ -87,7 +87,7 @@ Ownership: owns safe staged-package resolution, trusted export association, raw-
 Responsibilities:
 
 - resolves a safe direct-child JSON/JSONL staged identity and matching trusted export metadata
-- normalizes compact and full-source rows through the Data Sharing documents adapter
+- normalizes rows from declared import-supported profiles through the Data Sharing documents adapter
 - preserves package order and represents every raw package record in typed planning state
 - distinguishes wrapper/schema blockers from explicit per-record contract errors
 

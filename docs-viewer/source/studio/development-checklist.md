@@ -2,7 +2,7 @@
 doc_id: development-checklist
 title: Development Checklist
 added_date: 2026-05-23
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: dev-home
 viewable: true
 ---
@@ -147,7 +147,7 @@ Documents data-sharing adapters:
 Docs Review:
 
 - [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) owns the durable `/docs-review/` product, package, editing, and authority boundary.
-- [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export, asset/dependency packaging, returned-package validation, and the validated review handoff.
+- [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) owns exact-Markdown export and asset/dependency packaging only. Keep its `supports_return_import` flag false and do not route it into returned-package review or Docs Import.
 - [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) owns the implemented staged-JSONL collection import contract, with explicit create, overwrite, or skip decisions in managed Docs Import.
 - Returned review packages are persistent derived workspace artifacts, not Docs Viewer scopes, and must not be registered in scope config.
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.

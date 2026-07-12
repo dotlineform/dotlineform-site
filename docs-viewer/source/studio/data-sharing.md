@@ -2,7 +2,7 @@
 doc_id: data-sharing
 title: Data Sharing
 added_date: "2026-05-13 17:16"
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: ""
 ---
 # Data Sharing
@@ -13,7 +13,7 @@ Data Sharing supports repeated knowledge-development cycles, not only one-way ex
 
 For full reviewed documents, that boundary ends at the immutable staged JSONL and its persistent read-only review projection. [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) owns collection import into a configured Docs Viewer scope, including explicit user choices to create, overwrite, or skip records. Existing Data Sharing summary and hierarchy apply actions remain narrow field-update workflows and do not establish ownership of that import.
 
-See [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) for the planned source-and-asset-complete round trip.
+See [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) for the planned exact-source JSONL and asset export. It is not a second returned-package or import workflow.
 See [Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision) for the cross-system purpose of that loop.
 
 Data Sharing is now hosted by the standalone Local Analytics app.

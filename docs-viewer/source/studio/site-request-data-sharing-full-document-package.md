@@ -1,40 +1,44 @@
 ---
 doc_id: site-request-data-sharing-full-document-package
-title: Data Sharing Full Document Package
+title: Data Sharing Full Document Export Package
 added_date: 2026-07-11
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
-# Data Sharing Full Document Package
+# Data Sharing Full Document Export Package
 
 ## Status
 
-In progress as the producer for the complete [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) round trip. Its validated-package interface is implemented by the review consumer; the remaining work is the real full-source export/intake producer.
+In progress as an export-only Data Sharing profile.
 
-The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export and returned-package services, and Docs Review sessions now use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. Full-package schema, export, intake, and validation remain to be implemented.
+The external workspace-root slice is complete: Data Sharing registry v3, Analytics/Data Sharing adapters, Docs Viewer export services, and related workspace services use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` without repo-local fallback paths. The full-source JSONL schema, dependency discovery, asset copying, and export transport remain to be implemented.
 
-Phase 1 owns full-fidelity export, returned-package intake, validation, and the persistent read-only review projection. It does not own the configured-source write. [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) specifies schema-aware collection import from the immutable staged JSONL.
+This request stops at export. It does not add returned-package intake, Docs Review publication, or configured-source import for the full-source package. The profile must declare `workflow.supports_return_import: false`.
 
-## Product Context: Iterative Knowledge Creation
+The implemented [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) reviewed-package collection workflow remains based on returned `document-content` JSON/JSONL.
 
-This package implements the portable round-trip part of [Knowledge System Vision](/docs/?scope=studio&doc=knowledge-system-vision). It is a repeatable knowledge-development workspace, not primarily a backup or one-off migration format.
+## Product Context
 
-Consequences for the package design:
+Data Sharing sometimes needs a portable package that preserves more than rendered document text. A complete source-and-asset export is useful for external analysis, archival reference, migration planning, visual review, and tasks that need the exact document syntax or its local dependencies.
 
-- repeated export/edit/return cycles are a primary use case
-- stable `doc_id` values preserve identity across evolving versions
-- hierarchy, summaries, links, references, media, and embedded content are part of the knowledge, not incidental decoration
-- source and asset provenance must distinguish current accepted state, exported state, and returned state without treating AI authorship as an error condition
-- complete, lossless source and dependency transport matters more than compactness
-- the format must support whole collections and newly proposed chapter documents, not only isolated field patches
+Consequences for the export design:
+
+- stable `doc_id` values preserve document identity
+- exact source Markdown preserves front matter, tokens, comments, raw supported embeds, and formatting
+- hierarchy, summaries, links, references, media, and embedded content remain available as structured context
+- source and asset provenance records the accepted state at export time without making assumptions about human or AI authorship
+- complete, deterministic source and dependency transport matters more than compactness
+- the format supports whole collections, not only isolated field patches
+
+This profile is not a second round-trip workflow. A package may be edited outside the application, but Data Sharing does not accept that full package back for review or import.
 
 ## Problem
 
 The current `document-content` Data Sharing profile exports document content derived from rendered Docs Viewer HTML. Markdown output is produced by converting that HTML back to Markdown.
 
-That projection is useful for analysis, summaries, hierarchy proposals, and text-oriented tasks, but it is not a source-faithful round trip. Rendering may resolve or discard:
+That projection is useful for analysis, rewriting, summaries, hierarchy work, and the implemented reviewed-package collection workflow. It is not source-faithful because rendering may resolve or discard:
 
 - media tokens and their original attributes
 - semantic-reference tokens
@@ -44,97 +48,84 @@ That projection is useful for analysis, summaries, hierarchy proposals, and text
 - comments and source formatting
 - referenced media, downloadable files, scripts, styles, and other local dependencies
 
-The returned JSON therefore cannot safely become a complete review source or canonical replacement.
+`document-content` may still be used to overwrite canonical source through managed Docs Import. That is an explicit replacement with the returned rendered-derived content, not restoration of the original source file. When source-only constructs or media references are needed, the user remains responsible for adding the appropriate tokens to the returned content before or after import.
+
+A separate profile is therefore useful when the external task needs the exact current source and its referenced assets, even though that richer package will not be imported automatically.
 
 ## Outcome
 
-Add a separate Data Sharing profile that exports a complete portable document workspace:
+Add an export-only Data Sharing profile that writes a complete portable document workspace:
 
 - one JSONL file containing every selected document's exact canonical Markdown, including front matter and source tokens
 - one easy-to-parse document record per line
 - per-document media, link, reference, and embedded-content manifests inside the JSONL records
 - referenced local images and downloadable files
 - supported interactive HTML and its resolvable local dependencies
-- package-level manifests and trusted export provenance
+- package-level manifests and export provenance
 - external task instructions and package context
 - optional asset bundling for transport where the target service supports it
 
-The external service may edit Markdown, reorganize parent relationships, add new chapter documents, replace images, add supported assets, and modify packaged interactive content.
-
-On return, Data Sharing safely stages and validates the complete package, regenerates inventories from the actual files, and exposes a validated folder to Docs Review.
+The output is useful as a faithful external snapshot. No return schema, response layout, mutation intent, validation-to-preview pipeline, or automatic asset promotion is part of this request.
 
 ## Decision
 
-Create a new full-package profile rather than changing the meaning of the existing `document-content` JSON/JSONL profile.
+Create a new `document-full-source` profile rather than changing the meaning of the existing `document-content` JSON/JSONL profile.
 
-The new profile still uses JSONL because combining many documents into one uploadable, machine-readable text file is the central Data Sharing capability. The difference is that each row contains the exact canonical Markdown source rather than content reconstructed from rendered HTML.
+The new profile uses JSONL because combining many documents into one uploadable, machine-readable text file is the central Data Sharing capability. Each row contains the exact canonical Markdown source rather than content reconstructed from rendered HTML.
 
 JSONL is the default and primary format. A single JSON file containing the same header metadata and document-record array may remain an optional supported target, but the workflow must never require one Markdown upload per document.
 
 Images and other binary assets accompany the JSONL separately and are mapped through embedded and package-level manifests. A folder is the local workspace form. An archive may be offered as an optional transport convenience only when the target service is known to support it; ZIP support is not a requirement for the core workflow.
 
-For reviewed documents intended for import, prefer embedding new or replaced raster images directly in returned Markdown as supported data URLs when the external editing surface can supply them. Data Sharing must validate their package size and content shape, but it does not need to promote them into canonical media paths. The downstream Docs Viewer importer already has a planning/materialization path for PNG, JPEG, WebP, and GIF data URLs. Separate asset files remain necessary for existing packaged dependencies, attachments, interactive content, and unsupported inline forms.
+The profile is export-only:
+
+- set `workflow.supports_return_import: false`
+- do not register a returned-package import type or review/apply action
+- do not publish the export as a Docs Review package
+- do not treat returned JSONL or asset files as trusted inputs
+- do not add canonical-source or public-asset writes
 
 ## Ownership Boundary
 
-### Data Sharing
+### Data Sharing Export
 
 Data Sharing owns:
 
 - document selection and descendant inclusion
 - exact canonical-source serialization into one JSONL document stream
 - source and asset dependency discovery
-- package layout and schema
+- package layout and export schema
 - external task/context files
-- export manifests and trusted internal provenance
+- export manifests and internal provenance
 - JSONL plus asset-folder output
-- returned-package staging and safe extraction
-- returned source, hierarchy, asset, link, and embed validation
-- regenerated returned-package inventories
-- handoff to Docs Review
+- optional capability-gated archive creation
+- clear classification of copied, remote, missing, unresolved, and unsupported dependencies
 
-### Docs Review
+### Existing Reviewed-Package Workflow
 
-Docs Review owns only:
+The existing reviewed-package workflow remains separate:
 
-- listing validated returned package folders
-- rendering the persistent package-local projection
-- initial build or repair of missing derived output
-- package asset-inventory display
-- canonical counterpart links and manual comparison
+- `document-content` provides the returned JSON/JSONL collection
+- Data Sharing stages and validates that compact package for Docs Review
+- Docs Review remains a read-only inspection surface
+- managed Docs Import owns explicit create, overwrite, and skip decisions
+- the user adds or restores media tokens when rendered-derived returned content needs them
 
-Docs Review does not discover export dependencies, validate transport archives, edit preview source, or write configured source.
-
-### Docs Viewer Import Handoff
-
-The immutable staged JSONL associated with a reviewed package may later be handed to managed Docs Viewer Import as a document collection.
-
-Data Sharing supplies:
-
-- a trusted validated package identity
-- the immutable staged JSONL identity
-- validated record and inventory contracts
-- provenance and validation diagnostics
-
-Docs Viewer Import owns target-scope selection, complete-package planning, front-matter normalization, explicit create/overwrite/skip choices, parent mapping, body-link pass-through, embedded-image materialization, configured source writes, and rebuilds. It reads the staged JSONL rather than the derived preview Markdown.
-
-Docs Review may link to that managed import flow, but it must not acquire canonical mutation endpoints. The detailed reuse boundary is specified in [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec).
+The `document-full-source` export is not another input to that workflow.
 
 ## External Workspace Root
 
-Packages are user-workspace artifacts outside the repository:
+Full export packages are user-workspace artifacts outside the repository:
 
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
   exports/
-  import-staging/
-  import-preview/
   meta/
 ```
 
 No phase falls back to repo-local `var/analytics/data-sharing/...` paths.
 
-The shared workspace resolver validates `DOTLINEFORM_PROJECTS_BASE_DIR`, projects marker-rooted display paths, and supplies explicit resolved roots to Data Sharing and Docs Review services. The planned Docs Import slice will reuse the same adapter and its existing `import_staging` root for every supported import format.
+The shared workspace resolver validates `DOTLINEFORM_PROJECTS_BASE_DIR`, projects marker-rooted display paths, and supplies explicit resolved roots to Data Sharing services.
 
 ## Proposed Package Layout
 
@@ -145,7 +136,6 @@ The shared workspace resolver validates `DOTLINEFORM_PROJECTS_BASE_DIR`, project
   context/
     instructions.md
     package-context.json
-    returned-package.schema.json
   assets/
     media/
     files/
@@ -158,24 +148,24 @@ The shared workspace resolver validates `DOTLINEFORM_PROJECTS_BASE_DIR`, project
     embedded-content.json
 ```
 
-`documents.jsonl` is the primary external editing payload and contains the complete textual corpus. Assets are separate files so ChatGPT can inspect or replace them without encoding binary data into JSONL.
+`documents.jsonl` is the primary external text payload and contains the complete textual corpus. Assets are separate files so an external service can inspect them without binary data being encoded into JSONL.
 
 The exact supporting subdirectory names may be refined during schema work, but the single JSONL text payload, transferable assets, context, and package-level inventories must remain separate concerns.
 
 ## Canonical JSONL Contract
 
-The export contains one header row followed by one row per selected document. JSONL line order should follow deterministic source/tree order.
+The export contains one header row followed by one row per selected document. JSONL line order follows deterministic source/tree order.
 
 Illustrative shape:
 
 ```json
-{"record_type":"data_sharing_header","schema_version":"documents_full_package_v1","export_id":"...","scope":"library","profile_id":"document-full-source","document_count":50}
+{"record_type":"data_sharing_header","schema_version":"documents_full_export_v1","export_id":"...","scope":"library","profile_id":"document-full-source","document_count":50}
 {"record_type":"document","doc_id":"example","source_path":"example.md","source_sha256":"...","document":{"title":"Example","parent_id":""},"canonical_markdown":"<exact UTF-8 Markdown file including front matter and source tokens>","assets":[{"asset_id":"asset-001","kind":"image","package_path":"assets/media/example.webp","source_token":"<exact token text>","sha256":"..."}]}
 ```
 
-On export, `canonical_markdown` is the authoritative editable field for that row. It contains the complete UTF-8 source file, including front matter, body Markdown, media tokens, semantic-reference tokens, raw allowed embeds, comments, and formatting. JSON escaping is transport encoding only; decoding the string must reproduce the original source bytes used for `source_sha256`.
+`canonical_markdown` is the authoritative source field for that row. It contains the complete UTF-8 source file, including front matter, body Markdown, media tokens, semantic-reference tokens, raw allowed embeds, comments, and formatting. JSON escaping is transport encoding only; decoding the string must reproduce the original source bytes used for `source_sha256`.
 
-Extracted `document` metadata makes selection, hierarchy analysis, and prompt use easier. When returned `canonical_markdown` is present, validation reparses it and does not trust duplicated title, parent, or summary fields when they disagree with the returned source.
+Extracted `document` metadata makes selection, hierarchy analysis, and prompt use easier. It does not override `canonical_markdown`.
 
 Each document row records at least:
 
@@ -185,22 +175,11 @@ Each document row records at least:
 - title and `parent_id`
 - source SHA-256
 - source byte count
-- existing/new classification at export time
 - canonical counterpart URL
 - exact `canonical_markdown`
-- the document's asset/link/reference/embed manifest entries
+- the document's asset, link, reference, and embed manifest entries
 
 The `doc_id` and parsed front matter must agree on export. The row record, not filename inference, is authoritative for package identity.
-
-The returned JSONL must retain the complete package record set, but it does not need to repeat body content for every record. Content presence has explicit mutation meaning:
-
-- returned `canonical_markdown` or compact `content` present: validate and use that returned content
-- content omitted for a document from the trusted original export: later import applies only explicitly returned allowed front-matter changes to the current canonical source; use the exact exported source only to materialize a readable Docs Review projection
-- content omitted for a new structural document: require explicit `doc_id`, title, and allowed hierarchy/front-matter details, then plan a standard new document with an empty body and normal target-scope defaults
-
-Omitting content is not a request to erase or restore content. The normalized record must retain a content intent such as replace, preserve-existing, or empty-new so preview rehydration cannot turn a hierarchy-only return into a body overwrite. Preserve-existing apply reads the current canonical source and leaves its body and unrelated front matter unchanged.
-
-A returned package that omits content for an existing record must remain safely associated with the trusted original export so the review projection can be rehydrated. Missing content is blocking only when the record is neither resolvable to that trusted export nor a valid explicitly described new structural document. Duplicate identities remain invalid.
 
 ## Asset And Embedded-Content Contract
 
@@ -230,117 +209,73 @@ For each packaged asset, record:
 
 Every document row embeds the manifest entries for assets and other constructs referenced by that document. Package-level inventories provide deduplicated cross-document views over the same asset IDs.
 
-Exact Markdown remains unchanged inside `canonical_markdown`. Package-local copies are connected to source tokens through stable asset IDs, recorded token text, package paths, and the package-aware preview resolver.
+Exact Markdown remains unchanged inside `canonical_markdown`. Package-local copies are connected to source tokens through stable asset IDs, recorded token text, package paths, and inventory records. The exporter does not rewrite canonical source tokens to package-relative paths.
 
-An external service may replace an existing packaged asset, add a new supported asset, or update Markdown to reference it. Returned validation rescans the package and creates a new trustworthy inventory; it does not require ChatGPT to maintain manifest JSON perfectly.
+Remote URLs are inventoried but not downloaded silently. Dynamic or unresolved script dependencies produce explicit warnings rather than an incomplete package presented as fully portable.
 
-Remote URLs are inventoried but not downloaded silently. Dynamic or unresolved script dependencies must produce explicit warnings or blockers rather than an incomplete package presented as portable.
+## Export Provenance
 
-## Trusted Provenance
-
-The transferable JSONL header and `manifest.json` are useful context but become untrusted after the package leaves the application.
-
-Data Sharing retains a separate trusted export record under `meta/`, keyed by `export_id`, containing:
+Data Sharing retains an internal export record under `meta/`, keyed by `export_id`, containing:
 
 - export schema and profile version
 - source scope and selection
-- original document and asset hashes
+- document and asset hashes
 - `documents.jsonl` and package manifest hashes
 - generation time
-- source/config revisions needed for later comparison
+- source/config revisions useful for audit or later comparison
+- `supports_return_import: false`
 
-Returned intake uses the trusted record for provenance and regenerates returned inventories from actual files.
+This metadata records how the export was created. It does not authorize returned-package intake.
 
 ## External Task Context
 
-`context/instructions.md` should explain in plain language that `documents.jsonl` contains the complete editable corpus and that supporting assets are mapped by the manifests in each document row.
+`context/instructions.md` explains in plain language that `documents.jsonl` contains the complete exact source corpus and that supporting assets are mapped by the document and package manifests.
 
-The task may explicitly authorize the external service to:
+The context may authorize the external service to inspect, analyze, reorganize, or transform copies of the exported materials. It must also explain that:
 
-- expand and reorganize prose
-- change titles, summaries, and `parent_id`
-- create new chapter documents
-- preserve, reposition, replace, or remove existing media
-- add new images or supported files
-- update links and semantic references
-- edit packaged interactive content when requested
+- the package is an export snapshot, not a supported return format
+- canonical source and public assets are not updated from this package
+- a later text-only import should use the existing `document-content` reviewed-package workflow
+- media tokens needed by imported content remain a user-managed source edit
+- package files contain no credentials or environment-specific absolute paths
 
-It should also require:
-
-- valid source front matter and unique `doc_id` values
-- package-relative asset containment
-- no symlinks or absolute filesystem paths
-- no secrets, credentials, or environment-specific paths
-- a returned `documents.jsonl` plus any changed/new asset files in the declared response layout
-
-## Returned-Package Intake
-
-Data Sharing intake must treat all returned files as untrusted.
-
-Validation includes:
-
-- JSONL header/schema validation and one-object-per-line parsing
-- `canonical_markdown` string validation for every content-bearing document row
-- explicit content-intent validation for content-bearing, preserve-existing, and empty-new rows
-- configurable total size, file count, and per-file size limits
-- safe archive extraction with traversal, absolute-path, device-file, symlink, nesting, and compression-ratio limits only when optional archive intake is enabled
-- allowed source and asset types
-- duplicate/case-colliding path detection
-- returned `canonical_markdown` front-matter parsing where present and unique `doc_id` validation
-- complete hierarchy validation within the returned package context
-- asset-reference and missing-file checks
-- link/reference inventory regeneration
-- interactive-content and script inventory regeneration
-- no execution of returned scripts during intake
-- concise errors, warnings, and package counts
-
-Successful intake materializes persistent read-only `source/<doc-id>.md` inside `import-preview/<package_id>/`, copies validated asset files, and writes regenerated manifests for Docs Review. Content-bearing rows use validated returned content. Preserve-existing rows use the trusted exported source for preview while retaining their non-content mutation intent for later import. New structural rows without content materialize a valid empty-body source from their supplied details. This materialization is a review-workspace projection; it does not write canonical source or public assets and is not the later import input.
-
-The Docs Review consumer requires the trusted handoff `manifest.json` to use `schema_version: docs_review_validated_package_v1`, carry the matching safe `package_id`, set `status: validated`, identify `source_scope`, and optionally identify `default_doc_id` and a display `title`. Its regenerated `inventories/assets.json` uses asset records with `kind`, the source `token_path`, and a safe `package_path` under `assets/`. These are handoff fields owned by Data Sharing intake, not external-service assertions.
-
-The compact `document-content` Content review action now exercises this handoff for a rendered-derived, text-only package: it validates the materialized Markdown set in memory, then writes the timestamped package and trusted manifest. Existing timestamped package folders are rejected rather than replaced. A document whose parent is outside a partial compact selection is rooted in the derived projection with a preserved validation warning so the package remains buildable. This proves the live producer/consumer seam, but it does not satisfy the full-package contract. The `document-full-source` export must still provide exact `canonical_markdown` plus copied asset/dependency inventories, and returned intake must perform the complete package checks described here; its hierarchy validation remains complete and strict.
-
-## Review Rendering And Script Safety
-
-Docs Review renders the validated package through a synthetic Docs Viewer builder configuration and a package-aware asset resolver.
-
-Returned interactive HTML and scripts remain untrusted. Preview must use the existing sandbox boundary and should not grant same-origin privileges, canonical write services, repository paths, or management capabilities to packaged content.
-
-Any stronger network or content-security policy should be decided during implementation after auditing current supported interactive content.
+No returned response schema or required returned folder layout is generated for this profile.
 
 ## Relationship To Existing Profiles
 
-Keep `document-content` for compact JSON/JSONL tasks such as:
+Keep `document-content` for compact JSON/JSONL tasks and the reviewed-package import workflow, including:
 
-- analysis and rewriting suggestions
+- analysis and rewriting
 - summary creation
 - hierarchy proposals
 - search enrichment
 - text-oriented external reporting
+- explicit managed replacement of canonical document content
 
-Do not treat its rendered-derived `content` field as canonical Markdown.
+Its rendered-derived `content` field is not an exact copy of canonical Markdown. That limitation is informational rather than a prohibition on overwrite.
 
-Use the new `document-full-source` JSONL profile when the external service needs the complete exact source corpus, media manifests, links, embedded assets, or the ability to return a complete previewable workspace.
+Use `document-full-source` when the external task needs the exact source corpus, media manifests, links, or embedded assets and no automated return/import is required.
 
-Both profiles preserve the core Data Sharing benefit of sending many documents in one JSONL file. They differ in content contract:
+Both profiles preserve the core Data Sharing benefit of sending many documents in one JSONL file. They differ in content and workflow contract:
 
-- `document-content`: compact rendered-derived content for analysis and selected-field workflows
-- `document-full-source`: exact complete canonical Markdown plus asset/dependency manifests for full collection editing
+- `document-content`: compact rendered-derived content with reviewed return/import support
+- `document-full-source`: exact canonical Markdown plus asset/dependency manifests, export-only
 
 ## Implementation Steps
 
 ### 1. Supported-Construct Inventory
 
 - enumerate source tokens, Markdown constructs, local asset types, and allowed embedded content
-- identify dependency rules and unsupported/dynamic cases
+- identify dependency rules and unsupported or dynamic cases
 - assemble representative fixtures containing every supported class
 
-### 2. Package Schema And Workspace Resolver
+### 2. Export Schema And Profile
 
 - define the JSONL header, document-row, context, and inventory schemas
-- define trusted export metadata
-- implement external workspace-root resolution — complete
-- define JSONL-plus-assets transport and optional archive rules
+- define internal export metadata
+- add the `document-full-source` prepare profile
+- set `workflow.supports_return_import: false`
+- keep output below the existing external workspace export root
 
 ### 3. Source-Faithful Export
 
@@ -358,60 +293,44 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 
 ### 5. External Context And Transport
 
-- generate task instructions and response schema
-- write `documents.jsonl` and the asset folder atomically
+- generate export instructions and package context without a return schema
+- write `documents.jsonl`, manifests, and the asset folder atomically
 - optionally create a deterministic safe archive only for confirmed target surfaces
-- retain trusted metadata separately
+- retain internal export metadata separately
 
-### 6. Returned Intake And Validation
+### 6. Export-Only Boundary Cleanup
 
-- accept returned JSONL plus separate asset files, with optional safe archive intake
-- parse the complete returned record set, preserve explicit content intent, and materialize persistent read-only preview Markdown
-- regenerate inventories from returned JSONL and actual asset files
-- validate returned or rehydrated Markdown, hierarchy, assets, links, and embeds
-- create the Docs Review handoff folder
-
-### 7. Docs Review Integration
-
-- expose validated package records
-- provide package-aware source and asset roots to the review builder
-- verify representative original and modified packages render correctly
-
-### 8. Docs Viewer Import Handoff
-
-- hand the immutable staged JSONL identity to the separate managed Docs Viewer flow
-- share the JSONL parser/normalizer between preview materialization and import
-- keep persistent preview Markdown read-only and outside import authority
-- support explicit create, overwrite, or skip decisions for records
-- reuse Docs Import data-URL media planning and materialization
+- do not map `document-full-source` to a returned import type or review action
+- keep returned-package listing blocked by `supports_return_import: false`
+- remove unused `document-full-source` intake, review-materialization, and import branches and their dedicated tests when they are not required by another active contract
+- keep the implemented `document-content` reviewed-package collection workflow unchanged
 
 ## Acceptance Criteria
 
-Phase 1 is complete when:
+The request is complete when:
 
 - all selected canonical Markdown is exported without content transformation in one JSONL file
 - each exported document row contains complete `canonical_markdown` and its per-document asset/dependency manifest
 - all supported referenced local assets are copied or explicitly classified
-- manifests and trusted export metadata contain hashes and provenance
+- manifests and internal export metadata contain hashes and provenance
 - the JSONL can be sent to ChatGPT as the single textual corpus while mapped asset files are supplied separately
 - optional archive transport is capability-gated rather than required
-- returned packages are safely extracted and validated without executing content
-- returned rows may omit content without error when they resolve to trusted exported source or describe a valid new structural document
-- hierarchy-only returns surgically update allowed front matter on current canonical source rather than replacing it with exported, preview, or empty content
-- returned JSONL is materialized into persistent read-only preview Markdown only after validation
-- changed/new Markdown and assets are reflected in regenerated inventories
-- a validated returned package builds successfully in Docs Review
-- the entire workflow uses `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`
-- no phase writes canonical source or public assets
-- the validated package exposes enough safe identity and inventory context for the separate Docs Viewer import request
+- the package is written below `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/`
+- the profile records `supports_return_import: false`
+- staging the export does not make it actionable in returned-package review or Docs Import
+- no phase writes canonical source, public assets, Docs Review packages, or import-preview projections
+- existing `document-content` reviewed-package overwrite behavior remains supported and is described without a canonical-overwrite prohibition
 
 ## Non-Goals
 
 - replacing the compact `document-content` profile
-- configured-scope import in this request
-- configured-source create, overwrite, skip, merge, or delete behavior
+- returned full-package staging, extraction, validation, or repair
+- materializing full-package Markdown for Docs Review
+- importing `document-full-source` JSON/JSONL into a configured scope
+- automatic return or promotion of images, attachments, or interactive assets
+- configured-source create, overwrite, skip, merge, or delete behavior for this profile
 - implementing canonical mutation inside Docs Review
 - silently fetching remote assets
 - guaranteeing portability for unresolved dynamic script dependencies
-- executing returned scripts during intake
+- executing exported or externally edited scripts
 - Git commit or push

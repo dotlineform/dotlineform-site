@@ -2,7 +2,7 @@
 doc_id: knowledge-system-vision
 title: Knowledge System Vision
 added_date: 2026-07-11
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: architecture
 viewable: true
 ---
@@ -118,7 +118,7 @@ This is a loop, not a one-time publication pipeline.
 - Preserve stable document and catalogue identities across revisions.
 - Prefer typed semantic references to duplicated catalogue facts when live projection is intended.
 - Keep generated content traceable to its source data and projection rules.
-- Preserve source Markdown, media, links, and embedded assets in complete round trips.
+- Preserve source Markdown, media, links, and embedded assets in complete exports; keep accepted text-only returns explicit about any source-only constructs they omit.
 - Treat returned AI work as untrusted until it has been validated and accepted.
 - Keep preview/review authority separate from canonical mutation authority.
 - Make summaries, hierarchy, and relationships first-class knowledge rather than navigation afterthoughts.
@@ -131,7 +131,7 @@ The complete vision is not implemented yet. Current and planned work moves towar
 - clearer documentation scopes and user/architecture guidance
 - Docs Viewer app-context, provider, route-feature, and view/mode/control refactors
 - source-aware semantic token expansion
-- full source-and-asset Data Sharing packages
+- full source-and-asset Data Sharing export packages
 - isolated returned-package preview in Docs Review
 - schema-aware Docs Viewer collection import from immutable staged JSONL
 - summary-aware and later broader content-aware search
@@ -142,7 +142,7 @@ Each project should remain independently reviewable. The vision explains why the
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Data Sharing](/docs/?scope=studio&doc=data-sharing)
-- [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
+- [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
 - [Docs Review](/docs/?scope=studio&doc=docs-viewer-review)
 - [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)
 - [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap)

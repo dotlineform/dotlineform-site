@@ -40,7 +40,7 @@ data-sharing/adapters/documents/
 
 `prepare.py` delegates prepare operations to the document-record family.
 
-`import_content.py` owns the explicit compact/full-source wrapper mapping into the generic Docs Import `ImportContent` record. Data Sharing identity is adapter provenance and is not required by the generic record.
+`import_content.py` owns Data Sharing wrapper mapping into the generic Docs Import `ImportContent` record. The active reviewed-package contract is compact `document-content`; Data Sharing identity is adapter provenance and is not required by the generic record. The lower-level `document-full-source` parsing branch is not an enabled product workflow and is scheduled for removal by the export-only package request.
 
 `returned.py` delegates returned-package list, review, and apply operations to the document-record family and exposes the documents import-content normalizer.
 
@@ -75,7 +75,7 @@ The adapter adds Data Sharing context and summary text, and logs a `docs-export`
 ## Returned Packages
 
 Returned packages are staged under the shared Data Sharing import-staging root.
-The documents adapter delegates staged-file parsing and persistent review-package generation to Docs Viewer returned-package helpers. Both compact and full-source review materialization normalize rows through `import_content.py` before producing read-only Markdown.
+The documents adapter delegates staged-file parsing and persistent review-package generation to Docs Viewer returned-package helpers. Returned `document-content` materialization normalizes rows through `import_content.py` before producing read-only Markdown.
 
 Returned-record loading produces document-oriented review rows from the selected staged file.
 Review produces one Markdown review document for the selected rows.
@@ -94,7 +94,9 @@ The manifest uses `docs_review_validated_package_v1`, a matching `package_id`, `
 Those folders are disposable inputs for `/docs-review/`.
 They are not Docs Viewer scopes, are not registered in scope config, and do not mutate canonical source Markdown. Timestamped package folders are immutable; repeating the action for the same export is rejected.
 
-The `document-content` package remains a rendered-derived, text-only projection. The same adapter also maps the declared `document-full-source` schema by parsing exact `canonical_markdown` front matter once and keeping it out of downstream body content. The full-package producer remains responsible for asset/dependency inventories and the complete intake validation contract.
+The `document-content` package remains a rendered-derived, text-only projection. Managed Docs Import may use it as an explicit canonical-source replacement, with missing source-only constructs and media tokens left for user-managed editing.
+
+The planned `document-full-source` profile is an exact-source and asset export with `supports_return_import: false`. Existing lower-level parsing branches for that profile do not constitute supported intake and should be removed when the export profile is implemented.
 
 Current apply actions are:
 

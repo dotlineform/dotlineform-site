@@ -62,7 +62,7 @@ Dispositions are proposals for later focused batches. `Focus` means narrow the d
 | Runtime and management coordinator ownership | [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) | [Overview](/docs/?scope=studio&doc=docs-viewer-overview), [Management Scripts Overview](/docs/?scope=studio&doc=scripts-docs-management-scripts) | architecture roadmap | Phase 5 should update module ownership only for responsibilities actually extracted. |
 | CSS surfaces | [CSS Cascade Design](/docs/?scope=studio&doc=docs-viewer-css-cascade-design) | [Runtime Surfaces](/docs/?scope=studio&doc=docs-viewer-runtime-surfaces) | architecture roadmap phase 9 | Current owner exists; no broad CSS consolidation is a phase 1-5 prerequisite. |
 | Refactor checks and public isolation | [Development Checklist](/docs/?scope=studio&doc=development-checklist) and [Testing](/docs/?scope=studio&doc=testing) | [Runtime](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) | architecture roadmap | Use pure module contracts, static module graphs, and focused service checks; avoid UI choreography coverage. |
-| Docs Review product boundary | [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review), [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) | review app context and returned-package service | Current local workflow; configured-source apply remains outside Docs Review. |
+| Docs Review product boundary | [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review), [Returned Package Review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review) | review app context and returned-package service | Current local workflow; configured-source apply remains outside Docs Review. |
 | Reviewed-package admission | [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import), [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) | current staged-JSONL collection import with persistent read-only review | Docs Viewer Import owns explicit create/overwrite/skip actions; Data Sharing ends at staging, validation, and review projection. |
 
 ## Contradictions, Overlaps, And Gaps
@@ -170,7 +170,7 @@ The first summary batch should cover the Docs Viewer entry point, the phase 1-5 
 
 | document | type | status | present authority | disposition | summary |
 | --- | --- | --- | --- | --- | --- |
-| `site-request-data-sharing-full-document-package` | change request | proposed | Exact Markdown package and validated-return prerequisite | Keep active and separate from the runtime foundation refactor. | missing |
+| `site-request-data-sharing-full-document-package` | change request | active | Exact Markdown and asset/dependency export | Keep active as export-only work, separate from Docs Review and configured-source import. | missing |
 | `site-request-docs-document-content-markdown-export` | change request | historical | Completed Markdown-export decision and outcome | Transfer durable package behavior to export owners, then retain as superseded history. | missing |
 | `site-request-docs-viewer-architecture-refactor-roadmap` | change request | active | Foundation refactor sequence and guardrails | Keep durable outcomes and verification evidence directly in the roadmap. | missing |
 | `site-request-docs-viewer-semantic-reference-editor` | change request | mixed | Draft V2 goals beside implemented V1 behavior | Reconcile with current editor/implementation owners, then retain only genuinely proposed work. | missing |
@@ -183,7 +183,7 @@ The first summary batch should cover the Docs Viewer entry point, the phase 1-5 
 4. **Import/export/media**: separate workflow guidance from package, service, parser, and path/security reference.
 5. **Semantic references**: reconcile report, editor, implementation, and request status.
 6. **Management reference summaries**: add concise summaries to endpoint and script-inventory documents after their owner boundaries stabilize.
-7. **Change-request hygiene**: transfer implemented outcomes, mark superseded requests, and keep Docs Review and full-package work explicitly separate from phases 1-5.
+7. **Change-request hygiene**: transfer implemented outcomes, mark superseded requests, and keep Docs Review and full-package export work explicitly separate from phases 1-5.
 
 ## D0 Completion Check
 

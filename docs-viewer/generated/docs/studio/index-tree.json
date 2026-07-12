@@ -301,20 +301,9 @@
         },
         {
           "doc_id": "site-request-data-sharing-full-document-package",
-          "title": "Data Sharing Full Document Package",
+          "title": "Data Sharing Full Document Export Package",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
           "ui_status": "in-progress"
-        },
-        {
-          "doc_id": "site-request-data-sharing-import-content",
-          "title": "Data Sharing Import Content",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-import-content.json"
-        },
-        {
-          "doc_id": "site-request-docs-document-content-markdown-export",
-          "title": "Docs Document Content Markdown Export",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-document-content-markdown-export.json",
-          "ui_status": "done"
         },
         {
           "doc_id": "site-request-docs-viewer-architecture-refactor-roadmap",
@@ -1267,5 +1256,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-12T13:52:48Z"
+  "generated_at": "2026-07-12T14:51:39Z"
 }

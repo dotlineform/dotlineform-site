@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4c3bf9228a943809609b27af58ed0a11",
-    "generated_at_utc": "2026-07-12T13:52:49Z",
-    "count": 235
+    "version": "blake2b-a71597a1fac19d8330271795fb5e68b5",
+    "generated_at_utc": "2026-07-12T14:53:27Z",
+    "count": 233
   },
   "entries": [
     {
@@ -798,10 +798,10 @@
       "kind": "doc",
       "title": "Knowledge System Vision",
       "href": "/docs/?scope=studio&doc=knowledge-system-vision",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-07-11 • Architecture",
+      "display_meta": "2026-07-12 • Architecture",
       "search_terms": [
         "knowledge-system-vision",
         "knowledge",
@@ -809,12 +809,12 @@
         "vision",
         "knowledge system vision",
         "architecture",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "knowledge-system-vision knowledge system vision knowledge system vision architecture 2026-07-11 2026 07 11"
+      "search_text": "knowledge-system-vision knowledge system vision knowledge system vision architecture 2026-07-12 2026 07 12"
     },
     {
       "id": "data-models-projection-contract",
@@ -1257,12 +1257,12 @@
     {
       "id": "site-request-data-sharing-full-document-package",
       "kind": "doc",
-      "title": "Data Sharing Full Document Package",
+      "title": "Data Sharing Full Document Export Package",
       "href": "/docs/?scope=studio&doc=site-request-data-sharing-full-document-package",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
+      "display_meta": "2026-07-12 • Change Requests",
       "search_terms": [
         "site-request-data-sharing-full-document-package",
         "site",
@@ -1272,73 +1272,17 @@
         "full",
         "document",
         "package",
-        "data sharing full document package",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-11",
-        "2026",
-        "07",
-        "11"
-      ],
-      "search_text": "site-request-data-sharing-full-document-package site request data sharing full document package data sharing full document package change requests change requests 2026-07-11 2026 07 11"
-    },
-    {
-      "id": "site-request-data-sharing-import-content",
-      "kind": "doc",
-      "title": "Data Sharing Import Content",
-      "href": "/docs/?scope=studio&doc=site-request-data-sharing-import-content",
-      "last_updated": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-11 • Change Requests",
-      "search_terms": [
-        "site-request-data-sharing-import-content",
-        "site",
-        "request",
-        "data",
-        "sharing",
-        "import",
-        "content",
-        "data sharing import content",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-11",
-        "2026",
-        "07",
-        "11"
-      ],
-      "search_text": "site-request-data-sharing-import-content site request data sharing import content data sharing import content change requests change requests 2026-07-11 2026 07 11"
-    },
-    {
-      "id": "site-request-docs-document-content-markdown-export",
-      "kind": "doc",
-      "title": "Docs Document Content Markdown Export",
-      "href": "/docs/?scope=studio&doc=site-request-docs-document-content-markdown-export",
-      "last_updated": "2026-06-29",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-06-29 • Change Requests",
-      "search_terms": [
-        "site-request-docs-document-content-markdown-export",
-        "site",
-        "request",
-        "docs",
-        "document",
-        "content",
-        "markdown",
+        "data sharing full document export package",
         "export",
-        "docs document content markdown export",
         "change requests",
         "change",
         "requests",
-        "2026-06-29",
+        "2026-07-12",
         "2026",
-        "06",
-        "29"
+        "07",
+        "12"
       ],
-      "search_text": "site-request-docs-document-content-markdown-export site request docs document content markdown export docs document content markdown export change requests change requests 2026-06-29 2026 06 29"
+      "search_text": "site-request-data-sharing-full-document-package site request data sharing full document package data sharing full document export package export change requests change requests 2026-07-12 2026 07 12"
     },
     {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
@@ -1461,19 +1405,19 @@
       "kind": "doc",
       "title": "Data Sharing",
       "href": "/docs/?scope=studio&doc=data-sharing",
-      "last_updated": "2026-07-11",
-      "display_meta": "2026-07-11",
+      "last_updated": "2026-07-12",
+      "display_meta": "2026-07-12",
       "search_terms": [
         "data-sharing",
         "data",
         "sharing",
         "data sharing",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "data-sharing data sharing data sharing 2026-07-11 2026 07 11"
+      "search_text": "data-sharing data sharing data sharing 2026-07-12 2026 07 12"
     },
     {
       "id": "studio-data-sharing",
@@ -1629,10 +1573,10 @@
       "kind": "doc",
       "title": "Documents Returned Package Review",
       "href": "/docs/?scope=studio&doc=data-sharing-documents-returned-package-review",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-07-11 • Data Sharing",
+      "display_meta": "2026-07-12 • Data Sharing",
       "search_terms": [
         "data-sharing-documents-returned-package-review",
         "data",
@@ -1643,12 +1587,12 @@
         "review",
         "documents returned package review",
         "data sharing",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-07-11 2026 07 11"
+      "search_text": "data-sharing-documents-returned-package-review data sharing documents returned package review documents returned package review data sharing 2026-07-12 2026 07 12"
     },
     {
       "id": "data-sharing-tags-adapter-structure",
@@ -1724,10 +1668,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-11 • Dev Home",
+      "display_meta": "2026-07-12 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1736,12 +1680,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-11 2026 07 11"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-12 2026 07 12"
     },
     {
       "id": "development-workflow",

@@ -36,7 +36,7 @@ The sequence is:
 9. implement Docs Review as a separate product slice
 10. continue the broader documentation rewrite and non-blocking maintainability work as separately tracked workstreams
 
-Do not mix full-package export/intake, review-package endpoints, review UI, or returned-package editing into the foundation refactor.
+Do not mix full-package export, review-package endpoints, review UI, or returned-package editing into the foundation refactor.
 
 ## Scope
 
@@ -900,13 +900,13 @@ Verification evidence:
 - the four-check `docs-viewer-smoke` profile passed at `var/admin/test-runs/docs-review-readiness-checkpoint/summary.md`
 - the three-check docs test/build/search profile passed at `var/admin/test-runs/docs-review-readiness-checkpoint-docs/summary.md`
 
-The fixture-backed Phase 6 consumer work identified at this checkpoint is now complete. Connecting the real Data Sharing export/intake producer remains the only round-trip dependency recorded here.
+The fixture-backed Phase 6 consumer work identified at this checkpoint is now complete. The implemented `document-content` producer and managed collection importer provide the real reviewed round trip. The full source-and-asset export proceeds independently and is not a Docs Review dependency.
 
 ## Phase 6: Docs Review
 
 Implement [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) as its own feature project after the readiness checkpoint.
 
-Status: complete for the fixture-backed validated-package consumer and local review application. The real Data Sharing full-package producer remains a separate active dependency for the first real round trip.
+Status: complete for the validated-package consumer and local review application, with the real `document-content` producer connected. The separate full source-and-asset request is export-only and does not block Docs Review.
 
 Its implementation should consume:
 
@@ -1159,7 +1159,7 @@ Recommended order of work (to be reviewed after each step):
 11. reduce only coordinator bridges made obsolete by steps 8-11 — complete
 12. update affected user guidance and architecture owners with each slice
 13. complete the W0 Data Sharing/review path slice, which may run in parallel with phases 0-5 — complete
-14. approve the validated-package consumer interface; continue the real full-package producer independently — consumer interface complete, producer active
+14. approve the validated-package consumer interface; continue the full source-and-asset export independently — consumer interface complete, export request active and not a review dependency
 15. run the Docs Review readiness checkpoint — complete
 16. update the Docs Review spec only if the platform or package contracts materially changed — checkpoint sequencing clarified
 17. implement Docs Review through its active request, beginning with a fixture-backed preview vertical slice — complete for the validated-package consumer

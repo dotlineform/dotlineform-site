@@ -184,7 +184,7 @@ The service adds collision and write-flow fields after loading the target scope:
 
 `generate_markdown_content_import_preview()`, `generate_html_content_import_preview()`, and `generate_plain_text_content_import_preview()` sit beneath the existing file wrappers. `generate_content_import_preview()` dispatches normalized string content without requiring a temporary staged file, and `generate_normalized_import_content_preview()` accepts a content-bearing `ImportContent` record. The ordinary Markdown, HTML, and text file wrappers call the same entrypoints, preserving one conversion and validation path.
 
-The Data Sharing documents adapter owns wrapper/schema/provenance checks and emits `ImportContent` records. It maps only declared compact `content` and full-source `canonical_markdown` contracts; arbitrary JSON fields do not become body or front matter. A future standalone collection requires a separate explicit wrapper adapter but can emit the same generic record.
+The Data Sharing documents adapter owns wrapper/schema/provenance checks and emits `ImportContent` records for declared import-supported profiles. The active reviewed collection contract maps compact `document-content` fields; arbitrary JSON fields do not become body or front matter. The planned `document-full-source` profile is export-only and is not an import source. A future standalone collection requires a separate explicit wrapper adapter but can emit the same generic record.
 
 ## Shared Per-Document Plan And Apply
 

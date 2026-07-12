@@ -2,7 +2,7 @@
 doc_id: data-sharing-documents-returned-package-review
 title: Documents Returned Package Review
 added_date: "2026-06-27"
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: data-sharing
 viewable: true
 ---
@@ -167,15 +167,15 @@ The Content/source-folder action:
 - writes a trusted `docs_review_validated_package_v1` manifest with matching `package_id`, `status: validated`, `source_scope`, `default_doc_id`, provenance, and validation diagnostics
 - reports invalid rows and materialization failures in the Data Sharing response without publishing a discoverable package
 - copies only allowed front matter fields from returned rows: `title`, `parent_id`, `summary`, and `viewable`
-- normalizes returned compact or full-source content through the shared Docs Import content adapter before materializing preview Markdown
+- normalizes returned compact `document-content` through the shared Docs Import content adapter before materializing preview Markdown
 - treats `content_format` as manifest metadata only
 - rejects publication when the metadata-derived timestamped package folder already exists
 
 It does not register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown. The published folder is immediately discoverable with retained generated output; repair is limited to missing or malformed derived JSON.
 
-The current Content/source-folder action is a text-oriented preview handoff only. Its manifest records `source_projection: rendered_derived_text_only`. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
+The current Content/source-folder action is a text-oriented preview handoff. Its manifest records `source_projection: rendered_derived_text_only` because `content` was derived from rendered output and the package does not contain the complete source dependency set. Managed Docs Import may still use that returned content as an explicit canonical-source replacement; source-only constructs and media tokens that are absent from the projection remain a user-managed source edit.
 
-[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the exact-Markdown and asset producer for the same validated-package handoff. [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) keeps the persistent projection read-only and imports the associated staged JSONL through managed Docs Import instead.
+[Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies a separate exact-Markdown and asset export profile. It is export-only and does not extend this validated-package handoff. [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) keeps the persistent `document-content` projection read-only and imports its associated staged JSONL through managed Docs Import.
 
 ## Review Rows
 
@@ -301,4 +301,4 @@ It checks package shape, metadata, current-source context, and write-action prec
 It does not infer file meaning from row fields.
 It does not apply unrecognized fields.
 The Analytics returned-package apply actions do not treat review Markdown as canonical apply input.
-The current implementation does not automatically create missing documents or parent documents. The planned full-package workflow may preview explicit new chapter files, while configured-scope create or overwrite decisions belong to the Docs Viewer staged-JSONL collection importer.
+The current Data Sharing review/apply actions do not automatically create missing documents or parent documents. The configured-scope staged-JSONL collection importer separately plans explicit new document records and supplied parent chains before applying create or overwrite decisions.
