@@ -5,9 +5,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import docs_import_media
 import docs_import_preview
 import docs_import_source_service as import_source_service
+from services.paths import configured_workspace_paths
 
 from docs_import_test_support import (
     make_repo,
@@ -29,7 +32,7 @@ def test_source_import_files_list_html_and_markdown() -> None:
         write_staged_bytes(root, "source.pdf", b"fake pdf")
         write_staged_package_file(root, "package-note", "Note.md", "# Package Note\n")
 
-        files = import_source_service.list_staged_import_source_files(root)
+        files = import_source_service.handle_import_source_files(root)["files"]
 
     by_filename = {item["filename"]: item for item in files}
     assert by_filename["source.html"]["source_format"] == "html"
@@ -40,6 +43,60 @@ def test_source_import_files_list_html_and_markdown() -> None:
     assert by_filename["source.pdf"]["source_format"] == "file"
     assert by_filename["package-note"]["source_format"] == "markdown_package"
     assert by_filename["package-note"]["package_markdown_count"] == 1
+    assert by_filename["source.md"]["path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/source.md"
+
+
+def test_source_import_ignores_repo_local_staging_and_rejects_traversal() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_staged_markdown(root, "external.md", "# External\n")
+        repo_local = root / "var/docs/import-staging/repo-local.md"
+        repo_local.parent.mkdir(parents=True, exist_ok=True)
+        repo_local.write_text("# Repo local\n", encoding="utf-8")
+        paths = configured_workspace_paths(root)
+        outside = root / "outside.md"
+        outside.write_text("# Outside\n", encoding="utf-8")
+        (paths.import_staging / "linked.md").symlink_to(outside)
+
+        payload = import_source_service.handle_import_source_files(root)
+        with pytest.raises(ValueError, match="configured import staging root"):
+            docs_import_preview.resolve_staged_import_source(paths.import_staging, "../outside.md")
+        with pytest.raises(ValueError, match="must not be symlinks"):
+            docs_import_preview.resolve_staged_import_source(paths.import_staging, "linked.md")
+
+    assert payload["available"] is True
+    assert payload["staging_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging"
+    assert [item["filename"] for item in payload["files"]] == ["external.md"]
+
+
+def test_source_import_listing_reports_unavailable_workspace(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path / "missing-projects"))
+
+        payload = import_source_service.handle_import_source_files(root)
+
+    assert payload["ok"] is True
+    assert payload["available"] is False
+    assert payload["staging_root"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
+    assert payload["files"] == []
+    assert "does not exist" in payload["message"]
+
+
+def test_source_import_listing_reports_missing_configured_staging_root() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        paths = configured_workspace_paths(root)
+        paths.import_staging.rmdir()
+
+        payload = import_source_service.handle_import_source_files(root)
+
+    assert payload["available"] is False
+    assert payload["files"] == []
+    assert "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging" in payload["message"]
 
 def test_source_import_previews_validate_with_python_renderer() -> None:
     with make_repo() as temp:
@@ -51,11 +108,14 @@ def test_source_import_previews_validate_with_python_renderer() -> None:
         write_staged_bytes(root, "source.png", b"fake image")
         write_staged_bytes(root, "source.pdf", b"fake pdf")
         write_staged_package_file(root, "package-note", "Note.md", "# Package Note\n\nBody.\n")
+        paths = configured_workspace_paths(root)
 
         previews = [
             docs_import_preview.generate_import_preview(
                 root,
-                source_path=docs_import_preview.resolve_staged_import_source(root, staged_filename),
+                staging_root=paths.import_staging,
+                workspace_root=paths.root,
+                source_path=docs_import_preview.resolve_staged_import_source(paths.import_staging, staged_filename),
                 scope="library",
                 include_prompt_meta=False,
             )

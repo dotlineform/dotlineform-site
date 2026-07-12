@@ -10,14 +10,14 @@ viewable: true
 
 The Docs Viewer import source registry is the server-side format contract for staged source files imported through Docs Viewer management mode.
 
-The registry currently lives in `docs-viewer/services/docs_html_import.py`.
+The registry currently lives in `docs-viewer/services/docs_import_common.py`, with staged-source resolution and preview dispatch in `docs-viewer/services/docs_import_preview.py`.
 The service boundary that turns previews into source writes lives in `docs-viewer/services/docs_import_source_service.py` and is exposed through the standalone Docs Viewer service.
 
 ## Goals
 
 The registry must:
 
-- list every staged source format accepted from `var/docs/import-staging/`
+- list every staged source format accepted from `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 - map file extensions to a stable `source_format`
 - expose `source_format` in staged-file listings and preview/write responses
 - keep media-producing formats explicit
@@ -28,17 +28,17 @@ The registry must:
 The registry is intentionally small.
 It describes supported formats and dispatch metadata; it is not a plugin loader or an open-ended import execution surface.
 
-## Planned External Staging Root
+## External Staging Root
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will move every registered Docs Import format from `var/docs/import-staging/` to the existing shared user drop-zone:
+Every registered Docs Import format uses the shared user drop-zone:
 
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 ```
 
-Docs Import will reuse the W0 adapter already consumed by Docs Review: `configured_workspace_paths(repo_root).import_staging` from `data-sharing/services/paths.py`. Listing, source resolution, direct-child Markdown packages, interactive companions, and `staging_manual` media materialization must all use that resolved root. Responses use `marker_path()` rather than absolute paths.
+Docs Import reuses the W0 adapter already consumed by Docs Review: `configured_workspace_paths(repo_root).import_staging` from `data-sharing/services/paths.py`. Listing, source resolution, direct-child Markdown packages, interactive companions, and `staging_manual` media materialization all use that resolved root. Responses use `marker_path()` rather than absolute paths.
 
-The folder is application-neutral staging despite its existing `data-sharing/` namespace. Which workflow consumes a file depends on supported format/schema and the user action. There will be no Docs-specific external resolver and no fallback or compatibility reads from `var/docs/import-staging/`.
+The folder is application-neutral staging despite its existing `data-sharing/` namespace. Which workflow consumes a file depends on supported format/schema and the user action. There is no Docs-specific external resolver and no fallback or compatibility read from the retired repo-local staging folder.
 
 ## Planned Data Sharing Collection Source
 
@@ -103,7 +103,7 @@ Current registry entries:
 
 All managed imports read from:
 
-- `var/docs/import-staging/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 
 `resolve_staged_import_source()` requires the staged filename to resolve inside that directory and to use a supported suffix, unless the source is a supported Markdown package directory.
 Markdown package directories must be direct children of the staging folder.
@@ -123,7 +123,6 @@ Markdown package records also include:
 - `package_markdown_count`
 
 The local management service exposes that list through `GET /docs/import-source-files`.
-`GET /docs/import-html-files` remains a compatibility alias.
 
 ## Preview Dispatch
 
@@ -189,7 +188,7 @@ Markdown imports treat the staged file as body Markdown without front matter.
 The first `# H1` becomes the title when present; otherwise the title is derived from the filename.
 Inline raster data URLs are planned the same way as HTML imports.
 
-Markdown package imports treat a direct child directory of `var/docs/import-staging/` as one source when it contains exactly one Markdown file.
+Markdown package imports treat a direct child directory of the configured shared drop-zone as one source when it contains exactly one Markdown file.
 Local Markdown image links are resolved inside the package, renamed to readable `<doc_id>-image-NN.webp` outputs, rewritten to docs media links, and converted to WebP at write time with a maximum width of 800px.
 The rewritten Markdown image alt text and title use readable `<doc_id> image NN` text instead of opaque exported filenames.
 Local Markdown links to supported downloadable files are treated as attachments, renamed to `<doc_id>-attachment-NN.<ext>`, rewritten to docs media links, and copied unchanged at write time.
@@ -273,7 +272,7 @@ The normal UI collision recovery path uses `replacement_doc_id`.
 
 The registry and service enforce narrow inputs before conversion:
 
-- staged source filenames must stay under `var/docs/import-staging/`
+- staged source filenames must be direct children of the configured shared drop-zone
 - supported extensions come from the registry
 - media filenames must remain plain filenames when copied or materialized
 - repo asset writes must stay under the configured repo asset prefix

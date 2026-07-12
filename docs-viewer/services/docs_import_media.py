@@ -13,7 +13,6 @@ from typing import Any
 from docs_import_common import (
     INLINE_RASTER_EXTENSIONS,
     MARKDOWN_INLINE_RASTER_IMAGE_PATTERN,
-    STAGING_REL_DIR,
     humanize,
     normalize_scope,
     normalize_space,
@@ -22,6 +21,7 @@ from docs_import_common import (
     source_format_for_path,
 )
 from docs_scope_config import IMPORT_MEDIA_CONFIGS, MEDIA_PATH_PREFIXES
+from services.paths import marker_path
 
 def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
     safe_doc_id = slugify(doc_id or "imported-doc")
@@ -35,13 +35,22 @@ def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, 
         index += 1
 
 
-def inline_media_plan(scope: str, filename: str, title: str, *, mime_type: str, size_bytes: int) -> dict[str, Any]:
+def inline_media_plan(
+    scope: str,
+    filename: str,
+    title: str,
+    *,
+    staging_root: Path,
+    workspace_root: Path,
+    mime_type: str,
+    size_bytes: int,
+) -> dict[str, Any]:
     source_path = Path(filename)
     plan = build_media_plan(scope, "img", source_path, title)
     plan.update(
         {
             "source": "inline_data_url",
-            "staging_path": (STAGING_REL_DIR / filename).as_posix(),
+            "staging_path": marker_path(staging_root / filename, workspace_root=workspace_root),
             "mime_type": mime_type,
             "size_bytes": size_bytes,
         }
@@ -49,12 +58,16 @@ def inline_media_plan(scope: str, filename: str, title: str, *, mime_type: str, 
     return plan
 
 
-def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], scope: str) -> None:
+def apply_inline_raster_media_plans(
+    staging_root: Path,
+    workspace_root: Path,
+    summary: dict[str, Any],
+    scope: str,
+) -> None:
     markdown = str(summary.get("markdown_preview") or "")
     if "data:image/" not in markdown:
         return
 
-    staging_root = repo_root / STAGING_REL_DIR
     proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
     existing_plans = summary.get("media_plans")
     plans: list[dict[str, Any]] = list(existing_plans) if isinstance(existing_plans, list) else []
@@ -85,6 +98,8 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
             scope,
             filename,
             title,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
             mime_type=f"image/{'jpeg' if extension == 'jpg' else extension}",
             size_bytes=len(decoded),
         )
@@ -102,12 +117,16 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
         summary["media_plans"] = plans
 
 
-def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], scope: str) -> None:
+def retarget_inline_raster_media_plans(
+    staging_root: Path,
+    workspace_root: Path,
+    summary: dict[str, Any],
+    scope: str,
+) -> None:
     plans = summary.get("media_plans")
     if not isinstance(plans, list) or not plans:
         return
 
-    staging_root = repo_root / STAGING_REL_DIR
     proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
     used_filenames: set[str] = {
         str(plan.get("source_path") or "")
@@ -130,6 +149,8 @@ def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any],
             scope,
             new_filename,
             str(plan.get("title") or f"Inline image {index + 1:02d}"),
+            staging_root=staging_root,
+            workspace_root=workspace_root,
             mime_type=str(plan.get("mime_type") or f"image/{'jpeg' if extension == 'jpg' else extension}"),
             size_bytes=int(plan.get("size_bytes") or 0),
         )
@@ -166,7 +187,7 @@ def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: boo
     return ""
 
 
-def package_media_target_path(repo_root: Path, plan: dict[str, Any], scope: str) -> Path:
+def package_media_target_path(repo_root: Path, staging_root: Path, plan: dict[str, Any], scope: str) -> Path:
     filename = str(plan.get("source_path") or "").strip()
     if not filename or Path(filename).name != filename:
         raise ValueError(f"Invalid package media filename: {filename!r}")
@@ -180,7 +201,7 @@ def package_media_target_path(repo_root: Path, plan: dict[str, Any], scope: str)
             raise ValueError(f"Package media target escapes repo assets root: {target_rel.as_posix()!r}")
         return target_path
     if plan.get("storage_mode") == "staging_manual":
-        target_root = (repo_root / STAGING_REL_DIR).resolve()
+        target_root = staging_root.resolve()
         target_path = (target_root / filename).resolve()
         if not target_path.is_relative_to(target_root):
             raise ValueError(f"Package media filename escapes staging root: {filename!r}")
@@ -188,11 +209,11 @@ def package_media_target_path(repo_root: Path, plan: dict[str, Any], scope: str)
     raise ValueError("Docs Import media storage mode is not available for package media writes.")
 
 
-def package_media_source_path(repo_root: Path, package_root: Path, plan: dict[str, Any]) -> Path:
-    source_rel = str(plan.get("source_original_path") or "").strip()
+def package_media_source_path(package_root: Path, plan: dict[str, Any]) -> Path:
+    source_rel = str(plan.get("package_relative_source_path") or "").strip()
     if not source_rel:
-        raise ValueError("Package media plan is missing source_original_path.")
-    source_path = (repo_root / source_rel).resolve()
+        raise ValueError("Package media plan is missing package_relative_source_path.")
+    source_path = (package_root / source_rel).resolve()
     if not source_path.is_relative_to(package_root.resolve()):
         raise ValueError(f"Package media source escapes package root: {source_rel}")
     if not source_path.exists() or not source_path.is_file():
@@ -236,7 +257,14 @@ def convert_package_image_to_webp(source_path: Path, target_path: Path, *, max_w
     }
 
 
-def materialize_package_media_plans(repo_root: Path, package_root: Path, plans: list[dict[str, Any]], scope: str) -> list[dict[str, Any]]:
+def materialize_package_media_plans(
+    repo_root: Path,
+    staging_root: Path,
+    workspace_root: Path,
+    package_root: Path,
+    plans: list[dict[str, Any]],
+    scope: str,
+) -> list[dict[str, Any]]:
     package_plans = [
         plan
         for plan in plans
@@ -247,10 +275,15 @@ def materialize_package_media_plans(repo_root: Path, package_root: Path, plans: 
     normalized_scope = normalize_scope(scope)
     written: list[dict[str, Any]] = []
     for plan in package_plans:
-        source_path = package_media_source_path(repo_root, package_root, plan)
-        target_path = package_media_target_path(repo_root, plan, normalized_scope)
+        source_path = package_media_source_path(package_root, plan)
+        target_path = package_media_target_path(repo_root, staging_root, plan, normalized_scope)
         if target_path.exists():
-            raise FileExistsError(f"Package media target already exists: {relative_path(repo_root, target_path)}")
+            target_display = (
+                marker_path(target_path, workspace_root=workspace_root)
+                if target_path.is_relative_to(workspace_root.resolve())
+                else relative_path(repo_root, target_path)
+            )
+            raise FileExistsError(f"Package media target already exists: {target_display}")
         if plan.get("source") == "markdown_package_image":
             conversion_result = convert_package_image_to_webp(
                 source_path,
@@ -267,7 +300,12 @@ def materialize_package_media_plans(repo_root: Path, package_root: Path, plans: 
             {
                 "source_path": plan.get("source_path", ""),
                 "source_original_path": plan.get("source_original_path", ""),
-                "staging_path": plan.get("staging_path", relative_path(repo_root, target_path)),
+                "staging_path": plan.get(
+                    "staging_path",
+                    marker_path(target_path, workspace_root=workspace_root)
+                    if target_path.is_relative_to(workspace_root.resolve())
+                    else relative_path(repo_root, target_path),
+                ),
                 "size_bytes": size_bytes,
                 "media_path": plan.get("media_path", ""),
                 "media_token": plan.get("media_token", ""),
@@ -285,6 +323,8 @@ def materialize_package_media_plans(repo_root: Path, package_root: Path, plans: 
 def materialize_inline_raster_media(
     repo_root: Path,
     *,
+    staging_root: Path,
+    workspace_root: Path,
     source_path: Path,
     import_preview: dict[str, Any],
     include_prompt_meta: bool,
@@ -300,7 +340,14 @@ def materialize_inline_raster_media(
         return []
 
     inline_plans = [plan for plan in plans if plan.get("source") == "inline_data_url"]
-    package_written = materialize_package_media_plans(repo_root, source_path, plans, normalize_scope(str(import_preview.get("scope")))) if source_path.is_dir() else []
+    package_written = materialize_package_media_plans(
+        repo_root,
+        staging_root,
+        workspace_root,
+        source_path,
+        plans,
+        normalize_scope(str(import_preview.get("scope"))),
+    ) if source_path.is_dir() else []
     source_file_plans = [plan for plan in plans if plan.get("source") != "inline_data_url"]
     valid_inline_matches: list[tuple[re.Match[str], bytes]] = []
     if inline_plans:
@@ -330,14 +377,18 @@ def materialize_inline_raster_media(
             if not target_path.is_relative_to(target_root):
                 raise ValueError(f"Inline media target escapes repo assets root: {target_rel.as_posix()!r}")
         elif plan.get("storage_mode") == "staging_manual":
-            target_root = (repo_root / STAGING_REL_DIR).resolve()
+            target_root = staging_root.resolve()
             target_path = (target_root / filename).resolve()
             if not target_path.is_relative_to(target_root):
                 raise ValueError(f"Inline media filename escapes staging root: {filename!r}")
         else:
             raise ValueError("Docs Import media storage mode is not available for inline media writes.")
         if target_path.exists():
-            relative_target = target_path.relative_to(repo_root.resolve()).as_posix()
+            relative_target = (
+                marker_path(target_path, workspace_root=workspace_root)
+                if target_path.is_relative_to(workspace_root.resolve())
+                else relative_path(repo_root, target_path)
+            )
             raise FileExistsError(f"Inline media target already exists: {relative_target}")
         target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_bytes(decoded)
@@ -379,7 +430,7 @@ def materialize_inline_raster_media(
         written.append(
             {
                 "source_path": filename,
-                "staging_path": relative_path(repo_root, source_path),
+                "staging_path": marker_path(source_path, workspace_root=workspace_root),
                 "size_bytes": target_path.stat().st_size,
                 "media_path": plan.get("media_path", ""),
                 "media_token": plan.get("media_token", ""),

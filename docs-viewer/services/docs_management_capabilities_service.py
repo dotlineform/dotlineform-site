@@ -45,6 +45,7 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
 
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     data_sharing_workspace = workspace_status(repo_root)
+    docs_import_workspace = workspace_status(repo_root, required_paths=("import_staging",))
     scopes: Dict[str, Any] = {}
     try:
         manifest = docs_scope_manifest.load_manifest(repo_root)
@@ -110,9 +111,18 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "source_config_settings_reads": True,
             "source_config_settings_writes": True,
             "source_editor": True,
-            "html_import": True,
+            "html_import": docs_import_workspace["available"],
             "docs_export": True,
-            "library_import": True,
+            "library_import": docs_import_workspace["available"],
+            "docs_import": {
+                "available": docs_import_workspace["available"],
+                "message": docs_import_workspace["message"],
+                "staging_root": (
+                    docs_import_workspace.get("paths", {}).get("import_staging")
+                    if docs_import_workspace["available"]
+                    else docs_import_workspace["root"]
+                ),
+            },
             "docs_review": {
                 "available": data_sharing_workspace["available"],
                 "message": data_sharing_workspace["message"],

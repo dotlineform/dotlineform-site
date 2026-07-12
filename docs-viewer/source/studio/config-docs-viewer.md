@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer
 title: Config
 added_date: 2026-05-12
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -105,7 +105,7 @@ Each scope entry owns:
 `import_media_storage.storage_mode` supports three values:
 
 - `repo_assets`: copy imported media into a repo-owned public assets folder and write literal public links
-- `staging_manual`: keep extracted media under `var/docs/import-staging/` and write media tokens for manual copying
+- `staging_manual`: keep extracted media under the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone and write media tokens for manual copying
 - `r2_upload`: reserved for a future remote upload backend and unavailable until that backend exists
 
 `repo_assets` is the default recommendation for new portable installs that do not have remote media infrastructure.
@@ -150,7 +150,7 @@ Docs Import writes links like:
 
 <pre><code>![Example](&#91;&#91;media:docs/library/img/example.png&#93;&#93;)</code></pre>
 
-The local service stages inline extracted media under `var/docs/import-staging/` and reports the `media_path` that must be copied manually.
+The local service stages inline extracted media under the shared import drop-zone and reports the `media_path` that must be copied manually.
 Staged source image and file imports also remain manual-copy flows in this mode.
 
 `r2_upload` is intentionally config-shaped but not operational.

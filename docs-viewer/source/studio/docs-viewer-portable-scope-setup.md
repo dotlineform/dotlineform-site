@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-06-24
+last_updated: 2026-07-12
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -78,7 +78,7 @@ Local scopes use only `docs-viewer/generated/` roots, and the builders reject lo
 Running `./docs-viewer/build/build_docs.py --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
 The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to public route config after the docs build refreshes the config and generated docs payloads.
 `repo_assets` makes Docs Import copy imported images and files below `site/assets/docs/research/` and write literal `/assets/docs/research/...` links.
-Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
+Use `staging_manual` instead when imported media should stay in the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone until you manually copy it to the configured `media_path_prefix`.
 
 ### New Scope Action
 

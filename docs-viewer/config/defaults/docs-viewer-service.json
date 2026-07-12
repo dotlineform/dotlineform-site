@@ -43,11 +43,9 @@
     "source_body": "/docs/source",
     "source_rebuild": "/docs/source/rebuild",
     "import_source_files": "/docs/import-source-files",
-    "import_html_files": "/docs/import-html-files",
     "open_source": "/docs/open-source",
     "broken_links": "/docs/broken-links",
     "import_source": "/docs/import-source",
-    "import_html": "/docs/import-html",
     "update_metadata": "/docs/update-metadata",
     "update_viewability": "/docs/update-viewability",
     "update_viewability_bulk": "/docs/update-viewability-bulk",
@@ -66,7 +64,6 @@
     "sub_scope_delete_apply": "/docs/scopes/sub-scopes/delete-apply"
   },
   "local_state": {
-    "import_staging": "var/docs/import-staging",
     "backups": "var/docs/backups",
     "logs": "var/docs/logs",
     "watch_suppressions": "var/docs/watch-suppressions"

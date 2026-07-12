@@ -24,7 +24,7 @@ var DOCS_HTML_IMPORT_TEXT = {
   interactiveAssetOverwriteRequired: "Interactive asset overwrite required: {path}. Review the warning and confirm if you want to replace it.",
   idleStatus: "Select a staged source file and import it into a configured docs scope.",
   loadFilesFailed: "Failed to load staged import files.",
-  noFiles: "No supported staged import files found under var/docs/import-staging/.",
+  noFiles: "No supported staged import files found in the shared import drop-zone.",
   overwriteCancelled: "Overwrite cancelled.",
   overwriteRequired: "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
   replacementDocIdLabel: "doc_id",

@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Proposed prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation).
+Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0 and P1 are complete; P2 is the next bounded phase.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -153,11 +153,34 @@ Implementation details and verification remain in the work packages below and in
 - approved product decisions copied into the parent request
 - implementation checklist updated with the resulting contracts
 
-### P1. External Staging Root Contract
+### P1. External Staging Root Contract — Complete 2026-07-12
 
-- move existing Docs Import formats to the W0-resolved shared drop-zone
-- preserve current containment and format behavior
-- remove production fallback to repo-local staging
+- existing Docs Import formats use `configured_workspace_paths(repo_root).import_staging`
+- listing, source resolution, Markdown packages, interactive companions, inline media, and package media receive the explicit W0-resolved root
+- API and activity-facing external paths use `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/...` marker paths
+- missing, invalid, unreadable, or unwritable staging disables Docs Import capability without disabling ordinary Docs management
+- direct-child, traversal, suffix, symlink, and containment checks remain enforced
+- production code no longer reads, writes, or configures repo-local Docs Import staging
+- retired `/docs/import-html-files` and `/docs/import-html` compatibility aliases were removed; the supported `/docs/import-source-files` and `/docs/import-source` routes remain
+
+#### P1 Verification And Handoff
+
+Changed implementation owners:
+
+- `data-sharing/services/paths.py` adds required configured-path validation to the existing workspace status contract
+- `docs_management_import_service.py` resolves and supplies the W0 roots
+- `docs_import_source_service.py` reports clean availability and passes explicit roots through the workflow
+- preview, media, Markdown-package, and interactive-asset services use marker-rooted paths and no repo-local fallback
+- current import fixtures write into an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR`
+
+Verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 54 passed
+- the expanded focused source-listing, format, media/package, interactive HTML, capability, route, activity, service-config, and shared Data Sharing workspace set — 95 passed
+- `git diff --check` passed
+- focused production scans found no `STAGING_REL_DIR` or `var/docs/import-staging` reference in Docs Import services, runtime, or service config
+
+No known P1 blocker remains. P2 should define the generic normalized content record and content-based adapter entrypoints without reintroducing path resolution into format adapters.
 
 ### P2. Normalized Content And Adapter Boundary
 

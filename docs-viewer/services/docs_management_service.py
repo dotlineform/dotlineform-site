@@ -109,7 +109,7 @@ def docs_management_post_response(
             )
         payload["dry_run"] = dry_run
         return HTTPStatus.OK, payload
-    if path in {routes.IMPORT_SOURCE_PATH, routes.IMPORT_HTML_PATH}:
+    if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK, payload

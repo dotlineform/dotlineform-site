@@ -2,7 +2,7 @@
 doc_id: docs-viewer-media-handling
 title: Media Handling
 added_date: 2026-05-14
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -14,7 +14,7 @@ This document records how Docs Viewer media is represented, imported, staged, an
 
 Docs Viewer media handling covers:
 
-- source-file imports staged under `var/docs/import-staging/`
+- source-file imports staged under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 - wrapper docs for standalone images and downloadable files
 - inline raster extraction from HTML and Markdown imports
 - folder-based Markdown package imports with local images and attachments
@@ -82,9 +82,9 @@ For `repo_assets`, Docs Import uses the configured public repo asset path instea
 
 All Docs Import source formats are staged under:
 
-- `var/docs/import-staging/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 
-This folder is local and untracked.
+This is the W0-configured, user-owned shared import drop-zone outside the repository.
 It can contain original source files, standalone media import files, generated inline raster image files, and direct child Markdown package folders.
 
 The importer requires staged filenames to resolve inside that directory.
@@ -179,11 +179,11 @@ Generated filenames are deterministic and readable:
 - `<doc_id>-image-01.png`
 - `<doc_id>-image-02.jpg`
 
-If a planned filename already exists in `var/docs/import-staging/`, the importer uses the next available increment.
+If a planned filename already exists in the shared import drop-zone, the importer uses the next available increment.
 No hash suffix is used for the current implementation.
 
 During create or overwrite, the service materializes the decoded inline raster files.
-For `staging_manual`, the decoded files are written under `var/docs/import-staging/`.
+For `staging_manual`, the decoded files are written under the shared import drop-zone.
 For `repo_assets`, decoded files may be written to the configured repo asset path after allowlist checks.
 
 If a collision replacement changes the final `doc_id`, the service retargets inline media plans before write so filenames, media paths, and Markdown links match the final doc id.
@@ -216,7 +216,7 @@ During create or overwrite, package images are converted with Pillow to WebP.
 Images wider than 800px are downscaled to a maximum width of 800px; smaller images are not upscaled.
 Attachments are copied unchanged.
 
-For `staging_manual`, converted images and copied attachments are materialized under `var/docs/import-staging/` with the generated readable filenames.
+For `staging_manual`, converted images and copied attachments are materialized under the shared import drop-zone with the generated readable filenames.
 For `repo_assets`, they are written into the configured repo asset path.
 Animated image conversion is rejected rather than silently flattening animation.
 
@@ -273,7 +273,7 @@ If the source no longer matches the preview plan, the write fails rather than si
 
 For a normal media import:
 
-1. Place the source file in `var/docs/import-staging/`.
+1. Place the source file in `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`.
 2. Open `/docs/?scope=<scope>&import=1`.
 3. Import the source file.
 4. Review the result panel's media plan.
@@ -281,7 +281,7 @@ For a normal media import:
 6. Rebuild or refresh docs payloads through the normal management workflow if you changed media availability outside the import write.
 
 For HTML or Markdown with embedded raster data URLs, the same workflow applies, except the import write creates the staged decoded image files for you.
-For Markdown package imports, copy the whole package folder under `var/docs/import-staging/` and select the package folder in the import modal.
+For Markdown package imports, copy the whole package folder under the shared import drop-zone and select the package folder in the import modal.
 
 ## Related References
 

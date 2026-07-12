@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: Docs Import
 added_date: 2026-04-24
-last_updated: "2026-05-18 00:00"
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -18,11 +18,11 @@ There is no separate Studio Docs Import route.
 
 ## Before You Start
 
-Put the original source file in:
+Put the original source file in the shared import drop-zone:
 
-- `var/docs/import-staging/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
 
-This staging directory is repo-local and untracked, so it is a practical place to keep the original export nearby while you test imports.
+The path is resolved from `DOTLINEFORM_PROJECTS_BASE_DIR` through the shared Data Sharing workspace configuration. It is user-owned staging outside the repository and is shared by all supported import formats.
 For Markdown package imports, copy the whole exported folder as a direct child of this staging directory.
 
 Staged Markdown files should not include predefined front matter.
@@ -42,7 +42,7 @@ The source Markdown is not edited automatically; add an <code>&#91;&#91;interact
 
 The import modal:
 
-- lists supported staged files from `var/docs/import-staging/`
+- lists supported staged files from the shared import drop-zone
 - adds a `< all >` option that imports every listed staged source file in sequence
 - lets you choose any configured docs scope
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
@@ -158,7 +158,7 @@ HTML and Markdown imports also extract inline raster data URLs that appear as Ma
 ![Diagram](data:image/png;base64,...)
 ```
 
-The importer writes decoded image files under `var/docs/import-staging/` during the import write.
+The importer writes decoded image files back into the shared import drop-zone during the import write.
 Generated filenames use the final proposed `doc_id` plus an incrementing suffix, such as:
 
 - `example-doc-image-01.png`
@@ -171,7 +171,7 @@ Copy each generated staged image file to the reported media path before expectin
 
 Use a Markdown package import for folder exports such as Apple Notes Markdown export.
 
-The package must be a direct child folder under `var/docs/import-staging/` and must contain exactly one `.md` or `.markdown` file.
+The package must be a direct child folder under the shared import drop-zone and must contain exactly one `.md` or `.markdown` file.
 Local image and attachment links are resolved relative to that Markdown file and must remain inside the package folder.
 
 Package image behavior:
@@ -209,7 +209,7 @@ The interactive file must be a complete standalone HTML document and must includ
 ```
 
 Role-marked files are not listed as selectable staged sources.
-During a normal source import, the importer copies every role-marked HTML file in `var/docs/import-staging/` into the selected scope's repo-local interactive assets.
+During a normal source import, the importer copies every role-marked HTML file in the shared import drop-zone into the selected scope's repo-local interactive assets.
 The target filename is the slugified original filename stem plus `.html`.
 The import result lists each copied interactive file as another two-column result row with the slugified stem and `script file`, but it does not insert iframe tokens into the generated source doc.
 This keeps the import conversion unchanged and leaves placement as an explicit source edit.

@@ -8,27 +8,34 @@ import shutil
 from pathlib import Path
 from typing import Any, Dict
 
-from docs_import_common import HTML_STAGED_SUFFIXES, STAGING_REL_DIR, is_interactive_html_import_asset
+from docs_import_common import HTML_STAGED_SUFFIXES, is_interactive_html_import_asset
 from docs_import_source_helpers import relative_path
 from docs_source_model import normalize_scope, slugify
+from services.paths import marker_path
 
 INTERACTIVE_HTML_ASSET_REL_ROOT = Path("site/assets/docs/interactive")
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 
-def interactive_html_staged_paths(repo_root: Path) -> list[Path]:
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+def interactive_html_staged_paths(staging_root: Path) -> list[Path]:
+    staging_root = staging_root.resolve()
     if not staging_root.exists():
         return []
     return [
         path
         for path in sorted(staging_root.iterdir(), key=lambda candidate: candidate.name.lower())
         if path.is_file()
+        and not path.is_symlink()
         and path.suffix.lower() in HTML_STAGED_SUFFIXES
         and is_interactive_html_import_asset(path)
     ]
 
 
-def interactive_html_asset_plan_for_path(repo_root: Path, source_path: Path, scope: str) -> Dict[str, Any]:
+def interactive_html_asset_plan_for_path(
+    repo_root: Path,
+    workspace_root: Path,
+    source_path: Path,
+    scope: str,
+) -> Dict[str, Any]:
     filename = f"{slugify(source_path.stem)}.html"
     if not INTERACTIVE_HTML_FILENAME_PATTERN.fullmatch(filename):
         raise ValueError(f"Interactive HTML asset filename must be a simple slug ending in .html: {filename}")
@@ -41,21 +48,27 @@ def interactive_html_asset_plan_for_path(repo_root: Path, source_path: Path, sco
         raise ValueError(f"Interactive HTML target escapes scope asset root: {target_rel.as_posix()}")
 
     return {
-        "source_path": relative_path(repo_root, source_path),
+        "source_path": marker_path(source_path, workspace_root=workspace_root),
         "target_path": target_rel.as_posix(),
         "public_path": f"/assets/docs/interactive/{normalized_scope}/{filename}",
         "token": f"[[interactive-html:{filename}]]",
         "filename": filename,
+        "staged_filename": source_path.name,
         "display_name": Path(filename).stem,
         "result_type": "script file",
         "target_exists": target_path.exists(),
     }
 
 
-def interactive_html_asset_plans(repo_root: Path, scope: str) -> list[Dict[str, Any]]:
+def interactive_html_asset_plans(
+    repo_root: Path,
+    staging_root: Path,
+    workspace_root: Path,
+    scope: str,
+) -> list[Dict[str, Any]]:
     plans = [
-        interactive_html_asset_plan_for_path(repo_root, path, scope)
-        for path in interactive_html_staged_paths(repo_root)
+        interactive_html_asset_plan_for_path(repo_root, workspace_root, path, scope)
+        for path in interactive_html_staged_paths(staging_root)
     ]
     target_paths: set[str] = set()
     for plan in plans:
@@ -77,14 +90,21 @@ def ensure_interactive_html_targets_available(plans: list[Dict[str, Any]], *, al
 
 def materialize_interactive_html_asset(
     repo_root: Path,
+    staging_root: Path,
     plan: Dict[str, Any],
     *,
     allow_overwrite: bool = False,
 ) -> Dict[str, Any]:
     ensure_interactive_html_targets_available([plan], allow_overwrite=allow_overwrite)
-    source_path = (repo_root / str(plan.get("source_path") or "")).resolve()
+    staged_filename = str(plan.get("staged_filename") or "").strip()
+    if not staged_filename or Path(staged_filename).name != staged_filename:
+        raise ValueError("Interactive HTML asset plan has an invalid staged filename.")
+    staged_path = staging_root / staged_filename
+    if staged_path.is_symlink():
+        raise ValueError("Interactive HTML asset source must not be a symlink.")
+    source_path = staged_path.resolve()
     target_path = (repo_root / str(plan.get("target_path") or "")).resolve()
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    staging_root = staging_root.resolve()
     target_root = (repo_root / INTERACTIVE_HTML_ASSET_REL_ROOT / target_path.parent.name).resolve()
     if not source_path.is_relative_to(staging_root):
         raise ValueError("Interactive HTML asset source escapes import staging root.")
@@ -98,7 +118,7 @@ def materialize_interactive_html_asset(
     target_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source_path, target_path)
     return {
-        "source_path": relative_path(repo_root, source_path),
+        "source_path": str(plan.get("source_path") or ""),
         "target_path": relative_path(repo_root, target_path),
         "public_path": str(plan.get("public_path") or ""),
         "token": str(plan.get("token") or ""),
@@ -112,6 +132,7 @@ def materialize_interactive_html_asset(
 
 def materialize_interactive_html_assets(
     repo_root: Path,
+    staging_root: Path,
     plans: list[Dict[str, Any]],
     *,
     allow_overwrite: bool = False,
@@ -120,6 +141,6 @@ def materialize_interactive_html_assets(
         return []
     ensure_interactive_html_targets_available(plans, allow_overwrite=allow_overwrite)
     return [
-        materialize_interactive_html_asset(repo_root, plan, allow_overwrite=allow_overwrite)
+        materialize_interactive_html_asset(repo_root, staging_root, plan, allow_overwrite=allow_overwrite)
         for plan in plans
     ]

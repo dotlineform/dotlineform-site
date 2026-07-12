@@ -27,16 +27,16 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 
 ## 1. Move Docs Import To The W0 Drop-Zone Adapter
 
-- [ ] Replace `STAGING_REL_DIR` and `repo_root / var/docs/import-staging` assumptions with `configured_workspace_paths(repo_root).import_staging`.
-- [ ] Reuse `marker_path()` and the W0 availability/status contract.
-- [ ] Update file listing and primary-source resolution.
-- [ ] Update Markdown-package discovery and containment.
-- [ ] Update interactive HTML companion discovery.
-- [ ] Update `staging_manual` inline-media output.
-- [ ] Update converted Markdown-package images and copied attachments.
-- [ ] Keep existing suffix, direct-child, traversal, symlink, and containment protections.
-- [ ] Remove all production fallback reads and duplicate writes to `var/docs/import-staging/`.
-- [ ] Update tests to provide an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR`.
+- [x] Replace `STAGING_REL_DIR` and `repo_root / var/docs/import-staging` assumptions with `configured_workspace_paths(repo_root).import_staging`.
+- [x] Reuse `marker_path()` and the W0 availability/status contract.
+- [x] Update file listing and primary-source resolution.
+- [x] Update Markdown-package discovery and containment.
+- [x] Update interactive HTML companion discovery.
+- [x] Update `staging_manual` inline-media output.
+- [x] Update converted Markdown-package images and copied attachments.
+- [x] Keep existing suffix, direct-child, traversal, symlink, and containment protections.
+- [x] Remove all production fallback reads and duplicate writes to `var/docs/import-staging/`.
+- [x] Update tests to provide an isolated temporary `DOTLINEFORM_PROJECTS_BASE_DIR`.
 
 ## 2. Extract The Data Sharing Collection Adapter And Shared Content Contract
 
@@ -141,11 +141,11 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 
 ## 8. Verification
 
-- [ ] Keep ordinary single-file import behavior green.
-- [ ] Verify every existing Docs Import format is discovered from the W0 external drop-zone.
-- [ ] Verify missing workspace configuration disables import cleanly without affecting ordinary Docs viewing.
-- [ ] Verify responses expose marker-rooted paths and never user-specific absolute paths.
-- [ ] Verify repo-local `var/docs/import-staging/` is not read or written.
+- [x] Keep ordinary single-file import behavior green.
+- [x] Verify every existing Docs Import format is discovered from the W0 external drop-zone.
+- [x] Verify missing workspace configuration disables import cleanly without affecting ordinary Docs viewing.
+- [x] Verify responses expose marker-rooted paths and never user-specific absolute paths.
+- [x] Verify repo-local `var/docs/import-staging/` is not read or written.
 - [ ] Test schema detection before generic JSON/JSONL fallback.
 - [ ] Test shared parsing produces equivalent preview and import records.
 - [ ] Test Markdown, HTML, and plain-text body dispatch through content-based entrypoints.

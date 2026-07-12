@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c0cad50fe20e9a1f73bd66eed7ea3bef",
-    "generated_at_utc": "2026-07-12T06:45:17Z",
+    "version": "blake2b-ed3678858ad39e066d01dc5410235848",
+    "generated_at_utc": "2026-07-12T08:43:02Z",
     "count": 239
   },
   "entries": [
@@ -2174,22 +2174,22 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-07-11 2026 07 11"
+      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-css-cascade-design",
@@ -2293,10 +2293,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-18 00:00",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-18 00:00 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -2307,13 +2307,12 @@
         "docs import",
         "docs viewer",
         "viewer",
-        "2026-05-18 00:00",
+        "2026-07-12",
         "2026",
-        "05",
-        "18",
-        "00"
+        "07",
+        "12"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-05-18 00:00 2026 05 18 00"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-review",
@@ -2651,10 +2650,10 @@
       "kind": "doc",
       "title": "Endpoint Overview",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Services",
-      "display_meta": "2026-07-11 • Management Services",
+      "display_meta": "2026-07-12 • Management Services",
       "search_terms": [
         "scripts-docs-management-endpoints",
         "scripts",
@@ -2666,22 +2665,22 @@
         "overview",
         "management services",
         "services",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-07-11 2026 07 11"
+      "search_text": "scripts-docs-management-endpoints scripts docs management endpoints endpoint overview endpoint overview management services services 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-management-endpoints-create-import",
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-11 • Endpoint Overview",
+      "display_meta": "2026-07-12 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-create-import",
         "scripts",
@@ -2695,12 +2694,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "scripts-docs-management-endpoints-create-import scripts docs management endpoints create import create and import endpoints and endpoint overview endpoint overview 2026-07-11 2026 07 11"
+      "search_text": "scripts-docs-management-endpoints-create-import scripts docs management endpoints create import create and import endpoints and endpoint overview endpoint overview 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-management-endpoints-review",
@@ -2934,10 +2933,10 @@
       "kind": "doc",
       "title": "Management Operations",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-12",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Management Services",
-      "display_meta": "2026-06-07 • Management Services",
+      "display_meta": "2026-07-12 • Management Services",
       "search_terms": [
         "scripts-docs-management-server-operations",
         "scripts",
@@ -2948,12 +2947,12 @@
         "management operations",
         "management services",
         "services",
-        "2026-06-07",
+        "2026-07-12",
         "2026",
-        "06",
-        "07"
+        "07",
+        "12"
       ],
-      "search_text": "scripts-docs-management-server-operations scripts docs management server operations management operations management services services 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-server-operations scripts docs management server operations management operations management services services 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-management-scripts",
@@ -3010,10 +3009,10 @@
       "kind": "doc",
       "title": "Import Scripts",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-scripts-import",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "scripts-docs-management-scripts",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-07-11 • Scripts Overview",
+      "display_meta": "2026-07-12 • Scripts Overview",
       "search_terms": [
         "scripts-docs-management-scripts-import",
         "scripts",
@@ -3023,12 +3022,12 @@
         "import scripts",
         "scripts overview",
         "overview",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "scripts-docs-management-scripts-import scripts docs management import import scripts scripts overview overview 2026-07-11 2026 07 11"
+      "search_text": "scripts-docs-management-scripts-import scripts docs management import import scripts scripts overview overview 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-management-scripts-read-config",
@@ -3194,10 +3193,10 @@
       "kind": "doc",
       "title": "Media Handling",
       "href": "/docs/?scope=studio&doc=docs-viewer-media-handling",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-media-handling",
         "docs",
@@ -3206,12 +3205,12 @@
         "handling",
         "media handling",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-new-scopes-builder",
@@ -3340,10 +3339,10 @@
       "kind": "doc",
       "title": "Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-06-24",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-06-24 • Portable Setup",
+      "display_meta": "2026-07-12 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -3353,12 +3352,12 @@
         "setup",
         "portable scope setup",
         "portable setup",
-        "2026-06-24",
+        "2026-07-12",
         "2026",
-        "06",
-        "24"
+        "07",
+        "12"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-06-24 2026 06 24"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-portable-source-shape",

@@ -34,7 +34,7 @@ for path in (DOCS_DIR, DATA_SHARING_DIR, ANALYTICS_SERVER_DIR, ANALYTICS_PACKAGE
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
-from docs_management_import_service import import_source_dependencies  # noqa: E402
+from docs_management_import_service import handle_import_source as handle_managed_import_source  # noqa: E402
 from adapters.documents import prepare as documents_prepare  # noqa: E402
 from adapters.documents import returned as documents_returned  # noqa: E402
 import analytics_data_sharing_api  # noqa: E402
@@ -217,9 +217,4 @@ def stub_rebuild():
 
 
 def handle_import_source(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    return import_source_service.handle_import_source(
-        root,
-        body,
-        dry_run,
-        import_source_dependencies(),
-    )
+    return handle_managed_import_source(root, body, dry_run)

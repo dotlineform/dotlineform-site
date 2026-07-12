@@ -12,7 +12,6 @@ from bs4 import BeautifulSoup
 
 from docs_scope_config import SCOPE_ROOTS
 
-STAGING_REL_DIR = Path("var/docs/import-staging")
 HTML_STAGED_SUFFIXES = {".html", ".htm"}
 MARKDOWN_STAGED_SUFFIXES = {".md", ".markdown"}
 TEXT_STAGED_SUFFIXES = {".txt"}

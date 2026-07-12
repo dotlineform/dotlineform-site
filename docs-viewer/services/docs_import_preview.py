@@ -28,7 +28,6 @@ from docs_import_common import (  # noqa: E402
     PLAIN_URL_PATTERN,
     RASTER_IMAGE_STAGED_SUFFIXES,
     SOURCE_IMPORTER_BY_SUFFIX,
-    STAGING_REL_DIR,
     SVG_STAGED_SUFFIXES,
     SUPPORTED_STAGED_SUFFIXES,
     TEXT_STAGED_SUFFIXES,
@@ -60,6 +59,14 @@ from docs_import_media import (  # noqa: E402
     build_file_media_summary,
     build_image_summary,
 )
+from services.paths import configured_workspace_paths, marker_path  # noqa: E402
+
+
+def import_artifact_path(repo_root: Path, path: Path, workspace_root: Path) -> str:
+    resolved = path.resolve()
+    if resolved.is_relative_to(workspace_root.resolve()):
+        return marker_path(resolved, workspace_root=workspace_root)
+    return relative_path(repo_root, resolved)
 
 def validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, Any]:
     try:
@@ -82,12 +89,12 @@ def validate_markdown_preview(markdown: str, *, title: str = "") -> dict[str, An
     }
 
 
-def resolve_staged_html(repo_root: Path, staged_filename: str) -> Path:
-    return resolve_staged_import_source(repo_root, staged_filename, allowed_suffixes=HTML_STAGED_SUFFIXES)
+def resolve_staged_html(staging_root: Path, staged_filename: str) -> Path:
+    return resolve_staged_import_source(staging_root, staged_filename, allowed_suffixes=HTML_STAGED_SUFFIXES)
 
 
 def resolve_staged_import_source(
-    repo_root: Path,
+    staging_root: Path,
     staged_filename: str,
     *,
     allowed_suffixes: set[str] | None = None,
@@ -95,46 +102,57 @@ def resolve_staged_import_source(
     filename = str(staged_filename or "").strip()
     if not filename:
         raise ValueError("staged_filename is required")
-    path = (repo_root / STAGING_REL_DIR / filename).resolve()
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    staging_root = staging_root.resolve()
+    unresolved_path = staging_root / filename
+    if unresolved_path.is_symlink():
+        raise ValueError("staged import sources must not be symlinks")
+    path = unresolved_path.resolve()
     if staging_root not in [path, *path.parents]:
-        raise ValueError(f"staged file must resolve inside {STAGING_REL_DIR.as_posix()}")
+        raise ValueError("staged file must resolve inside the configured import staging root")
     if not path.exists():
         raise FileNotFoundError(f"staged import source does not exist: {filename}")
     if path.is_dir():
         if allowed_suffixes is not None:
             raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(allowed_suffixes)))
         if path.parent != staging_root:
-            raise ValueError(f"staged Markdown packages must be direct child directories of {STAGING_REL_DIR.as_posix()}")
+            raise ValueError("staged Markdown packages must be direct child directories of the configured import staging root")
+        if path.is_symlink():
+            raise ValueError("staged Markdown packages must not be symlinks")
+        if any(candidate.is_symlink() for candidate in path.rglob("*")):
+            raise ValueError("staged Markdown packages must not contain symlinks")
         return path
+    if path.parent != staging_root:
+        raise ValueError("staged import files must be direct children of the configured import staging root")
     suffixes = allowed_suffixes or SUPPORTED_STAGED_SUFFIXES
     if path.suffix.lower() not in suffixes:
         raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(suffixes)))
     return path
 
 
-def list_staged_html_files(repo_root: Path) -> list[dict[str, Any]]:
+def list_staged_html_files(staging_root: Path, workspace_root: Path) -> list[dict[str, Any]]:
     return [
         file
-        for file in list_staged_import_source_files(repo_root)
+        for file in list_staged_import_source_files(staging_root, workspace_root)
         if file.get("source_format") == "html"
     ]
 
 
-def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+def list_staged_import_source_files(staging_root: Path, workspace_root: Path) -> list[dict[str, Any]]:
+    staging_root = staging_root.resolve()
     if not staging_root.exists():
         return []
     files: list[dict[str, Any]] = []
     candidates = [
         path
         for path in staging_root.iterdir()
-        if path.is_file() and path.suffix.lower() in SUPPORTED_STAGED_SUFFIXES
+        if path.is_file() and not path.is_symlink() and path.suffix.lower() in SUPPORTED_STAGED_SUFFIXES
     ]
     package_candidates = [
         path
         for path in staging_root.iterdir()
-        if path.is_dir() and not path.is_symlink()
+        if path.is_dir()
+        and not path.is_symlink()
+        and not any(candidate.is_symlink() for candidate in path.rglob("*"))
     ]
     for path in sorted(candidates, key=lambda candidate: candidate.name.lower()):
         if is_interactive_html_import_asset(path):
@@ -143,7 +161,7 @@ def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
         files.append(
             {
                 "filename": path.name,
-                "path": relative_path(repo_root, path),
+                "path": marker_path(path, workspace_root=workspace_root),
                 "source_format": source_format_for_path(path),
                 "size_bytes": stat.st_size,
                 "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -162,7 +180,7 @@ def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
         files.append(
             {
                 "filename": path.name,
-                "path": relative_path(repo_root, path),
+                "path": marker_path(path, workspace_root=workspace_root),
                 "source_format": "markdown_package",
                 "size_bytes": sum(file.stat().st_size for file in package_files),
                 "modified_utc": dt.datetime.fromtimestamp(modified, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -176,6 +194,8 @@ def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
 def generate_import_preview(
     repo_root: Path,
     *,
+    staging_root: Path,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
     include_prompt_meta: bool,
@@ -184,41 +204,51 @@ def generate_import_preview(
     if source_format == "markdown_package":
         return generate_markdown_package_import_preview(
             repo_root,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
             package_path=source_path,
             scope=scope,
         )
     if source_format == "markdown":
         return generate_markdown_import_preview(
             repo_root,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
         )
     if source_format == "text":
         return generate_text_import_preview(
             repo_root,
+            workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
         )
     if source_format == "svg":
         return generate_svg_import_preview(
             repo_root,
+            workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
         )
     if source_format == "image":
         return generate_image_import_preview(
             repo_root,
+            workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
         )
     if source_format == "file":
         return generate_file_media_import_preview(
             repo_root,
+            workspace_root=workspace_root,
             source_path=source_path,
             scope=scope,
         )
     return generate_html_import_preview(
         repo_root,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
         source_path=source_path,
         scope=scope,
         include_prompt_meta=include_prompt_meta,
@@ -228,6 +258,8 @@ def generate_import_preview(
 def generate_html_import_preview(
     repo_root: Path,
     *,
+    staging_root: Path,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
     include_prompt_meta: bool,
@@ -246,12 +278,12 @@ def generate_html_import_preview(
     )
     summary["scope"] = normalized_scope
     summary["source_format"] = "html"
-    summary["source_path"] = relative_path(repo_root, source_path)
-    summary["source_html"] = relative_path(repo_root, source_path)
-    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary["source_html"] = summary["source_path"]
+    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
-    apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
+    apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -330,6 +362,8 @@ def build_text_summary(source_text: str, source_filename_stem: str) -> dict[str,
 def generate_markdown_import_preview(
     repo_root: Path,
     *,
+    staging_root: Path,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
@@ -338,12 +372,12 @@ def generate_markdown_import_preview(
     summary = build_markdown_summary(source_markdown, source_path.stem)
     summary["scope"] = normalized_scope
     summary["source_format"] = "markdown"
-    summary["source_path"] = relative_path(repo_root, source_path)
-    summary["source_markdown"] = relative_path(repo_root, source_path)
-    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary["source_markdown"] = summary["source_path"]
+    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
-    apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
+    apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -351,6 +385,8 @@ def generate_markdown_import_preview(
 def generate_markdown_package_import_preview(
     repo_root: Path,
     *,
+    staging_root: Path,
+    workspace_root: Path,
     package_path: Path,
     scope: str,
 ) -> dict[str, Any]:
@@ -362,21 +398,23 @@ def generate_markdown_package_import_preview(
     summary = build_markdown_summary(package_markdown, package_path.name)
     summary["scope"] = normalized_scope
     summary["source_format"] = "markdown_package"
-    summary["source_path"] = relative_path(repo_root, package_root)
-    summary["source_markdown"] = relative_path(repo_root, markdown_path)
-    summary["package_path"] = relative_path(repo_root, package_root)
+    summary["source_path"] = marker_path(package_root, workspace_root=workspace_root)
+    summary["source_markdown"] = marker_path(markdown_path, workspace_root=workspace_root)
+    summary["package_path"] = summary["source_path"]
     summary["package_markdown_path"] = markdown_path.relative_to(package_root).as_posix()
-    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     rewrite_markdown_package_media_links(
         repo_root,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
         package_root=package_root,
         markdown_path=markdown_path,
         summary=summary,
         scope=normalized_scope,
     )
-    apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
+    apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -384,6 +422,7 @@ def generate_markdown_package_import_preview(
 def generate_text_import_preview(
     repo_root: Path,
     *,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
@@ -392,9 +431,9 @@ def generate_text_import_preview(
     summary = build_text_summary(source_text, source_path.stem)
     summary["scope"] = normalized_scope
     summary["source_format"] = "text"
-    summary["source_path"] = relative_path(repo_root, source_path)
-    summary["source_text"] = relative_path(repo_root, source_path)
-    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary["source_text"] = summary["source_path"]
+    summary["staging_root"] = marker_path(source_path.parent, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
@@ -404,6 +443,7 @@ def generate_text_import_preview(
 def generate_svg_import_preview(
     repo_root: Path,
     *,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
@@ -433,9 +473,9 @@ def generate_svg_import_preview(
         "markdown_preview": markdown,
         "scope": normalized_scope,
         "source_format": "svg",
-        "source_path": relative_path(repo_root, source_path),
-        "source_svg": relative_path(repo_root, source_path),
-        "staging_root": STAGING_REL_DIR.as_posix(),
+        "source_path": import_artifact_path(repo_root, source_path, workspace_root),
+        "source_svg": import_artifact_path(repo_root, source_path, workspace_root),
+        "staging_root": marker_path(source_path.parent, workspace_root=workspace_root),
         "tag_counts": {"svg": svg_count} if svg_count else {},
         "comment_count": 0,
     }
@@ -446,6 +486,7 @@ def generate_svg_import_preview(
 def generate_image_import_preview(
     repo_root: Path,
     *,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
@@ -453,9 +494,9 @@ def generate_image_import_preview(
     summary = build_image_summary(source_path, normalized_scope)
     summary["scope"] = normalized_scope
     summary["source_format"] = "image"
-    summary["source_path"] = relative_path(repo_root, source_path)
-    summary["source_media"] = relative_path(repo_root, source_path)
-    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary["source_media"] = summary["source_path"]
+    summary["staging_root"] = marker_path(source_path.parent, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
@@ -465,6 +506,7 @@ def generate_image_import_preview(
 def generate_file_media_import_preview(
     repo_root: Path,
     *,
+    workspace_root: Path,
     source_path: Path,
     scope: str,
 ) -> dict[str, Any]:
@@ -472,9 +514,9 @@ def generate_file_media_import_preview(
     summary = build_file_media_summary(source_path, normalized_scope)
     summary["scope"] = normalized_scope
     summary["source_format"] = "file"
-    summary["source_path"] = relative_path(repo_root, source_path)
-    summary["source_media"] = relative_path(repo_root, source_path)
-    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
+    summary["source_media"] = summary["source_path"]
+    summary["staging_root"] = marker_path(source_path.parent, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
@@ -503,7 +545,7 @@ def resolve_import_source(repo_root: Path, args: argparse.Namespace) -> Path:
         return path
     if args.staged_filename:
         try:
-            return resolve_staged_import_source(repo_root, args.staged_filename)
+            return resolve_staged_import_source(configured_workspace_paths(repo_root).import_staging, args.staged_filename)
         except (FileNotFoundError, ValueError) as exc:
             raise SystemExit(str(exc)) from exc
     raise SystemExit("Pass either --source-html or --staged-filename.")
@@ -513,7 +555,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Dry-run source import conversion for Docs Viewer source docs.")
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
     parser.add_argument("--source-html", default="", help="Import directly from an HTML file path.")
-    parser.add_argument("--staged-filename", default="", help="Import from var/docs/import-staging/<filename>.")
+    parser.add_argument("--staged-filename", default="", help="Import from the configured shared import staging root.")
     parser.add_argument("--scope", default="studio", choices=sorted(SCOPE_ROOTS.keys()), help="Target docs scope.")
     parser.add_argument("--include-prompt-meta", action="store_true", help="Include clearly identifiable prompt/meta blocks.")
     parser.add_argument("--markdown-preview-out", default="", help="Optional path to write the Markdown preview.")
@@ -523,9 +565,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     repo_root = detect_repo_root(args.repo_root)
+    workspace_paths = configured_workspace_paths(repo_root)
     source_path = resolve_import_source(repo_root, args)
     summary = generate_import_preview(
         repo_root,
+        staging_root=workspace_paths.import_staging,
+        workspace_root=workspace_paths.root,
         source_path=source_path,
         scope=args.scope,
         include_prompt_meta=bool(args.include_prompt_meta),

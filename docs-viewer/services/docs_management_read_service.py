@@ -83,7 +83,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)
-    if path in {routes.IMPORT_SOURCE_FILES_PATH, routes.IMPORT_HTML_FILES_PATH}:
+    if path == routes.IMPORT_SOURCE_FILES_PATH:
         return import_source_service.handle_import_source_files(repo_root)
     if path == routes.REVIEW_SESSIONS_PATH:
         return docs_review_sessions.list_review_sessions(repo_root)

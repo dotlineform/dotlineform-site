@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints
 title: Endpoint Overview
 added_date: 2026-06-07
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: scripts-docs-management-server
 ---
 # Docs Viewer Endpoint Overview
@@ -31,7 +31,6 @@ Docs Viewer local endpoints are JSON APIs served by the standalone Docs Viewer s
 | `GET /docs/source-config-settings` | [Source Config Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-config) | Return the settings edit contract. |
 | `GET /docs/source` | [Source Editor Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-editor) | Return Markdown body text and a revision token for one source doc. |
 | `GET /docs/import-source-files` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | List staged files that can be imported into docs source. |
-| `GET /docs/import-html-files` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | Compatibility alias for staged import listing. |
 | `GET /docs/publish/status` | [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) | Report pending public-scope working-to-published changes. |
 
 ## Docs Review GET Endpoints
@@ -58,7 +57,6 @@ The complete independently gated contract lives in [Docs Review Endpoints](/docs
 | `POST /docs/open-source` | [Source Editor Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-editor) | Open one source Markdown file in a local editor. |
 | `POST /docs/create` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | Create a new source Markdown doc. |
 | `POST /docs/import-source` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | Import a staged file into docs source. |
-| `POST /docs/import-html` | [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import) | Compatibility alias for source import. |
 | `POST /docs/rebuild` | [Rebuild And Audit Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-rebuild-audit) | Rebuild generated docs and docs-search for one scope. |
 | `POST /docs/broken-links` | [Rebuild And Audit Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-rebuild-audit) | Run a missing-target audit for one docs scope. |
 | `POST /docs/update-metadata` | [Source Mutation Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-mutations) | Update supported front matter fields for one source doc. |

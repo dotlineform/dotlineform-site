@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints-create-import
 title: Create And Import Endpoints
 added_date: 2026-06-07
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Create And Import Endpoints
@@ -46,7 +46,7 @@ Returned data:
   "files": [
     {
       "filename": "example.md",
-      "path": "var/docs/import-staging/example.md",
+      "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/example.md",
       "format": "markdown",
       "size_bytes": 0,
       "modified": "..."
@@ -70,8 +70,6 @@ Supported staged source formats:
 - `image`: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`
 - `file`: `.pdf`, `.zip`, `.csv`, `.tsv`, `.json`, `.jsonl`, `.docx`, `.xlsx`, `.pptx`
 
-`GET /docs/import-html-files` is a compatibility alias that returns the same payload.
-
 ## `POST /docs/import-source`
 
 Expected data:
@@ -91,7 +89,7 @@ Expected data:
 
 Actions:
 
-- validates `scope` and resolves `staged_filename` inside `var/docs/import-staging/`
+- validates `scope` and resolves `staged_filename` as a direct child of the W0-configured shared import drop-zone
 - parses staged HTML, Markdown, Markdown packages, text, SVG, image, and downloadable-file formats
 - converts import output to Markdown source
 - validates generated Markdown with the shared Docs Viewer Markdown renderer
@@ -108,13 +106,11 @@ Actions:
 
 Returned data can include preview Markdown, proposed doc identity, operation type, collision information, media plans, interactive HTML plans, written media records, created or overwritten source path, rebuild diagnostics, summary text, and `dry_run`.
 
-`POST /docs/import-html` is a compatibility alias that delegates to the same source import handler.
-
-## Planned Reviewed-Package Import
+## Reviewed-Package Follow-On
 
 [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will extend the managed import family with schema-aware Data Sharing JSON/JSONL collection import.
 
-The same request first moves `GET /docs/import-source-files` and `POST /docs/import-source` to the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. Endpoint services will resolve it through `configured_workspace_paths(repo_root).import_staging`, return marker-rooted paths, and report import unavailable through the W0 workspace capability contract when the root cannot be used. They will not fall back to `var/docs/import-staging/`.
+The endpoints now use the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. Endpoint services resolve it through `configured_workspace_paths(repo_root).import_staging`, return marker-rooted paths, and report import unavailable through the W0 workspace capability contract when the root cannot be used. They do not fall back to repo-local staging.
 
 It will resolve a safe immutable staged-file identity through Data Sharing metadata, detect supported package headers before the generic JSON/JSONL file fallback, and normalize document records before shared validation, media planning, source writes, and rebuild work. It will not import from the derived Docs Review `source/*.md` projection.
 

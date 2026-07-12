@@ -103,7 +103,8 @@ def write_staged_data_file(root: Path, filename: str, payload: object) -> Path:
 
 
 def write_staged_import_file(root: Path, filename: str, payload: bytes | str) -> Path:
-    path = root / "var/docs/import-staging" / filename
+    del root
+    path = data_sharing_workspace_root() / "import-staging" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     if isinstance(payload, bytes):
         path.write_bytes(payload)
@@ -113,7 +114,8 @@ def write_staged_import_file(root: Path, filename: str, payload: bytes | str) ->
 
 
 def write_staged_package_file(root: Path, package: str, filename: str, payload: bytes | str) -> Path:
-    path = root / "var/docs/import-staging" / package / filename
+    del root
+    path = data_sharing_workspace_root() / "import-staging" / package / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     if isinstance(payload, bytes):
         path.write_bytes(payload)

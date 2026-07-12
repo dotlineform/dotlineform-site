@@ -5,6 +5,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from docs_management_test_support import (
     docs_management_service,
     make_repo,
@@ -47,6 +49,26 @@ def test_capabilities_advertise_source_config_reads() -> None:
     ]
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
+
+
+def test_missing_external_workspace_disables_only_import_and_review_capabilities(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path / "missing-projects"))
+
+        payload = docs_management_service.capabilities_payload(repo_root)
+
+    capabilities = payload["capabilities"]
+    assert capabilities["docs_management"] is True
+    assert capabilities["source_editor"] is True
+    assert capabilities["html_import"] is False
+    assert capabilities["library_import"] is False
+    assert capabilities["docs_import"]["available"] is False
+    assert capabilities["docs_review"]["available"] is False
+    assert capabilities["scopes"]["studio"]["available"] is True
 
 def test_source_config_report_reads_known_config_files() -> None:
     with make_repo() as temp_path:

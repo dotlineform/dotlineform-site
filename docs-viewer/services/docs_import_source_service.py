@@ -41,6 +41,7 @@ from docs_source_model import (
     scope_root,
     write_text_atomic,
 )
+from services.paths import configured_workspace_paths, marker_path, workspace_status
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
@@ -54,9 +55,22 @@ class ImportSourceDependencies:
 
 
 def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
+    status = workspace_status(repo_root, required_paths=("import_staging",))
+    if not status["available"]:
+        return {
+            "ok": True,
+            "available": False,
+            "staging_root": status["root"],
+            "message": status["message"],
+            "files": [],
+        }
+    workspace_paths = configured_workspace_paths(repo_root)
     return {
         "ok": True,
-        "files": list_staged_import_source_files(repo_root),
+        "available": True,
+        "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
+        "message": "",
+        "files": list_staged_import_source_files(workspace_paths.import_staging, workspace_paths.root),
     }
 
 
@@ -65,6 +79,9 @@ def handle_import_source(
     body: Dict[str, Any],
     dry_run: bool,
     dependencies: ImportSourceDependencies,
+    *,
+    staging_root: Path,
+    workspace_root: Path,
 ) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
@@ -74,16 +91,18 @@ def handle_import_source(
     preview_only = bool(body.get("preview_only"))
     replacement_doc_id = str(body.get("replacement_doc_id") or "").strip()
     replacement_title = str(body.get("replacement_title") or "").strip()
-    source_path = resolve_staged_import_source(repo_root, staged_filename)
+    source_path = resolve_staged_import_source(staging_root, staged_filename)
     if is_interactive_html_import_asset(source_path):
         raise ValueError("interactive HTML script files cannot be selected as the primary import source")
     preview = generate_import_preview(
         repo_root,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
         source_path=source_path,
         scope=scope,
         include_prompt_meta=include_prompt_meta,
     )
-    interactive_plans = interactive_html_asset_plans(repo_root, scope)
+    interactive_plans = interactive_html_asset_plans(repo_root, staging_root, workspace_root, scope)
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans
         for interactive_plan in interactive_plans:
@@ -94,12 +113,28 @@ def handle_import_source(
             )
     if replacement_doc_id:
         apply_replacement_doc_id_to_preview(preview, replacement_doc_id)
-        retarget_markdown_package_media_plans(repo_root, preview, scope)
-        retarget_inline_raster_media_plans(repo_root, preview, scope)
+        if source_path.is_dir():
+            retarget_markdown_package_media_plans(
+                repo_root,
+                staging_root,
+                workspace_root,
+                source_path,
+                preview,
+                scope,
+            )
+        retarget_inline_raster_media_plans(staging_root, workspace_root, preview, scope)
     elif replacement_title:
         apply_replacement_title_to_preview(preview, replacement_title)
-        retarget_markdown_package_media_plans(repo_root, preview, scope)
-        retarget_inline_raster_media_plans(repo_root, preview, scope)
+        if source_path.is_dir():
+            retarget_markdown_package_media_plans(
+                repo_root,
+                staging_root,
+                workspace_root,
+                source_path,
+                preview,
+                scope,
+            )
+        retarget_inline_raster_media_plans(staging_root, workspace_root, preview, scope)
 
     docs = load_scope_docs(repo_root, scope)
     proposed_doc_id = str(preview["proposed_doc_id"])
@@ -141,7 +176,7 @@ def handle_import_source(
     if dry_run or preview_only or requires_overwrite_confirmation:
         dependencies.log_event(
             repo_root,
-            "docs-import-html-preview",
+            "docs-import-source-preview",
             {
                 "scope": scope,
                 "staged_filename": staged_filename,
@@ -198,12 +233,15 @@ def handle_import_source(
                 nonlocal inline_media_written, interactive_html_written
                 inline_media_written = materialize_inline_raster_media(
                     repo_root,
+                    staging_root=staging_root,
+                    workspace_root=workspace_root,
                     source_path=source_path,
                     import_preview=preview,
                     include_prompt_meta=include_prompt_meta,
                 )
                 interactive_html_written = materialize_interactive_html_assets(
                     repo_root,
+                    staging_root,
                     interactive_plans,
                     allow_overwrite=confirm_overwrite,
                 )
@@ -214,13 +252,13 @@ def handle_import_source(
                 scope,
                 [collision_doc.path],
                 write_import_artifacts,
-                suppression_reason="docs-import-html-overwrite",
+                suppression_reason="docs-import-source-overwrite",
                 docs_doc_ids=[collision_doc.doc_id],
                 search_doc_ids=search_doc_ids,
             )
         dependencies.log_event(
             repo_root,
-            "docs-import-html-overwrite",
+            "docs-import-source-overwrite",
             {
                 "scope": scope,
                 "staged_filename": staged_filename,
@@ -274,12 +312,15 @@ def handle_import_source(
             nonlocal inline_media_written, interactive_html_written
             inline_media_written = materialize_inline_raster_media(
                 repo_root,
+                staging_root=staging_root,
+                workspace_root=workspace_root,
                 source_path=source_path,
                 import_preview=preview,
                 include_prompt_meta=include_prompt_meta,
             )
             interactive_html_written = materialize_interactive_html_assets(
                 repo_root,
+                staging_root,
                 interactive_plans,
                 allow_overwrite=confirm_overwrite,
             )
@@ -290,13 +331,13 @@ def handle_import_source(
             scope,
             [target_path],
             write_import_artifacts,
-            suppression_reason="docs-import-html-create",
+            suppression_reason="docs-import-source-create",
             docs_doc_ids=[doc_id],
             search_doc_ids=[doc_id],
         )
     dependencies.log_event(
         repo_root,
-        "docs-import-html-create",
+        "docs-import-source-create",
         {
             "scope": scope,
             "staged_filename": staged_filename,

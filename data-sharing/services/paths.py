@@ -158,6 +158,7 @@ def workspace_status(
     repo_root: Path | None = None,
     *,
     environ: Mapping[str, str] | None = None,
+    required_paths: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     try:
         paths = (
@@ -165,6 +166,17 @@ def workspace_status(
             if repo_root is not None
             else workspace_paths(environ=environ)
         )
+        for path_name in required_paths:
+            if path_name not in {"exports", "import_staging", "import_preview", "meta"}:
+                raise ValueError(f"Unknown Data Sharing workspace path: {path_name}")
+            required_path = getattr(paths, path_name)
+            display_path = marker_path(required_path, workspace_root=paths.root)
+            if not required_path.exists():
+                raise ValueError(f"Data Sharing workspace path does not exist: {display_path}")
+            if not required_path.is_dir():
+                raise ValueError(f"Data Sharing workspace path must be a directory: {display_path}")
+            if not os.access(required_path, os.R_OK | os.W_OK):
+                raise ValueError(f"Data Sharing workspace path must be readable and writable: {display_path}")
     except (OSError, ValueError) as exc:
         return {
             "available": False,

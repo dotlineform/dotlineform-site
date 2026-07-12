@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-operations
 title: Management Operations
 added_date: 2026-05-19
-last_updated: 2026-06-07
+last_updated: 2026-07-12
 parent_id: scripts-docs-management-server
 ---
 # Docs Viewer Management Operations
@@ -27,7 +27,7 @@ docs-viewer/source/library/*.md
 Local operational write targets include:
 
 ```text
-var/docs/import-staging/
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 var/docs/logs/
 var/docs/watch-suppressions/
 assets/docs/interactive/<scope>/
