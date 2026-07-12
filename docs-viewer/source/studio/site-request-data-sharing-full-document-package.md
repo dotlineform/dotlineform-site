@@ -116,7 +116,7 @@ Data Sharing supplies:
 - validated record and inventory contracts
 - provenance and validation diagnostics
 
-Docs Viewer Import owns target-scope selection, record selection, front-matter normalization, explicit create/overwrite/skip choices, parent/link mapping, embedded-image materialization, configured source writes, and rebuilds. It reads the staged JSONL rather than the derived preview Markdown.
+Docs Viewer Import owns target-scope selection, record selection, front-matter normalization, explicit create/overwrite/skip choices, parent mapping, body-link pass-through, embedded-image materialization, configured source writes, and rebuilds. It reads the staged JSONL rather than the derived preview Markdown.
 
 Docs Review may link to that managed import flow, but it must not acquire canonical mutation endpoints. The detailed reuse boundary is specified in [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
 
@@ -173,9 +173,9 @@ Illustrative shape:
 {"record_type":"document","doc_id":"example","source_path":"example.md","source_sha256":"...","document":{"title":"Example","parent_id":""},"canonical_markdown":"<exact UTF-8 Markdown file including front matter and source tokens>","assets":[{"asset_id":"asset-001","kind":"image","package_path":"assets/media/example.webp","source_token":"<exact token text>","sha256":"..."}]}
 ```
 
-`canonical_markdown` is the authoritative editable field for that row. It contains the complete UTF-8 source file, including front matter, body Markdown, media tokens, semantic-reference tokens, raw allowed embeds, comments, and formatting. JSON escaping is transport encoding only; decoding the string must reproduce the original source bytes used for `source_sha256`.
+On export, `canonical_markdown` is the authoritative editable field for that row. It contains the complete UTF-8 source file, including front matter, body Markdown, media tokens, semantic-reference tokens, raw allowed embeds, comments, and formatting. JSON escaping is transport encoding only; decoding the string must reproduce the original source bytes used for `source_sha256`.
 
-Extracted `document` metadata makes selection, hierarchy analysis, and prompt use easier, but returned validation reparses `canonical_markdown`. It does not trust duplicated title, parent, or summary fields when they disagree with the returned source.
+Extracted `document` metadata makes selection, hierarchy analysis, and prompt use easier. When returned `canonical_markdown` is present, validation reparses it and does not trust duplicated title, parent, or summary fields when they disagree with the returned source.
 
 Each document row records at least:
 
@@ -192,7 +192,15 @@ Each document row records at least:
 
 The `doc_id` and parsed front matter must agree on export. The row record, not filename inference, is authoritative for package identity.
 
-The returned JSONL is a complete corpus, not a changed-field patch. It may contain new document rows created by the external service. Returned validation derives their `doc_id`, title, hierarchy, and hashes from `canonical_markdown` and rejects duplicate identities.
+The returned JSONL must retain the complete package record set, but it does not need to repeat body content for every record. Content presence has explicit mutation meaning:
+
+- returned `canonical_markdown` or compact `content` present: validate and use that returned content
+- content omitted for a document from the trusted original export: later import applies only explicitly returned allowed front-matter changes to the current canonical source; use the exact exported source only to materialize a readable Docs Review projection
+- content omitted for a new structural document: require explicit `doc_id`, title, and allowed hierarchy/front-matter details, then plan a standard new document with an empty body and normal target-scope defaults
+
+Omitting content is not a request to erase or restore content. The normalized record must retain a content intent such as replace, preserve-existing, or empty-new so preview rehydration cannot turn a hierarchy-only return into a body overwrite. Preserve-existing apply reads the current canonical source and leaves its body and unrelated front matter unchanged.
+
+A returned package that omits content for an existing record must remain safely associated with the trusted original export so the review projection can be rehydrated. Missing content is blocking only when the record is neither resolvable to that trusted export nor a valid explicitly described new structural document. Duplicate identities remain invalid.
 
 ## Asset And Embedded-Content Contract
 
@@ -272,12 +280,13 @@ Data Sharing intake must treat all returned files as untrusted.
 Validation includes:
 
 - JSONL header/schema validation and one-object-per-line parsing
-- complete `canonical_markdown` string validation for every document row
+- `canonical_markdown` string validation for every content-bearing document row
+- explicit content-intent validation for content-bearing, preserve-existing, and empty-new rows
 - configurable total size, file count, and per-file size limits
 - safe archive extraction with traversal, absolute-path, device-file, symlink, nesting, and compression-ratio limits only when optional archive intake is enabled
 - allowed source and asset types
 - duplicate/case-colliding path detection
-- returned `canonical_markdown` front-matter parsing and unique `doc_id` validation
+- returned `canonical_markdown` front-matter parsing where present and unique `doc_id` validation
 - complete hierarchy validation within the returned package context
 - asset-reference and missing-file checks
 - link/reference inventory regeneration
@@ -285,11 +294,11 @@ Validation includes:
 - no execution of returned scripts during intake
 - concise errors, warnings, and package counts
 
-Successful intake materializes each validated `canonical_markdown` row as persistent read-only `source/<doc-id>.md` inside `import-preview/<package_id>/`, copies validated asset files, and writes regenerated manifests for Docs Review. This materialization is a review-workspace projection; it does not write canonical source or public assets and is not the later import input.
+Successful intake materializes persistent read-only `source/<doc-id>.md` inside `import-preview/<package_id>/`, copies validated asset files, and writes regenerated manifests for Docs Review. Content-bearing rows use validated returned content. Preserve-existing rows use the trusted exported source for preview while retaining their non-content mutation intent for later import. New structural rows without content materialize a valid empty-body source from their supplied details. This materialization is a review-workspace projection; it does not write canonical source or public assets and is not the later import input.
 
 The Docs Review consumer requires the trusted handoff `manifest.json` to use `schema_version: docs_review_validated_package_v1`, carry the matching safe `package_id`, set `status: validated`, identify `source_scope`, and optionally identify `default_doc_id` and a display `title`. Its regenerated `inventories/assets.json` uses asset records with `kind`, the source `token_path`, and a safe `package_path` under `assets/`. These are handoff fields owned by Data Sharing intake, not external-service assertions.
 
-The compact `document-content` Content review action now exercises this handoff for a rendered-derived, text-only package: it validates the materialized Markdown set in memory, then writes the timestamped package and trusted manifest. Existing timestamped package folders are rejected rather than replaced. A document whose parent is outside a partial compact selection is rooted in the derived projection with a preserved validation warning so the package remains buildable. This proves the live producer/consumer seam, but it does not satisfy the full-package contract. `document-full-source` must still provide exact `canonical_markdown`, copied and regenerated asset/dependency inventories, and the complete returned-package checks described here; its hierarchy validation remains complete and strict.
+The compact `document-content` Content review action now exercises this handoff for a rendered-derived, text-only package: it validates the materialized Markdown set in memory, then writes the timestamped package and trusted manifest. Existing timestamped package folders are rejected rather than replaced. A document whose parent is outside a partial compact selection is rooted in the derived projection with a preserved validation warning so the package remains buildable. This proves the live producer/consumer seam, but it does not satisfy the full-package contract. The `document-full-source` export must still provide exact `canonical_markdown` plus copied asset/dependency inventories, and returned intake must perform the complete package checks described here; its hierarchy validation remains complete and strict.
 
 ## Review Rendering And Script Safety
 
@@ -357,9 +366,9 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 ### 6. Returned Intake And Validation
 
 - accept returned JSONL plus separate asset files, with optional safe archive intake
-- parse complete returned document rows and materialize persistent read-only preview Markdown
+- parse the complete returned record set, preserve explicit content intent, and materialize persistent read-only preview Markdown
 - regenerate inventories from returned JSONL and actual asset files
-- validate canonical Markdown, hierarchy, assets, links, and embeds
+- validate returned or rehydrated Markdown, hierarchy, assets, links, and embeds
 - create the Docs Review handoff folder
 
 ### 7. Docs Review Integration
@@ -381,12 +390,14 @@ Both profiles preserve the core Data Sharing benefit of sending many documents i
 Phase 1 is complete when:
 
 - all selected canonical Markdown is exported without content transformation in one JSONL file
-- each document row contains complete `canonical_markdown` and its per-document asset/dependency manifest
+- each exported document row contains complete `canonical_markdown` and its per-document asset/dependency manifest
 - all supported referenced local assets are copied or explicitly classified
 - manifests and trusted export metadata contain hashes and provenance
 - the JSONL can be sent to ChatGPT as the single textual corpus while mapped asset files are supplied separately
 - optional archive transport is capability-gated rather than required
 - returned packages are safely extracted and validated without executing content
+- returned rows may omit content without error when they resolve to trusted exported source or describe a valid new structural document
+- hierarchy-only returns surgically update allowed front matter on current canonical source rather than replacing it with exported, preview, or empty content
 - returned JSONL is materialized into persistent read-only preview Markdown only after validation
 - changed/new Markdown and assets are reflected in regenerated inventories
 - a validated returned package builds successfully in Docs Review

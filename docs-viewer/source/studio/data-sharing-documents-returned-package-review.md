@@ -63,6 +63,8 @@ The review/apply layer treats returned fields as candidate changes.
 Only fields used by the selected write action are considered write candidates.
 Unchanged context fields are not required.
 
+For reviewed-package hierarchy work, omission of `content` or `canonical_markdown` is an explicit non-content change. Later apply edits only the returned allowed front-matter fields on the current canonical source, preserving its body and unrelated front matter. A new explicitly described structural document uses an empty body unless content is supplied. Any preview body rehydrated from trusted export/current source context remains derived review material and must not turn into replacement-content authority.
+
 ## Returned Records Operation
 
 The review page loads records from the selected staged file through:

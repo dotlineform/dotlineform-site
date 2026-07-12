@@ -1,0 +1,253 @@
+---
+doc_id: site-request-docs-import-reviewed-package-preparation-refactor
+title: Docs Import Reviewed Package Preparation And Refactor
+added_date: 2026-07-12
+last_updated: 2026-07-12
+ui_status: proposed
+summary: Resolve collection-import semantics and establish the focused frontend, service, plan/apply, and authority boundaries required by reviewed-package import.
+parent_id: site-request-docs-import-reviewed-package
+viewable: true
+---
+# Docs Import Reviewed Package Preparation And Refactor
+
+## Status
+
+Proposed prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation).
+
+The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
+
+## Why This Request Exists
+
+The completed Phase 7 management work was driven primarily by the need to add Docs Review without leaking management authority into the review app. It produced explicit management domains, focused import/modal/lifecycle owners, and a narrow management event router.
+
+Reviewed-package import creates a different pressure:
+
+- one immutable staged JSONL file contains many related document records
+- create/overwrite/skip decisions, hierarchy, and media must be resolved as one collection plan covering every package record
+- all document collision choices must be resolved before any configured-source write
+- one batch may require several source/media writes followed by coordinated Docs payload and search rebuilds
+- cancellation and failure semantics apply to the complete operation rather than one staged file at a time
+
+The existing `docs-html-import-workflow.js` can process several independent staged files sequentially. That is not the required one-file-to-many-document collection transaction and must not become the collection orchestrator.
+
+## Relationship To Existing Requests
+
+- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns product decisions and final acceptance criteria.
+- This request owns prerequisite batch decisions, owner contracts, and targeted refactor evidence.
+- [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation) owns end-to-end feature execution after the applicable preparation gates are resolved.
+- [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap) Phase 7 is complete for concrete management-coordinator work. This request must consume those boundaries rather than reopen general management refactoring.
+
+## Decision
+
+Create a focused collection-import family inside managed Docs Import.
+
+Do not add collection state or record-level command behavior to `docs-viewer-management.js`, `docs-viewer-management-actions.js`, `docs-viewer-management-import-controller.js`, Docs Review, or Data Sharing.
+
+The intended composition is:
+
+```text
+safe reviewed-package handoff or staged-file selection
+  -> managed Docs Import collection controller
+  -> wrapper-specific adapter
+  -> normalized ImportContent records
+  -> collection plan
+  -> explicit collision decisions
+  -> final validated batch plan
+  -> confirmed batch apply
+  -> coordinated rebuild and result
+```
+
+## Target Ownership
+
+### Management Shell
+
+`docs-viewer-management-import-controller.js` remains limited to lazy Docs Import initialization and modal handoff. The management event router may dispatch a named import handoff, but it must not receive package records, collision state, plans, or write behavior.
+
+### Existing Single-Source Import
+
+Retain the existing single-source workflow for HTML, Markdown, text, SVG, media, files, interactive HTML, and Markdown packages.
+
+Ordinary staged sources should continue through the same user-visible create/overwrite behavior after shared lower-level helpers are extracted.
+
+### Collection Import Frontend
+
+Add a focused collection controller/workflow under `docs-viewer/runtime/js/import/`. Exact filenames can follow implementation conventions, but the owner must hold the complete operation state:
+
+- safe staged package identity
+- target scope
+- normalized records
+- collision and create/overwrite/skip decisions
+- parent and media plan summaries
+- blockers and warnings
+- preview, decision, confirmation, applying, and result state, with cancellation available only before apply
+
+This is the command family whose independent state and lifecycle justify extraction. It is not a reason to split unrelated management action commands.
+
+### Collection Import Service
+
+Add a focused collection orchestrator, such as `docs_import_data_sharing_documents.py`, that:
+
+- validates the immutable staged package identity and schema
+- obtains normalized records from the Data Sharing documents adapter
+- plans the complete package before writing
+- coordinates shared per-document plan/apply helpers
+- reports precise record and batch results
+- invokes a batch rebuild boundary rather than the single-document HTTP/service entrypoint once per record
+
+### Shared Per-Document Plan And Apply
+
+Extract the smallest reusable per-document boundary from `docs_import_source_service.py`:
+
+- collision and action validation
+- create/overwrite source formatting
+- allowed front-matter mapping and preservation
+- media planning and materialization
+- target-path writes
+- activity and result shaping
+
+The existing single-source orchestrator must use the extracted boundary too. Do not keep parallel single and collection implementations of ordinary document formatting, media handling, writes, or rebuild follow-through.
+
+The shared plan/apply boundary must also distinguish content replacement from a metadata/hierarchy-only update. For an existing record whose returned content is omitted, apply reads the current configured canonical source and changes only the explicitly supplied allowed front-matter fields, such as `parent_id`. It preserves the current body and unrelated front matter and never writes the exported or preview body back. For a new structural record whose content is omitted, create uses a standard empty body.
+
+### Generated Rebuilds
+
+Plan all affected source targets before apply. Rebuild Docs payloads and search through the existing write/rebuild owner after the chosen batch mutation boundary completes.
+
+Do not rebuild once per record.
+
+## Authority And Data Boundaries
+
+- The immutable staged JSONL is the authority for returned fields and content intent. For preserve-existing rows, the current configured canonical source remains authoritative for every field and body region not explicitly changed by the returned record.
+- Persistent Docs Review Markdown is a derived read-only projection and is never import input.
+- Docs Review may pass only a safe package/staged-file identity to managed Docs Import.
+- Managed Docs Import owns target-scope selection, planning, confirmation, configured-source/media writes, and rebuilds.
+- Data Sharing owns package provenance and staging contracts but has no general configured-source mutation authority.
+- Browser requests must never supply arbitrary filesystem paths.
+- Target-scope changes must be revalidated at apply even though the staged package itself is immutable.
+
+## Resolved Batch Semantics
+
+P0 was completed on 2026-07-12. The former O1-O12 questions were resolved through review and their approved product contracts were copied into [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package), which remains the authority. This preparation request has no remaining open batch-semantics issue.
+
+The resolved direction is deliberately simple:
+
+- import every package record; subset selection is deferred
+- reuse existing parents or create explicitly supplied new parent documents
+- preserve body links and non-blocking asset problems for the user to repair after import
+- block unsafe package/identity and invalid hierarchy states; require explicit skip/cancel for record-level source errors
+- use per-document atomic writes without batch rollback, in package order
+- reuse the existing per-record media behavior and one managed targeted rebuild
+- resolve collisions sequentially with `Overwrite`, `Skip`, `Cancel`, and `Apply to all`
+- keep apply synchronous, cancellable only before writes, with no speculative progress/limit system
+- reuse the existing import listing and POST routes and recompute target state at apply
+- require reconfirmation only when collision, target identity, parent resolution, hierarchy validity, or blocker facts change
+- write a grouped Markdown result through the small shared JSON-to-Markdown helper
+
+Implementation details and verification remain in the work packages below and in [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation).
+
+## Preparation Work Packages
+
+### P0. Resolve Batch Semantics — Complete 2026-07-12
+
+- O1-O12 resolved
+- approved product decisions copied into the parent request
+- implementation checklist updated with the resulting contracts
+
+### P1. External Staging Root Contract
+
+- move existing Docs Import formats to the W0-resolved shared drop-zone
+- preserve current containment and format behavior
+- remove production fallback to repo-local staging
+
+### P2. Normalized Content And Adapter Boundary
+
+- define the generic `ImportContent` record, including replace, preserve-existing, and empty-new content intent
+- add content-based Markdown, HTML, and plain-text entrypoints beneath file wrappers
+- implement the Data Sharing documents adapter without making Data Sharing provenance mandatory in the generic record
+
+### P3. Shared Per-Document Plan And Apply
+
+- extract reusable document planning and apply helpers
+- support surgical metadata/hierarchy-only updates against current canonical source without replacing existing bodies or unrelated front matter
+- move the existing single-source orchestrator onto them without behavior change
+- keep rebuild orchestration in the existing write/rebuild owner
+
+### P4. Collection Dry-Run Orchestrator
+
+- normalize every package record
+- produce collision, hierarchy, new-parent dependency, media, blocker, and warning plans
+- prove complete planning performs no configured-source or media writes
+
+### P5. Collection Frontend Boundary
+
+- establish a focused collection controller and view state
+- keep the existing single-source workflow separate
+- connect only safe package identity and named management service commands through the existing import host
+- reuse the existing import-source listing/POST routes rather than adding a collection route family
+
+### P6. Approved Batch Apply Boundary
+
+- implement the O5/O6/O7 mutation and revalidation decisions
+- perform coordinated writes and rebuilds
+- return the O12 result contract
+- write the focused O12 Markdown report under `import-staging/results/`
+
+### P7. Shared JSON-To-Markdown Report Helper
+
+- add `studio/shared/python/json_markdown_report.py` with the narrow render/write API defined by O12
+- add deterministic escaping, ordering, nested mapping/list, and atomic-write tests under `studio/tests/python/`
+- keep path selection, marker projection, app grouping semantics, and activity behavior caller-owned
+- make the reviewed-package result report the first consumer without introducing a reporting framework
+
+## Non-Goals
+
+- reopening Phase 7 management-coordinator refactoring
+- splitting unrelated management action families
+- a plugin or generic handler framework
+- a general application store or event bus
+- invoking the single-document HTTP endpoint once per collection record
+- importing persistent preview Markdown
+- giving Docs Review or Data Sharing configured-source mutation authority
+- implementing the future standalone collection schema
+- broad scope-manifest, HTTP-dispatch, config, CSS, or test-suite cleanup
+- automatic remote media upload
+
+## Verification Strategy
+
+- pure adapter and normalized-record tests
+- pure collection-plan tests covering complete-package inclusion, collisions, hierarchy, and media
+- focused adapter tests proving body links pass through unchanged without resolution diagnostics
+- focused asset tests proving unsupported or failed materialization preserves source references, warns, and continues without unsafe copies
+- single-source regression tests against the extracted per-document helpers
+- direct service tests proving plan requests do not write
+- direct service tests for the approved no-rollback partial-failure, revalidation, and result contract
+- focused browser coverage only for route/module wiring and plan/apply request agreement
+- public import-boundary tests proving collection/import modules remain management-only
+- focused sanitization scans for external paths, logs, and result payloads
+
+Do not make modal timing, focus choreography, table layout, or button copy part of permanent workflow tests.
+
+## Completion Criteria
+
+This preparation request is complete when:
+
+- O1-O12 are resolved and the parent request carries the approved product decisions
+- named frontend, adapter, service, plan, apply, rebuild, and result owners are documented
+- the focused grouped Markdown result-report owner and safe `import-staging/results/` path are documented
+- the small cross-app JSON-to-Markdown helper is implemented and verified without app-specific dependencies
+- the existing single-source importer uses the shared per-document plan/apply boundary without behavior change
+- a collection dry run can produce the complete-package plan with no writes
+- the batch mutation, target-drift, rebuild, and partial-failure contracts are approved and testable
+- no collection state or write authority has moved into the management coordinator, Docs Review, or Data Sharing
+- the implementation tracker is updated to consume the approved preparation outcomes
+
+## Related References
+
+- [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package)
+- [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation)
+- [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
+- [Docs Viewer Architecture Assessment And Refactor Roadmap](/docs/?scope=studio&doc=site-request-docs-viewer-architecture-refactor-roadmap)
+- [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
+- [Create And Import Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-create-import)
+- [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
+- [Docs Review](/docs/?scope=studio&doc=docs-viewer-review)

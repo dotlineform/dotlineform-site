@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-90da4cf78a1ffa02ed7068b6992cbd53",
-    "generated_at_utc": "2026-07-12T06:10:17Z",
-    "count": 238
+    "version": "blake2b-c0cad50fe20e9a1f73bd66eed7ea3bef",
+    "generated_at_utc": "2026-07-12T06:45:17Z",
+    "count": 239
   },
   "entries": [
     {
@@ -1396,6 +1396,35 @@
       "search_text": "site-request-docs-import-reviewed-package-implementation site request docs import reviewed package implementation docs import reviewed package implementation docs import reviewed package 2026-07-12 2026 07 12"
     },
     {
+      "id": "site-request-docs-import-reviewed-package-preparation-refactor",
+      "kind": "doc",
+      "title": "Docs Import Reviewed Package Preparation And Refactor",
+      "href": "/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-preparation-refactor",
+      "last_updated": "2026-07-12",
+      "parent_id": "site-request-docs-import-reviewed-package",
+      "parent_title": "Docs Import Reviewed Package",
+      "display_meta": "2026-07-12 • Docs Import Reviewed Package",
+      "search_terms": [
+        "site-request-docs-import-reviewed-package-preparation-refactor",
+        "site",
+        "request",
+        "docs",
+        "import",
+        "reviewed",
+        "package",
+        "preparation",
+        "refactor",
+        "docs import reviewed package preparation and refactor",
+        "and",
+        "docs import reviewed package",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "site-request-docs-import-reviewed-package-preparation-refactor site request docs import reviewed package preparation refactor docs import reviewed package preparation and refactor and docs import reviewed package 2026-07-12 2026 07 12"
+    },
+    {
       "id": "site-request-docs-viewer-architecture-refactor-roadmap",
       "kind": "doc",
       "title": "Docs Viewer Architecture Assessment And Refactor Roadmap",
@@ -1460,10 +1489,10 @@
       "kind": "doc",
       "title": "Library Import Generated Parent Nodes Request",
       "href": "/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes",
-      "last_updated": "2026-05-04 23:26",
+      "last_updated": "2026-07-12",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-04 23:26 • Change Requests",
+      "display_meta": "2026-07-12 • Change Requests",
       "search_terms": [
         "site-request-library-import-generated-parent-nodes",
         "site",
@@ -1477,14 +1506,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-04 23:26",
+        "2026-07-12",
         "2026",
-        "05",
-        "04",
-        "23",
-        "26"
+        "07",
+        "12"
       ],
-      "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
+      "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-07-12 2026 07 12"
     },
     {
       "id": "site-request-r2-media-upload-automation",

@@ -131,11 +131,14 @@ The file shape is:
 
 - system-generated front matter
 - mapped front matter copied from the staged row
-- body copied verbatim from the staged row content field
+- body copied verbatim from the staged row content field when supplied
+- otherwise a review-only body rehydrated from trusted source context for an existing document, or an empty body for a valid new structural document
 
-The body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process the returned content. If the selected content field is `content`, the body is exactly that `content` value.
+When returned content is supplied, the body must be a straight copy from the staged JSON field. Do not normalize, convert, wrap, enrich, linkify, or otherwise process it. If the selected content field is `content`, the body is exactly that `content` value.
 
-`content_format` is metadata only for this workflow. Data Sharing must not require, reject, or branch on it when creating review source files. Plain text and Markdown content are both human-readable in Docs Viewer, so the source-folder builder writes the JSON `content` value verbatim into the `.md` body either way.
+When returned content is omitted, materialization may use trusted exported/current source context only to make the review projection readable. The normalized record must retain a preserve-existing content intent so later import does not write that derived body. A valid new structural document with omitted content materializes an empty body.
+
+`content_format` is metadata only for this workflow. Data Sharing must not require, reject, or branch on it when creating review source files. When content is supplied, plain text and Markdown content are both human-readable in Docs Viewer, so the source-folder builder writes the JSON `content` value verbatim into the `.md` body either way.
 
 Front matter should be mapping-driven rather than hard-coded. Generated/system fields are owned by the source-folder builder. Mapped fields come from the staged row when present.
 
@@ -232,7 +235,9 @@ The first implementation should:
 
 - require a user action to create or regenerate the review source folder
 - show the staged filename, source export id, source scope, content format, record count, and warnings before opening
-- block or report rows with missing `doc_id`, missing `title`, or missing content
+- block or report rows with missing `doc_id` or missing required identity/title details
+- accept missing content when the row resolves to trusted exported content for preview or explicitly describes a valid new structural document
+- preserve an explicit non-content mutation intent so rehydrated preview Markdown cannot authorize a body overwrite
 - warn when content was truncated during prepare
 - keep all canonical source writes out of the Data Sharing source-folder action
 

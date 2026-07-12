@@ -11,6 +11,14 @@
       "parent_title": "Docs Import Reviewed Package"
     },
     {
+      "doc_id": "site-request-docs-import-reviewed-package-preparation-refactor",
+      "title": "Docs Import Reviewed Package Preparation And Refactor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package-preparation-refactor.json",
+      "added_date": "2026-07-12",
+      "parent_id": "site-request-docs-import-reviewed-package",
+      "parent_title": "Docs Import Reviewed Package"
+    },
+    {
       "doc_id": "site-request-data-sharing-full-document-package",
       "title": "Data Sharing Full Document Package",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
@@ -73,15 +81,7 @@
       "added_date": "2026-06-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "site-request-data-sharing-import-content",
-      "title": "Data Sharing Import Content",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-import-content.json",
-      "added_date": "2026-06-28",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-07-11T23:42:04Z"
+  "generated_at": "2026-07-12T06:28:36Z"
 }

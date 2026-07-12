@@ -2,7 +2,7 @@
 doc_id: site-request-library-import-generated-parent-nodes
 title: Library Import Generated Parent Nodes Request
 added_date: 2026-05-04
-last_updated: "2026-05-04 23:26"
+last_updated: 2026-07-12
 ui_status: draft
 parent_id: change-requests
 viewable: true
@@ -11,7 +11,14 @@ viewable: true
 
 Status:
 
-- proposed
+- absorbed into [Docs Import Reviewed Package Preparation And Refactor](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-preparation-refactor)
+- do not implement this request as a separate hierarchy-import workflow
+
+## Disposition
+
+Reviewed-package import now owns the applicable requirement: reuse an existing target parent, or create a missing parent when the reviewed package supplies a complete explicit document record for that identity. Missing undeclared parents block the plan, and multi-level new parent chains are validated as a complete hierarchy while writes retain package order.
+
+The reviewed-package export already transports complete document context and its return contract carries explicit parent details. Returned body content may be omitted for hierarchy-only work: existing bodies are preserved and new structural parents use empty bodies unless content is supplied. It therefore does not need this proposal's separate `new_parent_nodes` section. The original proposal remains below as historical context only; its wrapper shape, selection behavior, backup model, and open questions are not an additional implementation contract.
 
 ## Summary
 

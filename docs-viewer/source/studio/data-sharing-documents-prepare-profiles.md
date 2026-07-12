@@ -56,6 +56,8 @@ The current file defines two enabled document package profiles:
 - `document-tree`
   JSON document tree for exporting selected document subtrees as nested `docs` / `children` nodes containing only `doc_id` and `title`; this profile is export-only and does not support returned-package import
 
+Retain `document-tree` as a lightweight export-only inspection profile. Hierarchy reorganization that may create or edit parent nodes should use the full-content package so the external service has document meaning as context. Its returned rows may omit unchanged body content under the reviewed-package content-intent contract; the tree-only profile is not promoted into a second hierarchy-apply workflow.
+
 Profile ids describe package shape, not Docs Viewer scope.
 Add a new profile only when a scope or workflow needs a materially different package shape, field set, limits, or selection behavior.
 
