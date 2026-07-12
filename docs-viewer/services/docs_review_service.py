@@ -34,8 +34,6 @@ def docs_review_get_payload(
                 "review_manifest_read": available,
                 "review_asset_inventory_read": available,
                 "review_generated_read": available,
-                "review_source_read": available,
-                "review_source_write": available,
                 "review_build": available,
                 "canonical_write": False,
                 "management": False,
@@ -52,8 +50,6 @@ def docs_review_get_payload(
         return packages.read_index_tree(repo_root, package_id)
     if path == routes.PAYLOAD_PATH:
         return packages.read_payload(repo_root, package_id, _query_value(query, "doc_id"))
-    if path == routes.SOURCE_PATH:
-        return packages.read_source(repo_root, package_id, _query_value(query, "doc_id"))
     raise FileNotFoundError("Not found")
 
 
@@ -76,6 +72,4 @@ def docs_review_post_response(
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     if path == routes.BUILD_PATH:
         return HTTPStatus.OK, packages.build_package(repo_root, body)
-    if path == routes.SOURCE_PATH:
-        return HTTPStatus.OK, packages.write_source(repo_root, body)
     raise FileNotFoundError("Not found")

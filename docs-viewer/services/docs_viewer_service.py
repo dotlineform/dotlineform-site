@@ -256,7 +256,7 @@ def render_route_config_registry(repo_root: Path, config: DocsViewerServiceConfi
             route["services"] = services
         if route_id == "docs-review":
             services["generated_data"] = {"base_url": config.base_url if config.review_enabled else ""}
-            services["source"] = {"base_url": config.base_url if config.review_enabled else ""}
+            services["source"] = {"base_url": ""}
             services["management"] = {"base_url": ""}
         else:
             services["generated_data"] = {

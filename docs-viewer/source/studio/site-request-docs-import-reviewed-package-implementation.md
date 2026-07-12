@@ -3,7 +3,7 @@ doc_id: site-request-docs-import-reviewed-package-implementation
 title: Docs Import Reviewed Package Implementation
 added_date: 2026-07-12
 last_updated: 2026-07-12
-ui_status: proposed
+ui_status: done
 summary: Track implementation and verification of the shared import drop-zone, collection adapter, persistent read-only review projection, and managed collection apply workflow.
 parent_id: site-request-docs-import-reviewed-package
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Sections 0-2 and 5-7 are complete. Section 3 persistent publication, generated reads, and repair are complete; its remaining read-only source-authority checkbox is intentionally completed with Section 4 removal of Docs Review source editing.
+Completed 2026-07-12. All implementation and verification sections are complete; the parent request's staged collection import, persistent read-only review projection, and safe review-to-import handoff are implemented.
 
 ## Purpose
 
@@ -61,7 +61,7 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 
 - [x] Keep the timestamped `import-preview/<package_id>/` identity.
 - [x] Write the trusted manifest association.
-- [ ] Materialize read-only `source/*.md`.
+- [x] Materialize read-only `source/*.md`.
 - [x] Build and retain package-local `generated/`.
 - [x] Make ordinary Docs Review reads use the persistent generated output.
 - [x] Preserve repair/regeneration only for missing or damaged derived output.
@@ -80,7 +80,7 @@ Section 3 immediate responsibility review:
 
 - atomic package publication is isolated in the 73-line `docs_review_materialization.py` owner rather than extending the already-large Data Sharing normalization module with filesystem/build lifecycle behavior
 - retained generated reads and repair remain in `docs_review_packages.py`, the existing validated-package read owner; splitting them from package validation would add parameter plumbing without creating a clearer authority boundary
-- the temporary source-edit portion of `docs_review_packages.py` is not being reorganized because Section 4 deletes that responsibility next
+- the former temporary source-edit portion of `docs_review_packages.py` was deleted in Section 4 rather than reorganized or wrapped
 - no persistent-preview lifecycle work was added to the shared app runtime or managed Docs Import
 
 Section 3 verification completed on 2026-07-12:
@@ -88,18 +88,43 @@ Section 3 verification completed on 2026-07-12:
 - `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 105 passed
 - focused review-package, materialization, management-route, public-boundary, and static-asset tests — 26 passed
 - focused persistent-package tests passed initial generated publication, ordinary repeated reads after staged JSONL and metadata deletion, build-failure cleanup, missing-index repair, corrupt-payload repair, and healthy repair no-op behavior
-- `docs_viewer_service_review.py` passed retained generated reads through the real route without a frontend repair POST, temporary source-edit behavior, and the review-to-import handoff
+- `docs_viewer_service_review.py` passed retained generated reads through the real route without a frontend repair POST and the review-to-import handoff; Section 4 retargeted it to the read-only surface
 - focused Python compilation and `git diff --check` passed
 
 ## 4. Remove Docs Review Source Editing
 
-- [ ] Remove source mode and its control.
-- [ ] Remove source-read and source-write capabilities.
-- [ ] Remove source-read and source-write endpoints.
-- [ ] Remove revision and save/rebuild services.
-- [ ] Remove review source-editor modules and bindings.
-- [ ] Update route contracts and runtime ownership documentation.
-- [ ] Update focused review tests.
+- [x] Remove source mode and its control.
+- [x] Remove source-read and source-write capabilities.
+- [x] Remove source-read and source-write endpoints.
+- [x] Remove revision and save/rebuild services.
+- [x] Remove review source-editor modules and bindings.
+- [x] Update route contracts and runtime ownership documentation.
+- [x] Update focused review tests.
+
+Section 4 implementation notes:
+
+- the review route no longer declares `source-editing`, preserves `view`, or receives a source-service URL
+- `docs-viewer-review-document-controls.js` and `docs-viewer-review-hosted-views.js` were deleted; the review entrypoint contributes no source mode, save control, or management source-editor import
+- the returned-package provider exposes generated, manifest, inventory, package-list, and explicit repair operations only
+- `review_source_read` and `review_source_write` were removed from capabilities, `/docs-review/packages/source` was removed from GET/POST/OPTIONS routing, and `read_source()`/`write_source()` plus revision/save-rebuild logic were deleted
+- review controls moved from management CSS into focused `docs-viewer-review.css`, so the review shell loads no management-only stylesheet
+- `source/*.md` remains inspectable persistent derived build input in the external workspace, but Docs Review has no UI, provider, capability, endpoint, or service that can edit it
+
+Section 4 immediate responsibility review:
+
+- no replacement facade or compatibility alias was introduced for retired review source APIs
+- shared management source-editor modules remain unchanged because `/docs/` still owns canonical manage-mode source editing
+- `docs_review_packages.py` now contains only validated package reads, asset containment, retained generated reads, and repair; removing the source methods reduced rather than redistributed responsibility
+- review-specific CSS is isolated from management CSS, and no source-edit lifecycle moved into the shared app runtime
+
+Section 4 verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 105 passed
+- focused review-package, materialization, service-config, management-route, public-boundary, static-asset, and manage-source-service tests — 38 passed
+- `docs_viewer_service_review.py` passed rendered navigation, discarded `view=source`, absent controls/editor modules/management CSS, absent source capabilities, HTTP 404 for both retired source methods, unchanged persistent source, repair, and import handoff
+- `docs_viewer_router_modules.py` passed after removing the obsolete review source-mode registry fixture; manage-mode source registry behavior remains covered
+- `docs_viewer_service_manage.py` passed the separate management route after review-only source authority was removed
+- route JSON validation, focused Python compilation, sanitization scan, and `git diff --check` passed
 
 ## 5. Register The JSONL Collection Import Format
 
@@ -213,7 +238,7 @@ Section 7 verification completed on 2026-07-12:
 - [x] Test shared parsing produces equivalent preview and import records.
 - [x] Test Markdown, HTML, and plain-text body dispatch through content-based entrypoints.
 - [x] Test persistent preview viewing without repeated JSONL conversion.
-- [ ] Test absence of review source-edit capabilities and UI.
+- [x] Test absence of review source-edit capabilities and UI.
 - [x] Test non-colliding create.
 - [x] Test `Overwrite` and `Skip` with the `Apply to all` checkbox off and on.
 - [x] Test `Apply to all` affects only remaining document collisions and is unavailable for invalid-record decisions.
@@ -244,7 +269,7 @@ Section 7 verification completed on 2026-07-12:
 - [x] Test result reports are ignored by import-source discovery and expose only marker-rooted paths.
 - [x] Test report-write failure preserves the import result and adds a warning.
 - [x] Test deleted staged-file import unavailability while persistent preview remains readable.
-- [ ] Verify Docs Review and Data Sharing expose no configured-source mutation capability.
+- [x] Verify Docs Review and Data Sharing expose no configured-source mutation capability.
 
 ## Completion Rule
 
@@ -254,6 +279,8 @@ Mark this child request complete only when:
 - verification evidence is recorded in the owning durable documentation or tests
 - the parent request's acceptance criteria are satisfied
 - the parent and child documents are updated to current status
+
+Completion rule satisfied on 2026-07-12.
 
 ## Related References
 

@@ -3,7 +3,7 @@ doc_id: docs-viewer-review
 title: Docs Review
 added_date: 2026-07-11
 last_updated: 2026-07-12
-summary: Durable product, workflow, package, editing, and authority contract for the local returned-package review route.
+summary: Durable product, workflow, persistent package, read-only rendering, and authority contract for the local returned-package review route.
 parent_id: docs-viewer
 viewable: true
 ---
@@ -11,9 +11,9 @@ viewable: true
 
 ## Purpose
 
-Docs Review is the local isolated preview and temporary editing surface for document packages that Data Sharing has already validated.
+Docs Review is the local isolated read-only preview for document packages that Data Sharing has already validated.
 
-It is served at `/docs-review/` by the standalone Docs Viewer service. It reuses the shared Docs Viewer tree, document renderer, panel layout, route state, source editor, and CSS through the explicit `review` app context and a returned-package provider.
+It is served at `/docs-review/` by the standalone Docs Viewer service. It reuses the shared Docs Viewer tree, document renderer, panel layout, route state, and public-safe CSS through the explicit `review` app context and a returned-package provider.
 
 Docs Review is not:
 
@@ -37,7 +37,6 @@ Docs Review owns only:
 - listing validated review packages
 - reading retained package-local generated previews and repairing damaged derived output
 - rendering package documents and inventoried assets
-- temporary Markdown body editing with revision checks
 - package inventory visibility
 - links to canonical counterparts for manual comparison
 
@@ -55,12 +54,10 @@ Review URLs use package identity rather than configured scope identity:
 
 ```text
 /docs-review/?package=<package_id>&doc=<doc_id>
-/docs-review/?package=<package_id>&doc=<doc_id>&view=source
 ```
 
 - `package` selects one validated package and is preserved in internal route changes.
 - `doc` selects one document within that package.
-- `view=source` selects temporary Markdown body editing.
 - links to canonical counterparts use `/docs/?scope=<source_scope>&doc=<doc_id>`.
 
 ## Current Interface
@@ -70,11 +67,11 @@ The single Docs Viewer toolbar row contains:
 - the validated-package selector
 - `Built` for a complete generated projection, or `Repair` when derived output is missing or damaged
 - `Assets`
+- `Import`, which hands only the active safe package identity to managed Docs Import
 - `Open canonical` when the selected package and document identify a counterpart
-- the Markdown source/rendered-mode control
 - the document information control
 
-The index panel renders the hierarchy supplied by the validated package. Docs Review does not provide parent or hierarchy editing. The planned Docs Viewer import preflight will map selected package parents to the new target documents without making the review route a hierarchy editor.
+The index panel renders the hierarchy supplied by the validated package. Docs Review does not provide parent or hierarchy editing. Managed Docs Import maps package parents to target documents without making the review route a hierarchy editor.
 
 Validated-package publication builds and retains the package-local generated preview before exposing the timestamped package. Ordinary navigation reads that retained output. Missing or malformed generated index/payload JSON is repaired from package-local derived source; explicit repair does nothing while the complete generated set is healthy.
 
@@ -136,28 +133,11 @@ Asset inventory records support:
 
 Package-local interactive HTML is rendered in a sandboxed iframe with scripts allowed but without same-origin authority.
 
-## Temporary Source Editing
+## Read-Only Source Projection
 
-Source reads return only the Markdown body after front matter plus a SHA-256 revision token.
+Package-local `source/*.md` is persistent derived build input. It is inspectable in the external workspace and reproducible from the validated returned package, but Docs Review exposes no source display mode, source provider methods, source-read/write capabilities, source endpoints, revision tokens, or save/rebuild workflow.
 
-Source writes require:
-
-- `package_id`
-- `doc_id`
-- the expected `source_revision`
-- `source_body`
-
-The write service:
-
-- verifies package and document containment
-- rejects stale revisions
-- preserves the existing front matter exactly
-- normalizes the submitted Markdown body
-- writes atomically inside the package
-- rebuilds the package preview
-- restores the previous source text if rebuilding fails
-
-`parent_id` updates are rejected. Docs Review cannot edit front matter, create documents, delete documents, or change canonical source.
+Docs Review cannot edit bodies or front matter, create or delete documents, change hierarchy, or mutate canonical source. The only configured-source mutation path for accepting a reviewed package is the separate managed Docs Import handoff.
 
 ## Capability And Security Boundary
 
@@ -168,8 +148,6 @@ review_packages_list
 review_manifest_read
 review_asset_inventory_read
 review_generated_read
-review_source_read
-review_source_write
 review_build
 ```
 
@@ -188,8 +166,6 @@ The service remains loopback-only, validates allowed origins, rejects unsafe pac
 - A missing or unavailable external workspace disables review capabilities with workspace setup diagnostics.
 - A package with an invalid manifest, source set, or package-local hierarchy is rejected rather than partially loaded.
 - A missing or malformed generated tree or payload is repaired from persistent package-local source when possible; healthy generated output is never rebuilt by ordinary reads or explicit repair.
-- A stale source revision is rejected before writing.
-- A source write whose rebuild fails is rolled back.
 - A manually deleted package produces an ordinary not-found response.
 - No package failure falls back to canonical source or a configured Docs Viewer scope.
 
@@ -202,7 +178,7 @@ docs-viewer/tests/python/test_docs_review_packages.py
 docs-viewer/tests/smoke/docs_viewer_service_review.py
 ```
 
-These checks cover validated package discovery, package-root containment, build and generated reads, inventoried assets, source revision/write behavior, parent-update rejection, route boot, rendered/source switching, and canonical comparison without canonical writes.
+These checks cover validated package discovery, package-root containment, persistent generated reads and repair, inventoried assets, absence of source capabilities/endpoints/UI/modules, route boot, identity-only import handoff, and canonical comparison without canonical writes.
 
 ## Related References
 

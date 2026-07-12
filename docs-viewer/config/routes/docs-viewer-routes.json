@@ -8,11 +8,9 @@
       "route_path": "/docs-review/",
       "default_scope_id": "review",
       "include_scope_param": false,
-      "preserve_query_params": ["package", "view"],
+      "preserve_query_params": ["package"],
       "viewer_base_url": "/docs-review/",
-      "features": [
-        "source-editing"
-      ],
+      "features": [],
       "access": {
         "allow_scope_query": false,
         "management_ui": false

@@ -40,7 +40,7 @@ Responsibilities:
 - serves `/docs/` management shell HTML
 - serves `/docs-review/` returned-package shell HTML
 - gates returned-package review through `DOCS_VIEWER_REVIEW_ENABLED` independently of canonical management
-- dispatches package-rooted review reads, builds, assets, and body-only temporary Markdown writes without hierarchy or canonical mutation routes
+- dispatches package-rooted review reads, generated repair, and inventoried assets without source, hierarchy, canonical, or configured-scope mutation routes
 - serves Docs Viewer runtime, static assets, and route config
 - applies CORS and request-size handling for management API calls
 - forwards allowlisted GET and POST API paths to management dispatch modules

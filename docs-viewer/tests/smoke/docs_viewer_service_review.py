@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 import tempfile
 from threading import Thread
+import urllib.error
 import urllib.request
 
 from playwright.sync_api import Page, sync_playwright
@@ -144,6 +145,28 @@ def read_json(url: str) -> dict[str, object]:
         return json.loads(response.read().decode("utf-8"))
 
 
+def assert_source_endpoints_retired(base_url: str) -> None:
+    requests = [
+        urllib.request.Request(
+            f"{base_url}/docs-review/packages/source?package_id=fixture-review&doc_id=fixture-root"
+        ),
+        urllib.request.Request(
+            f"{base_url}/docs-review/packages/source",
+            data=json.dumps({"package_id": "fixture-review"}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        ),
+    ]
+    for request in requests:
+        try:
+            urllib.request.urlopen(request, timeout=10)
+        except urllib.error.HTTPError as error:
+            if error.code != 404:
+                raise AssertionError(f"retired review source endpoint returned {error.code}") from error
+        else:
+            raise AssertionError("retired review source endpoint remained reachable")
+
+
 def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     requests: list[str] = []
     page.on("request", lambda request: requests.append(request.url))
@@ -177,7 +200,7 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     if state != {
         "appKind": "review",
         "managementUi": "false",
-        "sourceService": "true",
+        "sourceService": "false",
         "viewerScope": "review",
     }:
         raise AssertionError(f"unexpected Docs Review app context: {state!r}")
@@ -194,38 +217,38 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         f"{base_url}/docs-review/?package=fixture-review&doc=fixture-root&view=source",
         wait_until="domcontentloaded",
     )
-    try:
-        page.wait_for_selector("textarea.docsViewerSourceEditor__textarea", state="visible", timeout=timeout_ms)
-    except Exception as error:
-        diagnostics = page.evaluate(
-            """() => ({
-                status: document.querySelector('#docsViewerStatus')?.textContent || '',
-                buttonHidden: document.querySelector('#docsViewerManageSourceButton')?.hidden,
-                buttonDisabled: document.querySelector('#docsViewerManageSourceButton')?.disabled,
-                content: document.querySelector('#docsViewerContent')?.innerHTML || '',
-                url: location.href
-            })"""
-        )
-        raise AssertionError(f"Markdown source mode did not open: {diagnostics!r}") from error
-    if "view=source" not in page.url or "package=fixture-review" not in page.url:
-        raise AssertionError(f"source route did not preserve review package identity: {page.url}")
-    textarea = page.locator("textarea.docsViewerSourceEditor__textarea")
-    textarea.fill("# Fixture root\n\nEdited in Docs Review.\n")
-    page.locator("#docsViewerManageSourceSaveButton").click()
-    page.wait_for_function(
-        """() => {
-            const content = document.querySelector('#docsViewerContent');
-            return content && content.textContent.includes('Edited in Docs Review.');
-        }""",
-        timeout=timeout_ms,
+    wait_for_route_ready(
+        page,
+        "#docsViewerRoot",
+        "data-docs-viewer-ready",
+        "data-docs-viewer-busy",
+        timeout_ms,
     )
+    page.wait_for_selector("#docsViewerContent h1", state="visible", timeout=timeout_ms)
     if "view=source" in page.url or "package=fixture-review" not in page.url:
-        raise AssertionError(f"rendered route did not preserve only package identity: {page.url}")
+        raise AssertionError(f"read-only review route did not discard source mode: {page.url}")
+    if page.locator("textarea.docsViewerSourceEditor__textarea").count() != 0:
+        raise AssertionError("Docs Review still mounted a Markdown source editor")
+    if page.locator("#docsViewerManageSourceButton, #docsViewerManageSourceSaveButton").count() != 0:
+        raise AssertionError("Docs Review still rendered source-edit controls")
 
     if any("/docs/generated/" in url or "/docs/source" in url for url in requests):
         raise AssertionError("Docs Review crossed into configured-scope generated/source services")
+    if any("/docs-review/packages/source" in url for url in requests):
+        raise AssertionError("Docs Review requested a retired package source endpoint")
     if any("/docs-review/packages/build" in url for url in requests):
         raise AssertionError("ordinary Docs Review reads invoked the explicit repair endpoint")
+    if any("/management/source-editor/" in url for url in requests):
+        raise AssertionError("Docs Review loaded management source-editor modules")
+    if any("docs-viewer-manage.css" in url for url in requests):
+        raise AssertionError("Docs Review loaded management-only CSS")
+    if not any("docs-viewer-review.css" in url for url in requests):
+        raise AssertionError("Docs Review did not load its focused read-only route CSS")
+    source_text = (
+        workspace_paths().import_preview / "fixture-review/source/fixture-root.md"
+    ).read_text(encoding="utf-8")
+    if "Original review text." not in source_text or "Edited in Docs Review" in source_text:
+        raise AssertionError("read-only Docs Review changed its persistent source projection")
 
 
 def exercise_import_handoff(page: Page, base_url: str, staged: Path, timeout_ms: int) -> None:
@@ -284,8 +307,13 @@ def main() -> int:
         server, base_url = start_server()
         try:
             capabilities = read_json(f"{base_url}/docs-review/capabilities")["capabilities"]
-            if capabilities.get("review_source_write") is not True or capabilities.get("canonical_write") is not False:
+            if (
+                "review_source_read" in capabilities
+                or "review_source_write" in capabilities
+                or capabilities.get("canonical_write") is not False
+            ):
                 raise AssertionError(f"unexpected Docs Review backend authority: {capabilities!r}")
+            assert_source_endpoints_retired(base_url)
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(headless=True)
                 errors: list[str] = []

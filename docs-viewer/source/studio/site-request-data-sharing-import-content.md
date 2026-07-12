@@ -8,6 +8,8 @@ viewable: true
 ---
 # Data Sharing Import Content
 
+> Superseded review boundary: this request records the earlier temporary source-editing slice. The current implemented contract is a persistent read-only projection with managed collection import; see [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) and [Docs Review](/docs/?scope=studio&doc=docs-viewer-review).
+
 Partially implemented; remaining full-source direction superseded by [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package).
 
 Implemented first slice:
@@ -20,7 +22,7 @@ Implemented first slice:
 
 Still separate and durably owned by [Docs Review](/docs/?scope=studio&doc=docs-viewer-review):
 
-- `/docs-review/` listing, build, generated-payload serving, and temporary editing.
+- `/docs-review/` listing, retained generated-payload serving/repair, and read-only review.
 
 The implemented `document-content` source-folder action remains useful for text-oriented review, but it is not a source-faithful package and must not be treated as canonical replacement input. Exact Markdown, media, links, interactive assets, and returned-package intake now belong to the separate full-package request.
 
@@ -49,7 +51,7 @@ This Data Sharing slice ends at the temporary review-folder handoff:
 
 1. A user stages a returned `document-content` file.
 2. Data Sharing creates or regenerates temporary review source Markdown documents for the complete file from the Review menu's `Content` action.
-3. `/docs-review/` takes ownership of listing, building, rendering, temporary editing, and hierarchy review.
+3. `/docs-review/` takes ownership of listing, retained generated rendering/repair, read-only hierarchy review, and the safe managed-import handoff.
 
 No live source docs are created, overwritten, or deleted by the Data Sharing source-folder action.
 

@@ -93,70 +93,6 @@ def test_missing_or_damaged_generated_output_repairs_once_then_stays_persistent(
     assert listed["packages"][0]["built"] is True
 
 
-def test_source_write_is_revision_checked_package_local_and_rebuilds() -> None:
-    package = write_package()
-    docs_review_packages.build_package(REPO_ROOT, {"package_id": package.name})
-    source = docs_review_packages.read_source(REPO_ROOT, package.name, "fixture-root")
-
-    written = docs_review_packages.write_source(
-        REPO_ROOT,
-        {
-            "package_id": package.name,
-            "doc_id": "fixture-root",
-            "source_revision": source["source_revision"],
-            "source_body": "# Fixture root\n\nEdited review text.\n",
-        },
-    )
-
-    assert written["source_revision"] != source["source_revision"]
-    assert "Edited review text." in (package / "source/fixture-root.md").read_text(encoding="utf-8")
-    assert "Edited review text." in docs_review_packages.read_payload(
-        REPO_ROOT,
-        package.name,
-        "fixture-root",
-    )["payload"]["content_html"]
-    with pytest.raises(ValueError, match="stale"):
-        docs_review_packages.write_source(
-            REPO_ROOT,
-            {
-                "package_id": package.name,
-                "doc_id": "fixture-root",
-                "source_revision": source["source_revision"],
-                "source_body": "stale",
-            },
-        )
-
-
-def test_source_write_rejects_parent_updates() -> None:
-    package = write_package("parent-review")
-    (package / "source/fixture-child.md").write_text(
-        """---
-doc_id: fixture-child
-title: Fixture child
-parent_id: fixture-root
-added_date: 2026-07-11
-last_updated: 2026-07-11
----
-# Fixture child
-""",
-        encoding="utf-8",
-    )
-    source = docs_review_packages.read_source(REPO_ROOT, package.name, "fixture-child")
-
-    with pytest.raises(ValueError, match="does not support parent updates"):
-        docs_review_packages.write_source(
-            REPO_ROOT,
-            {
-                "package_id": package.name,
-                "doc_id": "fixture-child",
-                "source_revision": source["source_revision"],
-                "parent_id": "",
-            },
-        )
-
-    assert "parent_id: fixture-root" in (package / "source/fixture-child.md").read_text(encoding="utf-8")
-
-
 def test_package_asset_inventory_drives_media_and_sandboxed_interactive_rendering() -> None:
     package = write_package("asset-review")
     source_path = package / "source/fixture-root.md"
@@ -262,7 +198,8 @@ def test_review_dispatcher_keeps_routes_outside_management_dispatch() -> None:
     )
 
     assert listed["packages"][0]["package_id"] == package.name
-    assert capabilities["capabilities"]["review_source_write"] is True
+    assert "review_source_read" not in capabilities["capabilities"]
+    assert "review_source_write" not in capabilities["capabilities"]
     assert capabilities["capabilities"]["canonical_write"] is False
     assert status.value == 200
     assert built["ok"] is True
@@ -282,5 +219,24 @@ def test_review_capabilities_disable_cleanly_when_external_workspace_is_missing(
 
     assert payload["available"] is False
     assert payload["capabilities"]["review_packages_list"] is False
-    assert payload["capabilities"]["review_source_write"] is False
+    assert "review_source_read" not in payload["capabilities"]
+    assert "review_source_write" not in payload["capabilities"]
     assert "does not exist" in payload["workspace"]["message"]
+
+
+def test_review_source_routes_and_package_methods_are_absent() -> None:
+    assert not hasattr(docs_review_routes, "SOURCE_PATH")
+    assert not hasattr(docs_review_packages, "read_source")
+    assert not hasattr(docs_review_packages, "write_source")
+    with pytest.raises(FileNotFoundError, match="Not found"):
+        docs_review_service.docs_review_get_payload(
+            REPO_ROOT,
+            "/docs-review/packages/source",
+            {"package_id": ["fixture-review"], "doc_id": ["fixture-root"]},
+        )
+    with pytest.raises(FileNotFoundError, match="Not found"):
+        docs_review_service.docs_review_post_response(
+            REPO_ROOT,
+            "/docs-review/packages/source",
+            {"package_id": "fixture-review"},
+        )

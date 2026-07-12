@@ -3,7 +3,7 @@ doc_id: site-request-docs-import-reviewed-package
 title: Docs Import Reviewed Package
 added_date: 2026-07-11
 last_updated: 2026-07-12
-ui_status: proposed
+ui_status: done
 summary: Move Docs Import to the W0-resolved shared drop-zone, import immutable staged Data Sharing JSONL as a collection, and retain a persistent read-only review projection.
 parent_id: change-requests
 viewable: true
@@ -12,9 +12,7 @@ viewable: true
 
 ## Status
 
-Proposed follow-on to [Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) and the current [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) implementation.
-
-The current workflow already proves the persistent Docs Review package and renderer. This request simplifies the remaining import path and removes source editing from Docs Review.
+Completed 2026-07-12. Docs Import uses the shared external drop-zone, recognizes trusted Data Sharing document collections, plans and applies complete packages through managed import, writes grouped result reports, accepts an identity-only Docs Review handoff, and retains a persistent read-only review projection.
 
 ## Decision
 

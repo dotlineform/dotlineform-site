@@ -46,7 +46,6 @@ The complete independently gated contract lives in [Docs Review Endpoints](/docs
 | `GET /docs-review/packages/assets-content/<package>/<path>` | Serve one safe inventoried package asset. |
 | `GET /docs-review/packages/index-tree` | Read one package-local generated tree. |
 | `GET /docs-review/packages/payload` | Read one package-local generated document payload. |
-| `GET /docs-review/packages/source` | Read one temporary Markdown body and revision token. |
 
 ## POST Endpoints
 
@@ -76,7 +75,6 @@ The complete independently gated contract lives in [Docs Review Endpoints](/docs
 
 | Endpoint | Child doc | Action |
 | --- | --- | --- |
-| `POST /docs-review/packages/build` | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review) | Build generated output inside one validated package. |
-| `POST /docs-review/packages/source` | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review) | Replace one temporary Markdown body with revision checking and rebuild the package. |
+| `POST /docs-review/packages/build` | [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review) | Repair missing or malformed generated output inside one validated package; healthy output is unchanged. |
 
 All JSON responses are sent with `Cache-Control: no-store`.

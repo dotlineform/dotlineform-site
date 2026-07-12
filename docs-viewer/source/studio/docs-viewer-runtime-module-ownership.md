@@ -47,7 +47,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Service context | `docs-viewer-service-context.js` | Independent `generatedData`, `source`, `management`, and browser-safe `config` service surfaces. Presence and URLs do not grant backend capability. |
 | Config controller/service | `docs-viewer-config-controller.js`, `docs-viewer-config-service.js` | Shared config-envelope fetch/retry, independently callable configured-scope discovery and viewer-settings loading, scope route/picker projection, and UI-text/settings projection. |
 | Configured-scope provider | `docs-viewer-configured-scope-provider.js` | Feature-facing `readIndex`, `readDocument`, `readSearch`, `readRecentlyAdded`, and `readReferences` methods, configured-scope URL resolution, reference-target projection, and optional source-method projection. |
-| Returned-package provider | `docs-viewer-returned-package-provider.js`, `docs-viewer-review-client.js` | Package-selected index, document, source, manifest, inventory, and build transport for `/docs-review/`; wrapper normalization keeps external generated paths out of the shared viewer. |
+| Returned-package provider | `docs-viewer-returned-package-provider.js`, `docs-viewer-review-client.js` | Package-selected retained index/document, manifest, inventory, list, and repair transport for `/docs-review/`; wrapper normalization keeps external generated paths out of the shared viewer. |
 | Source-service adapter | `docs-viewer-management-source-adapter.js` | Manage-entrypoint-owned optional source endpoint delegation. Its explicit contribution supplies provider methods but does not grant backend authority. |
 | Generated-data runtime | `docs-viewer-generated-data-runtime.js` | Generated-data transport shaping, separately owned generated-read capability caching, selected-document reload projection, generated-search capability checks, payload normalization, and static/local generated JSON reads behind the provider. |
 | Low-level data primitives | `docs-viewer-data.js` | Low-level JSON fetch/retry and generated-read reload path primitives reserved for generated-data runtime and config-service owners. |
@@ -92,15 +92,15 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Management client | `docs-viewer-management-client.js` | Docs Viewer service transport helpers used by management controller workflows. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |
-| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Local source-body document display mode rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. Manage and review entrypoints may supply different providers; public entrypoints never import it. |
+| Source editor | `docs-viewer/runtime/js/management/source-editor/source-editor.js` | Manage-only source-body document display mode rendering, dirty-state handling, rebuild submission, diagnostics, and rendered-view return behavior. Public and review entrypoints never import it. |
 | Docs import | `docs-html-import.js`, `docs-html-import-workflow.js`, `docs-html-import-render.js`, `docs-html-import-modals.js` | Initialized Docs Import modal state, preview/write orchestration, overwrite prompts, result rendering, and modal behavior behind management service contracts. The management import workflow owns lazy initialization and host handoff. |
 
 ## Review-Only Runtime And Service
 
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
-| Review package workflow | `docs-viewer-review-controller.js`, `docs-viewer-review-document-controls.js`, `docs-viewer-review-hosted-views.js` | Package selection, explicit build, inventory visibility, canonical comparison, and review source-mode/control projection. |
-| Review package services | `docs_review_packages.py`, `docs_review_build.py`, `docs_review_service.py`, `docs_review_routes.py` | Validated package-root containment, trusted manifest and inventory reads, synthetic builds, package-aware assets, generated reads, body-only temporary Markdown writes, parent-update rejection, and focused route dispatch. |
+| Review package workflow | `docs-viewer-review-controller.js`, `docs-viewer-returned-package-provider.js` | Read-only package selection, generated reads/repair, inventory visibility, canonical comparison, and identity-only managed-import handoff. |
+| Review package services | `docs_review_materialization.py`, `docs_review_packages.py`, `docs_review_build.py`, `docs_review_service.py`, `docs_review_routes.py` | Atomic persistent publication, validated package-root containment, trusted manifest/inventory reads, synthetic generated repair, package-aware assets, retained generated reads, and focused read-only route dispatch. |
 
 ## Public Index Slimming Ownership
 

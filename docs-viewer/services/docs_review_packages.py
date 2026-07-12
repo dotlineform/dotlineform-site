@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validated returned-package reads, builds, and temporary source writes."""
+"""Validated returned-package reads and generated-output repair."""
 
 from __future__ import annotations
 
@@ -8,12 +8,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-import docs_source_model as source_model
-from docs_management_source_service import (
-    normalize_source_body,
-    source_revision_for_text,
-    split_source_exact,
-)
+from docs_management_source_service import split_source_exact
 from docs_review_build import build_review_package
 from services.paths import configured_workspace_paths, marker_path
 
@@ -350,22 +345,6 @@ def read_payload(repo_root: Path, package_id: Any, doc_id: Any) -> dict[str, Any
     }
 
 
-def read_source(repo_root: Path, package_id: Any, doc_id: Any) -> dict[str, Any]:
-    package_path, _manifest, records = _package_context(repo_root, package_id)
-    normalized_doc_id = validate_doc_id(doc_id)
-    record = records.get(normalized_doc_id)
-    if record is None:
-        raise FileNotFoundError(f"review package document not found: {normalized_doc_id}")
-    return {
-        "ok": True,
-        "package_id": package_path.name,
-        "doc_id": normalized_doc_id,
-        "source_body": normalize_source_body(record["source_body"]),
-        "source_revision": source_revision_for_text(record["source_text"]),
-        "path": _package_marker(repo_root, record["path"]),
-    }
-
-
 def _rebuild_generated_package(
     repo_root: Path,
     package_path: Path,
@@ -406,48 +385,4 @@ def build_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         **build,
         "repaired": True,
         "summary_text": f"Repaired {build['document_count']} review documents for {package_path.name}.",
-    }
-
-
-def write_source(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    package_path, manifest, records = _package_context(repo_root, body.get("package_id"))
-    doc_id = validate_doc_id(body.get("doc_id"))
-    source_revision = str(body.get("source_revision") or "").strip()
-    if not source_revision:
-        raise ValueError("source_revision is required")
-    if "parent_id" in body:
-        raise ValueError("Docs Review does not support parent updates")
-    if "source_body" not in body:
-        raise ValueError("source_body is required")
-    record = records.get(doc_id)
-    if record is None:
-        raise FileNotFoundError(f"review package document not found: {doc_id}")
-    if source_revision != source_revision_for_text(record["source_text"]):
-        raise ValueError("source revision is stale; reload source before rebuilding")
-    front_matter_source, front_matter, _source_body = split_source_exact(record["source_text"])
-    if str(front_matter.get("doc_id") or "").strip() != doc_id:
-        raise ValueError("existing review source doc_id does not match requested document")
-    next_source_body = normalize_source_body(body.get("source_body"))
-    next_source_text = front_matter_source + next_source_body
-    source_model.write_text_atomic(record["path"], next_source_text)
-    try:
-        default_doc_id = str(manifest.get("default_doc_id") or "").strip() or next(iter(records))
-        build = build_review_package(
-            repo_root,
-            package_id=package_path.name,
-            source_dir=package_path / "source",
-            generated_dir=package_path / "generated",
-            default_doc_id=default_doc_id,
-            asset_records=_asset_records(package_path),
-        )
-    except Exception:
-        source_model.write_text_atomic(record["path"], record["source_text"])
-        raise
-    return {
-        "ok": True,
-        "package_id": package_path.name,
-        "doc_id": doc_id,
-        "source_revision": source_revision_for_text(next_source_text),
-        "rebuild": build,
-        "summary_text": f"Saved and rebuilt {doc_id} inside review package {package_path.name}.",
     }

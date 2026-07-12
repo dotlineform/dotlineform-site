@@ -34,11 +34,11 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | --- | --- | --- | --- | --- | --- |
 | ES module entrypoint | `docs-viewer-public.js` | `docs-viewer-manage.js` | `docs-viewer-review.js` | no | Route shells load exactly one route-appropriate entrypoint. |
 | App boot owner | `docs-viewer-app-boot.js` | `docs-viewer-app-boot.js` | `docs-viewer-app-boot.js` | yes | Boot remains shared while receiving route-specific settings from the entrypoint. |
-| App shell owner | `docs-viewer-app-shell.js` | `docs-viewer-app-shell.js` plus manage-owned shell composition | `docs-viewer-app-shell.js` plus review-owned controls | partial | Shared shell code must not import manage or review renderers directly. |
+| App shell owner | `docs-viewer-app-shell.js` | `docs-viewer-app-shell.js` plus manage-owned shell composition | `docs-viewer-app-shell.js` plus the review toolbar controller | partial | Shared shell code must not import manage or review renderers directly. |
 | Manage shell composition | absent | `docs-viewer-management-shell-composition.js` | absent | no | Supplied by the manage entrypoint only. |
 | Management shell renderer | absent | `docs-viewer-management-shell-renderer.js` | absent | no | Context menu, metadata modal, import modal, settings modal, and import host refs stay manage-owned. |
-| Selected-document actions | absent | manage edit/source actions | review source/save actions | partial | Manage and review entrypoints contribute only their allowed controls. |
-| Hosted-view contributions | public-safe built-ins | `docs-viewer-management-hosted-views.js` | `docs-viewer-review-hosted-views.js` | partial | Source mode is contributed by the receiving local entrypoint; public imports remain read-only. |
+| Selected-document actions | absent | manage edit/source actions | none | no | Source editing is manage-only; review contributes no document mutation controls. |
+| Hosted-view contributions | public-safe built-ins | `docs-viewer-management-hosted-views.js` | none | partial | The review route uses only public-safe built-ins and remains read-only. |
 
 ## CSS Surface
 
@@ -47,7 +47,8 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | `site/assets/css/main.css` | inherited from the public site layout | absent from standalone shell | absent from standalone shell | Host public-site CSS is not a Docs Viewer runtime dependency. |
 | `site/docs-viewer/static/css/docs-viewer.css` | loaded via `/docs-viewer/static/css/docs-viewer.css` | loaded via service mapping for the same URL | loaded via service mapping for the same URL | Basic/public viewer styling and portable Docs Viewer tokens. |
 | `docs-viewer/static/css/docs-viewer-reports.css` | absent unless explicitly public-promoted | loaded | absent | Report styling is manage-only until a report is promoted. |
-| `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | loaded for source-editor and review-control styling | Local write-capable styling stays out of public routes. |
+| `docs-viewer/static/css/docs-viewer-manage.css` | absent | loaded | absent | Local write-capable styling stays in the management route. |
+| `docs-viewer/static/css/docs-viewer-review.css` | absent | absent | loaded | Review toolbar layout is isolated without importing management/source-editor CSS. |
 
 `site/docs-viewer/static/css/docs-viewer.css` supplies portable Docs Viewer tokens, shell utilities such as `visually-hidden`, `muted`, `small`, hidden-state handling inside `.docsViewer`, and viewer component tokens with Docs Viewer theme-token and host-token fallbacks.
 
@@ -59,12 +60,12 @@ Public `/moments/` uses the same public entrypoint, route registry, static gener
 | Route record shape | `docs_viewer_route_config_v4` snake_case | `docs_viewer_route_config_v4` snake_case | `docs_viewer_route_config_v4` snake_case |
 | Route config resolver | `docs-viewer-route-config.js` | `docs-viewer-route-config.js` | `docs-viewer-route-config.js` |
 | Local service route present | no | `/docs/` | `/docs-review/` |
-| Route-owned code definitions | public-safe built-ins | supplied by manage entrypoint | supplied by review entrypoint |
+| Route-owned code definitions | public-safe built-ins | supplied by manage entrypoint | public-safe built-ins only; review package workflow stays outside the view registry |
 | App kind | `public` | `manage` | `review` |
 | Route access | scope query and management UI disabled | scope query enabled; management UI projected independently of service URLs | scope query and management UI disabled |
-| Route features | configured-scope discovery, search, recently added, bookmarks, reports | configured-scope discovery, scope selection, search, recently added, bookmarks, reports, source editing, management | source editing only; package workflow is review-entrypoint owned |
+| Route features | configured-scope discovery, search, recently added, bookmarks, reports | configured-scope discovery, scope selection, search, recently added, bookmarks, reports, source editing, management | none; package workflow is review-entrypoint owned |
 | Generated-data service | static generated assets; local URL blank | local URL injected when generated reads are enabled, independently of management | review service URL injected when review is enabled |
-| Source service | absent | URL injected when source services are enabled | review service URL injected when review is enabled |
+| Source service | absent | URL injected when source services are enabled | absent |
 | Management service | absent | URL injected when management services are enabled | absent |
 
 Route config resolution no longer reads inline config scripts, legacy `#docsViewerRoot` data attributes, camelCase field aliases, or object-map route registries.

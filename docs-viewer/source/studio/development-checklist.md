@@ -151,12 +151,12 @@ Docs Review:
 - [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) owns the planned staged-JSONL collection import, with explicit create, overwrite, or skip decisions in managed Docs Import.
 - Returned review packages are persistent derived workspace artifacts, not Docs Viewer scopes, and must not be registered in scope config.
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
-- Reuse shared tree, routing, rendering, panel, source-editor, and CSS primitives through explicit review app context, provider, and capability contracts.
+- Reuse shared tree, routing, rendering, panel, and public-safe CSS primitives through explicit review app context, provider, and capability contracts; do not import management source-editor modules or CSS into Docs Review.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
 - `docs-viewer-review-controller.js` may hand the active validated `package_id` to managed Docs Import, but it must not resolve or send staged filenames, preview paths, target scopes, plans, decisions, or mutations.
-- `docs_review_packages.py` owns safe validated-package list/read behavior, retained generated-output completeness checks, and repair only for missing or malformed derived JSON; `docs_review_build.py` owns the synthetic package-local builder and `docs_review_materialization.py` owns initial complete-package publication.
+- `docs_review_packages.py` owns safe validated-package list/read behavior, retained generated-output completeness checks, and repair only for missing or malformed derived JSON; it exposes no package source-read/write methods. `docs_review_build.py` owns the synthetic package-local builder and `docs_review_materialization.py` owns initial complete-package publication.
 - Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
-- Temporary review edits require explicit package-rooted backend capabilities. Docs Review must not receive canonical import apply, promotion, or general management authority; it may only hand safe identities to managed Docs Import.
+- Docs Review is read-only: it must not expose package source read/write, canonical import apply, promotion, or general management authority; it may only hand a safe package identity to managed Docs Import.
 - Docs Review preserves validated package hierarchy but does not edit it; keep `parent_id` and hierarchy changes outside the review route.
 - Public entrypoints must not import review assets, receive review service URLs, or probe review capabilities.
 

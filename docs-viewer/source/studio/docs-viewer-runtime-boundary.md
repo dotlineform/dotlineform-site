@@ -25,7 +25,7 @@ The boundary exists so the repo can keep adding scope-specific docs behavior wit
 
 Public read-only installs should be lightweight deliverables that import only the data, JavaScript, CSS, and browser-visible config they need.
 Local/manage installs can keep the full management surface, local-service workflows, report tooling, source editing, imports, settings, and scope lifecycle behavior.
-Local/review installs receive only package-rooted generated reads, temporary Markdown body editing, package builds, inventory reads, and canonical comparison links.
+Local/review installs receive only package-rooted generated reads/repair, inventory reads, canonical comparison links, and the identity-only managed-import handoff.
 
 The durable boundary is:
 
@@ -42,7 +42,7 @@ Current model:
 - all three route families share lower-level core modules only when those modules do not grant authority beyond the receiving route
 - public route shells render only public-safe mounts and config
 - the local manage shell renders management-capable mounts and receives manage-owned renderer bundles from the manage entrypoint
-- the local review shell renders the shared viewer mounts and receives review-owned provider, source-mode, and package-control contributions without general management UI
+- the local review shell renders the shared viewer mounts and receives only the read-only returned-package provider and package toolbar controller without source mode or general management UI
 
 ## App Context And Authority
 
@@ -78,7 +78,7 @@ Backend capabilities authorize operations. Route config, registered views, visib
 ## Public, Manage, And Review Install Policy
 
 Docs Viewer should split public and local/manage deliverables at the entrypoint and shell-composition level, while keeping genuinely shared lower-level primitives.
-The review route follows the same rule: it reuses public-safe viewer primitives and imports its source editor and package workflow only through the review entrypoint.
+The review route follows the same rule: it reuses public-safe viewer primitives and imports only its read-only package workflow through the review entrypoint. Source-editor modules and management CSS remain manage-only.
 
 Shared modules remain appropriate for:
 

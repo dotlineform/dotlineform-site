@@ -31,7 +31,6 @@
     "review_asset_content": "/docs-review/packages/assets-content/",
     "review_index_tree": "/docs-review/packages/index-tree",
     "review_payload": "/docs-review/packages/payload",
-    "review_source": "/docs-review/packages/source",
     "review_build": "/docs-review/packages/build",
     "generated_index_tree": "/docs/generated/index-tree",
     "generated_payload": "/docs/generated/payload",

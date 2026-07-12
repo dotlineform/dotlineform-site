@@ -463,10 +463,6 @@ def assert_view_mode_control_registry(page: Page) -> None:
                 kind: 'manage',
                 featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['bookmarks', 'source-editing', 'management'])
             };
-            const reviewContext = {
-                kind: 'review',
-                featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['source-editing'])
-            };
             const manageDefinitions = {
                 modes: [{
                     id: 'markdown-source', ownerViewId: 'rendered-document', appKinds: ['manage'], features: ['source-editing']
@@ -485,28 +481,6 @@ def assert_view_mode_control_registry(page: Page) -> None:
             const manageRegistry = viewRegistry.createDocsViewerViewRegistry({
                 definitionSets,
                 projectionInputs: { appContext: manageContext }
-            });
-            const reviewRegistry = viewRegistry.createDocsViewerViewRegistry({
-                definitionSets: [
-                    viewRegistry.createDocsViewerSharedViewDefinitions(),
-                    {
-                        modes: [{
-                            id: 'markdown-source', ownerViewId: 'rendered-document', appKinds: ['review'], features: ['source-editing']
-                        }],
-                        controls: [
-                            {
-                                id: 'markdown-source', ownerViewId: 'rendered-document', modeIds: ['rendered-document', 'markdown-source'], appKinds: ['review'], features: ['source-editing']
-                            },
-                            {
-                                id: 'save-markdown-source', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['review'], features: ['source-editing'], requiredCapabilities: ['review.source.write']
-                            }
-                        ]
-                    }
-                ],
-                projectionInputs: {
-                    appContext: reviewContext,
-                    backendCapabilities: { review: { source: { write: true } } }
-                }
             });
             const narrowedRegistry = viewRegistry.createDocsViewerViewRegistry({
                 definitionSets,
@@ -569,10 +543,6 @@ def assert_view_mode_control_registry(page: Page) -> None:
                     activeViewId: 'rendered-document', activeModeId: 'rendered-document'
                 }).available,
                 publicMarkdownMode: publicRegistry.resolveMode('markdown-source').available,
-                reviewMarkdownMode: reviewRegistry.resolveMode('markdown-source').available,
-                reviewSourceControls: reviewRegistry.projectControls({
-                    activeViewId: 'rendered-document', activeModeId: 'markdown-source'
-                }).map((control) => control.id).sort(),
                 unknownPolicyRejected
             };
         }"""
@@ -586,8 +556,6 @@ def assert_view_mode_control_registry(page: Page) -> None:
         "manageSourceControls": ["info", "markdown-source", "save-markdown-source"],
         "publicEdit": False,
         "publicMarkdownMode": False,
-        "reviewMarkdownMode": True,
-        "reviewSourceControls": ["info", "markdown-source", "save-markdown-source"],
         "unknownPolicyRejected": True,
     }
     if result != expected:

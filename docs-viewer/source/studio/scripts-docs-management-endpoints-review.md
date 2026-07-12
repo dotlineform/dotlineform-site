@@ -3,7 +3,7 @@ doc_id: scripts-docs-management-endpoints-review
 title: Docs Review Endpoints
 added_date: 2026-07-11
 last_updated: 2026-07-12
-summary: Local package-rooted API contract for Docs Review capabilities, package reads, builds, assets, generated payloads, and temporary Markdown writes.
+summary: Local package-rooted API contract for read-only Docs Review capabilities, package reads, repair, assets, and retained generated payloads.
 parent_id: scripts-docs-management-endpoints
 viewable: true
 ---
@@ -31,8 +31,6 @@ Returns external workspace status plus independently projected review capabiliti
     "review_manifest_read": true,
     "review_asset_inventory_read": true,
     "review_generated_read": true,
-    "review_source_read": true,
-    "review_source_write": true,
     "review_build": true,
     "canonical_write": false,
     "management": false,
@@ -113,30 +111,6 @@ doc_id=<doc_id>
 
 Returns one retained package-local generated document payload from `generated/by-id/<doc_id>.json`. The requested `doc_id` must identify a source document in the selected package. Missing or malformed payload JSON triggers one package-local repair; normal reads do not rebuild.
 
-## `GET /docs-review/packages/source`
-
-Query parameters:
-
-```text
-package_id=<package_id>
-doc_id=<doc_id>
-```
-
-Returns:
-
-```json
-{
-  "ok": true,
-  "package_id": "example-package",
-  "doc_id": "example-doc",
-  "source_body": "# Example\n",
-  "source_revision": "sha256:...",
-  "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/example-package/source/example-doc.md"
-}
-```
-
-The endpoint returns only the body after front matter. It does not write files.
-
 ## `POST /docs-review/packages/build`
 
 Expected JSON:
@@ -151,30 +125,6 @@ Repair validates the selected package and its derived generated set. It uses the
 
 The response includes document and asset counts, warnings, diagnostics, generated path, and summary text.
 
-## `POST /docs-review/packages/source`
-
-Expected JSON:
-
-```json
-{
-  "package_id": "example-package",
-  "doc_id": "example-doc",
-  "source_revision": "sha256:...",
-  "source_body": "# Example\n\nEdited review text.\n"
-}
-```
-
-The write service:
-
-- rejects a missing or stale revision
-- preserves existing front matter exactly
-- rejects `parent_id` updates
-- writes the normalized body atomically inside the package
-- rebuilds package-local generated output
-- restores the previous source text if rebuilding fails
-
-The response includes the next revision token, rebuild diagnostics, and summary text.
-
 ## Authority Boundary
 
 These routes do not accept:
@@ -185,6 +135,8 @@ These routes do not accept:
 - parent or hierarchy mutations
 - publish, promotion, import, delete, or general management actions
 
+The endpoint family contains no package source-read or source-write route. `source/*.md` is persistent derived build input used internally for repair, not a browser-editable service surface.
+
 See [Docs Review](/docs/?scope=studio&doc=docs-viewer-review) for the durable workflow and ownership contract.
 
-The planned [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) flow remains a managed `/docs/` import capability. Docs Review may hand off safe package/document identities, but this endpoint family must not gain configured-source apply authority.
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains a managed `/docs/` import capability. Docs Review hands off only a safe package identity; this endpoint family has no configured-source apply authority.

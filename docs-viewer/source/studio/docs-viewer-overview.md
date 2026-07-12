@@ -171,7 +171,7 @@ Current URL state:
 - `/docs/` is the local manage route when the Docs Viewer service is available
 - `package` selects the validated external package on `/docs-review/` and is preserved by internal history writes
 - `import=1&review_package=<package_id>` is an initial managed `/docs/` handoff only; the route captures the safe identity before canonical URL normalization, then Docs Import resolves it against the server listing
-- `view=source` selects temporary returned Markdown editing on `/docs-review/`
+- `/docs-review/` has no source-mode URL state; unknown `view=source` input is discarded during canonical route projection
 - `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document
 

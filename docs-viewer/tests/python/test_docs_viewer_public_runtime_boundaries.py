@@ -106,6 +106,13 @@ def test_route_configs_separate_app_kind_from_service_presence() -> None:
         assert all(not surface["base_url"] for surface in route["services"].values())
 
     manage_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-manage")
+    review_route = next(route for route in manage_payload["routes"] if route["route_id"] == "docs-review")
+    assert review_route["app_kind"] == "review"
+    assert review_route["features"] == []
+    assert review_route["preserve_query_params"] == ["package"]
+    assert review_route["services"]["source"]["base_url"] == ""
+    assert not (REPO_ROOT / "docs-viewer/runtime/js/review/docs-viewer-review-document-controls.js").exists()
+    assert not (REPO_ROOT / "docs-viewer/runtime/js/review/docs-viewer-review-hosted-views.js").exists()
     assert manage_route["app_kind"] == "manage"
     assert manage_route["schema_version"] == "docs_viewer_route_config_v4"
     assert "hosted_views" not in manage_route

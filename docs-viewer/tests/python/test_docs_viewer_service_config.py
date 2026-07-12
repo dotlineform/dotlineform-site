@@ -122,7 +122,7 @@ def test_manage_route_config_separates_generated_reads_from_management_services(
     assert manage_route["services"]["management"]["base_url"] == ""
 
 
-def test_review_route_config_has_independent_temporary_write_services() -> None:
+def test_review_route_config_exposes_generated_reads_without_source_services() -> None:
     config = docs_viewer_service.DocsViewerServiceConfig(
         host="127.0.0.1",
         port=8776,
@@ -138,10 +138,11 @@ def test_review_route_config_has_independent_temporary_write_services() -> None:
 
     assert review_route["app_kind"] == "review"
     assert review_route["viewer_base_url"] == "/docs-review/"
-    assert review_route["preserve_query_params"] == ["package", "view"]
+    assert review_route["preserve_query_params"] == ["package"]
+    assert review_route["features"] == []
     assert review_route["access"]["management_ui"] is False
     assert review_route["services"]["generated_data"]["base_url"] == "http://127.0.0.1:8776"
-    assert review_route["services"]["source"]["base_url"] == "http://127.0.0.1:8776"
+    assert review_route["services"]["source"]["base_url"] == ""
     assert review_route["services"]["management"]["base_url"] == ""
 
 def test_apply_capability_flags_respects_local_service_flags() -> None:

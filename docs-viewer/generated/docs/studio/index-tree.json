@@ -320,19 +320,19 @@
           "doc_id": "site-request-docs-import-reviewed-package",
           "title": "Docs Import Reviewed Package",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package.json",
-          "ui_status": "proposed",
+          "ui_status": "done",
           "children": [
             {
               "doc_id": "site-request-docs-import-reviewed-package-implementation",
               "title": "Docs Import Reviewed Package Implementation",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package-implementation.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "site-request-docs-import-reviewed-package-preparation-refactor",
               "title": "Docs Import Reviewed Package Preparation And Refactor",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-import-reviewed-package-preparation-refactor.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             }
           ]
         },
@@ -1293,5 +1293,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-12T06:28:36Z"
+  "generated_at": "2026-07-12T13:32:41Z"
 }

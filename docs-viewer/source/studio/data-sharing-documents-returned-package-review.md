@@ -136,13 +136,17 @@ The request uses:
 }
 ```
 
-For `document-content` packages, this action validates and publishes one temporary Docs Review package for the complete staged returned file:
+For supported document packages, this action validates and atomically publishes one persistent read-only Docs Review package for the complete staged returned file:
 
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
   manifest.json
   source/
     <doc_id>.md
+  generated/
+    index-tree.json
+    by-id/
+      <doc_id>.json
 ```
 
 The folder id is derived only from the staged file's `export_id` and matching internal metadata:
@@ -159,19 +163,19 @@ The Content/source-folder action:
 - materializes one Markdown file per valid row in the timestamped package folder
 - strictly parses the materialized front matter and validates safe filename/`doc_id` agreement, unique identities, package-local parent references, and hierarchy cycles
 - roots a compact-package document when its original parent is outside the returned selection and records the original parent as a validation warning, so partial text projections remain buildable
-- writes the folder only when the complete in-memory materialized source set passes validation
+- builds derived source and package-local generated output beside the final path, then exposes the complete folder with one rename
 - writes a trusted `docs_review_validated_package_v1` manifest with matching `package_id`, `status: validated`, `source_scope`, `default_doc_id`, provenance, and validation diagnostics
 - reports invalid rows and materialization failures in the Data Sharing response without publishing a discoverable package
 - copies only allowed front matter fields from returned rows: `title`, `parent_id`, `summary`, and `viewable`
-- writes the returned `content` field as the Markdown body without content normalization or conversion
+- normalizes returned compact or full-source content through the shared Docs Import content adapter before materializing preview Markdown
 - treats `content_format` as manifest metadata only
 - rejects publication when the metadata-derived timestamped package folder already exists
 
-It does not build generated review payloads automatically, register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown. The published folder is immediately discoverable by `/docs-review/`, where Build creates package-local generated output.
+It does not register the folder as a Docs Viewer scope, open `/docs-review/`, or mutate canonical source Markdown. The published folder is immediately discoverable with retained generated output; repair is limited to missing or malformed derived JSON.
 
 The current Content/source-folder action is a text-oriented preview handoff only. Its manifest records `source_projection: rendered_derived_text_only`. It is not source-faithful enough for canonical replacement because `content` was derived from rendered output and the package does not contain the complete source dependency set.
 
-[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the later exact-Markdown and asset producer for the same validated-package handoff. The current Docs Review implementation may edit and rebuild the projection; [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will make that projection read-only and import the associated staged JSONL through managed Docs Import instead.
+[Data Sharing Full Document Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package) specifies the exact-Markdown and asset producer for the same validated-package handoff. [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) now keeps the persistent projection read-only and imports the associated staged JSONL through managed Docs Import instead.
 
 ## Review Rows
 

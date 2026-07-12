@@ -83,22 +83,6 @@ export function createDocsViewerReturnedPackageProvider(options) {
     });
   }
 
-  function readSource(docId) {
-    return ensurePackage().then(function (packageId) {
-      return request("/docs-review/packages/source", {
-        query: { package_id: packageId, doc_id: docId }
-      });
-    });
-  }
-
-  function writeSource(payload) {
-    return ensurePackage().then(function (packageId) {
-      return request("/docs-review/packages/source", {
-        body: Object.assign({}, payload || {}, { package_id: packageId })
-      });
-    });
-  }
-
   function build() {
     return ensurePackage().then(function (packageId) {
       return request("/docs-review/packages/build", {
@@ -136,8 +120,6 @@ export function createDocsViewerReturnedPackageProvider(options) {
     readAssetInventory: readAssetInventory,
     readDocument: readDocument,
     readIndex: readIndex,
-    readManifest: readManifest,
-    readSource: readSource,
-    writeSource: writeSource
+    readManifest: readManifest
   };
 }

@@ -887,7 +887,7 @@ Checkpoint evidence:
 | non-scope provider | pass | app composition accepts a code-owned `createCollectionProvider` factory and retains the configured-scope provider as its default |
 | independent generated/source services | pass | review context can expose local generated reads and source service access while omitting the management service |
 | optional route features | pass | an empty feature policy omits configured-scope discovery, search, recent, bookmarks, reports, scope selection, and management startup |
-| review source mode and controls | pass | the view registry admits review-only Markdown mode and save controls while the focused review backend authorizes temporary writes |
+| review read-only package boundary | pass | the review entrypoint contributes no source mode or save controls, loads no management source-editor assets, and the focused backend exposes no package source capabilities or routes |
 | public asset isolation | pass | public entrypoints retain public/shared imports only; review contributions are owned by the local review entrypoint |
 | coordinator boundary | pass | provider, view, source, and shell contributions enter through existing boot/composition seams; no review lifecycle is added to the private runtime coordinator |
 | package dependency | pass with sequencing clarification | preview may start from a representative package fixture; the real Data Sharing producer remains required before round-trip acceptance |
