@@ -63,7 +63,9 @@ var ACTION_TEXT = {
 
 export function createDocsViewerManagementActionController(options) {
   var root = options.root;
-  var state = options.state;
+  var documentIndex = options.documentIndex || {};
+  var management = options.management || {};
+  var selectedDocument = options.selectedDocument || {};
   var context = options.context;
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
@@ -115,7 +117,7 @@ export function createDocsViewerManagementActionController(options) {
   async function viewabilityTargetDocIds(doc) {
     return resolveViewabilityTargetDocIds({
       doc: doc,
-      allDocs: state.allDocs,
+      allDocs: documentIndex.allDocs,
       findDocById: context.findAllDocById,
       confirmAncestors: function (detail) {
         var ancestorMessage = context.formatText(ACTION_TEXT.viewableAncestorPrompt, {
@@ -257,7 +259,7 @@ export function createDocsViewerManagementActionController(options) {
 
   function handleEditMetadataSave(payload) {
     if (!payload) return;
-    var doc = state.docsById.get(payload.doc_id);
+    var doc = documentIndex.docsById.get(payload.doc_id);
     var title = doc && doc.title ? doc.title : payload.title;
 
     setManagementBusy(true);
@@ -284,7 +286,7 @@ export function createDocsViewerManagementActionController(options) {
 
     rebuildManagedDocs(managementClientOptions())
       .then(function () {
-        var targetDocId = state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
+        var targetDocId = selectedDocument.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
         setManagementMessage("", false);
         return reloadDocsIndex(targetDocId, "");
       })
@@ -359,7 +361,7 @@ export function createDocsViewerManagementActionController(options) {
 
   function currentScopeExportDetail() {
     var scopeId = typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
-    var capabilities = state.managementCapabilities || {};
+    var capabilities = management.managementCapabilities || {};
     var scopeCaps = capabilities.scopes && scopeId ? capabilities.scopes[scopeId] : null;
     return scopeCaps && scopeCaps.static_html_export ? scopeCaps.static_html_export : {};
   }
@@ -444,7 +446,7 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage(ACTION_TEXT.settingsSaved, false);
         var defaultDocChange = payload && payload.changes ? payload.changes.default_doc_id : null;
         var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
-        var targetDocId = state.selectedDocId || proposedDefaultDocId || context.defaultDocId();
+        var targetDocId = selectedDocument.selectedDocId || proposedDefaultDocId || context.defaultDocId();
         if (payload && payload.changed) {
           return reloadViewerConfiguration().then(function () {
             return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId) : null;
@@ -540,10 +542,10 @@ export function createDocsViewerManagementActionController(options) {
 
   function handleMoveDoc(docId, parentId) {
     if (!docId) return;
-    var movingDoc = state.docsById.get(docId);
+    var movingDoc = documentIndex.docsById.get(docId);
     var nextParentId = String(parentId || "").trim();
     if (!movingDoc) return;
-    if (nextParentId && !state.docsById.has(nextParentId)) return;
+    if (nextParentId && !documentIndex.docsById.has(nextParentId)) return;
 
     setManagementBusy(true);
     clearDragState();

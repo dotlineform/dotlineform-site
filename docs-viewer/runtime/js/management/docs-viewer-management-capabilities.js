@@ -1,7 +1,6 @@
 import {
   DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE,
-  readManagementCapabilities,
-  scopeSupportsGeneratedDataReads
+  readManagementCapabilities
 } from "./docs-viewer-management-client.js";
 
 function normalizeScopeId(scope) {
@@ -135,7 +134,8 @@ export function subScopeLifecycleDeleteTargets(capabilities, scope) {
 }
 
 export function createDocsViewerManagementCapabilityController(options) {
-  var state = options.state;
+  var management = options.management || {};
+  var routeSession = options.routeSession || {};
   var context = options.context;
   var callbacks = options.callbacks || {};
 
@@ -166,22 +166,20 @@ export function createDocsViewerManagementCapabilityController(options) {
   }
 
   function markUnavailable(error) {
-    state.managementCapabilities = null;
-    state.managementChecked = true;
-    state.managementAvailable = false;
-    state.managementCapabilityError = capabilityErrorMessage(error);
+    management.managementCapabilities = null;
+    management.managementChecked = true;
+    management.managementAvailable = false;
+    management.managementCapabilityError = capabilityErrorMessage(error);
     renderManagementUi();
   }
 
   function applyCapabilities(payload) {
     var capabilities = payload && payload.capabilities ? payload.capabilities : null;
     var scopeCaps = scopeManagementCapabilities(capabilities, viewerScope());
-    state.managementCapabilities = capabilities;
-    state.managementCapabilityError = "";
-    state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(capabilities, viewerScope());
-    state.generatedDataReadChecked = true;
-    state.managementChecked = true;
-    state.managementAvailable = Boolean(capabilities && capabilities.docs_management && scopeCaps && scopeCaps.available);
+    management.managementCapabilities = capabilities;
+    management.managementCapabilityError = "";
+    management.managementChecked = true;
+    management.managementAvailable = Boolean(capabilities && capabilities.docs_management && scopeCaps && scopeCaps.available);
     renderManagementUi();
     renderSidebar();
   }
@@ -189,11 +187,11 @@ export function createDocsViewerManagementCapabilityController(options) {
   function checkManagementCapabilities(attempt, checkId) {
     readManagementCapabilities(managementClientOptions())
       .then(function (payload) {
-        if (checkId !== state.managementCapabilityCheckId) return;
+        if (checkId !== management.managementCapabilityCheckId) return;
         applyCapabilities(payload);
       })
       .catch(function (error) {
-        if (checkId !== state.managementCapabilityCheckId) return;
+        if (checkId !== management.managementCapabilityCheckId) return;
         if (shouldRetryCapabilityError(error) && attempt < context.MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
           window.setTimeout(function () {
             checkManagementCapabilities(attempt + 1, checkId);
@@ -205,15 +203,15 @@ export function createDocsViewerManagementCapabilityController(options) {
   }
 
   function startCapabilityCheck() {
-    state.managementCapabilityCheckId += 1;
-    state.managementCapabilityError = "";
-    checkManagementCapabilities(0, state.managementCapabilityCheckId);
+    management.managementCapabilityCheckId += 1;
+    management.managementCapabilityError = "";
+    checkManagementCapabilities(0, management.managementCapabilityCheckId);
   }
 
   function initialize() {
-    state.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     renderManagementUi();
-    if (!state.managementContext) return;
+    if (!routeSession.managementContext) return;
 
     if (!context.managementBaseUrl) {
       markUnavailable(new Error(DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE));
@@ -224,7 +222,7 @@ export function createDocsViewerManagementCapabilityController(options) {
   }
 
   function refresh() {
-    if (!state.managementContext || !context.managementBaseUrl) return;
+    if (!routeSession.managementContext || !context.managementBaseUrl) return;
     startCapabilityCheck();
   }
 

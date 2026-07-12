@@ -231,7 +231,8 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management.js`
 
-- This controller now receives named `managementState`, `serviceClient`, and `routeReload` contracts from the lazy runtime boundary instead of broad runtime `state`. It builds a management-local state facade from explicit route-session, scope-config, document-index, selected-document, search/recent, generated-data, and management domains for existing management child modules.
+- This controller receives named `managementState`, `serviceClient`, and `routeReload` contracts from the lazy runtime boundary instead of broad runtime `state`. It consumes document-index, selected-document, search/recent, route-session, scope-config, and management domains directly and passes only the required named domains to each child controller.
+- The former management-local cross-domain property facade is removed. Management capability checks mutate only the management and route-session domains; generated-read capability caching remains solely in `docs-viewer-generated-data-runtime.js`.
 - action menu markup is design-time record rendering in `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`; this controller preserves binding, capability projection, and command workflow handoff for the rendered stable ids.
 - metadata and settings shell refs, validation/loading behavior, and modal handoffs are composed by focused workflow owners rather than this coordinator.
 - stable management-control binding, Actions-menu interaction, and root/keyboard event delegation belong to `docs-viewer-management-event-router.js`.

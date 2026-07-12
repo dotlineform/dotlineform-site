@@ -14,7 +14,11 @@ function shellRef(shellRefs, name, id) {
 
 export function createDocsViewerManagementModalComposition(options = {}) {
   var shellRefs = options.shellRefs || {};
-  var state = options.state || {};
+  var domains = options.domains || {};
+  var documentIndex = domains.documentIndex || {};
+  var management = domains.management || {};
+  var routeSession = domains.routeSession || {};
+  var scopeConfig = domains.scopeConfig || {};
   var context = options.context || {};
   var callbacks = options.callbacks || {};
   var refs = {
@@ -53,7 +57,9 @@ export function createDocsViewerManagementModalComposition(options = {}) {
   };
   var modalController = null;
   var metadataWorkflow = createDocsViewerManagementMetadataWorkflow({
-    state: state,
+    documentIndex: documentIndex,
+    management: management,
+    routeSession: routeSession,
     refs: {
       dateDisplayInput: refs.metadataDateDisplayInput,
       dateInput: refs.metadataDateInput,
@@ -74,7 +80,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     }
   });
   var settingsWorkflow = createDocsViewerManagementSettingsWorkflow({
-    state: state,
+    management: management,
     refs: {
       saveButton: refs.settingsSaveButton
     },
@@ -90,7 +96,9 @@ export function createDocsViewerManagementModalComposition(options = {}) {
 
   modalController = createDocsViewerManagementModalController({
     nav: options.nav || null,
-    state: state,
+    documentIndex: documentIndex,
+    management: management,
+    scopeConfig: scopeConfig,
     context: context,
     refs: refs,
     callbacks: {

@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import, metadata/settings, scope lifecycle, and event-router slices complete.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with Slices 7.1 through 7.5 complete.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -847,7 +847,7 @@ Implemented on 2026-07-11.
 - `docs-viewer-status-controller.js` owns viewer status text/error projection and nested busy-state accounting.
 - `docs-viewer-app-runtime.js` no longer owns Phase 4 host construction, active control projection, mode/default-info synchronization, status DOM mutation, busy counting, or repeated mode-to-view transition chains. Its size fell from about 996 lines at assessment to about 834 lines.
 - App-session domains no longer expose `expandedDocIds`, `uiStatusByValue`, `docNonViewableEmoji`, `managementContext`, management capabilities, reload state, management messages, or the view registry through duplicate facades. Generated-read capability payloads now live in `generatedDataCapabilities`, separate from management capability state.
-- The management state facade now reads route identity only from `routeSession` and reload state only from `selectedDocument`; the removed fallbacks have no aliases.
+- At the Phase 5 checkpoint, the management state facade read route identity only from `routeSession` and reload state only from `selectedDocument`; Slice 7.5 later removed that cross-domain facade entirely.
 - Service/provider construction remains in app composition because Phase 2 had already established the correct owner.
 - No review-specific code or generic event/store rewrite was added.
 
@@ -941,7 +941,7 @@ Verification evidence:
 
 This phase is not a Docs Review prerequisite unless a touched workflow blocks a clean integration.
 
-Status: active. Slices 7.1 through 7.4 are complete; later slices remain demand-driven.
+Status: active. Slices 7.1 through 7.5 are complete; command-family splitting remains demand-driven.
 
 Candidate slices:
 
@@ -949,7 +949,7 @@ Candidate slices:
 - separate metadata and settings workflow composition — Slice 7.2 complete
 - give scope/sub-scope lifecycle a focused controller — Slice 7.3 complete
 - narrow the management event router — Slice 7.4 complete
-- replace remaining broad management facade fields with explicit domains/queries
+- replace remaining broad management facade fields with explicit domains/queries — Slice 7.5 complete
 - split action command families only when they have independent state or lifecycle
 
 Each slice should preserve behavior and have its own task definition and verification set.
@@ -1047,6 +1047,34 @@ Verification set:
 
 - JavaScript syntax checks for the event router, coordinator, and focused modal race fix
 - focused manage-route smoke covering Actions-menu outside-click/Escape dismissal plus import, metadata, settings, and scope-lifecycle control routing
+- public runtime import-boundary and static-asset tests
+- `git diff --check`
+
+### Slice 7.5: Explicit Management Domains And Queries
+
+Task definition:
+
+- remove the management-local cross-domain property facade rather than moving it to another module
+- pass document-index, selected-document, search/recent, route-session, scope-config, and management domains only to consumers that use them
+- keep current-selected-document and current-context-menu lookups as explicit coordinator queries
+- remove management capability writes to generated-read state and preserve the generated-data runtime as its sole owner
+- preserve route reload, search/reset, metadata, settings, interaction, lifecycle, and action behavior
+
+Delivered outcome:
+
+- `docs-viewer-management.js` consumes the six named management domains directly and no longer defines proxy properties or remaps mutable fields
+- capability, interaction, action, config, metadata, settings, modal, and scope-lifecycle controllers receive only their required named domains
+- the metadata parent picker dropped an unused state argument rather than retaining a compatibility-shaped handoff
+- management capability checks now mutate only management capability state and route-session context; `docs-viewer-generated-data-runtime.js` remains the sole generated-read capability owner
+- unused management-client generated-read/search capability helpers were removed after their ownership moved entirely to the generated-data runtime
+- the focused capability smoke now asserts the positive management/route-session domain contract without synthetic generated-read fields
+- the management coordinator is reduced from 1,009 to 574 lines across Slices 7.1 through 7.5
+
+Verification set:
+
+- JavaScript syntax checks across every changed management-domain consumer
+- focused management-capability module smoke for management and route-session projection
+- focused manage-route smoke covering management boot and the previously exercised import, metadata, settings, event-router, and lifecycle boundaries
 - public runtime import-boundary and static-asset tests
 - `git diff --check`
 

@@ -7,7 +7,7 @@ var SETTINGS_TEXT = {
 };
 
 export function createDocsViewerManagementSettingsWorkflow(options = {}) {
-  var state = options.state || {};
+  var management = options.management || {};
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
 
@@ -55,7 +55,7 @@ export function createDocsViewerManagementSettingsWorkflow(options = {}) {
   function render() {
     var modal = modalController();
     if (!refs.saveButton || !modal || !modal.settingsModalOpen()) return;
-    refs.saveButton.disabled = Boolean(state.managementBusy) || !fieldState();
+    refs.saveButton.disabled = Boolean(management.managementBusy) || !fieldState();
   }
 
   return {

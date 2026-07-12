@@ -11,7 +11,9 @@ var METADATA_TEXT = {
 };
 
 export function createDocsViewerManagementMetadataWorkflow(options = {}) {
-  var state = options.state || {};
+  var documentIndex = options.documentIndex || {};
+  var management = options.management || {};
+  var routeSession = options.routeSession || {};
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
 
@@ -24,11 +26,11 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
   }
 
   function parentOptions(doc) {
-    var blockedIds = collectDescendantDocIds(state.allDocs, doc.doc_id, new Set([doc.doc_id]));
+    var blockedIds = collectDescendantDocIds(documentIndex.allDocs, doc.doc_id, new Set([doc.doc_id]));
     var options = [{ value: "", label: METADATA_TEXT.parentRootOption }];
-    var docsByParent = buildChildrenMap(state.allDocs, {
-      managementContext: state.managementContext,
-      showNonViewable: state.showNonViewable
+    var docsByParent = buildChildrenMap(documentIndex.allDocs, {
+      managementContext: routeSession.managementContext,
+      showNonViewable: documentIndex.showNonViewable
     });
     function pushChildren(parentId, depth) {
       (docsByParent.get(parentId) || []).forEach(function (candidate) {
@@ -47,7 +49,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
   function payloadFromModal() {
     var modal = modalController();
-    var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+    var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
     if (!modal || !doc || !refs.titleInput || !refs.summaryInput || !refs.dateInput || !refs.dateDisplayInput || !refs.statusInput || !refs.nonViewableInput || !refs.parentInput) return null;
 
     var title = String(refs.titleInput.value || "").trim();
@@ -96,19 +98,19 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
   }
 
   function openForDocId(docId) {
-    return openForDoc(state.docsById.get(docId) || null);
+    return openForDoc(documentIndex.docsById.get(docId) || null);
   }
 
   function refreshEditingOptions() {
     var modal = modalController();
-    if (!modal || !state.metadataEditingDocId) return;
-    var doc = state.docsById.get(state.metadataEditingDocId);
+    if (!modal || !management.metadataEditingDocId) return;
+    var doc = documentIndex.docsById.get(management.metadataEditingDocId);
     modal.renderMetadataStatusOptions(doc);
     modal.renderMetadataParentOptions(doc);
   }
 
   function render() {
-    if (refs.saveButton) refs.saveButton.disabled = Boolean(state.managementBusy);
+    if (refs.saveButton) refs.saveButton.disabled = Boolean(management.managementBusy);
   }
 
   return {

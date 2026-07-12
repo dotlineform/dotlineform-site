@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 ui_status: urgent
 summary: Current Docs Viewer route-shell, shared runtime, controller lifecycle, URL, and generated-read overview, with links to focused architecture owners.
 parent_id: docs-viewer
@@ -88,6 +88,7 @@ The viewer behavior starts from route-specific entrypoints:
 
 The entry modules delegate boot to `site/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js`, which resolves route config, initializes the app shell, and starts the private app runtime coordinator.
 The private app runtime coordinator delegates app composition and startup sequencing to `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js`, then wires focused controllers through explicit domain/command inputs where available and the runtime-internal broad state object for controller families that have not yet been narrowed.
+The lazy management controller family receives explicit document-index, selected-document, search/recent, route-session, scope-config, and management domains and does not reconstruct a cross-domain state facade. Generated-read capability state remains owned only by `docs-viewer-generated-data-runtime.js`.
 Current helper modules:
 
 - `site/docs-viewer/runtime/js/shared/docs-viewer-app-composition.js` owns runtime defaults, foundational owner construction, feature-filtered hosted-view registration, startup authority records, and feature-aware startup sequencing

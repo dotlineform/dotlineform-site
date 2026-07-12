@@ -42,7 +42,9 @@ export function buildDocsViewerDeletePreviewBody(preview) {
 
 export function createDocsViewerManagementModalController(options = {}) {
   var refs = options.refs || {};
-  var state = options.state || {};
+  var documentIndex = options.documentIndex || {};
+  var management = options.management || {};
+  var scopeConfig = options.scopeConfig || {};
   var context = options.context || {};
   var nav = options.nav || null;
   var callbacks = options.callbacks || {};
@@ -51,7 +53,6 @@ export function createDocsViewerManagementModalController(options = {}) {
   var importModalCancelButton = null;
   var metadataParentPicker = createDocsViewerMetadataParentPicker({
     refs: refs,
-    state: state,
     callbacks: callbacks
   });
 
@@ -88,7 +89,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       value: "",
       label: MODAL_TEXT.metadataStatusNoneOption
     }];
-    (state.uiStatuses || []).forEach(function (status) {
+    (scopeConfig.uiStatuses || []).forEach(function (status) {
       optionRecords.push({
         value: status.ui_status,
         label: status.emoji + " " + status.label
@@ -153,9 +154,9 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     dismissMetadataParentSuggestions();
     refs.metadataModal.hidden = true;
-    state.metadataEditingDocId = "";
-    var restoreDocId = state.metadataRestoreFocusId;
-    state.metadataRestoreFocusId = "";
+    management.metadataEditingDocId = "";
+    var restoreDocId = management.metadataRestoreFocusId;
+    management.metadataRestoreFocusId = "";
     if (metadataModalResolve) {
       var resolve = metadataModalResolve;
       metadataModalResolve = null;
@@ -172,8 +173,8 @@ export function createDocsViewerManagementModalController(options = {}) {
       return Promise.resolve(null);
     }
     if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
-    state.metadataEditingDocId = doc.doc_id;
-    state.metadataRestoreFocusId = doc.doc_id;
+    management.metadataEditingDocId = doc.doc_id;
+    management.metadataRestoreFocusId = doc.doc_id;
     if (refs.metadataDocId) {
       refs.metadataDocId.textContent = doc.doc_id;
     }
@@ -338,7 +339,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       return;
     }
     renderSettingsField(settingsFieldState);
-    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = state.managementBusy;
+    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = management.managementBusy;
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
     var fieldType = settingsFieldState.type;
@@ -481,15 +482,15 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     if (refs.metadataParentInput) {
       refs.metadataParentInput.addEventListener("input", function () {
-        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
         if (doc) metadataParentPicker.renderPopup(doc);
       });
       refs.metadataParentInput.addEventListener("focus", function () {
-        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
         if (doc) metadataParentPicker.renderPopup(doc);
       });
       refs.metadataParentInput.addEventListener("keydown", function (event) {
-        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
         metadataParentPicker.handleInputKeydown(event, doc);
       });
     }

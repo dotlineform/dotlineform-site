@@ -11,18 +11,18 @@ function parentOptions(callbacks, doc) {
   return typeof callbacks.metadataParentOptions === "function" ? callbacks.metadataParentOptions(doc) : [];
 }
 
-function parentOptionTitle(state, option) {
+function parentOptionTitle(option) {
   if (!option || !option.value) return PARENT_PICKER_TEXT.rootOption;
   return String(option.label || "").replace(/^(-\s*)+/, "");
 }
 
-function parentOptionDisplay(state, option) {
-  return parentOptionTitle(state, option);
+function parentOptionDisplay(option) {
+  return parentOptionTitle(option);
 }
 
-function parentMatchRank(state, option, query) {
-  var display = parentOptionDisplay(state, option).toLowerCase();
-  var title = parentOptionTitle(state, option).toLowerCase();
+function parentMatchRank(option, query) {
+  var display = parentOptionDisplay(option).toLowerCase();
+  var title = parentOptionTitle(option).toLowerCase();
   var value = String(option && option.value || "").toLowerCase();
   if (value === query) return 0;
   if (title === query || display === query) return 1;
@@ -35,7 +35,6 @@ function parentMatchRank(state, option, query) {
 
 export function createDocsViewerMetadataParentPicker(options = {}) {
   var refs = options.refs || {};
-  var state = options.state || {};
   var callbacks = options.callbacks || {};
   var optionRecords = [];
   var activeIndex = -1;
@@ -76,7 +75,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
       return {
         index: index,
         option: option,
-        rank: parentMatchRank(state, option, normalizedQuery)
+        rank: parentMatchRank(option, normalizedQuery)
       };
     }).filter(function (match) {
       return match.rank !== null;
@@ -108,7 +107,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     }
     refs.metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(records, {
       optionTitle: function (option) {
-        return parentOptionTitle(state, option);
+        return parentOptionTitle(option);
       }
     });
     refs.metadataParentPopup.hidden = false;
@@ -119,7 +118,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
   function selectOption(index) {
     var option = optionRecords[index];
     if (!option || !refs.metadataParentInput) return;
-    refs.metadataParentInput.value = parentOptionDisplay(state, option);
+    refs.metadataParentInput.value = parentOptionDisplay(option);
     hidePopup();
     refs.metadataParentInput.focus();
   }
@@ -131,7 +130,7 @@ export function createDocsViewerMetadataParentPicker(options = {}) {
     var currentOption = records.find(function (option) {
       return option.value === currentParentId;
     }) || records[0];
-    refs.metadataParentInput.value = parentOptionDisplay(state, currentOption);
+    refs.metadataParentInput.value = parentOptionDisplay(currentOption);
     hidePopup();
   }
 

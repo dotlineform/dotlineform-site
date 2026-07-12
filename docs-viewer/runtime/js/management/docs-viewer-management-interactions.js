@@ -8,7 +8,11 @@ import {
 
 export function createDocsViewerManagementInteractionController(options) {
   var nav = options.nav;
-  var state = options.state;
+  var documentIndex = options.documentIndex || {};
+  var management = options.management || {};
+  var routeSession = options.routeSession || {};
+  var searchRecent = options.searchRecent || {};
+  var selectedDocument = options.selectedDocument || {};
   var context = options.context;
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
@@ -23,7 +27,7 @@ export function createDocsViewerManagementInteractionController(options) {
   var lastEditRequestTime = 0;
 
   function docChildren(docId) {
-    return state.childrenByParent.get(docId) || [];
+    return documentIndex.childrenByParent.get(docId) || [];
   }
 
   function docHasChildren(docId) {
@@ -31,22 +35,22 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function dragEnabled() {
-    return state.managementContext && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
   }
 
   function contextMenuEnabled() {
-    return state.managementContext && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
   }
 
   function editFromIndexEnabled() {
-    return state.managementContext && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
   }
 
   function dragDropOptions() {
     return {
       dragDocId: dragDocId,
       dragEnabled: dragEnabled(),
-      docsById: state.docsById,
+      docsById: documentIndex.docsById,
       hasChildren: docHasChildren,
       nav: nav
     };
@@ -57,7 +61,7 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function currentContextMenuDoc() {
-    return state.docsById.get(contextMenuDocId) || null;
+    return documentIndex.docsById.get(contextMenuDocId) || null;
   }
 
   function clearDragState() {
@@ -77,7 +81,7 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function showContextMenu(docId, clientX, clientY) {
-    if (!contextMenu || !contextMenuEnabled() || !state.docsById.has(docId)) return;
+    if (!contextMenu || !contextMenuEnabled() || !documentIndex.docsById.has(docId)) return;
     contextMenuDocId = docId;
     contextMenu.hidden = false;
     contextMenu.style.left = "0px";
@@ -126,7 +130,7 @@ export function createDocsViewerManagementInteractionController(options) {
 
   function requestEditDoc(docId) {
     var normalizedDocId = String(docId || "");
-    if (!normalizedDocId || !state.docsById.has(normalizedDocId)) return;
+    if (!normalizedDocId || !documentIndex.docsById.has(normalizedDocId)) return;
     var now = Date.now();
     if (lastEditRequestDocId === normalizedDocId && now - lastEditRequestTime < 500) return;
     lastEditRequestDocId = normalizedDocId;
@@ -137,7 +141,7 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function requestEditSelectedDoc() {
-    requestEditDoc(state.selectedDocId);
+    requestEditDoc(selectedDocument.selectedDocId);
   }
 
   function handleRootClick(event) {
@@ -161,7 +165,7 @@ export function createDocsViewerManagementInteractionController(options) {
 
     nav.addEventListener("click", function (event) {
       if (event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
-        if (editFromIndexEnabled() && state.docsById.has(state.selectedDocId)) {
+        if (editFromIndexEnabled() && documentIndex.docsById.has(selectedDocument.selectedDocId)) {
           suppressNextClick = false;
           event.preventDefault();
           event.stopPropagation();
@@ -177,7 +181,7 @@ export function createDocsViewerManagementInteractionController(options) {
 
     nav.addEventListener("mousedown", function (event) {
       if (event.button === 0 && event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
-        if (editFromIndexEnabled() && state.docsById.has(state.selectedDocId)) {
+        if (editFromIndexEnabled() && documentIndex.docsById.has(selectedDocument.selectedDocId)) {
           suppressNextClick = true;
           event.preventDefault();
           event.stopPropagation();
@@ -203,7 +207,7 @@ export function createDocsViewerManagementInteractionController(options) {
       if (event.target.closest("[data-toggle-doc-id]")) return;
       var row = event.target.closest("[data-doc-row-id]");
       if (!row || !editFromIndexEnabled()) return;
-      if (!state.docsById.has(state.selectedDocId)) return;
+      if (!documentIndex.docsById.has(selectedDocument.selectedDocId)) return;
       event.preventDefault();
       requestEditSelectedDoc();
     });

@@ -8,4 +8,4 @@ The repo also contains locally run web apps:
 - **Analytics**: portfolio analysis and data sharing tools
 - **Docs Viewer**: document publishing tool and runtime for the *analysis*, *library* and *moments* site pages.
 
-These apps are being developed to enable a publishing workflow that supports data and AI-driven document authoring. The site is also almost completely coded by AI.
+These apps are being developed to enable a publishing workflow that supports data and AI-driven document authoring.

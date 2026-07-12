@@ -34,67 +34,17 @@ var MANAGEMENT_TEXT = {
   unavailableNote: "Docs management service unavailable."
 };
 
-function createDocsViewerManagementStateFacade(domains) {
-  var sources = domains || {};
-  var fieldSources = {
-    allDocs: sources.documentIndex,
-    childrenByParent: sources.documentIndex,
-    docNonViewableEmoji: sources.scopeConfig,
-    docsById: sources.documentIndex,
-    generatedDataReadAvailable: sources.generatedData,
-    generatedDataReadChecked: sources.generatedData,
-    managementAvailable: sources.management,
-    managementBusy: sources.management,
-    managementCapabilities: sources.management,
-    managementCapabilityCheckId: sources.management,
-    managementCapabilityError: sources.management,
-    managementChecked: sources.management,
-    managementMessage: sources.management,
-    managementMessageIsError: sources.management,
-    managementContext: sources.routeSession,
-    managementStatusOwnsViewerStatus: sources.management,
-    metadataEditingDocId: sources.management,
-    metadataRestoreFocusId: sources.management,
-    payloadCache: sources.selectedDocument,
-    recentEntries: sources.searchRecent,
-    recentLoaded: sources.searchRecent,
-    recentRequestPromise: sources.searchRecent,
-    recentModeActive: sources.searchRecent,
-    reloadExpectedDocId: sources.selectedDocument,
-    reloadNonce: sources.selectedDocument,
-    searchEntries: sources.searchRecent,
-    searchLoaded: sources.searchRecent,
-    searchQuery: sources.searchRecent,
-    searchRequestPromise: sources.searchRecent,
-    searchRouteActive: sources.searchRecent,
-    searchVisibleCount: sources.searchRecent,
-    selectedDocId: sources.selectedDocument,
-    showNonViewable: sources.documentIndex,
-    uiStatusByValue: sources.scopeConfig,
-    uiStatuses: sources.scopeConfig
-  };
-  var facade = {};
-  Object.keys(fieldSources).forEach(function (fieldName) {
-    Object.defineProperty(facade, fieldName, {
-      enumerable: true,
-      get: function () {
-        var source = fieldSources[fieldName] || {};
-        return source[fieldName];
-      },
-      set: function (value) {
-        var source = fieldSources[fieldName] || {};
-        source[fieldName] = value;
-      }
-    });
-  });
-  return facade;
-}
-
 export function initDocsViewerManagement(context) {
   var root = context.root;
   var nav = context.nav;
   var managementState = context.managementState || {};
-  var state = createDocsViewerManagementStateFacade(managementState.domains || {});
+  var domains = managementState.domains || {};
+  var documentIndex = domains.documentIndex || {};
+  var management = domains.management || {};
+  var routeSession = domains.routeSession || {};
+  var scopeConfig = domains.scopeConfig || {};
+  var searchRecent = domains.searchRecent || {};
+  var selectedDocument = domains.selectedDocument || {};
   var serviceClient = context.serviceClient || {};
   var routeReload = context.routeReload || {};
   context = Object.assign({}, context, {
@@ -150,7 +100,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function currentSelectedDoc() {
-    return state.docsById.get(state.selectedDocId) || null;
+    return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
   }
 
   function currentContextMenuDoc() {
@@ -170,9 +120,9 @@ export function initDocsViewerManagement(context) {
   }
 
   function setManagementBusy(busy) {
-    state.managementBusy = Boolean(busy);
+    management.managementBusy = Boolean(busy);
     if (root) {
-      root.dataset.managementBusy = state.managementBusy ? "true" : "false";
+      root.dataset.managementBusy = management.managementBusy ? "true" : "false";
     }
   }
 
@@ -181,8 +131,8 @@ export function initDocsViewerManagement(context) {
   }
 
   function managementNoteText() {
-    if (state.managementMessage) return state.managementMessage;
-    if (state.searchRouteActive) {
+    if (management.managementMessage) return management.managementMessage;
+    if (searchRecent.searchRouteActive) {
       return MANAGEMENT_TEXT.clearSearchNote;
     }
     return "";
@@ -191,10 +141,10 @@ export function initDocsViewerManagement(context) {
   function syncManagementStatus(noteText, isError) {
     var text = String(noteText || "");
     var hasManagementStatus = Boolean(text);
-    if (hasManagementStatus || state.managementStatusOwnsViewerStatus) {
+    if (hasManagementStatus || management.managementStatusOwnsViewerStatus) {
       context.setStatus(text, Boolean(isError));
     }
-    state.managementStatusOwnsViewerStatus = hasManagementStatus;
+    management.managementStatusOwnsViewerStatus = hasManagementStatus;
   }
 
   function projectDocumentActionButtons(hidden, disabled) {
@@ -229,8 +179,8 @@ export function initDocsViewerManagement(context) {
   function renderManagementUi() {
     if (!manageRow) return;
 
-    state.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
-    if (!state.managementContext) {
+    routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       manageRow.hidden = true;
       projectDocumentActionButtons(true, true);
@@ -240,7 +190,7 @@ export function initDocsViewerManagement(context) {
 
     manageRow.hidden = false;
     if (manageActions) {
-      manageActions.hidden = !state.managementChecked || !state.managementAvailable;
+      manageActions.hidden = !management.managementChecked || !management.managementAvailable;
       if (manageActions.hidden) {
         eventRouter.hideManageActionsMenu();
       }
@@ -248,14 +198,14 @@ export function initDocsViewerManagement(context) {
 
     var noteText = "";
     var noteIsError = false;
-    if (!state.managementChecked) {
+    if (!management.managementChecked) {
       noteText = MANAGEMENT_TEXT.checkingNote;
-    } else if (!state.managementAvailable) {
-      noteText = state.managementCapabilityError || MANAGEMENT_TEXT.unavailableNote;
+    } else if (!management.managementAvailable) {
+      noteText = management.managementCapabilityError || MANAGEMENT_TEXT.unavailableNote;
       noteIsError = true;
     } else {
       noteText = managementNoteText();
-      noteIsError = state.managementMessageIsError;
+      noteIsError = management.managementMessageIsError;
     }
     syncManagementStatus(noteText, noteIsError);
 
@@ -264,52 +214,52 @@ export function initDocsViewerManagement(context) {
     var doc = currentSelectedDoc();
     var draftDoc = Boolean(doc && isDocNonViewable(doc));
     var editDisabled = (
-      state.managementBusy ||
+      management.managementBusy ||
       !doc ||
-      state.searchRouteActive
+      searchRecent.searchRouteActive
     );
     var deleteDisabled = (
-      state.managementBusy ||
+      management.managementBusy ||
       !doc ||
-      state.searchRouteActive
+      searchRecent.searchRouteActive
     );
     var viewableDisabled = (
-      state.managementBusy ||
+      management.managementBusy ||
       !doc ||
-      state.searchRouteActive ||
+      searchRecent.searchRouteActive ||
       !draftDoc
     );
 
-    manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
+    manageRebuildButton.disabled = management.managementBusy || !management.managementAvailable;
     if (manageActionsButton) {
-      manageActionsButton.disabled = state.managementBusy || !state.managementAvailable;
+      manageActionsButton.disabled = management.managementBusy || !management.managementAvailable;
       if (manageActionsButton.disabled) {
         eventRouter.hideManageActionsMenu();
       }
     }
     if (scopeLifecycleController) scopeLifecycleController.render();
     if (managePublishButton) {
-      var publishAvailable = state.managementAvailable && scopePublishSupported(state.managementCapabilities, viewerScope());
-      managePublishButton.disabled = state.managementBusy || !publishAvailable;
+      var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
+      managePublishButton.disabled = management.managementBusy || !publishAvailable;
     }
     if (manageExportButton) {
-      var exportAvailable = state.managementAvailable && scopeStaticHtmlExportSupported(state.managementCapabilities, viewerScope());
+      var exportAvailable = management.managementAvailable && scopeStaticHtmlExportSupported(management.managementCapabilities, viewerScope());
       manageExportButton.hidden = !exportAvailable;
-      manageExportButton.disabled = state.managementBusy || !exportAvailable;
+      manageExportButton.disabled = management.managementBusy || !exportAvailable;
     }
     if (manageImportButton) {
-      manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
+      manageImportButton.disabled = management.managementBusy || !management.managementAvailable;
     }
     if (manageSettingsButton) {
-      manageSettingsButton.disabled = state.managementBusy || !state.managementAvailable;
+      manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
     }
-    manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
-    projectDocumentActionButtons(!state.managementChecked || !state.managementAvailable, !state.managementAvailable || editDisabled);
-    manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
-    manageViewableButton.disabled = !state.managementAvailable || viewableDisabled;
+    manageNewButton.disabled = management.managementBusy || !management.managementAvailable;
+    projectDocumentActionButtons(!management.managementChecked || !management.managementAvailable, !management.managementAvailable || editDisabled);
+    manageDeleteButton.disabled = !management.managementAvailable || deleteDisabled;
+    manageViewableButton.disabled = !management.managementAvailable || viewableDisabled;
     if (draftToggle) {
-      draftToggle.disabled = !state.managementAvailable || state.managementBusy;
-      draftToggle.checked = state.showNonViewable;
+      draftToggle.disabled = !management.managementAvailable || management.managementBusy;
+      draftToggle.checked = documentIndex.showNonViewable;
     }
     if (metadataWorkflow) metadataWorkflow.render();
     if (settingsWorkflow) settingsWorkflow.render();
@@ -354,18 +304,18 @@ export function initDocsViewerManagement(context) {
   }
 
   function reloadDocsIndex(targetDocId, summaryText) {
-    state.payloadCache.clear();
-    state.searchEntries = [];
-    state.searchLoaded = false;
-    state.searchRequestPromise = null;
-    state.recentEntries = [];
-    state.recentLoaded = false;
-    state.recentRequestPromise = null;
-    state.reloadNonce = String(Date.now());
-    state.reloadExpectedDocId = String(targetDocId || "").trim();
-    state.searchQuery = "";
-    state.searchVisibleCount = context.SEARCH_BATCH_SIZE;
-    state.searchRouteActive = false;
+    selectedDocument.payloadCache.clear();
+    searchRecent.searchEntries = [];
+    searchRecent.searchLoaded = false;
+    searchRecent.searchRequestPromise = null;
+    searchRecent.recentEntries = [];
+    searchRecent.recentLoaded = false;
+    searchRecent.recentRequestPromise = null;
+    selectedDocument.reloadNonce = String(Date.now());
+    selectedDocument.reloadExpectedDocId = String(targetDocId || "").trim();
+    searchRecent.searchQuery = "";
+    searchRecent.searchVisibleCount = context.SEARCH_BATCH_SIZE;
+    searchRecent.searchRouteActive = false;
     context.cancelSearchDebounce();
     if (context.searchInput) {
       context.searchInput.value = "";
@@ -382,27 +332,27 @@ export function initDocsViewerManagement(context) {
   }
 
   function setManagementMessage(message, isError) {
-    state.managementMessage = String(message || "");
-    state.managementMessageIsError = Boolean(isError);
+    management.managementMessage = String(message || "");
+    management.managementMessageIsError = Boolean(isError);
     renderManagementUi();
   }
 
   function handleDraftToggleChange() {
     if (!draftToggle) return;
-    state.showNonViewable = Boolean(draftToggle.checked);
-    state.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
+    documentIndex.showNonViewable = Boolean(draftToggle.checked);
+    routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     context.applyDocVisibility();
     context.renderSidebar();
     context.renderBookmarkUi();
     renderManagementUi();
 
-    var currentDocId = state.selectedDocId;
-    var targetDocId = currentDocId && state.docsById.has(currentDocId) ? currentDocId : context.defaultDocId();
-    if (state.recentModeActive) {
+    var currentDocId = selectedDocument.selectedDocId;
+    var targetDocId = currentDocId && documentIndex.docsById.has(currentDocId) ? currentDocId : context.defaultDocId();
+    if (searchRecent.recentModeActive) {
       context.renderRecentMode();
       return;
     }
-    if (state.searchRouteActive) {
+    if (searchRecent.searchRouteActive) {
       context.renderSearchMode();
       return;
     }
@@ -415,13 +365,14 @@ export function initDocsViewerManagement(context) {
     applyDocsViewerManagementConfig({
       config: config,
       context: context,
-      state: state,
+      scopeConfig: scopeConfig,
       metadataWorkflow: metadataWorkflow
     });
   }
 
   capabilityController = createDocsViewerManagementCapabilityController({
-    state: state,
+    management: management,
+    routeSession: routeSession,
     context: context,
     callbacks: {
       managementClientOptions: managementClientOptions,
@@ -433,7 +384,11 @@ export function initDocsViewerManagement(context) {
 
   interactionController = createDocsViewerManagementInteractionController({
     nav: nav,
-    state: state,
+    documentIndex: documentIndex,
+    management: management,
+    routeSession: routeSession,
+    searchRecent: searchRecent,
+    selectedDocument: selectedDocument,
     context: context,
     refs: {
       contextMenu: shellRefs.contextMenu
@@ -474,7 +429,9 @@ export function initDocsViewerManagement(context) {
 
   actionController = createDocsViewerManagementActionController({
     root: root,
-    state: state,
+    documentIndex: documentIndex,
+    management: management,
+    selectedDocument: selectedDocument,
     context: context,
     refs: {},
     callbacks: {
@@ -556,7 +513,7 @@ export function initDocsViewerManagement(context) {
 
   scopeLifecycleController = createDocsViewerManagementScopeLifecycleController({
     root: root,
-    state: state,
+    management: management,
     callbacks: {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
@@ -572,7 +529,12 @@ export function initDocsViewerManagement(context) {
 
   var modalComposition = createDocsViewerManagementModalComposition({
     nav: nav,
-    state: state,
+    domains: {
+      documentIndex: documentIndex,
+      management: management,
+      routeSession: routeSession,
+      scopeConfig: scopeConfig
+    },
     context: context,
     shellRefs: shellRefs,
     manageActionsButton: manageActionsButton,

@@ -36,22 +36,19 @@ def assert_capability_error_projection(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js');
-            const state = {
+            const management = {
                 managementCapabilities: null,
                 managementCapabilityCheckId: 0,
                 managementCapabilityError: '',
                 managementChecked: false,
-                managementAvailable: false,
-                generatedDataReadChecked: false,
-                generatedDataReadAvailable: false,
-                managementText: {
-                    serverNotConfiguredError: 'Local docs-management server is not configured.'
-                }
+                managementAvailable: false
             };
+            const routeSession = { managementContext: false };
             const renderEvents = [];
             let fetchCount = 0;
             const controller = module.createDocsViewerManagementCapabilityController({
-                state,
+                management,
+                routeSession,
                 context: {
                     MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS: 60,
                     MANAGEMENT_CAPABILITY_RETRY_DELAY_MS: 500,
@@ -75,23 +72,25 @@ def assert_capability_error_projection(page: Page) -> None:
                         }
                     }),
                     renderManagementUi: () => renderEvents.push({
-                        checked: state.managementChecked,
-                        available: state.managementAvailable,
-                        error: state.managementCapabilityError
+                        checked: management.managementChecked,
+                        available: management.managementAvailable,
+                        error: management.managementCapabilityError
                     }),
                     renderSidebar: () => {}
                 }
             });
             controller.initialize();
             await new Promise((resolve) => window.setTimeout(resolve, 20));
-            return { state, renderEvents, fetchCount };
+            return { management, routeSession, renderEvents, fetchCount };
         }"""
     )
-    state = result["state"]
-    if state["managementChecked"] is not True or state["managementAvailable"] is not False:
+    management = result["management"]
+    if management["managementChecked"] is not True or management["managementAvailable"] is not False:
         raise AssertionError(f"unexpected capability state after failed retries: {result!r}")
+    if result["routeSession"]["managementContext"] is not True:
+        raise AssertionError(f"management context was not projected through route-session state: {result!r}")
     expected = "Unknown parent_id 'missing-parent' for doc 'broken-parent-doc'"
-    if state["managementCapabilityError"] != expected:
+    if management["managementCapabilityError"] != expected:
         raise AssertionError(f"capability error was not retained for UI projection: {result!r}")
     if not any(event.get("error") == expected for event in result["renderEvents"]):
         raise AssertionError(f"management renderer was not called with the capability error: {result!r}")

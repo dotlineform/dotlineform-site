@@ -82,7 +82,7 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Lazy management boundary | `docs-viewer-runtime-lazy-controller.js` | Neutral lazy-controller loading, named management state-domain, service-client, and route-reload contracts, and gated management controller import. |
-| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability/status/control projection, focused-controller composition, and write orchestration. |
+| Management controller | `docs-viewer-management.js` and child modules | Explicit named-domain consumption, capability/status/control projection, focused-controller composition, and write orchestration. |
 | Management event router | `docs-viewer-management-event-router.js` | Stable management control binding, Actions-menu toggle/dismissal, named command dispatch, and ordered interaction/modal root and keyboard delegation. |
 | Management import workflow | `docs-viewer-management-import-controller.js` | Lazy Docs Import initialization, retry state, boot-error projection, and handoff from the management action to the import modal host. |
 | Management modal composition | `docs-viewer-management-modal-composition.js`, `docs-viewer-management-modals.js` | Management shell-ref resolution, focused workflow assembly, and shared metadata/import/settings modal UI state, visibility, focus, and event behavior. |

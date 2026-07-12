@@ -11,7 +11,7 @@ var LIFECYCLE_ERROR = "Scope lifecycle unavailable.";
 
 export function createDocsViewerManagementScopeLifecycleController(options = {}) {
   var root = options.root || null;
-  var state = options.state || {};
+  var management = options.management || {};
   var callbacks = options.callbacks || {};
   var documentRef = options.document || document;
   var refs = options.refs || {
@@ -74,7 +74,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       .then(function (module) {
         var flowOptions = {
           root: root,
-          capabilities: state.managementCapabilities,
+          capabilities: management.managementCapabilities,
           clientOptions: typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions() : {},
           callbacks: lifecycleCallbacks()
         };
@@ -107,26 +107,26 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
 
   function render() {
     if (refs.createScopeButton) {
-      var createScopeAvailable = state.managementAvailable && scopeCreateSupported(state.managementCapabilities);
+      var createScopeAvailable = management.managementAvailable && scopeCreateSupported(management.managementCapabilities);
       refs.createScopeButton.hidden = !createScopeAvailable;
-      refs.createScopeButton.disabled = state.managementBusy || !createScopeAvailable;
+      refs.createScopeButton.disabled = management.managementBusy || !createScopeAvailable;
     }
     if (refs.deleteScopeButton) {
-      var deleteScopeAvailable = state.managementAvailable && scopeDeleteSupported(state.managementCapabilities);
-      var deleteScopeTargets = scopeLifecycleDeleteTargets(state.managementCapabilities);
+      var deleteScopeAvailable = management.managementAvailable && scopeDeleteSupported(management.managementCapabilities);
+      var deleteScopeTargets = scopeLifecycleDeleteTargets(management.managementCapabilities);
       refs.deleteScopeButton.hidden = !deleteScopeAvailable;
-      refs.deleteScopeButton.disabled = state.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
+      refs.deleteScopeButton.disabled = management.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
     }
     if (refs.createSubScopeButton) {
-      var createSubScopeAvailable = state.managementAvailable && subScopeCreateSupported(state.managementCapabilities, viewerScope());
+      var createSubScopeAvailable = management.managementAvailable && subScopeCreateSupported(management.managementCapabilities, viewerScope());
       refs.createSubScopeButton.hidden = !createSubScopeAvailable;
-      refs.createSubScopeButton.disabled = state.managementBusy || !createSubScopeAvailable;
+      refs.createSubScopeButton.disabled = management.managementBusy || !createSubScopeAvailable;
     }
     if (refs.deleteSubScopeButton) {
-      var deleteSubScopeAvailable = state.managementAvailable && subScopeDeleteSupported(state.managementCapabilities, viewerScope());
-      var deleteSubScopeTargets = subScopeLifecycleDeleteTargets(state.managementCapabilities, viewerScope());
+      var deleteSubScopeAvailable = management.managementAvailable && subScopeDeleteSupported(management.managementCapabilities, viewerScope());
+      var deleteSubScopeTargets = subScopeLifecycleDeleteTargets(management.managementCapabilities, viewerScope());
       refs.deleteSubScopeButton.hidden = !deleteSubScopeAvailable;
-      refs.deleteSubScopeButton.disabled = state.managementBusy || !deleteSubScopeAvailable || deleteSubScopeTargets.length === 0;
+      refs.deleteSubScopeButton.disabled = management.managementBusy || !deleteSubScopeAvailable || deleteSubScopeTargets.length === 0;
     }
   }
 

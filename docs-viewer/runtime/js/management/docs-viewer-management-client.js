@@ -45,28 +45,6 @@ export function fetchManagementJson(path, method, payload, options) {
   });
 }
 
-export function scopeSupportsGeneratedDataReads(capabilities, scope) {
-  var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
-  return Boolean(
-    capabilities &&
-    capabilities.generated_data_reads &&
-    scopeCaps &&
-    scopeCaps.available &&
-    scopeCaps.generated_data_reads
-  );
-}
-
-export function scopeSupportsGeneratedSearchReads(capabilities, scope) {
-  var scopeCaps = capabilities && capabilities.scopes ? capabilities.scopes[scope] : null;
-  return Boolean(
-    capabilities &&
-    capabilities.generated_data_reads &&
-    scopeCaps &&
-    scopeCaps.available &&
-    scopeCaps.generated_search_reads
-  );
-}
-
 export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
 }
