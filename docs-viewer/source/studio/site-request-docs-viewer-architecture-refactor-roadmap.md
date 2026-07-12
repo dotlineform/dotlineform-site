@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import, metadata/settings, and scope/sub-scope lifecycle slices complete.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import, metadata/settings, scope lifecycle, and event-router slices complete.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -941,14 +941,14 @@ Verification evidence:
 
 This phase is not a Docs Review prerequisite unless a touched workflow blocks a clean integration.
 
-Status: active. Slices 7.1 through 7.3 are complete; later slices remain demand-driven.
+Status: active. Slices 7.1 through 7.4 are complete; later slices remain demand-driven.
 
 Candidate slices:
 
 - extract import initialization and modal handoff — Slice 7.1 complete
 - separate metadata and settings workflow composition — Slice 7.2 complete
 - give scope/sub-scope lifecycle a focused controller — Slice 7.3 complete
-- narrow the management event router
+- narrow the management event router — Slice 7.4 complete
 - replace remaining broad management facade fields with explicit domains/queries
 - split action command families only when they have independent state or lifecycle
 
@@ -1023,6 +1023,30 @@ Verification set:
 
 - JavaScript syntax checks for the focused lifecycle controller and changed management coordinator
 - focused manage-route smoke proving the lifecycle flow is absent at boot, lazily loaded by New Scope, and cancellable before preview or write
+- public runtime import-boundary and static-asset tests
+- `git diff --check`
+
+### Slice 7.4: Narrow Management Event Router
+
+Task definition:
+
+- move stable management-control binding and Actions-menu toggle/dismissal behavior out of `docs-viewer-management.js`
+- move ordered root-click and document-keydown delegation into a focused router
+- dispatch only named commands to existing action, import, metadata, settings, interaction, modal, and scope-lifecycle owners
+- preserve event ordering, dismissal behavior, control event types, and the small management runtime handle
+- do not introduce a generic event bus or move command/workflow behavior into the router
+
+Delivered outcome:
+
+- `docs-viewer-management-event-router.js` owns stable control binding, named command dispatch, Actions-menu behavior, and interaction/modal root and keyboard delegation
+- the router consumes focused controller getters and command callbacks rather than management state or backend services
+- `docs-viewer-management.js` no longer defines root/keyboard routers, Actions-menu behavior, or the management `bind()` function and is reduced from 1,009 to 612 lines across Slices 7.1 through 7.4
+- the focused smoke exposed and the slice fixed a pre-existing settings-modal focus race by snapshotting the loaded field type before the scheduled focus callback
+
+Verification set:
+
+- JavaScript syntax checks for the event router, coordinator, and focused modal race fix
+- focused manage-route smoke covering Actions-menu outside-click/Escape dismissal plus import, metadata, settings, and scope-lifecycle control routing
 - public runtime import-boundary and static-asset tests
 - `git diff --check`
 

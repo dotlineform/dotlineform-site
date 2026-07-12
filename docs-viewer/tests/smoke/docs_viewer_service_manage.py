@@ -202,6 +202,23 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
     if scope_lifecycle_requests:
         raise AssertionError(f"scope lifecycle flow loaded before a lifecycle action: {scope_lifecycle_requests!r}")
 
+    page.locator("#docsViewerManageActionsButton").click()
+    page.wait_for_function(
+        '() => document.querySelector("#docsViewerManageActionsMenu")?.hidden === false',
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerContent h1").click()
+    page.wait_for_function(
+        '() => document.querySelector("#docsViewerManageActionsMenu")?.hidden === true',
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerManageActionsButton").click()
+    page.keyboard.press("Escape")
+    page.wait_for_function(
+        '() => document.querySelector("#docsViewerManageActionsMenu")?.hidden === true',
+        timeout=timeout_ms,
+    )
+
     page.locator("#docsViewerManageImportButton").evaluate("button => button.click()")
     page.wait_for_function(
         """() => {
@@ -270,7 +287,7 @@ def main(argv: list[str] | None = None) -> int:
             errors: list[str] = []
             try:
                 page = browser.new_page()
-                page.on("pageerror", lambda exc: errors.append(str(exc)))
+                page.on("pageerror", lambda exc: errors.append(exc.stack or str(exc)))
                 generated_paths, import_module_paths, scope_lifecycle_paths, final_url = exercise_manage_route(
                     page,
                     base_url,

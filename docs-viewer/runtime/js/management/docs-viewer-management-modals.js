@@ -341,8 +341,9 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = state.managementBusy;
     renderSettingsWarnings(settingsFieldState.warnings || []);
     setSettingsStatus("", "");
+    var fieldType = settingsFieldState.type;
     window.requestAnimationFrame(function () {
-      var primaryInput = settingsFieldState.type === "string" ? refs.settingsTextInput : refs.settingsBooleanInput;
+      var primaryInput = fieldType === "string" ? refs.settingsTextInput : refs.settingsBooleanInput;
       focusWithoutScroll(primaryInput || refs.settingsSaveButton || refs.settingsModal);
     });
   }

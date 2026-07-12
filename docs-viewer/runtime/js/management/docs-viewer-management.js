@@ -10,6 +10,9 @@ import {
   applyDocsViewerManagementConfig
 } from "./docs-viewer-management-config.js";
 import {
+  createDocsViewerManagementEventRouter
+} from "./docs-viewer-management-event-router.js";
+import {
   createDocsViewerManagementInteractionController
 } from "./docs-viewer-management-interactions.js";
 import {
@@ -123,6 +126,7 @@ export function initDocsViewerManagement(context) {
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var capabilityController = null;
+  var eventRouter = null;
   var importController = null;
   var interactionController = null;
   var metadataWorkflow = null;
@@ -163,22 +167,6 @@ export function initDocsViewerManagement(context) {
 
   function hideContextMenu() {
     if (interactionController) interactionController.hideContextMenu();
-  }
-
-  function hideManageActionsMenu() {
-    if (!manageActionsMenu || !manageActionsButton) return;
-    manageActionsMenu.hidden = true;
-    manageActionsButton.setAttribute("aria-expanded", "false");
-  }
-
-  function toggleManageActionsMenu() {
-    if (!manageActionsMenu || !manageActionsButton || manageActionsButton.disabled) return;
-    if (manageActionsMenu.hidden) {
-      manageActionsMenu.hidden = false;
-      manageActionsButton.setAttribute("aria-expanded", "true");
-    } else {
-      hideManageActionsMenu();
-    }
   }
 
   function setManagementBusy(busy) {
@@ -246,7 +234,7 @@ export function initDocsViewerManagement(context) {
       syncManagementStatus("", false);
       manageRow.hidden = true;
       projectDocumentActionButtons(true, true);
-      hideManageActionsMenu();
+      eventRouter.hideManageActionsMenu();
       return;
     }
 
@@ -254,7 +242,7 @@ export function initDocsViewerManagement(context) {
     if (manageActions) {
       manageActions.hidden = !state.managementChecked || !state.managementAvailable;
       if (manageActions.hidden) {
-        hideManageActionsMenu();
+        eventRouter.hideManageActionsMenu();
       }
     }
 
@@ -296,7 +284,7 @@ export function initDocsViewerManagement(context) {
     if (manageActionsButton) {
       manageActionsButton.disabled = state.managementBusy || !state.managementAvailable;
       if (manageActionsButton.disabled) {
-        hideManageActionsMenu();
+        eventRouter.hideManageActionsMenu();
       }
     }
     if (scopeLifecycleController) scopeLifecycleController.render();
@@ -432,115 +420,6 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function handleRootClick(event) {
-    if (interactionController) interactionController.handleRootClick(event);
-    if (manageActionsMenu && !event.target.closest(".docsViewer__manageActions")) {
-      hideManageActionsMenu();
-    }
-    return modalController ? modalController.handleRootClick(event) : false;
-  }
-
-  function handleDocumentKeydown(event) {
-    if (interactionController && interactionController.handleDocumentKeydown(event)) {
-      return true;
-    }
-    if (event.key === "Escape" && manageActionsMenu && !manageActionsMenu.hidden) {
-      event.preventDefault();
-      hideManageActionsMenu();
-      return true;
-    }
-    return modalController ? modalController.handleDocumentKeydown(event) : false;
-  }
-
-  function bind() {
-    if (interactionController) interactionController.wireEvents();
-
-    if (manageRebuildButton) {
-      manageRebuildButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleRebuildDocs();
-      });
-    }
-    if (manageImportButton) {
-      manageImportButton.addEventListener("click", function () {
-        importController.open();
-      });
-    }
-    if (manageSettingsButton) {
-      manageSettingsButton.addEventListener("click", function () {
-        settingsWorkflow.open();
-      });
-    }
-    if (managePublishButton) {
-      managePublishButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handlePublishDocs();
-      });
-    }
-    if (manageExportButton) {
-      manageExportButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleExportDocs();
-      });
-    }
-    if (manageActionsButton) {
-      manageActionsButton.addEventListener("click", function () {
-        toggleManageActionsMenu();
-      });
-    }
-    if (manageNewButton) {
-      manageNewButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleCreateDoc();
-      });
-    }
-    if (manageEditButton) {
-      manageEditButton.addEventListener("click", function () {
-        hideManageActionsMenu();
-        metadataWorkflow.openCurrent();
-      });
-    }
-    if (manageSourceButton) {
-      manageSourceButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleMarkdownSource();
-      });
-    }
-    if (manageSourceSaveButton) {
-      manageSourceSaveButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleMarkdownSave();
-      });
-    }
-    if (manageDeleteButton) {
-      manageDeleteButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        actionController.handleDeleteDoc();
-      });
-    }
-    if (manageViewableButton) {
-      manageViewableButton.addEventListener("click", function () {
-        hideContextMenu();
-        actionController.handleMakeViewable();
-      });
-    }
-    if (draftToggle) {
-      draftToggle.addEventListener("change", function () {
-        hideContextMenu();
-        handleDraftToggleChange();
-      });
-    }
-    if (modalController) modalController.wireEvents();
-    if (scopeLifecycleController) scopeLifecycleController.wireEvents();
-  }
-
   capabilityController = createDocsViewerManagementCapabilityController({
     state: state,
     context: context,
@@ -584,7 +463,7 @@ export function initDocsViewerManagement(context) {
       },
       onEditDoc: function (docId) {
         if (!actionController) return;
-        hideManageActionsMenu();
+        eventRouter.hideManageActionsMenu();
         metadataWorkflow.openForDocId(docId);
       },
       onMoveDoc: function (movingDocId, parentId) {
@@ -617,6 +496,44 @@ export function initDocsViewerManagement(context) {
     }
   });
 
+  eventRouter = createDocsViewerManagementEventRouter({
+    refs: {
+      deleteButton: manageDeleteButton,
+      draftToggle: draftToggle,
+      editButton: manageEditButton,
+      exportButton: manageExportButton,
+      importButton: manageImportButton,
+      manageActionsButton: manageActionsButton,
+      manageActionsMenu: manageActionsMenu,
+      newButton: manageNewButton,
+      publishButton: managePublishButton,
+      rebuildButton: manageRebuildButton,
+      settingsButton: manageSettingsButton,
+      sourceButton: manageSourceButton,
+      sourceSaveButton: manageSourceSaveButton,
+      viewableButton: manageViewableButton
+    },
+    commands: {
+      createDoc: function () { actionController.handleCreateDoc(); },
+      deleteDoc: function () { actionController.handleDeleteDoc(); },
+      editCurrent: function () { metadataWorkflow.openCurrent(); },
+      exportDocs: function () { actionController.handleExportDocs(); },
+      makeViewable: function () { actionController.handleMakeViewable(); },
+      openImport: function () { importController.open(); },
+      openSettings: function () { settingsWorkflow.open(); },
+      publish: function () { actionController.handlePublishDocs(); },
+      rebuild: function () { actionController.handleRebuildDocs(); },
+      saveMarkdownSource: function () { actionController.handleMarkdownSave(); },
+      showMarkdownSource: function () { actionController.handleMarkdownSource(); },
+      toggleDraft: handleDraftToggleChange
+    },
+    controllers: {
+      interaction: function () { return interactionController; },
+      modal: function () { return modalController; },
+      scopeLifecycle: function () { return scopeLifecycleController; }
+    }
+  });
+
   importController = createDocsViewerManagementImportController({
     refs: {
       root: importRoot,
@@ -632,7 +549,7 @@ export function initDocsViewerManagement(context) {
         return modalController;
       },
       hideContextMenu: hideContextMenu,
-      hideManageActionsMenu: hideManageActionsMenu,
+      hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       viewerScope: viewerScope
     }
   });
@@ -642,7 +559,7 @@ export function initDocsViewerManagement(context) {
     state: state,
     callbacks: {
       hideContextMenu: hideContextMenu,
-      hideManageActionsMenu: hideManageActionsMenu,
+      hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       managementClientOptions: managementClientOptions,
       refreshManagementCapabilities: refreshManagementCapabilities,
       reloadViewerConfiguration: reloadViewerConfiguration,
@@ -664,7 +581,7 @@ export function initDocsViewerManagement(context) {
     callbacks: {
       currentSelectedDoc: currentSelectedDoc,
       hideContextMenu: hideContextMenu,
-      hideManageActionsMenu: hideManageActionsMenu,
+      hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       isDocNonViewable: isDocNonViewable,
       onImportOpen: importController.initialize,
       onMetadataSave: actionController.handleEditMetadataSave,
@@ -678,14 +595,14 @@ export function initDocsViewerManagement(context) {
   modalController = modalComposition.modalController;
   settingsWorkflow = modalComposition.settingsWorkflow;
 
-  bind();
+  eventRouter.wireEvents();
   applyConfig(context.currentViewerConfig());
 
   return {
     applyConfig: applyConfig,
     canDragCurrentDoc: canDragCurrentDoc,
-    handleDocumentKeydown: handleDocumentKeydown,
-    handleRootClick: handleRootClick,
+    handleDocumentKeydown: eventRouter.handleDocumentKeydown,
+    handleRootClick: eventRouter.handleRootClick,
     hideContextMenu: hideContextMenu,
     initialize: initializeManagement,
     openImportModal: importController.open,

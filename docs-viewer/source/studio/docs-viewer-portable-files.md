@@ -96,6 +96,7 @@ For management mode, also copy:
 - `docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-config.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-event-router.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-interactions.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js`
