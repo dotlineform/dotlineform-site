@@ -40,6 +40,8 @@ def write_fixture_package() -> Path:
             "title": "Fixture review",
             "source_scope": "library",
             "default_doc_id": "fixture-root",
+            "source_export_id": "ds_20260712T190000Z",
+            "staged_filename": "fixture-reviewed.jsonl",
         },
     )
     source = """---
@@ -74,13 +76,59 @@ Nested review text.
     return package
 
 
+def write_fixture_staged_package() -> Path:
+    paths = workspace_paths()
+    staged = paths.import_staging / "fixture-reviewed.jsonl"
+    staged.parent.mkdir(parents=True, exist_ok=True)
+    staged.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "record_type": "data_sharing_header",
+                        "schema_version": "data_sharing_returned_package_v1",
+                        "export_id": "ds_20260712T190000Z",
+                    }
+                ),
+                json.dumps(
+                    {
+                        "doc_id": "fixture-root",
+                        "title": "Fixture root",
+                        "content": "# Fixture root\n\nReturned content.\n",
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    write_json(
+        paths.meta / "ds_20260712T190000Z.meta.json",
+        {
+            "schema_version": "data_sharing_export_meta_v1",
+            "export_id": "ds_20260712T190000Z",
+            "app": "docs-viewer",
+            "adapter_id": "documents",
+            "data_domain": "library",
+            "profile_id": "document-content",
+            "config_id": "document-content",
+            "scope": "library",
+            "target_format": "jsonl",
+            "record_shape": "document_rows",
+            "supports_return_import": True,
+            "generated_at": "2026-07-12T19:00:00Z",
+        },
+    )
+    return staged
+
+
 def start_server() -> tuple[DocsViewerServer, str]:
     config = DocsViewerServiceConfig(
         host="127.0.0.1",
         port=0,
         base_url="http://127.0.0.1:0",
-        management_enabled=False,
-        generated_reads_enabled=False,
+        management_enabled=True,
+        generated_reads_enabled=True,
         watch_enabled=False,
         review_enabled=True,
     )
@@ -138,6 +186,9 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
     canonical = page.locator("#docsViewerReviewControlsMount a", has_text="Open canonical")
     if canonical.get_attribute("href") != "/docs/?scope=library&doc=fixture-root":
         raise AssertionError("Docs Review canonical comparison link is incorrect")
+    import_link = page.locator("#docsViewerReviewControlsMount a", has_text="Import")
+    if import_link.get_attribute("href") != "/docs/?import=1&review_package=fixture-review":
+        raise AssertionError("Docs Review import handoff did not contain only the safe package identity")
 
     page.goto(
         f"{base_url}/docs-review/?package=fixture-review&doc=fixture-root&view=source",
@@ -175,12 +226,59 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
         raise AssertionError("Docs Review crossed into configured-scope generated/source services")
 
 
+def exercise_import_handoff(page: Page, base_url: str, staged: Path, timeout_ms: int) -> None:
+    handoff_url = f"{base_url}/docs/?import=1&review_package=fixture-review"
+    page.goto(handoff_url, wait_until="domcontentloaded")
+    page.wait_for_function(
+        """() => {
+            const modal = document.querySelector('#docsViewerImportModal');
+            const root = document.querySelector('#docsHtmlImportRoot');
+            return modal && !modal.hidden && root && root.dataset.studioReady === 'true';
+        }""",
+        timeout=timeout_ms,
+    )
+    if page.locator("#docsHtmlImportFileSelect").input_value() != "fixture-reviewed.jsonl":
+        raise AssertionError("managed Docs Import did not preselect the server-associated staged record")
+    if "Reviewed package selected" not in page.locator("#docsHtmlImportStatus").inner_text():
+        raise AssertionError("managed Docs Import did not report the review handoff selection")
+
+    staged.unlink()
+    page.goto(handoff_url, wait_until="domcontentloaded")
+    page.wait_for_function(
+        """() => {
+            const modal = document.querySelector('#docsViewerImportModal');
+            const root = document.querySelector('#docsHtmlImportRoot');
+            return modal && !modal.hidden && root && root.dataset.studioReady === 'true';
+        }""",
+        timeout=timeout_ms,
+    )
+    status = page.locator("#docsHtmlImportStatus").inner_text()
+    if "Import unavailable" not in status or "associated" not in status:
+        raise AssertionError(f"deleted staged-file handoff was not reported safely: {status!r}")
+
+    page.goto(
+        f"{base_url}/docs-review/?package=fixture-review&doc=fixture-root",
+        wait_until="domcontentloaded",
+    )
+    wait_for_route_ready(
+        page,
+        "#docsViewerRoot",
+        "data-docs-viewer-ready",
+        "data-docs-viewer-busy",
+        timeout_ms,
+    )
+    page.wait_for_selector("#docsViewerContent h1", state="visible", timeout=timeout_ms)
+    if page.locator("#docsViewerContent h1").inner_text().strip() != "Fixture root":
+        raise AssertionError("persistent Docs Review became unreadable after the staged file was deleted")
+
+
 def main() -> int:
     timeout_ms = 15000
     with tempfile.TemporaryDirectory() as temp_dir:
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = temp_dir
         (Path(temp_dir) / "data-sharing").mkdir()
         write_fixture_package()
+        staged = write_fixture_staged_package()
         server, base_url = start_server()
         try:
             capabilities = read_json(f"{base_url}/docs-review/capabilities")["capabilities"]
@@ -193,6 +291,7 @@ def main() -> int:
                     page = browser.new_page()
                     page.on("pageerror", lambda error: errors.append(str(error)))
                     exercise_review_route(page, base_url, timeout_ms)
+                    exercise_import_handoff(page, base_url, staged, timeout_ms)
                 finally:
                     browser.close()
             if errors:

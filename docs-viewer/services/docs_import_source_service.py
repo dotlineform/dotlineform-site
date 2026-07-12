@@ -34,6 +34,7 @@ from docs_import_preview import (
     list_staged_import_source_files,
     resolve_staged_import_source,
 )
+from docs_import_review_handoff import attach_review_package_associations
 from docs_import_source_helpers import (
     apply_replacement_doc_id_to_preview,
     apply_replacement_title_to_preview,
@@ -83,15 +84,20 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
             )
         )
     }
+    files = list_staged_import_source_files(
+        workspace_paths.import_staging,
+        workspace_paths.root,
+        registered_source_formats=registered_source_formats,
+    )
     return {
         "ok": True,
         "available": True,
         "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
         "message": "",
-        "files": list_staged_import_source_files(
-            workspace_paths.import_staging,
-            workspace_paths.root,
-            registered_source_formats=registered_source_formats,
+        "files": attach_review_package_associations(
+            files,
+            import_preview_root=workspace_paths.import_preview,
+            import_staging_root=workspace_paths.import_staging,
         ),
     }
 

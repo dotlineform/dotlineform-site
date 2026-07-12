@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Completed prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P7 are complete; end-to-end implementation continues from the review-to-import handoff.
+Completed prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P7 and the review-to-import handoff are complete; end-to-end implementation continues with persistent preview materialization.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -326,7 +326,7 @@ Verification completed on 2026-07-12:
 - `docs_viewer_service_manage.py` passed the existing lazy management-modal smoke
 - focused Python compilation, activity-contract JSON validation, sanitization scan, and `git diff --check` passed
 
-The next end-to-end feature phase is [Add The Review-To-Import Handoff](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation), which should pass only a safe package identity into the now-complete managed import flow.
+The review-to-import handoff is now complete. Docs Review passes only a safe package identity; managed Docs Import matches it to the immutable manifest association projected onto a server-listed staged record and reports the handoff unavailable when that record no longer exists. The next end-to-end feature phase is persistent preview materialization in [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation).
 
 ### P7. Shared JSON-To-Markdown Report Helper — Complete 2026-07-12
 

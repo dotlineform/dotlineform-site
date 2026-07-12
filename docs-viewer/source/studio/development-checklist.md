@@ -106,9 +106,10 @@ Staged source imports:
 - `docs_import_collection_decisions.py` owns the collection apply request allowlist, explicit decision parsing, package/collision identity revalidation, decision drift, skipped-parent checks, and write-free refreshed-plan response.
 - `docs_import_collection_apply.py` owns package-order source/media mutation, asset-level best effort, partial source failure, one coordinated rebuild call, and batch apply activity.
 - `docs_import_collection_result.py` owns body-free grouped collection results, safe generation projection, manual-copy instructions, report payload shaping, and marker-rooted report output.
+- `docs_import_review_handoff.py` owns the read-only association from validated review-package identities to matching server-listed collection records; it validates package id, safe staged filename, manifest status/schema, and export identity without exposing preview paths or adding write authority.
 - `docs_import_source_helpers.py` owns replacement-preview mutation, viewer URLs, import path display, and import summary text.
 - `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
-- `docs-html-import.js` owns the managed import host, source-family selection, route-ready/busy projection, and dispatch to the separate single-source or collection owners.
+- `docs-html-import.js` owns the managed import host, source-family selection, identity-only review-package preselection/unavailable state, route-ready/busy projection, and dispatch to the separate single-source or collection owners.
 - `docs-import-collection-controller.js` owns safe collection identity and target-scope state, preview/apply service commands, sequential record decisions, pre-apply cancellation, confirmation/applying/result state, and refreshed-plan handling.
 - `docs-import-collection-view.js` owns the body-free collection plan, blocker, warning, record, decision, confirmation, applying, and grouped-result rendering.
 - `studio/shared/python/json_markdown_report.py` owns deterministic JSON-compatible Markdown rendering and atomic caller-path writes without app-specific output, grouping, marker, template, plugin, or registry behavior.
@@ -151,6 +152,7 @@ Docs Review:
 - Docs Review is a distinct local route/app context of the existing Docs Viewer application, not a copied `docs-viewer-review/` frontend.
 - Reuse shared tree, routing, rendering, panel, source-editor, and CSS primitives through explicit review app context, provider, and capability contracts.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
+- `docs-viewer-review-controller.js` may hand the active validated `package_id` to managed Docs Import, but it must not resolve or send staged filenames, preview paths, target scopes, plans, decisions, or mutations.
 - `docs_review_packages.py` owns safe validated-package list/read behavior; focused review build and source services own generated output and temporary Markdown writes.
 - Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
 - Temporary review edits require explicit package-rooted backend capabilities. Docs Review must not receive canonical import apply, promotion, or general management authority; it may only hand safe identities to managed Docs Import.

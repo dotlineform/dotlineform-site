@@ -69,6 +69,9 @@ Supported staged source formats:
 - `svg`: `.svg`
 - `image`: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`
 - `file`: `.pdf`, `.zip`, `.csv`, `.tsv`, `.json`, `.jsonl`, `.docx`, `.xlsx`, `.pptx`
+- `data_sharing_documents`: trusted supported Data Sharing `.json` or `.jsonl` document collections, detected before generic file fallback
+
+Validated review packages are associated read-only with matching collection records through `review_package_ids`. The listing adds that field only when the trusted preview manifest's safe staged filename and export identity still match the direct-child staged record. It never exposes a review path or grants Docs Review import/write authority.
 
 ## `POST /docs/import-source`
 
@@ -106,9 +109,9 @@ Actions:
 
 Returned data can include preview Markdown, proposed doc identity, operation type, collision information, media plans, interactive HTML plans, written media records, created or overwritten source path, rebuild diagnostics, summary text, and `dry_run`.
 
-## Reviewed-Package Follow-On
+## Reviewed-Package Collection Import
 
-[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) will extend the managed import family with schema-aware Data Sharing JSON/JSONL collection import.
+[Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) extends this route family with schema-aware Data Sharing JSON/JSONL collection planning and synchronous apply. Both phases reuse `POST /docs/import-source`; the review handoff uses only the safe server-listed staged identity.
 
 The endpoints now use the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. Endpoint services resolve it through `configured_workspace_paths(repo_root).import_staging`, return marker-rooted paths, and report import unavailable through the W0 workspace capability contract when the root cannot be used. They do not fall back to repo-local staging.
 

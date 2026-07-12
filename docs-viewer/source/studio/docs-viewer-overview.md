@@ -124,7 +124,7 @@ Current helper modules:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` owns info hosted-view option projection, lifecycle, switching, close behavior, update handoff, and graceful absence
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns report lookup and access checks
 - `docs-viewer/runtime/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
-- Docs Import is a management-modal app: `docs-html-import.js` owns the import host, source-family dispatch, and route-ready projection; `docs-html-import-workflow.js` owns ordinary single-source preview/write orchestration; `docs-import-collection-controller.js` and `docs-import-collection-view.js` own collection preview, decisions, confirmation, synchronous apply, refreshed-plan handling, and body-free result rendering; server-side collection decisions, mutation, and result/report shaping have separate focused owners, and all writes stay behind management endpoints through `docs-viewer-management-client.js`
+- Docs Import is a management-modal app: `docs-html-import.js` owns the import host, source-family dispatch, identity-only reviewed-package preselection, and route-ready projection; `docs-html-import-workflow.js` owns ordinary single-source preview/write orchestration; `docs-import-collection-controller.js` and `docs-import-collection-view.js` own collection preview, decisions, confirmation, synchronous apply, refreshed-plan handling, and body-free result rendering; `docs_import_review_handoff.py` projects validated review package ids only onto matching server-listed staged records; server-side collection decisions, mutation, and result/report shaping have separate focused owners, and all writes stay behind management endpoints through `docs-viewer-management-client.js`
 
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.
@@ -169,6 +169,7 @@ Current URL state:
 - `q` activates inline docs search for the current scope
 - `/docs/` is the local manage route when the Docs Viewer service is available
 - `package` selects the validated external package on `/docs-review/` and is preserved by internal history writes
+- `import=1&review_package=<package_id>` is an initial managed `/docs/` handoff only; the route captures the safe identity before canonical URL normalization, then Docs Import resolves it against the server listing
 - `view=source` selects temporary returned Markdown editing on `/docs-review/`
 - `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document

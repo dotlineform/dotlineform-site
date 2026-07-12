@@ -10,6 +10,10 @@ viewable: true
 ---
 # Docs Import Reviewed Package Implementation
 
+## Status
+
+Sections 0-2 and 5-7 are complete. The next bounded phase is Section 3, persistent preview materialization, followed by Section 4 removal of Docs Review source editing.
+
 ## Purpose
 
 This child document tracks implementation of [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package).
@@ -122,7 +126,7 @@ Any UI addition or change in the remaining implementation must remain consistent
 - [x] Reuse existing safety limits without adding speculative collection-specific thresholds.
 - [x] Reuse `GET /docs/import-source-files` and `POST /docs/import-source`; add no collection-specific route family.
 - [x] Use `preview_only: true` for server-calculated planning and `preview_only: false` plus explicit per-record decisions for synchronous apply.
-- [ ] Resolve a review `package_id` only to a server-listed safe `staged_filename`; never accept package or preview-source paths.
+- [x] Resolve a review `package_id` only to a server-listed safe `staged_filename`; never accept package or preview-source paths.
 - [x] Expand `Apply to all` in the frontend and submit explicit record decisions rather than a browser-calculated plan.
 - [x] Recompute/revalidate the plan at apply; add no stored plan, plan token, job id, polling, or result endpoint.
 - [x] Reconfirm only when collision target, target identity, parent resolution, hierarchy validity, or blocker state changes.
@@ -144,10 +148,34 @@ Any UI addition or change in the remaining implementation must remain consistent
 
 ## 7. Add The Review-To-Import Handoff
 
-- [ ] Identify the staged file through the immutable package association.
-- [ ] Open managed Docs Import with that package selected.
-- [ ] Keep review and configured-source authority separate.
-- [ ] Report import unavailable when the associated staged file has been deleted.
+- [x] Identify the staged file through the immutable package association.
+- [x] Open managed Docs Import with that package selected.
+- [x] Keep review and configured-source authority separate.
+- [x] Report import unavailable when the associated staged file has been deleted.
+
+Section 7 implementation notes:
+
+- Docs Review emits `/docs/?import=1&review_package=<package_id>` and passes no staged filename, package path, preview path, target scope, or mutation data.
+- `docs_import_review_handoff.py` validates direct-child reviewed-package manifests and attaches `review_package_ids` only to server-listed Data Sharing collection records whose safe filename and export identity still match.
+- the managed route captures the safe package identity before canonical URL normalization; the import host resolves it only against the returned listing and continues to submit the listing's `staged_filename` through the existing import contract
+- a missing or mismatched staged file leaves no selectable handoff record and renders an explicit unavailable state; it never falls through to another staged source
+- Docs Review remains without configured-source write authority, while planning, decisions, apply, and rebuild remain inside managed Docs Import
+
+Section 7 immediate responsibility review:
+
+- `docs_import_review_handoff.py` is a focused read-only association owner; it does not parse collection records, plan imports, mutate sources, or expose preview paths
+- the existing managed import host already owns staged-source selection, so package-id matching and its unavailable state remain there rather than widening the management coordinator or collection controller
+- the review controller owns only construction of the safe identity link; it does not call management endpoints or receive staged-file/configured-source authority
+- the shared route context captures one safe package id before canonical URL normalization, projects it through the existing route dataset, and adds no feature lifecycle work to `docs-viewer-app-runtime.js`
+
+Section 7 verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 103 passed
+- focused review-package, management-route, public-boundary, and static-asset tests — 24 passed
+- `docs_import_review_handoff_modules.py` passed safe route capture, unsafe-id rejection, review-link construction, management-modal handoff, server-record matching, and unavailable matching
+- `docs_viewer_service_review.py` passed real review-to-management navigation, exact staged preselection, deleted staged-file unavailability, and continued persistent preview reads
+- `docs_viewer_service_manage.py` passed the ordinary lazy management-modal path without a review handoff
+- focused Python compilation and `git diff --check` passed
 
 ## 8. Verification
 
@@ -168,7 +196,7 @@ Any UI addition or change in the remaining implementation must remain consistent
 - [x] Test cancellation is unavailable after apply begins and the synchronous operation runs to completion or failure.
 - [x] Verify no collection-specific progress/job infrastructure or speculative size limit is introduced.
 - [x] Test both collection phases use the existing import POST and that apply ignores/rejects browser-authored plan/path fields.
-- [ ] Test review handoff preselects the safe listed staged record without granting package-path authority.
+- [x] Test review handoff preselects the safe listed staged record without granting package-path authority.
 - [x] Test changed target facts return a refreshed plan with no writes, while unrelated preserve-existing source changes do not require reconfirmation.
 - [x] Test parent mapping across all package records.
 - [x] Test body links are preserved exactly without resolution diagnostics.
@@ -190,7 +218,7 @@ Any UI addition or change in the remaining implementation must remain consistent
 - [x] Test completed, partial, and generation-failed applies write reports while preview, rejected plans, and pre-write cancellation do not.
 - [x] Test result reports are ignored by import-source discovery and expose only marker-rooted paths.
 - [x] Test report-write failure preserves the import result and adds a warning.
-- [ ] Test deleted staged-file import unavailability while persistent preview remains readable.
+- [x] Test deleted staged-file import unavailability while persistent preview remains readable.
 - [ ] Verify Docs Review and Data Sharing expose no configured-source mutation capability.
 
 ## Completion Rule

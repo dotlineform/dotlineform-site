@@ -184,6 +184,20 @@ function selectedFileRecord(state) {
   return state.files.find((file) => normalizeText(file && file.filename) === filename) || null;
 }
 
+export function docsImportReviewHandoff(files, packageId) {
+  const normalizedPackageId = normalizeText(packageId);
+  const file = normalizedPackageId ? files.find((record) => (
+    Array.isArray(record && record.review_package_ids)
+    && record.review_package_ids.some((value) => normalizeText(value) === normalizedPackageId)
+  )) || null : null;
+  return {
+    requested: Boolean(normalizedPackageId),
+    packageId: normalizedPackageId,
+    file,
+    available: Boolean(file)
+  };
+}
+
 function selectedImportFiles(state) {
   if (isAllFilesSelected(state)) return state.files.filter((file) => !isDocsImportCollectionRecord(file));
   const record = selectedFileRecord(state);
@@ -327,7 +341,8 @@ export async function initDocsHtmlImport(options = {}) {
     serviceAvailable: false,
     isRunning: false,
     files: [],
-    docsScopeIds: []
+    docsScopeIds: [],
+    reviewPackageId: normalizeText(options.reviewPackageId)
   };
   state.collectionController = createDocsImportCollectionController({
     host: state.collectionView,
@@ -425,8 +440,10 @@ export async function initDocsHtmlImport(options = {}) {
       state.fileSelect.disabled = true;
       setStatus(
         state.statusNode,
-        "warn",
-        importText("noFiles")
+        state.reviewPackageId ? "error" : "warn",
+        state.reviewPackageId
+          ? importText("collectionHandoffUnavailableStatus")
+          : importText("noFiles")
       );
       markRouteReady(state, true);
       return;
@@ -440,17 +457,33 @@ export async function initDocsHtmlImport(options = {}) {
       const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
       return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
     })).join("");
-    state.fileSelect.value = normalizeText(files[0] && files[0].filename);
+    const handoff = docsImportReviewHandoff(files, state.reviewPackageId);
+    const handoffFile = handoff.file;
+    if (handoff.requested && !handoff.available) {
+      state.fileSelect.insertAdjacentHTML(
+        "afterbegin",
+        `<option value="" disabled>${escapeHtml(importText("collectionHandoffUnavailableStatus"))}</option>`
+      );
+      state.fileSelect.value = "";
+    } else {
+      state.fileSelect.value = normalizeText(handoffFile && handoffFile.filename || files[0] && files[0].filename);
+    }
     syncSourceFormatControls(state);
 
     setStatus(
       state.statusNode,
-      "",
-      selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")
+      handoff.requested && !handoff.available ? "error" : "",
+      handoff.requested && !handoff.available
+        ? importText("collectionHandoffUnavailableStatus")
+        : handoffFile
+          ? importText("collectionHandoffReadyStatus")
+          : selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")
     );
+    state.runButton.disabled = Boolean(handoff.requested && !handoff.available);
     markRouteReady(state, true);
 
     state.fileSelect.addEventListener("change", () => {
+      state.runButton.disabled = false;
       resetImportView(
         state,
         selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")

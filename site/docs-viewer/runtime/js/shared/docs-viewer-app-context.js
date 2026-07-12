@@ -17,6 +17,11 @@ function cleanString(value) {
   return String(value || "").trim();
 }
 
+function safeReviewPackageId(value) {
+  var packageId = cleanString(value);
+  return /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(packageId) ? packageId : "";
+}
+
 function locationSearch(windowRef) {
   return windowRef && windowRef.location ? windowRef.location.search : "";
 }
@@ -82,7 +87,11 @@ export function createDocsViewerRouteContext(options) {
     reportRegistryUrl: routeConfig.reportRegistryUrl
   };
   context.bookmarkScope = context.viewerScope || context.viewerPathname || "docs";
-  context.openImportOnLoad = context.isDocsManagementRoute && new URLSearchParams(locationSearch(windowRef)).get("import") === "1";
+  var routeParams = new URLSearchParams(locationSearch(windowRef));
+  context.openImportOnLoad = context.isDocsManagementRoute && routeParams.get("import") === "1";
+  context.importReviewPackageId = context.openImportOnLoad
+    ? safeReviewPackageId(routeParams.get("review_package"))
+    : "";
   return context;
 }
 

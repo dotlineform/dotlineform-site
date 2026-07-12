@@ -13,6 +13,7 @@ export function createDocsViewerReviewController(options) {
   var provider = null;
   var manifest = null;
   var canonicalLink = null;
+  var importLink = null;
 
   function projectCanonicalLink(docId) {
     if (!canonicalLink || !manifest) return;
@@ -21,6 +22,15 @@ export function createDocsViewerReviewController(options) {
     canonicalLink.hidden = !(sourceScope && selectedDocId);
     canonicalLink.href = sourceScope && selectedDocId
       ? "/docs/?scope=" + encodeURIComponent(sourceScope) + "&doc=" + encodeURIComponent(selectedDocId)
+      : "";
+  }
+
+  function projectImportLink() {
+    if (!importLink || !manifest || !provider) return;
+    var packageId = String(manifest.package_id || provider.activeCollectionId() || "").trim();
+    importLink.hidden = !packageId;
+    importLink.href = packageId
+      ? "/docs/?import=1&review_package=" + encodeURIComponent(packageId)
       : "";
   }
 
@@ -52,13 +62,17 @@ export function createDocsViewerReviewController(options) {
     select.setAttribute("aria-label", "Review package");
     var buildButton = createButton(documentRef, "Build");
     var assetsButton = createButton(documentRef, "Assets");
+    importLink = documentRef.createElement("a");
+    importLink.className = "docsViewer__actionButton docsViewer__reviewImportLink";
+    importLink.textContent = "Import";
+    importLink.hidden = true;
     canonicalLink = documentRef.createElement("a");
     canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
     canonicalLink.textContent = "Open canonical";
     canonicalLink.target = "_blank";
     canonicalLink.rel = "noopener";
     canonicalLink.hidden = true;
-    mount.append(select, buildButton, assetsButton, canonicalLink);
+    mount.append(select, buildButton, assetsButton, importLink, canonicalLink);
 
     select.addEventListener("change", function () {
       var url = new URL(windowRef.location.href);
@@ -89,6 +103,7 @@ export function createDocsViewerReviewController(options) {
     return Promise.all([provider.listCollections(), provider.readManifest()]).then(function (results) {
       var packages = results[0];
       manifest = results[1].manifest || {};
+      projectImportLink();
       packages.forEach(function (record) {
         var option = documentRef.createElement("option");
         option.value = record.package_id;

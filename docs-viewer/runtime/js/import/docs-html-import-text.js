@@ -15,6 +15,8 @@ var DOCS_HTML_IMPORT_TEXT = {
   collectionFailedStatus: "Collection preview failed.",
   collectionApplyFailedStatus: "Collection apply failed.",
   collectionIdleStatus: "Select a reviewed documents collection and preview its complete import plan.",
+  collectionHandoffReadyStatus: "Reviewed package selected. Preview its complete import plan before applying.",
+  collectionHandoffUnavailableStatus: "Import unavailable because the staged file associated with this review package is missing or no longer matches it.",
   collectionMediaCount: "{count} media",
   collectionParentMeta: "parent {parent_id}",
   collectionPlanHeading: "Collection plan",

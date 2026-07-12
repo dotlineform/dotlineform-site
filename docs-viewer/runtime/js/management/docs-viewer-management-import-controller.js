@@ -42,6 +42,9 @@ export function createDocsViewerManagementImportController(options = {}) {
           initialScope: scope || viewerScope(),
           docsViewerConfigUrl: context.docsViewerConfigUrl || context.root && context.root.dataset.docsViewerConfigUrl || DEFAULT_CONFIG_URL,
           managementBaseUrl: context.managementBaseUrl,
+          reviewPackageId: context.root && context.root.dataset
+            ? context.root.dataset.docsImportReviewPackageId || ""
+            : "",
           routePath: IMPORT_ROUTE_PATH
         });
       })
