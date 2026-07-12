@@ -27,8 +27,8 @@ Actions:
 - validates `parent_id` inside the same scope when supplied
 - writes a new Markdown source file under the configured scope root
 - writes `added_date` and `last_updated` to the current minute
-- omits `viewable` for Studio docs, which makes them viewable by default
-- writes `viewable: false` for Analysis and Library docs
+- omits `viewable` for local-scope docs such as Studio, which makes them viewable by default
+- writes `viewable: false` for public-scope docs such as Analysis, Library, and Moments
 - rebuilds targeted generated docs payloads and targeted docs search for the new doc
 - writes watcher-suppression markers for the new source file
 

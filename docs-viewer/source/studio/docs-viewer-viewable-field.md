@@ -133,13 +133,12 @@ For local manage-mode generated reads, the loaded payload is the working generat
 
 ## Create And Import Defaults
 
-Default viewability for new managed docs is scope-specific:
+Default viewability for new managed docs follows the configured scope type:
 
-- `library`: defaults to `viewable: false`
-- `analysis`: defaults to `viewable: false`
-- `studio`: defaults to viewable, so the field is omitted
+- public scopes such as `library`, `analysis`, and `moments` default to `viewable: false`
+- local scopes such as `studio` default to viewable, so the field is omitted
 
-HTML/source import uses the same scope default when creating a new doc.
+HTML/source import uses the same configured scope-type default when creating a new doc.
 Overwriting an existing imported doc preserves the existing viewability state.
 
 ## Make Viewable

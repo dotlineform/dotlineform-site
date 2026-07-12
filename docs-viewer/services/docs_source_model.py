@@ -169,7 +169,7 @@ def normalize_ui_status(value: Any) -> str:
 
 
 def default_viewable_for_scope(scope: str) -> bool:
-    return scope not in {"analysis", "library"}
+    return DOCS_SCOPE_CONFIGS[scope].scope_type != "public"
 
 
 def normalize_scope(scope: Any) -> str:

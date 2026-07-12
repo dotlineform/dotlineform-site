@@ -80,7 +80,7 @@ HTML imports preserve the imported HTML title.
 Markdown imports use the first `# H1` as the title when present and otherwise humanize the staged filename stem.
 Text, SVG, image, and file-media imports humanize the staged filename stem unless the source format contains a better title.
 
-New `library` and `analysis` imports use the same default import behavior: they are generated and opened for review through manage-mode viewer links before becoming normal public tree items.
+New imports into public scopes such as `library`, `analysis`, and `moments` use the same default behavior: they are created with `viewable: false`, generated, and opened for review through manage-mode viewer links before becoming normal public tree items.
 
 ## Reviewed-Package Collection Workflow
 

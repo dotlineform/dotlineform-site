@@ -49,6 +49,13 @@ def make_doc(
     )
 
 
+def test_default_viewability_follows_scope_type() -> None:
+    assert source_model.default_viewable_for_scope("library") is False
+    assert source_model.default_viewable_for_scope("analysis") is False
+    assert source_model.default_viewable_for_scope("moments") is False
+    assert source_model.default_viewable_for_scope("studio") is True
+
+
 def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
     with tempfile.TemporaryDirectory() as temp:
         path = Path(temp) / "sample.md"
