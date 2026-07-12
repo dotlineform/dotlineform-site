@@ -79,6 +79,16 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 - [ ] Parse records through the Data Sharing adapter into shared `ImportContent` records.
 - [ ] Keep unsupported JSON/JSONL downloadable-file behavior unchanged.
 
+## UI Consistency Guardrail
+
+Any UI addition or change in the remaining implementation must remain consistent with the existing Docs Viewer management UI:
+
+- reuse existing Docs Viewer CSS, layout primitives, tokens, control styles, and shared classes wherever possible; add focused styles only when no current primitive expresses the required state
+- follow the existing modal design and lifecycle conventions, with one focused owner responsible for open, render, decision, confirmation, cancellation, close, cleanup, and state reset; keep modal lifecycle and collection state out of the management coordinator
+- reuse existing status fields and ready/busy/error state conventions rather than introducing a parallel message surface
+- scope status text to the active control or workflow and clear it as soon as focus or interaction moves elsewhere, so stale status messages do not remain attached to an inactive task
+- keep UI copy in the existing import text/config owner and use manual or temporary browser checks for modal feel, focus behavior, status clearing, and visual consistency rather than permanent choreography tests
+
 ## 6. Add Collection Import Planning And Apply
 
 - [ ] Treat every package record as in scope; do not add per-record selection UI.
