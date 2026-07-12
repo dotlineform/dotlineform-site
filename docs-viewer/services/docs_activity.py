@@ -134,6 +134,50 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
 
 
 def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], payload: Dict[str, Any], dry_run: bool) -> None:
+    if payload.get("collection") is True:
+        if dry_run or payload.get("preview_only"):
+            return
+        records = payload.get("records") if isinstance(payload.get("records"), list) else []
+        applied_doc_ids = [
+            str(record.get("doc_id") or "").strip()
+            for record in records
+            if isinstance(record, dict) and record.get("status") in {"created", "overwritten"}
+        ]
+        skipped_notes = [
+            str(record.get("note") or "").strip()
+            for record in records
+            if isinstance(record, dict) and record.get("status") == "skipped" and str(record.get("note") or "").strip()
+        ]
+        counts = payload.get("counts") if isinstance(payload.get("counts"), dict) else {}
+        report_path = str(payload.get("report_path") or "").strip()
+        attach_docs_activity(
+            repo_root,
+            body,
+            payload,
+            endpoint=routes.IMPORT_SOURCE_PATH,
+            script_purpose_id="import-source-data",
+            record_id=str(body.get("staged_filename") or "").strip(),
+            record_groups={
+                "docs": compact_ids(applied_doc_ids),
+                "files": compact_ids([report_path] if report_path else []),
+            },
+            detail_items=[
+                (
+                    f"Collection import {payload.get('outcome') or 'completed'}: "
+                    f"{counts.get('created', 0)} created, {counts.get('overwritten', 0)} overwritten, "
+                    f"{counts.get('skipped', 0)} skipped, {counts.get('failed', 0)} failed, "
+                    f"{counts.get('not_attempted', 0)} not attempted."
+                ),
+                f"Result report: {report_path}" if report_path else "",
+                *[f"Skipped-record note: {note}" for note in skipped_notes],
+            ],
+            status=(
+                "completed" if payload.get("outcome") == "completed"
+                else "failed" if payload.get("outcome") == "failed"
+                else "warning"
+            ),
+        )
+        return
     if dry_run or payload.get("preview_only") or payload.get("requires_overwrite_confirmation"):
         return
     doc_id = str(payload.get("doc_id") or "").strip()

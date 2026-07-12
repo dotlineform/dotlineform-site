@@ -57,6 +57,7 @@ INLINE_RASTER_EXTENSIONS = {
 }
 DOCS_IMPORT_ROLE_META_NAME = "dlf:docs-import-role"
 INTERACTIVE_HTML_ROLE = "interactive-html"
+IMPORT_RESULTS_DIR_NAME = "results"
 
 
 @dataclass(frozen=True)

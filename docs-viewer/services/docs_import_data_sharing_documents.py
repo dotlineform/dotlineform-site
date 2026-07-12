@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
+from docs_import_collection_apply import apply_import_content_collection
 from docs_import_collection_plan import (
     DocumentsCollectionPlan,
     blocked_collection_plan,
@@ -89,8 +90,43 @@ def plan_data_sharing_documents_collection(
     )
 
 
+def apply_data_sharing_documents_collection(
+    repo_root: Path,
+    *,
+    scope: str,
+    staged_filename: str,
+    body: dict[str, Any],
+    staging_root: Path,
+    workspace_root: Path,
+    metadata_root: Path,
+    log_event: Callable[[Path, str, dict[str, Any]], None],
+    perform_source_write_and_rebuild: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
+    """Recompute one trusted package plan and synchronously apply explicit decisions."""
+
+    plan = plan_data_sharing_documents_collection(
+        repo_root,
+        scope=scope,
+        staged_filename=staged_filename,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+        metadata_root=metadata_root,
+    )
+    return apply_import_content_collection(
+        repo_root,
+        plan,
+        body,
+        staging_root=staging_root,
+        workspace_root=workspace_root,
+        source_path=staging_root / staged_filename,
+        log_event=log_event,
+        perform_source_write_and_rebuild=perform_source_write_and_rebuild,
+    )
+
+
 __all__ = [
     "COLLECTION_SOURCE_FORMAT",
     "DocumentsCollectionPlan",
+    "apply_data_sharing_documents_collection",
     "plan_data_sharing_documents_collection",
 ]

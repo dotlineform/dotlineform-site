@@ -328,6 +328,7 @@ def materialize_inline_raster_media(
     source_path: Path,
     import_preview: dict[str, Any],
     include_prompt_meta: bool,
+    source_markdown: str = "",
 ) -> list[dict[str, Any]]:
     plans: list[dict[str, Any]] = []
     raw_plans = import_preview.get("media_plans")
@@ -351,7 +352,10 @@ def materialize_inline_raster_media(
     source_file_plans = [plan for plan in plans if plan.get("source") != "inline_data_url"]
     valid_inline_matches: list[tuple[re.Match[str], bytes]] = []
     if inline_plans:
-        raw_markdown = raw_markdown_for_inline_media(source_path, include_prompt_meta=include_prompt_meta)
+        raw_markdown = source_markdown or raw_markdown_for_inline_media(
+            source_path,
+            include_prompt_meta=include_prompt_meta,
+        )
         for match in MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.finditer(raw_markdown):
             try:
                 decoded = base64.b64decode(match.group("data"), validate=True)

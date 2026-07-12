@@ -464,6 +464,26 @@
               "when": "a staged docs source file is converted into source Markdown or overwrites an existing source doc"
             }
           ]
+        },
+        "import-docs-collection": {
+          "label": "import docs collection",
+          "status": "v1-target",
+          "control_id": "docsImportCollectionConfirm",
+          "control_selector": "[data-collection-command=confirm]",
+          "control_label": "Confirm import",
+          "endpoint": "/docs/import-source",
+          "record_family": "docs_import",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed synchronous collection apply results. Planning, refreshed plans, and pre-apply cancellation remain excluded.",
+          "script_purposes": [
+            {
+              "id": "import-source-data",
+              "optional": false,
+              "when": "a confirmed docs collection apply writes source results and its grouped report"
+            }
+          ]
         }
       }
     },

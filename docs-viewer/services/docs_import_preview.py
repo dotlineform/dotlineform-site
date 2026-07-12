@@ -21,6 +21,7 @@ from markdown_renderer import markdown_renderer_contract, render_markdown_docume
 from docs_import_common import (  # noqa: E402
     FILE_MEDIA_STAGED_SUFFIXES,
     HTML_STAGED_SUFFIXES,
+    IMPORT_RESULTS_DIR_NAME,
     MARKDOWN_HEADING_PATTERN,
     MARKDOWN_IMAGE_PATTERN,
     MARKDOWN_LINK_PATTERN,
@@ -158,6 +159,7 @@ def list_staged_import_source_files(
         for path in staging_root.iterdir()
         if path.is_dir()
         and not path.is_symlink()
+        and path.name != IMPORT_RESULTS_DIR_NAME
         and not any(candidate.is_symlink() for candidate in path.rglob("*"))
     ]
     for path in sorted(candidates, key=lambda candidate: candidate.name.lower()):
@@ -280,6 +282,7 @@ def generate_html_import_preview(
         staging_root=staging_root,
         workspace_root=workspace_root,
     )
+    summary.pop("_inline_media_source_markdown", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_html"] = summary["source_path"]
     return summary
@@ -329,6 +332,7 @@ def generate_html_content_import_preview(
     summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
+    summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
     apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
@@ -421,6 +425,7 @@ def generate_markdown_import_preview(
         staging_root=staging_root,
         workspace_root=workspace_root,
     )
+    summary.pop("_inline_media_source_markdown", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_markdown"] = summary["source_path"]
     return summary
@@ -444,6 +449,7 @@ def generate_markdown_content_import_preview(
     summary["staging_root"] = marker_path(staging_root, workspace_root=workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
+    summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
     apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary

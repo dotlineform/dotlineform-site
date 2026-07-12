@@ -403,6 +403,55 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
     ]
 
 
+def test_perform_source_write_and_rebuild_completes_only_reported_written_paths() -> None:
+    events: list[tuple[str, str, list[str]]] = []
+    original_set = write_rebuild.set_watch_suppressions
+    original_clear = write_rebuild.clear_watch_suppressions
+    original_rebuild = write_rebuild.rebuild_scope_outputs
+
+    def fake_set(_repo_root, scope, filenames, *, status, **_kwargs):
+        events.append(("set", status, list(filenames)))
+
+    def fake_clear(_repo_root, scope, filenames):
+        events.append(("clear", scope, list(filenames)))
+
+    write_rebuild.set_watch_suppressions = fake_set
+    write_rebuild.clear_watch_suppressions = fake_clear
+    write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            repo_root = Path(temp_path)
+            source_root = repo_root / "docs-viewer/source/studio"
+            source_root.mkdir(parents=True)
+            first = source_root / "first.md"
+            second = source_root / "second.md"
+            written_paths: list[Path] = []
+
+            def write_first_only() -> None:
+                events.append(("write", "studio", []))
+                written_paths.append(first)
+
+            write_rebuild.perform_source_write_and_rebuild(
+                repo_root,
+                "studio",
+                [first, second],
+                write_first_only,
+                suppression_reason="test",
+                written_paths=written_paths,
+            )
+    finally:
+        write_rebuild.set_watch_suppressions = original_set
+        write_rebuild.clear_watch_suppressions = original_clear
+        write_rebuild.rebuild_scope_outputs = original_rebuild
+
+    assert events == [
+        ("set", write_rebuild.SUPPRESSION_PENDING, ["first.md", "second.md"]),
+        ("write", "studio", []),
+        ("clear", "studio", ["first.md", "second.md"]),
+        ("set", write_rebuild.SUPPRESSION_COMPLETE, ["first.md"]),
+    ]
+
+
 def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
     calls: list[list[str]] = []
     original_python = with_fake_python()

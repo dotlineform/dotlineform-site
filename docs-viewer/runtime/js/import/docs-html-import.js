@@ -332,6 +332,7 @@ export async function initDocsHtmlImport(options = {}) {
   state.collectionController = createDocsImportCollectionController({
     host: state.collectionView,
     statusNode: state.statusNode,
+    routePath: state.routePath,
     onBusyChange: (busy) => {
       state.isRunning = busy;
       state.runButton.disabled = busy;

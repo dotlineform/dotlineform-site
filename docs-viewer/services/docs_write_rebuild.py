@@ -259,6 +259,7 @@ def perform_source_write_and_rebuild(
     include_search: bool = True,
     search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
+    written_paths: Optional[list[Path]] = None,
 ) -> Dict[str, Any]:
     root = scope_root(repo_root, scope)
     filenames = sorted(
@@ -290,11 +291,22 @@ def perform_source_write_and_rebuild(
         if filenames:
             clear_watch_suppressions(repo_root, scope, filenames)
         raise
-    if filenames:
+    completion_filenames = filenames
+    if written_paths is not None:
+        completion_filenames = sorted(
+            {
+                path.resolve().relative_to(root.resolve()).as_posix()
+                for path in written_paths
+                if isinstance(path, Path)
+            }
+        )
+        if filenames:
+            clear_watch_suppressions(repo_root, scope, filenames)
+    if completion_filenames:
         set_watch_suppressions(
             repo_root,
             scope,
-            filenames,
+            completion_filenames,
             status=SUPPRESSION_COMPLETE,
             reason=suppression_reason,
             ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,

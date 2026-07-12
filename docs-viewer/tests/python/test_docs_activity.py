@@ -52,6 +52,13 @@ def write_activity_contract(repo_root: Path) -> None:
                                 "control_selector": "#docsHtmlImportRun",
                                 "endpoint": routes.IMPORT_SOURCE_PATH,
                                 "record_id_field": "staged_filename",
+                            },
+                            "import-docs-collection": {
+                                "label": "import docs collection",
+                                "control_id": "docsImportCollectionConfirm",
+                                "control_selector": "[data-collection-command=confirm]",
+                                "endpoint": routes.IMPORT_SOURCE_PATH,
+                                "record_id_field": "staged_filename",
                             }
                         },
                     },
@@ -194,6 +201,46 @@ def test_import_source_activity_suppresses_preview_and_confirmation() -> None:
         assert "activity_log" not in preview_payload
         assert "activity_log" not in confirmation_payload
         assert activity_entries(repo_root) == []
+
+
+def test_collection_import_activity_records_grouped_result_and_safe_report_path() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        repo_root = Path(tmp)
+        write_activity_contract(repo_root)
+        body = {
+            "staged_filename": "reviewed.jsonl",
+            "activity_context": {
+                "page_id": "docs-import",
+                "action_id": "import-docs-collection",
+                "route": "/docs/",
+                "control_id": "docsImportCollectionConfirm",
+                "control_selector": "[data-collection-command=confirm]",
+                "correlation_id": "import-collection:reviewed",
+                "staged_filename": "reviewed.jsonl",
+            },
+        }
+        payload = {
+            "ok": True,
+            "collection": True,
+            "preview_only": False,
+            "outcome": "partial",
+            "counts": {"created": 1, "overwritten": 0, "skipped": 1, "failed": 1, "not_attempted": 0},
+            "records": [
+                {"doc_id": "alpha", "status": "created"},
+                {"doc_id": "beta", "status": "skipped", "note": "Repair metadata."},
+                {"doc_id": "gamma", "status": "failed"},
+            ],
+            "report_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/result.md",
+        }
+
+        docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run=False)
+
+        assert payload["activity_log"]["written_count"] == 1
+        entry = activity_entries(repo_root)[0]
+        assert entry["status"] == "warning"
+        assert entry["record_groups"]["docs"]["sample_ids"] == ["alpha"]
+        assert entry["record_groups"]["files"]["sample_ids"] == [payload["report_path"]]
+        assert any("Repair metadata." in item for item in entry["detail_items"])
 
 
 def import_apply_body(confirm: bool) -> dict[str, object]:

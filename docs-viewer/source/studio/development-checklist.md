@@ -103,11 +103,15 @@ Staged source imports:
 - `docs_import_data_sharing_documents.py` is the thin Data Sharing collection orchestration entrypoint.
 - `docs_import_data_sharing_package.py` owns supported trusted-collection classification before generic JSON/JSONL fallback, safe Data Sharing staged-package intake, trusted export association, raw-row identity checks, and adapter normalization.
 - `docs_import_collection_plan.py` owns wrapper-neutral typed collection state and complete write-free collision, parent dependency, hierarchy, record-error, media-summary, blocker, warning, and response planning.
+- `docs_import_collection_decisions.py` owns the collection apply request allowlist, explicit decision parsing, package/collision identity revalidation, decision drift, skipped-parent checks, and write-free refreshed-plan response.
+- `docs_import_collection_apply.py` owns package-order source/media mutation, asset-level best effort, partial source failure, one coordinated rebuild call, and batch apply activity.
+- `docs_import_collection_result.py` owns body-free grouped collection results, safe generation projection, manual-copy instructions, report payload shaping, and marker-rooted report output.
 - `docs_import_source_helpers.py` owns replacement-preview mutation, viewer URLs, import path display, and import summary text.
 - `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
 - `docs-html-import.js` owns the managed import host, source-family selection, route-ready/busy projection, and dispatch to the separate single-source or collection owners.
-- `docs-import-collection-controller.js` owns safe collection identity and target-scope state, preview service commands, sequential record decisions, pre-apply cancellation, and confirmation readiness.
-- `docs-import-collection-view.js` owns the body-free collection plan, blocker, warning, record, decision, and confirmation rendering.
+- `docs-import-collection-controller.js` owns safe collection identity and target-scope state, preview/apply service commands, sequential record decisions, pre-apply cancellation, confirmation/applying/result state, and refreshed-plan handling.
+- `docs-import-collection-view.js` owns the body-free collection plan, blocker, warning, record, decision, confirmation, applying, and grouped-result rendering.
+- `studio/shared/python/json_markdown_report.py` owns deterministic JSON-compatible Markdown rendering and atomic caller-path writes without app-specific output, grouping, marker, template, plugin, or registry behavior.
 
 New staged source formats:
 

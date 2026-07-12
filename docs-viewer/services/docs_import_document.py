@@ -47,6 +47,7 @@ class ImportDocumentMediaContext:
     include_prompt_meta: bool = False
     interactive_html_plans: tuple[dict[str, Any], ...] = ()
     allow_interactive_html_overwrite: bool = False
+    source_markdown: str = ""
 
 
 @dataclass(frozen=True)
@@ -294,6 +295,23 @@ def apply_import_document(
 ) -> ImportDocumentApplyResult:
     """Materialize planned media and atomically write one planned source file."""
 
+    apply_result = materialize_import_document_media(
+        repo_root,
+        plan,
+        media_context=media_context,
+    )
+    apply_import_document_source(plan)
+    return apply_result
+
+
+def materialize_import_document_media(
+    repo_root: Path,
+    plan: ImportDocumentPlan,
+    *,
+    media_context: ImportDocumentMediaContext | None = None,
+) -> ImportDocumentApplyResult:
+    """Materialize only one planned document's media and return safe write summaries."""
+
     inline_media_written: list[dict[str, Any]] = []
     interactive_html_written: list[dict[str, Any]] = []
     if media_context is not None:
@@ -304,6 +322,7 @@ def apply_import_document(
             source_path=media_context.source_path,
             import_preview=plan.import_preview,
             include_prompt_meta=media_context.include_prompt_meta,
+            source_markdown=media_context.source_markdown,
         )
         interactive_html_written = materialize_interactive_html_assets(
             repo_root,
@@ -311,11 +330,16 @@ def apply_import_document(
             list(media_context.interactive_html_plans),
             allow_overwrite=media_context.allow_interactive_html_overwrite,
         )
-    write_text_atomic(plan.target_path, plan.source_text)
     return ImportDocumentApplyResult(
         inline_media_written=tuple(inline_media_written),
         interactive_html_written=tuple(interactive_html_written),
     )
+
+
+def apply_import_document_source(plan: ImportDocumentPlan) -> None:
+    """Atomically write only one already-validated planned source."""
+
+    write_text_atomic(plan.target_path, plan.source_text)
 
 
 def import_document_activity(
@@ -391,7 +415,9 @@ __all__ = [
     "ImportDocumentMediaContext",
     "ImportDocumentPlan",
     "apply_import_document",
+    "apply_import_document_source",
     "import_document_activity",
     "import_document_result",
+    "materialize_import_document_media",
     "plan_import_document",
 ]

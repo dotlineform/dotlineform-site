@@ -435,7 +435,8 @@ def blocked_collection_plan(
 ) -> DocumentsCollectionPlan:
     safe_blockers = _sanitize_issue_paths(blockers, workspace_root)
     response = {
-        "ok": False,
+        "ok": True,
+        "plan_valid": False,
         "collection": True,
         "source_format": source_format,
         "scope": scope,
@@ -507,7 +508,8 @@ def plan_import_content_collection(
     warning_count = len(package_warnings) + sum(len(record["warnings"]) for record in record_responses)
     requires_decisions = bool(record_error_count or collision_count)
     response = {
-        "ok": not blockers,
+        "ok": True,
+        "plan_valid": not blockers,
         "collection": True,
         "source_format": source_format,
         "scope": scope,

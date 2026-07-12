@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P5 are complete; P6 is the next bounded phase.
+Completed prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P7 are complete; end-to-end implementation continues from the review-to-import handoff.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -289,19 +289,53 @@ Verification completed on 2026-07-12:
 
 P6 should accept only the controller's explicit record decisions plus the safe staged identity and target scope, recompute the complete plan against current target facts, reject browser-authored plan/path data, and enter apply only after an unchanged final plan is confirmed.
 
-### P6. Approved Batch Apply Boundary
+### P6. Approved Batch Apply Boundary — Complete 2026-07-12
 
 - implement the O5/O6/O7 mutation and revalidation decisions
 - perform coordinated writes and rebuilds
 - return the O12 result contract
 - write the focused O12 Markdown report under `import-staging/results/`
 
-### P7. Shared JSON-To-Markdown Report Helper
+#### P6 Verification And Handoff
+
+- `docs_import_collection_decisions.py` owns the exact apply request allowlist, explicit decision parsing, confirmed package identity/hash comparison, collision-target checks, skipped-parent checks, and refreshed-plan responses
+- `docs_import_collection_apply.py` owns package-order mutation, asset-level best effort, first-source-failure stopping, applied/failed/not-attempted classification, one managed rebuild call, and batch activity logging
+- `docs_import_collection_result.py` owns body-free grouped result JSON, safe generation projection, manual-copy instructions, report payload shaping, marker-rooted report paths, and non-blocking report failure
+- apply rereads the staged package, recomputes the P4 plan, accepts no browser target paths/generated source/hierarchy/media plan, and returns a refreshed write-free plan when package, collision, decision, parent, hierarchy, or blocker facts require reconfirmation
+- preserve-existing rows do not use source revision/body hashes; apply reads the current canonical source and preserves unrelated front matter and the current body
+- source writes remain per-document atomic and package ordered with no rollback; the first source failure stops later rows, while earlier writes remain and still receive one targeted rebuild attempt
+- generation failure stays separate from successful source mutation and is returned synchronously without import retry, jobs, polling, or result retrieval
+- embedded data-URL media uses the shared planner/materializer; asset failure warns and does not block the source write or later records, and document overwrite decisions do not grant asset overwrite authority
+- the focused collection controller expands apply-to-all into explicit decisions, submits the safe package identity/hash, removes cancellation once apply begins, handles refreshed plans, and renders the body-free grouped result/report path
+- confirmed completed, partial, all-skipped, source-failed, and generation-failed applies write one grouped report under `import-staging/results/`; planning, rejected/refreshed plans, and pre-write cancellation do not
+- `results/` is explicitly excluded from direct-child source/package discovery
+- Studio Activity records the safe report path, grouped counts, applied doc ids, and optional skipped-record notes without source bodies or absolute paths
+
+Immediate responsibility review:
+
+- the first-pass apply module mixed request revalidation with mutation and was split into `docs_import_collection_decisions.py` and `docs_import_collection_apply.py`
+- result/report shaping remains in `docs_import_collection_result.py`; moving it back into apply would recreate mixed ownership
+- `docs_write_rebuild.perform_source_write_and_rebuild()` now accepts an optional mutable `written_paths` projection so a partial batch completes watcher suppression only for actual writes
+- the controller, view, result owner, and shared helper are each cohesive and need no further split before the review handoff
+
+Verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 102 passed
+- adjacent write/rebuild, activity, route, public-boundary, static-asset, activity-contract, and shared-helper checks — 51 passed
+- `docs_import_collection_modules.py` passed planning, sequential decisions, unchecked/apply-to-all, final confirmation, exact apply-request agreement, result rendering, and pre-apply cancellation
+- `docs_viewer_service_manage.py` passed the existing lazy management-modal smoke
+- focused Python compilation, activity-contract JSON validation, sanitization scan, and `git diff --check` passed
+
+The next end-to-end feature phase is [Add The Review-To-Import Handoff](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation), which should pass only a safe package identity into the now-complete managed import flow.
+
+### P7. Shared JSON-To-Markdown Report Helper — Complete 2026-07-12
 
 - add `studio/shared/python/json_markdown_report.py` with the narrow render/write API defined by O12
 - add deterministic escaping, ordering, nested mapping/list, and atomic-write tests under `studio/tests/python/`
 - keep path selection, marker projection, app grouping semantics, and activity behavior caller-owned
 - make the reviewed-package result report the first consumer without introducing a reporting framework
+
+`studio/shared/python/json_markdown_report.py` now provides only the approved render/write entrypoints. Focused tests cover JSON compatibility, supplied/default ordering, nested mappings/lists, Markdown escaping, deterministic output, validation failures, and atomic replacement. Output roots, marker paths, group semantics, activity, templates, plugins, and registry behavior remain caller-owned.
 
 ## Non-Goals
 

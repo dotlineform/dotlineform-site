@@ -104,7 +104,7 @@ def test_collection_preview_dispatches_through_existing_import_post(monkeypatch)
             },
             False,
         )
-        with pytest.raises(ValueError, match="approved batch plan"):
+        with pytest.raises(ValueError, match="preview_only false"):
             handle_import_source(
                 root,
                 {
@@ -265,7 +265,8 @@ def test_collection_plan_blocks_missing_parents_and_hierarchy_cycles(monkeypatch
 
         payload = plan_package(root, "invalid-hierarchy.jsonl").as_dict()
 
-    assert payload["ok"] is False
+    assert payload["ok"] is True
+    assert payload["plan_valid"] is False
     assert payload["ready_for_confirmation"] is False
     assert {blocker["code"] for blocker in payload["blockers"]} == {
         "missing_parent",
@@ -294,7 +295,8 @@ def test_collection_plan_blocks_malformed_or_unsafe_record_identity(monkeypatch)
 
         payload = plan_package(root, "unsafe-records.jsonl").as_dict()
 
-    assert payload["ok"] is False
+    assert payload["ok"] is True
+    assert payload["plan_valid"] is False
     assert {blocker["code"] for blocker in payload["blockers"]} >= {
         "unsafe_doc_id",
         "duplicate_doc_id",
@@ -440,6 +442,7 @@ def test_collection_plan_rejects_missing_trusted_export_metadata() -> None:
 
         payload = plan_package(root, "missing-metadata.jsonl").as_dict()
 
-    assert payload["ok"] is False
+    assert payload["ok"] is True
+    assert payload["plan_valid"] is False
     assert payload["records"] == []
     assert [blocker["code"] for blocker in payload["blockers"]] == ["missing_export_metadata"]

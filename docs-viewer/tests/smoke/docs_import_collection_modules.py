@@ -29,7 +29,32 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
     requests: list[dict[str, object]] = []
 
     def fulfill_collection_preview(route) -> None:
-        requests.append(route.request.post_data_json)
+        request_body = route.request.post_data_json
+        requests.append(request_body)
+        if request_body.get("preview_only") is False:
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body='''{
+                  "ok": true,
+                  "collection": true,
+                  "source_format": "data_sharing_documents",
+                  "scope": "library",
+                  "staged_filename": "reviewed.jsonl",
+                  "preview_only": false,
+                  "confirmed": true,
+                  "outcome": "completed",
+                  "counts": {"created": 0, "overwritten": 3, "skipped": 0, "failed": 0, "not_attempted": 0},
+                  "records": [
+                    {"record_index": 0, "doc_id": "alpha", "title": "Alpha", "status": "overwritten", "warnings": []},
+                    {"record_index": 1, "doc_id": "beta", "title": "Beta", "status": "overwritten", "warnings": []},
+                    {"record_index": 2, "doc_id": "gamma", "title": "Gamma", "status": "overwritten", "warnings": []}
+                  ],
+                  "warnings": [],
+                  "report_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/result.md"
+                }''',
+            )
+            return
         route.fulfill(
             status=200,
             content_type="application/json",
@@ -40,11 +65,12 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
               "preview_only": true,
               "requires_decisions": true,
               "ready_for_confirmation": false,
+              "package": {"export_id": "ds_20260712T170000Z", "source_sha256": "abc123"},
               "counts": {"records": 3, "creates": 0, "collisions": 3, "record_errors": 0, "media_plans": 0},
               "records": [
-                {"record_index": 0, "doc_id": "alpha", "title": "Alpha", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
-                {"record_index": 1, "doc_id": "beta", "title": "Beta", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
-                {"record_index": 2, "doc_id": "gamma", "title": "Gamma", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true}, "parent": {}, "media_plans": [], "warnings": [], "errors": []}
+                {"record_index": 0, "doc_id": "alpha", "title": "Alpha", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true, "doc_id": "alpha"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
+                {"record_index": 1, "doc_id": "beta", "title": "Beta", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true, "doc_id": "beta"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []},
+                {"record_index": 2, "doc_id": "gamma", "title": "Gamma", "action": "decision-required", "decision_kind": "collision", "allowed_actions": ["overwrite", "skip", "cancel"], "collision": {"exists": true, "doc_id": "gamma"}, "parent": {}, "media_plans": [], "warnings": [], "errors": []}
               ],
               "blockers": [],
               "warnings": []
@@ -74,6 +100,9 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
           document.querySelector('[data-collection-decision="overwrite"]').click();
           const readySnapshot = controller.snapshot();
           const readyStatus = document.getElementById('status').textContent;
+          await controller.confirmApply();
+          const resultSnapshot = controller.snapshot();
+          const resultReportVisible = document.getElementById('host').textContent.includes('results/result.md');
           controller.reset({ active: true });
           await controller.preview({
             file: { filename: 'reviewed.jsonl', source_format: 'data_sharing_documents' },
@@ -85,6 +114,8 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             afterFirst,
             readySnapshot,
             readyStatus,
+            resultSnapshot,
+            resultReportVisible,
             cancelledSnapshot: controller.snapshot(),
             cancelDecisionVisible: Boolean(document.querySelector('[data-collection-decision]')),
             recordCount: document.querySelectorAll('.docsViewerImport__collectionRecords > li').length
@@ -100,11 +131,26 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         raise AssertionError(f"apply-to-all did not resolve collision decisions: {result!r}")
     if result["recordCount"] != 3 or "ready for confirmation" not in result["readyStatus"]:
         raise AssertionError(f"collection view projection failed: {result!r}")
+    if result["resultSnapshot"]["phase"] != "result" or not result["resultReportVisible"]:
+        raise AssertionError(f"confirmed apply result did not remain collection-controller owned: {result!r}")
     if result["cancelledSnapshot"]["phase"] != "cancelled" or result["cancelDecisionVisible"]:
         raise AssertionError(f"pre-apply cancellation left active decision controls: {result!r}")
-    expected_request = {"scope": "library", "staged_filename": "reviewed.jsonl", "preview_only": True}
-    if requests != [expected_request, expected_request]:
+    expected_preview = {"scope": "library", "staged_filename": "reviewed.jsonl", "preview_only": True}
+    if requests[0] != expected_preview or requests[2] != expected_preview:
         raise AssertionError(f"collection preview did not use the existing import POST safely: {requests!r}")
+    apply_request = requests[1]
+    if apply_request.get("export_id") != "ds_20260712T170000Z" or apply_request.get("source_sha256") != "abc123":
+        raise AssertionError(f"confirmed package identity was not submitted: {apply_request!r}")
+    if apply_request.get("decisions") != [
+        {"record_index": 0, "action": "overwrite", "target_doc_id": "alpha", "note": ""},
+        {"record_index": 1, "action": "overwrite", "target_doc_id": "beta", "note": ""},
+        {"record_index": 2, "action": "overwrite", "target_doc_id": "gamma", "note": ""},
+    ]:
+        raise AssertionError(f"explicit expanded decisions did not match the reviewed plan: {apply_request!r}")
+    if set(apply_request) != {
+        "scope", "staged_filename", "preview_only", "confirm", "export_id", "source_sha256", "decisions", "activity_context"
+    }:
+        raise AssertionError(f"apply request widened beyond the safe collection contract: {apply_request!r}")
 
 
 def run_smoke(page: Page, base_url: str) -> None:

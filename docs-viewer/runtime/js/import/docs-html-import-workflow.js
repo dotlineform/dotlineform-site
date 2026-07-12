@@ -29,7 +29,7 @@ function setStatus(node, state, message) {
   }
 }
 
-function buildActivityContext({
+export function buildDocsImportActivityContext({
   pageId,
   actionId,
   route,
@@ -146,7 +146,7 @@ async function requestImport(
     confirm_overwrite: confirmOverwrite,
     replacement_doc_id: normalizedReplacementDocId,
     preview_only: false,
-    activity_context: buildActivityContext({
+    activity_context: buildDocsImportActivityContext({
       pageId: "docs-import",
       actionId: "import-docs-source",
       route: context.routePath || "/docs/",

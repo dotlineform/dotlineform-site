@@ -1,3 +1,7 @@
+import {
+  importText
+} from "./docs-html-import-text.js";
+
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -85,8 +89,56 @@ function decisionPanel(decision) {
       `<span>${escapeHtml(importText("collectionApplyAllLabel"))}</span>`,
       "</label>"
     ].join("") : "",
+    !collision ? [
+      '<label class="docsViewerImport__field">',
+      `<span class="docsViewerImport__fieldLabel">${escapeHtml(importText("collectionSkipNoteLabel"))}</span>`,
+      '<textarea class="docsViewerImport__input" rows="3" data-collection-skip-note></textarea>',
+      "</label>"
+    ].join("") : "",
     `<div class="docsViewerImport__collectionDecisionActions">${buttons.join("")}</div>`,
     "</section>"
+  ].join("");
+}
+
+function confirmationPanel(phase) {
+  if (phase === "applying") {
+    return `<section class="docsViewerImport__collectionDecision"><p>${escapeHtml(importText("collectionApplyingStatus"))}</p></section>`;
+  }
+  if (phase !== "confirmation") return "";
+  return [
+    '<section class="docsViewerImport__collectionDecision">',
+    `<p>${escapeHtml(importText("collectionConfirmationMessage"))}</p>`,
+    '<div class="docsViewerImport__collectionDecisionActions">',
+    `<button type="button" class="docsViewerImport__button" data-collection-command="confirm">${escapeHtml(importText("collectionConfirmButton"))}</button>`,
+    `<button type="button" class="docsViewerImport__button" data-collection-command="cancel">${escapeHtml(importText("cancelOverwriteButton"))}</button>`,
+    "</div>",
+    "</section>"
+  ].join("");
+}
+
+function resultPanel(result) {
+  if (!result || typeof result !== "object") return "";
+  const counts = result.counts || {};
+  const summary = [
+    importText("collectionCreatesCount", { count: Number(counts.created || 0) }),
+    importText("collectionOverwrittenCount", { count: Number(counts.overwritten || 0) }),
+    importText("collectionSkippedCount", { count: Number(counts.skipped || 0) }),
+    importText("collectionFailedCount", { count: Number(counts.failed || 0) }),
+    importText("collectionNotAttemptedCount", { count: Number(counts.not_attempted || 0) })
+  ].join(" · ");
+  const warnings = Array.isArray(result.warnings) ? result.warnings : [];
+  return [
+    '<section class="docsViewerImport__collectionSummary">',
+    `<h3>${escapeHtml(importText("collectionResultHeading"))}</h3>`,
+    `<p>${escapeHtml(summary)}</p>`,
+    result.report_path ? `<p class="docsViewerImport__meta">${escapeHtml(importText("collectionReportLabel", { path: result.report_path }))}</p>` : "",
+    "</section>",
+    issueList(importText("collectionWarningsHeading"), warnings),
+    recordList(Array.isArray(result.records) ? result.records.map((record) => ({
+      ...record,
+      action: record.status,
+      media_plans: []
+    })) : [], {})
   ].join("");
 }
 
@@ -97,6 +149,10 @@ export function renderDocsImportCollectionView(host, viewState, onDecision) {
   host.hidden = !state.active;
   if (!state.active || !plan) {
     host.replaceChildren();
+    return;
+  }
+  if (state.phase === "result") {
+    host.innerHTML = resultPanel(state.result);
     return;
   }
   const counts = plan.counts || {};
@@ -122,17 +178,23 @@ export function renderDocsImportCollectionView(host, viewState, onDecision) {
     issueList(importText("collectionWarningsHeading"), plan.warnings),
     recordList(Array.isArray(plan.records) ? plan.records : [], state.decisions || {}),
     decisionPanel(state.currentDecision),
+    confirmationPanel(state.phase),
   ].join("");
   host.querySelectorAll("[data-collection-decision]").forEach((button) => {
     button.addEventListener("click", () => {
       if (typeof onDecision !== "function") return;
       onDecision({
+        type: "decision",
         action: normalizeText(button.dataset.collectionDecision),
-        applyToAll: Boolean(host.querySelector("[data-collection-apply-all]")?.checked)
+        applyToAll: Boolean(host.querySelector("[data-collection-apply-all]")?.checked),
+        note: normalizeText(host.querySelector("[data-collection-skip-note]")?.value)
       });
     });
   });
+  host.querySelectorAll("[data-collection-command]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (typeof onDecision !== "function") return;
+      onDecision({ type: normalizeText(button.dataset.collectionCommand) });
+    });
+  });
 }
-import {
-  importText
-} from "./docs-html-import-text.js";

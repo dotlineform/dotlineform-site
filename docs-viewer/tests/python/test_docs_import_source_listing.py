@@ -89,6 +89,20 @@ def test_source_import_ignores_repo_local_staging_and_rejects_traversal() -> Non
     assert [item["filename"] for item in payload["files"]] == ["external.md"]
 
 
+def test_source_import_listing_ignores_collection_result_reports() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        paths = configured_workspace_paths(root)
+        results = paths.import_staging / "results"
+        results.mkdir()
+        (results / "result.md").write_text("# Import result\n", encoding="utf-8")
+        write_staged_markdown(root, "ordinary.md", "# Ordinary\n")
+
+        payload = import_source_service.handle_import_source_files(root)
+
+    assert [item["filename"] for item in payload["files"]] == ["ordinary.md"]
+
+
 def test_source_import_listing_reports_unavailable_workspace(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

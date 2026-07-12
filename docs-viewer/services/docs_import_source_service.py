@@ -19,7 +19,10 @@ from docs_import_document import (
     import_document_result,
     plan_import_document,
 )
-from docs_import_data_sharing_documents import plan_data_sharing_documents_collection
+from docs_import_data_sharing_documents import (
+    apply_data_sharing_documents_collection,
+    plan_data_sharing_documents_collection,
+)
 from docs_import_data_sharing_package import (
     COLLECTION_SOURCE_FORMAT,
     data_sharing_documents_source_format,
@@ -119,7 +122,17 @@ def handle_import_source(
     )
     if source_format == COLLECTION_SOURCE_FORMAT:
         if not (dry_run or preview_only):
-            raise ValueError("collection import apply is not available until an approved batch plan is supplied")
+            return apply_data_sharing_documents_collection(
+                repo_root,
+                scope=scope,
+                staged_filename=staged_filename,
+                body=body,
+                staging_root=staging_root,
+                workspace_root=workspace_root,
+                metadata_root=metadata_root,
+                log_event=dependencies.log_event,
+                perform_source_write_and_rebuild=dependencies.perform_source_write_and_rebuild,
+            )
         plan = plan_data_sharing_documents_collection(
             repo_root,
             scope=scope,
