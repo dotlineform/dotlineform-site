@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from adapters.documents.import_content import COMPACT_PROFILE_ID, FULL_SOURCE_PROFILE_ID
 from adapters.documents.returned import normalize_documents_import_content
 from docs_import_collection_plan import CollectionRecordState, collection_issue
 from docs_import_preview import resolve_staged_import_source
@@ -25,6 +26,8 @@ from docs_source_model import slugify
 
 
 COLLECTION_SUFFIXES = {".json", ".jsonl"}
+COLLECTION_SOURCE_FORMAT = "data_sharing_documents"
+SUPPORTED_COLLECTION_PROFILE_IDS = {COMPACT_PROFILE_ID, FULL_SOURCE_PROFILE_ID}
 BLOCKING_ADAPTER_ERRORS = (
     "must not supply both canonical_markdown and content",
     "record_type must be document",
@@ -81,6 +84,44 @@ def _content_format(
             if value:
                 return value
     return ""
+
+
+def data_sharing_documents_source_format(
+    repo_root: Path,
+    path: Path,
+    *,
+    metadata_root: Path,
+) -> str:
+    """Classify a trusted supported documents package before generic JSON import."""
+
+    if not path.is_file() or path.is_symlink() or path.suffix.lower() not in COLLECTION_SUFFIXES:
+        return ""
+    if path.suffix.lower() == ".jsonl":
+        export_id, export_issues = export_id_from_jsonl_header(path)
+    else:
+        payload, parse_issues = parse_json_file(path)
+        if parse_issues:
+            return ""
+        export_id, export_issues = export_id_from_json_payload(payload)
+    if export_issues or not export_id:
+        return ""
+    trusted_metadata, _unknown, metadata_issues, _metadata_path = metadata_from_internal_export_meta(
+        repo_root,
+        export_id,
+        metadata_root,
+    )
+    if metadata_issues:
+        return ""
+    profile_id = _clean_text(
+        trusted_metadata.get("profile_id") or trusted_metadata.get("config_id")
+    )
+    if (
+        _clean_text(trusted_metadata.get("adapter_id")) != "documents"
+        or trusted_metadata.get("supports_return_import") is False
+        or profile_id not in SUPPORTED_COLLECTION_PROFILE_IDS
+    ):
+        return ""
+    return COLLECTION_SOURCE_FORMAT
 
 
 def load_data_sharing_documents_package(
@@ -367,6 +408,8 @@ def normalize_data_sharing_record_states(
 
 
 __all__ = [
+    "COLLECTION_SOURCE_FORMAT",
+    "data_sharing_documents_source_format",
     "LoadedDocumentsPackage",
     "data_sharing_record_states",
     "load_data_sharing_documents_package",

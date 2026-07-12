@@ -19,6 +19,11 @@ from docs_import_document import (
     import_document_result,
     plan_import_document,
 )
+from docs_import_data_sharing_documents import plan_data_sharing_documents_collection
+from docs_import_data_sharing_package import (
+    COLLECTION_SOURCE_FORMAT,
+    data_sharing_documents_source_format,
+)
 from docs_import_markdown_package import retarget_markdown_package_media_plans
 from docs_import_media import retarget_inline_raster_media_plans
 from docs_import_preview import (
@@ -64,12 +69,27 @@ def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:
             "files": [],
         }
     workspace_paths = configured_workspace_paths(repo_root)
+    registered_source_formats = {
+        path.name: source_format
+        for path in workspace_paths.import_staging.iterdir()
+        if (
+            source_format := data_sharing_documents_source_format(
+                repo_root,
+                path,
+                metadata_root=workspace_paths.meta,
+            )
+        )
+    }
     return {
         "ok": True,
         "available": True,
         "staging_root": marker_path(workspace_paths.import_staging, workspace_root=workspace_paths.root),
         "message": "",
-        "files": list_staged_import_source_files(workspace_paths.import_staging, workspace_paths.root),
+        "files": list_staged_import_source_files(
+            workspace_paths.import_staging,
+            workspace_paths.root,
+            registered_source_formats=registered_source_formats,
+        ),
     }
 
 
@@ -81,6 +101,7 @@ def handle_import_source(
     *,
     staging_root: Path,
     workspace_root: Path,
+    metadata_root: Path,
 ) -> Dict[str, Any]:
     scope = normalize_scope(body.get("scope"))
     staged_filename = str(body.get("staged_filename") or "").strip()
@@ -91,6 +112,39 @@ def handle_import_source(
     replacement_doc_id = str(body.get("replacement_doc_id") or "").strip()
     replacement_title = str(body.get("replacement_title") or "").strip()
     source_path = resolve_staged_import_source(staging_root, staged_filename)
+    source_format = data_sharing_documents_source_format(
+        repo_root,
+        source_path,
+        metadata_root=metadata_root,
+    )
+    if source_format == COLLECTION_SOURCE_FORMAT:
+        if not (dry_run or preview_only):
+            raise ValueError("collection import apply is not available until an approved batch plan is supplied")
+        plan = plan_data_sharing_documents_collection(
+            repo_root,
+            scope=scope,
+            staged_filename=staged_filename,
+            staging_root=staging_root,
+            workspace_root=workspace_root,
+            metadata_root=metadata_root,
+        )
+        payload = plan.as_dict()
+        dependencies.log_event(
+            repo_root,
+            "docs-import-collection-preview",
+            {
+                "scope": scope,
+                "staged_filename": staged_filename,
+                "source_format": source_format,
+                "records": payload["counts"]["records"],
+                "collisions": payload["counts"]["collisions"],
+                "record_errors": payload["counts"]["record_errors"],
+                "blockers": payload["counts"]["blockers"],
+                "ready_for_confirmation": payload["ready_for_confirmation"],
+            },
+        )
+        payload["dry_run"] = dry_run
+        return payload
     if is_interactive_html_import_asset(source_path):
         raise ValueError("interactive HTML script files cannot be selected as the primary import source")
     preview = generate_import_preview(

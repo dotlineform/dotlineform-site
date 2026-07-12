@@ -98,13 +98,16 @@ Staged source imports:
 - `docs_import_media.py` owns media path planning, inline media extraction, media materialization, and image/file media summaries.
 - `docs_import_markdown_package.py` owns markdown package discovery, package media planning, and package link rewriting.
 - `docs_import_common.py` owns source-format constants and small shared helpers.
-- `docs_import_source_service.py` owns the management API workflow: request interpretation, collision discovery, confirmation gates, rebuild calls, and response assembly.
+- `docs_import_source_service.py` owns the management API workflow: request interpretation, collection-preview dispatch, single-source collision and confirmation gates, rebuild calls, and response assembly.
 - `docs_import_document.py` owns reusable `ImportContent` create/overwrite validation, allowed front-matter application, canonical source formatting, per-document media/source apply, target/search ids, and document result/activity shaping.
 - `docs_import_data_sharing_documents.py` is the thin Data Sharing collection orchestration entrypoint.
-- `docs_import_data_sharing_package.py` owns safe Data Sharing staged-package intake, trusted export association, raw-row identity checks, and adapter normalization.
+- `docs_import_data_sharing_package.py` owns supported trusted-collection classification before generic JSON/JSONL fallback, safe Data Sharing staged-package intake, trusted export association, raw-row identity checks, and adapter normalization.
 - `docs_import_collection_plan.py` owns wrapper-neutral typed collection state and complete write-free collision, parent dependency, hierarchy, record-error, media-summary, blocker, warning, and response planning.
 - `docs_import_source_helpers.py` owns replacement-preview mutation, viewer URLs, import path display, and import summary text.
 - `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
+- `docs-html-import.js` owns the managed import host, source-family selection, route-ready/busy projection, and dispatch to the separate single-source or collection owners.
+- `docs-import-collection-controller.js` owns safe collection identity and target-scope state, preview service commands, sequential record decisions, pre-apply cancellation, and confirmation readiness.
+- `docs-import-collection-view.js` owns the body-free collection plan, blocker, warning, record, decision, and confirmation rendering.
 
 New staged source formats:
 

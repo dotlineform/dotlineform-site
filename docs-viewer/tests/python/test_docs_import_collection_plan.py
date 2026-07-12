@@ -7,10 +7,11 @@ import json
 from pathlib import Path
 
 import docs_import_preview
+import pytest
 from docs_import_data_sharing_documents import plan_data_sharing_documents_collection
 from services.paths import configured_workspace_paths
 
-from docs_import_test_support import make_repo, write_staged
+from docs_import_test_support import handle_import_source, make_repo, write_staged
 from repo_factory import data_sharing_workspace_root
 
 
@@ -77,6 +78,46 @@ def plan_package(root: Path, filename: str):
         workspace_root=paths.root,
         metadata_root=paths.meta,
     )
+
+
+def test_collection_preview_dispatches_through_existing_import_post(monkeypatch) -> None:
+    stub_markdown_validation(monkeypatch)
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260712T150001Z"
+        write_collection_metadata(export_id)
+        write_staged(
+            root,
+            "post-preview.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "post-preview", "title": "POST Preview", "content": "Body."},
+            ],
+        )
+
+        payload = handle_import_source(
+            root,
+            {
+                "scope": "library",
+                "staged_filename": "post-preview.jsonl",
+                "preview_only": True,
+            },
+            False,
+        )
+        with pytest.raises(ValueError, match="approved batch plan"):
+            handle_import_source(
+                root,
+                {
+                    "scope": "library",
+                    "staged_filename": "post-preview.jsonl",
+                },
+                False,
+            )
+
+    assert payload["collection"] is True
+    assert payload["source_format"] == "data_sharing_documents"
+    assert payload["preview_only"] is True
+    assert payload["counts"]["records"] == 1
 
 
 def test_collection_plan_covers_every_record_collision_parent_and_media_without_writes(monkeypatch) -> None:

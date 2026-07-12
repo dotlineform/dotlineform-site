@@ -14,6 +14,8 @@ from services.paths import configured_workspace_paths
 
 from docs_import_test_support import (
     make_repo,
+    write_returned_jsonl,
+    write_staged,
     write_staged_bytes,
     write_staged_html,
     write_staged_markdown,
@@ -44,6 +46,24 @@ def test_source_import_files_list_html_and_markdown() -> None:
     assert by_filename["package-note"]["source_format"] == "markdown_package"
     assert by_filename["package-note"]["package_markdown_count"] == 1
     assert by_filename["source.md"]["path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/source.md"
+
+
+def test_supported_documents_collection_registers_before_generic_json_fallback() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_returned_jsonl(
+            root,
+            "reviewed-documents.jsonl",
+            [{"doc_id": "reviewed-doc", "title": "Reviewed Doc", "content": "Body."}],
+            export_id="ds_20260712T150000Z",
+        )
+        write_staged(root, "ordinary.json", {"kind": "ordinary-attachment"})
+
+        files = import_source_service.handle_import_source_files(root)["files"]
+
+    by_filename = {item["filename"]: item for item in files}
+    assert by_filename["reviewed-documents.jsonl"]["source_format"] == "data_sharing_documents"
+    assert by_filename["ordinary.json"]["source_format"] == "file"
 
 
 def test_source_import_ignores_repo_local_staging_and_rejects_traversal() -> None:

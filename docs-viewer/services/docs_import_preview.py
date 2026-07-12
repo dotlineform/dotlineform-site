@@ -138,7 +138,12 @@ def list_staged_html_files(staging_root: Path, workspace_root: Path) -> list[dic
     ]
 
 
-def list_staged_import_source_files(staging_root: Path, workspace_root: Path) -> list[dict[str, Any]]:
+def list_staged_import_source_files(
+    staging_root: Path,
+    workspace_root: Path,
+    *,
+    registered_source_formats: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
     staging_root = staging_root.resolve()
     if not staging_root.exists():
         return []
@@ -163,7 +168,7 @@ def list_staged_import_source_files(staging_root: Path, workspace_root: Path) ->
             {
                 "filename": path.name,
                 "path": marker_path(path, workspace_root=workspace_root),
-                "source_format": source_format_for_path(path),
+                "source_format": (registered_source_formats or {}).get(path.name) or source_format_for_path(path),
                 "size_bytes": stat.st_size,
                 "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             }

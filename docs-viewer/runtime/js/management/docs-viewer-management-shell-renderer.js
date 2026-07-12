@@ -104,6 +104,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '                <ul id="docsHtmlImportWarningsList"></ul>',
   '              </div>',
   '            </div>',
+  '            <div class="docsViewerImport__collection" id="docsImportCollectionView" hidden></div>',
   '          </div>',
   '          <div class="docsViewerImport__footer">',
   '            <p class="docsViewerImport__status" id="docsHtmlImportStatus"></p>',

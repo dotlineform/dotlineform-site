@@ -14,6 +14,10 @@ import {
 import {
   importText
 } from "./docs-html-import-text.js";
+import {
+  createDocsImportCollectionController,
+  isDocsImportCollectionRecord
+} from "./docs-import-collection-controller.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -91,6 +95,8 @@ function setRouteReady(root, ready, detail = {}) {
 }
 
 function routeModeForState(state) {
+  const collectionMode = state.collectionController && state.collectionController.mode();
+  if (collectionMode && collectionMode !== "idle") return collectionMode;
   if (state.resultNode && !state.resultNode.hidden) return "result";
   if (state.warningNode && !state.warningNode.hidden) return "confirm";
   return "idle";
@@ -179,17 +185,28 @@ function selectedFileRecord(state) {
 }
 
 function selectedImportFiles(state) {
-  if (isAllFilesSelected(state)) return state.files.slice();
+  if (isAllFilesSelected(state)) return state.files.filter((file) => !isDocsImportCollectionRecord(file));
   const record = selectedFileRecord(state);
   return record ? [record] : [];
 }
 
+function selectedCollectionFile(state) {
+  if (isAllFilesSelected(state)) return null;
+  const record = selectedFileRecord(state);
+  return isDocsImportCollectionRecord(record) ? record : null;
+}
+
 function syncSourceFormatControls(state) {
   const selectedFiles = selectedImportFiles(state);
+  const collectionFile = selectedCollectionFile(state);
   const supportsPromptMeta = selectedFiles.some((file) => docsHtmlImportSourceFormatForRecord(file) === "html");
   state.includePromptMeta.checked = supportsPromptMeta ? state.includePromptMeta.checked : false;
   state.includePromptMeta.disabled = !supportsPromptMeta || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
+  state.runButton.textContent = collectionFile
+    ? importText("collectionPreviewButton")
+    : importText("importButton");
+  state.collectionController.setActive(Boolean(collectionFile));
 }
 
 function resetImportView(state, statusMessage) {
@@ -225,6 +242,21 @@ function importScope(state) {
 }
 
 async function runImport(state) {
+  const collectionFile = selectedCollectionFile(state);
+  if (collectionFile) {
+    const scope = importScope(state);
+    if (!scope) {
+      setStatus(state.statusNode, "error", "Docs Viewer config does not define any import scopes.");
+      return;
+    }
+    persistSelectedScope(state, scope);
+    await state.collectionController.preview({
+      file: collectionFile,
+      scope,
+      managementBaseUrl: state.managementBaseUrl
+    });
+    return;
+  }
   const files = selectedImportFiles(state);
   if (!files.length) {
     setStatus(
@@ -285,6 +317,7 @@ export async function initDocsHtmlImport(options = {}) {
     warningsWrap: document.getElementById("docsHtmlImportWarnings"),
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
+    collectionView: document.getElementById("docsImportCollectionView"),
     pendingOverwriteDocId: "",
     pendingOverwriteResolver: null,
     replaceAllOverwrites: false,
@@ -296,6 +329,15 @@ export async function initDocsHtmlImport(options = {}) {
     files: [],
     docsScopeIds: []
   };
+  state.collectionController = createDocsImportCollectionController({
+    host: state.collectionView,
+    statusNode: state.statusNode,
+    onBusyChange: (busy) => {
+      state.isRunning = busy;
+      state.runButton.disabled = busy;
+      syncRouteBusyState(state);
+    }
+  });
 
   const requiredNodes = [
     state.fileLabelNode,
@@ -320,7 +362,8 @@ export async function initDocsHtmlImport(options = {}) {
     state.resultCountsNode,
     state.warningsWrap,
     state.warningsHeading,
-    state.warningsList
+    state.warningsList,
+    state.collectionView
   ];
   if (requiredNodes.some((node) => !node)) return;
 
@@ -346,7 +389,15 @@ export async function initDocsHtmlImport(options = {}) {
     state.scopeSelect.value = state.docsScopeIds.includes(initialScope)
       ? initialScope
       : selectedScopeFromUrl(state.docsScopeIds, fallbackScope);
-    state.scopeSelect.addEventListener("change", () => persistSelectedScope(state, state.scopeSelect.value));
+    state.scopeSelect.addEventListener("change", () => {
+      persistSelectedScope(state, state.scopeSelect.value);
+      if (!selectedCollectionFile(state)) return;
+      state.collectionController.reset({
+        active: true,
+        message: importText("collectionIdleStatus")
+      });
+      markRouteReady(state, true);
+    });
     state.includePromptMeta.checked = false;
 
     root.hidden = false;
@@ -380,9 +431,10 @@ export async function initDocsHtmlImport(options = {}) {
       return;
     }
 
-    state.fileSelect.innerHTML = [
+    const ordinaryFiles = files.filter((file) => !isDocsImportCollectionRecord(file));
+    state.fileSelect.innerHTML = (ordinaryFiles.length ? [
       `<option value="${escapeHtml(ALL_STAGED_FILES_VALUE)}">${escapeHtml(importText("allFilesOption"))}</option>`
-    ].concat(files.map((file) => {
+    ] : []).concat(files.map((file) => {
       const filename = normalizeText(file.filename);
       const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
       return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
@@ -393,16 +445,20 @@ export async function initDocsHtmlImport(options = {}) {
     setStatus(
       state.statusNode,
       "",
-      importText("idleStatus")
+      selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")
     );
     markRouteReady(state, true);
 
     state.fileSelect.addEventListener("change", () => {
-      syncSourceFormatControls(state);
       resetImportView(
         state,
-        importText("idleStatus")
+        selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")
       );
+      state.collectionController.reset({
+        active: Boolean(selectedCollectionFile(state))
+      });
+      syncSourceFormatControls(state);
+      markRouteReady(state, true);
     });
 
     state.runButton.addEventListener("click", () => {

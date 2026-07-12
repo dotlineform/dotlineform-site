@@ -30,4 +30,5 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         import_source_dependencies(),
         staging_root=workspace_paths.import_staging,
         workspace_root=workspace_paths.root,
+        metadata_root=workspace_paths.meta,
     )

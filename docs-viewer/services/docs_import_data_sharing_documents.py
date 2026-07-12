@@ -12,15 +12,13 @@ from docs_import_collection_plan import (
     plan_import_content_collection,
 )
 from docs_import_data_sharing_package import (
+    COLLECTION_SOURCE_FORMAT,
     data_sharing_record_states,
     load_data_sharing_documents_package,
     normalize_data_sharing_record_states,
 )
 from docs_source_model import load_scope_docs, normalize_scope
 from services.paths import marker_path
-
-
-COLLECTION_SOURCE_FORMAT = "data_sharing_documents"
 
 
 def _clean_text(value: Any) -> str:

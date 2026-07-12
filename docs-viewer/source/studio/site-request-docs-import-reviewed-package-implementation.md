@@ -74,10 +74,10 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 
 ## 5. Register The JSONL Collection Import Format
 
-- [ ] Detect supported Data Sharing headers before generic JSON/JSONL file import.
-- [ ] List the staged package as a collection import source.
-- [ ] Parse records through the Data Sharing adapter into shared `ImportContent` records.
-- [ ] Keep unsupported JSON/JSONL downloadable-file behavior unchanged.
+- [x] Detect supported Data Sharing headers before generic JSON/JSONL file import.
+- [x] List the staged package as a collection import source.
+- [x] Parse records through the Data Sharing adapter into shared `ImportContent` records.
+- [x] Keep unsupported JSON/JSONL downloadable-file behavior unchanged.
 
 ## UI Consistency Guardrail
 
@@ -156,8 +156,8 @@ Any UI addition or change in the remaining implementation must remain consistent
 - [x] Verify missing workspace configuration disables import cleanly without affecting ordinary Docs viewing.
 - [x] Verify responses expose marker-rooted paths and never user-specific absolute paths.
 - [x] Verify repo-local `var/docs/import-staging/` is not read or written.
-- [ ] Test schema detection before generic JSON/JSONL fallback.
-- [ ] Test shared parsing produces equivalent preview and import records.
+- [x] Test schema detection before generic JSON/JSONL fallback.
+- [x] Test shared parsing produces equivalent preview and import records.
 - [x] Test Markdown, HTML, and plain-text body dispatch through content-based entrypoints.
 - [ ] Test persistent preview viewing without repeated JSONL conversion.
 - [ ] Test absence of review source-edit capabilities and UI.

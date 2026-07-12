@@ -124,7 +124,7 @@ Current helper modules:
 - `site/docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` owns info hosted-view option projection, lifecycle, switching, close behavior, update handoff, and graceful absence
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns report lookup and access checks
 - `docs-viewer/runtime/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
-- Docs Import is a management-modal app: `docs-html-import.js` owns modal state and route-ready projection, `docs-html-import-workflow.js` owns preview/write orchestration, and import writes stay behind management endpoints through `docs-viewer-management-client.js`
+- Docs Import is a management-modal app: `docs-html-import.js` owns the import host, source-family dispatch, and route-ready projection; `docs-html-import-workflow.js` owns ordinary single-source preview/write orchestration; `docs-import-collection-controller.js` and `docs-import-collection-view.js` own collection preview/decision state and its body-free rendering; import writes stay behind management endpoints through `docs-viewer-management-client.js`
 
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.

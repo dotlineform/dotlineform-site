@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P4 are complete; P5 is the next bounded phase.
+Active prerequisite to the collection-import portions of [Docs Import Reviewed Package Implementation](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package-implementation). P0-P5 are complete; P6 is the next bounded phase.
 
 The parent [Docs Import Reviewed Package](/docs/?scope=studio&doc=site-request-docs-import-reviewed-package) remains the authority for product behavior, artifact roles, security, acceptance criteria, and non-goals. This request owns the unresolved batch decisions and the smallest enabling refactors needed before collection-import implementation.
 
@@ -261,12 +261,33 @@ Verification completed on 2026-07-12:
 
 P5 should register supported collection files ahead of the generic JSON/JSONL file fallback, connect `preview_only: true` to this planner through the existing import POST, and add a focused collection controller/view state without moving package records or decisions into the management coordinator.
 
-### P5. Collection Frontend Boundary
+### P5. Collection Frontend Boundary — Complete 2026-07-12
 
 - establish a focused collection controller and view state
 - keep the existing single-source workflow separate
 - connect only safe package identity and named management service commands through the existing import host
 - reuse the existing import-source listing/POST routes rather than adding a collection route family
+
+#### P5 Verification And Handoff
+
+- supported trusted `document-content` and `document-full-source` JSON/JSONL files are registered as `data_sharing_documents` before the generic file-media fallback; unsupported JSON/JSONL behavior is unchanged
+- the existing `/docs/import-source` POST dispatches registered collections to the P4 planner only for `preview_only: true` or service dry-run; apply without an approved batch plan remains rejected pending P6
+- `docs-import-collection-controller.js` owns safe staged identity, target scope, preview request state, body-free collection plan state, sequential record decisions, apply-to-all state, cancellation, and confirmation readiness
+- `docs-import-collection-view.js` owns the body-free counts, blockers, warnings, record summaries, current decision, and read-only final-plan rendering
+- collisions expose `Overwrite`, `Skip`, `Cancel`, and an unchecked `Apply to all` checkbox; invalid-record decisions expose only `Skip` and `Cancel`
+- `docs-html-import.js` performs only source-family selection/dispatch and route-state projection; the ordinary sequential single-source workflow remains separate and excludes collection packages from its all-files run
+- the management import controller remains unchanged and receives no package records, plan state, or record decisions
+- the immediate responsibility review retained the controller/view split: the controller is the complete operation-state owner, the view is the focused renderer, and neither responsibility needs another split before P6
+
+Verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 91 passed
+- focused adjacent static-route, public-runtime-boundary, review-session, and management-route checks — 32 passed
+- `docs_import_collection_modules.py` passed the safe POST, body-free render, sequential-decision, unchecked/apply-to-all, and pre-apply cancellation module smoke
+- `docs_viewer_service_manage.py` passed the existing lazy import-modal manage-shell smoke
+- focused Python compilation, sanitization scan, and `git diff --check` passed
+
+P6 should accept only the controller's explicit record decisions plus the safe staged identity and target scope, recompute the complete plan against current target facts, reject browser-authored plan/path data, and enter apply only after an unchanged final plan is confirmed.
 
 ### P6. Approved Batch Apply Boundary
 
