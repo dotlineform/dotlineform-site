@@ -105,6 +105,7 @@ For management mode, also copy:
 - `docs-viewer/runtime/js/management/docs-viewer-management-parent-picker.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-render.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-settings-workflow.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js`
 - `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js`
 - `docs-viewer/runtime/js/management/docs-viewer-drag-drop.js`
 

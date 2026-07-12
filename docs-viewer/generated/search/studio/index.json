@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e006b1cdfc7e8c7370ef9aae0d6b760a",
-    "generated_at_utc": "2026-07-12T05:13:31Z",
+    "version": "blake2b-297eb484022c87aa666a533e6351e57e",
+    "generated_at_utc": "2026-07-12T05:29:10Z",
     "count": 238
   },
   "entries": [
@@ -3191,10 +3191,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-06-24",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-24 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -3204,12 +3204,12 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-06-24",
+        "2026-07-12",
         "2026",
-        "06",
-        "24"
+        "07",
+        "12"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-06-24 2026 06 24"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-overview",

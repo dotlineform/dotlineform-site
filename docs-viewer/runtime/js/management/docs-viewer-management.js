@@ -3,14 +3,8 @@ import {
 } from "../shared/docs-viewer-tree.js";
 import {
   createDocsViewerManagementCapabilityController,
-  scopeCreateSupported,
-  scopeDeleteSupported,
   scopePublishSupported,
-  scopeStaticHtmlExportSupported,
-  scopeLifecycleDeleteTargets,
-  subScopeCreateSupported,
-  subScopeDeleteSupported,
-  subScopeLifecycleDeleteTargets
+  scopeStaticHtmlExportSupported
 } from "./docs-viewer-management-capabilities.js";
 import {
   applyDocsViewerManagementConfig
@@ -24,6 +18,9 @@ import {
 import {
   createDocsViewerManagementModalComposition
 } from "./docs-viewer-management-modal-composition.js";
+import {
+  createDocsViewerManagementScopeLifecycleController
+} from "./docs-viewer-management-scope-lifecycle-controller.js";
 import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
@@ -113,10 +110,6 @@ export function initDocsViewerManagement(context) {
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
-  var manageNewScopeButton = document.getElementById("docsViewerManageNewScopeButton");
-  var manageDeleteScopeButton = document.getElementById("docsViewerManageDeleteScopeButton");
-  var manageNewSubScopeButton = document.getElementById("docsViewerManageNewSubScopeButton");
-  var manageDeleteSubScopeButton = document.getElementById("docsViewerManageDeleteSubScopeButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageExportButton = document.getElementById("docsViewerManageExportButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
@@ -129,12 +122,12 @@ export function initDocsViewerManagement(context) {
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
-  var scopeLifecycleRequestPromise = null;
   var capabilityController = null;
   var importController = null;
   var interactionController = null;
   var metadataWorkflow = null;
   var modalController = null;
+  var scopeLifecycleController = null;
   var settingsWorkflow = null;
   var actionController = null;
 
@@ -306,28 +299,7 @@ export function initDocsViewerManagement(context) {
         hideManageActionsMenu();
       }
     }
-    if (manageNewScopeButton) {
-      var newScopeAvailable = state.managementAvailable && scopeCreateSupported(state.managementCapabilities);
-      manageNewScopeButton.hidden = !newScopeAvailable;
-      manageNewScopeButton.disabled = state.managementBusy || !newScopeAvailable;
-    }
-    if (manageDeleteScopeButton) {
-      var deleteScopeAvailable = state.managementAvailable && scopeDeleteSupported(state.managementCapabilities);
-      var deleteScopeTargets = scopeLifecycleDeleteTargets(state.managementCapabilities);
-      manageDeleteScopeButton.hidden = !deleteScopeAvailable;
-      manageDeleteScopeButton.disabled = state.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
-    }
-    if (manageNewSubScopeButton) {
-      var newSubScopeAvailable = state.managementAvailable && subScopeCreateSupported(state.managementCapabilities, viewerScope());
-      manageNewSubScopeButton.hidden = !newSubScopeAvailable;
-      manageNewSubScopeButton.disabled = state.managementBusy || !newSubScopeAvailable;
-    }
-    if (manageDeleteSubScopeButton) {
-      var deleteSubScopeAvailable = state.managementAvailable && subScopeDeleteSupported(state.managementCapabilities, viewerScope());
-      var deleteSubScopeTargets = subScopeLifecycleDeleteTargets(state.managementCapabilities, viewerScope());
-      manageDeleteSubScopeButton.hidden = !deleteSubScopeAvailable;
-      manageDeleteSubScopeButton.disabled = state.managementBusy || !deleteSubScopeAvailable || deleteSubScopeTargets.length === 0;
-    }
+    if (scopeLifecycleController) scopeLifecycleController.render();
     if (managePublishButton) {
       var publishAvailable = state.managementAvailable && scopePublishSupported(state.managementCapabilities, viewerScope());
       managePublishButton.disabled = state.managementBusy || !publishAvailable;
@@ -427,123 +399,6 @@ export function initDocsViewerManagement(context) {
     renderManagementUi();
   }
 
-  function scopeLifecycleCallbacks() {
-    return {
-      onApplied: function () {
-        var reloadConfig = reloadViewerConfiguration();
-        refreshManagementCapabilities();
-        Promise.resolve(reloadConfig)
-          .then(refreshManagementCapabilities)
-          .catch(function () {
-            refreshManagementCapabilities();
-          });
-      },
-      render: renderManagementUi,
-      setBusy: setManagementBusy,
-      setMessage: setManagementMessage
-    };
-  }
-
-  function loadScopeLifecycleModule() {
-    if (scopeLifecycleRequestPromise) return scopeLifecycleRequestPromise;
-    scopeLifecycleRequestPromise = import("./docs-viewer-scope-lifecycle.js")
-      .then(function (module) {
-        if (
-          !module ||
-          typeof module.openCreateScopeFlow !== "function" ||
-          typeof module.openDeleteScopeFlow !== "function" ||
-          typeof module.openCreateSubScopeFlow !== "function" ||
-          typeof module.openDeleteSubScopeFlow !== "function"
-        ) {
-          throw new Error("Docs Viewer scope lifecycle module is unavailable.");
-        }
-        return module;
-      })
-      .catch(function (error) {
-        scopeLifecycleRequestPromise = null;
-        throw error;
-      });
-    return scopeLifecycleRequestPromise;
-  }
-
-  function handleCreateScope() {
-    hideContextMenu();
-    hideManageActionsMenu();
-    return loadScopeLifecycleModule()
-      .then(function (module) {
-        return module.openCreateScopeFlow({
-          root: root,
-          state: state,
-          capabilities: state.managementCapabilities,
-          clientOptions: managementClientOptions(),
-          callbacks: scopeLifecycleCallbacks()
-        });
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
-        return null;
-      });
-  }
-
-  function handleDeleteScope() {
-    hideContextMenu();
-    hideManageActionsMenu();
-    return loadScopeLifecycleModule()
-      .then(function (module) {
-        return module.openDeleteScopeFlow({
-          root: root,
-          state: state,
-          capabilities: state.managementCapabilities,
-          clientOptions: managementClientOptions(),
-          callbacks: scopeLifecycleCallbacks()
-        });
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
-        return null;
-      });
-  }
-
-  function handleCreateSubScope() {
-    hideContextMenu();
-    hideManageActionsMenu();
-    return loadScopeLifecycleModule()
-      .then(function (module) {
-        return module.openCreateSubScopeFlow({
-          root: root,
-          state: state,
-          parentScope: viewerScope(),
-          capabilities: state.managementCapabilities,
-          clientOptions: managementClientOptions(),
-          callbacks: scopeLifecycleCallbacks()
-        });
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
-        return null;
-      });
-  }
-
-  function handleDeleteSubScope() {
-    hideContextMenu();
-    hideManageActionsMenu();
-    return loadScopeLifecycleModule()
-      .then(function (module) {
-        return module.openDeleteSubScopeFlow({
-          root: root,
-          state: state,
-          parentScope: viewerScope(),
-          capabilities: state.managementCapabilities,
-          clientOptions: managementClientOptions(),
-          callbacks: scopeLifecycleCallbacks()
-        });
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
-        return null;
-      });
-  }
-
   function handleDraftToggleChange() {
     if (!draftToggle) return;
     state.showNonViewable = Boolean(draftToggle.checked);
@@ -617,34 +472,6 @@ export function initDocsViewerManagement(context) {
         settingsWorkflow.open();
       });
     }
-    if (manageNewScopeButton) {
-      manageNewScopeButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        handleCreateScope();
-      });
-    }
-    if (manageDeleteScopeButton) {
-      manageDeleteScopeButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        handleDeleteScope();
-      });
-    }
-    if (manageNewSubScopeButton) {
-      manageNewSubScopeButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        handleCreateSubScope();
-      });
-    }
-    if (manageDeleteSubScopeButton) {
-      manageDeleteSubScopeButton.addEventListener("click", function () {
-        hideContextMenu();
-        hideManageActionsMenu();
-        handleDeleteSubScope();
-      });
-    }
     if (managePublishButton) {
       managePublishButton.addEventListener("click", function () {
         hideContextMenu();
@@ -711,6 +538,7 @@ export function initDocsViewerManagement(context) {
       });
     }
     if (modalController) modalController.wireEvents();
+    if (scopeLifecycleController) scopeLifecycleController.wireEvents();
   }
 
   capabilityController = createDocsViewerManagementCapabilityController({
@@ -805,6 +633,22 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: hideManageActionsMenu,
+      viewerScope: viewerScope
+    }
+  });
+
+  scopeLifecycleController = createDocsViewerManagementScopeLifecycleController({
+    root: root,
+    state: state,
+    callbacks: {
+      hideContextMenu: hideContextMenu,
+      hideManageActionsMenu: hideManageActionsMenu,
+      managementClientOptions: managementClientOptions,
+      refreshManagementCapabilities: refreshManagementCapabilities,
+      reloadViewerConfiguration: reloadViewerConfiguration,
+      render: renderManagementUi,
+      setBusy: setManagementBusy,
+      setMessage: setManagementMessage,
       viewerScope: viewerScope
     }
   });

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-06-24
+last_updated: 2026-07-12
 parent_id: docs-viewer
 viewable: true
 ---
@@ -148,8 +148,8 @@ The scope lifecycle workflow has server-side preview/apply endpoints and a manag
 - `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
 - `POST /docs/scopes/delete-apply` deletes eligible user-created scopes after explicit confirmation
 - the `/docs/` Actions menu exposes capability-gated `New scope` and `Delete scope` commands
+- `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js` owns lifecycle control projection, event wiring, lazy flow loading, option composition, and post-apply refresh
 - `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
-- `docs-viewer/runtime/js/management/docs-viewer-management.js` remains the management command coordinator
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
 
 ## Manifest Design
@@ -481,7 +481,7 @@ After target selection, the flow:
 Implementation ownership:
 
 - `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, preview summaries, selected delete target, and apply result summaries
-- `docs-viewer/runtime/js/management/docs-viewer-management.js` owns Actions menu wiring, capability-gated command visibility, busy/status state, and management capability refresh after apply
+- `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js` owns Actions menu wiring, capability-gated command visibility, busy/status callback composition, lazy flow loading, and management capability refresh after apply
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the HTTP wrappers for create/delete preview and apply endpoints
 - `docs-viewer/runtime/js/management/docs-viewer-management-modals.js` provides the reusable modal shell; the lifecycle flow does not define a separate modal framework
 

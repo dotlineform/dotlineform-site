@@ -82,11 +82,12 @@ Use [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javas
 | Owner | Modules | Responsibility |
 | --- | --- | --- |
 | Lazy management boundary | `docs-viewer-runtime-lazy-controller.js` | Neutral lazy-controller loading, named management state-domain, service-client, and route-reload contracts, and gated management controller import. |
-| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability checks, action/menu coordination, scope lifecycle, and write orchestration. |
+| Management controller | `docs-viewer-management.js` and child modules | Management-local facade, capability checks, action/menu coordination, and write orchestration. |
 | Management import workflow | `docs-viewer-management-import-controller.js` | Lazy Docs Import initialization, retry state, boot-error projection, and handoff from the management action to the import modal host. |
 | Management modal composition | `docs-viewer-management-modal-composition.js`, `docs-viewer-management-modals.js` | Management shell-ref resolution, focused workflow assembly, and shared metadata/import/settings modal UI state, visibility, focus, and event behavior. |
 | Metadata workflow | `docs-viewer-management-metadata-workflow.js` | Metadata parent-option projection, form validation and payload shaping, selected-document modal handoff, and save-result delegation to the action controller. |
 | Settings workflow | `docs-viewer-management-settings-workflow.js` | Settings service reads, editable-field selection, modal load/error projection, and the narrow field/change/close contract consumed by the action controller. |
+| Scope lifecycle controller | `docs-viewer-management-scope-lifecycle-controller.js` | Scope/sub-scope lifecycle control projection, event wiring, lazy flow loading, workflow option composition, failure projection, and post-apply config/capability refresh. |
 | Management client | `docs-viewer-management-client.js` | Docs Viewer service transport helpers used by management controller workflows. |
 | Drag/drop | `docs-viewer-drag-drop.js` | Drag/drop helpers used by the management controller. |
 | Manage reports | `docs-viewer-management-document-reports.js`, `docs-viewer-report-service.js`, `docs-viewer/runtime/js/reports/*` | Manage-owned report mounting, report-context construction, report registry URL handoff, local report-service creation, and report endpoint access. |

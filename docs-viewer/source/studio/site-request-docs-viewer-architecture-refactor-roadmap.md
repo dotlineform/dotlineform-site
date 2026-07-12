@@ -11,7 +11,7 @@ viewable: true
 
 ## Status
 
-Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import and metadata/settings workflow-composition slices complete.
+Assessment complete; roadmap accepted for implementation, D0, W0's Data Sharing/review slice, phases 0-5, the Docs Review readiness checkpoint, and the validated-package Docs Review phase 6 consumer are complete. Phase 7 is active with the import, metadata/settings, and scope/sub-scope lifecycle slices complete.
 
 The `studio` corpus remains the single reference scope for development and maintenance documentation. Separate product and shared-development documentation scopes are not part of this roadmap.
 
@@ -941,13 +941,13 @@ Verification evidence:
 
 This phase is not a Docs Review prerequisite unless a touched workflow blocks a clean integration.
 
-Status: active. Slices 7.1 and 7.2 are complete; later slices remain demand-driven.
+Status: active. Slices 7.1 through 7.3 are complete; later slices remain demand-driven.
 
 Candidate slices:
 
 - extract import initialization and modal handoff — Slice 7.1 complete
 - separate metadata and settings workflow composition — Slice 7.2 complete
-- give scope/sub-scope lifecycle a focused controller
+- give scope/sub-scope lifecycle a focused controller — Slice 7.3 complete
 - narrow the management event router
 - replace remaining broad management facade fields with explicit domains/queries
 - split action command families only when they have independent state or lifecycle
@@ -999,6 +999,30 @@ Verification set:
 
 - JavaScript syntax checks for the new workflow/composition owners and changed management modules
 - focused manage-route smoke covering metadata selection and settings service-read handoff without writes
+- public runtime import-boundary and static-asset tests
+- `git diff --check`
+
+### Slice 7.3: Focused Scope And Sub-Scope Lifecycle Controller
+
+Task definition:
+
+- move lifecycle control projection, event wiring, lazy flow loading, flow-option composition, failure projection, and post-apply refresh out of `docs-viewer-management.js`
+- keep `docs-viewer-scope-lifecycle.js` as the create/delete modal, preview, confirmation, apply, and result owner
+- preserve capability-gated visibility, management busy/message projection, service-client authority, and config/capability refresh timing
+- do not split create/delete flows or change backend manifest planning/apply ownership in this slice
+
+Delivered outcome:
+
+- `docs-viewer-management-scope-lifecycle-controller.js` owns the four scope/sub-scope lifecycle controls and the complete coordinator-side lifecycle contract
+- the heavy lifecycle flow module remains lazy and is validated before the focused controller invokes it
+- flow modules now receive only root, capabilities, client options, parent scope where required, and explicit lifecycle callbacks; the unused broad management-state handoff was removed
+- `docs-viewer-management.js` no longer imports lifecycle capability helpers, resolves lifecycle controls, retains lifecycle loader state, wires lifecycle actions, or builds lifecycle callbacks
+- the management coordinator is reduced from 1,009 to 695 lines across Slices 7.1 through 7.3
+
+Verification set:
+
+- JavaScript syntax checks for the focused lifecycle controller and changed management coordinator
+- focused manage-route smoke proving the lifecycle flow is absent at boot, lazily loaded by New Scope, and cancellable before preview or write
 - public runtime import-boundary and static-asset tests
 - `git diff --check`
 
