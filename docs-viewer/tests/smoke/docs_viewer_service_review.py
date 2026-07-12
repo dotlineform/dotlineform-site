@@ -224,6 +224,8 @@ def exercise_review_route(page: Page, base_url: str, timeout_ms: int) -> None:
 
     if any("/docs/generated/" in url or "/docs/source" in url for url in requests):
         raise AssertionError("Docs Review crossed into configured-scope generated/source services")
+    if any("/docs-review/packages/build" in url for url in requests):
+        raise AssertionError("ordinary Docs Review reads invoked the explicit repair endpoint")
 
 
 def exercise_import_handoff(page: Page, base_url: str, staged: Path, timeout_ms: int) -> None:

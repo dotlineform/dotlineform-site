@@ -107,6 +107,7 @@ Staged source imports:
 - `docs_import_collection_apply.py` owns package-order source/media mutation, asset-level best effort, partial source failure, one coordinated rebuild call, and batch apply activity.
 - `docs_import_collection_result.py` owns body-free grouped collection results, safe generation projection, manual-copy instructions, report payload shaping, and marker-rooted report output.
 - `docs_import_review_handoff.py` owns the read-only association from validated review-package identities to matching server-listed collection records; it validates package id, safe staged filename, manifest status/schema, and export identity without exposing preview paths or adding write authority.
+- `docs_review_materialization.py` owns atomic publication of a complete persistent review package: derived source, package-local generated output, trusted manifest, temporary-package cleanup, and final timestamped-folder rename.
 - `docs_import_source_helpers.py` owns replacement-preview mutation, viewer URLs, import path display, and import summary text.
 - `docs_import_source_interactive.py` owns interactive HTML companion asset detection, overwrite checks, target planning, and materialization.
 - `docs-html-import.js` owns the managed import host, source-family selection, identity-only review-package preselection/unavailable state, route-ready/busy projection, and dispatch to the separate single-source or collection owners.
@@ -153,7 +154,7 @@ Docs Review:
 - Reuse shared tree, routing, rendering, panel, source-editor, and CSS primitives through explicit review app context, provider, and capability contracts.
 - Review-specific frontend orchestration belongs under `docs-viewer/runtime/js/review/`; it must not add feature lifecycle ownership to `docs-viewer-app-runtime.js` or review conditionals to the normal scope selector.
 - `docs-viewer-review-controller.js` may hand the active validated `package_id` to managed Docs Import, but it must not resolve or send staged filenames, preview paths, target scopes, plans, decisions, or mutations.
-- `docs_review_packages.py` owns safe validated-package list/read behavior; focused review build and source services own generated output and temporary Markdown writes.
+- `docs_review_packages.py` owns safe validated-package list/read behavior, retained generated-output completeness checks, and repair only for missing or malformed derived JSON; `docs_review_build.py` owns the synthetic package-local builder and `docs_review_materialization.py` owns initial complete-package publication.
 - Keep route dispatch thin in `docs_viewer_service.py` and management service dispatchers; do not put review business logic in the server.
 - Temporary review edits require explicit package-rooted backend capabilities. Docs Review must not receive canonical import apply, promotion, or general management authority; it may only hand safe identities to managed Docs Import.
 - Docs Review preserves validated package hierarchy but does not edit it; keep `parent_id` and hierarchy changes outside the review route.

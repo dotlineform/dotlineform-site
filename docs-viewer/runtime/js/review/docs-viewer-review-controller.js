@@ -60,7 +60,7 @@ export function createDocsViewerReviewController(options) {
     var select = documentRef.createElement("select");
     select.className = "docsViewer__searchInput docsViewer__reviewPackageSelect";
     select.setAttribute("aria-label", "Review package");
-    var buildButton = createButton(documentRef, "Build");
+    var buildButton = createButton(documentRef, "Repair");
     var assetsButton = createButton(documentRef, "Assets");
     importLink = documentRef.createElement("a");
     importLink.className = "docsViewer__actionButton docsViewer__reviewImportLink";
@@ -83,7 +83,7 @@ export function createDocsViewerReviewController(options) {
     });
     buildButton.addEventListener("click", function () {
       buildButton.disabled = true;
-      setStatus("Building review package...", false);
+      setStatus("Repairing review package generated output...", false);
       provider.build().then(function (payload) {
         setStatus(payload.summary_text || "Review package built.", false);
         windowRef.location.reload();
@@ -104,6 +104,11 @@ export function createDocsViewerReviewController(options) {
       var packages = results[0];
       manifest = results[1].manifest || {};
       projectImportLink();
+      var activePackage = packages.find(function (record) {
+        return record.package_id === provider.activeCollectionId();
+      });
+      buildButton.disabled = Boolean(activePackage && activePackage.built);
+      buildButton.textContent = buildButton.disabled ? "Built" : "Repair";
       packages.forEach(function (record) {
         var option = documentRef.createElement("option");
         option.value = record.package_id;

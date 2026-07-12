@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints-review
 title: Docs Review Endpoints
 added_date: 2026-07-11
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 summary: Local package-rooted API contract for Docs Review capabilities, package reads, builds, assets, generated payloads, and temporary Markdown writes.
 parent_id: scripts-docs-management-endpoints
 viewable: true
@@ -11,7 +11,7 @@ viewable: true
 
 Docs Review endpoints are local-only JSON APIs served by the standalone Docs Viewer service. They are independently gated by `DOCS_VIEWER_REVIEW_ENABLED`; enabling `/docs/` management does not grant review-package access.
 
-Endpoint constants live in `docs-viewer/services/docs_review_routes.py`. Business behavior lives in `docs_review_service.py`, `docs_review_packages.py`, and `docs_review_build.py`.
+Endpoint constants live in `docs-viewer/services/docs_review_routes.py`. Business behavior lives in `docs_review_service.py`, `docs_review_packages.py`, `docs_review_build.py`, and `docs_review_materialization.py`.
 
 Browser requests require an allowed loopback origin; same-origin and non-browser requests without an `Origin` header are accepted. Disabled review endpoints return `403`, missing packages or files return `404`, invalid contracts return `400`, and unexpected failures return `500`. JSON responses use `Cache-Control: no-store`.
 
@@ -100,7 +100,7 @@ Query parameters:
 package_id=<package_id>
 ```
 
-Returns the package-local `generated/index-tree.json` wrapper used by the shared Docs Viewer tree adapter. The frontend runs Build and retries when the selected validated package has not yet been built.
+Returns the retained package-local `generated/index-tree.json` wrapper used by the shared Docs Viewer tree adapter. Missing or malformed derived JSON is repaired from package-local source before the response; healthy output is read without rebuilding.
 
 ## `GET /docs-review/packages/payload`
 
@@ -111,7 +111,7 @@ package_id=<package_id>
 doc_id=<doc_id>
 ```
 
-Returns one package-local generated document payload from `generated/by-id/<doc_id>.json`. The requested `doc_id` must identify a source document in the selected package.
+Returns one retained package-local generated document payload from `generated/by-id/<doc_id>.json`. The requested `doc_id` must identify a source document in the selected package. Missing or malformed payload JSON triggers one package-local repair; normal reads do not rebuild.
 
 ## `GET /docs-review/packages/source`
 
@@ -147,7 +147,7 @@ Expected JSON:
 }
 ```
 
-Build validates the selected package, uses a synthetic local-external Docs Viewer configuration, and writes only the selected package's `generated/` folder.
+Repair validates the selected package and its derived generated set. It uses the synthetic local-external Docs Viewer configuration and writes only the selected package's `generated/` folder when files are missing or malformed. A complete healthy generated set returns success without rebuilding.
 
 The response includes document and asset counts, warnings, diagnostics, generated path, and summary text.
 

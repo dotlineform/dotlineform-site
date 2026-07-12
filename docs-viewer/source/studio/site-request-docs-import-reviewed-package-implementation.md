@@ -12,7 +12,7 @@ viewable: true
 
 ## Status
 
-Sections 0-2 and 5-7 are complete. The next bounded phase is Section 3, persistent preview materialization, followed by Section 4 removal of Docs Review source editing.
+Sections 0-2 and 5-7 are complete. Section 3 persistent publication, generated reads, and repair are complete; its remaining read-only source-authority checkbox is intentionally completed with Section 4 removal of Docs Review source editing.
 
 ## Purpose
 
@@ -59,12 +59,37 @@ Prerequisite batch decisions and targeted enabling refactors are tracked in [Doc
 
 ## 3. Use The Adapter For Persistent Preview Materialization
 
-- [ ] Keep the timestamped `import-preview/<package_id>/` identity.
-- [ ] Write the trusted manifest association.
+- [x] Keep the timestamped `import-preview/<package_id>/` identity.
+- [x] Write the trusted manifest association.
 - [ ] Materialize read-only `source/*.md`.
-- [ ] Build and retain package-local `generated/`.
-- [ ] Make ordinary Docs Review reads use the persistent generated output.
-- [ ] Preserve repair/regeneration only for missing or damaged derived output.
+- [x] Build and retain package-local `generated/`.
+- [x] Make ordinary Docs Review reads use the persistent generated output.
+- [x] Preserve repair/regeneration only for missing or damaged derived output.
+
+Section 3 implementation notes:
+
+- `docs_review_materialization.py` writes the derived source set and generated tree into a hidden sibling package, writes the trusted manifest, and publishes the complete timestamped package with one rename
+- a generated-build failure removes only the unpublished temporary package and returns a package-build error; no selectable partial package is left behind
+- successful Data Sharing review publication now returns both `review_source_folder_written` and `review_generated_written`, plus a safe generated count/warning summary
+- ordinary index and document reads use retained package-local JSON and never revisit the staged JSON/JSONL or trusted export metadata
+- missing or malformed generated index/payload JSON is repaired from persistent package-local source; explicit repair is a no-op while the complete generated set is healthy
+- the frontend no longer calls the repair endpoint as part of an ordinary index read; the package control is projected as `Built` when healthy and `Repair` only when listing validation finds missing or damaged output
+- `source/*.md` is now persistent derived build input, but its product/API read-only enforcement remains unchecked here because Section 4 removes the current source-read/write capability, route, and UI together
+
+Section 3 immediate responsibility review:
+
+- atomic package publication is isolated in the 73-line `docs_review_materialization.py` owner rather than extending the already-large Data Sharing normalization module with filesystem/build lifecycle behavior
+- retained generated reads and repair remain in `docs_review_packages.py`, the existing validated-package read owner; splitting them from package validation would add parameter plumbing without creating a clearer authority boundary
+- the temporary source-edit portion of `docs_review_packages.py` is not being reorganized because Section 4 deletes that responsibility next
+- no persistent-preview lifecycle work was added to the shared app runtime or managed Docs Import
+
+Section 3 verification completed on 2026-07-12:
+
+- `python -m pytest docs-viewer/tests/python/test_docs_import*.py -q` — 105 passed
+- focused review-package, materialization, management-route, public-boundary, and static-asset tests — 26 passed
+- focused persistent-package tests passed initial generated publication, ordinary repeated reads after staged JSONL and metadata deletion, build-failure cleanup, missing-index repair, corrupt-payload repair, and healthy repair no-op behavior
+- `docs_viewer_service_review.py` passed retained generated reads through the real route without a frontend repair POST, temporary source-edit behavior, and the review-to-import handoff
+- focused Python compilation and `git diff --check` passed
 
 ## 4. Remove Docs Review Source Editing
 
@@ -187,7 +212,7 @@ Section 7 verification completed on 2026-07-12:
 - [x] Test schema detection before generic JSON/JSONL fallback.
 - [x] Test shared parsing produces equivalent preview and import records.
 - [x] Test Markdown, HTML, and plain-text body dispatch through content-based entrypoints.
-- [ ] Test persistent preview viewing without repeated JSONL conversion.
+- [x] Test persistent preview viewing without repeated JSONL conversion.
 - [ ] Test absence of review source-edit capabilities and UI.
 - [x] Test non-colliding create.
 - [x] Test `Overwrite` and `Skip` with the `Apply to all` checkbox off and on.

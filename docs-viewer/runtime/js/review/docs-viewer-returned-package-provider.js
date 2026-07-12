@@ -65,16 +65,10 @@ export function createDocsViewerReturnedPackageProvider(options) {
 
   function readIndex() {
     return ensurePackage().then(function (packageId) {
-      function read() {
-        return request("/docs-review/packages/index-tree", {
-          query: { package_id: packageId }
-        }).then(function (payload) {
-          return normalizeDocsIndexTreePayload(payload.index_tree);
-        });
-      }
-      return read().catch(function (error) {
-        if (!error || error.status !== 404) throw error;
-        return build().then(read);
+      return request("/docs-review/packages/index-tree", {
+        query: { package_id: packageId }
+      }).then(function (payload) {
+        return normalizeDocsIndexTreePayload(payload.index_tree);
       });
     });
   }

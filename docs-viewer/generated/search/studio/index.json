@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-74264cc6cdc19efb10801c4261077bf6",
-    "generated_at_utc": "2026-07-12T09:03:45Z",
+    "version": "blake2b-6cffbb8356755340163cd25ce30a7462",
+    "generated_at_utc": "2026-07-12T13:18:50Z",
     "count": 239
   },
   "entries": [
@@ -2319,10 +2319,10 @@
       "kind": "doc",
       "title": "Docs Review",
       "href": "/docs/?scope=studio&doc=docs-viewer-review",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-12 • Docs Viewer",
       "search_terms": [
         "docs-viewer-review",
         "docs",
@@ -2330,12 +2330,12 @@
         "review",
         "docs review",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "docs-viewer-review docs viewer review docs review docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-review docs viewer review docs review docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-public-route-shell-template",
@@ -2706,10 +2706,10 @@
       "kind": "doc",
       "title": "Docs Review Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-review",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-12",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-11 • Endpoint Overview",
+      "display_meta": "2026-07-12 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-review",
         "scripts",
@@ -2721,12 +2721,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-11",
+        "2026-07-12",
         "2026",
         "07",
-        "11"
+        "12"
       ],
-      "search_text": "scripts-docs-management-endpoints-review scripts docs management endpoints review docs review endpoints endpoint overview endpoint overview 2026-07-11 2026 07 11"
+      "search_text": "scripts-docs-management-endpoints-review scripts docs management endpoints review docs review endpoints endpoint overview endpoint overview 2026-07-12 2026 07 12"
     },
     {
       "id": "scripts-docs-management-endpoints-generated-reads",

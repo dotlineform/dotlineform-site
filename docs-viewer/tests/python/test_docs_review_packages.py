@@ -57,17 +57,40 @@ def test_fixture_package_lists_builds_and_reads_generated_payload() -> None:
 
     listed = docs_review_packages.list_packages(REPO_ROOT)
     built = docs_review_packages.build_package(REPO_ROOT, {"package_id": package.name})
+    already_built = docs_review_packages.build_package(REPO_ROOT, {"package_id": package.name})
     tree = docs_review_packages.read_index_tree(REPO_ROOT, package.name)
     document = docs_review_packages.read_payload(REPO_ROOT, package.name, "fixture-root")
     assets = docs_review_packages.read_asset_inventories(REPO_ROOT, package.name)
 
     assert listed["packages"][0]["package_id"] == package.name
+    assert listed["packages"][0]["built"] is False
     assert built["document_count"] == 1
+    assert built["repaired"] is True
+    assert already_built["repaired"] is False
     assert built["generated_path"].endswith(f"/import-preview/{package.name}/generated")
     assert tree["index_tree"]["docs"][0]["doc_id"] == "fixture-root"
     assert document["payload"]["doc_id"] == "fixture-root"
     assert document["payload"]["viewer_url"].startswith(f"/docs-review/?package={package.name}&doc=")
     assert assets["inventories"]["assets"]["assets"] == []
+
+
+def test_missing_or_damaged_generated_output_repairs_once_then_stays_persistent() -> None:
+    package = write_package("repair-review")
+
+    first_tree = docs_review_packages.read_index_tree(REPO_ROOT, package.name)
+    second_tree = docs_review_packages.read_index_tree(REPO_ROOT, package.name)
+    payload_path = package / "generated/by-id/fixture-root.json"
+    payload_path.write_text("{damaged", encoding="utf-8")
+    repaired_payload = docs_review_packages.read_payload(REPO_ROOT, package.name, "fixture-root")
+    persistent_payload = docs_review_packages.read_payload(REPO_ROOT, package.name, "fixture-root")
+    listed = docs_review_packages.list_packages(REPO_ROOT)
+
+    assert first_tree["generated_repaired"] is True
+    assert second_tree["generated_repaired"] is False
+    assert repaired_payload["generated_repaired"] is True
+    assert persistent_payload["generated_repaired"] is False
+    assert persistent_payload["payload"]["doc_id"] == "fixture-root"
+    assert listed["packages"][0]["built"] is True
 
 
 def test_source_write_is_revision_checked_package_local_and_rebuilds() -> None:

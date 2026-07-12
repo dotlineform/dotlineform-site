@@ -2,7 +2,7 @@
 doc_id: docs-viewer-review
 title: Docs Review
 added_date: 2026-07-11
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 summary: Durable product, workflow, package, editing, and authority contract for the local returned-package review route.
 parent_id: docs-viewer
 viewable: true
@@ -30,18 +30,18 @@ Data Sharing owns:
 - returned-package staging and validation
 - materializing validated source and asset files under the external workspace root
 
-Docs Viewer Import owns the planned import of the immutable staged JSONL associated with a review package. Managed import will let the user create, explicitly overwrite, or skip records; it will not treat the derived preview Markdown as import input.
+Docs Viewer Import owns import of the immutable staged JSONL associated with a review package. Managed import lets the user create, explicitly overwrite, or skip records; it never treats the derived preview Markdown as import input.
 
 Docs Review owns only:
 
 - listing validated review packages
-- building package-local generated previews
+- reading retained package-local generated previews and repairing damaged derived output
 - rendering package documents and inventoried assets
 - temporary Markdown body editing with revision checks
 - package inventory visibility
 - links to canonical counterparts for manual comparison
 
-Canonical source remains outside Docs Review authority. The route exposes no canonical write, management, publish, promotion, or import-apply capability. A future review control may hand safe package/document identities to the managed `/docs/` import flow without granting that authority to the review app context.
+Canonical source remains outside Docs Review authority. The route exposes no canonical write, management, publish, promotion, or import-apply capability. Its `Import` control hands only the safe active package identity to managed `/docs/` without granting that authority to the review app context.
 
 ## Enablement And Route
 
@@ -68,7 +68,7 @@ Review URLs use package identity rather than configured scope identity:
 The single Docs Viewer toolbar row contains:
 
 - the validated-package selector
-- `Build`
+- `Built` for a complete generated projection, or `Repair` when derived output is missing or damaged
 - `Assets`
 - `Open canonical` when the selected package and document identify a counterpart
 - the Markdown source/rendered-mode control
@@ -76,7 +76,7 @@ The single Docs Viewer toolbar row contains:
 
 The index panel renders the hierarchy supplied by the validated package. Docs Review does not provide parent or hierarchy editing. The planned Docs Viewer import preflight will map selected package parents to the new target documents without making the review route a hierarchy editor.
 
-`Build` writes a fresh package-local generated preview. Opening an unbuilt package also triggers the required initial build before its index is read.
+Validated-package publication builds and retains the package-local generated preview before exposing the timestamped package. Ordinary navigation reads that retained output. Missing or malformed generated index/payload JSON is repaired from package-local derived source; explicit repair does nothing while the complete generated set is healthy.
 
 `Assets` reports which optional package inventories are present. Docs Review does not provide a binary asset editor.
 
@@ -101,7 +101,7 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/
       <doc-id>.json
 ```
 
-`generated/` may be absent until the first build. Inventory files are optional.
+`generated/` is part of a newly published complete package. Legacy or manually damaged packages may temporarily lack derived files until repair. Inventory files are optional.
 
 The trusted `manifest.json` must:
 
@@ -124,7 +124,7 @@ Data Sharing is responsible for producing this trusted handoff. Invalid folders 
 
 ## Build And Asset Rendering
 
-The review builder uses a synthetic local-external Docs Viewer configuration. It reads only the selected package and writes only that package's `generated/` folder. It does not register the package in scope config or write repository source, normal generated scope output, public assets, or search output for another scope.
+The review builder uses a synthetic local-external Docs Viewer configuration. Initial publication builds beside the final package path and exposes the complete package with one rename. Repair reads only persistent package-local source and writes only that package's `generated/` folder. Neither path registers the package in scope config or writes repository source, normal generated scope output, public assets, or search output for another scope.
 
 Package media and interactive HTML are served only when they are declared in `inventories/assets.json` and resolve to safe files under `assets/`.
 
@@ -187,7 +187,7 @@ The service remains loopback-only, validates allowed origins, rejects unsafe pac
 
 - A missing or unavailable external workspace disables review capabilities with workspace setup diagnostics.
 - A package with an invalid manifest, source set, or package-local hierarchy is rejected rather than partially loaded.
-- A missing generated tree or payload is repaired by Build when possible.
+- A missing or malformed generated tree or payload is repaired from persistent package-local source when possible; healthy generated output is never rebuilt by ordinary reads or explicit repair.
 - A stale source revision is rejected before writing.
 - A source write whose rebuild fails is rolled back.
 - A manually deleted package produces an ordinary not-found response.

@@ -73,6 +73,8 @@ def _read_json_object(path: Path, label: str) -> dict[str, Any]:
         raise FileNotFoundError(f"{label} not found: {path.name}")
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as error:
+        raise ValueError(f"{label} is unreadable: {path.name}") from error
     except json.JSONDecodeError as error:
         raise ValueError(f"{label} is not valid JSON: {path.name}") from error
     if not isinstance(payload, dict):
@@ -159,6 +161,22 @@ def _generated_payload_count(package_path: Path) -> int:
     return sum(1 for path in root.glob("*.json") if path.is_file()) if root.is_dir() else 0
 
 
+def _generated_output_complete(
+    package_path: Path,
+    records: dict[str, dict[str, Any]],
+) -> bool:
+    try:
+        _read_json_object(package_path / "generated" / "index-tree.json", "review package index tree")
+        for doc_id in records:
+            _read_json_object(
+                package_path / "generated" / "by-id" / f"{doc_id}.json",
+                "review package document payload",
+            )
+    except (FileNotFoundError, ValueError):
+        return False
+    return True
+
+
 def _safe_package_asset_path(package_path: Path, value: Any) -> Path:
     text = str(value or "").strip()
     relative = Path(text)
@@ -217,7 +235,7 @@ def package_record(repo_root: Path, package_path: Path) -> dict[str, Any]:
         "path": _package_marker(repo_root, package_path),
         "document_count": len(records),
         "generated_document_count": generated_count,
-        "built": (package_path / "generated" / "index-tree.json").is_file() and generated_count == len(records),
+        "built": generated_count == len(records) and _generated_output_complete(package_path, records),
     }
 
 
@@ -294,25 +312,41 @@ def resolve_asset_file(repo_root: Path, package_id: Any, asset_path: Any) -> Pat
 
 
 def read_index_tree(repo_root: Path, package_id: Any) -> dict[str, Any]:
-    package_path, _manifest, _records = _package_context(repo_root, package_id)
-    payload = _read_json_object(package_path / "generated" / "index-tree.json", "review package index tree")
-    return {"ok": True, "package_id": package_path.name, "index_tree": payload}
+    package_path, manifest, records = _package_context(repo_root, package_id)
+    repaired = False
+    try:
+        payload = _read_json_object(package_path / "generated" / "index-tree.json", "review package index tree")
+    except (FileNotFoundError, ValueError):
+        _rebuild_generated_package(repo_root, package_path, manifest, records)
+        repaired = True
+        payload = _read_json_object(package_path / "generated" / "index-tree.json", "review package index tree")
+    return {
+        "ok": True,
+        "package_id": package_path.name,
+        "index_tree": payload,
+        "generated_repaired": repaired,
+    }
 
 
 def read_payload(repo_root: Path, package_id: Any, doc_id: Any) -> dict[str, Any]:
-    package_path, _manifest, records = _package_context(repo_root, package_id)
+    package_path, manifest, records = _package_context(repo_root, package_id)
     normalized_doc_id = validate_doc_id(doc_id)
     if normalized_doc_id not in records:
         raise FileNotFoundError(f"review package document not found: {normalized_doc_id}")
-    payload = _read_json_object(
-        package_path / "generated" / "by-id" / f"{normalized_doc_id}.json",
-        "review package document payload",
-    )
+    payload_path = package_path / "generated" / "by-id" / f"{normalized_doc_id}.json"
+    repaired = False
+    try:
+        payload = _read_json_object(payload_path, "review package document payload")
+    except (FileNotFoundError, ValueError):
+        _rebuild_generated_package(repo_root, package_path, manifest, records)
+        repaired = True
+        payload = _read_json_object(payload_path, "review package document payload")
     return {
         "ok": True,
         "package_id": package_path.name,
         "doc_id": normalized_doc_id,
         "payload": payload,
+        "generated_repaired": repaired,
     }
 
 
@@ -332,10 +366,14 @@ def read_source(repo_root: Path, package_id: Any, doc_id: Any) -> dict[str, Any]
     }
 
 
-def build_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    package_path, manifest, records = _package_context(repo_root, body.get("package_id"))
+def _rebuild_generated_package(
+    repo_root: Path,
+    package_path: Path,
+    manifest: dict[str, Any],
+    records: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
     default_doc_id = str(manifest.get("default_doc_id") or "").strip() or next(iter(records))
-    build = build_review_package(
+    return build_review_package(
         repo_root,
         package_id=package_path.name,
         source_dir=package_path / "source",
@@ -343,12 +381,31 @@ def build_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         default_doc_id=default_doc_id,
         asset_records=_asset_records(package_path),
     )
+
+
+def build_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    package_path, manifest, records = _package_context(repo_root, body.get("package_id"))
+    generated_path = _package_marker(repo_root, package_path / "generated")
+    if _generated_output_complete(package_path, records):
+        return {
+            "ok": True,
+            "package_id": package_path.name,
+            "generated_path": generated_path,
+            "document_count": len(records),
+            "asset_count": len(_asset_records(package_path)),
+            "warnings": [],
+            "diagnostics": {},
+            "repaired": False,
+            "summary_text": f"Review package {package_path.name} already has complete generated output.",
+        }
+    build = _rebuild_generated_package(repo_root, package_path, manifest, records)
     return {
         "ok": True,
         "package_id": package_path.name,
-        "generated_path": _package_marker(repo_root, package_path / "generated"),
+        "generated_path": generated_path,
         **build,
-        "summary_text": f"Built {build['document_count']} review documents for {package_path.name}.",
+        "repaired": True,
+        "summary_text": f"Repaired {build['document_count']} review documents for {package_path.name}.",
     }
 
 

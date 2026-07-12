@@ -6,7 +6,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from docs_import_test_support import handle_documents_import_preview, make_repo, write_staged
+import docs_data_sharing.review_sources as review_sources
 import docs_review_packages
 import docs_source_model as source_model
 from repo_factory import data_sharing_workspace_root, resolve_data_sharing_marker
@@ -180,7 +183,6 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
         front_matter, _ = source_model.parse_source(source_path)
         raw_body = raw_source_body(source_path)
         listed = docs_review_packages.list_packages(root)
-        built = docs_review_packages.build_package(root, {"package_id": payload["folder_id"]})
         generated = docs_review_packages.read_payload(root, payload["folder_id"], "alpha")
 
     assert payload["ok"] is True
@@ -188,6 +190,8 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
     assert payload["content_format"] == "markdown"
     assert payload["counts"] == {"records": 1, "valid_records": 1, "skipped_records": 0, "errors": 0, "warnings": 0}
     assert payload["review_source_folder_written"] is True
+    assert payload["review_generated_written"] is True
+    assert payload["generated"]["document_count"] == 1
     assert manifest["schema_version"] == "docs_review_validated_package_v1"
     assert manifest["package_id"] == payload["folder_id"]
     assert manifest["package_id_source"] == "export_metadata"
@@ -211,9 +215,10 @@ def test_review_source_folder_uses_shared_markdown_content_normalization() -> No
     assert "children" not in front_matter
     assert raw_body == returned_content.strip()
     assert listed["packages"][0]["package_id"] == payload["folder_id"]
+    assert listed["packages"][0]["built"] is True
     assert listed["rejected"] == []
-    assert built["document_count"] == 1
     assert generated["payload"]["doc_id"] == "alpha"
+    assert generated["generated_repaired"] is False
 
 
 def test_review_source_folder_uses_full_source_adapter_mapping() -> None:
@@ -293,7 +298,7 @@ def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -
         )
         source_path = resolve_data_sharing_marker(str(payload["source_files"][0]["path"]))
         front_matter, _ = source_model.parse_source(source_path)
-        built = docs_review_packages.build_package(root, {"package_id": payload["folder_id"]})
+        generated = docs_review_packages.read_index_tree(root, payload["folder_id"])
 
     assert payload["ok"] is True
     assert payload["review_source_folder_written"] is True
@@ -309,7 +314,86 @@ def test_review_source_folder_roots_parent_outside_compact_package_and_warns() -
         }
     ]
     assert "parent_id" not in front_matter
-    assert built["document_count"] == 1
+    assert generated["generated_repaired"] is False
+
+
+def test_persistent_review_reads_survive_staged_package_deletion_without_reconversion(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "alpha", "title": "Alpha", "content": "Persistent body."},
+            ],
+        )
+        write_content_meta(root, export_id)
+        payload = handle_documents_import_preview(
+            root,
+            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            dry_run=False,
+        )
+        staged_path = data_sharing_workspace_root() / "import-staging/content.jsonl"
+        staged_path.unlink()
+        (data_sharing_workspace_root() / f"meta/{export_id}.meta.json").unlink()
+
+        def reject_unnecessary_rebuild(*_args, **_kwargs):
+            raise AssertionError("persistent generated output should not rebuild during ordinary reads")
+
+        monkeypatch.setattr(docs_review_packages, "_rebuild_generated_package", reject_unnecessary_rebuild)
+
+        first_tree = docs_review_packages.read_index_tree(root, payload["folder_id"])
+        first_document = docs_review_packages.read_payload(root, payload["folder_id"], "alpha")
+        second_tree = docs_review_packages.read_index_tree(root, payload["folder_id"])
+        second_document = docs_review_packages.read_payload(root, payload["folder_id"], "alpha")
+
+    assert first_tree["generated_repaired"] is False
+    assert first_document["generated_repaired"] is False
+    assert second_tree["index_tree"] == first_tree["index_tree"]
+    assert second_document["payload"] == first_document["payload"]
+    assert second_tree["generated_repaired"] is False
+    assert second_document["generated_repaired"] is False
+
+
+def test_persistent_review_build_failure_publishes_no_partial_package(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        export_id = "ds_20260627T205010Z"
+        write_staged(
+            root,
+            "content.jsonl",
+            [
+                {"record_type": "data_sharing_header", "export_id": export_id},
+                {"doc_id": "alpha", "title": "Alpha", "content": "Body."},
+            ],
+        )
+        write_content_meta(root, export_id)
+
+        def fail_publication(*_args, **_kwargs):
+            raise RuntimeError("simulated generated build failure")
+
+        monkeypatch.setattr(review_sources, "publish_review_package", fail_publication)
+        payload = handle_documents_import_preview(
+            root,
+            {"data_domain": "library", "operation": "review", "review_action": "source_folder", "staged_filename": "content.jsonl"},
+            dry_run=False,
+        )
+        package_path = resolve_data_sharing_marker(str(payload["folder_path"]))
+        preview_root = data_sharing_workspace_root() / "import-preview"
+
+    assert payload["ok"] is False
+    assert payload["review_source_folder_written"] is False
+    assert payload["review_generated_written"] is False
+    assert payload["generated"] == {}
+    assert [item["code"] for item in payload["issues"]] == ["review_package_build_failed"]
+    assert package_path.exists() is False
+    assert list(preview_root.glob(".*.publishing-*")) == []
 
 
 def test_review_source_folder_preserves_existing_body_and_materializes_empty_new_record() -> None:

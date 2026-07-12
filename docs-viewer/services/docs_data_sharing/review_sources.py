@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Temporary review source folders for returned document-content packages."""
+"""Persistent review-package projections for returned document-content packages."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from docs_import_content import (
 )
 from docs_import_preview import generate_normalized_import_content_preview
 from docs_management_source_service import split_source_exact
+from docs_review_materialization import publish_review_package
 from docs_returned_import_common import (
     SUPPORTED_EXTENSIONS,
     issue,
@@ -631,18 +632,46 @@ def create_review_source_folder(
     if metadata_path is not None:
         manifest["source_metadata_file"] = relative_path(repo_root, metadata_path)
 
-    if ok and folder_path is not None:
-        if not dry_run:
-            (folder_path / "source").mkdir(parents=True, exist_ok=False)
-            for source_record in materialized_sources:
-                (folder_path / "source" / source_record["filename"]).write_text(
-                    source_record["source_text"],
-                    encoding="utf-8",
-                )
-            (folder_path / "manifest.json").write_text(
-                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
+    generated: dict[str, Any] = {}
+    package_written = False
+    if ok and folder_path is not None and not dry_run:
+        try:
+            build = publish_review_package(
+                repo_root,
+                package_path=folder_path,
+                package_id=folder_id,
+                default_doc_id=default_doc_id,
+                source_records=materialized_sources,
+                manifest=manifest,
             )
+            generated = {
+                "document_count": int(build.get("document_count") or 0),
+                "asset_count": int(build.get("asset_count") or 0),
+                "warnings": list(build.get("warnings") or []),
+            }
+            package_written = True
+        except (OSError, RuntimeError, ValueError) as exc:
+            issues.append(
+                issue(
+                    "error",
+                    "review_package_build_failed",
+                    f"persistent Docs Review package build failed: {exc}",
+                )
+            )
+            issue_counts = count_issues(issues)
+            counts = {
+                "records": len(raw_rows),
+                "valid_records": len(normalized_records),
+                "skipped_records": skipped_record_count(skipped_records),
+                **issue_counts,
+            }
+            ok = False
+            manifest["status"] = ""
+            manifest["validation"] = {
+                "counts": counts,
+                "issues": issues,
+                "skipped_records": skipped_records,
+            }
 
     package_path = relative_path(repo_root, folder_path) if folder_path is not None else ""
     source_path = relative_path(repo_root, folder_path / "source") if folder_path is not None else ""
@@ -673,6 +702,8 @@ def create_review_source_folder(
         "skipped_records": skipped_records,
         "source_files": source_files,
         "manifest": manifest,
-        "review_source_folder_written": bool(ok and not dry_run),
+        "review_source_folder_written": package_written,
+        "review_generated_written": package_written,
+        "generated": generated,
         "summary_text": summary_text,
     }
