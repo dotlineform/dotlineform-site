@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5ef4bbfbf3b0ea43866059f78975eb64",
-    "generated_at_utc": "2026-07-12T20:27:26Z",
-    "count": 235
+    "version": "blake2b-ffd1d7b5d92935a1cf957b3e1c949cda",
+    "generated_at_utc": "2026-07-12T20:35:53Z",
+    "count": 236
   },
   "entries": [
     {
@@ -5693,6 +5693,31 @@
         "12"
       ],
       "search_text": "site-request-moments-composition-workspace-roadmap site request moments composition workspace roadmap moments composition workspace roadmap moments composition workspace 2026-07-12 2026 07 12"
+    },
+    {
+      "id": "site-request-workspace-scope-eligibility",
+      "kind": "doc",
+      "title": "Workspace Scope Eligibility",
+      "href": "/docs/?scope=studio&doc=site-request-workspace-scope-eligibility",
+      "last_updated": "2026-07-12",
+      "parent_id": "workspaces",
+      "parent_title": "Workspaces",
+      "display_meta": "2026-07-12 • Workspaces",
+      "search_terms": [
+        "site-request-workspace-scope-eligibility",
+        "site",
+        "request",
+        "workspace",
+        "scope",
+        "eligibility",
+        "workspace scope eligibility",
+        "workspaces",
+        "2026-07-12",
+        "2026",
+        "07",
+        "12"
+      ],
+      "search_text": "site-request-workspace-scope-eligibility site request workspace scope eligibility workspace scope eligibility workspaces 2026-07-12 2026 07 12"
     }
   ]
 }

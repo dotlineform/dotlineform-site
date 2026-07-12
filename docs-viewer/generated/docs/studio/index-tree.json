@@ -1267,9 +1267,15 @@
               "ui_status": "proposed"
             }
           ]
+        },
+        {
+          "doc_id": "site-request-workspace-scope-eligibility",
+          "title": "Workspace Scope Eligibility",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-workspace-scope-eligibility.json",
+          "ui_status": "proposed"
         }
       ]
     }
   ],
-  "generated_at": "2026-07-12T20:27:26Z"
+  "generated_at": "2026-07-12T20:35:53Z"
 }

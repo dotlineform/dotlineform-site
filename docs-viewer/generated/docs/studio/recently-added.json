@@ -19,6 +19,14 @@
       "parent_title": "Moments Composition Workspace"
     },
     {
+      "doc_id": "site-request-workspace-scope-eligibility",
+      "title": "Workspace Scope Eligibility",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-workspace-scope-eligibility.json",
+      "added_date": "2026-07-12",
+      "parent_id": "workspaces",
+      "parent_title": "Workspaces"
+    },
+    {
       "doc_id": "workspaces",
       "title": "Workspaces",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/workspaces.json",
@@ -71,15 +79,7 @@
       "added_date": "2026-06-29",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "data-sharing-export-metadata",
-      "title": "Data Sharing Export Metadata",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json",
-      "added_date": "2026-06-27",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
     }
   ],
-  "generated_at": "2026-07-12T20:27:26Z"
+  "generated_at": "2026-07-12T20:35:53Z"
 }

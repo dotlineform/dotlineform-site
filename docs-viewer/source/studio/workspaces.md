@@ -70,6 +70,6 @@ Do not allow a first implementation to become an implicit permanent contract mer
 
 ## Current Documents
 
+- [Workspace Scope Eligibility](/docs/?scope=studio&doc=site-request-workspace-scope-eligibility) defines the first shared routing and availability task for Analysis semantic tools and Moments composition tools.
 - [Moments Composition Workspace](/docs/?scope=studio&doc=site-request-moments-composition-workspace) summarises the proposed plain-text composition environment, engine model, recipes, previews, settings, commands, and output kinds.
 - [Moments Composition Workspace Roadmap](/docs/?scope=studio&doc=site-request-moments-composition-workspace-roadmap) sequences the work from a basic word-axis editor through multiple engines, data visualisation, and complex generative composition.
-
