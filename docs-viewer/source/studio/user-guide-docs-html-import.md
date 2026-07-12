@@ -101,7 +101,7 @@ Existing target parents are reused. A missing parent is created only when the pa
 Apply rereads the immutable staged package and recomputes target state. A changed collision target, target identity, parent resolution, hierarchy state, blocker state, or package identity returns a refreshed plan without writes. Successful writes run in package order. If a source write fails, earlier writes remain and later records are reported as not attempted; there is no collection rollback. Generation failure is reported separately and does not undo successful source writes.
 
 The result groups records as created, overwritten, skipped, failed, or not attempted and includes generation status, warnings, manual-copy instructions, and a marker-rooted Markdown report path under `import-staging/results/`.
-After a terminal single-source or collection result, the modal replaces `Import` and `Cancel` with one `Close` button. Errors and pre-apply cancellations retain the normal controls so the operation can be corrected or retried; reopening the modal restores its normal `Import` and `Cancel` actions.
+While an import preview or write request is active, the modal disables `Cancel`; closing the browser page remains the local recovery path for an unexpectedly hung request. After a terminal single-source or collection result, the modal replaces `Import` and `Cancel` with one `Close` button. Errors and pre-apply cancellations retain the normal controls so the operation can be corrected or retried; reopening the modal restores its normal `Import` and `Cancel` actions.
 
 ## Prompt / Meta Option
 

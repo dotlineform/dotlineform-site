@@ -234,11 +234,19 @@ export function createDocsViewerManagementModalController(options = {}) {
     focusWithoutScroll(cancelButton);
   }
 
+  function projectImportBusy(busy) {
+    var cancelButton = ensureImportModalCancelButton();
+    if (cancelButton) cancelButton.disabled = Boolean(busy);
+  }
+
   function resetImportModalActions() {
     var cancelButton = ensureImportModalCancelButton();
     var runButton = document.getElementById("docsHtmlImportRun");
     if (runButton) runButton.hidden = false;
-    if (cancelButton) cancelButton.textContent = MODAL_TEXT.importCancelButton;
+    if (cancelButton) {
+      cancelButton.disabled = false;
+      cancelButton.textContent = MODAL_TEXT.importCancelButton;
+    }
   }
 
   function openImportModal() {
@@ -540,6 +548,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     openImportModal: openImportModal,
     openMetadataModal: openMetadataModal,
     openSettingsModalShell: openSettingsModalShell,
+    projectImportBusy: projectImportBusy,
     renderMetadataParentOptions: renderMetadataParentOptions,
     renderMetadataStatusOptions: renderMetadataStatusOptions,
     renderSettingsWarnings: renderSettingsWarnings,

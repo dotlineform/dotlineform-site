@@ -85,10 +85,12 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         """async (baseUrl) => {
           document.body.innerHTML = '<div id="host"></div><p id="status"></p>';
           const module = await import('/docs-viewer/runtime/js/import/docs-import-collection-controller.js');
+          const busyStates = [];
           let terminalResultCount = 0;
           const controller = module.createDocsImportCollectionController({
             host: document.getElementById('host'),
             statusNode: document.getElementById('status'),
+            onBusyChange: (busy) => { busyStates.push(busy); },
             onTerminalResult: () => { terminalResultCount += 1; }
           });
           await controller.preview({
@@ -118,6 +120,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             readyStatus,
             resultSnapshot,
             resultReportVisible,
+            busyStates,
             terminalResultCount,
             cancelledSnapshot: controller.snapshot(),
             cancelDecisionVisible: Boolean(document.querySelector('[data-collection-decision]')),
@@ -138,6 +141,8 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         raise AssertionError(f"confirmed apply result did not remain collection-controller owned: {result!r}")
     if result["terminalResultCount"] != 1:
         raise AssertionError(f"confirmed apply did not signal one terminal result: {result!r}")
+    if result["busyStates"] != [True, False, True, False, True, False]:
+        raise AssertionError(f"collection busy state did not bracket preview/apply requests: {result!r}")
     if result["cancelledSnapshot"]["phase"] != "cancelled" or result["cancelDecisionVisible"]:
         raise AssertionError(f"pre-apply cancellation left active decision controls: {result!r}")
     expected_preview = {"scope": "library", "staged_filename": "reviewed.jsonl", "preview_only": True}
