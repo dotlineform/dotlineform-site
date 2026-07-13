@@ -1,6 +1,7 @@
 import {
   scopeCreateSupported,
   scopeDeleteSupported,
+  scopeDeleteNavigationTarget,
   scopeLifecycleDeleteTargets,
   scopeLifecycleRenameTargets,
   scopeRenameSupported,
@@ -33,6 +34,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
     return {
       onApplied: function (payload) {
         if (payload && payload.action === "rename_scope" && typeof callbacks.navigateToScope === "function") return;
+        if (scopeDeleteNavigationTarget(payload, viewerScope()) && typeof callbacks.navigateToScope === "function") return;
         var reloadConfig = typeof callbacks.reloadViewerConfiguration === "function"
           ? callbacks.reloadViewerConfiguration()
           : Promise.resolve(null);
@@ -80,6 +82,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       .then(function (module) {
         var flowOptions = {
           root: root,
+          activeScope: viewerScope(),
           capabilities: management.managementCapabilities,
           clientOptions: typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions() : {},
           callbacks: lifecycleCallbacks()

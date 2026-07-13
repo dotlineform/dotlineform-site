@@ -1,8 +1,0 @@
-{
-  "doc_id": "vs-code",
-  "title": "vs code",
-  "added_date": "2026-05-26",
-  "last_updated": "2026-06-26",
-  "viewer_url": "/docs/?scope=tmp&doc=vs-code",
-  "content_html": "<h2>VS Code menu</h2>\n<ul>\n<li><strong>Commit</strong>: saves the selected/staged changes into your local Git history only. Nothing goes to GitHub. No GitHub Actions run. No live site update.</li>\n<li><strong>Commit &amp; Push</strong>: commits locally, then sends the commit to GitHub. That can trigger GitHub Actions and, on <code>main</code>, the current legacy Pages publish path.</li>\n<li><strong>Commit &amp; Sync</strong>: commits, pushes your changes, and also pulls remote changes. Treat it as “commit plus network operations”.</li>\n<li><strong>Commit (Amend)</strong>: rewrites the previous local commit. Useful only when you deliberately want to fold changes into the last commit.</li>\n</ul>\n"
-}

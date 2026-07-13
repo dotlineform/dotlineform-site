@@ -98,9 +98,26 @@ def assert_capability_error_projection(page: Page) -> None:
         raise AssertionError(f"400 capability errors should not consume the retry budget: {result!r}")
 
 
+def assert_active_scope_delete_navigation(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js');
+            const payload = { action: 'delete_scope', scope_id: 'tmp', fallback_scope_id: 'studio' };
+            return {
+                active: module.scopeDeleteNavigationTarget(payload, 'tmp'),
+                other: module.scopeDeleteNavigationTarget(payload, 'dlf'),
+                nonDelete: module.scopeDeleteNavigationTarget({ action: 'create_scope' }, 'tmp')
+            };
+        }"""
+    )
+    if result != {"active": "studio", "other": "", "nonDelete": ""}:
+        raise AssertionError(f"unexpected active-scope delete navigation: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
     assert_capability_error_projection(page)
+    assert_active_scope_delete_navigation(page)
 
 
 def main(argv: list[str] | None = None) -> int:

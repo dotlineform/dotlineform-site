@@ -895,6 +895,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
+    assert payload["fallback_scope_id"] == "studio"
     assert "backup_dir" not in payload
     assert delete_calls == [repo_root]
     assert create_calls == [(repo_root, "research", {"include_search": True})]

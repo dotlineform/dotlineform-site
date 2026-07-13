@@ -1,8 +1,0 @@
-{
-  "doc_id": "frontmatter",
-  "title": "frontmatter",
-  "added_date": "2026-05-26",
-  "last_updated": "2026-06-26",
-  "viewer_url": "/docs/?scope=tmp&doc=frontmatter",
-  "content_html": "<p>possible frontmatter fields:</p>\n<p>doc_id: activity\ntitle: Activity Report\ndate: 2020-01-01\ndate_display: c. 2020?\nadded_date: 2026-05-08\nlast_updated: 2026-06-06\nparent_id: admin\nui_status: draft\nviewable: true\nsummary: Our abstract thoughts\nviewer_report: docs_broken_links\nviewer_report_access: manage</p>\n"
-}

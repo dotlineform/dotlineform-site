@@ -71,26 +71,6 @@
       ]
     },
     {
-      "scope_id": "tmp",
-      "scope_type": "local",
-      "meta": "local management",
-      "source": "docs-viewer/source/tmp",
-      "media_path_prefix": "docs/tmp",
-      "output": "docs-viewer/generated/docs/tmp",
-      "search_output": "docs-viewer/generated/search/tmp/index.json",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "tmp",
-      "non_loadable_doc_ids": [],
-      "manage_only_tree_root_ids": [],
-      "allow_unresolved_parent_ids": false,
-      "import_media_storage": {
-        "storage_mode": "repo_assets",
-        "repo_assets_path_prefix": "docs-viewer/source/tmp/media",
-        "repo_assets_public_path_prefix": "/docs/media/tmp"
-      }
-    },
-    {
       "scope_id": "moments",
       "scope_type": "public",
       "meta": "public scope",
@@ -120,7 +100,7 @@
       "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/dlf/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "",
+      "default_doc_id": "tmp",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,

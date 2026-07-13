@@ -1,9 +1,0 @@
-{
-  "doc_id": "emoji",
-  "title": "emoji",
-  "added_date": "2026-05-28",
-  "last_updated": "2026-05-28",
-  "viewer_url": "/docs/?scope=tmp&doc=emoji",
-  "ui_status": "draft",
-  "content_html": "<p>It is not an emoji. It’s a Unicode punctuation character:</p>\n<p>Collapse: ‹ = U+2039, single left-pointing angle quotation mark\nRestore from collapsed: › = U+203A, single right-pointing angle quotation mark\nExpand index: ⤢ = U+2922, diagonal expand arrow</p>\n<hr />\n"
-}

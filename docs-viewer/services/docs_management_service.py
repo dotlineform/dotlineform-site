@@ -37,7 +37,7 @@ import docs_sub_scope_lifecycle  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
-from docs_management_capabilities_service import capabilities_payload  # noqa: E402
+from docs_management_capabilities_service import capabilities_payload as build_capabilities_payload  # noqa: E402
 from docs_management_context import (  # noqa: E402
     DEFAULT_MARKDOWN_APP_ENV,
     LOGS_REL_DIR,
@@ -68,9 +68,32 @@ from docs_management_mutation_service import (  # noqa: E402
 from docs_management_read_service import (  # noqa: E402
     docs_api_query_value,
     docs_generated_read_payload,
-    docs_management_get_payload,
+    docs_management_get_payload as read_docs_management_get_payload,
 )
 from docs_management_source_service import detect_preferred_markdown_app, open_source_doc, rebuild_source_body  # noqa: E402
+from docs_scope_config import load_docs_scope_configs  # noqa: E402
+
+
+def refresh_source_model_scope_configs(repo_root: Path) -> None:
+    configs = load_docs_scope_configs(repo_root)
+    source_model.DOCS_SCOPE_CONFIGS.clear()
+    source_model.DOCS_SCOPE_CONFIGS.update(configs)
+    source_model.SCOPE_ROOTS.clear()
+    source_model.SCOPE_ROOTS.update({scope: config.source for scope, config in configs.items()})
+
+
+def capabilities_payload(repo_root: Path) -> dict[str, object]:
+    refresh_source_model_scope_configs(repo_root)
+    return build_capabilities_payload(repo_root)
+
+
+def docs_management_get_payload(
+    repo_root: Path,
+    path: str,
+    params: dict[str, list[str]],
+) -> dict[str, object]:
+    refresh_source_model_scope_configs(repo_root)
+    return read_docs_management_get_payload(repo_root, path, params)
 
 
 def docs_management_post_response(
@@ -80,6 +103,7 @@ def docs_management_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
+    refresh_source_model_scope_configs(repo_root)
     if path == routes.SOURCE_REBUILD_PATH:
         return HTTPStatus.OK, rebuild_source_body(repo_root, body, dry_run)
     if path == routes.OPEN_SOURCE_PATH:

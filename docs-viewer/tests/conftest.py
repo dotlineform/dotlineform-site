@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 import sys
 
@@ -22,10 +23,20 @@ ensure_studio_python_paths(__file__)
 
 
 @pytest.fixture(autouse=True)
-def external_data_sharing_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+def external_data_sharing_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[Path]:
     projects_base = tmp_path / "projects-base"
     workspace = projects_base / "data-sharing"
     workspace.mkdir(parents=True)
     (projects_base / "docs-viewer").mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
-    return workspace
+    from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS
+
+    original_configs = dict(DOCS_SCOPE_CONFIGS)
+    original_roots = dict(SCOPE_ROOTS)
+    try:
+        yield workspace
+    finally:
+        DOCS_SCOPE_CONFIGS.clear()
+        DOCS_SCOPE_CONFIGS.update(original_configs)
+        SCOPE_ROOTS.clear()
+        SCOPE_ROOTS.update(original_roots)

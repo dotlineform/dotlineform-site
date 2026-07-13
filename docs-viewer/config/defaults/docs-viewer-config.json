@@ -80,29 +80,6 @@
       ]
     },
     {
-      "scope_id": "tmp",
-      "scope_type": "local",
-      "meta": "local management",
-      "viewer_base_url": "/docs/",
-      "include_scope_param": true,
-      "default_doc_id": "tmp",
-      "media_path_prefix": "docs/tmp",
-      "index_tree_url": "/docs-viewer/generated/docs/tmp/index-tree.json",
-      "recently_added_url": "/docs-viewer/generated/docs/tmp/recently-added.json",
-      "search_index_url": "/docs-viewer/generated/search/tmp/index.json",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "search_index_tmp_v1",
-        "index_url": "/docs-viewer/generated/search/tmp/index.json",
-        "targeted_policy": "record_update",
-        "targeted_operations": [
-          "create",
-          "update",
-          "delete"
-        ]
-      }
-    },
-    {
       "scope_id": "moments",
       "scope_type": "public",
       "meta": "public scope",
@@ -131,7 +108,7 @@
       "meta": "external local",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "",
+      "default_doc_id": "tmp",
       "media_path_prefix": "docs/dlf",
       "index_tree_url": "/docs/generated/index-tree?scope=dlf",
       "recently_added_url": "/docs/generated/recently-added?scope=dlf",

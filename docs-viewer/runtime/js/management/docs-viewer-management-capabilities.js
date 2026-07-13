@@ -29,6 +29,12 @@ export function scopeDeleteSupported(capabilities) {
   return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
 }
 
+export function scopeDeleteNavigationTarget(payload, activeScope) {
+  if (!payload || payload.action !== "delete_scope") return "";
+  if (normalizeScopeId(payload.scope_id) !== normalizeScopeId(activeScope)) return "";
+  return normalizeScopeId(payload.fallback_scope_id);
+}
+
 export function scopeRenameSupported(capabilities) {
   var lifecycle = scopeLifecycleCapabilities(capabilities);
   return Boolean(lifecycle && lifecycle.rename_preview && lifecycle.rename_apply);

@@ -16,6 +16,7 @@ import {
 import {
   scopeCreateSupported,
   scopeDeleteSupported,
+  scopeDeleteNavigationTarget,
   scopeLifecycleDeleteTargets,
   scopeLifecycleRenameTargets,
   scopeRenameSupported,
@@ -30,6 +31,7 @@ import {
 export {
   scopeCreateSupported,
   scopeDeleteSupported,
+  scopeDeleteNavigationTarget,
   scopeLifecycleDeleteTargets,
   scopeLifecycleRenameTargets,
   scopeRenameSupported,
@@ -970,6 +972,10 @@ export async function openDeleteScopeFlow(options = {}) {
     payload: appliedPayload,
     primaryLabel: SCOPE_LIFECYCLE_TEXT.scopeResultOkButton
   });
+  var navigationTarget = scopeDeleteNavigationTarget(appliedPayload, options.activeScope);
+  if (navigationTarget && typeof callbacks.navigateToScope === "function") {
+    callbacks.navigateToScope(navigationTarget);
+  }
   return appliedPayload;
 }
 

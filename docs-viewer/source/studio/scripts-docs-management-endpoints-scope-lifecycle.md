@@ -164,6 +164,7 @@ Actions:
 - removes user-created public route records when deleting a public-readonly scope
 - removes the manifest record
 - refreshes docs output for remaining scopes
+- returns a surviving scope so deleting the active scope can navigate away after confirmation
 - logs a `docs_scope_delete_apply` event
 
 Returned data includes deleted files, missing files, changed files, rebuild output, summary text, and `dry_run`.

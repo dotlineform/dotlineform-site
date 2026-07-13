@@ -116,6 +116,10 @@ def apply_delete_scope(
         raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
 
     scope_id = str(preview["scope_id"])
+    fallback_scope_id = next(
+        (configured_scope_id for configured_scope_id in load_docs_scope_configs(repo_root) if configured_scope_id != scope_id),
+        "",
+    )
     manifest = load_manifest(repo_root)
     rebuild = None
     if not dry_run:
@@ -132,6 +136,7 @@ def apply_delete_scope(
         "action": "delete_scope",
         "operation": "apply",
         "scope_id": scope_id,
+        "fallback_scope_id": fallback_scope_id,
         "created_files": [],
         "changed_files": preview["changed_files"],
         "deleted_files": preview["delete_files"],

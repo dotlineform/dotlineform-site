@@ -20,6 +20,7 @@ from docs_management_capabilities_service import capability_scope_root_label
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
         payload = docs_management_service.capabilities_payload(repo_root)
 
@@ -30,6 +31,7 @@ def test_capabilities_advertise_generated_data_reads() -> None:
 def test_capabilities_advertise_source_config_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
         payload = docs_management_service.capabilities_payload(repo_root)
 
     assert payload["capabilities"]["source_config_reads"] is True
@@ -73,6 +75,7 @@ def test_missing_external_workspace_disables_only_import_and_review_capabilities
 ) -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
         monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(tmp_path / "missing-projects"))
 
         payload = docs_management_service.capabilities_payload(repo_root)

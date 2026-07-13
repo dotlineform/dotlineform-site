@@ -7,7 +7,31 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
-from docs_management_test_support import docs_management_mutations, docs_management_service, make_repo
+from docs_management_test_support import (
+    docs_management_mutations,
+    docs_management_service,
+    make_repo,
+    write_docs_scope_config,
+)
+
+
+def test_management_request_refreshes_scope_model_from_config() -> None:
+    source_model = docs_management_mutations.source_model
+    original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
+    original_roots = dict(source_model.SCOPE_ROOTS)
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            source_model.SCOPE_ROOTS["retired"] = Path("docs-viewer/source/retired")
+            docs_management_service.refresh_source_model_scope_configs(repo_root)
+            assert list(source_model.SCOPE_ROOTS) == ["studio"]
+            assert source_model.SCOPE_ROOTS["studio"] == Path("docs-viewer/source/studio")
+    finally:
+        source_model.DOCS_SCOPE_CONFIGS.clear()
+        source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
+        source_model.SCOPE_ROOTS.clear()
+        source_model.SCOPE_ROOTS.update(original_roots)
 
 def test_hidden_doc_is_editable_in_dry_run() -> None:
     with make_repo() as temp_path:
