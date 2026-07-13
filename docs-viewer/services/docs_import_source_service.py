@@ -194,7 +194,7 @@ def handle_import_source(
                 preview,
                 scope,
             )
-        retarget_inline_raster_media_plans(staging_root, workspace_root, preview, scope)
+        retarget_inline_raster_media_plans(repo_root, staging_root, workspace_root, preview, scope)
     elif replacement_title:
         apply_replacement_title_to_preview(preview, replacement_title)
         if source_path.is_dir():
@@ -206,7 +206,7 @@ def handle_import_source(
                 preview,
                 scope,
             )
-        retarget_inline_raster_media_plans(staging_root, workspace_root, preview, scope)
+        retarget_inline_raster_media_plans(repo_root, staging_root, workspace_root, preview, scope)
 
     docs = load_scope_docs(repo_root, scope)
     proposed_doc_id = str(preview["proposed_doc_id"])

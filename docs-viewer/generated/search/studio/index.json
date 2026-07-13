@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1fe7b7ea3ed94411065b0488eac070c4",
-    "generated_at_utc": "2026-07-13T14:29:00Z",
+    "version": "blake2b-90184a4483818b19e3a6a728d00da3ef",
+    "generated_at_utc": "2026-07-13T19:45:02Z",
     "count": 238
   },
   "entries": [
@@ -2056,22 +2056,22 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-13 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-07-12 2026 07 12"
+      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-css-cascade-design",
@@ -2148,10 +2148,10 @@
       "kind": "doc",
       "title": "Docs Images And Assets",
       "href": "/docs/?scope=studio&doc=user-guide-docs-images",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-23 • Docs Viewer",
+      "display_meta": "2026-07-13 • Docs Viewer",
       "search_terms": [
         "user-guide-docs-images",
         "user",
@@ -2163,22 +2163,22 @@
         "assets",
         "docs viewer",
         "viewer",
-        "2026-04-23",
+        "2026-07-13",
         "2026",
-        "04",
-        "23"
+        "07",
+        "13"
       ],
-      "search_text": "user-guide-docs-images user guide docs images docs images and assets and assets docs viewer viewer 2026-04-23 2026 04 23"
+      "search_text": "user-guide-docs-images user guide docs images docs images and assets and assets docs viewer viewer 2026-07-13 2026 07 13"
     },
     {
       "id": "user-guide-docs-html-import",
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-13 • Docs Viewer",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -2189,12 +2189,12 @@
         "docs import",
         "docs viewer",
         "viewer",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-07-12 2026 07 12"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-review",
@@ -2479,10 +2479,10 @@
       "kind": "doc",
       "title": "Management Services",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-13 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2493,12 +2493,12 @@
         "services",
         "docs viewer",
         "viewer",
-        "2026-07-11",
+        "2026-07-13",
         "2026",
         "07",
-        "11"
+        "13"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server management services services docs viewer viewer 2026-07-11 2026 07 11"
+      "search_text": "scripts-docs-management-server scripts docs management server management services services docs viewer viewer 2026-07-13 2026 07 13"
     },
     {
       "id": "scripts-docs-management-endpoints",
@@ -3048,10 +3048,10 @@
       "kind": "doc",
       "title": "Media Handling",
       "href": "/docs/?scope=studio&doc=docs-viewer-media-handling",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-13 • Docs Viewer",
       "search_terms": [
         "docs-viewer-media-handling",
         "docs",
@@ -3060,12 +3060,12 @@
         "handling",
         "media handling",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-new-scopes-builder",
@@ -3194,10 +3194,10 @@
       "kind": "doc",
       "title": "Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Portable Setup",
-      "display_meta": "2026-07-12 • Portable Setup",
+      "display_meta": "2026-07-13 • Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -3207,12 +3207,12 @@
         "setup",
         "portable scope setup",
         "portable setup",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-portable-source-shape",

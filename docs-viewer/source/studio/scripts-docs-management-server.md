@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Management Services
 added_date: 2026-04-24
-last_updated: 2026-07-11
+last_updated: 2026-07-13
 parent_id: docs-viewer
 viewable: true
 ---
@@ -25,8 +25,13 @@ The browser talks to the standalone service at `DOCS_VIEWER_BASE_URL`. Local Stu
 ```text
 browser -> /docs/                  -> docs_viewer_service.py
 browser -> /assets/docs/...        -> docs_viewer_service.py
+browser -> /docs/media/...         -> docs_viewer_service.py -> configured local scope media root
 browser -> /docs/... API endpoints -> docs_viewer_service.py -> docs_management_service.py
 ```
+
+`/docs/media/<scope>/<class>/<filename>` is a local-service route for `repo_assets` and `external_assets` scopes.
+The service resolves the scope-owned media root, rejects traversal and symlink escape, and does not serve HTML through this route.
+Public `r2_upload` scopes continue to render R2-backed media tokens instead of using the local route.
 
 The service expects:
 

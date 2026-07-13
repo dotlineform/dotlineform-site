@@ -31,6 +31,7 @@ MEDIA_PLAN_FIELDS = (
     "public_path",
     "storage_mode",
     "manual_copy_required",
+    "media_class",
     "kind",
     "mime_type",
     "size_bytes",
@@ -205,6 +206,7 @@ def _plan_document_candidates(
             try:
                 preview = generate_normalized_import_content_preview(
                     record,
+                    repo_root=repo_root,
                     scope=scope,
                     staging_root=staging_root,
                     workspace_root=workspace_root,

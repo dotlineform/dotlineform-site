@@ -382,6 +382,16 @@ def planned_scope_config_record(
     external_data_root: Path | None = None,
 ) -> dict[str, Any]:
     viewer_base_url = public_route_path or "/docs/"
+    if publishing_mode == PUBLIC_MODE:
+        import_media_storage = {"storage_mode": "r2_upload"}
+    elif publishing_mode == LOCAL_EXTERNAL_MODE:
+        import_media_storage = {"storage_mode": "external_assets"}
+    else:
+        import_media_storage = {
+            "storage_mode": "repo_assets",
+            "repo_assets_path_prefix": (source_root / "media").as_posix(),
+            "repo_assets_public_path_prefix": f"/docs/media/{scope_id}",
+        }
     record = {
         "scope_id": scope_id,
         "scope_type": planned_scope_type(publishing_mode),
@@ -408,11 +418,7 @@ def planned_scope_config_record(
         "non_loadable_doc_ids": [],
         "manage_only_tree_root_ids": [],
         "allow_unresolved_parent_ids": False,
-        "import_media_storage": {
-            "storage_mode": "staging_manual",
-            "repo_assets_path_prefix": f"site/assets/docs/{scope_id}",
-            "repo_assets_public_path_prefix": f"/assets/docs/{scope_id}",
-        },
+        "import_media_storage": import_media_storage,
     }
     if publishing_mode == LOCAL_EXTERNAL_MODE:
         record["external_data_root"] = EXTERNAL_DATA_ROOT_MARKER

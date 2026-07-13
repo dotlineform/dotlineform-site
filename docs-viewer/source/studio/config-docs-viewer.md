@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer
 title: Config
 added_date: 2026-05-12
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: docs-viewer
 viewable: true
 ---
@@ -102,26 +102,29 @@ Each scope entry owns:
 
 ## Import Media Storage
 
-`import_media_storage.storage_mode` supports three values:
+`import_media_storage.storage_mode` supports four values:
 
-- `repo_assets`: copy imported media into a repo-owned public assets folder and write literal public links
+- `repo_assets`: copy imported media into a repo-owned allowlisted folder and write its configured literal link
 - `staging_manual`: keep extracted media under the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone and write media tokens for manual copying
-- `r2_upload`: reserved for a future remote upload backend and unavailable until that backend exists
+- `r2_upload`: publish a public scope's complete record-owned media set to R2 before committing its source link
+- `external_assets`: copy external-local media under the derived `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/` root and write a confined local-service link
 
-`repo_assets` is the default recommendation for new portable installs that do not have remote media infrastructure.
-Use these folder conventions unless the host site has a stronger reason to choose different paths:
+Current defaults are scope-owned:
 
-- `site/assets/docs/<scope>/img/<filename>`
-- `site/assets/docs/<scope>/files/<filename>`
+- public read-only scopes: `r2_upload`
+- repo-backed local scopes: `repo_assets` under `docs-viewer/source/<scope>/media/`
+- external-local scopes: `external_assets`
 
-For `repo_assets`, configure:
+`staging_manual` remains available for portable installs without automatic media storage.
+
+For a repo-backed local scope, configure:
 
 ```json
 {
   "import_media_storage": {
     "storage_mode": "repo_assets",
-    "repo_assets_path_prefix": "site/assets/docs/library",
-    "repo_assets_public_path_prefix": "/assets/docs/library"
+    "repo_assets_path_prefix": "docs-viewer/source/notes/media",
+    "repo_assets_public_path_prefix": "/docs/media/notes"
   }
 }
 ```
@@ -129,9 +132,11 @@ For `repo_assets`, configure:
 Image and file imports then write links like:
 
 ```md
-![Example](/assets/docs/library/img/example.png)
-[Download Example](/assets/docs/library/files/example.pdf)
+![Example](/docs/media/notes/img/example.png)
+[Download Example](/docs/media/notes/files/example.pdf)
 ```
+
+The local service confines that route to the configured repo asset root.
 
 For `staging_manual`, configure:
 
@@ -139,9 +144,7 @@ For `staging_manual`, configure:
 {
   "media_path_prefix": "docs/library",
   "import_media_storage": {
-    "storage_mode": "staging_manual",
-    "repo_assets_path_prefix": "site/assets/docs/library",
-    "repo_assets_public_path_prefix": "/assets/docs/library"
+    "storage_mode": "staging_manual"
   }
 }
 ```
@@ -153,9 +156,11 @@ Docs Import writes links like:
 The local service stages inline extracted media under the shared import drop-zone and reports the `media_path` that must be copied manually.
 Staged source image and file imports also remain manual-copy flows in this mode.
 
-`r2_upload` is intentionally config-shaped but not operational.
-Do not put R2 credentials or any other remote credentials in `docs-viewer/config/scopes/docs_scopes.json`, generated browser config, docs source, or UI text.
-Future remote upload support should read credentials from environment variables or platform secrets and fail closed when the backend is unavailable.
+For a public scope, `r2_upload` requires the scope-owned prefix `docs/<scope>` and writes the existing token form.
+R2 credentials remain in `.env.local` or platform secrets; they do not belong in scope config, generated browser config, docs source, or UI text.
+
+For an external-local scope, `external_assets` is the only valid mode.
+The config does not accept an arbitrary media path or repo destination; the service derives `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/img|files/` and writes `/docs/media/<scope>/...` links.
 
 ## Local Service
 

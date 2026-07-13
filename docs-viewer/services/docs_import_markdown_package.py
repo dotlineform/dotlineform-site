@@ -21,7 +21,8 @@ from docs_import_common import (
     slugify,
 )
 from docs_import_media import build_media_plan
-from docs_scope_config import IMPORT_MEDIA_CONFIGS
+from docs_media_storage import local_media_root_for_scope
+from docs_scope_config import load_docs_scope_configs
 from services.paths import marker_path
 
 def retarget_markdown_package_media_plans(
@@ -172,15 +173,21 @@ def next_package_media_filename(
     safe_doc_id = slugify(doc_id or "imported-doc")
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()
-    repo_asset_root = (repo_root / IMPORT_MEDIA_CONFIGS[normalized_scope].repo_assets_path_prefix / media_class).resolve()
+    scope_config = load_docs_scope_configs(repo_root)[normalized_scope]
+    storage_mode = scope_config.import_media_storage.storage_mode
+    local_asset_root = (
+        (local_media_root_for_scope(repo_root, scope_config) / media_class).resolve()
+        if storage_mode in {"external_assets", "repo_assets"}
+        else None
+    )
     index = 1
     while True:
         filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
-        repo_asset_path = (repo_asset_root / filename).resolve()
+        local_asset_path = (local_asset_root / filename).resolve() if local_asset_root is not None else None
         if (
             filename not in used_filenames
             and not (staging_root / filename).exists()
-            and not repo_asset_path.exists()
+            and not (local_asset_path and local_asset_path.exists())
         ):
             used_filenames.add(filename)
             return filename
@@ -200,7 +207,7 @@ def build_package_media_plan(
     kind: str,
 ) -> dict[str, Any]:
     media_class = "img" if kind == "image" else "files"
-    plan = build_media_plan(scope, media_class, Path(filename), title)
+    plan = build_media_plan(scope, media_class, Path(filename), title, repo_root=repo_root)
     source_rel = package_source_original_path(source_path, workspace_root)
     plan.update(
         {

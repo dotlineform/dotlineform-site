@@ -21,12 +21,11 @@ The Local Studio Work editor calls the same importable upload runner through ser
 
 ## Current Scope
 
-The first implementation supports catalogue primary-image derivatives only:
+The publisher supports:
 
-- works
-- work details
+- catalogue works and work details
+- one exact public Docs Viewer scope/class/filename from the shared import-staging drop-zone
 
-Docs media publishing is reserved for a later milestone.
 The Work editor exposes this publisher for saved published Work primaries.
 Creating a detail section from the Work editor publishes every newly created detail primary set automatically after its complete local build succeeds.
 Replacement of an existing individual detail remains CLI-only because there is intentionally no individual detail mutation workflow.
@@ -66,6 +65,16 @@ Default object-key mapping is:
 The expected catalogue primary widths are `800`, `1200`, and `1600`.
 If a selected item is missing one of those variants, the item is blocked by default.
 Use `--allow-partial` only for an intentional incomplete remote write; a partial set is never promoted as the confirmed public version.
+
+Docs publishing reads one direct-child file from `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` and requires:
+
+- `--scope docs`
+- `--docs-scope <public-scope>`
+- `--kind img|files`
+- `--staged-filename <filename>`
+
+Its deterministic object key is `docs/<scope>/<class>/<filename>`.
+The configured scope must use `r2_upload` and the matching `docs/<scope>` media prefix.
 
 ## Confirmed Media Versions
 
@@ -152,6 +161,21 @@ Overwrite changed remote objects intentionally:
 $HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --force --write
 ```
 
+Preview one manually staged public Docs image:
+
+```bash
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope docs --docs-scope library --kind img --staged-filename diagram.png
+```
+
+Upload it after reviewing the dry-run:
+
+```bash
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope docs --docs-scope library --kind img --staged-filename diagram.png --write
+```
+
+Docs CLI publishing is exact-scope and exact-file only; it has no `--all` or remote-delete path.
+Changed remote Docs objects require `--force`, but a new filename is preferred when immediate cache-safe replacement matters.
+
 ## Safety Behavior
 
 The publisher:
@@ -163,7 +187,8 @@ The publisher:
 - blocks changed remote objects unless `--force` is passed
 - promotes the canonical media version only after the complete required primary set succeeds
 - deletes remote objects only when `--delete --write` is passed with an exact `--kind` and `--id`
-- keeps logs to ids, relative local paths, object keys, statuses, and non-secret reasons
+- keeps catalogue logs to ids, relative local paths, object keys, statuses, and non-secret reasons
+- keeps Docs logs/reports narrower: scope, class, filename, byte size, status, and safe reason only
 
 Remote deletion is intentionally narrower than upload discovery.
 It does not support `--all` because deleted local files may no longer exist for discovery, and broad remote cleanup should stay a deliberate operation.

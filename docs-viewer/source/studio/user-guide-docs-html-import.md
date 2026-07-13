@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: Docs Import
 added_date: 2026-04-24
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: docs-viewer
 viewable: true
 ---
@@ -28,10 +28,11 @@ For Markdown package imports, copy the whole exported folder as a direct child o
 Staged Markdown files should not include predefined front matter.
 The importer creates or preserves the normal Docs Viewer front matter when it writes the target source doc.
 
-For image and downloadable file imports, copy the media file to the configured media store manually after import when the scope uses manual staging.
-The importer creates the wrapper Markdown and reports the expected media path, but it does not upload remote media.
-For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file after import.
-For Markdown package imports, package images are converted to 800px-max WebP outputs and package attachments are copied to readable staged filenames during import.
+Media handling follows the selected scope's configured storage mode.
+Public Library, Analysis, and Moments imports preflight and upload record-owned media to R2 before committing the Markdown source.
+Repo-backed local scopes copy media beside their docs source, and external-local scopes copy media under the external Docs Viewer workspace.
+Only `staging_manual` requires you to copy staged media after import.
+For Markdown package imports, package images are converted to 800px-max WebP outputs and package attachments keep readable generated filenames before the configured storage action runs.
 
 For interactive HTML widgets, test a standalone HTML file in a browser first.
 Add `<meta name="dlf:docs-import-role" content="interactive-html">` to the file.
@@ -51,8 +52,8 @@ The import modal:
 - imports staged Markdown package folders as one Markdown source doc plus planned image and attachment media
 - imports `.txt` files as plain Markdown prose and converts plain URLs to autolinks
 - imports standalone `.svg` files as wrapper docs with sanitized inline SVG
-- imports raster images as wrapper docs that point at the configured `<media_path_prefix>/img/<filename>` media path
-- imports supported downloadable files as wrapper docs that point at the configured `<media_path_prefix>/files/<filename>` media path
+- imports raster images as wrapper docs that point at the scope-owned image destination
+- imports supported downloadable files as wrapper docs that point at the scope-owned file destination
 - recognizes trusted returned Data Sharing JSON/JSONL as complete reviewed-document collections before generic file fallback
 - extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
 - hides role-marked interactive HTML files from the staged file picker and copies each one into `site/assets/docs/interactive/<scope>/` for manual iframe-token embedding
@@ -163,16 +164,16 @@ Supported downloadable file extensions:
 - `.xlsx`
 - `.pptx`
 
-Raster image wrappers use:
+For `r2_upload` and `staging_manual`, raster image wrappers use:
 
 - <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>
 
-Downloadable file wrappers use:
+For those same modes, downloadable file wrappers use:
 
 - <code>&#91;&#91;media:docs/&lt;scope&gt;/files/&lt;filename&gt;&#93;&#93;</code>
 
-Those tokens resolve against `_config.yml` `media_base` when docs payloads are built.
-The import result shows the expected media path so you can copy the source file manually to the matching media location.
+For `r2_upload` and `staging_manual`, those tokens resolve against `_config.yml` `media_base` when docs payloads are built.
+For `repo_assets` and `external_assets`, the importer writes the configured `/docs/media/<scope>/...` local-service link instead.
 
 HTML and Markdown imports also extract inline raster data URLs that appear as Markdown images, such as:
 
@@ -180,14 +181,13 @@ HTML and Markdown imports also extract inline raster data URLs that appear as Ma
 ![Diagram](data:image/png;base64,...)
 ```
 
-The importer writes decoded image files back into the shared import drop-zone during the import write.
 Generated filenames use the final proposed `doc_id` plus an incrementing suffix, such as:
 
 - `example-doc-image-01.png`
 - `example-doc-image-02.jpg`
 
-The generated Markdown points at the matching docs media token and the result panel lists each staged media path, configured media path, and media token.
-Copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
+The generated Markdown points at the matching scope-owned media link.
+The importer publishes R2 media before the source write, copies local media automatically, or reports a manual-copy action according to the scope's storage mode.
 
 ## Markdown Package Imports
 
@@ -259,8 +259,7 @@ After a successful import, the page reports:
 - the imported title
 - the original staged source path
 - the viewer link for the imported doc
-- generated staged media paths for inline raster images
-- the expected media path and media token for image, file-media, extracted inline raster, and Markdown package media imports
+- safe media class, filename, status, and link details for image, file-media, extracted inline raster, and Markdown package media imports
 - converted WebP image outputs and copied package attachments
 - copied interactive HTML script files as result rows labelled `script file`
 - any non-routine conversion warnings

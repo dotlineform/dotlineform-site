@@ -74,7 +74,12 @@ class DocsSubScopeConfig:
     publish_output: Path
 
 
-SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {"repo_assets", "staging_manual", "r2_upload"}
+SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {
+    "external_assets",
+    "repo_assets",
+    "r2_upload",
+    "staging_manual",
+}
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 
 
@@ -278,7 +283,9 @@ def normalize_import_media_storage(
     item: dict[str, Any],
     *,
     scope_id: str,
+    scope_type: str,
     media_path_prefix: Path,
+    public_readonly: bool,
     index: int,
 ) -> DocsImportMediaConfig:
     raw = item.get("import_media_storage")
@@ -287,12 +294,39 @@ def normalize_import_media_storage(
     if not isinstance(raw, dict):
         raise ValueError(f"docs scope config scopes[{index}].import_media_storage must be an object")
 
-    storage_mode = str(raw.get("storage_mode") or "staging_manual").strip()
+    default_storage_mode = "external_assets" if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE else "staging_manual"
+    storage_mode = str(raw.get("storage_mode") or default_storage_mode).strip()
     if storage_mode not in SUPPORTED_IMPORT_MEDIA_STORAGE_MODES:
         supported = ", ".join(sorted(SUPPORTED_IMPORT_MEDIA_STORAGE_MODES))
         raise ValueError(
             f"docs scope config scopes[{index}].import_media_storage.storage_mode "
             f"must be one of: {supported}"
+        )
+    if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE and storage_mode != "external_assets":
+        raise ValueError(
+            f"docs scope config scopes[{index}] external local scopes must use "
+            "import_media_storage.storage_mode 'external_assets'"
+        )
+    if storage_mode == "external_assets" and scope_type != LOCAL_EXTERNAL_SCOPE_TYPE:
+        raise ValueError(
+            f"docs scope config scopes[{index}].import_media_storage.storage_mode "
+            "'external_assets' is only valid for external local scopes"
+        )
+    if storage_mode == "r2_upload" and (scope_type != "public" or not public_readonly):
+        raise ValueError(
+            f"docs scope config scopes[{index}].import_media_storage.storage_mode "
+            "'r2_upload' is only valid for public read-only scopes"
+        )
+    if storage_mode == "r2_upload" and media_path_prefix != Path("docs") / scope_id:
+        raise ValueError(
+            f"docs scope config scopes[{index}].media_path_prefix for r2_upload "
+            f"must be docs/{scope_id}"
+        )
+    if scope_type == LOCAL_EXTERNAL_SCOPE_TYPE and (
+        "repo_assets_path_prefix" in raw or "repo_assets_public_path_prefix" in raw
+    ):
+        raise ValueError(
+            f"docs scope config scopes[{index}] external local media must not configure repo asset destinations"
         )
     repo_assets_path_prefix = safe_relative_path(
         raw.get("repo_assets_path_prefix") or f"site/assets/docs/{scope_id}",
@@ -559,7 +593,9 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
         import_media_storage = normalize_import_media_storage(
             item,
             scope_id=scope_id,
+            scope_type=scope_type,
             media_path_prefix=media_path_prefix,
+            public_readonly=public_readonly,
             index=index,
         )
         sub_scopes = normalize_sub_scope_configs(

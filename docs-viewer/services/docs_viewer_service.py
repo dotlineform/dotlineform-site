@@ -13,7 +13,7 @@ import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlparse, urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlparse, urlsplit
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
@@ -33,6 +33,7 @@ if str(SERVICE_DIR) not in sys.path:
 
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
+import docs_media_storage as media_storage  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
 from local_env import SITE_ENV_REL_PATH  # noqa: E402
@@ -403,6 +404,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_review_asset(path)
             return
+        if path.startswith(media_storage.DOCS_MEDIA_ROUTE_PREFIX):
+            self.send_docs_media(path)
+            return
         if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
             return
@@ -544,6 +548,25 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                     "Content-Security-Policy",
                     "sandbox allow-scripts; default-src 'self' data: blob:; connect-src 'none'",
                 )
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+
+    def send_docs_media(self, request_path: str) -> None:
+        try:
+            path, media_class = media_storage.local_media_path_from_route(self.repo_root, request_path)
+            body = path.read_bytes()
+            self.send_response(HTTPStatus.OK)
+            self.send_cors_headers()
+            self.send_header("Content-Type", media_storage.safe_content_type(path))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            if media_class == "files":
+                self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{quote(path.name, safe='')}")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)

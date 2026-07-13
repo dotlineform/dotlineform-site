@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: docs-viewer-portable-setup
 viewable: true
 ---
@@ -23,7 +23,7 @@ Decide:
 - scope id: for example `research`
 - source root: for example `docs-viewer/source/research`
 - media path prefix: for example `docs/research`
-- import media storage: usually `repo_assets` for a new portable install without remote media
+- import media storage: `r2_upload` for the standard public-scope contract, or an explicit portable alternative
 - working generated docs output: `docs-viewer/generated/docs/research`
 - working generated search output: `docs-viewer/generated/search/research/index.json`
 - published docs output: `site/assets/data/docs/scopes/research`
@@ -63,9 +63,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
   "manage_only_tree_root_ids": [],
   "allow_unresolved_parent_ids": true,
   "import_media_storage": {
-    "storage_mode": "repo_assets",
-    "repo_assets_path_prefix": "site/assets/docs/research",
-    "repo_assets_public_path_prefix": "/assets/docs/research"
+    "storage_mode": "r2_upload"
   }
 }
 ```
@@ -77,8 +75,8 @@ Local scopes use only `docs-viewer/generated/` roots, and the builders reject lo
 
 Running `./docs-viewer/build/build_docs.py --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
 The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to public route config after the docs build refreshes the config and generated docs payloads.
-`repo_assets` makes Docs Import copy imported images and files below `site/assets/docs/research/` and write literal `/assets/docs/research/...` links.
-Use `staging_manual` instead when imported media should stay in the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone until you manually copy it to the configured `media_path_prefix`.
+`r2_upload` preflights and uploads a complete imported media set to `docs/research/img|files/` before committing the source doc.
+Use `staging_manual` instead for a portable install without R2; imported media then stays in the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone until you manually copy it to the configured `media_path_prefix`.
 
 ### New Scope Action
 
@@ -102,6 +100,7 @@ The modal does not ask for an external path.
 For every external local scope, Docs Viewer derives:
 
 - source root: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`
+- media root: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/`
 - generated docs root: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/`
 - generated search output: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
 
@@ -110,6 +109,7 @@ The lifecycle action creates the scope-specific child paths under that fixed roo
 
 The central config record remains in `docs-viewer/config/scopes/docs_scopes.json`.
 For external local scopes it stores `external_data_root: "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"` plus marker-rooted source, docs output, and search output paths.
+It uses `external_assets`; Docs Import derives the media root and writes `/docs/media/<scope>/img|files/<filename>` links served by the local Docs Viewer service.
 It does not store user-specific absolute paths in the repo.
 
 External local scopes do not configure public `publish_output`, public `publish_search_output`, or a public route.
@@ -242,7 +242,8 @@ Then open:
 
 Docs Import reads the configured scope list and source roots from `docs-viewer/config/scopes/docs_scopes.json`.
 Imported media behavior follows each scope's `import_media_storage` settings.
-New portable installs should usually start with `repo_assets`; existing remote-token workflows can keep `staging_manual` and `media_path_prefix`.
+Standard public scopes use `r2_upload`.
+Portable installs without R2 can select `staging_manual` and keep their existing `media_path_prefix` workflow.
 
 ### 9. Verify The Public Route
 
@@ -291,12 +292,15 @@ Scope config example:
   "manage_only_tree_root_ids": [],
   "allow_unresolved_parent_ids": false,
   "import_media_storage": {
-    "storage_mode": "staging_manual",
-    "repo_assets_path_prefix": "site/assets/docs/notes",
-    "repo_assets_public_path_prefix": "/assets/docs/notes"
+    "storage_mode": "repo_assets",
+    "repo_assets_path_prefix": "docs-viewer/source/notes/media",
+    "repo_assets_public_path_prefix": "/docs/media/notes"
   }
 }
 ```
+
+Docs Import copies media into `docs-viewer/source/notes/media/img|files/` and writes `/docs/media/notes/...` links.
+The local Docs Viewer service confines those reads to the configured repo-owned root.
 
 Do not create a public static route shell, public route-config record, or published public payload root for a local-only scope.
 The scope is loaded through the local Docs Viewer management shell, not through a public static route.

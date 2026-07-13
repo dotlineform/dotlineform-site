@@ -22,6 +22,7 @@ from docs_import_document import (
     import_document_activity,
     materialize_import_document_media,
 )
+from docs_scope_config import load_docs_scope_configs
 
 
 LogEvent = Callable[[Path, str, dict[str, Any]], None]
@@ -125,6 +126,10 @@ def apply_import_content_collection(
     search_doc_ids: list[str] = []
     written_paths: list[Path] = []
     source_failed = False
+    storage_mode = (
+        load_docs_scope_configs(repo_root)[plan.response["scope"]]
+        .import_media_storage.storage_mode
+    )
 
     def write_collection_documents() -> None:
         nonlocal source_failed
@@ -152,7 +157,11 @@ def apply_import_content_collection(
                     document_plan,
                     media_context=media_context,
                 )
-            except Exception as exc:  # asset-level best effort
+            except Exception as exc:
+                if storage_mode == "r2_upload":
+                    result["status"] = "failed"
+                    result["error"] = _safe_error_message(exc, repo_root, workspace_root)
+                    continue
                 result["warnings"].append(collection_issue(
                     "warning",
                     "asset_materialization_failed",
@@ -194,6 +203,8 @@ def apply_import_content_collection(
                     result["reason"] = "stopped after the first source-write failure"
             if not docs_doc_ids:
                 raise NoAppliedCollectionWrites("first collection source write failed")
+        if not docs_doc_ids and any(result["status"] == "failed" for result in results):
+            raise NoAppliedCollectionWrites("collection media publication prevented all source writes")
 
     generation: dict[str, Any] = {"status": "not-run", "rebuild": None, "error": ""}
     if changed_paths:

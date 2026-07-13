@@ -16,9 +16,9 @@
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
-        "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "site/assets/docs/studio",
-        "repo_assets_public_path_prefix": "/assets/docs/studio"
+        "storage_mode": "repo_assets",
+        "repo_assets_path_prefix": "docs-viewer/source/studio/media",
+        "repo_assets_public_path_prefix": "/docs/media/studio"
       }
     },
     {
@@ -38,9 +38,7 @@
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": true,
       "import_media_storage": {
-        "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "site/assets/docs/library",
-        "repo_assets_public_path_prefix": "/assets/docs/library"
+        "storage_mode": "r2_upload"
       }
     },
     {
@@ -60,9 +58,7 @@
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
-        "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "site/assets/docs/analysis",
-        "repo_assets_public_path_prefix": "/assets/docs/analysis"
+        "storage_mode": "r2_upload"
       },
       "sub_scopes": [
         {
@@ -89,9 +85,9 @@
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
-        "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "site/assets/docs/tmp",
-        "repo_assets_public_path_prefix": "/assets/docs/tmp"
+        "storage_mode": "repo_assets",
+        "repo_assets_path_prefix": "docs-viewer/source/tmp/media",
+        "repo_assets_public_path_prefix": "/docs/media/tmp"
       }
     },
     {
@@ -111,9 +107,7 @@
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
-        "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "site/assets/docs/moments",
-        "repo_assets_public_path_prefix": "/assets/docs/moments"
+        "storage_mode": "r2_upload"
       }
     },
     {
@@ -131,9 +125,7 @@
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
-        "storage_mode": "staging_manual",
-        "repo_assets_path_prefix": "site/assets/docs/dlf",
-        "repo_assets_public_path_prefix": "/assets/docs/dlf"
+        "storage_mode": "external_assets"
       },
       "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
     }

@@ -98,7 +98,8 @@ Staged source imports:
 - `docs_import_preview.py` owns staged source preview dispatch and per-format preview response shape.
 - `docs_html_markdown.py` owns reusable HTML/SVG parsing, sanitization, and HTML-to-Markdown conversion.
 - `docs_import_html_parser.py` owns import-preview HTML summaries built from the shared HTML conversion boundary.
-- `docs_import_media.py` owns media path planning, inline media extraction, media materialization, and image/file media summaries.
+- `docs_import_media.py` owns media path planning, inline media extraction, local media materialization, remote-publication preparation, and image/file media summaries.
+- `docs_media_storage.py` owns scope-aware local media roots/routes, confined local media reads, complete-set Docs R2 preflight/publication, exact staged-file publishing, and safe media results/reports.
 - `docs_import_markdown_package.py` owns markdown package discovery, package media planning, and package link rewriting.
 - `docs_import_common.py` owns source-format constants and small shared helpers.
 - `docs_import_source_service.py` owns the management API workflow: request interpretation, collection-preview dispatch, single-source collision and confirmation gates, rebuild calls, and response assembly.

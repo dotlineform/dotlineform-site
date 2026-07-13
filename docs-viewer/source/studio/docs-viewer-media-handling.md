@@ -2,13 +2,13 @@
 doc_id: docs-viewer-media-handling
 title: Media Handling
 added_date: 2026-05-14
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer Media Handling
 
-This document records how Docs Viewer media is represented, imported, staged, and handed off to the configured media store.
+This document records how Docs Viewer media is represented, imported, and committed to the active scope's configured media store.
 
 ## Boundaries
 
@@ -20,18 +20,21 @@ Docs Viewer media handling covers:
 - folder-based Markdown package imports with local images and attachments
 - sanitized inline SVG preservation
 - scope-specific media path generation
-- media-copy handoff information shown in the Docs Import result
+- automatic R2 publication for public scopes
+- repo-backed and external-local materialization
+- safe publication/materialization results shown by Docs Import
 
-It does not currently cover:
+It does not cover:
 
-- automatic remote upload
 - raster-to-SVG conversion
 - catalogue media generation
-- browser runtime asset loading outside generated Docs Viewer content
+- automatic remote deletion, cache versioning, or a Docs asset registry
+- interactive HTML, which retains its separate sandbox contract
 
 Reviewed Data Sharing document collections reuse the existing inline raster data-URL path. Docs Import plans, retargets, decodes, and materializes supported PNG, JPEG, WebP, and GIF data URLs from normalized collection records. Non-embedded package assets require an explicit import mapping and are not automatically promoted from the Data Sharing workspace.
 
 Collection asset handling is best effort after trusted intake. An unsupported, missing, unauthorized-collision, or failed asset operation preserves the returned source reference, warns, and allows the document and later records to continue. Document-level `Overwrite` and `Apply to all` never authorize asset overwrite. Unsafe paths, containment or symlink escapes, size failures, and execution-safety failures remain blocking and are never attempted.
+For `r2_upload`, a planned record-owned media publication is stricter: a remote conflict or failure blocks that record's source write so Docs Import never commits a newly generated token to media it did not publish successfully.
 
 ## Scope Configuration
 
@@ -51,33 +54,42 @@ Current scope prefixes are:
 | `studio` | `docs/studio` |
 | `library` | `docs/library` |
 | `analysis` | `docs/analysis` |
+| `moments` | `docs/moments` |
 
 The configured prefix determines the logical media path used in generated Markdown and result payloads.
 
 ## Storage Modes
 
-Docs Import currently recognizes three storage modes:
+Docs Import recognizes four storage modes:
 
 | Mode | Current behavior |
 | --- | --- |
 | `staging_manual` | Import writes source docs and reports media paths/tokens. The user manually copies staged media to the configured media store. |
-| `repo_assets` | Import may copy source media or decoded inline media into the configured repo asset prefix after allowlist checks. Generated Markdown uses the configured public asset path. |
-| `r2_upload` | Reserved in config, but not operational. |
+| `repo_assets` | Import copies media into an allowlisted repo-owned root and writes its configured local/public link. Current local scopes use `docs-viewer/source/<scope>/media/`. |
+| `r2_upload` | Public-scope import preflights and uploads the complete record-owned media set to R2 before committing the Markdown source. |
+| `external_assets` | External-local import copies media under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/` and writes a confined local-service link. |
 
-The current site scopes use `staging_manual`.
-Portable installs without a remote media workflow can choose `repo_assets` when they want imported media to land inside the repo under `site/assets/docs/<scope>/`.
+Library, Analysis, and Moments use `r2_upload`.
+Studio and temporary repo-backed scopes use `repo_assets` beside their docs source.
+External-local scopes must use `external_assets`; config validation rejects R2 and repo destinations for them.
+`staging_manual` remains available for portable/manual workflows.
 
 ## Media Tokens
 
-For `staging_manual`, Docs Import writes logical media tokens in Markdown:
+For `staging_manual` and `r2_upload`, Docs Import writes logical media tokens in Markdown:
 
 <pre><code>![Example](&#91;&#91;media:docs/library/img/example.png&#93;&#93;)
 [Download Example](&#91;&#91;media:docs/library/files/example.pdf&#93;&#93;)</code></pre>
 
 Those tokens resolve during docs payload generation against the site's configured media base.
-The importer reports the token and expected media path, but it does not upload or publish the binary file.
+In `r2_upload`, the same token is committed only after the remote object set succeeds.
+In `staging_manual`, the importer reports the token and expected media path for manual copying.
 
 For `repo_assets`, Docs Import uses the configured public repo asset path instead of a <code>&#91;&#91;media:...&#93;&#93;</code> token.
+Current local scopes use links such as `/docs/media/studio/img/example.png`.
+
+For `external_assets`, Docs Import uses `/docs/media/<scope>/<class>/<filename>`.
+The local Docs Viewer service resolves that route only through the scope's derived media root, rejects traversal and symlink escape, sends `nosniff`, and does not serve interactive HTML through this ordinary media route.
 
 ## Staging Folder
 
@@ -127,7 +139,7 @@ That plan includes:
 - `repo_asset_path`
 - `public_path`
 
-When `manual_copy_required` is true, copy the staged source image to the reported media path before expecting the rendered doc to display it.
+`manual_copy_required` is true only for `staging_manual`.
 
 ## Downloadable File Imports
 
@@ -184,8 +196,9 @@ If a planned filename already exists in the shared import drop-zone, the importe
 No hash suffix is used for the current implementation.
 
 During create or overwrite, the service materializes the decoded inline raster files.
-For `staging_manual`, the decoded files are written under the shared import drop-zone.
-For `repo_assets`, decoded files may be written to the configured repo asset path after allowlist checks.
+For `staging_manual`, decoded files are written under the shared import drop-zone.
+For `repo_assets` and `external_assets`, decoded files are written to the confined configured/derived media root.
+For `r2_upload`, decoded files are prepared in a temporary directory and uploaded as part of the record's complete set.
 
 If a collision replacement changes the final `doc_id`, the service retargets inline media plans before write so filenames, media paths, and Markdown links match the final doc id.
 
@@ -218,7 +231,8 @@ Images wider than 800px are downscaled to a maximum width of 800px; smaller imag
 Attachments are copied unchanged.
 
 For `staging_manual`, converted images and copied attachments are materialized under the shared import drop-zone with the generated readable filenames.
-For `repo_assets`, they are written into the configured repo asset path.
+For `repo_assets` and `external_assets`, they are written into the scope-owned local target.
+For `r2_upload`, conversion completes before the complete remote preflight; successful remote publication leaves no repo-local copy.
 Animated image conversion is rejected rather than silently flattening animation.
 
 ## Inline Raster Handoff
@@ -236,6 +250,8 @@ Markdown package image and attachment plans use the same result payload shape, w
 
 For `staging_manual`, copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
 This keeps imported Markdown and generated docs JSON free of long base64 payloads while preserving the original raster bytes.
+
+For `r2_upload`, result rows report the safe filename/class status without object keys, checksums, ETags, credentials, signed URLs, or absolute paths.
 
 ## SVG Handling
 
@@ -261,9 +277,10 @@ It returns the proposed Markdown, media plan metadata, collision information, wa
 Write happens only on create or confirmed overwrite.
 At write time, the service:
 
-- creates or overwrites the Markdown source doc
-- materializes decoded inline raster media
-- copies source media only when the configured storage mode supports repo-asset writes
+- prepares and validates the complete record-owned media plan
+- materializes local media or publishes R2 media before the source write
+- stops without writing the Markdown source when required R2 publication is blocked or fails
+- creates or overwrites the Markdown source doc after the required media boundary succeeds
 - rebuilds same-scope docs payloads and targeted docs-search entries after successful source writes
 - relies on Git history, host/filesystem backups, or explicit manual copies for source recovery
 
@@ -277,9 +294,10 @@ For a normal media import:
 1. Place the source file in `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`.
 2. Open `/docs/?scope=<scope>&import=1`.
 3. Import the source file.
-4. Review the result panel's media plan.
-5. Copy any staged media file to the reported media path when `manual_copy_required` is true.
-6. Rebuild or refresh docs payloads through the normal management workflow if you changed media availability outside the import write.
+4. Review the result panel's media plan and apply the import.
+5. For `r2_upload`, the service preflights/uploads automatically before it commits the source.
+6. For `repo_assets` or `external_assets`, the service materializes the asset automatically.
+7. Copy a staged file manually only when `manual_copy_required` is true.
 
 For HTML or Markdown with embedded raster data URLs, the same workflow applies, except the import write creates the staged decoded image files for you.
 For Markdown package imports, copy the whole package folder under the shared import drop-zone and select the package folder in the import modal.

@@ -411,6 +411,27 @@ def test_moments_are_not_a_catalogue_publisher_kind() -> None:
     assert set(publisher.CATALOGUE_KINDS) == {"works", "work_details"}
 
 
+def test_docs_cli_shape_requires_an_exact_scope_class_and_staged_filename() -> None:
+    args = publisher.parse_args(
+        [
+            "--scope",
+            "docs",
+            "--docs-scope",
+            "library",
+            "--kind",
+            "img",
+            "--staged-filename",
+            "diagram.png",
+        ]
+    )
+
+    assert args.scope == "docs"
+    assert args.docs_scope == "library"
+    assert args.kind == "img"
+    assert args.staged_filename == "diagram.png"
+    assert args.write is False
+
+
 if __name__ == "__main__":
     test_credentials_load_from_env_file_without_printing_values()
     test_default_env_file_is_env_local()
@@ -425,4 +446,5 @@ if __name__ == "__main__":
     test_exact_target_delete_runner_cleans_work_and_dependent_details()
     test_complete_upload_promotes_once_and_incomplete_set_does_not_promote()
     test_moments_are_not_a_catalogue_publisher_kind()
+    test_docs_cli_shape_requires_an_exact_scope_class_and_staged_filename()
     print("publish media to R2 checks passed")

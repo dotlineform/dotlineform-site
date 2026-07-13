@@ -518,6 +518,7 @@ def create_review_source_folder(
             if record.content_intent == CONTENT_INTENT_REPLACE:
                 preview = generate_normalized_import_content_preview(
                     record,
+                    repo_root=repo_root,
                     scope=scope,
                     staging_root=staging_root,
                     workspace_root=workspace_paths.root,

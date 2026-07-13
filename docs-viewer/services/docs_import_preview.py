@@ -275,6 +275,7 @@ def generate_html_import_preview(
 ) -> dict[str, Any]:
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_html_content_import_preview(
+        repo_root=repo_root,
         source_html=source_html,
         source_identity=source_path.stem,
         scope=scope,
@@ -306,6 +307,7 @@ def apply_content_identity_hints(
 
 def generate_html_content_import_preview(
     *,
+    repo_root: Path | None = None,
     source_html: str,
     source_identity: str,
     scope: str,
@@ -333,7 +335,11 @@ def generate_html_content_import_preview(
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
     summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
-    apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
+    if repo_root is None:
+        from docs_scope_config import default_repo_root
+
+        repo_root = default_repo_root()
+    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -419,6 +425,7 @@ def generate_markdown_import_preview(
 ) -> dict[str, Any]:
     source_markdown = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_markdown_content_import_preview(
+        repo_root=repo_root,
         source_markdown=source_markdown,
         source_identity=source_path.stem,
         scope=scope,
@@ -433,6 +440,7 @@ def generate_markdown_import_preview(
 
 def generate_markdown_content_import_preview(
     *,
+    repo_root: Path | None = None,
     source_markdown: str,
     source_identity: str,
     scope: str,
@@ -450,7 +458,11 @@ def generate_markdown_content_import_preview(
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
     summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
-    apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
+    if repo_root is None:
+        from docs_scope_config import default_repo_root
+
+        repo_root = default_repo_root()
+    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -487,7 +499,7 @@ def generate_markdown_package_import_preview(
         summary=summary,
         scope=normalized_scope,
     )
-    apply_inline_raster_media_plans(staging_root, workspace_root, summary, normalized_scope)
+    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_scope)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -537,6 +549,7 @@ def generate_plain_text_content_import_preview(
 
 def generate_content_import_preview(
     *,
+    repo_root: Path | None = None,
     content: str,
     content_format: str,
     source_identity: str,
@@ -548,6 +561,7 @@ def generate_content_import_preview(
 ) -> dict[str, Any]:
     if content_format == "markdown":
         return generate_markdown_content_import_preview(
+            repo_root=repo_root,
             source_markdown=content,
             source_identity=source_identity,
             scope=scope,
@@ -558,6 +572,7 @@ def generate_content_import_preview(
         )
     if content_format == "html":
         return generate_html_content_import_preview(
+            repo_root=repo_root,
             source_html=content,
             source_identity=source_identity,
             scope=scope,
@@ -583,6 +598,7 @@ def generate_content_import_preview(
 def generate_normalized_import_content_preview(
     record: ImportContent,
     *,
+    repo_root: Path | None = None,
     scope: str,
     staging_root: Path,
     workspace_root: Path,
@@ -590,6 +606,7 @@ def generate_normalized_import_content_preview(
     if record.content_intent != CONTENT_INTENT_REPLACE or not isinstance(record.content, str):
         raise ValueError("only replace ImportContent records have body content to preview")
     return generate_content_import_preview(
+        repo_root=repo_root,
         content=record.content,
         content_format=record.content_format,
         source_identity=record.record_identity,
@@ -652,7 +669,7 @@ def generate_image_import_preview(
     scope: str,
 ) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
-    summary = build_image_summary(source_path, normalized_scope)
+    summary = build_image_summary(source_path, normalized_scope, repo_root=repo_root)
     summary["scope"] = normalized_scope
     summary["source_format"] = "image"
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
@@ -672,7 +689,7 @@ def generate_file_media_import_preview(
     scope: str,
 ) -> dict[str, Any]:
     normalized_scope = normalize_scope(scope)
-    summary = build_file_media_summary(source_path, normalized_scope)
+    summary = build_file_media_summary(source_path, normalized_scope, repo_root=repo_root)
     summary["scope"] = normalized_scope
     summary["source_format"] = "file"
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)

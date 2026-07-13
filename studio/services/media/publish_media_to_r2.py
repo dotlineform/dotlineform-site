@@ -174,8 +174,17 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         description="Publish approved media derivatives to Cloudflare R2. Defaults to dry-run.",
     )
     ap.add_argument("--scope", choices=["catalogue", "docs"], default="catalogue")
-    ap.add_argument("--kind", choices=sorted(CATALOGUE_KINDS), help="Catalogue media kind to publish")
+    ap.add_argument(
+        "--kind",
+        choices=sorted({*CATALOGUE_KINDS, "files", "img"}),
+        help="Catalogue kind or Docs media class to publish",
+    )
     ap.add_argument("--id", dest="item_id", help="Specific work or work-detail id")
+    ap.add_argument("--docs-scope", help="Exact public Docs Viewer scope for --scope docs")
+    ap.add_argument(
+        "--staged-filename",
+        help="One direct-child filename under the shared import-staging drop-zone for --scope docs",
+    )
     ap.add_argument("--all", action="store_true", help="Publish every selected kind")
     ap.add_argument("--changed-only", action="store_true", help="Omit unchanged objects from logs and JSON reports")
     ap.add_argument("--force", action="store_true", help="Overwrite changed remote objects")
@@ -192,7 +201,42 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     repo_root = Path(args.repo_root).expanduser().resolve() if args.repo_root else REPO_ROOT
     if args.scope == "docs":
-        raise SystemExit("Error: docs media publishing is not implemented in this milestone.")
+        if args.delete:
+            raise SystemExit("Error: Docs media publishing does not support remote deletion.")
+        if args.all or args.item_id:
+            raise SystemExit("Error: Docs media publishing requires one --staged-filename, not --all or --id.")
+        if args.allow_partial or args.changed_only:
+            raise SystemExit("Error: --allow-partial and --changed-only are catalogue-only options.")
+        if not args.docs_scope:
+            raise SystemExit("Error: Docs media publishing requires --docs-scope <scope>.")
+        if args.kind not in {"files", "img"}:
+            raise SystemExit("Error: Docs media publishing requires --kind img or --kind files.")
+        if not args.staged_filename:
+            raise SystemExit("Error: Docs media publishing requires --staged-filename <filename>.")
+        from docs_media_storage import run_docs_staged_media_publish
+
+        env_files = [repo_root / path for path in DEFAULT_ENV_FILES]
+        env_files.extend(Path(path).expanduser() for path in args.env_file)
+        try:
+            report = run_docs_staged_media_publish(
+                repo_root,
+                scope=args.docs_scope,
+                media_class=args.kind,
+                staged_filename=args.staged_filename,
+                write=args.write,
+                force=args.force,
+                env_files=env_files,
+            )
+        except (RuntimeError, ValueError) as exc:
+            raise SystemExit(f"Error: {exc}") from exc
+        print_docs_report(report)
+        write_report(repo_root=repo_root, report=report, report_json=args.report_json)
+        failed_statuses = {"blocked_changed", "failed", "not_attempted"}
+        return 1 if any(report["counts"].get(status, 0) for status in failed_statuses) else 0
+    if args.docs_scope or args.staged_filename:
+        raise SystemExit("Error: --docs-scope and --staged-filename require --scope docs.")
+    if args.kind in {"files", "img"}:
+        raise SystemExit("Error: catalogue publishing requires --kind works or --kind work_details.")
     if args.delete and not args.item_id:
         raise SystemExit("Error: remote delete requires --kind and --id.")
     if args.delete and not args.kind:
@@ -961,6 +1005,26 @@ def print_report(report: Mapping[str, object]) -> None:
                 f"media_version_{item.get('status')}: {item.get('kind')} {item.get('item_id')}"
                 f"{version_text}{reason}"
             )
+
+
+def print_docs_report(report: Mapping[str, object]) -> None:
+    print(f"R2 Docs media publish {report['mode']}: {report.get('docs_scope')}")
+    counts = report.get("counts", {})
+    if isinstance(counts, Mapping) and counts:
+        print("Counts: " + ", ".join(f"{key}={counts[key]}" for key in sorted(counts)))
+    else:
+        print("Counts: no matching objects")
+    objects = report.get("objects", [])
+    if not isinstance(objects, list):
+        return
+    for item in objects:
+        if not isinstance(item, Mapping):
+            continue
+        reason = f" - {item.get('reason')}" if item.get("reason") else ""
+        print(
+            f"{item.get('status')}: {item.get('media_class')}/{item.get('filename')}"
+            f"{reason}"
+        )
 
 
 class R2Client:
