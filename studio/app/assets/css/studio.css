@@ -886,6 +886,10 @@ span.studioUi__input--readonlyDisplay {
   color: var(--studio-success);
 }
 
+.studioUi__saveResult[data-state="warn"] {
+  color: var(--studio-warn);
+}
+
 .studioUi__saveResult[data-state="error"] {
   color: var(--studio-danger);
 }

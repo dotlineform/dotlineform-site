@@ -65,6 +65,8 @@ The first implementation covers:
 - search detail rows by the last three digits of `detail_id`
 - browse detail sections using section-owned `details_subfolder`, `section_order`, and `detail_sort` from the work lookup payload
 - manage detail sections through section-level actions only
+- create a detail section and all of its selected detail records immediately, then publish their complete primary sets to R2
+- delete a detail section and all of its detail records immediately, then remove their exact R2 primary variants
 - keep the detail-record toolbar host hidden because individual detail create/edit/delete is not yet implemented
 - list the current work's work-owned `downloads` metadata
 - list the current work's work-owned `links` metadata
@@ -114,7 +116,9 @@ The `series` URL parameter is intentionally single-series only. Additional serie
 
 Draft works can be found later from Catalogue Drafts using `/studio/catalogue-status/?family=works`.
 
-Work detail section creation is implemented through the section toolbar. Individual detail creation and editing are waiting on a future work-scoped modal/API design. The detail-record toolbar host remains in the page shell for that future work, but its buttons are hidden so users cannot edit individual details before source and generated public payload synchronization is designed.
+Work detail section creation is implemented through the section toolbar. Confirming the project-media picker immediately writes the section and every selected detail record, builds all selected detail media, and publishes the complete primary sets to R2. The parent Work `Save` is not involved. If the local build or remote publish does not complete, the created canonical records remain authoritative and Studio reports the affected detail ids for manual attention.
+
+Section deletion follows the same aggregate boundary: confirmation immediately deletes the section and all of its detail records, then removes their exact R2 primary variants. Individual detail creation, editing, and deletion remain intentionally unavailable because those rare mutations do not justify a separate record-level workflow. The detail-record toolbar host remains hidden.
 
 ## Series Picker
 
@@ -296,6 +300,7 @@ Delete flow:
 5. the server deletes the work plus dependent detail records and work-owned file/link metadata in one atomic write bundle
 6. if a draft series uses the deleted work as `primary_work_id`, the server clears that draft-only pointer; published series still block deletion until reassigned or unpublished
 7. the server removes generated work/detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries
+8. after the canonical/local transaction succeeds, the server removes the exact R2 Work variants plus every dependent detail variant; missing remote objects count as clean, while a rare remote failure leaves the deletion complete and shows a manual-cleanup warning
 
 The current public update scope is intentionally narrow:
 
@@ -315,7 +320,7 @@ Locked constraints for this phase:
 - the detail search box searches within the current work by `detail_uid`
 - the detail search box only appears when at least one section exceeds the fixed visible row limit
 - works with multiple detail sections render as multiple grouped lists
-- this area is navigation into the detail editor, not inline editing
+- the section toolbar owns aggregate create/edit/delete actions; individual detail rows remain read-only navigation
 
 ## Files And Links
 

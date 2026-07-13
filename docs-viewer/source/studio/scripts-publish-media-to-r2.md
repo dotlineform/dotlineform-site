@@ -28,7 +28,8 @@ The first implementation supports catalogue primary-image derivatives only:
 
 Docs media publishing is reserved for a later milestone.
 The Work editor exposes this publisher for saved published Work primaries.
-Work-detail publishing remains CLI-only until detail replacement has an editor-owned staging action.
+Creating a detail section from the Work editor publishes every newly created detail primary set automatically after its complete local build succeeds.
+Replacement of an existing individual detail remains CLI-only because there is intentionally no individual detail mutation workflow.
 
 ## Credentials
 
@@ -94,6 +95,18 @@ Apply repeats the comparison and must match the preview's opaque fingerprint, so
 
 The Local Studio service owns `.env.local` reads, R2 requests, complete-set validation, version promotion, and focused public JSON regeneration.
 The browser receives only compact per-width statuses and confirmed version state; it does not receive credentials, signed URLs, local paths, object keys, or checksums.
+
+## Detail Section And Delete Actions
+
+The Work editor treats each detail section as the mutation boundary:
+
+- confirming section creation writes all selected detail records and builds all of their local media first
+- one exact-target publisher run then uploads every created detail primary set through a shared R2 client
+- changed remote collisions are not overwritten automatically; the section remains created and Studio reports the affected detail ids for manual attention
+- confirming section deletion removes its canonical/public/local detail data first, then deletes the exact R2 variants for every affected detail
+- confirming Work deletion uses the same post-delete runner for the Work and all dependent detail ids, so the user does not need to delete sections first
+
+Remote deletion is best-effort after the authoritative local transaction. Missing R2 objects are successful cleanup. A rare remote failure does not roll back canonical deletion or create retry state; Studio reports the affected ids for manual cleanup.
 
 ## Usage
 

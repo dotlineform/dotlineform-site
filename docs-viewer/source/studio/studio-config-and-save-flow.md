@@ -151,7 +151,15 @@ Catalogue editor local save behavior:
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`
 - work delete removes the selected work plus dependent detail records and work-owned file/link metadata on that work record
+- after the canonical/public/local delete succeeds, work delete removes the exact R2 Work primary set and every dependent detail primary set; a remote failure produces a manual-cleanup warning without rolling back deletion
 - work delete is disabled while the work editor is in bulk mode
+
+Integrated work-detail section behavior:
+
+- confirming section creation immediately writes the section and every selected detail record; it does not wait for parent Work `Save`
+- after all selected detail builds succeed, the server publishes those exact Work-detail primary sets to R2
+- confirming section deletion immediately removes the section and every owned detail record, then removes their exact R2 primary sets
+- individual Work-detail create/edit/delete remains intentionally unavailable; section actions are the aggregate mutation boundary
 
 Catalogue work detail local save behavior:
 

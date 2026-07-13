@@ -798,6 +798,26 @@ export async function refreshWorkMedia(state, context) {
   }
 }
 
+export function catalogueRemoteMediaWarning(remoteMedia) {
+  if (!remoteMedia || normalizeText(remoteMedia.status) !== "warning") return null;
+  const targets = (Array.isArray(remoteMedia.failed_targets) ? remoteMedia.failed_targets : [])
+    .map((target) => {
+      const kind = normalizeText(target && target.kind);
+      const id = normalizeText(target && target.id);
+      if (!id) return "";
+      return `${kind === "work_details" ? "work detail" : "work"} ${id}`;
+    })
+    .filter(Boolean);
+  return {
+    failed: Math.max(0, Math.floor(Number(remoteMedia.failed) || 0)),
+    targets
+  };
+}
+
+export function catalogueDeleteRemoteCleanupWarning(response) {
+  return catalogueRemoteMediaWarning(response && response.cleanup && response.cleanup.r2_media);
+}
+
 export async function deleteCurrentWork(state, context) {
   if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
   state.isDeleting = true;
@@ -844,7 +864,39 @@ export async function deleteCurrentWork(state, context) {
     state.isDeleting = true;
     context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
-    await applyCatalogueDelete(request);
+    const response = await applyCatalogueDelete(request);
+    const remoteWarning = catalogueDeleteRemoteCleanupWarning(response);
+    if (remoteWarning) {
+      state.isDeleting = false;
+      state.currentRecord = null;
+      state.currentRecordHash = "";
+      state.baselineDraft = null;
+      state.buildPreview = null;
+      state.mediaPublishPending = false;
+      context.updateEditorState();
+      const targetText = remoteWarning.targets.length
+        ? remoteWarning.targets.join(", ")
+        : state.currentWorkId;
+      setTextWithState(
+        context,
+        state.statusNode,
+        t(state, context, "delete_status_r2_cleanup_warning", "Work deleted, but R2 media cleanup needs attention."),
+        "warn"
+      );
+      setTextWithState(
+        context,
+        state.resultNode,
+        t(
+          state,
+          context,
+          "delete_result_r2_cleanup_warning",
+          "Remove the remaining R2 primary media manually for: {targets}.",
+          { targets: targetText }
+        ),
+        "warn"
+      );
+      return;
+    }
     window.location.assign(buildStudioRouteUrl(state.config, "catalogue_status"));
   } catch (error) {
     const message = Number(error && error.status) === 409

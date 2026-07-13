@@ -193,6 +193,7 @@ def assert_save_then_media_publish_sequence(page: Page) -> None:
     result = page.evaluate(
         """async () => {
             const module = await import('/studio/app/frontend/js/catalogue-work-media-publish.js');
+            const actionsModule = await import('/studio/app/frontend/js/catalogue-work-actions.js');
             const enabledCalls = [];
             let enabledPending = false;
             const enabled = await module.runWorkSaveThenMediaPublish({
@@ -273,6 +274,30 @@ def assert_save_then_media_publish_sequence(page: Page) -> None:
                 mode: 'bulk',
                 mediaPublishPending: true
             }, false);
+            const completedRemoteMedia = actionsModule.catalogueRemoteMediaWarning({
+                status: 'completed',
+                failed: 0,
+                failed_targets: []
+            });
+            const detailRemoteWarning = actionsModule.catalogueRemoteMediaWarning({
+                status: 'warning',
+                failed: 3,
+                failed_targets: [
+                    { kind: 'work_details', id: '00008-001' }
+                ]
+            });
+            const deleteRemoteWarning = actionsModule.catalogueDeleteRemoteCleanupWarning({
+                cleanup: {
+                    r2_media: {
+                        status: 'warning',
+                        failed: 6,
+                        failed_targets: [
+                            { kind: 'works', id: '00008' },
+                            { kind: 'work_details', id: '00008-001' }
+                        ]
+                    }
+                }
+            });
             return {
                 enabled,
                 enabledCalls,
@@ -287,7 +312,10 @@ def assert_save_then_media_publish_sequence(page: Page) -> None:
                 sourceSaveRequired,
                 mediaRetryRequired,
                 cleanSaveRequired,
-                bulkRetryRequired
+                bulkRetryRequired,
+                completedRemoteMedia,
+                detailRemoteWarning,
+                deleteRemoteWarning
             };
         }"""
     )
@@ -306,6 +334,15 @@ def assert_save_then_media_publish_sequence(page: Page) -> None:
         "mediaRetryRequired": True,
         "cleanSaveRequired": False,
         "bulkRetryRequired": False,
+        "completedRemoteMedia": None,
+        "detailRemoteWarning": {
+            "failed": 3,
+            "targets": ["work detail 00008-001"],
+        },
+        "deleteRemoteWarning": {
+            "failed": 6,
+            "targets": ["work 00008", "work detail 00008-001"],
+        },
     }
 
 

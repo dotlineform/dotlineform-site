@@ -88,6 +88,8 @@ import {
   applyPublicationChange,
   bulkPublishedBuildTargets,
   bulkSelectionHasPublishedRecords,
+  catalogueDeleteRemoteCleanupWarning,
+  catalogueRemoteMediaWarning,
   currentWorkIsDraft,
   currentWorkIsPublished,
   deleteCurrentWork,
@@ -215,6 +217,7 @@ async function openDetailSectionPicker(state) {
       project_subfolder: selection.project_subfolder,
       filenames
     });
+    const remoteWarning = catalogueRemoteMediaWarning(payload && payload.r2_media);
     const sectionId = normalizeText(payload && payload.section_id);
     if (sectionId) state.detailBrowserSelectedSectionId = sectionId;
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
@@ -225,6 +228,25 @@ async function openDetailSectionPicker(state) {
         state.resultNode,
         t(state, "detail_section_create_status_exists", "Detail section already exists."),
         "info"
+      );
+    } else if (remoteWarning) {
+      const targetText = remoteWarning.targets.length
+        ? remoteWarning.targets.join(", ")
+        : (payload.created_detail_uids || []).join(", ");
+      state.messageController.setActionTextWithState(
+        state.statusNode,
+        t(state, "detail_section_create_status_r2_warning", "Detail section created, but R2 media publishing needs attention."),
+        "warn"
+      );
+      state.messageController.setActionTextWithState(
+        state.resultNode,
+        t(
+          state,
+          "detail_section_create_result_r2_warning",
+          "Publish the remaining R2 primary media manually for: {targets}.",
+          { targets: targetText }
+        ),
+        "warn"
       );
     } else {
       state.messageController.setActionTextWithState(
@@ -378,19 +400,41 @@ async function deleteDetailSection(state, row) {
       t(state, "detail_section_delete_status_deleting", "Deleting detail section..."),
       "info"
     );
-    await applyCatalogueDelete(request);
+    const response = await applyCatalogueDelete(request);
+    const remoteWarning = catalogueDeleteRemoteCleanupWarning(response);
     state.currentLookup = await loadWorkLookupRecord(state, state.currentWorkId);
     state.detailBrowserSelectedSectionId = "";
     state.detailBrowserSelectedDetailUid = "";
     updateSummary(state);
-    state.messageController.setActionTextWithState(
-      state.resultNode,
-      t(state, "detail_section_delete_status_deleted", "Deleted detail section {section_id}.", {
-        section_id: sectionId
-      }),
-      "success"
-    );
-    state.messageController.setActionTextWithState(state.statusNode, "");
+    if (remoteWarning) {
+      const targetText = remoteWarning.targets.length
+        ? remoteWarning.targets.join(", ")
+        : sectionId;
+      state.messageController.setActionTextWithState(
+        state.statusNode,
+        t(state, "detail_section_delete_status_r2_warning", "Detail section deleted, but R2 media cleanup needs attention."),
+        "warn"
+      );
+      state.messageController.setActionTextWithState(
+        state.resultNode,
+        t(
+          state,
+          "detail_section_delete_result_r2_warning",
+          "Remove the remaining R2 primary media manually for: {targets}.",
+          { targets: targetText }
+        ),
+        "warn"
+      );
+    } else {
+      state.messageController.setActionTextWithState(
+        state.resultNode,
+        t(state, "detail_section_delete_status_deleted", "Deleted detail section {section_id}.", {
+          section_id: sectionId
+        }),
+        "success"
+      );
+      state.messageController.setActionTextWithState(state.statusNode, "");
+    }
   } catch (error) {
     state.messageController.setActionTextWithState(
       state.statusNode,

@@ -171,7 +171,7 @@
           "record_id_field": "work_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers delete apply after the preview/confirmation flow, including dependent details and generated cleanup.",
+          "notes": "Covers delete apply after the preview/confirmation flow, including dependent details and exact R2 media cleanup.",
           "script_purposes": [
             {
               "id": "delete-canonical-data",
@@ -181,7 +181,7 @@
             {
               "id": "clean-generated-artifacts",
               "optional": true,
-              "when": "published artifacts, generated index records, or local media are cleaned"
+              "when": "published artifacts, generated index records, local media, or exact R2 primary variants are cleaned"
             },
             {
               "id": "rebuild-lookups",
@@ -212,7 +212,7 @@
             {
               "id": "clean-generated-artifacts",
               "optional": true,
-              "when": "published artifacts, generated index records, or local media are cleaned"
+              "when": "published artifacts, generated index records, local media, or exact R2 primary variants are cleaned"
             },
             {
               "id": "rebuild-lookups",
@@ -1004,7 +1004,8 @@
         "work-json",
         "series-json",
         "index-json",
-        "local-media"
+        "local-media",
+        "remote-media"
       ],
       "detail_templates": [
         "Cleaned generated artifacts for {record_id}"

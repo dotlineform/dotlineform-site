@@ -20,7 +20,8 @@ Status:
 - all existing media-bearing works and work details are backfilled to `media_version: 1`
 - stale catalogue `--kind moments` support has been removed from the publisher
 - Work `Save` continues into R2 preview/confirmation when media publishing is eligible and remains enabled for a pending retry after cancellation or failure
-- work-detail uploads remain available through the CLI until detail replacement has an editor-owned staging action
+- new Work-detail sections publish all newly created detail primary sets automatically; replacement of an existing individual detail remains CLI-only
+- confirmed section and Work deletes clean exact R2 primary variants after the canonical/local delete, with manual-attention warnings instead of rollback or retry state
 
 ## Summary
 
@@ -295,8 +296,14 @@ It uses a server-owned preview/apply flow:
 The browser sends only the work id, expected media version, opaque preview fingerprint, explicit overwrite decision, and Studio Activity context.
 It never receives raw R2 credentials, credential-bearing URLs, local paths, object keys, or checksums; `.env.local` is read only by the Local Studio service and media publisher.
 
-This first editor surface is intentionally Work-only.
-Work-detail publishing continues to use the same CLI because there is not yet a detail editor action that owns replacement-media staging and confirmation.
+Existing Work-detail replacement continues to use the CLI because there is intentionally no individual detail mutation action.
+The integrated Work editor does own aggregate detail-section creation and deletion:
+
+- section creation writes and builds every selected detail first, then publishes those exact detail ids in one server-owned R2 run
+- section deletion completes its canonical/public/local aggregate delete first, then removes every affected detail primary set from R2
+- Work deletion cascades through the Work primary set and every remaining dependent detail primary set
+- missing remote objects count as successful cleanup
+- a rare remote failure leaves canonical creation/deletion complete and returns only safe affected ids for a manual Cyberduck or CLI follow-up; there is no rollback, pending job, or automated retry state
 
 ## Documentation Requirements
 
@@ -348,7 +355,10 @@ The Local Studio integration is complete for Works:
 - the local service owns credential reads, R2 comparison, upload, version promotion, and public JSON regeneration
 - the browser response omits credentials, signed URLs, local paths, object keys, and checksums
 - successful apply refreshes the editor to the confirmed media version and writes a unified Studio Activity row
-- work-detail Studio publishing remains out of scope until detail replacement is editor-owned; its CLI path remains supported
+- new detail-section creation publishes every created detail primary set after the complete local build succeeds
+- detail-section deletion removes every affected detail primary set after canonical/public/local deletion
+- Work deletion also cleans all remaining dependent detail primary sets without requiring the user to delete sections first
+- existing individual detail replacement remains CLI-only
 
 ## Benefits
 

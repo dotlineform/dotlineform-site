@@ -212,6 +212,35 @@ def test_high_level_catalogue_upload_runner_is_reused_by_studio() -> None:
     assert report_payload["media_versions"] == []
 
 
+def test_exact_target_upload_runner_reuses_one_client_for_detail_section() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        projects_base = Path(temp) / "projects-base"
+        media_root = projects_base / "catalogue/media"
+        for detail_uid in ("01007-001", "01007-002"):
+            for width in publisher.PRIMARY_WIDTHS:
+                write_primary(
+                    media_root,
+                    "work_details",
+                    f"{detail_uid}-primary-{width}.webp",
+                    f"{detail_uid}-{width}".encode("utf-8"),
+                )
+        client = FakeR2Client()
+
+        report_payload = publisher.run_catalogue_upload_targets(
+            repo_root=REPO_ROOT,
+            targets=[("work_details", "01007-001"), ("work_details", "01007-002")],
+            write=False,
+            force=False,
+            client=client,
+            environ={"DOTLINEFORM_PROJECTS_BASE_DIR": str(projects_base)},
+            env_files=[],
+        )
+
+    assert report_payload["counts"] == {"would_upload": 6}
+    assert report_payload["mode"] == "dry-run"
+    assert client.puts == []
+
+
 def test_unchanged_remote_is_skipped_and_changed_remote_requires_force() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
@@ -294,6 +323,35 @@ def test_delete_plan_uses_deterministic_remote_keys_and_requires_write() -> None
     ]
 
 
+def test_exact_target_delete_runner_cleans_work_and_dependent_details() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        repo = make_repo(Path(temp))
+        targets = [("works", "01007"), ("work_details", "01007-001")]
+        remote = {
+            obj.object_key: publisher.RemoteObject(size=10, etag='"digest"')
+            for kind, item_id in targets
+            for obj in publisher.build_catalogue_remote_objects(
+                repo_root=repo,
+                kind_name=kind,
+                item_id=item_id,
+            )
+        }
+        client = FakeR2Client(remote)
+
+        report_payload = publisher.run_catalogue_remote_delete(
+            repo_root=repo,
+            targets=targets,
+            write=True,
+            client=client,
+        )
+
+    assert report_payload["counts"] == {"deleted": 6}
+    assert report_payload["action"] == "delete"
+    assert len(client.deletes) == 6
+    assert "works/img/01007-primary-800.webp" in client.deletes
+    assert "work_details/img/01007-001-primary-1600.webp" in client.deletes
+
+
 def test_complete_upload_promotes_once_and_incomplete_set_does_not_promote() -> None:
     results = [
         publisher.PublishResult(
@@ -355,11 +413,16 @@ def test_moments_are_not_a_catalogue_publisher_kind() -> None:
 
 if __name__ == "__main__":
     test_credentials_load_from_env_file_without_printing_values()
-    test_default_env_file_is_site_env()
+    test_default_env_file_is_env_local()
     test_missing_credentials_error_names_missing_vars_only()
     test_catalogue_mapping_uses_configured_remote_prefixes_and_blocks_partial_sets()
     test_symlink_escape_is_refused()
     test_dry_run_marks_missing_remote_as_would_upload()
+    test_high_level_catalogue_upload_runner_is_reused_by_studio()
+    test_exact_target_upload_runner_reuses_one_client_for_detail_section()
     test_unchanged_remote_is_skipped_and_changed_remote_requires_force()
     test_delete_plan_uses_deterministic_remote_keys_and_requires_write()
+    test_exact_target_delete_runner_cleans_work_and_dependent_details()
+    test_complete_upload_promotes_once_and_incomplete_set_does_not_promote()
+    test_moments_are_not_a_catalogue_publisher_kind()
     print("publish media to R2 checks passed")

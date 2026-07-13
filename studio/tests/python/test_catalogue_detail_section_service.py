@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -96,6 +97,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     repo_root, _projects_base = prepare_repo(tmp_path)
     context = build_catalogue_write_context(repo_root)
     build_calls: list[dict[str, object]] = []
+    publish_calls: list[dict[str, object]] = []
 
     def fake_build_operation(_context, **kwargs):
         build_calls.append(dict(kwargs))
@@ -107,6 +109,30 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     monkeypatch.setattr(detail_section_service, "run_build_operation", fake_build_operation)
     stub_lookup_refresh(monkeypatch)
 
+    def fake_remote_publish(**kwargs):
+        publish_calls.append(dict(kwargs))
+        detail_uids = [item_id for _kind, item_id in kwargs["targets"]]
+        return {
+            "counts": {"uploaded": len(detail_uids) * 3},
+            "objects": [
+                {
+                    "kind": "work_details",
+                    "item_id": detail_uid,
+                    "status": "uploaded",
+                }
+                for detail_uid in detail_uids
+                for _width in (800, 1200, 1600)
+            ],
+            "media_versions": [
+                {
+                    "kind": "work_details",
+                    "item_id": detail_uid,
+                    "status": "promoted",
+                }
+                for detail_uid in detail_uids
+            ],
+        }
+
     payload = detail_section_service.create_detail_section_payload(
         context,
         {
@@ -115,6 +141,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
             "project_subfolder": "details",
             "filenames": ["detail-01.jpg", "detail-02.png"],
         },
+        remote_publish_runner=fake_remote_publish,
     )
 
     assert payload["ok"] is True
@@ -124,7 +151,17 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     assert payload["created_count"] == 2
     assert payload["build_requested"] is True
     assert payload["build"]["ok"] is True
+    assert payload["r2_media"]["status"] == "completed"
+    assert payload["r2_media"]["uploaded"] == 6
     assert [call["detail_uid"] for call in build_calls] == ["00782-001", "00782-002"]
+    assert publish_calls == [{
+        "repo_root": repo_root,
+        "targets": [("work_details", "00782-001"), ("work_details", "00782-002")],
+        "write": True,
+        "force": False,
+        "changed_only": False,
+        "allow_partial": False,
+    }]
 
     source = read_work_details_source(repo_root)
     assert source["header"]["section_count"] == 1
@@ -162,6 +199,48 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     assert duplicate_payload["changed"] is False
     assert duplicate_payload["reason"] == "section_exists"
     assert duplicate_payload["section_id"] == "00782-1"
+    assert len(publish_calls) == 1
+
+
+def test_create_detail_section_keeps_canonical_records_when_r2_publish_fails(tmp_path: Path, monkeypatch) -> None:
+    repo_root, _projects_base = prepare_repo(tmp_path)
+    context = build_catalogue_write_context(repo_root)
+
+    monkeypatch.setattr(
+        detail_section_service,
+        "run_build_operation",
+        lambda _context, **_kwargs: (True, {"completed_at_utc": "2026-01-01T00:00:00Z"}),
+    )
+    stub_lookup_refresh(monkeypatch)
+
+    def failing_remote_publish(**_kwargs):
+        raise RuntimeError("secret remote detail")
+
+    payload = detail_section_service.create_detail_section_payload(
+        context,
+        {
+            "work_id": "00782",
+            "project_folder": "birth",
+            "project_subfolder": "details",
+            "filenames": ["detail-01.jpg"],
+        },
+        remote_publish_runner=failing_remote_publish,
+    )
+
+    assert payload["ok"] is True
+    assert payload["created"] is True
+    assert payload["warning"] == "Detail section was created, but R2 media publishing did not complete."
+    assert payload["r2_media"] == {
+        "status": "warning",
+        "target_count": 1,
+        "object_count": 3,
+        "uploaded": 0,
+        "unchanged": 0,
+        "failed": 3,
+        "failed_targets": [{"kind": "work_details", "id": "00782-001"}],
+    }
+    assert "secret remote detail" not in json.dumps(payload)
+    assert "00782-001" in read_work_details_source(repo_root)["work_details"]
 
 
 def test_create_detail_section_rejects_missing_file(tmp_path: Path) -> None:

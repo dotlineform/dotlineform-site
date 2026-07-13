@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from catalogue import catalogue_activity as activity
 from catalogue import catalogue_transactions as transactions
@@ -35,9 +35,106 @@ from catalogue.catalogue_source import (
 from catalogue.project_state_report import IMAGE_EXTENSIONS
 from local_env import runtime_env
 from pipeline_config import source_works_root_subdir
+from studio.services.media.publish_media_to_r2 import run_catalogue_upload_targets
 
 
-def create_detail_section_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
+DetailMediaPublisher = Callable[..., Mapping[str, object]]
+
+
+def _default_detail_media_publisher(**kwargs: Any) -> Mapping[str, object]:
+    return run_catalogue_upload_targets(**kwargs)
+
+
+def _detail_media_target_payload(detail_uid: str) -> dict[str, str]:
+    return {"kind": "work_details", "id": detail_uid}
+
+
+def _detail_media_publish_warning(detail_uids: Sequence[str]) -> dict[str, Any]:
+    return {
+        "status": "warning",
+        "target_count": len(detail_uids),
+        "object_count": len(detail_uids) * 3,
+        "uploaded": 0,
+        "unchanged": 0,
+        "failed": len(detail_uids) * 3,
+        "failed_targets": [_detail_media_target_payload(detail_uid) for detail_uid in detail_uids],
+    }
+
+
+def _compact_detail_media_publish(
+    report: Mapping[str, object],
+    detail_uids: Sequence[str],
+) -> dict[str, Any]:
+    raw_counts = report.get("counts") if isinstance(report.get("counts"), Mapping) else {}
+    counts: dict[str, int] = {}
+    for key, value in raw_counts.items():
+        try:
+            count = int(value)
+        except (TypeError, ValueError):
+            continue
+        if count:
+            counts[str(key)] = count
+
+    successful_object_statuses = {"uploaded", "overwritten", "unchanged"}
+    successful_version_statuses = {"promoted", "current"}
+    failed_detail_uids = {
+        str(item.get("item_id") or "")
+        for item in report.get("objects") or []
+        if isinstance(item, Mapping)
+        and str(item.get("status") or "") not in successful_object_statuses
+    }
+    finalized_detail_uids = {
+        str(item.get("item_id") or "")
+        for item in report.get("media_versions") or []
+        if isinstance(item, Mapping)
+        and str(item.get("status") or "") in successful_version_statuses
+    }
+    failed_detail_uids.update(
+        detail_uid for detail_uid in detail_uids if detail_uid not in finalized_detail_uids
+    )
+    failed_object_count = sum(
+        count for status, count in counts.items() if status not in successful_object_statuses
+    )
+    return {
+        "status": "warning" if failed_detail_uids else "completed",
+        "target_count": len(detail_uids),
+        "object_count": sum(counts.values()),
+        "uploaded": counts.get("uploaded", 0) + counts.get("overwritten", 0),
+        "unchanged": counts.get("unchanged", 0),
+        "failed": max(failed_object_count, len(failed_detail_uids)),
+        "failed_targets": [
+            _detail_media_target_payload(detail_uid)
+            for detail_uid in sorted(failed_detail_uids)
+            if detail_uid
+        ],
+    }
+
+
+def publish_created_detail_media(
+    context: CatalogueWriteContext,
+    detail_uids: Sequence[str],
+    remote_publish_runner: DetailMediaPublisher,
+) -> dict[str, Any]:
+    try:
+        report = remote_publish_runner(
+            repo_root=context.repo_root,
+            targets=[("work_details", detail_uid) for detail_uid in detail_uids],
+            write=True,
+            force=False,
+            changed_only=False,
+            allow_partial=False,
+        )
+    except (Exception, SystemExit):
+        return _detail_media_publish_warning(detail_uids)
+    return _compact_detail_media_publish(report, detail_uids)
+
+
+def create_detail_section_payload(
+    context: CatalogueWriteContext,
+    body: Mapping[str, Any],
+    *,
+    remote_publish_runner: DetailMediaPublisher = _default_detail_media_publisher,
+) -> dict[str, Any]:
     request = extract_create_detail_section_request(body)
     work_id = request["work_id"]
     project_subfolder = request["project_subfolder"]
@@ -179,9 +276,25 @@ def create_detail_section_payload(context: CatalogueWriteContext, body: Mapping[
         payload["would_write"] = changed
     else:
         payload["saved_at_utc"] = activity.utc_now()
-        payload["lookup_refresh"] = refresh_lookup_payloads(context)
         payload["build_requested"] = True
-        payload["build"] = build_created_details(context, work_id, sorted(created_details))
+        build_result = build_created_details(context, work_id, sorted(created_details))
+        payload["build"] = build_result
+        if build_result["ok"]:
+            remote_publish = publish_created_detail_media(
+                context,
+                sorted(created_details),
+                remote_publish_runner,
+            )
+            payload["r2_media"] = remote_publish
+            if remote_publish["status"] == "warning":
+                payload["warning"] = "Detail section was created, but R2 media publishing did not complete."
+            confirmed_details = records_from_json_source(context.source_dir).work_details
+            payload["records"] = [
+                {"detail_uid": detail_uid, "record": confirmed_details[detail_uid]}
+                for detail_uid in sorted(created_details)
+                if detail_uid in confirmed_details
+            ]
+        payload["lookup_refresh"] = refresh_lookup_payloads(context)
 
     log_event(
         context.repo_root,

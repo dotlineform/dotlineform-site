@@ -216,15 +216,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     client = R2Client(credentials)
 
     if args.delete:
-        objects = build_catalogue_remote_objects(repo_root=repo_root, kind_name=args.kind, item_id=args.item_id)
-        results = plan_and_delete(objects=objects, client=client, write=args.write)
-        report = build_report(
-            results=results,
-            missing=[],
+        report = run_catalogue_remote_delete(
+            repo_root=repo_root,
+            targets=[(args.kind, args.item_id)],
             write=args.write,
-            force=False,
-            changed_only=False,
-            action="delete",
+            client=client,
+            env_files=env_files,
         )
         print_report(report)
         write_report(repo_root=repo_root, report=report, report_json=args.report_json)
@@ -274,6 +271,18 @@ def run_catalogue_upload(
         raise SystemExit(f"Error: unsupported catalogue media kind: {kind!r}")
     if item_id:
         validate_item_id(item_id)
+    if kind and item_id:
+        return run_catalogue_upload_targets(
+            repo_root=resolved_root,
+            targets=[(kind, item_id)],
+            write=write,
+            force=force,
+            changed_only=changed_only,
+            allow_partial=allow_partial,
+            client=client,
+            env_files=env_files,
+            environ=environ,
+        )
     selected_env_files = list(env_files) if env_files is not None else [
         resolved_root / path for path in DEFAULT_ENV_FILES
     ]
@@ -321,6 +330,142 @@ def run_catalogue_upload(
         changed_only=changed_only,
         action="upload",
         media_versions=media_versions,
+    )
+
+
+def run_catalogue_upload_targets(
+    *,
+    repo_root: Path,
+    targets: Sequence[tuple[str, str]],
+    write: bool,
+    force: bool,
+    changed_only: bool = False,
+    allow_partial: bool = False,
+    client: RemoteClient | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> Dict[str, object]:
+    """Publish exact catalogue media targets through one remote client."""
+
+    resolved_root = repo_root.resolve()
+    normalized_targets: list[tuple[str, str]] = []
+    for kind, item_id in targets:
+        kind_name = str(kind or "").strip()
+        normalized_id = str(item_id or "").strip()
+        if kind_name not in CATALOGUE_KINDS:
+            raise SystemExit(f"Error: unsupported catalogue media kind: {kind_name!r}")
+        validate_item_id(normalized_id)
+        target = (kind_name, normalized_id)
+        if target not in normalized_targets:
+            normalized_targets.append(target)
+    if not normalized_targets:
+        raise SystemExit("Error: at least one exact catalogue media upload target is required.")
+
+    selected_env_files = list(env_files) if env_files is not None else [
+        resolved_root / path for path in DEFAULT_ENV_FILES
+    ]
+    try:
+        combined_env = runtime_env(environ=environ, env_files=selected_env_files)
+        media_workspace = configured_catalogue_media_workspace(resolved_root, environ=combined_env)
+        media_root = media_workspace.root
+    except ValueError as exc:
+        raise SystemExit(f"Error: {exc}") from exc
+
+    remote_client = client
+    if remote_client is None:
+        remote_client = R2Client(load_r2_credentials(env_files=selected_env_files, environ=environ))
+
+    objects: list[LocalMediaObject] = []
+    missing: list[MissingVariant] = []
+    for kind_name, item_id in normalized_targets:
+        target_objects, target_missing = discover_catalogue_primary_objects(
+            repo_root=resolved_root,
+            media_root=media_root,
+            kinds=[kind_name],
+            item_id=item_id,
+            allow_partial=allow_partial,
+        )
+        if not target_objects:
+            raise SystemExit(
+                "Error: no matching catalogue primary derivatives found for "
+                f"{kind_name} id {item_id!r} under "
+                f"{catalogue_media_display_path(media_root, media_workspace)}."
+            )
+        objects.extend(target_objects)
+        missing.extend(target_missing)
+
+    results = plan_and_publish(
+        objects=objects,
+        client=remote_client,
+        write=write,
+        force=force,
+        changed_only=changed_only,
+    )
+    media_versions = (
+        finalize_complete_catalogue_uploads(repo_root=resolved_root, results=results)
+        if write
+        else []
+    )
+    return build_report(
+        results=results,
+        missing=missing,
+        write=write,
+        force=force,
+        changed_only=changed_only,
+        action="upload",
+        media_versions=media_versions,
+    )
+
+
+def run_catalogue_remote_delete(
+    *,
+    repo_root: Path,
+    targets: Sequence[tuple[str, str]],
+    write: bool,
+    client: RemoteClient | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> Dict[str, object]:
+    """Delete exact catalogue media targets for CLI or Local Studio callers."""
+
+    resolved_root = repo_root.resolve()
+    normalized_targets: list[tuple[str, str]] = []
+    for kind, item_id in targets:
+        kind_name = str(kind or "").strip()
+        normalized_id = str(item_id or "").strip()
+        if kind_name not in CATALOGUE_KINDS:
+            raise SystemExit(f"Error: unsupported catalogue media kind: {kind_name!r}")
+        validate_item_id(normalized_id)
+        target = (kind_name, normalized_id)
+        if target not in normalized_targets:
+            normalized_targets.append(target)
+    if not normalized_targets:
+        raise SystemExit("Error: at least one exact catalogue media delete target is required.")
+
+    selected_env_files = list(env_files) if env_files is not None else [
+        resolved_root / path for path in DEFAULT_ENV_FILES
+    ]
+    remote_client = client
+    if remote_client is None:
+        remote_client = R2Client(load_r2_credentials(env_files=selected_env_files, environ=environ))
+
+    objects = [
+        obj
+        for kind_name, item_id in normalized_targets
+        for obj in build_catalogue_remote_objects(
+            repo_root=resolved_root,
+            kind_name=kind_name,
+            item_id=item_id,
+        )
+    ]
+    results = plan_and_delete(objects=objects, client=remote_client, write=write)
+    return build_report(
+        results=results,
+        missing=[],
+        write=write,
+        force=False,
+        changed_only=False,
+        action="delete",
     )
 
 
