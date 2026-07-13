@@ -259,9 +259,15 @@ Automated Docs uploads should:
 - activate the reserved `r2_upload` Docs Import storage mode
 - reuse the existing server-owned R2 credentials and client rather than exposing credentials to browser code
 - upload only the media plans owned by the current import/apply action
-- use immutable fingerprinted filenames for automatically materialized media, so replacement produces a new URL without adding Catalogue-style `media_version` fields
+- use stable deterministic object keys derived from the scope, media class, and chosen filename
 - commit a source link to new remote media only after every required upload for that import record succeeds
 - report safe scope/file identities without local absolute paths, object credentials, signed URLs, or checksums
+
+Docs Viewer cache invalidation is explicitly deferred.
+The first implementation should not add fingerprinted filenames, canonical media versions, version query parameters, purge calls, or an asset registry.
+Replacing an existing R2 object may therefore remain stale at the delivery edge until its normal cache entry expires; that delay is acceptable at the current scale.
+If one replacement needs to appear immediately, the operator can use a new filename and update the document token manually.
+If a public scope such as Analysis later needs frequent reliable replacements, cache-safe versioning should be designed as a separate Docs asset-management capability rather than added implicitly to the uploader.
 
 Automatic remote deletion is not part of the first Docs slice.
 Docs assets may be shared across documents, so document deletion does not prove that an R2 object is unreferenced. A later reference/orphan report can identify cleanup candidates without adding rollback or ownership machinery to the initial uploader.
@@ -302,9 +308,9 @@ The smallest implementation sequence is:
 
 1. add and validate the `external_assets` mode so external-local imports cannot select a public destination
 2. add the confined local media read route for external-local scopes
-3. activate `r2_upload` for public-scope Docs Import plans using immutable filenames
+3. activate `r2_upload` for public-scope Docs Import plans using stable scope-owned object keys
 4. add a small exact-scope CLI path for manually authored public Docs assets when the import workflow is not involved
-5. leave deletion cleanup and migration automation out until actual usage demonstrates a need
+5. leave cache versioning, deletion cleanup, and migration automation out until actual usage demonstrates a need
 
 ## CLI Shape
 
