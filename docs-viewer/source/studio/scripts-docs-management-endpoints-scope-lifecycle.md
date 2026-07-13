@@ -159,6 +159,7 @@ Actions:
 - requires `confirm: true`
 - re-runs delete-preview validation
 - deletes only files owned by the manifest record
+- removes each scope-specific generated and published search directory implied by its manifest-owned search index, including an empty directory whose index is already missing
 - removes the scope config entry
 - removes user-created public route records when deleting a public-readonly scope
 - removes the manifest record

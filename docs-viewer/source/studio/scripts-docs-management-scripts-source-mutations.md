@@ -92,7 +92,7 @@ Purpose: top-level scope deletion planner and apply owner.
 Responsibilities:
 
 - validates manifest ownership and management-route protection
-- resolves manifest-recorded delete and missing paths
+- resolves manifest-recorded delete and missing paths, including scope-specific search roots implied by owned search indexes
 - plans config, manifest, and public-route record changes
 - deletes only the confirmed manifest-owned paths
 - runs all-scope rebuild follow-through after removal

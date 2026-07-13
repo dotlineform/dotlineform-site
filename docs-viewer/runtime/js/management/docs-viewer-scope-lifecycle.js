@@ -541,7 +541,6 @@ function lifecycleStorageRows(payload, root) {
   var searchOutput = normalizeText(contract.search_output);
   var publishSearchOutput = normalizeText(contract.publish_search_output);
   return [
-    ["root", root],
     ["source", lifecycleRelativePath(contract.source_root || (sourceRecord && sourceRecord.path), root)],
     ["generated", lifecycleRelativePath(docsOutput || (generatedRecord && generatedRecord.path), root)],
     ["search", lifecycleRelativePath(searchOutput || (searchRecord && searchRecord.path), root)],

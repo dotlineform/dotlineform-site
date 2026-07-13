@@ -474,7 +474,7 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 - sends `confirm: true` only from the final save action
 - reports created files, changed files, build commands, and resulting URLs from the server response
 
-Scope and sub-scope lifecycle previews and results use aligned label/value rows. External storage displays its resolved root once and shows source, generated, search, and affected file paths relative to that root; repo-owned changes remain repo-relative under `Changed files (repo)`.
+Scope and sub-scope lifecycle previews and results use aligned label/value rows. External source, generated, search, and affected file paths are displayed relative to the fixed external Docs Viewer root; the user-specific root itself is omitted. Repo-owned changes remain repo-relative under `Changed files (repo)`.
 
 `Rename scope` uses one compact form rather than the detailed lifecycle preview/result presentation.
 The operator selects an eligible external-local scope and enters its new id; the client calls preview as a validation gate and applies immediately when allowed.

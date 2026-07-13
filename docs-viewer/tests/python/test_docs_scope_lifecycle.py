@@ -873,6 +873,8 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 {"ui_status": "draft", "label": "Draft", "emoji": "D"},
             ]
             write_json(config_path, created_source_payload)
+            search_index_path = repo_root / "docs-viewer/generated/search/research/index.json"
+            search_index_path.unlink()
             payload = docs_management_service.handle_scope_delete_apply(
                 repo_root,
                 {
@@ -886,7 +888,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
             source_root_exists = (repo_root / "docs-viewer/source/research").exists()
             route_exists = (repo_root / "research/index.md").exists()
             generated_docs_exists = (repo_root / "docs-viewer/generated/docs/research").exists()
-            generated_search_exists = (repo_root / "docs-viewer/generated/search/research/index.json").exists()
+            generated_search_root_exists = (repo_root / "docs-viewer/generated/search/research").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
         docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
@@ -903,8 +905,18 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert source_root_exists is False
     assert route_exists is False
     assert generated_docs_exists is False
-    assert generated_search_exists is False
+    assert generated_search_root_exists is False
     assert any(file["path"] == "docs-viewer/source/research" for file in payload["deleted_files"])
+    assert any(
+        file["kind"] == "generated_search_root"
+        and file["path"] == "docs-viewer/generated/search/research"
+        for file in payload["deleted_files"]
+    )
+    assert any(
+        file["kind"] == "generated_search_index"
+        and file["path"] == "docs-viewer/generated/search/research/index.json"
+        for file in payload["missing_files"]
+    )
 
 def test_scope_delete_apply_removes_user_created_public_route_and_payloads() -> None:
     create_calls: list[tuple[Path, str, dict[str, object]]] = []
@@ -960,7 +972,7 @@ def test_scope_delete_apply_removes_user_created_public_route_and_payloads() -> 
             all_routes = json.loads((repo_root / "docs-viewer/config/routes/docs-viewer-routes.json").read_text(encoding="utf-8"))
             route_exists = (repo_root / "site/research/index.html").exists()
             public_docs_exists = (repo_root / "site/assets/data/docs/scopes/research").exists()
-            public_search_exists = (repo_root / "site/assets/data/search/research/index.json").exists()
+            public_search_exists = (repo_root / "site/assets/data/search/research").exists()
             source_root_exists = (repo_root / "docs-viewer/source/research").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
@@ -980,3 +992,4 @@ def test_scope_delete_apply_removes_user_created_public_route_and_payloads() -> 
     assert "site/research/index.html" in deleted_paths
     assert "site/assets/data/docs/scopes/research" in deleted_paths
     assert "site/assets/data/search/research/index.json" in deleted_paths
+    assert "site/assets/data/search/research" in deleted_paths

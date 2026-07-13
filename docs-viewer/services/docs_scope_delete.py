@@ -38,6 +38,7 @@ from docs_scope_manifest import (
 def manifest_delete_path_records(repo_root: Path, record: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     delete_files = []
     missing_files = []
+    recorded_paths: set[tuple[str, str]] = set()
     metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
     external_root_text = str(metadata.get("external_data_root") or "").strip()
     external_data_root = (
@@ -60,11 +61,21 @@ def manifest_delete_path_records(repo_root: Path, record: dict[str, Any]) -> tup
             field="manifest file path",
             external_data_root=external_data_root,
         )
-        planned = path_record(repo_root, kind, path, action="delete")
-        if path.exists():
-            delete_files.append(planned)
-        else:
-            missing_files.append(planned)
+
+        def append_planned_path(planned_kind: str, planned_path: Path) -> None:
+            key = (planned_kind, planned_path.as_posix())
+            if key in recorded_paths:
+                return
+            recorded_paths.add(key)
+            planned = path_record(repo_root, planned_kind, planned_path, action="delete")
+            if planned_path.exists():
+                delete_files.append(planned)
+            else:
+                missing_files.append(planned)
+
+        append_planned_path(kind, path)
+        if kind in {"generated_search_index", "published_search_index"} and path.parent.exists():
+            append_planned_path(kind.removesuffix("_index") + "_root", path.parent)
     return delete_files, missing_files
 
 

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -14,6 +15,7 @@ from docs_management_test_support import (
     write_docs_viewer_browser_config,
     write_generated_docs,
 )
+from docs_management_capabilities_service import capability_scope_root_label
 
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
@@ -52,6 +54,17 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
     assert payload["capabilities"]["scopes"]["studio"]["scope_lifecycle"]["rename_eligible"] is False
+
+
+def test_external_scope_capability_uses_portable_root_label() -> None:
+    config = SimpleNamespace(
+        scope_type="local_external",
+        source=Path("/Users/example/external/docs-viewer/source/research"),
+    )
+
+    label = capability_scope_root_label(Path("/repo"), "research", config)
+
+    assert label == "source/research"
 
 
 def test_missing_external_workspace_disables_only_import_and_review_capabilities(

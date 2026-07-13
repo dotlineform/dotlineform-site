@@ -281,6 +281,20 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
     if rename_host.locator('button[data-role="modal-primary"]').inner_text().strip() != "Rename":
         raise AssertionError("Rename scope modal should use a direct Rename action")
     rename_host.locator('button[data-role="modal-cancel"]').evaluate("button => button.click()")
+
+    page.locator("#docsViewerManageDeleteScopeButton").evaluate("button => button.click()")
+    delete_host = page.locator('[data-docs-viewer-management-modal-host="true"]')
+    page.wait_for_selector(
+        '[data-docs-viewer-management-modal-host="true"] [data-role="scope-delete-target"]',
+        state="visible",
+        timeout=timeout_ms,
+    )
+    delete_options = delete_host.locator('[data-role="scope-delete-target"] option').all_inner_texts()
+    if not any(" - source/" in label for label in delete_options):
+        raise AssertionError(f"External delete target should use a portable root label: {delete_options!r}")
+    if any("/Users/" in label for label in delete_options):
+        raise AssertionError(f"Delete target labels should not expose user-specific roots: {delete_options!r}")
+    delete_host.locator('button[data-role="modal-cancel"]').evaluate("button => button.click()")
     return (
         request_paths(generated_requests),
         request_paths(import_module_requests),
