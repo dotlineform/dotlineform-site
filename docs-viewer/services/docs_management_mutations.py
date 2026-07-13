@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
-from docs_scope_config import resolve_external_data_root
+from docs_scope_config import load_docs_scope_configs, resolve_external_data_root
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
@@ -533,6 +533,14 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     )
 
 
+def configured_default_doc_id(repo_root: Path, scope: str) -> str:
+    try:
+        config = load_docs_scope_configs(repo_root).get(scope)
+    except FileNotFoundError:
+        config = source_model.DOCS_SCOPE_CONFIGS.get(scope)
+    return str(getattr(config, "default_doc_id", "") or "").strip()
+
+
 def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
     scope = source_model.normalize_scope(scope)
     docs = source_model.load_scope_docs(repo_root, scope)
@@ -554,6 +562,8 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, A
     warnings = []
     if children:
         blockers.append(f"{len(children)} child docs still depend on this parent")
+    configured_default = configured_default_doc_id(repo_root, scope)
+    default_doc_id_changed = configured_default == target.doc_id
 
     return {
         "ok": True,
@@ -565,6 +575,8 @@ def plan_delete_preview(repo_root: Path, scope: str, doc_id: str) -> Dict[str, A
         "blockers": blockers,
         "warnings": warnings,
         "children": children,
+        "default_doc_id_changed": default_doc_id_changed,
+        "default_doc_id": "" if default_doc_id_changed else configured_default,
     }
 
 
@@ -590,6 +602,8 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "doc_id": target.doc_id,
             "path": relative_path(repo_root, target.path),
             "warnings": preview["warnings"],
+            "default_doc_id_changed": preview["default_doc_id_changed"],
+            "default_doc_id": preview["default_doc_id"],
             "summary_text": f"Deleted {target.doc_id}.",
         },
         source_deletes=(SourceDelete(target.path),),
@@ -597,6 +611,11 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
         build_doc_ids=[target.doc_id],
         search_doc_ids=[target.doc_id],
         log_event_name="docs-delete",
-        log_details={"scope": scope, "doc_id": target.doc_id, "path": relative_path(repo_root, target.path)},
+        log_details={
+            "scope": scope,
+            "doc_id": target.doc_id,
+            "path": relative_path(repo_root, target.path),
+            "default_doc_id_changed": preview["default_doc_id_changed"],
+        },
         include_write_result_keys=True,
     )

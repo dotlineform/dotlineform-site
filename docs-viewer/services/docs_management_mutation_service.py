@@ -10,6 +10,7 @@ import docs_scope_create
 import docs_scope_delete
 import docs_scope_manifest
 import docs_scope_rename
+import docs_source_config_settings
 import docs_sub_scope_lifecycle
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
@@ -84,7 +85,14 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
 
 
 def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, mutations.plan_delete_apply(repo_root, body), dry_run)
+    plan = mutations.plan_delete_apply(repo_root, body)
+    if plan.response.get("default_doc_id_changed") and not dry_run:
+        docs_source_config_settings.apply_scope_settings_change(
+            repo_root,
+            plan.scope,
+            {"default_doc_id": ""},
+        )
+    return execute_management_mutation_plan(repo_root, plan, dry_run)
 
 
 def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:

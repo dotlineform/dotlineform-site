@@ -145,6 +145,8 @@ Actions:
 - requires `confirm: true`
 - re-runs delete preview validation
 - deletes the Markdown source file only when no blockers remain
+- clears `default_doc_id` when the deleted doc was the optional configured default
+- opens the first remaining loadable root in the browser without making it the new default
 - rebuilds targeted generated docs payloads and docs search after deletion
 - writes watcher-suppression markers for the deleted source path
 

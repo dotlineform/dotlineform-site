@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -96,7 +97,48 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         ),
         encoding="utf-8",
     )
+    (source_root / "analytics.md").write_text(
+        docs_management_mutations.source_model.format_source(
+            {
+                "doc_id": "analytics",
+                "title": "analytics",
+                "parent_id": "",
+            },
+            "# analytics\n",
+        ),
+        encoding="utf-8",
+    )
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+    config_path.parent.mkdir(parents=True)
+    config_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "dlf",
+                        "scope_type": "local_external",
+                        "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer",
+                        "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/dlf",
+                        "media_path_prefix": "docs/dlf",
+                        "output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/dlf",
+                        "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/dlf/index.json",
+                        "viewer_base_url": "/docs/",
+                        "include_scope_param": True,
+                        "default_doc_id": "dlf",
+                        "non_loadable_doc_ids": [],
+                        "manage_only_tree_root_ids": [],
+                        "allow_unresolved_parent_ids": False,
+                        "import_media_storage": {"storage_mode": "external_assets"},
+                    }
+                ],
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     source_model = docs_management_mutations.source_model
     original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
@@ -106,6 +148,8 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         scope_type="local_external",
         source=source_root,
         allow_unresolved_parent_ids=False,
+        default_doc_id="dlf",
+        non_loadable_doc_ids=(),
         sub_scopes=(),
     )
     source_model.SCOPE_ROOTS["dlf"] = source_root
@@ -129,6 +173,10 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
     assert preview["path"] == "source/dlf/dlf.md"
+    assert preview["default_doc_id_changed"] is True
     assert result["path"] == "source/dlf/dlf.md"
+    assert result["default_doc_id_changed"] is True
+    assert result["default_doc_id"] == ""
     assert result["rebuild"] == {"ok": True}
     assert not target_path.exists()
+    assert json.loads(config_path.read_text(encoding="utf-8"))["scopes"][0]["default_doc_id"] == ""

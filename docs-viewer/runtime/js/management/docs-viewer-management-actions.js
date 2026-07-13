@@ -61,6 +61,26 @@ var ACTION_TEXT = {
   copyLinkFailed: "Copy link failed."
 };
 
+export function firstRemainingRootDocId(docs, deletedDocId, resolveLoadableDocId) {
+  var records = Array.isArray(docs) ? docs : [];
+  var remaining = records.filter(function (doc) {
+    return doc && doc.doc_id !== deletedDocId;
+  });
+  var roots = remaining.filter(function (doc) {
+    return !String(doc.parent_id || "").trim();
+  });
+  var candidates = roots.length ? roots : remaining;
+  for (var i = 0; i < candidates.length; i += 1) {
+    var docId = String(candidates[i].doc_id || "").trim();
+    if (!docId) continue;
+    var loadableDocId = typeof resolveLoadableDocId === "function"
+      ? String(resolveLoadableDocId(docId) || "").trim()
+      : docId;
+    if (loadableDocId) return loadableDocId;
+  }
+  return "";
+}
+
 export function createDocsViewerManagementActionController(options) {
   var root = options.root;
   var documentIndex = options.documentIndex || {};
@@ -503,9 +523,18 @@ export function createDocsViewerManagementActionController(options) {
       })
       .then(function (payload) {
         if (!payload) return;
-        var fallbackDocId = doc.parent_id || context.defaultRouteDocId() || context.defaultDocId();
+        var fallbackDocId = firstRemainingRootDocId(
+          documentIndex.allDocs,
+          doc.doc_id,
+          context.resolveLoadableDocId
+        );
         setManagementMessage("", false);
-        return reloadDocsIndex(fallbackDocId, "");
+        var configReload = payload.default_doc_id_changed
+          ? reloadViewerConfiguration()
+          : Promise.resolve(null);
+        return configReload.then(function () {
+          return reloadDocsIndex(fallbackDocId, "");
+        });
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Delete failed.", true);

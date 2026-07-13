@@ -171,6 +171,28 @@ def assert_generated_requests(paths: set[str]) -> None:
             raise AssertionError(f"expected generated service request {expected!r}; saw {sorted(paths)!r}")
 
 
+def assert_delete_uses_first_remaining_root(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions.js');
+            const docs = [
+                { doc_id: 'analytics', parent_id: '' },
+                { doc_id: 'dlf', parent_id: '' },
+                { doc_id: 'section', parent_id: '' },
+                { doc_id: 'section-child', parent_id: 'section' }
+            ];
+            const resolveLoadableDocId = docId => docId === 'section' ? 'section-child' : docId;
+            return {
+                afterDlf: module.firstRemainingRootDocId(docs, 'dlf', resolveLoadableDocId),
+                afterAnalytics: module.firstRemainingRootDocId(docs, 'analytics', resolveLoadableDocId),
+                afterOnly: module.firstRemainingRootDocId([{ doc_id: 'only', parent_id: '' }], 'only')
+            };
+        }"""
+    )
+    if result != {"afterDlf": "analytics", "afterAnalytics": "dlf", "afterOnly": ""}:
+        raise AssertionError(f"unexpected post-delete root fallback: {result!r}")
+
+
 def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], set[str], set[str], str]:
     generated_requests: list[str] = []
     import_module_requests: list[str] = []
@@ -196,6 +218,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
 
     page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)
     if import_module_requests:
         raise AssertionError(f"Docs Import modules loaded before the import action: {import_module_requests!r}")
