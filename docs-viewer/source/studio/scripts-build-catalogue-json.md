@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
-last_updated: 2026-06-01
+last_updated: 2026-07-13
 parent_id: studio
 viewable: true
 ---
@@ -123,10 +123,10 @@ The helper:
 - requires every series in the build scope to have `status: published`
 - requires a series primary work to exist, belong to the series, and have `status: published`
 - lets the generator render optional work and series prose from `studio/data/canonical/catalogue-markdown/works/<work_id>.md` and `studio/data/canonical/catalogue-markdown/series/<series_id>.md` through the shared Python Markdown renderer
-- stages in-scope source images under `var/catalogue/media/`
+- stages in-scope source images under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`
   - work source media resolves through `project_folder`, optional `project_subfolder`, and `project_filename`
   - work-detail source media resolves through the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
-- generates local primary and thumbnail srcset derivatives under `var/catalogue/media/`
+- generates local primary and thumbnail srcset derivatives under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`
 - copies generated thumbnail derivatives into `site/assets/works/img/` or `site/assets/work_details/img/`
 - passes the generator's narrow `--refresh-published` mode so selected published records can be recomputed without forcing unchanged writes
 - runs the internal `generate_work_pages.py` JSON engine with a narrow `--only` selection:
@@ -153,8 +153,8 @@ For `--moment-file`, the helper:
 - resolves moment metadata from `studio/data/canonical/catalogue/moments.json`
 - resolves moment prose from `studio/data/canonical/catalogue-markdown/moments/<moment_id>.md`
 - validates the moment filename, metadata, and required prose source
-- stages the configured moment source image under `var/catalogue/media/moments/`
-- generates local moment primary and thumbnail srcset derivatives under `var/catalogue/media/moments/`
+- stages the configured moment source image under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/`
+- generates local moment primary and thumbnail srcset derivatives under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/`
 - copies generated moment thumbnails into `site/assets/moments/img/`
 - runs the internal `generate_work_pages.py` engine with `--only moments --moment-ids <moment_id> --refresh-published`
 - then runs `build_search.py --scope catalogue`
@@ -182,9 +182,9 @@ Work, work-detail, and moment image generation uses the source-image metadata in
 - work details resolve from the parent work `project_folder` plus optional `details_subfolder` and `project_filename`
 - moments resolve from `DOTLINEFORM_PROJECTS_BASE_DIR/moments/images/<source_image_file>`
 - local runs read `DOTLINEFORM_PROJECTS_BASE_DIR` from `.env.local`; cloud runs can provide the same key through process environment configuration
-- renamed source images are copied to `var/catalogue/media/works/make_srcset_images/<work_id>.<ext>`, `var/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`, or `var/catalogue/media/moments/make_srcset_images/<moment_id>.<ext>`
-- primary derivatives are staged under `var/catalogue/media/<kind>/srcset_images/primary/`
-- thumbnail derivatives are generated temporarily under `var/catalogue/media/<kind>/srcset_images/thumb/`
+- renamed source images are copied to `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/make_srcset_images/<work_id>.<ext>`, `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/work_details/make_srcset_images/<work_id>-<detail_id>.<ext>`, or `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/make_srcset_images/<moment_id>.<ext>`
+- primary derivatives are staged under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/<kind>/srcset_images/primary/`
+- thumbnail derivatives are generated temporarily under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/<kind>/srcset_images/thumb/`
 - thumbnail derivatives are copied into the repo-owned public asset folders and then removed from staging:
   - `site/assets/works/img/`
   - `site/assets/work_details/img/`
@@ -200,7 +200,7 @@ Work, work-detail, and moment image generation uses the source-image metadata in
 
 This mode intentionally skips:
 
-- source-image staging under `var/catalogue/media/`
+- source-image staging under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`
 - primary derivative generation
 - page/json generation
 - catalogue search rebuilds
@@ -210,6 +210,7 @@ Use `--force` when the thumbnail encoding policy changed and existing thumbnail 
 The staged primary derivatives are the local handoff point for the remote media publishing step.
 Use [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) to preview or upload those primary derivatives after local generation.
 Staged thumbnail derivatives are not retained after they have been copied into the public asset folders.
+The external staging root has no repo-local fallback and can be rebuilt from canonical catalogue metadata plus the configured source-media trees.
 
 ## Purpose
 

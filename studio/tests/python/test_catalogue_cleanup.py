@@ -3,9 +3,12 @@
 
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 from pathlib import Path
+
+import pytest
 
 from catalogue_factory import write_json
 
@@ -24,6 +27,18 @@ from tag_services import tag_source_paths  # noqa: E402
 TAG_ASSIGNMENTS_PATH = tag_source_paths.TAG_ASSIGNMENTS_REL_PATH
 
 
+@pytest.fixture(autouse=True)
+def external_catalogue_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    projects_base = tmp_path / "projects-base"
+    projects_base.mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    return projects_base / "catalogue/media"
+
+
+def catalogue_media_root() -> Path:
+    return Path(os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"]) / "catalogue/media"
+
+
 def touch(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("x", encoding="utf-8")
@@ -40,8 +55,8 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         touch(root / "site/assets/works/index/00001.json")
         touch(root / "site/assets/works/img/00001-thumb-800.jpg")
         touch(root / "site/assets/work_details/img/00001-001-thumb-800.jpg")
-        touch(root / "var/catalogue/media/works/make_srcset_images/00001.jpg")
-        touch(root / "var/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp")
+        touch(catalogue_media_root() / "works/make_srcset_images/00001.jpg")
+        touch(catalogue_media_root() / "work_details/srcset_images/thumb/00001-001-thumb-800.webp")
         touch(root / "site/assets/data/works_index.json")
         touch(root / "site/assets/data/series_index.json")
         touch(root / "site/assets/data/recent_index.json")
@@ -71,7 +86,7 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         TAG_ASSIGNMENTS_PATH.as_posix(),
     ]
     assert "site/assets/works/img/00001-thumb-800.jpg" in preview["delete_paths"]
-    assert "var/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp" in preview["delete_paths"]
+    assert "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp" in preview["delete_paths"]
 
 
 def test_cleanup_scope_rejects_unallowlisted_delete_path() -> None:
@@ -142,8 +157,8 @@ def test_work_detail_generated_payloads_remove_all_affected_details() -> None:
         root = Path(tmp)
         touch(root / "site/assets/work_details/img/00001-001-thumb-800.jpg")
         touch(root / "site/assets/work_details/img/00001-002-thumb-800.jpg")
-        touch(root / "var/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp")
-        touch(root / "var/catalogue/media/work_details/srcset_images/thumb/00001-002-thumb-800.webp")
+        touch(catalogue_media_root() / "work_details/srcset_images/thumb/00001-001-thumb-800.webp")
+        touch(catalogue_media_root() / "work_details/srcset_images/thumb/00001-002-thumb-800.webp")
         write_json(
             root / "site/assets/works/index/00001.json",
             {

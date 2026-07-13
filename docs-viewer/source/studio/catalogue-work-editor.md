@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
 added_date: 2026-04-22
-last_updated: 2026-06-17
+last_updated: 2026-07-13
 parent_id: studio
 viewable: true
 ---
@@ -76,7 +76,7 @@ The first implementation covers:
 - refresh local work image derivatives from the displayed source image path without changing source metadata
 - publish draft works through a dedicated `Publish` command
 - unpublish public works through a dedicated `Unpublish` command
-- when the public update path runs for a published work, stage the resolved source image under `var/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `site/assets/works/img/`
+- when the public update path runs for a published work, stage the resolved source image under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `site/assets/works/img/`
 - delete one work source record in single-record mode
 - show saved-state feedback and public-update failure state after save
 - expose the shared Studio route-ready attributes on `#catalogueWorkRoot` for browser smoke tests and future automation
@@ -206,7 +206,7 @@ Current save/publication flow:
 changed image from object-fit: cover to contained natural sizing, with a 70vh / 42rem max-height for very tall images.
 
 10. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
-11. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
+11. the public update path stages source media under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `site/assets/works/img/`, and leaves primary derivatives staged for remote publishing
 12. generator lookup still reads existing `studio/data/canonical/catalogue-markdown/works/<work_id>.md` files for public work prose, but the metadata editor no longer imports or stages work prose
 
 ## Project Media Picker
@@ -235,7 +235,7 @@ The work media readiness panel exposes `Refresh media` when the saved or draft m
 
 The server overlays those three fields onto the saved work record only for media planning. It does not write `works.json`, rebuild public page/json/search outputs, or change the preview link target.
 
-After the refresh, the editor image element prefers the staged local primary derivative under `var/catalogue/media/works/srcset_images/primary/` and adds a cache-bust token so the regenerated asset is visible in the panel before the record is saved or the primary variants are copied to R2. While that staged preview is active, the caption uses source-image dimensions reported by the media plan when available. Opening the preview still goes to the published work page. Loading or saving the record clears the staged-preview token, so the panel returns to the normal published media URL (`https://media.dotlineform.com/works/img/...`) and saved `width_px`/`height_px` once the JSON source metadata has been committed.
+After the refresh, the editor image element prefers the staged local primary derivative under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/primary/` and adds a cache-bust token so the regenerated asset is visible in the panel before the record is saved or the primary variants are copied to R2. The browser reads that external file through the confined local `/studio/media/catalogue/...` route; no repo-local copy is created. While that staged preview is active, the caption uses source-image dimensions reported by the media plan when available. Opening the preview still goes to the published work page. Loading or saving the record clears the staged-preview token, so the panel returns to the normal published media URL (`https://media.dotlineform.com/works/img/...`) and saved `width_px`/`height_px` once the JSON source metadata has been committed.
 
 ## Route Ready State
 

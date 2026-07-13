@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server-build-lookup
 title: Catalogue Write Server Build And Lookup
 added_date: 2026-05-19
-last_updated: 2026-06-16
+last_updated: 2026-07-13
 parent_id: scripts-catalogue-write-server
 ---
 # Catalogue Write Server Build And Lookup
@@ -14,11 +14,11 @@ parent_id: scripts-catalogue-write-server
 For work, work-detail, and moment scopes, the build helper:
 
 - resolves the source image from canonical catalogue JSON and `DOTLINEFORM_PROJECTS_BASE_DIR`
-- copies the source image into `var/catalogue/media/<kind>/make_srcset_images/` using the public catalogue id as the filename stem
-- generates primary and thumbnail srcset derivatives into `var/catalogue/media/<kind>/srcset_images/`
+- copies the source image into `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/<kind>/make_srcset_images/` using the public catalogue id as the filename stem
+- generates primary and thumbnail srcset derivatives into `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/<kind>/srcset_images/`
 - copies generated thumbnail derivatives into `site/assets/works/img/`, `site/assets/work_details/img/`, or `site/assets/moments/img/`
 - removes staged thumbnail derivatives after the asset-folder copy succeeds
-- leaves generated primary derivatives staged under `var/catalogue/media/` for remote media publishing
+- leaves generated primary derivatives staged under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/` for remote media publishing
 
 The write server reports generated/current/blocked media ids in the nested build response. It does not upload primary images to R2.
 

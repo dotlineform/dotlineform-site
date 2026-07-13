@@ -8,6 +8,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -16,6 +18,14 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue import catalogue_delete_plans  # noqa: E402
 from catalogue.catalogue_source import load_json_file, payload_for_map, work_details_payload_for_maps, write_work_detail_payloads  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def external_catalogue_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    projects_base = tmp_path / "projects-base"
+    projects_base.mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    return projects_base / "catalogue/media"
 
 
 def assert_equal(actual, expected, label: str) -> None:

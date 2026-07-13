@@ -15,10 +15,16 @@ if str(ANALYTICS_PACKAGE_DIR) not in sys.path:
     sys.path.insert(0, str(ANALYTICS_PACKAGE_DIR))
 
 from catalogue import catalogue_activity as activity
-from catalogue.catalogue_build_media import CATALOGUE_MEDIA_STAGING_REL_DIR
+from catalogue.catalogue_build_media import PIPELINE_CONFIG, detect_projects_base_dir
 from catalogue import catalogue_public_paths as public_paths
 from catalogue.catalogue_source import load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
 from catalogue.series_ids import normalize_series_id
+from catalogue_media_paths import (
+    catalogue_media_display_path,
+    catalogue_media_workspace_from_projects_base,
+)
+from external_workspace_paths import ExternalWorkspaceRoot
+from local_env import runtime_env
 from tag_services import tag_source_paths
 
 
@@ -197,8 +203,17 @@ def collect_work_repo_media_artifacts(repo_root: Path, work_id: str) -> list[Pat
     return collect_matching_paths(repo_root / public_paths.thumb_output_dir("work"), [f"{work_id}-thumb-*.*"])
 
 
-def collect_work_staged_media_artifacts(repo_root: Path, work_id: str) -> list[Path]:
-    staging_root = repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "works"
+def catalogue_media_staging_workspace(repo_root: Path) -> ExternalWorkspaceRoot:
+    projects_base = detect_projects_base_dir(runtime_env(repo_root=repo_root))
+    return catalogue_media_workspace_from_projects_base(PIPELINE_CONFIG, projects_base)
+
+
+def catalogue_media_staging_root(repo_root: Path) -> Path:
+    return catalogue_media_staging_workspace(repo_root).root
+
+
+def collect_work_staged_media_artifacts(media_root: Path, work_id: str) -> list[Path]:
+    staging_root = media_root / "works"
     paths: list[Path] = []
     paths.extend(collect_matching_paths(staging_root / "make_srcset_images", [f"{work_id}.*"]))
     paths.extend(collect_matching_paths(staging_root / "srcset_images" / "primary", [f"{work_id}-primary-*.*"]))
@@ -214,8 +229,8 @@ def collect_detail_repo_media_artifacts(repo_root: Path, detail_uid: str) -> lis
     return collect_matching_paths(repo_root / public_paths.thumb_output_dir("work_details"), [f"{detail_uid}-thumb-*.*"])
 
 
-def collect_detail_staged_media_artifacts(repo_root: Path, detail_uid: str) -> list[Path]:
-    staging_root = repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "work_details"
+def collect_detail_staged_media_artifacts(media_root: Path, detail_uid: str) -> list[Path]:
+    staging_root = media_root / "work_details"
     paths: list[Path] = []
     paths.extend(collect_matching_paths(staging_root / "make_srcset_images", [f"{detail_uid}.*"]))
     paths.extend(collect_matching_paths(staging_root / "srcset_images" / "primary", [f"{detail_uid}-primary-*.*"]))
@@ -243,8 +258,16 @@ def existing_repo_paths(repo_root: Path, rel_paths: Iterable[Path]) -> list[Path
     return unique_existing_paths(repo_root / rel_path for rel_path in rel_paths)
 
 
-def rel_path_for_preview(repo_root: Path, path: Path) -> str:
-    return str(path.relative_to(repo_root)) if path_is_under(path, repo_root) else path.name
+def rel_path_for_preview(
+    repo_root: Path,
+    path: Path,
+    media_workspace: ExternalWorkspaceRoot | None = None,
+) -> str:
+    if path_is_under(path, repo_root):
+        return str(path.relative_to(repo_root))
+    if media_workspace is not None and path_is_under(path, media_workspace.root):
+        return catalogue_media_display_path(path, media_workspace)
+    return path.name
 
 
 def collect_catalogue_delete_cleanup(
@@ -253,6 +276,7 @@ def collect_catalogue_delete_cleanup(
     record_id: str,
     affected: Mapping[str, Any],
 ) -> Dict[str, Any]:
+    media_root = catalogue_media_staging_root(repo_root)
     repo_artifacts: list[Path] = []
     repo_media: list[Path] = []
     staged_media: list[Path] = []
@@ -267,11 +291,11 @@ def collect_catalogue_delete_cleanup(
     if kind == "work":
         repo_artifacts.extend(collect_work_repo_artifacts(repo_root, record_id))
         repo_media.extend(collect_work_repo_media_artifacts(repo_root, record_id))
-        staged_media.extend(collect_work_staged_media_artifacts(repo_root, record_id))
+        staged_media.extend(collect_work_staged_media_artifacts(media_root, record_id))
         for detail_uid in detail_uids:
             repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, detail_uid))
             repo_media.extend(collect_detail_repo_media_artifacts(repo_root, detail_uid))
-            staged_media.extend(collect_detail_staged_media_artifacts(repo_root, detail_uid))
+            staged_media.extend(collect_detail_staged_media_artifacts(media_root, detail_uid))
         public_json_updates.extend(
             existing_repo_paths(
                 repo_root,
@@ -300,7 +324,7 @@ def collect_catalogue_delete_cleanup(
         for detail_uid in target_detail_uids:
             repo_artifacts.extend(collect_detail_repo_artifacts(repo_root, detail_uid))
             repo_media.extend(collect_detail_repo_media_artifacts(repo_root, detail_uid))
-            staged_media.extend(collect_detail_staged_media_artifacts(repo_root, detail_uid))
+            staged_media.extend(collect_detail_staged_media_artifacts(media_root, detail_uid))
         public_json_updates.extend(existing_repo_paths(repo_root, [public_paths.work_record_path(work_id) for work_id in work_ids]))
     elif kind == "series":
         repo_artifacts.extend(collect_series_repo_artifacts(repo_root, record_id))
@@ -334,13 +358,14 @@ def collect_catalogue_delete_cleanup(
 
 
 def ensure_catalogue_delete_cleanup_scope(repo_root: Path, cleanup: Mapping[str, Any]) -> None:
+    media_root = catalogue_media_staging_root(repo_root)
     delete_roots = [
         repo_root / public_paths.WORKS_JSON_DIR,
         repo_root / public_paths.SERIES_JSON_DIR,
         repo_root / public_paths.thumb_output_dir("work"),
         repo_root / public_paths.thumb_output_dir("work_details"),
-        repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "works",
-        repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / "work_details",
+        media_root / "works",
+        media_root / "work_details",
     ]
     update_roots = [
         repo_root / public_paths.WORKS_JSON_DIR,
@@ -372,13 +397,18 @@ def catalogue_delete_preview_cleanup(
     affected: Mapping[str, Any],
 ) -> Dict[str, Any]:
     cleanup = collect_catalogue_delete_cleanup(repo_root, kind, record_id, affected)
+    media_workspace = catalogue_media_staging_workspace(repo_root)
     return {
         "repo_artifacts": len(cleanup["repo_artifacts"]),
         "repo_media": len(cleanup["repo_media"]),
         "staged_media": len(cleanup["staged_media"]),
-        "public_json_updates": [rel_path_for_preview(repo_root, path) for path in cleanup["public_json_updates"]],
-        "studio_json_updates": [rel_path_for_preview(repo_root, path) for path in cleanup["studio_json_updates"]],
-        "delete_paths": [rel_path_for_preview(repo_root, path) for path in cleanup["delete_paths"]],
+        "public_json_updates": [
+            rel_path_for_preview(repo_root, path, media_workspace) for path in cleanup["public_json_updates"]
+        ],
+        "studio_json_updates": [
+            rel_path_for_preview(repo_root, path, media_workspace) for path in cleanup["studio_json_updates"]
+        ],
+        "delete_paths": [rel_path_for_preview(repo_root, path, media_workspace) for path in cleanup["delete_paths"]],
         "catalogue_search": public_paths.CATALOGUE_SEARCH_INDEX_JSON_PATH.as_posix() if cleanup["catalogue_search"] else "",
     }
 

@@ -2,30 +2,28 @@
 doc_id: scripts-srcset-builder
 title: Srcset Builder
 added_date: 2026-03-31
-last_updated: "2026-05-09 22:35"
+last_updated: 2026-07-13
 parent_id: studio
 viewable: true
 ---
 # Srcset Builder
 
-Stable shell entrypoint:
+Python entrypoint:
 
 ```bash
-bash scripts/make_srcset_images.sh
+$HOME/miniconda3/bin/python3 studio/services/media/make_srcset_images.py
 ```
 
-The shell entrypoint remains stable, but it delegates to the shared config-driven Python implementation at `scripts/media/make_srcset_images.py`.
-
-The current Studio scoped build path for work and work-detail images no longer requires this standalone entrypoint. It stages source images under `var/catalogue/media/`, generates primary and thumbnail derivatives there, and copies thumbnails into `site/assets/` automatically. This script remains available for explicit/manual srcset runs and deprecated pipeline compatibility.
+The current Studio scoped build path for work and work-detail images no longer requires this standalone entrypoint. It stages source images under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`, generates primary and thumbnail derivatives there, and copies thumbnails into `site/assets/` automatically. This script remains available for explicit/manual srcset runs.
 
 Works example:
 
 ```bash
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_work_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/work_success_ids.txt \
-bash scripts/make_srcset_images.sh \
-  var/catalogue/media/works/make_srcset_images \
-  var/catalogue/media/works/srcset_images \
+$HOME/miniconda3/bin/python3 studio/services/media/make_srcset_images.py \
+  "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/make_srcset_images" \
+  "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images" \
   4
 ```
 
@@ -34,9 +32,9 @@ Moments example:
 ```bash
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_moment_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/moment_success_ids.txt \
-bash scripts/make_srcset_images.sh \
-  var/catalogue/media/moments/make_srcset_images \
-  var/catalogue/media/moments/srcset_images \
+$HOME/miniconda3/bin/python3 studio/services/media/make_srcset_images.py \
+  "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/make_srcset_images" \
+  "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/srcset_images" \
   4
 ```
 
@@ -45,7 +43,7 @@ If that source file is missing, the copy step skips it.
 
 ## Flags And Arguments
 
-Shell entrypoint arguments:
+Entrypoint arguments:
 
 - positional `INPUT_DIR`
   - source images folder
@@ -66,7 +64,7 @@ Runtime defaults are resolved from `_data/pipeline.json` plus `.env.local`, espe
 
 Source artifacts:
 
-- staged source files under `var/catalogue/media/`
+- staged source files under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`
   - `works/make_srcset_images/`
   - `work_details/make_srcset_images/`
   - `moments/make_srcset_images/`
@@ -74,7 +72,7 @@ Source artifacts:
 
 Target artifacts:
 
-- derivative image trees under `var/catalogue/media/`
+- derivative image trees under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`
   - `works/srcset_images/`
   - `work_details/srcset_images/`
   - `moments/srcset_images/`

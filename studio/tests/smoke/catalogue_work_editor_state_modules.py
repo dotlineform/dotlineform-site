@@ -473,7 +473,7 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             state.mediaPreviewVersion = 'media-refresh-token';
             state.mediaConfig = {{
                 worksPrimaryBase: '/assets/works/img/',
-                stagedWorksPrimaryBase: '/var/catalogue/media/works/srcset_images/primary/',
+                stagedWorksPrimaryBase: '/studio/media/catalogue/works/srcset_images/primary/',
                 primaryDisplayWidth: 800,
                 primaryFullWidth: 1600,
                 primarySuffix: 'primary',
@@ -525,7 +525,7 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
     )
     assert result["captionText"] == "nerve · July 1990 - January 1995 2000 x 3000 px"
     assert result["previewActionsText"] == "Refresh media"
-    assert result["previewImageSrc"] == "/var/catalogue/media/works/srcset_images/primary/00008-primary-800.webp?v=media-refresh-token"
+    assert result["previewImageSrc"] == "/studio/media/catalogue/works/srcset_images/primary/00008-primary-800.webp?v=media-refresh-token"
     assert result["refreshDisabled"] is False
     assert result["readonlyFieldCount"] == 0
     assert "Source media is ready" not in result["readinessText"]

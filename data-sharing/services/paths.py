@@ -6,7 +6,23 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
+import sys
 from typing import Any, Mapping
+
+
+_BOOTSTRAP_START = Path(__file__).resolve()
+for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
+    if (_candidate / "site-tools" / "config" / "site-tools.json").exists():
+        if str(_candidate) not in sys.path:
+            sys.path.insert(0, str(_candidate))
+        break
+
+from studio.shared.python.external_workspace_paths import (  # noqa: E402
+    path_is_relative_to,
+    resolve_external_workspace_root,
+    resolve_workspace_path,
+    workspace_marker_path,
+)
 
 
 PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
@@ -34,26 +50,29 @@ def _environment(environ: Mapping[str, str] | None) -> Mapping[str, str]:
 
 
 def resolve_workspace_root(*, environ: Mapping[str, str] | None = None) -> Path:
-    base_text = str(_environment(environ).get(PROJECTS_BASE_DIR_ENV) or "").strip()
-    if not base_text:
-        raise ValueError(
-            f"{PROJECTS_BASE_DIR_ENV} is required for Data Sharing. "
-            f"Set it to an absolute projects directory and create {WORKSPACE_ROOT_MARKER}."
-        )
-    base_path = Path(base_text)
-    if not base_path.is_absolute() or ".." in base_path.parts:
-        raise ValueError(f"{PROJECTS_BASE_DIR_ENV} must be an absolute path without parent segments")
-    root = (base_path / WORKSPACE_DIR_NAME).resolve()
-    if not root.exists():
-        raise ValueError(
-            f"Data Sharing workspace does not exist: {root}. "
-            f"Create {WORKSPACE_ROOT_MARKER} as a readable and writable directory."
-        )
-    if not root.is_dir():
-        raise ValueError(f"Data Sharing workspace must be a directory: {root}")
-    if not os.access(root, os.R_OK | os.W_OK):
-        raise ValueError(f"Data Sharing workspace must be readable and writable: {root}")
-    return root
+    try:
+        return resolve_external_workspace_root(
+            WORKSPACE_DIR_NAME,
+            environ=_environment(environ),
+            require_exists=True,
+        ).root
+    except ValueError as exc:
+        message = str(exc)
+        if f"{PROJECTS_BASE_DIR_ENV} is required" in message:
+            raise ValueError(
+                f"{PROJECTS_BASE_DIR_ENV} is required for Data Sharing. "
+                f"Set it to an absolute projects directory and create {WORKSPACE_ROOT_MARKER}."
+            ) from exc
+        if "external workspace does not exist" in message or "does not exist or is not a directory" in message:
+            raise ValueError(
+                f"Data Sharing workspace does not exist. "
+                f"Create {WORKSPACE_ROOT_MARKER} as a readable and writable directory."
+            ) from exc
+        if "external workspace must be a directory" in message:
+            raise ValueError(f"Data Sharing workspace must be a directory: {WORKSPACE_ROOT_MARKER}") from exc
+        if "external workspace must be readable and writable" in message:
+            raise ValueError(f"Data Sharing workspace must be readable and writable: {WORKSPACE_ROOT_MARKER}") from exc
+        raise
 
 
 def safe_workspace_marker_path(value: Any, *, field: str) -> Path:
@@ -67,14 +86,6 @@ def safe_workspace_marker_path(value: Any, *, field: str) -> Path:
     return relative
 
 
-def path_is_relative_to(path: Path, root: Path) -> bool:
-    try:
-        path.relative_to(root)
-    except ValueError:
-        return False
-    return True
-
-
 def resolve_marker_path(
     value: Any,
     *,
@@ -84,20 +95,28 @@ def resolve_marker_path(
 ) -> Path:
     relative = safe_workspace_marker_path(value, field=field)
     root = (workspace_root or resolve_workspace_root(environ=environ)).resolve()
-    resolved = (root / relative).resolve()
-    if not path_is_relative_to(resolved, root):
-        raise ValueError(f"Data Sharing config field {field} resolves outside {WORKSPACE_ROOT_MARKER}")
-    return resolved
+    workspace = resolve_external_workspace_root(
+        WORKSPACE_DIR_NAME,
+        environ={PROJECTS_BASE_DIR_ENV: str(root.parent)},
+        require_exists=True,
+    )
+    try:
+        return resolve_workspace_path(workspace, relative)
+    except ValueError as exc:
+        raise ValueError(f"Data Sharing config field {field} resolves outside {WORKSPACE_ROOT_MARKER}") from exc
 
 
 def marker_path(path: Path, *, workspace_root: Path | None = None) -> str:
     root = (workspace_root or resolve_workspace_root()).resolve()
-    resolved = path.resolve()
-    if resolved == root:
-        return WORKSPACE_ROOT_MARKER
-    if not path_is_relative_to(resolved, root):
-        raise ValueError(f"Data Sharing artifact path is outside {WORKSPACE_ROOT_MARKER}: {path}")
-    return f"{WORKSPACE_ROOT_MARKER}/{resolved.relative_to(root).as_posix()}"
+    workspace = resolve_external_workspace_root(
+        WORKSPACE_DIR_NAME,
+        environ={PROJECTS_BASE_DIR_ENV: str(root.parent)},
+        require_exists=True,
+    )
+    try:
+        return workspace_marker_path(path, workspace)
+    except ValueError as exc:
+        raise ValueError(f"Data Sharing artifact path is outside {WORKSPACE_ROOT_MARKER}: {path}") from exc
 
 
 def workspace_paths(*, environ: Mapping[str, str] | None = None) -> DataSharingWorkspacePaths:

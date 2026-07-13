@@ -33,6 +33,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from studio.shared.python.display_paths import format_display_command, format_display_path
 
 try:
+    from catalogue_media_paths import configured_catalogue_media_root
     from pipeline_config import (
         env_var_value,
         env_var_name,
@@ -41,6 +42,7 @@ try:
         media_mode_output_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from studio.shared.python.catalogue_media_paths import configured_catalogue_media_root
     from studio.shared.python.pipeline_config import (
         env_var_value,
         env_var_name,
@@ -90,17 +92,24 @@ class ProcessResult:
 
 
 def parse_args() -> argparse.Namespace:
-    default_input = REPO_ROOT / media_mode_input_subdir(PIPELINE_CONFIG, "work")
-    default_output = REPO_ROOT / media_mode_output_subdir(PIPELINE_CONFIG, "work")
-
     ap = argparse.ArgumentParser(
         description="Build srcset derivatives from staged source images.",
     )
-    ap.add_argument("input_dir", nargs="?", default=default_input, help="Source images folder")
-    ap.add_argument("output_dir", nargs="?", default=default_output, help="Derivative output root")
+    ap.add_argument("input_dir", nargs="?", help="Source images folder")
+    ap.add_argument("output_dir", nargs="?", help="Derivative output root")
     ap.add_argument("jobs", nargs="?", default=env_var_value(PIPELINE_CONFIG, "srcset_jobs") or "1", help="Parallel workers")
     ap.add_argument("--dry-run", action="store_true", help="Preview writes and source cleanup only")
     args = ap.parse_args()
+
+    if args.input_dir is None or args.output_dir is None:
+        try:
+            media_root = configured_catalogue_media_root(REPO_ROOT)
+        except ValueError as exc:
+            raise SystemExit(f"Error: {exc}") from exc
+        if args.input_dir is None:
+            args.input_dir = media_root / media_mode_input_subdir(PIPELINE_CONFIG, "work")
+        if args.output_dir is None:
+            args.output_dir = media_root / media_mode_output_subdir(PIPELINE_CONFIG, "work")
 
     if str(args.input_dir).strip() == "":
         raise SystemExit("Error: missing input directory. Pass INPUT_DIR.")

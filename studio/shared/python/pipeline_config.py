@@ -36,19 +36,20 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
             "prose": "site text",
         },
         "media": {
+            "root_subdir": "catalogue/media",
             "work": {
-                "input_subdir": "var/catalogue/media/works/make_srcset_images",
-                "output_subdir": "var/catalogue/media/works/srcset_images",
+                "input_subdir": "works/make_srcset_images",
+                "output_subdir": "works/srcset_images",
             },
             "work_details": {
-                "input_subdir": "var/catalogue/media/work_details/make_srcset_images",
-                "output_subdir": "var/catalogue/media/work_details/srcset_images",
+                "input_subdir": "work_details/make_srcset_images",
+                "output_subdir": "work_details/srcset_images",
             },
             "moment": {
-                "input_subdir": "var/catalogue/media/moments/make_srcset_images",
-                "output_subdir": "var/catalogue/media/moments/srcset_images",
+                "input_subdir": "moments/make_srcset_images",
+                "output_subdir": "moments/srcset_images",
             },
-            "work_files_subdir": "var/catalogue/media/works/files",
+            "work_files_subdir": "works/files",
         },
     },
     "variants": {
@@ -137,6 +138,10 @@ def env_var_value(
 
 def media_mode_input_subdir(config: Mapping[str, Any], mode: str) -> Path:
     return Path(str(config["paths"]["media"][mode]["input_subdir"]))
+
+
+def media_root_subdir(config: Mapping[str, Any]) -> Path:
+    return Path(str(config["paths"]["media"]["root_subdir"]))
 
 
 def media_mode_output_subdir(config: Mapping[str, Any], mode: str) -> Path:

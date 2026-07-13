@@ -21,6 +21,11 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
         break
 
 from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
+from studio.shared.python.catalogue_media_paths import (
+    CATALOGUE_MEDIA_ROUTE_PREFIX,
+    configured_catalogue_media_workspace,
+    resolve_catalogue_media_request_path,
+)
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
@@ -50,7 +55,6 @@ STATIC_PREFIXES = (
     "/studio/data/canonical/catalogue/",
     "/studio/data/config/catalogue/",
     "/studio/data/generated/catalogue-lookup/",
-    "/var/catalogue/media/",
 )
 STATIC_FILES = {
     "/favicon.ico",
@@ -97,6 +101,9 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path == "/studio/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
             return
+        if self.is_catalogue_media_path(path):
+            self.send_catalogue_media(path)
+            return
         if path.startswith("/studio/api/catalogue/"):
             self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
             return
@@ -140,6 +147,9 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
 
     def is_allowed_static_path(self, path: str) -> bool:
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+
+    def is_catalogue_media_path(self, path: str) -> bool:
+        return path.startswith(CATALOGUE_MEDIA_ROUTE_PREFIX)
 
     def is_studio_shell_route(self, path: str) -> bool:
         return normalize_route_path(path) in studio_shell_route_paths(self.repo_root)
@@ -266,6 +276,26 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             return
         if not path.is_file():
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+            return
+
+        content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        body = path.read_bytes()
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def send_catalogue_media(self, request_path: str) -> None:
+        try:
+            workspace = configured_catalogue_media_workspace(self.repo_root)
+            path = resolve_catalogue_media_request_path(workspace, request_path)
+        except ValueError:
+            self.send_error(HTTPStatus.NOT_FOUND, "Catalogue media not found")
+            return
+        if not path.is_file():
+            self.send_error(HTTPStatus.NOT_FOUND, "Catalogue media not found")
             return
 
         content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"

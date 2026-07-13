@@ -11,6 +11,11 @@ from typing import Any, Callable, Dict, Mapping, Sequence
 
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
 from catalogue import catalogue_public_paths as public_paths
+from catalogue_media_paths import (
+    catalogue_media_display_path,
+    catalogue_media_root_from_projects_base,
+    catalogue_media_workspace_from_projects_base,
+)
 from pipeline_config import (
     env_var_name,
     env_var_value,
@@ -22,7 +27,6 @@ from pipeline_config import (
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
 CATALOGUE_PROSE_STAGING_REL_DIR = Path("var/docs/catalogue/import-staging")
-CATALOGUE_MEDIA_STAGING_REL_DIR = Path("var/catalogue/media")
 
 THUMB_SIZES = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]})
 THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
@@ -189,22 +193,24 @@ def media_staging_kind_dir(kind: str) -> str:
     raise ValueError(f"unsupported local media kind: {kind}")
 
 
-def media_staging_input_path(repo_root: Path, kind: str, item_id: str, source_path: Path | None) -> Path:
+def media_staging_input_path(projects_base_dir: Path, kind: str, item_id: str, source_path: Path | None) -> Path:
     suffix = source_path.suffix if source_path is not None and source_path.suffix else ".jpg"
-    return repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / media_staging_kind_dir(kind) / "make_srcset_images" / f"{item_id}{suffix}"
+    media_root = catalogue_media_root_from_projects_base(PIPELINE_CONFIG, projects_base_dir)
+    return media_root / media_staging_kind_dir(kind) / "make_srcset_images" / f"{item_id}{suffix}"
 
 
-def media_srcset_root(repo_root: Path, kind: str) -> Path:
-    return repo_root / CATALOGUE_MEDIA_STAGING_REL_DIR / media_staging_kind_dir(kind) / "srcset_images"
+def media_srcset_root(projects_base_dir: Path, kind: str) -> Path:
+    media_root = catalogue_media_root_from_projects_base(PIPELINE_CONFIG, projects_base_dir)
+    return media_root / media_staging_kind_dir(kind) / "srcset_images"
 
 
-def staged_thumb_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
-    root = media_srcset_root(repo_root, kind) / "thumb"
+def staged_thumb_output_paths(projects_base_dir: Path, kind: str, item_id: str) -> list[Path]:
+    root = media_srcset_root(projects_base_dir, kind) / "thumb"
     return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
 
 
-def staged_primary_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
-    root = media_srcset_root(repo_root, kind) / "primary"
+def staged_primary_output_paths(projects_base_dir: Path, kind: str, item_id: str) -> list[Path]:
+    root = media_srcset_root(projects_base_dir, kind) / "primary"
     return [root / f"{item_id}-{PRIMARY_SUFFIX}-{width}.{ASSET_FORMAT}" for width in PRIMARY_WIDTHS]
 
 
@@ -354,10 +360,36 @@ def build_local_media_task(
     projects_base_dir: Path | None = None,
     force: bool = False,
 ) -> Dict[str, Any]:
-    staged_source_path = media_staging_input_path(repo_root, kind, item_id, source_path)
-    staged_thumb_paths = staged_thumb_output_paths(repo_root, kind, item_id)
-    staged_primary_paths = staged_primary_output_paths(repo_root, kind, item_id)
     asset_thumb_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
+    if projects_base_dir is None:
+        return {
+            "kind": kind,
+            "id": item_id,
+            "source_path": display_source_path(source_path),
+            "source_abs_path": str(source_path.resolve()) if source_path is not None else "",
+            "staged_source_path": "",
+            "staged_source_abs_path": "",
+            "output_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
+            "staged_thumb_paths": [],
+            "staged_primary_paths": [],
+            "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
+            "status": "unavailable",
+            "reason": availability_error or f"{PROJECTS_BASE_DIR_ENV_NAME} is required for catalogue media workflows.",
+        }
+
+    media_workspace = catalogue_media_workspace_from_projects_base(PIPELINE_CONFIG, projects_base_dir)
+    media_root = media_workspace.root
+    staged_source_path = media_staging_input_path(projects_base_dir, kind, item_id, source_path)
+    staged_thumb_paths = staged_thumb_output_paths(projects_base_dir, kind, item_id)
+    staged_primary_paths = staged_primary_output_paths(projects_base_dir, kind, item_id)
+
+    def display_output_path(path: Path) -> str:
+        try:
+            path.resolve().relative_to(media_root)
+        except ValueError:
+            return repo_relative_path(path, repo_root)
+        return catalogue_media_display_path(path, media_workspace)
+
     output_paths = [*staged_primary_paths, *asset_thumb_paths]
     state = local_media_state(source_path, output_paths, staged_source_path)
     force_refresh = bool(force and source_path is not None and source_path.exists())
@@ -369,11 +401,11 @@ def build_local_media_task(
         "id": item_id,
         "source_path": display_source_path(source_path, projects_base_dir),
         "source_abs_path": str(source_path.resolve()) if source_path is not None else "",
-        "staged_source_path": repo_relative_path(staged_source_path, repo_root),
+        "staged_source_path": display_output_path(staged_source_path),
         "staged_source_abs_path": str(staged_source_path.resolve()),
-        "output_paths": [repo_relative_path(path, repo_root) for path in output_paths],
-        "staged_thumb_paths": [repo_relative_path(path, repo_root) for path in staged_thumb_paths],
-        "staged_primary_paths": [repo_relative_path(path, repo_root) for path in staged_primary_paths],
+        "output_paths": [display_output_path(path) for path in output_paths],
+        "staged_thumb_paths": [display_output_path(path) for path in staged_thumb_paths],
+        "staged_primary_paths": [display_output_path(path) for path in staged_primary_paths],
         "asset_thumb_paths": [repo_relative_path(path, repo_root) for path in asset_thumb_paths],
         "status": state,
     }
@@ -400,7 +432,7 @@ def build_local_media_task(
                     {
                         "variant": "thumb",
                         "size": size,
-                        "path": repo_relative_path(path, repo_root),
+                        "path": display_output_path(path),
                         "absolute_path": str(path.resolve()),
                     }
                 )
@@ -410,7 +442,7 @@ def build_local_media_task(
                     {
                         "variant": "primary",
                         "width": width,
-                        "path": repo_relative_path(path, repo_root),
+                        "path": display_output_path(path),
                         "absolute_path": str(path.resolve()),
                     }
                 )
@@ -421,7 +453,7 @@ def build_local_media_task(
                         "size": size,
                         "path": repo_relative_path(path, repo_root),
                         "absolute_path": str(path.resolve()),
-                        "staged_path": repo_relative_path(staged_path, repo_root),
+                        "staged_path": display_output_path(staged_path),
                         "staged_absolute_path": str(staged_path.resolve()),
                     }
                 )
@@ -882,6 +914,7 @@ def execute_local_media_plan(
             staged_thumb = Path(str(output_spec.get("staged_absolute_path") or "")).resolve()
             output_path = Path(str(output_spec.get("absolute_path") or "")).resolve()
             if not staged_thumb.exists():
+                staged_thumb_display = str(output_spec.get("staged_path") or repo_relative_path(staged_thumb, repo_root))
                 return {
                     "label": "Generate Local Media Derivatives",
                     "status": "failed",
@@ -891,15 +924,16 @@ def execute_local_media_plan(
                     "current": current,
                     "blocked": blocked,
                     "exit_code": 1,
-                    "stderr_tail": f"missing staged thumbnail: {repo_relative_path(staged_thumb, repo_root)}",
+                    "stderr_tail": f"missing staged thumbnail: {staged_thumb_display}",
                 }
             output_path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(staged_thumb, output_path)
             try:
                 staged_thumb.unlink()
-                cleaned_staged_thumbs[kind].append(repo_relative_path(staged_thumb, repo_root))
+                staged_thumb_display = str(output_spec.get("staged_path") or repo_relative_path(staged_thumb, repo_root))
+                cleaned_staged_thumbs[kind].append(staged_thumb_display)
             except OSError as exc:
-                staged_thumb_display = repo_relative_path(staged_thumb, repo_root)
+                staged_thumb_display = str(output_spec.get("staged_path") or repo_relative_path(staged_thumb, repo_root))
                 messages.append(f"{kind} {item_id}: could not remove staged thumbnail {staged_thumb_display}: {exc}")
         generated[kind].append(item_id)
 

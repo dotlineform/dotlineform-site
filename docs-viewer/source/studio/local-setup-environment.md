@@ -2,7 +2,7 @@
 doc_id: local-setup-environment
 title: Local Setup Environment
 added_date: 2026-05-19
-last_updated: 2026-06-22
+last_updated: 2026-07-13
 parent_id: local-setup
 ---
 # Local Setup Environment
@@ -59,7 +59,10 @@ Common local app runner variables:
 
 `bin/local-all` also reads `SITE_ENABLED`, `STUDIO_APP_ENABLED`, `ADMIN_APP_ENABLED`, and `ANALYTICS_APP_ENABLED` so a full-stack session can skip one of the supervised children without changing the independent runners.
 
-Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
+Media staging, generated srcset output, and staged work downloads are external under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`.
+The shared external-workspace resolver derives that fixed root from `DOTLINEFORM_PROJECTS_BASE_DIR`; there is no repo-local fallback.
+The media root is generated working output and can be recreated when needed.
+The same resolver owns the fixed Data Sharing, external Docs Viewer, and Docs static-export roots; their domain adapters only declare child paths and domain-specific messages.
 
 R2 media publishing also requires:
 
@@ -76,7 +79,7 @@ The publisher script reports missing variable names without printing configured 
 The R2 publisher reads `.env.local` by default:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 Two additional env vars are used by the srcset wrapper, but they are usually set per-command by pipeline scripts rather than persisted globally:

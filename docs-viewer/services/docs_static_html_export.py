@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import html
 import json
-import os
 import re
 import shutil
 from dataclasses import dataclass
@@ -14,7 +13,6 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 from docs_scope_config import (
-    DOTLINEFORM_PROJECTS_BASE_DIR_ENV,
     LOCAL_EXTERNAL_SCOPE_TYPE,
     DocsScopeConfig,
     is_public_readonly_scope,
@@ -23,12 +21,19 @@ from docs_scope_config import (
     resolve_scope_path,
     scope_uses_external_data,
 )
+from studio.shared.python.external_workspace_paths import (
+    ExternalWorkspaceRoot,
+    PROJECTS_BASE_DIR_ENV,
+    resolve_external_workspace_root,
+    resolve_workspace_path,
+)
 
 
 EXPORT_SCHEMA_VERSION = "docs_static_html_export_v1"
 SAFE_DOC_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 HREF_PATTERN = re.compile(r"""(?P<prefix>\bhref\s*=\s*)(?P<quote>["'])(?P<url>.*?)(?P=quote)""", re.IGNORECASE)
 EMPTY_CONFLICT_DIR_PATTERN = re.compile(r"\A(?P<base>[A-Za-z0-9_-]+) [2-9][0-9]*\Z")
+DOCS_EXPORT_WORKSPACE_SUBDIR = "docs-export"
 
 
 @dataclass(frozen=True)
@@ -59,14 +64,17 @@ def normalize_export_scope(repo_root: Path, value: Any) -> tuple[str, DocsScopeC
     return scope, config
 
 
+def resolve_docs_export_workspace() -> ExternalWorkspaceRoot:
+    try:
+        return resolve_external_workspace_root(DOCS_EXPORT_WORKSPACE_SUBDIR, require_exists=False)
+    except ValueError as exc:
+        if f"{PROJECTS_BASE_DIR_ENV} is required" in str(exc):
+            raise ValueError(f"{PROJECTS_BASE_DIR_ENV} is required for static HTML export") from exc
+        raise
+
+
 def resolve_projects_base_dir() -> Path:
-    value = str(os.environ.get(DOTLINEFORM_PROJECTS_BASE_DIR_ENV) or "").strip()
-    if not value:
-        raise ValueError(f"{DOTLINEFORM_PROJECTS_BASE_DIR_ENV} is required for static HTML export")
-    path = Path(value)
-    if not path.is_absolute() or ".." in path.parts:
-        raise ValueError(f"{DOTLINEFORM_PROJECTS_BASE_DIR_ENV} must be an absolute path without parent segments")
-    return path.resolve()
+    return resolve_docs_export_workspace().projects_base
 
 
 def resolve_repo_backed_scope_input_paths(repo_root: Path, scope: str, config: DocsScopeConfig) -> StaticHtmlExportPaths:
@@ -81,7 +89,7 @@ def resolve_repo_backed_scope_input_paths(repo_root: Path, scope: str, config: D
     if not payload_root.is_dir():
         raise FileNotFoundError(f"by-id payload root not found for scope {scope}: {payload_root}")
 
-    destination_root = resolve_projects_base_dir() / "docs-export" / scope
+    destination_root = resolve_workspace_path(resolve_docs_export_workspace(), scope)
     validate_destination_path(destination_root)
     return StaticHtmlExportPaths(
         scope=scope,
@@ -93,19 +101,19 @@ def resolve_repo_backed_scope_input_paths(repo_root: Path, scope: str, config: D
 
 
 def resolve_scope_export_destination(scope: str) -> Path:
-    destination_root = resolve_projects_base_dir() / "docs-export" / scope
+    destination_root = resolve_workspace_path(resolve_docs_export_workspace(), scope)
     validate_destination_path(destination_root)
     return destination_root
 
 
 def validate_destination_path(path: Path) -> None:
     resolved = path.resolve()
-    base = resolve_projects_base_dir() / "docs-export"
-    if not path_is_relative_to(resolved, base.resolve()):
+    base = resolve_docs_export_workspace().root
+    if not path_is_relative_to(resolved, base):
         raise ValueError(f"export destination must be under {base}")
     if resolved == resolved.parent:
         raise ValueError("export destination must not be the filesystem root")
-    if len(resolved.parts) < len(base.resolve().parts) + 1:
+    if len(resolved.parts) < len(base.parts) + 1:
         raise ValueError("export destination must include a scope folder")
 
 

@@ -224,7 +224,6 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/data-sharing/adapters/documents/config/prepare-profiles.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
-    assert allowed("/var/catalogue/media/works/srcset_images/primary/00008-primary-1600.webp") is True
     assert allowed("/studio/data/generated/project-state/report.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
@@ -238,6 +237,15 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is False
     assert allowed("/data-sharing/data_sharing/services/registry.py") is False
+
+    assert StudioAppRequestHandler.is_catalogue_media_path(
+        object(),
+        "/studio/media/catalogue/works/srcset_images/primary/00008-primary-1600.webp",
+    ) is True
+    assert StudioAppRequestHandler.is_catalogue_media_path(
+        object(),
+        "/studio/media/catalogue/../projects/private.jpg",
+    ) is True
 
 def test_studio_transport_does_not_publish_data_sharing_defaults() -> None:
     transport_source = (REPO_ROOT / "studio/app/frontend/js/studio-transport.js").read_text(encoding="utf-8")

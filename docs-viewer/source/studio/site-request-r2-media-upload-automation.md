@@ -2,8 +2,8 @@
 doc_id: site-request-r2-media-upload-automation
 title: R2 Media Upload Automation Request
 added_date: 2026-05-07
-last_updated: "2026-05-08 00:00"
-ui_status: paused
+last_updated: 2026-07-13
+ui_status: in-progress
 parent_id: change-requests
 viewable: true
 ---
@@ -11,10 +11,11 @@ viewable: true
 
 Status:
 
-- the first implementation is CLI-only.
-- .env.local has been implemenmted
-- still need to create the R2 keys
-- then need to switch UI over to using R2
+- the first implementation is CLI-only
+- `.env.local` and a bucket-scoped R2 account token are configured locally
+- catalogue media staging is external under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`
+- the next operational step is a dry run followed by one controlled upload
+- a future local Studio upload action remains separate follow-up work
 
 ## Summary
 
@@ -26,13 +27,13 @@ The implementation also establishes a credential and upload architecture that ca
 Implemented entrypoint:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 ## Problem
 
-The catalogue media pipeline already stages source images, generates primary derivatives, and copies thumbnails into repo-owned public asset folders.
-Primary derivatives remain under `var/catalogue/media/` as a manual handoff point for remote R2 publishing.
+The catalogue media pipeline stages source images, generates primary derivatives, and copies thumbnails into repo-owned public asset folders.
+Primary derivatives remain under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/` as a manual handoff point for remote R2 publishing.
 
 That leaves a recurring manual step:
 
@@ -120,13 +121,32 @@ The script should separate:
 
 That separation matters because catalogue primary images and future docs assets have different source roots, but should share credentials, safety checks, and upload behavior.
 
+## External Media Workspace
+
+Catalogue media staging uses one fixed external root:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/
+```
+
+The entire former `var/catalogue/media/` working tree is projected beneath that root, including staged source copies, generated primary and thumbnail variants, and staged work files.
+There is no repo-local fallback or migration read path.
+These artifacts are rebuildable, potentially large, and untracked, so keeping them inside the checkout provided no source-control benefit and allowed forgotten primary files to inflate the repository working directory.
+
+`studio/shared/python/external_workspace_paths.py` owns the common `DOTLINEFORM_PROJECTS_BASE_DIR` resolution and confinement contract used by external workspaces.
+Domain adapters declare their fixed child roots: Catalogue uses `catalogue/media`, Data Sharing uses `data-sharing`, and Docs Viewer uses `docs-viewer` plus `docs-export` for static exports.
+Those adapters preserve domain-specific messages and configuration, but do not repeat base-directory or confinement logic.
+
+Local Studio previews request `/studio/media/catalogue/...`.
+The local Studio server maps that URL directly to the allowlisted external catalogue-media root; it does not copy the image back into the repository or expose the rest of the projects directory.
+
 ## First Use Case: Catalogue Primary Images
 
 The catalogue adapter should discover generated primary derivatives under:
 
-- `var/catalogue/media/works/srcset_images/primary/`
-- `var/catalogue/media/work_details/srcset_images/primary/`
-- `var/catalogue/media/moments/srcset_images/primary/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/primary/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/work_details/srcset_images/primary/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/srcset_images/primary/`
 
 Initial scope flags should allow targeted uploads such as:
 
@@ -159,8 +179,8 @@ The first docs milestone may only validate and report upload plans without rewri
 Candidate script:
 
 ```text
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --dry-run
-./scripts/media/publish_media_to_r2.py --scope catalogue --all --write
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --all --write
 ```
 
 The default should be dry-run.

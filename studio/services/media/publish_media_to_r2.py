@@ -30,12 +30,14 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 try:
+    from catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
     from pipeline_config import (
         load_pipeline_config,
         media_mode_output_subdir,
     )
     from local_env import SITE_ENV_REL_PATH, runtime_env
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from studio.shared.python.catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
     from studio.shared.python.pipeline_config import (
         load_pipeline_config,
         media_mode_output_subdir,
@@ -196,6 +198,12 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     env_files = [repo_root / path for path in DEFAULT_ENV_FILES]
     env_files.extend(Path(path).expanduser() for path in args.env_file)
+    try:
+        combined_env = runtime_env(env_files=env_files)
+        media_workspace = configured_catalogue_media_workspace(repo_root, environ=combined_env)
+        media_root = media_workspace.root
+    except ValueError as exc:
+        raise SystemExit(f"Error: {exc}") from exc
     credentials = load_r2_credentials(env_files=env_files)
     client = R2Client(credentials)
 
@@ -217,6 +225,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     objects, missing = discover_catalogue_primary_objects(
         repo_root=repo_root,
+        media_root=media_root,
         kinds=[args.kind] if args.kind else sorted(CATALOGUE_KINDS),
         item_id=args.item_id,
         allow_partial=args.allow_partial,
@@ -225,7 +234,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         selected_kind = args.kind or "any catalogue kind"
         raise SystemExit(
             "Error: no matching catalogue primary derivatives found for "
-            f"{selected_kind} id {args.item_id!r} under {catalogue_media_staging_root(repo_root)}."
+            f"{selected_kind} id {args.item_id!r} under {catalogue_media_display_path(media_root, media_workspace)}."
         )
     results = plan_and_publish(
         objects=objects,
@@ -301,6 +310,7 @@ def load_r2_credentials(
 def discover_catalogue_primary_objects(
     *,
     repo_root: Path,
+    media_root: Path,
     kinds: Sequence[str],
     item_id: str | None = None,
     allow_partial: bool = False,
@@ -312,7 +322,7 @@ def discover_catalogue_primary_objects(
     for kind_name in kinds:
         kind = CATALOGUE_KINDS[kind_name]
         source_root = (
-            repo_root
+            media_root
             / media_mode_output_subdir(PIPELINE_CONFIG, kind.pipeline_mode)
             / PRIMARY_OUTPUT_SUBDIR
         ).resolve()
@@ -355,11 +365,6 @@ def discover_catalogue_primary_objects(
                 )
 
     return objects, missing
-
-
-def catalogue_media_staging_root(repo_root: Path) -> Path:
-    return (repo_root / "var" / "catalogue" / "media").resolve()
-
 
 def build_catalogue_remote_objects(*, repo_root: Path, kind_name: str, item_id: str) -> List[RemoteMediaObject]:
     kind = CATALOGUE_KINDS[kind_name]

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b92ed7a7ca454ef313a1591e8cee4329",
-    "generated_at_utc": "2026-07-13T12:46:37Z",
+    "version": "blake2b-1fe7b7ea3ed94411065b0488eac070c4",
+    "generated_at_utc": "2026-07-13T14:29:00Z",
     "count": 238
   },
   "entries": [
@@ -821,10 +821,10 @@
       "kind": "doc",
       "title": "Projection Contract",
       "href": "/docs/?scope=studio&doc=data-models-projection-contract",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-07-13",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-22 • Architecture",
+      "display_meta": "2026-07-13 • Architecture",
       "search_terms": [
         "data-models-projection-contract",
         "data",
@@ -833,12 +833,12 @@
         "contract",
         "projection contract",
         "architecture",
-        "2026-06-22",
+        "2026-07-13",
         "2026",
-        "06",
-        "22"
+        "07",
+        "13"
       ],
-      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-06-22 2026 06 22"
+      "search_text": "data-models-projection-contract data models projection contract projection contract architecture 2026-07-13 2026 07 13"
     },
     {
       "id": "scripts-audit-projection-contract",
@@ -940,10 +940,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-06-14",
+      "last_updated": "2026-07-13",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-06-14 • Architecture",
+      "display_meta": "2026-07-13 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -951,12 +951,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-06-14",
+        "2026-07-13",
         "2026",
-        "06",
-        "14"
+        "07",
+        "13"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-06-14 2026 06 14"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-07-13 2026 07 13"
     },
     {
       "id": "change-requests",
@@ -1373,10 +1373,10 @@
       "kind": "doc",
       "title": "R2 Media Upload Automation Request",
       "href": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
-      "last_updated": "2026-05-08 00:00",
+      "last_updated": "2026-07-13",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 00:00 • Change Requests",
+      "display_meta": "2026-07-13 • Change Requests",
       "search_terms": [
         "site-request-r2-media-upload-automation",
         "site",
@@ -1389,13 +1389,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-08 00:00",
+        "2026-07-13",
         "2026",
-        "05",
-        "08",
-        "00"
+        "07",
+        "13"
       ],
-      "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
+      "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-07-13 2026 07 13"
     },
     {
       "id": "site-request-shareable-content-blocks",
@@ -3764,10 +3763,10 @@
       "kind": "doc",
       "title": "Local Setup Environment",
       "href": "/docs/?scope=studio&doc=local-setup-environment",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-07-13",
       "parent_id": "local-setup",
       "parent_title": "Local Setup",
-      "display_meta": "2026-06-22 • Local Setup",
+      "display_meta": "2026-07-13 • Local Setup",
       "search_terms": [
         "local-setup-environment",
         "local",
@@ -3775,12 +3774,12 @@
         "environment",
         "local setup environment",
         "local setup",
-        "2026-06-22",
+        "2026-07-13",
         "2026",
-        "06",
-        "22"
+        "07",
+        "13"
       ],
-      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-06-22 2026 06 22"
+      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-07-13 2026 07 13"
     },
     {
       "id": "local-setup-github-codex",
@@ -4613,10 +4612,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-07-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "display_meta": "2026-07-13 • Studio",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -4624,12 +4623,12 @@
         "editor",
         "catalogue moment editor",
         "studio",
-        "2026-05-22",
+        "2026-07-13",
         "2026",
-        "05",
-        "22"
+        "07",
+        "13"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor studio 2026-05-22 2026 05 22"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor studio 2026-07-13 2026 07 13"
     },
     {
       "id": "catalogue-per-work-detail-source",
@@ -4784,10 +4783,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-06-17",
+      "last_updated": "2026-07-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-17 • Studio",
+      "display_meta": "2026-07-13 • Studio",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -4795,12 +4794,12 @@
         "editor",
         "catalogue work editor",
         "studio",
-        "2026-06-17",
+        "2026-07-13",
         "2026",
-        "06",
-        "17"
+        "07",
+        "13"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-06-17 2026 06 17"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor studio 2026-07-13 2026 07 13"
     },
     {
       "id": "studio-works",
@@ -4853,10 +4852,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server Build And Lookup",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup",
-      "last_updated": "2026-06-16",
+      "last_updated": "2026-07-13",
       "parent_id": "scripts-catalogue-write-server",
       "parent_title": "Catalogue Write Services",
-      "display_meta": "2026-06-16 • Catalogue Write Services",
+      "display_meta": "2026-07-13 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-build-lookup",
         "scripts",
@@ -4869,12 +4868,12 @@
         "and",
         "catalogue write services",
         "services",
-        "2026-06-16",
+        "2026-07-13",
         "2026",
-        "06",
-        "16"
+        "07",
+        "13"
       ],
-      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write services services 2026-06-16 2026 06 16"
+      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write services services 2026-07-13 2026 07 13"
     },
     {
       "id": "scripts-catalogue-write-server-endpoints",
@@ -5162,10 +5161,10 @@
       "kind": "doc",
       "title": "Pipeline Config JSON",
       "href": "/docs/?scope=studio&doc=config-pipeline-json",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-07-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-12 • Studio",
+      "display_meta": "2026-07-13 • Studio",
       "search_terms": [
         "config-pipeline-json",
         "config",
@@ -5173,12 +5172,12 @@
         "json",
         "pipeline config json",
         "studio",
-        "2026-05-12",
+        "2026-07-13",
         "2026",
-        "05",
-        "12"
+        "07",
+        "13"
       ],
-      "search_text": "config-pipeline-json config pipeline json pipeline config json studio 2026-05-12 2026 05 12"
+      "search_text": "config-pipeline-json config pipeline json pipeline config json studio 2026-07-13 2026 07 13"
     },
     {
       "id": "project-state-page",
@@ -5232,10 +5231,10 @@
       "kind": "doc",
       "title": "Publish Media To R2",
       "href": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
-      "last_updated": "2026-05-13 17:18",
+      "last_updated": "2026-07-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-13 17:18 • Studio",
+      "display_meta": "2026-07-13 • Studio",
       "search_terms": [
         "scripts-publish-media-to-r2",
         "scripts",
@@ -5245,14 +5244,12 @@
         "r2",
         "publish media to r2",
         "studio",
-        "2026-05-13 17:18",
+        "2026-07-13",
         "2026",
-        "05",
-        "13",
-        "17",
-        "18"
+        "07",
+        "13"
       ],
-      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-05-13 17:18 2026 05 13 17 18"
+      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-07-13 2026 07 13"
     },
     {
       "id": "data-models-studio",
@@ -5280,10 +5277,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-07-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-06-01 • Studio",
+      "display_meta": "2026-07-13 • Studio",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -5293,12 +5290,12 @@
         "scoped json catalogue build",
         "scoped",
         "studio",
-        "2026-06-01",
+        "2026-07-13",
         "2026",
-        "06",
-        "01"
+        "07",
+        "13"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped studio 2026-06-01 2026 06 01"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped studio 2026-07-13 2026 07 13"
     },
     {
       "id": "sorting-architecture",
@@ -5330,10 +5327,10 @@
       "kind": "doc",
       "title": "Srcset Builder",
       "href": "/docs/?scope=studio&doc=scripts-srcset-builder",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-07-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
+      "display_meta": "2026-07-13 • Studio",
       "search_terms": [
         "scripts-srcset-builder",
         "scripts",
@@ -5341,14 +5338,12 @@
         "builder",
         "srcset builder",
         "studio",
-        "2026-05-09 22:35",
+        "2026-07-13",
         "2026",
-        "05",
-        "09",
-        "22",
-        "35"
+        "07",
+        "13"
       ],
-      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder studio 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-srcset-builder scripts srcset builder srcset builder studio 2026-07-13 2026 07 13"
     },
     {
       "id": "config-studio-config-json",

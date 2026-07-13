@@ -5,6 +5,22 @@ added_date: 2026-05-26
 last_updated: 2026-06-26
 ---
 
+
+
+
+
+---
+
+new scope modal - wide:
+
+```
+.docsViewer__modalCard--wide{
+  --docs-viewer-modal-width: 64rem;
+  margin-top: 2vh;
+  max-height: calc(100vh - 2rem - 2vh);
+}
+```
+
 ```mermaid
 flowchart LR
     C["Route and scope config"] --> R["View registry"]

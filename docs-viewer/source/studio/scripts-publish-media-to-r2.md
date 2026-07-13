@@ -2,7 +2,7 @@
 doc_id: scripts-publish-media-to-r2
 title: Publish Media To R2
 added_date: 2026-05-08
-last_updated: "2026-05-13 17:18"
+last_updated: 2026-07-13
 parent_id: studio
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 Project-local entrypoint:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 The media-owned command publishes approved local media derivatives to Cloudflare R2.
@@ -46,11 +46,14 @@ When credentials are missing, the command reports the missing variable names but
 
 ## Source And Target Mapping
 
-Source files come from repo-local staged primary derivatives:
+Source files come from external staged primary derivatives:
 
-- `var/catalogue/media/works/srcset_images/primary/`
-- `var/catalogue/media/work_details/srcset_images/primary/`
-- `var/catalogue/media/moments/srcset_images/primary/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/primary/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/work_details/srcset_images/primary/`
+- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/srcset_images/primary/`
+
+The publisher has no repo-local staging fallback.
+Local Studio serves staged image previews through `/studio/media/catalogue/...`, mapped directly to this external root.
 
 The script reads `_data/pipeline.json` for those subpaths and `_config.yml` for remote media prefixes.
 Default object-key mapping is:
@@ -68,43 +71,43 @@ Use `--allow-partial` only when intentionally publishing an incomplete set.
 Preview one work:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
 ```
 
 Preview all catalogue primary derivatives:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --all
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --all
 ```
 
 Upload one work:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --write
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --write
 ```
 
 Preview remote primary-variant deletion for one deleted work:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete
 ```
 
 Delete remote primary variants for one deleted work:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete --write
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --delete --write
 ```
 
 Write a JSON report:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind moments --id keys --report-json var/local/r2-publish-report.json
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind moments --id keys --report-json var/local/r2-publish-report.json
 ```
 
 Overwrite changed remote objects intentionally:
 
 ```bash
-./scripts/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --force --write
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007 --force --write
 ```
 
 ## Safety Behavior

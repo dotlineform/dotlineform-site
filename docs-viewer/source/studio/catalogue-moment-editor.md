@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: Catalogue Moment Editor
 added_date: 2026-04-27
-last_updated: 2026-05-22
+last_updated: 2026-07-13
 parent_id: studio
 viewable: true
 ---
@@ -126,7 +126,7 @@ The Studio delete removes:
 - the canonical moment metadata record through `GET /studio/api/catalogue/read?key=catalogue_moments`
 - `site/assets/moments/index/<moment_id>.json`
 - matching published moment thumbnails under `site/assets/moments/img/`
-- matching repo-local staged media under `var/catalogue/media/moments/`
+- matching external staged media under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/`
 - the moment entry from `site/assets/data/moments_index.json`
 - the catalogue search record, by rebuilding catalogue search after the delete
 

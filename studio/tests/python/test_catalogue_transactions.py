@@ -8,12 +8,22 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from catalogue import catalogue_transactions as transactions  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def external_catalogue_media_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    projects_base = tmp_path / "projects-base"
+    projects_base.mkdir()
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+    return projects_base / "catalogue/media"
 
 
 def write_text(path: Path, text: str) -> None:

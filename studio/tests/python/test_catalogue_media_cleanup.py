@@ -19,10 +19,13 @@ from catalogue import catalogue_build_media as build_media  # noqa: E402
 def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
+        projects_base = root / "projects-base"
+        projects_base.mkdir()
+        media_root = projects_base / "catalogue/media"
         source = root / "source.jpg"
-        staged_source = root / "var/catalogue/media/works/make_srcset_images/00001.jpg"
-        staged_thumb = root / "var/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"
-        staged_primary = root / "var/catalogue/media/works/srcset_images/primary/00001-primary-800.webp"
+        staged_source = media_root / "works/make_srcset_images/00001.jpg"
+        staged_thumb = media_root / "works/srcset_images/thumb/00001-thumb-96.webp"
+        staged_primary = media_root / "works/srcset_images/primary/00001-primary-800.webp"
         asset_thumb = root / "assets/works/img/00001-thumb-96.webp"
         source.write_bytes(b"source-image")
 
@@ -50,6 +53,7 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
                     "pending_asset_thumbs": [
                         {
                             "absolute_path": str(asset_thumb),
+                            "staged_path": "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp",
                             "staged_absolute_path": str(staged_thumb),
                         }
                     ],
@@ -83,7 +87,7 @@ def test_successful_thumbnail_copy_removes_staged_thumbnail_but_keeps_primary() 
         assert staged_primary.read_bytes() == b"primary:800"
         assert not staged_thumb.exists()
         assert result["cleaned_staged_thumbs"] == {
-            "work": ["var/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"],
+            "work": ["$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"],
             "work_details": [],
         }
 

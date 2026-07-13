@@ -156,9 +156,14 @@ def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states
 
         scope = {"source_dir": str(source_dir), "work_ids": ["00001", "00002"], "detail_uid": "00001-001"}
         plan = media.build_local_media_plan(repo_root, scope=scope, env=projects_env(projects_base))
+        media_root = projects_base / "catalogue/media"
         current_paths = [
             Path(plan["tasks"][0]["staged_source_abs_path"]),
-            *[repo_root / path for path in plan["tasks"][0]["output_paths"]],
+            *[
+                media_root / f"works/srcset_images/primary/00001-primary-{width}.webp"
+                for width in media.PRIMARY_WIDTHS
+            ],
+            *media.thumb_output_paths(repo_root, "work", "00001"),
         ]
         touch_outputs(current_paths, newer_than=source_image)
         current_plan = media.build_local_media_plan(repo_root, scope={**scope, "work_ids": ["00001"]}, env=projects_env(projects_base))
@@ -172,7 +177,7 @@ def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states
 
     assert plan["counts"] == {"pending": 1, "current": 0, "blocked": 2, "unavailable": 0}
     assert plan["tasks"][0]["status"] == "pending"
-    assert plan["tasks"][0]["staged_source_path"] == "var/catalogue/media/works/make_srcset_images/00001.jpg"
+    assert plan["tasks"][0]["staged_source_path"] == "$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/make_srcset_images/00001.jpg"
     assert plan["tasks"][1]["reason"] == "project folder is missing"
     assert plan["tasks"][2]["kind"] == "work_details"
     assert plan["tasks"][2]["status"] == "blocked"
@@ -259,9 +264,12 @@ def test_media_readiness_distinguishes_pending_and_missing_metadata() -> None:
 def test_execute_local_media_plan_dry_run_suppresses_writes() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
+        projects_base = root / "projects-base"
+        projects_base.mkdir()
+        media_root = projects_base / "catalogue/media"
         source = root / "source.jpg"
-        staged_source = root / "var/catalogue/media/works/make_srcset_images/00001.jpg"
-        staged_thumb = root / "var/catalogue/media/works/srcset_images/thumb/00001-thumb-96.webp"
+        staged_source = media_root / "works/make_srcset_images/00001.jpg"
+        staged_thumb = media_root / "works/srcset_images/thumb/00001-thumb-96.webp"
         asset_thumb = root / "site/assets/works/img/00001-thumb-96.webp"
         source.write_bytes(b"source")
         plan = {
@@ -348,7 +356,7 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
             thumb_runner=fake_thumb,
         )
         asset_thumb = repo_root / "site/assets/works/img/00001-thumb-96.webp"
-        staged_root = repo_root / "var/catalogue/media"
+        staged_root = projects_base / "catalogue/media"
         asset_thumb_bytes = asset_thumb.read_bytes()
         staged_root_exists = staged_root.exists()
 

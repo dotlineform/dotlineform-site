@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-06-14
+last_updated: 2026-07-13
 parent_id: architecture
 viewable: true
 ---
@@ -48,6 +48,7 @@ The current Studio-owned source homes are:
 | `studio/shared/` | Shared Python helpers used by Studio-owned commands, Docs Viewer builders, catalogue generation, and services. |
 | `studio/tests/` | Studio-owned Python tests, smoke tests, and Codex-run verification helpers for catalogue/public-site behavior. |
 | `studio/retired/thumbnail-quality/` | Retired thumbnail-quality experiment code kept as repo-local reference tooling with no active Studio route, API endpoint, or static-data mount. |
+| `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/` | Rebuildable external Catalogue media staging, generated primary variants, temporary thumbnail variants, and staged work files outside the repository. |
 
 Risk operations are Admin-owned.
 Risk dashboards and inventories live as Studio docs under `docs-viewer/source/studio/`; checks report producers live under `admin-app/checks/reports/`; ignored local checks reports and snapshots should default to `var/admin/checks/`.
@@ -127,6 +128,8 @@ Current Docs Viewer-owned source homes:
 | `docs-viewer/generated/` | Tracked non-public generated Docs Viewer runtime payloads for local tracked scopes such as Studio. |
 | `docs-viewer/services/` | Standalone Docs Viewer service, Docs management, import/export, generated-read, scope, live rebuild, and data-sharing services. |
 | `docs-viewer/bin/` | Docs Viewer-owned launcher for the standalone local service. |
+| `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` | User-owned source and generated output for local external Docs Viewer scopes. |
+| `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-export/` | User-owned standalone static HTML exports produced from repo-backed local Docs Viewer scopes. |
 
 Public read-only installs such as `/library/` and `/analysis/` consume generated Docs Viewer payloads outside `studio/`.
 Manage-mode `/docs/` is owned by the standalone Docs Viewer service.
