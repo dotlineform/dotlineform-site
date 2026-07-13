@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ffd1d7b5d92935a1cf957b3e1c949cda",
-    "generated_at_utc": "2026-07-12T20:35:53Z",
-    "count": 236
+    "version": "blake2b-cdbb0ff84a02503c3eede19f38899ed8",
+    "generated_at_utc": "2026-07-13T12:38:01Z",
+    "count": 237
   },
   "entries": [
     {
@@ -1395,6 +1395,34 @@
         "23"
       ],
       "search_text": "site-request-shareable-content-blocks site request shareable content blocks shareable content blocks request change requests change requests 2026-06-23 2026 06 23"
+    },
+    {
+      "id": "site-request-source-documentation-and-linting",
+      "kind": "doc",
+      "title": "Source Documentation and Linting",
+      "href": "/docs/?scope=studio&doc=site-request-source-documentation-and-linting",
+      "last_updated": "2026-07-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-13 • Change Requests",
+      "search_terms": [
+        "site-request-source-documentation-and-linting",
+        "site",
+        "request",
+        "source",
+        "documentation",
+        "and",
+        "linting",
+        "source documentation and linting",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-13",
+        "2026",
+        "07",
+        "13"
+      ],
+      "search_text": "site-request-source-documentation-and-linting site request source documentation and linting source documentation and linting change requests change requests 2026-07-13 2026 07 13"
     },
     {
       "id": "data-sharing",

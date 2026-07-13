@@ -328,6 +328,12 @@
           "title": "Shareable Content Blocks Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
           "ui_status": "draft"
+        },
+        {
+          "doc_id": "site-request-source-documentation-and-linting",
+          "title": "Source Documentation and Linting",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-source-documentation-and-linting.json",
+          "ui_status": "draft"
         }
       ]
     },
@@ -1277,5 +1283,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-12T20:35:53Z"
+  "generated_at": "2026-07-13T12:38:01Z"
 }
