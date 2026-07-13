@@ -90,6 +90,17 @@ ACTIVITY_PROFILE_CREATE_SERIES = ActivityActionProfile(
     record_id_field="series_id",
     script_purpose_ids=("save-canonical-data", "rebuild-lookups"),
 )
+ACTIVITY_PROFILE_PUBLISH_WORK_MEDIA = ActivityActionProfile(
+    page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
+    action_id="publish-work-media",
+    route=ACTIVITY_CONTEXT_ROUTE_CATALOGUE_WORK,
+    control_id=ACTIVITY_CONTEXT_CONTROL_CATALOGUE_WORK_SAVE,
+    control_selector="#catalogueWorkSave",
+    endpoint=routes.MEDIA_PUBLISH_APPLY_PATH,
+    record_family="work",
+    record_id_field="work_id",
+    script_purpose_ids=("publish-media-to-r2",),
+)
 ACTIVITY_PUBLICATION_PROFILES: dict[tuple[str, str], ActivityActionProfile] = {
     ("work", "publish"): ActivityActionProfile(
         page_id=ACTIVITY_CONTEXT_PAGE_CATALOGUE_WORK,
@@ -202,6 +213,7 @@ ACTIVITY_ACTION_PROFILES: tuple[ActivityActionProfile, ...] = (
     ACTIVITY_PROFILE_SAVE_SERIES,
     ACTIVITY_PROFILE_CREATE_WORK,
     ACTIVITY_PROFILE_CREATE_SERIES,
+    ACTIVITY_PROFILE_PUBLISH_WORK_MEDIA,
     *ACTIVITY_PUBLICATION_PROFILES.values(),
     *ACTIVITY_DELETE_PROFILES.values(),
     ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS,

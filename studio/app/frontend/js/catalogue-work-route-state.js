@@ -93,6 +93,7 @@ function clearBuildState(state) {
   state.rebuildPending = false;
   state.buildPreview = null;
   state.mediaPreviewVersion = "";
+  state.mediaPublishPending = false;
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -132,6 +133,7 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   state.mediaPreviewVersion = "";
+  state.mediaPublishPending = false;
   resetBulkState(state);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
@@ -158,6 +160,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.currentRecord = null;
   state.currentLookup = null;
   state.currentRecordHash = "";
+  state.mediaPublishPending = false;
   state.bulkWorkIds = workIds.slice();
   state.bulkRecords = new Map(recordsById);
   state.bulkRecordHashes = new Map(recordHashes);

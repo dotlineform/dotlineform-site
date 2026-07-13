@@ -25,6 +25,7 @@ viewable: true
 | helper | `catalogue-work-sections.js` | current-record preview rendering, readiness rendering, work-owned file/link section rendering, and the summary rail. |
 | helper | `catalogue-work-detail-browser.js` | shared-list detail section browsing, detail thumbnail rows, detail-id suffix search, visible section-level actions, and a hidden detail-record toolbar reserved for future work-scoped detail modals. |
 | helper | `catalogue-work-actions.js` | save, create, build-preview, build, publish/unpublish, media refresh, and delete workflow orchestration for the route. |
+| helper | `catalogue-work-media-publish.js` | post-Save media-publish handoff, pending-retry state, R2 Work-primary preview, mandatory confirmation, explicit replacement acknowledgement, apply, and confirmed-record refresh orchestration. |
 | helper | `catalogue-work-selection.js` | work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route. |
 | helper | `catalogue-project-media-picker.js` | project-folder search, source-image file modal rendering, subfolder/file selection state, and derived project media field application. |
 
@@ -74,6 +75,7 @@ The first implementation covers:
 - preview the scoped public update impact for the current work
 - show work media readiness
 - refresh local work image derivatives from the displayed source image path without changing source metadata
+- publish a ready saved Work primary set to R2 as the second stage of Save
 - publish draft works through a dedicated `Publish` command
 - unpublish public works through a dedicated `Unpublish` command
 - when the public update path runs for a published work, stage the resolved source image under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`, generate local srcset derivatives, and copy thumbnails into `site/assets/works/img/`
@@ -87,7 +89,6 @@ It does not yet:
 - open individual work detail modals for create/edit/delete
 - edit series records directly
 - manage work prose; prose management is intentionally outside the metadata editor pending a separate process
-- upload primary images to remote media storage
 - paginate detail/member lists
 
 ## New Mode
@@ -237,10 +238,35 @@ The server overlays those three fields onto the saved work record only for media
 
 After the refresh, the editor image element prefers the staged local primary derivative under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/primary/` and adds a cache-bust token so the regenerated asset is visible in the panel before the record is saved or the primary variants are copied to R2. The browser reads that external file through the confined local `/studio/media/catalogue/...` route; no repo-local copy is created. While that staged preview is active, the caption uses source-image dimensions reported by the media plan when available and shows the canonical confirmed version plus the staged candidate `confirmed + 1`. Save preserves this staged-preview state but does not advance the confirmed version. Loading a different record clears the staged token; the normal confirmed preview uses the R2 primary URL with `?v=<media_version>` and the saved `width_px`/`height_px`. The publisher advances the canonical version only after every required R2 primary variant succeeds.
 
+## Publish media
+
+There is no separate media-publish button.
+`Save` composes the existing source-save and media-publish workflows in sequence.
+After the normal Save workflow settles, the editor evaluates media-publish eligibility: single saved published Work, local primary-media readiness `ready`, no unsaved changes, available service, positive confirmed version, and idle route.
+If ineligible, Save simply finishes.
+If eligible, Save immediately enters the media-publish workflow.
+Once that eligible media step begins, the editor keeps a pending-media action until publishing completes successfully.
+Cancellation, a blocked preview, or an R2 failure leaves the pending state in place, so Save remains enabled even though the source metadata is clean.
+Clicking Save again takes the no-change source path and retries the eligible media workflow.
+Successful publishing, loading another record, or leaving single-record mode clears the pending state; no separate action is needed.
+
+The browser first calls `POST /studio/api/catalogue/media-publish-preview` with the Work id and current confirmed `media_version`.
+The Local Studio service reads `.env.local`, checks the complete `800`, `1200`, and `1600` primary set, compares it with R2, and returns only compact width/status counts.
+Local paths, remote object keys, checksums, credentials, and signed requests stay server-side.
+
+Preview never writes and returns an opaque fingerprint covering the exact local bytes and remote comparison state without exposing either.
+Every apply requires a confirmation modal; changed remote objects are labelled as replacement and require the explicit `Replace media` action.
+The subsequent `POST /studio/api/catalogue/media-publish-apply` repeats the version guard and comparison, rejects fingerprint drift before any PUT, requires `confirm_overwrite: true` for forced replacement, and delegates to the same media-owned publisher used by the CLI.
+
+After a complete upload, the service promotes the canonical version exactly once when bytes changed, rebuilds focused public Work JSON, and records `publish-work-media` in Studio Activity.
+An all-current result rebuilds the current version without incrementing it.
+The editor replaces its baseline with the returned canonical record, reloads focused lookup/build readiness, clears any staged cache-bust token, and displays the newly confirmed URL version.
+Partial, failed, or version-conflict results stay visible as errors and do not get projected as success.
+
 ## Route Ready State
 
 The page root `#catalogueWorkRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific commands such as save, publish, unpublish, media refresh, import, and delete set route busy.
+Route-specific commands such as save, publish, unpublish, media refresh, R2 media publish, import, and delete set route busy.
 
 Route-specific state attributes:
 

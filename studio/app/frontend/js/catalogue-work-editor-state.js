@@ -114,6 +114,7 @@ export function createWorkEditorState(elements, options = {}) {
     pendingBuildExtraSeriesIds: [],
     buildPreview: null,
     mediaPreviewVersion: "",
+    mediaPublishPending: false,
     detailBrowserSelectedSectionId: "",
     detailBrowserSelectedDetailUid: "",
     detailBrowserSectionsController: null,

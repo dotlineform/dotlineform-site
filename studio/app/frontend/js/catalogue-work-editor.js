@@ -93,9 +93,12 @@ import {
   deleteCurrentWork,
   parseBulkSeriesOperation,
   refreshBuildPreview,
-  refreshWorkMedia,
-  saveCurrentWork
+  refreshWorkMedia
 } from "./catalogue-work-actions.js";
+import {
+  saveWorkThenPublishMedia,
+  workSaveActionRequired
+} from "./catalogue-work-media-publish.js";
 import {
   applyInitialWorkRouteSelection,
   bindWorkSelectionControls,
@@ -669,9 +672,9 @@ function updateEditorState(state) {
     : t(state, "save_button", "Save");
   state.saveButton.disabled = catalogueSaveDisabled({
     hasRecord,
-    isSaving: state.isSaving,
+    isSaving: state.isSaving || state.isBuilding || state.isDeleting,
     hasErrors: errors.size > 0,
-    dirty,
+    dirty: workSaveActionRequired(state, dirty),
     serverAvailable: state.serverAvailable
   });
   state.deleteButton.disabled = catalogueDeleteDisabled({
@@ -753,7 +756,7 @@ function workSelectionOptions(state) {
     },
     refreshBuildPreview: () => refreshBuildPreview(state, workActionOptions(state)),
     updateEditorState: () => updateEditorState(state),
-    saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
+    saveCurrentWork: () => saveWorkThenPublishMedia(state, workActionOptions(state)),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     setEmptySearchMode: (overrides = {}) => setEmptySearchMode(state, workRouteStateOptions(state, overrides)),
     setNewWorkMode: (overrides = {}) => setNewWorkMode(state, workRouteStateOptions(state, overrides))
@@ -894,7 +897,7 @@ async function init() {
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
       refreshWorkMedia: () => refreshWorkMedia(state, workActionOptions(state)),
-      saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
+      saveCurrentWork: () => saveWorkThenPublishMedia(state, workActionOptions(state)),
       applyPublicationChange: () => applyPublicationChange(state, workActionOptions(state)),
       deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))
     });

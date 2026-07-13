@@ -95,6 +95,8 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "delete-apply",
                 "publication-preview",
                 "publication-apply",
+                "media-publish-preview",
+                "media-publish-apply",
                 "work/create",
                 "work/save",
                 "series/create",

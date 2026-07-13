@@ -65,6 +65,26 @@ export function formatCataloguePublicationPreview(preview, options = {}) {
   return dirtyNote ? `${summary}\n\n${dirtyNote}` : summary;
 }
 
+export function formatCatalogueMediaPublishPreview(preview, options = {}) {
+  const summary = normalizeText(preview && preview.summary)
+    || lookupText(options, "media_publish_confirm_default", options.defaultText || "Publish this work's primary media to R2?");
+  const version = Number(options.currentVersion);
+  const versionText = Number.isFinite(version) && version > 0
+    ? lookupText(
+      options,
+      "media_publish_confirm_version",
+      preview && preview.requires_force
+        ? "Changed bytes will advance the confirmed media URL from v={current_version} to v={next_version}."
+        : "If uploaded bytes change, the confirmed media URL will advance from v={current_version} to v={next_version}.",
+      {
+        current_version: String(Math.floor(version)),
+        next_version: String(Math.floor(version) + 1)
+      }
+    )
+    : "";
+  return versionText ? `${summary}\n\n${versionText}` : summary;
+}
+
 export function formatCatalogueDeletePreview(preview, options = {}) {
   return normalizeText(preview && preview.summary)
     || lookupText(options, "delete_confirm_default", options.defaultText || "Delete this source record?");

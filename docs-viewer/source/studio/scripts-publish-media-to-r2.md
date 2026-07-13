@@ -17,6 +17,7 @@ $HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scop
 The media-owned command publishes approved local media derivatives to Cloudflare R2.
 It also provides an exact-id remote delete path for catalogue records that have been deleted locally.
 It defaults to dry-run mode and requires `--write` before it uploads or deletes anything.
+The Local Studio Work editor calls the same importable upload runner through server-owned preview/apply routes; it does not shell out or duplicate R2 logic.
 
 ## Current Scope
 
@@ -26,6 +27,8 @@ The first implementation supports catalogue primary-image derivatives only:
 - work details
 
 Docs media publishing is reserved for a later milestone.
+The Work editor exposes this publisher for saved published Work primaries.
+Work-detail publishing remains CLI-only until detail replacement has an editor-owned staging action.
 
 ## Credentials
 
@@ -78,6 +81,19 @@ Write-mode upload behavior is:
 
 Ordinary Studio Save and local derivative generation do not increment this value.
 The optional JSON report includes a `media_versions` section describing promotion, current-version rebuilds, and non-promoted or failed groups.
+
+## Work Editor Action
+
+There is no separate media-publish button in the Local Studio Work editor.
+After its normal source workflow completes, Work `Save` automatically enters media publishing when the saved published Work is ready and the route is otherwise eligible; otherwise the composed workflow exits without changing the Save result.
+Once an eligible media step begins, cancellation, a blocked preview, or a failed R2 attempt leaves media publishing pending and keeps Save enabled.
+The next Save takes the no-change source path and retries the media workflow; a successful publish or record/mode change clears the pending state.
+Studio first calls the write-free `/studio/api/catalogue/media-publish-preview`, shows mandatory confirmation, and then calls `/studio/api/catalogue/media-publish-apply`.
+Replacement of changed remote objects is labelled separately and requires an explicit overwrite acknowledgement.
+Apply repeats the comparison and must match the preview's opaque fingerprint, so changed local bytes or remote state stop the action before upload.
+
+The Local Studio service owns `.env.local` reads, R2 requests, complete-set validation, version promotion, and focused public JSON regeneration.
+The browser receives only compact per-width statuses and confirmed version state; it does not receive credentials, signed URLs, local paths, object keys, or checksums.
 
 ## Usage
 

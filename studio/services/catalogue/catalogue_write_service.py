@@ -10,6 +10,7 @@ from catalogue.catalogue_bulk_service import bulk_save_payload
 from catalogue.catalogue_build_service import build_apply_payload, build_preview_payload
 from catalogue.catalogue_detail_section_service import create_detail_section_payload, save_detail_section_payload
 from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
+from catalogue.catalogue_media_publish_service import media_publish_apply_response, media_publish_preview_response
 from catalogue.catalogue_publication_service import publication_apply_response, publication_preview_payload
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
@@ -28,6 +29,8 @@ SERVICE_POST_PATHS = {
     "/delete-apply",
     "/publication-preview",
     "/publication-apply",
+    "/media-publish-preview",
+    "/media-publish-apply",
     "/build-preview",
     "/build-apply",
 }
@@ -63,6 +66,10 @@ def handle_catalogue_post(
         return HTTPStatus.OK, publication_preview_payload(context, body)
     if api_path == "/publication-apply":
         return publication_apply_response(context, body)
+    if api_path == "/media-publish-preview":
+        return media_publish_preview_response(context, body)
+    if api_path == "/media-publish-apply":
+        return media_publish_apply_response(context, body)
     if api_path == "/build-preview":
         return HTTPStatus.OK, build_preview_payload(context, body)
     if api_path == "/build-apply":

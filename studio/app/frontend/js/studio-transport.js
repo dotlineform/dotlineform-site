@@ -4,6 +4,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   deleteApply: "/studio/api/catalogue/delete-apply",
   publicationPreview: "/studio/api/catalogue/publication-preview",
   publicationApply: "/studio/api/catalogue/publication-apply",
+  mediaPublishPreview: "/studio/api/catalogue/media-publish-preview",
+  mediaPublishApply: "/studio/api/catalogue/media-publish-apply",
   createWorkDetailSection: "/studio/api/catalogue/work-detail-section/create",
   saveWorkDetailSection: "/studio/api/catalogue/work-detail-section/save",
   createWork: "/studio/api/catalogue/work/create",

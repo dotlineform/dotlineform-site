@@ -105,6 +105,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["delete_apply"] == "/studio/api/catalogue/delete-apply"
     assert runtime["services"]["catalogue"]["publication_preview"] == "/studio/api/catalogue/publication-preview"
     assert runtime["services"]["catalogue"]["publication_apply"] == "/studio/api/catalogue/publication-apply"
+    assert runtime["services"]["catalogue"]["media_publish_preview"] == "/studio/api/catalogue/media-publish-preview"
+    assert runtime["services"]["catalogue"]["media_publish_apply"] == "/studio/api/catalogue/media-publish-apply"
     assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"
     assert runtime["services"]["catalogue"]["save_work"] == "/studio/api/catalogue/work/save"
     assert runtime["services"]["catalogue"]["import_preview"] == "/studio/api/catalogue/import-preview"

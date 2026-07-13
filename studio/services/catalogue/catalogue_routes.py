@@ -22,6 +22,8 @@ DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
 PUBLICATION_PREVIEW_PATH = "/catalogue/publication-preview"
 PUBLICATION_APPLY_PATH = "/catalogue/publication-apply"
+MEDIA_PUBLISH_PREVIEW_PATH = "/catalogue/media-publish-preview"
+MEDIA_PUBLISH_APPLY_PATH = "/catalogue/media-publish-apply"
 PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
 THUMBNAIL_QUALITY_PREVIEW_PATH = "/catalogue/thumbnail-quality-preview"
 
@@ -32,6 +34,8 @@ POST_PATHS = (
     DELETE_APPLY_PATH,
     PUBLICATION_PREVIEW_PATH,
     PUBLICATION_APPLY_PATH,
+    MEDIA_PUBLISH_PREVIEW_PATH,
+    MEDIA_PUBLISH_APPLY_PATH,
     WORK_SAVE_PATH,
     WORK_FILE_CREATE_PATH,
     WORK_FILE_SAVE_PATH,

@@ -105,6 +105,7 @@ def assert_state_factory(page: Page) -> None:
                 bulkRecordsIsMap: state.bulkRecords instanceof Map,
                 touchedFieldsIsSet: state.bulkTouchedFields instanceof Set,
                 validationErrorsIsMap: state.validationErrors instanceof Map,
+                mediaPublishPending: state.mediaPublishPending,
                 mediaConfig: state.mediaConfig,
                 modalHost: state.modalHost,
                 detailBrowserPanelTag: state.detailBrowserPanelNode && state.detailBrowserPanelNode.tagName,
@@ -128,6 +129,7 @@ def assert_state_factory(page: Page) -> None:
     assert result["bulkRecordsIsMap"] is True
     assert result["touchedFieldsIsSet"] is True
     assert result["validationErrorsIsMap"] is True
+    assert result["mediaPublishPending"] is False
     assert result["mediaConfig"] == {"rootId": "catalogueWorkRoot", "source": "stub-media"}
     assert result["modalHost"] == {"rootId": "catalogueWorkRoot", "source": "stub-modal"}
     assert result["detailBrowserPanelTag"] == "SECTION"
@@ -185,6 +187,126 @@ def assert_event_binder(page: Page) -> None:
         ["applyPublicationChange"],
         ["deleteCurrentWork"],
     ]
+
+
+def assert_save_then_media_publish_sequence(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/studio/app/frontend/js/catalogue-work-media-publish.js');
+            const enabledCalls = [];
+            let enabledPending = false;
+            const enabled = await module.runWorkSaveThenMediaPublish({
+                save: async () => enabledCalls.push('save'),
+                mediaPublishEnabled: () => {
+                    enabledCalls.push('check');
+                    return true;
+                },
+                publishMedia: async () => {
+                    enabledCalls.push('publishMedia');
+                    return true;
+                },
+                setMediaPublishPending: (pending) => {
+                    enabledPending = pending;
+                    enabledCalls.push(`pending:${pending}`);
+                }
+            });
+            const failedCalls = [];
+            let failedPending = false;
+            const failed = await module.runWorkSaveThenMediaPublish({
+                save: async () => failedCalls.push('save'),
+                mediaPublishEnabled: () => {
+                    failedCalls.push('check');
+                    return true;
+                },
+                publishMedia: async () => {
+                    failedCalls.push('publishMedia');
+                    return false;
+                },
+                setMediaPublishPending: (pending) => {
+                    failedPending = pending;
+                    failedCalls.push(`pending:${pending}`);
+                }
+            });
+            const disabledCalls = [];
+            const disabled = await module.runWorkSaveThenMediaPublish({
+                save: async () => disabledCalls.push('save'),
+                mediaPublishEnabled: () => {
+                    disabledCalls.push('check');
+                    return false;
+                },
+                publishMedia: async () => disabledCalls.push('publishMedia'),
+                setMediaPublishPending: (pending) => disabledCalls.push(`pending:${pending}`)
+            });
+            const eligibleState = {
+                mode: 'single',
+                currentWorkId: '00008',
+                currentRecord: { status: 'published', media_version: 2 },
+                serverAvailable: true,
+                isSaving: false,
+                isBuilding: false,
+                isDeleting: false,
+                buildPreview: {
+                    readiness: {
+                        items: [{ key: 'work_media', status: 'ready' }]
+                    }
+                }
+            };
+            const eligible = module.workMediaPublishEnabled(eligibleState, {
+                draftHasChanges: () => false
+            });
+            const dirty = module.workMediaPublishEnabled(eligibleState, {
+                draftHasChanges: () => true
+            });
+            const sourceSaveRequired = module.workSaveActionRequired({
+                mode: 'single',
+                mediaPublishPending: false
+            }, true);
+            const mediaRetryRequired = module.workSaveActionRequired({
+                mode: 'single',
+                mediaPublishPending: true
+            }, false);
+            const cleanSaveRequired = module.workSaveActionRequired({
+                mode: 'single',
+                mediaPublishPending: false
+            }, false);
+            const bulkRetryRequired = module.workSaveActionRequired({
+                mode: 'bulk',
+                mediaPublishPending: true
+            }, false);
+            return {
+                enabled,
+                enabledCalls,
+                enabledPending,
+                failed,
+                failedCalls,
+                failedPending,
+                disabled,
+                disabledCalls,
+                eligible,
+                dirty,
+                sourceSaveRequired,
+                mediaRetryRequired,
+                cleanSaveRequired,
+                bulkRetryRequired
+            };
+        }"""
+    )
+    assert result == {
+        "enabled": True,
+        "enabledCalls": ["save", "check", "pending:true", "publishMedia", "pending:false"],
+        "enabledPending": False,
+        "failed": True,
+        "failedCalls": ["save", "check", "pending:true", "publishMedia"],
+        "failedPending": True,
+        "disabled": False,
+        "disabledCalls": ["save", "check"],
+        "eligible": True,
+        "dirty": False,
+        "sourceSaveRequired": True,
+        "mediaRetryRequired": True,
+        "cleanSaveRequired": False,
+        "bulkRetryRequired": False,
+    }
 
 
 def assert_work_search_list_selection(page: Page) -> None:
@@ -371,6 +493,7 @@ def assert_route_state_status_target(page: Page) -> None:
                 clearReadonlyFields: () => undefined,
                 updateEditorState: () => undefined
             }});
+            state.mediaPublishPending = true;
             routeModule.setLoadedWorkRecord(state, '00008', {{
                 work_id: '00008',
                 title: 'Smoke work',
@@ -379,10 +502,17 @@ def assert_route_state_status_target(page: Page) -> None:
                 status: 'draft',
                 series_ids: ['001']
             }}, routeOptions);
+            const pendingAfterRecordLoad = state.mediaPublishPending;
+            state.mediaPublishPending = true;
             routeModule.setNewWorkMode(state, routeOptions);
+            const pendingAfterNewMode = state.mediaPublishPending;
+            state.mediaPublishPending = true;
             routeModule.setEmptySearchMode(state, routeOptions);
             return {{
                 hasContextNode: Object.prototype.hasOwnProperty.call(state, 'contextNode'),
+                pendingAfterRecordLoad,
+                pendingAfterNewMode,
+                pendingAfterEmptyMode: state.mediaPublishPending,
                 statusTexts: textWrites
                     .filter((write) => write.id === 'catalogueWorkStatus')
                     .map((write) => write.text),
@@ -391,6 +521,9 @@ def assert_route_state_status_target(page: Page) -> None:
         }}"""
     )
     assert result["hasContextNode"] is False
+    assert result["pendingAfterRecordLoad"] is False
+    assert result["pendingAfterNewMode"] is False
+    assert result["pendingAfterEmptyMode"] is False
     assert result["statusTexts"] == ["save_status_loaded", "new_status_loaded", "missing_work_param"]
     assert result["targetIds"] == ["catalogueWorkResult", "catalogueWorkStatus", "catalogueWorkWarning"]
 
@@ -519,6 +652,7 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
                 previewActionsText: state.previewNode.querySelector('.catalogueRecordPreview__actions').textContent.replace(/\\s+/g, ' ').trim(),
                 previewImageSrc: previewImage ? previewImage.getAttribute('src') : '',
                 refreshDisabled: refreshButton ? refreshButton.disabled : null,
+                publishButtonPresent: Boolean(state.previewNode.querySelector('[data-media-publish="work"]')),
                 readonlyFieldCount: state.readonlyNode.querySelectorAll('[data-readonly-field]').length,
                 readinessText: state.readinessNode.textContent.replace(/\\s+/g, ' ').trim()
             }};
@@ -528,6 +662,7 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
     assert result["previewActionsText"] == "Refresh media"
     assert result["previewImageSrc"] == "/studio/media/catalogue/works/srcset_images/primary/00008-primary-800.webp?v=media-refresh-token"
     assert result["refreshDisabled"] is False
+    assert result["publishButtonPresent"] is False
     assert result["readonlyFieldCount"] == 0
     assert "Source media is ready" not in result["readinessText"]
     assert "projects/nerve/nerve.jpg" not in result["readinessText"]
@@ -543,6 +678,7 @@ def run(site_root: Path) -> None:
             page.goto(f"{base_url}/", wait_until="domcontentloaded")
             assert_state_factory(page)
             assert_event_binder(page)
+            assert_save_then_media_publish_sequence(page)
             assert_work_search_list_selection(page)
             assert_detail_browser_search_filters_suffix(page)
             assert_route_state_status_target(page)

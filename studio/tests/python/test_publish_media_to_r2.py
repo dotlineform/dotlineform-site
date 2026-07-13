@@ -189,6 +189,29 @@ def test_dry_run_marks_missing_remote_as_would_upload() -> None:
     assert len(results) == 3
 
 
+def test_high_level_catalogue_upload_runner_is_reused_by_studio() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        projects_base = Path(temp) / "projects-base"
+        media_root = projects_base / "catalogue/media"
+        for width in publisher.PRIMARY_WIDTHS:
+            write_primary(media_root, "works", f"01007-primary-{width}.webp", f"image-{width}".encode("utf-8"))
+
+        report_payload = publisher.run_catalogue_upload(
+            repo_root=REPO_ROOT,
+            kind="works",
+            item_id="01007",
+            write=False,
+            force=True,
+            client=FakeR2Client(),
+            environ={"DOTLINEFORM_PROJECTS_BASE_DIR": str(projects_base)},
+            env_files=[],
+        )
+
+    assert report_payload["counts"] == {"would_upload": 3}
+    assert report_payload["mode"] == "dry-run"
+    assert report_payload["media_versions"] == []
+
+
 def test_unchanged_remote_is_skipped_and_changed_remote_requires_force() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)

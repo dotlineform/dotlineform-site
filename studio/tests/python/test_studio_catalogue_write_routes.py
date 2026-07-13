@@ -22,6 +22,8 @@ def test_catalogue_write_service_routes_are_registered() -> None:
         "/delete-apply",
         "/publication-preview",
         "/publication-apply",
+        "/media-publish-preview",
+        "/media-publish-apply",
         "/build-preview",
         "/build-apply",
     } <= service_paths

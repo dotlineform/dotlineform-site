@@ -212,12 +212,6 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     env_files = [repo_root / path for path in DEFAULT_ENV_FILES]
     env_files.extend(Path(path).expanduser() for path in args.env_file)
-    try:
-        combined_env = runtime_env(env_files=env_files)
-        media_workspace = configured_catalogue_media_workspace(repo_root, environ=combined_env)
-        media_root = media_workspace.root
-    except ValueError as exc:
-        raise SystemExit(f"Error: {exc}") from exc
     credentials = load_r2_credentials(env_files=env_files)
     client = R2Client(credentials)
 
@@ -237,48 +231,97 @@ def main(argv: Sequence[str] | None = None) -> int:
         failed = report["counts"].get("failed", 0)
         return 1 if failed else 0
 
-    objects, missing = discover_catalogue_primary_objects(
+    report = run_catalogue_upload(
         repo_root=repo_root,
-        media_root=media_root,
-        kinds=[args.kind] if args.kind else sorted(CATALOGUE_KINDS),
+        kind=args.kind,
         item_id=args.item_id,
+        write=args.write,
+        force=args.force,
+        changed_only=args.changed_only,
         allow_partial=args.allow_partial,
-    )
-    if args.item_id and not objects:
-        selected_kind = args.kind or "any catalogue kind"
-        raise SystemExit(
-            "Error: no matching catalogue primary derivatives found for "
-            f"{selected_kind} id {args.item_id!r} under {catalogue_media_display_path(media_root, media_workspace)}."
-        )
-    results = plan_and_publish(
-        objects=objects,
         client=client,
-        write=args.write,
-        force=args.force,
-        changed_only=args.changed_only,
-    )
-    media_versions = (
-        finalize_complete_catalogue_uploads(repo_root=repo_root, results=results)
-        if args.write
-        else []
-    )
-
-    report = build_report(
-        results=results,
-        missing=missing,
-        write=args.write,
-        force=args.force,
-        changed_only=args.changed_only,
-        action="upload",
-        media_versions=media_versions,
+        env_files=env_files,
     )
     print_report(report)
     write_report(repo_root=repo_root, report=report, report_json=args.report_json)
 
     failed = report["counts"].get("failed", 0)
     blocked = sum(count for status, count in report["counts"].items() if status.startswith("blocked"))
-    version_failed = any(item.status == "failed" for item in media_versions)
+    version_failed = any(
+        isinstance(item, Mapping) and item.get("status") == "failed"
+        for item in report.get("media_versions", [])
+    )
     return 1 if failed or blocked or version_failed else 0
+
+
+def run_catalogue_upload(
+    *,
+    repo_root: Path,
+    kind: str | None,
+    item_id: str | None,
+    write: bool,
+    force: bool,
+    changed_only: bool = False,
+    allow_partial: bool = False,
+    client: RemoteClient | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> Dict[str, object]:
+    """Run one catalogue upload plan for CLI or Local Studio callers."""
+
+    resolved_root = repo_root.resolve()
+    if kind is not None and kind not in CATALOGUE_KINDS:
+        raise SystemExit(f"Error: unsupported catalogue media kind: {kind!r}")
+    if item_id:
+        validate_item_id(item_id)
+    selected_env_files = list(env_files) if env_files is not None else [
+        resolved_root / path for path in DEFAULT_ENV_FILES
+    ]
+    try:
+        combined_env = runtime_env(environ=environ, env_files=selected_env_files)
+        media_workspace = configured_catalogue_media_workspace(resolved_root, environ=combined_env)
+        media_root = media_workspace.root
+    except ValueError as exc:
+        raise SystemExit(f"Error: {exc}") from exc
+
+    remote_client = client
+    if remote_client is None:
+        remote_client = R2Client(load_r2_credentials(env_files=selected_env_files, environ=environ))
+
+    objects, missing = discover_catalogue_primary_objects(
+        repo_root=resolved_root,
+        media_root=media_root,
+        kinds=[kind] if kind else sorted(CATALOGUE_KINDS),
+        item_id=item_id,
+        allow_partial=allow_partial,
+    )
+    if item_id and not objects:
+        selected_kind = kind or "any catalogue kind"
+        raise SystemExit(
+            "Error: no matching catalogue primary derivatives found for "
+            f"{selected_kind} id {item_id!r} under {catalogue_media_display_path(media_root, media_workspace)}."
+        )
+    results = plan_and_publish(
+        objects=objects,
+        client=remote_client,
+        write=write,
+        force=force,
+        changed_only=changed_only,
+    )
+    media_versions = (
+        finalize_complete_catalogue_uploads(repo_root=resolved_root, results=results)
+        if write
+        else []
+    )
+    return build_report(
+        results=results,
+        missing=missing,
+        write=write,
+        force=force,
+        changed_only=changed_only,
+        action="upload",
+        media_versions=media_versions,
+    )
 
 
 def write_report(*, repo_root: Path, report: Mapping[str, object], report_json: str | None) -> None:

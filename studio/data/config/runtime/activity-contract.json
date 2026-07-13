@@ -45,6 +45,26 @@
             }
           ]
         },
+        "publish-work-media": {
+          "label": "publish work media",
+          "status": "v1-target",
+          "control_id": "catalogueWorkSave",
+          "control_selector": "#catalogueWorkSave",
+          "control_label": "Save",
+          "endpoint": "/catalogue/media-publish-apply",
+          "record_family": "work",
+          "record_id_field": "work_id",
+          "no_change_activity": "report",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed R2 primary-media upload or replacement for one published work, including confirmed media-version promotion and focused public work JSON regeneration. Preview and cancelled confirmation are excluded.",
+          "script_purposes": [
+            {
+              "id": "publish-media-to-r2",
+              "optional": false,
+              "when": "the Local Studio service checks and publishes the work primary variants to R2"
+            }
+          ]
+        },
         "create-work": {
           "label": "create work",
           "status": "v1-target",
