@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cdbb0ff84a02503c3eede19f38899ed8",
-    "generated_at_utc": "2026-07-13T12:38:01Z",
-    "count": 237
+    "version": "blake2b-b92ed7a7ca454ef313a1591e8cee4329",
+    "generated_at_utc": "2026-07-13T12:46:37Z",
+    "count": 238
   },
   "entries": [
     {
@@ -1339,6 +1339,34 @@
         "23"
       ],
       "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-23 2026 06 23"
+    },
+    {
+      "id": "site-request-processing-print-project-setup",
+      "kind": "doc",
+      "title": "Processing Print Project Setup",
+      "href": "/docs/?scope=studio&doc=site-request-processing-print-project-setup",
+      "last_updated": "2026-07-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-13 • Change Requests",
+      "search_terms": [
+        "site-request-processing-print-project-setup",
+        "site",
+        "request",
+        "processing",
+        "print",
+        "project",
+        "setup",
+        "processing print project setup",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-13",
+        "2026",
+        "07",
+        "13"
+      ],
+      "search_text": "site-request-processing-print-project-setup site request processing print project setup processing print project setup change requests change requests 2026-07-13 2026 07 13"
     },
     {
       "id": "site-request-r2-media-upload-automation",

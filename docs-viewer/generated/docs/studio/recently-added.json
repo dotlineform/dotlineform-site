@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-processing-print-project-setup",
+      "title": "Processing Print Project Setup",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-processing-print-project-setup.json",
+      "added_date": "2026-07-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-source-documentation-and-linting",
       "title": "Source Documentation and Linting",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-source-documentation-and-linting.json",
@@ -71,15 +79,7 @@
       "added_date": "2026-07-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "knowledge-system-vision",
-      "title": "Knowledge System Vision",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/knowledge-system-vision.json",
-      "added_date": "2026-07-11",
-      "parent_id": "architecture",
-      "parent_title": "Architecture"
     }
   ],
-  "generated_at": "2026-07-13T12:38:01Z"
+  "generated_at": "2026-07-13T12:46:37Z"
 }

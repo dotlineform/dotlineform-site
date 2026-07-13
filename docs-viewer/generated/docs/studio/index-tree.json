@@ -318,6 +318,12 @@
           "ui_status": "draft"
         },
         {
+          "doc_id": "site-request-processing-print-project-setup",
+          "title": "Processing Print Project Setup",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-processing-print-project-setup.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "site-request-r2-media-upload-automation",
           "title": "R2 Media Upload Automation Request",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
@@ -1283,5 +1289,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-13T12:38:01Z"
+  "generated_at": "2026-07-13T12:46:37Z"
 }
