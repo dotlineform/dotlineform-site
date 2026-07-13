@@ -9,6 +9,7 @@ import docs_management_mutations as mutations
 import docs_scope_create
 import docs_scope_delete
 import docs_scope_manifest
+import docs_scope_rename
 import docs_sub_scope_lifecycle
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
@@ -130,6 +131,34 @@ def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
                 "scope": scope_id,
                 "deleted_count": len(payload.get("deleted_files", [])),
                 "missing_count": len(payload.get("missing_files", [])),
+                "changed_count": len(payload.get("changed_files", [])),
+            },
+        )
+    return payload
+
+
+def handle_scope_rename_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    old_scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id") or body.get("old_scope_id"))
+    new_scope_id = docs_scope_manifest.normalize_scope_id(body.get("new_scope_id"))
+    docs_scope_manifest.require_confirmed(body)
+    preview = docs_scope_rename.plan_rename_scope_preview(repo_root, body)
+    if not preview.get("allowed"):
+        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
+        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope rename is not allowed")
+    payload = docs_scope_rename.apply_rename_scope(
+        repo_root,
+        body,
+        dry_run=dry_run,
+        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
+    )
+    if not dry_run:
+        log_event(
+            repo_root,
+            "docs_scope_rename_apply",
+            {
+                "scope": old_scope_id,
+                "new_scope": new_scope_id,
+                "moved_count": len(payload.get("move_paths", [])),
                 "changed_count": len(payload.get("changed_files", [])),
             },
         )

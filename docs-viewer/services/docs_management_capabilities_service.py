@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_scope_manifest
+import docs_scope_rename
 import docs_source_config_settings
 import docs_static_html_export
 import docs_source_model as source_model
@@ -78,6 +79,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "owner": str((manifest_record or {}).get("owner") or ""),
                 "created_by_tool": (manifest_record or {}).get("created_by_tool") is True,
                 "delete_eligible": docs_scope_manifest.scope_delete_eligible(manifest_record),
+                "rename_eligible": docs_scope_rename.scope_rename_eligible(config, manifest_record),
             },
             "sub_scope_lifecycle": {
                 "create_eligible": True,
@@ -133,6 +135,8 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "manifest": True,
                 "create_preview": True,
                 "create_apply": True,
+                "rename_preview": True,
+                "rename_apply": True,
                 "delete_preview": True,
                 "delete_apply": True,
                 "sub_scope_create_preview": True,

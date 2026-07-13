@@ -400,6 +400,157 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "docs-viewer/static/css/docs-viewer-import.css" not in recorded_paths
     assert "docs-viewer/config/routes/docs-viewer-public-routes.json" not in recorded_paths
 
+def test_scope_rename_preview_blocks_system_scopes() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        payload = docs_management_service.docs_scope_rename.plan_rename_scope_preview(
+            repo_root,
+            {
+                "scope_id": "studio",
+                "new_scope_id": "new-studio",
+            },
+        )
+
+    assert payload["ok"] is True
+    assert payload["allowed"] is False
+    assert payload["move_paths"] == []
+    assert "only user-created external-local scopes" in payload["blockers"][0]
+
+def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids() -> None:
+    calls: list[tuple[Path, str, dict[str, object]]] = []
+    original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+
+    def fake_rebuild(repo_root: Path, scope: str, **kwargs):
+        calls.append((repo_root, scope, kwargs))
+        return {"ok": True, "steps": [], "search": {"mode": "full", "doc_ids": []}}
+
+    docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild
+    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            projects_root = (repo_root.parent / f"{repo_root.name}-external-docs-data").resolve()
+            external_root = projects_root / "docs-viewer"
+            external_root.mkdir(parents=True)
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            write_docs_scope_config(repo_root)
+            docs_management_service.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "local_external",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            docs_management_service.handle_sub_scope_create_apply(
+                repo_root,
+                {
+                    "parent_scope": "research",
+                    "sub_scope": "notes",
+                    "title": "Notes",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            source_path = external_root / "source/research/research.md"
+            source_path.write_text(
+                source_path.read_text(encoding="utf-8") + "\n[Old scope link](/docs/?scope=research&doc=research)\n",
+                encoding="utf-8",
+            )
+            media_path = external_root / "media/research/example.png"
+            media_path.parent.mkdir(parents=True)
+            media_path.write_bytes(b"image")
+            write_json(external_root / "generated/docs/research/index-tree.json", {"docs": []})
+            write_json(external_root / "generated/search/research/index.json", {"entries": []})
+            config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+            created_config = json.loads(config_path.read_text(encoding="utf-8"))
+            created_config["docs_viewer"]["ui_statuses_by_scope"]["research"] = [
+                {"ui_status": "draft", "label": "Draft", "emoji": "D"},
+            ]
+            write_json(config_path, created_config)
+
+            try:
+                docs_management_service.handle_scope_rename_apply(
+                    repo_root,
+                    {"scope_id": "research", "new_scope_id": "field-notes"},
+                    dry_run=True,
+                )
+            except ValueError as exc:
+                confirmation_error = str(exc)
+            else:
+                raise AssertionError("scope rename apply should require explicit confirmation")
+
+            conflicting_media_root = external_root / "media/field-notes"
+            conflicting_media_root.mkdir(parents=True)
+            blocked_preview = docs_management_service.docs_scope_rename.plan_rename_scope_preview(
+                repo_root,
+                {"scope_id": "research", "new_scope_id": "field-notes"},
+            )
+            conflicting_media_root.rmdir()
+            preview = docs_management_service.docs_scope_rename.plan_rename_scope_preview(
+                repo_root,
+                {"scope_id": "research", "new_scope_id": "field-notes"},
+            )
+            payload = docs_management_service.handle_scope_rename_apply(
+                repo_root,
+                {"scope_id": "research", "new_scope_id": "field-notes", "confirm": True},
+                dry_run=False,
+            )
+            final_config = json.loads(config_path.read_text(encoding="utf-8"))
+            final_manifest = json.loads(
+                (repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8")
+            )
+            renamed_scope = next(scope for scope in final_config["scopes"] if scope["scope_id"] == "field-notes")
+            renamed_manifest = next(scope for scope in final_manifest["scopes"] if scope["scope_id"] == "field-notes")
+            renamed_source_text = (external_root / "source/field-notes/research.md").read_text(encoding="utf-8")
+    finally:
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
+        if original_projects_base is None:
+            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+
+    assert "confirm must be true" in confirmation_error
+    assert blocked_preview["allowed"] is False
+    assert any("rename target already exists: media root" in blocker for blocker in blocked_preview["blockers"])
+    assert preview["allowed"] is True
+    assert preview["warnings"] == [docs_management_service.docs_scope_rename.LINK_REWRITE_WARNING]
+    assert payload["ok"] is True
+    assert payload["action"] == "rename_scope"
+    assert payload["scope_id"] == "research"
+    assert payload["new_scope_id"] == "field-notes"
+    assert calls == [
+        (repo_root, "research", {"include_search": True}),
+        (repo_root, "field-notes", {"include_search": True}),
+    ]
+    assert not (external_root / "source/research").exists()
+    assert not (external_root / "media/research").exists()
+    assert not (external_root / "generated/docs/research").exists()
+    assert not (external_root / "generated/search/research").exists()
+    assert (external_root / "source/field-notes/notes").is_dir()
+    assert (external_root / "media/field-notes/example.png").read_bytes() == b"image"
+    assert (external_root / "generated/docs/field-notes/index-tree.json").exists()
+    assert (external_root / "generated/search/field-notes/index.json").exists()
+    assert renamed_scope["default_doc_id"] == "research"
+    assert renamed_scope["source"] == f"{EXTERNAL_DATA_ROOT_MARKER}/source/field-notes"
+    assert renamed_scope["media_path_prefix"] == "docs/field-notes"
+    assert renamed_scope["output"] == f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/field-notes"
+    assert renamed_scope["search_output"] == f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/field-notes/index.json"
+    assert renamed_scope["sub_scopes"][0]["source"] == f"{EXTERNAL_DATA_ROOT_MARKER}/source/field-notes/notes"
+    assert renamed_scope["sub_scopes"][0]["output"] == f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/field-notes/notes"
+    assert "research" not in final_config["docs_viewer"]["ui_statuses_by_scope"]
+    assert "field-notes" in final_config["docs_viewer"]["ui_statuses_by_scope"]
+    assert "research" not in {scope["scope_id"] for scope in final_manifest["scopes"]}
+    assert any(
+        record["path"] == (external_root / "source/field-notes/research.md").as_posix()
+        for record in renamed_manifest["files"]
+    )
+    assert "scope=research" in renamed_source_text
+
 def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> None:
     calls: list[tuple[Path, str, dict[str, object]]] = []
     original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs

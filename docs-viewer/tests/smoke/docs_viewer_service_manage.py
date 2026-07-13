@@ -264,6 +264,23 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
     page.locator(
         '[data-docs-viewer-management-modal-host="true"] button[data-role="modal-cancel"]'
     ).evaluate("button => button.click()")
+
+    page.locator("#docsViewerManageRenameScopeButton").evaluate("button => button.click()")
+    rename_host = page.locator('[data-docs-viewer-management-modal-host="true"]')
+    page.wait_for_selector(
+        '[data-docs-viewer-management-modal-host="true"] [data-role="scope-rename-new-id"]',
+        state="visible",
+        timeout=timeout_ms,
+    )
+    if rename_host.locator('[data-role="scope-rename-target"]').count() != 1:
+        raise AssertionError("Rename scope modal should contain one scope selector")
+    if rename_host.locator(".docsViewerScopeLifecycle__section").count() != 0:
+        raise AssertionError("Rename scope modal should not render lifecycle preview sections")
+    if "Links containing the old scope id are not rewritten." not in rename_host.inner_text():
+        raise AssertionError("Rename scope modal should state the manual link-rewrite boundary")
+    if rename_host.locator('button[data-role="modal-primary"]').inner_text().strip() != "Rename":
+        raise AssertionError("Rename scope modal should use a direct Rename action")
+    rename_host.locator('button[data-role="modal-cancel"]').evaluate("button => button.click()")
     return (
         request_paths(generated_requests),
         request_paths(import_module_requests),

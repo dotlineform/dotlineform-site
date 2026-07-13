@@ -131,7 +131,7 @@
       "meta": "external local",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "dlf",
+      "default_doc_id": "tmp",
       "media_path_prefix": "docs/dlf",
       "index_tree_url": "/docs/generated/index-tree?scope=dlf",
       "recently_added_url": "/docs/generated/recently-added?scope=dlf",

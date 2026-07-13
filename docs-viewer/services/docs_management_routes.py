@@ -40,6 +40,8 @@ DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
 SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
 SCOPE_CREATE_APPLY_PATH = "/docs/scopes/create-apply"
+SCOPE_RENAME_PREVIEW_PATH = "/docs/scopes/rename-preview"
+SCOPE_RENAME_APPLY_PATH = "/docs/scopes/rename-apply"
 SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/delete-preview"
 SCOPE_DELETE_APPLY_PATH = "/docs/scopes/delete-apply"
 SUB_SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/sub-scopes/create-preview"
@@ -95,6 +97,8 @@ POST_PATHS = (
     DELETE_APPLY_PATH,
     SCOPE_CREATE_PREVIEW_PATH,
     SCOPE_CREATE_APPLY_PATH,
+    SCOPE_RENAME_PREVIEW_PATH,
+    SCOPE_RENAME_APPLY_PATH,
     SCOPE_DELETE_PREVIEW_PATH,
     SCOPE_DELETE_APPLY_PATH,
     SUB_SCOPE_CREATE_PREVIEW_PATH,

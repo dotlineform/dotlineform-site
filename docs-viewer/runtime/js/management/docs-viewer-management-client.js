@@ -125,6 +125,21 @@ export function applyScopeCreate(payload, options) {
   }), options);
 }
 
+export function previewScopeRename(scopeId, newScopeId, options) {
+  return fetchManagementJson("/docs/scopes/rename-preview", "POST", {
+    scope_id: scopeId,
+    new_scope_id: newScopeId
+  }, options);
+}
+
+export function applyScopeRename(scopeId, newScopeId, options) {
+  return fetchManagementJson("/docs/scopes/rename-apply", "POST", {
+    scope_id: scopeId,
+    new_scope_id: newScopeId,
+    confirm: true
+  }, options);
+}
+
 export function previewScopeDelete(scopeId, options) {
   return fetchManagementJson("/docs/scopes/delete-preview", "POST", {
     scope_id: scopeId

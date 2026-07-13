@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer JavaScript Inventory
@@ -247,7 +247,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - Owns stable management control binding, the Actions-menu toggle/dismissal contract, named command invocation, and ordered root/keyboard delegation to interaction and modal controllers.
 - It receives named command callbacks and focused controller getters; it does not own command implementation, workflow state, capability policy, drag/drop behavior, or a generic application event bus.
-- Scope lifecycle retains its own four control bindings; the event router invokes that focused controller's wiring contract during management startup.
+- Scope lifecycle retains its own five control bindings; the event router invokes that focused controller's wiring contract during management startup.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-modal-composition.js`
 
@@ -266,9 +266,9 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js`
 
-- Owns the four scope/sub-scope lifecycle controls, capability-based visibility/disabled projection, event wiring, lazy loading and validation of `docs-viewer-scope-lifecycle.js`, flow-option composition, error projection, and post-apply config/capability refresh.
-- `docs-viewer-scope-lifecycle.js` remains the create/delete modal, field-state, preview, confirmation, apply, and result owner; endpoint transport remains in `docs-viewer-management-client.js`.
-- Keep backend manifest planning/apply and future create/delete flow splits outside this controller.
+- Owns the five scope/sub-scope lifecycle controls, capability-based visibility/disabled projection, event wiring, lazy loading and validation of `docs-viewer-scope-lifecycle.js`, flow-option composition, error projection, and post-apply config/capability refresh or renamed-scope navigation.
+- `docs-viewer-scope-lifecycle.js` remains the create/rename/delete modal, field-state, validation, preview, confirmation, apply, and result owner; endpoint transport remains in `docs-viewer-management-client.js`.
+- Keep backend manifest planning/apply and future create/rename/delete flow splits outside this controller.
 
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-config-controller.js`
 

@@ -29,6 +29,7 @@ import docs_review_sessions  # noqa: E402
 import docs_scope_create  # noqa: E402
 import docs_scope_delete  # noqa: E402
 import docs_scope_manifest  # noqa: E402
+import docs_scope_rename  # noqa: E402
 import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
@@ -57,6 +58,7 @@ from docs_management_mutation_service import (  # noqa: E402
     handle_move,
     handle_scope_create_apply,
     handle_scope_delete_apply,
+    handle_scope_rename_apply,
     handle_sub_scope_create_apply,
     handle_sub_scope_delete_apply,
     handle_update_metadata,
@@ -148,6 +150,12 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.SCOPE_CREATE_APPLY_PATH:
         return HTTPStatus.OK, handle_scope_create_apply(repo_root, body, dry_run)
+    if path == routes.SCOPE_RENAME_PREVIEW_PATH:
+        payload = docs_scope_rename.plan_rename_scope_preview(repo_root, body)
+        payload["dry_run"] = True
+        return HTTPStatus.OK, payload
+    if path == routes.SCOPE_RENAME_APPLY_PATH:
+        return HTTPStatus.OK, handle_scope_rename_apply(repo_root, body, dry_run)
     if path == routes.SCOPE_DELETE_PREVIEW_PATH:
         payload = docs_scope_delete.plan_delete_scope_preview(repo_root, body)
         payload["dry_run"] = True

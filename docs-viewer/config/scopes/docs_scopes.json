@@ -120,7 +120,7 @@
       "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/dlf/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "dlf",
+      "default_doc_id": "tmp",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,

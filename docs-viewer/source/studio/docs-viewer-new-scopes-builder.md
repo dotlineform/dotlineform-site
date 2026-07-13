@@ -2,20 +2,20 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: docs-viewer
 viewable: true
 ---
 # New Scopes Builder
 
-The New Scopes Builder is the local-management workflow for creating and deleting Docs Viewer scopes from `/docs/`.
+The New Scopes Builder is the local-management workflow for creating, narrowly renaming, and deleting Docs Viewer scopes from `/docs/`.
 
 It should:
 
 - create the same files a developer would otherwise create by hand
 - keep all write behavior behind the loopback Docs Viewer service
 - preserve existing public read-only routes
-- show the planned write or delete set before any write
+- validate the planned change before any write
 - record ownership in a scope manifest so deletion can fail closed
 
 Current policy:
@@ -143,15 +143,18 @@ The scope lifecycle workflow has server-side preview/apply endpoints and a manag
 - `docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
 - `docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, and shared lifecycle policy
 - `docs-viewer/services/docs_scope_create.py` owns top-level scope create preview/apply
+- `docs-viewer/services/docs_scope_rename.py` owns external-local top-level scope rename preview/apply
 - `docs-viewer/services/docs_scope_delete.py` owns top-level scope delete preview/apply
 - `GET /capabilities` advertises scope lifecycle preview and apply support
 - `POST /docs/scopes/create-preview` reports a validated create write set
 - `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
+- `POST /docs/scopes/rename-preview` validates an external-local scope id/folder move
+- `POST /docs/scopes/rename-apply` moves eligible external roots and updates scope identity after explicit confirmation
 - `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
 - `POST /docs/scopes/delete-apply` deletes eligible user-created scopes after explicit confirmation
-- the `/docs/` Actions menu exposes capability-gated `New scope` and `Delete scope` commands
+- the `/docs/` Actions menu exposes capability-gated `New scope`, `Rename scope`, and `Delete scope` commands
 - `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js` owns lifecycle control projection, event wiring, lazy flow loading, option composition, and post-apply refresh
-- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
+- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the create/rename/delete modal flows
 - `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
 
 ## Manifest Design
@@ -450,6 +453,7 @@ The server response should list:
 
 Create preview reports this planned write set without writing files.
 Create apply writes the allowlisted source-root, config, generated-output, route, publish, and manifest changes after confirmation.
+Rename apply is limited to lifecycle-owned external-local scopes. It moves the derived external roots, updates config and manifest identity, and rebuilds the renamed scope without changing public routes, R2 objects, or links inside source content.
 Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
 
 Scope lifecycle manifests record user-created route and generated-output paths such as scope-specific `index-tree.json`, `recently-added.json`, by-id payload directories, and search payloads.
@@ -472,6 +476,10 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 
 Scope and sub-scope lifecycle previews and results use aligned label/value rows. External storage displays its resolved root once and shows source, generated, search, and affected file paths relative to that root; repo-owned changes remain repo-relative under `Changed files (repo)`.
 
+`Rename scope` uses one compact form rather than the detailed lifecycle preview/result presentation.
+The operator selects an eligible external-local scope and enters its new id; the client calls preview as a validation gate and applies immediately when allowed.
+The modal warns that links containing the old scope id are not rewritten.
+
 `Delete scope` is a selected-target flow.
 The current Docs Viewer scope is only the management shell context and is not the implicit delete target.
 The UI asks the operator to choose from server-advertised scopes whose lifecycle capability record has `delete_eligible: true`.
@@ -484,9 +492,9 @@ After target selection, the flow:
 
 Implementation ownership:
 
-- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, preview summaries, selected delete target, and apply result summaries
+- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, rename validation/apply flow, preview summaries, selected delete target, and apply result summaries
 - `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js` owns Actions menu wiring, capability-gated command visibility, busy/status callback composition, lazy flow loading, and management capability refresh after apply
-- `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the HTTP wrappers for create/delete preview and apply endpoints
+- `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the HTTP wrappers for create/rename/delete preview and apply endpoints
 - `docs-viewer/runtime/js/management/docs-viewer-management-modals.js` provides the reusable modal shell; the lifecycle flow does not define a separate modal framework
 
 ## Safety Rules
@@ -502,4 +510,5 @@ Implementation ownership:
 - Public read-only scope creation and deletion use the route shell template and manifest-owned file records; deletion must not remove shared runtime, shared CSS, UI text, route registry files themselves, or unrelated route shells.
 - Delete Scope must block any scope referenced as `default_scope_id` by a management route, even when that scope is user-created.
 - External local scopes should be easy to identify in responses and cleanup guidance.
+- Rename Scope must not imply that hard-coded document or media links are rewritten; links containing the old scope id require manual follow-through.
 - Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

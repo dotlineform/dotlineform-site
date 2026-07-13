@@ -115,6 +115,20 @@ It does not store user-specific absolute paths in the repo.
 External local scopes do not configure public `publish_output`, public `publish_search_output`, or a public route.
 The browser reads their generated JSON through Docs Viewer service endpoints such as `/docs/generated/index-tree?scope=<scope>` and `/docs/generated/payload?scope=<scope>&doc_id=<doc>`, not through static filesystem URLs.
 
+### Rename Scope Action
+
+The Actions menu's `Rename scope` command is a deliberately narrow lifecycle action for user-created external local scopes.
+Its compact modal asks for the existing scope and new scope id, then validates and applies the change without displaying a detailed change preview.
+
+The action:
+
+- moves the external `source/<scope>/`, `media/<scope>/`, `generated/docs/<scope>/`, and `generated/search/<scope>/` roots when present
+- changes the central scope config, lifecycle manifest, matching UI-status key, and nested sub-scope paths
+- rebuilds the renamed scope and opens its new `/docs/?scope=<scope>` management URL
+
+It does not rename public routes or perform R2 operations.
+It does not rewrite source links: hard-coded document URLs, `scope=` query values, `/docs/media/<old-scope>/...` paths, and remote media URLs containing the old scope id require manual review and editing after the rename.
+
 ### 4. Add The Public Static Route
 
 When using New Scope, this step is performed by the lifecycle action.

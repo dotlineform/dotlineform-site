@@ -36,6 +36,8 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scope_lifecycle"]["manifest"] is True
     assert payload["capabilities"]["scope_lifecycle"]["create_preview"] is True
     assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["rename_preview"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["rename_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_preview"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["sub_scope_create_preview"] is True
@@ -49,6 +51,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     ]
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
+    assert payload["capabilities"]["scopes"]["studio"]["scope_lifecycle"]["rename_eligible"] is False
 
 
 def test_missing_external_workspace_disables_only_import_and_review_capabilities(

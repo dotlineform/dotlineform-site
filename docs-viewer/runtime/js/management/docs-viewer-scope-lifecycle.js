@@ -1,10 +1,12 @@
 import {
   applyScopeCreate,
   applyScopeDelete,
+  applyScopeRename,
   applySubScopeCreate,
   applySubScopeDelete,
   previewScopeCreate,
   previewScopeDelete,
+  previewScopeRename,
   previewSubScopeCreate,
   previewSubScopeDelete
 } from "./docs-viewer-management-client.js";
@@ -15,6 +17,8 @@ import {
   scopeCreateSupported,
   scopeDeleteSupported,
   scopeLifecycleDeleteTargets,
+  scopeLifecycleRenameTargets,
+  scopeRenameSupported,
   subScopeCreateSupported,
   subScopeDeleteSupported,
   subScopeLifecycleDeleteTargets
@@ -27,6 +31,8 @@ export {
   scopeCreateSupported,
   scopeDeleteSupported,
   scopeLifecycleDeleteTargets,
+  scopeLifecycleRenameTargets,
+  scopeRenameSupported,
   subScopeCreateSupported,
   subScopeDeleteSupported,
   subScopeLifecycleDeleteTargets
@@ -56,6 +62,7 @@ var SCOPE_LIFECYCLE_TEXT = {
   scopePublicRoutePathLabel: "public route path",
   scopePreviewButton: "Preview",
   scopeSaveButton: "Save",
+  scopeRenameButton: "Rename",
   scopeDeleteButton: "Delete",
   scopeResultOkButton: "OK",
   scopeCreateRequiredMessage: "Enter the required scope fields.",
@@ -65,6 +72,17 @@ var SCOPE_LIFECYCLE_TEXT = {
   scopeCreateSaving: "Saving new scope...",
   scopeCreateFailed: "New scope failed.",
   scopeCreateResultTitle: "Scope created",
+  scopeRenameTitle: "Rename scope",
+  scopeRenameIntro: "Rename a user-created external-local scope.",
+  scopeRenameTargetLabel: "scope",
+  scopeRenameNewIdLabel: "new scope id",
+  scopeRenameWarning: "Links containing the old scope id are not rewritten.",
+  scopeRenameRequiredMessage: "Select a scope and enter its new id.",
+  scopeRenameSameIdMessage: "Enter a different scope id.",
+  scopeRenameNoTargets: "No user-created external-local scopes are eligible for renaming.",
+  scopeRenameSaving: "Renaming scope...",
+  scopeRenameFailed: "Rename scope failed.",
+  scopeRenameBlocked: "Rename scope is blocked.",
   scopeDeleteTitle: "Delete scope",
   scopeDeleteIntro: "Select the user-created scope to delete.",
   scopeDeleteTargetLabel: "scope",
@@ -771,6 +789,83 @@ function renderDeleteSelectHtml(targets) {
       '</label>' +
     '</div>'
   );
+}
+
+function renderRenameFormHtml(targets) {
+  return (
+    '<div class="docsViewerScopeLifecycle">' +
+      '<p class="docsViewer__modalNote muted small">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeRenameIntro) + '</p>' +
+      '<label class="docsViewer__field">' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeRenameTargetLabel) + '</span>' +
+        '<select class="docsViewer__fieldInput" data-role="scope-rename-target">' + targets.map(function (target) {
+          return '<option value="' + escapeHtml(target.scopeId) + '">' + escapeHtml(target.scopeId) + '</option>';
+        }).join("") + '</select>' +
+      '</label>' +
+      '<label class="docsViewer__field">' +
+        '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeRenameNewIdLabel) + '</span>' +
+        '<input class="docsViewer__fieldInput" data-role="scope-rename-new-id" type="text" autocomplete="off" spellcheck="false" required>' +
+      '</label>' +
+      '<p class="docsViewer__modalNote muted small">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeRenameWarning) + '</p>' +
+    '</div>'
+  );
+}
+
+export async function openRenameScopeFlow(options = {}) {
+  var callbacks = options.callbacks || {};
+  var targets = scopeLifecycleRenameTargets(options.capabilities);
+  if (!targets.length) {
+    setMessage(callbacks, SCOPE_LIFECYCLE_TEXT.scopeRenameNoTargets, true);
+    return null;
+  }
+
+  var selection = await openDocsViewerManagementModal({
+    root: options.root,
+    title: SCOPE_LIFECYCLE_TEXT.scopeRenameTitle,
+    size: "compact",
+    bodyHtml: renderRenameFormHtml(targets),
+    focusSelector: '[data-role="scope-rename-new-id"]',
+    actions: [
+      { role: "modal-primary", label: SCOPE_LIFECYCLE_TEXT.scopeRenameButton },
+      { role: "modal-cancel", label: SCOPE_LIFECYCLE_TEXT.cancelButton }
+    ],
+    onSubmit: function (api) {
+      var scopeId = normalizeText(api.host.querySelector('[data-role="scope-rename-target"]')?.value);
+      var newScopeId = normalizeText(api.host.querySelector('[data-role="scope-rename-new-id"]')?.value).toLowerCase();
+      if (!scopeId || !newScopeId) {
+        api.setStatus(SCOPE_LIFECYCLE_TEXT.scopeRenameRequiredMessage);
+        return false;
+      }
+      if (scopeId === newScopeId) {
+        api.setStatus(SCOPE_LIFECYCLE_TEXT.scopeRenameSameIdMessage);
+        return false;
+      }
+      return { confirmed: true, scopeId: scopeId, newScopeId: newScopeId };
+    }
+  });
+  if (!selection || !selection.confirmed) return null;
+
+  var preview;
+  try {
+    setBusy(callbacks, true);
+    setMessage(callbacks, SCOPE_LIFECYCLE_TEXT.scopeRenameSaving, false);
+    render(callbacks);
+    preview = await previewScopeRename(selection.scopeId, selection.newScopeId, options.clientOptions);
+    if (!preview.allowed) {
+      setMessage(callbacks, (preview.blockers || []).join("; ") || SCOPE_LIFECYCLE_TEXT.scopeRenameBlocked, true);
+      return null;
+    }
+    var appliedPayload = await applyScopeRename(selection.scopeId, selection.newScopeId, options.clientOptions);
+    setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
+    applied(callbacks, appliedPayload);
+    if (typeof callbacks.navigateToScope === "function") callbacks.navigateToScope(selection.newScopeId);
+    return appliedPayload;
+  } catch (error) {
+    setMessage(callbacks, error && error.message ? error.message : SCOPE_LIFECYCLE_TEXT.scopeRenameFailed, true);
+    return null;
+  } finally {
+    setBusy(callbacks, false);
+    render(callbacks);
+  }
 }
 
 function renderDeleteSubScopeSelectHtml(targets) {

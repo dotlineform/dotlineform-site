@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-90184a4483818b19e3a6a728d00da3ef",
-    "generated_at_utc": "2026-07-13T19:45:02Z",
+    "version": "blake2b-48bc61207a9c821cb952481e70360458",
+    "generated_at_utc": "2026-07-13T20:56:09Z",
     "count": 238
   },
   "entries": [
@@ -2675,10 +2675,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle",
-      "last_updated": "2026-06-13",
+      "last_updated": "2026-07-13",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-13 • Endpoint Overview",
+      "display_meta": "2026-07-13 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-scope-lifecycle",
         "scripts",
@@ -2691,12 +2691,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-13",
+        "2026-07-13",
         "2026",
-        "06",
+        "07",
         "13"
       ],
-      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-06-13 2026 06 13"
+      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-07-13 2026 07 13"
     },
     {
       "id": "scripts-docs-management-endpoints-source-config",
@@ -3021,10 +3021,10 @@
       "kind": "doc",
       "title": "Source Mutation Scripts",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-scripts-source-mutations",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "scripts-docs-management-scripts",
       "parent_title": "Scripts Overview",
-      "display_meta": "2026-07-12 • Scripts Overview",
+      "display_meta": "2026-07-13 • Scripts Overview",
       "search_terms": [
         "scripts-docs-management-scripts-source-mutations",
         "scripts",
@@ -3036,12 +3036,12 @@
         "mutation",
         "scripts overview",
         "overview",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "scripts-docs-management-scripts-source-mutations scripts docs management source mutations source mutation scripts mutation scripts overview overview 2026-07-12 2026 07 12"
+      "search_text": "scripts-docs-management-scripts-source-mutations scripts docs management source mutations source mutation scripts mutation scripts overview overview 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-media-handling",
@@ -3072,10 +3072,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-13 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -3085,12 +3085,12 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-overview",
@@ -3339,10 +3339,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-13",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-12 • Runtime",
+      "display_meta": "2026-07-13 • Runtime",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3351,12 +3351,12 @@
         "inventory",
         "javascript inventory",
         "runtime",
-        "2026-07-12",
+        "2026-07-13",
         "2026",
         "07",
-        "12"
+        "13"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-13 2026 07 13"
     },
     {
       "id": "docs-viewer-runtime-module-ownership",

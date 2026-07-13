@@ -29,6 +29,11 @@ export function scopeDeleteSupported(capabilities) {
   return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
 }
 
+export function scopeRenameSupported(capabilities) {
+  var lifecycle = scopeLifecycleCapabilities(capabilities);
+  return Boolean(lifecycle && lifecycle.rename_preview && lifecycle.rename_apply);
+}
+
 export function subScopeCreateSupported(capabilities, scope) {
   var lifecycle = scopeLifecycleCapabilities(capabilities);
   var scopeCaps = scopeManagementCapabilities(capabilities, scope);
@@ -111,6 +116,23 @@ export function scopeLifecycleDeleteTargets(capabilities) {
     };
   }).filter(function (record) {
     return record.deleteEligible;
+  });
+}
+
+export function scopeLifecycleRenameTargets(capabilities) {
+  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
+    ? capabilities.scopes
+    : {};
+  return Object.keys(scopes).sort().map(function (scopeId) {
+    var scopeCaps = scopes[scopeId] || {};
+    var lifecycle = scopeCaps.scope_lifecycle || {};
+    return {
+      scopeId: scopeId,
+      root: String(scopeCaps.root || "").trim(),
+      renameEligible: lifecycle.rename_eligible === true
+    };
+  }).filter(function (record) {
+    return record.renameEligible;
   });
 }
 

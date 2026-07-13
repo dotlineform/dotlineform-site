@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-scripts-source-mutations
 title: Source Mutation Scripts
 added_date: 2026-06-07
-last_updated: 2026-07-12
+last_updated: 2026-07-13
 parent_id: scripts-docs-management-scripts
 ---
 # Docs Viewer Source Mutation Scripts
@@ -69,6 +69,7 @@ Not responsible for:
 
 - general source doc mutations inside existing scopes
 - top-level scope create planning or apply
+- top-level scope rename planning or apply
 - top-level scope delete planning or apply
 - HTTP dispatch
 - browser rendering
@@ -95,3 +96,17 @@ Responsibilities:
 - plans config, manifest, and public-route record changes
 - deletes only the confirmed manifest-owned paths
 - runs all-scope rebuild follow-through after removal
+
+## `docs-viewer/services/docs_scope_rename.py`
+
+Purpose: external-local top-level scope rename planner and apply owner.
+
+Responsibilities:
+
+- limits rename eligibility to user-created, tool-owned external-local scopes
+- validates external source/media/generated target collisions
+- moves the scope-owned external roots to the new scope folder name
+- updates marker-rooted config, UI-status, nested sub-scope, and manifest records
+- rebuilds docs and search for the new scope id
+
+It does not own public-route changes, R2 operations, or link rewriting inside source documents.

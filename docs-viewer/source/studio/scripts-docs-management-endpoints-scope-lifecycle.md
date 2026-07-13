@@ -2,17 +2,17 @@
 doc_id: scripts-docs-management-endpoints-scope-lifecycle
 title: Scope Lifecycle Endpoints
 added_date: 2026-06-07
-last_updated: 2026-06-13
+last_updated: 2026-07-13
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Scope Lifecycle Endpoints
 
-Scope lifecycle endpoints create and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are blocked from lifecycle deletion.
+Scope lifecycle endpoints create, rename, and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are blocked from lifecycle rename and deletion.
 
 Current create support includes:
 
 - `public_readonly`
-- `local_uncommitted`
+- `local_external`
 - `local_committed`
 
 For public-readonly scopes, the lifecycle action renders `docs-viewer/templates/public-route/index.html` into `site/<route>/index.html`.
@@ -29,7 +29,7 @@ Expected data:
   "title": "Notes",
   "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
-  "publishing_mode": "local_uncommitted",
+  "publishing_mode": "local_committed",
   "public_route_path": "/notes/"
 }
 ```
@@ -54,7 +54,7 @@ Expected data:
   "title": "Notes",
   "source_root": "docs-viewer/source/notes",
   "default_doc_id": "notes",
-  "publishing_mode": "local_uncommitted",
+  "publishing_mode": "local_committed",
   "public_route_path": "/notes/",
   "confirm": true
 }
@@ -74,6 +74,51 @@ Actions:
 - logs a `docs_scope_create_apply` event
 
 Returned data includes created files, changed files, scope config, manifest record, rebuild output, URLs, summary text, and `dry_run`.
+
+## `POST /docs/scopes/rename-preview`
+
+Expected data:
+
+```json
+{
+  "scope_id": "notes",
+  "new_scope_id": "field-notes"
+}
+```
+
+Actions:
+
+- allows only lifecycle-owned `local_external` scopes
+- validates that the new scope id and all derived external target roots are unused
+- validates the existing external source and generated roots against the lifecycle-owned path contract
+- reports the external root moves, config/manifest changes, rebuild commands, and resulting management URL
+- does not move or write anything
+
+The management UI calls preview as a silent validation gate after the compact Rename scope form is submitted. It does not show the detailed preview change list.
+
+## `POST /docs/scopes/rename-apply`
+
+Expected data:
+
+```json
+{
+  "scope_id": "notes",
+  "new_scope_id": "field-notes",
+  "confirm": true
+}
+```
+
+Actions:
+
+- requires `confirm: true` and re-runs rename-preview validation
+- moves the external source root and any existing media, generated docs, and generated search roots to the new scope folder name
+- changes the scope id, marker-rooted paths, media prefix, matching UI-status key, and nested sub-scope paths in `docs_scopes.json`
+- changes the manifest identity and lifecycle-owned external paths
+- rebuilds docs and search for the renamed scope
+- logs a `docs_scope_rename_apply` event
+
+Rename does not create or change a public route and does not perform any R2 operation.
+It also does not rewrite links in source Markdown or raw HTML. Hard-coded document links, `scope=` query values, `/docs/media/<old-scope>/...` paths, and remote media URLs containing the old scope id must be reviewed and updated manually.
 
 ## `POST /docs/scopes/delete-preview`
 

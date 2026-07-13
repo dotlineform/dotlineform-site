@@ -155,7 +155,13 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
             "html_import": True,
             "docs_export": True,
             "library_import": True,
-            "scope_lifecycle": {"create_apply": True, "delete_apply": True},
+            "scope_lifecycle": {
+                "create_apply": True,
+                "rename_apply": True,
+                "delete_apply": True,
+                "sub_scope_create_apply": True,
+                "sub_scope_delete_apply": True,
+            },
             "scopes": {
                 "studio": {
                     "generated_data_reads": True,
@@ -181,6 +187,9 @@ def test_apply_capability_flags_respects_local_service_flags() -> None:
     assert capabilities["source_config_settings_writes"] is False
     assert capabilities["html_import"] is False
     assert capabilities["scope_lifecycle"]["create_apply"] is False
+    assert capabilities["scope_lifecycle"]["rename_apply"] is False
+    assert capabilities["scope_lifecycle"]["sub_scope_create_apply"] is False
+    assert capabilities["scope_lifecycle"]["sub_scope_delete_apply"] is False
     assert capabilities["scopes"]["studio"]["generated_data_reads"] is False
     assert capabilities["scopes"]["studio"]["generated_search_reads"] is False
 

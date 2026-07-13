@@ -2,6 +2,8 @@ import {
   scopeCreateSupported,
   scopeDeleteSupported,
   scopeLifecycleDeleteTargets,
+  scopeLifecycleRenameTargets,
+  scopeRenameSupported,
   subScopeCreateSupported,
   subScopeDeleteSupported,
   subScopeLifecycleDeleteTargets
@@ -16,6 +18,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
   var documentRef = options.document || document;
   var refs = options.refs || {
     createScopeButton: documentRef.getElementById("docsViewerManageNewScopeButton"),
+    renameScopeButton: documentRef.getElementById("docsViewerManageRenameScopeButton"),
     deleteScopeButton: documentRef.getElementById("docsViewerManageDeleteScopeButton"),
     createSubScopeButton: documentRef.getElementById("docsViewerManageNewSubScopeButton"),
     deleteSubScopeButton: documentRef.getElementById("docsViewerManageDeleteSubScopeButton")
@@ -28,7 +31,8 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
 
   function lifecycleCallbacks() {
     return {
-      onApplied: function () {
+      onApplied: function (payload) {
+        if (payload && payload.action === "rename_scope" && typeof callbacks.navigateToScope === "function") return;
         var reloadConfig = typeof callbacks.reloadViewerConfiguration === "function"
           ? callbacks.reloadViewerConfiguration()
           : Promise.resolve(null);
@@ -41,7 +45,8 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       },
       render: callbacks.render,
       setBusy: callbacks.setBusy,
-      setMessage: callbacks.setMessage
+      setMessage: callbacks.setMessage,
+      navigateToScope: callbacks.navigateToScope
     };
   }
 
@@ -52,6 +57,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
         if (
           !module ||
           typeof module.openCreateScopeFlow !== "function" ||
+          typeof module.openRenameScopeFlow !== "function" ||
           typeof module.openDeleteScopeFlow !== "function" ||
           typeof module.openCreateSubScopeFlow !== "function" ||
           typeof module.openDeleteSubScopeFlow !== "function"
@@ -97,6 +103,10 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
     return openFlow("openDeleteScopeFlow", false);
   }
 
+  function renameScope() {
+    return openFlow("openRenameScopeFlow", false);
+  }
+
   function createSubScope() {
     return openFlow("openCreateSubScopeFlow", true);
   }
@@ -117,6 +127,12 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
       refs.deleteScopeButton.hidden = !deleteScopeAvailable;
       refs.deleteScopeButton.disabled = management.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
     }
+    if (refs.renameScopeButton) {
+      var renameScopeAvailable = management.managementAvailable && scopeRenameSupported(management.managementCapabilities);
+      var renameScopeTargets = scopeLifecycleRenameTargets(management.managementCapabilities);
+      refs.renameScopeButton.hidden = !renameScopeAvailable;
+      refs.renameScopeButton.disabled = management.managementBusy || !renameScopeAvailable || renameScopeTargets.length === 0;
+    }
     if (refs.createSubScopeButton) {
       var createSubScopeAvailable = management.managementAvailable && subScopeCreateSupported(management.managementCapabilities, viewerScope());
       refs.createSubScopeButton.hidden = !createSubScopeAvailable;
@@ -133,6 +149,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
   function wireEvents() {
     if (refs.createScopeButton) refs.createScopeButton.addEventListener("click", createScope);
     if (refs.deleteScopeButton) refs.deleteScopeButton.addEventListener("click", deleteScope);
+    if (refs.renameScopeButton) refs.renameScopeButton.addEventListener("click", renameScope);
     if (refs.createSubScopeButton) refs.createSubScopeButton.addEventListener("click", createSubScope);
     if (refs.deleteSubScopeButton) refs.deleteSubScopeButton.addEventListener("click", deleteSubScope);
   }
@@ -141,6 +158,7 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
     createScope: createScope,
     createSubScope: createSubScope,
     deleteScope: deleteScope,
+    renameScope: renameScope,
     deleteSubScope: deleteSubScope,
     render: render,
     wireEvents: wireEvents

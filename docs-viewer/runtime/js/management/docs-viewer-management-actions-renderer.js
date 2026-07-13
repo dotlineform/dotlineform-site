@@ -25,6 +25,13 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     hidden: true
   },
   {
+    id: "docsViewerManageRenameScopeButton",
+    action: "rename-scope",
+    emoji: "🏷️",
+    label: "Rename scope",
+    hidden: true
+  },
+  {
     id: "docsViewerManageDeleteScopeButton",
     action: "delete-scope",
     emoji: "🗑️",

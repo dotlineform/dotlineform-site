@@ -521,6 +521,13 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       managementClientOptions: managementClientOptions,
+      navigateToScope: function (scopeId) {
+        var url = new URL(window.location.href);
+        url.searchParams.set("scope", scopeId);
+        url.searchParams.delete("doc");
+        url.searchParams.delete("q");
+        window.location.assign(url.toString());
+      },
       refreshManagementCapabilities: refreshManagementCapabilities,
       reloadViewerConfiguration: reloadViewerConfiguration,
       render: renderManagementUi,
