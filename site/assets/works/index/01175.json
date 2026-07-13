@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-30e75cb3e270e55be03f284d842dc5a9",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-e77ac3f4f9f2770943d0c4f12ea000c3",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01175",
     "count": 16
   },
@@ -19,7 +19,8 @@
     "height_cm": 61.0,
     "width_cm": 91.0,
     "width_px": 8268,
-    "height_px": 5560
+    "height_px": 5560,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01175-001",
           "title": "forest detail 1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -40,7 +42,8 @@
           "detail_uid": "01175-002",
           "title": "forest detail 2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -48,7 +51,8 @@
           "detail_uid": "01175-003",
           "title": "forest detail 3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -56,7 +60,8 @@
           "detail_uid": "01175-004",
           "title": "forest detail 4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -64,7 +69,8 @@
           "detail_uid": "01175-005",
           "title": "forest detail 5",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -72,7 +78,8 @@
           "detail_uid": "01175-006",
           "title": "forest detail 6",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -80,7 +87,8 @@
           "detail_uid": "01175-007",
           "title": "forest detail 7",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -88,7 +96,8 @@
           "detail_uid": "01175-008",
           "title": "forest detail 8",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -96,7 +105,8 @@
           "detail_uid": "01175-009",
           "title": "forest detail 9",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -104,7 +114,8 @@
           "detail_uid": "01175-010",
           "title": "forest detail 10",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -112,7 +123,8 @@
           "detail_uid": "01175-011",
           "title": "forest detail 11",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -120,7 +132,8 @@
           "detail_uid": "01175-012",
           "title": "forest detail 12",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -128,7 +141,8 @@
           "detail_uid": "01175-013",
           "title": "forest detail 13",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -136,7 +150,8 @@
           "detail_uid": "01175-014",
           "title": "forest detail 14",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -144,7 +159,8 @@
           "detail_uid": "01175-015",
           "title": "forest detail 15",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01175",
@@ -152,7 +168,8 @@
           "detail_uid": "01175-016",
           "title": "forest detail 16",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         }
       ]
     }

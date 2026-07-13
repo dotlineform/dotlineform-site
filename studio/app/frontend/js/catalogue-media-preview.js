@@ -22,6 +22,13 @@ function joinAssetPath(base, stem, suffix, size, format) {
   return `${root}${stem}-${suffix}-${size}.${format}`;
 }
 
+function appendVersionQuery(url, version) {
+  const href = normalizeText(url);
+  const normalizedVersion = Math.floor(Number(version));
+  if (!href || !Number.isFinite(normalizedVersion) || normalizedVersion < 1) return href;
+  return `${href}${href.includes("?") ? "&" : "?"}v=${encodeURIComponent(String(normalizedVersion))}`;
+}
+
 function buildSrcset(urlBuilder, sizes) {
   return sizes.map((size) => `${urlBuilder(size)} ${size}w`).join(", ");
 }
@@ -52,8 +59,8 @@ export function buildWorkPrimaryPreview(config, workId, options = {}) {
   const base = options.staged
     ? normalizeText(config && config.stagedWorksPrimaryBase) || normalizeText(config && config.worksPrimaryBase)
     : normalizeText(config && config.worksPrimaryBase);
-  const src = joinAssetPath(base, stem, suffix, width, format);
-  const fullSrc = joinAssetPath(base, stem, suffix, fullWidth, format);
+  const src = appendVersionQuery(joinAssetPath(base, stem, suffix, width, format), options.mediaVersion);
+  const fullSrc = appendVersionQuery(joinAssetPath(base, stem, suffix, fullWidth, format), options.mediaVersion);
   return {
     src,
     fullSrc,

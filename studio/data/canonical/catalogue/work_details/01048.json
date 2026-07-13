@@ -16,6 +16,7 @@
           "detail_uid": "01048-001",
           "detail_id": "001",
           "project_filename": "field II - detail 1.jpeg",
+          "media_version": 1,
           "title": "field II - detail 1",
           "width_px": 2000,
           "height_px": 1125
@@ -24,6 +25,7 @@
           "detail_uid": "01048-002",
           "detail_id": "002",
           "project_filename": "field II - detail 2.jpeg",
+          "media_version": 1,
           "title": "field II - detail 2",
           "width_px": 2000,
           "height_px": 1125
@@ -32,6 +34,7 @@
           "detail_uid": "01048-003",
           "detail_id": "003",
           "project_filename": "field II - detail 3.jpeg",
+          "media_version": 1,
           "title": "field II - detail 3",
           "width_px": 2000,
           "height_px": 1125

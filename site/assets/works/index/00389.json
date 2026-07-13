@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-11c05e8f82f4ca358f304b1cef46555e",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-921158520a98714c7b5c6a88ad42662a",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00389",
     "count": 523
   },
@@ -19,7 +19,8 @@
     "height_cm": 50.0,
     "width_cm": 30.0,
     "width_px": 3543,
-    "height_px": 5905
+    "height_px": 5905,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00389-001",
           "title": "2003-09-07 13꞉51",
           "width_px": 2038,
-          "height_px": 1465
+          "height_px": 1465,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -40,7 +42,8 @@
           "detail_uid": "00389-002",
           "title": "2003-09-07 13꞉59",
           "width_px": 2031,
-          "height_px": 1470
+          "height_px": 1470,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -48,7 +51,8 @@
           "detail_uid": "00389-003",
           "title": "2003-09-07 16꞉27",
           "width_px": 2712,
-          "height_px": 1970
+          "height_px": 1970,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -56,7 +60,8 @@
           "detail_uid": "00389-004",
           "title": "2003-09-07 16꞉38",
           "width_px": 2025,
-          "height_px": 1477
+          "height_px": 1477,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -64,7 +69,8 @@
           "detail_uid": "00389-005",
           "title": "2003-09-07 16꞉52",
           "width_px": 2051,
-          "height_px": 1464
+          "height_px": 1464,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -72,7 +78,8 @@
           "detail_uid": "00389-006",
           "title": "2003-09-07 17꞉07",
           "width_px": 2034,
-          "height_px": 1470
+          "height_px": 1470,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -80,7 +87,8 @@
           "detail_uid": "00389-007",
           "title": "2003-09-07 17꞉18",
           "width_px": 2037,
-          "height_px": 1465
+          "height_px": 1465,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -88,7 +96,8 @@
           "detail_uid": "00389-008",
           "title": "2003-09-07 17꞉28",
           "width_px": 2031,
-          "height_px": 1465
+          "height_px": 1465,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -96,7 +105,8 @@
           "detail_uid": "00389-009",
           "title": "2003-09-11 22꞉01",
           "width_px": 600,
-          "height_px": 440
+          "height_px": 440,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -104,7 +114,8 @@
           "detail_uid": "00389-010",
           "title": "2005_nature_2_4",
           "width_px": 2834,
-          "height_px": 1889
+          "height_px": 1889,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -112,7 +123,8 @@
           "detail_uid": "00389-011",
           "title": "2005_nature_2_5",
           "width_px": 2834,
-          "height_px": 1889
+          "height_px": 1889,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -120,7 +132,8 @@
           "detail_uid": "00389-012",
           "title": "2005_nature_2_12",
           "width_px": 2834,
-          "height_px": 1889
+          "height_px": 1889,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -128,7 +141,8 @@
           "detail_uid": "00389-013",
           "title": "2005_nature_2_13",
           "width_px": 2834,
-          "height_px": 1889
+          "height_px": 1889,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -136,7 +150,8 @@
           "detail_uid": "00389-014",
           "title": "2006-04-06 20꞉27",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -144,7 +159,8 @@
           "detail_uid": "00389-015",
           "title": "2006-05-21 21꞉24",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -152,7 +168,8 @@
           "detail_uid": "00389-016",
           "title": "2006-05-21 21꞉31 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -160,7 +177,8 @@
           "detail_uid": "00389-017",
           "title": "2006-05-21 21꞉31 3",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -168,7 +186,8 @@
           "detail_uid": "00389-018",
           "title": "2006-05-21 21꞉31",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -176,7 +195,8 @@
           "detail_uid": "00389-019",
           "title": "2006-05-21 21꞉32",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -184,7 +204,8 @@
           "detail_uid": "00389-020",
           "title": "2006-11-06 00꞉21 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -192,7 +213,8 @@
           "detail_uid": "00389-021",
           "title": "2006-11-06 00꞉21",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -200,7 +222,8 @@
           "detail_uid": "00389-022",
           "title": "2007-03-18 02꞉44",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -208,7 +231,8 @@
           "detail_uid": "00389-023",
           "title": "2007-04-05 20꞉11",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -216,7 +240,8 @@
           "detail_uid": "00389-024",
           "title": "2007-04-05 20꞉14",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -224,7 +249,8 @@
           "detail_uid": "00389-025",
           "title": "2007-04-21 11꞉42",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -232,7 +258,8 @@
           "detail_uid": "00389-026",
           "title": "2007-04-28 15꞉38",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -240,7 +267,8 @@
           "detail_uid": "00389-027",
           "title": "2007-04-28 21꞉31",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -248,7 +276,8 @@
           "detail_uid": "00389-028",
           "title": "2007-04-28 21꞉32",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -256,7 +285,8 @@
           "detail_uid": "00389-029",
           "title": "2007-04-28 21꞉33",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -264,7 +294,8 @@
           "detail_uid": "00389-030",
           "title": "2007-04-28 21꞉34",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -272,7 +303,8 @@
           "detail_uid": "00389-031",
           "title": "2007-04-29 11꞉02",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -280,7 +312,8 @@
           "detail_uid": "00389-032",
           "title": "2007-04-29 12꞉54",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -288,7 +321,8 @@
           "detail_uid": "00389-033",
           "title": "2007-04-29 12꞉56 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -296,7 +330,8 @@
           "detail_uid": "00389-034",
           "title": "2007-04-29 12꞉56",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -304,7 +339,8 @@
           "detail_uid": "00389-035",
           "title": "2007-04-29 16꞉25",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -312,7 +348,8 @@
           "detail_uid": "00389-036",
           "title": "2007-04-29 21꞉45",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -320,7 +357,8 @@
           "detail_uid": "00389-037",
           "title": "2007-04-29 21꞉46",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -328,7 +366,8 @@
           "detail_uid": "00389-038",
           "title": "2007-04-29 21꞉47",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -336,7 +375,8 @@
           "detail_uid": "00389-039",
           "title": "2007-04-30 11꞉34",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -344,7 +384,8 @@
           "detail_uid": "00389-040",
           "title": "2007-04-30 11꞉35 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -352,7 +393,8 @@
           "detail_uid": "00389-041",
           "title": "2007-04-30 11꞉35 3",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -360,7 +402,8 @@
           "detail_uid": "00389-042",
           "title": "2007-04-30 11꞉35",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -368,7 +411,8 @@
           "detail_uid": "00389-043",
           "title": "2007-05-01 10꞉28",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -376,7 +420,8 @@
           "detail_uid": "00389-044",
           "title": "2007-05-02 15꞉02 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -384,7 +429,8 @@
           "detail_uid": "00389-045",
           "title": "2007-05-02 15꞉02",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -392,7 +438,8 @@
           "detail_uid": "00389-046",
           "title": "2007-05-02 20꞉56",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -400,7 +447,8 @@
           "detail_uid": "00389-047",
           "title": "2007-05-02 20꞉58",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -408,7 +456,8 @@
           "detail_uid": "00389-048",
           "title": "2007-05-24 22꞉33",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -416,7 +465,8 @@
           "detail_uid": "00389-049",
           "title": "2007-05-24 22꞉35 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -424,7 +474,8 @@
           "detail_uid": "00389-050",
           "title": "2007-05-24 22꞉35",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -432,7 +483,8 @@
           "detail_uid": "00389-051",
           "title": "2007-05-24 22꞉37 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -440,7 +492,8 @@
           "detail_uid": "00389-052",
           "title": "2007-05-24 22꞉37 3",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -448,7 +501,8 @@
           "detail_uid": "00389-053",
           "title": "2007-05-24 22꞉37 4",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -456,7 +510,8 @@
           "detail_uid": "00389-054",
           "title": "2007-05-24 22꞉37",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -464,7 +519,8 @@
           "detail_uid": "00389-055",
           "title": "2007-05-24 22꞉38 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -472,7 +528,8 @@
           "detail_uid": "00389-056",
           "title": "2007-05-24 22꞉38",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -480,7 +537,8 @@
           "detail_uid": "00389-057",
           "title": "2007-05-24 22꞉39",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -488,7 +546,8 @@
           "detail_uid": "00389-058",
           "title": "2007-06-09 12꞉15",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -496,7 +555,8 @@
           "detail_uid": "00389-059",
           "title": "2007-06-20 13꞉12",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -504,7 +564,8 @@
           "detail_uid": "00389-060",
           "title": "2007-06-20 21꞉19",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -512,7 +573,8 @@
           "detail_uid": "00389-061",
           "title": "2007-06-20 21꞉21",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -520,7 +582,8 @@
           "detail_uid": "00389-062",
           "title": "2007-06-20 21꞉23",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -528,7 +591,8 @@
           "detail_uid": "00389-063",
           "title": "2007-06-28 21꞉10",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -536,7 +600,8 @@
           "detail_uid": "00389-064",
           "title": "2007-06-28 21꞉11 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -544,7 +609,8 @@
           "detail_uid": "00389-065",
           "title": "2007-06-28 21꞉11",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -552,7 +618,8 @@
           "detail_uid": "00389-066",
           "title": "2007-06-28 21꞉12",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -560,7 +627,8 @@
           "detail_uid": "00389-067",
           "title": "2007-06-28 22꞉08",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -568,7 +636,8 @@
           "detail_uid": "00389-068",
           "title": "2007-06-29 15꞉17",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -576,7 +645,8 @@
           "detail_uid": "00389-069",
           "title": "2007-06-29 15꞉18",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -584,7 +654,8 @@
           "detail_uid": "00389-070",
           "title": "2007-06-29 15꞉19",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -592,7 +663,8 @@
           "detail_uid": "00389-071",
           "title": "2007-06-29 15꞉20",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -600,7 +672,8 @@
           "detail_uid": "00389-072",
           "title": "2007-07-16 21꞉40",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -608,7 +681,8 @@
           "detail_uid": "00389-073",
           "title": "2007-07-16 21꞉41",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -616,7 +690,8 @@
           "detail_uid": "00389-074",
           "title": "2007-07-18 21꞉26",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -624,7 +699,8 @@
           "detail_uid": "00389-075",
           "title": "2007-09-02 13꞉08",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -632,7 +708,8 @@
           "detail_uid": "00389-076",
           "title": "2007-09-02 13꞉09",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -640,7 +717,8 @@
           "detail_uid": "00389-077",
           "title": "2007-09-04 18꞉22",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -648,7 +726,8 @@
           "detail_uid": "00389-078",
           "title": "2007-11-10 13꞉16",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -656,7 +735,8 @@
           "detail_uid": "00389-079",
           "title": "2007-12-03 10꞉02",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -664,7 +744,8 @@
           "detail_uid": "00389-080",
           "title": "2008-04-07 15꞉43",
           "width_px": 2123,
-          "height_px": 1512
+          "height_px": 1512,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -672,7 +753,8 @@
           "detail_uid": "00389-081",
           "title": "2008-04-07 16꞉14",
           "width_px": 2123,
-          "height_px": 1509
+          "height_px": 1509,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -680,7 +762,8 @@
           "detail_uid": "00389-082",
           "title": "2008-04-07 16꞉20",
           "width_px": 2126,
-          "height_px": 1506
+          "height_px": 1506,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -688,7 +771,8 @@
           "detail_uid": "00389-083",
           "title": "2008-04-07 16꞉26",
           "width_px": 2123,
-          "height_px": 1513
+          "height_px": 1513,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -696,7 +780,8 @@
           "detail_uid": "00389-084",
           "title": "2008-04-07 16꞉47",
           "width_px": 1513,
-          "height_px": 2124
+          "height_px": 2124,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -704,7 +789,8 @@
           "detail_uid": "00389-085",
           "title": "2008-04-07 16꞉50",
           "width_px": 1518,
-          "height_px": 2127
+          "height_px": 2127,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -712,7 +798,8 @@
           "detail_uid": "00389-086",
           "title": "2008-06-08 14꞉07",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -720,7 +807,8 @@
           "detail_uid": "00389-087",
           "title": "2008-07-21 18꞉24 2",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -728,7 +816,8 @@
           "detail_uid": "00389-088",
           "title": "2008-07-21 18꞉24",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -736,7 +825,8 @@
           "detail_uid": "00389-089",
           "title": "2008-07-21 18꞉25",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -744,7 +834,8 @@
           "detail_uid": "00389-090",
           "title": "2008-07-21 18꞉26 2",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -752,7 +843,8 @@
           "detail_uid": "00389-091",
           "title": "2008-07-21 18꞉26 3",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -760,7 +852,8 @@
           "detail_uid": "00389-092",
           "title": "2008-07-21 18꞉26",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -768,7 +861,8 @@
           "detail_uid": "00389-093",
           "title": "2008-07-21 18꞉27 2",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -776,7 +870,8 @@
           "detail_uid": "00389-094",
           "title": "2008-07-21 18꞉27",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -784,7 +879,8 @@
           "detail_uid": "00389-095",
           "title": "2008-08-15 21꞉14 2",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -792,7 +888,8 @@
           "detail_uid": "00389-096",
           "title": "2008-08-15 21꞉14 3",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -800,7 +897,8 @@
           "detail_uid": "00389-097",
           "title": "2008-08-15 21꞉14",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -808,7 +906,8 @@
           "detail_uid": "00389-098",
           "title": "2008-08-15 21꞉15",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -816,7 +915,8 @@
           "detail_uid": "00389-099",
           "title": "2008-09-30 19꞉46",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -824,7 +924,8 @@
           "detail_uid": "00389-100",
           "title": "2008-10-02 10꞉24 2",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -832,7 +933,8 @@
           "detail_uid": "00389-101",
           "title": "2008-10-02 10꞉24",
           "width_px": 1280,
-          "height_px": 960
+          "height_px": 960,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -840,7 +942,8 @@
           "detail_uid": "00389-102",
           "title": "2008-10-24 12꞉11",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -848,7 +951,8 @@
           "detail_uid": "00389-103",
           "title": "2008-10-25 15꞉52",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -856,7 +960,8 @@
           "detail_uid": "00389-104",
           "title": "2008-10-26 14꞉42",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -864,7 +969,8 @@
           "detail_uid": "00389-105",
           "title": "2009-06-20 20꞉36",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -872,7 +978,8 @@
           "detail_uid": "00389-106",
           "title": "2009-07-05 10꞉52",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -880,7 +987,8 @@
           "detail_uid": "00389-107",
           "title": "2009-07-06 11꞉23",
           "width_px": 2272,
-          "height_px": 1704
+          "height_px": 1704,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -888,7 +996,8 @@
           "detail_uid": "00389-108",
           "title": "2009-09-05 17꞉39",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -896,7 +1005,8 @@
           "detail_uid": "00389-109",
           "title": "2009-09-05 21꞉43",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -904,7 +1014,8 @@
           "detail_uid": "00389-110",
           "title": "2009-11-15 10꞉43",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -912,7 +1023,8 @@
           "detail_uid": "00389-111",
           "title": "2010-01-20 16꞉11",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -920,7 +1032,8 @@
           "detail_uid": "00389-112",
           "title": "2010-01-22 07꞉35",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -928,7 +1041,8 @@
           "detail_uid": "00389-113",
           "title": "2010-01-23 10꞉49",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -936,7 +1050,8 @@
           "detail_uid": "00389-114",
           "title": "2010-01-30 17꞉52",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -944,7 +1059,8 @@
           "detail_uid": "00389-115",
           "title": "2010-01-30 17꞉57",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -952,7 +1068,8 @@
           "detail_uid": "00389-116",
           "title": "2010-01-30 17꞉58",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -960,7 +1077,8 @@
           "detail_uid": "00389-117",
           "title": "2010-02-06 21꞉53",
           "width_px": 640,
-          "height_px": 480
+          "height_px": 480,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -968,7 +1086,8 @@
           "detail_uid": "00389-118",
           "title": "2010-02-10 16꞉33",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -976,7 +1095,8 @@
           "detail_uid": "00389-119",
           "title": "2010-03-01 11꞉07",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -984,7 +1104,8 @@
           "detail_uid": "00389-120",
           "title": "2010-03-01 11꞉08",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -992,7 +1113,8 @@
           "detail_uid": "00389-121",
           "title": "2010-05-26 20꞉03",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1000,7 +1122,8 @@
           "detail_uid": "00389-122",
           "title": "2010-05-26 20꞉04",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1008,7 +1131,8 @@
           "detail_uid": "00389-123",
           "title": "2010-05-30 11꞉17",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1016,7 +1140,8 @@
           "detail_uid": "00389-124",
           "title": "2010-05-30 12꞉16",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1024,7 +1149,8 @@
           "detail_uid": "00389-125",
           "title": "2010-06-02 12꞉37",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1032,7 +1158,8 @@
           "detail_uid": "00389-126",
           "title": "2010-06-02 12꞉39",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1040,7 +1167,8 @@
           "detail_uid": "00389-127",
           "title": "2010-06-02 12꞉40",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1048,7 +1176,8 @@
           "detail_uid": "00389-128",
           "title": "2010-06-02 12꞉49",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1056,7 +1185,8 @@
           "detail_uid": "00389-129",
           "title": "2010-07-16 22꞉24",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1064,7 +1194,8 @@
           "detail_uid": "00389-130",
           "title": "2010-07-20 11꞉36",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1072,7 +1203,8 @@
           "detail_uid": "00389-131",
           "title": "2010-07-20 11꞉37",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1080,7 +1212,8 @@
           "detail_uid": "00389-132",
           "title": "2010-07-20 11꞉38",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1088,7 +1221,8 @@
           "detail_uid": "00389-133",
           "title": "2011-02-20 13꞉31",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1096,7 +1230,8 @@
           "detail_uid": "00389-134",
           "title": "2011-04-24 14꞉34",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1104,7 +1239,8 @@
           "detail_uid": "00389-135",
           "title": "2011-09-09 11꞉08",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1112,7 +1248,8 @@
           "detail_uid": "00389-136",
           "title": "2011-09-14 14꞉39",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1120,7 +1257,8 @@
           "detail_uid": "00389-137",
           "title": "2011-12-14 20꞉59",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1128,7 +1266,8 @@
           "detail_uid": "00389-138",
           "title": "2012-01-02 15꞉15",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1136,7 +1275,8 @@
           "detail_uid": "00389-139",
           "title": "2012-01-18 21꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1144,7 +1284,8 @@
           "detail_uid": "00389-140",
           "title": "2012-01-22 12꞉37 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1152,7 +1293,8 @@
           "detail_uid": "00389-141",
           "title": "2012-01-22 12꞉37",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1160,7 +1302,8 @@
           "detail_uid": "00389-142",
           "title": "2012-02-04 12꞉26",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1168,7 +1311,8 @@
           "detail_uid": "00389-143",
           "title": "2012-02-04 12꞉34",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1176,7 +1320,8 @@
           "detail_uid": "00389-144",
           "title": "2012-02-04 12꞉39",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1184,7 +1329,8 @@
           "detail_uid": "00389-145",
           "title": "2012-02-06 07꞉52",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1192,7 +1338,8 @@
           "detail_uid": "00389-146",
           "title": "2012-02-20 - 19-57-19",
           "width_px": 1536,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1200,7 +1347,8 @@
           "detail_uid": "00389-147",
           "title": "2012-03-04 13꞉59",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1208,7 +1356,8 @@
           "detail_uid": "00389-148",
           "title": "2012-03-05 12꞉20",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1216,7 +1365,8 @@
           "detail_uid": "00389-149",
           "title": "2012-03-24 12꞉26",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1224,7 +1374,8 @@
           "detail_uid": "00389-150",
           "title": "2012-03-25 12꞉12",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1232,7 +1383,8 @@
           "detail_uid": "00389-151",
           "title": "2012-03-25 13꞉32",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1240,7 +1392,8 @@
           "detail_uid": "00389-152",
           "title": "2012-03-28 11꞉02",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1248,7 +1401,8 @@
           "detail_uid": "00389-153",
           "title": "2012-03-28 11꞉20",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1256,7 +1410,8 @@
           "detail_uid": "00389-154",
           "title": "2012-03-28 17꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1264,7 +1419,8 @@
           "detail_uid": "00389-155",
           "title": "2012-03-30 11꞉39",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1272,7 +1428,8 @@
           "detail_uid": "00389-156",
           "title": "2012-04-25 19꞉04",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1280,7 +1437,8 @@
           "detail_uid": "00389-157",
           "title": "2012-05-08 13꞉00",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1288,7 +1446,8 @@
           "detail_uid": "00389-158",
           "title": "2012-05-11 18꞉23 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1296,7 +1455,8 @@
           "detail_uid": "00389-159",
           "title": "2012-05-11 18꞉23",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1304,7 +1464,8 @@
           "detail_uid": "00389-160",
           "title": "2012-05-21 17꞉01",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1312,7 +1473,8 @@
           "detail_uid": "00389-161",
           "title": "2012-05-26 16꞉05",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1320,7 +1482,8 @@
           "detail_uid": "00389-162",
           "title": "2012-06-17 21꞉48",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1328,7 +1491,8 @@
           "detail_uid": "00389-163",
           "title": "2012-06-29 19꞉03",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1336,7 +1500,8 @@
           "detail_uid": "00389-164",
           "title": "2012-07-15 11꞉32",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1344,7 +1509,8 @@
           "detail_uid": "00389-165",
           "title": "2012-07-15 14꞉53",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1352,7 +1518,8 @@
           "detail_uid": "00389-166",
           "title": "2012-07-15 15꞉31",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1360,7 +1527,8 @@
           "detail_uid": "00389-167",
           "title": "2012-07-29 13꞉50",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1368,7 +1536,8 @@
           "detail_uid": "00389-168",
           "title": "2012-07-29 14꞉43 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1376,7 +1545,8 @@
           "detail_uid": "00389-169",
           "title": "2012-07-29 14꞉43",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1384,7 +1554,8 @@
           "detail_uid": "00389-170",
           "title": "2012-07-29 14꞉47",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1392,7 +1563,8 @@
           "detail_uid": "00389-171",
           "title": "2012-07-29 16꞉50 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1400,7 +1572,8 @@
           "detail_uid": "00389-172",
           "title": "2012-07-29 16꞉50",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1408,7 +1581,8 @@
           "detail_uid": "00389-173",
           "title": "2012-08-03 20꞉26",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1416,7 +1590,8 @@
           "detail_uid": "00389-174",
           "title": "2012-08-04 08꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1424,7 +1599,8 @@
           "detail_uid": "00389-175",
           "title": "2012-08-11 13꞉38",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1432,7 +1608,8 @@
           "detail_uid": "00389-176",
           "title": "2012-08-26 13꞉01",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1440,7 +1617,8 @@
           "detail_uid": "00389-177",
           "title": "2012-08-28 12꞉27",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1448,7 +1626,8 @@
           "detail_uid": "00389-178",
           "title": "2012-08-28 15꞉43",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1456,7 +1635,8 @@
           "detail_uid": "00389-179",
           "title": "2012-08-28 22꞉50",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1464,7 +1644,8 @@
           "detail_uid": "00389-180",
           "title": "2012-09-11 07꞉19",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1472,7 +1653,8 @@
           "detail_uid": "00389-181",
           "title": "2012-09-14 17꞉48 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1480,7 +1662,8 @@
           "detail_uid": "00389-182",
           "title": "2012-09-14 17꞉48",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1488,7 +1671,8 @@
           "detail_uid": "00389-183",
           "title": "2012-09-16 14꞉16",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1496,7 +1680,8 @@
           "detail_uid": "00389-184",
           "title": "2012-09-16 18꞉31",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1504,7 +1689,8 @@
           "detail_uid": "00389-185",
           "title": "2012-09-16 18꞉32",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1512,7 +1698,8 @@
           "detail_uid": "00389-186",
           "title": "2012-09-17 18꞉51",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1520,7 +1707,8 @@
           "detail_uid": "00389-187",
           "title": "2012-09-18 14꞉19",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1528,7 +1716,8 @@
           "detail_uid": "00389-188",
           "title": "2012-09-18 14꞉23",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1536,7 +1725,8 @@
           "detail_uid": "00389-189",
           "title": "2012-09-18 16꞉58",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1544,7 +1734,8 @@
           "detail_uid": "00389-190",
           "title": "2012-09-24 20꞉11",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1552,7 +1743,8 @@
           "detail_uid": "00389-191",
           "title": "2012-09-25 11꞉39",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1560,7 +1752,8 @@
           "detail_uid": "00389-192",
           "title": "2012-09-26 19꞉44",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1568,7 +1761,8 @@
           "detail_uid": "00389-193",
           "title": "2012-09-27 06꞉12",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1576,7 +1770,8 @@
           "detail_uid": "00389-194",
           "title": "2012-09-28 02꞉13",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1584,7 +1779,8 @@
           "detail_uid": "00389-195",
           "title": "2012-09-30 12꞉53",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1592,7 +1788,8 @@
           "detail_uid": "00389-196",
           "title": "2012-09-30 13꞉09",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1600,7 +1797,8 @@
           "detail_uid": "00389-197",
           "title": "2012-10-04 18꞉31",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1608,7 +1806,8 @@
           "detail_uid": "00389-198",
           "title": "2012-10-06 12꞉45",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1616,7 +1815,8 @@
           "detail_uid": "00389-199",
           "title": "2012-10-07 15꞉22",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1624,7 +1824,8 @@
           "detail_uid": "00389-200",
           "title": "2012-10-07 15꞉49",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1632,7 +1833,8 @@
           "detail_uid": "00389-201",
           "title": "2012-10-14 11꞉14",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1640,7 +1842,8 @@
           "detail_uid": "00389-202",
           "title": "2012-10-15 14꞉20",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1648,7 +1851,8 @@
           "detail_uid": "00389-203",
           "title": "2012-10-19 19꞉36",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1656,7 +1860,8 @@
           "detail_uid": "00389-204",
           "title": "2012-10-21 11꞉28",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1664,7 +1869,8 @@
           "detail_uid": "00389-205",
           "title": "2012-10-21 18꞉56",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1672,7 +1878,8 @@
           "detail_uid": "00389-206",
           "title": "2012-10-21 18꞉57",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1680,7 +1887,8 @@
           "detail_uid": "00389-207",
           "title": "2012-10-26 16꞉33",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1688,7 +1896,8 @@
           "detail_uid": "00389-208",
           "title": "2012-10-26 16꞉34",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1696,7 +1905,8 @@
           "detail_uid": "00389-209",
           "title": "2012-10-26 16꞉35",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1704,7 +1914,8 @@
           "detail_uid": "00389-210",
           "title": "2012-10-27 12꞉15",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1712,7 +1923,8 @@
           "detail_uid": "00389-211",
           "title": "2012-11-07 10꞉14",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1720,7 +1932,8 @@
           "detail_uid": "00389-212",
           "title": "2012-11-07 16꞉00",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1728,7 +1941,8 @@
           "detail_uid": "00389-213",
           "title": "2012-11-10 14꞉16",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1736,7 +1950,8 @@
           "detail_uid": "00389-214",
           "title": "2012-11-10 14꞉17",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1744,7 +1959,8 @@
           "detail_uid": "00389-215",
           "title": "2012-11-23 11꞉59",
           "width_px": 3008,
-          "height_px": 2482
+          "height_px": 2482,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1752,7 +1968,8 @@
           "detail_uid": "00389-216",
           "title": "2012-12-05 21꞉36",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1760,7 +1977,8 @@
           "detail_uid": "00389-217",
           "title": "2012-12-06 16꞉50",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1768,7 +1986,8 @@
           "detail_uid": "00389-218",
           "title": "2012-12-25 15꞉29",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1776,7 +1995,8 @@
           "detail_uid": "00389-219",
           "title": "2012-12-31 21꞉32",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1784,7 +2004,8 @@
           "detail_uid": "00389-220",
           "title": "2012-12-31 22꞉02",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1792,7 +2013,8 @@
           "detail_uid": "00389-221",
           "title": "2013-01-04 18꞉18",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1800,7 +2022,8 @@
           "detail_uid": "00389-222",
           "title": "2013-01-08 16꞉35",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1808,7 +2031,8 @@
           "detail_uid": "00389-223",
           "title": "2013-01-16 09꞉38",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1816,7 +2040,8 @@
           "detail_uid": "00389-224",
           "title": "2013-01-28 10꞉27",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1824,7 +2049,8 @@
           "detail_uid": "00389-225",
           "title": "2013-02-17 23꞉19",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1832,7 +2058,8 @@
           "detail_uid": "00389-226",
           "title": "2013-02-21 21꞉31",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1840,7 +2067,8 @@
           "detail_uid": "00389-227",
           "title": "2013-02-28 08꞉18",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1848,7 +2076,8 @@
           "detail_uid": "00389-228",
           "title": "2013-03-02 13꞉23",
           "width_px": 3578,
-          "height_px": 2375
+          "height_px": 2375,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1856,7 +2085,8 @@
           "detail_uid": "00389-229",
           "title": "2013-03-02 14꞉29",
           "width_px": 2368,
-          "height_px": 2368
+          "height_px": 2368,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1864,7 +2094,8 @@
           "detail_uid": "00389-230",
           "title": "2013-03-02 15꞉00",
           "width_px": 2371,
-          "height_px": 2371
+          "height_px": 2371,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1872,7 +2103,8 @@
           "detail_uid": "00389-231",
           "title": "2013-03-02 15꞉19",
           "width_px": 3562,
-          "height_px": 2365
+          "height_px": 2365,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1880,7 +2112,8 @@
           "detail_uid": "00389-232",
           "title": "2013-03-07 18꞉26",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1888,7 +2121,8 @@
           "detail_uid": "00389-233",
           "title": "2013-03-10 13꞉19",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1896,7 +2130,8 @@
           "detail_uid": "00389-234",
           "title": "2013-03-11 13꞉40",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1904,7 +2139,8 @@
           "detail_uid": "00389-235",
           "title": "2013-03-14 11꞉55",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1912,7 +2148,8 @@
           "detail_uid": "00389-236",
           "title": "2013-03-14 13꞉05",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1920,7 +2157,8 @@
           "detail_uid": "00389-237",
           "title": "2013-03-14 15꞉51",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1928,7 +2166,8 @@
           "detail_uid": "00389-238",
           "title": "2013-03-15 14꞉09",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1936,7 +2175,8 @@
           "detail_uid": "00389-239",
           "title": "2013-03-16 22꞉32",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1944,7 +2184,8 @@
           "detail_uid": "00389-240",
           "title": "2013-03-17 11꞉44",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1952,7 +2193,8 @@
           "detail_uid": "00389-241",
           "title": "2013-03-17 13꞉22",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1960,7 +2202,8 @@
           "detail_uid": "00389-242",
           "title": "2013-03-18 09꞉50",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1968,7 +2211,8 @@
           "detail_uid": "00389-243",
           "title": "2013-03-18 15꞉55",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1976,7 +2220,8 @@
           "detail_uid": "00389-244",
           "title": "2013-03-18 18꞉59",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1984,7 +2229,8 @@
           "detail_uid": "00389-245",
           "title": "2013-03-19 12꞉57",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -1992,7 +2238,8 @@
           "detail_uid": "00389-246",
           "title": "2013-03-20 10꞉35",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2000,7 +2247,8 @@
           "detail_uid": "00389-247",
           "title": "2013-03-20 17꞉17",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2008,7 +2256,8 @@
           "detail_uid": "00389-248",
           "title": "2013-03-20 17꞉53",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2016,7 +2265,8 @@
           "detail_uid": "00389-249",
           "title": "2013-03-23 09꞉42",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2024,7 +2274,8 @@
           "detail_uid": "00389-250",
           "title": "2013-04-02 08꞉11 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2032,7 +2283,8 @@
           "detail_uid": "00389-251",
           "title": "2013-04-02 08꞉11",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2040,7 +2292,8 @@
           "detail_uid": "00389-252",
           "title": "2013-04-02 08꞉12",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2048,7 +2301,8 @@
           "detail_uid": "00389-253",
           "title": "2013-04-12 19꞉22",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2056,7 +2310,8 @@
           "detail_uid": "00389-254",
           "title": "2013-04-12 20꞉37",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2064,7 +2319,8 @@
           "detail_uid": "00389-255",
           "title": "2013-04-26 19꞉47",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2072,7 +2328,8 @@
           "detail_uid": "00389-256",
           "title": "2013-04-28 08꞉20",
           "width_px": 640,
-          "height_px": 480
+          "height_px": 480,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2080,7 +2337,8 @@
           "detail_uid": "00389-257",
           "title": "2013-05-15 19꞉31",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2088,7 +2346,8 @@
           "detail_uid": "00389-258",
           "title": "2013-05-19 20꞉40",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2096,7 +2355,8 @@
           "detail_uid": "00389-259",
           "title": "2013-05-21 01꞉30",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2104,7 +2364,8 @@
           "detail_uid": "00389-260",
           "title": "2013-06-03 20꞉04",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2112,7 +2373,8 @@
           "detail_uid": "00389-261",
           "title": "2013-06-10 09꞉44",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2120,7 +2382,8 @@
           "detail_uid": "00389-262",
           "title": "2013-06-10 09꞉54",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2128,7 +2391,8 @@
           "detail_uid": "00389-263",
           "title": "2013-06-12 20꞉37",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2136,7 +2400,8 @@
           "detail_uid": "00389-264",
           "title": "2013-07-07 09꞉12",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2144,7 +2409,8 @@
           "detail_uid": "00389-265",
           "title": "2013-07-08 06꞉48",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2152,7 +2418,8 @@
           "detail_uid": "00389-266",
           "title": "2013-07-12 18꞉48",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2160,7 +2427,8 @@
           "detail_uid": "00389-267",
           "title": "2013-07-23 17꞉58",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2168,7 +2436,8 @@
           "detail_uid": "00389-268",
           "title": "2013-07-23 17꞉59 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2176,7 +2445,8 @@
           "detail_uid": "00389-269",
           "title": "2013-07-23 17꞉59 3",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2184,7 +2454,8 @@
           "detail_uid": "00389-270",
           "title": "2013-07-23 17꞉59",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2192,7 +2463,8 @@
           "detail_uid": "00389-271",
           "title": "2013-07-26 11꞉17",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2200,7 +2472,8 @@
           "detail_uid": "00389-272",
           "title": "2013-07-26 15꞉11",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2208,7 +2481,8 @@
           "detail_uid": "00389-273",
           "title": "2013-08-08 12꞉59 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2216,7 +2490,8 @@
           "detail_uid": "00389-274",
           "title": "2013-08-08 12꞉59",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2224,7 +2499,8 @@
           "detail_uid": "00389-275",
           "title": "2013-08-09 16꞉19",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2232,7 +2508,8 @@
           "detail_uid": "00389-276",
           "title": "2013-08-16 17꞉35",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2240,7 +2517,8 @@
           "detail_uid": "00389-277",
           "title": "2013-08-18 15꞉10",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2248,7 +2526,8 @@
           "detail_uid": "00389-278",
           "title": "2013-08-20 17꞉40",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2256,7 +2535,8 @@
           "detail_uid": "00389-279",
           "title": "2013-08-27 12꞉53",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2264,7 +2544,8 @@
           "detail_uid": "00389-280",
           "title": "2013-09-01 16꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2272,7 +2553,8 @@
           "detail_uid": "00389-281",
           "title": "2013-09-04 18꞉39",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2280,7 +2562,8 @@
           "detail_uid": "00389-282",
           "title": "2013-09-04 18꞉51",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2288,7 +2571,8 @@
           "detail_uid": "00389-283",
           "title": "2013-09-04 18꞉52",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2296,7 +2580,8 @@
           "detail_uid": "00389-284",
           "title": "2013-09-09 10꞉52",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2304,7 +2589,8 @@
           "detail_uid": "00389-285",
           "title": "2013-09-14 15꞉42",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2312,7 +2598,8 @@
           "detail_uid": "00389-286",
           "title": "2013-09-15 13꞉41 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2320,7 +2607,8 @@
           "detail_uid": "00389-287",
           "title": "2013-09-15 13꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2328,7 +2616,8 @@
           "detail_uid": "00389-288",
           "title": "2013-09-15 18꞉01",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2336,7 +2625,8 @@
           "detail_uid": "00389-289",
           "title": "2013-09-15 18꞉02",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2344,7 +2634,8 @@
           "detail_uid": "00389-290",
           "title": "2013-10-01 10꞉07",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2352,7 +2643,8 @@
           "detail_uid": "00389-291",
           "title": "2013-10-08 18꞉26",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2360,7 +2652,8 @@
           "detail_uid": "00389-292",
           "title": "2013-10-09 13꞉05",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2368,7 +2661,8 @@
           "detail_uid": "00389-293",
           "title": "2013-10-09 13꞉06",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2376,7 +2670,8 @@
           "detail_uid": "00389-294",
           "title": "2013-10-10 11꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2384,7 +2679,8 @@
           "detail_uid": "00389-295",
           "title": "2013-10-10 11꞉48",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2392,7 +2688,8 @@
           "detail_uid": "00389-296",
           "title": "2013-10-10 11꞉49",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2400,7 +2697,8 @@
           "detail_uid": "00389-297",
           "title": "2013-10-10 12꞉27",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2408,7 +2706,8 @@
           "detail_uid": "00389-298",
           "title": "2013-10-10 15꞉16",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2416,7 +2715,8 @@
           "detail_uid": "00389-299",
           "title": "2013-10-10 19꞉14",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2424,7 +2724,8 @@
           "detail_uid": "00389-300",
           "title": "2013-10-11 20꞉09",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2432,7 +2733,8 @@
           "detail_uid": "00389-301",
           "title": "2013-10-12 19꞉52",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2440,7 +2742,8 @@
           "detail_uid": "00389-302",
           "title": "2013-10-20 13꞉34",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2448,7 +2751,8 @@
           "detail_uid": "00389-303",
           "title": "2013-10-25 20꞉57",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2456,7 +2760,8 @@
           "detail_uid": "00389-304",
           "title": "2013-12-07 15꞉17",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2464,7 +2769,8 @@
           "detail_uid": "00389-305",
           "title": "2014-02-16 - 20-18-54",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2472,7 +2778,8 @@
           "detail_uid": "00389-306",
           "title": "2014-02-19 - 21-58-22",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2480,7 +2787,8 @@
           "detail_uid": "00389-307",
           "title": "2014-03-06 15꞉38",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2488,7 +2796,8 @@
           "detail_uid": "00389-308",
           "title": "2014-03-15 15꞉40",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2496,7 +2805,8 @@
           "detail_uid": "00389-309",
           "title": "2014-03-23 - 12-34-06",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2504,7 +2814,8 @@
           "detail_uid": "00389-310",
           "title": "2014-03-23 12꞉33 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2512,7 +2823,8 @@
           "detail_uid": "00389-311",
           "title": "2014-03-23 12꞉33",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2520,7 +2832,8 @@
           "detail_uid": "00389-312",
           "title": "2014-03-29 - 19-53-45",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2528,7 +2841,8 @@
           "detail_uid": "00389-313",
           "title": "2014-04-01 - 02-59-49",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2536,7 +2850,8 @@
           "detail_uid": "00389-314",
           "title": "2014-04-02 13꞉59",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2544,7 +2859,8 @@
           "detail_uid": "00389-315",
           "title": "2014-04-05 21꞉16",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2552,7 +2868,8 @@
           "detail_uid": "00389-316",
           "title": "2014-04-10 17꞉02",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2560,7 +2877,8 @@
           "detail_uid": "00389-317",
           "title": "2014-04-10 17꞉08",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2568,7 +2886,8 @@
           "detail_uid": "00389-318",
           "title": "2014-04-21 08꞉41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2576,7 +2895,8 @@
           "detail_uid": "00389-319",
           "title": "2014-04-25 13꞉47",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2584,7 +2904,8 @@
           "detail_uid": "00389-320",
           "title": "2014-04-26 11꞉42",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2592,7 +2913,8 @@
           "detail_uid": "00389-321",
           "title": "2014-05-22 18꞉27",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2600,7 +2922,8 @@
           "detail_uid": "00389-322",
           "title": "2014-05-26 10꞉42",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2608,7 +2931,8 @@
           "detail_uid": "00389-323",
           "title": "2014-05-30 10꞉28",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2616,7 +2940,8 @@
           "detail_uid": "00389-324",
           "title": "2014-06-28 - 19-24-37-2",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2624,7 +2949,8 @@
           "detail_uid": "00389-325",
           "title": "2014-06-28 - 19-49-35-2",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2632,7 +2958,8 @@
           "detail_uid": "00389-326",
           "title": "2014-06-29 12꞉00",
           "width_px": 1536,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2640,7 +2967,8 @@
           "detail_uid": "00389-327",
           "title": "2014-06-29 12꞉01",
           "width_px": 2048,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2648,7 +2976,8 @@
           "detail_uid": "00389-328",
           "title": "2014-06-30 19꞉44",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2656,7 +2985,8 @@
           "detail_uid": "00389-329",
           "title": "2014-07-01 09꞉57",
           "width_px": 2048,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2664,7 +2994,8 @@
           "detail_uid": "00389-330",
           "title": "2014-07-01 12꞉43",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2672,7 +3003,8 @@
           "detail_uid": "00389-331",
           "title": "2014-07-01 12꞉50",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2680,7 +3012,8 @@
           "detail_uid": "00389-332",
           "title": "2014-07-07 18꞉50",
           "width_px": 2048,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2688,7 +3021,8 @@
           "detail_uid": "00389-333",
           "title": "2014-07-13 11꞉54",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2696,7 +3030,8 @@
           "detail_uid": "00389-334",
           "title": "2014-09-14 21꞉24",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2704,7 +3039,8 @@
           "detail_uid": "00389-335",
           "title": "2014-09-14 21꞉54",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2712,7 +3048,8 @@
           "detail_uid": "00389-336",
           "title": "2014-10-19 17꞉34 2",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2720,7 +3057,8 @@
           "detail_uid": "00389-337",
           "title": "2014-10-19 17꞉34",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2728,7 +3066,8 @@
           "detail_uid": "00389-338",
           "title": "2014-10-20 13꞉43",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2736,7 +3075,8 @@
           "detail_uid": "00389-339",
           "title": "2014-11-03 15꞉53",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2744,7 +3084,8 @@
           "detail_uid": "00389-340",
           "title": "2014-12-05 12꞉38",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2752,7 +3093,8 @@
           "detail_uid": "00389-341",
           "title": "2014-12-10 18꞉42",
           "width_px": 3424,
-          "height_px": 3424
+          "height_px": 3424,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2760,7 +3102,8 @@
           "detail_uid": "00389-342",
           "title": "2015-01-03 16꞉22",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2768,7 +3111,8 @@
           "detail_uid": "00389-343",
           "title": "2015-01-04 12꞉14 2",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2776,7 +3120,8 @@
           "detail_uid": "00389-344",
           "title": "2015-01-04 12꞉14",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2784,7 +3129,8 @@
           "detail_uid": "00389-345",
           "title": "2015-01-04 12꞉21",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2792,7 +3138,8 @@
           "detail_uid": "00389-346",
           "title": "2015-01-10 22꞉24 2",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2800,7 +3147,8 @@
           "detail_uid": "00389-347",
           "title": "2015-01-10 22꞉24",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2808,7 +3156,8 @@
           "detail_uid": "00389-348",
           "title": "2015-02-14 12꞉47",
           "width_px": 2520,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2816,7 +3165,8 @@
           "detail_uid": "00389-349",
           "title": "2015-02-14 12꞉48 2",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2824,7 +3174,8 @@
           "detail_uid": "00389-350",
           "title": "2015-02-14 12꞉48",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2832,7 +3183,8 @@
           "detail_uid": "00389-351",
           "title": "2015-02-22 13꞉35",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2840,7 +3192,8 @@
           "detail_uid": "00389-352",
           "title": "2015-02-23 13꞉43",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2848,7 +3201,8 @@
           "detail_uid": "00389-353",
           "title": "2015-02-23 13꞉45",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2856,7 +3210,8 @@
           "detail_uid": "00389-354",
           "title": "2015-02-25 11꞉12",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2864,7 +3219,8 @@
           "detail_uid": "00389-355",
           "title": "2015-03-03 10꞉36",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2872,7 +3228,8 @@
           "detail_uid": "00389-356",
           "title": "2015-03-15 13꞉55",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2880,7 +3237,8 @@
           "detail_uid": "00389-357",
           "title": "2015-03-15 15꞉34",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2888,7 +3246,8 @@
           "detail_uid": "00389-358",
           "title": "2015-03-17 11꞉27",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2896,7 +3255,8 @@
           "detail_uid": "00389-359",
           "title": "2015-03-24 14꞉55",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2904,7 +3264,8 @@
           "detail_uid": "00389-360",
           "title": "2015-03-29 14꞉03",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2912,7 +3273,8 @@
           "detail_uid": "00389-361",
           "title": "2015-03-29 14꞉07",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2920,7 +3282,8 @@
           "detail_uid": "00389-362",
           "title": "2015-03-29 14꞉13",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2928,7 +3291,8 @@
           "detail_uid": "00389-363",
           "title": "2015-04-04 10꞉14 2",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2936,7 +3300,8 @@
           "detail_uid": "00389-364",
           "title": "2015-04-04 10꞉14",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2944,7 +3309,8 @@
           "detail_uid": "00389-365",
           "title": "2015-04-06 11꞉42 2",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2952,7 +3318,8 @@
           "detail_uid": "00389-366",
           "title": "2015-04-06 11꞉42",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2960,7 +3327,8 @@
           "detail_uid": "00389-367",
           "title": "2015-04-06 11꞉43",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2968,7 +3336,8 @@
           "detail_uid": "00389-368",
           "title": "2015-04-14 14꞉04",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2976,7 +3345,8 @@
           "detail_uid": "00389-369",
           "title": "2015-04-21 12꞉22",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2984,7 +3354,8 @@
           "detail_uid": "00389-370",
           "title": "2015-05-11 17꞉24",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -2992,7 +3363,8 @@
           "detail_uid": "00389-371",
           "title": "2015-05-25 12꞉45",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3000,7 +3372,8 @@
           "detail_uid": "00389-372",
           "title": "2015-05-26 18꞉10 2",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3008,7 +3381,8 @@
           "detail_uid": "00389-373",
           "title": "2015-05-26 18꞉10",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3016,7 +3390,8 @@
           "detail_uid": "00389-374",
           "title": "2015-05-26 19꞉07",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3024,7 +3399,8 @@
           "detail_uid": "00389-375",
           "title": "2015-05-29 18꞉12",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3032,7 +3408,8 @@
           "detail_uid": "00389-376",
           "title": "2015-06-16 11꞉28",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3040,7 +3417,8 @@
           "detail_uid": "00389-377",
           "title": "2015-06-26 16꞉18",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3048,7 +3426,8 @@
           "detail_uid": "00389-378",
           "title": "2015-07-03 10꞉42",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3056,7 +3435,8 @@
           "detail_uid": "00389-379",
           "title": "2015-07-11 14꞉24",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3064,7 +3444,8 @@
           "detail_uid": "00389-380",
           "title": "2015-07-28 18꞉10",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3072,7 +3453,8 @@
           "detail_uid": "00389-381",
           "title": "2015-08-07 11꞉06",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3080,7 +3462,8 @@
           "detail_uid": "00389-382",
           "title": "2015-08-07 11꞉07",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3088,7 +3471,8 @@
           "detail_uid": "00389-383",
           "title": "2015-08-12 17꞉51",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3096,7 +3480,8 @@
           "detail_uid": "00389-384",
           "title": "2015-08-17 13꞉49 2",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3104,7 +3489,8 @@
           "detail_uid": "00389-385",
           "title": "2015-08-17 13꞉49 3",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3112,7 +3498,8 @@
           "detail_uid": "00389-386",
           "title": "2015-08-17 13꞉49",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3120,7 +3507,8 @@
           "detail_uid": "00389-387",
           "title": "2015-08-17 19꞉23",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3128,7 +3516,8 @@
           "detail_uid": "00389-388",
           "title": "2015-08-24 19꞉10",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3136,7 +3525,8 @@
           "detail_uid": "00389-389",
           "title": "2015-08-24 20꞉48",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3144,7 +3534,8 @@
           "detail_uid": "00389-390",
           "title": "2015-08-24 20꞉49",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3152,7 +3543,8 @@
           "detail_uid": "00389-391",
           "title": "2015-10-04 12꞉47",
           "width_px": 2180,
-          "height_px": 2180
+          "height_px": 2180,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3160,7 +3552,8 @@
           "detail_uid": "00389-392",
           "title": "2015-10-04 13꞉00",
           "width_px": 2520,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3168,7 +3561,8 @@
           "detail_uid": "00389-393",
           "title": "2015-10-13 09꞉16",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3176,7 +3570,8 @@
           "detail_uid": "00389-394",
           "title": "2015-10-13 14꞉26",
           "width_px": 2520,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3184,7 +3579,8 @@
           "detail_uid": "00389-395",
           "title": "2015-10-14 13꞉24",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3192,7 +3588,8 @@
           "detail_uid": "00389-396",
           "title": "2016-03-06 16꞉28",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3200,7 +3597,8 @@
           "detail_uid": "00389-397",
           "title": "2016-03-10 08꞉13",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3208,7 +3606,8 @@
           "detail_uid": "00389-398",
           "title": "2016-05-07 17꞉48",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3216,7 +3615,8 @@
           "detail_uid": "00389-399",
           "title": "2016-07-29 16꞉37",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3224,7 +3624,8 @@
           "detail_uid": "00389-400",
           "title": "2016-08-15 16꞉15",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3232,7 +3633,8 @@
           "detail_uid": "00389-401",
           "title": "2016-09-23 19꞉37",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3240,7 +3642,8 @@
           "detail_uid": "00389-402",
           "title": "2016-10-15 22꞉53",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3248,7 +3651,8 @@
           "detail_uid": "00389-403",
           "title": "2016-10-30 12꞉25 2",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3256,7 +3660,8 @@
           "detail_uid": "00389-404",
           "title": "2016-10-30 12꞉25",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3264,7 +3669,8 @@
           "detail_uid": "00389-405",
           "title": "2016-11-06 10꞉14",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3272,7 +3678,8 @@
           "detail_uid": "00389-406",
           "title": "2016-11-07 17꞉39",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3280,7 +3687,8 @@
           "detail_uid": "00389-407",
           "title": "2016-12-27 14꞉01",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3288,7 +3696,8 @@
           "detail_uid": "00389-408",
           "title": "2016-12-27 14꞉10",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3296,7 +3705,8 @@
           "detail_uid": "00389-409",
           "title": "2017-04-08 08꞉19 2",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3304,7 +3714,8 @@
           "detail_uid": "00389-410",
           "title": "2017-04-08 08꞉19",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3312,7 +3723,8 @@
           "detail_uid": "00389-411",
           "title": "2017-07-08 19꞉41",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3320,7 +3732,8 @@
           "detail_uid": "00389-412",
           "title": "2017-08-02 00꞉59",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3328,7 +3741,8 @@
           "detail_uid": "00389-413",
           "title": "2017-08-26 14꞉17 2",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3336,7 +3750,8 @@
           "detail_uid": "00389-414",
           "title": "2017-08-26 14꞉17",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3344,7 +3759,8 @@
           "detail_uid": "00389-415",
           "title": "2017-09-02 09꞉50",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3352,7 +3768,8 @@
           "detail_uid": "00389-416",
           "title": "2017-09-02 17꞉59 2",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3360,7 +3777,8 @@
           "detail_uid": "00389-417",
           "title": "2017-09-02 17꞉59",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3368,7 +3786,8 @@
           "detail_uid": "00389-418",
           "title": "2017-12-26 15꞉03",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3376,7 +3795,8 @@
           "detail_uid": "00389-419",
           "title": "2018-01-22 18꞉22",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3384,7 +3804,8 @@
           "detail_uid": "00389-420",
           "title": "2018-02-24 15꞉36",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3392,7 +3813,8 @@
           "detail_uid": "00389-421",
           "title": "2018-03-04 17꞉17",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3400,7 +3822,8 @@
           "detail_uid": "00389-422",
           "title": "2018-03-18 14꞉08",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3408,7 +3831,8 @@
           "detail_uid": "00389-423",
           "title": "2018-04-19 10꞉52",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3416,7 +3840,8 @@
           "detail_uid": "00389-424",
           "title": "2018-04-19 22꞉01",
           "width_px": 1536,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3424,7 +3849,8 @@
           "detail_uid": "00389-425",
           "title": "2018-04-23 20꞉33",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3432,7 +3858,8 @@
           "detail_uid": "00389-426",
           "title": "2018-08-19 19꞉33",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3440,7 +3867,8 @@
           "detail_uid": "00389-427",
           "title": "2018-08-20 15꞉44 2",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3448,7 +3876,8 @@
           "detail_uid": "00389-428",
           "title": "2018-08-20 15꞉44",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3456,7 +3885,8 @@
           "detail_uid": "00389-429",
           "title": "2018-08-20 21꞉05",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3464,7 +3894,8 @@
           "detail_uid": "00389-430",
           "title": "2018-08-22 22꞉15",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3472,7 +3903,8 @@
           "detail_uid": "00389-431",
           "title": "2018-08-26 13꞉10",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3480,7 +3912,8 @@
           "detail_uid": "00389-432",
           "title": "2018-08-26 14꞉09",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3488,7 +3921,8 @@
           "detail_uid": "00389-433",
           "title": "2018-10-12 11꞉09",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3496,7 +3930,8 @@
           "detail_uid": "00389-434",
           "title": "2018-10-14 12꞉24",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3504,7 +3939,8 @@
           "detail_uid": "00389-435",
           "title": "2018-11-15 20꞉04 2",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3512,7 +3948,8 @@
           "detail_uid": "00389-436",
           "title": "2018-11-15 20꞉04",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3520,7 +3957,8 @@
           "detail_uid": "00389-437",
           "title": "2019-03-17 15꞉34",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3528,7 +3966,8 @@
           "detail_uid": "00389-438",
           "title": "2019-04-02 15꞉37",
           "width_px": 2663,
-          "height_px": 2663
+          "height_px": 2663,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3536,7 +3975,8 @@
           "detail_uid": "00389-439",
           "title": "2019-06-20 07꞉35",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3544,7 +3984,8 @@
           "detail_uid": "00389-440",
           "title": "2019-06-20 12꞉14",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3552,7 +3993,8 @@
           "detail_uid": "00389-441",
           "title": "2019-08-23 14꞉09",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3560,7 +4002,8 @@
           "detail_uid": "00389-442",
           "title": "2019-08-24 15꞉35",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3568,7 +4011,8 @@
           "detail_uid": "00389-443",
           "title": "2019-08-24 15꞉36",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3576,7 +4020,8 @@
           "detail_uid": "00389-444",
           "title": "2019-08-24 17꞉19",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3584,7 +4029,8 @@
           "detail_uid": "00389-445",
           "title": "2019-10-27 16꞉05",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3592,7 +4038,8 @@
           "detail_uid": "00389-446",
           "title": "2019-12-01 23꞉39",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3600,7 +4047,8 @@
           "detail_uid": "00389-447",
           "title": "2019-12-15 15꞉46",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3608,7 +4056,8 @@
           "detail_uid": "00389-448",
           "title": "2020-01-25 14꞉06",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3616,7 +4065,8 @@
           "detail_uid": "00389-449",
           "title": "2020-01-31 00꞉28",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3624,7 +4074,8 @@
           "detail_uid": "00389-450",
           "title": "2020-02-23 20꞉22 2",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3632,7 +4083,8 @@
           "detail_uid": "00389-451",
           "title": "2020-02-23 20꞉22",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3640,7 +4092,8 @@
           "detail_uid": "00389-452",
           "title": "2020-04-03 18꞉43",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3648,7 +4101,8 @@
           "detail_uid": "00389-453",
           "title": "2020-04-03 18꞉44",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3656,7 +4110,8 @@
           "detail_uid": "00389-454",
           "title": "2020-04-03 18꞉46",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3664,7 +4119,8 @@
           "detail_uid": "00389-455",
           "title": "2020-04-14 22꞉44",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3672,7 +4128,8 @@
           "detail_uid": "00389-456",
           "title": "2020-04-15 17꞉36",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3680,7 +4137,8 @@
           "detail_uid": "00389-457",
           "title": "2020-04-19 15꞉20",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3688,7 +4146,8 @@
           "detail_uid": "00389-458",
           "title": "2020-05-29 19꞉23",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3696,7 +4155,8 @@
           "detail_uid": "00389-459",
           "title": "2020-05-31 09꞉00",
           "width_px": 3024,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3704,7 +4164,8 @@
           "detail_uid": "00389-460",
           "title": "2020-06-07 09꞉18",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3712,7 +4173,8 @@
           "detail_uid": "00389-461",
           "title": "2020-06-07 09꞉19",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3720,7 +4182,8 @@
           "detail_uid": "00389-462",
           "title": "2020-06-27 18꞉20 2",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3728,7 +4191,8 @@
           "detail_uid": "00389-463",
           "title": "2020-06-27 18꞉20",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3736,7 +4200,8 @@
           "detail_uid": "00389-464",
           "title": "2020-08-12 15꞉02",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3744,7 +4209,8 @@
           "detail_uid": "00389-465",
           "title": "2020-08-12 15꞉11",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3752,7 +4218,8 @@
           "detail_uid": "00389-466",
           "title": "2020-08-12 15꞉12",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3760,7 +4227,8 @@
           "detail_uid": "00389-467",
           "title": "2020-08-30 15꞉40",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3768,7 +4236,8 @@
           "detail_uid": "00389-468",
           "title": "2020-08-30 15꞉46",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3776,7 +4245,8 @@
           "detail_uid": "00389-469",
           "title": "2020-09-14 21꞉14",
           "width_px": 1434,
-          "height_px": 1600
+          "height_px": 1600,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3784,7 +4254,8 @@
           "detail_uid": "00389-470",
           "title": "2020-09-19 19꞉29",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3792,7 +4263,8 @@
           "detail_uid": "00389-471",
           "title": "2020-10-29 17꞉17",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3800,7 +4272,8 @@
           "detail_uid": "00389-472",
           "title": "2020-12-03 15꞉15",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3808,7 +4281,8 @@
           "detail_uid": "00389-473",
           "title": "2021-01-03 13꞉30",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3816,7 +4290,8 @@
           "detail_uid": "00389-474",
           "title": "2021-02-15 13꞉06",
           "width_px": 3779,
-          "height_px": 2126
+          "height_px": 2126,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3824,7 +4299,8 @@
           "detail_uid": "00389-475",
           "title": "2021-07-23 18꞉54",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3832,7 +4308,8 @@
           "detail_uid": "00389-476",
           "title": "2021-08-01 13꞉31 2",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3840,7 +4317,8 @@
           "detail_uid": "00389-477",
           "title": "2021-08-01 13꞉31",
           "width_px": 2094,
-          "height_px": 2094
+          "height_px": 2094,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3848,7 +4326,8 @@
           "detail_uid": "00389-478",
           "title": "2021-08-05 07꞉20",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3856,7 +4335,8 @@
           "detail_uid": "00389-479",
           "title": "2021-09-12 20꞉52",
           "width_px": 3780,
-          "height_px": 3780
+          "height_px": 3780,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3864,7 +4344,8 @@
           "detail_uid": "00389-480",
           "title": "2021-09-12 20꞉53",
           "width_px": 4724,
-          "height_px": 4724
+          "height_px": 4724,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3872,7 +4353,8 @@
           "detail_uid": "00389-481",
           "title": "2021-09-17 23꞉46",
           "width_px": 4724,
-          "height_px": 4724
+          "height_px": 4724,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3880,7 +4362,8 @@
           "detail_uid": "00389-482",
           "title": "2021-10-05 13꞉59",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3888,7 +4371,8 @@
           "detail_uid": "00389-483",
           "title": "2021-10-09 13꞉04",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3896,7 +4380,8 @@
           "detail_uid": "00389-484",
           "title": "2021-10-30 21꞉36",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3904,7 +4389,8 @@
           "detail_uid": "00389-485",
           "title": "2021-11-04 15꞉58",
           "width_px": 8268,
-          "height_px": 4651
+          "height_px": 4651,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3912,7 +4398,8 @@
           "detail_uid": "00389-486",
           "title": "2021-11-30 00꞉59",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3920,7 +4407,8 @@
           "detail_uid": "00389-487",
           "title": "2021-11-30 01꞉08",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3928,7 +4416,8 @@
           "detail_uid": "00389-488",
           "title": "2022-01-13 07꞉37",
           "width_px": 1271,
-          "height_px": 1271
+          "height_px": 1271,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3936,7 +4425,8 @@
           "detail_uid": "00389-489",
           "title": "2022-01-20 06꞉56",
           "width_px": 2635,
-          "height_px": 2635
+          "height_px": 2635,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3944,7 +4434,8 @@
           "detail_uid": "00389-490",
           "title": "2022-01-21 08꞉33",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3952,7 +4443,8 @@
           "detail_uid": "00389-491",
           "title": "2022-02-02 12꞉51",
           "width_px": 1448,
-          "height_px": 2573
+          "height_px": 2573,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3960,7 +4452,8 @@
           "detail_uid": "00389-492",
           "title": "2022-05-14 18꞉58",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3968,7 +4461,8 @@
           "detail_uid": "00389-493",
           "title": "2022-11-09 00꞉22",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3976,7 +4470,8 @@
           "detail_uid": "00389-494",
           "title": "2023-01-14 22꞉16",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3984,7 +4479,8 @@
           "detail_uid": "00389-495",
           "title": "2023-03-20 13꞉44",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -3992,7 +4488,8 @@
           "detail_uid": "00389-496",
           "title": "2023-03-20 13꞉45",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4000,7 +4497,8 @@
           "detail_uid": "00389-497",
           "title": "2023-04-16 19꞉14",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4008,7 +4506,8 @@
           "detail_uid": "00389-498",
           "title": "2023-05-11 19꞉11",
           "width_px": 2097,
-          "height_px": 2097
+          "height_px": 2097,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4016,7 +4515,8 @@
           "detail_uid": "00389-499",
           "title": "2023-05-21 17꞉32 2",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4024,7 +4524,8 @@
           "detail_uid": "00389-500",
           "title": "2023-05-21 17꞉32",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4032,7 +4533,8 @@
           "detail_uid": "00389-501",
           "title": "2023-05-21 19꞉07",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4040,7 +4542,8 @@
           "detail_uid": "00389-502",
           "title": "2023-07-13 05꞉30 2",
           "width_px": 3402,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4048,7 +4551,8 @@
           "detail_uid": "00389-503",
           "title": "2023-07-13 05꞉30",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4056,7 +4560,8 @@
           "detail_uid": "00389-504",
           "title": "2023-08-08 20꞉17",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4064,7 +4569,8 @@
           "detail_uid": "00389-505",
           "title": "2023-08-19 09꞉39",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4072,7 +4578,8 @@
           "detail_uid": "00389-506",
           "title": "2023-08-19 16꞉42",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4080,7 +4587,8 @@
           "detail_uid": "00389-507",
           "title": "2023-11-28 13꞉58 2",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4088,7 +4596,8 @@
           "detail_uid": "00389-508",
           "title": "2023-11-28 13꞉58",
           "width_px": 2268,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4096,7 +4605,8 @@
           "detail_uid": "00389-509",
           "title": "2024-08-28 18꞉36",
           "width_px": 6048,
-          "height_px": 6048
+          "height_px": 6048,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4104,7 +4614,8 @@
           "detail_uid": "00389-510",
           "title": "2024-09-25 16꞉52 2",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4112,7 +4623,8 @@
           "detail_uid": "00389-511",
           "title": "2024-09-25 16꞉52 3",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4120,7 +4632,8 @@
           "detail_uid": "00389-512",
           "title": "2024-09-25 16꞉52",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4128,7 +4641,8 @@
           "detail_uid": "00389-513",
           "title": "2024-09-25 16꞉53 2",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4136,7 +4650,8 @@
           "detail_uid": "00389-514",
           "title": "2024-09-25 16꞉53 3",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4144,7 +4659,8 @@
           "detail_uid": "00389-515",
           "title": "2024-09-25 16꞉53",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4152,7 +4668,8 @@
           "detail_uid": "00389-516",
           "title": "2024-09-25 16꞉54 2",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4160,7 +4677,8 @@
           "detail_uid": "00389-517",
           "title": "2024-09-25 16꞉54 3",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4168,7 +4686,8 @@
           "detail_uid": "00389-518",
           "title": "2024-09-25 16꞉54",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4176,7 +4695,8 @@
           "detail_uid": "00389-519",
           "title": "2024-09-25 16꞉55 3",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4184,7 +4704,8 @@
           "detail_uid": "00389-520",
           "title": "2024-09-25 16꞉55",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4192,7 +4713,8 @@
           "detail_uid": "00389-521",
           "title": "2024-09-25 20꞉00",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4200,7 +4722,8 @@
           "detail_uid": "00389-522",
           "title": "2024-09-25 20꞉01 2",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00389",
@@ -4208,7 +4731,8 @@
           "detail_uid": "00389-523",
           "title": "2024-09-25 20꞉01",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         }
       ]
     }

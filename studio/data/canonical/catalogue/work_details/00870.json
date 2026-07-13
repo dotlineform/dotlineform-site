@@ -16,6 +16,7 @@
           "detail_uid": "00870-001",
           "detail_id": "001",
           "project_filename": "dots 1.jpg",
+          "media_version": 1,
           "title": "dots 1",
           "width_px": 2354,
           "height_px": 2354
@@ -24,6 +25,7 @@
           "detail_uid": "00870-002",
           "detail_id": "002",
           "project_filename": "dots 2.jpg",
+          "media_version": 1,
           "title": "dots 2",
           "width_px": 3024,
           "height_px": 3024
@@ -32,6 +34,7 @@
           "detail_uid": "00870-003",
           "detail_id": "003",
           "project_filename": "dots 3.jpg",
+          "media_version": 1,
           "title": "dots 3",
           "width_px": 3024,
           "height_px": 3024
@@ -40,6 +43,7 @@
           "detail_uid": "00870-004",
           "detail_id": "004",
           "project_filename": "dots 4.jpg",
+          "media_version": 1,
           "title": "dots 4",
           "width_px": 3024,
           "height_px": 3024
@@ -48,6 +52,7 @@
           "detail_uid": "00870-005",
           "detail_id": "005",
           "project_filename": "dots 5.jpg",
+          "media_version": 1,
           "title": "dots 5",
           "width_px": 3024,
           "height_px": 3024
@@ -56,6 +61,7 @@
           "detail_uid": "00870-006",
           "detail_id": "006",
           "project_filename": "dots 6.jpg",
+          "media_version": 1,
           "title": "dots 6",
           "width_px": 3024,
           "height_px": 3024
@@ -64,6 +70,7 @@
           "detail_uid": "00870-007",
           "detail_id": "007",
           "project_filename": "dots 7.jpg",
+          "media_version": 1,
           "title": "dots 7",
           "width_px": 3024,
           "height_px": 3024
@@ -72,6 +79,7 @@
           "detail_uid": "00870-008",
           "detail_id": "008",
           "project_filename": "dots 8.jpg",
+          "media_version": 1,
           "title": "dots 8",
           "width_px": 3024,
           "height_px": 3024
@@ -80,6 +88,7 @@
           "detail_uid": "00870-009",
           "detail_id": "009",
           "project_filename": "dots 9.jpg",
+          "media_version": 1,
           "title": "dots 9",
           "width_px": 3024,
           "height_px": 3024

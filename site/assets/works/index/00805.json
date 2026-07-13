@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-3cbe79f279d8a7dc0dac421ed537e306",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-d2730ff8fab4d662ff4e9524c7e12f07",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00805",
     "count": 80
   },
@@ -19,7 +19,8 @@
     "height_cm": 45.0,
     "width_cm": 60.0,
     "width_px": 7087,
-    "height_px": 5315
+    "height_px": 5315,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00805-001",
           "title": "book dna 1",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -40,7 +42,8 @@
           "detail_uid": "00805-002",
           "title": "book dna 2",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -48,7 +51,8 @@
           "detail_uid": "00805-003",
           "title": "book dna 3",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -56,7 +60,8 @@
           "detail_uid": "00805-004",
           "title": "book dna 4",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -64,7 +69,8 @@
           "detail_uid": "00805-005",
           "title": "book dna 5",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -72,7 +78,8 @@
           "detail_uid": "00805-006",
           "title": "book dna 6",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -80,7 +87,8 @@
           "detail_uid": "00805-007",
           "title": "book dna 7",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -88,7 +96,8 @@
           "detail_uid": "00805-008",
           "title": "book dna 8",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -96,7 +105,8 @@
           "detail_uid": "00805-009",
           "title": "book dna 9",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -104,7 +114,8 @@
           "detail_uid": "00805-010",
           "title": "book dna 10",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -112,7 +123,8 @@
           "detail_uid": "00805-011",
           "title": "book dna 11",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -120,7 +132,8 @@
           "detail_uid": "00805-012",
           "title": "book dna 12",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -128,7 +141,8 @@
           "detail_uid": "00805-013",
           "title": "book dna 13",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -136,7 +150,8 @@
           "detail_uid": "00805-014",
           "title": "book dna 14",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -144,7 +159,8 @@
           "detail_uid": "00805-015",
           "title": "book dna 15",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -152,7 +168,8 @@
           "detail_uid": "00805-016",
           "title": "book dna 16",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -160,7 +177,8 @@
           "detail_uid": "00805-017",
           "title": "book dna 17",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -168,7 +186,8 @@
           "detail_uid": "00805-018",
           "title": "book dna 18",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -176,7 +195,8 @@
           "detail_uid": "00805-019",
           "title": "book dna 19",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -184,7 +204,8 @@
           "detail_uid": "00805-020",
           "title": "book dna 20",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -192,7 +213,8 @@
           "detail_uid": "00805-021",
           "title": "book dna 21",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -200,7 +222,8 @@
           "detail_uid": "00805-022",
           "title": "book dna 22",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -208,7 +231,8 @@
           "detail_uid": "00805-023",
           "title": "book dna 23",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -216,7 +240,8 @@
           "detail_uid": "00805-024",
           "title": "book dna 24",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -224,7 +249,8 @@
           "detail_uid": "00805-025",
           "title": "book dna 25",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -232,7 +258,8 @@
           "detail_uid": "00805-026",
           "title": "book dna 26",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -240,7 +267,8 @@
           "detail_uid": "00805-027",
           "title": "book dna 27",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -248,7 +276,8 @@
           "detail_uid": "00805-028",
           "title": "book dna 28",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -256,7 +285,8 @@
           "detail_uid": "00805-029",
           "title": "book dna 29",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -264,7 +294,8 @@
           "detail_uid": "00805-030",
           "title": "book dna 30",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -272,7 +303,8 @@
           "detail_uid": "00805-031",
           "title": "book dna 31",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -280,7 +312,8 @@
           "detail_uid": "00805-032",
           "title": "book dna 32",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -288,7 +321,8 @@
           "detail_uid": "00805-033",
           "title": "book dna 33",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -296,7 +330,8 @@
           "detail_uid": "00805-034",
           "title": "book dna 34",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -304,7 +339,8 @@
           "detail_uid": "00805-035",
           "title": "book dna 35",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -312,7 +348,8 @@
           "detail_uid": "00805-036",
           "title": "book dna 36",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -320,7 +357,8 @@
           "detail_uid": "00805-037",
           "title": "book dna 37",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -328,7 +366,8 @@
           "detail_uid": "00805-038",
           "title": "book dna 38",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -336,7 +375,8 @@
           "detail_uid": "00805-039",
           "title": "book dna 39",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -344,7 +384,8 @@
           "detail_uid": "00805-040",
           "title": "book dna 40",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -352,7 +393,8 @@
           "detail_uid": "00805-041",
           "title": "book dna 41",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -360,7 +402,8 @@
           "detail_uid": "00805-042",
           "title": "book dna 42",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -368,7 +411,8 @@
           "detail_uid": "00805-043",
           "title": "book dna 43",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -376,7 +420,8 @@
           "detail_uid": "00805-044",
           "title": "book dna 44",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -384,7 +429,8 @@
           "detail_uid": "00805-045",
           "title": "book dna 45",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -392,7 +438,8 @@
           "detail_uid": "00805-046",
           "title": "book dna 46",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -400,7 +447,8 @@
           "detail_uid": "00805-047",
           "title": "book dna 47",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -408,7 +456,8 @@
           "detail_uid": "00805-048",
           "title": "book dna 48",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -416,7 +465,8 @@
           "detail_uid": "00805-049",
           "title": "book dna 49",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -424,7 +474,8 @@
           "detail_uid": "00805-050",
           "title": "book dna 50",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -432,7 +483,8 @@
           "detail_uid": "00805-051",
           "title": "book dna 51",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -440,7 +492,8 @@
           "detail_uid": "00805-052",
           "title": "book dna 52",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -448,7 +501,8 @@
           "detail_uid": "00805-053",
           "title": "book dna 53",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -456,7 +510,8 @@
           "detail_uid": "00805-054",
           "title": "book dna 54",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -464,7 +519,8 @@
           "detail_uid": "00805-055",
           "title": "book dna 55",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -472,7 +528,8 @@
           "detail_uid": "00805-056",
           "title": "book dna 56",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -480,7 +537,8 @@
           "detail_uid": "00805-057",
           "title": "book dna 57",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -488,7 +546,8 @@
           "detail_uid": "00805-058",
           "title": "book dna 58",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -496,7 +555,8 @@
           "detail_uid": "00805-059",
           "title": "book dna 59",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -504,7 +564,8 @@
           "detail_uid": "00805-060",
           "title": "book dna 60",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -512,7 +573,8 @@
           "detail_uid": "00805-061",
           "title": "book dna 61",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -520,7 +582,8 @@
           "detail_uid": "00805-062",
           "title": "book dna 62",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -528,7 +591,8 @@
           "detail_uid": "00805-063",
           "title": "book dna 63",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -536,7 +600,8 @@
           "detail_uid": "00805-064",
           "title": "book dna 64",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -544,7 +609,8 @@
           "detail_uid": "00805-065",
           "title": "book dna 65",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -552,7 +618,8 @@
           "detail_uid": "00805-066",
           "title": "book dna 66",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -560,7 +627,8 @@
           "detail_uid": "00805-067",
           "title": "book dna 67",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -568,7 +636,8 @@
           "detail_uid": "00805-068",
           "title": "book dna 68",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -576,7 +645,8 @@
           "detail_uid": "00805-069",
           "title": "book dna 69",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -584,7 +654,8 @@
           "detail_uid": "00805-070",
           "title": "book dna 70",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -592,7 +663,8 @@
           "detail_uid": "00805-071",
           "title": "book dna 71",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -600,7 +672,8 @@
           "detail_uid": "00805-072",
           "title": "book dna 72",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -608,7 +681,8 @@
           "detail_uid": "00805-073",
           "title": "book dna 73",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -616,7 +690,8 @@
           "detail_uid": "00805-074",
           "title": "book dna 74",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -624,7 +699,8 @@
           "detail_uid": "00805-075",
           "title": "book dna 75",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -632,7 +708,8 @@
           "detail_uid": "00805-076",
           "title": "book dna 76",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -640,7 +717,8 @@
           "detail_uid": "00805-077",
           "title": "book dna 77",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -648,7 +726,8 @@
           "detail_uid": "00805-078",
           "title": "book dna 78",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -656,7 +735,8 @@
           "detail_uid": "00805-079",
           "title": "book dna 79",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         },
         {
           "work_id": "00805",
@@ -664,7 +744,8 @@
           "detail_uid": "00805-080",
           "title": "book dna 80",
           "width_px": 1200,
-          "height_px": 1200
+          "height_px": 1200,
+          "media_version": 1
         }
       ]
     }

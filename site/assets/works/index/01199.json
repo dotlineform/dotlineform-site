@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-dfdd0e0331e56775b3d6eafb30a728ac",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-2c97fc6f813887d7518957218b129554",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01199",
     "count": 42
   },
@@ -19,7 +19,8 @@
     "height_cm": 50.0,
     "width_cm": 50.0,
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01199-001",
           "title": "particle (3 symbols)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -40,7 +42,8 @@
           "detail_uid": "01199-002",
           "title": "particle (10000)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -48,7 +51,8 @@
           "detail_uid": "01199-003",
           "title": "particle (a world of non-linearity)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -56,7 +60,8 @@
           "detail_uid": "01199-004",
           "title": "particle (architecture)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -64,7 +69,8 @@
           "detail_uid": "01199-005",
           "title": "particle (balance machine)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -72,7 +78,8 @@
           "detail_uid": "01199-006",
           "title": "particle (base series)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -80,7 +87,8 @@
           "detail_uid": "01199-007",
           "title": "particle (bird nature)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -88,7 +96,8 @@
           "detail_uid": "01199-008",
           "title": "particle (body space)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -96,7 +105,8 @@
           "detail_uid": "01199-009",
           "title": "particle (colours)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -104,7 +114,8 @@
           "detail_uid": "01199-010",
           "title": "particle (composit red blue smoke)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -112,7 +123,8 @@
           "detail_uid": "01199-011",
           "title": "particle (dependent origination)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -120,7 +132,8 @@
           "detail_uid": "01199-012",
           "title": "particle (doll dissection)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -128,7 +141,8 @@
           "detail_uid": "01199-013",
           "title": "particle (doll forest)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -136,7 +150,8 @@
           "detail_uid": "01199-014",
           "title": "particle (doll internal)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -144,7 +159,8 @@
           "detail_uid": "01199-015",
           "title": "particle (doll still life)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -152,7 +168,8 @@
           "detail_uid": "01199-016",
           "title": "particle (dots)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -160,7 +177,8 @@
           "detail_uid": "01199-017",
           "title": "particle (forest)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -168,7 +186,8 @@
           "detail_uid": "01199-018",
           "title": "particle (form space)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -176,7 +195,8 @@
           "detail_uid": "01199-019",
           "title": "particle (fur map)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -184,7 +204,8 @@
           "detail_uid": "01199-020",
           "title": "particle (gesture)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -192,7 +213,8 @@
           "detail_uid": "01199-021",
           "title": "particle (harmony)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -200,7 +222,8 @@
           "detail_uid": "01199-022",
           "title": "particle (interior design)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -208,7 +231,8 @@
           "detail_uid": "01199-023",
           "title": "particle (lava disco)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -216,7 +240,8 @@
           "detail_uid": "01199-024",
           "title": "particle (lipseyes)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -224,7 +249,8 @@
           "detail_uid": "01199-025",
           "title": "particle (memory loss hope)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -232,7 +258,8 @@
           "detail_uid": "01199-026",
           "title": "particle (mm)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -240,7 +267,8 @@
           "detail_uid": "01199-027",
           "title": "particle (nerve text)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -248,7 +276,8 @@
           "detail_uid": "01199-028",
           "title": "particle (nerve)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -256,7 +285,8 @@
           "detail_uid": "01199-029",
           "title": "particle (particle forms)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -264,7 +294,8 @@
           "detail_uid": "01199-030",
           "title": "particle (particle theory)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -272,7 +303,8 @@
           "detail_uid": "01199-031",
           "title": "particle (petri)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -280,7 +312,8 @@
           "detail_uid": "01199-032",
           "title": "particle (poa4)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -288,7 +321,8 @@
           "detail_uid": "01199-033",
           "title": "particle (pole vault)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -296,7 +330,8 @@
           "detail_uid": "01199-034",
           "title": "particle (qrnt)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -304,7 +339,8 @@
           "detail_uid": "01199-035",
           "title": "particle (qtot)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -312,7 +348,8 @@
           "detail_uid": "01199-036",
           "title": "particle (reduce and return)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -320,7 +357,8 @@
           "detail_uid": "01199-037",
           "title": "particle (string theory)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -328,7 +366,8 @@
           "detail_uid": "01199-038",
           "title": "particle (structure)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -336,7 +375,8 @@
           "detail_uid": "01199-039",
           "title": "particle (theory of happiness)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -344,7 +384,8 @@
           "detail_uid": "01199-040",
           "title": "particle (train moments)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -352,7 +393,8 @@
           "detail_uid": "01199-041",
           "title": "particle (wa)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "01199",
@@ -360,7 +402,8 @@
           "detail_uid": "01199-042",
           "title": "particle (water)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         }
       ]
     }

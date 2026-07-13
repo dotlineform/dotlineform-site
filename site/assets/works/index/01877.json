@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-018803a3158f689777967c7a18f5f13e",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-423ac5edded4884103b91780576aa010",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01877",
     "count": 4
   },
@@ -19,7 +19,8 @@
     "height_cm": 70.0,
     "width_cm": 70.0,
     "width_px": 8268,
-    "height_px": 8268
+    "height_px": 8268,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01877-001",
           "title": "untitled composite 3 - detail 1",
           "width_px": 3000,
-          "height_px": 3000
+          "height_px": 3000,
+          "media_version": 1
         },
         {
           "work_id": "01877",
@@ -40,7 +42,8 @@
           "detail_uid": "01877-002",
           "title": "untitled composite 3 - detail 2",
           "width_px": 3000,
-          "height_px": 3000
+          "height_px": 3000,
+          "media_version": 1
         },
         {
           "work_id": "01877",
@@ -48,7 +51,8 @@
           "detail_uid": "01877-003",
           "title": "untitled composite 3 - detail 3",
           "width_px": 3000,
-          "height_px": 3000
+          "height_px": 3000,
+          "media_version": 1
         },
         {
           "work_id": "01877",
@@ -56,7 +60,8 @@
           "detail_uid": "01877-004",
           "title": "untitled composite 3 - detail 4",
           "width_px": 3000,
-          "height_px": 3000
+          "height_px": 3000,
+          "media_version": 1
         }
       ]
     }

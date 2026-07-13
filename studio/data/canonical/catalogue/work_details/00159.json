@@ -16,6 +16,7 @@
           "detail_uid": "00159-001",
           "detail_id": "001",
           "project_filename": "Michelle Pfeiffer - page 1.jpg",
+          "media_version": 1,
           "title": "Michelle Pfeiffer - page 1",
           "width_px": 4038,
           "height_px": 5712
@@ -24,6 +25,7 @@
           "detail_uid": "00159-002",
           "detail_id": "002",
           "project_filename": "Michelle Pfeiffer - pages 2-3.jpg",
+          "media_version": 1,
           "title": "Michelle Pfeiffer - pages 2-3",
           "width_px": 5712,
           "height_px": 4038

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b0e0ebb812993c714107ebc4324e40ca",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-240d96292ef6387ccb23cdf2e0fc0acf",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01534",
     "count": 17
   },
@@ -19,7 +19,8 @@
     "height_cm": 40.0,
     "width_cm": 50.0,
     "width_px": 5906,
-    "height_px": 4724
+    "height_px": 4724,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01534-001",
           "title": "poa 1 - 0001",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -40,7 +42,8 @@
           "detail_uid": "01534-002",
           "title": "poa 1 - 0043",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -48,7 +51,8 @@
           "detail_uid": "01534-003",
           "title": "poa 1 - 0446",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -56,7 +60,8 @@
           "detail_uid": "01534-004",
           "title": "poa 1 - 0519",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -64,7 +69,8 @@
           "detail_uid": "01534-005",
           "title": "poa 1 - 0684",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -72,7 +78,8 @@
           "detail_uid": "01534-006",
           "title": "poa 1 - 0757",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -80,7 +87,8 @@
           "detail_uid": "01534-007",
           "title": "poa 1 - 0877",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -88,7 +96,8 @@
           "detail_uid": "01534-008",
           "title": "poa 1 - 1076",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -96,7 +105,8 @@
           "detail_uid": "01534-009",
           "title": "poa 1 - 1297",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -104,7 +114,8 @@
           "detail_uid": "01534-010",
           "title": "poa 1 - 1457",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -112,7 +123,8 @@
           "detail_uid": "01534-011",
           "title": "poa 1 - 1527",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -120,7 +132,8 @@
           "detail_uid": "01534-012",
           "title": "poa 1 - 1700",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -128,7 +141,8 @@
           "detail_uid": "01534-013",
           "title": "poa 1 - 1803",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -136,7 +150,8 @@
           "detail_uid": "01534-014",
           "title": "poa 1 - 1814",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -144,7 +159,8 @@
           "detail_uid": "01534-015",
           "title": "poa 1 - 1862",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -152,7 +168,8 @@
           "detail_uid": "01534-016",
           "title": "poa 1 - 1935",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         },
         {
           "work_id": "01534",
@@ -160,7 +177,8 @@
           "detail_uid": "01534-017",
           "title": "poa 1 - 1975",
           "width_px": 3000,
-          "height_px": 2398
+          "height_px": 2398,
+          "media_version": 1
         }
       ]
     }

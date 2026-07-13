@@ -16,6 +16,7 @@
           "detail_uid": "00530-001",
           "detail_id": "001",
           "project_filename": "00530-001.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 3024,
           "height_px": 4032
@@ -24,6 +25,7 @@
           "detail_uid": "00530-002",
           "detail_id": "002",
           "project_filename": "00530-002.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 3024,
           "height_px": 4032
@@ -32,6 +34,7 @@
           "detail_uid": "00530-003",
           "detail_id": "003",
           "project_filename": "00530-003.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 4032,
           "height_px": 3024
@@ -40,6 +43,7 @@
           "detail_uid": "00530-004",
           "detail_id": "004",
           "project_filename": "00530-004.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 4000,
           "height_px": 2667

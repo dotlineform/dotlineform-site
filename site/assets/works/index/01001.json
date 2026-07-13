@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-1f77df36db49f50fb4f3caee3c05ec55",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-eac44ea17cb14d8023da0c18f41308d2",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01001",
     "count": 5
   },
@@ -19,7 +19,8 @@
     "height_cm": 50.0,
     "width_cm": 50.0,
     "width_px": 5906,
-    "height_px": 5906
+    "height_px": 5906,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01001-001",
           "title": "dots (inside) [detail 1]",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "01001",
@@ -40,7 +42,8 @@
           "detail_uid": "01001-002",
           "title": "dots (inside) [detail 2]",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "01001",
@@ -48,7 +51,8 @@
           "detail_uid": "01001-003",
           "title": "dots (inside) [detail 3]",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "01001",
@@ -56,7 +60,8 @@
           "detail_uid": "01001-004",
           "title": "dots (inside) [detail 4]",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "01001",
@@ -64,7 +69,8 @@
           "detail_uid": "01001-005",
           "title": "dots (inside) [detail 5]",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         }
       ]
     }

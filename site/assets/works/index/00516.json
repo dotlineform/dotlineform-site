@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b4114d0a109d6d9609ec53ca852b198e",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-76b54a13db56a1c5e2777eda8b0e9e76",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00516",
     "count": 3
   },
@@ -19,7 +19,8 @@
     "height_cm": 50.0,
     "width_cm": 120.0,
     "width_px": 14173,
-    "height_px": 5906
+    "height_px": 5906,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00516-001",
           "title": "landscape 1 - detail 1",
           "width_px": 2362,
-          "height_px": 2362
+          "height_px": 2362,
+          "media_version": 1
         },
         {
           "work_id": "00516",
@@ -40,7 +42,8 @@
           "detail_uid": "00516-002",
           "title": "landscape 1 - detail 2",
           "width_px": 2362,
-          "height_px": 2362
+          "height_px": 2362,
+          "media_version": 1
         },
         {
           "work_id": "00516",
@@ -48,7 +51,8 @@
           "detail_uid": "00516-003",
           "title": "landscape 1 - detail 3",
           "width_px": 2362,
-          "height_px": 2362
+          "height_px": 2362,
+          "media_version": 1
         }
       ]
     }

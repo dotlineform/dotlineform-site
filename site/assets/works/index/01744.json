@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-e19db75e3f75f83cc7ea13040432a030",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-6a54d09010ad59cc437aff4da067e9fe",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01744",
     "count": 10
   },
@@ -19,7 +19,8 @@
     "height_cm": 76.2,
     "width_cm": 76.2,
     "width_px": 12000,
-    "height_px": 12000
+    "height_px": 12000,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01744-001",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -40,7 +42,8 @@
           "detail_uid": "01744-002",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -48,7 +51,8 @@
           "detail_uid": "01744-003",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -56,7 +60,8 @@
           "detail_uid": "01744-004",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -64,7 +69,8 @@
           "detail_uid": "01744-005",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -72,7 +78,8 @@
           "detail_uid": "01744-006",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -80,7 +87,8 @@
           "detail_uid": "01744-007",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -88,7 +96,8 @@
           "detail_uid": "01744-008",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         },
         {
           "work_id": "01744",
@@ -96,7 +105,8 @@
           "detail_uid": "01744-009",
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
-          "height_px": 3600
+          "height_px": 3600,
+          "media_version": 1
         }
       ]
     },
@@ -110,7 +120,8 @@
           "detail_uid": "01744-010",
           "title": "tabula rasa - source",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         }
       ]
     }

@@ -16,6 +16,7 @@
           "detail_uid": "00634-001",
           "detail_id": "001",
           "project_filename": "bits symbols 1.jpg",
+          "media_version": 1,
           "title": "bits symbols 1",
           "width_px": 8858,
           "height_px": 8858
@@ -24,6 +25,7 @@
           "detail_uid": "00634-002",
           "detail_id": "002",
           "project_filename": "bits symbols 2.jpg",
+          "media_version": 1,
           "title": "bits symbols 2",
           "width_px": 17717,
           "height_px": 11811
@@ -32,6 +34,7 @@
           "detail_uid": "00634-003",
           "detail_id": "003",
           "project_filename": "bits symbols 3.jpg",
+          "media_version": 1,
           "title": "bits symbols 3",
           "width_px": 11811,
           "height_px": 11811
@@ -40,6 +43,7 @@
           "detail_uid": "00634-004",
           "detail_id": "004",
           "project_filename": "bits symbols 4.jpg",
+          "media_version": 1,
           "title": "bits symbols 4",
           "width_px": 11811,
           "height_px": 11811
@@ -55,6 +59,7 @@
           "detail_uid": "00634-005",
           "detail_id": "005",
           "project_filename": "bits symbols 1.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.1",
           "width_px": 8858,
           "height_px": 8858
@@ -63,6 +68,7 @@
           "detail_uid": "00634-006",
           "detail_id": "006",
           "project_filename": "bits symbols 1.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.2",
           "width_px": 8858,
           "height_px": 8858
@@ -71,6 +77,7 @@
           "detail_uid": "00634-007",
           "detail_id": "007",
           "project_filename": "bits symbols 1.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.3",
           "width_px": 8858,
           "height_px": 8858
@@ -79,6 +86,7 @@
           "detail_uid": "00634-008",
           "detail_id": "008",
           "project_filename": "bits symbols 2.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 2.1",
           "width_px": 11811,
           "height_px": 11811
@@ -87,6 +95,7 @@
           "detail_uid": "00634-009",
           "detail_id": "009",
           "project_filename": "bits symbols 2.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 2.2",
           "width_px": 11811,
           "height_px": 11811
@@ -95,6 +104,7 @@
           "detail_uid": "00634-010",
           "detail_id": "010",
           "project_filename": "bits symbols 2.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 2.3",
           "width_px": 11811,
           "height_px": 11811
@@ -103,6 +113,7 @@
           "detail_uid": "00634-011",
           "detail_id": "011",
           "project_filename": "bits symbols 3.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 3.1",
           "width_px": 11811,
           "height_px": 11811
@@ -111,6 +122,7 @@
           "detail_uid": "00634-012",
           "detail_id": "012",
           "project_filename": "bits symbols 3.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 3.2",
           "width_px": 11811,
           "height_px": 11811
@@ -119,6 +131,7 @@
           "detail_uid": "00634-013",
           "detail_id": "013",
           "project_filename": "bits symbols 3.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 3.3",
           "width_px": 11811,
           "height_px": 11811
@@ -127,6 +140,7 @@
           "detail_uid": "00634-014",
           "detail_id": "014",
           "project_filename": "bits symbols 4.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 4.1",
           "width_px": 11811,
           "height_px": 11811
@@ -135,6 +149,7 @@
           "detail_uid": "00634-015",
           "detail_id": "015",
           "project_filename": "bits symbols 4.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 4.2",
           "width_px": 11811,
           "height_px": 11811
@@ -143,6 +158,7 @@
           "detail_uid": "00634-016",
           "detail_id": "016",
           "project_filename": "bits symbols 4.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 4.3",
           "width_px": 11811,
           "height_px": 11811
@@ -158,6 +174,7 @@
           "detail_uid": "00634-017",
           "detail_id": "017",
           "project_filename": "bits symbols 1.1.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.1.1",
           "width_px": 1536,
           "height_px": 1536
@@ -166,6 +183,7 @@
           "detail_uid": "00634-018",
           "detail_id": "018",
           "project_filename": "bits symbols 1.1.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.1.2",
           "width_px": 1536,
           "height_px": 1536
@@ -174,6 +192,7 @@
           "detail_uid": "00634-019",
           "detail_id": "019",
           "project_filename": "bits symbols 1.1.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.1.3",
           "width_px": 1536,
           "height_px": 1536
@@ -182,6 +201,7 @@
           "detail_uid": "00634-020",
           "detail_id": "020",
           "project_filename": "bits symbols 1.2.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.2.1",
           "width_px": 1535,
           "height_px": 1535
@@ -190,6 +210,7 @@
           "detail_uid": "00634-021",
           "detail_id": "021",
           "project_filename": "bits symbols 1.2.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.2.2",
           "width_px": 1535,
           "height_px": 1535
@@ -198,6 +219,7 @@
           "detail_uid": "00634-022",
           "detail_id": "022",
           "project_filename": "bits symbols 1.2.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.2.3",
           "width_px": 1535,
           "height_px": 1535
@@ -206,6 +228,7 @@
           "detail_uid": "00634-023",
           "detail_id": "023",
           "project_filename": "bits symbols 1.3.1.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.3.1",
           "width_px": 1535,
           "height_px": 1535
@@ -214,6 +237,7 @@
           "detail_uid": "00634-024",
           "detail_id": "024",
           "project_filename": "bits symbols 1.3.2.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.3.2",
           "width_px": 1535,
           "height_px": 1535
@@ -222,6 +246,7 @@
           "detail_uid": "00634-025",
           "detail_id": "025",
           "project_filename": "bits symbols 1.3.3.jpg",
+          "media_version": 1,
           "title": "bits symbols 1.3.3",
           "width_px": 1535,
           "height_px": 1535

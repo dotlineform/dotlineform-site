@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4417c8acb58638b10fc55a6213c1c2b0",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-0374f8bf64c1e5ef0d50c03fbf54802b",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00160",
     "count": 10
   },
@@ -20,6 +20,7 @@
     "width_cm": 21.0,
     "width_px": 2472,
     "height_px": 3498,
+    "media_version": 1,
     "downloads": [
       {
         "filename": "00160-mouse-story.pdf",
@@ -38,7 +39,8 @@
           "detail_uid": "00160-001",
           "title": "mouse story - 1",
           "width_px": 2472,
-          "height_px": 3498
+          "height_px": 3498,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -46,7 +48,8 @@
           "detail_uid": "00160-002",
           "title": "mouse story - 2",
           "width_px": 2472,
-          "height_px": 3498
+          "height_px": 3498,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -54,7 +57,8 @@
           "detail_uid": "00160-003",
           "title": "mouse story - 3",
           "width_px": 2472,
-          "height_px": 3498
+          "height_px": 3498,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -62,7 +66,8 @@
           "detail_uid": "00160-004",
           "title": "mouse story - 4",
           "width_px": 2472,
-          "height_px": 3498
+          "height_px": 3498,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -70,7 +75,8 @@
           "detail_uid": "00160-005",
           "title": "mouse story - 5",
           "width_px": 2472,
-          "height_px": 3498
+          "height_px": 3498,
+          "media_version": 1
         }
       ]
     },
@@ -84,7 +90,8 @@
           "detail_uid": "00160-006",
           "title": "mouse story - detail 1",
           "width_px": 5192,
-          "height_px": 2921
+          "height_px": 2921,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -92,7 +99,8 @@
           "detail_uid": "00160-007",
           "title": "mouse story - detail 2",
           "width_px": 6525,
-          "height_px": 3671
+          "height_px": 3671,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -100,7 +108,8 @@
           "detail_uid": "00160-008",
           "title": "mouse story - detail 3",
           "width_px": 2000,
-          "height_px": 1125
+          "height_px": 1125,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -108,7 +117,8 @@
           "detail_uid": "00160-009",
           "title": "mouse story - detail 4",
           "width_px": 4179,
-          "height_px": 2350
+          "height_px": 2350,
+          "media_version": 1
         },
         {
           "work_id": "00160",
@@ -116,7 +126,8 @@
           "detail_uid": "00160-010",
           "title": "mouse story - detail 5",
           "width_px": 5983,
-          "height_px": 3367
+          "height_px": 3367,
+          "media_version": 1
         }
       ]
     }

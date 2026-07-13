@@ -16,6 +16,7 @@
           "detail_uid": "01366-001",
           "detail_id": "001",
           "project_filename": "heaven and earth (blue).jpg",
+          "media_version": 1,
           "title": "heaven and earth (blue)",
           "width_px": 5906,
           "height_px": 4429
@@ -24,6 +25,7 @@
           "detail_uid": "01366-002",
           "detail_id": "002",
           "project_filename": "heaven and earth (cyan).jpg",
+          "media_version": 1,
           "title": "heaven and earth (cyan)",
           "width_px": 5906,
           "height_px": 4429
@@ -32,6 +34,7 @@
           "detail_uid": "01366-003",
           "detail_id": "003",
           "project_filename": "heaven and earth (green).jpg",
+          "media_version": 1,
           "title": "heaven and earth (green)",
           "width_px": 5906,
           "height_px": 4429

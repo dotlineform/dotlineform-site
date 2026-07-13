@@ -16,6 +16,7 @@
           "detail_uid": "00365-001",
           "detail_id": "001",
           "project_filename": "00365 - the eye - detail 1.jpeg",
+          "media_version": 1,
           "title": "the eye - detail 1",
           "width_px": 3024,
           "height_px": 3024
@@ -24,6 +25,7 @@
           "detail_uid": "00365-002",
           "detail_id": "002",
           "project_filename": "00365 - the eye - detail 2.jpeg",
+          "media_version": 1,
           "title": "the eye - detail 2",
           "width_px": 3024,
           "height_px": 3024
@@ -32,6 +34,7 @@
           "detail_uid": "00365-003",
           "detail_id": "003",
           "project_filename": "00365 - the eye - detail 3.jpeg",
+          "media_version": 1,
           "title": "the eye - detail 3",
           "width_px": 3024,
           "height_px": 3024
@@ -40,6 +43,7 @@
           "detail_uid": "00365-004",
           "detail_id": "004",
           "project_filename": "00365 - the eye - detail 4.jpeg",
+          "media_version": 1,
           "title": "the eye - detail 4",
           "width_px": 3024,
           "height_px": 3024

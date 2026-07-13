@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-cf397c49ce2be6e8925ecdf97a94b557",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-e87cbd17d21682b607467e98b172c5c4",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00519",
     "count": 75
   },
@@ -19,7 +19,8 @@
     "height_cm": 90.0,
     "width_cm": 30.0,
     "width_px": 3543,
-    "height_px": 10636
+    "height_px": 10636,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00519-001",
           "title": "version dall-e - 1.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -40,7 +42,8 @@
           "detail_uid": "00519-002",
           "title": "version dall-e - 1.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -48,7 +51,8 @@
           "detail_uid": "00519-003",
           "title": "version dall-e - 1.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -56,7 +60,8 @@
           "detail_uid": "00519-004",
           "title": "version dall-e - 1.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -64,7 +69,8 @@
           "detail_uid": "00519-005",
           "title": "version dall-e - 1.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -72,7 +78,8 @@
           "detail_uid": "00519-006",
           "title": "version dall-e - 2.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -80,7 +87,8 @@
           "detail_uid": "00519-007",
           "title": "version dall-e - 2.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -88,7 +96,8 @@
           "detail_uid": "00519-008",
           "title": "version dall-e - 2.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -96,7 +105,8 @@
           "detail_uid": "00519-009",
           "title": "version dall-e - 2.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -104,7 +114,8 @@
           "detail_uid": "00519-010",
           "title": "version dall-e - 2.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -112,7 +123,8 @@
           "detail_uid": "00519-011",
           "title": "version dall-e - 3.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -120,7 +132,8 @@
           "detail_uid": "00519-012",
           "title": "version dall-e - 3.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -128,7 +141,8 @@
           "detail_uid": "00519-013",
           "title": "version dall-e - 3.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -136,7 +150,8 @@
           "detail_uid": "00519-014",
           "title": "version dall-e - 3.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -144,7 +159,8 @@
           "detail_uid": "00519-015",
           "title": "version dall-e - 3.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -152,7 +168,8 @@
           "detail_uid": "00519-016",
           "title": "version dall-e - 4.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -160,7 +177,8 @@
           "detail_uid": "00519-017",
           "title": "version dall-e - 4.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -168,7 +186,8 @@
           "detail_uid": "00519-018",
           "title": "version dall-e - 4.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -176,7 +195,8 @@
           "detail_uid": "00519-019",
           "title": "version dall-e - 4.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -184,7 +204,8 @@
           "detail_uid": "00519-020",
           "title": "version dall-e - 4.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -192,7 +213,8 @@
           "detail_uid": "00519-021",
           "title": "version dall-e - 5.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -200,7 +222,8 @@
           "detail_uid": "00519-022",
           "title": "version dall-e - 5.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -208,7 +231,8 @@
           "detail_uid": "00519-023",
           "title": "version dall-e - 5.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -216,7 +240,8 @@
           "detail_uid": "00519-024",
           "title": "version dall-e - 5.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -224,7 +249,8 @@
           "detail_uid": "00519-025",
           "title": "version dall-e - 5.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -232,7 +258,8 @@
           "detail_uid": "00519-026",
           "title": "version dall-e - 6.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -240,7 +267,8 @@
           "detail_uid": "00519-027",
           "title": "version dall-e - 6.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -248,7 +276,8 @@
           "detail_uid": "00519-028",
           "title": "version dall-e - 6.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -256,7 +285,8 @@
           "detail_uid": "00519-029",
           "title": "version dall-e - 6.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -264,7 +294,8 @@
           "detail_uid": "00519-030",
           "title": "version dall-e - 6.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -272,7 +303,8 @@
           "detail_uid": "00519-031",
           "title": "version dall-e - 7.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -280,7 +312,8 @@
           "detail_uid": "00519-032",
           "title": "version dall-e - 7.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -288,7 +321,8 @@
           "detail_uid": "00519-033",
           "title": "version dall-e - 7.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -296,7 +330,8 @@
           "detail_uid": "00519-034",
           "title": "version dall-e - 7.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -304,7 +339,8 @@
           "detail_uid": "00519-035",
           "title": "version dall-e - 7.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -312,7 +348,8 @@
           "detail_uid": "00519-036",
           "title": "version dall-e - 8.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -320,7 +357,8 @@
           "detail_uid": "00519-037",
           "title": "version dall-e - 8.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -328,7 +366,8 @@
           "detail_uid": "00519-038",
           "title": "version dall-e - 8.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -336,7 +375,8 @@
           "detail_uid": "00519-039",
           "title": "version dall-e - 8.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -344,7 +384,8 @@
           "detail_uid": "00519-040",
           "title": "version dall-e - 8.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -352,7 +393,8 @@
           "detail_uid": "00519-041",
           "title": "version dall-e - 9.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -360,7 +402,8 @@
           "detail_uid": "00519-042",
           "title": "version dall-e - 9.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -368,7 +411,8 @@
           "detail_uid": "00519-043",
           "title": "version dall-e - 9.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -376,7 +420,8 @@
           "detail_uid": "00519-044",
           "title": "version dall-e - 9.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -384,7 +429,8 @@
           "detail_uid": "00519-045",
           "title": "version dall-e - 9.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -392,7 +438,8 @@
           "detail_uid": "00519-046",
           "title": "version dall-e - 10.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -400,7 +447,8 @@
           "detail_uid": "00519-047",
           "title": "version dall-e - 10.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -408,7 +456,8 @@
           "detail_uid": "00519-048",
           "title": "version dall-e - 10.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -416,7 +465,8 @@
           "detail_uid": "00519-049",
           "title": "version dall-e - 10.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -424,7 +474,8 @@
           "detail_uid": "00519-050",
           "title": "version dall-e - 10.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -432,7 +483,8 @@
           "detail_uid": "00519-051",
           "title": "version dall-e - 11.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -440,7 +492,8 @@
           "detail_uid": "00519-052",
           "title": "version dall-e - 11.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -448,7 +501,8 @@
           "detail_uid": "00519-053",
           "title": "version dall-e - 11.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -456,7 +510,8 @@
           "detail_uid": "00519-054",
           "title": "version dall-e - 11.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -464,7 +519,8 @@
           "detail_uid": "00519-055",
           "title": "version dall-e - 11.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -472,7 +528,8 @@
           "detail_uid": "00519-056",
           "title": "version dall-e - 12.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -480,7 +537,8 @@
           "detail_uid": "00519-057",
           "title": "version dall-e - 12.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -488,7 +546,8 @@
           "detail_uid": "00519-058",
           "title": "version dall-e - 12.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -496,7 +555,8 @@
           "detail_uid": "00519-059",
           "title": "version dall-e - 12.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -504,7 +564,8 @@
           "detail_uid": "00519-060",
           "title": "version dall-e - 12.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -512,7 +573,8 @@
           "detail_uid": "00519-061",
           "title": "version dall-e - 13.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -520,7 +582,8 @@
           "detail_uid": "00519-062",
           "title": "version dall-e - 13.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -528,7 +591,8 @@
           "detail_uid": "00519-063",
           "title": "version dall-e - 13.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -536,7 +600,8 @@
           "detail_uid": "00519-064",
           "title": "version dall-e - 13.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -544,7 +609,8 @@
           "detail_uid": "00519-065",
           "title": "version dall-e - 13.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -552,7 +618,8 @@
           "detail_uid": "00519-066",
           "title": "version dall-e - 14.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -560,7 +627,8 @@
           "detail_uid": "00519-067",
           "title": "version dall-e - 14.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -568,7 +636,8 @@
           "detail_uid": "00519-068",
           "title": "version dall-e - 14.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -576,7 +645,8 @@
           "detail_uid": "00519-069",
           "title": "version dall-e - 14.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -584,7 +654,8 @@
           "detail_uid": "00519-070",
           "title": "version dall-e - 14.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -592,7 +663,8 @@
           "detail_uid": "00519-071",
           "title": "version dall-e - 15.0 (run source)",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -600,7 +672,8 @@
           "detail_uid": "00519-072",
           "title": "version dall-e - 15.1",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -608,7 +681,8 @@
           "detail_uid": "00519-073",
           "title": "version dall-e - 15.2",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -616,7 +690,8 @@
           "detail_uid": "00519-074",
           "title": "version dall-e - 15.3",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         },
         {
           "work_id": "00519",
@@ -624,7 +699,8 @@
           "detail_uid": "00519-075",
           "title": "version dall-e - 15.4",
           "width_px": 3543,
-          "height_px": 3543
+          "height_px": 3543,
+          "media_version": 1
         }
       ]
     }

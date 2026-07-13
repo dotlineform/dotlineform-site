@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-c777da806bf0488e240ca77234859940",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-4bba916c6aa7cd873c102eac6f8fb528",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01176",
     "count": 44
   },
@@ -19,7 +19,8 @@
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4724,
-    "height_px": 3543
+    "height_px": 3543,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01176-001",
           "title": "form space noise 1",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -40,7 +42,8 @@
           "detail_uid": "01176-002",
           "title": "form space noise 2",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -48,7 +51,8 @@
           "detail_uid": "01176-003",
           "title": "form space noise 3",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -56,7 +60,8 @@
           "detail_uid": "01176-004",
           "title": "form space noise 4",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -64,7 +69,8 @@
           "detail_uid": "01176-005",
           "title": "form space noise 5",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -72,7 +78,8 @@
           "detail_uid": "01176-006",
           "title": "form space noise 6",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -80,7 +87,8 @@
           "detail_uid": "01176-007",
           "title": "form space noise 7",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -88,7 +96,8 @@
           "detail_uid": "01176-008",
           "title": "form space noise 8",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -96,7 +105,8 @@
           "detail_uid": "01176-009",
           "title": "form space noise 9",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -104,7 +114,8 @@
           "detail_uid": "01176-010",
           "title": "form space noise 10",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -112,7 +123,8 @@
           "detail_uid": "01176-011",
           "title": "form space noise 11",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -120,7 +132,8 @@
           "detail_uid": "01176-012",
           "title": "form space noise 12",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -128,7 +141,8 @@
           "detail_uid": "01176-013",
           "title": "form space noise 13",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -136,7 +150,8 @@
           "detail_uid": "01176-014",
           "title": "form space noise 14",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -144,7 +159,8 @@
           "detail_uid": "01176-015",
           "title": "form space noise 15",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -152,7 +168,8 @@
           "detail_uid": "01176-016",
           "title": "form space noise 16",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -160,7 +177,8 @@
           "detail_uid": "01176-017",
           "title": "form space noise 17",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -168,7 +186,8 @@
           "detail_uid": "01176-018",
           "title": "form space noise 18",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -176,7 +195,8 @@
           "detail_uid": "01176-019",
           "title": "form space noise 19",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -184,7 +204,8 @@
           "detail_uid": "01176-020",
           "title": "form space noise 20",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -192,7 +213,8 @@
           "detail_uid": "01176-021",
           "title": "form space noise 21",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -200,7 +222,8 @@
           "detail_uid": "01176-022",
           "title": "form space noise 22",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -208,7 +231,8 @@
           "detail_uid": "01176-023",
           "title": "form space noise 23",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -216,7 +240,8 @@
           "detail_uid": "01176-024",
           "title": "form space noise 24",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -224,7 +249,8 @@
           "detail_uid": "01176-025",
           "title": "form space noise 25",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -232,7 +258,8 @@
           "detail_uid": "01176-026",
           "title": "form space noise 26",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -240,7 +267,8 @@
           "detail_uid": "01176-027",
           "title": "form space noise 27",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -248,7 +276,8 @@
           "detail_uid": "01176-028",
           "title": "form space noise 28",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -256,7 +285,8 @@
           "detail_uid": "01176-029",
           "title": "form space noise 29",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -264,7 +294,8 @@
           "detail_uid": "01176-030",
           "title": "form space noise 30",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -272,7 +303,8 @@
           "detail_uid": "01176-031",
           "title": "form space noise 31",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -280,7 +312,8 @@
           "detail_uid": "01176-032",
           "title": "form space noise 32",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -288,7 +321,8 @@
           "detail_uid": "01176-033",
           "title": "form space noise 33",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -296,7 +330,8 @@
           "detail_uid": "01176-034",
           "title": "form space noise 34",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -304,7 +339,8 @@
           "detail_uid": "01176-035",
           "title": "form space noise 35",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -312,7 +348,8 @@
           "detail_uid": "01176-036",
           "title": "form space noise 36",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -320,7 +357,8 @@
           "detail_uid": "01176-037",
           "title": "form space noise 37",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -328,7 +366,8 @@
           "detail_uid": "01176-038",
           "title": "form space noise 38",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -336,7 +375,8 @@
           "detail_uid": "01176-039",
           "title": "form space noise 39",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -344,7 +384,8 @@
           "detail_uid": "01176-040",
           "title": "form space noise 40",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -352,7 +393,8 @@
           "detail_uid": "01176-041",
           "title": "form space noise 41",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -360,7 +402,8 @@
           "detail_uid": "01176-042",
           "title": "form space noise 42",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -368,7 +411,8 @@
           "detail_uid": "01176-043",
           "title": "form space noise 43",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         },
         {
           "work_id": "01176",
@@ -376,7 +420,8 @@
           "detail_uid": "01176-044",
           "title": "form space noise 44",
           "width_px": 4880,
-          "height_px": 3660
+          "height_px": 3660,
+          "media_version": 1
         }
       ]
     }

@@ -16,6 +16,7 @@
           "detail_uid": "00754-004",
           "detail_id": "004",
           "project_filename": "assembly code 2 (detail 1).jpg",
+          "media_version": 1,
           "title": "assembly code 2 (detail 1)",
           "width_px": 2000,
           "height_px": 2000
@@ -24,6 +25,7 @@
           "detail_uid": "00754-005",
           "detail_id": "005",
           "project_filename": "assembly code 2 (detail 2).jpg",
+          "media_version": 1,
           "title": "assembly code 2 (detail 2)",
           "width_px": 2000,
           "height_px": 2000
@@ -32,6 +34,7 @@
           "detail_uid": "00754-006",
           "detail_id": "006",
           "project_filename": "assembly code 2 (detail 3).jpg",
+          "media_version": 1,
           "title": "assembly code 2 (detail 3)",
           "width_px": 2000,
           "height_px": 2000

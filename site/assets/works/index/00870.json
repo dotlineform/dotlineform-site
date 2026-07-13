@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-e7685d4d86dd8ffe1b3de2b89894bcbc",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-863336c32b6f116febff9f21e0649137",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00870",
     "count": 9
   },
@@ -19,7 +19,8 @@
     "height_cm": 40.0,
     "width_cm": 50.0,
     "width_px": 5905,
-    "height_px": 4724
+    "height_px": 4724,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00870-001",
           "title": "dots 1",
           "width_px": 2354,
-          "height_px": 2354
+          "height_px": 2354,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -40,7 +42,8 @@
           "detail_uid": "00870-002",
           "title": "dots 2",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -48,7 +51,8 @@
           "detail_uid": "00870-003",
           "title": "dots 3",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -56,7 +60,8 @@
           "detail_uid": "00870-004",
           "title": "dots 4",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -64,7 +69,8 @@
           "detail_uid": "00870-005",
           "title": "dots 5",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -72,7 +78,8 @@
           "detail_uid": "00870-006",
           "title": "dots 6",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -80,7 +87,8 @@
           "detail_uid": "00870-007",
           "title": "dots 7",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -88,7 +96,8 @@
           "detail_uid": "00870-008",
           "title": "dots 8",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "00870",
@@ -96,7 +105,8 @@
           "detail_uid": "00870-009",
           "title": "dots 9",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         }
       ]
     }

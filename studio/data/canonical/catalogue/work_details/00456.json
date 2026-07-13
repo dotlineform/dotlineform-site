@@ -16,6 +16,7 @@
           "detail_uid": "00456-001",
           "detail_id": "001",
           "project_filename": "dots [detail 1].jpg",
+          "media_version": 1,
           "title": "dots [detail 1]",
           "width_px": 5906,
           "height_px": 5906
@@ -24,6 +25,7 @@
           "detail_uid": "00456-002",
           "detail_id": "002",
           "project_filename": "dots [detail 2].jpg",
+          "media_version": 1,
           "title": "dots [detail 2]",
           "width_px": 5906,
           "height_px": 5906
@@ -32,6 +34,7 @@
           "detail_uid": "00456-003",
           "detail_id": "003",
           "project_filename": "dots [detail 3].jpg",
+          "media_version": 1,
           "title": "dots [detail 3]",
           "width_px": 5906,
           "height_px": 5906
@@ -40,6 +43,7 @@
           "detail_uid": "00456-004",
           "detail_id": "004",
           "project_filename": "dots [detail 4].jpg",
+          "media_version": 1,
           "title": "dots [detail 4]",
           "width_px": 5906,
           "height_px": 5906
@@ -48,6 +52,7 @@
           "detail_uid": "00456-005",
           "detail_id": "005",
           "project_filename": "dots [detail 5].jpg",
+          "media_version": 1,
           "title": "dots [detail 5]",
           "width_px": 5906,
           "height_px": 5906

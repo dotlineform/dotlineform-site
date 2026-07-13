@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b3da1ca766e01f20e59368f771957098",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-587b244176ced8742025e9f4523bf99e",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00622",
     "count": 6
   },
@@ -19,7 +19,8 @@
     "height_cm": 75.0,
     "width_cm": 75.0,
     "width_px": 8858,
-    "height_px": 8858
+    "height_px": 8858,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00622-001",
           "title": "k source",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "00622",
@@ -40,7 +42,8 @@
           "detail_uid": "00622-002",
           "title": "k crystals bits - detail",
           "width_px": 2893,
-          "height_px": 1808
+          "height_px": 1808,
+          "media_version": 1
         },
         {
           "work_id": "00622",
@@ -48,7 +51,8 @@
           "detail_uid": "00622-003",
           "title": "k crystals bits - screenshot - detail",
           "width_px": 800,
-          "height_px": 500
+          "height_px": 500,
+          "media_version": 1
         },
         {
           "work_id": "00622",
@@ -56,7 +60,8 @@
           "detail_uid": "00622-004",
           "title": "k crystals bits - screenshot",
           "width_px": 5802,
-          "height_px": 4148
+          "height_px": 4148,
+          "media_version": 1
         },
         {
           "work_id": "00622",
@@ -64,7 +69,8 @@
           "detail_uid": "00622-005",
           "title": "k crystals bits",
           "width_px": 8681,
-          "height_px": 6300
+          "height_px": 6300,
+          "media_version": 1
         },
         {
           "work_id": "00622",
@@ -72,7 +78,8 @@
           "detail_uid": "00622-006",
           "title": "k crystals colours",
           "width_px": 4341,
-          "height_px": 3150
+          "height_px": 3150,
+          "media_version": 1
         }
       ]
     }

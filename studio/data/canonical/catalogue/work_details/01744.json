@@ -16,6 +16,7 @@
           "detail_uid": "01744-001",
           "detail_id": "001",
           "project_filename": "tabula rasa - detail 1.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -24,6 +25,7 @@
           "detail_uid": "01744-002",
           "detail_id": "002",
           "project_filename": "tabula rasa - detail 2.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -32,6 +34,7 @@
           "detail_uid": "01744-003",
           "detail_id": "003",
           "project_filename": "tabula rasa - detail 3.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -40,6 +43,7 @@
           "detail_uid": "01744-004",
           "detail_id": "004",
           "project_filename": "tabula rasa - detail 4.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -48,6 +52,7 @@
           "detail_uid": "01744-005",
           "detail_id": "005",
           "project_filename": "tabula rasa - detail 5.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -56,6 +61,7 @@
           "detail_uid": "01744-006",
           "detail_id": "006",
           "project_filename": "tabula rasa - detail 6.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -64,6 +70,7 @@
           "detail_uid": "01744-007",
           "detail_id": "007",
           "project_filename": "tabula rasa - detail 7.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -72,6 +79,7 @@
           "detail_uid": "01744-008",
           "detail_id": "008",
           "project_filename": "tabula rasa - detail 8.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -80,6 +88,7 @@
           "detail_uid": "01744-009",
           "detail_id": "009",
           "project_filename": "tabula rasa - detail 9.jpg",
+          "media_version": 1,
           "title": "tabula rasa - detail 1",
           "width_px": 3600,
           "height_px": 3600
@@ -95,6 +104,7 @@
           "detail_uid": "01744-010",
           "detail_id": "010",
           "project_filename": "tabula rasa - source.jpg",
+          "media_version": 1,
           "title": "tabula rasa - source",
           "width_px": 3543,
           "height_px": 3543

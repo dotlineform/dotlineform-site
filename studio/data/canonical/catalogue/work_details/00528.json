@@ -16,6 +16,7 @@
           "detail_uid": "00528-001",
           "detail_id": "001",
           "project_filename": "00528-001.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 4032,
           "height_px": 3024
@@ -24,6 +25,7 @@
           "detail_uid": "00528-002",
           "detail_id": "002",
           "project_filename": "00528-002.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 4032,
           "height_px": 3024
@@ -32,6 +34,7 @@
           "detail_uid": "00528-003",
           "detail_id": "003",
           "project_filename": "00528-003.jpg",
+          "media_version": 1,
           "title": "body detail",
           "width_px": 4032,
           "height_px": 3024

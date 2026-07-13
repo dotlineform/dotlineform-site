@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b6807b260661c75f4b4bc648293e440e",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-caa0fdb0be7ec056f45c53b0c9416200",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00161",
     "count": 0
   },
@@ -20,6 +20,7 @@
     "width_cm": 21.0,
     "width_px": 3115,
     "height_px": 4405,
+    "media_version": 1,
     "downloads": [
       {
         "filename": "00161-mouse-story-extended-version.pdf",

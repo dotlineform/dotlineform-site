@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-e62768c9fa52ae2a94708120ce1e71c0",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-4634660a6fb297f2f0f7fa4930a253f0",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00817",
     "count": 5
   },
@@ -19,7 +19,8 @@
     "height_cm": 30.0,
     "width_cm": 30.0,
     "width_px": 3543,
-    "height_px": 3543
+    "height_px": 3543,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00817-001",
           "title": "colours marilyn.1",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "00817",
@@ -40,7 +42,8 @@
           "detail_uid": "00817-002",
           "title": "colours marilyn.2",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "00817",
@@ -48,7 +51,8 @@
           "detail_uid": "00817-003",
           "title": "colours marilyn.3",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "00817",
@@ -56,7 +60,8 @@
           "detail_uid": "00817-004",
           "title": "colours marilyn.4",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         },
         {
           "work_id": "00817",
@@ -64,7 +69,8 @@
           "detail_uid": "00817-005",
           "title": "colours marilyn.5",
           "width_px": 5906,
-          "height_px": 5906
+          "height_px": 5906,
+          "media_version": 1
         }
       ]
     }

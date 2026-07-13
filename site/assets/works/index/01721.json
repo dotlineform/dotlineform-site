@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-e9919966f34e7a2968782253c57f4058",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-6da1e9d62890a7ecec3c18d04affcb6c",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "01721",
     "count": 119
   },
@@ -19,7 +19,8 @@
     "height_cm": 70.0,
     "width_cm": 70.0,
     "width_px": 8268,
-    "height_px": 8268
+    "height_px": 8268,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "01721-001",
           "title": "state of mind - detail (jewels)",
           "width_px": 2000,
-          "height_px": 2000
+          "height_px": 2000,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -40,7 +42,8 @@
           "detail_uid": "01721-002",
           "title": "state of mind - detail (leaf)",
           "width_px": 2000,
-          "height_px": 2000
+          "height_px": 2000,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -48,7 +51,8 @@
           "detail_uid": "01721-003",
           "title": "state of mind - detail (thorns)",
           "width_px": 2000,
-          "height_px": 2000
+          "height_px": 2000,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -56,7 +60,8 @@
           "detail_uid": "01721-004",
           "title": "state of mind - detail 1",
           "width_px": 2000,
-          "height_px": 2000
+          "height_px": 2000,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -64,7 +69,8 @@
           "detail_uid": "01721-005",
           "title": "state of mind - detail 2",
           "width_px": 2000,
-          "height_px": 2000
+          "height_px": 2000,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -72,7 +78,8 @@
           "detail_uid": "01721-006",
           "title": "state of mind - detail 3",
           "width_px": 2000,
-          "height_px": 2000
+          "height_px": 2000,
+          "media_version": 1
         }
       ]
     },
@@ -86,7 +93,8 @@
           "detail_uid": "01721-007",
           "title": "state of mind - source 1",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -94,7 +102,8 @@
           "detail_uid": "01721-008",
           "title": "state of mind - source 2",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -102,7 +111,8 @@
           "detail_uid": "01721-009",
           "title": "state of mind - source 3",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -110,7 +120,8 @@
           "detail_uid": "01721-010",
           "title": "state of mind - source 4",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -118,7 +129,8 @@
           "detail_uid": "01721-011",
           "title": "state of mind - source 5",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -126,7 +138,8 @@
           "detail_uid": "01721-012",
           "title": "state of mind - source 6",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -134,7 +147,8 @@
           "detail_uid": "01721-013",
           "title": "state of mind - source 7",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -142,7 +156,8 @@
           "detail_uid": "01721-014",
           "title": "state of mind - source 8",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -150,7 +165,8 @@
           "detail_uid": "01721-015",
           "title": "state of mind - source 9",
           "width_px": 1600,
-          "height_px": 1600
+          "height_px": 1600,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -158,7 +174,8 @@
           "detail_uid": "01721-016",
           "title": "state of mind - source 10",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -166,7 +183,8 @@
           "detail_uid": "01721-017",
           "title": "state of mind - source 11",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -174,7 +192,8 @@
           "detail_uid": "01721-018",
           "title": "state of mind - source 12",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -182,7 +201,8 @@
           "detail_uid": "01721-019",
           "title": "state of mind - source 13",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -190,7 +210,8 @@
           "detail_uid": "01721-020",
           "title": "state of mind - source 14",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -198,7 +219,8 @@
           "detail_uid": "01721-021",
           "title": "state of mind - source 15",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -206,7 +228,8 @@
           "detail_uid": "01721-022",
           "title": "state of mind - source 16",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -214,7 +237,8 @@
           "detail_uid": "01721-023",
           "title": "state of mind - source 17",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -222,7 +246,8 @@
           "detail_uid": "01721-024",
           "title": "state of mind - source 18",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -230,7 +255,8 @@
           "detail_uid": "01721-025",
           "title": "state of mind - source 19",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -238,7 +264,8 @@
           "detail_uid": "01721-026",
           "title": "state of mind - source 20",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -246,7 +273,8 @@
           "detail_uid": "01721-027",
           "title": "state of mind - source 21",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -254,7 +282,8 @@
           "detail_uid": "01721-028",
           "title": "state of mind - source 22",
           "width_px": 4112,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -262,7 +291,8 @@
           "detail_uid": "01721-029",
           "title": "state of mind - source 23",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -270,7 +300,8 @@
           "detail_uid": "01721-030",
           "title": "state of mind - source 24",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -278,7 +309,8 @@
           "detail_uid": "01721-031",
           "title": "state of mind - source 25",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -286,7 +318,8 @@
           "detail_uid": "01721-032",
           "title": "state of mind - source 26",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -294,7 +327,8 @@
           "detail_uid": "01721-033",
           "title": "state of mind - source 27",
           "width_px": 2268,
-          "height_px": 4032
+          "height_px": 4032,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -302,7 +336,8 @@
           "detail_uid": "01721-034",
           "title": "state of mind - source 28",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -310,7 +345,8 @@
           "detail_uid": "01721-035",
           "title": "state of mind - source 29",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -318,7 +354,8 @@
           "detail_uid": "01721-036",
           "title": "state of mind - source 30",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -326,7 +363,8 @@
           "detail_uid": "01721-037",
           "title": "state of mind - source 31",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -334,7 +372,8 @@
           "detail_uid": "01721-038",
           "title": "state of mind - source 32",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -342,7 +381,8 @@
           "detail_uid": "01721-039",
           "title": "state of mind - source 33",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -350,7 +390,8 @@
           "detail_uid": "01721-040",
           "title": "state of mind - source 34",
           "width_px": 4288,
-          "height_px": 2848
+          "height_px": 2848,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -358,7 +399,8 @@
           "detail_uid": "01721-041",
           "title": "state of mind - source 35",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -366,7 +408,8 @@
           "detail_uid": "01721-042",
           "title": "state of mind - source 36",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -374,7 +417,8 @@
           "detail_uid": "01721-043",
           "title": "state of mind - source 37",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -382,7 +426,8 @@
           "detail_uid": "01721-044",
           "title": "state of mind - source 38",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -390,7 +435,8 @@
           "detail_uid": "01721-045",
           "title": "state of mind - source 39",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -398,7 +444,8 @@
           "detail_uid": "01721-046",
           "title": "state of mind - source 40",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -406,7 +453,8 @@
           "detail_uid": "01721-047",
           "title": "state of mind - source 41",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -414,7 +462,8 @@
           "detail_uid": "01721-048",
           "title": "state of mind - source 42",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -422,7 +471,8 @@
           "detail_uid": "01721-049",
           "title": "state of mind - source 43",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -430,7 +480,8 @@
           "detail_uid": "01721-050",
           "title": "state of mind - source 44",
           "width_px": 4112,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -438,7 +489,8 @@
           "detail_uid": "01721-051",
           "title": "state of mind - source 45",
           "width_px": 1200,
-          "height_px": 857
+          "height_px": 857,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -446,7 +498,8 @@
           "detail_uid": "01721-052",
           "title": "state of mind - source 46",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -454,7 +507,8 @@
           "detail_uid": "01721-053",
           "title": "state of mind - source 47",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -462,7 +516,8 @@
           "detail_uid": "01721-054",
           "title": "state of mind - source 48",
           "width_px": 2272,
-          "height_px": 1704
+          "height_px": 1704,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -470,7 +525,8 @@
           "detail_uid": "01721-055",
           "title": "state of mind - source 49",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -478,7 +534,8 @@
           "detail_uid": "01721-056",
           "title": "state of mind - source 50",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -486,7 +543,8 @@
           "detail_uid": "01721-057",
           "title": "state of mind - source 51",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -494,7 +552,8 @@
           "detail_uid": "01721-058",
           "title": "state of mind - source 52",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -502,7 +561,8 @@
           "detail_uid": "01721-059",
           "title": "state of mind - source 53",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -510,7 +570,8 @@
           "detail_uid": "01721-060",
           "title": "state of mind - source 54",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -518,7 +579,8 @@
           "detail_uid": "01721-061",
           "title": "state of mind - source 55",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -526,7 +588,8 @@
           "detail_uid": "01721-062",
           "title": "state of mind - source 56",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -534,7 +597,8 @@
           "detail_uid": "01721-063",
           "title": "state of mind - source 57",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -542,7 +606,8 @@
           "detail_uid": "01721-064",
           "title": "state of mind - source 58",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -550,7 +615,8 @@
           "detail_uid": "01721-065",
           "title": "state of mind - source 59",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -558,7 +624,8 @@
           "detail_uid": "01721-066",
           "title": "state of mind - source 60",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -566,7 +633,8 @@
           "detail_uid": "01721-067",
           "title": "state of mind - source 61",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -574,7 +642,8 @@
           "detail_uid": "01721-068",
           "title": "state of mind - source 62",
           "width_px": 4288,
-          "height_px": 2848
+          "height_px": 2848,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -582,7 +651,8 @@
           "detail_uid": "01721-069",
           "title": "state of mind - source 63",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -590,7 +660,8 @@
           "detail_uid": "01721-070",
           "title": "state of mind - source 64",
           "width_px": 4032,
-          "height_px": 2268
+          "height_px": 2268,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -598,7 +669,8 @@
           "detail_uid": "01721-071",
           "title": "state of mind - source 65",
           "width_px": 4288,
-          "height_px": 2848
+          "height_px": 2848,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -606,7 +678,8 @@
           "detail_uid": "01721-072",
           "title": "state of mind - source 66",
           "width_px": 4288,
-          "height_px": 2848
+          "height_px": 2848,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -614,7 +687,8 @@
           "detail_uid": "01721-073",
           "title": "state of mind - source 67",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -622,7 +696,8 @@
           "detail_uid": "01721-074",
           "title": "state of mind - source 68",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -630,7 +705,8 @@
           "detail_uid": "01721-075",
           "title": "state of mind - source 69",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -638,7 +714,8 @@
           "detail_uid": "01721-076",
           "title": "state of mind - source 70",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -646,7 +723,8 @@
           "detail_uid": "01721-077",
           "title": "state of mind - source 71",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -654,7 +732,8 @@
           "detail_uid": "01721-078",
           "title": "state of mind - source 72",
           "width_px": 2448,
-          "height_px": 3264
+          "height_px": 3264,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -662,7 +741,8 @@
           "detail_uid": "01721-079",
           "title": "state of mind - source 73",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -670,7 +750,8 @@
           "detail_uid": "01721-080",
           "title": "state of mind - source 74",
           "width_px": 4288,
-          "height_px": 2848
+          "height_px": 2848,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -678,7 +759,8 @@
           "detail_uid": "01721-081",
           "title": "state of mind - source 75",
           "width_px": 4288,
-          "height_px": 2848
+          "height_px": 2848,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -686,7 +768,8 @@
           "detail_uid": "01721-082",
           "title": "state of mind - source 76",
           "width_px": 2048,
-          "height_px": 1536
+          "height_px": 1536,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -694,7 +777,8 @@
           "detail_uid": "01721-083",
           "title": "state of mind - source 77",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -702,7 +786,8 @@
           "detail_uid": "01721-084",
           "title": "state of mind - source 78",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -710,7 +795,8 @@
           "detail_uid": "01721-085",
           "title": "state of mind - source 79",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -718,7 +804,8 @@
           "detail_uid": "01721-086",
           "title": "state of mind - source 80",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -726,7 +813,8 @@
           "detail_uid": "01721-087",
           "title": "state of mind - source 81",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -734,7 +822,8 @@
           "detail_uid": "01721-088",
           "title": "state of mind - source 82",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -742,7 +831,8 @@
           "detail_uid": "01721-089",
           "title": "state of mind - source 83",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -750,7 +840,8 @@
           "detail_uid": "01721-090",
           "title": "state of mind - source 84",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -758,7 +849,8 @@
           "detail_uid": "01721-091",
           "title": "state of mind - source 85",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -766,7 +858,8 @@
           "detail_uid": "01721-092",
           "title": "state of mind - source 86",
           "width_px": 2448,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -774,7 +867,8 @@
           "detail_uid": "01721-093",
           "title": "state of mind - source 87",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -782,7 +876,8 @@
           "detail_uid": "01721-094",
           "title": "state of mind - source 88",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -790,7 +885,8 @@
           "detail_uid": "01721-095",
           "title": "state of mind - source 89",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -798,7 +894,8 @@
           "detail_uid": "01721-096",
           "title": "state of mind - source 90",
           "width_px": 2422,
-          "height_px": 2422
+          "height_px": 2422,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -806,7 +903,8 @@
           "detail_uid": "01721-097",
           "title": "state of mind - source 91",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -814,7 +912,8 @@
           "detail_uid": "01721-098",
           "title": "state of mind - source 92",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -822,7 +921,8 @@
           "detail_uid": "01721-099",
           "title": "state of mind - source 93",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -830,7 +930,8 @@
           "detail_uid": "01721-100",
           "title": "state of mind - source 94",
           "width_px": 2048,
-          "height_px": 2048
+          "height_px": 2048,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -838,7 +939,8 @@
           "detail_uid": "01721-101",
           "title": "state of mind - source 95",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -846,7 +948,8 @@
           "detail_uid": "01721-102",
           "title": "state of mind - source 96",
           "width_px": 4112,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -854,7 +957,8 @@
           "detail_uid": "01721-103",
           "title": "state of mind - source 97",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -862,7 +966,8 @@
           "detail_uid": "01721-104",
           "title": "state of mind - source 98",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -870,7 +975,8 @@
           "detail_uid": "01721-105",
           "title": "state of mind - source 99",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -878,7 +984,8 @@
           "detail_uid": "01721-106",
           "title": "state of mind - source 100",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -886,7 +993,8 @@
           "detail_uid": "01721-107",
           "title": "state of mind - source 101",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -894,7 +1002,8 @@
           "detail_uid": "01721-108",
           "title": "state of mind - source 102",
           "width_px": 3024,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -902,7 +1011,8 @@
           "detail_uid": "01721-109",
           "title": "state of mind - source 103",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -910,7 +1020,8 @@
           "detail_uid": "01721-110",
           "title": "state of mind - source 104",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -918,7 +1029,8 @@
           "detail_uid": "01721-111",
           "title": "state of mind - source 105",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -926,7 +1038,8 @@
           "detail_uid": "01721-112",
           "title": "state of mind - source 106",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -934,7 +1047,8 @@
           "detail_uid": "01721-113",
           "title": "state of mind - source 107",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -942,7 +1056,8 @@
           "detail_uid": "01721-114",
           "title": "state of mind - source 108",
           "width_px": 2272,
-          "height_px": 1704
+          "height_px": 1704,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -950,7 +1065,8 @@
           "detail_uid": "01721-115",
           "title": "state of mind - source 109",
           "width_px": 3264,
-          "height_px": 2448
+          "height_px": 2448,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -958,7 +1074,8 @@
           "detail_uid": "01721-116",
           "title": "state of mind - source 110",
           "width_px": 4032,
-          "height_px": 3024
+          "height_px": 3024,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -966,7 +1083,8 @@
           "detail_uid": "01721-117",
           "title": "state of mind - source 111",
           "width_px": 3088,
-          "height_px": 3088
+          "height_px": 3088,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -974,7 +1092,8 @@
           "detail_uid": "01721-118",
           "title": "state of mind - source 112",
           "width_px": 4480,
-          "height_px": 2520
+          "height_px": 2520,
+          "media_version": 1
         },
         {
           "work_id": "01721",
@@ -982,7 +1101,8 @@
           "detail_uid": "01721-119",
           "title": "state of mind - source 113",
           "width_px": 2816,
-          "height_px": 2112
+          "height_px": 2112,
+          "media_version": 1
         }
       ]
     }

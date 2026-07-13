@@ -16,6 +16,7 @@
           "detail_uid": "00464-001",
           "detail_id": "001",
           "project_filename": "memories of the forest 1.jpg",
+          "media_version": 1,
           "title": "memories of the forest 1",
           "width_px": 8268,
           "height_px": 8268
@@ -24,6 +25,7 @@
           "detail_uid": "00464-002",
           "detail_id": "002",
           "project_filename": "memories of the forest 2.jpg",
+          "media_version": 1,
           "title": "memories of the forest 2",
           "width_px": 8268,
           "height_px": 8268
@@ -32,6 +34,7 @@
           "detail_uid": "00464-003",
           "detail_id": "003",
           "project_filename": "memories of the forest 3.jpg",
+          "media_version": 1,
           "title": "memories of the forest 3",
           "width_px": 8268,
           "height_px": 8268
@@ -40,6 +43,7 @@
           "detail_uid": "00464-004",
           "detail_id": "004",
           "project_filename": "3 moments.jpg",
+          "media_version": 1,
           "title": "3 moments",
           "width_px": 4000,
           "height_px": 4000
@@ -55,6 +59,7 @@
           "detail_uid": "00464-005",
           "detail_id": "005",
           "project_filename": "memory - 1.1.jpg",
+          "media_version": 1,
           "title": "memory - 1.1",
           "width_px": 2362,
           "height_px": 2362
@@ -63,6 +68,7 @@
           "detail_uid": "00464-006",
           "detail_id": "006",
           "project_filename": "memory - 1.2.jpg",
+          "media_version": 1,
           "title": "memory - 1.2",
           "width_px": 2362,
           "height_px": 2362
@@ -71,6 +77,7 @@
           "detail_uid": "00464-007",
           "detail_id": "007",
           "project_filename": "memory - 1.3.jpg",
+          "media_version": 1,
           "title": "memory - 1.3",
           "width_px": 2362,
           "height_px": 2362
@@ -79,6 +86,7 @@
           "detail_uid": "00464-008",
           "detail_id": "008",
           "project_filename": "memory - 2.1.jpg",
+          "media_version": 1,
           "title": "memory - 2.1",
           "width_px": 2362,
           "height_px": 2362
@@ -87,6 +95,7 @@
           "detail_uid": "00464-009",
           "detail_id": "009",
           "project_filename": "memory - 2.2.jpg",
+          "media_version": 1,
           "title": "memory - 2.2",
           "width_px": 2362,
           "height_px": 2362
@@ -95,6 +104,7 @@
           "detail_uid": "00464-010",
           "detail_id": "010",
           "project_filename": "memory - 2.3.jpg",
+          "media_version": 1,
           "title": "memory - 2.3",
           "width_px": 2362,
           "height_px": 2362
@@ -103,6 +113,7 @@
           "detail_uid": "00464-011",
           "detail_id": "011",
           "project_filename": "memory - 3.1.jpg",
+          "media_version": 1,
           "title": "memory - 3.1",
           "width_px": 2362,
           "height_px": 2362
@@ -111,6 +122,7 @@
           "detail_uid": "00464-012",
           "detail_id": "012",
           "project_filename": "memory - 3.2.jpg",
+          "media_version": 1,
           "title": "memory - 3.2",
           "width_px": 2362,
           "height_px": 2362
@@ -119,6 +131,7 @@
           "detail_uid": "00464-013",
           "detail_id": "013",
           "project_filename": "memory - 3.3.jpg",
+          "media_version": 1,
           "title": "memory - 3.3",
           "width_px": 2362,
           "height_px": 2362
@@ -127,6 +140,7 @@
           "detail_uid": "00464-014",
           "detail_id": "014",
           "project_filename": "memory - 4.1.jpg",
+          "media_version": 1,
           "title": "memory - 4.1",
           "width_px": 2362,
           "height_px": 2362
@@ -135,6 +149,7 @@
           "detail_uid": "00464-015",
           "detail_id": "015",
           "project_filename": "memory - 4.2.jpg",
+          "media_version": 1,
           "title": "memory - 4.2",
           "width_px": 2362,
           "height_px": 2362
@@ -143,6 +158,7 @@
           "detail_uid": "00464-016",
           "detail_id": "016",
           "project_filename": "memory - 4.3.jpg",
+          "media_version": 1,
           "title": "memory - 4.3",
           "width_px": 2362,
           "height_px": 2362
@@ -151,6 +167,7 @@
           "detail_uid": "00464-017",
           "detail_id": "017",
           "project_filename": "memory - 5.1.jpg",
+          "media_version": 1,
           "title": "memory - 5.1",
           "width_px": 2362,
           "height_px": 2362
@@ -159,6 +176,7 @@
           "detail_uid": "00464-018",
           "detail_id": "018",
           "project_filename": "memory - 5.2.jpg",
+          "media_version": 1,
           "title": "memory - 5.2",
           "width_px": 2362,
           "height_px": 2362
@@ -167,6 +185,7 @@
           "detail_uid": "00464-019",
           "detail_id": "019",
           "project_filename": "memory - 5.3.jpg",
+          "media_version": 1,
           "title": "memory - 5.3",
           "width_px": 2362,
           "height_px": 2362
@@ -175,6 +194,7 @@
           "detail_uid": "00464-020",
           "detail_id": "020",
           "project_filename": "memory - 6.1.jpg",
+          "media_version": 1,
           "title": "memory - 6.1",
           "width_px": 2362,
           "height_px": 2362
@@ -183,6 +203,7 @@
           "detail_uid": "00464-021",
           "detail_id": "021",
           "project_filename": "memory - 6.2.jpg",
+          "media_version": 1,
           "title": "memory - 6.2",
           "width_px": 2362,
           "height_px": 2362
@@ -191,6 +212,7 @@
           "detail_uid": "00464-022",
           "detail_id": "022",
           "project_filename": "memory - 6.3.jpg",
+          "media_version": 1,
           "title": "memory - 6.3",
           "width_px": 2362,
           "height_px": 2362
@@ -199,6 +221,7 @@
           "detail_uid": "00464-023",
           "detail_id": "023",
           "project_filename": "memory - 7.1.jpg",
+          "media_version": 1,
           "title": "memory - 7.1",
           "width_px": 2362,
           "height_px": 2362
@@ -207,6 +230,7 @@
           "detail_uid": "00464-024",
           "detail_id": "024",
           "project_filename": "memory - 7.2.jpg",
+          "media_version": 1,
           "title": "memory - 7.2",
           "width_px": 2362,
           "height_px": 2362
@@ -215,6 +239,7 @@
           "detail_uid": "00464-025",
           "detail_id": "025",
           "project_filename": "memory - 7.3.jpg",
+          "media_version": 1,
           "title": "memory - 7.3",
           "width_px": 2362,
           "height_px": 2362
@@ -223,6 +248,7 @@
           "detail_uid": "00464-026",
           "detail_id": "026",
           "project_filename": "memory - 8.1.jpg",
+          "media_version": 1,
           "title": "memory - 8.1",
           "width_px": 2362,
           "height_px": 2362
@@ -231,6 +257,7 @@
           "detail_uid": "00464-027",
           "detail_id": "027",
           "project_filename": "memory - 8.2.jpg",
+          "media_version": 1,
           "title": "memory - 8.2",
           "width_px": 2362,
           "height_px": 2362
@@ -239,6 +266,7 @@
           "detail_uid": "00464-028",
           "detail_id": "028",
           "project_filename": "memory - 8.3.jpg",
+          "media_version": 1,
           "title": "memory - 8.3",
           "width_px": 2362,
           "height_px": 2362
@@ -247,6 +275,7 @@
           "detail_uid": "00464-029",
           "detail_id": "029",
           "project_filename": "memory - 9.1.jpg",
+          "media_version": 1,
           "title": "memory - 9.1",
           "width_px": 2362,
           "height_px": 2362
@@ -255,6 +284,7 @@
           "detail_uid": "00464-030",
           "detail_id": "030",
           "project_filename": "memory - 9.2.jpg",
+          "media_version": 1,
           "title": "memory - 9.2",
           "width_px": 2362,
           "height_px": 2362
@@ -263,6 +293,7 @@
           "detail_uid": "00464-031",
           "detail_id": "031",
           "project_filename": "memory - 9.3.jpg",
+          "media_version": 1,
           "title": "memory - 9.3",
           "width_px": 2362,
           "height_px": 2362
@@ -271,6 +302,7 @@
           "detail_uid": "00464-032",
           "detail_id": "032",
           "project_filename": "memory - 10.1.jpg",
+          "media_version": 1,
           "title": "memory - 10.1",
           "width_px": 2362,
           "height_px": 2362
@@ -279,6 +311,7 @@
           "detail_uid": "00464-033",
           "detail_id": "033",
           "project_filename": "memory - 10.2.jpg",
+          "media_version": 1,
           "title": "memory - 10.2",
           "width_px": 2362,
           "height_px": 2362
@@ -287,6 +320,7 @@
           "detail_uid": "00464-034",
           "detail_id": "034",
           "project_filename": "memory - 10.3.jpg",
+          "media_version": 1,
           "title": "memory - 10.3",
           "width_px": 2362,
           "height_px": 2362
@@ -295,6 +329,7 @@
           "detail_uid": "00464-035",
           "detail_id": "035",
           "project_filename": "memory - 11.1.jpg",
+          "media_version": 1,
           "title": "memory - 11.1",
           "width_px": 2362,
           "height_px": 2362
@@ -303,6 +338,7 @@
           "detail_uid": "00464-036",
           "detail_id": "036",
           "project_filename": "memory - 11.2.jpg",
+          "media_version": 1,
           "title": "memory - 11.2",
           "width_px": 2362,
           "height_px": 2362
@@ -311,6 +347,7 @@
           "detail_uid": "00464-037",
           "detail_id": "037",
           "project_filename": "memory - 11.3.jpg",
+          "media_version": 1,
           "title": "memory - 11.3",
           "width_px": 2362,
           "height_px": 2362
@@ -319,6 +356,7 @@
           "detail_uid": "00464-038",
           "detail_id": "038",
           "project_filename": "memory - 12.1.jpg",
+          "media_version": 1,
           "title": "memory - 12.1",
           "width_px": 2362,
           "height_px": 2362
@@ -327,6 +365,7 @@
           "detail_uid": "00464-039",
           "detail_id": "039",
           "project_filename": "memory - 12.2.jpg",
+          "media_version": 1,
           "title": "memory - 12.2",
           "width_px": 2362,
           "height_px": 2362
@@ -335,6 +374,7 @@
           "detail_uid": "00464-040",
           "detail_id": "040",
           "project_filename": "memory - 12.3.jpg",
+          "media_version": 1,
           "title": "memory - 12.3",
           "width_px": 2362,
           "height_px": 2362
@@ -343,6 +383,7 @@
           "detail_uid": "00464-041",
           "detail_id": "041",
           "project_filename": "memory - 13.1.jpg",
+          "media_version": 1,
           "title": "memory - 13.1",
           "width_px": 2362,
           "height_px": 2362
@@ -351,6 +392,7 @@
           "detail_uid": "00464-042",
           "detail_id": "042",
           "project_filename": "memory - 13.2.jpg",
+          "media_version": 1,
           "title": "memory - 13.2",
           "width_px": 2362,
           "height_px": 2362
@@ -359,6 +401,7 @@
           "detail_uid": "00464-043",
           "detail_id": "043",
           "project_filename": "memory - 13.3.jpg",
+          "media_version": 1,
           "title": "memory - 13.3",
           "width_px": 2362,
           "height_px": 2362
@@ -367,6 +410,7 @@
           "detail_uid": "00464-044",
           "detail_id": "044",
           "project_filename": "memory - 14.1.jpg",
+          "media_version": 1,
           "title": "memory - 14.1",
           "width_px": 2362,
           "height_px": 2362
@@ -375,6 +419,7 @@
           "detail_uid": "00464-045",
           "detail_id": "045",
           "project_filename": "memory - 14.2.jpg",
+          "media_version": 1,
           "title": "memory - 14.2",
           "width_px": 2362,
           "height_px": 2362
@@ -383,6 +428,7 @@
           "detail_uid": "00464-046",
           "detail_id": "046",
           "project_filename": "memory - 14.3.jpg",
+          "media_version": 1,
           "title": "memory - 14.3",
           "width_px": 2362,
           "height_px": 2362
@@ -391,6 +437,7 @@
           "detail_uid": "00464-047",
           "detail_id": "047",
           "project_filename": "memory - 15.1.jpg",
+          "media_version": 1,
           "title": "memory - 15.1",
           "width_px": 2362,
           "height_px": 2362
@@ -399,6 +446,7 @@
           "detail_uid": "00464-048",
           "detail_id": "048",
           "project_filename": "memory - 15.2.jpg",
+          "media_version": 1,
           "title": "memory - 15.2",
           "width_px": 2362,
           "height_px": 2362
@@ -407,6 +455,7 @@
           "detail_uid": "00464-049",
           "detail_id": "049",
           "project_filename": "memory - 15.3.jpg",
+          "media_version": 1,
           "title": "memory - 15.3",
           "width_px": 2362,
           "height_px": 2362
@@ -415,6 +464,7 @@
           "detail_uid": "00464-050",
           "detail_id": "050",
           "project_filename": "memory - 16.1.jpg",
+          "media_version": 1,
           "title": "memory - 16.1",
           "width_px": 2362,
           "height_px": 2362
@@ -423,6 +473,7 @@
           "detail_uid": "00464-051",
           "detail_id": "051",
           "project_filename": "memory - 16.2.jpg",
+          "media_version": 1,
           "title": "memory - 16.2",
           "width_px": 2362,
           "height_px": 2362
@@ -431,6 +482,7 @@
           "detail_uid": "00464-052",
           "detail_id": "052",
           "project_filename": "memory - 16.3.jpg",
+          "media_version": 1,
           "title": "memory - 16.3",
           "width_px": 2362,
           "height_px": 2362
@@ -446,6 +498,7 @@
           "detail_uid": "00464-053",
           "detail_id": "053",
           "project_filename": "memories 1-6.jpg",
+          "media_version": 1,
           "title": "memories 1-6",
           "width_px": 5906,
           "height_px": 5906
@@ -454,6 +507,7 @@
           "detail_uid": "00464-054",
           "detail_id": "054",
           "project_filename": "memories 7-12.jpg",
+          "media_version": 1,
           "title": "memories 7-12",
           "width_px": 5906,
           "height_px": 5906
@@ -462,6 +516,7 @@
           "detail_uid": "00464-055",
           "detail_id": "055",
           "project_filename": "memories 13-18.jpg",
+          "media_version": 1,
           "title": "memories 13-18",
           "width_px": 5906,
           "height_px": 5906
@@ -470,6 +525,7 @@
           "detail_uid": "00464-056",
           "detail_id": "056",
           "project_filename": "memories 19-24.jpg",
+          "media_version": 1,
           "title": "memories 19-24",
           "width_px": 5906,
           "height_px": 5906
@@ -478,6 +534,7 @@
           "detail_uid": "00464-057",
           "detail_id": "057",
           "project_filename": "memories 25-30.jpg",
+          "media_version": 1,
           "title": "memories 25-30",
           "width_px": 5906,
           "height_px": 5906
@@ -486,6 +543,7 @@
           "detail_uid": "00464-058",
           "detail_id": "058",
           "project_filename": "memories 31-36.jpg",
+          "media_version": 1,
           "title": "memories 31-36",
           "width_px": 5906,
           "height_px": 5906
@@ -494,6 +552,7 @@
           "detail_uid": "00464-059",
           "detail_id": "059",
           "project_filename": "memories 37-42.jpg",
+          "media_version": 1,
           "title": "memories 37-42",
           "width_px": 5906,
           "height_px": 5906
@@ -502,6 +561,7 @@
           "detail_uid": "00464-060",
           "detail_id": "060",
           "project_filename": "memories 43-48.jpg",
+          "media_version": 1,
           "title": "memories 43-48",
           "width_px": 5906,
           "height_px": 5906

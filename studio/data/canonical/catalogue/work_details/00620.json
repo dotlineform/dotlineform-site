@@ -16,6 +16,7 @@
           "detail_uid": "00620-001",
           "detail_id": "001",
           "project_filename": "harmony 3.1.jpg",
+          "media_version": 1,
           "title": "harmony 3.1",
           "width_px": 3543,
           "height_px": 3543
@@ -24,6 +25,7 @@
           "detail_uid": "00620-002",
           "detail_id": "002",
           "project_filename": "harmony 3.2.jpg",
+          "media_version": 1,
           "title": "harmony 3.2",
           "width_px": 3543,
           "height_px": 3543
@@ -32,6 +34,7 @@
           "detail_uid": "00620-003",
           "detail_id": "003",
           "project_filename": "harmony 3.3.jpg",
+          "media_version": 1,
           "title": "harmony 3.3",
           "width_px": 3543,
           "height_px": 3543
@@ -40,6 +43,7 @@
           "detail_uid": "00620-004",
           "detail_id": "004",
           "project_filename": "harmony 3.4.jpg",
+          "media_version": 1,
           "title": "harmony 3.4",
           "width_px": 3543,
           "height_px": 3543
@@ -48,6 +52,7 @@
           "detail_uid": "00620-005",
           "detail_id": "005",
           "project_filename": "harmony 3.5.jpg",
+          "media_version": 1,
           "title": "harmony 3.5",
           "width_px": 3543,
           "height_px": 3543
@@ -56,6 +61,7 @@
           "detail_uid": "00620-006",
           "detail_id": "006",
           "project_filename": "harmony 3.6.jpg",
+          "media_version": 1,
           "title": "harmony 3.6",
           "width_px": 3543,
           "height_px": 3543
@@ -64,6 +70,7 @@
           "detail_uid": "00620-007",
           "detail_id": "007",
           "project_filename": "harmony 3.7.jpg",
+          "media_version": 1,
           "title": "harmony 3.7",
           "width_px": 3543,
           "height_px": 3543
@@ -72,6 +79,7 @@
           "detail_uid": "00620-008",
           "detail_id": "008",
           "project_filename": "harmony 3.8.jpg",
+          "media_version": 1,
           "title": "harmony 3.8",
           "width_px": 3543,
           "height_px": 3543
@@ -80,6 +88,7 @@
           "detail_uid": "00620-009",
           "detail_id": "009",
           "project_filename": "harmony 3.9.jpg",
+          "media_version": 1,
           "title": "harmony 3.9",
           "width_px": 3543,
           "height_px": 3543
@@ -88,6 +97,7 @@
           "detail_uid": "00620-010",
           "detail_id": "010",
           "project_filename": "harmony 3.10.jpg",
+          "media_version": 1,
           "title": "harmony 3.10",
           "width_px": 3543,
           "height_px": 3543
@@ -96,6 +106,7 @@
           "detail_uid": "00620-011",
           "detail_id": "011",
           "project_filename": "harmony 3.11.jpg",
+          "media_version": 1,
           "title": "harmony 3.11",
           "width_px": 3543,
           "height_px": 3543
@@ -104,6 +115,7 @@
           "detail_uid": "00620-012",
           "detail_id": "012",
           "project_filename": "harmony 3.12.jpg",
+          "media_version": 1,
           "title": "harmony 3.12",
           "width_px": 3543,
           "height_px": 3543
@@ -112,6 +124,7 @@
           "detail_uid": "00620-013",
           "detail_id": "013",
           "project_filename": "harmony 3.13.jpg",
+          "media_version": 1,
           "title": "harmony 3.13",
           "width_px": 3543,
           "height_px": 3543

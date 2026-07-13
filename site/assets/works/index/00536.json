@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8018780c35bed587374d14768a42cf50",
-    "generated_at_utc": "2026-06-16T19:13:01Z",
+    "version": "blake2b-e3dfaec4c4bcc00a2f9323c23de52912",
+    "generated_at_utc": "2026-07-13T16:18:53Z",
     "work_id": "00536",
     "count": 1
   },
@@ -19,7 +19,8 @@
     "height_cm": 38.8,
     "width_cm": 25.4,
     "width_px": 3234,
-    "height_px": 4940
+    "height_px": 4940,
+    "media_version": 1
   },
   "sections": [
     {
@@ -32,7 +33,8 @@
           "detail_uid": "00536-001",
           "title": "model 2 - 001",
           "width_px": 3031,
-          "height_px": 4629
+          "height_px": 4629,
+          "media_version": 1
         }
       ]
     }

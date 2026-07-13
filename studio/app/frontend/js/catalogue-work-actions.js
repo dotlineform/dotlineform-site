@@ -444,11 +444,13 @@ export async function saveCurrentWork(state, context) {
       ]).filter((seriesId) => !nextSeriesIds.includes(seriesId));
     }
     const lookup = await context.loadWorkLookupRecord(state.currentWorkId);
+    const stagedPreviewVersion = state.mediaPreviewVersion;
     setLoadedWorkRecord(state, state.currentWorkId, record, context.workRouteStateOptions({
       recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
       keepResult: true,
       lookup
     }));
+    state.mediaPreviewVersion = stagedPreviewVersion;
     await refreshBuildPreview(state, context);
     applyActionPresentation(context, state, projectSingleWorkSavePresentation(state, context, response, outcome));
   } catch (error) {
