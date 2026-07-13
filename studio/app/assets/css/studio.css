@@ -1373,10 +1373,9 @@ button.studioList__cellLink {
   align-items: center;
   min-width: 10rem;
   min-height: 2.2rem;
-  overflow: hidden;
   color: var(--muted, var(--studio-muted-body));
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .catalogueEditorMessage:empty {

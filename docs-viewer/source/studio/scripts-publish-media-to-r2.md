@@ -88,7 +88,7 @@ There is no separate media-publish button in the Local Studio Work editor.
 After its normal source workflow completes, Work `Save` automatically enters media publishing when the saved published Work is ready and the route is otherwise eligible; otherwise the composed workflow exits without changing the Save result.
 Once an eligible media step begins, cancellation, a blocked preview, or a failed R2 attempt leaves media publishing pending and keeps Save enabled.
 The next Save takes the no-change source path and retries the media workflow; a successful publish or record/mode change clears the pending state.
-Studio first calls the write-free `/studio/api/catalogue/media-publish-preview`, shows mandatory confirmation, and then calls `/studio/api/catalogue/media-publish-apply`.
+Studio first calls the write-free `/studio/api/catalogue/media-publish-preview`, shows a terse mandatory `Publish R2 media?` or `Replace R2 media?` confirmation, and then calls `/studio/api/catalogue/media-publish-apply`.
 Replacement of changed remote objects is labelled separately and requires an explicit overwrite acknowledgement.
 Apply repeats the comparison and must match the preview's opaque fingerprint, so changed local bytes or remote state stop the action before upload.
 

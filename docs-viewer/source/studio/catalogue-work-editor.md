@@ -255,7 +255,8 @@ The Local Studio service reads `.env.local`, checks the complete `800`, `1200`, 
 Local paths, remote object keys, checksums, credentials, and signed requests stay server-side.
 
 Preview never writes and returns an opaque fingerprint covering the exact local bytes and remote comparison state without exposing either.
-Every apply requires a confirmation modal; changed remote objects are labelled as replacement and require the explicit `Replace media` action.
+Every apply requires a deliberately terse `Publish R2 media?` or `Replace R2 media?` confirmation; changed remote objects require the explicit `Replace media` action.
+The preview service still validates the complete required local variant set and blocks before confirmation when any required width is missing or otherwise unavailable.
 The subsequent `POST /studio/api/catalogue/media-publish-apply` repeats the version guard and comparison, rejects fingerprint drift before any PUT, requires `confirm_overwrite: true` for forced replacement, and delegates to the same media-owned publisher used by the CLI.
 
 After a complete upload, the service promotes the canonical version exactly once when bytes changed, rebuilds focused public Work JSON, and records `publish-work-media` in Studio Activity.

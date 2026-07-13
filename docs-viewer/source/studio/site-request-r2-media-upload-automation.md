@@ -286,7 +286,7 @@ Successful publishing, loading another record, or leaving single-record mode cle
 It uses a server-owned preview/apply flow:
 
 1. `POST /studio/api/catalogue/media-publish-preview` checks the expected confirmed media version, validates the complete local width set, and compares the variants with R2.
-2. Studio shows one mandatory confirmation summarising new, current, and replacement objects. Changed remote objects use an explicit `Replace media` confirmation.
+2. Studio shows one terse mandatory `Publish R2 media?` or `Replace R2 media?` confirmation. Changed remote objects use the explicit `Replace media` action; detailed width and version counts stay out of this routine modal.
 3. Preview returns an opaque fingerprint of the exact local/remote comparison. `POST /studio/api/catalogue/media-publish-apply` repeats that comparison and rejects local-byte or remote-state drift before any upload.
 4. Apply performs the upload through the same media-owned publisher used by the CLI. Forced replacement also requires `confirm_overwrite: true` at the service boundary.
 5. A complete result promotes or retains the confirmed canonical version, rebuilds focused public work JSON, records the action in Studio Activity, and returns the refreshed Work record.

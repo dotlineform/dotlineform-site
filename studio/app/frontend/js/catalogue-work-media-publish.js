@@ -3,7 +3,6 @@ import {
   previewCatalogueMediaPublish
 } from "./catalogue-editor-service-client.js";
 import { computeRecordHash } from "./catalogue-editor-records.js";
-import { formatCatalogueMediaPublishPreview } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import {
   extractCatalogueActionPreview,
@@ -92,17 +91,12 @@ export async function publishWorkMedia(state, context) {
     const previewFingerprint = normalizeText(preview && preview.preview_fingerprint);
     if (!previewFingerprint) throw new Error("media publish preview missing fingerprint");
 
-    const summary = formatCatalogueMediaPublishPreview(preview, {
-      text: (key, fallback, tokens) => text(state, context, key, fallback, tokens),
-      currentVersion
-    });
     state.isBuilding = false;
     context.updateEditorState();
     const confirmed = await confirmCatalogueActionModal(state, {
       title: preview.requires_force
-        ? text(state, context, "media_publish_overwrite_confirm_title", "Confirm media replacement")
-        : text(state, context, "media_publish_confirm_title", "Confirm media publish"),
-      message: summary,
+        ? text(state, context, "media_publish_overwrite_confirm_title", "Replace R2 media?")
+        : text(state, context, "media_publish_confirm_title", "Publish R2 media?"),
       primaryLabel: preview.requires_force
         ? text(state, context, "media_publish_overwrite_confirm_button", "Replace media")
         : text(state, context, "media_publish_confirm_button", "Publish media"),
