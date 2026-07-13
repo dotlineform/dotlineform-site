@@ -424,6 +424,27 @@ select.docsViewer__fieldInput--listbox{
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
 }
 
+.docsViewerScopeLifecycle__detailGrid{
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.3rem 0.75rem;
+  margin: 0;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+}
+
+.docsViewerScopeLifecycle__detailGrid dt{
+  margin: 0;
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  font-weight: 600;
+}
+
+.docsViewerScopeLifecycle__detailGrid dd{
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .docsViewerScopeLifecycle__section{
   display: grid;
   gap: 0.35rem;
@@ -438,6 +459,11 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewerScopeLifecycle__list > li{
   overflow-wrap: anywhere;
+}
+
+.docsViewerScopeLifecycle__list--plain{
+  list-style: none;
+  padding-left: 0;
 }
 
 .docsViewerScopeLifecycle__empty{

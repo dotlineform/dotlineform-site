@@ -291,7 +291,7 @@ Preview response fields:
 The preview response uses file records with `kind`, `path`, `action`, and `exists`.
 It always reports planned generated docs/search outputs.
 It reports public route files only for `public_readonly`.
-The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or local runtime data served by the local Docs Viewer service.
+The preview projects the `storage_contract` paths before save. The scope type and any published paths distinguish public static assets from local runtime data served by the local Docs Viewer service.
 
 Expected preview storage paths:
 
@@ -469,6 +469,8 @@ The management shell exposes scope lifecycle commands only when the local Docs V
 - previews the server-planned write set before enabling the save step
 - sends `confirm: true` only from the final save action
 - reports created files, changed files, build commands, and resulting URLs from the server response
+
+Scope and sub-scope lifecycle previews and results use aligned label/value rows. External storage displays its resolved root once and shows source, generated, search, and affected file paths relative to that root; repo-owned changes remain repo-relative under `Changed files (repo)`.
 
 `Delete scope` is a selected-target flow.
 The current Docs Viewer scope is only the management shell context and is not the implicit delete target.

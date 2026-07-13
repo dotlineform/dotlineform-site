@@ -115,6 +115,27 @@
         "repo_assets_path_prefix": "site/assets/docs/moments",
         "repo_assets_public_path_prefix": "/assets/docs/moments"
       }
+    },
+    {
+      "scope_id": "dlf",
+      "scope_type": "local_external",
+      "meta": "external local",
+      "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/dlf",
+      "media_path_prefix": "docs/dlf",
+      "output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/dlf",
+      "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/dlf/index.json",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "dlf",
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "allow_unresolved_parent_ids": false,
+      "import_media_storage": {
+        "storage_mode": "staging_manual",
+        "repo_assets_path_prefix": "site/assets/docs/dlf",
+        "repo_assets_public_path_prefix": "/assets/docs/dlf"
+      },
+      "external_data_root": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
     }
   ],
   "docs_viewer": {

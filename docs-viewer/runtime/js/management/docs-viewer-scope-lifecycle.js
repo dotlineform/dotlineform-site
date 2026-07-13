@@ -368,7 +368,7 @@ function renderCommands(commands) {
   return (
     '<section class="docsViewerScopeLifecycle__section">' +
       '<h3>' + escapeHtml("Build commands") + '</h3>' +
-      '<ul class="docsViewerScopeLifecycle__list">' + records.map(function (record) {
+      '<ul class="docsViewerScopeLifecycle__list docsViewerScopeLifecycle__list--plain">' + records.map(function (record) {
         var command = normalizeText(record && record.command);
         var status = normalizeText(record && record.status);
         return '<li>' + escapeHtml([command, status].filter(Boolean).join(" - ")) + '</li>';
@@ -377,70 +377,192 @@ function renderCommands(commands) {
   );
 }
 
-function renderUrls(urls) {
-  var entries = [];
-  if (urls && urls.management) entries.push(["management", urls.management]);
-  if (urls && urls.public) entries.push(["public", urls.public]);
-  if (!entries.length) return "";
-  return (
-    '<section class="docsViewerScopeLifecycle__section">' +
-      '<h3>' + escapeHtml("URLs") + '</h3>' +
-      '<dl class="docsViewerScopeLifecycle__summaryGrid">' + entries.map(function (entry) {
-        return '<div><dt>' + escapeHtml(entry[0]) + '</dt><dd>' + escapeHtml(entry[1]) + '</dd></div>';
-      }).join("") + '</dl>' +
-    '</section>'
-  );
+function renderDetailRows(rows, emptyText) {
+  var entries = Array.isArray(rows) ? rows.filter(function (entry) {
+    return Array.isArray(entry) && normalizeText(entry[0]) && normalizeText(entry[1]);
+  }) : [];
+  if (!entries.length) {
+    return '<p class="docsViewerScopeLifecycle__empty muted small">' + escapeHtml(emptyText || "None") + '</p>';
+  }
+  return '<dl class="docsViewerScopeLifecycle__detailGrid">' + entries.map(function (entry) {
+    return '<dt>' + escapeHtml(entry[0]) + ':</dt><dd>' + escapeHtml(entry[1]) + '</dd>';
+  }).join("") + '</dl>';
 }
 
-function renderStorageContract(contract) {
-  if (!contract || typeof contract !== "object") return "";
-  var rows = [];
-  var summary = normalizeText(contract.summary);
+function hasDetailRows(rows) {
+  return Array.isArray(rows) && rows.some(function (entry) {
+    return Array.isArray(entry) && normalizeText(entry[0]) && normalizeText(entry[1]);
+  });
+}
+
+function lifecyclePathRecords(payload) {
+  return [
+    payload && payload.created_files,
+    payload && payload.publish_files,
+    payload && payload.delete_files,
+    payload && payload.deleted_files,
+    payload && payload.missing_files
+  ].flatMap(function (records) {
+    return Array.isArray(records) ? records : [];
+  });
+}
+
+function lifecycleRecord(payload, kinds) {
+  var allowedKinds = new Set(Array.isArray(kinds) ? kinds : [kinds]);
+  return lifecyclePathRecords(payload).find(function (record) {
+    return allowedKinds.has(normalizeText(record && record.kind));
+  }) || null;
+}
+
+function externalLifecycleRoot(payload) {
+  var contract = payload && payload.storage_contract && typeof payload.storage_contract === "object"
+    ? payload.storage_contract
+    : {};
   var sourceRoot = normalizeText(contract.source_root);
-  var docsOutput = normalizeText(contract.docs_output);
-  var searchOutput = normalizeText(contract.search_output);
-  var publicAssets = contract.public_static_assets === true ? "yes" : "no";
-  rows.push(["public static assets", publicAssets]);
-  if (sourceRoot) rows.push(["source root", sourceRoot]);
-  if (docsOutput) rows.push(["docs output", docsOutput]);
-  if (searchOutput) rows.push(["search output", searchOutput]);
-  return (
-    '<section class="docsViewerScopeLifecycle__section">' +
-      '<h3>' + escapeHtml("Storage") + '</h3>' +
-      (summary ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(summary) + '</p>' : "") +
-      '<dl class="docsViewerScopeLifecycle__summaryGrid">' + rows.map(function (entry) {
-        return '<div><dt>' + escapeHtml(entry[0]) + '</dt><dd>' + escapeHtml(entry[1]) + '</dd></div>';
-      }).join("") + '</dl>' +
-    '</section>'
-  );
+  var sourceRecord = lifecycleRecord(payload, ["source_root", "sub_scope_source_root"]);
+  var sourcePath = normalizeText(sourceRecord && sourceRecord.path);
+  if (normalizeText(sourceRecord && sourceRecord.location) !== "external" || !sourcePath) return "";
+  var sourceAnchor = sourceRoot.indexOf("/source/");
+  var relativeSource = sourceAnchor >= 0
+    ? sourceRoot.slice(sourceAnchor + 1)
+    : [
+        "source",
+        normalizeText(payload && payload.parent_scope) || normalizeText(payload && payload.scope_id),
+        normalizeText(payload && payload.sub_scope)
+      ].filter(Boolean).join("/");
+  var suffix = "/" + relativeSource;
+  return sourcePath.endsWith(suffix) ? sourcePath.slice(0, -suffix.length) : "";
 }
 
-function renderPreviewHtml(payload, options) {
-  var settings = options || {};
-  var title = normalizeText(payload && payload.title) || normalizeText(payload && payload.scope_id);
-  var summary = normalizeText(payload && payload.summary_text);
+function lifecycleRelativePath(value, root) {
+  var path = normalizeText(value);
+  if (!path) return "";
+  if (root && path.startsWith(root + "/")) return path.slice(root.length + 1);
+  if (root) {
+    var anchors = ["/source/", "/generated/"];
+    var anchor = anchors.find(function (candidate) {
+      return path.includes(candidate);
+    });
+    if (anchor) return path.slice(path.indexOf(anchor) + 1);
+  }
+  return path;
+}
+
+function lifecycleFileRows(payload, records) {
+  var labels = {
+    default_source_doc: "default doc",
+    generated_docs_index_tree: "index",
+    generated_docs_recently_added: "recently added",
+    generated_search_index: "search index",
+    published_docs_index_tree: "index",
+    published_docs_recently_added: "recently added",
+    published_search_index: "search index",
+    route_file: "public route",
+    scope_config: "scope config",
+    scope_manifest: "scope manifest",
+    route_config: "route config",
+    public_route_config: "public route config"
+  };
+  var omittedKinds = new Set([
+    "source_root",
+    "generated_docs_root",
+    "generated_docs_payload_root",
+    "published_docs_root",
+    "published_docs_payload_root",
+    "sub_scope_source_root",
+    "sub_scope_generated_docs_root",
+    "sub_scope_generated_docs_payload_root",
+    "sub_scope_published_docs_root",
+    "sub_scope_published_docs_payload_root"
+  ]);
+  var root = externalLifecycleRoot(payload);
+  return (Array.isArray(records) ? records : []).filter(function (record) {
+    return !omittedKinds.has(normalizeText(record && record.kind));
+  }).map(function (record) {
+    var kind = normalizeText(record && record.kind);
+    var label = labels[kind] || kind.replace(/_/g, " ");
+    return [label, lifecycleRelativePath(record && record.path, root)];
+  });
+}
+
+function lifecycleTypeLabel(payload, root) {
+  var publishingMode = normalizeText(payload && payload.publishing_mode);
+  if (publishingMode) return modeLabel(publishingMode);
+  if (root) return SCOPE_LIFECYCLE_TEXT.scopeLocalExternalMode;
+  var scopeType = normalizeText(payload && payload.scope_type);
+  if (scopeType === "public") return SCOPE_LIFECYCLE_TEXT.scopePublicReadonlyMode;
+  if (scopeType === "local") return SCOPE_LIFECYCLE_TEXT.scopeLocalCommittedMode;
+  return scopeType;
+}
+
+function lifecycleOverviewRows(payload, root) {
+  var subScope = normalizeText(payload && payload.sub_scope);
+  var rows = subScope
+    ? [
+        ["parent scope", payload && payload.parent_scope],
+        ["sub-scope", subScope]
+      ]
+    : [["scope", payload && payload.scope_id]];
+  rows.push(["title", payload && payload.title]);
+  rows.push(["url", payload && payload.urls && payload.urls.management]);
+  if (!subScope) rows.push(["type", lifecycleTypeLabel(payload, root)]);
+  return rows;
+}
+
+function lifecycleStorageRows(payload, root) {
+  var contract = payload && payload.storage_contract && typeof payload.storage_contract === "object"
+    ? payload.storage_contract
+    : {};
+  var sourceRecord = lifecycleRecord(payload, ["source_root", "sub_scope_source_root"]);
+  var generatedRecord = lifecycleRecord(payload, ["generated_docs_root", "sub_scope_generated_docs_root"]);
+  var searchRecord = lifecycleRecord(payload, "generated_search_index");
+  var publishedRecord = lifecycleRecord(payload, ["published_docs_root", "sub_scope_published_docs_root"]);
+  var publishedSearchRecord = lifecycleRecord(payload, "published_search_index");
+  var docsOutput = normalizeText(contract.docs_output);
+  var publishOutput = normalizeText(contract.publish_output);
+  var searchOutput = normalizeText(contract.search_output);
+  var publishSearchOutput = normalizeText(contract.publish_search_output);
+  return [
+    ["root", root],
+    ["source", lifecycleRelativePath(contract.source_root || (sourceRecord && sourceRecord.path), root)],
+    ["generated", lifecycleRelativePath(docsOutput || (generatedRecord && generatedRecord.path), root)],
+    ["search", lifecycleRelativePath(searchOutput || (searchRecord && searchRecord.path), root)],
+    ["published", publishOutput && publishOutput !== docsOutput
+      ? lifecycleRelativePath(publishOutput, root)
+      : lifecycleRelativePath(publishedRecord && publishedRecord.path, root)],
+    ["public search", publishSearchOutput && publishSearchOutput !== searchOutput
+      ? lifecycleRelativePath(publishSearchOutput, root)
+      : lifecycleRelativePath(publishedSearchRecord && publishedSearchRecord.path, root)]
+  ];
+}
+
+function renderLifecycleFileSection(heading, payload, records) {
+  var rows = lifecycleFileRows(payload, records);
+  if (!rows.length) return "";
+  return '<section class="docsViewerScopeLifecycle__section"><h3>' + escapeHtml(heading) + '</h3>' +
+    renderDetailRows(rows, "") + '</section>';
+}
+
+function renderPreviewHtml(payload) {
+  var root = externalLifecycleRoot(payload);
+  var storageRows = lifecycleStorageRows(payload, root);
   var blockers = Array.isArray(payload && payload.blockers) ? payload.blockers : [];
-  var summaryRows = [];
-  if (payload && payload.parent_scope) summaryRows.push(["parent scope", payload.parent_scope]);
-  if (payload && payload.sub_scope) summaryRows.push(["sub-scope", payload.sub_scope]);
-  if (payload && !payload.parent_scope && payload.scope_id) summaryRows.push(["scope", payload.scope_id]);
-  if (title) summaryRows.push(["title", title]);
+  var warnings = Array.isArray(payload && payload.warnings) ? payload.warnings : [];
+  var deletedFiles = Array.isArray(payload && payload.deleted_files) && payload.deleted_files.length
+    ? payload.deleted_files
+    : payload && payload.delete_files;
   return (
     '<div class="docsViewerScopeLifecycle docsViewerScopeLifecycle--preview">' +
-      (summary ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(summary) + '</p>' : "") +
-      (summaryRows.length ? '<dl class="docsViewerScopeLifecycle__summaryGrid">' + summaryRows.map(function (entry) {
-        return '<div><dt>' + escapeHtml(entry[0]) + '</dt><dd>' + escapeHtml(entry[1]) + '</dd></div>';
-      }).join("") + '</dl>' : "") +
-      renderStorageContract(payload && payload.storage_contract) +
+      renderDetailRows(lifecycleOverviewRows(payload, root), "") +
+      (hasDetailRows(storageRows) ? renderDetailRows(storageRows, "") : "") +
       (blockers.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Blockers</h3>' + renderList(blockers, "") + '</section>' : "") +
-      (Array.isArray(payload && payload.warnings) && payload.warnings.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Warnings</h3>' + renderList(payload.warnings, "") + '</section>' : "") +
-      (Array.isArray(payload && payload.created_files) ? '<section class="docsViewerScopeLifecycle__section"><h3>' + escapeHtml(settings.createdHeading || "Created files") + '</h3>' + renderList(payload && payload.created_files, "No files will be created.") + '</section>' : "") +
-      '<section class="docsViewerScopeLifecycle__section"><h3>' + escapeHtml(settings.changedHeading || "Changed files") + '</h3>' + renderList(payload && payload.changed_files, "No files will be changed.") + '</section>' +
-      (Array.isArray(payload && payload.deleted_files) && payload.deleted_files.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Deleted files</h3>' + renderList(payload.deleted_files, "") + '</section>' : "") +
-      (Array.isArray(payload && payload.delete_files) && payload.delete_files.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Deleted files</h3>' + renderList(payload.delete_files, "") + '</section>' : "") +
-      (Array.isArray(payload && payload.missing_files) && payload.missing_files.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Missing files</h3>' + renderList(payload.missing_files, "") + '</section>' : "") +
+      (warnings.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Warnings</h3>' + renderList(warnings, "") + '</section>' : "") +
+      renderLifecycleFileSection("Created files", payload, payload && payload.created_files) +
+      renderLifecycleFileSection("Published files", payload, payload && payload.publish_files) +
+      renderLifecycleFileSection("Changed files (repo)", payload, payload && payload.changed_files) +
+      renderLifecycleFileSection("Deleted files", payload, deletedFiles) +
+      renderLifecycleFileSection("Missing files", payload, payload && payload.missing_files) +
       renderCommands(payload && payload.build_commands) +
-      renderUrls(payload && payload.urls) +
     '</div>'
   );
 }
@@ -466,7 +588,7 @@ async function openPreviewModal(options) {
     root: options.root,
     title: options.title,
     size: "wide",
-    bodyHtml: renderPreviewHtml(options.payload, options),
+    bodyHtml: renderPreviewHtml(options.payload),
     actions: [
       { role: "modal-primary", label: options.primaryLabel },
       { role: "modal-cancel", label: options.cancelLabel }
@@ -480,7 +602,7 @@ async function openResultModal(options) {
     root: options.root,
     title: options.title,
     size: "wide",
-    bodyHtml: renderPreviewHtml(options.payload, options),
+    bodyHtml: renderPreviewHtml(options.payload),
     actions: [
       { role: "modal-primary", label: options.primaryLabel }
     ]
@@ -724,8 +846,6 @@ export async function openDeleteScopeFlow(options = {}) {
     root: options.root,
     title: SCOPE_LIFECYCLE_TEXT.scopeDeletePreviewTitle,
     payload: preview,
-    createdHeading: "Created files",
-    changedHeading: "Changed files",
     primaryLabel: SCOPE_LIFECYCLE_TEXT.scopeDeleteButton,
     cancelLabel: SCOPE_LIFECYCLE_TEXT.cancelButton
   });
@@ -822,7 +942,6 @@ export async function openDeleteSubScopeFlow(options = {}) {
     root: options.root,
     title: SCOPE_LIFECYCLE_TEXT.subScopeDeletePreviewTitle,
     payload: preview,
-    changedHeading: "Changed files",
     primaryLabel: SCOPE_LIFECYCLE_TEXT.scopeDeleteButton,
     cancelLabel: SCOPE_LIFECYCLE_TEXT.cancelButton
   });
