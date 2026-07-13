@@ -187,6 +187,12 @@ html[data-theme="dark"] body.docs-viewer-service{
   padding: 0.95rem;
 }
 
+.docsViewer__modalCard--wide{
+  --docs-viewer-modal-width: 64rem;
+  margin-top: 2vh;
+  max-height: calc(100vh - 2rem - 2vh);
+}
+
 .docsViewer__modalCard--document{
   display: flex;
   flex-direction: column;

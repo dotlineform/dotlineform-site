@@ -195,7 +195,7 @@ function wireCreateForm(api) {
   var routeInput = host.querySelector('[data-role="scope-public-route-path"]');
 
   function expectedTitle() {
-    return humanTitleFromSlug(scopeInput && scopeInput.value);
+    return slugFromScopeInput(scopeInput && scopeInput.value);
   }
 
   function expectedSourceRoot() {
