@@ -25,6 +25,7 @@ from docs_scope_config import (
     safe_relative_path,
     safe_scope_data_path,
 )
+from docs_scope_external_validation import external_scope_id_sync_blocker
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
     LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -175,6 +176,10 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     publishing_mode = normalize_publishing_mode(body.get("publishing_mode"))
     default_doc_id = normalize_doc_id(body.get("default_doc_id"))
     external_data_root = resolve_external_data_root() if publishing_mode == LOCAL_EXTERNAL_MODE else None
+    if external_data_root is not None:
+        sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
+        if sync_blocker:
+            raise ValueError(sync_blocker)
     source_root = (
         planned_external_source_root(scope_id, external_data_root)
         if external_data_root is not None

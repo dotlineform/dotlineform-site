@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-67df0376a3ef046f457d8db8ec0d8fc2",
-    "generated_at_utc": "2026-07-13T22:21:33Z",
+    "version": "blake2b-b5119e1e9585dfd9ce1aa240718059b1",
+    "generated_at_utc": "2026-07-13T23:05:53Z",
     "count": 238
   },
   "entries": [
@@ -2675,10 +2675,10 @@
       "kind": "doc",
       "title": "Scope Lifecycle Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-14",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-13 • Endpoint Overview",
+      "display_meta": "2026-07-14 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-scope-lifecycle",
         "scripts",
@@ -2691,12 +2691,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-07-13 2026 07 13"
+      "search_text": "scripts-docs-management-endpoints-scope-lifecycle scripts docs management endpoints scope lifecycle scope lifecycle endpoints endpoint overview endpoint overview 2026-07-14 2026 07 14"
     },
     {
       "id": "scripts-docs-management-endpoints-source-config",

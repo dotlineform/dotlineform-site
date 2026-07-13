@@ -103,20 +103,20 @@
       }
     },
     {
-      "scope_id": "dlf",
+      "scope_id": "notes",
       "scope_type": "local_external",
       "meta": "external local",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "tmp",
-      "media_path_prefix": "docs/dlf",
-      "index_tree_url": "/docs/generated/index-tree?scope=dlf",
-      "recently_added_url": "/docs/generated/recently-added?scope=dlf",
-      "search_index_url": "/docs/generated/search?scope=dlf",
+      "media_path_prefix": "docs/notes",
+      "index_tree_url": "/docs/generated/index-tree?scope=notes",
+      "recently_added_url": "/docs/generated/recently-added?scope=notes",
+      "search_index_url": "/docs/generated/search?scope=notes",
       "search": {
         "domain": "docs_viewer",
-        "schema": "search_index_dlf_v1",
-        "index_url": "/docs/generated/search?scope=dlf",
+        "schema": "search_index_notes_v1",
+        "index_url": "/docs/generated/search?scope=notes",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",

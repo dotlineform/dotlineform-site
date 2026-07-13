@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-endpoints-scope-lifecycle
 title: Scope Lifecycle Endpoints
 added_date: 2026-06-07
-last_updated: 2026-07-13
+last_updated: 2026-07-14
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Scope Lifecycle Endpoints
@@ -37,6 +37,7 @@ Expected data:
 Actions:
 
 - validates the new scope id, title, default doc id, publishing mode, source root, and generated output paths
+- rejects the scope id `tmp` for `local_external` workspaces stored in iCloud Drive because iCloud excludes that folder name from sync
 - validates the public route path for `public_readonly`
 - checks for collisions with existing scopes and files
 - reports planned created files, changed files, build commands, and management URL
@@ -89,6 +90,7 @@ Expected data:
 Actions:
 
 - allows only lifecycle-owned `local_external` scopes
+- rejects the target scope id `tmp` when the external workspace is stored in iCloud Drive
 - validates that the new scope id and all derived external target roots are unused
 - validates the existing external source and generated roots against the lifecycle-owned path contract
 - reports the external root moves, config/manifest changes, rebuild commands, and resulting management URL

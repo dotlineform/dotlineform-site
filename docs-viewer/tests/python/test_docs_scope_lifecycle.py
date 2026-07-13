@@ -92,6 +92,45 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
 
+def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None:
+    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            projects_root = (
+                repo_root
+                / "icloud-fixture"
+                / "Library"
+                / "Mobile Documents"
+                / "com~apple~CloudDocs"
+                / "dotlineform"
+            )
+            (projects_root / "docs-viewer").mkdir(parents=True)
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            write_docs_scope_config(repo_root)
+
+            try:
+                docs_management_service.docs_scope_create.plan_create_scope_preview(
+                    repo_root,
+                    {
+                        "scope_id": "tmp",
+                        "title": "Temporary",
+                        "default_doc_id": "tmp",
+                        "publishing_mode": "local_external",
+                    },
+                )
+            except ValueError as exc:
+                error = str(exc)
+            else:
+                raise AssertionError("iCloud external scope creation should reject the tmp scope id")
+    finally:
+        if original_projects_base is None:
+            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+
+    assert "iCloud excludes folders named tmp from sync" in error
+
 def test_sub_scope_create_apply_updates_parent_config_and_creates_nested_roots() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -416,6 +455,48 @@ def test_scope_rename_preview_blocks_system_scopes() -> None:
     assert payload["allowed"] is False
     assert payload["move_paths"] == []
     assert "only user-created external-local scopes" in payload["blockers"][0]
+
+def test_scope_rename_preview_blocks_tmp_for_icloud_external_workspace() -> None:
+    original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            projects_root = (
+                repo_root
+                / "icloud-fixture"
+                / "Library"
+                / "Mobile Documents"
+                / "com~apple~CloudDocs"
+                / "dotlineform"
+            )
+            (projects_root / "docs-viewer").mkdir(parents=True)
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
+            write_docs_scope_config(repo_root)
+            docs_management_service.docs_scope_create.apply_create_scope(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "local_external",
+                    "confirm": True,
+                },
+                dry_run=False,
+                rebuild_scope_outputs=lambda *_args, **_kwargs: {"ok": True},
+            )
+
+            payload = docs_management_service.docs_scope_rename.plan_rename_scope_preview(
+                repo_root,
+                {"scope_id": "research", "new_scope_id": "tmp"},
+            )
+    finally:
+        if original_projects_base is None:
+            os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
+        else:
+            os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = original_projects_base
+
+    assert payload["allowed"] is False
+    assert any("iCloud excludes folders named tmp from sync" in blocker for blocker in payload["blockers"])
 
 def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids() -> None:
     calls: list[tuple[Path, str, dict[str, object]]] = []

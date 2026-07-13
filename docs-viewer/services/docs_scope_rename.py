@@ -21,6 +21,7 @@ from docs_scope_config import (
     path_label,
     resolve_external_data_root,
 )
+from docs_scope_external_validation import external_scope_id_sync_blocker
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
     LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -140,6 +141,9 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     new_roots: dict[str, Path] = {}
     if config is not None and config.scope_type == LOCAL_EXTERNAL_SCOPE_TYPE:
         external_root = resolve_external_data_root()
+        sync_blocker = external_scope_id_sync_blocker(new_scope_id, external_root)
+        if sync_blocker:
+            blockers.append(sync_blocker)
         old_roots = external_scope_roots(external_root, old_scope_id)
         new_roots = external_scope_roots(external_root, new_scope_id)
         configured_paths = {

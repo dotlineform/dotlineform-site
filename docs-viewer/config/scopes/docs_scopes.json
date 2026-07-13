@@ -91,13 +91,13 @@
       }
     },
     {
-      "scope_id": "dlf",
+      "scope_id": "notes",
       "scope_type": "local_external",
       "meta": "external local",
-      "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/dlf",
-      "media_path_prefix": "docs/dlf",
-      "output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/dlf",
-      "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/dlf/index.json",
+      "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes",
+      "media_path_prefix": "docs/notes",
+      "output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/notes",
+      "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/notes/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "tmp",
