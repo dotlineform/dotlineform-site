@@ -22,6 +22,7 @@ Status:
 - Work `Save` continues into R2 preview/confirmation when media publishing is eligible and remains enabled for a pending retry after cancellation or failure
 - new Work-detail sections publish all newly created detail primary sets automatically; replacement of an existing individual detail remains CLI-only
 - confirmed section and Work deletes clean exact R2 primary variants after the canonical/local delete, with manual-attention warnings instead of rollback or retry state
+- the Docs Viewer media follow-up now has a scope-aware storage contract; implementation remains future work
 
 ## Summary
 
@@ -227,17 +228,83 @@ Catalogue thumbnails are committed under `site/assets/...` and served separately
 The live thumbnail response was observed with `Cache-Control: max-age=600`, so an overwritten thumbnail may remain stale for about ten minutes after the regenerated file is committed and deployed.
 That short delay is acceptable: thumbnails remain unversioned, and the version field does not need to be copied into aggregate indexes solely for thumbnail cache busting.
 
-## Later Use Case: Docs Assets
+## Docs Viewer Media Follow-Up
 
-The later docs adapter should upload docs-owned media only after the docs import media model is implemented.
+Docs Viewer should use one scope-aware media policy rather than one physical storage location for every scope.
+The storage labels describe application publication behavior, not a guarantee that bytes never exist in third-party infrastructure: the repository is public, and `$DOTLINEFORM_PROJECTS_BASE_DIR` may itself be synchronized by iCloud or another filesystem provider. There is currently no sensitive Docs Viewer material that requires a stronger security boundary.
 
-Likely source roots:
+The agreed defaults are:
 
-- `assets/docs/imports/...`
-- other stable docs asset folders under `assets/docs/...`
+| Docs Viewer scope | Ordinary images and files | Application publication behavior |
+| --- | --- | --- |
+| public scopes such as Library, Analysis, and Moments | Cloudflare R2 under `docs/<scope>/...` | published through the shared media origin |
+| repo-backed local scopes such as Studio and temporary technical documentation | repo-owned assets when needed | retained with the repository and not intentionally copied to R2 by the Docs media workflow |
+| external-local scopes | `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/...` | served only through the local Docs Viewer service and not copied into the repo, public site, or R2 |
 
-Docs asset upload should not change Markdown source links until the docs remote-media convention is confirmed.
-The first docs milestone may only validate and report upload plans without rewriting doc bodies.
+Thumbs and interactive HTML remain separate asset classes because they have their own rendering and sandbox contracts.
+They must still follow the active scope's publication boundary: an external-local scope must not place either class in a repo/public location if support is added later.
+
+### Public Scope R2 Contract
+
+Public Docs Viewer scopes should use the existing literal token form:
+
+<pre><code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;
+&#91;&#91;media:docs/&lt;scope&gt;/files/&lt;filename&gt;&#93;&#93;</code></pre>
+
+The builder already resolves those tokens through the configured shared media base, and Moments already uses this convention for manually copied R2 images.
+Library and Analysis can use the same object-key family so public scopes do not need scope-specific media URL logic.
+
+Automated Docs uploads should:
+
+- activate the reserved `r2_upload` Docs Import storage mode
+- reuse the existing server-owned R2 credentials and client rather than exposing credentials to browser code
+- upload only the media plans owned by the current import/apply action
+- use immutable fingerprinted filenames for automatically materialized media, so replacement produces a new URL without adding Catalogue-style `media_version` fields
+- commit a source link to new remote media only after every required upload for that import record succeeds
+- report safe scope/file identities without local absolute paths, object credentials, signed URLs, or checksums
+
+Automatic remote deletion is not part of the first Docs slice.
+Docs assets may be shared across documents, so document deletion does not prove that an R2 object is unreferenced. A later reference/orphan report can identify cleanup candidates without adding rollback or ownership machinery to the initial uploader.
+
+### External-Local Media Contract
+
+External-local media should be co-located with its external source and generated data under the configured projects base:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/img/
+$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/<scope>/files/
+```
+
+This requires a new Docs Import storage mode, provisionally `external_assets`, that:
+
+- derives the target root from the existing marker-rooted external scope configuration rather than accepting an arbitrary absolute path
+- copies imported media into the allowlisted scope media root
+- emits a scope-relative media reference rather than an R2 token or `/assets/...` URL
+- serves media through a confined local Docs Viewer service route
+- keeps absolute filesystem paths out of generated payloads and browser configuration
+- rejects `r2_upload` and public repo-asset destinations for an external-local scope
+
+The external-local rule is about keeping the application workflow local to that scope. It does not claim that the underlying filesystem is physically offline or unsynchronized.
+
+### Existing Media And Migration
+
+There is very little existing Docs Viewer media:
+
+- Moments media is already manually stored in R2 and already uses the target token convention
+- only a small amount of other public-scope media exists
+- Studio and other local scopes currently have no media to migrate
+
+No bulk migration phase is required.
+Existing public media can remain in place or be normalized as it is next touched, while new public imports use R2 by default once the adapter is implemented.
+Existing repo-held technical-documentation references may remain repo-owned.
+
+The smallest implementation sequence is:
+
+1. add and validate the `external_assets` mode so external-local imports cannot select a public destination
+2. add the confined local media read route for external-local scopes
+3. activate `r2_upload` for public-scope Docs Import plans using immutable filenames
+4. add a small exact-scope CLI path for manually authored public Docs assets when the import workflow is not involved
+5. leave deletion cleanup and migration automation out until actual usage demonstrates a need
 
 ## CLI Shape
 
