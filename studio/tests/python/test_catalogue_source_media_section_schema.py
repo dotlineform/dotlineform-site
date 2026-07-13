@@ -28,6 +28,9 @@ def source_records_with_detail(detail_record: dict, section_record: dict | None 
         "section_order": None,
         "detail_sort": None,
     }
+    normalized_detail = dict(detail_record)
+    if normalized_detail.get("project_filename") and not normalized_detail.get("media_version"):
+        normalized_detail["media_version"] = 1
     return CatalogueSourceRecords(
         works={
             "00001": {
@@ -36,11 +39,12 @@ def source_records_with_detail(detail_record: dict, section_record: dict | None 
                 "series_ids": [],
                 "project_folder": "one",
                 "project_filename": "one.jpg",
+                "media_version": 1,
                 "title": "One",
             }
         },
         work_detail_sections={str(section["section_id"]): section},
-        work_details={"00001-001": detail_record},
+        work_details={"00001-001": normalized_detail},
         series={},
     )
 
@@ -117,6 +121,24 @@ def assert_next_detail_section_id_uses_hyphen_suffix() -> None:
     assert next_id == "00001-3"
 
 
+def assert_media_version_is_required_for_media_records() -> None:
+    records = source_records_with_detail(
+        {
+            "detail_uid": "00001-001",
+            "work_id": "00001",
+            "detail_id": "001",
+            "section_id": "00001-1",
+            "project_filename": "detail.jpg",
+            "title": "Detail",
+        }
+    )
+    records.works["00001"].pop("media_version")
+    records.work_details["00001-001"].pop("media_version")
+    errors = validate_source_records(records)
+    assert any("works 00001: media_version is required" in error for error in errors), errors
+    assert any("work_details 00001-001: media_version is required" in error for error in errors), errors
+
+
 def assert_detail_section_id_must_match_section_work() -> None:
     detail = {
         "detail_uid": "00001-001",
@@ -142,6 +164,7 @@ def main() -> int:
     assert_target_detail_schema_rejects_compat_subfolder_field()
     assert_target_section_schema_rejects_bad_section_order()
     assert_next_detail_section_id_uses_hyphen_suffix()
+    assert_media_version_is_required_for_media_records()
     assert_detail_section_id_must_match_section_work()
     print("catalogue source media section schema checks passed")
     return 0

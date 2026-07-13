@@ -85,6 +85,7 @@ def normalize_optional_int(value: Any) -> int | None:
 def build_resolved_work_detail_record(record: Mapping[str, Any], section_resolution: Mapping[str, Any]) -> Dict[str, Any]:
     detail_payload = dict(record)
     detail_payload.pop("project_subfolder", None)
+    detail_payload.pop("media_version", None)
     for field in ("section_id", "section_title", "details_subfolder", "section_order", "detail_sort"):
         value = section_resolution.get(field)
         if value is not None and value != "":

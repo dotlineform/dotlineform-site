@@ -58,6 +58,7 @@ def prepare_repo(tmp_path: Path) -> tuple[Path, Path]:
                     "series_ids": ["009"],
                     "project_folder": "birth",
                     "project_filename": "cover.jpg",
+                    "media_version": 1,
                     "title": "birth of forms",
                     "year": 2026,
                     "year_display": "2026",
@@ -138,6 +139,7 @@ def test_create_detail_section_writes_section_and_records(tmp_path: Path, monkey
     assert first_detail["detail_id"] == "001"
     assert first_detail["detail_uid"] == "00782-001"
     assert first_detail["project_filename"] == "detail-01.jpg"
+    assert first_detail["media_version"] == 1
     assert first_detail["section_id"] == "00782-1"
     assert first_detail["title"] == "detail-01"
     assert first_detail["work_id"] == "00782"
@@ -218,6 +220,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
                     "detail_id": "001",
                     "section_id": "00782-1",
                     "project_filename": "alpha.jpg",
+                    "media_version": 1,
                     "title": "Alpha",
                 },
                 "00782-002": {
@@ -226,6 +229,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
                     "detail_id": "002",
                     "section_id": "00782-2",
                     "project_filename": "beta.jpg",
+                    "media_version": 1,
                     "title": "Beta",
                 },
                 "00782-003": {
@@ -234,6 +238,7 @@ def test_save_detail_section_updates_title_sort_and_compact_order(tmp_path: Path
                     "detail_id": "003",
                     "section_id": "00782-3",
                     "project_filename": "gamma.jpg",
+                    "media_version": 1,
                     "title": "Gamma",
                 },
             },
@@ -299,6 +304,7 @@ def test_save_detail_section_single_section_omits_default_sort_and_keeps_details
                     "detail_id": "001",
                     "section_id": "00782-1",
                     "project_filename": "detail-001.jpg",
+                    "media_version": 1,
                     "title": "Detail",
                 },
             },
@@ -360,6 +366,7 @@ def test_save_detail_section_noop_does_not_rebuild(tmp_path: Path, monkeypatch) 
                 "detail_id": "001",
                 "section_id": "00782-1",
                 "project_filename": "detail-001.jpg",
+                "media_version": 1,
                 "title": "Detail",
             },
         },

@@ -8,6 +8,7 @@ import json
 import os
 import sys
 import tempfile
+from types import SimpleNamespace
 from pathlib import Path
 
 
@@ -268,6 +269,65 @@ def test_delete_plan_uses_deterministic_remote_keys_and_requires_write() -> None
         "works/img/01007-primary-800.webp",
         "works/img/01007-primary-1200.webp",
     ]
+
+
+def test_complete_upload_promotes_once_and_incomplete_set_does_not_promote() -> None:
+    results = [
+        publisher.PublishResult(
+            scope="catalogue",
+            kind="works",
+            item_id="01007",
+            width=width,
+            local_path=f"01007-primary-{width}.webp",
+            object_key=f"works/img/01007-primary-{width}.webp",
+            size=10,
+            md5="digest",
+            status="overwritten" if width == 800 else "unchanged",
+        )
+        for width in publisher.PRIMARY_WIDTHS
+    ]
+    results.append(
+        publisher.PublishResult(
+            scope="catalogue",
+            kind="work_details",
+            item_id="01007-001",
+            width=800,
+            local_path="01007-001-primary-800.webp",
+            object_key="work_details/img/01007-001-primary-800.webp",
+            size=10,
+            md5="digest",
+            status="uploaded",
+        )
+    )
+    calls = []
+    original = publisher.finalize_catalogue_media_version
+    publisher.finalize_catalogue_media_version = lambda repo_root, **kwargs: (
+        calls.append(kwargs)
+        or SimpleNamespace(
+            advanced=kwargs["advance"],
+            work_id="01007",
+            previous_version=1,
+            media_version=2 if kwargs["advance"] else 1,
+            public_json_path="site/assets/works/index/01007.json",
+        )
+    )
+    try:
+        finalized = publisher.finalize_complete_catalogue_uploads(
+            repo_root=REPO_ROOT,
+            results=results,
+        )
+    finally:
+        publisher.finalize_catalogue_media_version = original
+
+    assert calls == [{"kind": "works", "item_id": "01007", "advance": True}]
+    assert [(item.kind, item.status, item.media_version) for item in finalized] == [
+        ("work_details", "not_promoted", None),
+        ("works", "promoted", 2),
+    ]
+
+
+def test_moments_are_not_a_catalogue_publisher_kind() -> None:
+    assert set(publisher.CATALOGUE_KINDS) == {"works", "work_details"}
 
 
 if __name__ == "__main__":

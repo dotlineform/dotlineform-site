@@ -459,7 +459,8 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
                 status: 'published',
                 year_display: 'July 1990 - January 1995',
                 height_px: '2263',
-                width_px: '1600'
+                width_px: '1600',
+                media_version: 1
             }};
             state.currentWorkId = '00008';
             state.serverAvailable = true;
@@ -523,7 +524,7 @@ def assert_media_refresh_button_uses_preview_actions(page: Page) -> None:
             }};
         }}"""
     )
-    assert result["captionText"] == "nerve · July 1990 - January 1995 2000 x 3000 px"
+    assert result["captionText"] == "nerve · July 1990 - January 1995 2000 x 3000 px media version 1 · staged candidate 2"
     assert result["previewActionsText"] == "Refresh media"
     assert result["previewImageSrc"] == "/studio/media/catalogue/works/srcset_images/primary/00008-primary-800.webp?v=media-refresh-token"
     assert result["refreshDisabled"] is False

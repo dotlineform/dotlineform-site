@@ -44,6 +44,7 @@ def fixture_records() -> CatalogueSourceRecords:
                 "series_ids": ["009"],
                 "project_folder": "2026/alpha",
                 "project_filename": "alpha.jpg",
+                "media_version": 1,
                 "title": "Alpha",
                 "year": "2026",
                 "year_display": "2026",
@@ -54,6 +55,7 @@ def fixture_records() -> CatalogueSourceRecords:
                 "series_ids": [],
                 "project_folder": "2026/beta",
                 "project_filename": "beta.jpg",
+                "media_version": 1,
                 "title": "Beta",
                 "year": "2026",
                 "year_display": "2026",
@@ -76,6 +78,7 @@ def fixture_records() -> CatalogueSourceRecords:
                 "detail_id": "001",
                 "section_id": "00001-1",
                 "project_filename": "alpha-detail.jpg",
+                "media_version": 1,
                 "title": "Alpha detail",
             }
         },
@@ -127,6 +130,21 @@ def test_work_create_defaults_draft_and_series_ids() -> None:
         "work title is required",
         lambda: source_mutation.plan_work_create(records, records.works, "00004", {"work_id": "00004"}),
     )
+
+    media_plan = source_mutation.plan_work_create(
+        records,
+        records.works,
+        "00004",
+        {
+            "work_id": "00004",
+            "title": "Delta",
+            "year": "2026",
+            "year_display": "2026",
+            "project_folder": "2026/delta",
+            "project_filename": "delta.jpg",
+        },
+    )
+    assert_equal(media_plan.updated_record["media_version"], 1, "created work media version")
 
 
 def test_detail_update_normalizes_detail_owned_fields() -> None:

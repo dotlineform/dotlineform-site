@@ -430,6 +430,31 @@
       }
     },
     {
+      "id": "work_media_version",
+      "record_family": "work",
+      "operation": "derived_update",
+      "fields": [
+        "media_version"
+      ],
+      "current": {
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
+        "fallback": false
+      },
+      "target": {
+        "artifacts": [
+          "source-json",
+          "studio-lookup",
+          "work-json"
+        ],
+        "fallback": false,
+        "reason": "The confirmed work primary-media version is publisher-owned and affects the focused Studio lookup and public work payload only."
+      }
+    },
+    {
       "id": "work_detail_identity",
       "record_family": "work_detail",
       "operation": "create_delete_identity",
@@ -552,6 +577,29 @@
         ],
         "fallback": false,
         "reason": "Detail section_id controls parent work JSON grouping. Section labels, source folders, section ordering, and section detail-sort modes live in work_detail_sections."
+      }
+    },
+    {
+      "id": "work_detail_media_version",
+      "record_family": "work_detail",
+      "operation": "derived_update",
+      "fields": [
+        "media_version"
+      ],
+      "current": {
+        "artifacts": [
+          "source-json",
+          "work-json"
+        ],
+        "fallback": false
+      },
+      "target": {
+        "artifacts": [
+          "source-json",
+          "work-json"
+        ],
+        "fallback": false,
+        "reason": "The confirmed detail primary-media version is publisher-owned and is emitted only in the parent public work payload."
       }
     },
     {

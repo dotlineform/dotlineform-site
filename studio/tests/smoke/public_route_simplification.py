@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 from functools import partial
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -100,6 +101,8 @@ def assert_public_routes(page: Page, base_url: str) -> None:
     goto(page, base_url, "/work-details/?detail=00001-001&from_work=00001&series=009")
     expect(page.locator("#detailPageRoot")).to_be_visible(timeout=10_000)
     expect(page.locator("#detailTitleText")).to_contain_text("a poem divided into 4 parts", timeout=10_000)
+    expect(page.locator("#detailPrimaryImg")).to_have_attribute("src", re.compile(r"[?&]v=1$"), timeout=10_000)
+    expect(page.locator("#detailPrimaryImg")).to_have_attribute("srcset", re.compile(r"[?&]v=1(?:\s|,|$)"), timeout=10_000)
     detail_back_href = first_href(page, "#detailBackLink")
     if "/works/?" not in detail_back_href or "work=00001" not in detail_back_href or "series=009" not in detail_back_href:
         raise AssertionError(f"detail back link is not canonical: {detail_back_href!r}")

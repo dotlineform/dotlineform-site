@@ -32,6 +32,7 @@ SOURCE_FILES = {
 
 DETAIL_COMPAT_SUBFOLDER_FIELD = "project_subfolder"
 DETAIL_SECTION_ID_SEPARATOR = "-"
+MEDIA_VERSION_FIELD = "media_version"
 
 WORK_FIELDS = [
     "work_id",
@@ -41,6 +42,7 @@ WORK_FIELDS = [
     "project_folder",
     "project_subfolder",
     "project_filename",
+    MEDIA_VERSION_FIELD,
     "title",
     "width_cm",
     "height_cm",
@@ -77,6 +79,7 @@ DETAIL_FIELDS = [
     "detail_id",
     "section_id",
     "project_filename",
+    MEDIA_VERSION_FIELD,
     "title",
     "width_px",
     "height_px",
@@ -106,9 +109,10 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "depth_cm",
     "width_px",
     "height_px",
+    MEDIA_VERSION_FIELD,
 }
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS) - {"year"}
-DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px"}
+DETAIL_TEXT_FIELDS = set(DETAIL_FIELDS) - {"width_px", "height_px", MEDIA_VERSION_FIELD}
 OMIT_EMPTY_SOURCE_FIELDS = {"project_subfolder", "details_subfolder", "section_order", "detail_sort"}
 
 SOURCE_FIELDS_BY_RECORD_FAMILY = {
@@ -124,8 +128,8 @@ SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY = {
 }
 
 SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY = {
-    "work": ("width_px", "height_px"),
-    "work_detail": ("width_px", "height_px"),
+    "work": ("width_px", "height_px", MEDIA_VERSION_FIELD),
+    "work_detail": ("width_px", "height_px", MEDIA_VERSION_FIELD),
     "series": (),
 }
 
@@ -465,7 +469,7 @@ def normalize_source_record(
             entries = normalize_links(value)
             if entries:
                 out[field] = entries
-        elif field in {"sort_order", "section_order"}:
+        elif field in {"sort_order", "section_order", MEDIA_VERSION_FIELD}:
             normalized_int = normalize_optional_int(value)
             if normalized_int is not None:
                 out[field] = normalized_int
@@ -819,6 +823,18 @@ def validate_record_fields(
         errors.append(f"{kind} {key}: unsupported field(s): {', '.join(unknown)}")
 
 
+def validate_media_version(errors: list[str], *, kind: str, key: str, record: Mapping[str, Any]) -> None:
+    value = record.get(MEDIA_VERSION_FIELD)
+    has_media = not is_empty(record.get("project_filename"))
+    if is_empty(value):
+        if has_media:
+            errors.append(f"{kind} {key}: media_version is required when project_filename is set")
+        return
+    normalized = normalize_optional_int(value)
+    if normalized is None or normalized < 1:
+        errors.append(f"{kind} {key}: media_version must be a positive whole number")
+
+
 def validate_work_detail_section_record(key: str, record: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
     raw_work_id = record.get("work_id")
@@ -904,6 +920,7 @@ def validate_source_records(
 
     for key, record in records.works.items():
         validate_record_fields(errors, kind="works", key=key, record=record, allowed_fields=WORK_FIELDS)
+        validate_media_version(errors, kind="works", key=key, record=record)
         try:
             work_id = slug_id(record.get("work_id") or key)
         except ValueError as exc:
@@ -1020,6 +1037,7 @@ def validate_source_records(
             allowed_fields=DETAIL_FIELDS,
             allowed_compat_fields=allowed_compat_fields,
         )
+        validate_media_version(errors, kind="work_details", key=key, record=record)
         if DETAIL_COMPAT_SUBFOLDER_FIELD in record and not allow_compat_detail_project_subfolder:
             errors.append(f"work_details {key}: project_subfolder is not supported; use details_subfolder")
         raw_work_id = record.get("work_id")

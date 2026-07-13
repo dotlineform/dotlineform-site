@@ -118,6 +118,7 @@ def create_detail_section_payload(context: CatalogueWriteContext, body: Mapping[
             "detail_id": detail_id,
             "section_id": section_id,
             "project_filename": filename,
+            "media_version": 1,
             "title": filename_stem(filename),
         }
         if width_px is not None and height_px is not None:

@@ -17,6 +17,7 @@ def build_generate_command(
     write: bool,
     force: bool,
     refresh_published: bool,
+    skip_source_dimension_refresh: bool = False,
 ) -> list[str]:
     cmd = [
         sys.executable,
@@ -46,6 +47,8 @@ def build_generate_command(
         cmd.append("--write")
     if refresh_published:
         cmd.append("--refresh-published")
+    if skip_source_dimension_refresh:
+        cmd.append("--skip-source-dimension-refresh")
     if force:
         cmd.append("--force")
     return cmd

@@ -413,6 +413,11 @@ def main() -> None:
         help="Process selected published records without forcing unchanged writes",
     )
     ap.add_argument(
+        "--skip-source-dimension-refresh",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
+    ap.add_argument(
         "--work-ids",
         default="",
         help=(
@@ -613,7 +618,7 @@ def main() -> None:
     skipped = 0
     run_work_processing = run_work_pages
     run_work_selection_scope = run_work_processing or run_work_json
-    run_work_dimension_refresh = run_work_json
+    run_work_dimension_refresh = run_work_json and not args.skip_source_dimension_refresh
 
     # Optional filtering: allow a specific list of work_ids (from file or comma-separated arg).
     selected_ids = None
@@ -1076,6 +1081,7 @@ def main() -> None:
                     title=coerce_string(detail_source_record.get("title")),
                     width_px=coerce_int(detail_source_record.get("width_px")),
                     height_px=coerce_int(detail_source_record.get("height_px")),
+                    media_version=coerce_int(detail_source_record.get("media_version")),
                 )
                 detail_records_by_work.setdefault(wid, {})[detail_uid] = detail_record
 

@@ -24,7 +24,6 @@ The first implementation supports catalogue primary-image derivatives only:
 
 - works
 - work details
-- moments
 
 Docs media publishing is reserved for a later milestone.
 
@@ -50,21 +49,35 @@ Source files come from external staged primary derivatives:
 
 - `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/works/srcset_images/primary/`
 - `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/work_details/srcset_images/primary/`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/moments/srcset_images/primary/`
 
 The publisher has no repo-local staging fallback.
 Local Studio serves staged image previews through `/studio/media/catalogue/...`, mapped directly to this external root.
 
-The script reads `_data/pipeline.json` for those subpaths and `_config.yml` for remote media prefixes.
+The script reads the shared pipeline config for those subpaths and `site-tools/config/site-tools.json` for remote media prefixes.
 Default object-key mapping is:
 
 - `works/img/<work_id>-primary-<width>.webp`
 - `work_details/img/<detail_uid>-primary-<width>.webp`
-- `moments/img/<moment_id>-primary-<width>.webp`
 
 The expected catalogue primary widths are `800`, `1200`, and `1600`.
 If a selected item is missing one of those variants, the item is blocked by default.
-Use `--allow-partial` only when intentionally publishing an incomplete set.
+Use `--allow-partial` only for an intentional incomplete remote write; a partial set is never promoted as the confirmed public version.
+
+## Confirmed Media Versions
+
+Each media-bearing work and work detail has a positive canonical `media_version`.
+All primary widths for one item share that version, and public work/detail routes append it to R2 primary `src`, full-size links, and `srcset` entries as `?v=<media_version>`.
+
+Write-mode upload behavior is:
+
+- the complete required local width set must be present before the item can be promoted
+- when at least one required R2 object is uploaded or overwritten and every required object succeeds, the publisher increments the item's canonical version once
+- the publisher then rebuilds the owning `site/assets/works/index/<work_id>.json`; work-detail versions remain nested in that work payload
+- when every remote object already matches, the publisher rebuilds the current version without incrementing it
+- failed, blocked, or partial groups do not change the confirmed version
+
+Ordinary Studio Save and local derivative generation do not increment this value.
+The optional JSON report includes a `media_versions` section describing promotion, current-version rebuilds, and non-promoted or failed groups.
 
 ## Usage
 
@@ -101,7 +114,7 @@ $HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scop
 Write a JSON report:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind moments --id keys --report-json var/local/r2-publish-report.json
+$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind work_details --id 00001-003 --report-json var/local/r2-publish-report.json
 ```
 
 Overwrite changed remote objects intentionally:
@@ -119,6 +132,7 @@ The publisher:
 - checks remote object size and ETag against the local MD5 digest
 - skips unchanged remote objects
 - blocks changed remote objects unless `--force` is passed
+- promotes the canonical media version only after the complete required primary set succeeds
 - deletes remote objects only when `--delete --write` is passed with an exact `--kind` and `--id`
 - keeps logs to ids, relative local paths, object keys, statuses, and non-secret reasons
 

@@ -47,6 +47,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("depth_cm", "depth_cm", coerce_numeric),
     ("width_px", "width_px", coerce_int),
     ("height_px", "height_px", coerce_int),
+    ("media_version", "media_version", coerce_int),
     # tags handled separately (csv list)
 ]
 
@@ -70,6 +71,7 @@ WORKS_FIELD_ORDER = [
     "depth_cm",
     "width_px",
     "height_px",
+    "media_version",
     "downloads",
     "artist",
 ]
@@ -159,6 +161,7 @@ def build_canonical_detail_record(
     title: Optional[str],
     width_px: Optional[int],
     height_px: Optional[int],
+    media_version: Optional[int],
 ) -> Dict[str, Any]:
     detail_uid = f"{wid}-{did}"
     dfm: Dict[str, Any] = {
@@ -168,6 +171,7 @@ def build_canonical_detail_record(
         "title": title,
         "width_px": width_px,
         "height_px": height_px,
+        "media_version": media_version,
     }
     return compact_json_object(dfm)
 

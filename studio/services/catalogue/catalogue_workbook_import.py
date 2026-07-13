@@ -360,6 +360,8 @@ def _build_work_import_plan(source_records: CatalogueSourceRecords, workbook, wo
             if field in record or field in {"status", "published_date"}:
                 continue
             record[field] = normalize_json_value(cell(row, headers, field))
+        if normalize_text(record.get("project_filename")) and not normalize_text(record.get("media_version")):
+            record["media_version"] = 1
         normalized_record = normalize_source_record(record, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
         importable[work_id] = normalized_record
 
@@ -490,6 +492,8 @@ def _build_work_detail_import_plan(source_records: CatalogueSourceRecords, workb
             if field in record:
                 continue
             record[field] = normalize_json_value(cell(row, headers, field))
+        if normalize_text(record.get("project_filename")) and not normalize_text(record.get("media_version")):
+            record["media_version"] = 1
         normalized_record = normalize_source_record(record, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
         importable[detail_uid] = normalized_record
 

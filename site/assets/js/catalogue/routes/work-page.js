@@ -13,7 +13,7 @@ import {
   workPayloadUrl
 } from '../shared/catalogue-urls.js';
 import { fetchJson } from '../shared/fetch-json.js';
-import { normalizePositiveSizes, slug, text, toNumber, toPositiveInteger } from '../shared/text.js';
+import { appendVersionQuery, normalizePositiveSizes, slug, text, toNumber, toPositiveInteger } from '../shared/text.js';
 import { thumbnailImageData } from '../shared/thumbnails.js';
 
 var DETAILS_PAGE_SIZE = 80;
@@ -114,8 +114,11 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
     nextIds: ['seriesNavNext']
   });
 
-  function workImageUrl(id, width) {
-    return worksImgBase + encodeURIComponent(id) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat;
+  function workImageUrl(id, width, mediaVersion) {
+    return appendVersionQuery(
+      worksImgBase + encodeURIComponent(id) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat,
+      mediaVersion
+    );
   }
 
   function workFileUrl(filename) {
@@ -230,10 +233,15 @@ function bootSelectedWorkRoute(rootNode, routeState, workId) {
   function renderMedia(work) {
     var media = document.getElementById('selectedWorkMedia');
     if (!media) return;
-    var displaySrc = workImageUrl(workId, primaryDisplayWidth);
-    var fullSrc = workImageUrl(workId, primaryFullWidth);
+    var mediaVersion = toPositiveInteger(work && work.media_version);
+    if (!mediaVersion) {
+      renderPrimaryMedia({ rootElement: media, hidden: true });
+      return;
+    }
+    var displaySrc = workImageUrl(workId, primaryDisplayWidth, mediaVersion);
+    var fullSrc = workImageUrl(workId, primaryFullWidth, mediaVersion);
     var srcset = renderWidths.map(function (width) {
-      return workImageUrl(workId, width) + ' ' + String(width) + 'w';
+      return workImageUrl(workId, width, mediaVersion) + ' ' + String(width) + 'w';
     }).join(', ');
     var widthPx = toNumber(work && work.width_px);
     var heightPx = toNumber(work && work.height_px);

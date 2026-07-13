@@ -24,6 +24,8 @@ def run(base_url: str) -> None:
         href_pattern = re.compile(r"/works/\?series=009&work=[0-9]+|/works/\?work=[0-9]+&series=009")
         expect(page.locator("#seriesNavPrev")).to_have_attribute("href", href_pattern, timeout=10_000)
         expect(page.locator("#seriesNavNext")).to_have_attribute("href", href_pattern, timeout=10_000)
+        expect(page.locator("#selectedWorkImg")).to_have_attribute("src", re.compile(r"[?&]v=1$"), timeout=10_000)
+        expect(page.locator("#selectedWorkImg")).to_have_attribute("srcset", re.compile(r"[?&]v=1(?:\s|,|$)"), timeout=10_000)
         if errors:
             raise AssertionError(f"page errors during public work route smoke: {errors!r}")
         browser.close()

@@ -146,7 +146,7 @@ When `--changed-fields` is supplied, the `--only` selection, catalogue-search st
 
 Planner behavior is covered by `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`.
 
-For work scopes, `work-json` writes `site/assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Sections are sourced from `work_detail_sections` and carry `section_id`, `section_title`, optional `section_order`, optional `detail_sort`, and `details[]`. Nested detail records do not repeat section-level metadata. Null optional section fields are compacted out of public payloads until they carry meaningful values.
+For work scopes, `work-json` writes `site/assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. The work record carries its confirmed `media_version`; independently replaceable detail media carries its own version in the nested detail record. Aggregate works, series, recent, and search indexes omit those versions because they use repo-owned thumbnails rather than R2 primary media. Sections are sourced from `work_detail_sections` and carry `section_id`, `section_title`, optional `section_order`, optional `detail_sort`, and `details[]`. Nested detail records do not repeat section-level metadata. Null optional section fields are compacted out of public payloads until they carry meaningful values.
 
 For `--moment-file`, the helper:
 
@@ -209,6 +209,7 @@ Use `--force` when the thumbnail encoding policy changed and existing thumbnail 
 
 The staged primary derivatives are the local handoff point for the remote media publishing step.
 Use [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) to preview or upload those primary derivatives after local generation.
+That publisher owns confirmed-version promotion and the focused per-work JSON rebuild after a complete successful R2 write; this scoped build does not advance media versions.
 Staged thumbnail derivatives are not retained after they have been copied into the public asset folders.
 The external staging root has no repo-local fallback and can be rebuilt from canonical catalogue metadata plus the configured source-media trees.
 

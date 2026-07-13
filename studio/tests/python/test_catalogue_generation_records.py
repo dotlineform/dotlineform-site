@@ -24,6 +24,7 @@ def test_work_projection_order_and_coercion() -> None:
             "storage_location": "",
             "height_cm": "12.5",
             "width_px": "800",
+            "media_version": "2",
         }
     )
 
@@ -34,6 +35,7 @@ def test_work_projection_order_and_coercion() -> None:
     assert projected["storage"] is None
     assert projected["height_cm"] == 12.5
     assert projected["width_px"] == 800
+    assert projected["media_version"] == 2
 
 
 def test_work_series_ids_are_normalized_and_deduped() -> None:
@@ -60,6 +62,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
             "series_id": "009",
             "series_title": "Old title",
             "title_sort": "controlled field",
+            "media_version": 3,
         }
     )
 
@@ -86,6 +89,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     assert canonical["series_sort"] == "001-00042"
     assert canonical["storage"] == "Rack A"
     assert canonical["links"] == [{"url": "https://example.test", "label": "Example"}]
+    assert canonical["media_version"] == 3
     assert "checksum" in canonical
 
     public_record = records.build_work_json_record(canonical)
@@ -120,6 +124,7 @@ def test_detail_record_grouping_is_deterministic() -> None:
         title="Detail one",
         width_px=None,
         height_px=600,
+        media_version=4,
     )
     assert detail_record == {
         "work_id": "00042",
@@ -127,6 +132,7 @@ def test_detail_record_grouping_is_deterministic() -> None:
         "detail_uid": "00042-001",
         "title": "Detail one",
         "height_px": 600,
+        "media_version": 4,
     }
 
     sections = records.build_sections_from_detail_sections(

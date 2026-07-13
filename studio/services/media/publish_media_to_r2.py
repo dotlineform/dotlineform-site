@@ -36,6 +36,7 @@ try:
         media_mode_output_subdir,
     )
     from local_env import SITE_ENV_REL_PATH, runtime_env
+    from catalogue.catalogue_media_version import finalize_catalogue_media_version
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from studio.shared.python.catalogue_media_paths import catalogue_media_display_path, configured_catalogue_media_workspace
     from studio.shared.python.pipeline_config import (
@@ -43,6 +44,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         media_mode_output_subdir,
     )
     from studio.shared.python.local_env import SITE_ENV_REL_PATH, runtime_env
+    from studio.services.catalogue.catalogue_media_version import finalize_catalogue_media_version
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -74,7 +76,6 @@ class CatalogueKind:
 CATALOGUE_KINDS: Dict[str, CatalogueKind] = {
     "works": CatalogueKind("works", "work", "media_image_works"),
     "work_details": CatalogueKind("work_details", "work_details", "media_image_work_details"),
-    "moments": CatalogueKind("moments", "moment", "media_image_moments"),
 }
 
 
@@ -144,6 +145,19 @@ class MissingVariant:
     present_widths: List[int]
 
 
+@dataclass
+class MediaVersionResult:
+    kind: str
+    item_id: str
+    status: str
+    work_id: str = ""
+    previous_version: int | None = None
+    media_version: int | None = None
+    advanced: bool = False
+    public_json_path: str = ""
+    reason: str = ""
+
+
 class RemoteClient(Protocol):
     def head_object(self, key: str) -> RemoteObject | None:
         ...
@@ -161,7 +175,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     ap.add_argument("--scope", choices=["catalogue", "docs"], default="catalogue")
     ap.add_argument("--kind", choices=sorted(CATALOGUE_KINDS), help="Catalogue media kind to publish")
-    ap.add_argument("--id", dest="item_id", help="Specific work, work-detail, or moment id")
+    ap.add_argument("--id", dest="item_id", help="Specific work or work-detail id")
     ap.add_argument("--all", action="store_true", help="Publish every selected kind")
     ap.add_argument("--changed-only", action="store_true", help="Omit unchanged objects from logs and JSON reports")
     ap.add_argument("--force", action="store_true", help="Overwrite changed remote objects")
@@ -243,6 +257,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         force=args.force,
         changed_only=args.changed_only,
     )
+    media_versions = (
+        finalize_complete_catalogue_uploads(repo_root=repo_root, results=results)
+        if args.write
+        else []
+    )
 
     report = build_report(
         results=results,
@@ -251,13 +270,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         force=args.force,
         changed_only=args.changed_only,
         action="upload",
+        media_versions=media_versions,
     )
     print_report(report)
     write_report(repo_root=repo_root, report=report, report_json=args.report_json)
 
     failed = report["counts"].get("failed", 0)
     blocked = sum(count for status, count in report["counts"].items() if status.startswith("blocked"))
-    return 1 if failed or blocked else 0
+    version_failed = any(item.status == "failed" for item in media_versions)
+    return 1 if failed or blocked or version_failed else 0
 
 
 def write_report(*, repo_root: Path, report: Mapping[str, object], report_json: str | None) -> None:
@@ -436,12 +457,10 @@ def load_media_prefixes(repo_root: Path) -> Dict[str, str]:
     defaults = {
         "media_image_works": "works/img",
         "media_image_work_details": "work_details/img",
-        "media_image_moments": "moments/img",
     }
     config_keys = {
         "media_image_works": "image_works",
         "media_image_work_details": "image_work_details",
-        "media_image_moments": "image_moments",
     }
     return {
         key: normalize_remote_prefix(str(media.get(config_keys[key], default_value)))
@@ -486,15 +505,14 @@ def plan_and_publish(
             continue
 
         if remote is not None and remote_matches(obj, remote):
-            if not changed_only:
-                results.append(
-                    result_for(
-                        obj,
-                        status="unchanged",
-                        remote=remote,
-                        reason="remote size and ETag match local file",
-                    )
+            results.append(
+                result_for(
+                    obj,
+                    status="unchanged",
+                    remote=remote,
+                    reason="remote size and ETag match local file",
                 )
+            )
             continue
 
         if remote is not None and not force:
@@ -531,6 +549,70 @@ def plan_and_publish(
         except Exception as exc:  # pragma: no cover - defensive CLI boundary
             results.append(result_for(obj, status="failed", remote=remote, reason=f"upload failed: {exc}"))
     return results
+
+
+def finalize_complete_catalogue_uploads(
+    *,
+    repo_root: Path,
+    results: Sequence[PublishResult],
+) -> List[MediaVersionResult]:
+    grouped: Dict[tuple[str, str], List[PublishResult]] = {}
+    for result in results:
+        grouped.setdefault((result.kind, result.item_id), []).append(result)
+
+    finalizations: List[MediaVersionResult] = []
+    successful_statuses = {"unchanged", "uploaded", "overwritten"}
+    changed_statuses = {"uploaded", "overwritten"}
+    required_widths = set(PRIMARY_WIDTHS)
+    for (kind, item_id), group in sorted(grouped.items()):
+        widths = {item.width for item in group}
+        statuses = {item.status for item in group}
+        if widths != required_widths or not statuses.issubset(successful_statuses):
+            finalizations.append(
+                MediaVersionResult(
+                    kind=kind,
+                    item_id=item_id,
+                    status="not_promoted",
+                    reason="complete successful primary variant set is required",
+                )
+            )
+            continue
+
+        advance = any(item.status in changed_statuses for item in group)
+        try:
+            finalized = finalize_catalogue_media_version(
+                repo_root,
+                kind=kind,
+                item_id=item_id,
+                advance=advance,
+            )
+            finalizations.append(
+                MediaVersionResult(
+                    kind=kind,
+                    item_id=item_id,
+                    status="promoted" if finalized.advanced else "current",
+                    work_id=finalized.work_id,
+                    previous_version=finalized.previous_version,
+                    media_version=finalized.media_version,
+                    advanced=finalized.advanced,
+                    public_json_path=finalized.public_json_path,
+                    reason=(
+                        "complete upload promoted the confirmed media version"
+                        if finalized.advanced
+                        else "remote objects already match; rebuilt the current confirmed version"
+                    ),
+                )
+            )
+        except Exception as exc:  # pragma: no cover - defensive CLI boundary
+            finalizations.append(
+                MediaVersionResult(
+                    kind=kind,
+                    item_id=item_id,
+                    status="failed",
+                    reason=f"media-version finalization failed: {exc}",
+                )
+            )
+    return finalizations
 
 
 def plan_and_delete(
@@ -627,9 +709,11 @@ def build_report(
     force: bool,
     changed_only: bool,
     action: str,
+    media_versions: Sequence[MediaVersionResult] = (),
 ) -> Dict[str, object]:
+    visible_results = [result for result in results if not (changed_only and result.status == "unchanged")]
     counts: Dict[str, int] = {}
-    for result in results:
+    for result in visible_results:
         counts[result.status] = counts.get(result.status, 0) + 1
     return {
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -640,7 +724,8 @@ def build_report(
         "changed_only": changed_only,
         "counts": dict(sorted(counts.items())),
         "missing_variants": [asdict(item) for item in missing],
-        "objects": [asdict(result) for result in results],
+        "objects": [asdict(result) for result in visible_results],
+        "media_versions": [asdict(result) for result in media_versions],
     }
 
 
@@ -674,6 +759,19 @@ def print_report(report: Mapping[str, object]) -> None:
             print(
                 f"{item.get('status')}: {item.get('kind')} {item.get('item_id')} "
                 f"{item.get('width')} -> {item.get('object_key')}{reason}"
+            )
+
+    media_versions = report.get("media_versions", [])
+    if isinstance(media_versions, list):
+        for item in media_versions:
+            if not isinstance(item, Mapping):
+                continue
+            version = item.get("media_version")
+            version_text = f" -> v={version}" if version is not None else ""
+            reason = f" - {item.get('reason')}" if item.get("reason") else ""
+            print(
+                f"media_version_{item.get('status')}: {item.get('kind')} {item.get('item_id')}"
+                f"{version_text}{reason}"
             )
 
 

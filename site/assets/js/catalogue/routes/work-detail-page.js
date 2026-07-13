@@ -11,7 +11,7 @@ import {
   workUrl
 } from '../shared/catalogue-urls.js';
 import { fetchJson } from '../shared/fetch-json.js';
-import { normalizePositiveSizes, slug, text, toNumber, toPositiveInteger } from '../shared/text.js';
+import { appendVersionQuery, normalizePositiveSizes, slug, text, toNumber, toPositiveInteger } from '../shared/text.js';
 
 var root = document.getElementById('detailPageRoot');
 if (root) bootWorkDetailRoute(root);
@@ -67,13 +67,17 @@ function bootWorkDetailRoute(rootNode) {
     seriesPage: routeState.seriesPage,
     title: detailUid,
     widthPx: 0,
-    heightPx: 0
+    heightPx: 0,
+    mediaVersion: 0
   };
   if (!ctx.detailsSection) ctx.detailsSection = ctx.section;
   if (!ctx.fromWorkTitle) ctx.fromWorkTitle = ctx.fromWork;
 
   function imageUrl(uid, width) {
-    return imgBase + encodeURIComponent(uid) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat;
+    return appendVersionQuery(
+      imgBase + encodeURIComponent(uid) + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat,
+      ctx.mediaVersion
+    );
   }
 
   function renderMetadata() {
@@ -111,6 +115,10 @@ function bootWorkDetailRoute(rootNode) {
   function updateMedia() {
     var media = document.getElementById('detailPrimaryMedia');
     if (!media) return;
+    if (!ctx.mediaVersion) {
+      renderPrimaryMedia({ rootElement: media, hidden: true });
+      return;
+    }
     var srcset = renderWidths.map(function (width) {
       return imageUrl(ctx.detailUid, width) + ' ' + String(width) + 'w';
     }).join(', ');
@@ -238,7 +246,6 @@ function bootWorkDetailRoute(rootNode) {
   }
 
   updateTitle();
-  updateMedia();
   updateBackLink();
   rootNode.hidden = false;
   bindSwipeNavigation();
@@ -253,6 +260,7 @@ function bootWorkDetailRoute(rootNode) {
         ctx.title = text(found.detail.title) || ctx.detailUid;
         ctx.widthPx = toNumber(found.detail.width_px) || 0;
         ctx.heightPx = toNumber(found.detail.height_px) || 0;
+        ctx.mediaVersion = toPositiveInteger(found.detail.media_version) || 0;
         if (!ctx.section && found.sectionId) ctx.section = found.sectionId;
         if (!ctx.detailsSection && found.sectionId) ctx.detailsSection = found.sectionId;
       }
