@@ -36,8 +36,10 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
 
 from docs_source_model import load_scope_docs, scope_doc_sort_key
 from docs_scope_config import (
+    CONFIG_REL_PATH,
     DOCS_SCOPE_CONFIGS,
     SCOPE_ROOTS,
+    load_docs_scope_configs,
     path_is_under_configured_sub_scope_source,
     resolve_scope_path,
 )
@@ -118,6 +120,117 @@ def state_snapshot(state: dict[str, Any]) -> Dict[str, tuple[int, int]]:
     if state.get("sub_scope"):
         return snapshot_markdown_root(root)
     return snapshot_scope(root, state["scope"])
+
+
+def try_state_snapshot(state: dict[str, Any]) -> tuple[Optional[Dict[str, tuple[int, int]]], str]:
+    try:
+        return state_snapshot(state), ""
+    except FileNotFoundError as exc:
+        return None, str(exc)
+
+
+def pause_state_for_missing_source(state: dict[str, Any]) -> bool:
+    newly_missing = state.get("source_missing") is not True
+    state["source_missing"] = True
+    state["snapshot"] = {}
+    state["doc_snapshot"] = None
+    state["dirty_at"] = None
+    state["changed_files"] = []
+    return newly_missing
+
+
+def config_file_signature(path: Path) -> tuple[int, int]:
+    try:
+        stat = path.stat()
+    except FileNotFoundError:
+        return (0, 0)
+    return (stat.st_mtime_ns, stat.st_size)
+
+
+def sync_scope_config_globals(configs: dict[str, Any]) -> None:
+    DOCS_SCOPE_CONFIGS.clear()
+    DOCS_SCOPE_CONFIGS.update(configs)
+    SCOPE_ROOTS.clear()
+    SCOPE_ROOTS.update({scope: config.source for scope, config in configs.items()})
+
+
+def desired_watch_state_specs(repo_root: Path, configs: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    specs: dict[str, dict[str, Any]] = {}
+    for scope, config in sorted(configs.items()):
+        specs[scope] = {
+            "scope": scope,
+            "sub_scope": "",
+            "label": scope,
+            "root": resolve_scope_path(repo_root, config.source),
+            "config": config,
+        }
+        for sub_scope in config.sub_scopes:
+            label = f"{scope}/{sub_scope.sub_scope}"
+            specs[label] = {
+                "scope": scope,
+                "sub_scope": sub_scope.sub_scope,
+                "label": label,
+                "root": resolve_scope_path(repo_root, sub_scope.source),
+                "config": config,
+            }
+    return specs
+
+
+def new_watch_state(repo_root: Path, spec: dict[str, Any], *, baseline: bool) -> dict[str, Any]:
+    state = {
+        **spec,
+        "snapshot": {},
+        "doc_snapshot": None,
+        "dirty_at": None,
+        "changed_files": [],
+        "source_missing": False,
+        "startup_doc_error": "",
+        "startup_source_error": "",
+    }
+    if not baseline:
+        return state
+    if not state.get("sub_scope"):
+        doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, state["scope"])
+        state["doc_snapshot"] = doc_snapshot
+        state["startup_doc_error"] = snapshot_error
+    initial_snapshot, source_error = try_state_snapshot(state)
+    if initial_snapshot is None:
+        pause_state_for_missing_source(state)
+        state["startup_source_error"] = source_error
+    else:
+        state["snapshot"] = initial_snapshot
+    return state
+
+
+def reconcile_watch_states(
+    repo_root: Path,
+    states: dict[str, dict[str, Any]],
+    configs: dict[str, Any],
+    *,
+    baseline: bool,
+) -> dict[str, list[str]]:
+    sync_scope_config_globals(configs)
+    desired = desired_watch_state_specs(repo_root, configs)
+    changes = {"added": [], "removed": [], "reloaded": []}
+
+    for key in sorted(set(states) - set(desired)):
+        del states[key]
+        changes["removed"].append(key)
+
+    for key, spec in desired.items():
+        existing = states.get(key)
+        if existing is None:
+            states[key] = new_watch_state(repo_root, spec, baseline=baseline)
+            changes["added"].append(key)
+            continue
+        if existing.get("root") != spec["root"] or existing.get("config") != spec["config"]:
+            states[key] = new_watch_state(repo_root, spec, baseline=baseline)
+            changes["reloaded"].append(key)
+    return changes
+
+
+def watch_roots_log_text(states: dict[str, dict[str, Any]]) -> str:
+    return ", ".join(f"{state['root']} -> {state['label']}" for _, state in sorted(states.items()))
 
 
 def summarize_output(output: str, fallback: str) -> str:
@@ -372,49 +485,61 @@ def main() -> int:
         raise SystemExit("--debounce-seconds must be zero or greater")
 
     repo_root = detect_repo_root(args.repo_root)
-    states = {}
-    for scope, rel_root in SCOPE_ROOTS.items():
-        root = resolve_scope_path(repo_root, rel_root)
-        doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, scope)
-        if snapshot_error:
-            log(f"{scope} parsed docs snapshot unavailable at startup; watcher search will use full rebuilds: {snapshot_error}")
-        states[scope] = {
-            "scope": scope,
-            "sub_scope": "",
-            "label": scope,
-            "root": root,
-            "snapshot": snapshot_scope(root, scope),
-            "doc_snapshot": doc_snapshot,
-            "dirty_at": None,
-            "changed_files": [],
-        }
-        config = DOCS_SCOPE_CONFIGS.get(scope)
-        for sub_scope in config.sub_scopes if config else ():
-            label = f"{scope}/{sub_scope.sub_scope}"
-            sub_scope_root = resolve_scope_path(repo_root, sub_scope.source)
-            states[label] = {
-                "scope": scope,
-                "sub_scope": sub_scope.sub_scope,
-                "label": label,
-                "root": sub_scope_root,
-                "snapshot": snapshot_markdown_root(sub_scope_root),
-                "doc_snapshot": None,
-                "dirty_at": None,
-                "changed_files": [],
-            }
-    state_keys = list(states.keys())
+    config_path = repo_root / CONFIG_REL_PATH
+    config_signature = config_file_signature(config_path)
+    states: dict[str, dict[str, Any]] = {}
+    reconcile_watch_states(
+        repo_root,
+        states,
+        load_docs_scope_configs(repo_root),
+        baseline=True,
+    )
+    for state in states.values():
+        if state.get("startup_doc_error"):
+            log(
+                f"{state['label']} parsed docs snapshot unavailable at startup; "
+                f"watcher search will use full rebuilds: {state['startup_doc_error']}"
+            )
+        if state.get("startup_source_error"):
+            log(f"{state['label']} source root unavailable at startup; watcher is waiting: {state['startup_source_error']}")
 
-    watched_roots = ", ".join(f"{states[key]['root']} -> {states[key]['label']}" for key in state_keys)
-    log(f"Watching {watched_roots} (poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s).")
-    log("Docs scope config is loaded at watcher startup; restart the watcher after adding or removing sub-scopes.")
+    log(
+        f"Watching {watch_roots_log_text(states)} "
+        f"(poll={args.poll_seconds:.2f}s, debounce={args.debounce_seconds:.2f}s)."
+    )
+    log(f"Watching scope config {config_path}; scope and sub-scope state will reconcile after config changes.")
 
     try:
         while True:
             now = time.monotonic()
-            for key in state_keys:
+            current_config_signature = config_file_signature(config_path)
+            if current_config_signature != config_signature:
+                config_signature = current_config_signature
+                try:
+                    changes = reconcile_watch_states(
+                        repo_root,
+                        states,
+                        load_docs_scope_configs(repo_root),
+                        baseline=False,
+                    )
+                except (FileNotFoundError, ValueError) as exc:
+                    log(f"Scope config reload failed; keeping current watch state: {exc}")
+                else:
+                    for change_kind, labels in changes.items():
+                        if labels:
+                            log(f"Scope config {change_kind}: {', '.join(labels)}.")
+
+            for key in list(states):
                 state = states[key]
                 previous_snapshot = state["snapshot"]
-                current_snapshot = state_snapshot(state)
+                current_snapshot, source_error = try_state_snapshot(state)
+                if current_snapshot is None:
+                    if pause_state_for_missing_source(state):
+                        log(f"{state['label']} source root unavailable; watcher is waiting: {source_error}")
+                    continue
+                if state.get("source_missing"):
+                    state["source_missing"] = False
+                    log(f"{state['label']} source root is available again; resuming change detection.")
                 if current_snapshot != previous_snapshot:
                     state["snapshot"] = current_snapshot
                     state["changed_files"] = merge_changed_filenames(
@@ -426,7 +551,7 @@ def main() -> int:
                     log(f"Detected source changes for {state['label']}: {changed_text}.")
 
             ready_key = None
-            for key in state_keys:
+            for key in list(states):
                 dirty_at = states[key]["dirty_at"]
                 if dirty_at is not None and (now - dirty_at) >= args.debounce_seconds:
                     ready_key = key
@@ -489,7 +614,11 @@ def main() -> int:
                         search_doc_ids=search_doc_ids,
                     )
 
-                post_rebuild_snapshot = state_snapshot(state)
+                post_rebuild_snapshot, source_error = try_state_snapshot(state)
+                if post_rebuild_snapshot is None:
+                    if pause_state_for_missing_source(state):
+                        log(f"{ready_label} source root unavailable after rebuild; watcher is waiting: {source_error}")
+                    continue
                 if post_rebuild_snapshot != state["snapshot"]:
                     previous_snapshot = state["snapshot"]
                     state["snapshot"] = post_rebuild_snapshot

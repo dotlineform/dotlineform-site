@@ -26,5 +26,6 @@ def external_data_sharing_workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     projects_base = tmp_path / "projects-base"
     workspace = projects_base / "data-sharing"
     workspace.mkdir(parents=True)
+    (projects_base / "docs-viewer").mkdir()
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
     return workspace

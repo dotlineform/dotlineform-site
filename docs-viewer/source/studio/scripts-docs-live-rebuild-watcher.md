@@ -2,7 +2,7 @@
 doc_id: scripts-docs-live-rebuild-watcher
 title: Live Rebuild Watcher
 added_date: 2026-04-24
-last_updated: 2026-06-10
+last_updated: 2026-07-13
 parent_id: docs-viewer
 viewable: true
 ---
@@ -29,6 +29,7 @@ The watcher maps source roots directly onto docs scopes:
 - `docs-viewer/source/library/*.md` -> `library`
 
 The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./docs-viewer/build/build_docs.py` and the Docs Viewer service.
+The watcher also watches that config file and reconciles its in-memory scope and sub-scope states when the file changes.
 
 It watches source roots only. It does not watch generated outputs under:
 
@@ -55,6 +56,8 @@ Default behavior:
 - falls back to a full same-scope docs payload rebuild when affected ids are ambiguous or targeted docs prerequisites are missing
 - falls back to a full same-scope docs-search rebuild when affected ids are ambiguous
 - skips a duplicate same-scope pass when a docs-management write has already rebuilt that source change and left a short-lived watcher suppression marker
+- adds, reloads, or retires scope and sub-scope watch states when `docs_scopes.json` changes
+- pauses a still-configured scope instead of exiting if its source root is unavailable, then treats files present when that root returns as changes
 - logs computed affected doc ids when targeted search is safe
 - logs the fallback reason when affected ids are unavailable and search must rebuild the full scope
 
@@ -136,6 +139,8 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 
 - `bin/local-studio` starts this watcher by default
 - `bin/local-studio` does not perform startup docs/docs-search rebuilds
+- scope create, rename, delete, and sub-scope config changes are reconciled without restarting the watcher
+- if a source root disappears before its matching config mutation is observed, the watcher waits without blocking other scopes; the subsequent config reconciliation either retires that state or replaces it with the new one
 - `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `.env.local` for local runs, including when the watcher is started through `bin/local-studio`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds

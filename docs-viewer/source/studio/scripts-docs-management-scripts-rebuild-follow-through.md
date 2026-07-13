@@ -77,6 +77,8 @@ Ownership: owns polling/debounce behavior for changed docs source files while lo
 Responsibilities:
 
 - watches configured docs source roots
+- watches `docs_scopes.json` and reconciles added, changed, renamed, and removed scope/sub-scope states
+- pauses rather than exiting when a still-configured source root is unavailable, and resumes change detection if that root returns
 - rebuilds docs/search output after detected source changes
 - respects short-lived suppression markers written by management endpoints
 - avoids duplicate rebuilds for files that were already rebuilt by a management write

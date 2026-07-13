@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -62,6 +63,94 @@ def test_watcher_snapshot_tolerates_file_removed_after_discovery(tmp_path: Path,
 
     assert module.snapshot_scope(tmp_path, "unconfigured-test-scope") == {}
     assert module.snapshot_markdown_root(tmp_path) == {}
+
+
+def test_watcher_pauses_and_can_resume_when_scope_root_is_temporarily_missing(tmp_path: Path) -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    source_root = tmp_path / "source" / "research"
+    state = {
+        "scope": "research",
+        "sub_scope": "",
+        "label": "research",
+        "root": source_root,
+        "snapshot": {"old.md": (1, 1)},
+        "doc_snapshot": {"old.md": {"doc_id": "old"}},
+        "dirty_at": 1.0,
+        "changed_files": ["old.md"],
+        "source_missing": False,
+    }
+
+    snapshot, error = module.try_state_snapshot(state)
+
+    assert snapshot is None
+    assert "Source root not found" in error
+    assert module.pause_state_for_missing_source(state) is True
+    assert module.pause_state_for_missing_source(state) is False
+    assert state["snapshot"] == {}
+    assert state["doc_snapshot"] is None
+    assert state["dirty_at"] is None
+    assert state["changed_files"] == []
+
+    source_root.mkdir(parents=True)
+    (source_root / "new.md").write_text("# New\n", encoding="utf-8")
+    snapshot, error = module.try_state_snapshot(state)
+
+    assert error == ""
+    assert snapshot is not None
+    assert list(snapshot) == ["new.md"]
+
+
+def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path) -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
+    original_roots = dict(module.SCOPE_ROOTS)
+
+    def config(source: str, sub_scopes=()):
+        return SimpleNamespace(
+            scope_type="local",
+            source=Path(source),
+            sub_scopes=tuple(sub_scopes),
+        )
+
+    states = {}
+    try:
+        changes = module.reconcile_watch_states(
+            tmp_path,
+            states,
+            {"notes": config("docs-viewer/source/notes")},
+            baseline=False,
+        )
+        assert changes == {"added": ["notes"], "removed": [], "reloaded": []}
+        assert states["notes"]["root"] == tmp_path / "docs-viewer/source/notes"
+
+        changes = module.reconcile_watch_states(
+            tmp_path,
+            states,
+            {"notes": config("external/source/notes")},
+            baseline=False,
+        )
+        assert changes == {"added": [], "removed": [], "reloaded": ["notes"]}
+        assert states["notes"]["root"] == tmp_path / "external/source/notes"
+
+        tags = SimpleNamespace(sub_scope="tags", source=Path("external/source/archive/tags"))
+        changes = module.reconcile_watch_states(
+            tmp_path,
+            states,
+            {"archive": config("external/source/archive", (tags,))},
+            baseline=False,
+        )
+        assert changes == {
+            "added": ["archive", "archive/tags"],
+            "removed": ["notes"],
+            "reloaded": [],
+        }
+        assert sorted(states) == ["archive", "archive/tags"]
+        assert module.SCOPE_ROOTS == {"archive": Path("external/source/archive")}
+    finally:
+        module.DOCS_SCOPE_CONFIGS.clear()
+        module.DOCS_SCOPE_CONFIGS.update(original_configs)
+        module.SCOPE_ROOTS.clear()
+        module.SCOPE_ROOTS.update(original_roots)
 
 
 def test_watcher_formats_affected_doc_ids_for_logs() -> None:
