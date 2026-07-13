@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-48bc61207a9c821cb952481e70360458",
-    "generated_at_utc": "2026-07-13T20:56:09Z",
+    "version": "blake2b-c5c8773efe96d65fd4eb94214242f33a",
+    "generated_at_utc": "2026-07-13T22:01:18Z",
     "count": 238
   },
   "entries": [
@@ -2759,10 +2759,10 @@
       "kind": "doc",
       "title": "Source Mutation Endpoints",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-mutations",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-13",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-07 • Endpoint Overview",
+      "display_meta": "2026-07-13 • Endpoint Overview",
       "search_terms": [
         "scripts-docs-management-endpoints-source-mutations",
         "scripts",
@@ -2776,12 +2776,12 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-07",
+        "2026-07-13",
         "2026",
-        "06",
-        "07"
+        "07",
+        "13"
       ],
-      "search_text": "scripts-docs-management-endpoints-source-mutations scripts docs management endpoints source mutations source mutation endpoints mutation endpoint overview endpoint overview 2026-06-07 2026 06 07"
+      "search_text": "scripts-docs-management-endpoints-source-mutations scripts docs management endpoints source mutations source mutation endpoints mutation endpoint overview endpoint overview 2026-07-13 2026 07 13"
     },
     {
       "id": "scripts-docs-management-server-operations",

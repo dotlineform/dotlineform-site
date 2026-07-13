@@ -2,12 +2,14 @@
 doc_id: scripts-docs-management-endpoints-source-mutations
 title: Source Mutation Endpoints
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-13
 parent_id: scripts-docs-management-endpoints
 ---
 # Docs Viewer Source Mutation Endpoints
 
 Source mutation endpoints rewrite source Markdown front matter or delete source Markdown files. They do not move files on disk except when deleting a confirmed source doc.
+
+Returned source paths are repo-relative for repo-backed scopes and relative to the fixed external Docs Viewer root for external-local scopes. User-specific absolute workspace roots are not exposed.
 
 ## `POST /docs/update-metadata`
 

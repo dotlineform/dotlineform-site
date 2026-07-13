@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 from docs_management_test_support import docs_management_mutations, docs_management_service, make_repo
 
@@ -70,3 +71,64 @@ def test_hidden_parent_delete_is_blocked_only_by_children() -> None:
 
     assert result["allowed"] is False
     assert result["blockers"] == ["1 child docs still depend on this parent"]
+
+
+def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path: Path, monkeypatch) -> None:
+    repo_root = tmp_path / "repo"
+    (repo_root / "site-tools/config").mkdir(parents=True)
+    (repo_root / "site-tools/config/site-tools.json").write_text(
+        '{"schema_version":"site_tools_config_v1"}\n',
+        encoding="utf-8",
+    )
+    projects_base = tmp_path / "projects-base"
+    external_root = projects_base / "docs-viewer"
+    source_root = external_root / "source/dlf"
+    source_root.mkdir(parents=True)
+    target_path = source_root / "dlf.md"
+    target_path.write_text(
+        docs_management_mutations.source_model.format_source(
+            {
+                "doc_id": "dlf",
+                "title": "dlf",
+                "parent_id": "",
+            },
+            "# dlf\n",
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+
+    source_model = docs_management_mutations.source_model
+    original_configs = dict(source_model.DOCS_SCOPE_CONFIGS)
+    original_roots = dict(source_model.SCOPE_ROOTS)
+    original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+    source_model.DOCS_SCOPE_CONFIGS["dlf"] = SimpleNamespace(
+        scope_type="local_external",
+        source=source_root,
+        allow_unresolved_parent_ids=False,
+        sub_scopes=(),
+    )
+    source_model.SCOPE_ROOTS["dlf"] = source_root
+    docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
+    try:
+        preview = docs_management_mutations.plan_delete_preview(repo_root, "dlf", "dlf")
+        result = docs_management_service.handle_delete_apply(
+            repo_root,
+            {
+                "scope": "dlf",
+                "doc_id": "dlf",
+                "confirm": True,
+            },
+            dry_run=False,
+        )
+    finally:
+        source_model.DOCS_SCOPE_CONFIGS.clear()
+        source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
+        source_model.SCOPE_ROOTS.clear()
+        source_model.SCOPE_ROOTS.update(original_roots)
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
+
+    assert preview["path"] == "source/dlf/dlf.md"
+    assert result["path"] == "source/dlf/dlf.md"
+    assert result["rebuild"] == {"ok": True}
+    assert not target_path.exists()

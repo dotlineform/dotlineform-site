@@ -9,10 +9,19 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
+from docs_scope_config import resolve_external_data_root
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
-    return path.resolve().relative_to(repo_root.resolve()).as_posix()
+    resolved_path = path.resolve()
+    try:
+        return resolved_path.relative_to(repo_root.resolve()).as_posix()
+    except ValueError:
+        pass
+    try:
+        return resolved_path.relative_to(resolve_external_data_root().resolve()).as_posix()
+    except ValueError as exc:
+        raise ValueError("source path is outside the repo and external Docs Viewer root") from exc
 
 
 def normalize_summary(value: Any) -> str:
