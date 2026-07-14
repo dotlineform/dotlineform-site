@@ -566,7 +566,7 @@ select.docsViewer__fieldInput--listbox{
   position: relative;
   display: inline-flex;
   --docs-viewer-scope-select-width: 15rem;
-  --docs-viewer-scope-select-label-min: 4rem;
+  --docs-viewer-scope-select-label-min: 5rem;
 }
 
 .docsViewer__scopeSelectButton{

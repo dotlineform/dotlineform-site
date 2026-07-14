@@ -3,10 +3,10 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "site-request-processing-print-project-setup",
-      "title": "Processing Print Project Setup",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-processing-print-project-setup.json",
-      "added_date": "2026-07-13",
+      "doc_id": "site-request-docs-viewer-index-multiple-selection",
+      "title": "Docs Viewer Index Multiple Selection",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
+      "added_date": "2026-07-14",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
     },
@@ -81,5 +81,5 @@
       "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-07-13T12:46:37Z"
+  "generated_at": "2026-07-14T14:12:37Z"
 }

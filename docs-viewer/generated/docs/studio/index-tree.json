@@ -312,15 +312,15 @@
           "ui_status": "in-progress"
         },
         {
-          "doc_id": "site-request-docs-viewer-semantic-reference-editor",
-          "title": "Docs Viewer Semantic Reference Editor Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
+          "doc_id": "site-request-docs-viewer-index-multiple-selection",
+          "title": "Docs Viewer Index Multiple Selection",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
           "ui_status": "draft"
         },
         {
-          "doc_id": "site-request-processing-print-project-setup",
-          "title": "Processing Print Project Setup",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-processing-print-project-setup.json",
+          "doc_id": "site-request-docs-viewer-semantic-reference-editor",
+          "title": "Docs Viewer Semantic Reference Editor Request",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
           "ui_status": "draft"
         },
         {
@@ -1289,5 +1289,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-13T19:55:59Z"
+  "generated_at": "2026-07-14T14:12:37Z"
 }
