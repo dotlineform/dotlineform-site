@@ -63,6 +63,7 @@ The four general development-guidance documents should be reviewed at implementa
 - implicit selection of every descendant when a parent is selected
 - multiple selection in search, recently-added, review, public, or `index-graph` views
 - adding batch delete or unrelated bulk actions in the first implementation
+- Shift+Arrow, Cmd/Ctrl+Space, or other keyboard range/toggle gestures in the first selection slice
 - replacing native HTML drag/drop with a custom pointer-drag system
 - creating a dynamic action-registration or plugin framework
 - moving handlers, DOM nodes, workflow state, or backend implementation into action definitions
@@ -77,14 +78,18 @@ The four general development-guidance documents should be reviewed at implementa
 
 - A normal click keeps the current open-document behavior and makes that row the sole selected row.
 - Cmd-click on macOS and Ctrl-click elsewhere toggles one row without navigating.
-- Shift-click selects a range from the selection anchor through the clicked row without navigating.
+- Shift-click replaces the current selection with one contiguous range from the selection anchor through the clicked row without navigating. Shift-click does not add disjoint ranges; Cmd/Ctrl-click may still create an arbitrary selection by toggling individual rows.
 - The range is based on the currently rendered tree-row order. Collapsed descendants are not part of a visible range.
+- When Cmd/Ctrl-click removes the range anchor, the first remaining selected row in visible/index order becomes the new anchor. The anchor clears when the selection becomes empty.
 - The primary selection is the most recently focused or explicitly targeted selected row. It is distinct from both the open document and the Shift-range anchor.
 - Right-clicking a selected row preserves the group and makes that row primary. Right-clicking an unselected row replaces the selection with that row and makes it primary.
+- Clicking empty index space or pressing Escape clears the selection without changing the open document.
 - The open document remains represented by `aria-current="page"` and the existing active style. Multiple selection uses a distinct visual state and must not overload `selectedDocId`.
 - Selection changes update row state directly. They do not rebuild or rerender the index tree, load a document, or call the management service.
 - Selection is pruned against the current index whenever the index is reloaded.
+- A selected non-viewable document is pruned immediately when the Show non-viewable filter hides its row. Actions must not retain invisible filtered targets.
 - Selection is cleared when the scope changes or when the active index view no longer exposes the tree.
+- Escape is the only new keyboard selection command required in Slice 1. Shift+Arrow range extension and Cmd/Ctrl+Space toggling may follow after the pointer behavior is proven.
 
 ### Dragging
 
@@ -95,6 +100,9 @@ The four general development-guidance documents should be reviewed at implementa
 - A selected descendant whose ancestor is also selected remains selected visually, but is removed from the effective move roots. Moving the selected ancestor preserves the existing subtree instead of flattening the descendant.
 - Selection and dragover remain local and synchronous. The management busy state begins only after a valid drop requests the move.
 - A failed move retains the selection so the user can retry or choose another destination.
+- The drag preview should show the first selected document in visible order with a badge containing the total selected-document count.
+- After a successful move, the moved documents remain selected and are re-projected after the index reload.
+- A successful move does not change the currently open document, including when that document or one of its ancestors was moved. Existing Delete, New, and Import workflows retain ownership of any post-action document change.
 
 ## State And Ownership
 
@@ -322,11 +330,12 @@ Slice 0 is behavior-preserving. It must not add a selected-id store, modifier-cl
 - intercept Cmd/Ctrl-click and Shift-click before normal link navigation
 - preserve normal click, double-click edit, context menu, expand/collapse, and public behavior
 - project selection after ordinary sidebar renders and prune it after index reloads
+- clear selection from empty-space clicks and Escape, and prune rows hidden by the Show non-viewable filter
 - expose active, primary, selected, and anchor state to the action resolver and manage-mode consumers
 - re-project every visible action when selection or primary state changes
 - complete the pressure-point review before proceeding to group drag/drop
 
-This slice should be usable on its own as a visible selection foundation. Group drag/drop begins in Slice 2.
+This slice should be usable on its own as a visible pointer-selection foundation. Group drag/drop begins in Slice 2. Extended keyboard range/toggle behavior remains deferred.
 
 ### Slice 2: Multiple-Document Drag/Drop
 
@@ -335,8 +344,9 @@ This slice should be usable on its own as a visible selection foundation. Group 
 - validate plural drop destinations
 - generalize `/docs/move` to `doc_ids`
 - apply one move plan and coordinated rebuild
-- reload the index while preserving a sensible open-document target
-- retain selection on failure and apply the decided post-success selection behavior
+- show the first selected document and total selection count in the drag preview
+- reload the index without changing the open document
+- retain selection on failure and keep the moved documents selected after success
 - complete the pressure-point review before adding any further selection consumer
 
 ### Slice 3: Optional Toolbar Consumers
@@ -369,8 +379,10 @@ Review the documents as one guidance system rather than appending the same rule 
 
 - remove formal placeholders that do not elicit a decision or useful handoff evidence
 - distinguish required safety/ownership gates from optional planning prompts
-- keep the workflow as a concise route through the work and avoid duplicating the checklist
-- decide whether Task and Task Batch still need separate templates; retain both only if they guide materially different work
+- compress Development Checklist and Development Workflow into one short canonical development-guide document containing the key gates and route through the work; retire or reduce the other document to a clear pointer
+- retain one lightweight Task structure and make Task Batch a short variant containing only genuinely batch-specific prompts
+- keep long verification-script inventories out of task templates and user-facing handoffs; link to a canonical check/profile where useful and record the verification result
+- identify which prompts in this request materially improved implementation or handoff, and preserve only those in durable guidance
 - use examples from this implementation to express the pressure-point and post-build cohesion review concretely
 - keep feature-specific decisions in this request and stable reusable guidance in the durable documents
 
@@ -391,8 +403,12 @@ Action-definition checks should cover:
 Selection checks should cover:
 
 - normal replacement, Cmd/Ctrl toggle, Shift range, and anchor updates
+- replacement rather than additive Shift ranges, while retaining arbitrary Cmd/Ctrl toggles
+- recalculation of the anchor when its row is toggled off
 - visible-order range behavior with collapsed branches
 - pruning after index changes
+- immediate pruning when selected non-viewable rows are filtered out
+- empty-space and Escape clearing without open-document changes
 - separation between active document, primary selection, range anchor, and selected ids
 - direct selected-row projection after render
 
@@ -404,6 +420,8 @@ Drag/drop checks should cover:
 - rejection of every selected subtree as a destination
 - unchanged-parent no-op behavior
 - root drops and existing single-row behavior through a one-item selection
+- drag preview using the first selected row and total selection count
+- selected-row retention and unchanged open document after a successful move
 
 Mutation-plan checks should cover:
 
@@ -425,52 +443,6 @@ Slice handoffs should also confirm:
 The durable-guidance review should confirm that the four documents have distinct jobs, do not duplicate or contradict the same gate, and retain practical prompts without making template completion the goal.
 
 Manual UI review should confirm selection contrast, modifier-click interception, drag responsiveness, and coexistence with normal click, double-click edit, context menu, and expand/collapse.
-
-## Open Questions
-
-- Should Shift-click replace the current selection with the anchor range, or add the range to existing disjoint selections? Should Cmd/Ctrl+Shift-click explicitly provide the additive form?
-
-replace, no disjointed sections
-
-- When Cmd/Ctrl-click removes the anchor row, which remaining row becomes the next Shift-click anchor?
-
-recalc the new top row in selection
-
-- Should clicking empty index space clear selection?
-
-yes. also Esc
-
-- After a successful move, should moved roots remain selected, should the destination expand automatically, or should selection clear?
-
-remain selected
-
-- If a moved selection contains the currently open document or one of its ancestors, which document should remain open after the index reload?
-
-currently open doc stays open. i.e. only Delete or New or Import changes the displayed doc
-
-- Should the drag image or management status show the number of documents being moved, or are the selected-row projections sufficient for V1?
-
-ideally, show the top doc with a number next to it.
-
-- When non-viewable documents are hidden after selection, should their ids be pruned immediately or retained until the index data itself changes?
-
-don't understand.
-
-- Is keyboard-only multiple selection needed in the first slice, or should it follow once the pointer interaction is proven?
-
-don't understand. do you mean holding shift and arrowing down?
-
-- Which prompts from this request materially improved implementation or handoff, and therefore belong in durable development guidance?
-
-tbd
-
-- Do Task Template and Task Batch Template still guide meaningfully different work, or should one become a short variant of the other?
-
-short variant. on that topic, long lists of verification scripts are pointless for me.
-
-- Which gates belong in Development Checklist, and which navigation/context belongs in Development Workflow, so neither repeats the other?
-
-we need to compress these into key points in a short single doc.
 
 ## Risks To Watch
 
