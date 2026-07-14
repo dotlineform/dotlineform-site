@@ -21,8 +21,8 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     return typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
   }
 
-  function currentSelectedDoc() {
-    return typeof callbacks.currentSelectedDoc === "function" ? callbacks.currentSelectedDoc() : null;
+  function currentActiveDoc() {
+    return typeof callbacks.currentActiveDoc === "function" ? callbacks.currentActiveDoc() : null;
   }
 
   function parentOptions(doc) {
@@ -49,7 +49,7 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
   function payloadFromModal() {
     var modal = modalController();
-    var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
+    var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
     if (!modal || !doc || !refs.titleInput || !refs.summaryInput || !refs.dateInput || !refs.dateDisplayInput || !refs.statusInput || !refs.nonViewableInput || !refs.parentInput) return null;
 
     var title = String(refs.titleInput.value || "").trim();
@@ -93,10 +93,6 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
     });
   }
 
-  function openCurrent() {
-    return openForDoc(currentSelectedDoc());
-  }
-
   function openForDocId(docId) {
     return openForDoc(documentIndex.docsById.get(docId) || null);
   }
@@ -115,7 +111,6 @@ export function createDocsViewerManagementMetadataWorkflow(options = {}) {
 
   return {
     confirm: confirm,
-    openCurrent: openCurrent,
     openForDocId: openForDocId,
     parentOptions: parentOptions,
     refreshEditingOptions: refreshEditingOptions,

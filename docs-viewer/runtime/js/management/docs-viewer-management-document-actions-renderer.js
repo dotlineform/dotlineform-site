@@ -15,7 +15,7 @@ function renderDocumentActionButton(documentRef, options) {
   button.id = settings.id || "";
   button.type = "button";
   button.hidden = true;
-  if (settings.action) button.dataset.docsViewerAction = settings.action;
+  if (settings.actionId) button.dataset.docsViewerAction = settings.actionId;
   button.setAttribute("aria-label", settings.label || "");
   button.title = settings.label || "";
   button.textContent = settings.emoji || "";
@@ -37,13 +37,14 @@ export function renderDocsViewerManagementDocumentActions(options) {
   var buttonsByRenderer = new Map();
   controls.forEach(function (control) {
     var optionsByRenderer = {
-      "manage-edit": { id: "docsViewerManageEditButton", action: "edit", emoji: "✏️" },
-      "markdown-source-toggle": { id: "docsViewerManageSourceButton", action: "markdown-source", emoji: "☰" },
-      "markdown-source-save": { id: "docsViewerManageSourceSaveButton", action: "markdown-save", emoji: "💾" }
+      "manage-edit": { id: "docsViewerManageEditButton", emoji: "✏️" },
+      "markdown-source-toggle": { id: "docsViewerManageSourceButton", emoji: "☰" },
+      "markdown-source-save": { id: "docsViewerManageSourceSaveButton", emoji: "💾" }
     };
     var buttonOptions = optionsByRenderer[control.renderer];
     if (!buttonOptions) return;
     buttonsByRenderer.set(control.renderer, renderDocumentActionButton(documentRef, Object.assign({}, buttonOptions, {
+      actionId: control.actionId,
       label: control.label
     })));
   });

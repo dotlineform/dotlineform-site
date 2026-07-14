@@ -1,4 +1,7 @@
 import {
+  DOCS_VIEWER_ACTION_IDS
+} from "./docs-viewer-action-definitions.js";
+import {
   canDragDoc,
   canDropOnParent,
   currentDropTargetFromEvent,
@@ -17,7 +20,9 @@ export function createDocsViewerManagementInteractionController(options) {
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
   var contextMenu = refs.contextMenu || document.getElementById("docsViewerContextMenu");
-  var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
+  var contextCopyLinkButton = contextMenu
+    ? contextMenu.querySelector('[data-docs-viewer-action="' + DOCS_VIEWER_ACTION_IDS.COPY_LINK + '"]')
+    : null;
   var contextMenuDocId = "";
   var dragDocId = "";
   var dropTargetParentId = "";
@@ -123,9 +128,9 @@ export function createDocsViewerManagementInteractionController(options) {
     if (selection) selection.removeAllRanges();
   }
 
-  function handleContextAction(actionName) {
+  function handleContextAction(actionId) {
     if (!contextMenuEnabled() || !currentContextMenuDoc()) return;
-    if (callbacks.onContextAction) callbacks.onContextAction(actionName);
+    if (callbacks.onContextAction) callbacks.onContextAction(actionId);
   }
 
   function requestEditDoc(docId) {
@@ -296,10 +301,10 @@ export function createDocsViewerManagementInteractionController(options) {
   function wireContextMenuEvents() {
     if (!contextMenu) return;
     contextMenu.addEventListener("click", function (event) {
-      var action = event.target.closest("[data-context-action]");
+      var action = event.target.closest("[data-docs-viewer-action]");
       if (!action) return;
       event.preventDefault();
-      handleContextAction(action.dataset.contextAction);
+      handleContextAction(action.dataset.docsViewerAction);
     });
   }
 

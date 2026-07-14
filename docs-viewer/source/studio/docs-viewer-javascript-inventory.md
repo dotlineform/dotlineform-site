@@ -231,12 +231,19 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `docs-viewer/runtime/js/management/docs-viewer-management.js`
 
 - This controller receives named `managementState`, `serviceClient`, and `routeReload` contracts from the lazy runtime boundary instead of broad runtime `state`. It consumes document-index, selected-document, search/recent, route-session, scope-config, and management domains directly and passes only the required named domains to each child controller.
+- It composes the current active route document into the behavior-preserving one-document action context and supplies pure action resolutions to render projection and command workflows. It does not own action definitions or multiple-selection state.
 - The former management-local cross-domain property facade is removed. Management capability checks mutate only the management and route-session domains; generated-read capability caching remains solely in `docs-viewer-generated-data-runtime.js`.
 - action menu markup is design-time record rendering in `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`; this controller preserves binding, capability projection, and command workflow handoff for the rendered stable ids.
 - metadata and settings shell refs, validation/loading behavior, and modal handoffs are composed by focused workflow owners rather than this coordinator.
 - stable management-control binding, Actions-menu interaction, and root/keyboard event delegation belong to `docs-viewer-management-event-router.js`.
 - Keep service access behind the management service-client contract and post-write reloads behind the route-reload contract.
 - Do not move new backend writes, generated-read behavior, public hosted-view behavior, route shell boot, or route URL primitives into this file.
+
+### `docs-viewer/runtime/js/management/docs-viewer-action-definitions.js`
+
+- The manage-owned, code-owned action-target contract for canonical action ids, `scope`/`active-document`/`selection` targets, `primary`/`all`/`exactly-one` selection policies, disabled reasons, stable target-id resolution, and the temporary one-document context adapter used before multiple selection exists.
+- The module is pure and side-effect free. It must not own renderer placement, DOM refs, handlers, modal/workflow state, hosted-view eligibility, backend capabilities, service transport, or mutation implementation.
+- Shared and manage-only control records may reference its canonical ids through passive `actionId`/`data-docs-viewer-action` values; public entrypoints do not import this manage-only module.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
 
@@ -250,6 +257,12 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 - It receives named command callbacks and focused controller getters; it does not own command implementation, workflow state, capability policy, drag/drop behavior, or a generic application event bus.
 - Scope lifecycle retains its own five control bindings; the event router invokes that focused controller's wiring contract during management startup.
 
+### `docs-viewer/runtime/js/management/docs-viewer-management-interactions.js`
+
+- Owns manage-only navigation, edit, context-menu, and current single-document drag event routing.
+- Context-menu records and events use the same canonical `data-docs-viewer-action` ids as toolbar and Actions-menu controls, while target/cardinality interpretation remains in `docs-viewer-action-definitions.js`.
+- It does not own action targeting or multiple-selection state. The multiple-selection slice must delegate selected ids, primary id, anchor, range/toggle behavior, pruning, and row projection to the focused selection owner.
+
 ### `docs-viewer/runtime/js/management/docs-viewer-management-modal-composition.js`
 
 - Resolves the metadata/import/settings shell refs and composes the shared modal UI-state controller with the focused metadata and settings workflow owners.
@@ -257,7 +270,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-metadata-workflow.js`
 
-- Owns metadata parent-option projection, form validation and payload shaping, selected-document modal opening, config-time option refresh, and delegation of confirmed payloads to the action controller.
+- Owns metadata parent-option projection, form validation and payload shaping, explicit document-id modal opening with active-document fallback, config-time option refresh, and delegation of confirmed payloads to the action controller.
 - Metadata writes and post-write index reloads remain in `docs-viewer-management-actions.js`.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-settings-workflow.js`
@@ -333,7 +346,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 - the focused renderer for management toolbar markup, including the icon-only direct Import shortcut, Actions menu, capability-gated direct Publish shortcut, viewability controls, and scope picker shell.
 - the scope picker shell renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
-- the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; direct and menu Import controls and direct and menu Publish controls share projected state and command owners outside this renderer.
+- the management `Actions` menu is rendered from design-time item records that define stable DOM ids, canonical action ids, labels, optional emoji, and default visibility; direct and menu Import controls and direct and menu Publish controls share projected state and command owners outside this renderer.
 - selected-document `Edit` and `Markdown source` controls moved to the rendered-document main-view toolbar; this renderer keeps broader management/admin Actions such as create, import, delete, settings, rebuild, and scope lifecycle commands.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
 
@@ -357,13 +370,13 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`
 
 - the focused renderer for main-view shell chrome, replacing the former document-shell renderer boundary.
-- the shared main-view renderer is public-safe and defines the selected-document breadcrumb path, bookmark toggle, info-panel toggle, and action mount; the app shell mounts that toolbar in the top bar, and manage-only edit/source controls are rendered by `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`.
+- the shared main-view renderer is public-safe and defines the selected-document breadcrumb path, bookmark toggle, info-panel toggle, and action mount; projected control records may add a passive canonical `actionId` DOM reference without importing manage-only target policy. The app shell mounts that toolbar in the top bar, and manage-only edit/source controls are rendered by `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`.
 - Keep this module limited to rendering `.docsViewer__main`, the main-view toolbar surface, rendered-document/search/recent result mounts, and applying the current narrow rendered/search/recent/results-status projection to DOM refs.
 - Do not move Markdown rendering, generated report loading, payload fetching, breadcrumb path population, selected-document edit/source controls, bookmark storage, metadata display, or search/recent result rendering into it.
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`
 
-- the manage-owned renderer for selected-document `Edit` and `Markdown source` controls.
+- the manage-owned renderer for active/resolved-document `Edit` and `Markdown source` controls, using the passive canonical `actionId` supplied by each hosted-view control record.
 - Keep this module loaded only through manage-capable shell composition; public entrypoints and public-safe shared renderers must not import it statically or duplicate its control ids/labels.
 - Keep command behavior in `docs-viewer/runtime/js/management/docs-viewer-management.js` and its action/controller children.
 

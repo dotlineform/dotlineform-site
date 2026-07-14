@@ -71,7 +71,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       titleInput: refs.metadataTitleInput
     },
     callbacks: {
-      currentSelectedDoc: callbacks.currentSelectedDoc,
+      currentActiveDoc: callbacks.currentActiveDoc,
       getModalController: function () {
         return modalController;
       },
@@ -102,7 +102,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     context: context,
     refs: refs,
     callbacks: {
-      currentSelectedDoc: callbacks.currentSelectedDoc,
+      currentActiveDoc: callbacks.currentActiveDoc,
       hideContextMenu: callbacks.hideContextMenu,
       hideManageActionsMenu: callbacks.hideManageActionsMenu,
       isDocNonViewable: callbacks.isDocNonViewable,

@@ -27,6 +27,11 @@ import {
 import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
+import {
+  DOCS_VIEWER_ACTION_IDS,
+  createDocsViewerSingleDocumentActionContext,
+  resolveDocsViewerAction
+} from "./docs-viewer-action-definitions.js";
 
 var MANAGEMENT_TEXT = {
   checkingNote: "Checking manage mode...",
@@ -103,8 +108,24 @@ export function initDocsViewerManagement(context) {
     };
   }
 
-  function currentSelectedDoc() {
+  function currentActiveDoc() {
     return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
+  }
+
+  function resolveAction(actionId, targetDocId) {
+    var contextOptions = {
+      activeDocId: selectedDocument.selectedDocId
+    };
+    if (arguments.length > 1) contextOptions.targetDocId = targetDocId;
+    return resolveDocsViewerAction(
+      actionId,
+      createDocsViewerSingleDocumentActionContext(contextOptions)
+    );
+  }
+
+  function actionTargetDoc(resolution) {
+    if (!resolution || !resolution.enabled || resolution.targetDocIds.length !== 1) return null;
+    return documentIndex.docsById.get(resolution.targetDocIds[0]) || null;
   }
 
   function currentContextMenuDoc() {
@@ -215,21 +236,24 @@ export function initDocsViewerManagement(context) {
 
     if (!manageRebuildButton || !manageNewButton || !manageDeleteButton || !manageViewableButton) return;
 
-    var doc = currentSelectedDoc();
-    var draftDoc = Boolean(doc && isDocNonViewable(doc));
+    var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA);
+    var deleteAction = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
+    var showAction = resolveAction(DOCS_VIEWER_ACTION_IDS.SHOW);
+    var showDoc = actionTargetDoc(showAction);
+    var draftDoc = Boolean(showDoc && isDocNonViewable(showDoc));
     var editDisabled = (
       management.managementBusy ||
-      !doc ||
+      !editAction.enabled ||
       searchRecent.searchRouteActive
     );
     var deleteDisabled = (
       management.managementBusy ||
-      !doc ||
+      !deleteAction.enabled ||
       searchRecent.searchRouteActive
     );
     var viewableDisabled = (
       management.managementBusy ||
-      !doc ||
+      !showAction.enabled ||
       searchRecent.searchRouteActive ||
       !draftDoc
     );
@@ -419,25 +443,25 @@ export function initDocsViewerManagement(context) {
       contextMenu: shellRefs.contextMenu
     },
     callbacks: {
-      onContextAction: function (actionName) {
+      onContextAction: function (actionId) {
         if (!actionController) return;
-        if (actionName === "new-sibling") {
+        if (actionId === DOCS_VIEWER_ACTION_IDS.NEW_SIBLING) {
           actionController.handleCreateRelatedDoc("sibling");
           return;
         }
-        if (actionName === "new-child") {
+        if (actionId === DOCS_VIEWER_ACTION_IDS.NEW_CHILD) {
           actionController.handleCreateRelatedDoc("child");
           return;
         }
-        if (actionName === "copy-link") {
+        if (actionId === DOCS_VIEWER_ACTION_IDS.COPY_LINK) {
           actionController.handleCopyLink();
           return;
         }
-        if (actionName === "open-vscode") {
+        if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE) {
           actionController.handleOpenSource("vscode");
           return;
         }
-        if (actionName === "open") {
+        if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN) {
           actionController.handleOpenSource("default");
         }
       },
@@ -459,10 +483,11 @@ export function initDocsViewerManagement(context) {
     selectedDocument: selectedDocument,
     context: context,
     refs: {},
+    resolveAction: resolveAction,
     callbacks: {
       clearDragState: clearDragState,
+      currentActiveDoc: currentActiveDoc,
       currentContextMenuDoc: currentContextMenuDoc,
-      currentSelectedDoc: currentSelectedDoc,
       getSettingsWorkflow: function () {
         return settingsWorkflow;
       },
@@ -498,7 +523,10 @@ export function initDocsViewerManagement(context) {
     commands: {
       createDoc: function () { actionController.handleCreateDoc(); },
       deleteDoc: function () { actionController.handleDeleteDoc(); },
-      editCurrent: function () { metadataWorkflow.openCurrent(); },
+      editCurrent: function () {
+        var doc = actionTargetDoc(resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA));
+        if (doc) metadataWorkflow.openForDocId(doc.doc_id);
+      },
       exportDocs: function () { actionController.handleExportDocs(); },
       makeViewable: function () { actionController.handleMakeViewable(); },
       openImport: function () { importController.open(); },
@@ -574,7 +602,7 @@ export function initDocsViewerManagement(context) {
     manageImportButton: manageToolbarImportButton || manageImportButton,
     manageSettingsButton: manageSettingsButton,
     callbacks: {
-      currentSelectedDoc: currentSelectedDoc,
+      currentActiveDoc: currentActiveDoc,
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       isDocNonViewable: isDocNonViewable,

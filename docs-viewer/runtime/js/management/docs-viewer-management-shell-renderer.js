@@ -1,12 +1,18 @@
+import {
+  DOCS_VIEWER_ACTION_IDS
+} from "./docs-viewer-action-definitions.js";
+
+var ACTION_IDS = DOCS_VIEWER_ACTION_IDS;
+
 var MANAGEMENT_SHELL_MARKUP = [
   '<div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden>',
-  '  <button class="docsViewer__contextAction" type="button" data-context-action="copy-link" aria-label="Copy Link">Copy Link</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.COPY_LINK + '" aria-label="Copy Link">Copy Link</button>',
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
-  '  <button class="docsViewer__contextAction" type="button" data-context-action="open">Open</button>',
-  '  <button class="docsViewer__contextAction" type="button" data-context-action="open-vscode">Open In VS Code</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.OPEN + '">Open</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.OPEN_VSCODE + '">Open In VS Code</button>',
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
-  '  <button class="docsViewer__contextAction" type="button" data-context-action="new-sibling">New Sibling</button>',
-  '  <button class="docsViewer__contextAction" type="button" data-context-action="new-child">New Child</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_SIBLING + '">New Sibling</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_CHILD + '">New Child</button>',
   '</div>',
   '<div class="docsViewer__modal" id="docsViewerMetadataModal" hidden>',
   '  <div class="docsViewer__modalBackdrop" data-metadata-close="true"></div>',

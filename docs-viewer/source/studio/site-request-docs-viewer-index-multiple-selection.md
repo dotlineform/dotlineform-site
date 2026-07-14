@@ -8,7 +8,7 @@ parent_id: change-requests
 ---
 # Docs Viewer Index Multiple Selection
 
-Status: proposed
+Status: in progress — Slice 0 complete
 
 ## Summary
 
@@ -110,7 +110,7 @@ Multiple selection is browser UI state, not generated document state and not rou
 
 | Responsibility | Owner after the change |
 | --- | --- |
-| action target/cardinality definitions and pure target resolution | new code-owned `docs-viewer-action-definitions.js` |
+| action target/cardinality definitions, one-document adapter, and pure target resolution | manage-owned `docs-viewer/runtime/js/management/docs-viewer-action-definitions.js` |
 | selected ids, primary id, range anchor, toggle/range behavior, pruning, and row projection | new manage-only `docs-viewer-index-selection.js` |
 | optional selected-row rendering after a normal sidebar render | shared `docs-viewer-sidebar.js`, through narrow management callbacks only |
 | modifier-click interception, drag start/drop event routing, and context-menu coexistence | existing `docs-viewer-management-interactions.js` |
@@ -307,7 +307,7 @@ A prerequisite slice must remain behavior-preserving across the stack. A feature
 
 Each slice starts and ends with the pressure-point gate. The next slice should not begin until its ownership decision, negative scope, and verification result are recorded in this request or its implementation handoff.
 
-### Slice 0: Action Target Prerequisite
+### Slice 0: Action Target Prerequisite — Complete 2026-07-14
 
 - add `docs-viewer-action-definitions.js` with the code-owned definitions object and pure resolver
 - classify every current document-facing, scope-facing, toolbar, Actions-menu, and context-menu command
@@ -322,6 +322,45 @@ Each slice starts and ends with the pressure-point gate. The next slice should n
 This slice removes ambiguous action targeting before the UI can display more than one selected document. It is a prerequisite for Slice 1.
 
 Slice 0 is behavior-preserving. It must not add a selected-id store, modifier-click behavior, selected-row styling, group drag state, plural service requests, batch delete, or other later-slice UI or mutation behavior. Definitions may name future policies such as `all`, but handlers and backend support must remain unchanged until the slice that owns them.
+
+#### Slice 0 Outcome
+
+- added the manage-owned pure action-definition module with 25 code-owned action ids, the three target kinds, the three selection policies, disabled reasons, stable target ordering, and explicit unknown-action rejection
+- added a one-document action-context adapter that maps the active route document to active, primary, and selected ids without introducing a selection store
+- classified every current main-view toolbar, management toolbar, Actions-menu, context-menu, scope-lifecycle, viewability, and filter action
+- added passive `actionId` references to hosted-view control records and one canonical `data-docs-viewer-action` attribute across rendered controls
+- routed Edit metadata, Markdown source, Show, Delete, Move, Copy link, Open, Open in VS Code, New sibling, and New child through resolved target ids while retaining their existing handlers and service behavior
+- renamed manage-only `currentSelectedDoc` callbacks to `currentActiveDoc`; the shared selected-document route state itself is unchanged
+- kept backend capability, hosted-view eligibility, placement, rendering, handlers, workflow state, transport, and mutation ownership outside the definitions module
+
+Focused verification passed: the manage-route smoke now checks the complete action classification, pure resolver projections, canonical rendered action ids, and existing manage flows; the router/module smoke passed; the public-runtime boundary suite passed all six checks; syntax, Python compilation, and whitespace checks passed.
+
+#### Slice 0 Pressure Review
+
+- `docs-viewer-management.js` remains a coordinator. It gained only the one-document context composition and target lookup needed to connect the pure resolver to current state.
+- `docs-viewer-management-actions.js` still owns command workflows. It now receives resolved ids rather than interpreting active/selection policy itself.
+- `docs-viewer-management-interactions.js` gained no selection state or range rules; it only reads the canonical context-menu action attribute.
+- `docs-viewer-view-registry.js` carries a passive `actionId` reference on control records. It does not import the manage-owned definitions or interpret target/cardinality rules.
+- No further extraction was justified in Slice 0. The new definition module moved one complete responsibility, while the other changes were narrow connections to that owner.
+- The negative scope held: no multiple-selection state, gestures, row projection, drag-group behavior, plural service request, or batch mutation was implemented.
+- The next slice would overload the interaction controller and management coordinator if selection rules were added directly; the planned focused selection owner is therefore required before adding that behavior.
+
+#### Slice 1 Handoff
+
+Start Slice 1 from the implemented `docs-viewer-action-definitions.js` contract and add `docs-viewer-index-selection.js` as the complete manage-only owner of selected ids, primary id, range anchor, range/toggle rules, pruning, and row projection.
+
+Implementation boundary:
+
+- replace the one-document adapter inside the management coordinator with the selection owner's context snapshot; keep `selectedDocument.selectedDocId` as the independently active route document
+- keep modifier-click, right-click, empty-space, and Escape event recognition in the interaction controller, but delegate every selection transition to the new owner
+- project selected-row state through a narrow management callback after ordinary shared sidebar rendering; do not give the shared sidebar ownership of selection state
+- re-resolve and re-project all visible actions whenever selection or primary changes; `exactly-one` actions must disable for multiple selection, while scope and active-document actions remain independent
+- preserve the active-document behavior of Bookmark and Markdown source
+- address the current Info-panel seam explicitly: its shared controller reads the active route document today, while the implemented action definition targets the primary selection. Supply the resolved primary document through a narrow manage-mode context/handoff without moving selection policy or manage-only state into the shared controller
+- add empty-space and Escape clearing and immediate pruning of non-viewable rows hidden by the filter
+- do not change drag state, move callbacks, `/docs/move`, mutation planning, or backend contracts; those remain Slice 2
+
+Begin with a fresh pressure-point review of `docs-viewer-management-interactions.js`, the management coordinator, the shared Info-panel context seam, and sidebar post-render projection. Verify the selection model as pure behavior first, then use the focused manage route to confirm module wiring and current single-document behavior.
 
 ### Slice 1: Multiple Selection Foundation
 

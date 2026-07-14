@@ -1,79 +1,85 @@
+import {
+  DOCS_VIEWER_ACTION_IDS
+} from "./docs-viewer-action-definitions.js";
+
+var ACTION_IDS = DOCS_VIEWER_ACTION_IDS;
+
 var MANAGEMENT_ACTION_MENU_ITEMS = [
   {
     id: "docsViewerManageNewButton",
-    action: "new",
+    actionId: ACTION_IDS.NEW,
     emoji: "📄",
     label: "New"
   },
   {
     id: "docsViewerManageImportButton",
-    action: "import",
+    actionId: ACTION_IDS.IMPORT,
     emoji: "📥",
     label: "Import"
   },
   {
     id: "docsViewerManageDeleteButton",
-    action: "delete",
+    actionId: ACTION_IDS.DELETE,
     emoji: "🗑️",
     label: "Delete"
   },
   {
     id: "docsViewerManageNewScopeButton",
-    action: "new-scope",
+    actionId: ACTION_IDS.NEW_SCOPE,
     emoji: "🗂️",
     label: "New scope",
     hidden: true
   },
   {
     id: "docsViewerManageRenameScopeButton",
-    action: "rename-scope",
+    actionId: ACTION_IDS.RENAME_SCOPE,
     emoji: "🏷️",
     label: "Rename scope",
     hidden: true
   },
   {
     id: "docsViewerManageDeleteScopeButton",
-    action: "delete-scope",
+    actionId: ACTION_IDS.DELETE_SCOPE,
     emoji: "🗑️",
     label: "Delete scope",
     hidden: true
   },
   {
     id: "docsViewerManageNewSubScopeButton",
-    action: "new-sub-scope",
+    actionId: ACTION_IDS.NEW_SUB_SCOPE,
     emoji: "📁",
     label: "New sub-scope",
     hidden: true
   },
   {
     id: "docsViewerManageDeleteSubScopeButton",
-    action: "delete-sub-scope",
+    actionId: ACTION_IDS.DELETE_SUB_SCOPE,
     emoji: "🗑️",
     label: "Delete sub-scope",
     hidden: true
   },
   {
     id: "docsViewerManagePublishButton",
-    action: "publish-docs",
+    actionId: ACTION_IDS.PUBLISH_DOCS,
     emoji: "🌍",
     label: "Publish"
   },
   {
     id: "docsViewerManageExportButton",
-    action: "export-docs",
+    actionId: ACTION_IDS.EXPORT_DOCS,
     emoji: "⬇️",
     label: "Export",
     hidden: true
   },
   {
     id: "docsViewerManageSettingsButton",
-    action: "settings",
+    actionId: ACTION_IDS.SETTINGS,
     emoji: "⚙️",
     label: "Settings"
   },
   {
     id: "docsViewerManageRebuildButton",
-    action: "rebuild-docs",
+    actionId: ACTION_IDS.REBUILD_DOCS,
     emoji: "🔄",
     label: "Rebuild docs"
   }
@@ -89,7 +95,7 @@ function escapeHtml(value) {
 
 function renderActionMenuItem(item) {
   var hidden = item.hidden ? " hidden" : "";
-  var action = item.action ? ' data-docs-viewer-action="' + escapeHtml(item.action) + '"' : "";
+  var action = item.actionId ? ' data-docs-viewer-action="' + escapeHtml(item.actionId) + '"' : "";
   var label = escapeHtml(item.label);
   return [
     '        <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="' + escapeHtml(item.id) + '"' + action + ' aria-label="' + label + '" title="' + label + '"' + hidden + ">",
@@ -120,17 +126,17 @@ function managementActionsMarkup(options) {
   return [
   '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
   '  <div class="docsViewer__manageActions" role="toolbar" aria-label="Management actions">',
-  '    <button class="docsViewer__actionButton docsViewer__actionButton--iconOnly" type="button" id="docsViewerManageToolbarImportButton" data-docs-viewer-action="import" aria-label="Import" title="Import"><span aria-hidden="true">📥</span></button>',
+  '    <button class="docsViewer__actionButton docsViewer__actionButton--iconOnly" type="button" id="docsViewerManageToolbarImportButton" data-docs-viewer-action="' + ACTION_IDS.IMPORT + '" aria-label="Import" title="Import"><span aria-hidden="true">📥</span></button>',
   '    <div class="docsViewer__actionsMenuHost">',
   '      <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
   '      <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',
   MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
   '      </div>',
   '    </div>',
-  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageToolbarPublishButton" data-docs-viewer-action="publish-docs" aria-label="Publish" title="Publish" hidden>Publish</button>',
-  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton" aria-label="Show" title="Show">Show</button>',
+  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageToolbarPublishButton" data-docs-viewer-action="' + ACTION_IDS.PUBLISH_DOCS + '" aria-label="Publish" title="Publish" hidden>Publish</button>',
+  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton" data-docs-viewer-action="' + ACTION_IDS.SHOW + '" aria-label="Show" title="Show">Show</button>',
   '    <label class="docsViewer__draftToggle">',
-  '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox" aria-label="Show non-viewable docs">',
+  '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" data-docs-viewer-action="' + ACTION_IDS.SHOW_NON_VIEWABLE + '" type="checkbox" aria-label="Show non-viewable docs">',
   '      <span class="docsViewer__draftLabel">Show non-viewable</span>',
   '    </label>',
   featurePolicy.scopeSelection === true ? renderScopeSelect() : "",

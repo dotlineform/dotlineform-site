@@ -40,6 +40,7 @@ export function renderDocsViewerMainView(options = {}) {
     var button = null;
     if (control.renderer === "info-toggle") {
       button = renderControlButton(documentRef, {
+        actionId: control.actionId,
         className: "docsViewer__infoToggle",
         id: "docsViewerInfoToggle",
         label: "Show document info",
@@ -48,6 +49,7 @@ export function renderDocsViewerMainView(options = {}) {
       button.setAttribute("aria-expanded", "false");
     } else if (control.renderer === "bookmark-toggle") {
       button = renderControlButton(documentRef, {
+        actionId: control.actionId,
         className: "docsViewer__bookmarkToggle",
         id: "docsViewerBookmarkToggle",
         label: "Add bookmark",
@@ -162,6 +164,7 @@ function renderControlButton(documentRef, options) {
   button.id = options.id;
   button.type = "button";
   button.hidden = true;
+  if (options.actionId) button.dataset.docsViewerAction = options.actionId;
   button.setAttribute("aria-label", options.label);
   button.title = options.label;
   button.textContent = options.text;

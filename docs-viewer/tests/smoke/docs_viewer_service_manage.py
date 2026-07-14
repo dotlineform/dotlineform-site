@@ -193,6 +193,170 @@ def assert_delete_uses_first_remaining_root(page: Page) -> None:
         raise AssertionError(f"unexpected post-delete root fallback: {result!r}")
 
 
+def assert_action_target_definitions(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const module = await import('/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js');
+            const definitions = module.listDocsViewerActionDefinitions();
+            const groupedIds = (target, selectionPolicy = '') => definitions
+                .filter(definition => definition.target === target && (definition.selectionPolicy || '') === selectionPolicy)
+                .map(definition => definition.id)
+                .sort();
+            const multiContext = {
+                activeDocId: 'active',
+                primaryDocId: 'second',
+                selectedDocIds: ['first', 'second', 'first']
+            };
+            const singleContext = module.createDocsViewerSingleDocumentActionContext({ activeDocId: 'active' });
+            const targetedContext = module.createDocsViewerSingleDocumentActionContext({
+                activeDocId: 'active',
+                targetDocId: 'context'
+            });
+            let unknownRejected = false;
+            try {
+                module.resolveDocsViewerAction('invented-action', singleContext);
+            } catch (error) {
+                unknownRejected = /Unknown Docs Viewer action/.test(String(error && error.message || ''));
+            }
+            const surfaceActionIds = Array.from(document.querySelectorAll('[data-docs-viewer-action]'))
+                .map(node => node.dataset.docsViewerAction)
+                .filter(Boolean);
+            const unknownSurfaceActionIds = Array.from(new Set(surfaceActionIds.filter(actionId => (
+                !module.getDocsViewerActionDefinition(actionId)
+            )))).sort();
+            return {
+                active: groupedIds('active-document'),
+                all: groupedIds('selection', 'all'),
+                exactlyOne: groupedIds('selection', 'exactly-one'),
+                primary: groupedIds('selection', 'primary'),
+                scope: groupedIds('scope'),
+                singleContext,
+                targetedContext,
+                resolutions: {
+                    active: module.resolveDocsViewerAction('bookmark', multiContext),
+                    all: module.resolveDocsViewerAction('move', multiContext),
+                    exactlyOne: module.resolveDocsViewerAction('delete', multiContext),
+                    primary: module.resolveDocsViewerAction('info', multiContext),
+                    scope: module.resolveDocsViewerAction('export-docs', multiContext)
+                },
+                surfaceActionIds: Array.from(new Set(surfaceActionIds)).sort(),
+                unknownRejected,
+                unknownSurfaceActionIds
+            };
+        }"""
+    )
+    expected = {
+        "active": ["bookmark", "markdown-save", "markdown-source"],
+        "all": ["move"],
+        "exactlyOne": ["delete", "show"],
+        "primary": [
+            "copy-link",
+            "edit-metadata",
+            "info",
+            "new-child",
+            "new-sibling",
+            "open",
+            "open-vscode",
+        ],
+        "scope": [
+            "delete-scope",
+            "delete-sub-scope",
+            "export-docs",
+            "import",
+            "new",
+            "new-scope",
+            "new-sub-scope",
+            "publish-docs",
+            "rebuild-docs",
+            "rename-scope",
+            "settings",
+            "show-non-viewable",
+        ],
+        "singleContext": {
+            "activeDocId": "active",
+            "primaryDocId": "active",
+            "selectedDocIds": ["active"],
+        },
+        "targetedContext": {
+            "activeDocId": "active",
+            "primaryDocId": "context",
+            "selectedDocIds": ["context"],
+        },
+        "resolutions": {
+            "active": {
+                "actionId": "bookmark",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "",
+                "target": "active-document",
+                "targetDocIds": ["active"],
+            },
+            "all": {
+                "actionId": "move",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": ["first", "second"],
+            },
+            "exactlyOne": {
+                "actionId": "delete",
+                "disabledReason": "Available for one document only.",
+                "enabled": False,
+                "selectionPolicy": "exactly-one",
+                "target": "selection",
+                "targetDocIds": [],
+            },
+            "primary": {
+                "actionId": "info",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "primary",
+                "target": "selection",
+                "targetDocIds": ["second"],
+            },
+            "scope": {
+                "actionId": "export-docs",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "",
+                "target": "scope",
+                "targetDocIds": [],
+            },
+        },
+        "surfaceActionIds": [
+            "bookmark",
+            "copy-link",
+            "delete",
+            "delete-scope",
+            "delete-sub-scope",
+            "edit-metadata",
+            "export-docs",
+            "import",
+            "info",
+            "markdown-save",
+            "markdown-source",
+            "new",
+            "new-child",
+            "new-scope",
+            "new-sibling",
+            "new-sub-scope",
+            "open",
+            "open-vscode",
+            "publish-docs",
+            "rebuild-docs",
+            "rename-scope",
+            "settings",
+            "show",
+            "show-non-viewable",
+        ],
+        "unknownRejected": True,
+        "unknownSurfaceActionIds": [],
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected Docs Viewer action target contract: {result!r}")
+
+
 def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], set[str], set[str], str]:
     generated_requests: list[str] = []
     import_module_requests: list[str] = []
@@ -218,6 +382,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
 
     page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    assert_action_target_definitions(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)
     if import_module_requests:

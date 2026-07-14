@@ -20,6 +20,9 @@ import {
   resolveViewabilityTargetDocIds
 } from "./docs-viewer-management-action-workflow.js";
 import {
+  DOCS_VIEWER_ACTION_IDS
+} from "./docs-viewer-action-definitions.js";
+import {
   buildDocsViewerDeletePreviewBody,
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
@@ -89,13 +92,25 @@ export function createDocsViewerManagementActionController(options) {
   var context = options.context;
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
+  var resolveAction = options.resolveAction;
+  if (typeof resolveAction !== "function") {
+    throw new Error("Docs Viewer management actions require action target resolution.");
+  }
 
-  function currentSelectedDoc() {
-    return callbacks.currentSelectedDoc ? callbacks.currentSelectedDoc() : null;
+  function currentActiveDoc() {
+    return callbacks.currentActiveDoc ? callbacks.currentActiveDoc() : null;
   }
 
   function currentContextMenuDoc() {
     return callbacks.currentContextMenuDoc ? callbacks.currentContextMenuDoc() : null;
+  }
+
+  function actionTargetDoc(actionId, targetDocId) {
+    var resolution = arguments.length > 1
+      ? resolveAction(actionId, targetDocId)
+      : resolveAction(actionId);
+    if (!resolution || !resolution.enabled || resolution.targetDocIds.length !== 1) return null;
+    return documentIndex.docsById.get(resolution.targetDocIds[0]) || null;
   }
 
   function managementClientOptions() {
@@ -212,7 +227,7 @@ export function createDocsViewerManagementActionController(options) {
     if (!titleResult || !titleResult.confirmed) return;
 
     var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
-    var currentDoc = currentSelectedDoc();
+    var currentDoc = currentActiveDoc();
 
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
@@ -235,7 +250,9 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   async function handleCreateRelatedDoc(kind) {
-    var baseDoc = currentContextMenuDoc();
+    var contextDoc = currentContextMenuDoc();
+    var actionId = kind === "child" ? DOCS_VIEWER_ACTION_IDS.NEW_CHILD : DOCS_VIEWER_ACTION_IDS.NEW_SIBLING;
+    var baseDoc = contextDoc ? actionTargetDoc(actionId, contextDoc.doc_id) : null;
     if (!baseDoc) return;
 
     var titleResult = await openDocsViewerTextInputModal({
@@ -432,7 +449,7 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleMarkdownSource() {
-    var doc = currentSelectedDoc();
+    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.MARKDOWN_SOURCE);
     if (!doc || typeof context.requestDocumentMode !== "function") return;
     hideContextMenu();
     var activeMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
@@ -490,7 +507,7 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleDeleteDoc() {
-    var doc = currentSelectedDoc();
+    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.DELETE);
     if (!doc) return;
 
     setManagementBusy(true);
@@ -546,7 +563,7 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   async function handleMakeViewable() {
-    var doc = currentSelectedDoc();
+    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.SHOW);
     if (!doc || isDocViewable(doc)) return;
     var targetDocIds = await viewabilityTargetDocIds(doc);
     if (!targetDocIds) return;
@@ -571,7 +588,7 @@ export function createDocsViewerManagementActionController(options) {
 
   function handleMoveDoc(docId, parentId) {
     if (!docId) return;
-    var movingDoc = documentIndex.docsById.get(docId);
+    var movingDoc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.MOVE, docId);
     var nextParentId = String(parentId || "").trim();
     if (!movingDoc) return;
     if (nextParentId && !documentIndex.docsById.has(nextParentId)) return;
@@ -595,7 +612,9 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleOpenSource(editor) {
-    var doc = currentContextMenuDoc();
+    var contextDoc = currentContextMenuDoc();
+    var actionId = editor === "vscode" ? DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE : DOCS_VIEWER_ACTION_IDS.OPEN;
+    var doc = contextDoc ? actionTargetDoc(actionId, contextDoc.doc_id) : null;
     if (!doc) return;
 
     setManagementBusy(true);
@@ -616,7 +635,8 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleCopyLink() {
-    var doc = currentContextMenuDoc();
+    var contextDoc = currentContextMenuDoc();
+    var doc = contextDoc ? actionTargetDoc(DOCS_VIEWER_ACTION_IDS.COPY_LINK, contextDoc.doc_id) : null;
     if (!doc || typeof context.markdownDocLink !== "function") return;
     var markdownLink = context.markdownDocLink(doc);
     if (!markdownLink) return;

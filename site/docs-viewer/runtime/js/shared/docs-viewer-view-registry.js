@@ -82,6 +82,7 @@ function normalizeMode(record) {
 function normalizeControl(record) {
   var source = record || {};
   return Object.assign(normalizeCommon(source, "control"), {
+    actionId: cleanString(source.actionId),
     ownerViewId: cleanId(source.ownerViewId, "control owner view"),
     modeIds: cleanStringList(source.modeIds),
     renderer: cleanString(source.renderer)
@@ -145,6 +146,7 @@ export function createDocsViewerSharedViewDefinitions() {
     controls: [
       {
         id: "bookmark",
+        actionId: "bookmark",
         label: "Bookmark",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document"],
@@ -153,6 +155,7 @@ export function createDocsViewerSharedViewDefinitions() {
       },
       {
         id: "info",
+        actionId: "info",
         label: "Document info",
         ownerViewId: "rendered-document",
         renderer: "info-toggle"

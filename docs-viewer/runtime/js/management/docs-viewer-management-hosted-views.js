@@ -44,6 +44,7 @@ export function createDocsViewerManagementViewDefinitions() {
     controls: [
       {
         id: "edit",
+        actionId: "edit-metadata",
         label: "Edit",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document"],
@@ -53,6 +54,7 @@ export function createDocsViewerManagementViewDefinitions() {
       },
       {
         id: "markdown-source",
+        actionId: "markdown-source",
         label: "Markdown source",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document", "markdown-source"],
@@ -62,6 +64,7 @@ export function createDocsViewerManagementViewDefinitions() {
       },
       {
         id: "save-markdown-source",
+        actionId: "markdown-save",
         label: "Save Markdown source",
         ownerViewId: "rendered-document",
         modeIds: ["markdown-source"],

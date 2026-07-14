@@ -16,7 +16,7 @@ This is the model for Docs Viewer panel views, layout rules, and extensible view
 - panel layout uses the active index view’s capabilities, and
 - management-enabled Docs Viewer routes get a placeholder graph view plus a single toolbar toggle.
 
-This contract is limited to hosted-view layout capabilities such as supported index-panel states and toolbar presence. Combined view, document-mode, and toolbar-control eligibility is code-owned by `docs-viewer-view-registry.js`; browser route config cannot invent executable definitions or widen app/capability access.
+This contract is limited to hosted-view layout capabilities such as supported index-panel states and toolbar presence. Combined view, document-mode, and toolbar-control eligibility is code-owned by `docs-viewer-view-registry.js`; browser route config cannot invent executable definitions or widen app/capability access. Code-owned control records may carry a passive `actionId` reference for action-target resolution, but the view registry does not own or interpret action targets or selection cardinality.
 
 ## Purpose
 
@@ -120,6 +120,7 @@ These should be added as explicit fields rather than inferred from a view id.
 `docs-viewer-route-config.js` normalizes route-only view policy and cannot define view capabilities.
 
 `docs-viewer-view-registry.js` carries the normalized capability object for code-owned shared and entrypoint-contributed views.
+It also preserves an optional passive `actionId` on control records. Manage-only action definitions and selection context resolve that id outside the registry; control availability remains a separate view/route/capability projection.
 
 `docs-viewer-view-state.js` exposes the active view id for each panel.
 It does not decide view-specific behavior by id.

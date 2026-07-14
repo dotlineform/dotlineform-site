@@ -61,8 +61,8 @@ export function createDocsViewerManagementModalController(options = {}) {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
   }
 
-  function currentSelectedDoc() {
-    return typeof callbacks.currentSelectedDoc === "function" ? callbacks.currentSelectedDoc() : null;
+  function currentActiveDoc() {
+    return typeof callbacks.currentActiveDoc === "function" ? callbacks.currentActiveDoc() : null;
   }
 
   function metadataModalOpen() {
@@ -508,15 +508,15 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     if (refs.metadataParentInput) {
       refs.metadataParentInput.addEventListener("input", function () {
-        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
+        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
         if (doc) metadataParentPicker.renderPopup(doc);
       });
       refs.metadataParentInput.addEventListener("focus", function () {
-        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
+        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
         if (doc) metadataParentPicker.renderPopup(doc);
       });
       refs.metadataParentInput.addEventListener("keydown", function (event) {
-        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentSelectedDoc();
+        var doc = management.metadataEditingDocId ? documentIndex.docsById.get(management.metadataEditingDocId) : currentActiveDoc();
         metadataParentPicker.handleInputKeydown(event, doc);
       });
     }
