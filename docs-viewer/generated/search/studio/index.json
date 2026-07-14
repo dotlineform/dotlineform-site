@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7f1fbf01baea3bccf8d1bb8d49b9789a",
-    "generated_at_utc": "2026-07-14T18:36:39Z",
+    "version": "blake2b-a93060ecd0d2b0ce52ed9516566abe80",
+    "generated_at_utc": "2026-07-14T19:31:12Z",
     "count": 239
   },
   "entries": [
@@ -1705,19 +1705,19 @@
       "kind": "doc",
       "title": "Dev Home",
       "href": "/docs/?scope=studio&doc=dev-home",
-      "last_updated": "2026-06-18",
-      "display_meta": "2026-06-18",
+      "last_updated": "2026-07-14",
+      "display_meta": "2026-07-14",
       "search_terms": [
         "dev-home",
         "dev",
         "home",
         "dev home",
-        "2026-06-18",
+        "2026-07-14",
         "2026",
-        "06",
-        "18"
+        "07",
+        "14"
       ],
-      "search_text": "dev-home dev home dev home 2026-06-18 2026 06 18"
+      "search_text": "dev-home dev home dev home 2026-07-14 2026 07 14"
     },
     {
       "id": "scripts-cloud-environments",

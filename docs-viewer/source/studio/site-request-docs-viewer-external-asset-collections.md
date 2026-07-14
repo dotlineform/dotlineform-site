@@ -20,7 +20,7 @@ This should be a formal New Scope capability and a lifecycle action that can be 
 
 ## Why This Is Needed
 
-Docs Import currently gives each standalone image or downloadable file a wrapper Markdown document. That is useful when an individual attachment is intentionally part of the document tree, but it is the wrong model for a substantial project asset collection.
+Docs Import currently gives each standalone image or downloadable file a wrapper Markdown document. That remains useful when an individual attachment is intentionally part of the document tree. It becomes unwieldy when a substantial or frequently changing project collection would add one main-tree document per file.
 
 Processing already has source sketches, libraries, saved slider configurations, ZIP archives, spreadsheets, images, and recovered notes with different ownership needs:
 
@@ -49,6 +49,7 @@ The I Ching project adds roughly 150 MB of files and images. Its byte size is no
 
 - treating the external collection as a second Markdown source root
 - importing every asset into the Docs Viewer document tree
+- automatically creating an embedded-detail sub-scope or document per asset in the first implementation
 - automatically moving existing repo-managed attachments
 - making external asset collections available on public read-only routes
 - R2 publication or remote synchronization
@@ -101,6 +102,49 @@ The scope's Markdown source location does not change:
 Markdown found inside the asset collection is an asset for inventory purposes. It is not loaded as a scope document. A file becomes a document only through the normal source or import workflow.
 
 Existing repo-managed attachments remain under `docs-viewer/source/<scope>/media/` and continue to use `/docs/media/<scope>/...`. They do not move when this capability is enabled.
+
+### Asset Representation Choices
+
+External asset collections add another representation; they do not replace the existing document-wrapper behavior.
+
+The representation decision follows three simple principles:
+
+1. **No explanation needed — inventory asset:** the external file simply remains in its folder and appears through the `scope_assets` report. It does not need document identity merely to exist and be discoverable.
+2. **Explanation needed — ordinary document:** a wrapper Markdown document references the external asset and provides its commentary. It participates in the main index, search, metadata, links, and document actions.
+3. **Explanation needed for many assets — embedded detail documents:** wrapper Markdown documents reference the external assets from a configured sub-scope, following the existing Analysis Tags pattern. The parent report provides discovery while each detail document retains normal Docs Viewer rendering and metadata without filling the main sidebar or global search.
+
+Choose the representation from the asset's documentation need and the cardinality of the explained set, not from file type, file size, or storage location.
+
+The external asset stays in its original collection location in all three cases. Creating a wrapper changes how the asset is discovered; it does not move, copy, rename, or delete the external file. The wrapper links to `/docs/assets/<scope>/<relative-path>`.
+
+Current standalone-file Docs Import behavior remains separate: for a local tracked scope such as Processing, import materializes a repo-managed media copy and creates an ordinary wrapper document. A user may continue to use that workflow when a managed copy is wanted.
+
+For an asset that should remain external, a user can manually author a normal wrapper document and insert its asset link. A later report action may automate exactly that source-document creation without turning it into an import or media-copy operation.
+
+### Deferred Asset Clean-Up Workflow
+
+The first implementation supports the inventory surface only and leaves the report read-only. It should nevertheless preserve a clear follow-on clean-up workflow:
+
+1. The report scans and lists every external asset.
+2. The user selects one or more assets.
+3. `Create document` writes main-scope wrapper documents containing the corresponding external asset links.
+4. `Create embedded document` performs the same wrapper generation inside a configured asset-detail sub-scope.
+5. The refreshed report keeps the external assets in place and shows which discovery surface now references each one.
+
+“Move” in this workflow means assigning an asset to a more deliberate Docs Viewer discovery surface. It never means moving the underlying file.
+
+The report may therefore evolve from simple reference state to a disposition such as:
+
+- inventory only
+- referenced by an ordinary document
+- referenced by an embedded detail document
+- referenced by both
+
+Manual wrapper creation must produce the same report state as an automated action. The relationship should be derived from source-document asset links where possible rather than requiring hidden per-asset state.
+
+Representation must not be inferred silently from file type or collection size. The exact multi-selection action, naming, collision, parent, ordering, and partial-failure contracts belong to a separate follow-on request.
+
+The sub-scope option should reuse the existing `docs_subscope` parent-report, manifest, `subdoc`, by-id payload, and normal rendering pipeline. It must not introduce a parallel site or asset application. Designing the wrapper generation, promotion action, ordering metadata, and lifecycle behavior belongs to a separate follow-on request after the inventory is proven.
 
 ### Relationship To Existing External Media
 
@@ -312,6 +356,7 @@ These are prerequisite design checks, not invitations to broad refactoring:
 5. Scope delete and capability projection must consume the server-owned ownership decision, not reproduce path heuristics in the UI.
 6. Reports already provide the desired read-only document surface. Asset-specific filtering and rendering belong in a report module, not the shared document controller.
 7. Docs Import should continue to own import plans and wrapper-document decisions. This capability must not be smuggled into the importer as a second bulk-import workflow.
+8. Project State already demonstrates that metadata-only traversal over `$DOTLINEFORM_PROJECTS_BASE_DIR` can remain fast even when the underlying projects occupy many gigabytes. Its current walker is mixed with catalogue-specific image filtering, detail-folder exclusions, and reference comparison, so Docs Viewer must not import `project_state_report.py` directly. Extract the low-level traversal contract and migrate Project State as an explicit behavior-preserving prerequisite; otherwise the new shared module has no proven existing consumer.
 
 If one of these modules cannot accept its narrow responsibility cleanly, pause that slice and record the ownership problem before refactoring. A prerequisite refactor should leave current behavior intact and should not vertically implement the later report or UI slices as a side effect.
 
@@ -324,9 +369,13 @@ If one of these modules cannot accept its narrow responsibility cleanly, pause t
 - define manifest association and preservation semantics
 - reconcile external-local rename behavior with populated collections
 - define enable preview/apply plans for an existing local scope
+- extract a small shared filesystem inventory primitive, preferably alongside the existing external-workspace path helpers under `studio/shared/python/`
+- keep that primitive limited to confined traversal, relative paths, exclusion pruning, no symlink following, inexpensive file metadata, warnings, totals, and elapsed time
+- migrate Project State to consume the shared traversal primitive while preserving its current default/subfolder scan behavior, catalogue filtering, Markdown output, and API response
+- add focused equivalence tests for Project State before and after the migration, including hidden paths, detail-folder exclusions, direct images, and optional subfolders
 - add focused service tests for config validation, containment, delete preservation, and rename blocking
 
-Exit condition: Processing can be previewed for enablement with an exact safe plan, but no asset index/report UI needs to exist yet.
+Exit condition: Processing can be previewed for enablement with an exact safe plan, and Project State uses the tested shared traversal primitive without changing its observable report behavior. No asset index/report UI needs to exist yet.
 
 ### Slice 1 — New Scope And Retrofit Actions
 
@@ -341,6 +390,7 @@ Exit condition: a new or existing local scope can acquire the capability through
 ### Slice 2 — Index And Local File Route
 
 - implement the confined metadata index endpoint
+- consume the shared filesystem inventory primitive as its second production user
 - implement the nested local asset route
 - add reference correlation and missing-reference records
 - cover traversal, symlink, unsafe-inline, partial-read, and nested-path behavior
@@ -374,6 +424,7 @@ Exit condition: the capability is proven on both shapes of project and stable be
 4. What scan time is acceptable before the report needs a cache or asynchronous refresh? Measure by file count and elapsed time rather than the collection's total bytes.
 5. Should a later collection-disable action preserve the report document as an explanatory stub or offer its deletion as a separate confirmed choice?
 6. Does I Ching become its own Docs Viewer scope or remain a collection attached to another scope? That project-organization decision is outside the capability contract.
+7. For the deferred clean-up actions, how should wrapper titles/doc ids, main-tree parents, sub-scope ordering, collisions, and partial batch failures be resolved? The external-file preservation and two destination surfaces are already decided.
 
 ## Acceptance Criteria
 
@@ -382,12 +433,18 @@ Exit condition: the capability is proven on both shapes of project and stable be
 - Processing Markdown remains under `docs-viewer/source/processing/`.
 - Processing external assets resolve under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/media/processing/` without an absolute config path.
 - Repo-managed Processing attachments remain valid and unmoved.
+- Existing standalone image/file imports continue to create ordinary wrapper documents.
 - The report lists nested assets without creating one Markdown document per file.
+- The first implementation leaves every external asset in place and performs no promotion writes.
 - Asset records expose relative paths only.
 - Nested local links reject traversal and symlink escape and do not execute active content inline.
 - Public routes do not expose the asset index or local asset service.
 - Scope deletion demonstrably preserves external asset files.
 - A populated enabled asset collection is not silently moved by scope rename.
+- Project State retains its existing report contract and exclusions while using the shared filesystem inventory primitive.
+- The asset inventory is the second production consumer of that primitive rather than a parallel walker.
+- The first implementation does not create an asset sub-scope, but its contracts do not block later reuse of the existing embedded-detail document pattern.
+- Any later main-tree or embedded-detail wrapper action links to the external asset in place and does not move or copy it.
 - Processing works as the initial retrofit and I Ching supplies a measured scale result before performance machinery is added.
 
 ## Documentation Impact
@@ -400,6 +457,8 @@ Closeout should update:
 - [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle) for preview/apply, ownership, rename, and delete semantics
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) for the distinction between imported attachments and external collections
 - [Reports](/docs/?scope=studio&doc=docs-viewer-reports) for `scope_assets`
+- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report) for its shared traversal dependency after the behavior-preserving migration
+- [Embedded Detail Documents](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents) only if a later document-per-asset sub-scope workflow is implemented
 - [Source Config Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-config) only to preserve the boundary that lifecycle-installed capabilities are not generic settings
 - [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) and [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for the new lifecycle/report owners
 - the scope config and manifest contract documentation for capability and association fields

@@ -39,6 +39,15 @@ processing cli --sketch=/absolute/path/to/MySketch --run
 
 A p5.js version may be considered later.
 
+## Java
+
+Java came bundled with Processing—not from a separate installation.
+Processing is using:
+
+`/Applications/Processing.app/Contents/app/resources/jdk/bin/java`
+
+That is Temurin/OpenJDK 17.0.19+10 from Eclipse Adoptium. macOS cannot find any separately installed system Java runtime, so there’s nothing additional  to manage. That version information will be useful if InkEngine ever behaves differently after a Processing upgrade.
+
 ## additional setup
 
 When work begins, review whether implementation also needs to:

@@ -3,7 +3,7 @@ doc_id: site-request-admin-checks-operational-reports
 title: Admin Checks Operational Reports
 added_date: 2026-06-10
 last_updated: 2026-06-10
-ui_status: draft
+ui_status: deferred
 parent_id: change-requests
 ---
 # Admin Checks Operational Reports

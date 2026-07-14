@@ -2,7 +2,7 @@
 doc_id: dev-home
 title: Dev Home
 added_date: 2026-04-19
-last_updated: 2026-06-18
+last_updated: 2026-07-14
 summary: This section contains technical reference documents that apply to the repo as a whole.
 parent_id: ""
 viewable: true
@@ -17,6 +17,8 @@ The repo also contains locally run web apps:
 - **[Analytics](/docs/?scope=studio&doc=analytics)**, which adds a semantic tagging layer to catalogue data.
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using manage mode, which is served by the standalone Docs Viewer service.
 - **[Admin](/docs/?scope=studio&doc=admin)**, which includes audit, risks and activity reporting.
+
+The repo also contains `processing/` alongside `site/`. It is currently a separate Java/Processing project rather than a website module, and it is not part of the GitHub Pages artifact deployed from `site/`. It has its own [Processing Docs Viewer scope](/docs/?scope=processing) and is expected to acquire its own build, test, and development lifecycle. Sharing a Git repository does not imply shared runtime or toolchain assumptions; any integration between Processing and the website should be treated as an explicit cross-project change.
 
 ## How The Site Works
 

@@ -14,6 +14,10 @@
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff note with changed files, decisions made, remaining tasks, commands run, and known risks. If the implementation is documented, add the handoff note to that document.
 - For material new changes, requirements, or refactors, state the main benefits and risks. For trivial or mechanical edits, a short summary is enough.
 
+## Processing Project Boundary
+
+`processing/` is tracked in this Git repository but is currently a separate Java/Processing project, not a module of the website or the deployed `site/` artifact. Its documentation belongs to the `processing` Docs Viewer scope, and it is expected to acquire its own build, test, and development lifecycle. Until that lifecycle is defined, do not apply website runtime, build, test, or release assumptions to it implicitly; treat any integration with the website as an explicit cross-project change.
+
 ## Documentation And Generated Payloads
 
 - Update source documents, but do not rebuild Docs Viewer payloads unless the task explicitly calls for that follow-through.

@@ -239,7 +239,7 @@
           "doc_id": "site-request-admin-checks-operational-reports",
           "title": "Admin Checks Operational Reports",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-operational-reports.json",
-          "ui_status": "draft",
+          "ui_status": "deferred",
           "children": [
             {
               "doc_id": "site-request-report-generated-payloads",
@@ -1295,5 +1295,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-14T18:36:39Z"
+  "generated_at": "2026-07-14T19:48:43Z"
 }
