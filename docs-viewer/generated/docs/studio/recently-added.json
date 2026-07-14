@@ -3,6 +3,14 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "site-request-docs-viewer-external-asset-collections",
+      "title": "Docs Viewer External Asset Collections",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-collections.json",
+      "added_date": "2026-07-14",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
       "doc_id": "site-request-docs-viewer-index-multiple-selection",
       "title": "Docs Viewer Index Multiple Selection",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
@@ -71,15 +79,7 @@
       "added_date": "2026-07-11",
       "parent_id": "scripts-docs-management-endpoints",
       "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "docs-viewer-documentation-register",
-      "title": "Docs Viewer Documentation Cleanup",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
-      "added_date": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
     }
   ],
-  "generated_at": "2026-07-14T15:06:37Z"
+  "generated_at": "2026-07-14T18:36:39Z"
 }

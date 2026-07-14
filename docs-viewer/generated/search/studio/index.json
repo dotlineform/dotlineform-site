@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6d7770f102aa376d0ad50528776956cb",
-    "generated_at_utc": "2026-07-14T15:06:37Z",
-    "count": 238
+    "version": "blake2b-7f1fbf01baea3bccf8d1bb8d49b9789a",
+    "generated_at_utc": "2026-07-14T18:36:39Z",
+    "count": 239
   },
   "entries": [
     {
@@ -1310,6 +1310,35 @@
         "12"
       ],
       "search_text": "docs-viewer-documentation-register docs viewer documentation register docs viewer documentation cleanup cleanup change requests change requests 2026-07-12 2026 07 12"
+    },
+    {
+      "id": "site-request-docs-viewer-external-asset-collections",
+      "kind": "doc",
+      "title": "Docs Viewer External Asset Collections",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-external-asset-collections",
+      "last_updated": "2026-07-14",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-07-14 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-external-asset-collections",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "external",
+        "asset",
+        "collections",
+        "docs viewer external asset collections",
+        "change requests",
+        "change",
+        "requests",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "site-request-docs-viewer-external-asset-collections site request docs viewer external asset collections docs viewer external asset collections change requests change requests 2026-07-14 2026 07 14"
     },
     {
       "id": "site-request-docs-viewer-index-multiple-selection",

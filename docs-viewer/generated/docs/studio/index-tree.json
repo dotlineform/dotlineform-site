@@ -312,6 +312,12 @@
           "ui_status": "in-progress"
         },
         {
+          "doc_id": "site-request-docs-viewer-external-asset-collections",
+          "title": "Docs Viewer External Asset Collections",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-collections.json",
+          "ui_status": "draft"
+        },
+        {
           "doc_id": "site-request-docs-viewer-index-multiple-selection",
           "title": "Docs Viewer Index Multiple Selection",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
@@ -1289,5 +1295,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-14T15:06:37Z"
+  "generated_at": "2026-07-14T18:36:39Z"
 }
