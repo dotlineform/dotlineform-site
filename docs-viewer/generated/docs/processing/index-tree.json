@@ -1,0 +1,21 @@
+{
+  "schema": "docs_index_tree_v1",
+  "viewer_options": {
+    "non_loadable_doc_ids": [],
+    "manage_only_tree_root_ids": []
+  },
+  "docs": [
+    {
+      "doc_id": "ffmpeg",
+      "title": "Ffmpeg",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/ffmpeg.json"
+    },
+    {
+      "doc_id": "processing",
+      "title": "processing",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/processing.json",
+      "ui_status": "draft"
+    }
+  ],
+  "generated_at": "2026-07-14T08:16:06Z"
+}

@@ -1,0 +1,143 @@
+---
+doc_id: ffmpeg
+title: Ffmpeg
+added_date: "2026-07-14 09:16"
+last_updated: "2026-07-14 09:16"
+parent_id: ""
+---
+# Ffmpeg
+
+
+
+**here’s a ready-to-use Automator Quick Action that:**
+	•	takes **two selected videos** in Finder,
+	•	**reverses the second**,
+	•	blends it with the first at a user‑entered **opacity** (default 0.5),
+	•	**auto-resizes** the reversed video to match the first video,
+	•	mixes audio (forward + reversed),
+	•	and drops the result next to the first file.
+
+You can paste this straight into Automator’s **Run Shell Script** step.
+
+⸻
+## 
+**1) Prereqs**
+
+Install FFmpeg (includes ffprobe):
+
+brew install ffmpeg
+
+
+⸻
+## 
+**2) Create the Quick Action**
+	1.	Open **Automator** → **File → New → Quick Action**.
+	2.	Set:
+
+	•	**Workflow receives current:** *movie files*
+	•	**in:** *Finder*
+
+	3.	Add **Run Shell Script**.
+
+	•	**Shell:** /bin/bash
+	•	**Pass input:** as arguments
+
+	4.	Paste the script below.
+
+#!/bin/bash
+
+*# ---- Configuration / defaults ----*
+DEFAULT_OPACITY="0.5"     *# 0.0–1.0*
+CRF="20"                  *# lower = higher quality (e.g., 18–23)*
+PRESET="medium"           *# ultrafast … slow … placebo*
+AUDIO_MIX_DURATION="shortest"  *# shortest | longest | first*
+
+*# ---- Basic checks ----*
+if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+  osascript -e 'display alert "FFmpeg not found" message "Install with: brew install ffmpeg"'
+  exit 1
+fi
+
+if [ "$#" -ne 2 ]; then
+  osascript -e 'display alert "Please select exactly TWO video files in Finder, then run the Quick Action again."'
+  exit 1
+fi
+
+VIDEO1="$1"   *# plays forward*
+VIDEO2="$2"   *# will be reversed*
+
+*# ---- Ask user for opacity ----*
+OPACITY=$(osascript -e 'text returned of (display dialog "Enter blend opacity (0.0–1.0):" default answer "'"$DEFAULT_OPACITY"'")' 2>/dev/null)
+
+*# Validate opacity (basic 0.0–1.0 check)*
+if ! [[ "$OPACITY" =~ ^0(\.[0-9]+)?$|^1(\.0+)?$ ]]; then
+  osascript -e 'display alert "Invalid opacity" message "Enter a number between 0.0 and 1.0."'
+  exit 1
+fi
+
+*# ---- Probe the reference size from VIDEO1 ----*
+read -r W H < <(ffprobe -v error -select_streams v:0 -show_entries stream=width,height \
+  -of csv=p=0:s=" " "$VIDEO1")
+
+if [ -z "$W" ] || [ -z "$H" ]; then
+  osascript -e 'display alert "Could not read dimensions" message "VIDEO1 has no detectable video stream."'
+  exit 1
+fi
+
+OUTDIR="$(dirname "$VIDEO1")"
+BASE1="$(basename "$VIDEO1")"
+BASE2="$(basename "$VIDEO2")"
+
+STAMP="$(date +"%Y%m%d-%H%M%S")"
+OUTFILE="${OUTDIR}/blend_fwd_rev_${STAMP}.mp4"
+
+*# ---- Build filter graph ----*
+*# 1) Reverse VIDEO2, scale to VIDEO1’s WxH with aspect preserved, pad to fit.*
+*# 2) Blend VIDEO1 (forward) with reversed VIDEO2 at chosen opacity.*
+*# 3) Mix audio: VIDEO1 normal (volume=OPACITY) + VIDEO2 reversed (volume=OPACITY).*
+FILTER_COMPLEX="
+[1:v]reverse,scale=${W}:${H}:force_original_aspect_ratio=decrease,pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2[revv];
+[0:v][revv]blend=all_mode=overlay:all_opacity=${OPACITY}[v];
+[0:a]volume=${OPACITY}[a0];
+[1:a]areverse,volume=${OPACITY}[a1];
+[a0][a1]amix=inputs=2:duration=${AUDIO_MIX_DURATION}[a]
+"
+
+*# ---- Run FFmpeg ----*
+ffmpeg -hide_banner -y \
+  -i "$VIDEO1" -i "$VIDEO2" \
+  -filter_complex "$FILTER_COMPLEX" \
+  -map "[v]" -map "[a]" \
+  -c:v libx264 -crf "$CRF" -preset "$PRESET" -pix_fmt yuv420p \
+  -c:a aac -b:a 192k \
+  -movflags +faststart \
+  "$OUTFILE"
+
+STATUS=$?
+
+if [ $STATUS -eq 0 ]; then
+  osascript -e 'display notification "Created: '"$(basename "$OUTFILE")"'" with title "FFmpeg Blend (Fwd + Rev)"'
+else
+  osascript -e 'display alert "FFmpeg failed" message "Check your input files and try again."'
+  exit $STATUS
+fi
+
+	5.	Save it as something like **Blend: forward + reverse (FFmpeg)**.
+
+⸻
+## 
+**How to use**
+	•	In **Finder**, select **two videos** (the **first** plays forward, the **second** is reversed).
+	•	Right‑click → **Quick Actions** → **Blend: forward + reverse (FFmpeg)**.
+	•	Enter an opacity (e.g., 0.5).
+	•	Output file appears next to the first video (name like blend_fwd_rev_YYYYMMDD-HHMMSS.mp4).
+
+⸻
+## 
+**Tweaks you can make**
+	•	**Reverse the first clip instead:** swap the input roles or change the filter so [0:v]reverse is used and blended over [1:v].
+	•	**Change length rule:** set AUDIO_MIX_DURATION to longest if you want the timeline to follow the longer clip.
+	•	**Quality vs speed:** lower CRF (e.g., 18) for higher quality; change PRESET to faster/slow as you prefer.
+	•	**No audio mixing:** remove the audio lines and -map "[a]", or replace with -an to drop audio.
+
+Want a **second Quick Action** that *just reverses* any single video in-place (video and audio), or another that blends two forward videos at a fixed 50%? I can drop those scripts too.

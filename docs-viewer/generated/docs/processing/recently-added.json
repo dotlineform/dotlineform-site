@@ -1,0 +1,19 @@
+{
+  "schema": "docs_recently_added_v1",
+  "limit": 10,
+  "docs": [
+    {
+      "doc_id": "ffmpeg",
+      "title": "Ffmpeg",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/ffmpeg.json",
+      "added_date": "2026-07-14 09:16"
+    },
+    {
+      "doc_id": "processing",
+      "title": "processing",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/processing.json",
+      "added_date": "2026-07-14"
+    }
+  ],
+  "generated_at": "2026-07-14T08:16:06Z"
+}

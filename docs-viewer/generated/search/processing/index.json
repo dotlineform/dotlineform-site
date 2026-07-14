@@ -1,0 +1,45 @@
+{
+  "header": {
+    "schema": "search_index_processing_v1",
+    "scope": "processing",
+    "version": "blake2b-c356f9cdd7513b6bf9e4dda51f7fe19b",
+    "generated_at_utc": "2026-07-14T08:16:07Z",
+    "count": 2
+  },
+  "entries": [
+    {
+      "id": "ffmpeg",
+      "kind": "doc",
+      "title": "Ffmpeg",
+      "href": "/docs/?scope=processing&doc=ffmpeg",
+      "last_updated": "2026-07-14 09:16",
+      "display_meta": "2026-07-14 09:16",
+      "search_terms": [
+        "ffmpeg",
+        "2026-07-14 09:16",
+        "2026",
+        "07",
+        "14",
+        "09",
+        "16"
+      ],
+      "search_text": "ffmpeg 2026-07-14 09:16 2026 07 14 09 16"
+    },
+    {
+      "id": "processing",
+      "kind": "doc",
+      "title": "processing",
+      "href": "/docs/?scope=processing&doc=processing",
+      "last_updated": "2026-07-14",
+      "display_meta": "2026-07-14",
+      "search_terms": [
+        "processing",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "processing 2026-07-14 2026 07 14"
+    }
+  ]
+}
