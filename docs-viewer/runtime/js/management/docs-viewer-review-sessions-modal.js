@@ -1,3 +1,7 @@
+import {
+  trapDocsViewerModalFocus
+} from "./docs-viewer-management-modal-shell.js";
+
 function cleanString(value) {
   return String(value || "").trim();
 }
@@ -86,6 +90,7 @@ export function createDocsViewerReviewSessionsModal(options) {
   var state = {
     callbacks: callbacks,
     document: documentRef,
+    returnFocus: null,
     sessions: [],
     selectedSessionId: ""
   };
@@ -121,6 +126,7 @@ export function createDocsViewerReviewSessionsModal(options) {
   state.openButton = modal.querySelector("[data-review-sessions-open]");
   state.buildButton = modal.querySelector("[data-review-sessions-build]");
   state.deleteButton = modal.querySelector("[data-review-sessions-delete]");
+  state.cancelButton = modal.querySelector("button[data-review-sessions-close]");
 
   modal.querySelectorAll("[data-review-sessions-close]").forEach(function (node) {
     node.addEventListener("click", function () {
@@ -138,6 +144,13 @@ export function createDocsViewerReviewSessionsModal(options) {
   state.deleteButton.addEventListener("click", function () {
     var session = selectedSession(state);
     if (session && callbacks.onDelete) callbacks.onDelete(session);
+  });
+  documentRef.addEventListener("keydown", function (event) {
+    if (modal.hidden) return;
+    if (trapDocsViewerModalFocus(event, modal)) return;
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    if (callbacks.onClose) callbacks.onClose();
   });
 
   function setSessions(sessions, selectedSessionId) {
@@ -159,11 +172,27 @@ export function createDocsViewerReviewSessionsModal(options) {
   }
 
   function open() {
+    state.returnFocus = documentRef.activeElement;
     modal.hidden = false;
+    documentRef.defaultView.setTimeout(function () {
+      if (state.cancelButton && typeof state.cancelButton.focus === "function") {
+        state.cancelButton.focus();
+      }
+    }, 0);
   }
 
   function close() {
     modal.hidden = true;
+    var returnFocus = state.returnFocus;
+    state.returnFocus = null;
+    documentRef.defaultView.setTimeout(function () {
+      if (!returnFocus || typeof returnFocus.focus !== "function") return;
+      try {
+        returnFocus.focus({ preventScroll: true });
+      } catch (_error) {
+        returnFocus.focus();
+      }
+    }, 0);
   }
 
   setSessions([], "");

@@ -1,6 +1,9 @@
 import {
   importText
 } from "./docs-html-import-text.js";
+import {
+  trapDocsViewerModalFocus
+} from "../management/docs-viewer-management-modal-shell.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -65,45 +68,6 @@ function renderModalFrame(options = {}) {
   `;
 }
 
-function focusableControls(container) {
-  if (!container) return [];
-  return Array.from(container.querySelectorAll([
-    "button:not([disabled])",
-    "input:not([disabled])",
-    "select:not([disabled])",
-    "textarea:not([disabled])",
-    "a[href]",
-    "[tabindex]:not([tabindex='-1'])"
-  ].join(","))).filter((node) => {
-    return !node.hidden && node.getClientRects && node.getClientRects().length;
-  });
-}
-
-function trapModalFocus(event, modal) {
-  if (!modal || event.key !== "Tab") return false;
-  const controls = focusableControls(modal);
-  if (!controls.length) return false;
-  const first = controls[0];
-  const last = controls[controls.length - 1];
-  const active = document.activeElement;
-  if (!modal.contains(active)) {
-    event.preventDefault();
-    first.focus();
-    return true;
-  }
-  if (event.shiftKey && active === first) {
-    event.preventDefault();
-    last.focus();
-    return true;
-  }
-  if (!event.shiftKey && active === last) {
-    event.preventDefault();
-    first.focus();
-    return true;
-  }
-  return false;
-}
-
 export function openReplacementDocIdModal(options = {}) {
   const collision = options.payload && options.payload.collision && typeof options.payload.collision === "object"
     ? options.payload.collision
@@ -118,11 +82,7 @@ export function openReplacementDocIdModal(options = {}) {
 
   const actions = [
     { role: "filename-conflict-cancel", label: importText("filenameConflictCancelButton") },
-    { role: "filename-conflict-replace", label: importText("filenameConflictReplaceButton") },
-    {
-      role: "filename-conflict-replace-all",
-      label: importText("filenameConflictReplaceAllButton")
-    }
+    { role: "filename-conflict-replace", label: importText("filenameConflictReplaceButton") }
   ];
   actions.push({ role: "filename-conflict-ok", label: importText("filenameConflictOkButton") });
 
@@ -152,7 +112,6 @@ export function openReplacementDocIdModal(options = {}) {
   const statusNode = host.querySelector(`[data-role="${statusRole}"]`);
   const okButton = host.querySelector('[data-role="filename-conflict-ok"]');
   const replaceButton = host.querySelector('[data-role="filename-conflict-replace"]');
-  const replaceAllButton = host.querySelector('[data-role="filename-conflict-replace-all"]');
   const cancelNodes = host.querySelectorAll('[data-role="filename-conflict-cancel"]');
   const restoreFocus = document.activeElement;
 
@@ -192,10 +151,9 @@ export function openReplacementDocIdModal(options = {}) {
       close({ action: "rename", replacementDocId: value });
     };
     const submitReplace = () => close({ action: "replace", overwriteDocId: currentDocId });
-    const submitReplaceAll = () => close({ action: "replaceAll", overwriteDocId: currentDocId });
     const cancel = () => close({ action: "cancel" });
     const onKeydown = (event) => {
-      if (trapModalFocus(event, modal)) return;
+      if (trapDocsViewerModalFocus(event, modal)) return;
       if (event.key === "Escape") {
         event.preventDefault();
         cancel();
@@ -205,7 +163,6 @@ export function openReplacementDocIdModal(options = {}) {
     document.addEventListener("keydown", onKeydown);
     if (okButton) okButton.addEventListener("click", submitReplacement);
     if (replaceButton) replaceButton.addEventListener("click", submitReplace);
-    if (replaceAllButton) replaceAllButton.addEventListener("click", submitReplaceAll);
     cancelNodes.forEach((node) => node.addEventListener("click", cancel));
     if (form) {
       form.addEventListener("submit", (event) => {

@@ -87,11 +87,15 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
           const module = await import('/docs-viewer/runtime/js/import/docs-import-collection-controller.js');
           const busyStates = [];
           let terminalResultCount = 0;
+          let terminalResultDetail = null;
           const controller = module.createDocsImportCollectionController({
             host: document.getElementById('host'),
             statusNode: document.getElementById('status'),
             onBusyChange: (busy) => { busyStates.push(busy); },
-            onTerminalResult: () => { terminalResultCount += 1; }
+            onTerminalResult: (detail) => {
+              terminalResultCount += 1;
+              terminalResultDetail = { scope: detail.scope, docId: detail.docId };
+            }
           });
           await controller.preview({
             file: { filename: 'reviewed.jsonl', source_format: 'data_sharing_documents' },
@@ -122,6 +126,7 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
             resultReportVisible,
             busyStates,
             terminalResultCount,
+            terminalResultDetail,
             cancelledSnapshot: controller.snapshot(),
             cancelDecisionVisible: Boolean(document.querySelector('[data-collection-decision]')),
             recordCount: document.querySelectorAll('.docsViewerImport__collectionRecords > li').length
@@ -141,6 +146,8 @@ def assert_collection_controller(page: Page, base_url: str) -> None:
         raise AssertionError(f"confirmed apply result did not remain collection-controller owned: {result!r}")
     if result["terminalResultCount"] != 1:
         raise AssertionError(f"confirmed apply did not signal one terminal result: {result!r}")
+    if result["terminalResultDetail"] != {"scope": "library", "docId": "alpha"}:
+        raise AssertionError(f"confirmed apply did not identify the first imported collection doc: {result!r}")
     if result["busyStates"] != [True, False, True, False, True, False]:
         raise AssertionError(f"collection busy state did not bracket preview/apply requests: {result!r}")
     if result["cancelledSnapshot"]["phase"] != "cancelled" or result["cancelDecisionVisible"]:

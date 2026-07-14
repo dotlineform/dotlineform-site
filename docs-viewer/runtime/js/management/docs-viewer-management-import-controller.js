@@ -6,6 +6,7 @@ export function createDocsViewerManagementImportController(options = {}) {
   var context = options.context || {};
   var callbacks = options.callbacks || {};
   var importRequestPromise = null;
+  var importApp = null;
   var initialized = false;
 
   function viewerScope() {
@@ -27,11 +28,15 @@ export function createDocsViewerManagementImportController(options = {}) {
     refs.bootStatus.dataset.state = "error";
   }
 
-  function projectTerminalResult() {
+  function projectTerminalResult(detail) {
     var modalController = typeof callbacks.getModalController === "function" ? callbacks.getModalController() : null;
     if (modalController && typeof modalController.projectImportTerminalResult === "function") {
       modalController.projectImportTerminalResult();
     }
+    if (typeof callbacks.onImportComplete === "function") {
+      return callbacks.onImportComplete(detail || {});
+    }
+    return Promise.resolve();
   }
 
   function projectBusy(busy) {
@@ -42,8 +47,13 @@ export function createDocsViewerManagementImportController(options = {}) {
   }
 
   function initialize(scope) {
-    if (!refs.root || !refs.bootStatus || initialized) return Promise.resolve();
+    if (!refs.root || !refs.bootStatus) return Promise.resolve();
     if (importRequestPromise) return importRequestPromise;
+    if (initialized) {
+      return importApp && typeof importApp.refreshStagedFiles === "function"
+        ? importApp.refreshStagedFiles()
+        : Promise.resolve();
+    }
 
     importRequestPromise = importModule()
       .then(function (module) {
@@ -64,7 +74,8 @@ export function createDocsViewerManagementImportController(options = {}) {
           onTerminalResult: projectTerminalResult
         });
       })
-      .then(function () {
+      .then(function (initializedApp) {
+        importApp = initializedApp || null;
         initialized = true;
       })
       .catch(setBootError)

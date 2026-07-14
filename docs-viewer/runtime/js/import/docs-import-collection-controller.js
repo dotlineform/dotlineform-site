@@ -259,8 +259,15 @@ export function createDocsImportCollectionController(options = {}) {
         setStatus(statusNode, payload.outcome === "completed" ? "success" : "warn", importText("collectionResultStatus", {
           outcome: normalizeText(payload.outcome) || "unknown"
         }));
+        const displayedRecord = (Array.isArray(payload.records) ? payload.records : []).find((record) => (
+          record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
+        )) || null;
         try {
-          onTerminalResult();
+          await onTerminalResult({
+            scope: state.scope,
+            docId: normalizeText(displayedRecord && displayedRecord.doc_id),
+            result: payload
+          });
         } catch (error) {
           console.warn("docs_import_collection: terminal result projection failed", error);
         }

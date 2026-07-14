@@ -47,6 +47,12 @@
   height: var(--docs-viewer-import-control-height);
 }
 
+.docsViewerImport__input:is(select).docsViewerImport__input--list{
+  min-height: 14rem;
+  height: auto;
+  padding-block: 0.35rem;
+}
+
 .docsViewerImport__input:disabled{
   color: var(--docs-viewer-import-default-value);
   background: var(--docs-viewer-panel, var(--panel, #fff));
@@ -184,7 +190,13 @@
 }
 
 .docsViewerImport__field--file{
-  flex: 0 1 calc(50% - 0.4rem);
+  flex: 1 1 100%;
+  width: 100%;
+  align-items: start;
+}
+
+.docsViewerImport__field--file .docsViewerImport__fieldControl{
+  width: 100%;
 }
 
 .docsViewerImport__field--file .docsViewerImport__fieldControl > .docsViewerImport__input{
@@ -404,7 +416,7 @@
   gap: 0.8rem;
   min-height: 0;
   overflow: auto;
-  padding-right: 0.35rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.3rem;
   scrollbar-gutter: stable;
 }
 
@@ -418,9 +430,17 @@
 }
 
 .docsViewer__importBody .docsViewerImport__field--inline{
-  grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
+}
+
+.docsViewer__importBody .docsViewerImport__field--file{
+  align-items: start;
+}
+
+.docsViewer__importBody .docsViewerImport__field--file .docsViewerImport__fieldLabel{
+  padding-top: 0.48rem;
 }
 
 .docsViewer__importBody .docsViewerImport__field--inline .docsViewerImport__fieldControl{
@@ -448,7 +468,7 @@
   flex: 0 0 auto;
   display: grid;
   gap: 0.55rem;
-  padding-top: 0.75rem;
+  padding: 0.75rem 0.3rem 0.3rem;
   background: var(--docs-viewer-panel, var(--panel, #fff));
 }
 
@@ -460,5 +480,9 @@
 
   .docsViewer__importBody .docsViewerImport__field--inline .docsViewerImport__fieldControl{
     grid-column: auto;
+  }
+
+  .docsViewer__importBody .docsViewerImport__field--file .docsViewerImport__fieldLabel{
+    padding-top: 0;
   }
 }

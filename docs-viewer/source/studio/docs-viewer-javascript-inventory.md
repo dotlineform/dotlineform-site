@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-07-13
+last_updated: 2026-07-14
 parent_id: docs-viewer-runtime-boundary
 ---
 # Docs Viewer JavaScript Inventory
@@ -20,7 +20,7 @@ Risk themes:
 
 | File                                                | Focus                                                                                                                                                                                                                       |
 |-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| docs-html-import-modals.js                          | runtime support module.                                                                                                                                                                                                     |
+| docs-html-import-modals.js                          | Filename-conflict modal rendering and interaction through the shared management-modal focus contract.                                                                                                                      |
 | docs-html-import-render.js                          | Docs import result rendering helper.                                                                                                                                                                                        |
 | docs-html-import-workflow.js                        | Docs import preview/write workflow helper.                                                                                                                                                                                  |
 | docs-html-import.js                                 | Docs import controller after explicit workflow handoff and focused module-smoke coverage.                                                                                                                                   |
@@ -63,8 +63,9 @@ Risk themes:
 | docs-viewer-management-import-controller.js         | Lazy Docs Import initialization, retry/error state, and management-modal host handoff.                                                                                                                                      |
 | docs-viewer-management-metadata-workflow.js          | Metadata parent projection, validation, payload shaping, and save handoff.                                                                                                                                                   |
 | docs-viewer-management-modal-composition.js          | Focused metadata/settings workflow and shared management-modal controller composition.                                                                                                                                      |
-| docs-viewer-management-modals.js                    | management modal controller after transient modal shell and metadata parent-picker extraction.                                                                                                                              |
+| docs-viewer-management-modals.js                    | Metadata/import/settings modal lifecycle, explicit focus containment, and keyboard dismissal after transient modal shell and metadata parent-picker extraction.                                                             |
 | docs-viewer-management-render.js                    | management support module.                                                                                                                                                                                                  |
+| docs-viewer-review-sessions-modal.js                | Review-session modal rendering, selection controls, shared focus containment, Escape dismissal, and focus return.                                                                                                          |
 | docs-viewer-management-settings-workflow.js          | Settings service loading and narrow field/change/close workflow contract.                                                                                                                                                    |
 | docs-viewer-management-scope-lifecycle-controller.js | Scope/sub-scope control projection, event wiring, lazy flow loading, and post-apply refresh composition.                                                                                                                      |
 | docs-viewer-management-shell-composition.js         | Manage-owned shell renderer composition supplied by the manage entrypoint so public-safe app shell code does not import management renderers.                                                                               |
@@ -239,7 +240,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js`
 
-- Owns the management-side Docs Import lifecycle boundary: lazy module loading, single in-flight initialization, retry after a failed load, boot-error projection, and the action-to-modal handoff.
+- Owns the management-side Docs Import lifecycle boundary: lazy module loading, single in-flight initialization, retry after a failed load, staged-file refresh on every later modal open, boot-error projection, terminal imported-document handoff, and the action-to-modal handoff.
 - Receives explicit import host refs, service/config URLs, and scope/modal callbacks; it forwards busy and terminal-result projection to the modal owner but does not own import preview/write behavior or general management modal behavior.
 - Keep Docs Import preview and write orchestration in `docs-viewer/runtime/js/import/docs-html-import.js` and its child modules.
 
@@ -330,9 +331,9 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 
 ### `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`
 
-- the focused renderer for management toolbar markup, including the Actions menu, capability-gated direct Publish shortcut, viewability controls, and scope picker shell.
+- the focused renderer for management toolbar markup, including the icon-only direct Import shortcut, Actions menu, capability-gated direct Publish shortcut, viewability controls, and scope picker shell.
 - the scope picker shell renders the custom select-menu trigger/list plus a visually hidden native select with the preserved `docsViewerScopeSelect` id for controller/event compatibility.
-- the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; the direct and menu Publish controls share one projected state and command owner outside this renderer.
+- the management `Actions` menu is rendered from design-time item records that define stable ids, labels, optional emoji, and default visibility; direct and menu Import controls and direct and menu Publish controls share projected state and command owners outside this renderer.
 - selected-document `Edit` and `Markdown source` controls moved to the rendered-document main-view toolbar; this renderer keeps broader management/admin Actions such as create, import, delete, settings, rebuild, and scope lifecycle commands.
 - Keep this module static and side-effect-light: it should preserve existing control refs and render only into an explicit app-shell mount.
 
@@ -470,7 +471,7 @@ These files are the route-specific ES module entrypoint wrappers loaded by publi
 ### Docs Import And Management
 
 - Current boundary: Docs Import is a Docs Viewer management-modal app, not a standalone route surface. `docs-viewer/runtime/js/management/docs-viewer-management-import-controller.js` lazily initializes `docs-viewer/runtime/js/import/docs-html-import.js` only from the management modal host.
-- Keep modal app state, scope/file selection, service availability display, and `studio:ready` route-ready dataset projection in `docs-viewer/runtime/js/import/docs-html-import.js`.
+- Keep modal app state, refreshed staged-file selection, scope selection, service availability display, and `studio:ready` route-ready dataset projection in `docs-viewer/runtime/js/import/docs-html-import.js`.
 - Keep import result rendering in `docs-viewer/runtime/js/import/docs-html-import-render.js`.
 - Keep preview/write orchestration in `docs-viewer/runtime/js/import/docs-html-import-workflow.js`.
 - Single-source and collection workflows signal busy and terminal-result state without changing management-modal controls directly; `docs-viewer-management-modals.js` owns disabling `Cancel` while busy, replacing `Import`/`Cancel` with `Close`, and restoring normal actions when the modal reopens.

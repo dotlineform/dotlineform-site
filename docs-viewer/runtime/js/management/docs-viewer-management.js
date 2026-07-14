@@ -68,6 +68,8 @@ export function initDocsViewerManagement(context) {
   var managePublishButtons = [managePublishButton, manageToolbarPublishButton].filter(Boolean);
   var manageExportButton = document.getElementById("docsViewerManageExportButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
+  var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
+  var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
   var manageSourceButton = document.getElementById("docsViewerManageSourceButton");
@@ -250,9 +252,9 @@ export function initDocsViewerManagement(context) {
       manageExportButton.hidden = !exportAvailable;
       manageExportButton.disabled = management.managementBusy || !exportAvailable;
     }
-    if (manageImportButton) {
-      manageImportButton.disabled = management.managementBusy || !management.managementAvailable;
-    }
+    manageImportButtons.forEach(function (button) {
+      button.disabled = management.managementBusy || !management.managementAvailable;
+    });
     if (manageSettingsButton) {
       manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
     }
@@ -332,6 +334,26 @@ export function initDocsViewerManagement(context) {
       context.setStatus("", false);
       renderManagementUi();
     });
+  }
+
+  function displayImportedDocument(detail) {
+    var importedScope = String(detail && detail.scope || "").trim().toLowerCase();
+    var importedDocId = String(detail && detail.docId || "").trim();
+    if (!importedDocId) return Promise.resolve();
+
+    if (importedScope && importedScope !== viewerScope()) {
+      var url = new URL(window.location.href);
+      url.searchParams.set("scope", importedScope);
+      url.searchParams.set("doc", importedDocId);
+      url.searchParams.delete("import");
+      url.searchParams.delete("review_package");
+      url.searchParams.delete("q");
+      url.hash = "";
+      window.location.assign(url.toString());
+      return Promise.resolve();
+    }
+
+    return reloadDocsIndex(importedDocId, "");
   }
 
   function setManagementMessage(message, isError) {
@@ -462,7 +484,7 @@ export function initDocsViewerManagement(context) {
       draftToggle: draftToggle,
       editButton: manageEditButton,
       exportButton: manageExportButton,
-      importButton: manageImportButton,
+      importButtons: manageImportButtons,
       manageActionsButton: manageActionsButton,
       manageActionsMenu: manageActionsMenu,
       newButton: manageNewButton,
@@ -510,6 +532,7 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
+      onImportComplete: displayImportedDocument,
       viewerScope: viewerScope
     }
   });
@@ -548,7 +571,7 @@ export function initDocsViewerManagement(context) {
     context: context,
     shellRefs: shellRefs,
     manageActionsButton: manageActionsButton,
-    manageImportButton: manageImportButton,
+    manageImportButton: manageToolbarImportButton || manageImportButton,
     manageSettingsButton: manageSettingsButton,
     callbacks: {
       currentSelectedDoc: currentSelectedDoc,

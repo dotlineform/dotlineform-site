@@ -95,17 +95,27 @@ def assert_handoff_modules(page: Page) -> None:
           root.dataset.docsImportReviewPackageId = 'fixture-review';
           const bootStatus = document.createElement('p');
           let initOptions = null;
+          let refreshCount = 0;
+          let completedImport = null;
           const managementController = managementModule.createDocsViewerManagementImportController({
             refs: { root, bootStatus },
             context: { root, managementBaseUrl: 'http://127.0.0.1:9999' },
             callbacks: {
               loadImportModule: async () => ({
-                initDocsHtmlImport: async options => { initOptions = options; }
+                initDocsHtmlImport: async options => {
+                  initOptions = options;
+                  return {
+                    refreshStagedFiles: async () => { refreshCount += 1; }
+                  };
+                }
               }),
+              onImportComplete: async detail => { completedImport = detail; },
               viewerScope: () => 'library'
             }
           });
           await managementController.initialize();
+          await managementController.initialize();
+          await initOptions.onTerminalResult({ scope: 'library', docId: 'imported-doc' });
 
           const files = [
             { filename: 'other.jsonl', source_format: 'data_sharing_documents', review_package_ids: ['other-review'] },
@@ -121,6 +131,8 @@ def assert_handoff_modules(page: Page) -> None:
             reviewHref,
             initializedPackageId: initOptions && initOptions.reviewPackageId,
             initializedScope: initOptions && initOptions.initialScope,
+            refreshCount,
+            completedImport,
             matchedFilename: matched.file && matched.file.filename,
             missingRequested: missing.requested,
             missingAvailable: missing.available
@@ -134,6 +146,8 @@ def assert_handoff_modules(page: Page) -> None:
         "reviewHref": "/docs/?import=1&review_package=fixture-review",
         "initializedPackageId": "fixture-review",
         "initializedScope": "library",
+        "refreshCount": 1,
+        "completedImport": {"scope": "library", "docId": "imported-doc"},
         "matchedFilename": "reviewed.jsonl",
         "missingRequested": True,
         "missingAvailable": False,

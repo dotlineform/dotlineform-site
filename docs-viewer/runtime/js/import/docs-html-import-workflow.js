@@ -92,10 +92,7 @@ async function handleReplacementDocIdModal(state, payload) {
     );
     return { action: "cancel" };
   }
-  if ((result.action === "replace" || result.action === "replaceAll") && result.overwriteDocId) {
-    if (result.action === "replaceAll") {
-      state.replaceAllOverwrites = true;
-    }
+  if (result.action === "replace" && result.overwriteDocId) {
     return {
       action: "replace",
       overwriteDocId: result.overwriteDocId,
@@ -188,14 +185,6 @@ async function importFileWithPrompts(state, file, context = {}) {
         "warn",
         payload.summary_text || importText("replacementDocIdRequired")
       );
-      if (state.replaceAllOverwrites) {
-        const overwriteDocId = collisionDocId(payload);
-        if (!overwriteDocId) {
-          throw new Error(importText("overwriteRequired"));
-        }
-        nextOptions = { overwriteDocId, confirmOverwrite: true };
-        continue;
-      }
       const choice = await handleReplacementDocIdModal(state, payload);
       if (!choice || choice.action === "cancel") return { cancelled: true };
       if (choice.action === "replace") {
@@ -212,13 +201,6 @@ async function importFileWithPrompts(state, file, context = {}) {
     }
 
     if (payload.preview_only && payload.requires_overwrite_confirmation) {
-      if (state.replaceAllOverwrites) {
-        nextOptions = {
-          overwriteDocId: collisionDocId(payload),
-          confirmOverwrite: true
-        };
-        continue;
-      }
       const action = await awaitOverwriteConfirmation(state, payload);
       if (action !== "confirm") return { cancelled: true };
       nextOptions = {
@@ -250,7 +232,6 @@ export async function runDocsHtmlImportWorkflow(
     routePath: normalizeText(routePath) || "/docs/",
     managementBaseUrl: normalizeText(managementBaseUrl)
   };
-  state.replaceAllOverwrites = false;
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
@@ -291,8 +272,13 @@ export async function runDocsHtmlImportWorkflow(
         ? importText("importAllSuccess", { count: results.length })
         : normalizeText(results[0] && results[0].summary_text)
     );
+    const displayedResult = results.slice().reverse().find((result) => normalizeText(result && result.doc_id)) || null;
     try {
-      onTerminalResult();
+      await onTerminalResult({
+        scope: workflowContext.scope,
+        docId: normalizeText(displayedResult && displayedResult.doc_id),
+        results: results.slice()
+      });
     } catch (error) {
       console.warn("docs_import_source: terminal result projection failed", error);
     }

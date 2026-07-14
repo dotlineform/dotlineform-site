@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: Docs Import
 added_date: 2026-04-24
-last_updated: 2026-07-13
+last_updated: 2026-07-14
 parent_id: docs-viewer
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 Use this page when you have a staged source file that should become a Library, Analysis, or Studio docs source doc.
 
 The import workflow is owned by Docs Viewer management.
-Open it from `/docs/?scope=<scope>` with the `Import` toolbar action.
+Open it from `/docs/?scope=<scope>` with the icon-only `Import` toolbar action or `Actions` > `Import`.
 
 The import UI runs directly inside the Docs Viewer management modal.
 There is no separate Studio Docs Import route.
@@ -43,9 +43,11 @@ The source Markdown is not edited automatically; add an <code>&#91;&#91;interact
 
 The import modal:
 
-- lists supported staged files from the shared import drop-zone
-- adds a `< all >` option that imports every listed staged source file in sequence
+- refreshes supported staged files from the shared import drop-zone every time it opens
+- shows staged files in a visible list of about ten rows
+- accepts one staged file or reviewed collection at a time; multi-file selection is not currently exposed
 - lets you choose any configured docs scope
+- keeps `Tab` and `Shift+Tab` focus inside the open modal
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
 - converts HTML into a best-attempt Markdown source doc
 - imports staged Markdown as the source body without HTML conversion
@@ -65,9 +67,8 @@ The import modal:
 ## Basic Workflow
 
 1. Open `/docs/?scope=library&import=1` or the matching Docs Viewer management scope.
-2. Click `Import`.
+2. Click the icon-only `Import` toolbar action, or choose `Actions` > `Import`.
 3. Choose the staged file.
-   Choose `< all >` to import every listed staged source file in one run.
 4. Confirm or change the publish scope:
    - `library` for the public Library viewer
    - `analysis` for the public Analysis viewer
@@ -76,6 +77,7 @@ The import modal:
 6. Click `Import`.
 
 If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
+After a successful import, Docs Viewer refreshes the target index and selects the imported document. The terminal result remains in the modal until you click `Close`; an import into another scope navigates directly to that scope and document.
 The new source doc's `doc_id` and Markdown filename come from the staged source filename stem.
 HTML imports preserve the imported HTML title.
 Markdown imports use the first `# H1` as the title when present and otherwise humanize the staged filename stem.
@@ -127,7 +129,6 @@ If the generated import target already matches an existing doc:
 - the modal's text input is seeded with the existing `doc_id`
 - the edited `doc_id` is used as the new Markdown filename stem
 - `Replace` overwrites the existing source file instead of creating a renamed import
-- `Replace all` also overwrites the current collision; during an all-file import, it automatically overwrites later filename collisions without opening another filename-conflict modal
 - the importer checks the new `doc_id` again before writing
 
 Example:
@@ -140,7 +141,6 @@ Example:
 
 Low-level overwrite support remains available to the local service for explicit callers, but the Studio page treats filename collisions as a rename prompt rather than as a normal overwrite flow.
 Use `Replace` only when the staged file should intentionally replace the existing source doc at the same filename.
-Use `Replace all` only when every later filename collision in the current all-file run should be replaced too.
 
 ## Media Imports
 
@@ -253,7 +253,6 @@ Recover overwritten source through Git history, host/filesystem backups, or an e
 After a successful import, the page reports:
 
 - whether the operation created or overwrote a doc
-- each imported staged file when `< all >` was selected
 - the target scope
 - the final `doc_id`
 - the imported title

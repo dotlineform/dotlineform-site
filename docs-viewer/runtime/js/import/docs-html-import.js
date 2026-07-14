@@ -162,8 +162,6 @@ function persistSelectedScope(state, scope) {
   }
 }
 
-const ALL_STAGED_FILES_VALUE = "__all_staged_import_files__";
-
 function managementOptionsForState(state) {
   return docsHtmlImportManagementOptions({
     managementBaseUrl: state.managementBaseUrl
@@ -173,10 +171,6 @@ function managementOptionsForState(state) {
 async function fetchImportFiles(state) {
   const payload = await fetchManagementJson("/docs/import-source-files", "GET", undefined, managementOptionsForState(state));
   return Array.isArray(payload.files) ? payload.files : [];
-}
-
-function isAllFilesSelected(state) {
-  return normalizeText(state.fileSelect.value) === ALL_STAGED_FILES_VALUE;
 }
 
 function selectedFileRecord(state) {
@@ -199,13 +193,11 @@ export function docsImportReviewHandoff(files, packageId) {
 }
 
 function selectedImportFiles(state) {
-  if (isAllFilesSelected(state)) return state.files.filter((file) => !isDocsImportCollectionRecord(file));
   const record = selectedFileRecord(state);
-  return record ? [record] : [];
+  return record && !isDocsImportCollectionRecord(record) ? [record] : [];
 }
 
 function selectedCollectionFile(state) {
-  if (isAllFilesSelected(state)) return null;
   const record = selectedFileRecord(state);
   return isDocsImportCollectionRecord(record) ? record : null;
 }
@@ -227,6 +219,150 @@ function resetImportView(state, statusMessage) {
   resetDocsHtmlImportWarning(state);
   clearDocsHtmlImportResult(state);
   setStatus(state.statusNode, "", statusMessage);
+}
+
+function stagedFileOption(file) {
+  const filename = normalizeText(file && file.filename);
+  const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
+  return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
+}
+
+function renderStagedFiles(state, files) {
+  const previousValue = normalizeText(state.fileSelect.value);
+  state.files = files;
+  resetImportView(state, "");
+  state.collectionController.reset({ active: false });
+
+  if (!files.length) {
+    state.fileSelect.innerHTML = "";
+    state.fileSelect.disabled = true;
+    state.runButton.disabled = true;
+    syncSourceFormatControls(state);
+    setStatus(
+      state.statusNode,
+      state.reviewPackageId ? "error" : "warn",
+      state.reviewPackageId
+        ? importText("collectionHandoffUnavailableStatus")
+        : importText("noFiles")
+    );
+    markRouteReady(state, true);
+    return;
+  }
+
+  state.fileSelect.innerHTML = files.map(stagedFileOption).join("");
+
+  const handoff = docsImportReviewHandoff(files, state.reviewPackageId);
+  const availableValues = new Set(files.map((file) => normalizeText(file && file.filename)));
+  if (handoff.requested && !handoff.available) {
+    state.fileSelect.insertAdjacentHTML(
+      "afterbegin",
+      `<option value="" disabled>${escapeHtml(importText("collectionHandoffUnavailableStatus"))}</option>`
+    );
+    state.fileSelect.value = "";
+  } else if (previousValue && availableValues.has(previousValue)) {
+    state.fileSelect.value = previousValue;
+  } else {
+    state.fileSelect.value = normalizeText(handoff.file && handoff.file.filename || files[0] && files[0].filename);
+  }
+
+  state.fileSelect.disabled = false;
+  state.runButton.disabled = Boolean(handoff.requested && !handoff.available);
+  state.collectionController.reset({
+    active: Boolean(selectedCollectionFile(state))
+  });
+  syncSourceFormatControls(state);
+  setStatus(
+    state.statusNode,
+    handoff.requested && !handoff.available ? "error" : "",
+    handoff.requested && !handoff.available
+      ? importText("collectionHandoffUnavailableStatus")
+      : ""
+  );
+  markRouteReady(state, true);
+}
+
+function refreshStagedFiles(state) {
+  if (!state.serviceAvailable || state.isRunning) return Promise.resolve(state.files);
+  if (state.refreshPromise) return state.refreshPromise;
+
+  state.fileSelect.disabled = true;
+  state.runButton.disabled = true;
+  state.refreshPromise = fetchImportFiles(state)
+    .then((files) => {
+      renderStagedFiles(state, files);
+      return files;
+    })
+    .catch((error) => {
+      console.warn("docs_import_source: staged file refresh failed", error);
+      state.files = [];
+      state.fileSelect.innerHTML = "";
+      state.fileSelect.disabled = true;
+      state.runButton.disabled = true;
+      state.collectionController.reset({ active: false });
+      syncSourceFormatControls(state);
+      resetImportView(state, "");
+      setStatus(state.statusNode, "error", importText("loadFilesFailed"));
+      markRouteReady(state, true);
+      return [];
+    })
+    .finally(() => {
+      state.refreshPromise = null;
+    });
+  return state.refreshPromise;
+}
+
+function bindImportEvents(state) {
+  state.scopeSelect.addEventListener("change", () => {
+    persistSelectedScope(state, state.scopeSelect.value);
+    if (!selectedCollectionFile(state)) return;
+    state.collectionController.reset({ active: true });
+    setStatus(state.statusNode, "", "");
+    markRouteReady(state, true);
+  });
+  state.fileSelect.addEventListener("change", () => {
+    state.runButton.disabled = false;
+    resetImportView(state, "");
+    state.collectionController.reset({
+      active: Boolean(selectedCollectionFile(state))
+    });
+    syncSourceFormatControls(state);
+    markRouteReady(state, true);
+  });
+  state.runButton.addEventListener("click", () => {
+    runImport(state).catch((error) => console.warn("docs_import_source: unexpected import failure", error));
+  });
+  state.resultGridNode.addEventListener("click", (event) => {
+    const target = event.target && event.target.closest
+      ? event.target
+      : event.target && event.target.parentElement
+        ? event.target.parentElement
+        : null;
+    const link = target && target.closest
+      ? target.closest("[data-doc-source-link]")
+      : null;
+    if (!link || !state.resultGridNode.contains(link)) return;
+    event.preventDefault();
+    openResultSource(state, link).catch((error) => console.warn("docs_import_source: unexpected open source failure", error));
+  });
+  state.confirmButton.addEventListener("click", () => {
+    if (state.pendingOverwriteResolver) {
+      state.pendingOverwriteResolver("confirm");
+      return;
+    }
+    runImport(state).catch((error) => console.warn("docs_import_source: unexpected overwrite failure", error));
+  });
+  state.cancelButton.addEventListener("click", () => {
+    if (state.pendingOverwriteResolver) {
+      state.pendingOverwriteResolver("cancel");
+      return;
+    }
+    resetDocsHtmlImportWarning(state);
+    setStatus(
+      state.statusNode,
+      "",
+      importText("overwriteCancelled")
+    );
+  });
 }
 
 async function openResultSource(state, link) {
@@ -338,12 +474,12 @@ export async function initDocsHtmlImport(options = {}) {
     collectionView: document.getElementById("docsImportCollectionView"),
     pendingOverwriteDocId: "",
     pendingOverwriteResolver: null,
-    replaceAllOverwrites: false,
     persistScope: options.persistScope !== false,
     routePath: normalizeText(options.routePath) || "/docs/",
     managementBaseUrl: normalizeText(options.managementBaseUrl),
     serviceAvailable: false,
     isRunning: false,
+    refreshPromise: null,
     files: [],
     docsScopeIds: [],
     reviewPackageId: normalizeText(options.reviewPackageId),
@@ -390,6 +526,9 @@ export async function initDocsHtmlImport(options = {}) {
     state.collectionView
   ];
   if (requiredNodes.some((node) => !node)) return;
+  const importApp = {
+    refreshStagedFiles: () => refreshStagedFiles(state)
+  };
 
   try {
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
@@ -413,16 +552,8 @@ export async function initDocsHtmlImport(options = {}) {
     state.scopeSelect.value = state.docsScopeIds.includes(initialScope)
       ? initialScope
       : selectedScopeFromUrl(state.docsScopeIds, fallbackScope);
-    state.scopeSelect.addEventListener("change", () => {
-      persistSelectedScope(state, state.scopeSelect.value);
-      if (!selectedCollectionFile(state)) return;
-      state.collectionController.reset({
-        active: true,
-        message: importText("collectionIdleStatus")
-      });
-      markRouteReady(state, true);
-    });
     state.includePromptMeta.checked = false;
+    bindImportEvents(state);
 
     root.hidden = false;
     bootStatus.hidden = true;
@@ -438,106 +569,11 @@ export async function initDocsHtmlImport(options = {}) {
         DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE
       );
       markRouteReady(state, true);
-      return;
+      return importApp;
     }
 
-    const files = await fetchImportFiles(state);
-    state.files = files;
-    if (!files.length) {
-      state.runButton.disabled = true;
-      state.fileSelect.disabled = true;
-      setStatus(
-        state.statusNode,
-        state.reviewPackageId ? "error" : "warn",
-        state.reviewPackageId
-          ? importText("collectionHandoffUnavailableStatus")
-          : importText("noFiles")
-      );
-      markRouteReady(state, true);
-      return;
-    }
-
-    const ordinaryFiles = files.filter((file) => !isDocsImportCollectionRecord(file));
-    state.fileSelect.innerHTML = (ordinaryFiles.length ? [
-      `<option value="${escapeHtml(ALL_STAGED_FILES_VALUE)}">${escapeHtml(importText("allFilesOption"))}</option>`
-    ] : []).concat(files.map((file) => {
-      const filename = normalizeText(file.filename);
-      const sourceFormat = docsHtmlImportSourceFormatForRecord(file).replace(/_/g, " ");
-      return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
-    })).join("");
-    const handoff = docsImportReviewHandoff(files, state.reviewPackageId);
-    const handoffFile = handoff.file;
-    if (handoff.requested && !handoff.available) {
-      state.fileSelect.insertAdjacentHTML(
-        "afterbegin",
-        `<option value="" disabled>${escapeHtml(importText("collectionHandoffUnavailableStatus"))}</option>`
-      );
-      state.fileSelect.value = "";
-    } else {
-      state.fileSelect.value = normalizeText(handoffFile && handoffFile.filename || files[0] && files[0].filename);
-    }
-    syncSourceFormatControls(state);
-
-    setStatus(
-      state.statusNode,
-      handoff.requested && !handoff.available ? "error" : "",
-      handoff.requested && !handoff.available
-        ? importText("collectionHandoffUnavailableStatus")
-        : handoffFile
-          ? importText("collectionHandoffReadyStatus")
-          : selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")
-    );
-    state.runButton.disabled = Boolean(handoff.requested && !handoff.available);
-    markRouteReady(state, true);
-
-    state.fileSelect.addEventListener("change", () => {
-      state.runButton.disabled = false;
-      resetImportView(
-        state,
-        selectedCollectionFile(state) ? importText("collectionIdleStatus") : importText("idleStatus")
-      );
-      state.collectionController.reset({
-        active: Boolean(selectedCollectionFile(state))
-      });
-      syncSourceFormatControls(state);
-      markRouteReady(state, true);
-    });
-
-    state.runButton.addEventListener("click", () => {
-      runImport(state).catch((error) => console.warn("docs_import_source: unexpected import failure", error));
-    });
-    state.resultGridNode.addEventListener("click", (event) => {
-      const target = event.target && event.target.closest
-        ? event.target
-        : event.target && event.target.parentElement
-          ? event.target.parentElement
-          : null;
-      const link = target && target.closest
-        ? target.closest("[data-doc-source-link]")
-        : null;
-      if (!link || !state.resultGridNode.contains(link)) return;
-      event.preventDefault();
-      openResultSource(state, link).catch((error) => console.warn("docs_import_source: unexpected open source failure", error));
-    });
-    state.confirmButton.addEventListener("click", () => {
-      if (state.pendingOverwriteResolver) {
-        state.pendingOverwriteResolver("confirm");
-        return;
-      }
-      runImport(state).catch((error) => console.warn("docs_import_source: unexpected overwrite failure", error));
-    });
-    state.cancelButton.addEventListener("click", () => {
-      if (state.pendingOverwriteResolver) {
-        state.pendingOverwriteResolver("cancel");
-        return;
-      }
-      resetDocsHtmlImportWarning(state);
-      setStatus(
-        state.statusNode,
-        "",
-        importText("overwriteCancelled")
-      );
-    });
+    await refreshStagedFiles(state);
+    return importApp;
   } catch (error) {
     console.warn("docs_import_source: init failed", error);
     bootStatus.hidden = false;
@@ -549,5 +585,7 @@ export async function initDocsHtmlImport(options = {}) {
     root.hidden = false;
     state.serviceAvailable = false;
     markRouteReady(state, true);
+    delete root.dataset.docsImportInitialized;
+    throw error;
   }
 }

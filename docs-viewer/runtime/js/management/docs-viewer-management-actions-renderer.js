@@ -120,6 +120,7 @@ function managementActionsMarkup(options) {
   return [
   '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
   '  <div class="docsViewer__manageActions" role="toolbar" aria-label="Management actions">',
+  '    <button class="docsViewer__actionButton docsViewer__actionButton--iconOnly" type="button" id="docsViewerManageToolbarImportButton" data-docs-viewer-action="import" aria-label="Import" title="Import"><span aria-hidden="true">📥</span></button>',
   '    <div class="docsViewer__actionsMenuHost">',
   '      <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
   '      <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',

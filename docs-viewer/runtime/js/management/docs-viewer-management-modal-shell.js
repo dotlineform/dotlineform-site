@@ -177,25 +177,18 @@ export function trapDocsViewerModalFocus(event, modal) {
   if (!modal || event.key !== "Tab") return false;
   var controls = focusableControls(modal);
   if (!controls.length) return false;
-  var first = controls[0];
-  var last = controls[controls.length - 1];
-  var active = document.activeElement;
-  if (!modal.contains(active)) {
-    event.preventDefault();
-    first.focus();
-    return true;
+  var documentRef = modal.ownerDocument || document;
+  var active = documentRef.activeElement;
+  var activeIndex = modal.contains(active) ? controls.indexOf(active) : -1;
+  var nextIndex;
+  if (event.shiftKey) {
+    nextIndex = activeIndex <= 0 ? controls.length - 1 : activeIndex - 1;
+  } else {
+    nextIndex = activeIndex < 0 || activeIndex >= controls.length - 1 ? 0 : activeIndex + 1;
   }
-  if (event.shiftKey && active === first) {
-    event.preventDefault();
-    last.focus();
-    return true;
-  }
-  if (!event.shiftKey && active === last) {
-    event.preventDefault();
-    first.focus();
-    return true;
-  }
-  return false;
+  event.preventDefault();
+  controls[nextIndex].focus();
+  return true;
 }
 
 export function openDocsViewerConfirmModal(options = {}) {

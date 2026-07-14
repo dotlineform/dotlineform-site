@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b5119e1e9585dfd9ce1aa240718059b1",
-    "generated_at_utc": "2026-07-13T23:05:53Z",
+    "version": "blake2b-f31e381128a8eb3df97d455e0f78eb19",
+    "generated_at_utc": "2026-07-14T10:57:34Z",
     "count": 238
   },
   "entries": [
@@ -2175,10 +2175,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-13 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -2189,12 +2189,12 @@
         "docs import",
         "docs viewer",
         "viewer",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-07-13 2026 07 13"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-review",
@@ -3339,10 +3339,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory",
       "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer-runtime-boundary",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-13 • Runtime",
+      "display_meta": "2026-07-14 • Runtime",
       "search_terms": [
         "docs-viewer-javascript-inventory",
         "docs",
@@ -3351,12 +3351,12 @@
         "inventory",
         "javascript inventory",
         "runtime",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-13 2026 07 13"
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory javascript inventory runtime 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-runtime-module-ownership",

@@ -35,6 +35,29 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     root = Path(temp.name)
     write_json(root / "site-tools/config/site-tools.json", {"schema_version": "site_tools_config_v1"})
     write_json(
+        root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "studio",
+                    "scope_type": "local",
+                    "source": "docs-viewer/source/studio",
+                    "media_path_prefix": "docs/studio",
+                    "output": "docs-viewer/generated/docs/studio",
+                    "search_output": "docs-viewer/generated/search/studio/index.json",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "",
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "allow_unresolved_parent_ids": False,
+                    "import_media_storage": {"storage_mode": "staging_manual"},
+                }
+            ],
+        },
+    )
+    write_json(
         root / "data-sharing/config/adapters.json",
         {
             "schema_version": "data_sharing_adapters_v3",
