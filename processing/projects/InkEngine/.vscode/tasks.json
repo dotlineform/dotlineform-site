@@ -16,6 +16,7 @@
         "panel": "dedicated"
       },
       "args": [
+		"cli",
 		"--force",
 		"--sketch=${workspaceRoot}",
 		"--output=${workspaceRoot}/out",
@@ -24,6 +25,7 @@
       "windows": {
         "type": "process",
         "args": [
+          "cli",
           "--force",
           {
             "value": "--sketch=${workspaceRoot}",

@@ -1,6 +1,9 @@
 # output + caches
 .sass-cache/
 
+# Processing compiler output
+processing/projects/**/out/
+
 # Python
 .venv/
 

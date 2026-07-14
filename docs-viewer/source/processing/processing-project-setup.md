@@ -2,7 +2,7 @@
 doc_id: processing-project-setup
 title: Processing Project Setup
 added_date: "2026-07-14 16:42"
-last_updated: "2026-07-14 16:42"
+last_updated: "2026-07-14 19:00"
 parent_id: ""
 ---
 
@@ -47,33 +47,38 @@ When work begins, review whether implementation also needs to:
 - update `source-tree-ownership.md` if a new top-level `processing/` source area is adopted
 - update repository setup or dependency documentation once the required Processing version and libraries are known
 
-## Proposed Repository Shape
+## Adopted Repository Shape
 
 Use one repo-owned source area for the Processing work:
 
 ```text
 processing/
   README.md
-  docs/
+  libraries/
+    controlP5/
   projects/
-    <project-one>/
-      <project-one>.pde
-      ...original sketch tabs and files...
+    InkEngine/
+      InkEngine.pde
+      droplets.pde
       README.md
-      presets/
-    <project-two>/
-      <project-two>.pde
-      ...original sketch tabs and files...
-      README.md
-      presets/
-  shared/
-  tools/
+      data/
+  recovered/
+    layer-permutations/
+    simple-composite/
   previews/
+    ink-engine/
 ```
 
-This is a proposed destination, not a requirement to reorganize the old projects during import.
+`InkEngine` is the first runnable recovered project. The folder and main `.pde`
+file use the same name as required by Processing. Its historical
+`sketch-250309a-ink` Docs Viewer identity remains in place so the existing child
+notes do not need a simultaneous hierarchy migration.
 
-The first checked-in version of each project should preserve its original sketch structure. Shared code should move into `shared/` only after both projects are understood and a real shared boundary has been identified.
+`recovered/` is a preservation area, not an active sketch directory. The loose
+LayerPermutations and SimpleComposite files remain there until their evolution,
+dependencies, and runnable baselines are understood. Shared code should be
+introduced only after more than one active project demonstrates a real shared
+boundary.
 
 ### Tracked Material
 
@@ -83,6 +88,8 @@ Track:
 - small configuration and preset files
 - project notes and reference documentation
 - dependency and version information
+- deliberately pinned, redistributable sketchbook libraries required for a
+  reproducible build
 - small representative preview images selected for documentation or publication
 - scripts that reproduce an export or prepare a publication copy
 
@@ -94,10 +101,49 @@ Do not routinely track:
 - print masters that are too large for ordinary Git history
 - caches, temporary frames, or animation sequences
 - Processing build output
-- locally installed libraries
+- locally installed libraries that have not been deliberately pinned for repo
+  distribution
 - licensed fonts or assets that cannot be redistributed
 
 Choose an ignored or external output root before enabling full-resolution export. Print masters are important artwork, so their storage and backup location must be explicit even when they are not committed to Git.
+
+Processing compiler output under `processing/projects/**/out/` is ignored and
+must not be committed.
+
+## Asset Management Boundary
+
+The repo has three distinct asset classes:
+
+1. Sketch source assets and tracked presets required to run or reproduce a
+   project belong inside its `processing/projects/<Sketch>/` directory.
+2. Small, stable files intended as downloadable companions to a Docs Viewer
+   document belong in `docs-viewer/source/processing/media/files/`.
+3. Large inputs, repeated renders, print masters, and bulk project collections
+   belong under `$DOTLINEFORM_PROJECTS_BASE_DIR/<project-id>/`, with only
+   selected previews or reference files copied into the repo.
+
+Importing a standalone media file through Docs Import currently creates a
+matching wrapper document. That is useful when the file should be independently
+named, found, and downloaded, but it should not be treated as a general-purpose
+bulk asset ingest workflow. Existing ZIP, spreadsheet, and CSV attachments stay
+in place until their owning documents and reproducibility value are reviewed.
+
+The external I Ching project is the first pressure test: its roughly 150 MB of
+files and images should not be imported file-by-file merely to make them visible
+in Docs Viewer. Before moving it, decide:
+
+- whether I Ching remains a project described within the Processing scope or
+  becomes its own Docs Viewer scope
+- which files are working assets, generated artifacts, archival sources, or
+  curated document attachments
+- whether Docs Viewer needs an attachment or asset-management flow that does
+  not create one ordinary document per file
+- how local external assets should be browsed or linked without embedding
+  machine-specific absolute paths
+
+This is a cross-cutting Docs Viewer asset-management question. Record a focused
+Studio change request before changing the import or storage model; do not make
+the Processing recovery slice carry that redesign vertically.
 
 ## First Import Boundary
 
@@ -291,6 +337,18 @@ Any later p5.js work should be treated as a separate adaptation with its own pur
 
 ## Initial Work Sequence
 
+Current recovery status:
+
+- the repo-owned `processing/` sketchbook structure is established
+- `InkEngine` is renamed, documented, and builds with Processing 4.5.5
+- ControlP5 2.2.6 is pinned in the sketchbook
+- named slider configurations and historical previews are preserved
+- generated compiler output is removed and ignored
+- the LayerPermutations and SimpleComposite families remain preserved source,
+  not yet runnable maintained projects
+- code mapping, refactoring, deterministic rendering, and print export have not
+  begun
+
 1. Create the `processing/` source area and import the first project unchanged.
 2. Preserve the baseline and inventory its environment and dependencies.
 3. Recover a runnable version and capture known output.
@@ -306,16 +364,16 @@ Any later p5.js work should be treated as a separate adaptation with its own pur
 
 ## Decisions To Make During Recovery
 
-- final repo path and project names
-- compatible Processing version
-- required libraries, fonts, and assets
+- which recovered source family becomes the second active project
+- required fonts and assets beyond the current InkEngine baseline
 - storage and backup location for print masters
 - raster, PDF, SVG, or mixed export strategy for each project
 - physical print sizes, target pixel dimensions, and colour workflow
 - preset file shape and naming
 - appropriate balance between `.pde` tabs and ordinary `.java` classes
 - Processing-aware formatting, linting, and testing options
-- Processing Docs Viewer scope id and source location
+- whether large related projects such as I Ching need their own Docs Viewer
+  scope or only a distinct external asset root
 
 ## Intended Outcome
 
