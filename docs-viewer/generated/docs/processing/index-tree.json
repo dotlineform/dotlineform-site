@@ -57,7 +57,12 @@
       "title": "processing",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/processing.json",
       "ui_status": "draft"
+    },
+    {
+      "doc_id": "processing-project-setup",
+      "title": "Processing Project Setup",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-project-setup.json"
     }
   ],
-  "generated_at": "2026-07-14T12:17:38Z"
+  "generated_at": "2026-07-14T15:42:31Z"
 }

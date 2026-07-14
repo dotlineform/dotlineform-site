@@ -3,6 +3,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "processing-project-setup",
+      "title": "Processing Project Setup",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-project-setup.json",
+      "added_date": "2026-07-14 16:42"
+    },
+    {
       "doc_id": "composite-ideas",
       "title": "Composite ideas",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/composite-ideas.json",
@@ -71,13 +77,7 @@
       "added_date": "2026-07-14 09:16",
       "parent_id": "composites-engine",
       "parent_title": "composites engine"
-    },
-    {
-      "doc_id": "processing",
-      "title": "processing",
-      "content_url": "/docs-viewer/generated/docs/processing/by-id/processing.json",
-      "added_date": "2026-07-14"
     }
   ],
-  "generated_at": "2026-07-14T12:17:38Z"
+  "generated_at": "2026-07-14T15:42:31Z"
 }
