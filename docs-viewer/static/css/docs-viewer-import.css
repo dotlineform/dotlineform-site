@@ -422,7 +422,8 @@
 
 .docsViewer__importBody .docsViewerImport__controls{
   display: grid;
-  gap: 0.9rem;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.9rem 0.75rem;
 }
 
 .docsViewer__importBody .docsViewerImport__field{
@@ -430,7 +431,9 @@
 }
 
 .docsViewer__importBody .docsViewerImport__field--inline{
-  grid-template-columns: max-content minmax(0, 1fr);
+  grid-column: 1 / -1;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  grid-template-columns: subgrid;
   align-items: center;
   gap: 0.75rem;
 }
@@ -493,7 +496,12 @@
 }
 
 @media (max-width: 700px){
+  .docsViewer__importBody .docsViewerImport__controls{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .docsViewer__importBody .docsViewerImport__field--inline{
+    grid-column: auto;
     grid-template-columns: minmax(0, 1fr);
     gap: 0.22rem;
   }

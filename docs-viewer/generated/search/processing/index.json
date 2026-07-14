@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-6e61a2afed0e477e87e01d00d7e2442d",
-    "generated_at_utc": "2026-07-14T12:06:37Z",
-    "count": 5
+    "version": "blake2b-7eef090cb6ab875eef873a6fb79f30e3",
+    "generated_at_utc": "2026-07-14T12:17:38Z",
+    "count": 10
   },
   "entries": [
     {
@@ -27,6 +27,32 @@
         "06"
       ],
       "search_text": "composites-engine composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06"
+    },
+    {
+      "id": "composite-ideas",
+      "kind": "doc",
+      "title": "Composite ideas",
+      "href": "/docs/?scope=processing&doc=composite-ideas",
+      "last_updated": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 13:12 • composites engine",
+      "search_terms": [
+        "composite-ideas",
+        "composite",
+        "ideas",
+        "composite ideas",
+        "composites engine",
+        "composites",
+        "engine",
+        "2026-07-14 13:12",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "12"
+      ],
+      "search_text": "composite-ideas composite ideas composite ideas composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
     },
     {
       "id": "ffmpeg",
@@ -79,6 +105,29 @@
       "search_text": "interpolation-2-images interpolation 2 images interpolation 2 images composites engine composites engine 2026-07-14 11:38 2026 07 14 11 38"
     },
     {
+      "id": "introduction",
+      "kind": "doc",
+      "title": "Introduction",
+      "href": "/docs/?scope=processing&doc=introduction",
+      "last_updated": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 13:12 • composites engine",
+      "search_terms": [
+        "introduction",
+        "composites engine",
+        "composites",
+        "engine",
+        "2026-07-14 13:12",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "12"
+      ],
+      "search_text": "introduction composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+    },
+    {
       "id": "levels",
       "kind": "doc",
       "title": "Levels",
@@ -100,6 +149,82 @@
         "06"
       ],
       "search_text": "levels composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06"
+    },
+    {
+      "id": "non-repeating-memories",
+      "kind": "doc",
+      "title": "Non repeating memories",
+      "href": "/docs/?scope=processing&doc=non-repeating-memories",
+      "last_updated": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 13:12 • composites engine",
+      "search_terms": [
+        "non-repeating-memories",
+        "non",
+        "repeating",
+        "memories",
+        "non repeating memories",
+        "composites engine",
+        "composites",
+        "engine",
+        "2026-07-14 13:12",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "12"
+      ],
+      "search_text": "non-repeating-memories non repeating memories non repeating memories composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+    },
+    {
+      "id": "sjt",
+      "kind": "doc",
+      "title": "SJT",
+      "href": "/docs/?scope=processing&doc=sjt",
+      "last_updated": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 13:12 • composites engine",
+      "search_terms": [
+        "sjt",
+        "composites engine",
+        "composites",
+        "engine",
+        "2026-07-14 13:12",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "12"
+      ],
+      "search_text": "sjt composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+    },
+    {
+      "id": "sjt-code",
+      "kind": "doc",
+      "title": "SJT Code",
+      "href": "/docs/?scope=processing&doc=sjt-code",
+      "last_updated": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 13:12 • composites engine",
+      "search_terms": [
+        "sjt-code",
+        "sjt",
+        "code",
+        "sjt code",
+        "composites engine",
+        "composites",
+        "engine",
+        "2026-07-14 13:12",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "12"
+      ],
+      "search_text": "sjt-code sjt code sjt code composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
     },
     {
       "id": "processing",

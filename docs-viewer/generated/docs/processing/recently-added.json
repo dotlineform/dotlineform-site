@@ -3,6 +3,46 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "composite-ideas",
+      "title": "Composite ideas",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/composite-ideas.json",
+      "added_date": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine"
+    },
+    {
+      "doc_id": "introduction",
+      "title": "Introduction",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/introduction.json",
+      "added_date": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine"
+    },
+    {
+      "doc_id": "non-repeating-memories",
+      "title": "Non repeating memories",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/non-repeating-memories.json",
+      "added_date": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine"
+    },
+    {
+      "doc_id": "sjt",
+      "title": "SJT",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/sjt.json",
+      "added_date": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine"
+    },
+    {
+      "doc_id": "sjt-code",
+      "title": "SJT Code",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/sjt-code.json",
+      "added_date": "2026-07-14 13:12",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine"
+    },
+    {
       "doc_id": "composites-engine",
       "title": "composites engine",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/composites-engine.json",
@@ -39,5 +79,5 @@
       "added_date": "2026-07-14"
     }
   ],
-  "generated_at": "2026-07-14T12:06:37Z"
+  "generated_at": "2026-07-14T12:17:38Z"
 }

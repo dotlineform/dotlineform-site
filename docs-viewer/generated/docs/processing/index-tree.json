@@ -11,6 +11,11 @@
       "content_url": "/docs-viewer/generated/docs/processing/by-id/composites-engine.json",
       "children": [
         {
+          "doc_id": "composite-ideas",
+          "title": "Composite ideas",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/composite-ideas.json"
+        },
+        {
           "doc_id": "ffmpeg",
           "title": "Ffmpeg",
           "content_url": "/docs-viewer/generated/docs/processing/by-id/ffmpeg.json"
@@ -21,9 +26,29 @@
           "content_url": "/docs-viewer/generated/docs/processing/by-id/interpolation-2-images.json"
         },
         {
+          "doc_id": "introduction",
+          "title": "Introduction",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/introduction.json"
+        },
+        {
           "doc_id": "levels",
           "title": "Levels",
           "content_url": "/docs-viewer/generated/docs/processing/by-id/levels.json"
+        },
+        {
+          "doc_id": "non-repeating-memories",
+          "title": "Non repeating memories",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/non-repeating-memories.json"
+        },
+        {
+          "doc_id": "sjt",
+          "title": "SJT",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/sjt.json"
+        },
+        {
+          "doc_id": "sjt-code",
+          "title": "SJT Code",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/sjt-code.json"
         }
       ]
     },
@@ -34,5 +59,5 @@
       "ui_status": "draft"
     }
   ],
-  "generated_at": "2026-07-14T12:06:37Z"
+  "generated_at": "2026-07-14T12:17:38Z"
 }
