@@ -1,0 +1,74 @@
+---
+doc_id: docs-viewer-semantic-reference-authoring-architecture
+title: Semantic Reference Authoring Architecture
+added_date: 2026-07-14
+last_updated: 2026-07-14
+ui_status: proposed
+summary: Proposed extension and ownership boundaries for semantic-reference authoring improvements.
+parent_id: site-request-docs-viewer-semantic-reference-editor
+viewable: true
+---
+# Semantic Reference Authoring Architecture
+
+## Architectural Outcome
+
+Authoring assistance should extend the current registry, generated lookup, picker, source-editor adapter, builder, and report owners without adding write-path target validation or feature-specific route logic.
+
+## Current Execution Path
+
+```text
+semantic-reference registry
+  -> generated browser-safe target lookup
+  -> manage-only picker hosted in the Info panel
+  -> source-editor selection or caret range
+  -> local token insertion
+  -> normal Rebuild doc write and render
+  -> reports audit stale or missing targets
+```
+
+The current code and durable semantic-reference documents remain authoritative. This document describes how proposed additions should fit.
+
+## Extension Boundaries
+
+### Cursor And Direct Id Assistance
+
+Cursor seed expansion and direct id entry belong in picker/source-editor assistance. They should not add server endpoints or make insertion a target-existence validation gate.
+
+Use current generated target data first. Add an exact-target artifact only when a real kind demonstrates that the title-weighted lookup is too large, ambiguous, or inefficient.
+
+### New Token Kinds
+
+A kind should extend the registry and its target generator. Route controllers and source-editor lifecycle code should not gain hardcoded kind lists.
+
+Any kind that resolves into an embedded-detail report must wait for that route/state contract. The picker cannot invent a standalone document URL merely to unblock authoring.
+
+### Labels And Audits
+
+Custom labels remain an authoring concern; mismatch warnings belong in the semantic-reference report unless a proven editing workflow needs immediate feedback.
+
+Malformed, unsupported, or suspicious token-like text remains audit output. Builder success and source writes should not become dependent on target availability.
+
+### Semantic Directives
+
+Field insertion, related lists, and other non-link directives need dedicated resolver and rendering ownership. They are not variants of an editor action and should not be added as branches in the picker or builder without a separately promoted architecture.
+
+## Ownership Map
+
+| responsibility | owner |
+| --- | --- |
+| supported kinds and route metadata | semantic-reference registry |
+| browser-safe target records | focused generator and generated payload |
+| search, selection, and insertion UI | manage-only semantic token picker |
+| selected text, caret, and local replacement | Markdown source-editor adapter |
+| token parsing and rendered output | builder semantic-reference owner |
+| stale, missing, or suspicious references | semantic-reference reports |
+
+## Known Weak Spots
+
+- Cursor expansion can replace unintended prose if Markdown and punctuation boundaries are vague.
+- High-cardinality target payloads could make eager browser lookup expensive.
+- Tag routing depends on embedded-detail state rather than a simple document id.
+- Custom labels can drift from canonical titles.
+- Directive actions could turn a narrow registry into an unowned execution framework.
+
+The [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap) owns promotion and sequence. Proposed architecture does not create implementation priority.

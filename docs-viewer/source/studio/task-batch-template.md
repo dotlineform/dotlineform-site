@@ -2,13 +2,15 @@
 doc_id: task-batch-template
 title: Task Batch Template
 added_date: "2026-06-05 10:36"
-last_updated: "2026-06-05 10:36"
+last_updated: 2026-07-14
 ui_status: planned
 parent_id: dev-home
 ---
 # [Batch Title]
 
 This is the delivery specification for Batch [#] in [link to tasks tracker document].
+
+Use a batch only for tightly related coordination inside one bounded request. If the batch is useful on its own or can be prioritised separately, it belongs on the roadmap as its own deliverable request.
 
 Purpose: [one-line summary of batch]
 
@@ -22,7 +24,7 @@ Purpose: [one-line summary of batch]
 
 ## Deliverables
 
-[any deliverables that need ongoing revision or should become part of durable documentation should be created as sibling documents that are linked  from this document]
+[update the request's named durable documentation owner; create another durable document only when it has a genuinely separate subject]
 
 - state the expected deliverables:
     - changed or new functionality
@@ -63,8 +65,8 @@ example:
 
 [to be completed during the current task]
 
-- list any follow-on tasks that need to be created
-- list any issues that were found during this task which need to be addressed
+- keep only work required to complete the current request here
+- move independently finishable follow-on outcomes to the roadmap
 
 ## batch close
 

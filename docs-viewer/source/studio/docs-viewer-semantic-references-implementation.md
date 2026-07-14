@@ -2,7 +2,7 @@
 doc_id: docs-viewer-semantic-references-implementation
 title: Semantic References Implementation
 added_date: 2026-06-02
-last_updated: 2026-06-23
+last_updated: 2026-07-14
 parent_id: docs-viewer
 viewable: true
 ---
@@ -11,7 +11,7 @@ viewable: true
 This document records the current technical implementation of Docs Viewer semantic references: token parsing, registry ownership, generated lookup data, browser helper modules, generated reference artifacts, and report inputs.
 
 Author-facing source-editor behavior is documented separately in [Semantic References Editor](/docs/?scope=studio&doc=docs-viewer-semantic-references-editor).
-Future editor enhancements are tracked in [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor).
+Possible authoring enhancements are separated under [Semantic Reference Authoring](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor). None is an active delivery request.
 
 ## Ownership
 

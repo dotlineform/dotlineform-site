@@ -1,8 +1,9 @@
 ---
-doc_id: site-request-docs-viewer-embedded-detail-documents
+doc_id: docs-viewer-embedded-detail-documents
 title: Embedded Detail Documents
 added_date: 2026-06-23
-last_updated: 2026-06-24
+last_updated: 2026-07-14
+summary: Durable source, payload, URL, manifest, lifecycle, and runtime contract for report-hosted detail documents outside the main index.
 parent_id: docs-viewer
 viewable: true
 ---

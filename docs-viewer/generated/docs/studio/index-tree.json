@@ -306,34 +306,70 @@
           "ui_status": "in-progress"
         },
         {
-          "doc_id": "docs-viewer-documentation-register",
-          "title": "Docs Viewer Documentation Cleanup",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-documentation-register.json",
-          "ui_status": "in-progress"
-        },
-        {
           "doc_id": "site-request-docs-viewer-external-asset-collections",
-          "title": "Docs Viewer External Asset Collections",
+          "title": "External Asset Collections",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-collections.json",
-          "ui_status": "draft"
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "site-request-docs-viewer-external-asset-lifecycle-ownership",
+              "title": "External Asset Collection Lifecycle Ownership",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-lifecycle-ownership.json",
+              "ui_status": "planned"
+            },
+            {
+              "doc_id": "docs-viewer-external-asset-collections-architecture",
+              "title": "External Asset Collections Architecture",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-architecture.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "docs-viewer-external-asset-collections-concept",
+              "title": "External Asset Collections Concept",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-concept.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "site-request-docs-viewer-index-multiple-selection",
-          "title": "Docs Viewer Index Multiple Selection",
+          "title": "Index Multiple Selection",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
-          "ui_status": "draft"
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "docs-viewer-index-multiple-selection-architecture",
+              "title": "Index Multiple Selection Architecture",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-architecture.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "docs-viewer-index-multiple-selection-concept",
+              "title": "Index Multiple Selection Concept",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-concept.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "site-request-docs-viewer-semantic-reference-editor",
-          "title": "Docs Viewer Semantic Reference Editor Request",
+          "title": "Semantic Reference Authoring",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
-          "ui_status": "draft"
-        },
-        {
-          "doc_id": "site-request-r2-media-upload-automation",
-          "title": "R2 Media Upload Automation Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-r2-media-upload-automation.json",
-          "ui_status": "done"
+          "ui_status": "proposed",
+          "children": [
+            {
+              "doc_id": "docs-viewer-semantic-reference-authoring-architecture",
+              "title": "Semantic Reference Authoring Architecture",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-architecture.json",
+              "ui_status": "proposed"
+            },
+            {
+              "doc_id": "docs-viewer-semantic-reference-authoring-concept",
+              "title": "Semantic Reference Authoring Concept",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-concept.json",
+              "ui_status": "proposed"
+            }
+          ]
         },
         {
           "doc_id": "site-request-shareable-content-blocks",
@@ -484,7 +520,7 @@
         },
         {
           "doc_id": "config-docs-viewer",
-          "title": "Config",
+          "title": "Configuration And Extension Points",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer.json"
         },
         {
@@ -513,9 +549,19 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json"
         },
         {
+          "doc_id": "docs-viewer-import-source-registry-spec",
+          "title": "Docs Import Architecture",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json"
+        },
+        {
           "doc_id": "docs-viewer-review",
           "title": "Docs Review",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-review.json"
+        },
+        {
+          "doc_id": "docs-viewer-delivery-roadmap",
+          "title": "Docs Viewer Delivery Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-delivery-roadmap.json"
         },
         {
           "doc_id": "docs-viewer-public-route-shell-template",
@@ -538,19 +584,14 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json"
         },
         {
-          "doc_id": "site-request-docs-viewer-embedded-detail-documents",
+          "doc_id": "docs-viewer-embedded-detail-documents",
           "title": "Embedded Detail Documents",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-embedded-detail-documents.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-embedded-detail-documents.json"
         },
         {
           "doc_id": "docs-viewer-export",
           "title": "Export",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-export.json"
-        },
-        {
-          "doc_id": "docs-viewer-import-source-registry-spec",
-          "title": "Import Source Registry Spec",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json"
         },
         {
           "doc_id": "docs-viewer-info-panel",
@@ -681,19 +722,14 @@
         },
         {
           "doc_id": "docs-viewer-media-handling",
-          "title": "Media Handling",
+          "title": "Media And Asset Handling",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-media-handling.json"
-        },
-        {
-          "doc_id": "docs-viewer-new-scopes-builder",
-          "title": "New Scopes Builder",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json"
         },
         {
           "doc_id": "docs-viewer-overview",
           "title": "Overview",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-          "ui_status": "urgent"
+          "ui_status": "review"
         },
         {
           "doc_id": "docs-viewer-panel-hosts",
@@ -702,25 +738,9 @@
         },
         {
           "doc_id": "docs-viewer-portable-setup",
-          "title": "Portable Setup",
+          "title": "Portability Snapshot",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-setup.json",
-          "children": [
-            {
-              "doc_id": "docs-viewer-portable-files",
-              "title": "Portable File Manifest",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-files.json"
-            },
-            {
-              "doc_id": "docs-viewer-portable-scope-setup",
-              "title": "Portable Scope Setup",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-scope-setup.json"
-            },
-            {
-              "doc_id": "docs-viewer-portable-source-shape",
-              "title": "Portable Source Shape",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-source-shape.json"
-            }
-          ]
+          "ui_status": "deferred"
         },
         {
           "doc_id": "docs-viewer-public-scopes",
@@ -751,13 +771,13 @@
               "doc_id": "docs-viewer-runtime-module-ownership",
               "title": "Runtime Module Ownership",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json"
-            },
-            {
-              "doc_id": "docs-viewer-runtime-surfaces",
-              "title": "Runtime Surfaces",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-surfaces.json"
             }
           ]
+        },
+        {
+          "doc_id": "docs-viewer-new-scopes-builder",
+          "title": "Scope Lifecycle",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json"
         },
         {
           "doc_id": "docs-viewer-semantic-references",
@@ -795,11 +815,6 @@
           "doc_id": "doc-ui-status",
           "title": "UI Status",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/doc-ui-status.json"
-        },
-        {
-          "doc_id": "docs-viewer-view-capability-contract",
-          "title": "View Capability Contract",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-view-capability-contract.json"
         },
         {
           "doc_id": "docs-viewer-viewable-field",
@@ -1127,11 +1142,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-files.json"
         },
         {
-          "doc_id": "config-docs-viewer-files",
-          "title": "Docs Viewer Config Files",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer-files.json"
-        },
-        {
           "doc_id": "local-studio-apis",
           "title": "Local Studio APIs",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-apis.json"
@@ -1295,5 +1305,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-14T19:48:43Z"
+  "generated_at": "2026-07-14T22:35:05Z"
 }

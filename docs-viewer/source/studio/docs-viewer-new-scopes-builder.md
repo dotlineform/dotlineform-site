@@ -1,514 +1,165 @@
 ---
 doc_id: docs-viewer-new-scopes-builder
-title: New Scopes Builder
+title: Scope Lifecycle
 added_date: 2026-05-15
-last_updated: 2026-07-13
+last_updated: 2026-07-14
+summary: Create, rename, and delete Docs Viewer scopes through previewed server plans, explicit ownership, and public-isolation safeguards.
 parent_id: docs-viewer
 viewable: true
 ---
-# New Scopes Builder
+# Docs Viewer Scope Lifecycle
 
-The New Scopes Builder is the local-management workflow for creating, narrowly renaming, and deleting Docs Viewer scopes from `/docs/`.
+Scope lifecycle is the local-management boundary for creating, narrowly renaming, and deleting Docs Viewer scopes. It coordinates canonical source, generated data, configuration, route assets, media ownership, and rebuilds; it is not a browser-side file helper.
 
-It should:
+The assurance model is:
 
-- create the same files a developer would otherwise create by hand
-- keep all write behavior behind the loopback Docs Viewer service
-- preserve existing public read-only routes
-- validate the planned change before any write
-- record ownership in a scope manifest so deletion can fail closed
+- scope config describes where a scope lives and how it is delivered
+- the lifecycle manifest records what this tool may later delete
+- the server plans from current state before every mutation
+- apply requires explicit confirmation and recomputes the plan
+- per-scope capabilities tell the UI which operations are eligible
+- public routes receive neither the management entrypoint nor local service configuration
 
-Current policy:
+Exact endpoint payloads belong to [Scope Lifecycle Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-scope-lifecycle).
 
-- `New scope` defaults to an external local scope
-- public read-only scope creation is available through the local management lifecycle action
-- local tracked scope creation is available through the same lifecycle action
-- external local scope creation replaces the former local untracked mode
-- user-created public scope deletion is available when the scope manifest records owned files
-- public route shells are rendered from [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template)
+## Structure
 
-## Scope Creation Boundary
-
-A Docs Viewer scope is made from four parts:
-
-- source root, such as `docs-viewer/source/research/`
-- scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
-- generated viewer/search outputs, whose roots depend on publishing mode
-
-Existing public read-only scopes use working generated outputs under:
-
-- `docs-viewer/generated/docs/<scope>/`
-- `docs-viewer/generated/search/<scope>/index.json`
-
-and published snapshot outputs under:
-
-- `site/assets/data/docs/scopes/<scope>/`
-- `site/assets/data/search/<scope>/index.json`
-
-Local tracked scopes use generated outputs under:
-
-- `docs-viewer/generated/docs/<scope>/`
-- `docs-viewer/generated/search/<scope>/index.json`
-
-External local scopes store source and working generated outputs outside the repo under:
-
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
-
-The checked-in scope config stores `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer` marker paths, not user-specific absolute paths.
-Create preview and apply fail before writing when `DOTLINEFORM_PROJECTS_BASE_DIR` is unset or when `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` does not already exist as a readable and writable directory.
-
-Local scopes must not write generated docs/search runtime payloads under `site/assets/data/docs/scopes/` or `site/assets/data/search/`.
-Those `site/assets/` roots are public static-site payload roots and are reserved for scopes that are explicitly public read-only.
-
-The localhost Docs Viewer service may create or update those files.
-The public browser runtime must not.
-
-Scope creation should run only through:
-
-- `/docs/`
-- the loopback Docs Viewer service
-- explicit write allowlists in the server
-- normal rebuild commands after the write
-
-Public read-only routes should not expose create-scope controls, management endpoints, Docs Import, or local write capabilities.
-
-## Route Adapter Choices
-
-Public read-only route shells are checked-in static HTML under `site/`.
-New public scopes must not create Markdown route files or generated Python source.
-The public-scope lifecycle path renders `docs-viewer/templates/public-route/index.html` into `site/<route>/index.html` during the local write action and updates data/config route records.
-
-Use `docs-viewer/shell/docs-viewer-manage.html` through the standalone Docs Viewer service for the local management shell.
-In this repo, that route is `/docs/`.
-Public builds use read-only route shells, while the standalone Docs Viewer service serves `/docs/` management locally.
-
-The management shell can switch scopes with the `scope` query parameter.
-Public read-only routes ignore and normalize away `scope` and `mode` so they cannot become management routes by query string.
-
-## Publishing Modes
-
-### Public Read-Only Scope
-
-Use this option when the scope should publish a public read-only route under `site/`.
-
-Public scope creation updates source/config records, public route metadata, published public payload roots, and a tracked static route shell.
-It renders `site/<route>/index.html` from `docs-viewer/templates/public-route/index.html`.
-It does not write Markdown route stubs or Python source.
-
-Existing public scopes such as Library and Analysis remain manageable through `/docs/?scope=<scope>`.
-Their `/docs/` toolbar `Publish` command, also retained in the Actions menu, copies reviewed working JSON from `docs-viewer/generated/` into the tracked `site/assets/data/` files that public routes read.
-
-### Local Tracked Scope
-
-Use this option when the scope should be available to local developers or Codex sessions, but not published as a public route.
-
-Create and commit:
-
-- source root and Markdown files
-- `docs-viewer/config/scopes/docs_scopes.json` entry
-- generated docs tree, recently-added, by-id payloads, and search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
-
-Do not create a public read-only route page.
-The scope remains available through `/docs/?scope=<scope>` when the local server is running.
-The generated JSON is tracked runtime data, but it is not a public static asset because it lives under the Docs Viewer-owned `docs-viewer/` boundary rather than under `site/assets/`.
-
-This is useful for private planning notes, local drafts, or internal review material that should move with the repo but not have a public URL.
-
-### External Local Scope
-
-Use this option when the scope should be locally manageable but its source Markdown and generated JSON should not live in the repo.
-
-Register in the repo:
-
-- `docs-viewer/config/scopes/docs_scopes.json` entry
-- `docs-viewer/config/scopes/docs_scope_manifest.json` ownership record
-
-Create under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/`:
-
-- source root and default Markdown file
-- generated docs tree, recently-added, by-id payloads, and search JSON when generated output writes are requested
-
-Do not create a public read-only route page or public publish outputs.
-The scope remains available through `/docs/?scope=<scope>` when the local Docs Viewer service is running.
-Browser reads use management generated-data endpoints, not static URLs derived from filesystem paths.
-
-This mode is useful for private planning notes, local drafts, or internal review material that should be registered in the central Docs Viewer config without storing source or generated payloads in the repo.
-
-## Implementation State
-
-The scope lifecycle workflow has server-side preview/apply endpoints and a management UI entry point:
-
-- `docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
-- `docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, and shared lifecycle policy
-- `docs-viewer/services/docs_scope_create.py` owns top-level scope create preview/apply
-- `docs-viewer/services/docs_scope_rename.py` owns external-local top-level scope rename preview/apply
-- `docs-viewer/services/docs_scope_delete.py` owns top-level scope delete preview/apply
-- `GET /capabilities` advertises scope lifecycle preview and apply support
-- `POST /docs/scopes/create-preview` reports a validated create write set
-- `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
-- `POST /docs/scopes/rename-preview` validates an external-local scope id/folder move
-- `POST /docs/scopes/rename-apply` moves eligible external roots and updates scope identity after explicit confirmation
-- `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
-- `POST /docs/scopes/delete-apply` deletes eligible user-created scopes after explicit confirmation
-- the `/docs/` Actions menu exposes capability-gated `New scope`, `Rename scope`, and `Delete scope` commands
-- `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js` owns lifecycle control projection, event wiring, lazy flow loading, option composition, and post-apply refresh
-- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the create/rename/delete modal flows
-- `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
-
-## Manifest Design
-
-Manifest file:
-
-- `docs-viewer/config/scopes/docs_scope_manifest.json`
-
-Schema version:
-
-- `docs_scope_manifest_v1`
-
-Top-level fields:
-
-- `schema_version`: manifest schema id
-- `tool_id`: current lifecycle tool id, `docs-viewer-scope-lifecycle`
-- `updated_at`: UTC timestamp for the manifest payload
-- `scopes`: scope ownership records
-
-Scope record fields:
-
-- `scope_id`: configured Docs Viewer scope id
-- `scope_type`: `public` or `local`
-- `owner`: `system` or a future user/tool owner value
-- `user_created`: whether the scope was created by a local operator
-- `created_by_tool`: whether this lifecycle tool created the scope
-- `tool_id`: creating tool id when applicable
-- `repo_status_at_creation`: `tracked`, `external`, or `unknown`
-- `created_at`: creation timestamp when known
-- `updated_at`: manifest-record timestamp
-- `files`: repo-relative or external file records owned by the scope
-- `metadata`: audit metadata such as `backfilled`, `viewer_base_url`, and `default_doc_id`
-
-File record fields:
-
-- `kind`: file role, such as `source_root`, `scope_config`, `scope_manifest`, `default_source_doc`, `route_file`, `generated_docs_root`, `generated_docs_index_tree`, `generated_docs_recently_added`, `generated_docs_payload_root`, `generated_search_index`, `published_docs_root`, or `published_search_index`
-- `path`: repo-relative path or resolved external path label
-- `location`: `repo` or `external`
-- `action`: current manifest action, usually `track`; preview responses use actions such as `create`, `change`, or `delete`
-- `exists`: whether the path existed when the record or preview was generated
-
-Existing scopes are backfilled as system-owned records.
-That means Studio, Library, and Analysis are visible in lifecycle capability data but are not delete-eligible.
-Future created scopes must set both `user_created: true` and `created_by_tool: true` before delete can be available.
-
-## Capability Contract
-
-`GET /capabilities` includes a top-level lifecycle capability block:
-
-```json
-{
-  "scope_lifecycle": {
-    "manifest": true,
-    "create_preview": true,
-    "create_apply": true,
-    "delete_preview": true,
-    "delete_apply": true,
-    "publishing_modes": ["public_readonly", "local_external", "local_committed"],
-    "manifest_path": "docs-viewer/config/scopes/docs_scope_manifest.json"
-  }
-}
+```text
+management UI
+    |
+    | request preview
+    v
+loopback Docs Viewer service
+    |
+    +-- scope config -------- topology, scope type, source/output/media paths
+    +-- lifecycle manifest -- tool ownership and delete eligibility
+    +-- route registries ---- management route defaults and public route records
+    +-- current filesystem -- conflicts, missing paths, containment
+    |
+    v
+write-free plan: allowed + blockers + created/changed/deleted paths
+    |
+    | confirm apply
+    v
+server recomputes plan -> mutates allowlisted roots -> rebuilds -> refreshes capabilities
 ```
 
-- Apply flags are authoritative.
-- Create apply is advertised only after the allowlisted write implementation is available.
-- Delete apply is advertised only after the manifest-backed deletion implementation is available.
-- The UI should avoid showing save/delete apply controls before the server advertises the matching capability.
+The browser never submits an authoritative filesystem plan. It sends scope identities and choices; the service resolves paths and eligibility again.
 
-Each scope capability record also includes lifecycle state:
+## Scope Types
 
-```json
-{
-  "scope_lifecycle": {
-    "manifest_recorded": true,
-    "owner": "system",
-    "created_by_tool": false,
-    "delete_eligible": false
-  }
-}
+| mode | canonical source | working generated data | public delivery |
+| --- | --- | --- | --- |
+| `public_readonly` | Repo source root. | `docs-viewer/generated/` working docs/search. | Static route shell and copied snapshots under `site/assets/data/`. |
+| `local_committed` | Repo source root. | `docs-viewer/generated/` only. | None; read through local `/docs/`. |
+| `local_external` | Derived `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/<scope>/`. | Derived external docs/search roots. | None; read through local service endpoints. |
+
+The external root is derived from one configured workspace marker. The UI does not collect arbitrary absolute paths, and checked-in config does not store user-specific paths.
+
+## Operator Workflow
+
+### Create
+
+1. Choose `New scope` in the local `/docs/` Actions menu.
+2. Choose the scope id, title, default document, and publishing mode.
+3. For a public scope, supply its public route; for a repo-backed scope, supply the required conventional source root.
+4. Review the server-planned storage and affected paths.
+5. Confirm apply.
+
+Create writes a default source document, appends config and manifest records, creates only mode-appropriate route/output paths, and rebuilds the new scope. A public create also renders the static route shell, updates the public route registry, and copies the initial generated snapshots.
+
+### Rename
+
+Rename is intentionally limited to lifecycle-created external-local scopes. It moves derived source, media, generated-docs, and generated-search roots; updates scope config, manifest identity, UI-status keys, and sub-scope paths; then rebuilds under the new id.
+
+It does not rename public or committed scopes, rewrite document links, rename R2 objects, or inspect arbitrary source text.
+
+### Delete
+
+Delete is available only when the manifest says the scope is both user-created and created by this lifecycle tool. System/backfilled scopes and a scope used as a management route default are blocked.
+
+Preview lists manifest-owned paths that exist or are already missing. Apply removes eligible owned paths, removes config and route records, removes the manifest record, and rebuilds remaining scopes. Missing recorded files do not prevent removal of the remaining owned state.
+
+Sub-scopes have separate preview/apply services and remain entries owned by their parent scope configuration rather than independent top-level manifest scopes.
+
+## Ownership And Asset Consequences
+
+The manifest records roots and generated artifacts, not semantic ownership of every future file.
+
+| resource | lifecycle behavior |
+| --- | --- |
+| Repo-backed source root | Created and delete-owned as a directory. Media placed beneath its configured `media/` directory is therefore removed with that source root. |
+| External-local source and generated roots | Created, renamed, and delete-owned by their recorded derived paths. |
+| External-local media root | Not created or delete-owned by the current create manifest; delete preserves it. External rename nevertheless moves it when present. |
+| Public route shell and published snapshots | Created and delete-owned for a lifecycle-created public scope. Shared route registry files are changed, never deleted as scope-owned files. |
+| Public R2 objects | Outside the lifecycle manifest. Scope delete and rename do not remove or rename them. |
+| Shared runtime, CSS, templates, and browser config families | Never recorded as scope-delete targets. |
+
+This distinction matters: “belongs to a scope” does not automatically mean “safe for lifecycle deletion.” The manifest is the deletion authority, while media publication has its own ownership rules.
+
+## Public Isolation
+
+Public routes and local management share public-safe reader modules, but they do not share authority or delivery inputs.
+
+```text
+public static route                     local /docs/ management
+-------------------                     ----------------------
+public route registry                   management route registry
+public-filtered viewer config           full browser-safe scope config
+site/assets/data snapshots              local generated-data service reads
+public runtime entrypoint               management entrypoint contributions
+no local base URLs                      loopback service capabilities
+no write/import/lifecycle controls      capability-gated write workflows
 ```
 
-Delete eligibility is server-derived.
-The client should not infer delete eligibility from scope ids, routes, or file locations.
+Public route shells set public app context and load the public entrypoint. Their route config fixes the scope, strips local service base URLs, points only at published static payloads, and does not allow `scope` or `mode` query state to turn the route into management.
 
-## Create Preview Endpoint
+Server authorization remains the final boundary even in management mode. UI visibility and capability projection are not write authority.
 
-Endpoint:
+[Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes) owns working-to-published data flow and the browser-facing isolation contract. [Runtime Architecture](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) owns the entrypoint/import boundary.
 
-- `POST /docs/scopes/create-preview`
+## Configuration And Capability Owners
 
-Required payload fields:
+- `docs-viewer/config/scopes/docs_scopes.json` — canonical scope topology and media policy
+- `docs-viewer/config/scopes/docs_scope_manifest.json` — lifecycle ownership evidence
+- `docs_scope_manifest.py` — ids, publishing modes, planned paths, manifest eligibility, and shared lifecycle rules
+- `docs_scope_create.py`, `docs_scope_rename.py`, `docs_scope_delete.py` — top-level preview/apply operations
+- `docs_sub_scope_lifecycle.py` — nested source/generated/published sub-scope lifecycle
+- `docs_management_capabilities_service.py` — global operation support plus per-scope create/delete/rename eligibility
+- `docs-viewer-management-scope-lifecycle-controller.js` — capability-gated UI projection and lazy flow loading
+- `docs-viewer-scope-lifecycle.js` — modal choices, preview, confirmation, and result rendering
 
-- `scope_id`
-- `title`
-- `default_doc_id`
-- `publishing_mode`
+## Executable Assurance
 
-Conditional and optional payload fields:
+The current test boundaries prove different parts of the structure:
 
-- `source_root`: required for `public_readonly` and `local_committed`; ignored for `local_external`
-- `public_route_path`: required for `public_readonly`; ignored for local modes
+- `test_docs_scope_config.py` rejects invalid public/local output combinations and escaping sub-scope paths.
+- `test_docs_scope_lifecycle.py` covers preview, explicit confirmation, allowlisted create, external rename, system/default-scope delete blockers, public route/payload creation and removal, and sub-scope lifecycle.
+- `test_docs_management_capabilities.py` checks capability and portable external-root projection.
+- `public_docs_viewer_readonly.py` boots public routes and verifies public app context, no management controls or local service URLs, public-only payload requests, query normalization, and filtered metadata.
+- browser module smokes cover capability error projection and active-scope delete navigation.
 
-Validation rules currently implemented:
+These tests are more authoritative than copied endpoint or file lists. When lifecycle structure changes, update the smallest test boundary that proves the new invariant.
 
-- `scope_id` must use lowercase letters, numbers, and single hyphen separators
-- `scope_id` must not already exist in `docs-viewer/config/scopes/docs_scopes.json`
-- `scope_id` must not already exist in the scope manifest
-- repo-backed `source_root` must be the single repo-relative `docs-viewer/source/<scope>` directory
-- `default_doc_id` must use lowercase letters, numbers, and hyphens
-- `publishing_mode` must be `public_readonly`, `local_external`, or `local_committed`
-- `public_readonly` requires a valid `public_route_path`
-- `local_external` requires `DOTLINEFORM_PROJECTS_BASE_DIR` and an existing readable/writable `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` directory
-- local tracked generated docs output must not be under `site/assets/data/docs/scopes/`
-- local tracked generated search output must not be under `site/assets/data/search/`
-- planned created paths must not already exist
+## Extension Method
 
-Preview response fields:
+When adding a lifecycle-owned resource or operation:
 
-- `ok`
-- `schema_version`
-- `action`
-- `operation`
-- `scope_id`
-- `title`
-- `publishing_mode`
-- `planned_scope_config`
-- `storage_contract`
-- `created_files`
-- `changed_files`
-- `publish_files`
-- `build_commands`
-- `urls`
-- `warnings`
-- `summary_text`
-- `dry_run`
+1. Define whether config, manifest, or another registry owns its identity.
+2. Make preview derive every affected path from current server-side state.
+3. Separate changed shared files from deletable scope-owned paths.
+4. Recompute the same plan on confirmed apply.
+5. Project eligibility from the service; do not infer it from DOM state, scope names, or paths.
+6. Add containment, ownership, partial-state, and public-isolation tests before exposing the control.
+7. Document the stable ownership consequence here; keep exact request/response fields in the endpoint reference.
 
-The preview response uses file records with `kind`, `path`, `action`, and `exists`.
-It always reports planned generated docs/search outputs.
-It reports public route files only for `public_readonly`.
-The preview projects the `storage_contract` paths before save. The scope type and any published paths distinguish public static assets from local runtime data served by the local Docs Viewer service.
+## Weak Spots
 
-Expected preview storage paths:
-
-- `local_committed`: `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`
-- `local_external`: `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/<scope>/` and `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/<scope>/index.json`
-- `public_readonly`: working generated output under `docs-viewer/generated/`, plus public publish snapshots under `site/assets/data/`
-
-The planned source-scope config also stores browser-facing `scope_type` and `meta` values:
-
-- `local_committed` -> `local`
-- `local_external` -> `local_external`
-- `public_readonly` -> `public`
-
-The Docs Viewer scope dropdown maps these types through `docs_viewer.scope_type_badges` for emoji and shows the scope record `meta` beside the scope id.
-
-## Create Apply Endpoint
-
-Endpoint:
-
-- `POST /docs/scopes/create-apply`
-
-Payload fields:
-
-- all create-preview fields
-- `confirm: true`
-
-Apply behavior:
-
-- requires explicit confirmation
-- re-runs create-preview validation before any write
-- creates the source root and default welcome Markdown document
-- appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
-- creates public route files and route-registry records only for `public_readonly`
-- creates external local source and generated output under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` for `local_external`
-- writes local generated docs outputs, including `index-tree.json`, `recently-added.json`, and selected by-id payloads
-- writes a user-created, tool-created manifest record
-- runs the docs build and docs search build after the config and source files are written
-
-Apply response fields:
-
-- `ok`
-- `schema_version`
-- `action`
-- `operation`
-- `scope_id`
-- `title`
-- `publishing_mode`
-- `storage_contract`
-- `created_files`
-- `publish_files`
-- `changed_files`
-- `deleted_files`
-- `missing_files`
-- `build_commands`
-- `urls`
-- `rebuild`
-- `summary_text`
-- `dry_run`
-
-Dry-run server mode validates the apply request and returns the apply response shape without writing files or running rebuild commands.
-
-## Delete Preview Endpoint
-
-Endpoint:
-
-- `POST /docs/scopes/delete-preview`
-
-Payload fields:
-
-- `scope_id`; `scope` is accepted as an alias
-
-Delete preview is manifest-driven.
-If the scope has no manifest record, the response is allowed false with a blocker.
-If the manifest record is system-owned or was not created by this lifecycle tool, the response is allowed false with a blocker.
-
-Eligible delete response fields:
-
-- `ok`
-- `schema_version`
-- `action`
-- `operation`
-- `scope_id`
-- `allowed`
-- `blockers`
-- `delete_files`
-- `missing_files`
-- `changed_files`
-- `build_commands`
-- `summary_text`
-- `dry_run`
-
-Missing manifest-listed files should be reported in `missing_files`.
-They do not block deletion of files that still exist.
-
-## Delete Apply Endpoint
-
-Endpoint:
-
-- `POST /docs/scopes/delete-apply`
-
-Payload fields:
-
-- `scope_id`; `scope` is accepted as an alias
-- `confirm: true`
-
-Apply behavior:
-
-- requires explicit confirmation
-- re-runs delete-preview validation before any write
-- blocks system-owned scopes and scopes not created by the lifecycle tool
-- deletes existing manifest-owned scope paths, excluding scope config and manifest files
-- reports missing manifest-owned paths without blocking the delete
-- removes the scope entry from `docs-viewer/config/scopes/docs_scopes.json`
-- removes the scope record from `docs-viewer/config/scopes/docs_scope_manifest.json`
-- refreshes docs viewer generated outputs for the remaining configured scopes
-
-Apply response fields:
-
-- `ok`
-- `schema_version`
-- `action`
-- `operation`
-- `scope_id`
-- `created_files`
-- `changed_files`
-- `deleted_files`
-- `missing_files`
-- `build_commands`
-- `urls`
-- `rebuild`
-- `summary_text`
-- `dry_run`
-
-Dry-run server mode validates the delete apply request and returns the apply response shape without deleting files, changing config/manifest state, or running rebuild commands.
-
-## Create Flow Contract
-
-Minimum fields:
-
-- scope id
-- title
-- source root for repo-backed modes
-- default doc id
-- publishing mode
-
-For `local_external`, the modal does not collect a source root or external data root.
-The server derives the external source and generated-output paths from `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer`.
-For local modes, the server skips public route creation.
-
-The server response should list:
-
-- files created
-- files changed
-- build commands run or suggested
-- resulting management URL
-
-Create preview reports this planned write set without writing files.
-Create apply writes the allowlisted source-root, config, generated-output, route, publish, and manifest changes after confirmation.
-Rename apply is limited to lifecycle-owned external-local scopes. It moves the derived external roots, updates config and manifest identity, and rebuilds the renamed scope without changing public routes, R2 objects, or links inside source content.
-Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
-
-Scope lifecycle manifests record user-created route and generated-output paths such as scope-specific `index-tree.json`, `recently-added.json`, by-id payload directories, and search payloads.
-They must not record shared public/manage entrypoints, route registries, CSS, UI text, or runtime modules as delete-owned scope files.
-
-## Management UI Flow
-
-The management shell exposes scope lifecycle commands only when the local Docs Viewer service advertises the matching lifecycle capability.
-
-`New scope` opens a dedicated modal flow that:
-
-- collects scope id, title, source root for repo-backed modes, default doc id, and publishing mode
-- hides the source root field for `local_external`
-- does not collect an external data root path
-- defaults publishing mode to `local_external`
-- includes `public_readonly`, `local_external`, and `local_committed` according to the server-advertised publishing modes
-- previews the server-planned write set before enabling the save step
-- sends `confirm: true` only from the final save action
-- reports created files, changed files, build commands, and resulting URLs from the server response
-
-Scope and sub-scope lifecycle previews and results use aligned label/value rows. External source, generated, search, and affected file paths are displayed relative to the fixed external Docs Viewer root; the user-specific root itself is omitted. Repo-owned changes remain repo-relative under `Changed files (repo)`.
-
-`Rename scope` uses one compact form rather than the detailed lifecycle preview/result presentation.
-The operator selects an eligible external-local scope and enters its new id; the client calls preview as a validation gate and applies immediately when allowed.
-The modal warns that links containing the old scope id are not rewritten.
-
-`Delete scope` is a selected-target flow.
-The current Docs Viewer scope is only the management shell context and is not the implicit delete target.
-The UI asks the operator to choose from server-advertised scopes whose lifecycle capability record has `delete_eligible: true`.
-After target selection, the flow:
-
-- previews the manifest-backed delete plan
-- shows deleted files, missing files, changed files, and build commands before confirmation
-- sends `confirm: true` only from the final delete action
-- reports the server apply result after deletion
-
-Implementation ownership:
-
-- `docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, rename validation/apply flow, preview summaries, selected delete target, and apply result summaries
-- `docs-viewer/runtime/js/management/docs-viewer-management-scope-lifecycle-controller.js` owns Actions menu wiring, capability-gated command visibility, busy/status callback composition, lazy flow loading, and management capability refresh after apply
-- `docs-viewer/runtime/js/management/docs-viewer-management-client.js` owns the HTTP wrappers for create/rename/delete preview and apply endpoints
-- `docs-viewer/runtime/js/management/docs-viewer-management-modals.js` provides the reusable modal shell; the lifecycle flow does not define a separate modal framework
-
-## Safety Rules
-
-- Scope creation is a local write action and must stay behind the loopback management server.
-- Public routes must remain read-only even if a management query or `scope=<other-scope>` appears in the URL.
-- The write server should validate scope ids and route paths before writing.
-- The write server should refuse repo paths outside the configured repo allowlist.
-- External local writes must stay under the resolved `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/` root.
-- The checked-in scope config must store marker-rooted external local paths instead of user-specific absolute paths.
-- Local scopes must keep generated docs/search payloads out of `site/assets/data/docs/scopes/` and `site/assets/data/search/`; config loading and lifecycle preview/apply fail closed if a local scope points there.
-- Public read-only scopes are the only scopes that should use those public generated asset roots.
-- Public read-only scope creation and deletion use the route shell template and manifest-owned file records; deletion must not remove shared runtime, shared CSS, UI text, route registry files themselves, or unrelated route shells.
-- Delete Scope must block any scope referenced as `default_scope_id` by a management route, even when that scope is user-created.
-- External local scopes should be easy to identify in responses and cleanup guidance.
-- Rename Scope must not imply that hard-coded document or media links are rewritten; links containing the old scope id require manual follow-through.
-- Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.
+- Create, rename, and delete are ordered multi-file operations, not transactions. A filesystem, config, route, or rebuild failure can leave partial current state; there is no rollback bundle.
+- Manifest ownership is only as current as the recorded path set. Manual config/filesystem edits can make preview block, omit an unrecorded associated asset, or target a coarse directory containing later-added files.
+- External-local media is preserved on delete but moved on rename. That asymmetry is current code, not a general ownership model, and must be resolved before External Asset Collections can rely on it.
+- Rename does not rewrite document URLs, `scope=` query values, local media links, or R2 keys.
+- Public and committed scopes cannot currently be renamed through lifecycle.
+- R2 objects have no lifecycle manifest, reference count, or automatic scope cleanup.
+- Unit tests create and remove a new public route and its payloads, while browser smoke boots configured public routes separately. There is no single end-to-end test that creates a fresh public scope and then boots that new route in a browser.
+- Public isolation depends on several mutually reinforcing layers—static route config, filtered browser config, entrypoint separation, capability absence, and server authorization—rather than one universal policy object.

@@ -2,79 +2,41 @@
 doc_id: tasks-tracker-template
 title: Tasks Tracker Template
 added_date: "2026-06-04 20:26"
-last_updated: "2026-06-04 20:26"
+last_updated: 2026-07-14
 ui_status: planned
 parent_id: dev-home
 ---
-# [Implementation Name]
+# [Request Outcome] Task Tracker
 
-This is the tracker for implementing [link to request document].
+Use this only when one bounded [change request](/docs/?scope=studio&doc=change-requests) needs coordination across sessions or owners.
 
-### baseline verification set
+Do not create a tracker merely because a change spans several files. If the rows below produce independently useful outcomes or can be prioritised separately, the request is too large: put those outcomes on the owning roadmap and create separate requests when they become ready.
 
-State the baseline verification set for before and after extraction slices, to be run only when the touched area warrants it.
+Request: [link]
 
-For example:
+## Delivery Boundary
 
-- Core checks: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick`.
-- Docs Viewer smoke checks: `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke`.
-- Local Studio smoke checks that prove Studio links and integration still work.
-- Public scope checks for `/library/` and `/analysis/` when scope registration, generated payload locations, route shells, or public Docs Viewer runtime behavior changes.
-- Focused Python and JavaScript syntax/import checks for moved files.
-- Focused tests for Docs Viewer management write APIs, source/scope config, New Scope, generated-data builders, and local service launchers when those areas move.
+- **Complete outcome:** [repeat the request outcome in one sentence]
+- **Durable documentation owner:** [one document]
+- **Must remain working throughout:** [important current behavior]
 
-Codex sandbox note: local service, browser, and temporary localhost checks will need elevated permissions even when the product code is healthy.
+## Tasks
 
-### general steer
+Keep the list short. A child task note is exceptional and should exist only when a handoff needs context that cannot fit in the row.
 
-- This section should highlight key points from the original request.
-- Development guidances in `development-workflow.md` need to be followed or called out if there is conflict with the implementation.
-- Implement direct reference updates instead of compatibility shims for old paths.
-- Use sibling docs for large inventories, target layouts, contract tables, or path maps so this tracker remains a concise sequential task list.
+| ID | status | action | proof |
+| --- | --- | --- | --- |
+| 1 | planned | [complete implementation step] | [focused check or observable result] |
 
-## Implementation Tasks
+Allowed statuses: `planned`, `in progress`, `done`, `deferred`.
 
-- This section lists the tasks needed to implement the request.
-- Work through the table by ID order. A `deferred` row is intentionally out of the implementation path and includes the reason in the action.
-- Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
+A deferred row must not be required for the request outcome. If it is required, the request is not complete.
 
-**Each task** or **batch of tasks** is described in its own sibling document:
+## Closeout
 
-- if tasks need tracking individually, use the template `task-template.md`.
-- if tasks can be done as a batch in one session, use the template `task-batch-template.md`
-
-| ID | status | title |
-| --- | --- | --- |
-| 1 | planned | title and link to task/batch document |
-
-The last tasks/batch should close out the implementation with the following named tasks:
-
-| ID | status | title |
-| --- | --- | --- |
-| - | planned | update docs |
-| - | planned | cleanup |
-| - | planned | verification |
-| - | planned | close out |
-
-### task: update docs
-- Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe any changed boundary, service config, route ownership, runner behavior, service ownership, and retired current-state assumptions.
-
-### task: cleanup
-- confirm any removed paths or artifacts are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic.
-
-### task: verification
-- Run the appropriate final verification set, which may include:
-    - quick profile,
-    - Docs Viewer smoke profile,
-    - focused Local Studio integration smokes,
-    - public build, public scope checks,
-    - syntax/import checks,
-    - any changed-doc link/path checks.
-
-### task: close out
-- Close out the parent request and this tracker:
-    - update statuses,
-    - summarize moved paths,
-    - record verification results and generated payload status,
-    - copy durable decisions/contracts into permanent owning docs,
-    - note remaining risks or follow-on work before these request docs are marked 'done'.
+- verify the complete request outcome, not only individual rows
+- remove temporary, compatibility, or superseded paths introduced during delivery
+- update the named durable owner and only other docs whose own contract or navigation changed
+- record the focused verification result
+- move new independently finishable work to the roadmap
+- close this tracker with the request; do not keep it as permanent architecture history

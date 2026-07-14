@@ -2,120 +2,92 @@
 doc_id: user-guide-docs-images
 title: Docs Images And Assets
 added_date: 2026-04-23
-last_updated: 2026-07-13
+last_updated: 2026-07-14
+summary: Link existing media, import new images and downloads, or embed self-contained visuals in a Docs Viewer document.
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Images And Assets
 
-Use this guide when you need to show an image or visual example inside a docs page.
+Use this guide to choose how a document should refer to an image, download, diagram, or interactive asset.
 
-There are three supported options.
+## Choose The Outcome
 
-## 1. Repo-Local Docs Asset
+| goal | use |
+| --- | --- |
+| Show an existing public-scope image or file. | A `media` token pointing at its R2 object. |
+| Show an existing asset in a local or external-local scope. | A `/docs/media/<scope>/...` link. |
+| Turn a staged image or downloadable file into its own document. | Docs Import; it creates a wrapper document and stores the bytes. |
+| Import the contents of HTML, Markdown, text, or a trusted documents package. | Docs Import; it interprets the supported content and writes document source. |
+| Keep a small diagram with the explanation. | Inline safe SVG or HTML in the Markdown source. |
+| Run a self-contained interactive example. | An `interactive-html` asset and token, not ordinary media. |
 
-Use this for:
+## Accepted Does Not Mean Interpreted
 
-- screenshots checked into the repo
-- annotated reference images
-- stable local technical/design references that should remain with the docs source
+Docs Import accepts several downloadable file extensions because it can store the file and create a document linking to it. It does not necessarily understand the file's contents.
 
-Save the file under:
+For example, ordinary `.json` or `.jsonl` is imported as a downloadable file:
 
-- `docs-viewer/source/<scope>/media/img/<filename>`
-- `docs-viewer/source/<scope>/media/files/<filename>`
+```text
+example.json -> stored bytes + wrapper document with a download link
+```
 
-Examples:
+A trusted Data Sharing documents package also uses JSON/JSONL, but its package identity and schema are recognized before the generic-file fallback:
 
-- `docs-viewer/source/studio/media/img/workspaces-example-doc.png`
-- `docs-viewer/source/studio/media/img/ui-audits-example-state.png`
+```text
+trusted documents package -> collection plan -> several canonical documents
+```
 
-Use it in Markdown:
+CSV, TSV, ZIP, and Office files similarly become downloads; they are not converted into document content. [Media And Asset Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) owns the complete capability distinction and code pointers.
+
+## Link Existing Public Media
+
+Public scopes use literal media tokens so source does not hardcode the shared media origin.
+
+Image:
+
+<pre><code>![Example](&#91;&#91;media:docs/library/img/example.jpg&#93;&#93;)</code></pre>
+
+Download:
+
+<pre><code>[Download data](&#91;&#91;media:docs/library/files/example.json&#93;&#93;)</code></pre>
+
+An image token may include positive integer dimensions:
+
+<pre><code>![Example](&#91;&#91;media:docs/library/img/example.jpg width=800 height=600&#93;&#93;)</code></pre>
+
+The docs builder replaces the token with `<media_base>/docs/<scope>/<class>/<filename>` before rendering. The token does not upload the object or prove that it exists.
+
+For a manually staged public asset, use the dry-run-first [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) command. Prefer a new filename when a replacement must appear immediately because Docs media has no cache-version contract.
+
+## Link Existing Local Media
+
+Repo-backed and external-local scopes use the confined local media route:
 
 ```md
-![Docs Viewer example](/docs/media/studio/img/workspaces-example-doc.png)
+![Example](/docs/media/studio/img/example.png)
+[Download data](/docs/media/studio/files/example.json)
 ```
 
-Use it in raw HTML:
+For repo-backed scopes, place the file under the configured media root, currently `docs-viewer/source/<scope>/media/img/` or `files/`. External-local scopes use their derived external media root. The local service resolves the URL through scope configuration and rejects traversal and symlink escapes.
 
-```html
-<img src="/docs/media/studio/img/workspaces-example-doc.png" alt="Docs Viewer example">
-```
-
-Recommended rule:
-
-- keep docs-facing images small and optimized
-- prefix filenames with the topic when that makes the flat class folder easier to scan
-- use clear names such as `default.png`, `example-docs-viewer.png`, or `state-disabled.png`
-
-The local Docs Viewer service serves only the configured repo media root through `/docs/media/<scope>/...` with containment checks.
 Do not put local design documents or working references in `site/`; that tree is the public deploy artifact.
 
-## 2. Remote Docs Media
+## Import A New Image Or Download
 
-Use this for:
+1. Put the source file in `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`.
+2. Open Docs Import in the target scope.
+3. Select the file and run the import.
+4. Inspect the generated wrapper document and media result.
 
-- images/files owned by public Library, Analysis, or Moments scopes
-- larger docs media that should use the shared media origin
-- public docs that should not hardcode the full media origin
+The target scope decides what happens to the bytes: public scopes publish to R2, repo-backed scopes copy into repo media, external-local scopes copy into their derived external media root, and manual storage reports a copy instruction.
 
-Important:
+Importing a standalone image or download creates a new canonical document. If you only need to reference an asset that already exists, add the appropriate link instead.
 
-- <code>&#91;&#91;media:...&#93;&#93;</code> is a real literal token that you type directly into the Markdown or HTML source
+Markdown package imports are different: one Markdown source becomes one document, package images are converted to readable WebP outputs, and supported attachments are copied and linked. HTML and Markdown imports can also extract raster data URLs written as Markdown images. [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) owns those operator workflows.
 
-Markdown example:
+## Inline And Interactive Assets
 
-<pre><code>![Library example](&#91;&#91;media:docs/library/img/example.jpg&#93;&#93;)</code></pre>
+Use inline SVG for a small self-contained diagram that belongs to the explanation. Docs Import sanitizes standalone or imported SVG markup rather than publishing it as ordinary raster media.
 
-Markdown image tokens can include optional dimensions:
-
-<pre><code>![Library example](&#91;&#91;media:docs/library/img/example.jpg width=800 height=600&#93;&#93;)</code></pre>
-
-Raw HTML example:
-
-<pre><code>&lt;img src="&#91;&#91;media:docs/library/img/example.jpg&#93;&#93;" alt="Library example"&gt;</code></pre>
-
-What you type:
-
-- <code>&#91;&#91;media:docs/library/img/example.jpg&#93;&#93;</code>
-
-What the docs builder resolves it to before render:
-
-- `<media_base>/docs/library/img/example.jpg`
-
-Docs Import publishes record-owned public media automatically before it commits this token.
-For a manually authored asset already placed in the shared import-staging drop-zone, use the exact-scope dry-run-first CLI described in [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2).
-Use a new filename when one replacement must be visible immediately; Docs media cache versioning is not part of the current uploader.
-
-## 3. Inline Raw HTML/CSS/SVG
-
-Use this for:
-
-- small diagrams
-- custom callouts or layouts
-- self-contained SVG examples that belong directly in the doc body
-
-Example:
-
-```html
-<svg viewBox="0 0 120 40" width="240" role="img" aria-label="Simple example">
-  <rect x="1" y="1" width="118" height="38" rx="6" fill="none" stroke="currentColor" />
-  <text x="60" y="25" text-anchor="middle" font-size="14">Example</text>
-</svg>
-```
-
-Use this when the visual is part of the explanation itself and does not need to exist as a separate image file.
-
-## Which Option Should I Use?
-
-- use `/docs/media/<scope>/...` for repo-backed or external-local scope assets
-- use <code>&#91;&#91;media:docs/&lt;scope&gt;/...&#93;&#93;</code> for public R2 media
-- use inline HTML/CSS/SVG for small self-contained visuals
-
-If the doc is public, use its R2 media token. If it is local technical/design documentation, keep the asset beside the docs source.
-
-## Related References
-
-- [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling)
+Interactive HTML has a separate sandboxed iframe contract and asset location. It is not downloadable media, is not served through `/docs/media/`, and is not selected as an ordinary import source. Use it only when the document genuinely needs executable interaction.

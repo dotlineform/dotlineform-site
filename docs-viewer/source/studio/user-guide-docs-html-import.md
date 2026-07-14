@@ -3,312 +3,122 @@ doc_id: user-guide-docs-html-import
 title: Docs Import
 added_date: 2026-04-24
 last_updated: 2026-07-14
+summary: Stage source material, review the import decisions, and write it into a configured Docs Viewer scope.
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Import
 
-Use this page when you have a staged source file that should become a Library, Analysis, or Studio docs source doc.
+Docs Import turns staged source material into canonical Markdown documents and associated media. It runs inside Docs Viewer management; there is no separate import route.
 
-The import workflow is owned by Docs Viewer management.
-Open it from `/docs/?scope=<scope>` with the icon-only `Import` toolbar action or `Actions` > `Import`.
+Open the target `/docs/?scope=<scope>` page and choose the Import toolbar action or `Actions` > `Import`.
 
-The import UI runs directly inside the Docs Viewer management modal.
-There is no separate Studio Docs Import route.
+## Workflow
 
-## Before You Start
-
-Put the original source file in the shared import drop-zone:
-
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
-
-The path is resolved from `DOTLINEFORM_PROJECTS_BASE_DIR` through the shared Data Sharing workspace configuration. It is user-owned staging outside the repository and is shared by all supported import formats.
-For Markdown package imports, copy the whole exported folder as a direct child of this staging directory.
-
-Staged Markdown files should not include predefined front matter.
-The importer creates or preserves the normal Docs Viewer front matter when it writes the target source doc.
-
-Media handling follows the selected scope's configured storage mode.
-Public Library, Analysis, and Moments imports preflight and upload record-owned media to R2 before committing the Markdown source.
-Repo-backed local scopes copy media beside their docs source, and external-local scopes copy media under the external Docs Viewer workspace.
-Only `staging_manual` requires you to copy staged media after import.
-For Markdown package imports, package images are converted to 800px-max WebP outputs and package attachments keep readable generated filenames before the configured storage action runs.
-
-For interactive HTML widgets, test a standalone HTML file in a browser first.
-Add `<meta name="dlf:docs-import-role" content="interactive-html">` to the file.
-Role-marked interactive HTML files are copied into the current scope's repo-local interactive assets during any normal source import.
-The source Markdown is not edited automatically; add an <code>&#91;&#91;interactive-html:example-widget.html&#93;&#93;</code> token yourself where the iframe should appear.
-
-## What The Modal Does
-
-The import modal:
-
-- refreshes supported staged files from the shared import drop-zone every time it opens
-- shows staged files in a visible list of about ten rows
-- separates ordinary staged files from reviewed Data Sharing packages through the server-provided source format
-- supports native multi-selection plus `Select all` and `Clear selection` in `Files` mode
-- keeps `Data Sharing packages` single-select and routes the selected package into its complete collection plan
-- lets you choose any configured docs scope
-- keeps `Tab` and `Shift+Tab` focus inside the open modal
-- optionally keeps clearly identifiable prompt/meta blocks for HTML imports
-- converts HTML into a best-attempt Markdown source doc
-- imports staged Markdown as the source body without HTML conversion
-- imports staged Markdown package folders as one Markdown source doc plus planned image and attachment media
-- imports `.txt` files as plain Markdown prose and converts plain URLs to autolinks
-- imports standalone `.svg` files as wrapper docs with sanitized inline SVG
-- imports raster images as wrapper docs that point at the scope-owned image destination
-- imports supported downloadable files as wrapper docs that point at the scope-owned file destination
-- recognizes trusted returned Data Sharing JSON/JSONL as complete reviewed-document collections before generic file fallback
-- extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
-- hides role-marked interactive HTML files from the staged file picker and copies each one into `site/assets/docs/interactive/<scope>/` for manual iframe-token embedding
-- keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
-- validates the generated Markdown through the shared Python Docs Viewer Markdown renderer before write success
-- writes a new doc immediately when the target is free
-- opens a filename-conflict modal when the staged filename stem matches an existing doc target
-
-## Basic Workflow
-
-1. Open `/docs/?scope=library&import=1` or the matching Docs Viewer management scope.
-2. Click the icon-only `Import` toolbar action, or choose `Actions` > `Import`.
-3. Leave the import type on `Files`.
-4. Choose one or more staged files. Use Cmd/Ctrl-click or Shift-click for native multi-selection, or use `Select all`.
-5. Confirm or change the publish scope:
-   - `library` for the public Library viewer
-   - `analysis` for the public Analysis viewer
-   - `studio` for the Studio docs viewer
-6. If any selected file is HTML, decide whether to include obvious prompt/meta blocks for the selected HTML files.
-7. Click `Import selected`.
-
-If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
-Multi-file imports process the selected ordinary files in list order. Filename collisions are resolved one file at a time; reviewed Data Sharing packages cannot be included in the same run.
-After a successful import, Docs Viewer refreshes the target index once and selects the imported document, or the final successfully imported document in a multi-file run. The terminal result remains in the modal until you click `Close`; an import into another scope navigates directly to that scope and document.
-The new source doc's `doc_id` and Markdown filename come from the staged source filename stem.
-HTML imports preserve the imported HTML title.
-Markdown imports use the first `# H1` as the title when present and otherwise humanize the staged filename stem.
-Text, SVG, image, and file-media imports humanize the staged filename stem unless the source format contains a better title.
-
-New imports into public scopes such as `library`, `analysis`, and `moments` use the same default behavior: they are created with `viewable: false`, generated, and opened for review through manage-mode viewer links before becoming normal public tree items.
-
-## Reviewed-Package Collection Workflow
-
-A validated package in Docs Review can open managed Docs Import in `Data Sharing packages` mode with its matching staged JSON/JSONL collection preselected. The handoff carries only the safe package identity; Docs Import resolves it against the server-listed staged file. If that staged file has been deleted, the persistent review remains readable but import is unavailable.
-
-Opening Docs Import directly lets you switch to `Data Sharing packages` manually. This mode is intentionally single-select and never exposes `Select all` or ordinary-file multi-selection.
-
-Collection import always plans the complete package before writing:
-
-1. Choose the target scope and review every package record, parent mapping, warning, and blocker.
-2. Resolve document collisions one at a time with `Overwrite`, `Skip`, or `Cancel`.
-3. Leave `Apply to all` unchecked to decide only the current collision, or check it to apply the chosen action to remaining document collisions.
-4. Resolve invalid-front-matter or unsupported-content records individually with `Skip` or `Cancel`; an optional note may accompany a skipped invalid record.
-5. Review the final read-only plan and confirm apply.
-
-The collection workflow does not offer replacement ids, `Create as new`, ordinary per-record selection, or automatic overwrite. `Apply to all` does not affect invalid-record decisions or authorize media and attachment overwrites. `Cancel` is available before apply and writes nothing; once confirmed apply begins, the synchronous operation runs to completion or failure.
-
-Existing target parents are reused. A missing parent is created only when the package supplies a complete explicit document record for that identity; missing undeclared parents and hierarchy cycles block confirmation. Multi-level supplied parent chains are supported. Hierarchy-only existing records preserve their current body and unrelated front matter, while a new structural record without supplied content receives an empty body.
-
-Apply rereads the immutable staged package and recomputes target state. A changed collision target, target identity, parent resolution, hierarchy state, blocker state, or package identity returns a refreshed plan without writes. Successful writes run in package order. If a source write fails, earlier writes remain and later records are reported as not attempted; there is no collection rollback. Generation failure is reported separately and does not undo successful source writes.
-
-The result groups records as created, overwritten, skipped, failed, or not attempted and includes generation status, warnings, manual-copy instructions, and a marker-rooted Markdown report path under `import-staging/results/`.
-While an import preview or write request is active, the modal disables `Cancel`; closing the browser page remains the local recovery path for an unexpectedly hung request. After a terminal ordinary-file or collection result, the modal replaces the run action and `Cancel` with one `Close` button. Errors and pre-apply cancellations retain the normal controls so the operation can be corrected or retried; reopening the modal restores its normal run and `Cancel` actions.
-
-## Prompt / Meta Option
-
-When `Include obvious prompt/meta blocks` is enabled:
-
-- clearly identifiable prompt/meta sections are kept
-- they are simplified into wrapped quoted prose
-
-When it is disabled:
-
-- those sections are dropped when the importer can identify them clearly
-
-This option is hidden for non-HTML files because those formats do not use the HTML prompt/meta detector.
-If you are unsure for HTML, start with the option off and only enable it when the prompt/meta content is part of the document you actually want to keep.
-
-## Duplicate Filename Behavior
-
-If the generated import target already matches an existing doc:
-
-- the page opens a `File already exists` modal naming the existing Markdown filename
-- nothing is written yet
-- the modal's text input is seeded with the existing `doc_id`
-- the edited `doc_id` is used as the new Markdown filename stem
-- `Replace` overwrites the existing source file instead of creating a renamed import
-- the importer checks the new `doc_id` again before writing
-
-Example:
-
-- staged file: `diagram.svg`
-- existing source doc: `diagram.md`
-- modal value: `diagram`
-- user edits to: `diagram-2`
-- imported doc: `diagram-2.md`
-
-Low-level overwrite support remains available to the local service for explicit callers, but the Studio page treats filename collisions as a rename prompt rather than as a normal overwrite flow.
-Use `Replace` only when the staged file should intentionally replace the existing source doc at the same filename.
-
-## Media Imports
-
-Supported raster image extensions:
-
-- `.jpg`
-- `.jpeg`
-- `.png`
-- `.webp`
-- `.gif`
-
-Supported downloadable file extensions:
-
-- `.pdf`
-- `.zip`
-- `.csv`
-- `.tsv`
-- `.json`
-- `.jsonl`
-- `.docx`
-- `.xlsx`
-- `.pptx`
-
-For `r2_upload` and `staging_manual`, raster image wrappers use:
-
-- <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>
-
-For those same modes, downloadable file wrappers use:
-
-- <code>&#91;&#91;media:docs/&lt;scope&gt;/files/&lt;filename&gt;&#93;&#93;</code>
-
-For `r2_upload` and `staging_manual`, those tokens resolve against `_config.yml` `media_base` when docs payloads are built.
-For `repo_assets` and `external_assets`, the importer writes the configured `/docs/media/<scope>/...` local-service link instead.
-
-HTML and Markdown imports also extract inline raster data URLs that appear as Markdown images, such as:
-
-```md
-![Diagram](data:image/png;base64,...)
+```text
+stage source
+    |
+    v
+open Import -> choose target scope and source
+    |
+    +-- Files ----------------> convert and validate
+    |                              |
+    |                              +-- collision? -> rename or replace
+    |                              v
+    |                         write + rebuild -> result
+    |
+    +-- Data Sharing package -> plan whole collection
+                                   |
+                                   +-- blockers? -> stop and correct package
+                                   +-- decisions? -> overwrite or skip
+                                   v
+                              confirm -> re-plan -> ordered apply -> result report
 ```
 
-Generated filenames use the final proposed `doc_id` plus an incrementing suffix, such as:
+The browser presents choices. The local Docs Viewer service resolves staged paths, validates targets, creates the authoritative plan, performs writes, and rebuilds generated docs.
 
-- `example-doc-image-01.png`
-- `example-doc-image-02.jpg`
+## Stage The Source
 
-The generated Markdown points at the matching scope-owned media link.
-The importer publishes R2 media before the source write, copies local media automatically, or reports a manual-copy action according to the scope's storage mode.
+Put source material in the shared drop-zone:
 
-## Markdown Package Imports
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
+```
 
-Use a Markdown package import for folder exports such as Apple Notes Markdown export.
+Ordinary files must be direct children. A Markdown package is a direct-child folder containing one Markdown file plus its local images or attachments. The picker shows only formats the server currently accepts; [Docs Import Architecture](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) points to the code-owned format registry.
 
-The package must be a direct child folder under the shared import drop-zone and must contain exactly one `.md` or `.markdown` file.
-Local image and attachment links are resolved relative to that Markdown file and must remain inside the package folder.
+Do not add Docs Viewer front matter to staged Markdown. Import creates the target document front matter and treats the staged Markdown as its body.
 
-Package image behavior:
+## Import Files
 
-- supported source image extensions are `.jpg`, `.jpeg`, `.png`, `.webp`, and `.gif`
-- generated image outputs are always `.webp`
-- images wider than 800px are downscaled to 800px wide
-- smaller images are not upscaled
-- animated images are rejected instead of being silently flattened
-- generated filenames use `<doc_id>-image-NN.webp`
-- generated Markdown uses readable alt/title text such as `<doc_id> image NN`
+Use `Files` for HTML, Markdown, text, SVG, images, downloadable files, and Markdown packages.
 
-Package attachment behavior:
+1. Select one or more staged sources.
+2. Choose the target scope.
+3. For HTML, decide whether obvious prompt/meta sections belong in the document.
+4. Choose `Import selected`.
+5. Resolve any filename collision when prompted.
+6. Inspect the result and open the imported document.
 
-- supported attachment extensions match the downloadable file allowlist
-- attachments are copied unchanged
-- generated filenames use `<doc_id>-attachment-NN.<ext>`
+Multi-file runs process the selected files in list order. A failure stops the run; successfully completed earlier imports remain. Docs Viewer refreshes the target index once and selects the final successful document.
 
-The generated Markdown points at docs media links for each resolved package image or attachment.
-The result panel lists every planned media item, including original package-relative paths and image conversion details.
+The staged filename normally supplies the new `doc_id` and Markdown filename. HTML can supply its title; Markdown uses its first H1 when present; other formats use the best available source title or a humanized filename.
 
-## Interactive HTML Assets
+New documents in public scopes are created non-viewable so they can be checked in management mode before publication.
 
-An import can carry one or more staged interactive HTML assets:
+### Filename Collisions
 
-- selected staged source: `coincidence-salience.html`
-- role-marked asset: `Coincidence Widget.html`
-- copied asset: `site/assets/docs/interactive/<scope>/coincidence-widget.html`
-- Markdown token to add manually: <code>&#91;&#91;interactive-html:coincidence-widget.html&#93;&#93;</code>
+When the proposed Markdown filename already exists, nothing is written until you choose:
 
-The interactive file must be a complete standalone HTML document and must include this metadata:
+- enter another `doc_id` to create a different document
+- choose `Replace` to overwrite the colliding canonical source
+- cancel that file
+
+Replacing preserves the existing document identity and parent while replacing its body with the imported content. Recover unwanted overwrites through Git or filesystem backups; Docs Import does not create a separate backup bundle.
+
+## Import A Reviewed Collection
+
+Use `Data Sharing packages` for a trusted returned documents package. Docs Review can open the modal with its matching staged package selected, but the handoff contains only the package identity; Docs Import resolves the actual staged source again.
+
+The collection path is deliberately plan-first:
+
+1. Choose the package and target scope.
+2. Review every record, parent resolution, warning, and blocker.
+3. For collisions, choose `Overwrite`, `Skip`, or `Cancel`. `Apply to all` affects only the remaining document collisions.
+4. For invalid records, choose `Skip` or `Cancel`; a skip may include a note.
+5. Review the complete resolved plan and confirm apply.
+
+The plan covers the whole collection. There is no ordinary subset selection, automatic overwrite, replacement `doc_id`, or `Create as new` path. Missing undeclared parents, hierarchy cycles, unsafe identities, and package-shape errors block confirmation.
+
+On confirmation the service rereads the staged package and recomputes the target plan. If package identity, collisions, hierarchy, or blockers changed, it returns the refreshed plan without writing. Otherwise it applies records in package order and rebuilds once.
+
+Collection apply is synchronous, not transactional. A source-write failure preserves earlier writes and reports later records as not attempted. Generation failure is reported separately and does not undo successful source changes.
+
+## Media And Companion Assets
+
+Media behavior comes from the target scope configuration:
+
+- public scopes can publish record-owned media to R2 before committing the source
+- repo-backed scopes copy media into their configured repo assets
+- external-local scopes copy media into their external media root
+- `staging_manual` leaves an explicit copy instruction in the result
+
+Markdown packages convert supported images to readable, 800px-maximum WebP outputs and copy supported attachments unchanged. HTML and Markdown can also extract inline raster data URLs. Exact paths, storage modes, collision rules, and media limitations belong to [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling).
+
+A standalone HTML file marked with:
 
 ```html
 <meta name="dlf:docs-import-role" content="interactive-html">
 ```
 
-Role-marked files are not listed as selectable staged sources.
-During a normal source import, the importer copies every role-marked HTML file in the shared import drop-zone into the selected scope's repo-local interactive assets.
-The target filename is the slugified original filename stem plus `.html`.
-The import result lists each copied interactive file as another two-column result row with the slugified stem and `script file`, but it does not insert iframe tokens into the generated source doc.
-This keeps the import conversion unchanged and leaves placement as an explicit source edit.
-You can add multiple interactive HTML tokens manually when a document uses multiple interactive assets.
-When the default iframe height does not fit the asset, add a measured pixel height to the token, for example <code>&#91;&#91;interactive-html:coincidence-widget.html height=546&#93;&#93;</code>.
+is treated as a companion asset rather than a selectable source. A normal file import copies marked companions into the target scope's interactive-assets folder after any required overwrite confirmation. Add the resulting `interactive-html` token to the document manually; import does not decide where the iframe belongs.
 
-If any target interactive asset already exists, the importer asks for overwrite confirmation before replacing it.
-Cancel leaves the existing asset unchanged.
+## Results And Recovery
 
-Template: `site/assets/docs/interactive/template.html`
+An ordinary result identifies the created or overwritten document, target scope, viewer link, media actions, and conversion warnings. A collection result groups created, overwritten, skipped, failed, and not-attempted records and writes a Markdown report under `import-staging/results/`.
 
-## Recovery Behavior
+The terminal result remains in the modal until `Close`. Reopen the modal to refresh the staged-source list and start another run.
 
-The importer no longer creates local backup bundles before source writes.
-Recover overwritten source through Git history, host/filesystem backups, or an explicit manual copy made before import.
+Docs Import is best-effort conversion. Normal prose, headings, lists, links, simple tables, Markdown, and supported media are reliable inputs. Presentation-heavy HTML, interactive UI, unresolved package links, and unsupported assets may need source editing after import. The generated Markdown is always checked by the shared Python renderer before a source write.
 
-## What To Expect In The Result
-
-After a successful import, the page reports:
-
-- whether the operation created or overwrote a doc
-- each imported staged file when multiple ordinary files were selected
-- the target scope
-- the final `doc_id`
-- the imported title
-- the original staged source path
-- the viewer link for the imported doc
-- safe media class, filename, status, and link details for image, file-media, extracted inline raster, and Markdown package media imports
-- converted WebP image outputs and copied package attachments
-- copied interactive HTML script files as result rows labelled `script file`
-- any non-routine conversion warnings
-
-## Route Ready State
-
-The page root `#docsHtmlImportRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state).
-It currently uses Studio-style attributes inside the Docs Viewer bundle.
-Route-specific details:
-
-- import and confirmed overwrite commands set route busy
-- `data-studio-mode` is `idle` before import, `confirm` when an overwrite warning is shown, and `result` after a successful import
-- `data-studio-service` reports whether the Docs Management Service is available
-- `data-studio-record-loaded` is `true` when supported staged files are available
-
-## Current Practical Limits
-
-This importer is intentionally best-effort.
-
-Expect good HTML conversion results for:
-
-- normal prose docs
-- headings and lists
-- simple tables
-- external links
-- plain-text `http://` and `https://` URLs, which become clickable autolinks
-- inline SVG diagrams
-- standalone SVG files, using the same SVG safety rules as HTML inline SVG
-- inline raster images that appear as Markdown images with `data:image/<type>;base64,...` targets
-- technical notation that needs safe inline HTML such as subscripts
-
-Expect simplified output for:
-
-- presentation-heavy layout wrappers
-- interactive disclosure UI such as `details/summary`
-- prompt/meta shells
-- source images or downloadable files that have not yet been copied to the configured media store
-
-Markdown, text, SVG, image-wrapper, and file-wrapper imports bypass the HTML converter.
-They are still validated through the shared Python Docs Viewer Markdown renderer before write success.
-
-## Related References
-
-- [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
-- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
+For implementation boundaries, extension methods, and known structural weak spots, see [Docs Import Architecture](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec).

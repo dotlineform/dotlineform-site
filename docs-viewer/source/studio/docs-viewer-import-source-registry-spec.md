@@ -1,343 +1,189 @@
 ---
 doc_id: docs-viewer-import-source-registry-spec
-title: Import Source Registry Spec
+title: Docs Import Architecture
 added_date: 2026-05-14
-last_updated: 2026-07-12
+last_updated: 2026-07-14
+summary: Configuration, registries, execution paths, extension methods, and weak spots for staged Docs Viewer imports.
 parent_id: docs-viewer
 viewable: true
 ---
-# Docs Viewer Import Source Registry Spec
+# Docs Import Architecture
 
-The Docs Viewer import source registry is the server-side format contract for staged source files imported through Docs Viewer management mode.
+Docs Import is a management workflow that reads user-staged material, normalizes it into document intent, and writes canonical Docs Viewer source through the local service.
 
-The registry currently lives in `docs-viewer/services/docs_import_common.py`, with staged-source resolution and preview dispatch in `docs-viewer/services/docs_import_preview.py`.
-The service boundary that turns previews into source writes lives in `docs-viewer/services/docs_import_source_service.py` and is exposed through the standalone Docs Viewer service.
+This document owns the stable architecture and extension method. [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) owns the operator workflow. Exact formats, fields, endpoint payloads, and tests remain code-owned.
 
-## Goals
+## Execution Paths
 
-The registry must:
+```text
+external import-staging
+          |
+          v
+server listing + source classification
+          |
+          +---------------- ordinary file or Markdown package
+          |                              |
+          |                              v
+          |                    preview / conversion / validation
+          |                              |
+          |                              v
+          |                       ImportContent(replace)
+          |                              |
+          |                              v
+          |                    plan one document -> media -> source write
+          |                                              |
+          |                                              v
+          |                                        rebuild + result
+          |
+          +---------------- trusted documents package
+                                         |
+                                         v
+                              package adapter -> ImportContent records
+                                         |
+                                         v
+                              write-free complete collection plan
+                                         |
+                              browser decisions + confirmation
+                                         |
+                                         v
+                               reread and recompute server plan
+                                         |
+                                         v
+                              ordered writes -> one rebuild -> report
+```
 
-- list every staged source format accepted from `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
-- map file extensions to a stable `source_format`
-- expose `source_format` in staged-file listings and preview/write responses
-- keep media-producing formats explicit
-- keep HTML prompt/meta handling explicit
-- send every format through one preview contract before write
-- keep create, collision, overwrite, source-write, and rebuild behavior outside individual format converters
+The browser selects sources and submits decisions. It does not own filesystem paths, converted source, hierarchy plans, media plans, or write authority.
 
-The registry is intentionally small.
-It describes supported formats and dispatch metadata; it is not a plugin loader or an open-ended import execution surface.
+## Configuration And Registries
 
-## External Staging Root
+### Staging Root
 
-Every registered Docs Import format uses the shared user drop-zone:
+All formats use `configured_workspace_paths(repo_root).import_staging` from `data-sharing/services/paths.py`, normally:
 
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 ```
 
-Docs Import reuses the W0 adapter already consumed by Docs Review: `configured_workspace_paths(repo_root).import_staging` from `data-sharing/services/paths.py`. Listing, source resolution, direct-child Markdown packages, interactive companions, and `staging_manual` media materialization all use that resolved root. Responses use `marker_path()` rather than absolute paths.
+This is a shared user drop-zone, not a Docs Import inbox. Source resolution requires direct children, confines paths to the configured root, rejects symlinks, and returns marker paths instead of absolute workspace paths.
 
-The folder is application-neutral staging despite its existing `data-sharing/` namespace. Which workflow consumes a file depends on supported format/schema and the user action. There is no Docs-specific external resolver and no fallback or compatibility read from the retired repo-local staging folder.
+### Source Classification
 
-## Data Sharing Collection Source
+Classification is code-owned and deliberately closed:
 
-Supported Data Sharing documents JSON/JSONL is a current collection source format. The registry detects supported Data Sharing headers and trusted export metadata before the generic `.json`/`.jsonl` downloadable-file fallback, parses the immutable staged file into normalized document records, and applies it as a collection.
+- `SOURCE_IMPORTERS` in `docs-viewer/services/docs_import_common.py` maps ordinary file suffixes to a `source_format` and small dispatch metadata.
+- A direct-child directory is classified separately as `markdown_package` after package validation.
+- Supported trusted Data Sharing JSON/JSONL is reclassified as `data_sharing_documents` from trusted export metadata before the generic downloadable-file fallback.
+- `generate_import_preview()` in `docs_import_preview.py` performs explicit format dispatch.
 
-The same Data Sharing collection adapter feeds both the persistent read-only Docs Review projection and Docs Import. Import reads the staged JSONL, never `import-preview/<package_id>/source/*.md`. Shared lower-level services continue to own renderer validation, data-URL image extraction, collision handling, source formatting, writes, and rebuilds.
+The browser receives the resulting `source_format`; it does not recreate suffix or package rules. This registry is an allowlist, not a plugin loader.
 
-Each non-colliding record creates. A collision can only be explicitly overwritten or skipped; the collection workflow does not offer a replacement `doc_id` or `Create as new`. The UI resolves collisions sequentially with `Overwrite`, `Skip`, or `Cancel` and an unchecked `Apply to all` checkbox before showing one read-only final confirmation. `Apply to all` affects only remaining document collisions, not invalid-record decisions or asset overwrite authority.
+### Target Scope And Media Policy
 
-### Future Standalone Collection Compatibility
+`docs-viewer/config/scopes/docs_scopes.json` defines target source roots and `import_media_storage`. `docs_scope_config.py` validates and normalizes that config. Import media services then project the configured `repo_assets`, `external_assets`, `r2_upload`, or `staging_manual` behavior.
 
-The shared downstream contract must not require Data Sharing provenance. Data Sharing JSON/JSONL is the first collection adapter, but a future explicitly versioned standalone documents JSON/JSONL schema may be produced directly by ChatGPT or another source without an export seed.
+Source-format registration does not decide where media is stored. That separation lets the same import format target different scope types without format-specific path logic.
 
-Wrapper adapters should emit generic import-content records containing identity, title, body content, `content_format`, allowed metadata, hierarchy, and asset diagnostics. `content_format` can dispatch to the existing Markdown, HTML-to-Markdown, or plain-text behavior through content-based entrypoints beneath the current file wrappers.
+## The Core Contracts
 
-That standalone schema is not implemented. Arbitrary JSON/JSONL keeps the generic downloadable-file behavior unless a supported collection schema is explicitly declared.
+| contract | owner | purpose |
+| --- | --- | --- |
+| source allowlist and lightweight format metadata | `docs_import_common.py` | Classify ordinary staged sources. |
+| safe source resolution, listing, conversion, and preview validation | `docs_import_preview.py` | Produce Markdown and media intent without a source write. |
+| trusted documents-package intake | `docs_import_data_sharing_package.py` | Verify wrapper provenance and emit generic records. |
+| wrapper-neutral document intent | `docs_import_content.py` | Represent one document without Data Sharing or file-wrapper assumptions. |
+| per-document plan and apply | `docs_import_document.py` | Validate a create/overwrite and perform its media/source mutation. |
+| write-free collection plan | `docs_import_collection_plan.py` | Resolve all records, collisions, parents, warnings, and blockers. |
+| collection decisions, ordered apply, and result | `docs_import_collection_decisions.py`, `docs_import_collection_apply.py`, `docs_import_collection_result.py` | Revalidate browser choices, mutate, rebuild, and report. |
+| HTTP-facing orchestration | `docs_import_source_service.py` | Select the ordinary or collection path and keep writes behind the service. |
+| browser workflow | `docs-viewer/runtime/js/import/` | Present file selection, prompts, collection decisions, and results. |
 
-### Targeted Refactoring Boundary
+These are navigation pointers, not a promise that every helper will remain in the same file.
 
-The current registry and dispatcher remain valid for existing one-document formats. `SourceImporter` may remain a metadata record, and `generate_import_preview()` may retain its explicit format dispatch.
+## Normalized Document Intent
 
-The implemented collection extension retains this boundary:
+`ImportContent` is the seam between source-specific adapters and document planning. It carries identity, title, allowed front matter, hierarchy, diagnostics, and one explicit content intent:
 
-1. the W0 external staging-root substitution;
-2. content-aware Data Sharing JSON/JSONL detection before generic file fallback;
-3. a focused collection orchestrator for one staged source producing several document actions; and
-4. extraction of reusable per-document collision, create/overwrite, media, write, and rebuild helpers from the current single-document orchestrator.
+- `replace`: convert supplied Markdown, HTML, or plain text and use it as the target body
+- `preserve-existing`: update allowed metadata or hierarchy while retaining the current body
+- `empty-new`: create a structural document with no fabricated body
 
-The existing `handle_import_source()` continues to own ordinary one-source-to-one-document workflow and calls the same extracted helpers. Do not introduce a plugin framework, callable-handler registry, wholesale dispatcher replacement, or migration of every format into a separate module without a separate requirement and evidence.
+Ordinary file imports produce one replacement record after preview. Collection adapters may produce any of the three intents. This prevents collection planning from inventing replacement content for hierarchy-only records and lets future trusted wrappers reuse document planning without reusing Data Sharing provenance.
 
-## Registry Shape
+Only `title`, `parent_id`, `summary`, and `viewable` are accepted from imported front matter. Canonical formatting, timestamps, target paths, collision identity, and default visibility remain service-owned.
 
-The registry is represented by `SourceImporter` records:
+## Ordinary Source Path
 
-```python
-@dataclass(frozen=True)
-class SourceImporter:
-    source_format: str
-    suffixes: set[str]
-    include_prompt_meta: bool = False
-    creates_remote_media_plan: bool = False
-```
+An ordinary source follows one-document orchestration:
 
-Current registry entries:
+1. Resolve and classify the staged source.
+2. Convert it to Markdown and validate it through the shared Python renderer.
+3. Plan media and any role-marked interactive companions.
+4. Compare the proposed `doc_id` with current target-scope state.
+5. Return a write-free response when a rename or overwrite decision is required.
+6. Convert the accepted preview to `ImportContent`, plan the document, materialize media, atomically write source, and invoke the managed rebuild boundary.
 
-| `source_format` | Extensions | Prompt/meta option | Media plan |
-| --- | --- | --- | --- |
-| `html` | `.html`, `.htm` | yes | inline raster extraction can emit `media_plans` |
-| `markdown` | `.md`, `.markdown` | no | inline raster extraction can emit `media_plans` |
-| `markdown_package` | direct child directories containing one Markdown file | no | package images and attachments emit `media_plans` |
-| `text` | `.txt` | no | no |
-| `svg` | `.svg` | no | no |
-| `image` | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif` | no | singular `media_plan` |
-| `file` | `.pdf`, `.zip`, `.csv`, `.tsv`, `.json`, `.jsonl`, `.docx`, `.xlsx`, `.pptx` | no | singular `media_plan` |
+The format converter never writes source or performs a rebuild. Filename replacement, overwrite confirmation, current target state, and endpoint authorization stay outside it.
 
-`SOURCE_IMPORTER_BY_SUFFIX` is derived from this registry and is the canonical suffix lookup.
-`SUPPORTED_STAGED_SUFFIXES` is the union used by staging resolution and staged-file listing.
+## Collection Path
 
-## Staging Contract
+A collection source first passes a trusted wrapper adapter. The generic planner then processes every normalized record without exposing bodies or generated source to the browser.
 
-All managed imports read from:
+The plan resolves:
 
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`
+- create or collision state
+- allowed overwrite/skip decisions
+- invalid-record decisions
+- existing and package-supplied parent chains
+- hierarchy blockers and cycles
+- safe media summaries and unmapped asset warnings
 
-`resolve_staged_import_source()` requires the staged filename to resolve inside that directory and to use a supported suffix, unless the source is a supported Markdown package directory.
-Markdown package directories must be direct children of the staging folder.
-Nested paths, path traversal, unsupported extensions, and package directory escapes are rejected before conversion.
+Confirmed apply rereads the immutable package, recomputes the plan, and checks submitted package identity and decisions against current state. Records are written in package order through the same per-document boundary, followed by one rebuild and a marker-rooted result report.
 
-`list_staged_import_source_files()` returns only supported files and includes:
+This is synchronous batch orchestration, not a transaction or job system. Earlier writes survive a later source-write failure; later records become not attempted. R2 publication failure blocks that record's source write so a new media token is not committed without its media. Generation failure remains separate from successful canonical mutations.
 
-- `filename`
-- `path`
-- `source_format`
-- `size_bytes`
-- `modified_utc`
+## Extension Methods
 
-Markdown package records also include:
+### Add An Ordinary File Format
 
-- `package_file_count`
-- `package_markdown_count`
+1. Add a code-owned allowlist entry and stable `source_format`.
+2. Add a preview builder that returns normalized Markdown, warnings, validation, and optional media plans.
+3. Dispatch it from `generate_import_preview()`.
+4. Reuse `ImportContent`, per-document planning, collision handling, writes, and rebuilds.
+5. Add focused listing, preview, collision, media, and service tests.
 
-The local management service exposes that list through `GET /docs/import-source-files`.
+Do not add a format by extending only the browser suffix list or by giving a converter direct write access.
 
-## Preview Dispatch
+### Add A Collection Wrapper
 
-`generate_import_preview()` resolves the `source_format` and delegates to the format-specific preview builder.
+1. Require an explicit, trusted, versioned wrapper contract.
+2. Classify it before any generic file fallback.
+3. Normalize each record to `ImportContent` with explicit content intent.
+4. Reuse the generic collection planner, decisions, per-document apply, rebuild, and result contracts.
+5. Add wrapper-specific UI only when its operator decisions genuinely differ.
 
-The current dispatch functions are:
+A collection adapter should own provenance and schema interpretation. It should not fork document mutation rules.
 
-- `generate_html_import_preview()`
-- `generate_markdown_import_preview()`
-- `generate_markdown_package_import_preview()`
-- `generate_text_import_preview()`
-- `generate_svg_import_preview()`
-- `generate_image_import_preview()`
-- `generate_file_media_import_preview()`
+### Add A Media Storage Mode
 
-Every preview is validated through `validate_markdown_preview()` before it is returned as successful.
-That helper renders generated preview Markdown through the shared Python Markdown renderer and records the explicit import sanitizer boundary.
-Preview generation does not write source docs.
-For inline raster data URLs, preview generation plans media output but write-time materialization is handled later by the service.
+Extend scope configuration validation and the focused media materialization owner. Do not add storage policy to `SourceImporter` or a format converter.
 
-## Shared Preview Contract
+## Why This Structure Exists
 
-Every format returns a preview dictionary with the same core fields:
+- A closed server registry makes accepted local files inspectable and testable.
+- Wrapper-neutral `ImportContent` separates provenance from canonical mutation.
+- Write-free planning makes collisions, hierarchy, and unsafe input visible before collection mutation.
+- Replanning on confirmation prevents the browser from applying a stale plan.
+- Shared per-document apply keeps ordinary and collection imports on the same source-formatting and mutation boundary.
+- Media publication before source write prevents new R2 tokens from pointing at unpublished record-owned media.
 
-- `scope`
-- `source_format`
-- `source_path`
-- `staging_root`
-- `title`
-- `title_source`
-- `proposed_doc_id`
-- `proposed_doc_id_source`
-- `source_stats`
-- `image_summary`
-- `warnings`
-- `markdown_preview`
-- `tag_counts`
-- `comment_count`
-- `markdown_validation`
+## Weak Spots
 
-Optional fields are format-specific:
+- “Registry” is only partly accurate: `SOURCE_IMPORTERS` covers ordinary file suffixes, while Markdown packages and trusted collections have separate classification paths.
+- Format metadata and preview dispatch are separate code structures, so a new ordinary format requires coordinated edits rather than one self-contained registration.
+- The single-source and collection workflows share one endpoint and modal but have different orchestration and failure semantics.
+- Collection apply is synchronous and partially durable; large packages have no progress, resume, rollback, or result-retrieval job.
+- Role-marked interactive companions are discovered across the staging root during an ordinary import rather than explicitly associated with one selected source.
+- Media policy spans scope config and focused media services. Looking only at the source registry gives an incomplete picture of import behavior.
+- Data Sharing is the only current collection wrapper. The generic seam is implemented, but its independence will be proven only by another real wrapper.
 
-- `source_html` for HTML imports
-- `source_markdown` for Markdown imports
-- `package_path` and `package_markdown_path` for Markdown package imports
-- `source_text` for text imports
-- `source_svg` for standalone SVG imports
-- `source_media` for image and file-media imports
-- `media_plan` for standalone image and file-media wrappers
-- `media_plans` for extracted inline raster images and Markdown package media
-
-The service adds collision and write-flow fields after loading the target scope:
-
-- `doc_id_collision`
-- `replacement_doc_id_required`
-- `replacement_title_required`
-
-## Normalized Content Boundary
-
-`docs-viewer/services/docs_import_content.py` defines the wrapper-neutral `ImportContent` record used by collection adapters. It does not require Data Sharing provenance. Its explicit `content_intent` is one of `replace`, `preserve-existing`, or `empty-new`, and `content_format` is one of `markdown`, `html`, or `plain_text`.
-
-`generate_markdown_content_import_preview()`, `generate_html_content_import_preview()`, and `generate_plain_text_content_import_preview()` sit beneath the existing file wrappers. `generate_content_import_preview()` dispatches normalized string content without requiring a temporary staged file, and `generate_normalized_import_content_preview()` accepts a content-bearing `ImportContent` record. The ordinary Markdown, HTML, and text file wrappers call the same entrypoints, preserving one conversion and validation path.
-
-The Data Sharing documents adapter owns wrapper/schema/provenance checks and emits `ImportContent` records for declared import-supported profiles. The active reviewed collection contract maps compact `document-content` fields; arbitrary JSON fields do not become body or front matter. The planned `document-full-source` profile is export-only and is not an import source. A future standalone collection requires a separate explicit wrapper adapter but can emit the same generic record.
-
-## Shared Per-Document Plan And Apply
-
-`docs-viewer/services/docs_import_document.py` is the shared lower-level owner for one normalized document action. `plan_import_document()` consumes an `ImportContent` record plus current scope state and returns a write-free create or overwrite plan with the target source text, target path, Docs/search ids, and normalized result metadata. It rejects unsafe target identities and content intents that do not match the create/overwrite target.
-
-The plan applies only `title`, `parent_id`, `summary`, and `viewable` from returned front matter. `preserve-existing` overwrites format the current configured canonical source with its existing body and unrelated front matter intact; `empty-new` creates the standard empty body. Replacement content continues through the normalized preview/conversion boundary before planning.
-
-`apply_import_document()` materializes the plan's per-document media and interactive assets through the existing focused services, then performs the atomic source write. It does not run Docs/search rebuilds. The single-source workflow creates an `ImportContent` record, uses this shared plan/apply boundary, and supplies its changed path and ids to the existing `perform_source_write_and_rebuild()` owner. The collection orchestrator applies package records in order inside one managed batch write/rebuild callback without invoking the single-source endpoint per record.
-
-## Data Sharing Collection Dry-Run Plan
-
-`docs-viewer/services/docs_import_data_sharing_documents.py` is the thin orchestration entrypoint. It composes wrapper-specific intake from `docs_import_data_sharing_package.py` with the wrapper-neutral collection planner in `docs_import_collection_plan.py`.
-
-`docs_import_data_sharing_package.py` reads a safe direct-child JSON/JSONL staged identity, validates its trusted export metadata, represents every raw row, and normalizes supported rows through the Data Sharing documents adapter. `docs_import_collection_plan.py` then retains package order and produces the complete body-free collection projection with candidate document actions, collision targets, content intent, parent resolution, new-parent dependencies, media summaries, record errors, blockers, and warnings. Its typed `CollectionRecordState` is internal planning state rather than browser-authored or stored plan authority.
-
-The planner calls `generate_normalized_import_content_preview()` only for replacement content, then calls `plan_import_document()` for each normalized record. `preserve-existing` and `empty-new` records remain explicit without fabricated replacement bodies. Existing parents are reused, supplied new-parent chains are resolved without reordering rows, and missing parents or hierarchy cycles block confirmation. Body links are not resolved, rewritten, or diagnosed.
-
-Collision records expose only `Overwrite`, `Skip`, and `Cancel` as allowed decisions. Invalid front matter and unsupported content formats expose only `Skip` and `Cancel`; they are record errors rather than implicit skips. Malformed package/schema data, unsafe or duplicate identities, mismatched collision targets, missing parents, and cycles remain package blockers.
-
-Planning computes inline data-URL media summaries through the existing content preview path. Declared package assets without an authorized materialization mapping remain non-blocking warnings with their source references preserved. The response contains no source body or generated source text. Planning never calls the per-document apply helper, materializes media, writes configured source, or invokes rebuilds.
-
-## Data Sharing Collection Decisions And Apply
-
-Planning covers every package record; the collection UI does not provide ordinary subset selection. Malformed package/schema data, unsafe or duplicate identities, missing parents, and hierarchy cycles block the complete plan. Invalid front matter and unsupported supplied content require an explicit per-record `Skip` or complete `Cancel`; an optional note is retained only for a skipped invalid record.
-
-Confirmed apply rereads the immutable staged package, recomputes the target plan, and validates explicit record decisions. The browser submits safe staged identity, package identity, actions, optional invalid-record notes, and activity context. It does not submit target paths, generated source, hierarchy/media plans, or an authoritative write plan. A changed package identity, collision target, target identity, parent resolution, hierarchy state, or blocker state returns a write-free refreshed plan for reconfirmation. Unrelated current body or metadata changes do not force reconfirmation for `preserve-existing` records.
-
-Writes run synchronously and strictly in package JSONL order. Each record uses the shared per-document atomic apply boundary; the collection is not a transaction and has no batch rollback. A source-write failure stops the batch, preserves completed writes, and reports later records as not attempted. Asset materialization failures remain record warnings and do not stop source writes. After mutation, the managed write/rebuild owner runs once for all affected paths and ids. Generation failure does not roll back or reclassify successful source mutations.
-
-The final body-free result groups records as created, overwritten, skipped, failed, or not attempted and reports generation separately. Confirmed applies write a deterministic Markdown report below `import-staging/results/`; planning, rejected plans, and pre-write cancellation do not. Report-write failure is a non-blocking warning. Collection import remains synchronous and has no stored plan, plan token, job, polling, progress, or result-retrieval route.
-
-## Format Behavior
-
-HTML imports parse the source with Beautiful Soup, convert supported structures to Markdown, optionally keep identifiable prompt/meta blocks, preserve safe inline SVG, and extract Markdown-image-form inline raster data URLs into planned media files.
-
-Markdown imports treat the staged file as body Markdown without front matter.
-The first `# H1` becomes the title when present; otherwise the title is derived from the filename.
-Inline raster data URLs are planned the same way as HTML imports.
-
-Markdown package imports treat a direct child directory of the configured shared drop-zone as one source when it contains exactly one Markdown file.
-Local Markdown image links are resolved inside the package, renamed to readable `<doc_id>-image-NN.webp` outputs, rewritten to docs media links, and converted to WebP at write time with a maximum width of 800px.
-The rewritten Markdown image alt text and title use readable `<doc_id> image NN` text instead of opaque exported filenames.
-Local Markdown links to supported downloadable files are treated as attachments, renamed to `<doc_id>-attachment-NN.<ext>`, rewritten to docs media links, and copied unchanged at write time.
-External links, anchors, mail links, unresolved package links, and unsupported package media stay in place with warnings where useful.
-
-Text imports treat `.txt` content as prose, derive the title from a short first non-empty line when available, and convert plain `http://` and `https://` URLs to Markdown autolinks.
-
-SVG imports sanitize a standalone `<svg>` with the same SVG serialization and safety rules used for HTML inline SVG.
-The wrapper Markdown body contains a heading and the sanitized SVG block.
-
-Image imports create a wrapper Markdown document with one image reference.
-File-media imports create a wrapper Markdown document with one download link.
-They do not parse or transform the media file contents.
-
-## Media Planning
-
-Image and file-media imports use `build_media_plan()` to describe the expected target media location and rendered link.
-
-For the current site config, `staging_manual` mode writes media tokens:
-
-<pre><code>![Example](&#91;&#91;media:docs/library/img/example.png&#93;&#93;)
-[Download Example](&#91;&#91;media:docs/library/files/example.pdf&#93;&#93;)</code></pre>
-
-The preview reports:
-
-- `storage_mode`
-- `manual_copy_required`
-- `source_path`
-- `media_path`
-- `media_token`
-- `media_link`
-- `title`
-- `repo_asset_path`
-- `public_path`
-
-When `storage_mode` is `staging_manual`, source media files are not copied by the importer.
-The user copies them to the reported media store path after import.
-
-When `storage_mode` is `repo_assets`, write-time media handling may copy source media or decoded inline media into the configured repo asset prefix after path allowlist checks.
-`r2_upload` is reserved in config but is not operational.
-
-## Inline Raster Extraction
-
-HTML and Markdown imports can extract images that appear as Markdown image data URLs:
-
-```md
-![Alt](data:image/png;base64,...)
-```
-
-Supported inline raster subtypes are PNG, JPEG, WebP, and GIF.
-Preview replaces each data URL with a configured media link and records a `media_plans` array.
-Generated filenames use the final proposed `doc_id` plus an incrementing suffix:
-
-- `<doc_id>-image-01.png`
-- `<doc_id>-image-02.jpg`
-
-Write-time materialization is performed by `materialize_inline_raster_media()`.
-If a collision replacement changes the final doc id, `retarget_inline_raster_media_plans()` updates the generated filenames and media tokens before write.
-
-## Collision And Write Boundary
-
-Format preview builders do not create, overwrite, back up, or rebuild docs.
-Those responsibilities belong to `handle_import_source()`.
-
-The service:
-
-- loads docs for the selected scope
-- detects collisions against existing `doc_id` values and Markdown filename stems
-- requires a replacement doc id or explicit overwrite confirmation when the proposed target collides
-- creates new source docs with standard Docs Viewer front matter
-- preserves existing identity, parent, order, and visibility metadata on overwrite
-- materializes inline raster media during create or overwrite
-- writes the source Markdown atomically
-- rebuilds same-scope docs payloads and targeted docs-search entries after successful writes
-- relies on Git history, host/filesystem backups, or explicit manual copies for source recovery
-
-The normal UI collision recovery path uses `replacement_doc_id`.
-`replacement_title` remains as a compatibility fallback for older callers.
-
-## Security Rules
-
-The registry and service enforce narrow inputs before conversion:
-
-- staged source filenames must be direct children of the configured shared drop-zone
-- supported extensions come from the registry
-- media filenames must remain plain filenames when copied or materialized
-- repo asset writes must stay under the configured repo asset prefix
-- generated Markdown must pass the Python renderer validation used by Docs Viewer payload generation
-
-SVG safety is shared by HTML inline SVG and standalone SVG imports:
-
-- `<script>` content is stripped
-- `on*` event-handler attributes are stripped
-- external SVG references are reported as warnings
-- safe SVG `<title>` and `<desc>` content can be preserved
-
-## Adding A Format
-
-To add a new source format:
-
-1. Add a `SourceImporter` entry with a unique `source_format` and suffix set.
-2. Add a preview builder that returns the shared preview contract.
-3. Add dispatch in `generate_import_preview()`.
-4. Decide whether the format uses `media_plan`, `media_plans`, or neither.
-5. Add tests for staged-file listing, preview, collision behavior, and write behavior when applicable.
-6. Update [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) and [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server).
-
-New formats should not write files directly from preview builders.
-Keep writes in the service layer so source-write, rebuild, and search behavior remain consistent across formats.
-
-## Related References
-
-- [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
-- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer)
+[Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) owns storage paths and materialization rules. [Docs Management Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints) owns the HTTP surface rather than this architecture summary.

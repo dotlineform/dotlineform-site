@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a93060ecd0d2b0ce52ed9516566abe80",
-    "generated_at_utc": "2026-07-14T19:31:12Z",
+    "version": "blake2b-00c7ee524500da6e2a16d1f24f1b86fc",
+    "generated_at_utc": "2026-07-14T22:35:05Z",
     "count": 239
   },
   "entries": [
@@ -963,19 +963,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-06-13",
-      "display_meta": "2026-06-13",
+      "last_updated": "2026-07-14",
+      "display_meta": "2026-07-14",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-06-13",
+        "2026-07-14",
         "2026",
-        "06",
-        "13"
+        "07",
+        "14"
       ],
-      "search_text": "change-requests change requests change requests 2026-06-13 2026 06 13"
+      "search_text": "change-requests change requests change requests 2026-07-14 2026 07 14"
     },
     {
       "id": "site-request-admin-checks-operational-reports",
@@ -1285,36 +1285,9 @@
       "search_text": "site-request-data-sharing-full-document-package site request data sharing full document package data sharing full document export package export change requests change requests 2026-07-12 2026 07 12"
     },
     {
-      "id": "docs-viewer-documentation-register",
-      "kind": "doc",
-      "title": "Docs Viewer Documentation Cleanup",
-      "href": "/docs/?scope=studio&doc=docs-viewer-documentation-register",
-      "last_updated": "2026-07-12",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-12 • Change Requests",
-      "search_terms": [
-        "docs-viewer-documentation-register",
-        "docs",
-        "viewer",
-        "documentation",
-        "register",
-        "docs viewer documentation cleanup",
-        "cleanup",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "docs-viewer-documentation-register docs viewer documentation register docs viewer documentation cleanup cleanup change requests change requests 2026-07-12 2026 07 12"
-    },
-    {
       "id": "site-request-docs-viewer-external-asset-collections",
       "kind": "doc",
-      "title": "Docs Viewer External Asset Collections",
+      "title": "External Asset Collections",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-external-asset-collections",
       "last_updated": "2026-07-14",
       "parent_id": "change-requests",
@@ -1329,7 +1302,7 @@
         "external",
         "asset",
         "collections",
-        "docs viewer external asset collections",
+        "external asset collections",
         "change requests",
         "change",
         "requests",
@@ -1338,12 +1311,94 @@
         "07",
         "14"
       ],
-      "search_text": "site-request-docs-viewer-external-asset-collections site request docs viewer external asset collections docs viewer external asset collections change requests change requests 2026-07-14 2026 07 14"
+      "search_text": "site-request-docs-viewer-external-asset-collections site request docs viewer external asset collections external asset collections change requests change requests 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "site-request-docs-viewer-external-asset-lifecycle-ownership",
+      "kind": "doc",
+      "title": "External Asset Collection Lifecycle Ownership",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-external-asset-lifecycle-ownership",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-external-asset-collections",
+      "parent_title": "External Asset Collections",
+      "display_meta": "2026-07-14 • External Asset Collections",
+      "search_terms": [
+        "site-request-docs-viewer-external-asset-lifecycle-ownership",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "external",
+        "asset",
+        "lifecycle",
+        "ownership",
+        "external asset collection lifecycle ownership",
+        "collection",
+        "external asset collections",
+        "collections",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "site-request-docs-viewer-external-asset-lifecycle-ownership site request docs viewer external asset lifecycle ownership external asset collection lifecycle ownership collection external asset collections collections 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-external-asset-collections-architecture",
+      "kind": "doc",
+      "title": "External Asset Collections Architecture",
+      "href": "/docs/?scope=studio&doc=docs-viewer-external-asset-collections-architecture",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-external-asset-collections",
+      "parent_title": "External Asset Collections",
+      "display_meta": "2026-07-14 • External Asset Collections",
+      "search_terms": [
+        "docs-viewer-external-asset-collections-architecture",
+        "docs",
+        "viewer",
+        "external",
+        "asset",
+        "collections",
+        "architecture",
+        "external asset collections architecture",
+        "external asset collections",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-external-asset-collections-architecture docs viewer external asset collections architecture external asset collections architecture external asset collections 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-external-asset-collections-concept",
+      "kind": "doc",
+      "title": "External Asset Collections Concept",
+      "href": "/docs/?scope=studio&doc=docs-viewer-external-asset-collections-concept",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-external-asset-collections",
+      "parent_title": "External Asset Collections",
+      "display_meta": "2026-07-14 • External Asset Collections",
+      "search_terms": [
+        "docs-viewer-external-asset-collections-concept",
+        "docs",
+        "viewer",
+        "external",
+        "asset",
+        "collections",
+        "concept",
+        "external asset collections concept",
+        "external asset collections",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-external-asset-collections-concept docs viewer external asset collections concept external asset collections concept external asset collections 2026-07-14 2026 07 14"
     },
     {
       "id": "site-request-docs-viewer-index-multiple-selection",
       "kind": "doc",
-      "title": "Docs Viewer Index Multiple Selection",
+      "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-index-multiple-selection",
       "last_updated": "2026-07-14",
       "parent_id": "change-requests",
@@ -1358,7 +1413,7 @@
         "index",
         "multiple",
         "selection",
-        "docs viewer index multiple selection",
+        "index multiple selection",
         "change requests",
         "change",
         "requests",
@@ -1367,17 +1422,69 @@
         "07",
         "14"
       ],
-      "search_text": "site-request-docs-viewer-index-multiple-selection site request docs viewer index multiple selection docs viewer index multiple selection change requests change requests 2026-07-14 2026 07 14"
+      "search_text": "site-request-docs-viewer-index-multiple-selection site request docs viewer index multiple selection index multiple selection change requests change requests 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-index-multiple-selection-architecture",
+      "kind": "doc",
+      "title": "Index Multiple Selection Architecture",
+      "href": "/docs/?scope=studio&doc=docs-viewer-index-multiple-selection-architecture",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-index-multiple-selection",
+      "parent_title": "Index Multiple Selection",
+      "display_meta": "2026-07-14 • Index Multiple Selection",
+      "search_terms": [
+        "docs-viewer-index-multiple-selection-architecture",
+        "docs",
+        "viewer",
+        "index",
+        "multiple",
+        "selection",
+        "architecture",
+        "index multiple selection architecture",
+        "index multiple selection",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-index-multiple-selection-architecture docs viewer index multiple selection architecture index multiple selection architecture index multiple selection 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-index-multiple-selection-concept",
+      "kind": "doc",
+      "title": "Index Multiple Selection Concept",
+      "href": "/docs/?scope=studio&doc=docs-viewer-index-multiple-selection-concept",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-index-multiple-selection",
+      "parent_title": "Index Multiple Selection",
+      "display_meta": "2026-07-14 • Index Multiple Selection",
+      "search_terms": [
+        "docs-viewer-index-multiple-selection-concept",
+        "docs",
+        "viewer",
+        "index",
+        "multiple",
+        "selection",
+        "concept",
+        "index multiple selection concept",
+        "index multiple selection",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-index-multiple-selection-concept docs viewer index multiple selection concept index multiple selection concept index multiple selection 2026-07-14 2026 07 14"
     },
     {
       "id": "site-request-docs-viewer-semantic-reference-editor",
       "kind": "doc",
-      "title": "Docs Viewer Semantic Reference Editor Request",
+      "title": "Semantic Reference Authoring",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-07-14",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-06-23 • Change Requests",
+      "display_meta": "2026-07-14 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-semantic-reference-editor",
         "site",
@@ -1387,44 +1494,69 @@
         "semantic",
         "reference",
         "editor",
-        "docs viewer semantic reference editor request",
+        "semantic reference authoring",
+        "authoring",
         "change requests",
         "change",
         "requests",
-        "2026-06-23",
-        "2026",
-        "06",
-        "23"
-      ],
-      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor docs viewer semantic reference editor request change requests change requests 2026-06-23 2026 06 23"
-    },
-    {
-      "id": "site-request-r2-media-upload-automation",
-      "kind": "doc",
-      "title": "R2 Media Upload Automation Request",
-      "href": "/docs/?scope=studio&doc=site-request-r2-media-upload-automation",
-      "last_updated": "2026-07-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-07-13 • Change Requests",
-      "search_terms": [
-        "site-request-r2-media-upload-automation",
-        "site",
-        "request",
-        "r2",
-        "media",
-        "upload",
-        "automation",
-        "r2 media upload automation request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-07-13 2026 07 13"
+      "search_text": "site-request-docs-viewer-semantic-reference-editor site request docs viewer semantic reference editor semantic reference authoring authoring change requests change requests 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-semantic-reference-authoring-architecture",
+      "kind": "doc",
+      "title": "Semantic Reference Authoring Architecture",
+      "href": "/docs/?scope=studio&doc=docs-viewer-semantic-reference-authoring-architecture",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-semantic-reference-editor",
+      "parent_title": "Semantic Reference Authoring",
+      "display_meta": "2026-07-14 • Semantic Reference Authoring",
+      "search_terms": [
+        "docs-viewer-semantic-reference-authoring-architecture",
+        "docs",
+        "viewer",
+        "semantic",
+        "reference",
+        "authoring",
+        "architecture",
+        "semantic reference authoring architecture",
+        "semantic reference authoring",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-semantic-reference-authoring-architecture docs viewer semantic reference authoring architecture semantic reference authoring architecture semantic reference authoring 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-semantic-reference-authoring-concept",
+      "kind": "doc",
+      "title": "Semantic Reference Authoring Concept",
+      "href": "/docs/?scope=studio&doc=docs-viewer-semantic-reference-authoring-concept",
+      "last_updated": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-semantic-reference-editor",
+      "parent_title": "Semantic Reference Authoring",
+      "display_meta": "2026-07-14 • Semantic Reference Authoring",
+      "search_terms": [
+        "docs-viewer-semantic-reference-authoring-concept",
+        "docs",
+        "viewer",
+        "semantic",
+        "reference",
+        "authoring",
+        "concept",
+        "semantic reference authoring concept",
+        "semantic reference authoring",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-semantic-reference-authoring-concept docs viewer semantic reference authoring concept semantic reference authoring concept semantic reference authoring 2026-07-14 2026 07 14"
     },
     {
       "id": "site-request-shareable-content-blocks",
@@ -1749,10 +1881,10 @@
       "kind": "doc",
       "title": "Development Checklist",
       "href": "/docs/?scope=studio&doc=development-checklist",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-14",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-12 • Dev Home",
+      "display_meta": "2026-07-14 • Dev Home",
       "search_terms": [
         "development-checklist",
         "development",
@@ -1761,22 +1893,22 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-12",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-12 2026 07 12"
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-07-14 2026 07 14"
     },
     {
       "id": "development-workflow",
       "kind": "doc",
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=development-workflow",
-      "last_updated": "2026-06-03",
+      "last_updated": "2026-07-14",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-03 • Dev Home",
+      "display_meta": "2026-07-14 • Dev Home",
       "search_terms": [
         "development-workflow",
         "development",
@@ -1785,12 +1917,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-03",
+        "2026-07-14",
         "2026",
-        "06",
-        "03"
+        "07",
+        "14"
       ],
-      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-06-03 2026 06 03"
+      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-07-14 2026 07 14"
     },
     {
       "id": "github-actions",
@@ -1915,10 +2047,10 @@
       "kind": "doc",
       "title": "Task Batch Template",
       "href": "/docs/?scope=studio&doc=task-batch-template",
-      "last_updated": "2026-06-05 10:36",
+      "last_updated": "2026-07-14",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-05 10:36 • Dev Home",
+      "display_meta": "2026-07-14 • Dev Home",
       "search_terms": [
         "task-batch-template",
         "task",
@@ -1928,24 +2060,22 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-05 10:36",
+        "2026-07-14",
         "2026",
-        "06",
-        "05",
-        "10",
-        "36"
+        "07",
+        "14"
       ],
-      "search_text": "task-batch-template task batch template task batch template dev home dev home 2026-06-05 10:36 2026 06 05 10 36"
+      "search_text": "task-batch-template task batch template task batch template dev home dev home 2026-07-14 2026 07 14"
     },
     {
       "id": "task-template",
       "kind": "doc",
       "title": "Task Template",
       "href": "/docs/?scope=studio&doc=task-template",
-      "last_updated": "2026-06-04 20:59",
+      "last_updated": "2026-07-14",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-04 20:59 • Dev Home",
+      "display_meta": "2026-07-14 • Dev Home",
       "search_terms": [
         "task-template",
         "task",
@@ -1954,24 +2084,22 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-04 20:59",
+        "2026-07-14",
         "2026",
-        "06",
-        "04",
-        "20",
-        "59"
+        "07",
+        "14"
       ],
-      "search_text": "task-template task template task template dev home dev home 2026-06-04 20:59 2026 06 04 20 59"
+      "search_text": "task-template task template task template dev home dev home 2026-07-14 2026 07 14"
     },
     {
       "id": "tasks-tracker-template",
       "kind": "doc",
       "title": "Tasks Tracker Template",
       "href": "/docs/?scope=studio&doc=tasks-tracker-template",
-      "last_updated": "2026-06-04 20:26",
+      "last_updated": "2026-07-14",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-06-04 20:26 • Dev Home",
+      "display_meta": "2026-07-14 • Dev Home",
       "search_terms": [
         "tasks-tracker-template",
         "tasks",
@@ -1981,33 +2109,31 @@
         "dev home",
         "dev",
         "home",
-        "2026-06-04 20:26",
+        "2026-07-14",
         "2026",
-        "06",
-        "04",
-        "20",
-        "26"
+        "07",
+        "14"
       ],
-      "search_text": "tasks-tracker-template tasks tracker template tasks tracker template dev home dev home 2026-06-04 20:26 2026 06 04 20 26"
+      "search_text": "tasks-tracker-template tasks tracker template tasks tracker template dev home dev home 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer",
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-07-12",
-      "display_meta": "2026-07-12",
+      "last_updated": "2026-07-14",
+      "display_meta": "2026-07-14",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-broken-links",
@@ -2084,34 +2210,39 @@
     {
       "id": "config-docs-viewer",
       "kind": "doc",
-      "title": "Config",
+      "title": "Configuration And Extension Points",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-13 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
+        "configuration and extension points",
+        "configuration",
+        "and",
+        "extension",
+        "points",
         "docs viewer",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer 2026-07-13 2026 07 13"
+      "search_text": "config-docs-viewer config docs viewer configuration and extension points configuration and extension points docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-css-cascade-design",
       "kind": "doc",
       "title": "CSS Cascade Design",
       "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-css-cascade-design",
         "docs",
@@ -2121,34 +2252,34 @@
         "design",
         "css cascade design",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design css cascade design docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-dependencies",
       "kind": "doc",
       "title": "Dependencies",
       "href": "/docs/?scope=studio&doc=docs-viewer-dependencies",
-      "last_updated": "2026-06-01",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-01 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-dependencies",
         "docs",
         "viewer",
         "dependencies",
         "docs viewer",
-        "2026-06-01",
+        "2026-07-14",
         "2026",
-        "06",
-        "01"
+        "07",
+        "14"
       ],
-      "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer 2026-06-01 2026 06 01"
+      "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-data",
@@ -2178,10 +2309,10 @@
       "kind": "doc",
       "title": "Docs Images And Assets",
       "href": "/docs/?scope=studio&doc=user-guide-docs-images",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-13 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "user-guide-docs-images",
         "user",
@@ -2193,12 +2324,12 @@
         "assets",
         "docs viewer",
         "viewer",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "user-guide-docs-images user guide docs images docs images and assets and assets docs viewer viewer 2026-07-13 2026 07 13"
+      "search_text": "user-guide-docs-images user guide docs images docs images and assets and assets docs viewer viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -2227,14 +2358,41 @@
       "search_text": "user-guide-docs-html-import user guide docs html import docs import docs viewer viewer 2026-07-14 2026 07 14"
     },
     {
+      "id": "docs-viewer-import-source-registry-spec",
+      "kind": "doc",
+      "title": "Docs Import Architecture",
+      "href": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
+      "last_updated": "2026-07-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-import-source-registry-spec",
+        "docs",
+        "viewer",
+        "import",
+        "source",
+        "registry",
+        "spec",
+        "docs import architecture",
+        "architecture",
+        "docs viewer",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec docs import architecture architecture docs viewer 2026-07-14 2026 07 14"
+    },
+    {
       "id": "docs-viewer-review",
       "kind": "doc",
       "title": "Docs Review",
       "href": "/docs/?scope=studio&doc=docs-viewer-review",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-review",
         "docs",
@@ -2242,12 +2400,36 @@
         "review",
         "docs review",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "docs-viewer-review docs viewer review docs review docs viewer 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-review docs viewer review docs review docs viewer 2026-07-14 2026 07 14"
+    },
+    {
+      "id": "docs-viewer-delivery-roadmap",
+      "kind": "doc",
+      "title": "Docs Viewer Delivery Roadmap",
+      "href": "/docs/?scope=studio&doc=docs-viewer-delivery-roadmap",
+      "last_updated": "2026-07-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-delivery-roadmap",
+        "docs",
+        "viewer",
+        "delivery",
+        "roadmap",
+        "docs viewer delivery roadmap",
+        "docs viewer",
+        "2026-07-14",
+        "2026",
+        "07",
+        "14"
+      ],
+      "search_text": "docs-viewer-delivery-roadmap docs viewer delivery roadmap docs viewer delivery roadmap docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-public-route-shell-template",
@@ -2357,18 +2539,16 @@
       "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-06-29 2026 06 29"
     },
     {
-      "id": "site-request-docs-viewer-embedded-detail-documents",
+      "id": "docs-viewer-embedded-detail-documents",
       "kind": "doc",
       "title": "Embedded Detail Documents",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents",
-      "last_updated": "2026-06-24",
+      "href": "/docs/?scope=studio&doc=docs-viewer-embedded-detail-documents",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-24 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
-        "site-request-docs-viewer-embedded-detail-documents",
-        "site",
-        "request",
+        "docs-viewer-embedded-detail-documents",
         "docs",
         "viewer",
         "embedded",
@@ -2376,12 +2556,12 @@
         "documents",
         "embedded detail documents",
         "docs viewer",
-        "2026-06-24",
+        "2026-07-14",
         "2026",
-        "06",
-        "24"
+        "07",
+        "14"
       ],
-      "search_text": "site-request-docs-viewer-embedded-detail-documents site request docs viewer embedded detail documents embedded detail documents docs viewer 2026-06-24 2026 06 24"
+      "search_text": "docs-viewer-embedded-detail-documents docs viewer embedded detail documents embedded detail documents docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-export",
@@ -2404,32 +2584,6 @@
         "29"
       ],
       "search_text": "docs-viewer-export docs viewer export docs viewer 2026-06-29 2026 06 29"
-    },
-    {
-      "id": "docs-viewer-import-source-registry-spec",
-      "kind": "doc",
-      "title": "Import Source Registry Spec",
-      "href": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
-      "last_updated": "2026-07-12",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-import-source-registry-spec",
-        "docs",
-        "viewer",
-        "import",
-        "source",
-        "registry",
-        "spec",
-        "import source registry spec",
-        "docs viewer",
-        "2026-07-12",
-        "2026",
-        "07",
-        "12"
-      ],
-      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec import source registry spec docs viewer 2026-07-12 2026 07 12"
     },
     {
       "id": "docs-viewer-info-panel",
@@ -3076,83 +3230,60 @@
     {
       "id": "docs-viewer-media-handling",
       "kind": "doc",
-      "title": "Media Handling",
+      "title": "Media And Asset Handling",
       "href": "/docs/?scope=studio&doc=docs-viewer-media-handling",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-13 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-media-handling",
         "docs",
         "viewer",
         "media",
         "handling",
-        "media handling",
+        "media and asset handling",
+        "and",
+        "asset",
         "docs viewer",
-        "2026-07-13",
+        "2026-07-14",
         "2026",
         "07",
-        "13"
+        "14"
       ],
-      "search_text": "docs-viewer-media-handling docs viewer media handling media handling docs viewer 2026-07-13 2026 07 13"
-    },
-    {
-      "id": "docs-viewer-new-scopes-builder",
-      "kind": "doc",
-      "title": "New Scopes Builder",
-      "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-07-13",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-13 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-new-scopes-builder",
-        "docs",
-        "viewer",
-        "new",
-        "scopes",
-        "builder",
-        "new scopes builder",
-        "docs viewer",
-        "2026-07-13",
-        "2026",
-        "07",
-        "13"
-      ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-07-13 2026 07 13"
+      "search_text": "docs-viewer-media-handling docs viewer media handling media and asset handling and asset docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-overview",
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-07-12",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-12 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-07-12",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-panel-hosts",
       "kind": "doc",
       "title": "Panel Hosts",
       "href": "/docs/?scope=studio&doc=docs-viewer-panel-hosts",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-panel-hosts",
         "docs",
@@ -3161,124 +3292,48 @@
         "hosts",
         "panel hosts",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-14",
         "2026",
         "07",
-        "11"
+        "14"
       ],
-      "search_text": "docs-viewer-panel-hosts docs viewer panel hosts panel hosts docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-panel-hosts docs viewer panel hosts panel hosts docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-portable-setup",
       "kind": "doc",
-      "title": "Portable Setup",
+      "title": "Portability Snapshot",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-06-22",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-22 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
         "viewer",
         "portable",
         "setup",
-        "portable setup",
+        "portability snapshot",
+        "portability",
+        "snapshot",
         "docs viewer",
-        "2026-06-22",
-        "2026",
-        "06",
-        "22"
-      ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup portable setup docs viewer 2026-06-22 2026 06 22"
-    },
-    {
-      "id": "docs-viewer-portable-files",
-      "kind": "doc",
-      "title": "Portable File Manifest",
-      "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-07-12",
-      "parent_id": "docs-viewer-portable-setup",
-      "parent_title": "Portable Setup",
-      "display_meta": "2026-07-12 • Portable Setup",
-      "search_terms": [
-        "docs-viewer-portable-files",
-        "docs",
-        "viewer",
-        "portable",
-        "files",
-        "portable file manifest",
-        "file",
-        "manifest",
-        "portable setup",
-        "setup",
-        "2026-07-12",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files portable file manifest file manifest portable setup setup 2026-07-12 2026 07 12"
-    },
-    {
-      "id": "docs-viewer-portable-scope-setup",
-      "kind": "doc",
-      "title": "Portable Scope Setup",
-      "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-07-13",
-      "parent_id": "docs-viewer-portable-setup",
-      "parent_title": "Portable Setup",
-      "display_meta": "2026-07-13 • Portable Setup",
-      "search_terms": [
-        "docs-viewer-portable-scope-setup",
-        "docs",
-        "viewer",
-        "portable",
-        "scope",
-        "setup",
-        "portable scope setup",
-        "portable setup",
-        "2026-07-13",
-        "2026",
-        "07",
-        "13"
-      ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup portable scope setup portable setup 2026-07-13 2026 07 13"
-    },
-    {
-      "id": "docs-viewer-portable-source-shape",
-      "kind": "doc",
-      "title": "Portable Source Shape",
-      "href": "/docs/?scope=studio&doc=docs-viewer-portable-source-shape",
-      "last_updated": "2026-06-22",
-      "parent_id": "docs-viewer-portable-setup",
-      "parent_title": "Portable Setup",
-      "display_meta": "2026-06-22 • Portable Setup",
-      "search_terms": [
-        "docs-viewer-portable-source-shape",
-        "docs",
-        "viewer",
-        "portable",
-        "source",
-        "shape",
-        "portable source shape",
-        "portable setup",
-        "setup",
-        "2026-06-22",
-        "2026",
-        "06",
-        "22"
-      ],
-      "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape portable source shape portable setup setup 2026-06-22 2026 06 22"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup portability snapshot portability snapshot docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-public-scopes",
       "kind": "doc",
       "title": "Public Scopes",
       "href": "/docs/?scope=studio&doc=docs-viewer-public-scopes",
-      "last_updated": "2026-06-24",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-24 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-public-scopes",
         "docs",
@@ -3287,12 +3342,12 @@
         "scopes",
         "public scopes",
         "docs viewer",
-        "2026-06-24",
+        "2026-07-14",
         "2026",
-        "06",
-        "24"
+        "07",
+        "14"
       ],
-      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-06-24 2026 06 24"
+      "search_text": "docs-viewer-public-scopes docs viewer public scopes public scopes docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-reports",
@@ -3321,10 +3376,10 @@
       "kind": "doc",
       "title": "Runtime",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -3332,12 +3387,12 @@
         "runtime",
         "boundary",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-14",
         "2026",
         "07",
-        "11"
+        "14"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-generated-data-contracts",
@@ -3413,37 +3468,41 @@
       "search_text": "docs-viewer-runtime-module-ownership docs viewer runtime module ownership runtime module ownership 2026-07-12 2026 07 12"
     },
     {
-      "id": "docs-viewer-runtime-surfaces",
+      "id": "docs-viewer-new-scopes-builder",
       "kind": "doc",
-      "title": "Runtime Surfaces",
-      "href": "/docs/?scope=studio&doc=docs-viewer-runtime-surfaces",
-      "last_updated": "2026-07-12",
-      "parent_id": "docs-viewer-runtime-boundary",
-      "parent_title": "Runtime",
-      "display_meta": "2026-07-12 • Runtime",
+      "title": "Scope Lifecycle",
+      "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
+      "last_updated": "2026-07-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
-        "docs-viewer-runtime-surfaces",
+        "docs-viewer-new-scopes-builder",
         "docs",
         "viewer",
-        "runtime",
-        "surfaces",
-        "runtime surfaces",
-        "2026-07-12",
+        "new",
+        "scopes",
+        "builder",
+        "scope lifecycle",
+        "scope",
+        "lifecycle",
+        "docs viewer",
+        "2026-07-14",
         "2026",
         "07",
-        "12"
+        "14"
       ],
-      "search_text": "docs-viewer-runtime-surfaces docs viewer runtime surfaces runtime surfaces 2026-07-12 2026 07 12"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder scope lifecycle scope lifecycle docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-semantic-references",
       "kind": "doc",
       "title": "Semantic References",
       "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-23 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-semantic-references",
         "docs",
@@ -3452,12 +3511,12 @@
         "references",
         "semantic references",
         "docs viewer",
-        "2026-06-23",
+        "2026-07-14",
         "2026",
-        "06",
-        "23"
+        "07",
+        "14"
       ],
-      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-06-23 2026 06 23"
+      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-semantic-references-editor",
@@ -3489,10 +3548,10 @@
       "kind": "doc",
       "title": "Semantic References Implementation",
       "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-23 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-semantic-references-implementation",
         "docs",
@@ -3502,12 +3561,12 @@
         "implementation",
         "semantic references implementation",
         "docs viewer",
-        "2026-06-23",
+        "2026-07-14",
         "2026",
-        "06",
-        "23"
+        "07",
+        "14"
       ],
-      "search_text": "docs-viewer-semantic-references-implementation docs viewer semantic references implementation semantic references implementation docs viewer 2026-06-23 2026 06 23"
+      "search_text": "docs-viewer-semantic-references-implementation docs viewer semantic references implementation semantic references implementation docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-source-config-report",
@@ -3538,10 +3597,10 @@
       "kind": "doc",
       "title": "Source Organisation",
       "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-source-organisation",
         "docs",
@@ -3550,22 +3609,22 @@
         "organisation",
         "source organisation",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-14",
         "2026",
         "07",
-        "11"
+        "14"
       ],
-      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "docs-viewer-toolbar-model",
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=docs-viewer-toolbar-model",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
+      "display_meta": "2026-07-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-toolbar-model",
         "docs",
@@ -3574,12 +3633,12 @@
         "model",
         "toolbar model",
         "docs viewer",
-        "2026-07-11",
+        "2026-07-14",
         "2026",
         "07",
-        "11"
+        "14"
       ],
-      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model toolbar model docs viewer 2026-07-11 2026 07 11"
+      "search_text": "docs-viewer-toolbar-model docs viewer toolbar model toolbar model docs viewer 2026-07-14 2026 07 14"
     },
     {
       "id": "doc-ui-status",
@@ -3607,31 +3666,6 @@
         "41"
       ],
       "search_text": "doc-ui-status doc ui status ui status docs viewer docs viewer 2026-05-13 21:41 2026 05 13 21 41"
-    },
-    {
-      "id": "docs-viewer-view-capability-contract",
-      "kind": "doc",
-      "title": "View Capability Contract",
-      "href": "/docs/?scope=studio&doc=docs-viewer-view-capability-contract",
-      "last_updated": "2026-07-11",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-11 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-view-capability-contract",
-        "docs",
-        "viewer",
-        "view",
-        "capability",
-        "contract",
-        "view capability contract",
-        "docs viewer",
-        "2026-07-11",
-        "2026",
-        "07",
-        "11"
-      ],
-      "search_text": "docs-viewer-view-capability-contract docs viewer view capability contract view capability contract docs viewer 2026-07-11 2026 07 11"
     },
     {
       "id": "docs-viewer-viewable-field",
@@ -5097,30 +5131,6 @@
         "21"
       ],
       "search_text": "config-data-sharing-files config data sharing files data sharing config files studio 2026-06-21 2026 06 21"
-    },
-    {
-      "id": "config-docs-viewer-files",
-      "kind": "doc",
-      "title": "Docs Viewer Config Files",
-      "href": "/docs/?scope=studio&doc=config-docs-viewer-files",
-      "last_updated": "2026-06-03",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-06-03 • Studio",
-      "search_terms": [
-        "config-docs-viewer-files",
-        "config",
-        "docs",
-        "viewer",
-        "files",
-        "docs viewer config files",
-        "studio",
-        "2026-06-03",
-        "2026",
-        "06",
-        "03"
-      ],
-      "search_text": "config-docs-viewer-files config docs viewer files docs viewer config files studio 2026-06-03 2026 06 03"
     },
     {
       "id": "local-studio-apis",

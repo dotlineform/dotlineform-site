@@ -2,7 +2,7 @@
 doc_id: docs-viewer-semantic-references
 title: Semantic References
 added_date: 2026-05-18
-last_updated: 2026-06-23
+last_updated: 2026-07-14
 ui_status: report
 parent_id: docs-viewer
 viewable: true
@@ -30,4 +30,4 @@ Current semantic-reference docs:
 
 - [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation) documents registry, lookup, builder, generated artifacts, browser helpers, and report inputs.
 - [Semantic References Editor](/docs/?scope=studio&doc=docs-viewer-semantic-references-editor) documents the manage-mode source-editor picker and token insertion workflow.
-- [Docs Viewer Semantic Reference Editor Request](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) tracks v2 editor enhancements.
+- [Semantic Reference Authoring](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) groups unsequenced enhancement concepts outside the current feature docs.

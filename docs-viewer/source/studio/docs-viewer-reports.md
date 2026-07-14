@@ -142,7 +142,7 @@ This document uses it so the list of configured reports stays visible from the D
 `docs_subscope` renders a manifest-ordered list for a configured Docs Viewer sub-scope.
 It reads `viewer_report_subscope` from the selected parent document payload, validates that sub-scope against the current scope's browser config, loads the configured `manifest.json`, and renders the manifest `doc_ids` as a report-owned list state.
 Selecting a row sets `subdoc`, loads the selected sub-scope by-id payload, and renders its `content_html` inside an embedded detail region while the parent report document remains the selected Docs Viewer document.
-The durable source, payload, URL, manifest, and lifecycle contract is documented in [Embedded Detail Documents](/docs/?scope=studio&doc=site-request-docs-viewer-embedded-detail-documents).
+The durable source, payload, URL, manifest, and lifecycle contract is documented in [Embedded Detail Documents](/docs/?scope=studio&doc=docs-viewer-embedded-detail-documents).
 
 `source_config` renders the Docs Viewer source config report in manage mode.
 It reads through the standalone Docs Viewer service and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.

@@ -68,9 +68,14 @@ Focused registry and coordinator checks should prove:
 - a representative Moments-only definition is available in managed Moments and unavailable elsewhere
 - switching away from an eligible scope does not leave the previous scope-specific hosted view active
 
-## Boundary
+## Change Boundary
 
 This task adds frontend scope eligibility.
 It does not grant write authority, add the axis editor, redesign route configuration, or introduce arbitrary conditional expressions into config.
 Source writes remain protected by the existing manage-only service and backend capability contracts.
 
+## Documentation Boundary
+
+This request is the single owner of the unresolved `scopeIds` proposal and its verification. Do not distribute the proposed rule across configuration, runtime, workspace, and capability documents before it ships.
+
+If implemented, [Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) will absorb the stable scope-eligibility rule, extension method, and any known weakness because the rule belongs to the code-owned view/mode/control registry. This request should then retain only unresolved follow-up work or be deleted.

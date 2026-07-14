@@ -2,7 +2,7 @@
 doc_id: development-checklist
 title: Development Checklist
 added_date: 2026-05-23
-last_updated: 2026-07-12
+last_updated: 2026-07-14
 parent_id: dev-home
 viewable: true
 ---
@@ -17,7 +17,10 @@ Before editing:
 
 - classify the work as feature, bugfix, refactor, documentation, generated-data change, UI change, or workflow change
 - read the owning docs for the smallest runtime, script, data model, UI primitive, or workflow that explains the change
-- use a change request when the work changes user workflow, spans multiple modules or generated artifacts, creates a convention/data model, or has unresolved tradeoffs
+- keep unresolved feature discussion in a concept document; do not jump from open questions into implementation
+- put independently finishable outcomes, priority, and dependencies on the owning roadmap
+- use a change request only for one roadmap outcome that is ready to implement and complete
+- split an oversized outcome before implementation rather than accepting a half-finished request or hiding multiple deliveries in a task tracker
 - keep implementation scoped to the owning runtime, script, data model, or UI primitive
 - keep UI shell, validation, data mutation, generated-output behavior, config ownership, and docs ownership separate
 - prefer shared modules, UI primitives, JS, and CSS over one-off route-local or duplicated inline patterns
@@ -275,5 +278,5 @@ At closeout:
 
 - summarize changed files and the purpose of the change
 - report any generated payloads updated
-- update owning docs and any implementation plan, task tracker, or change request status that changed
-- list remaining risks or follow-up tasks
+- update the one durable owner whose behavior changed and any roadmap, task tracker, or request status that actually changed
+- list remaining risks and separately finishable follow-up roadmap rows; do not leave later work inside a completed request

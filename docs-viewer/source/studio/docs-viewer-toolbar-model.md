@@ -2,131 +2,75 @@
 doc_id: docs-viewer-toolbar-model
 title: Toolbar Model
 added_date: 2026-05-31
-last_updated: 2026-07-11
-summary: Docs Viewer toolbar-region ownership and the distinction between viewer, manage, active-view, and context-panel controls.
+last_updated: 2026-07-14
+summary: Placement and ownership rules for viewer, active-main-view, management, and context-panel controls.
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer Toolbar Model
 
-This is Docs Viewer-specific UI guidance, not a generic Studio toolbar primitive.
+This document answers one question: where should a Docs Viewer control live?
 
-This document owns toolbar regions and layout semantics. `docs-viewer-view-registry.js` centralizes control eligibility while focused controllers retain handlers and live pressed, dirty, busy, pending, and disabled state.
-
-## Purpose
-
-Docs Viewer now has enough controls that "row", "actions", "controls", and "toolbar" should not be used interchangeably.
-The rendered view should be easy to describe, and the implementation should expose matching owner surfaces.
-
-The model is:
-
-- top bar: layout container for top-level toolbar groups
-- viewer toolbar: read, navigation, search, and index-layout controls
-- manage toolbar: management, write, and admin controls
-- main-view toolbar: controls for the active central-panel view
-- context/info panel: no internal toolbar; the active outside context selects the panel view
+The placement owner does not decide whether a control is available or what operation it performs. The view registry projects eligibility; focused renderers place controls; controllers and action definitions own behaviour.
 
 ## Top Bar
 
-The top bar is a visual layout container.
-It can place the viewer toolbar, main-view toolbar, and manage toolbar on the same row when space allows, then wrap toolbar groups onto additional rows on narrower screens.
-
-The top bar should not own control behavior.
-It should render or mount named toolbar surfaces and let those toolbar owners expose refs to the runtime.
-
-Structure:
-
 ```text
 top bar
-  viewer toolbar
-  main-view toolbar
-  manage toolbar
+  +-- viewer toolbar
+  +-- active main-view toolbar
+  +-- manage toolbar
 ```
 
-Responsive behavior should operate on toolbar groups first, then on individual controls inside each toolbar.
-This keeps narrow layouts from interleaving unrelated controls.
+The top bar is a responsive layout container. It provides ordered mounts and may wrap whole toolbar groups on narrow screens. It owns no commands.
 
 ## Viewer Toolbar
 
-The viewer toolbar owns controls that apply to the viewer experience and remain conceptually read-safe:
+Use the viewer toolbar for collection-reading and top-level index-view selection controls that are not tied to the selected document or a write workflow.
 
-- recently added control
-- search input
-- index view toggle
+Current examples are search, recently added, and the index-view toggle. Panel-local collapse and expand controls remain in index-panel chrome. A control can appear only on manage routes and still belong here when its purpose is changing the reading surface rather than performing management.
 
-The index view toggle is a layout/view control.
-It should not be treated as a management action, even if some index modes are only available in management-enabled routes.
-It renders after the search control so it remains visibly part of the viewer toolbar.
-
-Top-bar layout owner: `docs-viewer-top-bar-renderer.js`
-
-## Manage Toolbar
-
-The manage toolbar owns controls that imply management mode, write capability, or local admin behavior:
-
-- Actions menu
-- capability-gated direct Publish shortcut for public scopes; it invokes the same command as the Actions-menu item
-- create, import, delete, settings, rebuild, and scope actions
-- viewability controls such as Show / non-viewable
-- scope selector for management-enabled docs routes
-- management status affordances when needed
-
-The manage toolbar may sit next to the viewer toolbar in the same top bar.
-Its presence must still depend on route access and management UI availability.
-
-Owner: `docs-viewer-management-actions-renderer.js`
+Owner: `site/docs-viewer/runtime/js/shared/docs-viewer-viewer-toolbar-renderer.js`
 
 ## Main-View Toolbar
 
-The main-view toolbar owns controls for the active central-panel view.
-When the active main view is `rendered-document`, the document view can switch document display modes such as rendered HTML and Markdown source without becoming a different main view.
-The top bar provides its mount slot, but the active main view remains responsible for rendering the toolbar surface and projecting its controls.
+Use the main-view toolbar for controls belonging to the active central view or its current display mode.
 
-Example controls:
+For `rendered-document`, this includes its breadcrumb, info/bookmark controls, and manage-only document actions such as edit or Markdown source. Mode-specific controls such as source save remain here because the mode is owned by the document view.
 
-- breadcrumbs for `rendered-document`
-- context/info panel toggle for selected-document metadata
-- bookmark toggle
-- manage-mode `Edit` action for the current document
-- manage-mode `Markdown source` toggle that switches between rendered HTML and the `markdown-source` document display mode
-- manage-mode `Save Markdown source` action, shown next to the Markdown toggle only while `markdown-source` is active
+The shared renderer creates the public-safe surface. The manage entrypoint composes eligible manage-owned document controls into the same action mount.
 
-Implemented owner:
+Owners: `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` and `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js`
 
-- `site/docs-viewer/runtime/js/shared/docs-viewer-top-bar-renderer.js` provides the `docsViewerMainViewToolbarMount` slot between the viewer toolbar and manage toolbar.
-- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js` renders the `docsViewerMainViewToolbar` surface into that slot and keeps the current rendered-document breadcrumbs, bookmark toggle, and info-panel toggle in that toolbar.
-- `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-host.js` exposes the main-view toolbar projection helper through the main-view module context.
-- `site/docs-viewer/runtime/js/shared/docs-viewer-document-display-mode-host.js` owns document display mode lifecycle inside the document main view.
-- `site/docs-viewer/runtime/js/shared/docs-viewer-document-controller.js` projects the toolbar hidden/visible state when switching between rendered-document, search-results, and recent-results.
-- `docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js` composes manage-mode `Edit`, `Markdown source`, and `Save Markdown source` actions into the same main-view toolbar action area.
-- `docs-viewer/runtime/js/management/source-editor/source-editor.js` projects the source-editor body state, hides rendered-document-only toolbar controls such as edit/info/bookmark, and routes toolbar save/back-to-rendered requests for the `markdown-source` document display mode.
+## Manage Toolbar
 
-Current limitation:
+Use the manage toolbar for scope-wide, write, workflow, and local-administration commands: the Actions menu, scope selection, import, rebuild, publish, export, settings, and scope lifecycle.
 
-- rendered-document, search-results, and recent-results still use existing controllers for content rendering; Markdown source is now a document display mode within `rendered-document`, not a peer main view.
+Its mount exists only when route access allows management UI. Individual operations remain capability-gated and server-authorized.
 
-## Context Panel View Selection
+Owner: `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`
 
-The context/info panel does not render its own hosted-view switcher.
-It keeps a simple `info` shell, and the active outside context chooses the hosted view:
+## Context Panel Chrome
 
-- rendered document context opens `metadata-info`
-- Markdown source context opens `semantic-token-picker` in manage mode
+The info/context panel owns only panel chrome such as status and close. The outside document or mode context chooses the hosted info view; do not add an internal toolbar merely to switch context.
 
-Future context/info views should be selected by the owning outside context rather than by adding a toolbar inside the panel.
+A hosted view may render controls inside its own body when they operate on that view's content. Those are view UI, not top-bar controls.
 
-Target owner:
+## Placement Test
 
-- current owner: `docs-viewer-info-panel-renderer.js`
-- current controller: `docs-viewer-info-panel-controller.js`
-- current hosted-view lifecycle owner: `docs-viewer-info-panel-host.js`
+1. Does it change collection reading or select the active index view? Put it in the viewer toolbar.
+2. Does it resize, collapse, or otherwise operate on one panel? Put it in that panel's chrome.
+3. Does it act on the active main view, selected document, or document mode? Put it in the main-view toolbar.
+4. Does it start a scope-wide, write, import/export, or local-admin workflow? Put it in the manage toolbar.
+5. Does it operate only inside one hosted view? Let that view render it inside its mount.
 
-## Naming Notes
+Do not choose placement based on which module currently has convenient DOM access.
 
-Use:
+## Weak Spots
 
-- "context panel" when describing the broader role. The current implementation may keep `infoPanel` names until a focused rename is worth the churn.
-- "main view" for the central panel that can host rendered documents, search results, recent results, and future editor views.
-- "document" only when the active view or controller specifically owns rendered document payload behavior.
-- "toolbar" only when referring to one of the named toolbar surfaces in this document.
-- "row" for layout only, not for ownership.
+- The main-view toolbar is composed by shared and manage-owned renderers, so ordering must be projected deliberately rather than left to incidental DOM insertion.
+- Some commands appear in more than one surface, such as a direct shortcut plus the Actions menu. They must resolve the same action definition and handler.
+- Responsive layout should wrap toolbar groups before interleaving unrelated controls.
+- Visibility, pressed state, dirty state, and busy state still come from focused controllers; the toolbar model is not a global UI-state owner.
+
+[Panel Hosts](/docs/?scope=studio&doc=docs-viewer-panel-hosts) owns the registry, context, and lifecycle model behind these surfaces.

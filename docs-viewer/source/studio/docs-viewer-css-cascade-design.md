@@ -2,7 +2,7 @@
 doc_id: docs-viewer-css-cascade-design
 title: CSS Cascade Design
 added_date: 2026-05-11
-last_updated: 2026-07-12
+last_updated: 2026-07-14
 parent_id: docs-viewer
 viewable: true
 ---
@@ -213,8 +213,3 @@ After changing the cascade:
 - open `/docs/?scope=studio&import=1` and verify the import modal still has usable form controls
 - confirm public routes do not load Studio CSS
 - confirm generated docs content still uses host prose and responsive image styling
-
-## Related Docs
-
-- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
-- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)

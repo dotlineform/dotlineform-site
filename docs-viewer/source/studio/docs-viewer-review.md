@@ -2,7 +2,7 @@
 doc_id: docs-viewer-review
 title: Docs Review
 added_date: 2026-07-11
-last_updated: 2026-07-12
+last_updated: 2026-07-14
 summary: Durable product, workflow, persistent package, read-only rendering, and authority contract for the local returned-package review route.
 parent_id: docs-viewer
 viewable: true
@@ -24,13 +24,13 @@ Docs Review is not:
 
 ## Ownership Boundary
 
-Data Sharing owns:
+[Data Sharing returned-package review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review) owns:
 
 - export provenance and portable package contracts
 - returned-package staging and validation
 - materializing validated source and asset files under the external workspace root
 
-Docs Viewer Import owns import of the immutable staged JSONL associated with a review package. Managed import lets the user create, explicitly overwrite, or skip records; it never treats the derived preview Markdown as import input.
+[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) owns import of the immutable staged JSONL associated with a review package. Managed import lets the user create, explicitly overwrite, or skip records; it never treats the derived preview Markdown as import input.
 
 Docs Review owns only:
 
@@ -45,6 +45,8 @@ Canonical source remains outside Docs Review authority. The route exposes no can
 ## Enablement And Route
 
 `DOCS_VIEWER_REVIEW_ENABLED` independently enables the route and its package-rooted APIs.
+
+[Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review) owns the exact API surface.
 
 - `bin/local-all` enables Docs Review by default.
 - `DOCS_VIEWER_REVIEW_ENABLED=0` suppresses the route and API family.
@@ -179,15 +181,3 @@ docs-viewer/tests/smoke/docs_viewer_service_review.py
 ```
 
 These checks cover validated package discovery, package-root containment, persistent generated reads and repair, inventoried assets, absence of source capabilities/endpoints/UI/modules, route boot, identity-only import handoff, and canonical comparison without canonical writes.
-
-## Related References
-
-- [Docs Review Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-review)
-- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
-- [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership)
-- [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
-- [Returned Package Review](/docs/?scope=studio&doc=data-sharing-documents-returned-package-review)
-- [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
-- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
-- [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
-- [Local Setup Environment](/docs/?scope=studio&doc=local-setup-environment)

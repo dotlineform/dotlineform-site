@@ -2,281 +2,108 @@
 doc_id: docs-viewer-public-scopes
 title: Public Scopes
 added_date: 2026-03-31
-last_updated: 2026-06-24
+last_updated: 2026-07-14
+summary: Working-to-published data flow and management-isolation guarantees for public read-only Docs Viewer routes.
 parent_id: docs-viewer
+viewable: true
 ---
-# Public Scopes
-
-Current public routes:
-
-- `/library/`
-- `/analysis/`
-
-New public scopes can be created through the Docs Viewer New Scope lifecycle action with `publishing_mode: "public_readonly"`.
-The action renders the route shell from [Docs Viewer Public Route Shell Template](/docs/?scope=studio&doc=docs-viewer-public-route-shell-template), updates public route config, creates source/generated payloads, and syncs the initial public route asset copy under `site/assets/data/`.
-
-## Dependencies
-
-- shared Docs Viewer management conventions
-- Analytics Data Sharing service conventions for package preparation, review, and confirmed apply
-
-## Scope Boundary
+# Docs Viewer Public Scopes
 
-Source and generated artifacts:
-
-- public route shell:
-  - `site/<route>/index.html`
-- public route registry:
-  - `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
-- source docs:
-  - `docs-viewer/source/<scope>/*.md`
-- working generated docs data:
-  - `docs-viewer/generated/docs/<scope>/index-tree.json`
-  - `docs-viewer/generated/docs/<scope>/recently-added.json`
-  - `docs-viewer/generated/docs/<scope>/by-id/<doc_id>.json`
-- working docs search:
-  - `docs-viewer/generated/search/<scope>/index.json`
-- published docs data:
-  - `site/assets/data/docs/scopes/<scope>/index-tree.json`
-  - `site/assets/data/docs/scopes/<scope>/recently-added.json`
-  - `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
-- published docs search:
-  - `site/assets/data/search/<scope>/index.json`
-- export configs:
-  - `data-sharing/config/<scope>-export-configs.json`
-  - `data-sharing/config/<scope>-export-configs.schema.json`
-- export/import adapter dispatch:
-  - `data-sharing/config/adapters.json`
-  - `data-sharing/config/adapters.schema.json`
-- local generated export artifacts:
-  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.json`
-  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.jsonl`
-- local import staging artifacts:
-  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.json`
-  - `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.jsonl`
-## Source Model
+A public scope is locally managed canonical content delivered through a fixed read-only static route. It shares reader code with `/docs/`, but it does not share the management entrypoint, local service configuration, or working generated-data source.
 
-### `site/<route>/index.html`
+## Data Flow
 
-Purpose: canonical public route shell for one read-only Docs Viewer scope.
+```text
+canonical Markdown
+docs-viewer/source/<scope>/
+          |
+          | build / local write follow-through
+          v
+working docs + search
+docs-viewer/generated/
+          |
+          | explicit Publish
+          v
+tracked public snapshots
+site/assets/data/
+          |
+          v
+fixed public static route
+site/<route>/index.html
+```
 
-Design:
+Canonical source is the authority. Working generated data is the local review surface. Published snapshots are the files deployed for public reads. Publishing does not deploy the site or mutate source; it copies the reviewed working docs/search projection and removes stale copied payload files.
 
-- tracked static HTML under `site/`
-- created from `docs-viewer/templates/public-route/index.html` for new public scopes
-- not regenerated during deploy
-- loads public Docs Viewer CSS and the public runtime entrypoint
-- identifies the route with `data-route-id`
-- reads public route config from `/docs-viewer/config/routes/docs-viewer-public-routes.json`
-- excludes management, import, report, source-editing, and localhost service surfaces
+## Public And Management Boundaries
 
-### `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
+| concern | public route | local `/docs/` route |
+| --- | --- | --- |
+| scope | Fixed by public route config. | Selected from configured scopes. |
+| runtime entrypoint | Public only. | Management contributions load after local context is established. |
+| data reads | Published `site/assets/data/` snapshots. | Working generated-data service reads. |
+| services | No local service base URLs. | Loopback Docs Viewer service. |
+| controls | Reader controls only. | Capability-gated editing, import, publish, and lifecycle controls. |
+| query state | `scope` and management `mode` cannot widen the route. | `scope`, `doc`, and supported management state are meaningful. |
 
-Purpose: browser-safe route registry for public read-only Docs Viewer routes.
+The static shell identifies a public route id and loads `site/docs-viewer/config/routes/docs-viewer-public-routes.json`. That browser-safe registry fixes the scope, viewer base URL, published payload URLs, and public UI features. The public viewer config is a filtered projection and contains no localhost management base URLs.
 
-Design:
+UI absence is not the sole security boundary. Public routes cannot load the management entrypoint, and mutation endpoints remain available only from the loopback service.
 
-- maps the public route id to its fixed scope, default doc, viewer base URL, public generated payload URLs, UI text config, and panel settings
-- does not grant write authority or local management access
-- is updated by New Scope for user-created public-readonly scopes
-- has user-created route records removed by Delete Scope when the manifest records ownership
+## Publish Workflow
 
-### `docs-viewer/source/<scope>/*.md`
+For a configured public scope, local management exposes one Publish command through the toolbar and Actions menu.
 
-Purpose: canonical authored content for the Library docs scope
+1. `GET /docs/publish/status` compares working and published payloads.
+2. `POST /docs/publish/confirm` returns the proposed copy/remove diff without writing.
+3. `POST /docs/publish/apply` requires `confirm: true` and recomputes the operation before synchronizing files.
 
-Design:
+Local scopes do not advertise a publish target. Their generated JSON remains under Docs Viewer-owned working roots and must not be redirected into public `site/assets/data/` paths.
 
-- the route uses the same docs-scope contract as Studio rather than a scope-specific runtime
-- same front-matter model as the Studio docs scope
-- same Markdown-or-raw-HTML authoring model
-- separate source root so scope can grow without being folded into Studio docs
-- import/create defaults new docs to `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/<scope>/` route
-- optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
-- optional `ui_status` front matter stores a Docs Viewer status key that is carried into generated docs payloads and interpreted against scope-specific viewer config
-- export configs are defined separately from source docs by `data-sharing/config/<scope>-export-configs.json` and `data-sharing/config/<scope>-export-configs.schema.json`; export configs should read Docs Viewer source/generated fields without mutating them
+## Public Payload Contract
 
-## Generated Docs Data
+Public routes read compact scope-owned files:
 
-### Working Roots And Publish-To-Site Assets
+- `index-tree.json` for public-viewable navigation
+- `recently-added.json` for the small recent list
+- `by-id/<doc_id>.json` for rendered document content and public-safe metadata
+- the scope search `index.json`
 
-Public scope source edits, live watcher rebuilds, and docs-management write follow-through rebuild working generated output under `docs-viewer/generated/`.
-Public routes read only the site asset copies under `site/assets/data/`.
-New Scope public-readonly creation writes the initial working generated output and syncs that initial output to the public route asset roots so the new route can load.
-After the scope exists, normal source edits rebuild the working output first.
+Public per-document payloads intentionally omit management metadata such as parent paths, visibility state, UI status, internal route details, and report/service data. Search and tree generation exclude non-viewable documents, while local management can still inspect their working generated payloads.
 
-Publishing is the local `/docs/` toolbar `Publish` command for public scopes; the Actions menu retains the same command as a second entry point.
-In this Docs Viewer context, publish means copy reviewed working docs/search JSON into tracked site assets.
-It does not deploy the site, upload data, or run a remote release.
-When viewing a local scope such as Studio in `/docs/`, the direct Publish shortcut is hidden and the Publish menu item is disabled because that scope has no public route asset target.
+Exact schemas belong to [Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) and the builders/tests, not this boundary summary.
 
-The Publish command uses these local endpoints:
+## Creating And Deleting Public Scopes
 
-- `GET /docs/publish/status?scope=<scope>` reports pending working-to-site-asset changes
-- `POST /docs/publish/confirm` reports the confirmation diff without writing
-- `POST /docs/publish/apply` requires `confirm: true` and syncs working docs/search to the site asset roots, removing stale copied files
+[Scope Lifecycle](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) creates a public scope by writing its conventional source/config records, rendering a tracked static route shell, adding public and management route records, building working output, and copying the initial public snapshots.
 
-The v1 publish gate is local and file-based.
-It does not add persistent confirmation ids, rollback, unpublish, publish manifests, or durable publish summary artifacts.
+The lifecycle manifest records the created route shell, source/output roots, and published payloads. Delete may remove them only for a scope recorded as user-created and tool-created. Shared runtime, CSS, templates, and route registry files are changed or reused; they are never recorded as deletable scope assets.
 
-## Lifecycle Ownership
+## Executable Assurance
 
-New Scope public-readonly creation records user-created files in `docs-viewer/config/scopes/docs_scope_manifest.json`.
-Delete Scope may remove a public scope only when that manifest records it as user-created and tool-created.
+`public_docs_viewer_readonly.py` boots public routes from a static site root and verifies:
 
-Deletion removes the user-created route shell, user-created public route records, source docs, generated working outputs, and public docs/search payloads owned by the scope.
-It must not remove shared public runtime files, shared CSS, UI text, route registry files themselves, or unrelated public route shells.
+- public app kind with management and source service disabled
+- no local service base URLs or management controls
+- the public route registry and public payload URLs are used
+- management query state is normalized away
+- only public-safe metadata appears in the info panel
+- tree, recent, document, search, and public report paths remain functional
 
-### `site/assets/data/docs/scopes/<scope>/index-tree.json`
+Lifecycle tests separately prove that creating a public scope produces its route/config/payload set and that deleting an eligible scope removes only its owned records and files.
 
-Purpose: compact navigation tree payload for the docs corpus
+## Extension Method
 
-Current content families:
+Add a public scope through lifecycle rather than hand-assembling a route. A change to the public delivery model should preserve four independent checks:
 
-- one row per generated doc
-- identity, title, optional non-empty `parent_id`, optional `viewable: false`, optional `ui_status`, and per-doc content URL
-- `viewer_options` for legacy scope-level display behavior
+1. canonical source and working outputs remain outside `site/assets/`
+2. Publish is the explicit working-to-public synchronization boundary
+3. the public route loads only public-filtered config, payloads, and entrypoint modules
+4. browser smoke proves the absence of management/service state as well as successful reading
 
-Current site mapping:
+## Weak Spots
 
-- the nav/tree layer on `/<scope>/`
-- public/default `/<scope>/` hides docs with `viewable: false`; `/docs/?scope=<scope>` can show those generated docs for local management
-
-### `site/assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
-
-Purpose: per-doc rendered payload for one Library doc
-
-Current content families:
-
-- reader-facing metadata: title, optional `summary`, and `last_updated`
-- rendered `content_html`
-
-Current site mapping:
-
-- the content pane and public info panel on `/<scope>/`
-
-Public by-id payloads do not expose management fields such as `doc_id`, `viewer_url`, `ui_status`, `viewable`, `parent_id`, `added_date`, `content_text_length`, or report metadata.
-
-### `site/assets/data/docs/scopes/<scope>/recently-added.json`
-
-Purpose: small 'recently-added' payload for the public route.
-
-Current content families:
-
-- schema `docs_recently_added_v1`
-- configured result limit
-- rows with doc identity, title, content URL, `added_date`, optional `parent_id`, and optional `parent_title`
-
-Current site mapping:
-
-- recently-added mode on `/<scope>/`
-
-## Search Data
-
-### `site/assets/data/search/<scope>/index.json`
-
-Purpose:
-
-- search-owned flattened index for public-viewable docs
-
-Current content families:
-
-- one `doc` entry per public-viewable doc after applying `viewable` filtering
-- identity, viewer URL, last-updated metadata, and normalized search text
-
-Note:
-
-- Recently-added lists use `added_date` from `recently-added.json`.
-- Search uses `last_updated`.
-
-Current site mapping:
-
-- inline docs search on `/<scope>/`
-
-## Export Data
-
-Export configs are source-controlled Analytics data, but export files themselves are local generated artifacts.
-
-Config files:
-
-- `data-sharing/config/<scope>-export-configs.json`
-- `data-sharing/config/<scope>-export-configs.schema.json`
-
-Generated output:
-
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.json`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.jsonl`
-
-Current model:
-
-- configs read generated Docs Viewer index and per-doc payload data
-- configs do not mutate `docs-viewer/source/<scope>/*.md`
-- export files are ignored by git and are safe to delete
-- export files are reproducible from generated docs data, the selected config, and the selected document ids
-- document body export uses plain text derived from rendered `content_html`; default exports should not expose raw rendered HTML
-
-Current consumers:
-
-- `/analytics/data-sharing/prepare/`
-- `GET /analytics/api/data-sharing/selectable-records` on the Local Analytics app server
-- `POST /analytics/api/data-sharing/prepare` on the Local Analytics app server
-- `docs-viewer/services/docs_export.py`
-
-Current limits:
-
-- Library is the only configured v1 export scope
-- no batching and long-document chunking
-- markdown target files and raw Markdown exports are future config extensions
-
-## Import Data
-
-Import files are local working artifacts copied into a staging folder for preview-first review.
-
-Staged input:
-
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.json`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/<filename>.jsonl`
-
-Preview output:
-
-Current model:
-
-- staged files are ignored by git and are safe to delete
-- import v1 reads staged data files but does not mutate `docs-viewer/source/<scope>/*.md`
-- the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
-- unknown file-level and record-level metadata is preserved in parser reports
-- parser reports compare staged records with adapter-owned current document records and generated payload filenames
-- summary apply can update selected source `summary` values through the Analytics Data Sharing API after preflight and confirmation
-- hierarchy apply can update selected source `parent_id` values through the Analytics Data Sharing API after preflight and confirmation; retired `sort_order` front matter is removed when touched
-- hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships
-
-Current consumers:
-
-- `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
-- `GET /analytics/api/data-sharing/returned-packages`
-- `POST /analytics/api/data-sharing/review`
-- `POST /analytics/api/data-sharing/apply`
-- `/analytics/data-sharing/review/`
-
-## Dependencies And Enforcement
-
-Current dependencies:
-
-- working docs data is written by [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- working docs search is derived from Library source front matter as documented in [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture)
-- public route asset copies are updated only through the Docs Viewer `/docs/` Actions menu `Publish` management action
-
-Current enforcement:
-
-- duplicate `doc_id` values are rejected by the docs builder before docs data is written
-- unresolved `parent_id` references are allowed for imported hierarchy staging and are emitted as root-level generated relationships
-- `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from search and public/default viewer discovery
-
-## Performance Notes
-
-Public scopes inherit the same performance model as Studio docs:
-
-- one compact docs tree payload for tree/navigation
-- one small recently-added payload
-- one per-doc payload for heavier rendered content
-- one flattened search artifact for inline search
+- Working and published payloads can intentionally differ until Publish; there is no automatic deployment or persistent publication ledger.
+- Public route and viewer configs are generated projections from canonical registries. Manual edits can create drift until builders or lifecycle rewrite them.
+- Public media objects are referenced by URL/token but are not covered by scope publish or lifecycle manifests.
+- Public isolation is layered across config filtering, route policy, entrypoint imports, capability absence, payload filtering, and loopback authorization. A change crossing those layers needs more than a UI visibility test.
+- Lifecycle artifact tests and public browser smoke are separate; a newly created route is not booted end to end in the same test.

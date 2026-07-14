@@ -3,83 +3,85 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "docs-viewer-delivery-roadmap",
+      "title": "Docs Viewer Delivery Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-delivery-roadmap.json",
+      "added_date": "2026-07-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "site-request-docs-viewer-external-asset-lifecycle-ownership",
+      "title": "External Asset Collection Lifecycle Ownership",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-lifecycle-ownership.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-external-asset-collections",
+      "parent_title": "External Asset Collections"
+    },
+    {
       "doc_id": "site-request-docs-viewer-external-asset-collections",
-      "title": "Docs Viewer External Asset Collections",
+      "title": "External Asset Collections",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-collections.json",
       "added_date": "2026-07-14",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
     },
     {
+      "doc_id": "docs-viewer-external-asset-collections-architecture",
+      "title": "External Asset Collections Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-architecture.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-external-asset-collections",
+      "parent_title": "External Asset Collections"
+    },
+    {
+      "doc_id": "docs-viewer-external-asset-collections-concept",
+      "title": "External Asset Collections Concept",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-concept.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-external-asset-collections",
+      "parent_title": "External Asset Collections"
+    },
+    {
       "doc_id": "site-request-docs-viewer-index-multiple-selection",
-      "title": "Docs Viewer Index Multiple Selection",
+      "title": "Index Multiple Selection",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
       "added_date": "2026-07-14",
       "parent_id": "change-requests",
       "parent_title": "Change Requests"
     },
     {
-      "doc_id": "site-request-source-documentation-and-linting",
-      "title": "Source Documentation and Linting",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-source-documentation-and-linting.json",
-      "added_date": "2026-07-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
+      "doc_id": "docs-viewer-index-multiple-selection-architecture",
+      "title": "Index Multiple Selection Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-architecture.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-index-multiple-selection",
+      "parent_title": "Index Multiple Selection"
     },
     {
-      "doc_id": "site-request-moments-composition-workspace",
-      "title": "Moments Composition Workspace",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-moments-composition-workspace.json",
-      "added_date": "2026-07-12",
-      "parent_id": "workspaces",
-      "parent_title": "Workspaces"
+      "doc_id": "docs-viewer-index-multiple-selection-concept",
+      "title": "Index Multiple Selection Concept",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-concept.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-index-multiple-selection",
+      "parent_title": "Index Multiple Selection"
     },
     {
-      "doc_id": "site-request-moments-composition-workspace-roadmap",
-      "title": "Moments Composition Workspace Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-moments-composition-workspace-roadmap.json",
-      "added_date": "2026-07-12",
-      "parent_id": "site-request-moments-composition-workspace",
-      "parent_title": "Moments Composition Workspace"
+      "doc_id": "docs-viewer-semantic-reference-authoring-architecture",
+      "title": "Semantic Reference Authoring Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-architecture.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-semantic-reference-editor",
+      "parent_title": "Semantic Reference Authoring"
     },
     {
-      "doc_id": "site-request-workspace-scope-eligibility",
-      "title": "Workspace Scope Eligibility",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-workspace-scope-eligibility.json",
-      "added_date": "2026-07-12",
-      "parent_id": "workspaces",
-      "parent_title": "Workspaces"
-    },
-    {
-      "doc_id": "workspaces",
-      "title": "Workspaces",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/workspaces.json",
-      "added_date": "2026-07-12"
-    },
-    {
-      "doc_id": "site-request-data-sharing-full-document-package",
-      "title": "Data Sharing Full Document Export Package",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
-      "added_date": "2026-07-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "docs-viewer-review",
-      "title": "Docs Review",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-review.json",
-      "added_date": "2026-07-11",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "scripts-docs-management-endpoints-review",
-      "title": "Docs Review Endpoints",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-review.json",
-      "added_date": "2026-07-11",
-      "parent_id": "scripts-docs-management-endpoints",
-      "parent_title": "Endpoint Overview"
+      "doc_id": "docs-viewer-semantic-reference-authoring-concept",
+      "title": "Semantic Reference Authoring Concept",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-concept.json",
+      "added_date": "2026-07-14",
+      "parent_id": "site-request-docs-viewer-semantic-reference-editor",
+      "parent_title": "Semantic Reference Authoring"
     }
   ],
-  "generated_at": "2026-07-14T18:36:39Z"
+  "generated_at": "2026-07-14T22:30:08Z"
 }

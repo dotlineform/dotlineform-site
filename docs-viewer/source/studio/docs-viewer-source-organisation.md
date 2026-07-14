@@ -2,143 +2,80 @@
 doc_id: docs-viewer-source-organisation
 title: Source Organisation
 added_date: 2026-04-23
-last_updated: 2026-07-11
+last_updated: 2026-07-14
+summary: Canonical source, hierarchy, generated working data, public snapshots, sub-scopes, and media ownership by Docs Viewer scope.
 parent_id: docs-viewer
+viewable: true
 ---
 # Docs Viewer Source Organisation
 
-## Purpose
+Each Docs Viewer scope is an independent canonical Markdown collection. Shared reader and management code does not merge scopes into one corpus.
 
-This document records how source docs are currently organised for the shared Docs Viewer.
+## Source To Delivery
 
-It covers:
+```text
+scope config
+    |
+    +-- canonical source root
+    |       +-- top-level *.md documents
+    |       +-- configured local media where applicable
+    |
+    +-- working generated docs/search root
+    |       +-- tree, recent, per-document and search payloads
+    |
+    +-- optional public publish roots
+            +-- copied read-only snapshots under site/assets/data/
+```
 
-- the current source roots
-- how docs are grouped into trees
-- how that organisation maps onto scope-owned generated outputs
+Canonical Markdown is the content authority. Generated JSON is rebuildable runtime data. Public snapshots are an explicit published projection, not another source corpus.
 
-It does not define the detailed schema of the generated JSON payloads.
+## Scope Storage Types
 
-## Current Source Roots
+| scope type | source | working generated data | media | public snapshot |
+| --- | --- | --- | --- | --- |
+| Public | Repo `docs-viewer/source/<scope>/`. | Repo `docs-viewer/generated/`. | R2 for normal imported media. | Required under `site/assets/data/`. |
+| Local committed | Repo `docs-viewer/source/<scope>/`. | Repo `docs-viewer/generated/`. | Configured repo media root. | None. |
+| External local | Derived external workspace source root. | Derived external docs/search roots. | Derived external media root. | None. |
 
-The shared Docs Viewer currently serves three separate source trees.
+`docs-viewer/config/scopes/docs_scopes.json` is the topology authority. It declares source, generated, published, route, search, and media paths; code resolves marker paths and validates scope-type combinations.
 
-Studio docs source root:
+## Document Shape And Hierarchy
 
-- `docs-viewer/source/studio/`
+Normal scope documents are top-level Markdown files in the configured source root. Nested Markdown is rejected unless it belongs to an explicitly configured sub-scope.
 
-Analysis docs source root:
+Every document requires a stable `doc_id`. `parent_id` establishes hierarchy; a blank parent makes a root document. Siblings are ordered case-insensitively by title with `doc_id` as the stable tie-breaker.
 
-- `docs-viewer/source/analysis/`
+Filesystem folders do not define the navigation tree. Source-relative Markdown links are therefore not a stable cross-document contract; use Docs Viewer URLs with `doc=<doc_id>`.
 
-Library docs source root:
+Common front matter includes title, parent, summary, visibility, status, and added/updated metadata. Exact parsing and generated-field behavior belong to `docs_builder/source.py`, `docs_source_model.py`, and their tests.
 
-- `docs-viewer/source/library/`
+## Sub-Scopes
 
-Each scope owns its own source-doc tree and generated output tree.
-The shared viewer does not merge those scopes into one combined docs corpus.
+A configured sub-scope is a nested source/generated collection owned by one parent scope but excluded from the parent's normal tree and global search. It is appropriate for large detail collections rendered through a report or focused consumer.
 
-Document Data Sharing reads this same source boundary through Docs Viewer-owned source context helpers.
-Those helpers use scope config plus source Markdown front matter and body content, then render source content through shared Docs Viewer rendering code when export or review workflows need headings or plain text.
-Generated Docs Viewer payloads are publication/runtime outputs and are not the Data Sharing document source-record input.
+Sub-scope lifecycle changes the parent scope config and nested roots. A sub-scope is not a top-level selectable Docs Viewer scope and does not receive an independent top-level lifecycle manifest record.
 
-Normal scope source roots are flat:
+## Media Boundary
 
-- Studio docs: `docs-viewer/source/studio/*.md`
-- Library docs: `docs-viewer/source/library/*.md`
-- Analysis docs: `docs-viewer/source/analysis/*.md`
+Media is associated with a scope but is not always canonical source:
 
-Nested source Markdown is not supported for normal scope discovery.
-Large detail-document sets should use configured Docs Viewer sub-scopes, which keep nested detail docs out of the parent index tree and global docs search.
+- repo-backed local media may live beneath the source root
+- external-local imported media lives in a derived sibling media root
+- public media normally lives in R2 and is referenced from Markdown
+- interactive HTML uses a separate asset and sandbox contract
 
-## Current Tree Model
+[Media And Asset Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) owns storage, link resolution, and materialization. Scope association alone does not imply lifecycle delete ownership.
 
-Each source doc declares a `doc_id` and can optionally declare a `parent_id`.
+## Other Consumers
 
-Current tree rules:
+Data Sharing and Docs Import may read or produce canonical document content through Docs Viewer-owned source and rendering boundaries. Returned-package previews and export artifacts are working data in the external Data Sharing workspace; they are not configured Docs Viewer scopes or alternative canonical source roots.
 
-- a blank `parent_id` makes a top-level document within that scope
-- a populated `parent_id` places the document under that parent
-- root siblings and each parent’s children are sorted case-insensitively by `title`
-- `doc_id` is the stable tie-breaker when titles match
+## Weak Spots
 
-This gives each scope its own hierarchical navigation tree without requiring separate viewer code.
+- The flat normal-source layout keeps discovery simple but makes `doc_id` and front matter the only structural organization.
+- Canonical source, generated working data, public snapshots, and external media can temporarily disagree until rebuild or Publish completes.
+- Scope config is centralized, so manual path edits can affect builders, management reads, media, lifecycle, and public delivery together.
+- Directory-level lifecycle ownership is coarser than semantic ownership of every file later placed beneath that directory.
+- Sub-scopes are structurally nested but operationally different from top-level scopes, which makes “scope” ambiguous without context.
 
-## Current Section Organisation
-
-Within the Studio source root, top-level parent docs group documentation by implementation area, including:
-
-- `architecture`
-- `config`
-- `data-models`
-- `design`
-- `scripts`
-- `docs-viewer`
-- `search`
-- `studio`
-- `user-guide`
-
-Working docs and historical notes that should stay out of public/default discovery use `viewable: false`.
-
-Examples:
-
-- `backlog.md`
-- `ideas.md`
-- `design-backlog.md`
-- `search-config-architecture.md`
-
-## Guidance Split
-
-The current docs set now distinguishes between two different documentation jobs:
-
-- technical reference docs for contracts, implementation details, and generated-output behavior
-- practical user guidance for concrete editing tasks and copy-paste usage examples
-- technical subsystem docs should link to that guidance rather than burying task-level instructions inside implementation detail
-
-Example:
-
-- [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images) explains where docs images should be saved and exactly what syntax to type
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) remains the technical reference for token resolution and build behavior
-
-## Current Management-Relevant Constraint
-
-The flat Studio source layout is now part of the live Docs Viewer contract.
-
-Current effect:
-
-- Studio file storage no longer carries section meaning
-- tree structure comes only from `doc_id` and `parent_id`; sibling order comes from generated title ordering
-
-Important builder consequence:
-
-- source-relative `.md` links are unsupported; docs should link to viewer URLs with `doc=<doc_id>`
-- source filenames are loader inputs only and are not emitted as generated runtime metadata
-
-## Current Generated Output Boundary
-
-The docs builder writes scope-owned viewer data under:
-
-- `docs-viewer/generated/docs/studio/`
-- `site/assets/data/docs/scopes/analysis/`
-- `site/assets/data/docs/scopes/library/`
-
-At a high level, each scope currently has:
-
-- one generated `index-tree.json` payload for the tree
-- one generated `recently-added.json` payload for recently-added mode
-- one generated per-doc payload for each included source doc
-
-This is why the shared runtime can stay generic: it consumes the same kind of scope-owned output for each docs scope.
-
-Validated returned-package source and generated previews are not repository source or configured scopes. They live under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<package_id>/`, with derived Markdown in `source/`, inventoried files in `assets/`, and review output in `generated/`. The current Docs Review implementation can edit and rebuild within that package folder. The planned simplified flow makes the projection read-only and imports directly from the immutable staged JSONL associated with the package rather than from derived preview Markdown.
-
-Detailed payload shape and rationale are intentionally left out of this section.
-
-## Practical Documentation Rule
-
-When updating Docs Viewer docs:
-
-- document shared viewer behavior here if it applies to both Studio and Library
-- document route-shell or scope differences here if they affect how the common module is wired
-- document builder implementation in [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- leave payload-schema detail for [Shared Patterns](/docs/?scope=studio&doc=data-models-shared), [Studio Scope](/docs/?scope=studio&doc=data-models-studio), and [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes)
+[Scope Lifecycle](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) owns creation/deletion consequences. [Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) owns payload families and read authority.

@@ -2,7 +2,7 @@
 doc_id: development-workflow
 title: Development Workflow
 added_date: 2026-05-19
-last_updated: 2026-06-03
+last_updated: 2026-07-14
 parent_id: dev-home
 viewable: true
 ---
@@ -18,12 +18,13 @@ This document is the repo-specific lifecycle guide for major new features, behav
 For any non-trivial change:
 
 1. Classify the work: feature, bugfix, refactor, documentation, generated-data change, UI change, or workflow change. Read the owning section docs before editing.
-2. Decide whether the work needs a change request. Change requests are documented under [Change Requests](/docs/?scope=studio&doc=change-requests).
-3. Use [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template) as the template for tracking tasks. This becomes a child documemnt of the owning change request document.
-4. Keep implementation scoped to the owning runtime, script, data model, or UI primitive.
-5. Run targeted verification proportional to the blast radius.
-6. Update owning docs and generated payloads when source docs or generated contracts change.
-7. Close out with a concise summary, remaining risks, and follow-up tasks.
+2. Separate broad concept work from delivery. Put complete outcomes and their sequence on the owning roadmap.
+3. Create a [Change Request](/docs/?scope=studio&doc=change-requests) only when one roadmap outcome is ready to implement and finish.
+4. Add a task tracker only when coordination inside that bounded request genuinely needs one.
+5. Keep implementation scoped to the owning runtime, script, data model, or UI primitive.
+6. Run targeted verification proportional to the blast radius.
+7. Update the one durable owner whose behavior or navigation changed.
+8. Close the request only when its complete outcome has shipped.
 
 ## 1. Classify The Work
 
@@ -39,22 +40,26 @@ Use the smallest owning area that explains the change:
 - Local setup, dependency, or environment behavior: [Local Setup](/docs/?scope=studio&doc=local-setup) and [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 - Test strategy and check profiles: [Testing](/docs/?scope=studio&doc=testing), [Run Checks](/docs/?scope=studio&doc=scripts-run-checks), and [Pytest](/docs/?scope=studio&doc=testing-pytest)
 
-## 2. Decide Whether A Change Request Is Needed
+## 2. Move From Concept To Delivery
 
-Use [Change Requests](/docs/?scope=studio&doc=change-requests) for work that needs a visible product, workflow, or implementation plan before it is complete.
+Use a concept document when the problem is useful but the outcome, tradeoffs, or delivery shape are still being explored. Concept documents may be broad. They do not imply priority and should not turn discussion directly into an implementation checklist.
 
-A change request is usually useful when the work:
+For a substantial feature, use one short parent under [Change Requests](/docs/?scope=studio&doc=change-requests) to group separate concept, proposed architecture, and promoted delivery documents. The feature parent routes between them; it does not repeat them. The architecture child may explain intended ownership and pressure points, but shipped current behavior still belongs to durable owner documents and the code.
 
-- changes user workflow or operational behavior
-- spans multiple files, modules, routes, or generated artifacts
-- involves uncertain requirements or tradeoffs
-- creates a new convention, data model, or local-service behavior
-- should remain visible after the implementation conversation ends
+Use the owning product roadmap to split a concept into independently finishable outcomes. The roadmap owns:
 
-Small bugfixes, narrow docs edits, and mechanical cleanup usually do not need a new request.
+- delivery order and importance
+- prerequisite relationships
+- current status
+- the active request link, when a row is ready
 
-Keep change requests manually curated.
-They are planning and close-out artifacts, not the durable implementation log.
+Then create one [Change Request](/docs/?scope=studio&doc=change-requests) for one complete roadmap outcome. Its in-scope work may cross several modules, but all of it must contribute to the same verifiable result.
+
+A request is not ready while an open decision could fundamentally change its outcome. Resolve the decision in the concept or make investigation itself a small, explicit deliverable.
+
+Small bugfixes, narrow docs edits, and mechanical cleanup usually do not need either a roadmap row or a request.
+
+Keep concepts, roadmaps, and requests manually curated. None is the durable implementation log.
 
 ## 3. Shape The Implementation
 
@@ -78,7 +83,7 @@ This is a list of the most common references within the documenattion:
 - For browser JavaScript maintenance-risk work, use [Risk Analysis Policy](/docs/?scope=studio&doc=risk-analysis-policy) for scoring.
 - For Docs Viewer frontend-app architecture work, start with [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary), [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview).
 
-When the work needs a task tracker, create one from [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template).
+When coordination inside one request genuinely needs a task tracker, create one from [Tasks Tracker Template](/docs/?scope=studio&doc=tasks-tracker-template). If the tracker contains independently useful outcomes, split the request on the roadmap instead.
 
 Implementation slices must move frontend app concepts and backend/service contracts together rather than treating server changes as incidental follow-through.
 
@@ -183,7 +188,7 @@ Default rules:
 - Feature-facing generated reads must go through `docs-viewer-generated-data-runtime.js`; direct `docs-viewer-data.js` imports stay limited to the generated-data runtime and config service owners.
 - Management writes, imports, settings, scope lifecycle, rebuilds, source opening, and local-only data must go through `docs-viewer-management-client.js` and server-side management endpoints with validation.
 - Do not add new feature lifecycle ownership to `docs-viewer-app-runtime.js`. It is the private app runtime coordinator for focused controller construction, event wiring, route-global updates, private management/startup callbacks, and the small returned app handle.
-- Keep implementation details in child task documents; keep parent requests as policy, benefits, and slice-framing records.
+- Keep implementation detail in the code or an optional task tracker; keep the request focused on one complete outcome, its boundaries, and proof of completion.
 
 ## 4. Implement In A Focused Slice
 
@@ -198,7 +203,9 @@ During implementation:
 - validate dry-run behavior for generators before write runs
 - keep user-specific paths, tokens, and local credentials out of tracked docs and source
 
-When a request grows beyond a single safe slice, stop at a checkpoint with completed work, checks run, risks, and the next slice.
+Before implementation, split any request whose result cannot be completed coherently. During implementation, do not widen a request when another useful outcome appears: add that outcome to the roadmap.
+
+If unexpected work prevents completion, stop at a safe working boundary. Close the current request only if what remains is still a complete useful outcome in its own right; otherwise the request remains open and the roadmap must be reshaped before more implementation begins.
 
 ## 5. Verify Proportionally
 
@@ -247,6 +254,8 @@ Run a separate targeted docs sweep only when needed, against current owning docs
 ## 6. Update Docs And Generated Artifacts
 
 - When behavior changes, update the owning durable reference doc in the same change.
+- Update one durable owner by default. Touch another document only when its own workflow, contract, or navigation changed.
+- Use an inline link when it identifies an authority, prerequisite, or actual next step. Avoid generic related-document lists that add link maintenance without helping the workflow.
 - Do not treat the parent change request or task plan as a durable doc.
 
 ## 7. Close Out The Work
@@ -256,10 +265,11 @@ A close-out should include:
 - changed files and the purpose of the change
 - verification run and result
 - generated payloads updated or intentionally not rebuilt
-- remaining risks or follow-up tasks
+- remaining risks and any separately finishable follow-up roadmap rows
 - request status updates when the work was driven by a change request
 - mark completed tasks clearly
-- mark an owning change request `done` only when durable docs contain the important decisions, verification is recorded, and remaining risks are explicit.
+- mark an owning change request `done` only when its whole outcome works, durable docs contain the shipped behavior, verification is recorded, and remaining risks are explicit
+- do not leave unfinished phases inside a completed request; later capability belongs on the roadmap
 
 ## Documentation Review Candidates
 

@@ -42,15 +42,15 @@ Every config contract review should answer:
 
 | file | role | edit class | contract doc |
 | --- | --- | --- | --- |
-| `docs-viewer/config/scopes/docs_scopes.json` | source scope registry used by docs/search builders | maintainer-editable app config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/scopes/docs_scope_manifest.json` | portable source-scope manifest | maintainer-editable app config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/routes/docs-viewer-routes.json` | local/manage and public route registry | maintainer-editable app config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `site/docs-viewer/config/routes/docs-viewer-public-routes.json` | public route subset registry | maintainer-editable app config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/defaults/docs-viewer-config.json` | local/manage browser default config | generated-by-builder default, source-controlled | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/defaults/docs-viewer-public-config.json` | public browser default config | generated-by-builder default, source-controlled | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/defaults/docs-viewer-service.json` | standalone Docs Viewer service defaults and endpoints | code infrastructure | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/reports/reports.json` | Docs Viewer report registry source | maintainer-editable app config | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
-| `docs-viewer/config/schema/docs-viewer-service.schema.json` | service config schema | code infrastructure | [Docs Viewer Config Files](/docs/?scope=studio&doc=config-docs-viewer-files) |
+| `docs-viewer/config/scopes/docs_scopes.json` | source scope registry used by docs/search builders | maintainer-editable app config | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/scopes/docs_scope_manifest.json` | portable source-scope manifest | maintainer-editable app config | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/routes/docs-viewer-routes.json` | local/manage and public route registry | maintainer-editable app config | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `site/docs-viewer/config/routes/docs-viewer-public-routes.json` | public route subset registry | maintainer-editable app config | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/defaults/docs-viewer-config.json` | local/manage browser default config | generated-by-builder default, source-controlled | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/defaults/docs-viewer-public-config.json` | public browser default config | generated-by-builder default, source-controlled | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/defaults/docs-viewer-service.json` | standalone Docs Viewer service defaults and endpoints | code infrastructure | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/reports/reports.json` | Docs Viewer report registry source | maintainer-editable app config | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
+| `docs-viewer/config/schema/docs-viewer-service.schema.json` | service config schema | code infrastructure | [Docs Viewer Configuration](/docs/?scope=studio&doc=config-docs-viewer) |
 
 ## Data Sharing
 
