@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-c356f9cdd7513b6bf9e4dda51f7fe19b",
-    "generated_at_utc": "2026-07-14T08:16:07Z",
-    "count": 2
+    "version": "blake2b-b4a43ec4256afbed66908b7ff1a9c8cf",
+    "generated_at_utc": "2026-07-14T10:38:56Z",
+    "count": 3
   },
   "entries": [
     {
@@ -24,6 +24,28 @@
         "16"
       ],
       "search_text": "ffmpeg 2026-07-14 09:16 2026 07 14 09 16"
+    },
+    {
+      "id": "interpolation-2-images",
+      "kind": "doc",
+      "title": "Interpolation 2 images",
+      "href": "/docs/?scope=processing&doc=interpolation-2-images",
+      "last_updated": "2026-07-14 11:38",
+      "display_meta": "2026-07-14 11:38",
+      "search_terms": [
+        "interpolation-2-images",
+        "interpolation",
+        "2",
+        "images",
+        "interpolation 2 images",
+        "2026-07-14 11:38",
+        "2026",
+        "07",
+        "14",
+        "11",
+        "38"
+      ],
+      "search_text": "interpolation-2-images interpolation 2 images interpolation 2 images 2026-07-14 11:38 2026 07 14 11 38"
     },
     {
       "id": "processing",

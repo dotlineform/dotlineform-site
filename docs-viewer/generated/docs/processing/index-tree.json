@@ -11,11 +11,16 @@
       "content_url": "/docs-viewer/generated/docs/processing/by-id/ffmpeg.json"
     },
     {
+      "doc_id": "interpolation-2-images",
+      "title": "Interpolation 2 images",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/interpolation-2-images.json"
+    },
+    {
       "doc_id": "processing",
       "title": "processing",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/processing.json",
       "ui_status": "draft"
     }
   ],
-  "generated_at": "2026-07-14T08:16:06Z"
+  "generated_at": "2026-07-14T10:38:56Z"
 }
