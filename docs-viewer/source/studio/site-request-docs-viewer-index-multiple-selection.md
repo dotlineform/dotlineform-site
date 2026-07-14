@@ -18,6 +18,8 @@ The first consumer should extend the existing drag/drop reparent action so a sel
 
 The selection interaction must feel immediate. Selection changes remain entirely in browser state and update existing rows directly. Network activity, rebuild work, and busy projection begin only after an action such as drop is committed.
 
+Before multiple selection is exposed, the existing document-facing controls need one shared action-target contract. Each action should declare whether it operates on the scope, the active document, the primary selection, every selected document, or exactly one selected document. Toolbar, Actions-menu, and context-menu surfaces should resolve those definitions consistently.
+
 ## Documentation Impact
 
 This request owns the proposed behavior until it is implemented and absorbed into stable documentation.
@@ -25,12 +27,16 @@ This request owns the proposed behavior until it is implemented and absorbed int
 Implementation should update:
 
 - [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) for the selection owner and any changed module responsibilities
-- [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for the manage-only selection and move boundaries
+- [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for the action-definition, manage-only selection, and move boundaries
 - [Source Mutation Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints-source-mutations) for the plural `/docs/move` contract
 - [Docs Management Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints) if the endpoint summary changes
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview) only when the workflow is stable enough to describe as current behavior
+- [Task Template](/docs/?scope=studio&doc=task-template) and [Task Batch Template](/docs/?scope=studio&doc=task-batch-template) to retain lightweight implementation guidance without requiring placeholder-heavy task prose
+- [Development Checklist](/docs/?scope=studio&doc=development-checklist) and [Development Workflow](/docs/?scope=studio&doc=development-workflow) to make pressure-point, ownership, slice, and closeout guidance concise and non-duplicative
 
 The [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capability-contract) already reserves selection behavior as a possible future capability. V1 should not add a capability field unless more than the manage-mode `index-tree` view needs selection policy.
+
+The four general development-guidance documents should be reviewed at implementation closeout, using evidence from the completed slices. This request should not rewrite them abstractly before the work has shown which prompts and gates are genuinely useful.
 
 ## Goals
 
@@ -38,9 +44,14 @@ The [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capabili
 - keep selection separate from the currently open document
 - make selection changes local, synchronous, and visually immediate
 - preserve the existing single-document open, edit, context-menu, and drag/drop behavior
+- give every document-facing action one explicit target and selection-cardinality rule
+- project the same action behavior through toolbar, Actions-menu, and context-menu surfaces
 - provide one selection contract that drag/drop and later toolbar actions can consume
 - apply a group reparent as one validated mutation plan and one coordinated rebuild
 - keep public and review routes free of manage-only selection behavior
+- identify pressure on existing module responsibilities before adding each slice
+- keep prerequisite refactors behavior-preserving and prevent them from vertically implementing later capabilities
+- use the completed work to improve durable development guidance without adding more ceremony
 
 ## Non-Goals
 
@@ -53,6 +64,12 @@ The [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capabili
 - multiple selection in search, recently-added, review, public, or `index-graph` views
 - adding batch delete or unrelated bulk actions in the first implementation
 - replacing native HTML drag/drop with a custom pointer-drag system
+- creating a dynamic action-registration or plugin framework
+- moving handlers, DOM nodes, workflow state, or backend implementation into action definitions
+- broad preventive refactoring based on hypothetical future pressure
+- using the action-target prerequisite to implement selection gestures, group moves, or batch mutation behavior
+- introducing another mandatory task format or treating template completion as evidence of implementation quality
+- rewriting the general development workflow before this implementation provides concrete examples
 
 ## Interaction Contract
 
@@ -62,6 +79,8 @@ The [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capabili
 - Cmd-click on macOS and Ctrl-click elsewhere toggles one row without navigating.
 - Shift-click selects a range from the selection anchor through the clicked row without navigating.
 - The range is based on the currently rendered tree-row order. Collapsed descendants are not part of a visible range.
+- The primary selection is the most recently focused or explicitly targeted selected row. It is distinct from both the open document and the Shift-range anchor.
+- Right-clicking a selected row preserves the group and makes that row primary. Right-clicking an unselected row replaces the selection with that row and makes it primary.
 - The open document remains represented by `aria-current="page"` and the existing active style. Multiple selection uses a distinct visual state and must not overload `selectedDocId`.
 - Selection changes update row state directly. They do not rebuild or rerender the index tree, load a document, or call the management service.
 - Selection is pruned against the current index whenever the index is reloaded.
@@ -79,11 +98,12 @@ The [View Capability Contract](/docs/?scope=studio&doc=docs-viewer-view-capabili
 
 ## State And Ownership
 
-Multiple selection is browser UI state, not generated document state and not route state. It must remain separate from `selectedDocument.selectedDocId`, which identifies the document displayed by the route.
+Multiple selection is browser UI state, not generated document state and not route state. It must remain separate from `selectedDocument.selectedDocId`, which identifies the document displayed by the route. The selection model should expose a stable `primaryDocId` and a separate range-anchor id; visual tree order must not silently choose an action target.
 
 | Responsibility | Owner after the change |
 | --- | --- |
-| selected ids, anchor, toggle/range behavior, pruning, and row projection | new manage-only `docs-viewer-index-selection.js` |
+| action target/cardinality definitions and pure target resolution | new code-owned `docs-viewer-action-definitions.js` |
+| selected ids, primary id, range anchor, toggle/range behavior, pruning, and row projection | new manage-only `docs-viewer-index-selection.js` |
 | optional selected-row rendering after a normal sidebar render | shared `docs-viewer-sidebar.js`, through narrow management callbacks only |
 | modifier-click interception, drag start/drop event routing, and context-menu coexistence | existing `docs-viewer-management-interactions.js` |
 | plural drop eligibility, subtree-cycle checks, root-drop resolution, and effective move roots | existing `docs-viewer-drag-drop.js` |
@@ -100,14 +120,84 @@ The selection owner should expose a small contract such as:
 - replace selection with one doc id
 - toggle one doc id
 - select a visible range from the anchor
+- set and return the primary selected doc id
+- return the range-anchor doc id independently
 - return selected ids in visible/index order
 - prune missing ids
 - clear selection
 - project the current selection onto rendered rows
 
-The owner may keep a `Set` for membership and a separate anchor id. Range resolution should use a supplied ordered list of currently rendered row ids rather than rebuilding the tree model.
+The owner may keep a `Set` for membership plus separate primary and range-anchor ids. Range resolution should use a supplied ordered list of currently rendered row ids rather than rebuilding the tree model.
 
 The selection owner should preserve the exact user selection. Consumer-specific normalization, such as reducing selected ancestors and descendants to effective move roots, belongs to the move/drag boundary rather than selection state.
+
+## Action Definitions
+
+Do not add another extensible registry framework. Add one code-owned action-definitions module containing a small definitions object and a pure resolver.
+
+In this request:
+
+- an action definition describes one action
+- the action definitions object contains the known definitions
+- the resolver applies a definition to the current active document and selection
+
+The module should expose a shape equivalent to:
+
+```js
+const ACTION_DEFINITIONS = {
+  "edit-metadata": {
+    target: "selection",
+    selectionPolicy: "primary"
+  },
+  delete: {
+    target: "selection",
+    selectionPolicy: "exactly-one"
+  },
+  export: {
+    target: "scope"
+  }
+};
+```
+
+Supported target values should remain small:
+
+- `scope`: the action is independent of document selection
+- `active-document`: the action uses the document currently open in the main view
+- `selection`: the action resolves selected document ids through its `selectionPolicy`
+
+Initial selection policies:
+
+- `primary`: resolve only the explicit primary selection even when several docs are selected
+- `all`: resolve all selected docs in stable index order
+- `exactly-one`: enable only when one doc is selected
+
+`primary` is suitable only when single-document behavior is clear and safe. Destructive actions must not silently fall back to the primary row while several rows remain highlighted. An action may change from `exactly-one` to `all` only when its handler and backend genuinely support the complete selection.
+
+The resolver should receive a selection context containing at least:
+
+- `activeDocId`
+- `primaryDocId`
+- `selectedDocIds`
+
+It should return resolved target ids, enabled state, and a concise disabled reason. Rendering surfaces may use that projection to adapt labels or titles, but must not independently reinterpret cardinality.
+
+The action definitions own targeting and cardinality only. They do not own command handlers, DOM elements, modal state, transport, mutation behavior, or hosted-view eligibility. Existing view/mode projection continues to decide where a control may appear, and backend capabilities continue to decide whether the service supports an operation.
+
+Initial action classification:
+
+| Action | Initial target rule | Multiple-selection behavior |
+| --- | --- | --- |
+| Info | selection / `primary` | show the primary selection |
+| Edit metadata | selection / `primary` | edit the primary selection |
+| Markdown source and Bookmark | `active-document` | continue to use the open document |
+| Copy link, Open, Open in VS Code, New sibling, and New child | selection / `primary` | use the primary selection |
+| Move | selection / `all` | move effective selected roots in Slice 2 |
+| Show/make viewable | selection / `exactly-one` initially | broaden only with an explicit multi-doc workflow |
+| Delete | selection / `exactly-one` initially | disable for multiple selection until batch delete is designed |
+| Export | `scope` | ignore selection and present clearly as scope export |
+| Publish, Rebuild, Settings, Import, and New | `scope` | remain independent of selection |
+
+Toolbar, Actions-menu, and context-menu records should reference the same action id. They may own surface-specific placement, icon, and wording, but they must not create separate target rules for the same action.
 
 ## Extending Drag/Drop
 
@@ -162,7 +252,68 @@ The mutation plan should:
 
 The response should identify requested ids, effective move roots, changed ids, skipped/no-op ids, the requested parent, rebuild diagnostics, summary text, and `dry_run`.
 
+## Pressure-Point Gate
+
+Every implementation slice must begin with a short ownership and pressure review. The purpose is to notice when a new responsibility would overload an existing owner, while preventing a preparatory refactor from quietly becoming the feature itself.
+
+Record only decisions that affect the slice:
+
+- the complete responsibility being added or changed
+- its current owner and the specific pressure already visible there
+- whether the current owner can remain a coordinator and delegate the new responsibility
+- any extraction required now, with the observed reason for it
+- responsibilities deliberately deferred to later slices
+- the slice's explicit negative scope
+
+Extraction is justified when the current code provides evidence such as:
+
+- the same policy already being interpreted by multiple UI surfaces
+- a broad coordinator being asked to own another complete stateful responsibility
+- the next approved slice naturally expanding the same already-pressured owner
+- a public/manage or UI/service boundary becoming difficult to preserve
+- focused verification being unable to isolate the new seam
+
+Do not extract modules for hypothetical reuse, symmetry, or a possible future feature. A focused extraction should move one coherent responsibility behind a narrow contract while leaving the existing owner as coordinator where appropriate.
+
+Known pressure points at the start of this request:
+
+| Existing area | Visible pressure | Boundary for this request |
+| --- | --- | --- |
+| `docs-viewer-management.js` | broad management coordinator | compose the new owners; do not add selection rules or action-target policy directly |
+| `docs-viewer-management-interactions.js` | already routes navigation, editing, context-menu, and drag/drop events | delegate selection state and range rules to the focused selection owner |
+| view definitions, management menu records, and context-menu records | action availability and action targeting can be confused or duplicated | share action ids and target resolution only; do not merge renderers, placement, or lifecycle ownership |
+| current `selectedDocId` consumers | many paths assume one open document | bridge existing behavior through the resolver; do not broadly rewrite route or selected-document state |
+| singular move client, service, and mutation planner | plural movement crosses browser and backend boundaries | leave unchanged in Slices 0 and 1; generalize together only in Slice 2 |
+
+At the end of every slice, record:
+
+- which module, if any, is now under more pressure
+- whether an extraction moved a complete responsibility or merely redistributed fragments
+- whether the next slice would expand the same owner
+- whether the pressure was observed in the code or only anticipated
+- whether a prerequisite accidentally implemented behavior belonging to a later slice
+
+A prerequisite slice must remain behavior-preserving across the stack. A feature slice may be vertical when that is the smallest complete way to deliver its named behavior; that does not authorize adjacent capability work.
+
 ## Implementation Slices
+
+Each slice starts and ends with the pressure-point gate. The next slice should not begin until its ownership decision, negative scope, and verification result are recorded in this request or its implementation handoff.
+
+### Slice 0: Action Target Prerequisite
+
+- add `docs-viewer-action-definitions.js` with the code-owned definitions object and pure resolver
+- classify every current document-facing, scope-facing, toolbar, Actions-menu, and context-menu command
+- define active document, primary selection, selected ids, and range anchor as distinct concepts
+- make all action surfaces reference the same action ids and resolved targeting rules
+- adapt current single-document state to a one-item selection context and preserve current visible behavior
+- keep destructive single-document actions on `exactly-one` until a complete multi-document mutation exists
+- clarify scope-wide actions such as Export so a document selection does not imply selected-doc export
+- add focused resolver checks before multiple-selection behavior is introduced
+- complete the pressure-point review before proceeding to the selection owner
+
+This slice removes ambiguous action targeting before the UI can display more than one selected document. It is a prerequisite for Slice 1.
+
+Slice 0 is behavior-preserving. It must not add a selected-id store, modifier-click behavior, selected-row styling, group drag state, plural service requests, batch delete, or other later-slice UI or mutation behavior. Definitions may name future policies such as `all`, but handlers and backend support must remain unchanged until the slice that owns them.
 
 ### Slice 1: Multiple Selection Foundation
 
@@ -171,7 +322,9 @@ The response should identify requested ids, effective move roots, changed ids, s
 - intercept Cmd/Ctrl-click and Shift-click before normal link navigation
 - preserve normal click, double-click edit, context menu, expand/collapse, and public behavior
 - project selection after ordinary sidebar renders and prune it after index reloads
-- expose selected ids to manage-mode consumers
+- expose active, primary, selected, and anchor state to the action resolver and manage-mode consumers
+- re-project every visible action when selection or primary state changes
+- complete the pressure-point review before proceeding to group drag/drop
 
 This slice should be usable on its own as a visible selection foundation. Group drag/drop begins in Slice 2.
 
@@ -184,23 +337,63 @@ This slice should be usable on its own as a visible selection foundation. Group 
 - apply one move plan and coordinated rebuild
 - reload the index while preserving a sensible open-document target
 - retain selection on failure and apply the decided post-success selection behavior
+- complete the pressure-point review before adding any further selection consumer
 
 ### Slice 3: Optional Toolbar Consumers
 
-Add focused toolbar actions only when a concrete action is requested. Each action should read the same selected-id contract and own its own normalization, confirmation, and service behavior.
+Add or broaden focused toolbar actions only when a concrete action is requested. Each action should update its existing definition, read the resolved target ids, and own its own normalization, confirmation, and service behavior.
 
 Do not add a generic bulk-action framework in advance.
+
+Each consumer is a separate feature slice and must pass the same pressure-point gate. The presence of multiple selection does not imply that every action should become a batch action.
+
+### Slice 4: Durable Guidance Review
+
+After the implementation slices provide real examples, review:
+
+- [Task Template](/docs/?scope=studio&doc=task-template)
+- [Task Batch Template](/docs/?scope=studio&doc=task-batch-template)
+- [Development Checklist](/docs/?scope=studio&doc=development-checklist)
+- [Development Workflow](/docs/?scope=studio&doc=development-workflow)
+
+The outcome should be lightweight guidance and structure, not stricter template compliance. Preserve a small set of useful prompts:
+
+- intended outcome and explicit negative scope
+- responsibility and current owner
+- observed pressure points and the extraction/defer decision
+- bounded implementation slices and prerequisites
+- verification evidence
+- durable documentation impact and closeout state
+
+Review the documents as one guidance system rather than appending the same rule to all four:
+
+- remove formal placeholders that do not elicit a decision or useful handoff evidence
+- distinguish required safety/ownership gates from optional planning prompts
+- keep the workflow as a concise route through the work and avoid duplicating the checklist
+- decide whether Task and Task Batch still need separate templates; retain both only if they guide materially different work
+- use examples from this implementation to express the pressure-point and post-build cohesion review concretely
+- keep feature-specific decisions in this request and stable reusable guidance in the durable documents
+
+This review is a closeout task, not a prerequisite for multiple selection. It must not expand into a general rewrite of the development corpus without a separately agreed scope.
 
 ## Verification
 
 Use focused checks rather than a full browser workflow test.
+
+Action-definition checks should cover:
+
+- scope, active-document, primary, all, and exactly-one resolution
+- primary selection remaining stable when tree order or expansion changes
+- destructive exactly-one actions disabling for multiple selection
+- consistent targeting from toolbar, Actions-menu, and context-menu surfaces
+- separation between action targeting, hosted-view eligibility, and backend capability checks
 
 Selection checks should cover:
 
 - normal replacement, Cmd/Ctrl toggle, Shift range, and anchor updates
 - visible-order range behavior with collapsed branches
 - pruning after index changes
-- separation between open-document and multiple-selection state
+- separation between active document, primary selection, range anchor, and selected ids
 - direct selected-row projection after render
 
 Drag/drop checks should cover:
@@ -222,19 +415,62 @@ Mutation-plan checks should cover:
 - search-target union for moved subtrees
 - complete no-op requests
 
+Slice handoffs should also confirm:
+
+- the pressure-point review identified an observed pressure, an explicit deferral, or no change needed
+- any extraction moved a complete responsibility and preserved existing behavior outside the named slice
+- the slice's negative scope remained unimplemented
+- Slice 0 introduced no selection gestures, multi-row state, plural service behavior, or batch mutations
+
+The durable-guidance review should confirm that the four documents have distinct jobs, do not duplicate or contradict the same gate, and retain practical prompts without making template completion the goal.
+
 Manual UI review should confirm selection contrast, modifier-click interception, drag responsiveness, and coexistence with normal click, double-click edit, context menu, and expand/collapse.
 
 ## Open Questions
 
 - Should Shift-click replace the current selection with the anchor range, or add the range to existing disjoint selections? Should Cmd/Ctrl+Shift-click explicitly provide the additive form?
+
+replace, no disjointed sections
+
 - When Cmd/Ctrl-click removes the anchor row, which remaining row becomes the next Shift-click anchor?
+
+recalc the new top row in selection
+
 - Should clicking empty index space clear selection?
+
+yes. also Esc
+
 - After a successful move, should moved roots remain selected, should the destination expand automatically, or should selection clear?
+
+remain selected
+
 - If a moved selection contains the currently open document or one of its ancestors, which document should remain open after the index reload?
+
+currently open doc stays open. i.e. only Delete or New or Import changes the displayed doc
+
 - Should the drag image or management status show the number of documents being moved, or are the selected-row projections sufficient for V1?
-- Should right-clicking an unselected row replace the selection, while right-clicking a selected row preserves the group for future context-menu actions?
+
+ideally, show the top doc with a number next to it.
+
 - When non-viewable documents are hidden after selection, should their ids be pruned immediately or retained until the index data itself changes?
+
+don't understand.
+
 - Is keyboard-only multiple selection needed in the first slice, or should it follow once the pointer interaction is proven?
+
+don't understand. do you mean holding shift and arrowing down?
+
+- Which prompts from this request materially improved implementation or handoff, and therefore belong in durable development guidance?
+
+tbd
+
+- Do Task Template and Task Batch Template still guide meaningfully different work, or should one become a short variant of the other?
+
+short variant. on that topic, long lists of verification scripts are pointless for me.
+
+- Which gates belong in Development Checklist, and which navigation/context belongs in Development Workflow, so neither repeats the other?
+
+we need to compress these into key points in a short single doc.
 
 ## Risks To Watch
 
@@ -244,4 +480,10 @@ Manual UI review should confirm selection contrast, modifier-click interception,
 - moving selected parents and descendants independently could flatten an intended subtree
 - sequential single-document move requests could leave partial results and trigger repeated rebuilds
 - adding selection algorithms directly to the interaction controller could turn event routing into another state owner
+- duplicating action-target rules across toolbar, Actions-menu, and context-menu renderers could make identical actions behave differently
+- action definitions could become a second view/capability system if they absorb placement, handlers, workflow state, or backend implementation
 - preserving stale selected ids across scope or index-view changes could expose incorrect toolbar actions later
+- a prerequisite refactor could implement the later capability vertically and make slice boundaries impossible to verify
+- the pressure-point gate could be misused to justify speculative refactoring instead of responding to observed responsibility pressure
+- the general templates could remain formal but vague, or become even more ceremonial, if the review adds sections instead of sharpening decisions
+- Development Checklist and Development Workflow could drift further if both try to own the same implementation guidance
