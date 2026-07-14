@@ -3,7 +3,7 @@ doc_id: interpolation-2-images
 title: Interpolation 2 images
 added_date: "2026-07-14 11:38"
 last_updated: "2026-07-14 11:38"
-parent_id: ""
+parent_id: composites-engine
 ---
 # Interpolation 2 images
 

@@ -2,20 +2,46 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-b4a43ec4256afbed66908b7ff1a9c8cf",
-    "generated_at_utc": "2026-07-14T10:38:56Z",
-    "count": 3
+    "version": "blake2b-6e61a2afed0e477e87e01d00d7e2442d",
+    "generated_at_utc": "2026-07-14T12:06:37Z",
+    "count": 5
   },
   "entries": [
+    {
+      "id": "composites-engine",
+      "kind": "doc",
+      "title": "composites engine",
+      "href": "/docs/?scope=processing&doc=composites-engine",
+      "last_updated": "2026-07-14 13:06",
+      "display_meta": "2026-07-14 13:06",
+      "search_terms": [
+        "composites-engine",
+        "composites",
+        "engine",
+        "composites engine",
+        "2026-07-14 13:06",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "06"
+      ],
+      "search_text": "composites-engine composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06"
+    },
     {
       "id": "ffmpeg",
       "kind": "doc",
       "title": "Ffmpeg",
       "href": "/docs/?scope=processing&doc=ffmpeg",
       "last_updated": "2026-07-14 09:16",
-      "display_meta": "2026-07-14 09:16",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 09:16 • composites engine",
       "search_terms": [
         "ffmpeg",
+        "composites engine",
+        "composites",
+        "engine",
         "2026-07-14 09:16",
         "2026",
         "07",
@@ -23,7 +49,7 @@
         "09",
         "16"
       ],
-      "search_text": "ffmpeg 2026-07-14 09:16 2026 07 14 09 16"
+      "search_text": "ffmpeg composites engine composites engine 2026-07-14 09:16 2026 07 14 09 16"
     },
     {
       "id": "interpolation-2-images",
@@ -31,13 +57,18 @@
       "title": "Interpolation 2 images",
       "href": "/docs/?scope=processing&doc=interpolation-2-images",
       "last_updated": "2026-07-14 11:38",
-      "display_meta": "2026-07-14 11:38",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 11:38 • composites engine",
       "search_terms": [
         "interpolation-2-images",
         "interpolation",
         "2",
         "images",
         "interpolation 2 images",
+        "composites engine",
+        "composites",
+        "engine",
         "2026-07-14 11:38",
         "2026",
         "07",
@@ -45,7 +76,30 @@
         "11",
         "38"
       ],
-      "search_text": "interpolation-2-images interpolation 2 images interpolation 2 images 2026-07-14 11:38 2026 07 14 11 38"
+      "search_text": "interpolation-2-images interpolation 2 images interpolation 2 images composites engine composites engine 2026-07-14 11:38 2026 07 14 11 38"
+    },
+    {
+      "id": "levels",
+      "kind": "doc",
+      "title": "Levels",
+      "href": "/docs/?scope=processing&doc=levels",
+      "last_updated": "2026-07-14 13:06",
+      "parent_id": "composites-engine",
+      "parent_title": "composites engine",
+      "display_meta": "2026-07-14 13:06 • composites engine",
+      "search_terms": [
+        "levels",
+        "composites engine",
+        "composites",
+        "engine",
+        "2026-07-14 13:06",
+        "2026",
+        "07",
+        "14",
+        "13",
+        "06"
+      ],
+      "search_text": "levels composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06"
     },
     {
       "id": "processing",

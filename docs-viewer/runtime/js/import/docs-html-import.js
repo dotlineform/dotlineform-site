@@ -173,15 +173,47 @@ async function fetchImportFiles(state) {
   return Array.isArray(payload.files) ? payload.files : [];
 }
 
-function selectedFileRecord(state) {
-  const filename = normalizeText(state.fileSelect.value);
-  return state.files.find((file) => normalizeText(file && file.filename) === filename) || null;
+export const DOCS_IMPORT_MODE_FILES = "files";
+export const DOCS_IMPORT_MODE_DATA_SHARING = "data_sharing_packages";
+
+function normalizeImportMode(value) {
+  return normalizeText(value) === DOCS_IMPORT_MODE_DATA_SHARING
+    ? DOCS_IMPORT_MODE_DATA_SHARING
+    : DOCS_IMPORT_MODE_FILES;
+}
+
+export function docsImportFilesForMode(files, mode) {
+  const records = Array.isArray(files) ? files : [];
+  const wantsCollections = normalizeImportMode(mode) === DOCS_IMPORT_MODE_DATA_SHARING;
+  return records.filter((record) => isDocsImportCollectionRecord(record) === wantsCollections);
+}
+
+function selectedFilenames(state) {
+  return Array.from(state.fileSelect.selectedOptions || [])
+    .map((option) => normalizeText(option.value))
+    .filter(Boolean);
+}
+
+function rememberSelectedFilenames(state) {
+  state.selectedFilenamesByMode[state.importMode] = selectedFilenames(state);
+}
+
+function selectedRecordsForMode(state, mode) {
+  const selected = new Set(
+    mode === state.importMode
+      ? selectedFilenames(state)
+      : state.selectedFilenamesByMode[mode] || []
+  );
+  return docsImportFilesForMode(state.files, mode).filter((record) => (
+    selected.has(normalizeText(record && record.filename))
+  ));
 }
 
 export function docsImportReviewHandoff(files, packageId) {
   const normalizedPackageId = normalizeText(packageId);
   const file = normalizedPackageId ? files.find((record) => (
-    Array.isArray(record && record.review_package_ids)
+    isDocsImportCollectionRecord(record)
+    && Array.isArray(record && record.review_package_ids)
     && record.review_package_ids.some((value) => normalizeText(value) === normalizedPackageId)
   )) || null : null;
   return {
@@ -193,26 +225,59 @@ export function docsImportReviewHandoff(files, packageId) {
 }
 
 function selectedImportFiles(state) {
-  const record = selectedFileRecord(state);
-  return record && !isDocsImportCollectionRecord(record) ? [record] : [];
+  if (state.importMode !== DOCS_IMPORT_MODE_FILES) return [];
+  return selectedRecordsForMode(state, DOCS_IMPORT_MODE_FILES);
 }
 
 function selectedCollectionFile(state) {
-  const record = selectedFileRecord(state);
-  return isDocsImportCollectionRecord(record) ? record : null;
+  if (state.importMode !== DOCS_IMPORT_MODE_DATA_SHARING) return null;
+  return selectedRecordsForMode(state, DOCS_IMPORT_MODE_DATA_SHARING)[0] || null;
+}
+
+function renderImportModeOptions(state) {
+  const filesCount = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_FILES).length;
+  const packagesCount = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_DATA_SHARING).length;
+  state.typeSelect.innerHTML = [
+    `<option value="${DOCS_IMPORT_MODE_FILES}">${escapeHtml(importText("filesOption", { count: filesCount }))}</option>`,
+    `<option value="${DOCS_IMPORT_MODE_DATA_SHARING}">${escapeHtml(importText("dataSharingPackagesOption", { count: packagesCount }))}</option>`
+  ].join("");
+  state.typeSelect.value = state.importMode;
 }
 
 function syncSourceFormatControls(state) {
   const selectedFiles = selectedImportFiles(state);
   const collectionFile = selectedCollectionFile(state);
+  const availableFiles = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_FILES);
   const supportsPromptMeta = selectedFiles.some((file) => docsHtmlImportSourceFormatForRecord(file) === "html");
   state.includePromptMeta.checked = supportsPromptMeta ? state.includePromptMeta.checked : false;
   state.includePromptMeta.disabled = !supportsPromptMeta || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
+  state.selectionBar.hidden = state.importMode !== DOCS_IMPORT_MODE_FILES;
+  state.selectionCountNode.textContent = importText("selectedCount", {
+    count: state.importMode === DOCS_IMPORT_MODE_FILES ? selectedFiles.length : collectionFile ? 1 : 0
+  });
+  const allFilesSelected = Boolean(availableFiles.length && selectedFiles.length === availableFiles.length);
+  state.selectAllButton.textContent = importText(
+    allFilesSelected ? "clearSelectionButton" : "selectAllButton"
+  );
+  state.selectAllButton.disabled = state.isRunning || !state.serviceAvailable || !availableFiles.length;
   state.runButton.textContent = collectionFile
     ? importText("collectionPreviewButton")
-    : importText("importButton");
+    : importText("importSelectedButton");
+  state.runButton.disabled = state.isRunning || !state.serviceAvailable || (!collectionFile && !selectedFiles.length);
   state.collectionController.setActive(Boolean(collectionFile));
+}
+
+function syncImportInputControls(state) {
+  const records = docsImportFilesForMode(state.files, state.importMode);
+  const handoff = docsImportReviewHandoff(state.files, state.reviewPackageId);
+  const handoffUnavailable = state.importMode === DOCS_IMPORT_MODE_DATA_SHARING
+    && handoff.requested
+    && !handoff.available;
+  state.typeSelect.disabled = state.isRunning || !state.serviceAvailable;
+  state.scopeSelect.disabled = state.isRunning || !state.serviceAvailable;
+  state.fileSelect.disabled = state.isRunning || !state.serviceAvailable || !records.length || handoffUnavailable;
+  syncSourceFormatControls(state);
 }
 
 function resetImportView(state, statusMessage) {
@@ -227,57 +292,84 @@ function stagedFileOption(file) {
   return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
 }
 
-function renderStagedFiles(state, files) {
-  const previousValue = normalizeText(state.fileSelect.value);
-  state.files = files;
-  resetImportView(state, "");
-  state.collectionController.reset({ active: false });
+function selectFileOptions(state, filenames) {
+  const selected = new Set((filenames || []).map(normalizeText).filter(Boolean));
+  Array.from(state.fileSelect.options).forEach((option) => {
+    option.selected = selected.has(normalizeText(option.value));
+  });
+}
 
-  if (!files.length) {
-    state.fileSelect.innerHTML = "";
-    state.fileSelect.disabled = true;
-    state.runButton.disabled = true;
-    syncSourceFormatControls(state);
-    setStatus(
-      state.statusNode,
-      state.reviewPackageId ? "error" : "warn",
-      state.reviewPackageId
-        ? importText("collectionHandoffUnavailableStatus")
-        : importText("noFiles")
-    );
-    markRouteReady(state, true);
-    return;
-  }
+function renderStagedFileList(state, handoff) {
+  const records = docsImportFilesForMode(state.files, state.importMode);
+  const availableValues = new Set(records.map((file) => normalizeText(file && file.filename)));
+  const previousSelection = (state.selectedFilenamesByMode[state.importMode] || [])
+    .filter((filename) => availableValues.has(filename));
+  const packageMode = state.importMode === DOCS_IMPORT_MODE_DATA_SHARING;
+  state.fileSelect.multiple = !packageMode;
+  setText(state.fileLabelNode, importText(packageMode ? "packageLabel" : "fileLabel"));
+  state.fileSelect.innerHTML = records.map(stagedFileOption).join("");
 
-  state.fileSelect.innerHTML = files.map(stagedFileOption).join("");
-
-  const handoff = docsImportReviewHandoff(files, state.reviewPackageId);
-  const availableValues = new Set(files.map((file) => normalizeText(file && file.filename)));
-  if (handoff.requested && !handoff.available) {
+  if (packageMode && handoff.requested && !handoff.available) {
     state.fileSelect.insertAdjacentHTML(
       "afterbegin",
       `<option value="" disabled>${escapeHtml(importText("collectionHandoffUnavailableStatus"))}</option>`
     );
     state.fileSelect.value = "";
-  } else if (previousValue && availableValues.has(previousValue)) {
-    state.fileSelect.value = previousValue;
+  } else if (packageMode && handoff.file) {
+    state.fileSelect.value = normalizeText(handoff.file.filename);
+  } else if (previousSelection.length) {
+    selectFileOptions(state, packageMode ? previousSelection.slice(0, 1) : previousSelection);
+  } else if (records.length) {
+    selectFileOptions(state, [normalizeText(records[0] && records[0].filename)]);
   } else {
-    state.fileSelect.value = normalizeText(handoff.file && handoff.file.filename || files[0] && files[0].filename);
+    state.fileSelect.value = "";
   }
 
-  state.fileSelect.disabled = false;
-  state.runButton.disabled = Boolean(handoff.requested && !handoff.available);
+  state.fileSelect.disabled = !records.length || Boolean(packageMode && handoff.requested && !handoff.available);
+  rememberSelectedFilenames(state);
   state.collectionController.reset({
     active: Boolean(selectedCollectionFile(state))
   });
-  syncSourceFormatControls(state);
+  syncImportInputControls(state);
+
+  let statusState = "";
+  let statusMessage = "";
+  if (packageMode && handoff.requested && !handoff.available) {
+    statusState = "error";
+    statusMessage = importText("collectionHandoffUnavailableStatus");
+  } else if (packageMode && handoff.file) {
+    statusMessage = importText("collectionHandoffReadyStatus");
+  } else if (!records.length) {
+    statusState = "warn";
+    statusMessage = importText(packageMode ? "noPackagesInMode" : "noFilesInMode");
+  }
   setStatus(
     state.statusNode,
-    handoff.requested && !handoff.available ? "error" : "",
-    handoff.requested && !handoff.available
-      ? importText("collectionHandoffUnavailableStatus")
-      : ""
+    statusState,
+    statusMessage
   );
+}
+
+function renderStagedFiles(state, files) {
+  rememberSelectedFilenames(state);
+  state.files = files;
+  resetImportView(state, "");
+  state.collectionController.reset({ active: false });
+
+  const handoff = docsImportReviewHandoff(files, state.reviewPackageId);
+  if (handoff.requested) {
+    state.importMode = DOCS_IMPORT_MODE_DATA_SHARING;
+  } else if (!docsImportFilesForMode(files, state.importMode).length) {
+    state.importMode = docsImportFilesForMode(files, DOCS_IMPORT_MODE_DATA_SHARING).length
+      ? DOCS_IMPORT_MODE_DATA_SHARING
+      : DOCS_IMPORT_MODE_FILES;
+  }
+  renderImportModeOptions(state);
+  renderStagedFileList(state, handoff);
+
+  if (!files.length && !handoff.requested) {
+    setStatus(state.statusNode, "warn", importText("noFiles"));
+  }
   markRouteReady(state, true);
 }
 
@@ -286,6 +378,8 @@ function refreshStagedFiles(state) {
   if (state.refreshPromise) return state.refreshPromise;
 
   state.fileSelect.disabled = true;
+  state.typeSelect.disabled = true;
+  state.selectAllButton.disabled = true;
   state.runButton.disabled = true;
   state.refreshPromise = fetchImportFiles(state)
     .then((files) => {
@@ -297,6 +391,8 @@ function refreshStagedFiles(state) {
       state.files = [];
       state.fileSelect.innerHTML = "";
       state.fileSelect.disabled = true;
+      state.typeSelect.disabled = true;
+      state.selectAllButton.disabled = true;
       state.runButton.disabled = true;
       state.collectionController.reset({ active: false });
       syncSourceFormatControls(state);
@@ -312,6 +408,14 @@ function refreshStagedFiles(state) {
 }
 
 function bindImportEvents(state) {
+  state.typeSelect.addEventListener("change", () => {
+    rememberSelectedFilenames(state);
+    state.importMode = normalizeImportMode(state.typeSelect.value);
+    resetImportView(state, "");
+    state.collectionController.reset({ active: false });
+    renderStagedFileList(state, docsImportReviewHandoff(state.files, state.reviewPackageId));
+    markRouteReady(state, true);
+  });
   state.scopeSelect.addEventListener("change", () => {
     persistSelectedScope(state, state.scopeSelect.value);
     if (!selectedCollectionFile(state)) return;
@@ -320,12 +424,25 @@ function bindImportEvents(state) {
     markRouteReady(state, true);
   });
   state.fileSelect.addEventListener("change", () => {
-    state.runButton.disabled = false;
+    rememberSelectedFilenames(state);
     resetImportView(state, "");
     state.collectionController.reset({
       active: Boolean(selectedCollectionFile(state))
     });
-    syncSourceFormatControls(state);
+    syncImportInputControls(state);
+    markRouteReady(state, true);
+  });
+  state.selectAllButton.addEventListener("click", () => {
+    if (state.importMode !== DOCS_IMPORT_MODE_FILES) return;
+    const availableFiles = docsImportFilesForMode(state.files, DOCS_IMPORT_MODE_FILES);
+    const clearSelection = Boolean(availableFiles.length && selectedImportFiles(state).length === availableFiles.length);
+    Array.from(state.fileSelect.options).forEach((option) => {
+      option.selected = !clearSelection;
+    });
+    rememberSelectedFilenames(state);
+    resetImportView(state, "");
+    state.collectionController.reset({ active: false });
+    syncImportInputControls(state);
     markRouteReady(state, true);
   });
   state.runButton.addEventListener("click", () => {
@@ -430,11 +547,13 @@ async function runImport(state) {
     routePath: state.routePath,
     managementBaseUrl: state.managementBaseUrl,
     onRunningChange: (busy) => {
+      syncImportInputControls(state);
       syncRouteBusyState(state);
       state.onBusyChange(busy);
     },
     onTerminalResult: state.onTerminalResult
   });
+  syncImportInputControls(state);
 }
 
 export async function initDocsHtmlImport(options = {}) {
@@ -448,8 +567,13 @@ export async function initDocsHtmlImport(options = {}) {
   const state = {
     bootStatus,
     root,
+    typeLabelNode: document.getElementById("docsHtmlImportTypeLabel"),
+    typeSelect: document.getElementById("docsHtmlImportTypeSelect"),
     fileLabelNode: document.getElementById("docsHtmlImportFileLabel"),
     fileSelect: document.getElementById("docsHtmlImportFileSelect"),
+    selectionBar: document.getElementById("docsHtmlImportSelectionBar"),
+    selectAllButton: document.getElementById("docsHtmlImportSelectAll"),
+    selectionCountNode: document.getElementById("docsHtmlImportSelectionCount"),
     scopeLabelNode: document.getElementById("docsHtmlImportScopeLabel"),
     scopeSelect: document.getElementById("docsHtmlImportScopeSelect"),
     includePromptMeta: document.getElementById("docsHtmlImportIncludePromptMeta"),
@@ -481,6 +605,11 @@ export async function initDocsHtmlImport(options = {}) {
     isRunning: false,
     refreshPromise: null,
     files: [],
+    importMode: DOCS_IMPORT_MODE_FILES,
+    selectedFilenamesByMode: {
+      [DOCS_IMPORT_MODE_FILES]: [],
+      [DOCS_IMPORT_MODE_DATA_SHARING]: []
+    },
     docsScopeIds: [],
     reviewPackageId: normalizeText(options.reviewPackageId),
     onBusyChange: typeof options.onBusyChange === "function" ? options.onBusyChange : () => {},
@@ -493,15 +622,20 @@ export async function initDocsHtmlImport(options = {}) {
     onTerminalResult: state.onTerminalResult,
     onBusyChange: (busy) => {
       state.isRunning = busy;
-      state.runButton.disabled = busy;
+      syncImportInputControls(state);
       syncRouteBusyState(state);
       state.onBusyChange(busy);
     }
   });
 
   const requiredNodes = [
+    state.typeLabelNode,
+    state.typeSelect,
     state.fileLabelNode,
     state.fileSelect,
+    state.selectionBar,
+    state.selectAllButton,
+    state.selectionCountNode,
     state.scopeLabelNode,
     state.scopeSelect,
     state.includePromptMeta,
@@ -538,6 +672,7 @@ export async function initDocsHtmlImport(options = {}) {
       .catch(() => false);
     state.serviceAvailable = Boolean(serviceAvailable);
 
+    setText(state.typeLabelNode, importText("typeLabel"));
     setText(state.fileLabelNode, importText("fileLabel"));
     setText(state.scopeLabelNode, importText("scopeLabel"));
     setText(state.includePromptMetaLabelNode, importText("includePromptMetaLabel"));
@@ -561,6 +696,8 @@ export async function initDocsHtmlImport(options = {}) {
     if (!serviceAvailable) {
       state.runButton.disabled = true;
       state.fileSelect.disabled = true;
+      state.typeSelect.disabled = true;
+      state.selectAllButton.disabled = true;
       state.scopeSelect.disabled = true;
       state.includePromptMeta.disabled = true;
       setStatus(

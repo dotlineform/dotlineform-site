@@ -310,6 +310,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as temp_dir:
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = temp_dir
         (Path(temp_dir) / "data-sharing").mkdir()
+        (Path(temp_dir) / "docs-viewer").mkdir()
         write_fixture_package()
         staged = write_fixture_staged_package()
         server, base_url = start_server()

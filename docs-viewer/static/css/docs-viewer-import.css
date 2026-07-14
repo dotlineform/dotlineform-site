@@ -443,6 +443,26 @@
   padding-top: 0.48rem;
 }
 
+.docsViewer__importBody .docsViewerImport__fileControl{
+  display: grid;
+  gap: 0.45rem;
+}
+
+.docsViewer__importBody .docsViewerImport__selectionBar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.docsViewer__importBody .docsViewerImport__selectionBar[hidden]{
+  display: none;
+}
+
+.docsViewer__importBody .docsViewerImport__selectionCount{
+  margin-left: auto;
+}
+
 .docsViewer__importBody .docsViewerImport__field--inline .docsViewerImport__fieldControl{
   grid-column: 2;
 }

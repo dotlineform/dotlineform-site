@@ -6,14 +6,26 @@
   },
   "docs": [
     {
-      "doc_id": "ffmpeg",
-      "title": "Ffmpeg",
-      "content_url": "/docs-viewer/generated/docs/processing/by-id/ffmpeg.json"
-    },
-    {
-      "doc_id": "interpolation-2-images",
-      "title": "Interpolation 2 images",
-      "content_url": "/docs-viewer/generated/docs/processing/by-id/interpolation-2-images.json"
+      "doc_id": "composites-engine",
+      "title": "composites engine",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/composites-engine.json",
+      "children": [
+        {
+          "doc_id": "ffmpeg",
+          "title": "Ffmpeg",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ffmpeg.json"
+        },
+        {
+          "doc_id": "interpolation-2-images",
+          "title": "Interpolation 2 images",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/interpolation-2-images.json"
+        },
+        {
+          "doc_id": "levels",
+          "title": "Levels",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/levels.json"
+        }
+      ]
     },
     {
       "doc_id": "processing",
@@ -22,5 +34,5 @@
       "ui_status": "draft"
     }
   ],
-  "generated_at": "2026-07-14T10:38:56Z"
+  "generated_at": "2026-07-14T12:06:37Z"
 }

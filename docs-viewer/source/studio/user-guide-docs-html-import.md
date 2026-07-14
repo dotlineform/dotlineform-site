@@ -45,7 +45,9 @@ The import modal:
 
 - refreshes supported staged files from the shared import drop-zone every time it opens
 - shows staged files in a visible list of about ten rows
-- accepts one staged file or reviewed collection at a time; multi-file selection is not currently exposed
+- separates ordinary staged files from reviewed Data Sharing packages through the server-provided source format
+- supports native multi-selection plus `Select all` and `Clear selection` in `Files` mode
+- keeps `Data Sharing packages` single-select and routes the selected package into its complete collection plan
 - lets you choose any configured docs scope
 - keeps `Tab` and `Shift+Tab` focus inside the open modal
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
@@ -68,16 +70,18 @@ The import modal:
 
 1. Open `/docs/?scope=library&import=1` or the matching Docs Viewer management scope.
 2. Click the icon-only `Import` toolbar action, or choose `Actions` > `Import`.
-3. Choose the staged file.
-4. Confirm or change the publish scope:
+3. Leave the import type on `Files`.
+4. Choose one or more staged files. Use Cmd/Ctrl-click or Shift-click for native multi-selection, or use `Select all`.
+5. Confirm or change the publish scope:
    - `library` for the public Library viewer
    - `analysis` for the public Analysis viewer
    - `studio` for the Studio docs viewer
-5. For HTML files, decide whether to include obvious prompt/meta blocks.
-6. Click `Import`.
+6. If any selected file is HTML, decide whether to include obvious prompt/meta blocks for the selected HTML files.
+7. Click `Import selected`.
 
 If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
-After a successful import, Docs Viewer refreshes the target index and selects the imported document. The terminal result remains in the modal until you click `Close`; an import into another scope navigates directly to that scope and document.
+Multi-file imports process the selected ordinary files in list order. Filename collisions are resolved one file at a time; reviewed Data Sharing packages cannot be included in the same run.
+After a successful import, Docs Viewer refreshes the target index once and selects the imported document, or the final successfully imported document in a multi-file run. The terminal result remains in the modal until you click `Close`; an import into another scope navigates directly to that scope and document.
 The new source doc's `doc_id` and Markdown filename come from the staged source filename stem.
 HTML imports preserve the imported HTML title.
 Markdown imports use the first `# H1` as the title when present and otherwise humanize the staged filename stem.
@@ -87,7 +91,9 @@ New imports into public scopes such as `library`, `analysis`, and `moments` use 
 
 ## Reviewed-Package Collection Workflow
 
-A validated package in Docs Review can open managed Docs Import with its matching staged JSON/JSONL collection preselected. The handoff carries only the safe package identity; Docs Import resolves it against the server-listed staged file. If that staged file has been deleted, the persistent review remains readable but import is unavailable.
+A validated package in Docs Review can open managed Docs Import in `Data Sharing packages` mode with its matching staged JSON/JSONL collection preselected. The handoff carries only the safe package identity; Docs Import resolves it against the server-listed staged file. If that staged file has been deleted, the persistent review remains readable but import is unavailable.
+
+Opening Docs Import directly lets you switch to `Data Sharing packages` manually. This mode is intentionally single-select and never exposes `Select all` or ordinary-file multi-selection.
 
 Collection import always plans the complete package before writing:
 
@@ -104,7 +110,7 @@ Existing target parents are reused. A missing parent is created only when the pa
 Apply rereads the immutable staged package and recomputes target state. A changed collision target, target identity, parent resolution, hierarchy state, blocker state, or package identity returns a refreshed plan without writes. Successful writes run in package order. If a source write fails, earlier writes remain and later records are reported as not attempted; there is no collection rollback. Generation failure is reported separately and does not undo successful source writes.
 
 The result groups records as created, overwritten, skipped, failed, or not attempted and includes generation status, warnings, manual-copy instructions, and a marker-rooted Markdown report path under `import-staging/results/`.
-While an import preview or write request is active, the modal disables `Cancel`; closing the browser page remains the local recovery path for an unexpectedly hung request. After a terminal single-source or collection result, the modal replaces `Import` and `Cancel` with one `Close` button. Errors and pre-apply cancellations retain the normal controls so the operation can be corrected or retried; reopening the modal restores its normal `Import` and `Cancel` actions.
+While an import preview or write request is active, the modal disables `Cancel`; closing the browser page remains the local recovery path for an unexpectedly hung request. After a terminal ordinary-file or collection result, the modal replaces the run action and `Cancel` with one `Close` button. Errors and pre-apply cancellations retain the normal controls so the operation can be corrected or retried; reopening the modal restores its normal run and `Cancel` actions.
 
 ## Prompt / Meta Option
 
@@ -253,6 +259,7 @@ Recover overwritten source through Git history, host/filesystem backups, or an e
 After a successful import, the page reports:
 
 - whether the operation created or overwrote a doc
+- each imported staged file when multiple ordinary files were selected
 - the target scope
 - the final `doc_id`
 - the imported title
