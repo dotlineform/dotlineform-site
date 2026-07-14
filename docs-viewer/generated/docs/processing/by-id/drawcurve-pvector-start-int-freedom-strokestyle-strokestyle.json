@@ -1,0 +1,9 @@
+{
+  "doc_id": "drawcurve-pvector-start-int-freedom-strokestyle-strokestyle",
+  "title": "drawCurve (PVector start, int freedom, StrokeStyle strokeStyle)",
+  "added_date": "2026-07-14 17:47",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=drawcurve-pvector-start-int-freedom-strokestyle-strokestyle",
+  "parent_id": "sketch-250309a-ink",
+  "content_html": "<h1>drawCurve (PVector start, int freedom, StrokeStyle strokeStyle)</h1>\n<h2>drawCurve (PVector start, int freedom, StrokeStyle strokeStyle)</h2>\n<p>draws a Bezier curve, geometry derived from the parameters.\nreturns a BezierCurve object variable containing the control points etc</p>\n<h3><strong>parameters</strong></h3>\n <span style=\"background-color: #00C6BD;\">\n     **start**\n </span> - the start point of the curve\n <span style=\"background-color: #00C6BD;\">\n     **freedom**\n </span> **-** how the curve is constrained to a boundary, defined in [[defineCurve (PVector start, int freedom, int direction)]]\n <span style=\"background-color: #00C6BD;\">\n     **strokeStyle**\n </span> - what the curve looks like:\n<p>strokeStyle.media:</p>\n<ul>\n<li>ink</li>\n<li>pencil\nstrokeStyle.weight:</li>\n<li>light</li>\n<li>medium</li>\n<li>bold</li>\n</ul>\n<p>The drawCurve function implements strokeStyle as follows:</p>\n<p>strokeStyle.media maps to which drawCurve_ function(s) should be used to draw the curve, and what inkOptions to use.\nstrokeStyle.weight maps to lineOptions.lineWidth (and potentially inkOptions if a mapping can be defined)</p>\n<p>media maps to a createLine_ function (or a combination)\nweight maps to lineOptions (width) and inkOptions (</p>\n"
+}

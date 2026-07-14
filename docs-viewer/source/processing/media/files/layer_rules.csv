@@ -1,0 +1,7 @@
+layer,mode,opacity,weight
+1,,1.0,1.0
+2,SOFTLIGHT,0.35,1.0
+3,SCREEN,0.35,1.0
+4,MULTIPLY,0.35,1.0
+5,OVERLAY,0.35,1.0
+6,DARKEN,0.35,1.0

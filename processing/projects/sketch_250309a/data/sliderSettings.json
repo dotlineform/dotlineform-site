@@ -1,0 +1,112 @@
+{"settings": [
+  {
+    "compositeAlphas": {
+      "particle texture": 255,
+      "vector field": 255,
+      "particle diffuse": 255,
+      "particle": 255
+    },
+    "inkTypes": {
+      "particle texture": {
+        "numParticles": 1000,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "quickslow",
+        "greyscale": 0,
+        "velocity": 50,
+        "slope": 100,
+        "initialMultiplier": 6.25,
+        "lineWidth": 1,
+        "exponent": 10
+      },
+      "vector field": {
+        "distortionScale": 1,
+        "numParticles": 1000,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "quickslow",
+        "greyscale": 0,
+        "velocity": 50,
+        "noiseScale": 0.05000000074505806,
+        "slope": 100,
+        "initialMultiplier": 6,
+        "lineWidth": 1,
+        "exponent": 10
+      },
+      "particle diffuse": {
+        "numParticles": 1000,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "quickslow",
+        "greyscale": 0,
+        "velocity": 50,
+        "slope": 100,
+        "initialMultiplier": 3,
+        "lineWidth": 1
+      },
+      "particle": {
+        "numParticles": 1000,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "quickslow",
+        "greyscale": 0,
+        "velocity": 50,
+        "slope": 100,
+        "initialMultiplier": 3,
+        "lineWidth": 1
+      }
+    },
+    "name": "test 1"
+  },
+  {
+    "compositeAlphas": {
+      "particle texture": 255,
+      "vector field": 255,
+      "particle diffuse": 54,
+      "particle": 255
+    },
+    "inkTypes": {
+      "particle texture": {
+        "numParticles": 1000,
+        "inkFraction": 0.21250000596046448,
+        "decayType": "sigmoidal",
+        "greyscale": 232.6875,
+        "velocity": 93.75,
+        "slope": 31.25,
+        "initialMultiplier": 3,
+        "lineWidth": 2.5,
+        "exponent": 15.75
+      },
+      "vector field": {
+        "distortionScale": 1,
+        "numParticles": 1000,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "logarithmic",
+        "greyscale": 0,
+        "velocity": 50,
+        "noiseScale": 0.05000000074505806,
+        "slope": 20,
+        "initialMultiplier": 4.625,
+        "lineWidth": 1,
+        "exponent": 10
+      },
+      "particle diffuse": {
+        "numParticles": 1700,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "sigmoidal",
+        "greyscale": 60.5625,
+        "velocity": 50,
+        "slope": 12.5,
+        "initialMultiplier": 6.25,
+        "lineWidth": 1
+      },
+      "particle": {
+        "numParticles": 1000,
+        "inkFraction": 0.10000000149011612,
+        "decayType": "exponential",
+        "greyscale": 0,
+        "velocity": 90,
+        "slope": 100,
+        "initialMultiplier": 4.125,
+        "lineWidth": 3.375
+      }
+    },
+    "name": "test 2"
+  }
+]}

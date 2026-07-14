@@ -1,0 +1,9 @@
+{
+  "doc_id": "drawing-size",
+  "title": "drawing size",
+  "added_date": "2026-07-14 17:47",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=drawing-size",
+  "parent_id": "sketch-250309a-ink",
+  "content_html": "<h1>drawing size</h1>\n<p>MBP is 3456 × 2234</p>\n<p>On high‐resolution (retina) displays the coordinate space you work in can differ from the physical pixel dimensions. When you call:</p>\n<p>size(800, 600);</p>\n<p>Processing creates a drawing surface with a logical resolution of 800×600. However, your operating system may be using a scaling factor (often 2× on retina displays) so that each “logical” pixel is rendered using multiple physical pixels. In your case, even though your display’s physical resolution is 3456×2234, its logical resolution might be roughly half that (around 1728×1117). That means an 800×600 window actually appears much larger relative to the logical screen size—potentially filling about half of it.</p>\n<p>To summarize:\n•\t<strong>Logical vs. Physical Resolution:</strong> The size() command defines the logical coordinate space, not the full physical resolution of your monitor.\n•\t<strong>DPI Scaling:</strong> On high-DPI displays, the OS scales up the logical dimensions, making an 800×600 canvas appear larger.</p>\n<p>If you want the drawing window to better reflect the physical resolution, you could use fullScreen() or adjust the size() parameters according to your needs.</p>\n<p>On high-DPI displays (like retina screens), Processing’s default rendering may use a lower pixel density than your monitor’s physical resolution, leading to a pixelated appearance. To improve quality, try calling:</p>\n<p>pixelDensity(displayDensity);</p>\n<p>inside your setup() function before calling fullScreen(). This tells Processing to use the full display density. Also, ensure that any images (like your brush texture) are of high enough resolution to avoid pixelation when scaled.</p>\n"
+}

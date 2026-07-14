@@ -1,0 +1,9 @@
+{
+  "doc_id": "showgeometry",
+  "title": "showGeometry",
+  "added_date": "2026-07-14 17:47",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=showgeometry",
+  "parent_id": "sketch-250309a-ink",
+  "content_html": "<h1>showGeometry</h1>\n<p>this is a parameter in line and curve object variables to also draw control points, boundary etc</p>\n<p>useful to see what is going on with the curve function</p>\n"
+}

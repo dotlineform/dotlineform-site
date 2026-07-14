@@ -1,0 +1,9 @@
+{
+  "doc_id": "progressn-overview",
+  "title": "Progress Bar & First‑N Limits — Dual‑Res Workflow",
+  "added_date": "2026-07-14 17:57",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=progressn-overview",
+  "parent_id": "unsorted",
+  "content_html": "<h1>Progress Bar &amp; “First N” Limits</h1>\n<blockquote>\n<p>Timestamp: 2025-08-29 19:12:38 BST</p>\n</blockquote>\n<h2>What’s new</h2>\n<ul>\n<li><strong>Live progress bar</strong> while generating composites. The UI stays responsive.</li>\n<li><strong>First N</strong> controls for <em>Preview</em> and <em>Final</em> so you can cap the number of permutations processed.</li>\n</ul>\n<h2>How it works</h2>\n<p>The generator now runs in a separate thread, so the draw loop can update the progress bar and counters. The bar shows how many composites have been written out of either the full permutation count or the selected <em>First N</em> cap.</p>\n<h2>Tips</h2>\n<ul>\n<li>Set a small <em>First N (Preview)</em> (e.g., 50–200) when exploring settings.</li>\n<li>Use <em>Preview Scale</em> (10–50%) for rapid iteration, then set <em>First N (Final)</em> to 0 ( = all ) for the full output.</li>\n</ul>\n<p>If you want a <em>Cancel</em> / <em>Pause</em> button, we can add that next by checking a flag inside the worker loop.</p>\n"
+}

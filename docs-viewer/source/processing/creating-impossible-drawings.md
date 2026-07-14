@@ -1,0 +1,46 @@
+---
+doc_id: creating-impossible-drawings
+title: Creating Impossible Drawings
+added_date: "2026-07-14 17:27"
+last_updated: "2026-07-14 17:27"
+parent_id: unsorted
+---
+# Creating Impossible Drawings
+
+
+This reference sheet summarizes the philosophical, technical, and generative approaches to creating drawings that are *theoretically* or *practically* impossible — whether by perceptual, computational, or logical limits.
+ <span style="font-family: .AppleColorEmojiUI;">
+     ## 
+
+ </span>## 🔹 **Categories of Impossibility**
+
+* **Resolution Impossibility**: Precision exceeds human ability or display technology (e.g., sub-micron lines)
+* **Entropy-Based Impossibility**: Results depend on quantum or noise entropy, not reproducible
+* **Non-Repeatability**: Irrational recursion, floating-point chaos, unstable limits
+* **Logical/Geometric Contradiction**: Escher-like paradoxes or topological inversions
+* **Environmental Dependence**: Requires real-world processes (e.g., real-time ink dispersal)
+* **Human Constraint Violation**: Actions requiring multiple hands, infinite time, or scale shifts
+ <span style="font-family: .AppleColorEmojiUI;">
+     ## 
+
+ </span> <span style="font-family: .AppleColorEmojiUI;">
+     ## 🧠
+ </span> **Philosophical Parallels**
+
+* **Gödel**: Incompleteness — truths beyond proof <u>[Gödel’s Incompleteness Theorem (Stanford)](https://plato.stanford.edu/entries/goedel-incompleteness/)</u>**Turing**: Halting problem — unresolved processes <u>[Turing's Halting Problem](https://en.wikipedia.org/wiki/Halting_problem)</u>**Kant**: Noumenon — unknowable reality
+* **Escher**: Visually recursive logic <u>[Escher Impossible Figures](https://www.mcescher.com/gallery/impossible-constructions/)</u>**Buddhist Emptiness**: Form as illusion <u>[https://plato.stanford.edu/entries/kyoto-school/](https://plato.stanford.edu/entries/kyoto-school/)</u> <span style="font-family: .AppleColorEmojiUI;">
+     ## 
+
+ </span> <span style="font-family: .AppleColorEmojiUI;">
+     ## 🧮
+ </span> **Coding Techniques (Processing)**
+
+* Recursive subdivisions without convergence
+* Irrational/noise-driven transformations
+* Contradictory transforms in space
+* Render-layer contradictions over time
+* Self-mutating variables, shifting seeds
+ <span style="font-family: .AppleColorEmojiUI;">
+     ## 
+
+ </span>

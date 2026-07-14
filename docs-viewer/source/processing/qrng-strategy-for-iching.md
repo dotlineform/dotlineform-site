@@ -1,0 +1,55 @@
+---
+doc_id: qrng-strategy-for-iching
+title: "Hybrid QRNG Strategy for I Ching — Prefetch + Ritual Pause"
+added_date: "2026-07-14 17:57"
+last_updated: "2026-07-14 17:57"
+parent_id: unsorted
+---
+# Hybrid QRNG Strategy for I Ching — Prefetch + Ritual Pause
+
+Exported: 2025-09-25 16:48:35 BST Goal: Hide network lag from QRNG while keeping a contemplative rhythm for casting.
+
+## Design in a sentence
+
+**Prefetch a small buffer** of quantum‑random bytes, then on cast: **consume immediately** and start a configurable **ritual pause** (e.g., 6–12 s) for reflection; in parallel, **top up** the buffer from the QRNG. If the buffer dips below a threshold, fall back gracefully (hardware noise or PRNG), but label the source clearly.
+
+### Buffer math (I Ching)
+
+- 3 bits × 6 lines = **18 bits ≈ 3 bytes per cast**.
+- **512 bytes** → ≈170 casts before refetch.
+- Fetch in batches; ANU JSON API supports up to **1024 items** per call for *uint8*.
+
+### Buffer math (mo)
+
+- Two dice; rejection‑sampled 1–6 → typically **~2–3 bytes** per cast.
+- Same 512–1024 byte buffer is ample.
+
+## UX recipe (Processing)
+
+1. **Ring buffer:** Maintain a byte ring with a *low‑water mark* (e.g., 256). When below it, fetch 1024 *uint8* from ANU.
+2. **Instant response:** On SPACE, consume bytes immediately and render the hexagram/dice.
+3. **Ritual pause:** Run a 6–12 s breathing/chant prompt as the “reveal” timer.
+4. **Source label:** Show *Source: QRNG (ANU)* vs *PRNG fallback*; also log it.
+5. **Offline‑first:** If fetch fails, keep serving from buffer; when empty, fall back and retry later with backoff.
+6. **Audit option:** Optional NIST Beacon pulse anchoring + hash‑chained logs.
+
+## Suggested settings
+
+| Parameter | Default | Notes |
+| --- | --- | --- |
+| Fetch size | 1024 (uint8) | Single HTTP; per ANU docs. |
+| Low‑water mark | 256 bytes | Triggers top‑up. |
+| High‑water mark | 4096 bytes | Cap buffer size. |
+| Ritual pause | 8 s | Set 4–12 s to taste. |
+| Retry backoff | 2× up to 60 s | Network‑friendly. |
+
+## Why it works
+
+- Meaning attaches to the *cast event*; consuming pre‑harvested quantum bits preserves synchrony.
+- The pause reproduces the contemplative cadence of coins/yarrow without network jitter.
+- Transparency (labels + logs) keeps practice honest and auditable.
+
+## Citations
+
+- **ANU Quantum Random Numbers — JSON API docs & FAQ:** array length limits, data types, and usage guidance. citeturn0search0turn0search5turn0search12
+- **NIST Interoperable Randomness Beacons:** project overview and technical notes on beacon pulses. citeturn0search1turn0search2turn0search11

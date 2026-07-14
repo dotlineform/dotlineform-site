@@ -1,0 +1,9 @@
+{
+  "doc_id": "folder-gui-overview",
+  "title": "Folder-Select GUI for Processing Composites",
+  "added_date": "2026-07-14 17:57",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=folder-gui-overview",
+  "parent_id": "unsorted",
+  "content_html": "<h1>Folder-Select GUI</h1>\n<blockquote>\n<p>Export meta Timestamp: 2025-08-29 15:43:14 BST What’s included: In-sketch GUI to pick SOURCE and OUTPUT folders; runs permutations pipeline with CSV + Manifest.</p>\n</blockquote>\n<h2>How to Use</h2>\n<ol>\n<li>Run the sketch. Click <strong>Select SOURCE folder…</strong> and choose the folder containing your images.</li>\n<li>Click <strong>Select OUTPUT folder…</strong> where composites + <code>manifest.csv</code> should be saved.</li>\n<li>Click <strong>START GENERATION</strong>. Progress appears in the status area.</li>\n</ol>\n<h2>Notes</h2>\n<ul>\n<li>The sketch auto-detects <code>layer_rules.csv</code> in your selected SOURCE folder (optional).</li>\n<li>Images are loaded in deterministic (alphanumeric) order to stabilise index ↔ filename mapping.</li>\n<li>Other settings (blend strategy, auto-levels, etc.) are constants at the top of the file; change and re-run as needed.</li>\n</ul>\n<h2>Output</h2>\n<ul>\n<li>Composites written to your chosen OUTPUT folder with structured filenames.</li>\n<li><code>manifest.csv</code> in OUTPUT records filename, order, strategy, modes, auto_levels, and source_files.</li>\n</ul>\n<p>Want toggle controls in the GUI for strategy, auto-levels, and clip percent? I can add on-canvas widgets next.</p>\n"
+}

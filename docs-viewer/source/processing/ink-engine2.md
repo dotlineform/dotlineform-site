@@ -1,0 +1,112 @@
+---
+doc_id: ink-engine2
+title: ink engine
+added_date: "2026-07-14 17:27"
+last_updated: "2026-07-14 17:27"
+parent_id: ink-engine
+---
+# ink engine
+
+
+processing project
+
+not yet initialised
+
+project folder for visual artefacts
+
+```
+/Users/dlf/Library/CloudStorage/OneDrive-Personal/dotlineform/projects/ink engine
+
+```
+
+processing folder
+
+```
+Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/Processing
+
+```
+
+
+____________________________________
+
+# **Composite Curve Rendering**
+
+System to render layered composite curves from individual ink types, managing alpha blending, stroke overlap, and dynamic visibility.
+
+Composite rendering strategy:
+
+* Each curve group is generated individually.
+* A separate 'composite' group overlays multiple curves using transparency.
+* Noise or offset can be added per group to differentiate strokes.
+* Composite alpha can be separately tuned per group.
+* UI elements: sliders for decay, tapering, greyscale, alpha, velocity.
+
+
+```
+drawStaticContinuousInkStroke(settings)     'generates final composite.                                        
+FavouriteSettings	'stores curve and ink parameters for reload.
+```
+
+
+```
+
+
+```
+
+
+
+
+# **Ink Simulation and Bézier Curve Parameters**
+
+Key adjustable parameters
+
+* velocity – controls ink tapering rate - Simulate ink depletion using customizable decay functions (e.g. velocity-weighted exponentials
+* taper – adjusts stroke width fade
+* alpha – opacity variation over time
+* greyscale – ink color from black (0) to white (255)
+* controlPoints – number of Bézier handles (randomized or constrained)
+
+Relevant functions and objects:
+
+
+```
+drawInkStroke(),
+inkDrop(),
+defineCurve(),
+FavouriteSettings object
+
+```
+
+
+
+
+# **Self-Mutating Variables**
+
+- Variables that evolve via feedback, noise, or recursive logic
+- Uses: organic motion, irreproducibility, emergence
+- Techniques: angleStep mutation, meta-rules, recursive coupling
+- Applications: ink simulation, chaotic drawing, neural/agent models
+
+[[Self-Mutating Variables]]
+[[Controlling the Degree of Self-Mutation]]
+
+
+
+# **Entropy injection**
+
+* Use UI sliders to control entropy parameters (e.g. noise intensity, taper curve, ink decay slope), allowing live tuning of unpredictability.
+* Use entropy fields (e.g. noise, quantum randomness) to distort Bézier control points in real time or batch mode. Generates unique, non-reproducible paths.
+
+[[Entropy Injection Methods]]
+[[Entropy-Mapped Bezier Fields]]
+
+
+# **Quantum Superposition in Stroke Logic**
+
+Model strokes as a superposition of possible paths, collapsed only at render time, inspired by quantum uncertainty.
+
+
+
+# **Unknowable Origins in Art**
+
+Explore authorship and origin when neither the artist nor algorithm can retrace a work’s specific generative path.

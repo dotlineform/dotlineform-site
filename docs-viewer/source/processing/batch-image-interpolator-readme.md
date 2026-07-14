@@ -1,0 +1,368 @@
+---
+doc_id: batch-image-interpolator-readme
+title: "Batch Image Interpolator — Static Frame Generator"
+added_date: "2026-07-14 17:57"
+last_updated: "2026-07-14 17:57"
+parent_id: unsorted
+---
+# Batch Image Interpolator — Static Frame Generator
+
+> Original prompt — 2025-09-01 13:08:10 (Europe/London)Optimise for static image generation. Create interpolations between a large series of images for slow‑motion video.
+
+This sketch is tuned for **offline, static frame generation** across large, ordered image sets. It loads only the current pair into memory, computes `INTER_FRAMES` gamma-correct crossfade frames (plus optional holds), and writes sequentially numbered PNGs for later stitching.
+
+Why this is efficient:
+
+memory stays low (2 images + GPU), no per-pixel CPU loops, single shader path, sequential filenames for easy resume, and a compact CSV manifest.
+
+## Setup
+
+1. Copy the folder BatchImageInterpolator/ into your Processing sketches folder.
+2. Put your ordered images into BatchImageInterpolator/input/ (create the folder). Naming like frame_0001.jpg, frame_0002.jpg, … is ideal.
+3. Open BatchImageInterpolator.pde and adjust the **Quick Config** section.
+4. Run. Frames will be written into BatchImageInterpolator/out/ as frame_000000.png, frame_000001.png, …
+
+## Key parameters (Quick Config)
+
+- INTER_FRAMES — number of in-betweens between each adjacent pair.
+- HOLD_START, HOLD_END — duplicate frames to create stillness before/after each transition.
+- FIT_MODE — *FIT* (letterbox), *FILL* (crop), or *STRETCH*.
+- EASING — *linear*, *smoothstep*, or *easeInOutCubic*.
+- START_INDEX + OVERWRITE — enable resuming into an existing output folder.
+
+## Code
+
+**BatchImageInterpolator.pde**
+
+```
+// BatchImageInterpolator.pde
+// Optimized for generating static intermediate frames between MANY consecutive images.
+// Uses a gamma-correct crossfade shader (linear-light) for better tonality.
+// Author: ChatGPT (GPT-5 Thinking) — Prepared: 2025-09-01 13:08:10 (Europe/London)
+//
+// HOW IT WORKS
+// - Put your ordered source images (A_0001.jpg, A_0002.jpg, ...) into SOURCE_DIR.
+// - The sketch will generate INTER_FRAMES between each adjacent pair, optionally with holds.
+// - Output frames are sequentially numbered so they can be stitched into video later.
+//
+// QUICK CONFIG (edit these for your project)
+String SOURCE_DIR   = "input";     // relative to sketch folder; put your images here
+String OUTPUT_DIR   = "out";       // output folder for frames
+int    INTER_FRAMES = 30;          // frames BETWEEN each pair (A->B), not counting optional holds
+int    HOLD_START   = 0;           // extra duplicates of first image before transition
+int    HOLD_END     = 0;           // extra duplicates of second image after transition
+String EXTENSIONS   = "jpg,jpeg,png"; // allowed extensions
+int    CANVAS_W     = 3840;        // output width (e.g., 3840 for UHD)
+int    CANVAS_H     = 2160;        // output height
+String FIT_MODE     = "FIT";       // FIT | FILL | STRETCH
+String EASING       = "smoothstep";// linear | smoothstep | easeInOutCubic
+int    START_INDEX  = 0;           // starting frame index for output numbering (resume support)
+boolean WRITE_MANIFEST = true;     // write a simple CSV manifest
+boolean OVERWRITE = false;         // if false, skip frames that already exist
+color  BACKGROUND  = color(0);     // used when FIT/FILL with letterbox/pillarbox
+
+// Advanced
+boolean USE_SHADER = true;         // gamma-correct blending; set false to use tint() path
+boolean SHOW_PREVIEW = true;       // display while rendering (turn off for headless speed)
+
+// INTERNAL STATE (don't touch)
+java.io.File[] files;
+int pairIdx = 0;      // current pair index (files[pairIdx], files[pairIdx+1])
+int tIdx = -1;        // -1..HOLD_START-1 duplicates of A; then 0..INTER_FRAMES; then END holds
+long frameCounter;    // absolute frame sequence counter used for filenames
+PImage imgA, imgB;
+PShader crossfade;
+float dx, dy, dw, dh; // destination rect
+
+java.io.PrintWriter manifest;
+
+// ------------------------------------------------------------
+
+void settings() {{
+  size(CANVAS_W, CANVAS_H, P2D);
+}}
+
+void setup() {{
+  surface.setTitle("Batch Image Interpolator");
+  hint(DISABLE_TEXTURE_MIPMAPS);
+  frameRate(60);
+  files = listImages(sketchPath(SOURCE_DIR), EXTENSIONS);
+  if (files == null || files.length < 2) {{
+    println("[ERROR] Need at least 2 images in /" + SOURCE_DIR);
+    exit();
+  }}
+  println("[INFO] Found " + files.length + " images.");
+  ensureDir(sketchPath(OUTPUT_DIR));
+
+  frameCounter = findResumeIndex(sketchPath(OUTPUT_DIR), START_INDEX, "frame_%06d.png", OVERWRITE);
+
+  if (WRITE_MANIFEST) {{
+    manifest = createWriter(sketchPath(OUTPUT_DIR + "/manifest.csv"));
+    manifest.println("pair_index,srcA,srcB,hold_start,inter_frames,hold_end,start_frame_idx,end_frame_idx");
+  }}
+
+  if (USE_SHADER) {{
+    crossfade = loadShader("crossfade.frag");
+  }}
+
+  // Load first pair
+  loadPair(0);
+  // Start on initial hold frames
+  tIdx = -HOLD_START;
+}}
+
+void draw() {{
+  if (pairIdx >= files.length - 1) {{
+    println("[DONE] All pairs processed.");
+    if (manifest != null) {{ manifest.flush(); manifest.close(); }}
+    exit();
+    return;
+  }}
+
+  // Determine phase: start holds, interpolation 0..INTER_FRAMES, end holds
+  if (tIdx < 0) {{
+    // emit hold frames for A
+    renderAndSave(0.0);
+    tIdx++;
+    if (!SHOW_PREVIEW) {{ return; }}
+  }} else if (tIdx <= INTER_FRAMES) {{
+    float t = ease((float)tIdx / max(1, INTER_FRAMES), EASING);
+    renderAndSave(t);
+    tIdx++;
+    if (!SHOW_PREVIEW) {{ return; }}
+  }} else if (tIdx <= INTER_FRAMES + HOLD_END) {{
+    renderAndSave(1.0);
+    tIdx++;
+    if (!SHOW_PREVIEW) {{ return; }}
+  }} else {{
+    // next pair
+    if (WRITE_MANIFEST) logManifestRow();
+    pairIdx++;
+    if (pairIdx >= files.length - 1) return;
+    loadPair(pairIdx);
+    tIdx = -HOLD_START;
+  }}
+}}
+
+// ------------------------------------------------------------
+// Rendering & Saving
+// ------------------------------------------------------------
+
+void renderAndSave(float t) {{
+  background(BACKGROUND);
+
+  if (USE_SHADER) {{
+    crossfade.set("t", t);
+    crossfade.set("texA", imgA);
+    crossfade.set("texB", imgB);
+    shader(crossfade);
+    image(imgA, dx, dy, dw, dh); // draw one quad; shader samples both
+    resetShader();
+  }} else {{
+    // baseline tint path
+    pushStyle();
+    tint(255, 255);
+    image(imgA, dx, dy, dw, dh);
+    int alpha = int(255 * t);
+    tint(255, alpha);
+    image(imgB, dx, dy, dw, dh);
+    popStyle();
+  }}
+
+  // Save frame
+  String outName = String.format("frame_%06d.png", frameCounter);
+  String outPath = sketchPath(OUTPUT_DIR + "/" + outName);
+  if (OVERWRITE || !(new java.io.File(outPath).exists())) {{
+    save(outPath);
+  }}
+  if (SHOW_PREVIEW) {{
+    fill(255);
+    text(String.format("pair %d/%d  t=%.3f  -> %s", pairIdx+1, files.length-1, t, outName), 12, 20);
+  }}
+  frameCounter++;
+}}
+
+void logManifestRow() {{
+  if (manifest == null) return;
+  int startIdx = (int)(frameCounter) - (HOLD_START + INTER_FRAMES + 1 + HOLD_END);
+  int endIdx   = (int)(frameCounter) - 1;
+  manifest.println(String.format("%d,%s,%s,%d,%d,%d,%d,%d",
+    pairIdx,
+    files[pairIdx].getName(),
+    files[pairIdx+1].getName(),
+    HOLD_START, INTER_FRAMES, HOLD_END,
+    startIdx, endIdx));
+}}
+
+// ------------------------------------------------------------
+// Loading & Layout
+// ------------------------------------------------------------
+
+void loadPair(int idx) {{
+  // Dispose previous
+  imgA = null; imgB = null;
+  System.gc();
+
+  imgA = loadImage(files[idx].getAbsolutePath());
+  imgB = loadImage(files[idx+1].getAbsolutePath());
+  if (imgA == null || imgB == null) {{
+    println("[ERROR] Failed to load pair at index " + idx);
+    exit();
+  }}
+
+  // Compute destination rectangle once per pair for performance/consistency
+  float[] rect = computeDestRect(CANVAS_W, CANVAS_H, imgA.width, imgA.height, FIT_MODE);
+  dx = rect[0]; dy = rect[1]; dw = rect[2]; dh = rect[3];
+}}
+
+float[] computeDestRect(int cw, int ch, int iw, int ih, String mode) {{
+  if ("STRETCH".equals(mode)) return new float[]{{0,0,cw,ch}};
+  float canvasAR = (float)cw/ch;
+  float imgAR = (float)iw/ih;
+  float x=0,y=0,w=cw,h=ch;
+
+  if ("FILL".equals(mode)) {{
+    if (imgAR > canvasAR) {{
+      // image wider; fill height
+      h = ch;
+      w = h*imgAR;
+      x = (cw - w)/2;
+    }} else {{
+      w = cw;
+      h = w/imgAR;
+      y = (ch - h)/2;
+    }}
+  }} else {{
+    // FIT (default)
+    if (imgAR > canvasAR) {{
+      w = cw;
+      h = w/imgAR;
+      y = (ch - h)/2;
+    }} else {{
+      h = ch;
+      w = h*imgAR;
+      x = (cw - w)/2;
+    }}
+  }}
+  return new float[]{{x,y,w,h}};
+}}
+
+// ------------------------------------------------------------
+// Utilities
+// ------------------------------------------------------------
+
+java.io.File[] listImages(String dirPath, String extsCSV) {{
+  java.io.File dir = new java.io.File(dirPath);
+  if (!dir.exists()) {{
+    println("[ERROR] Source dir missing: " + dirPath);
+    return null;
+  }}
+  final String[] exts = split(extsCSV.toLowerCase(), ',');
+  java.io.File[] arr = dir.listFiles(new java.io.FilenameFilter() {{
+    public boolean accept(java.io.File d, String name) {{
+      String n = name.toLowerCase();
+      for (String e : exts) if (n.endsWith("." + e.trim())) return true;
+      return false;
+    }}
+  }});
+  if (arr == null) return null;
+  java.util.Arrays.sort(arr, new java.util.Comparator() {{
+    public int compare(java.io.File a, java.io.File b) {{ return a.getName().compareTo(b.getName()); }}
+  }});
+  return arr;
+}}
+
+void ensureDir(String path) {{
+  java.io.File d = new java.io.File(path);
+  if (!d.exists()) d.mkdirs();
+}}
+
+long findResumeIndex(String outDir, int startAt, String pattern, boolean overwrite) {{
+  if (overwrite) return startAt;
+  long maxIdx = startAt - 1;
+  java.io.File d = new java.io.File(outDir);
+  java.io.File[] arr = d.listFiles();
+  if (arr != null) {{
+    for (java.io.File f : arr) {{
+      String n = f.getName();
+      if (n.startsWith("frame_") && n.endsWith(".png") && n.length() == 15) {{
+        try {{
+          long idx = Long.parseLong(n.substring(6, 12));
+          if (idx > maxIdx) maxIdx = idx;
+        }} catch (Exception ignore) {{}}
+      }}
+    }}
+  }}
+  return maxIdx + 1;
+}}
+
+// EASING
+float ease(float t, String mode) {{
+  t = constrain(t, 0, 1);
+  if ("linear".equals(mode)) return t;
+  if ("smoothstep".equals(mode)) return t*t*(3.0 - 2.0*t);
+  if ("easeInOutCubic".equals(mode)) {{
+    return t < 0.5 ? 4*t*t*t : 1 - pow(-2*t + 2, 3)/2.0;
+  }}
+  return t;
+}}
+```
+
+**data/crossfade.frag**
+
+```
+// data/crossfade.frag
+#ifdef GL_ES
+precision mediump float;
+precision mediump int;
+#endif
+
+uniform sampler2D texA;
+uniform sampler2D texB;
+uniform float t;
+varying vec4 vertTexCoord;
+
+// approximate sRGB <-> linear
+vec3 srgb_to_linear(vec3 c) { return pow(c, vec3(2.2)); }
+vec3 linear_to_srgb(vec3 c) { return pow(c, vec3(1.0/2.2)); }
+
+void main() {
+  vec2 uv = vertTexCoord.st;
+  vec4 a = texture2D(texA, uv);
+  vec4 b = texture2D(texB, uv);
+
+  // premultiply to handle PNG alpha cleanly
+  vec3 a_rgb = srgb_to_linear(a.rgb) * a.a;
+  vec3 b_rgb = srgb_to_linear(b.rgb) * b.a;
+  float a_a = a.a;
+  float b_a = b.a;
+
+  vec3 mix_rgb = mix(a_rgb, b_rgb, t);
+  float mix_a  = mix(a_a,  b_a,  t);
+
+  vec3 out_rgb = mix_a > 0.0 ? mix_rgb / mix_a : vec3(0.0);
+  out_rgb = linear_to_srgb(out_rgb);
+  gl_FragColor = vec4(out_rgb, mix_a);
+}
+```
+
+## Stitching to video
+
+```
+ffmpeg -r 25 -i out/frame%06d.png -c:v libx264 -crf 18 -preset medium -pix_fmt yuv420p slow_interpolation_25fps.mp4
+```
+
+Adjust -r to your target frame rate (e.g., 24, 25, 30, 60). For an intermediate master, consider ProRes:
+
+```
+ffmpeg -r 25 -i out/frame%06d.png -c:v prores_ks -profile:v 3 slow_interpolation_25fps_prores.mov
+```
+
+## Tips for very large runs
+
+- Turn off on-screen preview (SHOW_PREVIEW = false) to reduce draw overhead.
+- Set OVERWRITE = false and keep partial outputs; the sketch will resume after the last existing frame index.
+- Use HOLD_* to create slow motion without exploding pair counts.
+- Keep your source images uniformly sized and ordered; consistent naming helps.
+
+Prepared: 2025-09-01 13:08:10 (Europe/London).

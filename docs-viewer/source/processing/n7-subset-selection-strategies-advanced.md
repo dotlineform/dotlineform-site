@@ -1,0 +1,28 @@
+---
+doc_id: n7-subset-selection-strategies-advanced
+title: "Advanced Subsets for n=7: Derangements & Hamming-Balanced Sample"
+added_date: "2026-07-14 17:57"
+last_updated: "2026-07-14 17:57"
+parent_id: unsorted
+---
+# Advanced Subsets for n = 7
+
+> Timestamp: Sunday, 31 August 2025 at 05:44 PM Prompt: Add Derangements_7 and a HammingBalanced sample to the n=7 subsets workbook, with an HTML addendum.
+
+Download the extended Excel:
+
+n7_subset_selection_strategies_advanced.xlsx
+
+## Derangements (No Fixed Points)
+
+A **derangement** is a permutation with no element in its original position (`perm[i] != i+1` for all i). For n = 7, the number of derangements is `!7 = 1,854`. This sheet lists *all* derangements in lexicographic order with their global indices.
+
+## Hamming‑Distance–Balanced Sample
+
+To maximize visual variety between successive selections, we sample permutations by a *greedy farthest‑point* rule in Hamming space (positions where symbols differ). Starting from a seed permutation, each subsequent choice maximizes the minimum Hamming distance to the already selected set. This produces a set that is broadly spread out (separated) across the space of permutations.
+
+- **Distance:** Hamming distance between permutations counts positions where the symbols differ (0…n).
+- **Objective:** Maximize the *minimum* distance to previous selections at each step.
+- **Sheet:** `HammingBalanced_300` contains 300 permutations with their global lexicographic indices and the running minimum distance.
+
+Use these subsets when you want property‑constrained permutations (derangements) or when you want to emphasize diversity across frames (Hamming‑balanced sample).

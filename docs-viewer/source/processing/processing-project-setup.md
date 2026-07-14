@@ -8,7 +8,7 @@ parent_id: ""
 
 # Processing Project Setup
 
-Bring the existing unfinished Processing (https://processing.org) projects into this repository, recover how they work, and establish a maintainable structure for continuing them.
+Bring the existing unfinished [Processing](https://processing.org) projects into this repository, recover how they work, and establish a maintainable structure for continuing them.
 
 The primary aim is high-quality still artwork for print. Processing in Java mode remains the canonical implementation and rendering environment.
 
@@ -19,9 +19,25 @@ Interactivity belongs mainly to the authoring application:
 - save useful configurations as named presets
 - deliberately render a selected preset at print resolution
 
+## Application
+
 Installed version of Processing is current version 4.5.5
 
-A JavaScript or p5.js version may be considered much later. It is not part of the initial recovery, architecture, or rendering contract, and the Processing code should not be distorted to prepare for a hypothetical browser port.
+[CLI](https://github.com/processing/processing4/wiki/Command-Line) symlinked:
+
+```
+ln -s /Applications/Processing.app/Contents/MacOS/Processing /usr/local/bin/processing
+
+processing cli --help
+```
+
+use it like this:
+
+```
+processing cli --sketch=/absolute/path/to/MySketch --run
+```
+
+A p5.js version may be considered later.
 
 ## additional setup
 

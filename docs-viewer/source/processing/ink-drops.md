@@ -1,0 +1,13 @@
+---
+doc_id: ink-drops
+title: Ink drops
+added_date: "2026-07-14 17:27"
+last_updated: "2026-07-14 17:27"
+parent_id: unsorted
+---
+# Ink drops
+
+
+As happens when you roll a dice, or cast an I-Ching symbol, the moments that measure a droplet of ink falling onto a piece of paper connect us to the world and universe. The droplet is the ‘question’ (perhaps wordless and unformed) and milliseconds later the ink on the paper is the ‘answer’.
+
+The state of our minds has been measured, collapsed and for all to now see. Is what you see, as the ink settles, a history of your life, or simply unknowable present and future moments? Perhaps all these things, since the present is the past and future joining together in a creative act.

@@ -1,0 +1,15 @@
+Column,ID,Title
+Backlog,M0,Baseline load and layer A/B; verify save path.
+Backlog,M1,Crossfade with easing; export sequence.
+Backlog,M2,Gamma‑correct crossfade (shader).
+Backlog,M3,Canvas normalization FIT/FILL/STRETCH.
+Backlog,M4,"Homography align (optional, planar)."
+Backlog,M5,Multi‑scale Horn–Schunck flow (A→B).
+Backlog,M6,Bilinear warp + gamma‑premult blend.
+Backlog,M7,Per‑pair flow caching; resume.
+Backlog,M8,GPU warper: RG flow texture + shader.
+Backlog,M9a,Fwd‑back consistency mask.
+Backlog,M9b,Hole filling (edge‑aware/median).
+Backlog,M9c,Multi‑band blend (Laplacian).
+Backlog,M9d,Time easing options.
+Backlog,M10,Batch run + FFmpeg stitch.

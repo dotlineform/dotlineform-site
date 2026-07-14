@@ -1,0 +1,9 @@
+{
+  "doc_id": "demo-drawcurve-string-layout",
+  "title": "demo_drawCurve(String layout)",
+  "added_date": "2026-07-14 17:47",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=demo-drawcurve-string-layout",
+  "parent_id": "sketch-250309a-ink",
+  "content_html": "<h1>demo_drawCurve(String layout)</h1>\n<h1>demo_drawCurve(String layout)</h1>\n<p>this demonstrates drawCurve for each of the available stroke styles\n[[drawCurve (PVector start, int freedom, StrokeStyle strokeStyle)]]</p>\n"
+}

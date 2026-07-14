@@ -1,0 +1,44 @@
+---
+doc_id: minimalcomposite3-uhd-png-jpeg
+title: "Minimal Processing Composite — 3 UHD Images (PNG + JPEG)"
+added_date: "2026-07-14 17:57"
+last_updated: "2026-07-14 17:57"
+parent_id: unsorted
+---
+# Minimal Processing Composite — 3 UHD Images (PNG + JPEG)
+
+> Updated: 2025-08-31 17:14:13 BST
+
+## Overview
+
+This sketch demonstrates the simplest possible composite workflow in Processing. It blends exactly **three UHD images** (3840 × 2160 pixels) into a single output image. Each new layer is blended at **50% opacity**.
+
+## Features
+
+- Works with both **PNG** and **JPEG** source images.
+- PNG transparency is preserved: transparent areas allow lower layers to show through.
+- JPEGs are always fully opaque (no alpha channel).
+- Hard-coded source and output folders for simplicity.
+- Composite is saved as `composite.png`.
+
+## How it works
+
+1. Load three images with `loadImage()`.
+2. Resize each to UHD resolution (3840 × 2160) to ensure matching dimensions.
+3. Start with the first image as the base.
+4. Blend the second and third images sequentially at 50% opacity.
+5. Save the result in the output folder.
+
+## Blend Function
+
+The pixel blending formula is:
+
+```
+result = base * (1 - opacity) + top * opacity
+```
+
+With opacity = 0.5, both layers contribute equally. If the top image is a PNG with transparency, its alpha further reduces its contribution.
+
+## Usage
+
+Update the `sourceDir` and `outputDir` variables in the code. Place three UHD images (`image1.png/jpg`, `image2.png/jpg`, `image3.png/jpg`). Run the sketch; the blended composite is written to the output folder.

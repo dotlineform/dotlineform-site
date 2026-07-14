@@ -1,0 +1,61 @@
+---
+doc_id: refactored-drawcurve
+title: refactored drawCurve
+added_date: "2026-07-14 17:47"
+last_updated: "2026-07-14 17:47"
+parent_id: sketch-250309a-ink
+---
+# refactored drawCurve
+
+
+drawCurve() needs to take 2 parameters
+
+## **preset**
+
+the name of the preset, which is defined in the json file as a combination of the available line styles (particle, vector etc) with all their properties defined (number of particles, velocity etc)
+
+## weight
+
+how thick the line is.
+
+## start
+
+the start point of the curve (and hence the boundary circle segment)
+
+## boundary
+
+**boundary.arcAngle**
+
+the angle of the circle segment in which the curve will be fitted
+
+**boundary.arcRadius**
+
+the radius of the arc segment
+
+**boundary.direction**
+
+the angle of the circle segment (0 degrees is horizontal, pointing to the right)
+
+
+__________________
+
+
+ <span style="background-color: #00C6BD;">
+     BezierCurve 
+ </span> <span style="background-color: #00C6BD;">
+     **drawCurve**
+ </span> <span style="background-color: #00C6BD;">
+     (String preset, int weight, PVector start, Boundary boundary)
+ </span>
+
+overloaded version:
+
+ <span style="background-color: #00C6BD;">
+     BezierCurve 
+ </span> <span style="background-color: #00C6BD;">
+     **drawCurve**
+ </span> <span style="background-color: #00C6BD;">
+     (String preset, int weight, Pvector start)
+
+ </span>
+when boundary is not specified, this means the curve can go anywhere in the drawing.

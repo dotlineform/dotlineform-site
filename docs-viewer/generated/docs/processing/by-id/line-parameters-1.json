@@ -1,0 +1,9 @@
+{
+  "doc_id": "line-parameters-1",
+  "title": "line parameters",
+  "added_date": "2026-07-14 17:47",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=line-parameters-1",
+  "parent_id": "sketch-250309a-ink",
+  "content_html": "<h1>line parameters</h1>\n<p>So createLine takes the following parameters:</p>\n<p>styleOptions\ncurveOptions\nboundaryOptions</p>\n<p>actually, boundaryOptions can be merged into curveOptions</p>\n<p>lineStyle\nlineBoundary</p>\n<h2>simplify the parameters</h2>\n<p><strong>lineBoundary</strong></p>\n<p>this defines the line placement and the area which it can cover</p>\n<p><strong>lineStyle</strong></p>\n<p>this defines what the line line looks like</p>\n"
+}

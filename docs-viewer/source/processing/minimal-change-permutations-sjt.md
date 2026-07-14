@@ -1,0 +1,82 @@
+---
+doc_id: minimal-change-permutations-sjt
+title: "Minimal‑Change Permutations (SJT) – 3! to 6!"
+added_date: "2026-07-14 17:57"
+last_updated: "2026-07-14 17:57"
+parent_id: unsorted
+---
+# Minimal‑Change Ordering of Permutations (Steinhaus–Johnson–Trotter)
+
+### Prompt & Timestamp
+
+> Timestamp: Sunday, August 31, 2025 at 06:11 PM (Europe/London) Prompt: Regenerate permutations for 3!–6! in SJT (minimal-change) order and explain in downloadable HTML.
+
+Download the Excel listing (3!–6!, SJT order, indexed):
+
+Permutations_3to6_SJT_indexed.xlsx
+
+This file lists permutations of 1..n for n = 3, 4, 5, 6 in Steinhaus–Johnson–Trotter (SJT) order, where each successive permutation differs from the previous by a single *adjacent* swap (a permutation Gray code).
+
+## What does “minimum‑change” mean here?
+
+Among all ways to list permutations, the SJT algorithm ensures that consecutive permutations differ by swapping two *adjacent* elements only. That’s the smallest possible change to move from one permutation to the next, and it yields a permutation Gray code (each step is one adjacent transposition).
+
+## How the SJT algorithm works (intuition)
+
+1. Start with `1 2 3 … n`. Give every number a direction (initially left).
+2. A number is *mobile* if its arrow points to a smaller neighbor in that direction.
+3. At each step: find the **largest mobile** number and swap it one place in its direction (an adjacent swap).
+4. Reverse the directions of all numbers larger than the one you just moved.
+5. Repeat until no number is mobile: you’ve listed all `n!` permutations.
+
+### Example (n = 3, SJT order)
+
+```
+123
+132  (swap 3 with 2)
+312  (swap 3 with 1)
+321  (swap 2 with 1)
+231  (swap 3 with 2)
+213  (swap 2 with 1)
+```
+
+## Why this is minimal change
+
+Any transition between different permutations requires at least one swap. SJT guarantees exactly one swap per step, and moreover the swap is *adjacent*, so elements move by the smallest possible distance between successive permutations.
+
+## Pseudocode (high‑level)
+
+```
+# SJT for numbers 1..n
+perm = [1..n]
+dir = {k: LEFT for k in 1..n}
+output perm
+
+while True:
+    i = largest_mobile_index(perm, dir)
+    if i == NONE: break
+    x = perm[i]
+    swap perm[i] with perm[i + dir[x]]  # adjacent swap
+    for y in (x+1..n): dir[y] = reverse(dir[y])
+    output perm
+```
+
+## About the Excel build
+
+- Each sheet corresponds to `n!` for `n = 3..6`.
+- Top line shows the count (e.g., `6! = 720`).
+- Rows are indexed and the permutation is split into one column per position.
+- Ordering is SJT: every row differs from the previous by one adjacent swap.
+
+## References
+
+| Source | Description | URL |
+| --- | --- | --- |
+| Steinhaus–Johnson–Trotter algorithm (Wikipedia) | Overview, properties, and history of the SJT minimal‑change permutation order. | [https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm](https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm) |
+| Permutation (MathWorld) | Background on permutations and factorial counts. | [https://mathworld.wolfram.com/Permutation.html](https://mathworld.wolfram.com/Permutation.html) |
+| Frank Ruskey, *Combinatorial Generation* (book) | Chapters on permutation Gray codes and minimal‑change generation. | [https://page.math.tu-berlin.de/~felsner/SemWS17-18/Ruskey-Comb-Gen.pdf](https://page.math.tu-berlin.de/~felsner/SemWS17-18/Ruskey-Comb-Gen.pdf) |
+| Cut‑the‑Knot: Johnson–Trotter | Intuitive explanation and relation to Gray codes. | [https://www.cut-the-knot.org/Curriculum/Combinatorics/JohnsonTrotter.shtml](https://www.cut-the-knot.org/Curriculum/Combinatorics/JohnsonTrotter.shtml) |
+
+### APA‑style citations
+
+Steinhaus–Johnson–Trotter algorithm. (n.d.). In *Wikipedia*. Retrieved August 31, 2025, from <https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm> Weisstein, E. W. (2003). Permutation. In *MathWorld—A Wolfram Web Resource*. Retrieved August 31, 2025, from <https://mathworld.wolfram.com/Permutation.html> Ruskey, F. (2003). *Combinatorial Generation*. Retrieved August 31, 2025, from <https://page.math.tu-berlin.de/~felsner/SemWS17-18/Ruskey-Comb-Gen.pdf> Bogomolny, A. (n.d.). Johnson–Trotter Algorithm: Listing All Permutations. *Cut‑the‑Knot*. Retrieved August 31, 2025, from <https://www.cut-the-knot.org/Curriculum/Combinatorics/JohnsonTrotter.shtml>

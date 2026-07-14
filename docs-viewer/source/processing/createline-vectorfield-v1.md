@@ -1,0 +1,70 @@
+---
+doc_id: createline-vectorfield-v1
+title: createLine_VectorField (v1)
+added_date: "2026-07-14 17:47"
+last_updated: "2026-07-14 17:47"
+parent_id: sketch-250309a-ink
+---
+# createLine_VectorField (v1)
+
+
+// draw a smooth stroke along a Bezier curve and then distort it
+void createLine_VectorField(LineOptions lineOptions, InkOptions inkOptions, BezierCurve curve) {
+  // distorts bezier line using a noise-based vector field to simulate organic, wavy ink edges.
+
+  // 1. Generate a smooth stroke along the Bezier curve.
+  int numPoints = lineOptions.numParticles;  // Number of points sampled along the curve.
+  float baseLineWidth = lineOptions.lineWidth; // Base stroke width.
+  
+  // Array to hold the original, smooth points.
+  PVector[] basePoints = new PVector[numPoints];
+  for (int i = 0; i < numPoints; i++) {
+    float t = i / float(numPoints - 1); // Normalized parameter (0 to 1)
+    float x = bezierPoint(curve.start.x, curve.control1.x, curve.control2.x, curve.end.x, t);
+    float y = bezierPoint(curve.start.y, curve.control1.y, curve.control2.y, curve.end.y, t);
+    basePoints[i] = new PVector(x, y);
+  }
+  
+  // 2. Distort the stroke using a noise-based vector field.
+  // The noise values generate displacements in both x and y directions.
+  PVector[] distortedPoints = new PVector[numPoints];
+  float distortionScale = 20;  // Maximum displacement (in pixels)
+  float noiseScale = 0.05;     // Frequency of noise variations; adjust to control the wavy effect.
+  
+  // Set a local variable for static time value (default: 1.0)
+  // (this could be incorporated into an extended InkOptions class if useful)
+  float staticTime = 1.0;  // Try values in the range 0.0 to 10.0 for different distortion effects
+
+  for (int i = 0; i < numPoints; i++) {
+  PVector base = basePoints[i];
+  // Use staticTime instead of frameCount in noise calculations.
+  // (frameCount is a built-in global variable that automatically increments by 1 each time a new frame is drawn.)
+  // Multiplying staticTime by 0.01 scales down the time value before it’s used in the noise function.
+  // The noise() function is sensitive to the magnitude of its inputs, and smaller values tend to produce smoother, more gradual variations.
+  // By using 0.01 as a multiplier, you effectively compress the range of staticTime so that even if staticTime is increased, its effect on the noise output remains subtle.
+  // This scaling helps achieve a controlled, organic distortion rather than abrupt changes.
+  // You can adjust the multiplier if you want a stronger or weaker time effect.
+  float noiseX = noise(base.x * noiseScale, base.y * noiseScale, staticTime * 0.01);
+  float noiseY = noise(base.y * noiseScale, base.x * noiseScale, staticTime * 0.01);
+  float dx = map(noiseX, 0, 1, -distortionScale, distortionScale);
+  float dy = map(noiseY, 0, 1, -distortionScale, distortionScale);
+  distortedPoints[i] = new PVector(base.x + dx, base.y + dy);
+}
+  
+  // 3. Draw the distorted stroke.
+  // We use a continuous curve (via curveVertex) to connect the distorted points smoothly.
+   // 3. Draw the distorted stroke.
+  noFill();
+  stroke(0);
+  strokeWeight(baseLineWidth);
+  beginShape();
+  // Duplicate the first point to ensure the curve starts correctly.
+  curveVertex(distortedPoints[0].x, distortedPoints[0].y);
+  // Add all the distorted points.
+  for (int i = 0; i < numPoints; i++) {
+    curveVertex(distortedPoints[i].x, distortedPoints[i].y);
+  }
+  // Duplicate the last point to ensure the curve ends correctly.
+  curveVertex(distortedPoints[numPoints - 1].x, distortedPoints[numPoints - 1].y);
+  endShape();
+}

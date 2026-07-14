@@ -1,0 +1,9 @@
+{
+  "doc_id": "refactored-drawcurve",
+  "title": "refactored drawCurve",
+  "added_date": "2026-07-14 17:47",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=refactored-drawcurve",
+  "parent_id": "sketch-250309a-ink",
+  "content_html": "<h1>refactored drawCurve</h1>\n<p>drawCurve() needs to take 2 parameters</p>\n<h2><strong>preset</strong></h2>\n<p>the name of the preset, which is defined in the json file as a combination of the available line styles (particle, vector etc) with all their properties defined (number of particles, velocity etc)</p>\n<h2>weight</h2>\n<p>how thick the line is.</p>\n<h2>start</h2>\n<p>the start point of the curve (and hence the boundary circle segment)</p>\n<h2>boundary</h2>\n<p><strong>boundary.arcAngle</strong></p>\n<p>the angle of the circle segment in which the curve will be fitted</p>\n<p><strong>boundary.arcRadius</strong></p>\n<p>the radius of the arc segment</p>\n<p><strong>boundary.direction</strong></p>\n<p>the angle of the circle segment (0 degrees is horizontal, pointing to the right)</p>\n<hr />\n <span style=\"background-color: #00C6BD;\">\n     BezierCurve \n </span> <span style=\"background-color: #00C6BD;\">\n     **drawCurve**\n </span> <span style=\"background-color: #00C6BD;\">\n     (String preset, int weight, PVector start, Boundary boundary)\n </span>\n<p>overloaded version:</p>\n <span style=\"background-color: #00C6BD;\">\n     BezierCurve \n </span> <span style=\"background-color: #00C6BD;\">\n     **drawCurve**\n </span> <span style=\"background-color: #00C6BD;\">\n     (String preset, int weight, Pvector start)\n </span>\nwhen boundary is not specified, this means the curve can go anywhere in the drawing.\n"
+}

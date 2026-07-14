@@ -1,0 +1,87 @@
+---
+doc_id: line-parameters
+title: line parameters
+added_date: "2026-07-14 17:47"
+last_updated: "2026-07-14 17:47"
+parent_id: sketch-250309a-ink
+---
+# line parameters
+
+
+
+## lineOptions
+
+The **LineOptions** class holds parameters that control the overall look of your drawn line (or stroke) by defining how many discrete particles (droplets) are used and how wide the base stroke is. Here’s what each argument means and the typical ranges you might consider:
+	•	**numParticles (int):**
+This defines the number of individual droplets or particles that make up the line. A higher number produces a smoother, more continuous stroke because more particles are used to fill the gap along the curve.
+**Typical Range:**
+	•	**Minimum:** Around 100 (for a sparse, textured look)
+	•	**Maximum:** Could go into the thousands (e.g., 1000–2000 or more) depending on your performance limits and desired visual density.
+	•	**lineWidth (float):**
+This value sets the base width for the stroke. It serves as a multiplier that scales the size of each droplet. The decay functions then further modify the effective size of each droplet along the stroke.
+**Typical Range:**
+	•	**Minimum:** A value greater than 0 (for example, 1.0), ensuring that droplets are visible.
+	•	**Maximum:** Usually between 5.0 and 10.0 for most sketches, but it really depends on your canvas size and the visual effect you want to achieve.
+
+Adjusting these parameters lets you fine-tune the appearance of the ink stroke—from a light, wispy line (with low numParticles and small lineWidth) to a bold, continuous stroke (with high numParticles and larger lineWidth). The exact ranges can vary based on your project’s design and performance considerations.
+
+**InkOptions** and **TextureInkOptions** are configuration classes that control how the ink stroke is rendered along a drawn line. They determine properties like the strength and decay of the stroke, and in the case of TextureInkOptions, also define the brush texture used for a textured stroke.
+
+⸻
+
+## **InkOptions**
+
+This class holds generic ink parameters used to control the appearance of the stroke in functions such as createLine_Particle and createLine_Particle_Diffuse.
+	•	**inkFraction (float):**
+	•	**What it does:** Specifies the fraction of the stroke where full-strength (or maximum size) ink is applied before decay begins.
+	•	**Typical Range:** 0 to 1
+	•	**Example:** A value of 0.1 means that only the first 10% of the stroke is rendered with full strength, while the remaining 90% gradually decays in size.
+	•	**decayType (String):**
+	•	**What it does:** Determines the mathematical function used to reduce (or decay) the droplet sizes along the stroke after the full-strength portion.
+	•	**Accepted Values:** “linear”, “exponential”, “quadratic”, “cubic”, “logarithmic”, “sigmoidal”, “quickslow”
+	•	**Example:** “exponential” decay will make the stroke drop off sharply after the full-strength portion.
+
+0: Linear Decay - A simple linear taper.
+  1: Exponential Decay - Uses an exponent (values > 1 make it run out faster).
+  2: Quadratic Decay - Uses a quadratic function.
+  3: Cubic Decay - Uses a cubic function.
+  4: Logarithmic Decay - Uses a logarithmic mapping.
+  5: Sigmoidal Decay - Uses a logistic (sigmoid) function, with slope controlling the steepness.
+1. Quickslow
+
+![37FF0A69-5207-4225-BF3D-7E7A6391F460](images/37FF0A69-5207-4225-BF3D-7E7A6391F460.jpg)
+
+	•	**exponent (float):**
+	•	**What it does:** Used with decay functions such as exponential decay. It controls how rapidly the droplet size decreases after the full-strength portion.
+	•	**Typical Range:** Often between 1 and 10 (depending on the desired sharpness of the decay).
+	•	**slope (float):**
+	•	**What it does:** Relevant for the sigmoidal decay. It controls the steepness of the S-shaped decay curve.
+	•	**Typical Range:** This can vary widely, but often values in the range of 1 to 100 work well. A higher value results in a sharper transition around the midpoint.
+	•	**initialMultiplier (float):**
+	•	**What it does:** Acts as a scaling factor for the droplet size in the portion of the stroke drawn at full strength.
+	•	**Typical Range:** Values greater than 0. For instance, 1.5 or 3 can be used depending on how bold you want the full-strength ink to be.
+	•	**velocity (float):**
+	•	**What it does:** Although defined in the options, this parameter isn’t used in every decay mode (such as “quickslow”). It’s intended for cases where the dynamic variation or speed of decay might be controlled.
+	•	**Typical Range:** Often set between 1 and 100.
+
+⸻
+
+## **TextureInkOptions**
+
+This class extends **InkOptions** to include properties specific to textured strokes, particularly for functions like createLine_Particle_Texture.
+	•	**brushTexture (PImage):**
+	•	**What it does:** Stores the image used as a brush texture. When drawing the textured stroke, this image is stamped along the path, with alpha blending applied to simulate a brush stroke on paper.
+	•	**Usage:** The brushTexture should be a high-resolution image to prevent pixelation when scaled.
+	•	**Other InkOptions parameters:**
+	•	Inherits all the parameters from **InkOptions** (inkFraction, decayType, exponent, slope, initialMultiplier, velocity) and they function in the same way as described above.
+
+⸻
+
+## **How They Work Together**
+
+	•	**InkOptions** is used in general ink stroke functions where the visual effect is created by varying the size and opacity of droplets along a curve.
+	•	**TextureInkOptions** adds an extra dimension—using a texture image (brushTexture) for each droplet—so the stroke appears to be painted with a brush rather than just being a series of simple ellipses.
+
+By adjusting these parameters, you can experiment with how your ink stroke fades, the sharpness of its decay, and whether it appears as a smooth gradient of droplets or a textured brush stroke.
+
+————

@@ -53,6 +53,184 @@
       ]
     },
     {
+      "doc_id": "files",
+      "title": "files",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/files.json",
+      "children": [
+        {
+          "doc_id": "de-bruijn-b8-3-digits",
+          "title": "De Bruijn B8 3 Digits",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/de-bruijn-b8-3-digits.json"
+        },
+        {
+          "doc_id": "de-bruijn-b8-3-digits-with-files",
+          "title": "De Bruijn B8 3 Digits With Files",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/de-bruijn-b8-3-digits-with-files.json"
+        },
+        {
+          "doc_id": "de-bruijn-b8-3-digits-with-positioned-files",
+          "title": "De Bruijn B8 3 Digits With Positioned Files",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/de-bruijn-b8-3-digits-with-positioned-files.json"
+        },
+        {
+          "doc_id": "de-bruijn-b8-3-triples",
+          "title": "De Bruijn B8 3 Triples",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/de-bruijn-b8-3-triples.json"
+        },
+        {
+          "doc_id": "kanban-optical-flow",
+          "title": "Kanban Optical Flow",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/kanban-optical-flow.json"
+        },
+        {
+          "doc_id": "layer-rules",
+          "title": "Layer Rules",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/layer-rules.json"
+        },
+        {
+          "doc_id": "n7-subset-selection-strategies2",
+          "title": "N7 Subset Selection Strategies",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/n7-subset-selection-strategies2.json"
+        },
+        {
+          "doc_id": "n7-subset-selection-strategies-advanced2",
+          "title": "N7 Subset Selection Strategies Advanced",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/n7-subset-selection-strategies-advanced2.json"
+        },
+        {
+          "doc_id": "n9-sjt-1min-all-fps",
+          "title": "N9 Sjt 1min All Fps",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/n9-sjt-1min-all-fps.json"
+        },
+        {
+          "doc_id": "permutation-subsets-fps-24-25-30-60",
+          "title": "Permutation Subsets Fps 24 25 30 60",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutation-subsets-fps-24-25-30-60.json"
+        },
+        {
+          "doc_id": "permutation-subsets-n7-n8-advanced",
+          "title": "Permutation Subsets N7 N8 Advanced",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutation-subsets-n7-n8-advanced.json"
+        },
+        {
+          "doc_id": "permutation-subsets-n7-n8-with-durations",
+          "title": "Permutation Subsets N7 N8 With Durations",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutation-subsets-n7-n8-with-durations.json"
+        },
+        {
+          "doc_id": "permutations-3to6-indexed",
+          "title": "Permutations 3to6 Indexed",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-3to6-indexed.json"
+        },
+        {
+          "doc_id": "permutations-3to6-sjt-indexed",
+          "title": "Permutations 3to6 Sjt Indexed",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-3to6-sjt-indexed.json"
+        },
+        {
+          "doc_id": "permutations-3to6-split-columns",
+          "title": "Permutations 3to6 Split Columns",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-3to6-split-columns.json"
+        },
+        {
+          "doc_id": "permutations-3to6-with-counts",
+          "title": "Permutations 3to6 With Counts",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-3to6-with-counts.json"
+        },
+        {
+          "doc_id": "permutations-3to7-sjt-indexed-with-properties",
+          "title": "Permutations 3to7 Sjt Indexed With Properties",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-3to7-sjt-indexed-with-properties.json"
+        }
+      ]
+    },
+    {
+      "doc_id": "i-ching",
+      "title": "I Ching",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/i-ching.json",
+      "children": [
+        {
+          "doc_id": "a-processing-i-ching-app-that-uses-real-time-qrng",
+          "title": "A processing I Ching app that uses real time QRNG?",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/a-processing-i-ching-app-that-uses-real-time-qrng.json"
+        },
+        {
+          "doc_id": "arrange-the-64-into-two-blocks-of-8-x-4",
+          "title": "Arrange the 64 into two blocks of 8 x 4?",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/arrange-the-64-into-two-blocks-of-8-x-4.json"
+        },
+        {
+          "doc_id": "quantum-randomness-and-i-ching",
+          "title": "Quantum randomness and I Ching",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/quantum-randomness-and-i-ching.json"
+        },
+        {
+          "doc_id": "redesigning-i-ching-symbols",
+          "title": "Redesigning I Ching symbols",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/redesigning-i-ching-symbols.json"
+        }
+      ]
+    },
+    {
+      "doc_id": "ink-engine",
+      "title": "ink engine",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/ink-engine.json",
+      "children": [
+        {
+          "doc_id": "ink-engine2",
+          "title": "ink engine",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ink-engine2.json"
+        },
+        {
+          "doc_id": "ink-engine-architecture",
+          "title": "Ink Engine Architecture",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ink-engine-architecture.json"
+        },
+        {
+          "doc_id": "ink-engine-quantum",
+          "title": "Ink Engine Quantum",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ink-engine-quantum.json"
+        },
+        {
+          "doc_id": "philosophical-challenge",
+          "title": "Philosophical Challenge",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/philosophical-challenge.json"
+        },
+        {
+          "doc_id": "practical-implementation-methodology",
+          "title": "Practical Implementation Methodology",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/practical-implementation-methodology.json"
+        }
+      ]
+    },
+    {
+      "doc_id": "layer-blending2",
+      "title": "Layer blending",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/layer-blending2.json",
+      "children": [
+        {
+          "doc_id": "built-in-functions",
+          "title": "built in functions",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/built-in-functions.json"
+        },
+        {
+          "doc_id": "layering-and-transparency",
+          "title": "layering and transparency",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/layering-and-transparency.json"
+        },
+        {
+          "doc_id": "render-techniques",
+          "title": "Render Techniques",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/render-techniques.json"
+        },
+        {
+          "doc_id": "simple-start",
+          "title": "simple start",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/simple-start.json"
+        }
+      ]
+    },
+    {
       "doc_id": "processing",
       "title": "processing",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/processing.json",
@@ -62,7 +240,461 @@
       "doc_id": "processing-project-setup",
       "title": "Processing Project Setup",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-project-setup.json"
+    },
+    {
+      "doc_id": "sketch-250309a-ink",
+      "title": "sketch_250309a (ink)",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/sketch-250309a-ink.json",
+      "children": [
+        {
+          "doc_id": "brush-strokes",
+          "title": "brush strokes",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/brush-strokes.json"
+        },
+        {
+          "doc_id": "createline-vectorfield-v1",
+          "title": "createLine_VectorField (v1)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/createline-vectorfield-v1.json"
+        },
+        {
+          "doc_id": "createline-vectorfield-v2",
+          "title": "createLine_VectorField (v2)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/createline-vectorfield-v2.json"
+        },
+        {
+          "doc_id": "curve-boundary-function",
+          "title": "curve boundary function",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/curve-boundary-function.json"
+        },
+        {
+          "doc_id": "definecurve-pvector-start-int-freedom-int-direction",
+          "title": "defineCurve (PVector start, int freedom, int direction)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/definecurve-pvector-start-int-freedom-int-direction.json"
+        },
+        {
+          "doc_id": "demo-drawcurve-string-layout",
+          "title": "demo_drawCurve(String layout)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/demo-drawcurve-string-layout.json"
+        },
+        {
+          "doc_id": "drawcurve-pvector-start-int-freedom-strokestyle-strokestyle",
+          "title": "drawCurve (PVector start, int freedom, StrokeStyle strokeStyle)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/drawcurve-pvector-start-int-freedom-strokestyle-strokestyle.json"
+        },
+        {
+          "doc_id": "drawing-size",
+          "title": "drawing size",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/drawing-size.json"
+        },
+        {
+          "doc_id": "drawline",
+          "title": "drawLine",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/drawline.json"
+        },
+        {
+          "doc_id": "drawline-demo",
+          "title": "drawLine demo",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/drawline-demo.json"
+        },
+        {
+          "doc_id": "explorecurve",
+          "title": "exploreCurve",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/explorecurve.json"
+        },
+        {
+          "doc_id": "ink-simulation",
+          "title": "ink simulation",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ink-simulation.json"
+        },
+        {
+          "doc_id": "line-parameters",
+          "title": "line parameters",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/line-parameters.json"
+        },
+        {
+          "doc_id": "line-parameters-1",
+          "title": "line parameters",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/line-parameters-1.json"
+        },
+        {
+          "doc_id": "modify-boundary",
+          "title": "modify boundary",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/modify-boundary.json"
+        },
+        {
+          "doc_id": "random-seeding",
+          "title": "random seeding",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/random-seeding.json"
+        },
+        {
+          "doc_id": "refactored-drawcurve",
+          "title": "refactored drawCurve",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/refactored-drawcurve.json"
+        },
+        {
+          "doc_id": "refresh",
+          "title": "refresh",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/refresh.json"
+        },
+        {
+          "doc_id": "remove-inkoptions",
+          "title": "remove inkOptions",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/remove-inkoptions.json"
+        },
+        {
+          "doc_id": "rotation-angle",
+          "title": "rotation angle",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/rotation-angle.json"
+        },
+        {
+          "doc_id": "saving-image",
+          "title": "saving image",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/saving-image.json"
+        },
+        {
+          "doc_id": "showgeometry",
+          "title": "showGeometry",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/showgeometry.json"
+        },
+        {
+          "doc_id": "ui-positioning",
+          "title": "UI positioning",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ui-positioning.json"
+        }
+      ]
+    },
+    {
+      "doc_id": "unsorted",
+      "title": "unsorted",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/unsorted.json",
+      "children": [
+        {
+          "doc_id": "stride-overview",
+          "title": "1‑in‑n Sampling (Stride) — Processing Permutation Composites",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/stride-overview.json"
+        },
+        {
+          "doc_id": "stride-overview-2",
+          "title": "1‑in‑n Sampling (Stride) — Processing Permutation Composites",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/stride-overview-2.json"
+        },
+        {
+          "doc_id": "a-guide-to-better-looking-processing-sketches",
+          "title": "A guide to better looking Processing sketches",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/a-guide-to-better-looking-processing-sketches.json"
+        },
+        {
+          "doc_id": "n7-subset-selection-strategies-advanced",
+          "title": "Advanced Subsets for n=7: Derangements & Hamming-Balanced Sample",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/n7-subset-selection-strategies-advanced.json"
+        },
+        {
+          "doc_id": "processing-alive-modes-changelog",
+          "title": "Aliveness as Participation — Processing Modes Update (ICON / AGENCY / RITUAL)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-alive-modes-changelog.json"
+        },
+        {
+          "doc_id": "anu-qrng-quantum-random-numbers",
+          "title": "ANU QRNG – Quantum random numbers",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/anu-qrng-quantum-random-numbers.json"
+        },
+        {
+          "doc_id": "app-structure",
+          "title": "App structure",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/app-structure.json"
+        },
+        {
+          "doc_id": "batch-image-interpolator-readme",
+          "title": "Batch Image Interpolator — Static Frame Generator",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/batch-image-interpolator-readme.json"
+        },
+        {
+          "doc_id": "checklist-optical-flow",
+          "title": "Checklist — Layering → Optical‑Flow Interpolation",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/checklist-optical-flow.json"
+        },
+        {
+          "doc_id": "alignment-and-morphing-concepts",
+          "title": "Conceptual Notes — Alignment & Morphing (Homography • Triangle Mesh • Optical Flow)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/alignment-and-morphing-concepts.json"
+        },
+        {
+          "doc_id": "controlling-the-degree-of-self-mutation",
+          "title": "Controlling the Degree of Self-Mutation",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/controlling-the-degree-of-self-mutation.json"
+        },
+        {
+          "doc_id": "creating-impossible-drawings",
+          "title": "Creating Impossible Drawings",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/creating-impossible-drawings.json"
+        },
+        {
+          "doc_id": "layerpermutations-csv-overview",
+          "title": "CSV-driven Layer Rules for Processing Permutation Composites",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/layerpermutations-csv-overview.json"
+        },
+        {
+          "doc_id": "de-bruijn-b8-3-linear",
+          "title": "De Bruijn B8 3 Linear",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/de-bruijn-b8-3-linear.json"
+        },
+        {
+          "doc_id": "structured-variation-in-repetitive-pipelines",
+          "title": "Design Notes — Structured Variation in Repetitive Pipelines (Processing × FFmpeg)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/structured-variation-in-repetitive-pipelines.json"
+        },
+        {
+          "doc_id": "design-notes-structured-variation",
+          "title": "design_notes_structured_variation",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/design-notes-structured-variation.json"
+        },
+        {
+          "doc_id": "deterministic-random",
+          "title": "deterministic random",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/deterministic-random.json"
+        },
+        {
+          "doc_id": "dualres-overview",
+          "title": "Dual‑Resolution Preview & Final Export — Processing Workflow",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/dualres-overview.json"
+        },
+        {
+          "doc_id": "engrams-companion-processing",
+          "title": "engrams_companion_processing",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/engrams-companion-processing.json"
+        },
+        {
+          "doc_id": "entropy-injection-methods",
+          "title": "Entropy Injection Methods",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/entropy-injection-methods.json"
+        },
+        {
+          "doc_id": "entropy-mapped-bezier-fields",
+          "title": "Entropy-Mapped Bezier Fields",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/entropy-mapped-bezier-fields.json"
+        },
+        {
+          "doc_id": "final-variable",
+          "title": "final variable",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/final-variable.json"
+        },
+        {
+          "doc_id": "finalonly-overview",
+          "title": "Final‑Only Build — Overview",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/finalonly-overview.json"
+        },
+        {
+          "doc_id": "memory-aspects-summary-table",
+          "title": "Five Key Aspects of Memory — Summary Table",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/memory-aspects-summary-table.json"
+        },
+        {
+          "doc_id": "folder-gui-overview",
+          "title": "Folder-Select GUI for Processing Composites",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/folder-gui-overview.json"
+        },
+        {
+          "doc_id": "frame-rate-and-subsets-explainer",
+          "title": "Frame‑Rate Comparison (24/25/30/60 fps) & Subset Strategies",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/frame-rate-and-subsets-explainer.json"
+        },
+        {
+          "doc_id": "permutations-calc-and-save-explainer",
+          "title": "How the Processing Sketch Calculates & Saves Permutations",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-calc-and-save-explainer.json"
+        },
+        {
+          "doc_id": "how-to-call-a-java-method-using-a-variable-name",
+          "title": "how to call a java method using a variable name?",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/how-to-call-a-java-method-using-a-variable-name.json"
+        },
+        {
+          "doc_id": "hybrid-generative-system-architecture",
+          "title": "Hybrid Generative System Architecture",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/hybrid-generative-system-architecture.json"
+        },
+        {
+          "doc_id": "qrng-strategy-for-iching",
+          "title": "Hybrid QRNG Strategy for I Ching — Prefetch + Ritual Pause",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/qrng-strategy-for-iching.json"
+        },
+        {
+          "doc_id": "image-interpolation-explainer",
+          "title": "Image Interpolation Between Two Images — Explainer & Starter Code",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/image-interpolation-explainer.json"
+        },
+        {
+          "doc_id": "impossibility-and-incompleteness",
+          "title": "Impossibility and Incompleteness",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/impossibility-and-incompleteness.json"
+        },
+        {
+          "doc_id": "ink-drops",
+          "title": "Ink drops",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/ink-drops.json"
+        },
+        {
+          "doc_id": "layer-blending",
+          "title": "layer blending",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/layer-blending.json"
+        },
+        {
+          "doc_id": "manifest-integration-overview",
+          "title": "Manifest CSV Integration",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/manifest-integration-overview.json"
+        },
+        {
+          "doc_id": "minimalcomposite3-uhd-png-jpeg",
+          "title": "Minimal Processing Composite — 3 UHD Images (PNG + JPEG)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/minimalcomposite3-uhd-png-jpeg.json"
+        },
+        {
+          "doc_id": "minimal-change-permutations-sjt",
+          "title": "Minimal‑Change Permutations (SJT) – 3! to 6!",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/minimal-change-permutations-sjt.json"
+        },
+        {
+          "doc_id": "sjt-explanation",
+          "title": "Minimal‑Change Permutations (SJT) — Explanation & Implementation",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/sjt-explanation.json"
+        },
+        {
+          "doc_id": "n9-sjt-1min-all-fps-explainer",
+          "title": "n=9 — 1‑Minute Video Strategies (SJT, 24/25/30/60 fps)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/n9-sjt-1min-all-fps-explainer.json"
+        },
+        {
+          "doc_id": "estimator-overview",
+          "title": "On‑Canvas Estimator — How It Works",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/estimator-overview.json"
+        },
+        {
+          "doc_id": "optical-flow-morph-explainer",
+          "title": "Optical-flow Morph — Pure Processing Implementation (Horn–Schunck)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/optical-flow-morph-explainer.json"
+        },
+        {
+          "doc_id": "panarchy-processing-helper",
+          "title": "Panarchy → Processing Helper Sheet (Phases, CSV Schema, SJT Presets, Blend Recipes)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/panarchy-processing-helper.json"
+        },
+        {
+          "doc_id": "permutations-1-to-9-25fps-minutes",
+          "title": "Permutations and Video Duration at 25 fps (n = 1..9)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-1-to-9-25fps-minutes.json"
+        },
+        {
+          "doc_id": "permutations-calc-and-save-explainer-v2",
+          "title": "Permutations — Calculation, Saving, and Practical Estimates",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/permutations-calc-and-save-explainer-v2.json"
+        },
+        {
+          "doc_id": "processing-app-design-episodic-semantic",
+          "title": "Processing App Design — Episodic vs Semantic Modes",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-app-design-episodic-semantic.json"
+        },
+        {
+          "doc_id": "processing-brief-aliveness-modules",
+          "title": "Processing Brief — Making Images ‘Feel Alive’: Punctum, Salience, Aura, Relation (with Citations)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-brief-aliveness-modules.json"
+        },
+        {
+          "doc_id": "processing-cloud-batch-composites-and-python-workflows",
+          "title": "Processing in the Cloud — Batch Composites & Python Workflows",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-cloud-batch-composites-and-python-workflows.json"
+        },
+        {
+          "doc_id": "processing-project-structure-full-20250901-165302",
+          "title": "Processing Project Structure → One Cohesive Application (Full Guide)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-project-structure-full-20250901-165302.json"
+        },
+        {
+          "doc_id": "processing-alive-sketch-guide",
+          "title": "Processing Sketch Scaffold — Alive Imaging (with Citations)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/processing-alive-sketch-guide.json"
+        },
+        {
+          "doc_id": "layerpermutations-overview",
+          "title": "Processing: Layered Composites for All Permutations",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/layerpermutations-overview.json"
+        },
+        {
+          "doc_id": "layerpermutations-autolevels-overview",
+          "title": "Processing: Permutation Composites + Auto Levels",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/layerpermutations-autolevels-overview.json"
+        },
+        {
+          "doc_id": "progressn-overview",
+          "title": "Progress Bar & First‑N Limits — Dual‑Res Workflow",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/progressn-overview.json"
+        },
+        {
+          "doc_id": "route-map-optical-flow",
+          "title": "Route Map: From Layering Images in Processing → Optical-Flow Interpolation",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/route-map-optical-flow.json"
+        },
+        {
+          "doc_id": "seededrandom-overview",
+          "title": "Seeded Random Subset — How It Works",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/seededrandom-overview.json"
+        },
+        {
+          "doc_id": "selectionaudit-overview",
+          "title": "Selection Audit — Indices Preview & CSV",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/selectionaudit-overview.json"
+        },
+        {
+          "doc_id": "selectioncsv-withfilenames",
+          "title": "Selection CSV — With Source Filenames",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/selectioncsv-withfilenames.json"
+        },
+        {
+          "doc_id": "self-mutating-variables",
+          "title": "Self-Mutating Variables",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/self-mutating-variables.json"
+        },
+        {
+          "doc_id": "sighack",
+          "title": "Sighack",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/sighack.json"
+        },
+        {
+          "doc_id": "sound",
+          "title": "Sound",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/sound.json"
+        },
+        {
+          "doc_id": "n7-subset-selection-strategies",
+          "title": "Subset Selection Strategies for Permutations (n = 7)",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/n7-subset-selection-strategies.json"
+        },
+        {
+          "doc_id": "64-curves",
+          "title": "tmp",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/64-curves.json"
+        },
+        {
+          "doc_id": "toggles-gui-overview",
+          "title": "Toggles & Sliders GUI — Processing Permutation Composites",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/toggles-gui-overview.json"
+        },
+        {
+          "doc_id": "video-overlay-reverse-ffmpeg-macos",
+          "title": "Video Overlay Reverse Ffmpeg Macos",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/video-overlay-reverse-ffmpeg-macos.json"
+        },
+        {
+          "doc_id": "visual-code",
+          "title": "Visual Code",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/visual-code.json"
+        },
+        {
+          "doc_id": "when-variables-become-functions",
+          "title": "When Variables Become Functions",
+          "content_url": "/docs-viewer/generated/docs/processing/by-id/when-variables-become-functions.json"
+        }
+      ]
     }
   ],
-  "generated_at": "2026-07-14T15:42:31Z"
+  "generated_at": "2026-07-14T17:19:16Z"
 }
