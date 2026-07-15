@@ -135,7 +135,12 @@ Related body.
     assert diagnostics["build_mode"] == "sub_scope"
     assert diagnostics["sub_scope"] == "tags"
     assert diagnostics["docs_emitted"] == 2
-    assert manifest == {"doc_ids": "detail,related"}
+    assert manifest == {
+        "docs": [
+            {"doc_id": "detail", "title": "Detail"},
+            {"doc_id": "related", "title": "Related"},
+        ]
+    }
     assert detail["doc_id"] == "detail"
     assert detail["title"] == "Detail"
     assert detail["last_updated"] == "2026-06-21"
@@ -146,40 +151,6 @@ Related body.
     assert not (root / "docs-viewer/generated/docs/studio/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/index-tree.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/recently-added.json").exists()
-
-def test_python_docs_builder_rejects_comma_doc_ids_for_sub_scope_manifest() -> None:
-    with tempfile.TemporaryDirectory() as temp_path:
-        root = Path(temp_path)
-        prepare_repo(root)
-        config_path = root / "docs-viewer/config/scopes/docs_scopes.json"
-        payload = read_json(config_path)
-        payload["scopes"][0]["sub_scopes"] = [
-            {
-                "sub_scope": "tags",
-                "title": "Tags",
-                "source": "docs-viewer/source/studio/tags",
-                "output": "docs-viewer/generated/docs/studio/tags",
-            }
-        ]
-        write_json(config_path, payload)
-        write_text(
-            root / "docs-viewer/source/studio/tags/bad.md",
-            """---
-doc_id: bad,id
-title: Bad
----
-# Bad
-""",
-        )
-
-        try:
-            run_cli(root, ["--scope", "studio", "--sub-scope", "tags", "--write"])
-        except RuntimeError as exc:
-            message = str(exc)
-        else:
-            raise AssertionError("Expected comma doc_id to be rejected")
-
-    assert "must not contain commas" in message
 
 def test_python_docs_builder_public_sub_scope_uses_publish_url_base() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

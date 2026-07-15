@@ -2,46 +2,45 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-f03efe4b5b16e4eabfc3ec3dda6b4546",
-    "generated_at_utc": "2026-07-14T18:02:55Z",
+    "version": "blake2b-ebdbf62c2639efabf88637dcf3fcd1c9",
+    "generated_at_utc": "2026-07-15T09:18:21Z",
     "count": 135
   },
   "entries": [
     {
-      "id": "composites-engine",
+      "id": "d-20260714-130600-d0cb08",
       "kind": "doc",
       "title": "composites engine",
-      "href": "/docs/?scope=processing&doc=composites-engine",
+      "href": "/docs/?scope=processing&doc=d-20260714-130600-d0cb08",
       "last_updated": "2026-07-14 13:06",
       "display_meta": "2026-07-14 13:06",
       "search_terms": [
-        "composites-engine",
+        "composites engine",
         "composites",
         "engine",
-        "composites engine",
         "2026-07-14 13:06",
         "2026",
         "07",
         "14",
         "13",
-        "06"
+        "06",
+        "d-20260714-130600-d0cb08"
       ],
-      "search_text": "composites-engine composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06"
+      "search_text": "composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06 d-20260714-130600-d0cb08"
     },
     {
-      "id": "composite-ideas",
+      "id": "d-20260714-131200-b7ea8d",
       "kind": "doc",
       "title": "Composite ideas",
-      "href": "/docs/?scope=processing&doc=composite-ideas",
+      "href": "/docs/?scope=processing&doc=d-20260714-131200-b7ea8d",
       "last_updated": "2026-07-14 13:12",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 13:12 • composites engine",
       "search_terms": [
-        "composite-ideas",
+        "composite ideas",
         "composite",
         "ideas",
-        "composite ideas",
         "composites engine",
         "composites",
         "engine",
@@ -50,17 +49,18 @@
         "07",
         "14",
         "13",
-        "12"
+        "12",
+        "d-20260714-131200-b7ea8d"
       ],
-      "search_text": "composite-ideas composite ideas composite ideas composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+      "search_text": "composite ideas composite ideas composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12 d-20260714-131200-b7ea8d"
     },
     {
-      "id": "ffmpeg",
+      "id": "d-20260714-091600-7d5237",
       "kind": "doc",
       "title": "Ffmpeg",
-      "href": "/docs/?scope=processing&doc=ffmpeg",
+      "href": "/docs/?scope=processing&doc=d-20260714-091600-7d5237",
       "last_updated": "2026-07-14 09:16",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 09:16 • composites engine",
       "search_terms": [
@@ -73,25 +73,25 @@
         "07",
         "14",
         "09",
-        "16"
+        "16",
+        "d-20260714-091600-7d5237"
       ],
-      "search_text": "ffmpeg composites engine composites engine 2026-07-14 09:16 2026 07 14 09 16"
+      "search_text": "ffmpeg composites engine composites engine 2026-07-14 09:16 2026 07 14 09 16 d-20260714-091600-7d5237"
     },
     {
-      "id": "interpolation-2-images",
+      "id": "d-20260714-113800-613a32",
       "kind": "doc",
       "title": "Interpolation 2 images",
-      "href": "/docs/?scope=processing&doc=interpolation-2-images",
+      "href": "/docs/?scope=processing&doc=d-20260714-113800-613a32",
       "last_updated": "2026-07-14 11:38",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 11:38 • composites engine",
       "search_terms": [
-        "interpolation-2-images",
+        "interpolation 2 images",
         "interpolation",
         "2",
         "images",
-        "interpolation 2 images",
         "composites engine",
         "composites",
         "engine",
@@ -100,17 +100,18 @@
         "07",
         "14",
         "11",
-        "38"
+        "38",
+        "d-20260714-113800-613a32"
       ],
-      "search_text": "interpolation-2-images interpolation 2 images interpolation 2 images composites engine composites engine 2026-07-14 11:38 2026 07 14 11 38"
+      "search_text": "interpolation 2 images interpolation 2 images composites engine composites engine 2026-07-14 11:38 2026 07 14 11 38 d-20260714-113800-613a32"
     },
     {
-      "id": "introduction",
+      "id": "d-20260714-131200-fc4a8c",
       "kind": "doc",
       "title": "Introduction",
-      "href": "/docs/?scope=processing&doc=introduction",
+      "href": "/docs/?scope=processing&doc=d-20260714-131200-fc4a8c",
       "last_updated": "2026-07-14 13:12",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 13:12 • composites engine",
       "search_terms": [
@@ -123,17 +124,18 @@
         "07",
         "14",
         "13",
-        "12"
+        "12",
+        "d-20260714-131200-fc4a8c"
       ],
-      "search_text": "introduction composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+      "search_text": "introduction composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12 d-20260714-131200-fc4a8c"
     },
     {
-      "id": "levels",
+      "id": "d-20260714-130600-243938",
       "kind": "doc",
       "title": "Levels",
-      "href": "/docs/?scope=processing&doc=levels",
+      "href": "/docs/?scope=processing&doc=d-20260714-130600-243938",
       "last_updated": "2026-07-14 13:06",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 13:06 • composites engine",
       "search_terms": [
@@ -146,25 +148,25 @@
         "07",
         "14",
         "13",
-        "06"
+        "06",
+        "d-20260714-130600-243938"
       ],
-      "search_text": "levels composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06"
+      "search_text": "levels composites engine composites engine 2026-07-14 13:06 2026 07 14 13 06 d-20260714-130600-243938"
     },
     {
-      "id": "non-repeating-memories",
+      "id": "d-20260714-131200-fce139",
       "kind": "doc",
       "title": "Non repeating memories",
-      "href": "/docs/?scope=processing&doc=non-repeating-memories",
+      "href": "/docs/?scope=processing&doc=d-20260714-131200-fce139",
       "last_updated": "2026-07-14 13:12",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 13:12 • composites engine",
       "search_terms": [
-        "non-repeating-memories",
+        "non repeating memories",
         "non",
         "repeating",
         "memories",
-        "non repeating memories",
         "composites engine",
         "composites",
         "engine",
@@ -173,17 +175,18 @@
         "07",
         "14",
         "13",
-        "12"
+        "12",
+        "d-20260714-131200-fce139"
       ],
-      "search_text": "non-repeating-memories non repeating memories non repeating memories composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+      "search_text": "non repeating memories non repeating memories composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12 d-20260714-131200-fce139"
     },
     {
-      "id": "sjt",
+      "id": "d-20260714-131200-dd2259",
       "kind": "doc",
       "title": "SJT",
-      "href": "/docs/?scope=processing&doc=sjt",
+      "href": "/docs/?scope=processing&doc=d-20260714-131200-dd2259",
       "last_updated": "2026-07-14 13:12",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 13:12 • composites engine",
       "search_terms": [
@@ -196,24 +199,24 @@
         "07",
         "14",
         "13",
-        "12"
+        "12",
+        "d-20260714-131200-dd2259"
       ],
-      "search_text": "sjt composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+      "search_text": "sjt composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12 d-20260714-131200-dd2259"
     },
     {
-      "id": "sjt-code",
+      "id": "d-20260714-131200-08e966",
       "kind": "doc",
       "title": "SJT Code",
-      "href": "/docs/?scope=processing&doc=sjt-code",
+      "href": "/docs/?scope=processing&doc=d-20260714-131200-08e966",
       "last_updated": "2026-07-14 13:12",
-      "parent_id": "composites-engine",
+      "parent_id": "d-20260714-130600-d0cb08",
       "parent_title": "composites engine",
       "display_meta": "2026-07-14 13:12 • composites engine",
       "search_terms": [
-        "sjt-code",
+        "sjt code",
         "sjt",
         "code",
-        "sjt code",
         "composites engine",
         "composites",
         "engine",
@@ -222,15 +225,16 @@
         "07",
         "14",
         "13",
-        "12"
+        "12",
+        "d-20260714-131200-08e966"
       ],
-      "search_text": "sjt-code sjt code sjt code composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12"
+      "search_text": "sjt code sjt code composites engine composites engine 2026-07-14 13:12 2026 07 14 13 12 d-20260714-131200-08e966"
     },
     {
-      "id": "files",
+      "id": "d-20260714-180800-4dcaca",
       "kind": "doc",
       "title": "files",
-      "href": "/docs/?scope=processing&doc=files",
+      "href": "/docs/?scope=processing&doc=d-20260714-180800-4dcaca",
       "last_updated": "2026-07-14 18:08",
       "display_meta": "2026-07-14 18:08",
       "search_terms": [
@@ -240,48 +244,49 @@
         "07",
         "14",
         "18",
-        "08"
+        "08",
+        "d-20260714-180800-4dcaca"
       ],
-      "search_text": "files 2026-07-14 18:08 2026 07 14 18 08"
+      "search_text": "files 2026-07-14 18:08 2026 07 14 18 08 d-20260714-180800-4dcaca"
     },
     {
-      "id": "de-bruijn-b8-3-digits",
+      "id": "d-20260714-180600-1b8f03",
       "kind": "doc",
       "title": "De Bruijn B8 3 Digits",
-      "href": "/docs/?scope=processing&doc=de-bruijn-b8-3-digits",
+      "href": "/docs/?scope=processing&doc=d-20260714-180600-1b8f03",
       "last_updated": "2026-07-14 18:06",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:06 • files",
       "search_terms": [
-        "de-bruijn-b8-3-digits",
+        "de bruijn b8 3 digits",
         "de",
         "bruijn",
         "b8",
         "3",
         "digits",
-        "de bruijn b8 3 digits",
         "files",
         "2026-07-14 18:06",
         "2026",
         "07",
         "14",
         "18",
-        "06"
+        "06",
+        "d-20260714-180600-1b8f03"
       ],
-      "search_text": "de-bruijn-b8-3-digits de bruijn b8 3 digits de bruijn b8 3 digits files 2026-07-14 18:06 2026 07 14 18 06"
+      "search_text": "de bruijn b8 3 digits de bruijn b8 3 digits files 2026-07-14 18:06 2026 07 14 18 06 d-20260714-180600-1b8f03"
     },
     {
-      "id": "de-bruijn-b8-3-digits-with-files",
+      "id": "d-20260714-180600-55c8af",
       "kind": "doc",
       "title": "De Bruijn B8 3 Digits With Files",
-      "href": "/docs/?scope=processing&doc=de-bruijn-b8-3-digits-with-files",
+      "href": "/docs/?scope=processing&doc=d-20260714-180600-55c8af",
       "last_updated": "2026-07-14 18:06",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:06 • files",
       "search_terms": [
-        "de-bruijn-b8-3-digits-with-files",
+        "de bruijn b8 3 digits with files",
         "de",
         "bruijn",
         "b8",
@@ -289,27 +294,27 @@
         "digits",
         "with",
         "files",
-        "de bruijn b8 3 digits with files",
         "2026-07-14 18:06",
         "2026",
         "07",
         "14",
         "18",
-        "06"
+        "06",
+        "d-20260714-180600-55c8af"
       ],
-      "search_text": "de-bruijn-b8-3-digits-with-files de bruijn b8 3 digits with files de bruijn b8 3 digits with files 2026-07-14 18:06 2026 07 14 18 06"
+      "search_text": "de bruijn b8 3 digits with files de bruijn b8 3 digits with files 2026-07-14 18:06 2026 07 14 18 06 d-20260714-180600-55c8af"
     },
     {
-      "id": "de-bruijn-b8-3-digits-with-positioned-files",
+      "id": "d-20260714-180600-2ba62f",
       "kind": "doc",
       "title": "De Bruijn B8 3 Digits With Positioned Files",
-      "href": "/docs/?scope=processing&doc=de-bruijn-b8-3-digits-with-positioned-files",
+      "href": "/docs/?scope=processing&doc=d-20260714-180600-2ba62f",
       "last_updated": "2026-07-14 18:06",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:06 • files",
       "search_terms": [
-        "de-bruijn-b8-3-digits-with-positioned-files",
+        "de bruijn b8 3 digits with positioned files",
         "de",
         "bruijn",
         "b8",
@@ -318,182 +323,180 @@
         "with",
         "positioned",
         "files",
-        "de bruijn b8 3 digits with positioned files",
         "2026-07-14 18:06",
         "2026",
         "07",
         "14",
         "18",
-        "06"
+        "06",
+        "d-20260714-180600-2ba62f"
       ],
-      "search_text": "de-bruijn-b8-3-digits-with-positioned-files de bruijn b8 3 digits with positioned files de bruijn b8 3 digits with positioned files 2026-07-14 18:06 2026 07 14 18 06"
+      "search_text": "de bruijn b8 3 digits with positioned files de bruijn b8 3 digits with positioned files 2026-07-14 18:06 2026 07 14 18 06 d-20260714-180600-2ba62f"
     },
     {
-      "id": "de-bruijn-b8-3-triples",
+      "id": "d-20260714-180600-b8ed4b",
       "kind": "doc",
       "title": "De Bruijn B8 3 Triples",
-      "href": "/docs/?scope=processing&doc=de-bruijn-b8-3-triples",
+      "href": "/docs/?scope=processing&doc=d-20260714-180600-b8ed4b",
       "last_updated": "2026-07-14 18:06",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:06 • files",
       "search_terms": [
-        "de-bruijn-b8-3-triples",
+        "de bruijn b8 3 triples",
         "de",
         "bruijn",
         "b8",
         "3",
         "triples",
-        "de bruijn b8 3 triples",
         "files",
         "2026-07-14 18:06",
         "2026",
         "07",
         "14",
         "18",
-        "06"
+        "06",
+        "d-20260714-180600-b8ed4b"
       ],
-      "search_text": "de-bruijn-b8-3-triples de bruijn b8 3 triples de bruijn b8 3 triples files 2026-07-14 18:06 2026 07 14 18 06"
+      "search_text": "de bruijn b8 3 triples de bruijn b8 3 triples files 2026-07-14 18:06 2026 07 14 18 06 d-20260714-180600-b8ed4b"
     },
     {
-      "id": "kanban-optical-flow",
+      "id": "d-20260714-180400-32edad",
       "kind": "doc",
       "title": "Kanban Optical Flow",
-      "href": "/docs/?scope=processing&doc=kanban-optical-flow",
+      "href": "/docs/?scope=processing&doc=d-20260714-180400-32edad",
       "last_updated": "2026-07-14 18:04",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:04 • files",
       "search_terms": [
-        "kanban-optical-flow",
+        "kanban optical flow",
         "kanban",
         "optical",
         "flow",
-        "kanban optical flow",
         "files",
         "2026-07-14 18:04",
         "2026",
         "07",
         "14",
         "18",
-        "04"
+        "04",
+        "d-20260714-180400-32edad"
       ],
-      "search_text": "kanban-optical-flow kanban optical flow kanban optical flow files 2026-07-14 18:04 2026 07 14 18 04"
+      "search_text": "kanban optical flow kanban optical flow files 2026-07-14 18:04 2026 07 14 18 04 d-20260714-180400-32edad"
     },
     {
-      "id": "layer-rules",
+      "id": "d-20260714-180500-b4c270",
       "kind": "doc",
       "title": "Layer Rules",
-      "href": "/docs/?scope=processing&doc=layer-rules",
+      "href": "/docs/?scope=processing&doc=d-20260714-180500-b4c270",
       "last_updated": "2026-07-14 18:05",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:05 • files",
       "search_terms": [
-        "layer-rules",
+        "layer rules",
         "layer",
         "rules",
-        "layer rules",
         "files",
         "2026-07-14 18:05",
         "2026",
         "07",
         "14",
         "18",
-        "05"
+        "05",
+        "d-20260714-180500-b4c270"
       ],
-      "search_text": "layer-rules layer rules layer rules files 2026-07-14 18:05 2026 07 14 18 05"
+      "search_text": "layer rules layer rules files 2026-07-14 18:05 2026 07 14 18 05 d-20260714-180500-b4c270"
     },
     {
-      "id": "n7-subset-selection-strategies2",
+      "id": "d-20260714-180700-4bb3af",
       "kind": "doc",
       "title": "N7 Subset Selection Strategies",
-      "href": "/docs/?scope=processing&doc=n7-subset-selection-strategies2",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-4bb3af",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "n7-subset-selection-strategies2",
+        "n7 subset selection strategies",
         "n7",
         "subset",
         "selection",
-        "strategies2",
-        "n7 subset selection strategies",
         "strategies",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-4bb3af"
       ],
-      "search_text": "n7-subset-selection-strategies2 n7 subset selection strategies2 n7 subset selection strategies strategies files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "n7 subset selection strategies n7 subset selection strategies files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-4bb3af"
     },
     {
-      "id": "n7-subset-selection-strategies-advanced2",
+      "id": "d-20260714-180700-0b8789",
       "kind": "doc",
       "title": "N7 Subset Selection Strategies Advanced",
-      "href": "/docs/?scope=processing&doc=n7-subset-selection-strategies-advanced2",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-0b8789",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "n7-subset-selection-strategies-advanced2",
+        "n7 subset selection strategies advanced",
         "n7",
         "subset",
         "selection",
         "strategies",
-        "advanced2",
-        "n7 subset selection strategies advanced",
         "advanced",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-0b8789"
       ],
-      "search_text": "n7-subset-selection-strategies-advanced2 n7 subset selection strategies advanced2 n7 subset selection strategies advanced advanced files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "n7 subset selection strategies advanced n7 subset selection strategies advanced files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-0b8789"
     },
     {
-      "id": "n9-sjt-1min-all-fps",
+      "id": "d-20260714-180700-5d809c",
       "kind": "doc",
       "title": "N9 Sjt 1min All Fps",
-      "href": "/docs/?scope=processing&doc=n9-sjt-1min-all-fps",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-5d809c",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "n9-sjt-1min-all-fps",
+        "n9 sjt 1min all fps",
         "n9",
         "sjt",
         "1min",
         "all",
         "fps",
-        "n9 sjt 1min all fps",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-5d809c"
       ],
-      "search_text": "n9-sjt-1min-all-fps n9 sjt 1min all fps n9 sjt 1min all fps files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "n9 sjt 1min all fps n9 sjt 1min all fps files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-5d809c"
     },
     {
-      "id": "permutation-subsets-fps-24-25-30-60",
+      "id": "d-20260714-180700-b5896f",
       "kind": "doc",
       "title": "Permutation Subsets Fps 24 25 30 60",
-      "href": "/docs/?scope=processing&doc=permutation-subsets-fps-24-25-30-60",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-b5896f",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutation-subsets-fps-24-25-30-60",
+        "permutation subsets fps 24 25 30 60",
         "permutation",
         "subsets",
         "fps",
@@ -501,227 +504,227 @@
         "25",
         "30",
         "60",
-        "permutation subsets fps 24 25 30 60",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-b5896f"
       ],
-      "search_text": "permutation-subsets-fps-24-25-30-60 permutation subsets fps 24 25 30 60 permutation subsets fps 24 25 30 60 files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutation subsets fps 24 25 30 60 permutation subsets fps 24 25 30 60 files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-b5896f"
     },
     {
-      "id": "permutation-subsets-n7-n8-advanced",
+      "id": "d-20260714-180700-1ae2b7",
       "kind": "doc",
       "title": "Permutation Subsets N7 N8 Advanced",
-      "href": "/docs/?scope=processing&doc=permutation-subsets-n7-n8-advanced",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-1ae2b7",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutation-subsets-n7-n8-advanced",
+        "permutation subsets n7 n8 advanced",
         "permutation",
         "subsets",
         "n7",
         "n8",
         "advanced",
-        "permutation subsets n7 n8 advanced",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-1ae2b7"
       ],
-      "search_text": "permutation-subsets-n7-n8-advanced permutation subsets n7 n8 advanced permutation subsets n7 n8 advanced files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutation subsets n7 n8 advanced permutation subsets n7 n8 advanced files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-1ae2b7"
     },
     {
-      "id": "permutation-subsets-n7-n8-with-durations",
+      "id": "d-20260714-180700-5ba007",
       "kind": "doc",
       "title": "Permutation Subsets N7 N8 With Durations",
-      "href": "/docs/?scope=processing&doc=permutation-subsets-n7-n8-with-durations",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-5ba007",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutation-subsets-n7-n8-with-durations",
+        "permutation subsets n7 n8 with durations",
         "permutation",
         "subsets",
         "n7",
         "n8",
         "with",
         "durations",
-        "permutation subsets n7 n8 with durations",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-5ba007"
       ],
-      "search_text": "permutation-subsets-n7-n8-with-durations permutation subsets n7 n8 with durations permutation subsets n7 n8 with durations files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutation subsets n7 n8 with durations permutation subsets n7 n8 with durations files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-5ba007"
     },
     {
-      "id": "permutations-3to6-indexed",
+      "id": "d-20260714-180700-c98a19",
       "kind": "doc",
       "title": "Permutations 3to6 Indexed",
-      "href": "/docs/?scope=processing&doc=permutations-3to6-indexed",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-c98a19",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutations-3to6-indexed",
+        "permutations 3to6 indexed",
         "permutations",
         "3to6",
         "indexed",
-        "permutations 3to6 indexed",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-c98a19"
       ],
-      "search_text": "permutations-3to6-indexed permutations 3to6 indexed permutations 3to6 indexed files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutations 3to6 indexed permutations 3to6 indexed files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-c98a19"
     },
     {
-      "id": "permutations-3to6-sjt-indexed",
+      "id": "d-20260714-180700-0b4a0f",
       "kind": "doc",
       "title": "Permutations 3to6 Sjt Indexed",
-      "href": "/docs/?scope=processing&doc=permutations-3to6-sjt-indexed",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-0b4a0f",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutations-3to6-sjt-indexed",
+        "permutations 3to6 sjt indexed",
         "permutations",
         "3to6",
         "sjt",
         "indexed",
-        "permutations 3to6 sjt indexed",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-0b4a0f"
       ],
-      "search_text": "permutations-3to6-sjt-indexed permutations 3to6 sjt indexed permutations 3to6 sjt indexed files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutations 3to6 sjt indexed permutations 3to6 sjt indexed files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-0b4a0f"
     },
     {
-      "id": "permutations-3to6-split-columns",
+      "id": "d-20260714-180700-18048f",
       "kind": "doc",
       "title": "Permutations 3to6 Split Columns",
-      "href": "/docs/?scope=processing&doc=permutations-3to6-split-columns",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-18048f",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutations-3to6-split-columns",
+        "permutations 3to6 split columns",
         "permutations",
         "3to6",
         "split",
         "columns",
-        "permutations 3to6 split columns",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-18048f"
       ],
-      "search_text": "permutations-3to6-split-columns permutations 3to6 split columns permutations 3to6 split columns files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutations 3to6 split columns permutations 3to6 split columns files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-18048f"
     },
     {
-      "id": "permutations-3to6-with-counts",
+      "id": "d-20260714-180700-a15d97",
       "kind": "doc",
       "title": "Permutations 3to6 With Counts",
-      "href": "/docs/?scope=processing&doc=permutations-3to6-with-counts",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-a15d97",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutations-3to6-with-counts",
+        "permutations 3to6 with counts",
         "permutations",
         "3to6",
         "with",
         "counts",
-        "permutations 3to6 with counts",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-a15d97"
       ],
-      "search_text": "permutations-3to6-with-counts permutations 3to6 with counts permutations 3to6 with counts files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutations 3to6 with counts permutations 3to6 with counts files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-a15d97"
     },
     {
-      "id": "permutations-3to7-sjt-indexed-with-properties",
+      "id": "d-20260714-180700-6e2963",
       "kind": "doc",
       "title": "Permutations 3to7 Sjt Indexed With Properties",
-      "href": "/docs/?scope=processing&doc=permutations-3to7-sjt-indexed-with-properties",
+      "href": "/docs/?scope=processing&doc=d-20260714-180700-6e2963",
       "last_updated": "2026-07-14 18:07",
-      "parent_id": "files",
+      "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
       "display_meta": "2026-07-14 18:07 • files",
       "search_terms": [
-        "permutations-3to7-sjt-indexed-with-properties",
+        "permutations 3to7 sjt indexed with properties",
         "permutations",
         "3to7",
         "sjt",
         "indexed",
         "with",
         "properties",
-        "permutations 3to7 sjt indexed with properties",
         "files",
         "2026-07-14 18:07",
         "2026",
         "07",
         "14",
-        "18"
+        "18",
+        "d-20260714-180700-6e2963"
       ],
-      "search_text": "permutations-3to7-sjt-indexed-with-properties permutations 3to7 sjt indexed with properties permutations 3to7 sjt indexed with properties files 2026-07-14 18:07 2026 07 14 18"
+      "search_text": "permutations 3to7 sjt indexed with properties permutations 3to7 sjt indexed with properties files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-6e2963"
     },
     {
-      "id": "i-ching",
+      "id": "d-20260714-174200-720410",
       "kind": "doc",
       "title": "I Ching",
-      "href": "/docs/?scope=processing&doc=i-ching",
+      "href": "/docs/?scope=processing&doc=d-20260714-174200-720410",
       "last_updated": "2026-07-14 17:42",
       "display_meta": "2026-07-14 17:42",
       "search_terms": [
-        "i-ching",
+        "i ching",
         "i",
         "ching",
-        "i ching",
         "2026-07-14 17:42",
         "2026",
         "07",
         "14",
         "17",
-        "42"
+        "42",
+        "d-20260714-174200-720410"
       ],
-      "search_text": "i-ching i ching i ching 2026-07-14 17:42 2026 07 14 17 42"
+      "search_text": "i ching i ching 2026-07-14 17:42 2026 07 14 17 42 d-20260714-174200-720410"
     },
     {
-      "id": "a-processing-i-ching-app-that-uses-real-time-qrng",
+      "id": "d-20260714-174300-55a627",
       "kind": "doc",
       "title": "A processing I Ching app that uses real time QRNG?",
-      "href": "/docs/?scope=processing&doc=a-processing-i-ching-app-that-uses-real-time-qrng",
+      "href": "/docs/?scope=processing&doc=d-20260714-174300-55a627",
       "last_updated": "2026-07-14 17:43",
-      "parent_id": "i-ching",
+      "parent_id": "d-20260714-174200-720410",
       "parent_title": "I Ching",
       "display_meta": "2026-07-14 17:43 • I Ching",
       "search_terms": [
-        "a-processing-i-ching-app-that-uses-real-time-qrng",
+        "a processing i ching app that uses real time qrng?",
         "a",
         "processing",
         "i",
@@ -732,28 +735,28 @@
         "real",
         "time",
         "qrng",
-        "a processing i ching app that uses real time qrng?",
         "i ching",
         "2026-07-14 17:43",
         "2026",
         "07",
         "14",
         "17",
-        "43"
+        "43",
+        "d-20260714-174300-55a627"
       ],
-      "search_text": "a-processing-i-ching-app-that-uses-real-time-qrng a processing i ching app that uses real time qrng a processing i ching app that uses real time qrng? i ching 2026-07-14 17:43 2026 07 14 17 43"
+      "search_text": "a processing i ching app that uses real time qrng? a processing i ching app that uses real time qrng i ching 2026-07-14 17:43 2026 07 14 17 43 d-20260714-174300-55a627"
     },
     {
-      "id": "arrange-the-64-into-two-blocks-of-8-x-4",
+      "id": "d-20260714-174300-4823c9",
       "kind": "doc",
       "title": "Arrange the 64 into two blocks of 8 x 4?",
-      "href": "/docs/?scope=processing&doc=arrange-the-64-into-two-blocks-of-8-x-4",
+      "href": "/docs/?scope=processing&doc=d-20260714-174300-4823c9",
       "last_updated": "2026-07-14 17:43",
-      "parent_id": "i-ching",
+      "parent_id": "d-20260714-174200-720410",
       "parent_title": "I Ching",
       "display_meta": "2026-07-14 17:43 • I Ching",
       "search_terms": [
-        "arrange-the-64-into-two-blocks-of-8-x-4",
+        "arrange the 64 into two blocks of 8 x 4?",
         "arrange",
         "the",
         "64",
@@ -764,7 +767,6 @@
         "8",
         "x",
         "4",
-        "arrange the 64 into two blocks of 8 x 4?",
         "i ching",
         "i",
         "ching",
@@ -773,172 +775,171 @@
         "07",
         "14",
         "17",
-        "43"
+        "43",
+        "d-20260714-174300-4823c9"
       ],
-      "search_text": "arrange-the-64-into-two-blocks-of-8-x-4 arrange the 64 into two blocks of 8 x 4 arrange the 64 into two blocks of 8 x 4? i ching i ching 2026-07-14 17:43 2026 07 14 17 43"
+      "search_text": "arrange the 64 into two blocks of 8 x 4? arrange the 64 into two blocks of 8 x 4 i ching i ching 2026-07-14 17:43 2026 07 14 17 43 d-20260714-174300-4823c9"
     },
     {
-      "id": "quantum-randomness-and-i-ching",
+      "id": "d-20260714-174300-033a57",
       "kind": "doc",
       "title": "Quantum randomness and I Ching",
-      "href": "/docs/?scope=processing&doc=quantum-randomness-and-i-ching",
+      "href": "/docs/?scope=processing&doc=d-20260714-174300-033a57",
       "last_updated": "2026-07-14 17:43",
-      "parent_id": "i-ching",
+      "parent_id": "d-20260714-174200-720410",
       "parent_title": "I Ching",
       "display_meta": "2026-07-14 17:43 • I Ching",
       "search_terms": [
-        "quantum-randomness-and-i-ching",
+        "quantum randomness and i ching",
         "quantum",
         "randomness",
         "and",
         "i",
         "ching",
-        "quantum randomness and i ching",
         "i ching",
         "2026-07-14 17:43",
         "2026",
         "07",
         "14",
         "17",
-        "43"
+        "43",
+        "d-20260714-174300-033a57"
       ],
-      "search_text": "quantum-randomness-and-i-ching quantum randomness and i ching quantum randomness and i ching i ching 2026-07-14 17:43 2026 07 14 17 43"
+      "search_text": "quantum randomness and i ching quantum randomness and i ching i ching 2026-07-14 17:43 2026 07 14 17 43 d-20260714-174300-033a57"
     },
     {
-      "id": "redesigning-i-ching-symbols",
+      "id": "d-20260714-174300-ce68ff",
       "kind": "doc",
       "title": "Redesigning I Ching symbols",
-      "href": "/docs/?scope=processing&doc=redesigning-i-ching-symbols",
+      "href": "/docs/?scope=processing&doc=d-20260714-174300-ce68ff",
       "last_updated": "2026-07-14 17:43",
-      "parent_id": "i-ching",
+      "parent_id": "d-20260714-174200-720410",
       "parent_title": "I Ching",
       "display_meta": "2026-07-14 17:43 • I Ching",
       "search_terms": [
-        "redesigning-i-ching-symbols",
+        "redesigning i ching symbols",
         "redesigning",
         "i",
         "ching",
         "symbols",
-        "redesigning i ching symbols",
         "i ching",
         "2026-07-14 17:43",
         "2026",
         "07",
         "14",
         "17",
-        "43"
+        "43",
+        "d-20260714-174300-ce68ff"
       ],
-      "search_text": "redesigning-i-ching-symbols redesigning i ching symbols redesigning i ching symbols i ching 2026-07-14 17:43 2026 07 14 17 43"
+      "search_text": "redesigning i ching symbols redesigning i ching symbols i ching 2026-07-14 17:43 2026 07 14 17 43 d-20260714-174300-ce68ff"
     },
     {
-      "id": "ink-engine",
+      "id": "d-20260714-172300-a188f2",
       "kind": "doc",
       "title": "ink engine",
-      "href": "/docs/?scope=processing&doc=ink-engine",
+      "href": "/docs/?scope=processing&doc=d-20260714-172300-a188f2",
       "last_updated": "2026-07-14 17:23",
       "display_meta": "2026-07-14 17:23",
       "search_terms": [
-        "ink-engine",
+        "ink engine",
         "ink",
         "engine",
-        "ink engine",
         "2026-07-14 17:23",
         "2026",
         "07",
         "14",
         "17",
-        "23"
+        "23",
+        "d-20260714-172300-a188f2"
       ],
-      "search_text": "ink-engine ink engine ink engine 2026-07-14 17:23 2026 07 14 17 23"
+      "search_text": "ink engine ink engine 2026-07-14 17:23 2026 07 14 17 23 d-20260714-172300-a188f2"
     },
     {
-      "id": "ink-engine2",
+      "id": "d-20260714-172700-cadb13",
       "kind": "doc",
       "title": "ink engine",
-      "href": "/docs/?scope=processing&doc=ink-engine2",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-cadb13",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "ink-engine",
+      "parent_id": "d-20260714-172300-a188f2",
       "parent_title": "ink engine",
       "display_meta": "2026-07-14 17:27 • ink engine",
       "search_terms": [
-        "ink-engine2",
-        "ink",
-        "engine2",
         "ink engine",
+        "ink",
         "engine",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-cadb13"
       ],
-      "search_text": "ink-engine2 ink engine2 ink engine engine 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "ink engine ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-cadb13"
     },
     {
-      "id": "ink-engine-architecture",
+      "id": "d-20260714-172700-fbec10",
       "kind": "doc",
       "title": "Ink Engine Architecture",
-      "href": "/docs/?scope=processing&doc=ink-engine-architecture",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-fbec10",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "ink-engine",
+      "parent_id": "d-20260714-172300-a188f2",
       "parent_title": "ink engine",
       "display_meta": "2026-07-14 17:27 • ink engine",
       "search_terms": [
-        "ink-engine-architecture",
+        "ink engine architecture",
         "ink",
         "engine",
         "architecture",
-        "ink engine architecture",
         "ink engine",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-fbec10"
       ],
-      "search_text": "ink-engine-architecture ink engine architecture ink engine architecture ink engine 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "ink engine architecture ink engine architecture ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-fbec10"
     },
     {
-      "id": "ink-engine-quantum",
+      "id": "d-20260714-172700-c5909c",
       "kind": "doc",
       "title": "Ink Engine Quantum",
-      "href": "/docs/?scope=processing&doc=ink-engine-quantum",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-c5909c",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "ink-engine",
+      "parent_id": "d-20260714-172300-a188f2",
       "parent_title": "ink engine",
       "display_meta": "2026-07-14 17:27 • ink engine",
       "search_terms": [
-        "ink-engine-quantum",
+        "ink engine quantum",
         "ink",
         "engine",
         "quantum",
-        "ink engine quantum",
         "ink engine",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-c5909c"
       ],
-      "search_text": "ink-engine-quantum ink engine quantum ink engine quantum ink engine 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "ink engine quantum ink engine quantum ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-c5909c"
     },
     {
-      "id": "philosophical-challenge",
+      "id": "d-20260714-172700-036f91",
       "kind": "doc",
       "title": "Philosophical Challenge",
-      "href": "/docs/?scope=processing&doc=philosophical-challenge",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-036f91",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "ink-engine",
+      "parent_id": "d-20260714-172300-a188f2",
       "parent_title": "ink engine",
       "display_meta": "2026-07-14 17:27 • ink engine",
       "search_terms": [
-        "philosophical-challenge",
+        "philosophical challenge",
         "philosophical",
         "challenge",
-        "philosophical challenge",
         "ink engine",
         "ink",
         "engine",
@@ -947,25 +948,25 @@
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-036f91"
       ],
-      "search_text": "philosophical-challenge philosophical challenge philosophical challenge ink engine ink engine 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "philosophical challenge philosophical challenge ink engine ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-036f91"
     },
     {
-      "id": "practical-implementation-methodology",
+      "id": "d-20260714-172700-c6213a",
       "kind": "doc",
       "title": "Practical Implementation Methodology",
-      "href": "/docs/?scope=processing&doc=practical-implementation-methodology",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-c6213a",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "ink-engine",
+      "parent_id": "d-20260714-172300-a188f2",
       "parent_title": "ink engine",
       "display_meta": "2026-07-14 17:27 • ink engine",
       "search_terms": [
-        "practical-implementation-methodology",
+        "practical implementation methodology",
         "practical",
         "implementation",
         "methodology",
-        "practical implementation methodology",
         "ink engine",
         "ink",
         "engine",
@@ -974,244 +975,242 @@
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-c6213a"
       ],
-      "search_text": "practical-implementation-methodology practical implementation methodology practical implementation methodology ink engine ink engine 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "practical implementation methodology practical implementation methodology ink engine ink engine 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-c6213a"
     },
     {
-      "id": "sketch-250309a-ink",
+      "id": "d-20260714-174600-cedc85",
       "kind": "doc",
       "title": "InkEngine",
-      "href": "/docs/?scope=processing&doc=sketch-250309a-ink",
+      "href": "/docs/?scope=processing&doc=d-20260714-174600-cedc85",
       "last_updated": "2026-07-14 19:00",
       "display_meta": "2026-07-14 19:00",
       "search_terms": [
-        "sketch-250309a-ink",
-        "sketch",
-        "250309a",
-        "ink",
         "inkengine",
         "2026-07-14 19:00",
         "2026",
         "07",
         "14",
         "19",
-        "00"
+        "00",
+        "d-20260714-174600-cedc85"
       ],
-      "search_text": "sketch-250309a-ink sketch 250309a ink inkengine 2026-07-14 19:00 2026 07 14 19 00"
+      "search_text": "inkengine 2026-07-14 19:00 2026 07 14 19 00 d-20260714-174600-cedc85"
     },
     {
-      "id": "brush-strokes",
+      "id": "d-20260714-174700-a994cf",
       "kind": "doc",
       "title": "brush strokes",
-      "href": "/docs/?scope=processing&doc=brush-strokes",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-a994cf",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "brush-strokes",
+        "brush strokes",
         "brush",
         "strokes",
-        "brush strokes",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-a994cf"
       ],
-      "search_text": "brush-strokes brush strokes brush strokes inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "brush strokes brush strokes inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-a994cf"
     },
     {
-      "id": "createline-vectorfield-v1",
+      "id": "d-20260714-174700-f98f58",
       "kind": "doc",
       "title": "createLine_VectorField (v1)",
-      "href": "/docs/?scope=processing&doc=createline-vectorfield-v1",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-f98f58",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "createline-vectorfield-v1",
+        "createline_vectorfield (v1)",
         "createline",
         "vectorfield",
         "v1",
-        "createline_vectorfield (v1)",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-f98f58"
       ],
-      "search_text": "createline-vectorfield-v1 createline vectorfield v1 createline_vectorfield (v1) inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "createline_vectorfield (v1) createline vectorfield v1 inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-f98f58"
     },
     {
-      "id": "createline-vectorfield-v2",
+      "id": "d-20260714-174700-a12a87",
       "kind": "doc",
       "title": "createLine_VectorField (v2)",
-      "href": "/docs/?scope=processing&doc=createline-vectorfield-v2",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-a12a87",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "createline-vectorfield-v2",
+        "createline_vectorfield (v2)",
         "createline",
         "vectorfield",
         "v2",
-        "createline_vectorfield (v2)",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-a12a87"
       ],
-      "search_text": "createline-vectorfield-v2 createline vectorfield v2 createline_vectorfield (v2) inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "createline_vectorfield (v2) createline vectorfield v2 inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-a12a87"
     },
     {
-      "id": "curve-boundary-function",
+      "id": "d-20260714-174700-c13a4e",
       "kind": "doc",
       "title": "curve boundary function",
-      "href": "/docs/?scope=processing&doc=curve-boundary-function",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-c13a4e",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "curve-boundary-function",
+        "curve boundary function",
         "curve",
         "boundary",
         "function",
-        "curve boundary function",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-c13a4e"
       ],
-      "search_text": "curve-boundary-function curve boundary function curve boundary function inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "curve boundary function curve boundary function inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-c13a4e"
     },
     {
-      "id": "definecurve-pvector-start-int-freedom-int-direction",
+      "id": "d-20260714-174700-996002",
       "kind": "doc",
       "title": "defineCurve (PVector start, int freedom, int direction)",
-      "href": "/docs/?scope=processing&doc=definecurve-pvector-start-int-freedom-int-direction",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-996002",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "definecurve-pvector-start-int-freedom-int-direction",
+        "definecurve (pvector start, int freedom, int direction)",
         "definecurve",
         "pvector",
         "start",
         "int",
         "freedom",
         "direction",
-        "definecurve (pvector start, int freedom, int direction)",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-996002"
       ],
-      "search_text": "definecurve-pvector-start-int-freedom-int-direction definecurve pvector start int freedom direction definecurve (pvector start, int freedom, int direction) inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "definecurve (pvector start, int freedom, int direction) definecurve pvector start int freedom direction inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-996002"
     },
     {
-      "id": "demo-drawcurve-string-layout",
+      "id": "d-20260714-174700-5ee568",
       "kind": "doc",
       "title": "demo_drawCurve(String layout)",
-      "href": "/docs/?scope=processing&doc=demo-drawcurve-string-layout",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-5ee568",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "demo-drawcurve-string-layout",
+        "demo_drawcurve(string layout)",
         "demo",
         "drawcurve",
         "string",
         "layout",
-        "demo_drawcurve(string layout)",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-5ee568"
       ],
-      "search_text": "demo-drawcurve-string-layout demo drawcurve string layout demo_drawcurve(string layout) inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "demo_drawcurve(string layout) demo drawcurve string layout inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-5ee568"
     },
     {
-      "id": "drawcurve-pvector-start-int-freedom-strokestyle-strokestyle",
+      "id": "d-20260714-174700-340088",
       "kind": "doc",
       "title": "drawCurve (PVector start, int freedom, StrokeStyle strokeStyle)",
-      "href": "/docs/?scope=processing&doc=drawcurve-pvector-start-int-freedom-strokestyle-strokestyle",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-340088",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "drawcurve-pvector-start-int-freedom-strokestyle-strokestyle",
+        "drawcurve (pvector start, int freedom, strokestyle strokestyle)",
         "drawcurve",
         "pvector",
         "start",
         "int",
         "freedom",
         "strokestyle",
-        "drawcurve (pvector start, int freedom, strokestyle strokestyle)",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-340088"
       ],
-      "search_text": "drawcurve-pvector-start-int-freedom-strokestyle-strokestyle drawcurve pvector start int freedom strokestyle drawcurve (pvector start, int freedom, strokestyle strokestyle) inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "drawcurve (pvector start, int freedom, strokestyle strokestyle) drawcurve pvector start int freedom strokestyle inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-340088"
     },
     {
-      "id": "drawing-size",
+      "id": "d-20260714-174700-ac7f3e",
       "kind": "doc",
       "title": "drawing size",
-      "href": "/docs/?scope=processing&doc=drawing-size",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-ac7f3e",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "drawing-size",
+        "drawing size",
         "drawing",
         "size",
-        "drawing size",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-ac7f3e"
       ],
-      "search_text": "drawing-size drawing size drawing size inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "drawing size drawing size inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-ac7f3e"
     },
     {
-      "id": "drawline",
+      "id": "d-20260714-174700-6e9b64",
       "kind": "doc",
       "title": "drawLine",
-      "href": "/docs/?scope=processing&doc=drawline",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-6e9b64",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
@@ -1222,41 +1221,42 @@
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-6e9b64"
       ],
-      "search_text": "drawline inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "drawline inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-6e9b64"
     },
     {
-      "id": "drawline-demo",
+      "id": "d-20260714-174700-c41eb0",
       "kind": "doc",
       "title": "drawLine demo",
-      "href": "/docs/?scope=processing&doc=drawline-demo",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-c41eb0",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "drawline-demo",
+        "drawline demo",
         "drawline",
         "demo",
-        "drawline demo",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-c41eb0"
       ],
-      "search_text": "drawline-demo drawline demo drawline demo inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "drawline demo drawline demo inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-c41eb0"
     },
     {
-      "id": "explorecurve",
+      "id": "d-20260714-174700-83e4a4",
       "kind": "doc",
       "title": "exploreCurve",
-      "href": "/docs/?scope=processing&doc=explorecurve",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-83e4a4",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
@@ -1267,162 +1267,162 @@
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-83e4a4"
       ],
-      "search_text": "explorecurve inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "explorecurve inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-83e4a4"
     },
     {
-      "id": "ink-simulation",
+      "id": "d-20260714-174700-51b031",
       "kind": "doc",
       "title": "ink simulation",
-      "href": "/docs/?scope=processing&doc=ink-simulation",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-51b031",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "ink-simulation",
+        "ink simulation",
         "ink",
         "simulation",
-        "ink simulation",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-51b031"
       ],
-      "search_text": "ink-simulation ink simulation ink simulation inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "ink simulation ink simulation inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-51b031"
     },
     {
-      "id": "line-parameters",
+      "id": "d-20260714-174700-372e6e",
       "kind": "doc",
       "title": "line parameters",
-      "href": "/docs/?scope=processing&doc=line-parameters",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-372e6e",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "line-parameters",
+        "line parameters",
         "line",
         "parameters",
-        "line parameters",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-372e6e"
       ],
-      "search_text": "line-parameters line parameters line parameters inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "line parameters line parameters inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-372e6e"
     },
     {
-      "id": "line-parameters-1",
+      "id": "d-20260714-174700-b6f2e9",
       "kind": "doc",
       "title": "line parameters",
-      "href": "/docs/?scope=processing&doc=line-parameters-1",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-b6f2e9",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "line-parameters-1",
+        "line parameters",
         "line",
         "parameters",
-        "1",
-        "line parameters",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-b6f2e9"
       ],
-      "search_text": "line-parameters-1 line parameters 1 line parameters inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "line parameters line parameters inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-b6f2e9"
     },
     {
-      "id": "modify-boundary",
+      "id": "d-20260714-174700-0c7815",
       "kind": "doc",
       "title": "modify boundary",
-      "href": "/docs/?scope=processing&doc=modify-boundary",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-0c7815",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "modify-boundary",
+        "modify boundary",
         "modify",
         "boundary",
-        "modify boundary",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-0c7815"
       ],
-      "search_text": "modify-boundary modify boundary modify boundary inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "modify boundary modify boundary inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-0c7815"
     },
     {
-      "id": "random-seeding",
+      "id": "d-20260714-174700-9452c6",
       "kind": "doc",
       "title": "random seeding",
-      "href": "/docs/?scope=processing&doc=random-seeding",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-9452c6",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "random-seeding",
+        "random seeding",
         "random",
         "seeding",
-        "random seeding",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-9452c6"
       ],
-      "search_text": "random-seeding random seeding random seeding inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "random seeding random seeding inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-9452c6"
     },
     {
-      "id": "refactored-drawcurve",
+      "id": "d-20260714-174700-482efb",
       "kind": "doc",
       "title": "refactored drawCurve",
-      "href": "/docs/?scope=processing&doc=refactored-drawcurve",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-482efb",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "refactored-drawcurve",
+        "refactored drawcurve",
         "refactored",
         "drawcurve",
-        "refactored drawcurve",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-482efb"
       ],
-      "search_text": "refactored-drawcurve refactored drawcurve refactored drawcurve inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "refactored drawcurve refactored drawcurve inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-482efb"
     },
     {
-      "id": "refresh",
+      "id": "d-20260714-174700-137761",
       "kind": "doc",
       "title": "refresh",
-      "href": "/docs/?scope=processing&doc=refresh",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-137761",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
@@ -1433,89 +1433,90 @@
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-137761"
       ],
-      "search_text": "refresh inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "refresh inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-137761"
     },
     {
-      "id": "remove-inkoptions",
+      "id": "d-20260714-174700-0dcd12",
       "kind": "doc",
       "title": "remove inkOptions",
-      "href": "/docs/?scope=processing&doc=remove-inkoptions",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-0dcd12",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "remove-inkoptions",
+        "remove inkoptions",
         "remove",
         "inkoptions",
-        "remove inkoptions",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-0dcd12"
       ],
-      "search_text": "remove-inkoptions remove inkoptions remove inkoptions inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "remove inkoptions remove inkoptions inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-0dcd12"
     },
     {
-      "id": "rotation-angle",
+      "id": "d-20260714-174700-cec763",
       "kind": "doc",
       "title": "rotation angle",
-      "href": "/docs/?scope=processing&doc=rotation-angle",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-cec763",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "rotation-angle",
+        "rotation angle",
         "rotation",
         "angle",
-        "rotation angle",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-cec763"
       ],
-      "search_text": "rotation-angle rotation angle rotation angle inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "rotation angle rotation angle inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-cec763"
     },
     {
-      "id": "saving-image",
+      "id": "d-20260714-174700-0b545b",
       "kind": "doc",
       "title": "saving image",
-      "href": "/docs/?scope=processing&doc=saving-image",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-0b545b",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "saving-image",
+        "saving image",
         "saving",
         "image",
-        "saving image",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-0b545b"
       ],
-      "search_text": "saving-image saving image saving image inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "saving image saving image inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-0b545b"
     },
     {
-      "id": "showgeometry",
+      "id": "d-20260714-174700-92356e",
       "kind": "doc",
       "title": "showGeometry",
-      "href": "/docs/?scope=processing&doc=showgeometry",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-92356e",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
@@ -1526,71 +1527,70 @@
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-92356e"
       ],
-      "search_text": "showgeometry inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "showgeometry inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-92356e"
     },
     {
-      "id": "ui-positioning",
+      "id": "d-20260714-174700-81195c",
       "kind": "doc",
       "title": "UI positioning",
-      "href": "/docs/?scope=processing&doc=ui-positioning",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-81195c",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "sketch-250309a-ink",
+      "parent_id": "d-20260714-174600-cedc85",
       "parent_title": "InkEngine",
       "display_meta": "2026-07-14 17:47 • InkEngine",
       "search_terms": [
-        "ui-positioning",
+        "ui positioning",
         "ui",
         "positioning",
-        "ui positioning",
         "inkengine",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-81195c"
       ],
-      "search_text": "ui-positioning ui positioning ui positioning inkengine 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "ui positioning ui positioning inkengine 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-81195c"
     },
     {
-      "id": "layer-blending2",
+      "id": "d-20260714-173600-92adc9",
       "kind": "doc",
       "title": "Layer blending",
-      "href": "/docs/?scope=processing&doc=layer-blending2",
+      "href": "/docs/?scope=processing&doc=d-20260714-173600-92adc9",
       "last_updated": "2026-07-14 17:36",
       "display_meta": "2026-07-14 17:36",
       "search_terms": [
-        "layer-blending2",
-        "layer",
-        "blending2",
         "layer blending",
+        "layer",
         "blending",
         "2026-07-14 17:36",
         "2026",
         "07",
         "14",
         "17",
-        "36"
+        "36",
+        "d-20260714-173600-92adc9"
       ],
-      "search_text": "layer-blending2 layer blending2 layer blending blending 2026-07-14 17:36 2026 07 14 17 36"
+      "search_text": "layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36 d-20260714-173600-92adc9"
     },
     {
-      "id": "built-in-functions",
+      "id": "d-20260714-173500-99d5f8",
       "kind": "doc",
       "title": "built in functions",
-      "href": "/docs/?scope=processing&doc=built-in-functions",
+      "href": "/docs/?scope=processing&doc=d-20260714-173500-99d5f8",
       "last_updated": "2026-07-14 17:35",
-      "parent_id": "layer-blending2",
+      "parent_id": "d-20260714-173600-92adc9",
       "parent_title": "Layer blending",
       "display_meta": "2026-07-14 17:35 • Layer blending",
       "search_terms": [
-        "built-in-functions",
+        "built in functions",
         "built",
         "in",
         "functions",
-        "built in functions",
         "layer blending",
         "layer",
         "blending",
@@ -1599,25 +1599,25 @@
         "07",
         "14",
         "17",
-        "35"
+        "35",
+        "d-20260714-173500-99d5f8"
       ],
-      "search_text": "built-in-functions built in functions built in functions layer blending layer blending 2026-07-14 17:35 2026 07 14 17 35"
+      "search_text": "built in functions built in functions layer blending layer blending 2026-07-14 17:35 2026 07 14 17 35 d-20260714-173500-99d5f8"
     },
     {
-      "id": "layering-and-transparency",
+      "id": "d-20260714-173600-61306d",
       "kind": "doc",
       "title": "layering and transparency",
-      "href": "/docs/?scope=processing&doc=layering-and-transparency",
+      "href": "/docs/?scope=processing&doc=d-20260714-173600-61306d",
       "last_updated": "2026-07-14 17:36",
-      "parent_id": "layer-blending2",
+      "parent_id": "d-20260714-173600-92adc9",
       "parent_title": "Layer blending",
       "display_meta": "2026-07-14 17:36 • Layer blending",
       "search_terms": [
-        "layering-and-transparency",
+        "layering and transparency",
         "layering",
         "and",
         "transparency",
-        "layering and transparency",
         "layer blending",
         "layer",
         "blending",
@@ -1626,24 +1626,24 @@
         "07",
         "14",
         "17",
-        "36"
+        "36",
+        "d-20260714-173600-61306d"
       ],
-      "search_text": "layering-and-transparency layering and transparency layering and transparency layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36"
+      "search_text": "layering and transparency layering and transparency layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36 d-20260714-173600-61306d"
     },
     {
-      "id": "render-techniques",
+      "id": "d-20260714-173600-44141d",
       "kind": "doc",
       "title": "Render Techniques",
-      "href": "/docs/?scope=processing&doc=render-techniques",
+      "href": "/docs/?scope=processing&doc=d-20260714-173600-44141d",
       "last_updated": "2026-07-14 17:36",
-      "parent_id": "layer-blending2",
+      "parent_id": "d-20260714-173600-92adc9",
       "parent_title": "Layer blending",
       "display_meta": "2026-07-14 17:36 • Layer blending",
       "search_terms": [
-        "render-techniques",
+        "render techniques",
         "render",
         "techniques",
-        "render techniques",
         "layer blending",
         "layer",
         "blending",
@@ -1652,24 +1652,24 @@
         "07",
         "14",
         "17",
-        "36"
+        "36",
+        "d-20260714-173600-44141d"
       ],
-      "search_text": "render-techniques render techniques render techniques layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36"
+      "search_text": "render techniques render techniques layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36 d-20260714-173600-44141d"
     },
     {
-      "id": "simple-start",
+      "id": "d-20260714-173600-5da8ab",
       "kind": "doc",
       "title": "simple start",
-      "href": "/docs/?scope=processing&doc=simple-start",
+      "href": "/docs/?scope=processing&doc=d-20260714-173600-5da8ab",
       "last_updated": "2026-07-14 17:36",
-      "parent_id": "layer-blending2",
+      "parent_id": "d-20260714-173600-92adc9",
       "parent_title": "Layer blending",
       "display_meta": "2026-07-14 17:36 • Layer blending",
       "search_terms": [
-        "simple-start",
+        "simple start",
         "simple",
         "start",
-        "simple start",
         "layer blending",
         "layer",
         "blending",
@@ -1678,15 +1678,16 @@
         "07",
         "14",
         "17",
-        "36"
+        "36",
+        "d-20260714-173600-5da8ab"
       ],
-      "search_text": "simple-start simple start simple start layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36"
+      "search_text": "simple start simple start layer blending layer blending 2026-07-14 17:36 2026 07 14 17 36 d-20260714-173600-5da8ab"
     },
     {
-      "id": "processing",
+      "id": "d-20260714-092047-06a5db",
       "kind": "doc",
       "title": "processing",
-      "href": "/docs/?scope=processing&doc=processing",
+      "href": "/docs/?scope=processing&doc=d-20260714-092047-06a5db",
       "last_updated": "2026-07-14",
       "display_meta": "2026-07-14",
       "search_terms": [
@@ -1694,37 +1695,38 @@
         "2026-07-14",
         "2026",
         "07",
-        "14"
+        "14",
+        "d-20260714-092047-06a5db"
       ],
-      "search_text": "processing 2026-07-14 2026 07 14"
+      "search_text": "processing 2026-07-14 2026 07 14 d-20260714-092047-06a5db"
     },
     {
-      "id": "processing-project-setup",
+      "id": "d-20260714-164200-381988",
       "kind": "doc",
       "title": "Processing Project Setup",
-      "href": "/docs/?scope=processing&doc=processing-project-setup",
+      "href": "/docs/?scope=processing&doc=d-20260714-164200-381988",
       "last_updated": "2026-07-14 19:00",
       "display_meta": "2026-07-14 19:00",
       "search_terms": [
-        "processing-project-setup",
+        "processing project setup",
         "processing",
         "project",
         "setup",
-        "processing project setup",
         "2026-07-14 19:00",
         "2026",
         "07",
         "14",
         "19",
-        "00"
+        "00",
+        "d-20260714-164200-381988"
       ],
-      "search_text": "processing-project-setup processing project setup processing project setup 2026-07-14 19:00 2026 07 14 19 00"
+      "search_text": "processing project setup processing project setup 2026-07-14 19:00 2026 07 14 19 00 d-20260714-164200-381988"
     },
     {
-      "id": "unsorted",
+      "id": "d-20260714-173500-48f96d",
       "kind": "doc",
       "title": "unsorted",
-      "href": "/docs/?scope=processing&doc=unsorted",
+      "href": "/docs/?scope=processing&doc=d-20260714-173500-48f96d",
       "last_updated": "2026-07-14 17:35",
       "display_meta": "2026-07-14 17:35",
       "search_terms": [
@@ -1734,28 +1736,27 @@
         "07",
         "14",
         "17",
-        "35"
+        "35",
+        "d-20260714-173500-48f96d"
       ],
-      "search_text": "unsorted 2026-07-14 17:35 2026 07 14 17 35"
+      "search_text": "unsorted 2026-07-14 17:35 2026 07 14 17 35 d-20260714-173500-48f96d"
     },
     {
-      "id": "stride-overview",
+      "id": "d-20260714-175700-935ede",
       "kind": "doc",
       "title": "1‑in‑n Sampling (Stride) — Processing Permutation Composites",
-      "href": "/docs/?scope=processing&doc=stride-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-935ede",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "stride-overview",
-        "stride",
-        "overview",
         "1‑in‑n sampling (stride) — processing permutation composites",
         "1",
         "in",
         "n",
         "sampling",
+        "stride",
         "processing",
         "permutation",
         "composites",
@@ -1765,29 +1766,27 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-935ede"
       ],
-      "search_text": "stride-overview stride overview 1‑in‑n sampling (stride) — processing permutation composites 1 in n sampling processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "1‑in‑n sampling (stride) — processing permutation composites 1 in n sampling stride processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-935ede"
     },
     {
-      "id": "stride-overview-2",
+      "id": "d-20260714-175700-d5cfa5",
       "kind": "doc",
       "title": "1‑in‑n Sampling (Stride) — Processing Permutation Composites",
-      "href": "/docs/?scope=processing&doc=stride-overview-2",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-d5cfa5",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "stride-overview-2",
-        "stride",
-        "overview",
-        "2",
         "1‑in‑n sampling (stride) — processing permutation composites",
         "1",
         "in",
         "n",
         "sampling",
+        "stride",
         "processing",
         "permutation",
         "composites",
@@ -1797,21 +1796,22 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-d5cfa5"
       ],
-      "search_text": "stride-overview-2 stride overview 2 1‑in‑n sampling (stride) — processing permutation composites 1 in n sampling processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "1‑in‑n sampling (stride) — processing permutation composites 1 in n sampling stride processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-d5cfa5"
     },
     {
-      "id": "a-guide-to-better-looking-processing-sketches",
+      "id": "d-20260714-173800-90454d",
       "kind": "doc",
       "title": "A guide to better looking Processing sketches",
-      "href": "/docs/?scope=processing&doc=a-guide-to-better-looking-processing-sketches",
+      "href": "/docs/?scope=processing&doc=d-20260714-173800-90454d",
       "last_updated": "2026-07-14 17:38",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:38 • unsorted",
       "search_terms": [
-        "a-guide-to-better-looking-processing-sketches",
+        "a guide to better looking processing sketches",
         "a",
         "guide",
         "to",
@@ -1819,34 +1819,29 @@
         "looking",
         "processing",
         "sketches",
-        "a guide to better looking processing sketches",
         "unsorted",
         "2026-07-14 17:38",
         "2026",
         "07",
         "14",
         "17",
-        "38"
+        "38",
+        "d-20260714-173800-90454d"
       ],
-      "search_text": "a-guide-to-better-looking-processing-sketches a guide to better looking processing sketches a guide to better looking processing sketches unsorted 2026-07-14 17:38 2026 07 14 17 38"
+      "search_text": "a guide to better looking processing sketches a guide to better looking processing sketches unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173800-90454d"
     },
     {
-      "id": "n7-subset-selection-strategies-advanced",
+      "id": "d-20260714-175700-3c1e40",
       "kind": "doc",
       "title": "Advanced Subsets for n=7: Derangements & Hamming-Balanced Sample",
-      "href": "/docs/?scope=processing&doc=n7-subset-selection-strategies-advanced",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-3c1e40",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "n7-subset-selection-strategies-advanced",
-        "n7",
-        "subset",
-        "selection",
-        "strategies",
-        "advanced",
         "advanced subsets for n=7: derangements & hamming-balanced sample",
+        "advanced",
         "subsets",
         "for",
         "n",
@@ -1861,29 +1856,27 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-3c1e40"
       ],
-      "search_text": "n7-subset-selection-strategies-advanced n7 subset selection strategies advanced advanced subsets for n=7: derangements & hamming-balanced sample subsets for n 7 derangements hamming balanced sample unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "advanced subsets for n=7: derangements & hamming-balanced sample advanced subsets for n 7 derangements hamming balanced sample unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-3c1e40"
     },
     {
-      "id": "processing-alive-modes-changelog",
+      "id": "d-20260714-175700-166062",
       "kind": "doc",
       "title": "Aliveness as Participation — Processing Modes Update (ICON / AGENCY / RITUAL)",
-      "href": "/docs/?scope=processing&doc=processing-alive-modes-changelog",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-166062",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "processing-alive-modes-changelog",
-        "processing",
-        "alive",
-        "modes",
-        "changelog",
         "aliveness as participation — processing modes update (icon / agency / ritual)",
         "aliveness",
         "as",
         "participation",
+        "processing",
+        "modes",
         "update",
         "icon",
         "agency",
@@ -1894,77 +1887,76 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-166062"
       ],
-      "search_text": "processing-alive-modes-changelog processing alive modes changelog aliveness as participation — processing modes update (icon / agency / ritual) aliveness as participation update icon agency ritual unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "aliveness as participation — processing modes update (icon / agency / ritual) aliveness as participation processing modes update icon agency ritual unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-166062"
     },
     {
-      "id": "anu-qrng-quantum-random-numbers",
+      "id": "d-20260714-173700-a002de",
       "kind": "doc",
       "title": "ANU QRNG – Quantum random numbers",
-      "href": "/docs/?scope=processing&doc=anu-qrng-quantum-random-numbers",
+      "href": "/docs/?scope=processing&doc=d-20260714-173700-a002de",
       "last_updated": "2026-07-14 17:38",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:38 • unsorted",
       "search_terms": [
-        "anu-qrng-quantum-random-numbers",
+        "anu qrng – quantum random numbers",
         "anu",
         "qrng",
         "quantum",
         "random",
         "numbers",
-        "anu qrng – quantum random numbers",
         "unsorted",
         "2026-07-14 17:38",
         "2026",
         "07",
         "14",
         "17",
-        "38"
+        "38",
+        "d-20260714-173700-a002de"
       ],
-      "search_text": "anu-qrng-quantum-random-numbers anu qrng quantum random numbers anu qrng – quantum random numbers unsorted 2026-07-14 17:38 2026 07 14 17 38"
+      "search_text": "anu qrng – quantum random numbers anu qrng quantum random numbers unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173700-a002de"
     },
     {
-      "id": "app-structure",
+      "id": "d-20260714-172700-94d2d9",
       "kind": "doc",
       "title": "App structure",
-      "href": "/docs/?scope=processing&doc=app-structure",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-94d2d9",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "app-structure",
+        "app structure",
         "app",
         "structure",
-        "app structure",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-94d2d9"
       ],
-      "search_text": "app-structure app structure app structure unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "app structure app structure unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-94d2d9"
     },
     {
-      "id": "batch-image-interpolator-readme",
+      "id": "d-20260714-175700-a8b51d",
       "kind": "doc",
       "title": "Batch Image Interpolator — Static Frame Generator",
-      "href": "/docs/?scope=processing&doc=batch-image-interpolator-readme",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-a8b51d",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "batch-image-interpolator-readme",
+        "batch image interpolator — static frame generator",
         "batch",
         "image",
         "interpolator",
-        "readme",
-        "batch image interpolator — static frame generator",
         "static",
         "frame",
         "generator",
@@ -1974,26 +1966,26 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-a8b51d"
       ],
-      "search_text": "batch-image-interpolator-readme batch image interpolator readme batch image interpolator — static frame generator static frame generator unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "batch image interpolator — static frame generator batch image interpolator static frame generator unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-a8b51d"
     },
     {
-      "id": "checklist-optical-flow",
+      "id": "d-20260714-175700-dba814",
       "kind": "doc",
       "title": "Checklist — Layering → Optical‑Flow Interpolation",
-      "href": "/docs/?scope=processing&doc=checklist-optical-flow",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-dba814",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "checklist-optical-flow",
+        "checklist — layering → optical‑flow interpolation",
         "checklist",
+        "layering",
         "optical",
         "flow",
-        "checklist — layering → optical‑flow interpolation",
-        "layering",
         "interpolation",
         "unsorted",
         "2026-07-14 17:57",
@@ -2001,28 +1993,26 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-dba814"
       ],
-      "search_text": "checklist-optical-flow checklist optical flow checklist — layering → optical‑flow interpolation layering interpolation unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "checklist — layering → optical‑flow interpolation checklist layering optical flow interpolation unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-dba814"
     },
     {
-      "id": "alignment-and-morphing-concepts",
+      "id": "d-20260714-175700-68e350",
       "kind": "doc",
       "title": "Conceptual Notes — Alignment & Morphing (Homography • Triangle Mesh • Optical Flow)",
-      "href": "/docs/?scope=processing&doc=alignment-and-morphing-concepts",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-68e350",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "alignment-and-morphing-concepts",
-        "alignment",
-        "and",
-        "morphing",
-        "concepts",
         "conceptual notes — alignment & morphing (homography • triangle mesh • optical flow)",
         "conceptual",
         "notes",
+        "alignment",
+        "morphing",
         "homography",
         "triangle",
         "mesh",
@@ -2034,78 +2024,76 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-68e350"
       ],
-      "search_text": "alignment-and-morphing-concepts alignment and morphing concepts conceptual notes — alignment & morphing (homography • triangle mesh • optical flow) conceptual notes homography triangle mesh optical flow unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "conceptual notes — alignment & morphing (homography • triangle mesh • optical flow) conceptual notes alignment morphing homography triangle mesh optical flow unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-68e350"
     },
     {
-      "id": "controlling-the-degree-of-self-mutation",
+      "id": "d-20260714-172700-2e08c4",
       "kind": "doc",
       "title": "Controlling the Degree of Self-Mutation",
-      "href": "/docs/?scope=processing&doc=controlling-the-degree-of-self-mutation",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-2e08c4",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "controlling-the-degree-of-self-mutation",
+        "controlling the degree of self-mutation",
         "controlling",
         "the",
         "degree",
         "of",
         "self",
         "mutation",
-        "controlling the degree of self-mutation",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-2e08c4"
       ],
-      "search_text": "controlling-the-degree-of-self-mutation controlling the degree of self mutation controlling the degree of self-mutation unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "controlling the degree of self-mutation controlling the degree of self mutation unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-2e08c4"
     },
     {
-      "id": "creating-impossible-drawings",
+      "id": "d-20260714-172700-1627f8",
       "kind": "doc",
       "title": "Creating Impossible Drawings",
-      "href": "/docs/?scope=processing&doc=creating-impossible-drawings",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-1627f8",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "creating-impossible-drawings",
+        "creating impossible drawings",
         "creating",
         "impossible",
         "drawings",
-        "creating impossible drawings",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-1627f8"
       ],
-      "search_text": "creating-impossible-drawings creating impossible drawings creating impossible drawings unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "creating impossible drawings creating impossible drawings unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-1627f8"
     },
     {
-      "id": "layerpermutations-csv-overview",
+      "id": "d-20260714-175700-0f375b",
       "kind": "doc",
       "title": "CSV-driven Layer Rules for Processing Permutation Composites",
-      "href": "/docs/?scope=processing&doc=layerpermutations-csv-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-0f375b",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "layerpermutations-csv-overview",
-        "layerpermutations",
-        "csv",
-        "overview",
         "csv-driven layer rules for processing permutation composites",
+        "csv",
         "driven",
         "layer",
         "rules",
@@ -2119,56 +2107,56 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-0f375b"
       ],
-      "search_text": "layerpermutations-csv-overview layerpermutations csv overview csv-driven layer rules for processing permutation composites driven layer rules for processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "csv-driven layer rules for processing permutation composites csv driven layer rules for processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-0f375b"
     },
     {
-      "id": "de-bruijn-b8-3-linear",
+      "id": "d-20260714-181200-ca6556",
       "kind": "doc",
       "title": "De Bruijn B8 3 Linear",
-      "href": "/docs/?scope=processing&doc=de-bruijn-b8-3-linear",
+      "href": "/docs/?scope=processing&doc=d-20260714-181200-ca6556",
       "last_updated": "2026-07-14 18:12",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 18:12 • unsorted",
       "search_terms": [
-        "de-bruijn-b8-3-linear",
+        "de bruijn b8 3 linear",
         "de",
         "bruijn",
         "b8",
         "3",
         "linear",
-        "de bruijn b8 3 linear",
         "unsorted",
         "2026-07-14 18:12",
         "2026",
         "07",
         "14",
         "18",
-        "12"
+        "12",
+        "d-20260714-181200-ca6556"
       ],
-      "search_text": "de-bruijn-b8-3-linear de bruijn b8 3 linear de bruijn b8 3 linear unsorted 2026-07-14 18:12 2026 07 14 18 12"
+      "search_text": "de bruijn b8 3 linear de bruijn b8 3 linear unsorted 2026-07-14 18:12 2026 07 14 18 12 d-20260714-181200-ca6556"
     },
     {
-      "id": "structured-variation-in-repetitive-pipelines",
+      "id": "d-20260714-175700-5946e7",
       "kind": "doc",
       "title": "Design Notes — Structured Variation in Repetitive Pipelines (Processing × FFmpeg)",
-      "href": "/docs/?scope=processing&doc=structured-variation-in-repetitive-pipelines",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-5946e7",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "structured-variation-in-repetitive-pipelines",
+        "design notes — structured variation in repetitive pipelines (processing × ffmpeg)",
+        "design",
+        "notes",
         "structured",
         "variation",
         "in",
         "repetitive",
         "pipelines",
-        "design notes — structured variation in repetitive pipelines (processing × ffmpeg)",
-        "design",
-        "notes",
         "processing",
         "ffmpeg",
         "unsorted",
@@ -2177,73 +2165,71 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-5946e7"
       ],
-      "search_text": "structured-variation-in-repetitive-pipelines structured variation in repetitive pipelines design notes — structured variation in repetitive pipelines (processing × ffmpeg) design notes processing ffmpeg unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "design notes — structured variation in repetitive pipelines (processing × ffmpeg) design notes structured variation in repetitive pipelines processing ffmpeg unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-5946e7"
     },
     {
-      "id": "design-notes-structured-variation",
+      "id": "d-20260714-173800-9dc1b0",
       "kind": "doc",
       "title": "design_notes_structured_variation",
-      "href": "/docs/?scope=processing&doc=design-notes-structured-variation",
+      "href": "/docs/?scope=processing&doc=d-20260714-173800-9dc1b0",
       "last_updated": "2026-07-14 17:38",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:38 • unsorted",
       "search_terms": [
-        "design-notes-structured-variation",
+        "design_notes_structured_variation",
         "design",
         "notes",
         "structured",
         "variation",
-        "design_notes_structured_variation",
         "unsorted",
         "2026-07-14 17:38",
         "2026",
         "07",
         "14",
         "17",
-        "38"
+        "38",
+        "d-20260714-173800-9dc1b0"
       ],
-      "search_text": "design-notes-structured-variation design notes structured variation design_notes_structured_variation unsorted 2026-07-14 17:38 2026 07 14 17 38"
+      "search_text": "design_notes_structured_variation design notes structured variation unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173800-9dc1b0"
     },
     {
-      "id": "deterministic-random",
+      "id": "d-20260714-172700-8610c7",
       "kind": "doc",
       "title": "deterministic random",
-      "href": "/docs/?scope=processing&doc=deterministic-random",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-8610c7",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "deterministic-random",
+        "deterministic random",
         "deterministic",
         "random",
-        "deterministic random",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-8610c7"
       ],
-      "search_text": "deterministic-random deterministic random deterministic random unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "deterministic random deterministic random unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-8610c7"
     },
     {
-      "id": "dualres-overview",
+      "id": "d-20260714-175700-fb1b66",
       "kind": "doc",
       "title": "Dual‑Resolution Preview & Final Export — Processing Workflow",
-      "href": "/docs/?scope=processing&doc=dualres-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-fb1b66",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "dualres-overview",
-        "dualres",
-        "overview",
         "dual‑resolution preview & final export — processing workflow",
         "dual",
         "resolution",
@@ -2258,182 +2244,180 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-fb1b66"
       ],
-      "search_text": "dualres-overview dualres overview dual‑resolution preview & final export — processing workflow dual resolution preview final export processing workflow unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "dual‑resolution preview & final export — processing workflow dual resolution preview final export processing workflow unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-fb1b66"
     },
     {
-      "id": "engrams-companion-processing",
+      "id": "d-20260714-173800-0d4a44",
       "kind": "doc",
       "title": "engrams_companion_processing",
-      "href": "/docs/?scope=processing&doc=engrams-companion-processing",
+      "href": "/docs/?scope=processing&doc=d-20260714-173800-0d4a44",
       "last_updated": "2026-07-14 17:38",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:38 • unsorted",
       "search_terms": [
-        "engrams-companion-processing",
+        "engrams_companion_processing",
         "engrams",
         "companion",
         "processing",
-        "engrams_companion_processing",
         "unsorted",
         "2026-07-14 17:38",
         "2026",
         "07",
         "14",
         "17",
-        "38"
+        "38",
+        "d-20260714-173800-0d4a44"
       ],
-      "search_text": "engrams-companion-processing engrams companion processing engrams_companion_processing unsorted 2026-07-14 17:38 2026 07 14 17 38"
+      "search_text": "engrams_companion_processing engrams companion processing unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173800-0d4a44"
     },
     {
-      "id": "entropy-injection-methods",
+      "id": "d-20260714-172700-53c646",
       "kind": "doc",
       "title": "Entropy Injection Methods",
-      "href": "/docs/?scope=processing&doc=entropy-injection-methods",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-53c646",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "entropy-injection-methods",
+        "entropy injection methods",
         "entropy",
         "injection",
         "methods",
-        "entropy injection methods",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-53c646"
       ],
-      "search_text": "entropy-injection-methods entropy injection methods entropy injection methods unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "entropy injection methods entropy injection methods unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-53c646"
     },
     {
-      "id": "entropy-mapped-bezier-fields",
+      "id": "d-20260714-172700-a81eab",
       "kind": "doc",
       "title": "Entropy-Mapped Bezier Fields",
-      "href": "/docs/?scope=processing&doc=entropy-mapped-bezier-fields",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-a81eab",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "entropy-mapped-bezier-fields",
+        "entropy-mapped bezier fields",
         "entropy",
         "mapped",
         "bezier",
         "fields",
-        "entropy-mapped bezier fields",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-a81eab"
       ],
-      "search_text": "entropy-mapped-bezier-fields entropy mapped bezier fields entropy-mapped bezier fields unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "entropy-mapped bezier fields entropy mapped bezier fields unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-a81eab"
     },
     {
-      "id": "final-variable",
+      "id": "d-20260714-173800-6708e4",
       "kind": "doc",
       "title": "final variable",
-      "href": "/docs/?scope=processing&doc=final-variable",
+      "href": "/docs/?scope=processing&doc=d-20260714-173800-6708e4",
       "last_updated": "2026-07-14 17:38",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:38 • unsorted",
       "search_terms": [
-        "final-variable",
+        "final variable",
         "final",
         "variable",
-        "final variable",
         "unsorted",
         "2026-07-14 17:38",
         "2026",
         "07",
         "14",
         "17",
-        "38"
+        "38",
+        "d-20260714-173800-6708e4"
       ],
-      "search_text": "final-variable final variable final variable unsorted 2026-07-14 17:38 2026 07 14 17 38"
+      "search_text": "final variable final variable unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173800-6708e4"
     },
     {
-      "id": "finalonly-overview",
+      "id": "d-20260714-175700-bca0ba",
       "kind": "doc",
       "title": "Final‑Only Build — Overview",
-      "href": "/docs/?scope=processing&doc=finalonly-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-bca0ba",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "finalonly-overview",
-        "finalonly",
-        "overview",
         "final‑only build — overview",
         "final",
         "only",
         "build",
+        "overview",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-bca0ba"
       ],
-      "search_text": "finalonly-overview finalonly overview final‑only build — overview final only build unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "final‑only build — overview final only build overview unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-bca0ba"
     },
     {
-      "id": "memory-aspects-summary-table",
+      "id": "d-20260714-175700-719cfc",
       "kind": "doc",
       "title": "Five Key Aspects of Memory — Summary Table",
-      "href": "/docs/?scope=processing&doc=memory-aspects-summary-table",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-719cfc",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "memory-aspects-summary-table",
-        "memory",
-        "aspects",
-        "summary",
-        "table",
         "five key aspects of memory — summary table",
         "five",
         "key",
+        "aspects",
         "of",
+        "memory",
+        "summary",
+        "table",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-719cfc"
       ],
-      "search_text": "memory-aspects-summary-table memory aspects summary table five key aspects of memory — summary table five key of unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "five key aspects of memory — summary table five key aspects of memory summary table unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-719cfc"
     },
     {
-      "id": "folder-gui-overview",
+      "id": "d-20260714-175700-5c5dae",
       "kind": "doc",
       "title": "Folder-Select GUI for Processing Composites",
-      "href": "/docs/?scope=processing&doc=folder-gui-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-5c5dae",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "folder-gui-overview",
-        "folder",
-        "gui",
-        "overview",
         "folder-select gui for processing composites",
+        "folder",
         "select",
+        "gui",
         "for",
         "processing",
         "composites",
@@ -2443,27 +2427,24 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-5c5dae"
       ],
-      "search_text": "folder-gui-overview folder gui overview folder-select gui for processing composites select for processing composites unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "folder-select gui for processing composites folder select gui for processing composites unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-5c5dae"
     },
     {
-      "id": "frame-rate-and-subsets-explainer",
+      "id": "d-20260714-175700-7f86c7",
       "kind": "doc",
       "title": "Frame‑Rate Comparison (24/25/30/60 fps) & Subset Strategies",
-      "href": "/docs/?scope=processing&doc=frame-rate-and-subsets-explainer",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-7f86c7",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "frame-rate-and-subsets-explainer",
+        "frame‑rate comparison (24/25/30/60 fps) & subset strategies",
         "frame",
         "rate",
-        "and",
-        "subsets",
-        "explainer",
-        "frame‑rate comparison (24/25/30/60 fps) & subset strategies",
         "comparison",
         "24",
         "25",
@@ -2478,26 +2459,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-7f86c7"
       ],
-      "search_text": "frame-rate-and-subsets-explainer frame rate and subsets explainer frame‑rate comparison (24/25/30/60 fps) & subset strategies comparison 24 25 30 60 fps subset strategies unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "frame‑rate comparison (24/25/30/60 fps) & subset strategies frame rate comparison 24 25 30 60 fps subset strategies unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-7f86c7"
     },
     {
-      "id": "permutations-calc-and-save-explainer",
+      "id": "d-20260714-175700-5b0f10",
       "kind": "doc",
       "title": "How the Processing Sketch Calculates & Saves Permutations",
-      "href": "/docs/?scope=processing&doc=permutations-calc-and-save-explainer",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-5b0f10",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "permutations-calc-and-save-explainer",
-        "permutations",
-        "calc",
-        "and",
-        "save",
-        "explainer",
         "how the processing sketch calculates & saves permutations",
         "how",
         "the",
@@ -2505,27 +2481,29 @@
         "sketch",
         "calculates",
         "saves",
+        "permutations",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-5b0f10"
       ],
-      "search_text": "permutations-calc-and-save-explainer permutations calc and save explainer how the processing sketch calculates & saves permutations how the processing sketch calculates saves unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "how the processing sketch calculates & saves permutations how the processing sketch calculates saves permutations unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-5b0f10"
     },
     {
-      "id": "how-to-call-a-java-method-using-a-variable-name",
+      "id": "d-20260714-173800-78694d",
       "kind": "doc",
       "title": "how to call a java method using a variable name?",
-      "href": "/docs/?scope=processing&doc=how-to-call-a-java-method-using-a-variable-name",
+      "href": "/docs/?scope=processing&doc=d-20260714-173800-78694d",
       "last_updated": "2026-07-14 17:38",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:38 • unsorted",
       "search_terms": [
-        "how-to-call-a-java-method-using-a-variable-name",
+        "how to call a java method using a variable name?",
         "how",
         "to",
         "call",
@@ -2535,60 +2513,58 @@
         "using",
         "variable",
         "name",
-        "how to call a java method using a variable name?",
         "unsorted",
         "2026-07-14 17:38",
         "2026",
         "07",
         "14",
         "17",
-        "38"
+        "38",
+        "d-20260714-173800-78694d"
       ],
-      "search_text": "how-to-call-a-java-method-using-a-variable-name how to call a java method using variable name how to call a java method using a variable name? unsorted 2026-07-14 17:38 2026 07 14 17 38"
+      "search_text": "how to call a java method using a variable name? how to call a java method using variable name unsorted 2026-07-14 17:38 2026 07 14 17 38 d-20260714-173800-78694d"
     },
     {
-      "id": "hybrid-generative-system-architecture",
+      "id": "d-20260714-172700-e3445b",
       "kind": "doc",
       "title": "Hybrid Generative System Architecture",
-      "href": "/docs/?scope=processing&doc=hybrid-generative-system-architecture",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-e3445b",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "hybrid-generative-system-architecture",
+        "hybrid generative system architecture",
         "hybrid",
         "generative",
         "system",
         "architecture",
-        "hybrid generative system architecture",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-e3445b"
       ],
-      "search_text": "hybrid-generative-system-architecture hybrid generative system architecture hybrid generative system architecture unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "hybrid generative system architecture hybrid generative system architecture unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-e3445b"
     },
     {
-      "id": "qrng-strategy-for-iching",
+      "id": "d-20260714-175700-00e655",
       "kind": "doc",
       "title": "Hybrid QRNG Strategy for I Ching — Prefetch + Ritual Pause",
-      "href": "/docs/?scope=processing&doc=qrng-strategy-for-iching",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-00e655",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "qrng-strategy-for-iching",
+        "hybrid qrng strategy for i ching — prefetch + ritual pause",
+        "hybrid",
         "qrng",
         "strategy",
         "for",
-        "iching",
-        "hybrid qrng strategy for i ching — prefetch + ritual pause",
-        "hybrid",
         "i",
         "ching",
         "prefetch",
@@ -2600,28 +2576,28 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-00e655"
       ],
-      "search_text": "qrng-strategy-for-iching qrng strategy for iching hybrid qrng strategy for i ching — prefetch + ritual pause hybrid i ching prefetch ritual pause unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "hybrid qrng strategy for i ching — prefetch + ritual pause hybrid qrng strategy for i ching prefetch ritual pause unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-00e655"
     },
     {
-      "id": "image-interpolation-explainer",
+      "id": "d-20260714-175700-6e4c62",
       "kind": "doc",
       "title": "Image Interpolation Between Two Images — Explainer & Starter Code",
-      "href": "/docs/?scope=processing&doc=image-interpolation-explainer",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-6e4c62",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "image-interpolation-explainer",
+        "image interpolation between two images — explainer & starter code",
         "image",
         "interpolation",
-        "explainer",
-        "image interpolation between two images — explainer & starter code",
         "between",
         "two",
         "images",
+        "explainer",
         "starter",
         "code",
         "unsorted",
@@ -2630,156 +2606,154 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-6e4c62"
       ],
-      "search_text": "image-interpolation-explainer image interpolation explainer image interpolation between two images — explainer & starter code between two images starter code unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "image interpolation between two images — explainer & starter code image interpolation between two images explainer starter code unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-6e4c62"
     },
     {
-      "id": "impossibility-and-incompleteness",
+      "id": "d-20260714-172700-d4ab61",
       "kind": "doc",
       "title": "Impossibility and Incompleteness",
-      "href": "/docs/?scope=processing&doc=impossibility-and-incompleteness",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-d4ab61",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "impossibility-and-incompleteness",
+        "impossibility and incompleteness",
         "impossibility",
         "and",
         "incompleteness",
-        "impossibility and incompleteness",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-d4ab61"
       ],
-      "search_text": "impossibility-and-incompleteness impossibility and incompleteness impossibility and incompleteness unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "impossibility and incompleteness impossibility and incompleteness unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-d4ab61"
     },
     {
-      "id": "ink-drops",
+      "id": "d-20260714-172700-88d480",
       "kind": "doc",
       "title": "Ink drops",
-      "href": "/docs/?scope=processing&doc=ink-drops",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-88d480",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "ink-drops",
+        "ink drops",
         "ink",
         "drops",
-        "ink drops",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-88d480"
       ],
-      "search_text": "ink-drops ink drops ink drops unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "ink drops ink drops unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-88d480"
     },
     {
-      "id": "layer-blending",
+      "id": "d-20260714-173400-1feefb",
       "kind": "doc",
       "title": "layer blending",
-      "href": "/docs/?scope=processing&doc=layer-blending",
+      "href": "/docs/?scope=processing&doc=d-20260714-173400-1feefb",
       "last_updated": "2026-07-14 17:34",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:34 • unsorted",
       "search_terms": [
-        "layer-blending",
+        "layer blending",
         "layer",
         "blending",
-        "layer blending",
         "unsorted",
         "2026-07-14 17:34",
         "2026",
         "07",
         "14",
         "17",
-        "34"
+        "34",
+        "d-20260714-173400-1feefb"
       ],
-      "search_text": "layer-blending layer blending layer blending unsorted 2026-07-14 17:34 2026 07 14 17 34"
+      "search_text": "layer blending layer blending unsorted 2026-07-14 17:34 2026 07 14 17 34 d-20260714-173400-1feefb"
     },
     {
-      "id": "manifest-integration-overview",
+      "id": "d-20260714-175700-ba5f64",
       "kind": "doc",
       "title": "Manifest CSV Integration",
-      "href": "/docs/?scope=processing&doc=manifest-integration-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-ba5f64",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "manifest-integration-overview",
-        "manifest",
-        "integration",
-        "overview",
         "manifest csv integration",
+        "manifest",
         "csv",
+        "integration",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-ba5f64"
       ],
-      "search_text": "manifest-integration-overview manifest integration overview manifest csv integration csv unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "manifest csv integration manifest csv integration unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-ba5f64"
     },
     {
-      "id": "minimalcomposite3-uhd-png-jpeg",
+      "id": "d-20260714-175700-88789f",
       "kind": "doc",
       "title": "Minimal Processing Composite — 3 UHD Images (PNG + JPEG)",
-      "href": "/docs/?scope=processing&doc=minimalcomposite3-uhd-png-jpeg",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-88789f",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "minimalcomposite3-uhd-png-jpeg",
-        "minimalcomposite3",
-        "uhd",
-        "png",
-        "jpeg",
         "minimal processing composite — 3 uhd images (png + jpeg)",
         "minimal",
         "processing",
         "composite",
         "3",
+        "uhd",
         "images",
+        "png",
+        "jpeg",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-88789f"
       ],
-      "search_text": "minimalcomposite3-uhd-png-jpeg minimalcomposite3 uhd png jpeg minimal processing composite — 3 uhd images (png + jpeg) minimal processing composite 3 images unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "minimal processing composite — 3 uhd images (png + jpeg) minimal processing composite 3 uhd images png jpeg unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-88789f"
     },
     {
-      "id": "minimal-change-permutations-sjt",
+      "id": "d-20260714-175700-b48c38",
       "kind": "doc",
       "title": "Minimal‑Change Permutations (SJT) – 3! to 6!",
-      "href": "/docs/?scope=processing&doc=minimal-change-permutations-sjt",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-b48c38",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "minimal-change-permutations-sjt",
+        "minimal‑change permutations (sjt) – 3! to 6!",
         "minimal",
         "change",
         "permutations",
         "sjt",
-        "minimal‑change permutations (sjt) – 3! to 6!",
         "3",
         "to",
         "6",
@@ -2789,27 +2763,27 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-b48c38"
       ],
-      "search_text": "minimal-change-permutations-sjt minimal change permutations sjt minimal‑change permutations (sjt) – 3! to 6! 3 to 6 unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "minimal‑change permutations (sjt) – 3! to 6! minimal change permutations sjt 3 to 6 unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-b48c38"
     },
     {
-      "id": "sjt-explanation",
+      "id": "d-20260714-175700-36c243",
       "kind": "doc",
       "title": "Minimal‑Change Permutations (SJT) — Explanation & Implementation",
-      "href": "/docs/?scope=processing&doc=sjt-explanation",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-36c243",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "sjt-explanation",
-        "sjt",
-        "explanation",
         "minimal‑change permutations (sjt) — explanation & implementation",
         "minimal",
         "change",
         "permutations",
+        "sjt",
+        "explanation",
         "implementation",
         "unsorted",
         "2026-07-14 17:57",
@@ -2817,27 +2791,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-36c243"
       ],
-      "search_text": "sjt-explanation sjt explanation minimal‑change permutations (sjt) — explanation & implementation minimal change permutations implementation unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "minimal‑change permutations (sjt) — explanation & implementation minimal change permutations sjt explanation implementation unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-36c243"
     },
     {
-      "id": "n9-sjt-1min-all-fps-explainer",
+      "id": "d-20260714-175700-317a09",
       "kind": "doc",
       "title": "n=9 — 1‑Minute Video Strategies (SJT, 24/25/30/60 fps)",
-      "href": "/docs/?scope=processing&doc=n9-sjt-1min-all-fps-explainer",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-317a09",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "n9-sjt-1min-all-fps-explainer",
-        "n9",
-        "sjt",
-        "1min",
-        "all",
-        "fps",
-        "explainer",
         "n=9 — 1‑minute video strategies (sjt, 24/25/30/60 fps)",
         "n",
         "9",
@@ -2845,36 +2813,37 @@
         "minute",
         "video",
         "strategies",
+        "sjt",
         "24",
         "25",
         "30",
         "60",
+        "fps",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-317a09"
       ],
-      "search_text": "n9-sjt-1min-all-fps-explainer n9 sjt 1min all fps explainer n=9 — 1‑minute video strategies (sjt, 24/25/30/60 fps) n 9 1 minute video strategies 24 25 30 60 unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "n=9 — 1‑minute video strategies (sjt, 24/25/30/60 fps) n 9 1 minute video strategies sjt 24 25 30 60 fps unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-317a09"
     },
     {
-      "id": "estimator-overview",
+      "id": "d-20260714-175700-e089ad",
       "kind": "doc",
       "title": "On‑Canvas Estimator — How It Works",
-      "href": "/docs/?scope=processing&doc=estimator-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-e089ad",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "estimator-overview",
-        "estimator",
-        "overview",
         "on‑canvas estimator — how it works",
         "on",
         "canvas",
+        "estimator",
         "how",
         "it",
         "works",
@@ -2884,26 +2853,25 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-e089ad"
       ],
-      "search_text": "estimator-overview estimator overview on‑canvas estimator — how it works on canvas how it works unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "on‑canvas estimator — how it works on canvas estimator how it works unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-e089ad"
     },
     {
-      "id": "optical-flow-morph-explainer",
+      "id": "d-20260714-175700-5a362c",
       "kind": "doc",
       "title": "Optical-flow Morph — Pure Processing Implementation (Horn–Schunck)",
-      "href": "/docs/?scope=processing&doc=optical-flow-morph-explainer",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-5a362c",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "optical-flow-morph-explainer",
+        "optical-flow morph — pure processing implementation (horn–schunck)",
         "optical",
         "flow",
         "morph",
-        "explainer",
-        "optical-flow morph — pure processing implementation (horn–schunck)",
         "pure",
         "processing",
         "implementation",
@@ -2915,25 +2883,25 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-5a362c"
       ],
-      "search_text": "optical-flow-morph-explainer optical flow morph explainer optical-flow morph — pure processing implementation (horn–schunck) pure processing implementation horn schunck unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "optical-flow morph — pure processing implementation (horn–schunck) optical flow morph pure processing implementation horn schunck unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-5a362c"
     },
     {
-      "id": "panarchy-processing-helper",
+      "id": "d-20260714-175700-4c7654",
       "kind": "doc",
       "title": "Panarchy → Processing Helper Sheet (Phases, CSV Schema, SJT Presets, Blend Recipes)",
-      "href": "/docs/?scope=processing&doc=panarchy-processing-helper",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-4c7654",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "panarchy-processing-helper",
+        "panarchy → processing helper sheet (phases, csv schema, sjt presets, blend recipes)",
         "panarchy",
         "processing",
         "helper",
-        "panarchy → processing helper sheet (phases, csv schema, sjt presets, blend recipes)",
         "sheet",
         "phases",
         "csv",
@@ -2948,28 +2916,23 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-4c7654"
       ],
-      "search_text": "panarchy-processing-helper panarchy processing helper panarchy → processing helper sheet (phases, csv schema, sjt presets, blend recipes) sheet phases csv schema sjt presets blend recipes unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "panarchy → processing helper sheet (phases, csv schema, sjt presets, blend recipes) panarchy processing helper sheet phases csv schema sjt presets blend recipes unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-4c7654"
     },
     {
-      "id": "permutations-1-to-9-25fps-minutes",
+      "id": "d-20260714-175700-e9cee7",
       "kind": "doc",
       "title": "Permutations and Video Duration at 25 fps (n = 1..9)",
-      "href": "/docs/?scope=processing&doc=permutations-1-to-9-25fps-minutes",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-e9cee7",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "permutations-1-to-9-25fps-minutes",
-        "permutations",
-        "1",
-        "to",
-        "9",
-        "25fps",
-        "minutes",
         "permutations and video duration at 25 fps (n = 1..9)",
+        "permutations",
         "and",
         "video",
         "duration",
@@ -2977,36 +2940,34 @@
         "25",
         "fps",
         "n",
+        "1",
+        "9",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-e9cee7"
       ],
-      "search_text": "permutations-1-to-9-25fps-minutes permutations 1 to 9 25fps minutes permutations and video duration at 25 fps (n = 1..9) and video duration at 25 fps n unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "permutations and video duration at 25 fps (n = 1..9) permutations and video duration at 25 fps n 1 9 unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-e9cee7"
     },
     {
-      "id": "permutations-calc-and-save-explainer-v2",
+      "id": "d-20260714-175700-e320c2",
       "kind": "doc",
       "title": "Permutations — Calculation, Saving, and Practical Estimates",
-      "href": "/docs/?scope=processing&doc=permutations-calc-and-save-explainer-v2",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-e320c2",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "permutations-calc-and-save-explainer-v2",
-        "permutations",
-        "calc",
-        "and",
-        "save",
-        "explainer",
-        "v2",
         "permutations — calculation, saving, and practical estimates",
+        "permutations",
         "calculation",
         "saving",
+        "and",
         "practical",
         "estimates",
         "unsorted",
@@ -3015,28 +2976,28 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-e320c2"
       ],
-      "search_text": "permutations-calc-and-save-explainer-v2 permutations calc and save explainer v2 permutations — calculation, saving, and practical estimates calculation saving practical estimates unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "permutations — calculation, saving, and practical estimates permutations calculation saving and practical estimates unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-e320c2"
     },
     {
-      "id": "processing-app-design-episodic-semantic",
+      "id": "d-20260714-175700-38f0ba",
       "kind": "doc",
       "title": "Processing App Design — Episodic vs Semantic Modes",
-      "href": "/docs/?scope=processing&doc=processing-app-design-episodic-semantic",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-38f0ba",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "processing-app-design-episodic-semantic",
+        "processing app design — episodic vs semantic modes",
         "processing",
         "app",
         "design",
         "episodic",
-        "semantic",
-        "processing app design — episodic vs semantic modes",
         "vs",
+        "semantic",
         "modes",
         "unsorted",
         "2026-07-14 17:57",
@@ -3044,26 +3005,24 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-38f0ba"
       ],
-      "search_text": "processing-app-design-episodic-semantic processing app design episodic semantic processing app design — episodic vs semantic modes vs modes unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing app design — episodic vs semantic modes processing app design episodic vs semantic modes unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-38f0ba"
     },
     {
-      "id": "processing-brief-aliveness-modules",
+      "id": "d-20260714-175700-072cb4",
       "kind": "doc",
       "title": "Processing Brief — Making Images ‘Feel Alive’: Punctum, Salience, Aura, Relation (with Citations)",
-      "href": "/docs/?scope=processing&doc=processing-brief-aliveness-modules",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-072cb4",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "processing-brief-aliveness-modules",
+        "processing brief — making images ‘feel alive’: punctum, salience, aura, relation (with citations)",
         "processing",
         "brief",
-        "aliveness",
-        "modules",
-        "processing brief — making images ‘feel alive’: punctum, salience, aura, relation (with citations)",
         "making",
         "images",
         "feel",
@@ -3080,62 +3039,59 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-072cb4"
       ],
-      "search_text": "processing-brief-aliveness-modules processing brief aliveness modules processing brief — making images ‘feel alive’: punctum, salience, aura, relation (with citations) making images feel alive punctum salience aura relation with citations unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing brief — making images ‘feel alive’: punctum, salience, aura, relation (with citations) processing brief making images feel alive punctum salience aura relation with citations unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-072cb4"
     },
     {
-      "id": "processing-cloud-batch-composites-and-python-workflows",
+      "id": "d-20260714-175700-0a6a01",
       "kind": "doc",
       "title": "Processing in the Cloud — Batch Composites & Python Workflows",
-      "href": "/docs/?scope=processing&doc=processing-cloud-batch-composites-and-python-workflows",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-0a6a01",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "processing-cloud-batch-composites-and-python-workflows",
+        "processing in the cloud — batch composites & python workflows",
         "processing",
+        "in",
+        "the",
         "cloud",
         "batch",
         "composites",
-        "and",
         "python",
         "workflows",
-        "processing in the cloud — batch composites & python workflows",
-        "in",
-        "the",
         "unsorted",
         "2026-07-14 17:57",
         "2026",
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-0a6a01"
       ],
-      "search_text": "processing-cloud-batch-composites-and-python-workflows processing cloud batch composites and python workflows processing in the cloud — batch composites & python workflows in the unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing in the cloud — batch composites & python workflows processing in the cloud batch composites python workflows unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-0a6a01"
     },
     {
-      "id": "processing-project-structure-full-20250901-165302",
+      "id": "d-20260714-175700-393d91",
       "kind": "doc",
       "title": "Processing Project Structure → One Cohesive Application (Full Guide)",
-      "href": "/docs/?scope=processing&doc=processing-project-structure-full-20250901-165302",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-393d91",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "processing-project-structure-full-20250901-165302",
+        "processing project structure → one cohesive application (full guide)",
         "processing",
         "project",
         "structure",
-        "full",
-        "20250901",
-        "165302",
-        "processing project structure → one cohesive application (full guide)",
         "one",
         "cohesive",
         "application",
+        "full",
         "guide",
         "unsorted",
         "2026-07-14 17:57",
@@ -3143,27 +3099,26 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-393d91"
       ],
-      "search_text": "processing-project-structure-full-20250901-165302 processing project structure full 20250901 165302 processing project structure → one cohesive application (full guide) one cohesive application guide unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing project structure → one cohesive application (full guide) processing project structure one cohesive application full guide unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-393d91"
     },
     {
-      "id": "processing-alive-sketch-guide",
+      "id": "d-20260714-175700-af3d84",
       "kind": "doc",
       "title": "Processing Sketch Scaffold — Alive Imaging (with Citations)",
-      "href": "/docs/?scope=processing&doc=processing-alive-sketch-guide",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-af3d84",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "processing-alive-sketch-guide",
-        "processing",
-        "alive",
-        "sketch",
-        "guide",
         "processing sketch scaffold — alive imaging (with citations)",
+        "processing",
+        "sketch",
         "scaffold",
+        "alive",
         "imaging",
         "with",
         "citations",
@@ -3173,23 +3128,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-af3d84"
       ],
-      "search_text": "processing-alive-sketch-guide processing alive sketch guide processing sketch scaffold — alive imaging (with citations) scaffold imaging with citations unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing sketch scaffold — alive imaging (with citations) processing sketch scaffold alive imaging with citations unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-af3d84"
     },
     {
-      "id": "layerpermutations-overview",
+      "id": "d-20260714-175700-8a34c3",
       "kind": "doc",
       "title": "Processing: Layered Composites for All Permutations",
-      "href": "/docs/?scope=processing&doc=layerpermutations-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-8a34c3",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "layerpermutations-overview",
-        "layerpermutations",
-        "overview",
         "processing: layered composites for all permutations",
         "processing",
         "layered",
@@ -3203,24 +3156,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-8a34c3"
       ],
-      "search_text": "layerpermutations-overview layerpermutations overview processing: layered composites for all permutations processing layered composites for all permutations unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing: layered composites for all permutations processing layered composites for all permutations unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-8a34c3"
     },
     {
-      "id": "layerpermutations-autolevels-overview",
+      "id": "d-20260714-175700-978e80",
       "kind": "doc",
       "title": "Processing: Permutation Composites + Auto Levels",
-      "href": "/docs/?scope=processing&doc=layerpermutations-autolevels-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-978e80",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "layerpermutations-autolevels-overview",
-        "layerpermutations",
-        "autolevels",
-        "overview",
         "processing: permutation composites + auto levels",
         "processing",
         "permutation",
@@ -3233,23 +3183,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-978e80"
       ],
-      "search_text": "layerpermutations-autolevels-overview layerpermutations autolevels overview processing: permutation composites + auto levels processing permutation composites auto levels unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "processing: permutation composites + auto levels processing permutation composites auto levels unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-978e80"
     },
     {
-      "id": "progressn-overview",
+      "id": "d-20260714-175700-b8222a",
       "kind": "doc",
       "title": "Progress Bar & First‑N Limits — Dual‑Res Workflow",
-      "href": "/docs/?scope=processing&doc=progressn-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-b8222a",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "progressn-overview",
-        "progressn",
-        "overview",
         "progress bar & first‑n limits — dual‑res workflow",
         "progress",
         "bar",
@@ -3265,31 +3213,31 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-b8222a"
       ],
-      "search_text": "progressn-overview progressn overview progress bar & first‑n limits — dual‑res workflow progress bar first n limits dual res workflow unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "progress bar & first‑n limits — dual‑res workflow progress bar first n limits dual res workflow unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-b8222a"
     },
     {
-      "id": "route-map-optical-flow",
+      "id": "d-20260714-175700-acea46",
       "kind": "doc",
       "title": "Route Map: From Layering Images in Processing → Optical-Flow Interpolation",
-      "href": "/docs/?scope=processing&doc=route-map-optical-flow",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-acea46",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "route-map-optical-flow",
+        "route map: from layering images in processing → optical-flow interpolation",
         "route",
         "map",
-        "optical",
-        "flow",
-        "route map: from layering images in processing → optical-flow interpolation",
         "from",
         "layering",
         "images",
         "in",
         "processing",
+        "optical",
+        "flow",
         "interpolation",
         "unsorted",
         "2026-07-14 17:57",
@@ -3297,23 +3245,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-acea46"
       ],
-      "search_text": "route-map-optical-flow route map optical flow route map: from layering images in processing → optical-flow interpolation from layering images in processing interpolation unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "route map: from layering images in processing → optical-flow interpolation route map from layering images in processing optical flow interpolation unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-acea46"
     },
     {
-      "id": "seededrandom-overview",
+      "id": "d-20260714-175700-935cc6",
       "kind": "doc",
       "title": "Seeded Random Subset — How It Works",
-      "href": "/docs/?scope=processing&doc=seededrandom-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-935cc6",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "seededrandom-overview",
-        "seededrandom",
-        "overview",
         "seeded random subset — how it works",
         "seeded",
         "random",
@@ -3327,23 +3273,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-935cc6"
       ],
-      "search_text": "seededrandom-overview seededrandom overview seeded random subset — how it works seeded random subset how it works unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "seeded random subset — how it works seeded random subset how it works unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-935cc6"
     },
     {
-      "id": "selectionaudit-overview",
+      "id": "d-20260714-175700-e787aa",
       "kind": "doc",
       "title": "Selection Audit — Indices Preview & CSV",
-      "href": "/docs/?scope=processing&doc=selectionaudit-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-e787aa",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "selectionaudit-overview",
-        "selectionaudit",
-        "overview",
         "selection audit — indices preview & csv",
         "selection",
         "audit",
@@ -3356,23 +3300,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-e787aa"
       ],
-      "search_text": "selectionaudit-overview selectionaudit overview selection audit — indices preview & csv selection audit indices preview csv unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "selection audit — indices preview & csv selection audit indices preview csv unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-e787aa"
     },
     {
-      "id": "selectioncsv-withfilenames",
+      "id": "d-20260714-175700-18d772",
       "kind": "doc",
       "title": "Selection CSV — With Source Filenames",
-      "href": "/docs/?scope=processing&doc=selectioncsv-withfilenames",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-18d772",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "selectioncsv-withfilenames",
-        "selectioncsv",
-        "withfilenames",
         "selection csv — with source filenames",
         "selection",
         "csv",
@@ -3385,42 +3327,43 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-18d772"
       ],
-      "search_text": "selectioncsv-withfilenames selectioncsv withfilenames selection csv — with source filenames selection csv with source filenames unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "selection csv — with source filenames selection csv with source filenames unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-18d772"
     },
     {
-      "id": "self-mutating-variables",
+      "id": "d-20260714-172700-d5d1a4",
       "kind": "doc",
       "title": "Self-Mutating Variables",
-      "href": "/docs/?scope=processing&doc=self-mutating-variables",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-d5d1a4",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "self-mutating-variables",
+        "self-mutating variables",
         "self",
         "mutating",
         "variables",
-        "self-mutating variables",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-d5d1a4"
       ],
-      "search_text": "self-mutating-variables self mutating variables self-mutating variables unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "self-mutating variables self mutating variables unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-d5d1a4"
     },
     {
-      "id": "sighack",
+      "id": "d-20260714-173900-d1cdab",
       "kind": "doc",
       "title": "Sighack",
-      "href": "/docs/?scope=processing&doc=sighack",
+      "href": "/docs/?scope=processing&doc=d-20260714-173900-d1cdab",
       "last_updated": "2026-07-14 17:39",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:39 • unsorted",
       "search_terms": [
@@ -3431,17 +3374,18 @@
         "07",
         "14",
         "17",
-        "39"
+        "39",
+        "d-20260714-173900-d1cdab"
       ],
-      "search_text": "sighack unsorted 2026-07-14 17:39 2026 07 14 17 39"
+      "search_text": "sighack unsorted 2026-07-14 17:39 2026 07 14 17 39 d-20260714-173900-d1cdab"
     },
     {
-      "id": "sound",
+      "id": "d-20260714-173900-195884",
       "kind": "doc",
       "title": "Sound",
-      "href": "/docs/?scope=processing&doc=sound",
+      "href": "/docs/?scope=processing&doc=d-20260714-173900-195884",
       "last_updated": "2026-07-14 17:39",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:39 • unsorted",
       "search_terms": [
@@ -3452,26 +3396,25 @@
         "07",
         "14",
         "17",
-        "39"
+        "39",
+        "d-20260714-173900-195884"
       ],
-      "search_text": "sound unsorted 2026-07-14 17:39 2026 07 14 17 39"
+      "search_text": "sound unsorted 2026-07-14 17:39 2026 07 14 17 39 d-20260714-173900-195884"
     },
     {
-      "id": "n7-subset-selection-strategies",
+      "id": "d-20260714-175700-fdd365",
       "kind": "doc",
       "title": "Subset Selection Strategies for Permutations (n = 7)",
-      "href": "/docs/?scope=processing&doc=n7-subset-selection-strategies",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-fdd365",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "n7-subset-selection-strategies",
-        "n7",
+        "subset selection strategies for permutations (n = 7)",
         "subset",
         "selection",
         "strategies",
-        "subset selection strategies for permutations (n = 7)",
         "for",
         "permutations",
         "n",
@@ -3482,23 +3425,21 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-fdd365"
       ],
-      "search_text": "n7-subset-selection-strategies n7 subset selection strategies subset selection strategies for permutations (n = 7) for permutations n 7 unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "subset selection strategies for permutations (n = 7) subset selection strategies for permutations n 7 unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-fdd365"
     },
     {
-      "id": "64-curves",
+      "id": "d-20260714-174300-ed1c3c",
       "kind": "doc",
       "title": "tmp",
-      "href": "/docs/?scope=processing&doc=64-curves",
+      "href": "/docs/?scope=processing&doc=d-20260714-174300-ed1c3c",
       "last_updated": "2026-07-14 17:43",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:43 • unsorted",
       "search_terms": [
-        "64-curves",
-        "64",
-        "curves",
         "tmp",
         "unsorted",
         "2026-07-14 17:43",
@@ -3506,26 +3447,25 @@
         "07",
         "14",
         "17",
-        "43"
+        "43",
+        "d-20260714-174300-ed1c3c"
       ],
-      "search_text": "64-curves 64 curves tmp unsorted 2026-07-14 17:43 2026 07 14 17 43"
+      "search_text": "tmp unsorted 2026-07-14 17:43 2026 07 14 17 43 d-20260714-174300-ed1c3c"
     },
     {
-      "id": "toggles-gui-overview",
+      "id": "d-20260714-175700-dddff8",
       "kind": "doc",
       "title": "Toggles & Sliders GUI — Processing Permutation Composites",
-      "href": "/docs/?scope=processing&doc=toggles-gui-overview",
+      "href": "/docs/?scope=processing&doc=d-20260714-175700-dddff8",
       "last_updated": "2026-07-14 17:57",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:57 • unsorted",
       "search_terms": [
-        "toggles-gui-overview",
-        "toggles",
-        "gui",
-        "overview",
         "toggles & sliders gui — processing permutation composites",
+        "toggles",
         "sliders",
+        "gui",
         "processing",
         "permutation",
         "composites",
@@ -3535,86 +3475,87 @@
         "07",
         "14",
         "17",
-        "57"
+        "57",
+        "d-20260714-175700-dddff8"
       ],
-      "search_text": "toggles-gui-overview toggles gui overview toggles & sliders gui — processing permutation composites sliders processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57"
+      "search_text": "toggles & sliders gui — processing permutation composites toggles sliders gui processing permutation composites unsorted 2026-07-14 17:57 2026 07 14 17 57 d-20260714-175700-dddff8"
     },
     {
-      "id": "video-overlay-reverse-ffmpeg-macos",
+      "id": "d-20260714-181100-447f40",
       "kind": "doc",
       "title": "Video Overlay Reverse Ffmpeg Macos",
-      "href": "/docs/?scope=processing&doc=video-overlay-reverse-ffmpeg-macos",
+      "href": "/docs/?scope=processing&doc=d-20260714-181100-447f40",
       "last_updated": "2026-07-14 18:11",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 18:11 • unsorted",
       "search_terms": [
-        "video-overlay-reverse-ffmpeg-macos",
+        "video overlay reverse ffmpeg macos",
         "video",
         "overlay",
         "reverse",
         "ffmpeg",
         "macos",
-        "video overlay reverse ffmpeg macos",
         "unsorted",
         "2026-07-14 18:11",
         "2026",
         "07",
         "14",
         "18",
-        "11"
+        "11",
+        "d-20260714-181100-447f40"
       ],
-      "search_text": "video-overlay-reverse-ffmpeg-macos video overlay reverse ffmpeg macos video overlay reverse ffmpeg macos unsorted 2026-07-14 18:11 2026 07 14 18 11"
+      "search_text": "video overlay reverse ffmpeg macos video overlay reverse ffmpeg macos unsorted 2026-07-14 18:11 2026 07 14 18 11 d-20260714-181100-447f40"
     },
     {
-      "id": "visual-code",
+      "id": "d-20260714-174700-ba44be",
       "kind": "doc",
       "title": "Visual Code",
-      "href": "/docs/?scope=processing&doc=visual-code",
+      "href": "/docs/?scope=processing&doc=d-20260714-174700-ba44be",
       "last_updated": "2026-07-14 17:47",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:47 • unsorted",
       "search_terms": [
-        "visual-code",
+        "visual code",
         "visual",
         "code",
-        "visual code",
         "unsorted",
         "2026-07-14 17:47",
         "2026",
         "07",
         "14",
         "17",
-        "47"
+        "47",
+        "d-20260714-174700-ba44be"
       ],
-      "search_text": "visual-code visual code visual code unsorted 2026-07-14 17:47 2026 07 14 17 47"
+      "search_text": "visual code visual code unsorted 2026-07-14 17:47 2026 07 14 17 47 d-20260714-174700-ba44be"
     },
     {
-      "id": "when-variables-become-functions",
+      "id": "d-20260714-172700-0087b2",
       "kind": "doc",
       "title": "When Variables Become Functions",
-      "href": "/docs/?scope=processing&doc=when-variables-become-functions",
+      "href": "/docs/?scope=processing&doc=d-20260714-172700-0087b2",
       "last_updated": "2026-07-14 17:27",
-      "parent_id": "unsorted",
+      "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
       "display_meta": "2026-07-14 17:27 • unsorted",
       "search_terms": [
-        "when-variables-become-functions",
+        "when variables become functions",
         "when",
         "variables",
         "become",
         "functions",
-        "when variables become functions",
         "unsorted",
         "2026-07-14 17:27",
         "2026",
         "07",
         "14",
         "17",
-        "27"
+        "27",
+        "d-20260714-172700-0087b2"
       ],
-      "search_text": "when-variables-become-functions when variables become functions when variables become functions unsorted 2026-07-14 17:27 2026 07 14 17 27"
+      "search_text": "when variables become functions when variables become functions unsorted 2026-07-14 17:27 2026 07 14 17 27 d-20260714-172700-0087b2"
     }
   ]
 }

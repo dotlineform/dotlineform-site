@@ -26,6 +26,12 @@ from docs_scope_config import (
     safe_scope_data_path,
 )
 from docs_scope_external_validation import external_scope_id_sync_blocker
+from docs_document_identity import (
+    allocate_doc_id,
+    current_doc_timestamp,
+    doc_id_matches_added_date,
+    is_immutable_doc_id,
+)
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
     LIFECYCLE_PREVIEW_SCHEMA_VERSION,
@@ -38,7 +44,6 @@ from docs_scope_manifest import (
     generated_search_index_path,
     load_manifest,
     manifest_scopes_by_id,
-    normalize_doc_id,
     normalize_publishing_mode,
     normalize_scope_id,
     normalize_source_root,
@@ -110,7 +115,11 @@ def apply_create_scope(
         source_root.mkdir(parents=True, exist_ok=False)
         write_text_atomic(
             default_doc_path,
-            default_source_doc_text(str(preview["title"]), str(preview["planned_scope_config"]["default_doc_id"])),
+            default_source_doc_text(
+                str(preview["title"]),
+                str(preview["planned_document_identity"]["doc_id"]),
+                str(preview["planned_document_identity"]["added_date"]),
+            ),
         )
         append_scope_config(repo_root, preview["planned_scope_config"])
         if preview["urls"]["public"]:
@@ -152,6 +161,7 @@ def apply_create_scope(
         "scope_id": scope_id,
         "title": preview["title"],
         "publishing_mode": preview["publishing_mode"],
+        "planned_document_identity": preview["planned_document_identity"],
         "storage_contract": preview.get("storage_contract", {}),
         "created_files": preview["created_files"],
         "publish_files": preview.get("publish_files", []),
@@ -174,7 +184,19 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     scope_id = normalize_scope_id(body.get("scope_id"))
     title = normalize_title(body.get("title"))
     publishing_mode = normalize_publishing_mode(body.get("publishing_mode"))
-    default_doc_id = normalize_doc_id(body.get("default_doc_id"))
+    planned_identity = body.get("planned_document_identity")
+    if planned_identity is None:
+        added_date = current_doc_timestamp()
+        default_doc_id = allocate_doc_id(added_date)
+    else:
+        if not isinstance(planned_identity, dict):
+            raise ValueError("planned_document_identity must be an object")
+        default_doc_id = str(planned_identity.get("doc_id") or "").strip()
+        added_date = str(planned_identity.get("added_date") or "").strip()
+        if not is_immutable_doc_id(default_doc_id):
+            raise ValueError("planned_document_identity.doc_id must be an immutable document ID")
+        if not doc_id_matches_added_date(default_doc_id, added_date):
+            raise ValueError("planned_document_identity added_date must match its document ID timestamp")
     external_data_root = resolve_external_data_root() if publishing_mode == LOCAL_EXTERNAL_MODE else None
     if external_data_root is not None:
         sync_blocker = external_scope_id_sync_blocker(scope_id, external_data_root)
@@ -284,6 +306,10 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "title": title,
         "publishing_mode": publishing_mode,
         "external_data_root": EXTERNAL_DATA_ROOT_MARKER if external_data_root else "",
+        "planned_document_identity": {
+            "doc_id": default_doc_id,
+            "added_date": added_date,
+        },
         "planned_scope_config": planned_scope_config,
         "storage_contract": planned_storage_contract(
             {

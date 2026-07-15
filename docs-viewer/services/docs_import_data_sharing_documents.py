@@ -34,6 +34,7 @@ def plan_data_sharing_documents_collection(
     staging_root: Path,
     workspace_root: Path,
     metadata_root: Path,
+    planned_identities: list[dict[str, Any]] | None = None,
 ) -> DocumentsCollectionPlan:
     """Read and completely plan one trusted package without applying any writes."""
 
@@ -87,6 +88,7 @@ def plan_data_sharing_documents_collection(
         workspace_root=workspace_root,
         package_projection=package_projection,
         blockers=blockers,
+        planned_identities=planned_identities,
     )
 
 
@@ -104,6 +106,11 @@ def apply_data_sharing_documents_collection(
 ) -> dict[str, Any]:
     """Recompute one trusted package plan and synchronously apply explicit decisions."""
 
+    if body.get("preview_only") is not False:
+        raise ValueError("collection apply requires preview_only false")
+    planned_identities = body.get("planned_identities")
+    if not isinstance(planned_identities, list):
+        raise ValueError("collection apply requires planned_identities from the confirmed preview")
     plan = plan_data_sharing_documents_collection(
         repo_root,
         scope=scope,
@@ -111,6 +118,7 @@ def apply_data_sharing_documents_collection(
         staging_root=staging_root,
         workspace_root=workspace_root,
         metadata_root=metadata_root,
+        planned_identities=planned_identities,
     )
     return apply_import_content_collection(
         repo_root,

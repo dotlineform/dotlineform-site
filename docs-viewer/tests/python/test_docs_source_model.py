@@ -169,7 +169,7 @@ def test_descendant_helper_handles_cycles_without_looping() -> None:
 
 def test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter() -> None:
     original_timestamp = source_model.current_doc_timestamp
-    source_model.current_doc_timestamp = lambda: "2026-05-09 13:00"
+    source_model.current_doc_timestamp = lambda: "2026-05-09 13:00:00"
     try:
         doc = make_doc("sample", title="Sample", parent_id="parent")
         doc.front_matter["sort_order"] = 10
@@ -209,13 +209,18 @@ def test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter() -> Non
     }
 
 
-def test_ensure_unique_stem_checks_existing_stems_and_doc_ids() -> None:
-    docs = [
-        make_doc("first-doc", stem="first-doc"),
-        make_doc("alternate-id", stem="first-doc-2"),
-    ]
+def test_allocate_doc_id_uses_timestamp_and_retries_collisions() -> None:
+    tokens = iter(["abcdef", "123abc"])
 
-    assert source_model.ensure_unique_stem(docs, "First Doc") == "first-doc-3"
+    doc_id = source_model.allocate_doc_id(
+        "2026-07-15 09:44:11",
+        {"d-20260715-094411-abcdef"},
+        token_factory=lambda _bytes: next(tokens),
+    )
+
+    assert doc_id == "d-20260715-094411-123abc"
+    assert source_model.is_immutable_doc_id(doc_id) is True
+    assert source_model.is_immutable_doc_id("document-title") is False
 
 
 def main() -> None:
@@ -227,7 +232,7 @@ def main() -> None:
         test_title_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
         test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter,
-        test_ensure_unique_stem_checks_existing_stems_and_doc_ids,
+        test_allocate_doc_id_uses_timestamp_and_retries_collisions,
     ]
     for test in tests:
         test()

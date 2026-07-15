@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260715-092247-659e29",
+  "title": "Tag Dimensions",
+  "added_date": "2026-07-15 09:22:47",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-659e29",
+  "parent_id": "d-20260715-092247-c67bbf",
+  "ui_status": "paused",
+  "content_html": "<h1>Tag Dimensions</h1>\n<p>Explore explicit dimensions that can score or classify works and series without confusing unlike meanings merely to fit one visualisation.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-ab3eff\">Concept</a> — semantic model, representation vocabulary, and unresolved product choices.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-053d06\">Architecture</a> — proposed registry, ownership, scoring, and projection structure.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-5e1795\">Small Dimension Set Delivery</a> — one possible end-to-end proving outcome.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-c67bbf\">Analytics Roadmap</a> — relative importance and sequence.</li>\n</ul>\n<p>The feature is paused and not implemented. Current Analytics scoring measures tag completeness only.</p>\n"
+}

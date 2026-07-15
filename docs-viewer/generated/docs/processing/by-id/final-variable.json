@@ -1,9 +1,0 @@
-{
-  "doc_id": "final-variable",
-  "title": "final variable",
-  "added_date": "2026-07-14 17:38",
-  "last_updated": "2026-07-14 17:38",
-  "viewer_url": "/docs/?scope=processing&doc=final-variable",
-  "parent_id": "unsorted",
-  "content_html": "<h1>final variable</h1>\n<h1>final <strong>variable</strong></h1>\n<p>In Java, marking a variable as <strong>final</strong> means that once it has been assigned a value, that variable’s reference cannot be changed. Here are a few key points:\n•\t<strong>Constant Value:</strong> For primitive types, the value cannot be modified after assignment.\n•\t<strong>Immutable Reference:</strong> For object references, the reference itself cannot point to a different object later, though the object’s internal state may still be mutable.\n•\t<strong>Use Cases:</strong> It’s often used to create constants (often combined with static) or to ensure that a variable is not accidentally re-assigned, which is particularly useful in inner classes and anonymous functions.</p>\n<p>For example:</p>\n<p>final int myConstant = 5;\n<em>// myConstant = 6; // This would cause a compilation error.</em></p>\n<p>final ArrayList<String> list = new ArrayList<String>();\nlist.add(&quot;Hello&quot;); <em>// Allowed, because we're not reassigning list, we're modifying its contents.</em>\n<em>// list = new ArrayList<String>(); // Not allowed; can't reassign a final reference.</em></p>\n<p>In short, <strong>final</strong> enforces that once a variable is set, it cannot be re-assigned to another value.</p>\n"
-}

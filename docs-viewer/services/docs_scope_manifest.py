@@ -466,15 +466,14 @@ def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def default_source_doc_text(title: str, default_doc_id: str) -> str:
-    today = utc_now()[:10]
+def default_source_doc_text(title: str, default_doc_id: str, added_date: str) -> str:
     return "\n".join(
         [
             "---",
             f"doc_id: {default_doc_id}",
             f"title: {json.dumps(title, ensure_ascii=False)}",
-            f"added_date: {today}",
-            f"last_updated: {today}",
+            f"added_date: {json.dumps(added_date)}",
+            f"last_updated: {json.dumps(added_date)}",
             "ui_status: draft",
             "---",
             f"# {title}",

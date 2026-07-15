@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260715-092247-6bbb5e",
+  "title": "Search Mechanics",
+  "added_date": "2026-07-15 09:22:47",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-6bbb5e",
+  "parent_id": "d-20260715-092247-f3fd52",
+  "ui_status": "paused",
+  "content_html": "<h1>Search Mechanics</h1>\n<p>Refine index inclusion, ranking, result context, and efficiency while retaining the current separate Catalogue and Docs Viewer static-search structure.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-084611-c2fa6f\">Mechanics Review Delivery</a> — gather representative queries and produce a short sequence of independently finishable improvements.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-f3fd52\">Repository Roadmap</a> — relative importance and sequence.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260331-000000-5dcf32\">Search</a> — current architecture and known weak spots.</li>\n</ul>\n<p>The review is paused. Clear regressions against current behavior can still be fixed directly.</p>\n"
+}

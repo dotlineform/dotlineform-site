@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260513-214100-0a7f44",
+  "title": "UI Status",
+  "added_date": "2026-05-13 21:41:00",
+  "last_updated": "2026-05-13 21:41",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260513-214100-0a7f44",
+  "parent_id": "d-20260424-000000-50b63f",
+  "content_html": "<h1>Doc UI Status</h1>\n<p>✅ Done</p>\n<p>🔄 In progress</p>\n<p>😴 Deferred</p>\n<p>❗ Urgent</p>\n<p>⏸️ Paused</p>\n<p>⛔ Blocked</p>\n<p>👀 Needs review</p>\n<p>📝 Draft</p>\n<p>🧪 Testing</p>\n<p>🏷️ Status menu</p>\n<p>The popup reads from the generated browser config:</p>\n<p><code>docs-viewer/config/defaults/docs-viewer-config.json</code></p>\n<p>But that file is generated from the source config:</p>\n<p><code>docs-viewer/config/scopes/docs_scopes.json</code></p>\n<p>So the durable place to add/edit status options is:</p>\n<pre><code>&quot;docs_viewer&quot;: {\n  &quot;ui_statuses_by_scope&quot;: {\n    &quot;studio&quot;: [\n      { &quot;ui_status&quot;: &quot;paused&quot;, &quot;label&quot;: &quot;Paused&quot;, &quot;emoji&quot;: &quot;⏸️&quot; },\n      { &quot;ui_status&quot;: &quot;deferred&quot;, &quot;label&quot;: &quot;Deferred&quot;, &quot;emoji&quot;: &quot;😴&quot; }\n    ]\n  }\n}\n</code></pre>\n<p>Then regenerate with:</p>\n<p><code>./docs-viewer/build/build_docs.py --scope studio --write</code></p>\n<p>Editing <code>docs-viewer/config/defaults/docs-viewer-config.json</code> directly can work temporarily, but it will be overwritten by the next docs build.</p>\n"
+}

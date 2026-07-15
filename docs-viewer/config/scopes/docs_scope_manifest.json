@@ -28,7 +28,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/analysis/analysis.md",
+          "path": "docs-viewer/source/analysis/d-20260426-164043-e14f49.md",
           "action": "track",
           "exists": true
         },
@@ -72,7 +72,7 @@
       "metadata": {
         "backfilled": true,
         "viewer_base_url": "/analysis/",
-        "default_doc_id": "analysis"
+        "default_doc_id": "d-20260426-164043-e14f49"
       }
     },
     {
@@ -100,7 +100,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/library/library.md",
+          "path": "docs-viewer/source/library/d-20260330-172255-8399b7.md",
           "action": "track",
           "exists": true
         },
@@ -144,7 +144,7 @@
       "metadata": {
         "backfilled": true,
         "viewer_base_url": "/library/",
-        "default_doc_id": "library"
+        "default_doc_id": "d-20260330-172255-8399b7"
       }
     },
     {
@@ -172,7 +172,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/studio/dev-home.md",
+          "path": "docs-viewer/source/studio/d-20260419-000000-d2e47b.md",
           "action": "track",
           "exists": true
         },
@@ -204,7 +204,7 @@
       "metadata": {
         "backfilled": true,
         "viewer_base_url": "/docs/",
-        "default_doc_id": "dev-home"
+        "default_doc_id": "d-20260419-000000-d2e47b"
       }
     },
     {
@@ -418,7 +418,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/processing/processing.md",
+          "path": "docs-viewer/source/processing/d-20260714-092047-06a5db.md",
           "location": "repo",
           "action": "track",
           "exists": true
@@ -469,7 +469,7 @@
       "metadata": {
         "backfilled": false,
         "viewer_base_url": "/docs/",
-        "default_doc_id": "processing",
+        "default_doc_id": "d-20260714-092047-06a5db",
         "publishing_mode": "local_committed",
         "external_data_root": ""
       }

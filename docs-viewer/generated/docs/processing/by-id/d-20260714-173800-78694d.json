@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-173800-78694d",
+  "title": "how to call a java method using a variable name?",
+  "added_date": "2026-07-14 17:38:00",
+  "last_updated": "2026-07-14 17:38",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-173800-78694d",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>how to call a java method using a variable name?</h1>\n<h1><a href=\"https://stackoverflow.com/questions/4138527/how-to-call-a-java-method-using-a-variable-name#4138562\">how to call a java method using a variable name?</a></h1>\n<p>Use reflection:</p>\n<pre><code>Method method = WhateverYourClassIs.class.getDeclaredMethod(&quot;Method&quot; + MyVar);\nmethod.invoke();\n\n</code></pre>\n"
+}

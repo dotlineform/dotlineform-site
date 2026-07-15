@@ -1,9 +1,0 @@
-{
-  "doc_id": "scripts-catalogue-lookup",
-  "title": "Catalogue Lookup Export",
-  "added_date": "2026-04-17",
-  "last_updated": "2026-07-15",
-  "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
-  "parent_id": "studio",
-  "content_html": "<h1>Catalogue Lookup Export</h1>\n<h2>Command</h2>\n<p>Preview or write the complete Studio lookup family:</p>\n<pre><code class=\"language-bash\">$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py\n$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write\n</code></pre>\n<p>Defaults:</p>\n<ul>\n<li>source: <code>studio/data/canonical/catalogue/</code></li>\n<li>output: <code>studio/data/generated/catalogue-lookup/</code></li>\n</ul>\n<p><code>--source-dir</code> and <code>--lookup-dir</code> override those roots for focused testing or migration work.</p>\n<h2>What It Produces</h2>\n<p>The exporter builds Work search, Series search, and focused Series list projections used by Studio. They are non-canonical and can be regenerated from catalogue source.</p>\n<p>Focused Work and detail editor records are service projections, not generated per-record lookup files. The <a href=\"/docs/?scope=studio&amp;doc=data-models-catalogue-indexes\">Catalogue Indexes And Payloads</a> page explains that read split.</p>\n<h2>Normal Refresh Path</h2>\n<p>Catalogue mutations use <code>catalogue_lookup_refresh.py</code> to select a focused, related, or complete refresh. Run the exporter directly when a deliberate full refresh is needed outside a mutation workflow.</p>\n<p><code>catalogue_lookup.py</code> owns payload schemas and serializers; <code>export_catalogue_lookup.py</code> owns only CLI input/output and full-export orchestration.</p>\n"
-}

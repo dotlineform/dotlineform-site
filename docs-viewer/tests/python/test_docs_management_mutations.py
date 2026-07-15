@@ -124,10 +124,11 @@ def test_create_plan_selects_unique_source_path_and_search_target() -> None:
             },
         )
 
-    assert plan.response["doc_id"] == "target-2"
+    doc_id = plan.response["doc_id"]
+    assert mutations.source_model.is_immutable_doc_id(doc_id)
     assert plan.response["record"]["parent_id"] == ""
-    assert plan.search_doc_ids == ["target-2"]
-    assert plan.source_writes[0].path.name == "target-2.md"
+    assert plan.search_doc_ids == [doc_id]
+    assert plan.source_writes[0].path.name == f"{doc_id}.md"
 
 
 def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:

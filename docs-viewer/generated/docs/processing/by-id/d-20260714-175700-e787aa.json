@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-175700-e787aa",
+  "title": "Selection Audit — Indices Preview & CSV",
+  "added_date": "2026-07-14 17:57:00",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-175700-e787aa",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>Selection Audit (Final‑Only)</h1>\n<blockquote>\n<p>Timestamp: 2025-08-29 20:17:19 BST</p>\n</blockquote>\n<h2>What you get</h2>\n<ul>\n<li><strong>PREPARE SELECTION</strong>: builds permutations and computes the subset chosen by your sampling (Stride or Random) and First‑N — <em>no images rendered</em>.</li>\n<li><strong>On‑canvas table</strong>: shows the first K selected permutations (index → order string).</li>\n<li><strong>EXPORT SELECTED CSV</strong>: writes <code>selection_indices.csv</code> with columns:\n<ul>\n<li><code>perm_index</code> — index into the full permutation list</li>\n<li><code>order</code> — e.g., 0-2-1-3</li>\n<li><code>sampling_mode</code>, <code>stride_n</code>, <code>random_keep_pct</code>, <code>random_seed</code></li>\n<li><code>first_n_applied</code> — the cap used after sampling</li>\n</ul>\n</li>\n</ul>\n<h2>Why this helps</h2>\n<p>You can review, archive, or share the exact subset to be rendered — ensuring reproducibility and helping collaborators review choices without generating images.</p>\n"
+}

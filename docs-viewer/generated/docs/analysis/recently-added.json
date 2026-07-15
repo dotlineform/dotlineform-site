@@ -3,25 +3,25 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "tags",
+      "doc_id": "d-20260624-213316-478639",
       "title": "Tags",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/tags.json",
-      "added_date": "2026-06-24",
-      "parent_id": "analysis",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260624-213316-478639.json",
+      "added_date": "2026-06-24 21:33:16",
+      "parent_id": "d-20260426-164043-e14f49",
       "parent_title": "Analysis"
     },
     {
-      "doc_id": "3-symbols",
+      "doc_id": "d-20260518-180700-214487",
       "title": "3 symbols",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/3-symbols.json",
-      "added_date": "2026-05-18 18:07"
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260518-180700-214487.json",
+      "added_date": "2026-05-18 18:07:00"
     },
     {
-      "doc_id": "analysis",
+      "doc_id": "d-20260426-164043-e14f49",
       "title": "Analysis",
-      "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json",
-      "added_date": "2026-04-26"
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/d-20260426-164043-e14f49.json",
+      "added_date": "2026-04-26 16:40:43"
     }
   ],
-  "generated_at": "2026-06-24T20:29:25Z"
+  "generated_at": "2026-07-15T09:17:34Z"
 }

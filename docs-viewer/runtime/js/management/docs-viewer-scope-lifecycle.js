@@ -60,7 +60,6 @@ var SCOPE_LIFECYCLE_TEXT = {
   scopeLocalCommittedMode: "local tracked",
   scopeLocalExternalMode: "external local",
   scopeSourceRootLabel: "source root",
-  scopeDefaultDocIdLabel: "default doc id",
   scopePublicRoutePathLabel: "public route path",
   scopePreviewButton: "Preview",
   scopeSaveButton: "Save",
@@ -191,10 +190,6 @@ function renderCreateFormHtml(capabilities) {
         '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeSourceRootLabel) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-source-root" type="text" autocomplete="off" spellcheck="false" required>' +
       '</label>' +
-      '<label class="docsViewer__field">' +
-        '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopeDefaultDocIdLabel) + '</span>' +
-        '<input class="docsViewer__fieldInput" data-role="scope-default-doc-id" type="text" autocomplete="off" spellcheck="false" required>' +
-      '</label>' +
       '<label class="docsViewer__field" data-role="scope-route-field">' +
         '<span class="docsViewer__fieldLabel">' + escapeHtml(SCOPE_LIFECYCLE_TEXT.scopePublicRoutePathLabel) + '</span>' +
         '<input class="docsViewer__fieldInput" data-role="scope-public-route-path" type="text" autocomplete="off" spellcheck="false">' +
@@ -210,7 +205,6 @@ function wireCreateForm(api) {
   var modeInput = host.querySelector('[data-role="scope-publishing-mode"]');
   var sourceField = host.querySelector('[data-role="scope-source-root-field"]');
   var sourceInput = host.querySelector('[data-role="scope-source-root"]');
-  var defaultDocInput = host.querySelector('[data-role="scope-default-doc-id"]');
   var routeField = host.querySelector('[data-role="scope-route-field"]');
   var routeInput = host.querySelector('[data-role="scope-public-route-path"]');
 
@@ -221,10 +215,6 @@ function wireCreateForm(api) {
   function expectedSourceRoot() {
     var slug = slugFromScopeInput(scopeInput && scopeInput.value);
     return slug ? "docs-viewer/source/" + slug : "";
-  }
-
-  function expectedDefaultDocId() {
-    return slugFromScopeInput(scopeInput && scopeInput.value);
   }
 
   function expectedRoutePath() {
@@ -240,10 +230,6 @@ function wireCreateForm(api) {
     if (sourceInput && (!sourceInput.value || sourceInput.dataset.auto === "true")) {
       sourceInput.value = expectedSourceRoot();
       sourceInput.dataset.auto = "true";
-    }
-    if (defaultDocInput && (!defaultDocInput.value || defaultDocInput.dataset.auto === "true")) {
-      defaultDocInput.value = expectedDefaultDocId();
-      defaultDocInput.dataset.auto = "true";
     }
     if (routeInput && (!routeInput.value || routeInput.dataset.auto === "true")) {
       routeInput.value = expectedRoutePath();
@@ -271,7 +257,7 @@ function wireCreateForm(api) {
   if (scopeInput) {
     scopeInput.addEventListener("input", applyScopeDefaults);
   }
-  [titleInput, sourceInput, defaultDocInput, routeInput].forEach(function (input) {
+  [titleInput, sourceInput, routeInput].forEach(function (input) {
     if (!input) return;
     input.dataset.auto = "true";
     input.addEventListener("input", function () {
@@ -290,10 +276,9 @@ function collectCreatePayload(api) {
   var title = normalizeText(host.querySelector('[data-role="scope-title"]')?.value);
   var publishingMode = normalizeText(host.querySelector('[data-role="scope-publishing-mode"]')?.value) || "local_external";
   var sourceRoot = normalizeText(host.querySelector('[data-role="scope-source-root"]')?.value);
-  var defaultDocId = normalizeText(host.querySelector('[data-role="scope-default-doc-id"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
 
-  if (!scopeId || !title || !defaultDocId || (publishingMode !== "local_external" && !sourceRoot)) {
+  if (!scopeId || !title || (publishingMode !== "local_external" && !sourceRoot)) {
     api.setStatus(SCOPE_LIFECYCLE_TEXT.scopeCreateRequiredMessage);
     return null;
   }
@@ -306,7 +291,6 @@ function collectCreatePayload(api) {
     scope_id: scopeId,
     title: title,
     source_root: publishingMode === "local_external" ? "" : sourceRoot,
-    default_doc_id: defaultDocId,
     publishing_mode: publishingMode,
     public_route_path: publishingMode === "public_readonly" ? publicRoutePath : ""
   };
@@ -680,7 +664,9 @@ export async function openCreateScopeFlow(options = {}) {
     setBusy(callbacks, true);
     setMessage(callbacks, SCOPE_LIFECYCLE_TEXT.scopeCreateSaving, false);
     render(callbacks);
-    appliedPayload = await applyScopeCreate(result.payload, options.clientOptions);
+    appliedPayload = await applyScopeCreate(Object.assign({}, result.payload, {
+      planned_document_identity: preview.planned_document_identity
+    }), options.clientOptions);
     setMessage(callbacks, normalizeText(appliedPayload.summary_text), false);
     applied(callbacks, appliedPayload);
   } catch (error) {

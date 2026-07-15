@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260416-000000-1744c6",
+  "title": "LLM Integration",
+  "added_date": "2026-04-16 00:00:00",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260416-000000-1744c6",
+  "parent_id": "d-20260715-092247-c67bbf",
+  "ui_status": "paused",
+  "content_html": "<h1>LLM Integration</h1>\n<p>Use language models as advisory tools for selected Analytics and document workflows without moving canonical ownership, validation, or write authority into the model integration.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260416-000000-7b5d77\">Concept</a> — useful applications, boundaries, and questions.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-1c5d85\">Architecture</a> — proposed invocation, review, validation, and domain ownership structure.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-81535b\">Library Summary Proposals Delivery</a> — a possible first complete proving workflow.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-c67bbf\">Analytics Roadmap</a> — relative importance and sequence.</li>\n</ul>\n<p>The feature is paused. None of its proposed architecture is a dependency for current work.</p>\n"
+}

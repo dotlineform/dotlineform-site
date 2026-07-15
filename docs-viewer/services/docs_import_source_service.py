@@ -364,6 +364,6 @@ def handle_import_source(
         "requires_doc_overwrite_confirmation": False,
         "requires_interactive_html_confirmation": False,
         "collision": collision,
-        "import_preview": preview,
+        "import_preview": plan.import_preview,
         **result,
     }

@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-172700-8610c7",
+  "title": "deterministic random",
+  "added_date": "2026-07-14 17:27:00",
+  "last_updated": "2026-07-14 17:27",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-172700-8610c7",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>deterministic random</h1>\n<p>Create an option which sets a seed value\nthis will make the drawing repeatable</p>\n"
+}

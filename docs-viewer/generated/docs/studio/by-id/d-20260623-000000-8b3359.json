@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260623-000000-8b3359",
+  "title": "Shareable Content Blocks",
+  "added_date": "2026-06-23 00:00:00",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260623-000000-8b3359",
+  "parent_id": "d-20260715-092247-c67bbf",
+  "ui_status": "draft",
+  "content_html": "<h1>Shareable Content Blocks</h1>\n<p>Define a managed workflow for sharing bounded source content, reviewing returned text, and applying accepted changes through the canonical source owner.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260623-190947-78e88b\">Concept</a> — product boundary, ownership direction, possible block shapes, and unresolved choices.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-c67bbf\">Analytics Roadmap</a> — relative importance and sequence.</li>\n</ul>\n<p>No architecture or delivery is active. Add them only when one coherent source-exchange outcome is worth building.</p>\n"
+}

@@ -109,10 +109,13 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     if parent_id and parent_id not in docs_by_id:
         raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
 
-    doc_id = source_model.ensure_unique_stem(docs, title)
+    timestamp = source_model.current_doc_timestamp()
+    doc_id = source_model.allocate_doc_id(
+        timestamp,
+        {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)},
+    )
     target_root = source_model.scope_root(repo_root, scope)
     target_path = target_root / f"{doc_id}.md"
-    timestamp = source_model.current_doc_timestamp()
     front_matter = {
         "doc_id": doc_id,
         "title": title,

@@ -231,6 +231,9 @@ export function createDocsImportCollectionController(options = {}) {
         confirm: true,
         export_id: normalizeText(packageIdentity.export_id),
         source_sha256: normalizeText(packageIdentity.source_sha256),
+        planned_identities: Array.isArray(state.plan.planned_identities)
+          ? state.plan.planned_identities
+          : [],
         decisions,
         activity_context: buildDocsImportActivityContext({
           pageId: "docs-import",

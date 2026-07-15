@@ -3,85 +3,85 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "d-20260715-094411-1c5fa7",
-      "title": "Document Identity",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-1c5fa7.json",
-      "added_date": "2026-07-15 09:44:11",
-      "parent_id": "docs-viewer-roadmap",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260715-094411-599c3d",
-      "title": "Document Identity Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-599c3d.json",
-      "added_date": "2026-07-15 09:44:11",
-      "parent_id": "d-20260715-094411-1c5fa7",
-      "parent_title": "Document Identity"
-    },
-    {
       "doc_id": "d-20260715-094411-2b6e65",
-      "title": "Document Identity Concept",
+      "title": "Document Identity",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-2b6e65.json",
       "added_date": "2026-07-15 09:44:11",
-      "parent_id": "d-20260715-094411-1c5fa7",
-      "parent_title": "Document Identity"
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
     },
     {
-      "doc_id": "d-20260715-094411-e46323",
-      "title": "Document Identity Delivery",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-e46323.json",
-      "added_date": "2026-07-15 09:44:11",
-      "parent_id": "d-20260715-094411-1c5fa7",
-      "parent_title": "Document Identity"
-    },
-    {
-      "doc_id": "config-admin-config-json",
-      "title": "Admin Config JSON",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-admin-config-json.json",
-      "added_date": "2026-07-15",
-      "parent_id": "admin",
-      "parent_title": "Admin"
-    },
-    {
-      "doc_id": "admin-overview",
-      "title": "Admin Overview",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-overview.json",
-      "added_date": "2026-07-15",
-      "parent_id": "admin",
-      "parent_title": "Admin"
-    },
-    {
-      "doc_id": "admin-roadmap",
+      "doc_id": "d-20260715-092247-85515f",
       "title": "Admin Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-roadmap.json",
-      "added_date": "2026-07-15",
-      "parent_id": "roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-85515f.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "analytics-overview",
-      "title": "Analytics Overview",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-overview.json",
-      "added_date": "2026-07-15",
-      "parent_id": "analytics",
-      "parent_title": "Analytics"
-    },
-    {
-      "doc_id": "analytics-roadmap",
+      "doc_id": "d-20260715-092247-c67bbf",
       "title": "Analytics Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-roadmap.json",
-      "added_date": "2026-07-15",
-      "parent_id": "roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-c67bbf.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
     {
-      "doc_id": "data-sharing-overview",
-      "title": "Data Sharing Overview",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-overview.json",
-      "added_date": "2026-07-15",
-      "parent_id": "data-sharing",
-      "parent_title": "Data Sharing"
+      "doc_id": "d-20260715-092247-1c5d85",
+      "title": "LLM Integration Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-1c5d85.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260416-000000-1744c6",
+      "parent_title": "LLM Integration"
+    },
+    {
+      "doc_id": "d-20260715-092247-81535b",
+      "title": "LLM Library Summary Proposals Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-81535b.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260416-000000-1744c6",
+      "parent_title": "LLM Integration"
+    },
+    {
+      "doc_id": "d-20260715-092247-595d47",
+      "title": "Moments Basic Axis Editor Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-595d47.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260712-000000-45286c",
+      "parent_title": "Moments Composition Workspace"
+    },
+    {
+      "doc_id": "d-20260715-092247-da73da",
+      "title": "Moments Composition Workspace Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-da73da.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260712-000000-45286c",
+      "parent_title": "Moments Composition Workspace"
+    },
+    {
+      "doc_id": "d-20260715-092247-4b7382",
+      "title": "Portable Document Packages",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-4b7382.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260715-092247-c67bbf",
+      "parent_title": "Analytics Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-092247-f3fd52",
+      "title": "Repository Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-f3fd52.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-092247-6bbb5e",
+      "title": "Search Mechanics",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-6bbb5e.json",
+      "added_date": "2026-07-15 09:22:47",
+      "parent_id": "d-20260715-092247-f3fd52",
+      "parent_title": "Repository Roadmap"
     }
   ],
-  "generated_at": "2026-07-15T08:48:16Z"
+  "generated_at": "2026-07-15T09:32:02Z"
 }

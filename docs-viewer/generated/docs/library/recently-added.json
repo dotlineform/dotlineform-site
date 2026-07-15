@@ -3,65 +3,65 @@
   "limit": 10,
   "docs": [
     {
-      "doc_id": "coincidence-salience",
+      "doc_id": "d-20260516-094500-c346e9",
       "title": "Coincidence Salience Worksheet",
-      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json",
-      "added_date": "2026-05-16 09:45"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-094500-c346e9.json",
+      "added_date": "2026-05-16 09:45:00"
     },
     {
-      "doc_id": "coincidence-inevitability",
+      "doc_id": "d-20260516-085800-d87bbb",
       "title": "Coincidence Inevitability",
-      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-inevitability.json",
-      "added_date": "2026-05-16 08:58"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-085800-d87bbb.json",
+      "added_date": "2026-05-16 08:58:00"
     },
     {
-      "doc_id": "closed-vs-open-universe",
+      "doc_id": "d-20260507-212900-ae8262",
       "title": "Entropy & Evolution Under Two Cosmologies",
-      "content_url": "/assets/data/docs/scopes/library/by-id/closed-vs-open-universe.json",
-      "added_date": "2026-05-07 21:29"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-212900-ae8262.json",
+      "added_date": "2026-05-07 21:29:00"
     },
     {
-      "doc_id": "beyond-conscious-subconscious",
+      "doc_id": "d-20260507-190900-d1823e",
       "title": "Beyond Conscious vs. Subconscious",
-      "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json",
-      "added_date": "2026-05-07 19:09"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-190900-d1823e.json",
+      "added_date": "2026-05-07 19:09:00"
     },
     {
-      "doc_id": "beauty",
+      "doc_id": "d-20260507-172400-74807b",
       "title": "Beauty",
-      "content_url": "/assets/data/docs/scopes/library/by-id/beauty.json",
-      "added_date": "2026-05-07 17:24"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-172400-74807b.json",
+      "added_date": "2026-05-07 17:24:00"
     },
     {
-      "doc_id": "beauty-memory-meaning",
+      "doc_id": "d-20260507-170100-089703",
       "title": "Beauty × Memory × Meaning",
-      "content_url": "/assets/data/docs/scopes/library/by-id/beauty-memory-meaning.json",
-      "added_date": "2026-05-07 17:01"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-170100-089703.json",
+      "added_date": "2026-05-07 17:01:00"
     },
     {
-      "doc_id": "bayesian-reasoning",
+      "doc_id": "d-20260507-165500-ac372d",
       "title": "Bayesian Reasoning",
-      "content_url": "/assets/data/docs/scopes/library/by-id/bayesian-reasoning.json",
-      "added_date": "2026-05-07 16:55"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-165500-ac372d.json",
+      "added_date": "2026-05-07 16:55:00"
     },
     {
-      "doc_id": "abstract-thought",
+      "doc_id": "d-20260507-164300-37db8d",
       "title": "Abstract Thought and Physical Processes",
-      "content_url": "/assets/data/docs/scopes/library/by-id/abstract-thought.json",
-      "added_date": "2026-05-07 16:43"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-164300-37db8d.json",
+      "added_date": "2026-05-07 16:43:00"
     },
     {
-      "doc_id": "3d-space-to-many-dimensions",
+      "doc_id": "d-20260507-155600-5389bb",
       "title": "From 3D Space to Many Dimensions",
-      "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json",
-      "added_date": "2026-05-07 15:56"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-155600-5389bb.json",
+      "added_date": "2026-05-07 15:56:00"
     },
     {
-      "doc_id": "defining-information-for-cross-boundary-comparisons",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
-      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons.json",
-      "added_date": "2026-04-24"
+      "doc_id": "d-20260424-091029-8f0a95",
+      "title": "Dreaming is Active",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260424-091029-8f0a95.json",
+      "added_date": "2026-04-24 09:10:29"
     }
   ],
-  "generated_at": "2026-06-10T14:50:42Z"
+  "generated_at": "2026-07-15T09:17:33Z"
 }

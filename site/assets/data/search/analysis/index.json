@@ -2,16 +2,16 @@
   "header": {
     "schema": "search_index_analysis_v1",
     "scope": "analysis",
-    "version": "blake2b-caab06acdd48b342e76328b7f5b15a62",
-    "generated_at_utc": "2026-06-24T20:29:25Z",
+    "version": "blake2b-f2bdd8302386b4522f804508afa21028",
+    "generated_at_utc": "2026-07-15T09:18:19Z",
     "count": 2
   },
   "entries": [
     {
-      "id": "analysis",
+      "id": "d-20260426-164043-e14f49",
       "kind": "doc",
       "title": "Analysis",
-      "href": "/analysis/?doc=analysis",
+      "href": "/analysis/?doc=d-20260426-164043-e14f49",
       "last_updated": "2026-04-26",
       "display_meta": "2026-04-26",
       "search_terms": [
@@ -19,17 +19,18 @@
         "2026-04-26",
         "2026",
         "04",
-        "26"
+        "26",
+        "d-20260426-164043-e14f49"
       ],
-      "search_text": "analysis 2026-04-26 2026 04 26"
+      "search_text": "analysis 2026-04-26 2026 04 26 d-20260426-164043-e14f49"
     },
     {
-      "id": "tags",
+      "id": "d-20260624-213316-478639",
       "kind": "doc",
       "title": "Tags",
-      "href": "/analysis/?doc=tags",
+      "href": "/analysis/?doc=d-20260624-213316-478639",
       "last_updated": "2026-06-24",
-      "parent_id": "analysis",
+      "parent_id": "d-20260426-164043-e14f49",
       "parent_title": "Analysis",
       "display_meta": "2026-06-24 • Analysis",
       "search_terms": [
@@ -38,9 +39,10 @@
         "2026-06-24",
         "2026",
         "06",
-        "24"
+        "24",
+        "d-20260624-213316-478639"
       ],
-      "search_text": "tags analysis 2026-06-24 2026 06 24"
+      "search_text": "tags analysis 2026-06-24 2026 06 24 d-20260624-213316-478639"
     }
   ]
 }

@@ -19,6 +19,15 @@ sys.path.insert(0, str(REPO_ROOT))
 from tests.smoke.route_ready_helpers import wait_for_route_ready
 
 
+LIBRARY_DOC_ID = "d-20260330-172255-8399b7"
+ANALYSIS_DOC_ID = "d-20260426-164043-e14f49"
+TAGS_DOC_ID = "d-20260624-213316-478639"
+BIRD_SUBDOC_ID = "d-20260624-204534-0d6ae2"
+NERVE_SUBDOC_ID = "d-20260624-204534-ecfc12"
+ORDERED_SUBDOC_ID = "d-20260624-204534-e3de0b"
+MOMENTS_DOC_ID = "d-20260215-000000-8c3fcc"
+
+
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):  # noqa: A003
         return
@@ -225,42 +234,44 @@ def exercise_public_route(
 def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) -> None:
     request_urls: list[str] = []
     page.on("request", lambda request: request_urls.append(request.url))
-    page.goto(route_url(base_url, "/analysis/?doc=tags"), wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, "tags", "Tags", timeout_ms)
+    page.goto(route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}"), wait_until="domcontentloaded")
+    wait_for_rendered_doc(page, TAGS_DOC_ID, "Tags", timeout_ms)
     page.wait_for_function(
-        """() => {
+        f"""() => {{
             const report = document.querySelector(".docsViewerReport");
             const rows = Array.from(document.querySelectorAll(".docsViewerReport__row"));
             return report &&
                 report.dataset.reportId === "docs_subscope" &&
                 report.dataset.reportSubscope === "tags" &&
-                rows.map((row) => row.dataset.reportSubdocId).join(",") === "bird,nerve,ordered" &&
-                rows.map((row) => (row.textContent || "").trim()).join(",") === "Bird,Nerve,Ordered";
-        }""",
+                rows.map((row) => row.dataset.reportSubdocId).join(",") === "{BIRD_SUBDOC_ID},{NERVE_SUBDOC_ID},{ORDERED_SUBDOC_ID}" &&
+                rows.map((row) => (row.textContent || "").trim()).join(",") === "bird,nerve,ordered";
+        }}""",
         timeout=timeout_ms,
     )
-    if query_value(page.url, "doc") != "tags":
+    if query_value(page.url, "doc") != TAGS_DOC_ID:
         raise AssertionError(f"public report parent doc should remain selected, got {page.url}")
     paths = request_paths(request_urls)
     if "/assets/data/docs/public-reports.json" not in paths:
         raise AssertionError(f"public report did not read public report registry; saw {sorted(paths)!r}")
     if "/assets/data/docs/scopes/analysis/tags/manifest.json" not in paths:
         raise AssertionError(f"public report did not read sub-scope manifest; saw {sorted(paths)!r}")
-    page.locator(".docsViewerReport__row[data-report-subdoc-id='ordered'] .docsViewerReport__subscopeButton").click()
+    page.locator(
+        f".docsViewerReport__row[data-report-subdoc-id='{ORDERED_SUBDOC_ID}'] .docsViewerReport__subscopeButton"
+    ).click()
     page.wait_for_function(
-        """() => {
+        f"""() => {{
             const report = document.querySelector(".docsViewerReport");
             const active = document.querySelector(".docsViewer__navLink.is-active");
             const detail = document.querySelector(".docsReportDetail__body");
             return report &&
                 report.dataset.reportState === "detail" &&
                 active &&
-                active.dataset.docId === "tags" &&
+                active.dataset.docId === "{TAGS_DOC_ID}" &&
                 detail &&
                 /form:ordered/.test(detail.textContent || "") &&
-                new URL(location.href).searchParams.get("doc") === "tags" &&
-                new URL(location.href).searchParams.get("subdoc") === "ordered";
-        }""",
+                new URL(location.href).searchParams.get("doc") === "{TAGS_DOC_ID}" &&
+                new URL(location.href).searchParams.get("subdoc") === "{ORDERED_SUBDOC_ID}";
+        }}""",
         timeout=timeout_ms,
     )
     page.go_back(wait_until="domcontentloaded")
@@ -276,12 +287,12 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
     )
     page.go_forward(wait_until="domcontentloaded")
     page.wait_for_function(
-        """() => {
+        f"""() => {{
             const detail = document.querySelector(".docsReportDetail__body");
             return document.querySelector(".docsViewerReport")?.dataset.reportState === "detail" &&
                 /form:ordered/.test(detail?.textContent || "") &&
-                new URL(location.href).searchParams.get("subdoc") === "ordered";
-        }""",
+                new URL(location.href).searchParams.get("subdoc") === "{ORDERED_SUBDOC_ID}";
+        }}""",
         timeout=timeout_ms,
     )
     page.locator(".docsReportDetail__back").click()
@@ -290,27 +301,33 @@ def exercise_public_subscope_report(page: Page, base_url: str, timeout_ms: int) 
             !new URL(location.href).searchParams.has("subdoc")""",
         timeout=timeout_ms,
     )
-    page.goto(route_url(base_url, "/analysis/?doc=tags&subdoc=bird"), wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, "tags", "Tags", timeout_ms)
+    page.goto(
+        route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}&subdoc={BIRD_SUBDOC_ID}"),
+        wait_until="domcontentloaded",
+    )
+    wait_for_rendered_doc(page, TAGS_DOC_ID, "Tags", timeout_ms)
     page.wait_for_function(
-        """() => {
+        f"""() => {{
             const active = document.querySelector(".docsViewer__navLink.is-active");
             const detail = document.querySelector(".docsReportDetail__body");
             return active &&
-                active.dataset.docId === "tags" &&
+                active.dataset.docId === "{TAGS_DOC_ID}" &&
                 document.querySelector(".docsViewerReport")?.dataset.reportState === "detail" &&
                 /subject:bird/.test(detail?.textContent || "") &&
-                new URL(location.href).searchParams.get("doc") === "tags" &&
-                new URL(location.href).searchParams.get("subdoc") === "bird";
-        }""",
+                new URL(location.href).searchParams.get("doc") === "{TAGS_DOC_ID}" &&
+                new URL(location.href).searchParams.get("subdoc") === "{BIRD_SUBDOC_ID}";
+        }}""",
         timeout=timeout_ms,
     )
-    page.goto(route_url(base_url, "/analysis/?doc=tags&subdoc=missing-detail"), wait_until="domcontentloaded")
-    wait_for_rendered_doc(page, "tags", "Tags", timeout_ms)
+    page.goto(
+        route_url(base_url, f"/analysis/?doc={TAGS_DOC_ID}&subdoc=missing-detail"),
+        wait_until="domcontentloaded",
+    )
+    wait_for_rendered_doc(page, TAGS_DOC_ID, "Tags", timeout_ms)
     page.wait_for_function(
-        """() => document.querySelector(".docsViewerReport")?.dataset.reportState === "error" &&
+        f"""() => document.querySelector(".docsViewerReport")?.dataset.reportState === "error" &&
             /missing-detail/.test(document.querySelector(".docsViewerReport")?.textContent || "") &&
-            document.querySelector(".docsViewer__navLink.is-active")?.dataset.docId === "tags" """,
+            document.querySelector(".docsViewer__navLink.is-active")?.dataset.docId === "{TAGS_DOC_ID}" """,
         timeout=timeout_ms,
     )
     paths = request_paths(request_urls)
@@ -350,18 +367,25 @@ def main() -> int:
                 exercise_public_route(
                     page,
                     base_url,
-                    f"/library/?doc=library&mode={legacy_mode}",
-                    "library",
+                    f"/library/?doc={LIBRARY_DOC_ID}&mode={legacy_mode}",
+                    LIBRARY_DOC_ID,
                     "Library",
                     args.timeout_ms,
                 )
-                exercise_public_route(page, base_url, "/analysis/?doc=analysis", "analysis", "Analysis", args.timeout_ms)
+                exercise_public_route(
+                    page,
+                    base_url,
+                    f"/analysis/?doc={ANALYSIS_DOC_ID}",
+                    ANALYSIS_DOC_ID,
+                    "Analysis",
+                    args.timeout_ms,
+                )
                 exercise_public_subscope_report(page, base_url, args.timeout_ms)
                 exercise_public_route(
                     page,
                     base_url,
-                    "/moments/?doc=a-feeling-of-free-will",
-                    "a-feeling-of-free-will",
+                    f"/moments/?doc={MOMENTS_DOC_ID}",
+                    MOMENTS_DOC_ID,
                     "a feeling of free will",
                     args.timeout_ms,
                     expect_document_controls=False,

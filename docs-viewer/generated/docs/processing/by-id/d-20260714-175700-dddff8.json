@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-175700-dddff8",
+  "title": "Toggles & Sliders GUI — Processing Permutation Composites",
+  "added_date": "2026-07-14 17:57:00",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-175700-dddff8",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>On‑Canvas Toggles &amp; Sliders</h1>\n<blockquote>\n<p>Timestamp: 2025-08-29 18:59:14 BST</p>\n</blockquote>\n<p>This build adds live controls to the existing folder‑picker GUI:</p>\n<ul>\n<li>Checkboxes: <strong>UHD MODE</strong>, <strong>UHD STRICT</strong>, <strong>FORCE GREYSCALE</strong>, <strong>AUTO LEVELS</strong>, <strong>PER‑CHANNEL</strong> (Auto Levels)</li>\n<li>Cycle button: <strong>BLEND STRATEGY</strong> (<code>SEQUENTIAL</code>/<code>AVERAGE</code>)</li>\n<li>Sliders: <strong>LAYER OPACITY</strong> (0–1), <strong>CLIP PERCENT</strong> (0–5%)</li>\n</ul>\n<p>Everything else remains: CSV per‑layer rules, manifest logging, Auto Levels/Contrast with percentile clipping, permutations generator, and two blend strategies.</p>\n<p>If you’d like a progress bar, keyboard shortcuts, or a “dry‑run” preview of the first N permutations, say the word.</p>\n"
+}

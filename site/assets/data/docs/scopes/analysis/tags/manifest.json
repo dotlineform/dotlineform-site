@@ -1,3 +1,16 @@
 {
-  "doc_ids": "bird,nerve,ordered"
+  "docs": [
+    {
+      "doc_id": "d-20260624-204534-0d6ae2",
+      "title": "bird"
+    },
+    {
+      "doc_id": "d-20260624-204534-ecfc12",
+      "title": "nerve"
+    },
+    {
+      "doc_id": "d-20260624-204534-e3de0b",
+      "title": "ordered"
+    }
+  ]
 }

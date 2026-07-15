@@ -109,6 +109,16 @@ def build_search_tokens(*values: Any) -> list[str]:
     return tokens
 
 
+def build_doc_search_tokens(doc_id: str, *display_values: Any) -> list[str]:
+    """Index human metadata plus the exact identity without tokenizing the code."""
+
+    tokens = build_search_tokens(*display_values)
+    exact_id = normalize_search_text(doc_id)
+    if exact_id and exact_id not in tokens:
+        tokens.append(exact_id)
+    return tokens
+
+
 def json_text(payload: Any) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
@@ -335,7 +345,7 @@ class DocsViewerSearchDataBuilder:
         for doc in docs:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
             display_meta = compact_join(doc.last_updated, parent_title)
-            search_terms = build_search_tokens(doc.doc_id, doc.title, parent_title, doc.last_updated)
+            search_terms = build_doc_search_tokens(doc.doc_id, doc.title, parent_title, doc.last_updated)
             entry = {
                 "id": doc.doc_id,
                 "kind": "doc",

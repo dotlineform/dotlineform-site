@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260715-092247-1c5d85",
+  "title": "LLM Integration Architecture",
+  "added_date": "2026-07-15 09:22:47",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-1c5d85",
+  "parent_id": "d-20260416-000000-1744c6",
+  "ui_status": "proposed",
+  "content_html": "<h1>LLM Integration Architecture</h1>\n<p>This is proposed structure, not an implemented shared LLM platform.</p>\n<h2>Workflow Boundary</h2>\n<pre><code class=\"language-text\">owning domain selects explicit source context\n  -&gt; task builds structured input\n  -&gt; provider returns structured proposal data\n  -&gt; task validates the untrusted response\n  -&gt; person reviews and edits proposals\n  -&gt; accepted changes pass through the domain writer\n  -&gt; existing builders regenerate derived output\n</code></pre>\n<h2>Ownership</h2>\n<ul>\n<li>Analytics owns tag, catalogue-analysis, and dimension meaning.</li>\n<li>Document source owners retain summaries, hierarchy, and document content.</li>\n<li>Each workflow owns its source selection, privacy decision, schemas, review surface, validation, apply rules, and audit decision.</li>\n<li>A provider adapter may own transport, structured-response parsing, timeouts, and common diagnostics after a real workflow proves that seam.</li>\n</ul>\n<p>Shared transport does not imply shared persistence, user interface, or governance.</p>\n<h2>Extension Method</h2>\n<p>Add a task-specific workflow with explicit input and proposal schemas. Reuse the owning domain's current read and write services. Extract provider-neutral invocation only when a second task demonstrates the same transport boundary.</p>\n<h2>Weak Spots</h2>\n<ul>\n<li>Provider and model selection are unresolved and temporally unstable.</li>\n<li>Privacy and data-retention constraints differ by workflow.</li>\n<li>Batch review needs a usable scale boundary.</li>\n<li>Provider output can validate structurally while remaining semantically wrong.</li>\n<li>Audit and reproducibility expectations are not yet established.</li>\n<li>Premature shared machinery could obscure domain-specific responsibilities.</li>\n</ul>\n"
+}

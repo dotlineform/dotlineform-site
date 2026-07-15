@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import datetime as dt
 import json
 import os
 import re
@@ -11,6 +10,15 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
+
+from docs_document_identity import (
+    DOC_TIMESTAMP_FORMAT,
+    IMMUTABLE_DOC_ID_PATTERN,
+    allocate_doc_id,
+    current_doc_timestamp,
+    doc_id_matches_added_date,
+    is_immutable_doc_id,
+)
 
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
@@ -38,10 +46,6 @@ class ScopeDoc:
     ui_status: str
     parent_id: str
     viewable: bool
-
-
-def current_doc_timestamp() -> str:
-    return dt.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M")
 
 
 def humanize(value: str) -> str:
@@ -304,15 +308,3 @@ def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str) -> str:
     updated_front_matter["parent_id"] = parent_id
     updated_front_matter.pop("sort_order", None)
     return format_source(updated_front_matter, doc.body)
-
-
-def ensure_unique_stem(docs: list[ScopeDoc], title: str) -> str:
-    base = slugify(title)
-    existing_stems = {doc.path.stem for doc in docs}
-    existing_ids = {doc.doc_id for doc in docs}
-    candidate = base
-    suffix = 2
-    while candidate in existing_stems or candidate in existing_ids:
-        candidate = f"{base}-{suffix}"
-        suffix += 1
-    return candidate

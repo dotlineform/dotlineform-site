@@ -82,10 +82,11 @@ def test_create_plan_applies_allowed_front_matter_and_empty_new_body() -> None:
         apply_import_document(root, plan)
         front_matter, body = source_model.parse_source(plan.target_path)
 
-    assert plan.doc_id == "new-parent"
+    assert source_model.is_immutable_doc_id(plan.doc_id)
+    assert plan.record.provenance["source_doc_id"] == "new-parent"
     assert plan.parent_id == "library"
     assert plan.viewable is False
-    assert plan.search_doc_ids == ("new-parent",)
+    assert plan.search_doc_ids == (plan.doc_id,)
     assert front_matter["summary"] == "Structural parent."
     assert front_matter["viewable"] is False
     assert "children" not in front_matter
@@ -286,19 +287,22 @@ def test_plan_rejects_invalid_allowed_front_matter(
             )
 
 
-def test_plan_rejects_unsafe_target_identity_before_path_creation() -> None:
+def test_create_plan_treats_external_identity_as_provenance_not_a_local_path() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
         docs = source_model.load_scope_docs(root, "library")
         record = import_content(doc_id="../outside")
 
-        with pytest.raises(ValueError, match="safe normalized docs id"):
-            plan_import_document(
-                root,
-                "library",
-                record,
-                operation=IMPORT_DOCUMENT_CREATE,
-                docs=docs,
-                import_preview=normalized_preview(record),
-            )
+        plan = plan_import_document(
+            root,
+            "library",
+            record,
+            operation=IMPORT_DOCUMENT_CREATE,
+            docs=docs,
+            import_preview=normalized_preview(record),
+        )
+
+    assert source_model.is_immutable_doc_id(plan.doc_id)
+    assert plan.record.provenance["source_doc_id"] == "../outside"
+    assert plan.target_path.parent.name == "library"

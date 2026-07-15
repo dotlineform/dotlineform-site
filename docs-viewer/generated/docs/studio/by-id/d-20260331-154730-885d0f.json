@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260331-154730-885d0f",
+  "title": "Catalogue Search Policy",
+  "added_date": "2026-03-31 15:47:30",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260331-154730-885d0f",
+  "parent_id": "d-20260602-160839-4ebe27",
+  "content_html": "<h1>Catalogue Search Policy</h1>\n<p><code>site/assets/data/search/policy.json</code> configures the public <code>/catalogue/search/</code> route.</p>\n<h2>It Owns</h2>\n<ul>\n<li>live/Enter search behaviour and minimum query length</li>\n<li>debounce and result batch sizes</li>\n<li>enabled search scopes</li>\n<li>static index URL and back-route presentation</li>\n<li>input labels, status messages, result labels, and instrumentation copy</li>\n</ul>\n<p><code>site/assets/js/catalogue-search.js</code> loads the file at route startup. <code>site/assets/js/search/search-policy.js</code> validates values and supplies fallback defaults.</p>\n<h2>Boundary</h2>\n<p>The policy affects Catalogue route behaviour, not record construction or relevance. Build dependencies live in <a href=\"/docs/?scope=studio&amp;doc=d-20260425-154733-c6062c\">Catalogue Search Build Config</a>; ranking lives in <code>catalogue-search-runtime.js</code>.</p>\n<p>Docs Viewer searches do not use this file. Their URLs and expected schemas come from Docs Viewer scope/route config.</p>\n<h2>Weak Spot</h2>\n<p>The complete default policy is duplicated in <code>search-policy.js</code> so the public route can fail soft when JSON cannot load. Treat that as resilience with a synchronization cost: change both deliberately and keep the external JSON as the normal runtime authority.</p>\n<p>Read the JSON for the exact current values rather than copying them into documentation.</p>\n"
+}

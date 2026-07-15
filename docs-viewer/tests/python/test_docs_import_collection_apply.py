@@ -117,6 +117,7 @@ def apply_package(
             "preview_only": False,
             "confirm": True,
             "decisions": decisions,
+            "planned_identities": preview.get("planned_identities", []),
             "export_id": export_id if export_id is not None else preview.get("package", {}).get("export_id", ""),
             "source_sha256": source_sha256 if source_sha256 is not None else preview.get("package", {}).get("source_sha256", ""),
         },
@@ -162,7 +163,10 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
             logs=logs,
         )
         alpha_front_matter, alpha_body = docs_source_model.parse_source(root / "docs-viewer/source/library/alpha.md")
-        new_front_matter, new_body = docs_source_model.parse_source(root / "docs-viewer/source/library/new-doc.md")
+        new_doc_id = payload["records"][1]["doc_id"]
+        new_front_matter, new_body = docs_source_model.parse_source(
+            root / "docs-viewer/source/library" / f"{new_doc_id}.md"
+        )
         report_path = configured_workspace_paths(root).root / str(payload["report_path"]).split("data-sharing/", 1)[1]
         report_text = report_path.read_text(encoding="utf-8")
 
@@ -178,14 +182,15 @@ def test_collection_apply_creates_overwrites_skips_reports_and_rebuilds_once(mon
     assert payload["records"][2]["note"] == "Needs metadata repair."
     assert alpha_front_matter["added_date"] == "2020-01-01"
     assert "New body." in alpha_body
-    assert new_front_matter["doc_id"] == "new-doc"
+    assert new_front_matter["doc_id"] == new_doc_id
+    assert payload["records"][1]["source_doc_id"] == "new-doc"
     assert "Body." in new_body
     assert rebuild_calls == [
         {
             "scope": "library",
-            "changed_paths": ["alpha.md", "new-doc.md"],
-            "docs_doc_ids": ["alpha", "new-doc"],
-            "search_doc_ids": ["alpha", "new-doc"],
+            "changed_paths": ["alpha.md", f"{new_doc_id}.md"],
+            "docs_doc_ids": ["alpha", new_doc_id],
+            "search_doc_ids": ["alpha", new_doc_id],
         }
     ]
     assert payload["report_path"].startswith(
@@ -228,6 +233,7 @@ def test_collection_confirmed_apply_dispatches_through_existing_import_post(monk
                 "confirm": True,
                 "export_id": preview["package"]["export_id"],
                 "source_sha256": preview["package"]["source_sha256"],
+                "planned_identities": preview["planned_identities"],
                 "decisions": [],
             },
             False,
@@ -235,7 +241,7 @@ def test_collection_confirmed_apply_dispatches_through_existing_import_post(monk
 
     assert payload["preview_only"] is False
     assert payload["records"][0]["status"] == "created"
-    assert rebuild_calls[0]["docs_doc_ids"] == ["post-applied"]
+    assert rebuild_calls[0]["docs_doc_ids"] == [payload["records"][0]["doc_id"]]
 
 
 def test_collection_all_skipped_writes_report_without_rebuild(monkeypatch) -> None:
@@ -355,6 +361,7 @@ def test_preserve_existing_apply_uses_current_body_without_revision_reconfirmati
                 "confirm": True,
                 "export_id": preview["package"]["export_id"],
                 "source_sha256": preview["package"]["source_sha256"],
+                "planned_identities": preview.get("planned_identities", []),
                 "decisions": [
                     {"record_index": 0, "action": "overwrite", "target_doc_id": "preserved"}
                 ],
@@ -380,7 +387,7 @@ def test_collection_apply_stops_after_source_failure_and_rebuilds_completed_writ
     original_write = collection_apply.apply_import_document_source
 
     def fail_epsilon(plan) -> None:
-        if plan.doc_id == "epsilon":
+        if plan.record.provenance.get("source_doc_id") == "epsilon":
             raise OSError("simulated epsilon write failure")
         original_write(plan)
 
@@ -399,16 +406,18 @@ def test_collection_apply_stops_after_source_failure_and_rebuilds_completed_writ
         )
 
         payload = apply_package(root, "partial.jsonl", [], rebuild=fake_rebuild(rebuild_calls))
-        delta_exists = (root / "docs-viewer/source/library/delta.md").exists()
-        epsilon_exists = (root / "docs-viewer/source/library/epsilon.md").exists()
-        zeta_exists = (root / "docs-viewer/source/library/zeta.md").exists()
+        result_ids = [record["doc_id"] for record in payload["records"]]
+        delta_exists, epsilon_exists, zeta_exists = [
+            (root / "docs-viewer/source/library" / f"{doc_id}.md").exists()
+            for doc_id in result_ids
+        ]
 
     assert payload["outcome"] == "partial"
     assert [record["status"] for record in payload["records"]] == ["created", "failed", "not-attempted"]
     assert delta_exists is True
     assert epsilon_exists is False
     assert zeta_exists is False
-    assert rebuild_calls[0]["docs_doc_ids"] == ["delta"]
+    assert rebuild_calls[0]["docs_doc_ids"] == [result_ids[0]]
     assert payload["report_path"].startswith(
         "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/results/"
     )
@@ -432,7 +441,9 @@ def test_collection_apply_keeps_source_success_when_generation_or_report_write_f
             [],
             rebuild=fake_rebuild(rebuild_calls, fail_generation=True),
         )
-        source_exists = (root / "docs-viewer/source/library/delta.md").exists()
+        source_exists = (
+            root / "docs-viewer/source/library" / f"{payload['records'][0]['doc_id']}.md"
+        ).exists()
 
     assert source_exists is True
     assert payload["records"][0]["status"] == "created"
@@ -479,14 +490,17 @@ def test_collection_apply_materializes_inline_media_and_keeps_asset_failure_non_
 
         payload = apply_package(root, "media.jsonl", [], rebuild=fake_rebuild([]))
         paths = configured_workspace_paths(root)
-        media_path = paths.import_staging / "media-doc-image-01.png"
-        _front_matter, body = docs_source_model.parse_source(root / "docs-viewer/source/library/media-doc.md")
+        local_doc_id = payload["records"][0]["doc_id"]
+        media_path = paths.import_staging / f"{local_doc_id}-image-01.png"
+        _front_matter, body = docs_source_model.parse_source(
+            root / "docs-viewer/source/library" / f"{payload['records'][0]['doc_id']}.md"
+        )
 
     assert media_path.read_bytes() == b"hello"
-    assert "[[media:docs/library/img/media-doc-image-01.png]]" in body
+    assert f"[[media:docs/library/img/{local_doc_id}-image-01.png]]" in body
     assert payload["records"][0]["inline_media_written"][0]["source_path"] == media_path.name
     assert payload["manual_copy_instructions"] == [
-        "Copy media-doc-image-01.png to docs/library/img/media-doc-image-01.png."
+        f"Copy {local_doc_id}-image-01.png to docs/library/img/{local_doc_id}-image-01.png."
     ]
 
     monkeypatch.setattr(
@@ -509,15 +523,17 @@ def test_collection_apply_materializes_inline_media_and_keeps_asset_failure_non_
             "ds_20260712T160007Z",
         )
         asset_failure = apply_package(root, "asset-failure.jsonl", [], rebuild=fake_rebuild([]))
-        source_exists = (root / "docs-viewer/source/library/asset-doc.md").exists()
+        asset_doc_id = asset_failure["records"][0]["doc_id"]
+        source_path = root / "docs-viewer/source/library" / f"{asset_doc_id}.md"
+        source_exists = source_path.exists()
         _front_matter, asset_body = docs_source_model.parse_source(
-            root / "docs-viewer/source/library/asset-doc.md"
+            source_path
         )
 
     assert source_exists is True
     assert asset_failure["records"][0]["status"] == "created"
     assert asset_failure["records"][0]["warnings"][-1]["code"] == "asset_materialization_failed"
-    assert "[[media:docs/library/img/asset-doc-image-01.png]]" in asset_body
+    assert f"[[media:docs/library/img/{asset_doc_id}-image-01.png]]" in asset_body
 
 
 def test_collection_apply_rejects_browser_plan_fields_and_skipped_new_parent(monkeypatch) -> None:

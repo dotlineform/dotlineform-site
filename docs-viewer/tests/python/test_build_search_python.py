@@ -168,6 +168,19 @@ def test_python_docs_search_builder_writes_current_schema_and_hash() -> None:
     assert child["search_text"] == " ".join(child["search_terms"])
 
 
+def test_doc_search_keeps_exact_opaque_id_without_fragment_tokens() -> None:
+    terms = build_search.build_doc_search_tokens(
+        "d-20260715-094411-2b6e65",
+        "Document Identity",
+        "Docs Viewer",
+    )
+
+    assert "d-20260715-094411-2b6e65" in terms
+    assert "20260715" not in terms
+    assert "094411" not in terms
+    assert "2b6e65" not in terms
+
+
 def test_python_docs_search_builder_excludes_configured_sub_scope_sources() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)

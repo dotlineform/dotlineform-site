@@ -1,0 +1,11 @@
+{
+  "doc_id": "d-20260714-194217-b2bdd7",
+  "title": "External Asset Collections",
+  "added_date": "2026-07-14 19:42:17",
+  "last_updated": "2026-07-14",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260714-194217-b2bdd7",
+  "parent_id": "d-20260714-234030-1e0af6",
+  "summary": "Feature parent for the External Asset Collections concept, architecture, and finishable deliveries.",
+  "ui_status": "proposed",
+  "content_html": "<h1>External Asset Collections</h1>\n<h2>Purpose</h2>\n<p>Give local Docs Viewer scopes a useful inventory of user-owned project files without turning every file into a Markdown document or making Docs Viewer own the files.</p>\n<p>This is the feature parent. It keeps the broad idea, architecture, and implementation-ready deliveries separate.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-f2b36c\">Concept</a> — problem, desired capability, product boundaries, and unresolved choices.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-19a064\">Architecture</a> — proposed ownership, execution boundaries, extension method, code pressure points, and weak spots.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-1e0af6\">Docs Viewer Roadmap</a> — importance, dependencies, and the sequence of complete outcomes outside this feature.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-a63b0b\">Lifecycle Delivery</a> — the only promoted delivery; make delete and rename safe before inventory work.</li>\n</ul>\n<h2>Status</h2>\n<ul>\n<li>Feature: proposed.</li>\n<li>EAC-01 Lifecycle Ownership is ready but not active.</li>\n<li>Later EAC rows remain roadmap outcomes only. They do not yet have delivery documents.</li>\n</ul>\n<p>Do not add implementation history or duplicate child content here. When a roadmap row is promoted, add its delivery as another child. When the feature ships, current behavior moves to one durable External Asset Collections document and this parent retains only unresolved delivery links.</p>\n"
+}

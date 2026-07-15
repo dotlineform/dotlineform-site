@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import copy
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -17,7 +17,13 @@ from docs_import_document import (
 )
 from docs_import_preview import generate_normalized_import_content_preview
 from docs_import_source_helpers import relative_path
-from docs_source_model import ScopeDoc
+from docs_source_model import (
+    ScopeDoc,
+    allocate_doc_id,
+    current_doc_timestamp,
+    doc_id_matches_added_date,
+    is_immutable_doc_id,
+)
 from services.paths import marker_path
 
 
@@ -53,6 +59,8 @@ class CollectionRecordState:
     record_index: int
     raw: Any
     doc_id: str = ""
+    source_doc_id: str = ""
+    create_added_date: str = ""
     title: str = ""
     parent_id: str = ""
     normalized: ImportContent | None = None
@@ -113,6 +121,108 @@ def _collision_for(record: ImportContent, docs: list[ScopeDoc]) -> ScopeDoc | No
         (doc for doc in docs if doc.doc_id == record.doc_id or doc.path.stem == record.doc_id),
         None,
     )
+
+
+def _prepare_local_create_identities(
+    states: list[CollectionRecordState],
+    docs: list[ScopeDoc],
+    planned_identities: list[dict[str, Any]] | None,
+) -> list[dict[str, Any]]:
+    supplied: dict[int, dict[str, Any]] = {}
+    if planned_identities is not None:
+        if not isinstance(planned_identities, list):
+            raise ValueError("planned_identities must be an array")
+        for item in planned_identities:
+            if not isinstance(item, dict):
+                raise ValueError("each planned identity must be an object")
+            if set(item) != {"record_index", "source_doc_id", "doc_id", "added_date"}:
+                raise ValueError(
+                    "planned identity fields must be record_index, source_doc_id, doc_id, added_date"
+                )
+            index = item.get("record_index")
+            if not isinstance(index, int) or isinstance(index, bool) or index < 0:
+                raise ValueError("planned identity record_index must be a non-negative integer")
+            if index in supplied:
+                raise ValueError(f"duplicate planned identity for record_index {index}")
+            supplied[index] = item
+
+    unavailable = {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)}
+    source_to_local: dict[str, str] = {}
+    rows: list[dict[str, Any]] = []
+    planned_create_indices: set[int] = set()
+    for state in states:
+        record = state.normalized
+        state.source_doc_id = state.doc_id
+        if record is None or state.blocked or state.errors:
+            continue
+        state.collision = _collision_for(record, docs)
+        if state.collision is not None:
+            continue
+        planned_create_indices.add(state.record_index)
+        supplied_row = supplied.get(state.record_index)
+        if supplied_row is None:
+            added_date = current_doc_timestamp()
+            local_doc_id = allocate_doc_id(added_date, unavailable)
+        else:
+            if _clean_text(supplied_row.get("source_doc_id")) != state.source_doc_id:
+                raise ValueError(
+                    f"planned identity source_doc_id changed for record_index {state.record_index}"
+                )
+            added_date = _clean_text(supplied_row.get("added_date"))
+            local_doc_id = _clean_text(supplied_row.get("doc_id"))
+            if not is_immutable_doc_id(local_doc_id) or not doc_id_matches_added_date(
+                local_doc_id,
+                added_date,
+            ):
+                raise ValueError(
+                    f"planned identity is invalid for record_index {state.record_index}"
+                )
+            if local_doc_id in unavailable:
+                raise ValueError(
+                    f"planned identity collides for record_index {state.record_index}"
+                )
+        unavailable.add(local_doc_id)
+        source_to_local[state.source_doc_id] = local_doc_id
+        state.create_added_date = added_date
+        rows.append(
+            {
+                "record_index": state.record_index,
+                "source_doc_id": state.source_doc_id,
+                "doc_id": local_doc_id,
+                "added_date": added_date,
+            }
+        )
+
+    unknown_indices = sorted(set(supplied) - planned_create_indices)
+    if unknown_indices:
+        raise ValueError(
+            "planned identities reference records that are no longer creates: "
+            + ", ".join(str(index) for index in unknown_indices)
+        )
+
+    for state in states:
+        record = state.normalized
+        local_doc_id = source_to_local.get(state.source_doc_id)
+        if record is None:
+            continue
+        parent_id = source_to_local.get(record.parent_id, record.parent_id)
+        front_matter = copy.deepcopy(record.front_matter)
+        if "parent_id" in front_matter:
+            front_matter["parent_id"] = parent_id
+        provenance = copy.deepcopy(record.provenance)
+        if local_doc_id is not None:
+            provenance["source_doc_id"] = state.source_doc_id
+        state.normalized = replace(
+            record,
+            doc_id=local_doc_id or record.doc_id,
+            parent_id=parent_id,
+            front_matter=front_matter,
+            provenance=provenance,
+        )
+        if local_doc_id is not None:
+            state.doc_id = local_doc_id
+        state.parent_id = parent_id
+    return rows
 
 
 def _collision_payload(repo_root: Path, target: ScopeDoc | None) -> dict[str, Any]:
@@ -184,8 +294,7 @@ def _plan_document_candidates(
         record = state.normalized
         if record is None:
             continue
-        collision = _collision_for(record, docs)
-        state.collision = collision
+        collision = state.collision
         if collision is not None and collision.doc_id != record.doc_id:
             state.blocked = True
             blockers.append(
@@ -243,6 +352,8 @@ def _plan_document_candidates(
                 docs=docs,
                 target=collision,
                 import_preview=preview if record.content_intent == CONTENT_INTENT_REPLACE else None,
+                create_doc_id=record.doc_id if collision is None else "",
+                create_added_date=state.create_added_date if collision is None else "",
             )
             state.parent_id = state.document_plan.parent_id
         except ValueError as exc:
@@ -408,6 +519,8 @@ def _record_response(repo_root: Path, state: CollectionRecordState) -> dict[str,
         "record_index": state.record_index,
         "record_identity": record.record_identity if record is not None else "",
         "doc_id": state.doc_id,
+        "source_doc_id": state.source_doc_id,
+        "added_date": state.create_added_date,
         "title": state.title,
         "content_intent": record.content_intent if record is not None else "unknown",
         "action": action,
@@ -447,6 +560,7 @@ def blocked_collection_plan(
         "ready_for_confirmation": False,
         "requires_decisions": False,
         "package": {},
+        "planned_identities": [],
         "records": [],
         "new_parent_dependencies": [],
         "blockers": safe_blockers,
@@ -476,9 +590,11 @@ def plan_import_content_collection(
     workspace_root: Path,
     package_projection: dict[str, Any],
     blockers: list[dict[str, Any]],
+    planned_identities: list[dict[str, Any]] | None = None,
 ) -> DocumentsCollectionPlan:
     """Complete a body-free collection plan from wrapper-normalized states."""
 
+    identity_rows = _prepare_local_create_identities(states, docs, planned_identities)
     blockers.extend(
         _plan_document_candidates(
             repo_root,
@@ -520,6 +636,7 @@ def plan_import_content_collection(
         "ready_for_confirmation": not blockers and not requires_decisions,
         "requires_decisions": requires_decisions,
         "package": copy.deepcopy(package_projection),
+        "planned_identities": identity_rows,
         "records": record_responses,
         "new_parent_dependencies": dependencies,
         "blockers": blockers,

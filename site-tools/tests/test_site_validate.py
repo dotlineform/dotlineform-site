@@ -68,6 +68,26 @@ def test_site_validation_rejects_missing_docs_viewer_route_payload(tmp_path: Pat
         validate_site(tmp_path, config)
 
 
+def test_site_validation_rejects_missing_configured_default_doc_payload(tmp_path: Path) -> None:
+    config = load_config(CONFIG_PATH)
+    site_root = resolve_site_root(REPO_ROOT, config)
+    _copy_validation_site(site_root, tmp_path, config)
+    viewer_config = json.loads(
+        (tmp_path / "docs-viewer/config/defaults/docs-viewer-public-config.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    library = next(scope for scope in viewer_config["scopes"] if scope["scope_id"] == "library")
+    (
+        tmp_path
+        / "assets/data/docs/scopes/library/by-id"
+        / f"{library['default_doc_id']}.json"
+    ).unlink()
+
+    with pytest.raises(RuntimeError, match="library default document"):
+        validate_site(tmp_path, config)
+
+
 def _copy_validation_site(site_root: Path, target_root: Path, config) -> str:
     for required in config.validation.required_files:
         _copy_file(site_root, target_root, required)
@@ -87,11 +107,18 @@ def _copy_docs_viewer_route_files(site_root: Path, target_root: Path, config) ->
     route_config = _site_relative_url_path(config.docs_viewer["route_config_url"])
     route_config_path = site_root / route_config
     data = json.loads(route_config_path.read_text(encoding="utf-8"))
+    viewer_config_path = _site_relative_url_path(data["routes"][0]["config_urls"]["docs_viewer"])
+    viewer_config = json.loads((site_root / viewer_config_path).read_text(encoding="utf-8"))
+    scopes = {scope["scope_id"]: scope for scope in viewer_config["scopes"]}
     for route in data["routes"]:
         _copy_file(site_root, target_root, _route_path_to_file(route["route_path"]))
         for section_name in ("docs_paths", "config_urls"):
             for url in route.get(section_name, {}).values():
                 _copy_file(site_root, target_root, _site_relative_url_path(url))
+        default_doc_id = scopes[route["default_scope_id"]]["default_doc_id"]
+        if default_doc_id:
+            docs_root = Path(_site_relative_url_path(route["docs_paths"]["index_tree_url"])).parent
+            _copy_file(site_root, target_root, (docs_root / "by-id" / f"{default_doc_id}.json").as_posix())
 
 
 def _copy_file(site_root: Path, target_root: Path, relative: str) -> None:

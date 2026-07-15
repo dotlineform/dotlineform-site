@@ -1,0 +1,11 @@
+{
+  "doc_id": "d-20260714-151900-6fa23e",
+  "title": "Index Multiple Selection",
+  "added_date": "2026-07-14 15:19:00",
+  "last_updated": "2026-07-14",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
+  "parent_id": "d-20260714-234030-1e0af6",
+  "summary": "Feature parent for proposed index selection and group-move work, separated from its shipped action-target foundation.",
+  "ui_status": "proposed",
+  "content_html": "<h1>Index Multiple Selection</h1>\n<h2>Purpose</h2>\n<p>Add familiar desktop multiple selection to the manage-mode index, then let explicitly designed actions consume that selection.</p>\n<p>This is the feature parent. It does not act as an implementation tracker.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-876066\">Concept</a> — desired interaction, product boundaries, and deferred choices.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-f30d01\">Architecture</a> — proposed state, ownership, action-target, drag/drop, and service boundaries.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260714-234030-1e0af6\">Docs Viewer Roadmap</a> — the completed prerequisite and unsequenced future outcomes.</li>\n</ul>\n<h2>Current State</h2>\n<p>The action-target prerequisite is complete. <code>docs-viewer-action-definitions.js</code> now gives current controls one code-owned scope, active-document, or selection target policy without adding multiple-selection state. <a href=\"/docs/?scope=studio&amp;doc=d-20260605-125108-1d1ef3\">Runtime Module Ownership</a> is the durable owner for that shipped boundary.</p>\n<p>Pointer selection, group drag/drop, plural move service behavior, and additional multi-document consumers are not implemented.</p>\n<p>No delivery is active. When this feature becomes important, promote one finishable roadmap outcome and add only that delivery as a child here.</p>\n"
+}

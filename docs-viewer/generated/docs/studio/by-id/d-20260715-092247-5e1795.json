@@ -1,0 +1,10 @@
+{
+  "doc_id": "d-20260715-092247-5e1795",
+  "title": "Small Tag Dimension Set Delivery",
+  "added_date": "2026-07-15 09:22:47",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260715-092247-5e1795",
+  "parent_id": "d-20260715-092247-659e29",
+  "ui_status": "paused",
+  "content_html": "<h1>Small Tag Dimension Set Delivery</h1>\n<h2>Outcome</h2>\n<p>Define a very small dimension set for one concrete analytical question, score a bounded set of catalogue identities through native controls, and use the result in one comparison or review that demonstrates whether the data is useful.</p>\n<p>This is a candidate first delivery, not active work.</p>\n<h2>In Scope</h2>\n<ul>\n<li>one clearly stated analytical question;</li>\n<li>a deliberately small set of dimensions;</li>\n<li>explicit definition ownership and subject eligibility;</li>\n<li>one native representation and validation rule per dimension;</li>\n<li>distinct applicability, missing, and scored states;</li>\n<li>one bounded scoring and review workflow;</li>\n<li>one named projection or comparison with declared information loss;</li>\n<li>evidence that the result does or does not support a useful decision.</li>\n</ul>\n<h2>Not In Scope</h2>\n<ul>\n<li>a complete dimension ontology;</li>\n<li>every representation family;</li>\n<li>cross-domain scoring;</li>\n<li>generalized visualization infrastructure;</li>\n<li>automatic LLM scoring;</li>\n<li>promotion tiers that have not been justified by use;</li>\n<li>forced numeric normalization for categorical or multi-part meanings.</li>\n</ul>\n<h2>Completion Decision</h2>\n<p>Close the delivery by deciding whether to retain, revise, or discard the model. Generalize registries, controls, projections, or assistance only from the structure the proving workflow actually needs.</p>\n<h2>Durable Owners</h2>\n<p>If retained, shipped definitions, score schemas, and extension rules move into current Analytics registry and workflow documentation. This delivery keeps only unresolved follow-up direction.</p>\n"
+}

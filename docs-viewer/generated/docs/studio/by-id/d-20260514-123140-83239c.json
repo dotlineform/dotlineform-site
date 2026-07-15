@@ -1,0 +1,12 @@
+{
+  "doc_id": "d-20260514-123140-83239c",
+  "title": "Source Config Report",
+  "added_date": "2026-05-14 12:31:40",
+  "last_updated": "2026-06-06",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260514-123140-83239c",
+  "parent_id": "d-20260424-000000-50b63f",
+  "ui_status": "report",
+  "viewer_report": "source_config",
+  "viewer_report_access": "local",
+  "content_html": "<h1>Docs Viewer Source Config Report</h1>\n<p>This manage-mode report shows the Docs Viewer source config, browser projection, and generated artifact projection for every configured scope.</p>\n<p>The generated projection reads viewer options from each scope's configured <code>index-tree.json</code> output, not from the retired flat docs <code>index.json</code>.</p>\n"
+}

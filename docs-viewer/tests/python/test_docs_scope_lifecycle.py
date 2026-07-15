@@ -40,13 +40,23 @@ def test_scope_create_preview_reports_public_readonly_site_route_and_payloads() 
                 "scope_id": "research",
                 "title": "Research",
                 "source_root": "docs-viewer/source/research",
-                "default_doc_id": "research",
                 "publishing_mode": "public_readonly",
                 "public_route_path": "/research/",
             },
         )
 
     assert payload["ok"] is True
+    planned_identity = payload["planned_document_identity"]
+    assert docs_management_service.docs_scope_create.is_immutable_doc_id(planned_identity["doc_id"])
+    assert docs_management_service.docs_scope_create.doc_id_matches_added_date(
+        planned_identity["doc_id"],
+        planned_identity["added_date"],
+    )
+    assert payload["planned_scope_config"]["default_doc_id"] == planned_identity["doc_id"]
+    assert any(
+        file["path"] == f"docs-viewer/source/research/{planned_identity['doc_id']}.md"
+        for file in payload["created_files"]
+    )
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
     assert payload["planned_scope_config"]["include_scope_param"] is False
     assert payload["planned_scope_config"]["publish_output"] == "site/assets/data/docs/scopes/research"
@@ -91,6 +101,32 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
+
+
+def test_scope_create_preview_rejects_a_changed_planned_document_identity() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        try:
+            docs_management_service.docs_scope_create.plan_create_scope_preview(
+                repo_root,
+                {
+                    "scope_id": "notes",
+                    "title": "Notes",
+                    "source_root": "docs-viewer/source/notes",
+                    "publishing_mode": "local_committed",
+                    "planned_document_identity": {
+                        "doc_id": "d-20260715-120001-a1b2c3",
+                        "added_date": "2026-07-15 12:00:00",
+                    },
+                },
+            )
+        except ValueError as exc:
+            error = str(exc)
+        else:
+            raise AssertionError("scope creation should reject a mismatched planned document identity")
+
+    assert "added_date must match" in error
 
 def test_scope_create_preview_blocks_tmp_for_icloud_external_workspace() -> None:
     original_projects_base = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR")
@@ -376,20 +412,29 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             external_root.mkdir(parents=True)
             os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
             write_docs_scope_config(repo_root)
+            preview = docs_management_service.docs_scope_create.plan_create_scope_preview(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "publishing_mode": "local_external",
+                },
+            )
             payload = docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "default_doc_id": "research",
                     "publishing_mode": "local_external",
+                    "planned_document_identity": preview["planned_document_identity"],
                     "confirm": True,
                 },
                 dry_run=False,
             )
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
-            default_doc_path = external_root / "source/research/research.md"
+            default_doc_id = preview["planned_document_identity"]["doc_id"]
+            default_doc_path = external_root / f"source/research/{default_doc_id}.md"
             default_doc_exists = default_doc_path.exists()
             default_doc_text = default_doc_path.read_text(encoding="utf-8")
             route_exists = (repo_root / "research/index.md").exists()
@@ -527,6 +572,10 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 },
                 dry_run=False,
             )
+            created_config = json.loads(
+                (repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8")
+            )
+            default_doc_id = created_config["scopes"][1]["default_doc_id"]
             docs_management_service.handle_sub_scope_create_apply(
                 repo_root,
                 {
@@ -537,9 +586,10 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
                 },
                 dry_run=False,
             )
-            source_path = external_root / "source/research/research.md"
+            source_path = external_root / f"source/research/{default_doc_id}.md"
             source_path.write_text(
-                source_path.read_text(encoding="utf-8") + "\n[Old scope link](/docs/?scope=research&doc=research)\n",
+                source_path.read_text(encoding="utf-8")
+                + f"\n[Old scope link](/docs/?scope=research&doc={default_doc_id})\n",
                 encoding="utf-8",
             )
             media_path = external_root / "media/research/example.png"
@@ -587,7 +637,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
             )
             renamed_scope = next(scope for scope in final_config["scopes"] if scope["scope_id"] == "field-notes")
             renamed_manifest = next(scope for scope in final_manifest["scopes"] if scope["scope_id"] == "field-notes")
-            renamed_source_text = (external_root / "source/field-notes/research.md").read_text(encoding="utf-8")
+            renamed_source_text = (external_root / f"source/field-notes/{default_doc_id}.md").read_text(encoding="utf-8")
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
         if original_projects_base is None:
@@ -616,7 +666,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
     assert (external_root / "media/field-notes/example.png").read_bytes() == b"image"
     assert (external_root / "generated/docs/field-notes/index-tree.json").exists()
     assert (external_root / "generated/search/field-notes/index.json").exists()
-    assert renamed_scope["default_doc_id"] == "research"
+    assert renamed_scope["default_doc_id"] == default_doc_id
     assert renamed_scope["source"] == f"{EXTERNAL_DATA_ROOT_MARKER}/source/field-notes"
     assert renamed_scope["media_path_prefix"] == "docs/field-notes"
     assert renamed_scope["output"] == f"{EXTERNAL_DATA_ROOT_MARKER}/generated/docs/field-notes"
@@ -627,7 +677,7 @@ def test_scope_rename_apply_moves_external_roots_and_preserves_links_and_doc_ids
     assert "field-notes" in final_config["docs_viewer"]["ui_statuses_by_scope"]
     assert "research" not in {scope["scope_id"] for scope in final_manifest["scopes"]}
     assert any(
-        record["path"] == (external_root / "source/field-notes/research.md").as_posix()
+        record["path"] == (external_root / f"source/field-notes/{default_doc_id}.md").as_posix()
         for record in renamed_manifest["files"]
     )
     assert "scope=research" in renamed_source_text
@@ -725,7 +775,8 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             )
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
-            default_doc_text = (repo_root / "docs-viewer/source/notes/notes.md").read_text(encoding="utf-8")
+            default_doc_id = source_payload["scopes"][1]["default_doc_id"]
+            default_doc_text = (repo_root / f"docs-viewer/source/notes/{default_doc_id}.md").read_text(encoding="utf-8")
             route_exists = (repo_root / "notes/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild

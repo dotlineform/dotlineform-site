@@ -1,9 +1,0 @@
-{
-  "doc_id": "analytics-roadmap",
-  "title": "Analytics Roadmap",
-  "added_date": "2026-07-15",
-  "last_updated": "2026-07-15",
-  "viewer_url": "/docs/?scope=studio&doc=analytics-roadmap",
-  "parent_id": "roadmap",
-  "content_html": "<h1>Analytics Roadmap</h1>\n<p>Analytics roadmap items cover semantic models, tag workflows, and Data Sharing capabilities owned by Analytics.</p>\n<h2>Features</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=analytics-llm-integration\">LLM Integration</a> — advisory semantic assistance with domain-owned review and apply boundaries.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=analytics-tag-dimensions\">Tag Dimensions</a> — exploratory dimension definitions, representations, scoring, and projections.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=analytics-portable-document-packages\">Portable Document Packages</a> — source-faithful Data Sharing packages, currently limited to export.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=analytics-shareable-content-blocks\">Shareable Content Blocks</a> — bounded source exchange and reviewed writeback.</li>\n</ul>\n<h2>Current Position</h2>\n<p>The portable full-document export is the only in-progress delivery. LLM Integration and Tag Dimensions remain paused ideas. Shareable Content Blocks remains conceptual.</p>\n"
-}

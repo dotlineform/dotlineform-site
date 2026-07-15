@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-131200-b7ea8d",
+  "title": "Composite ideas",
+  "added_date": "2026-07-14 13:12:00",
+  "last_updated": "2026-07-14 13:12",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-131200-b7ea8d",
+  "parent_id": "d-20260714-130600-d0cb08",
+  "content_html": "<h1>Composite ideas</h1>\n<p>Create versions of a composite by changing the order of the layers</p>\n<p>Each version then becomes a frame in the video sequence for slowing down</p>\n<p>6 source photos produces 6! ￼composites</p>\n<p>720/25￼seconds of raw video\nSo slowed down 16*28.8/60￼min\neach composite will last about .6s\ni.e it will be fast!</p>\n<p>So will need to select subset of permutations or make a much longer video for it to be slower</p>\n<p>and that’s only 6 source photos\nideally want a subset of much larger number of layers</p>\n<p>However, only 9!￼</p>\n<p>See ChatGPT for Processing implementation ideas</p>\n<h2></h2>\n<h3>File naming</h3>\n<p>[index]_[permutation]</p>\n<p>1_123\n2_213\n3_231</p>\n<p>Etc</p>\n"
+}

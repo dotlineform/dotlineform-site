@@ -37,9 +37,21 @@ function normalizeDocIds(value) {
     .filter(Boolean);
 }
 
-function manifestDocIds(payload) {
+function manifestDocs(payload) {
   if (!payload || typeof payload !== "object") return [];
-  return normalizeDocIds(payload.doc_ids);
+  if (Array.isArray(payload.docs)) {
+    return payload.docs.map(function (record) {
+      return {
+        docId: cleanString(record && record.doc_id),
+        title: cleanString(record && record.title)
+      };
+    }).filter(function (record) {
+      return record.docId;
+    });
+  }
+  return normalizeDocIds(payload.doc_ids).map(function (docId) {
+    return { docId: docId, title: "" };
+  });
 }
 
 function subScopesFromRoute(context) {
@@ -124,7 +136,8 @@ function appendHeaderCell(row, text) {
   row.appendChild(cell);
 }
 
-function appendDocRow(state, docId) {
+function appendDocRow(state, doc) {
+  var docId = doc.docId;
   var row = document.createElement("li");
   row.className = "docsViewerReport__row";
   row.dataset.reportSubdocId = docId;
@@ -135,7 +148,7 @@ function appendDocRow(state, docId) {
 
   var titleText = document.createElement("span");
   titleText.className = "docsViewerReport__title";
-  titleText.textContent = humanize(docId) || docId;
+  titleText.textContent = doc.title || humanize(docId) || docId;
 
   title.appendChild(titleText);
   title.addEventListener("click", function () {
@@ -173,18 +186,18 @@ function renderShell(context, subScope) {
   return { statusNode: status, tableNode: table, rowsNode: rows };
 }
 
-function renderRows(state, docIds) {
+function renderRows(state, docs) {
   clearNode(state.rowsNode);
-  renderStatus(state, docIds.length);
-  if (!docIds.length) {
+  renderStatus(state, docs.length);
+  if (!docs.length) {
     var empty = document.createElement("li");
     empty.className = "docsViewerReport__empty";
     empty.textContent = "No documents in this sub-scope.";
     state.rowsNode.appendChild(empty);
     return;
   }
-  docIds.forEach(function (docId) {
-    appendDocRow(state, docId);
+  docs.forEach(function (doc) {
+    appendDocRow(state, doc);
   });
 }
 
@@ -193,7 +206,7 @@ function renderListView(state) {
   state.tableNode.hidden = false;
   state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
-  renderRows(state, state.docIds);
+  renderRows(state, state.docs);
 }
 
 function detailTitle(payload, fallback) {
@@ -309,6 +322,7 @@ export function mountDocsSubscopeReport(context) {
     subScope: subScope,
     subScopeId: subScopeIdValue,
     byIdUrlBase: byIdUrlBase(subScope),
+    docs: [],
     docIds: [],
     detailPayloads: {},
     statusNode: refs.statusNode,
@@ -318,7 +332,8 @@ export function mountDocsSubscopeReport(context) {
 
   return fetchJson(url, "Failed to load docs sub-scope manifest")
     .then(function (payload) {
-      state.docIds = manifestDocIds(payload);
+      state.docs = manifestDocs(payload);
+      state.docIds = state.docs.map(function (doc) { return doc.docId; });
       var selectedDetailId = currentSubdocId();
       if (selectedDetailId) {
         if (state.docIds.indexOf(selectedDetailId) === -1) {

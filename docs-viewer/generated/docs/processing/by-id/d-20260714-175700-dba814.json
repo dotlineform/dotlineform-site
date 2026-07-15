@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-175700-dba814",
+  "title": "Checklist — Layering → Optical‑Flow Interpolation",
+  "added_date": "2026-07-14 17:57:00",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-175700-dba814",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>Checklist — From Layering to Optical‑Flow Interpolation</h1>\n<p>Prepared: 2025-09-02 16:12:52 (Europe/London). Tick items as you complete them. This page stores state only while open (no persistence).</p>\n<p>M0</p>\n<p>— Set up baseline: load A/B and layer with fixed alpha; verify output folder &amp; save one frame.</p>\n<p>M1</p>\n<p>— Animate true crossfade with easing; export sequence.</p>\n<p>M2</p>\n<p>— Switch to gamma‑correct crossfade (GLSL shader).</p>\n<p>M3</p>\n<p>— Normalize inputs to fixed canvas (FIT/FILL/STRETCH) and verify sizing.</p>\n<p>M4</p>\n<p>— Optional: Add homography alignment pre‑step for planar scenes.</p>\n<p>M5</p>\n<p>— Compute multi‑scale Horn–Schunck dense flow (A→B).</p>\n<p>M6</p>\n<p>— Implement bilinear warping of A and B using flow; premult + gamma‑correct blending.</p>\n<p>M7</p>\n<p>— Add per‑pair flow caching (binary); test resume behaviour.</p>\n<p>M8</p>\n<p>— GPU warper: pack flow to RG texture + shader decode; disable mipmaps.</p>\n<p>M9a</p>\n<p>— Quality: forward–backward consistency mask for occlusions.</p>\n<p>M9b</p>\n<p>— Quality: small‑hole fill (edge‑aware or median/bilateral).</p>\n<p>M9c</p>\n<p>— Quality: multi‑band (Laplacian pyramid) blend for seams.</p>\n<p>M9d</p>\n<p>— Quality: time easing curve options (smoothstep/cubic/custom).</p>\n<p>M10</p>\n<p>— Batch over large image set; generate sequential PNGs; stitch with FFmpeg.</p>\n<p>Tip: print to PDF for progress snapshots; pair this with the Kanban board for team workflow.</p>\n"
+}

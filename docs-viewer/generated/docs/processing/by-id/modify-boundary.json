@@ -1,9 +1,0 @@
-{
-  "doc_id": "modify-boundary",
-  "title": "modify boundary",
-  "added_date": "2026-07-14 17:47",
-  "last_updated": "2026-07-14 17:47",
-  "viewer_url": "/docs/?scope=processing&doc=modify-boundary",
-  "parent_id": "sketch-250309a-ink",
-  "content_html": "<h1>modify boundary</h1>\n<p>move start point into centre of drawing for demo</p>\n<p>Boundary function should set a random angle for the circle segment</p>\n"
-}

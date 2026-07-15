@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-175700-e9cee7",
+  "title": "Permutations and Video Duration at 25 fps (n = 1..9)",
+  "added_date": "2026-07-14 17:57:00",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-175700-e9cee7",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>Permutations and 25 fps Video Duration</h1>\n<blockquote>\n<p>Timestamp: Sunday, 31 August 2025 at 05:30 PM Prompt: Create an html table showing the number of permutations for n = 1 to 9. Add a column to show how long a 25fps video would last, in minutes, using these permutations as individual frames.</p>\n</blockquote>\n<p><strong>Formula:</strong> permutations = <em>n!</em>; minutes = <code>n! / (25 × 60)</code> = <code>n! / 1500</code>.</p>\n<table>\n<thead>\n<tr>\n<th>n</th>\n<th>n! (number of permutations)</th>\n<th>Duration at 25 fps (minutes)</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td>1</td>\n<td>0.000667</td>\n</tr>\n<tr>\n<td>2</td>\n<td>2</td>\n<td>0.001333</td>\n</tr>\n<tr>\n<td>3</td>\n<td>6</td>\n<td>0.004000</td>\n</tr>\n<tr>\n<td>4</td>\n<td>24</td>\n<td>0.016000</td>\n</tr>\n<tr>\n<td>5</td>\n<td>120</td>\n<td>0.080000</td>\n</tr>\n<tr>\n<td>6</td>\n<td>720</td>\n<td>0.480000</td>\n</tr>\n<tr>\n<td>7</td>\n<td>5,040</td>\n<td>3.360000</td>\n</tr>\n<tr>\n<td>8</td>\n<td>40,320</td>\n<td>26.880000</td>\n</tr>\n<tr>\n<td>9</td>\n<td>362,880</td>\n<td>241.920000</td>\n</tr>\n</tbody>\n</table>\n"
+}

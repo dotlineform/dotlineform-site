@@ -1,9 +1,0 @@
-{
-  "doc_id": "scripts-css-token-audit",
-  "title": "CSS Token Audit",
-  "added_date": "2026-03-31",
-  "last_updated": "2026-07-15",
-  "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
-  "parent_id": "scripts",
-  "content_html": "<h1>CSS Token Audit</h1>\n<p>Run the lightweight CSS literal report with:</p>\n<pre><code class=\"language-bash\">$HOME/miniconda3/bin/python3 admin-app/checks/css_token_audit.py\n</code></pre>\n<h2>What It Does</h2>\n<ul>\n<li>scans the supplied CSS files for raw <code>font-size</code> values and direct color literals</li>\n<li>reports repeated values and source line numbers</li>\n<li>writes <code>var/studio/reports/css-audit-latest.md</code> by default</li>\n</ul>\n<p>The default inputs are <code>site/assets/css/main.css</code> and <code>studio/app/assets/css/studio.css</code>. Pass file paths explicitly to inspect a different surface, and use <code>--md-out</code> to change the report path.</p>\n<p>This is a heuristic maintenance report, not a complete unused-selector, cascade, or visual-regression audit. Read <code>admin-app/checks/css_token_audit.py</code> for the exact detection rules.</p>\n<p>The script is also part of the Admin checks configuration; use the checks runner when the report is needed as part of a wider validation profile.</p>\n"
-}

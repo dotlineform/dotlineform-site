@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-175700-e089ad",
+  "title": "On‑Canvas Estimator — How It Works",
+  "added_date": "2026-07-14 17:57:00",
+  "last_updated": "2026-07-14 17:57",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-175700-e089ad",
+  "parent_id": "d-20260714-173500-48f96d",
+  "content_html": "<h1>On‑Canvas Time &amp; Memory Estimator</h1>\n<blockquote>\n<p>Timestamp: 2025-08-29 19:37:35 BST</p>\n</blockquote>\n<p>This build adds a live estimator panel (right side) so you can sanity‑check runtimes and RAM before hitting PREVIEW or FINAL.</p>\n<h2>What it uses</h2>\n<ul>\n<li><strong>n</strong>: number of images detected in the SOURCE folder (PNG/JPG/JPEG).</li>\n<li><strong>Resolution</strong>: UHD if UHD mode is on, otherwise it probes the first image.</li>\n<li><strong>Preview Scale</strong>: scales pixel count by <code>scale²</code>.</li>\n<li><strong>Stride</strong> (1‑in‑n) and <strong>First N</strong>: to estimate how many composites will be produced.</li>\n<li><strong>MPix/s</strong> slider: your CPU’s effective throughput (default 150).</li>\n<li><strong>Auto‑Levels</strong>: adds a 20% overhead to the estimate.</li>\n</ul>\n<h2>Formulas</h2>\n<pre><code>pixels_per_image = width × height × scale²\nseconds_per_composite ≈ (n × pixels_per_image) / (MPix/s × 1e6) × (1.2 if Auto‑Levels else 1.0)\ntotal_seconds ≈ seconds_per_composite × composites_to_render  (after stride &amp; First‑N)\n</code></pre>\n<p>These are ballpark numbers; actual timings depend on JVM, disk, and modes used.</p>\n"
+}

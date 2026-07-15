@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260715-084611-7c7c8d",
+  "title": "Repository Maintenance",
+  "added_date": "2026-07-15 08:46:11",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260715-084611-7c7c8d",
+  "parent_id": "d-20260715-092247-f3fd52",
+  "content_html": "<h1>Repository Maintenance</h1>\n<p>This page preserves actionable maintenance gaps found during normal work. The owning durable documentation contains the explanation and remains authoritative.</p>\n<h2>Follow-Ups</h2>\n<ul>\n<li>Data Sharing — <a href=\"/docs/?scope=studio&amp;doc=d-20260715-084611-f25940#known-gaps-and-pressure-points\">row selection does not reach document apply</a></li>\n<li>Analytics — <a href=\"/docs/?scope=studio&amp;doc=d-20260715-084611-19cda2#known-weak-spots\">offline fallback models are inconsistent</a></li>\n<li>Analytics Tags — <a href=\"/docs/?scope=studio&amp;doc=d-20260419-000000-86255c#weak-spots\">embedded detail documents duplicate registry-owned data</a></li>\n<li>Search — <a href=\"/docs/?scope=studio&amp;doc=d-20260331-000000-5dcf32#current-weak-spots\">index and ranking mechanics need refinement</a></li>\n<li>GitHub Actions — <a href=\"/docs/?scope=studio&amp;doc=d-20260612-153500-7eadc8#weak-spots\">obsolete push-event condition remains</a></li>\n</ul>\n<h2>Rules</h2>\n<ul>\n<li>Link to the owning gap comment; do not repeat its explanation here.</li>\n<li>Include concrete follow-ups, not every general weak spot.</li>\n<li>Do not add task lists, implementation notes, priorities, or file inventories.</li>\n<li>When work becomes timely, add one bounded delivery and link it from the owning gap comment.</li>\n<li>When resolved, update or remove the owning gap comment and remove its link here.</li>\n</ul>\n<p>Git preserves completed history. This page does not archive finished maintenance work.</p>\n"
+}

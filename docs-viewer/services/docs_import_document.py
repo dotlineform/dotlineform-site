@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import copy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -20,9 +20,12 @@ from docs_import_source_interactive import materialize_interactive_html_assets
 from docs_management_mutations import metadata_search_doc_ids
 from docs_source_model import (
     ScopeDoc,
+    allocate_doc_id,
     current_doc_timestamp,
     default_viewable_for_scope,
+    doc_id_matches_added_date,
     format_source,
+    is_immutable_doc_id,
     normalize_scope,
     scope_root,
     slugify,
@@ -152,17 +155,17 @@ def _create_source(
     scope: str,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
+    added_date: str,
 ) -> tuple[str, str, bool]:
     if record.content_intent == CONTENT_INTENT_PRESERVE_EXISTING:
         raise ValueError("preserve-existing content requires an existing import target")
-    timestamp = current_doc_timestamp()
     parent_id = _clean_text(record.parent_id)
     default_viewable = default_viewable_for_scope(scope)
     front_matter: dict[str, Any] = {
         "doc_id": record.doc_id,
         "title": record.title,
-        "added_date": timestamp,
-        "last_updated": timestamp,
+        "added_date": added_date,
+        "last_updated": added_date,
         "parent_id": parent_id,
     }
     if not default_viewable:
@@ -222,11 +225,13 @@ def plan_import_document(
     docs: list[ScopeDoc],
     target: ScopeDoc | None = None,
     import_preview: dict[str, Any] | None = None,
+    create_doc_id: str = "",
+    create_added_date: str = "",
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
     normalized_scope = normalize_scope(scope)
-    if slugify(record.doc_id) != record.doc_id:
+    if operation == IMPORT_DOCUMENT_OVERWRITE and slugify(record.doc_id) != record.doc_id:
         raise ValueError("ImportContent doc_id must be a safe normalized docs id")
     if operation not in IMPORT_DOCUMENT_OPERATIONS:
         raise ValueError("import document operation must be create or overwrite")
@@ -240,6 +245,30 @@ def plan_import_document(
         raise ValueError("replace content requires a normalized import preview")
 
     preview = copy.deepcopy(import_preview or {})
+    if operation == IMPORT_DOCUMENT_CREATE:
+        if bool(create_doc_id) != bool(create_added_date):
+            raise ValueError("planned create identity requires both doc_id and added_date")
+        added_date = create_added_date or current_doc_timestamp()
+        unavailable = {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)}
+        local_doc_id = create_doc_id or allocate_doc_id(added_date, unavailable)
+        if not is_immutable_doc_id(local_doc_id):
+            raise ValueError("new local document identity must use the immutable document ID format")
+        if not doc_id_matches_added_date(local_doc_id, added_date):
+            raise ValueError("new local document identity timestamp must match added_date")
+        if local_doc_id in unavailable:
+            raise ValueError(f"cannot create existing import target {local_doc_id!r}")
+        source_doc_id = record.doc_id
+        provenance = copy.deepcopy(record.provenance)
+        if source_doc_id != local_doc_id:
+            provenance["source_doc_id"] = source_doc_id
+        record = replace(record, doc_id=local_doc_id, provenance=provenance)
+        preview["source_doc_id"] = source_doc_id
+        preview["proposed_doc_id"] = local_doc_id
+        preview["proposed_doc_id_source"] = "allocated-local-identity"
+        preview["planned_added_date"] = added_date
+    else:
+        added_date = ""
+
     explicit_front_matter = _explicit_front_matter(record)
     title = _clean_text(record.title)
     if operation == IMPORT_DOCUMENT_CREATE:
@@ -253,6 +282,7 @@ def plan_import_document(
             normalized_scope,
             preview,
             explicit_front_matter,
+            added_date,
         )
         search_doc_ids = (record.doc_id,)
     else:

@@ -163,10 +163,58 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
                 if not (site_root / relative).is_file():
                     missing_files.append(f"{route_id} {section_name}.{field_name}: {relative}")
 
+        default_doc_payload = _docs_viewer_default_doc_payload(site_root, route_id, route)
+        if default_doc_payload:
+            checked_files.add(default_doc_payload)
+            if not (site_root / default_doc_payload).is_file():
+                missing_files.append(f"{route_id} default document: {default_doc_payload}")
+
     if missing_files:
         raise RuntimeError("Docs Viewer route config points at missing files: " + ", ".join(missing_files))
 
     return len(routes), len(checked_files)
+
+
+def _docs_viewer_default_doc_payload(site_root: Path, route_id: str, route: dict) -> str:
+    default_scope_id = route.get("default_scope_id")
+    if not isinstance(default_scope_id, str) or not default_scope_id:
+        raise RuntimeError(f"Docs Viewer route {route_id} must define default_scope_id")
+    config_url = (route.get("config_urls") or {}).get("docs_viewer")
+    config_path = site_root / _site_relative_url_path(
+        config_url,
+        context=f"Docs Viewer route {route_id} config_urls.docs_viewer",
+    )
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    scopes = config.get("scopes") if isinstance(config, dict) else None
+    if not isinstance(scopes, list):
+        raise RuntimeError(f"Docs Viewer config for route {route_id} must contain a scopes list")
+    scope = next(
+        (
+            item
+            for item in scopes
+            if isinstance(item, dict) and item.get("scope_id") == default_scope_id
+        ),
+        None,
+    )
+    if scope is None:
+        raise RuntimeError(
+            f"Docs Viewer config for route {route_id} is missing scope {default_scope_id}"
+        )
+    default_doc_id = scope.get("default_doc_id")
+    if not isinstance(default_doc_id, str):
+        raise RuntimeError(
+            f"Docs Viewer config scope {default_scope_id} default_doc_id must be a string"
+        )
+    if not default_doc_id:
+        return ""
+    index_tree_url = (route.get("docs_paths") or {}).get("index_tree_url")
+    index_tree_path = Path(
+        _site_relative_url_path(
+            index_tree_url,
+            context=f"Docs Viewer route {route_id} docs_paths.index_tree_url",
+        )
+    )
+    return (index_tree_path.parent / "by-id" / f"{default_doc_id}.json").as_posix()
 
 
 def _check_route_file(

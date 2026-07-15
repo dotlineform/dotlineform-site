@@ -1,9 +1,0 @@
-{
-  "doc_id": "stride-overview",
-  "title": "1‑in‑n Sampling (Stride) — Processing Permutation Composites",
-  "added_date": "2026-07-14 17:57",
-  "last_updated": "2026-07-14 17:57",
-  "viewer_url": "/docs/?scope=processing&doc=stride-overview",
-  "parent_id": "unsorted",
-  "content_html": "<h1>1‑in‑n Sampling (Stride)</h1>\n<blockquote>\n<p>Timestamp: 2025-08-29 19:22:15 BST</p>\n</blockquote>\n<p>When there are many permutations (e.g., 720 for 6 images), computing all can be slow. The new <strong>1‑in‑n</strong> option lets you render only every n‑th permutation (n between 1 and 10). With <code>n=10</code>, you’ll process ~10% of the total set.</p>\n<h2>How it works</h2>\n<ul>\n<li>After generating all permutations, the sketch keeps only indices where <code>i % n == 0</code>.</li>\n<li>Then the normal “First N” cap is applied on top, so you can combine both filters.</li>\n<li>Filenames include a <code>__stride_n</code> tag; the manifest logs the resulting files as usual.</li>\n</ul>\n<h2>When to use it</h2>\n<ul>\n<li>Quick surveys across the permutation space without creating thousands of images.</li>\n<li>Combine with <em>Preview Scale</em> and <em>First N</em> for very fast iterations.</li>\n</ul>\n<p>Want a <em>random subset</em> option as an alternative to regular stride? Easy to add next.</p>\n"
-}

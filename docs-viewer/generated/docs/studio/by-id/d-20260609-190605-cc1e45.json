@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260609-190605-cc1e45",
+  "title": "Reports",
+  "added_date": "2026-06-09 19:06:05",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260609-190605-cc1e45",
+  "parent_id": "d-20260608-225607-868570",
+  "content_html": "<h1>Admin Checks Reports</h1>\n<h2>Implemented</h2>\n<ul>\n<li><code>files</code> — file count, line count, byte size, and target-match context; writes JSON, focused Markdown, and CSV.</li>\n<li><code>target-map</code> — classification, shared dependencies, boundary flags, and pattern status; writes JSON and focused Markdown.</li>\n</ul>\n<p>The report registry in <code>admin-checks-reports.json</code> is the exact inventory.</p>\n<h2>Output Rule</h2>\n<ul>\n<li>JSON holds complete structured evidence.</li>\n<li>Markdown answers a small set of immediate review questions.</li>\n<li>CSV is used for full tabular review where useful.</li>\n</ul>\n<p>Avoid wide exhaustive Markdown tables. If a report cannot state what decision its Markdown helps make, it is not ready to become an implemented report.</p>\n<p>Conceptual report ideas and sequencing belong under <a href=\"/docs/?scope=studio&amp;doc=d-20260531-000000-6679ea\">Admin Checks Responsibility Reports</a> until delivered.</p>\n"
+}

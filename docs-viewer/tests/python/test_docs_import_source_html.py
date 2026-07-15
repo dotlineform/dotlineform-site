@@ -34,7 +34,7 @@ def test_html_to_markdown_is_available_without_import_preview_summary() -> None:
     assert result.warnings == []
 
 
-def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
+def test_html_import_create_allocates_identity_independent_of_staged_filename() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
@@ -65,18 +65,19 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_path = root / "docs-viewer/source/library/compact-name.md"
+        source_path = root / payload["path"]
         source_exists = source_path.exists()
         source_text = source_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["operation"] == "create"
-    assert payload["doc_id"] == "compact-name"
-    assert payload["path"] == "docs-viewer/source/library/compact-name.md"
+    assert payload["doc_id"].startswith("d-")
+    assert payload["path"] == f"docs-viewer/source/library/{payload['doc_id']}.md"
     assert payload["title"] == "An Overly Descriptive Document Title"
-    assert payload["import_preview"]["proposed_doc_id_source"] == "filename"
+    assert payload["import_preview"]["proposed_doc_id_source"] == "allocated-local-identity"
+    assert payload["import_preview"]["source_doc_id"] == "compact-name"
     assert source_exists
-    assert "doc_id: compact-name" in source_text
+    assert f"doc_id: {payload['doc_id']}" in source_text
     assert "title: An Overly Descriptive Document Title" in source_text
 
 def test_html_import_copies_role_marked_interactive_assets() -> None:
@@ -132,7 +133,7 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
         asset_path = root / "site/assets/docs/interactive/library/worksheet-widget.html"
         asset_text = asset_path.read_text(encoding="utf-8")
         second_asset_path = root / "site/assets/docs/interactive/library/second-widget.html"
@@ -235,7 +236,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
+        source_text = (root / apply_payload["path"]).read_text(encoding="utf-8")
         asset_text = existing_asset.read_text(encoding="utf-8")
 
     assert preview_payload["ok"] is True
@@ -244,6 +245,6 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
     assert preview_payload["summary_text"] == "Interactive HTML asset overwrite required for site/assets/docs/interactive/library/worksheet-widget.html."
     assert apply_payload["ok"] is True
     assert apply_payload["interactive_html_written"][0]["overwrote"] is True
-    assert "doc_id: worksheet" in source_text
+    assert f"doc_id: {apply_payload['doc_id']}" in source_text
     assert "Interactive" in asset_text
     assert asset_text != "existing\n"

@@ -45,16 +45,17 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_path = root / "docs-viewer/source/library/markdown-note.md"
+        source_path = root / payload["path"]
         source_text = source_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["operation"] == "create"
-    assert payload["doc_id"] == "markdown-note"
+    assert payload["doc_id"].startswith("d-")
     assert payload["title"] == "Imported Markdown"
     assert payload["import_preview"]["source_format"] == "markdown"
-    assert payload["import_preview"]["proposed_doc_id_source"] == "filename"
-    assert "doc_id: markdown-note" in source_text
+    assert payload["import_preview"]["proposed_doc_id_source"] == "allocated-local-identity"
+    assert payload["import_preview"]["source_doc_id"] == "markdown-note"
+    assert f"doc_id: {payload['doc_id']}" in source_text
     assert "title: Imported Markdown" in source_text
     assert "# Imported Markdown" in source_text
     assert "Body from staged Markdown" in source_text
@@ -81,7 +82,7 @@ def test_text_import_autolinks_plain_urls() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/plain-note.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["import_preview"]["source_format"] == "text"
@@ -119,7 +120,7 @@ def test_svg_import_strips_unsafe_content() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/diagram.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["title"] == "Unsafe Diagram"
@@ -151,7 +152,7 @@ def test_image_import_creates_media_path_plan_wrapper() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/reference-image.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["import_preview"]["source_format"] == "image"
@@ -180,7 +181,7 @@ def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/reference-file.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["import_preview"]["source_format"] == "file"
@@ -219,7 +220,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_path = root / "docs-viewer/source/library/reference-file-2.md"
+        source_path = root / apply_payload["path"]
         source_exists = source_path.exists()
         source_text = source_path.read_text(encoding="utf-8")
 
@@ -229,6 +230,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
     assert preview_payload["collision"]["doc_id"] == "reference-file"
     assert apply_payload["ok"] is True
     assert apply_payload["operation"] == "create"
-    assert apply_payload["doc_id"] == "reference-file-2"
+    assert apply_payload["doc_id"].startswith("d-")
+    assert apply_payload["import_preview"]["source_doc_id"] == "reference-file-2"
     assert source_exists
     assert "title: Reference File" in source_text

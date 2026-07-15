@@ -790,14 +790,14 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
     cases = [
         {
             "config_id": "document-content",
-            "selected_doc_ids": ["can-the-brain-comprehend-how-it-works"],
+            "selected_doc_ids": ["d-20260423-214445-aa9f19"],
             "select_all": False,
             "missing_summary_only": None,
             "target_format": "jsonl",
         },
         {
             "config_id": "document-tree",
-            "selected_doc_ids": ["library"],
+            "selected_doc_ids": ["d-20260330-172255-8399b7"],
             "select_all": False,
             "missing_summary_only": None,
             "target_format": "json",

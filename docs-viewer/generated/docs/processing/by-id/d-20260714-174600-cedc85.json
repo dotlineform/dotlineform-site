@@ -1,0 +1,8 @@
+{
+  "doc_id": "d-20260714-174600-cedc85",
+  "title": "InkEngine",
+  "added_date": "2026-07-14 17:46:00",
+  "last_updated": "2026-07-14 19:00",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-174600-cedc85",
+  "content_html": "<h1>InkEngine</h1>\n<p>InkEngine is the recovered Processing sketch formerly named\n<code>sketch_250309a</code>. Its source is in:</p>\n<pre><code class=\"language-text\">processing/projects/InkEngine/\n</code></pre>\n<p>The sketch compares vector-field, particle, diffuse-particle, and\ntextured-particle interpretations of the same curve, then overlays them as a\nweighted composite. ControlP5 supplies the authoring controls.</p>\n<p>The recovered baseline builds and runs with Processing 4.5.5 in Java mode and\nControlP5 2.2.6. Named slider configurations are stored in the tracked\n<code>data/sliderSettings.json</code> file so useful parameter combinations can be\nrecalled.</p>\n<p>The existing child documents are historical notes, code experiments, and\npartial explanations created while the sketch evolved. They are evidence for\nreconstructing the design, not a current specification.</p>\n"
+}

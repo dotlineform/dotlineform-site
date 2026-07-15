@@ -18,6 +18,7 @@ COLLECTION_APPLY_BODY_FIELDS = {
     "decisions",
     "export_id",
     "source_sha256",
+    "planned_identities",
     "activity_context",
 }
 COLLECTION_DECISION_FIELDS = {"record_index", "action", "target_doc_id", "note"}

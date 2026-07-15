@@ -1,0 +1,11 @@
+{
+  "doc_id": "d-20260712-000000-45286c",
+  "title": "Moments Composition Workspace",
+  "added_date": "2026-07-12 00:00:00",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=d-20260712-000000-45286c",
+  "parent_id": "d-20260715-092247-81d19a",
+  "summary": "Feature parent for a text-first Moments composition workspace with interchangeable first-party visual engines.",
+  "ui_status": "proposed",
+  "content_html": "<h1>Moments Composition Workspace</h1>\n<p>Create a text-first workspace that can arrange stable Moments content through interchangeable visual composition engines.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260712-000000-f49032\">Concept</a> — desired experience, long-term direction, and product boundaries.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-da73da\">Architecture</a> — proposed ownership, extension method, and pressure points.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-595d47\">Basic Axis Editor Delivery</a> — the first complete proving outcome.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=d-20260715-092247-81d19a\">Studio Roadmap</a> — relative importance and later vertical outcomes.</li>\n</ul>\n<p>No broad workspace implementation is active. The existing word-axis CSS is a visual proof; the first delivery remains proposed.</p>\n<p>Keep broad direction in the concept, structural reasoning in the architecture, and only independently finishable outcomes in delivery documents.</p>\n"
+}

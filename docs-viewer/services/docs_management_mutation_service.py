@@ -97,8 +97,6 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
 
 def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id"))
-    docs_scope_manifest.require_confirmed(body)
-    docs_scope_create.plan_create_scope_preview(repo_root, body)
     payload = docs_scope_create.apply_create_scope(
         repo_root,
         body,

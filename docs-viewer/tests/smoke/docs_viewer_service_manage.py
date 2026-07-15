@@ -24,6 +24,9 @@ from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig  # noq
 from tests.smoke.route_ready_helpers import wait_for_route_ready  # noqa: E402
 
 
+DOCS_VIEWER_DOC_ID = "d-20260424-000000-50b63f"
+
+
 def start_server() -> tuple[DocsViewerServer, str]:
     config = DocsViewerServiceConfig(
         host="127.0.0.1",
@@ -68,7 +71,7 @@ def assert_service_basics(base_url: str) -> None:
 
 
 def assert_origin_rejection(base_url: str) -> None:
-    payload = json.dumps({"scope": "studio", "doc_id": "docs-viewer"}).encode("utf-8")
+    payload = json.dumps({"scope": "studio", "doc_id": DOCS_VIEWER_DOC_ID}).encode("utf-8")
     request = urllib.request.Request(
         f"{base_url}/docs/delete-preview",
         data=payload,
@@ -380,7 +383,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         else None,
     )
 
-    page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer", wait_until="domcontentloaded")
+    page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     assert_action_target_definitions(page)
     assert_delete_uses_first_remaining_root(page)
@@ -524,7 +527,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected clean manage URL without mode query, got {final_url}")
         if errors:
             raise AssertionError(f"page errors during Docs Viewer service smoke: {errors!r}")
-        print(f"Docs Viewer service manage shell OK: {base_url}/docs/?scope=studio&doc=docs-viewer")
+        print(f"Docs Viewer service manage shell OK: {base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}")
         return 0
     finally:
         server.shutdown()

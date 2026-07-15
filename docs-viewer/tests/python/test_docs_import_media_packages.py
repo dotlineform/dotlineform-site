@@ -57,7 +57,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/inline-diagram.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_path = configured_workspace_paths(root).import_staging / "inline-diagram-image-01.png"
         media_bytes = media_path.read_bytes()
 
@@ -96,7 +96,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/inline-note.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_path = configured_workspace_paths(root).import_staging / "inline-note-image-02.png"
         media_bytes = media_path.read_bytes()
 
@@ -133,7 +133,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/mixed-inline.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
         media_path = configured_workspace_paths(root).import_staging / "mixed-inline-image-01.png"
         media_bytes = media_path.read_bytes()
 
@@ -183,7 +183,7 @@ Some text.
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        source_text = (root / "docs-viewer/source/library/my-note.md").read_text(encoding="utf-8")
+        source_text = (root / payload["path"]).read_text(encoding="utf-8")
         webp_path = configured_workspace_paths(root).import_staging / "my-note-image-01.webp"
         attachment_path = configured_workspace_paths(root).import_staging / "my-note-attachment-01.pdf"
         from PIL import Image

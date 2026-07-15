@@ -2,80 +2,79 @@
   "schema": "docs_index_tree_v1",
   "viewer_options": {
     "non_loadable_doc_ids": [],
-    "manage_only_tree_root_ids": [],
-    "show_updated_date": false
+    "manage_only_tree_root_ids": []
   },
   "docs": [
     {
-      "doc_id": "abstract-thought",
+      "doc_id": "d-20260507-164300-37db8d",
       "title": "Abstract Thought and Physical Processes",
-      "content_url": "/assets/data/docs/scopes/library/by-id/abstract-thought.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-164300-37db8d.json"
     },
     {
-      "doc_id": "bayesian-reasoning",
+      "doc_id": "d-20260507-165500-ac372d",
       "title": "Bayesian Reasoning",
-      "content_url": "/assets/data/docs/scopes/library/by-id/bayesian-reasoning.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-165500-ac372d.json"
     },
     {
-      "doc_id": "beauty",
+      "doc_id": "d-20260507-172400-74807b",
       "title": "Beauty",
-      "content_url": "/assets/data/docs/scopes/library/by-id/beauty.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-172400-74807b.json"
     },
     {
-      "doc_id": "beauty-memory-meaning",
+      "doc_id": "d-20260507-170100-089703",
       "title": "Beauty × Memory × Meaning",
-      "content_url": "/assets/data/docs/scopes/library/by-id/beauty-memory-meaning.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-170100-089703.json"
     },
     {
-      "doc_id": "beyond-conscious-subconscious",
+      "doc_id": "d-20260507-190900-d1823e",
       "title": "Beyond Conscious vs. Subconscious",
-      "content_url": "/assets/data/docs/scopes/library/by-id/beyond-conscious-subconscious.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-190900-d1823e.json"
     },
     {
-      "doc_id": "can-the-brain-comprehend-how-it-works",
+      "doc_id": "d-20260423-214445-aa9f19",
       "title": "Can the Brain Comprehend How It Works?",
-      "content_url": "/assets/data/docs/scopes/library/by-id/can-the-brain-comprehend-how-it-works.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260423-214445-aa9f19.json"
     },
     {
-      "doc_id": "coincidence-inevitability",
+      "doc_id": "d-20260516-085800-d87bbb",
       "title": "Coincidence Inevitability",
-      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-inevitability.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-085800-d87bbb.json"
     },
     {
-      "doc_id": "coincidence-salience",
+      "doc_id": "d-20260516-094500-c346e9",
       "title": "Coincidence Salience Worksheet",
-      "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-094500-c346e9.json"
     },
     {
-      "doc_id": "defining-information-for-cross-boundary-comparisons",
+      "doc_id": "d-20260424-000000-8eb1d9",
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
-      "content_url": "/assets/data/docs/scopes/library/by-id/defining-information-for-cross-boundary-comparisons.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260424-000000-8eb1d9.json"
     },
     {
-      "doc_id": "dreaming-is-active",
+      "doc_id": "d-20260424-091029-8f0a95",
       "title": "Dreaming is Active",
-      "content_url": "/assets/data/docs/scopes/library/by-id/dreaming-is-active.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260424-091029-8f0a95.json"
     },
     {
-      "doc_id": "closed-vs-open-universe",
+      "doc_id": "d-20260507-212900-ae8262",
       "title": "Entropy & Evolution Under Two Cosmologies",
-      "content_url": "/assets/data/docs/scopes/library/by-id/closed-vs-open-universe.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-212900-ae8262.json"
     },
     {
-      "doc_id": "evolutionary-psychology-overview",
+      "doc_id": "d-20260423-231122-d0dd6d",
       "title": "Evolutionary Psychology — Overview",
-      "content_url": "/assets/data/docs/scopes/library/by-id/evolutionary-psychology-overview.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260423-231122-d0dd6d.json"
     },
     {
-      "doc_id": "3d-space-to-many-dimensions",
+      "doc_id": "d-20260507-155600-5389bb",
       "title": "From 3D Space to Many Dimensions",
-      "content_url": "/assets/data/docs/scopes/library/by-id/3d-space-to-many-dimensions.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-155600-5389bb.json"
     },
     {
-      "doc_id": "library",
+      "doc_id": "d-20260330-172255-8399b7",
       "title": "Library",
-      "content_url": "/assets/data/docs/scopes/library/by-id/library.json"
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260330-172255-8399b7.json"
     }
   ],
-  "generated_at": "2026-06-10T14:50:42Z"
+  "generated_at": "2026-07-15T09:17:33Z"
 }

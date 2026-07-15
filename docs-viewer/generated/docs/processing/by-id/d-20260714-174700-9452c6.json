@@ -1,0 +1,9 @@
+{
+  "doc_id": "d-20260714-174700-9452c6",
+  "title": "random seeding",
+  "added_date": "2026-07-14 17:47:00",
+  "last_updated": "2026-07-14 17:47",
+  "viewer_url": "/docs/?scope=processing&doc=d-20260714-174700-9452c6",
+  "parent_id": "d-20260714-174600-cedc85",
+  "content_html": "<h1>random seeding</h1>\n<p>drawing looks the same each run:</p>\n<pre><code>•\t**Static Noise:** In your vector field function, you’re using a constant value (staticTime = 1.0) and not modifying the noise seed. The Processing noise() function is deterministic (producing the same output each run unless seeded differently).\n\n•\t**No Random Seeding:** If you haven’t called randomSeed() or noiseSeed() with a dynamic value (like based on the current time), the pseudo-random number generators (both for random() and noise()) use their default seeds, which results in the same random sequence on each run.\n</code></pre>\n<p>If you want a different drawing each run, you could:</p>\n<pre><code>•\tCall randomSeed(millis()) or noiseSeed(millis()) in your setup() function.\n•\tOr incorporate some additional randomness in functions like setLineBoundary (e.g., by adding random offsets to the control points).\n</code></pre>\n"
+}

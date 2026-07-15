@@ -48,6 +48,7 @@ def _base_record_result(record: dict[str, Any], status: str) -> dict[str, Any]:
         "record_index": record.get("record_index"),
         "record_identity": record.get("record_identity", ""),
         "doc_id": record.get("doc_id", ""),
+        "source_doc_id": record.get("source_doc_id", ""),
         "title": record.get("title", ""),
         "status": status,
         "target_path": record.get("target_path", ""),

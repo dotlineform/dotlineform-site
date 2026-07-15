@@ -73,22 +73,16 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def by_id_metadata_entry(self, doc: DocRecord, docs: list[DocRecord]) -> dict[str, Any]:
         return self.metadata_entry(doc, docs)
 
-    def manifest_doc_ids(self, docs: list[DocRecord]) -> list[str]:
-        return [doc.doc_id for doc in sorted(docs, key=self.doc_sort_key)]
-
     def manifest_payload(self, docs: list[DocRecord]) -> dict[str, Any]:
         return {
-            "doc_ids": ",".join(self.manifest_doc_ids(docs)),
+            "docs": [
+                {
+                    "doc_id": doc.doc_id,
+                    "title": doc.title,
+                }
+                for doc in sorted(docs, key=self.doc_sort_key)
+            ],
         }
-
-    def validate_docs(self, docs: list[DocRecord]) -> None:
-        super().validate_docs(docs)
-        comma_doc_ids = [doc.doc_id for doc in docs if "," in doc.doc_id]
-        if comma_doc_ids:
-            raise RuntimeError(
-                "Sub-scope doc_id values must not contain commas: "
-                + ", ".join(sorted(comma_doc_ids))
-            )
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()

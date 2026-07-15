@@ -196,8 +196,12 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
     assert payload["records"][2]["decision_kind"] == "collision"
     assert payload["records"][2]["allowed_actions"] == ["overwrite", "skip", "cancel"]
     assert payload["records"][2]["collision"]["doc_id"] == "alpha"
+    new_parent_id = payload["records"][0]["doc_id"]
+    beta_id = payload["records"][1]["doc_id"]
+    assert payload["records"][0]["source_doc_id"] == "new-parent"
+    assert payload["records"][1]["source_doc_id"] == "beta"
     assert payload["records"][1]["parent"] == {
-        "parent_id": "new-parent",
+        "parent_id": new_parent_id,
         "resolution": "package-create",
         "record_index": 0,
     }
@@ -205,8 +209,8 @@ def test_collection_plan_covers_every_record_collision_parent_and_media_without_
     assert payload["records"][1]["media_plans"][0]["source"] == "inline_data_url"
     assert payload["records"][1]["declared_asset_plans"][0]["status"] == "mapping-required"
     assert payload["new_parent_dependencies"] == [
-        {"doc_id": "beta", "record_index": 1, "parent_id": "new-parent", "parent_record_index": 0},
-        {"doc_id": "alpha", "record_index": 2, "parent_id": "new-parent", "parent_record_index": 0},
+        {"doc_id": beta_id, "record_index": 1, "parent_id": new_parent_id, "parent_record_index": 0},
+        {"doc_id": "alpha", "record_index": 2, "parent_id": new_parent_id, "parent_record_index": 0},
     ]
     serialized = json.dumps(payload)
     assert "Keep this link" not in serialized
@@ -239,10 +243,11 @@ def test_collection_plan_resolves_multi_level_new_parents_without_reordering() -
 
     assert payload["ok"] is True
     assert payload["ready_for_confirmation"] is True
-    assert [record["doc_id"] for record in payload["records"]] == ["child", "parent", "grandparent"]
+    child_id, parent_id, grandparent_id = [record["doc_id"] for record in payload["records"]]
+    assert [record["source_doc_id"] for record in payload["records"]] == ["child", "parent", "grandparent"]
     assert payload["new_parent_dependencies"] == [
-        {"doc_id": "child", "record_index": 0, "parent_id": "parent", "parent_record_index": 1},
-        {"doc_id": "parent", "record_index": 1, "parent_id": "grandparent", "parent_record_index": 2},
+        {"doc_id": child_id, "record_index": 0, "parent_id": parent_id, "parent_record_index": 1},
+        {"doc_id": parent_id, "record_index": 1, "parent_id": grandparent_id, "parent_record_index": 2},
     ]
 
 

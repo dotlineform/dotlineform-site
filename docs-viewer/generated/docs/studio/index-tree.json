@@ -6,727 +6,732 @@
   },
   "docs": [
     {
-      "doc_id": "admin",
+      "doc_id": "d-20260606-212412-01ed44",
       "title": "Admin",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260606-212412-01ed44.json",
       "children": [
         {
-          "doc_id": "activity",
+          "doc_id": "d-20260508-171312-725e00",
           "title": "Activity",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/activity.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260508-171312-725e00.json"
         },
         {
-          "doc_id": "config-admin-config-json",
+          "doc_id": "d-20260715-084611-56645e",
           "title": "Admin Config JSON",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-admin-config-json.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-56645e.json"
         },
         {
-          "doc_id": "admin-overview",
+          "doc_id": "d-20260715-084611-2d223d",
           "title": "Admin Overview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-overview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-2d223d.json"
         },
         {
-          "doc_id": "audit-runner",
+          "doc_id": "d-20260607-000000-fc2912",
           "title": "Audit Runner",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/audit-runner.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-000000-fc2912.json"
         },
         {
-          "doc_id": "audits",
+          "doc_id": "d-20260607-000000-c36c22",
           "title": "Audits",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/audits.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-000000-c36c22.json"
         },
         {
-          "doc_id": "admin-checks",
+          "doc_id": "d-20260608-225607-868570",
           "title": "Checks",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260608-225607-868570.json",
           "children": [
             {
-              "doc_id": "admin-checks-config",
+              "doc_id": "d-20260608-000000-828192",
               "title": "Checks Config And Targeting",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-config.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260608-000000-828192.json"
             },
             {
-              "doc_id": "admin-checks-reports",
+              "doc_id": "d-20260609-190605-cc1e45",
               "title": "Reports",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-reports.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260609-190605-cc1e45.json",
               "children": [
                 {
-                  "doc_id": "admin-checks-report-files",
+                  "doc_id": "d-20260608-225607-77fc13",
                   "title": "Files Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-files.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260608-225607-77fc13.json"
                 },
                 {
-                  "doc_id": "admin-checks-report-target-map",
+                  "doc_id": "d-20260610-194253-551bea",
                   "title": "Target Map Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-report-target-map.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260610-194253-551bea.json"
                 }
               ]
             },
             {
-              "doc_id": "admin-checks-target-map-architecture",
+              "doc_id": "d-20260609-125123-5a23f5",
               "title": "Target Map Architecture",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-target-map-architecture.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260609-125123-5a23f5.json"
             }
           ]
         },
         {
-          "doc_id": "local-admin-app",
+          "doc_id": "d-20260606-202710-81c53a",
           "title": "Local Admin App",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-admin-app.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260606-202710-81c53a.json"
         },
         {
-          "doc_id": "risk-analysis-policy",
+          "doc_id": "d-20260607-000000-15afd8",
           "title": "Risk Review Method",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/risk-analysis-policy.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-000000-15afd8.json"
         },
         {
-          "doc_id": "scripts-audit-route-ready-state",
+          "doc_id": "d-20260625-174523-74cf61",
           "title": "Route Ready-State Audit",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-route-ready-state.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260625-174523-74cf61.json"
         },
         {
-          "doc_id": "scripts-audit-site-consistency",
+          "doc_id": "d-20260331-000000-cdc571",
           "title": "Site Consistency Audit",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-cdc571.json"
         }
       ]
     },
     {
-      "doc_id": "analytics",
+      "doc_id": "d-20260506-181900-d08dbe",
       "title": "Analytics",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260506-181900-d08dbe.json",
       "children": [
         {
-          "doc_id": "config-analytics-config-json",
+          "doc_id": "d-20260602-234732-9e91da",
           "title": "Analytics Config JSON",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-analytics-config-json.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-234732-9e91da.json"
         },
         {
-          "doc_id": "analytics-overview",
+          "doc_id": "d-20260715-084611-19cda2",
           "title": "Analytics Overview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-overview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-19cda2.json"
         },
         {
-          "doc_id": "series-tags",
+          "doc_id": "d-20260331-000000-974bf0",
           "title": "Series Tags",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/series-tags.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-974bf0.json"
         },
         {
-          "doc_id": "tag-aliases",
+          "doc_id": "d-20260331-000000-519b1e",
           "title": "Tag Aliases",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-aliases.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-519b1e.json"
         },
         {
-          "doc_id": "tag-editor",
+          "doc_id": "d-20260331-000000-643429",
           "title": "Tag Editor",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-editor.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-643429.json"
         },
         {
-          "doc_id": "tag-groups",
+          "doc_id": "d-20260331-000000-3b6fa8",
           "title": "Tag Groups",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-groups.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-3b6fa8.json"
         },
         {
-          "doc_id": "tag-registry",
+          "doc_id": "d-20260331-000000-4519a5",
           "title": "Tag Registry",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/tag-registry.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-4519a5.json"
         },
         {
-          "doc_id": "analytics-tag-services",
+          "doc_id": "d-20260602-000000-9ffb5c",
           "title": "Tag Services",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-services.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-000000-9ffb5c.json"
         },
         {
-          "doc_id": "analytics-tag-source-data",
+          "doc_id": "d-20260419-000000-86255c",
           "title": "Tag Source Data",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-source-data.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260419-000000-86255c.json"
         }
       ]
     },
     {
-      "doc_id": "architecture",
+      "doc_id": "d-20260331-000000-4a16b0",
       "title": "Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/architecture.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-4a16b0.json",
       "children": [
         {
-          "doc_id": "knowledge-system-vision",
+          "doc_id": "d-20260711-012238-814555",
           "title": "Knowledge System Vision",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/knowledge-system-vision.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260711-012238-814555.json"
         },
         {
-          "doc_id": "data-models-projection-contract",
+          "doc_id": "d-20260523-222005-1085b2",
           "title": "Projection Contract",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-projection-contract.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260523-222005-1085b2.json"
         },
         {
-          "doc_id": "scripts-audit-projection-contract",
+          "doc_id": "d-20260523-224407-911c73",
           "title": "Projection Contract Validation",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-projection-contract.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260523-224407-911c73.json"
         },
         {
-          "doc_id": "public-route-model",
+          "doc_id": "d-20260602-192905-260208",
           "title": "Public Route Model",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/public-route-model.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-192905-260208.json",
           "ui_status": "stable"
         },
         {
-          "doc_id": "data-models-shared",
+          "doc_id": "d-20260419-000000-d5b655",
           "title": "Shared Artifact Patterns",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-shared.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260419-000000-d5b655.json"
         },
         {
-          "doc_id": "site-shell-runtime",
+          "doc_id": "d-20260331-000000-6d51e9",
           "title": "Site Shell Runtime",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-shell-runtime.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-6d51e9.json"
         },
         {
-          "doc_id": "source-tree-ownership",
+          "doc_id": "d-20260524-214228-7247ef",
           "title": "Source Tree Ownership",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260524-214228-7247ef.json"
         }
       ]
     },
     {
-      "doc_id": "data-sharing",
+      "doc_id": "d-20260513-171600-a1eeb9",
       "title": "Data Sharing",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260513-171600-a1eeb9.json",
       "children": [
         {
-          "doc_id": "studio-data-sharing",
+          "doc_id": "d-20260506-000000-211c99",
           "title": "Analytics Data Sharing Runtime",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260506-000000-211c99.json"
         },
         {
-          "doc_id": "data-sharing-adapter-architecture",
+          "doc_id": "d-20260621-000000-ada8c8",
           "title": "Data Sharing Adapter Architecture",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-adapter-architecture.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260621-000000-ada8c8.json"
         },
         {
-          "doc_id": "config-data-sharing-adapters",
+          "doc_id": "d-20260506-113500-99395d",
           "title": "Data Sharing Adapter Registry",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260506-113500-99395d.json"
         },
         {
-          "doc_id": "data-sharing-export-metadata",
+          "doc_id": "d-20260627-113800-55dd63",
           "title": "Data Sharing Export Metadata",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-export-metadata.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260627-113800-55dd63.json"
         },
         {
-          "doc_id": "data-sharing-overview",
+          "doc_id": "d-20260715-084611-f25940",
           "title": "Data Sharing Overview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-overview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-f25940.json"
         },
         {
-          "doc_id": "data-sharing-documents-adapter-structure",
+          "doc_id": "d-20260621-000000-baa17e",
           "title": "Documents Data Sharing Adapter",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-adapter-structure.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260621-000000-baa17e.json"
         },
         {
-          "doc_id": "data-sharing-documents-prepare-profiles",
+          "doc_id": "d-20260503-141500-98fa03",
           "title": "Documents Prepare Profiles",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-prepare-profiles.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260503-141500-98fa03.json"
         },
         {
-          "doc_id": "data-sharing-documents-returned-package-review",
+          "doc_id": "d-20260627-225625-1c9b7e",
           "title": "Documents Returned Package Review",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-documents-returned-package-review.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260627-225625-1c9b7e.json"
         },
         {
-          "doc_id": "data-sharing-tags-adapter-structure",
+          "doc_id": "d-20260621-000000-4461b0",
           "title": "Tags Data Sharing Adapter",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-tags-adapter-structure.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260621-000000-4461b0.json"
         }
       ]
     },
     {
-      "doc_id": "dev-home",
+      "doc_id": "d-20260419-000000-d2e47b",
       "title": "Dev Home",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/dev-home.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260419-000000-d2e47b.json",
       "children": [
         {
-          "doc_id": "scripts-cloud-environments",
+          "doc_id": "d-20260414-000000-f22e3e",
           "title": "Cloud Environments",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-cloud-environments.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260414-000000-f22e3e.json"
         },
         {
-          "doc_id": "development-checklist",
+          "doc_id": "d-20260523-190651-7157ec",
           "title": "Development Checklist",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/development-checklist.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260523-190651-7157ec.json"
         },
         {
-          "doc_id": "development-workflow",
+          "doc_id": "d-20260523-000000-bf7161",
           "title": "Development Workflow",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/development-workflow.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260523-000000-bf7161.json"
         },
         {
-          "doc_id": "github-actions",
+          "doc_id": "d-20260612-153500-7eadc8",
           "title": "GitHub Actions",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/github-actions.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260612-153500-7eadc8.json"
         },
         {
-          "doc_id": "route-ready-state",
+          "doc_id": "d-20260625-162242-b0b6c7",
           "title": "Route Ready State",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/route-ready-state.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260625-162242-b0b6c7.json"
         },
         {
-          "doc_id": "scripts-run-checks",
+          "doc_id": "d-20260501-174746-f92667",
           "title": "Run Checks",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-run-checks.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260501-174746-f92667.json"
         },
         {
-          "doc_id": "runtime-dependencies",
+          "doc_id": "d-20260423-204839-111501",
           "title": "Runtime Dependencies",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/runtime-dependencies.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-204839-111501.json"
         },
         {
-          "doc_id": "scripts",
+          "doc_id": "d-20260423-000000-d274d3",
           "title": "Scripts",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-000000-d274d3.json",
           "children": [
             {
-              "doc_id": "scripts-css-token-audit",
+              "doc_id": "d-20260331-000000-faddd2",
               "title": "CSS Token Audit",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-css-token-audit.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-faddd2.json"
             }
           ]
         },
         {
-          "doc_id": "task-batch-template",
+          "doc_id": "d-20260605-103600-2dc18d",
           "title": "Task Batch Template",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/task-batch-template.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260605-103600-2dc18d.json",
           "ui_status": "planned"
         },
         {
-          "doc_id": "task-template",
+          "doc_id": "d-20260604-205900-dd9db8",
           "title": "Task Template",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/task-template.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260604-205900-dd9db8.json",
           "ui_status": "planned"
         },
         {
-          "doc_id": "tasks-tracker-template",
+          "doc_id": "d-20260604-202600-88dd17",
           "title": "Tasks Tracker Template",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-tracker-template.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260604-202600-88dd17.json",
           "ui_status": "planned"
         }
       ]
     },
     {
-      "doc_id": "docs-viewer",
+      "doc_id": "d-20260424-000000-50b63f",
       "title": "Docs Viewer",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-50b63f.json",
       "children": [
         {
-          "doc_id": "docs-broken-links",
+          "doc_id": "d-20260423-165116-e7f7e9",
           "title": "Broken Links",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-broken-links.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-165116-e7f7e9.json",
           "ui_status": "report"
         },
         {
-          "doc_id": "scripts-docs-broken-links",
+          "doc_id": "d-20260423-165116-c83a81",
           "title": "Broken Links Script",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-165116-c83a81.json"
         },
         {
-          "doc_id": "config-docs-viewer",
+          "doc_id": "d-20260512-142027-54b354",
           "title": "Configuration And Extension Points",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-docs-viewer.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260512-142027-54b354.json"
         },
         {
-          "doc_id": "docs-viewer-css-cascade-design",
+          "doc_id": "d-20260511-200845-2a03a0",
           "title": "CSS Ownership",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-css-cascade-design.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260511-200845-2a03a0.json"
         },
         {
-          "doc_id": "docs-viewer-dependencies",
+          "doc_id": "d-20260514-180120-b23811",
           "title": "Dependencies",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-dependencies.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260514-180120-b23811.json"
         },
         {
-          "doc_id": "docs-data",
+          "doc_id": "d-20260419-000000-0516ab",
           "title": "Docs Data",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-data.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260419-000000-0516ab.json"
         },
         {
-          "doc_id": "user-guide-docs-images",
+          "doc_id": "d-20260423-155039-e36925",
           "title": "Docs Images And Assets",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-images.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-155039-e36925.json"
         },
         {
-          "doc_id": "user-guide-docs-html-import",
+          "doc_id": "d-20260424-000000-fc8b5d",
           "title": "Docs Import",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/user-guide-docs-html-import.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-fc8b5d.json"
         },
         {
-          "doc_id": "docs-viewer-import-source-registry-spec",
+          "doc_id": "d-20260514-164722-3de65e",
           "title": "Docs Import Architecture",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-import-source-registry-spec.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260514-164722-3de65e.json"
         },
         {
-          "doc_id": "docs-viewer-review",
+          "doc_id": "d-20260711-214307-b4c800",
           "title": "Docs Review",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-review.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260711-214307-b4c800.json"
         },
         {
-          "doc_id": "scripts-docs-builder",
+          "doc_id": "d-20260423-000000-c9f3ea",
           "title": "Docs Viewer Builder",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-builder.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-000000-c9f3ea.json"
         },
         {
-          "doc_id": "docs-viewer-public-route-shell-template",
+          "doc_id": "d-20260613-115624-3d377c",
           "title": "Docs Viewer Public Route Shell Template",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-route-shell-template.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260613-115624-3d377c.json"
         },
         {
-          "doc_id": "scripts-docs-export",
+          "doc_id": "d-20260715-094411-2b6e65",
+          "title": "Document Identity",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-2b6e65.json"
+        },
+        {
+          "doc_id": "d-20260503-150500-b0f1df",
           "title": "Documents Package Preparation Script",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260503-150500-b0f1df.json"
         },
         {
-          "doc_id": "scripts-docs-import",
+          "doc_id": "d-20260503-202500-316d29",
           "title": "Documents Returned Package Script",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260503-202500-316d29.json"
         },
         {
-          "doc_id": "docs-viewer-embedded-detail-documents",
+          "doc_id": "d-20260623-221357-a97b66",
           "title": "Embedded Detail Documents",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-embedded-detail-documents.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260623-221357-a97b66.json"
         },
         {
-          "doc_id": "docs-viewer-export",
+          "doc_id": "d-20260629-152159-ac1af9",
           "title": "Export",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-export.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260629-152159-ac1af9.json"
         },
         {
-          "doc_id": "docs-viewer-info-panel",
+          "doc_id": "d-20260623-000000-c99cef",
           "title": "Info Panel",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-info-panel.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260623-000000-c99cef.json"
         },
         {
-          "doc_id": "library-documents",
+          "doc_id": "d-20260507-123607-fd7cff",
           "title": "Library Documents",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/library-documents.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260507-123607-fd7cff.json",
           "ui_status": "report"
         },
         {
-          "doc_id": "scripts-docs-live-rebuild-watcher",
+          "doc_id": "d-20260424-000000-5b64f6",
           "title": "Live Rebuild Watcher",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-live-rebuild-watcher.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-5b64f6.json"
         },
         {
-          "doc_id": "scripts-docs-management-server",
+          "doc_id": "d-20260424-000000-04d75e",
           "title": "Management Services",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-04d75e.json",
           "children": [
             {
-              "doc_id": "scripts-docs-management-endpoints",
+              "doc_id": "d-20260607-222033-647b52",
               "title": "Endpoint Overview",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-647b52.json",
               "children": [
                 {
-                  "doc_id": "scripts-docs-management-endpoints-create-import",
+                  "doc_id": "d-20260607-222033-78a47c",
                   "title": "Create And Import Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-create-import.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-78a47c.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-review",
+                  "doc_id": "d-20260711-214307-6d6d46",
                   "title": "Docs Review Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-review.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260711-214307-6d6d46.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-generated-reads",
+                  "doc_id": "d-20260607-222033-d06f35",
                   "title": "Generated Read Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-generated-reads.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-d06f35.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-health-capabilities",
+                  "doc_id": "d-20260607-222033-5d82a6",
                   "title": "Health And Capabilities Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-health-capabilities.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-5d82a6.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-rebuild-audit",
+                  "doc_id": "d-20260607-222033-fc3fe4",
                   "title": "Rebuild And Audit Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-rebuild-audit.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-fc3fe4.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-scope-lifecycle",
+                  "doc_id": "d-20260607-222033-3e391b",
                   "title": "Scope Lifecycle Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-scope-lifecycle.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-3e391b.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-source-config",
+                  "doc_id": "d-20260607-222033-d9b8b1",
                   "title": "Source Config Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-config.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-d9b8b1.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-source-editor",
+                  "doc_id": "d-20260607-222033-4b1d77",
                   "title": "Source Editor Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-editor.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-4b1d77.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-endpoints-source-mutations",
+                  "doc_id": "d-20260607-222033-ce5515",
                   "title": "Source Mutation Endpoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-endpoints-source-mutations.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-ce5515.json"
                 }
               ]
             },
             {
-              "doc_id": "scripts-docs-management-server-operations",
+              "doc_id": "d-20260519-202931-66c794",
               "title": "Management Operations",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-202931-66c794.json"
             },
             {
-              "doc_id": "scripts-docs-management-scripts",
+              "doc_id": "d-20260607-222033-2a494e",
               "title": "Scripts Overview",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-2a494e.json",
               "children": [
                 {
-                  "doc_id": "scripts-docs-management-scripts-audit",
+                  "doc_id": "d-20260607-222033-6331b3",
                   "title": "Audit Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-audit.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-6331b3.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-import",
+                  "doc_id": "d-20260607-222033-c902f6",
                   "title": "Import Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-import.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-c902f6.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-read-config",
+                  "doc_id": "d-20260607-222033-f2a546",
                   "title": "Read And Config Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-read-config.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-f2a546.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-rebuild-follow-through",
+                  "doc_id": "d-20260607-222033-dd2265",
                   "title": "Rebuild Follow-Through Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-rebuild-follow-through.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-dd2265.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-route-dispatch",
+                  "doc_id": "d-20260607-222033-71d1be",
                   "title": "Route Dispatch Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-route-dispatch.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-71d1be.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-service-entrypoints",
+                  "doc_id": "d-20260607-222033-ccc471",
                   "title": "Service Entrypoints",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-service-entrypoints.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-ccc471.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-source-editor",
+                  "doc_id": "d-20260607-222033-704641",
                   "title": "Source Editor Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-source-editor.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-704641.json"
                 },
                 {
-                  "doc_id": "scripts-docs-management-scripts-source-mutations",
+                  "doc_id": "d-20260607-222033-c0b57a",
                   "title": "Source Mutation Scripts",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-scripts-source-mutations.json"
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260607-222033-c0b57a.json"
                 }
               ]
             }
           ]
         },
         {
-          "doc_id": "docs-viewer-media-handling",
+          "doc_id": "d-20260514-184303-7914e2",
           "title": "Media And Asset Handling",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-media-handling.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260514-184303-7914e2.json"
         },
         {
-          "doc_id": "docs-viewer-overview",
+          "doc_id": "d-20260424-000000-291cc8",
           "title": "Overview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-291cc8.json"
         },
         {
-          "doc_id": "docs-viewer-panel-hosts",
+          "doc_id": "d-20260528-224754-964108",
           "title": "Panel Hosts",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-panel-hosts.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260528-224754-964108.json"
         },
         {
-          "doc_id": "docs-viewer-portable-setup",
+          "doc_id": "d-20260511-120352-90ffa6",
           "title": "Portability Snapshot",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-setup.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260511-120352-90ffa6.json",
           "ui_status": "deferred"
         },
         {
-          "doc_id": "docs-viewer-public-scopes",
+          "doc_id": "d-20260331-000000-f992b9",
           "title": "Public Scopes",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-public-scopes.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-f992b9.json"
         },
         {
-          "doc_id": "docs-viewer-reports",
+          "doc_id": "d-20260513-105343-6de36b",
           "title": "Reports",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-reports.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260513-105343-6de36b.json"
         },
         {
-          "doc_id": "docs-viewer-runtime-boundary",
+          "doc_id": "d-20260331-000000-c313fd",
           "title": "Runtime",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-c313fd.json",
           "children": [
             {
-              "doc_id": "docs-viewer-generated-data-contracts",
+              "doc_id": "d-20260605-125108-c68916",
               "title": "Generated Data Contracts",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-generated-data-contracts.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260605-125108-c68916.json"
             },
             {
-              "doc_id": "docs-viewer-runtime-module-ownership",
+              "doc_id": "d-20260605-125108-1d1ef3",
               "title": "Runtime Module Ownership",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-module-ownership.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260605-125108-1d1ef3.json"
             }
           ]
         },
         {
-          "doc_id": "docs-viewer-new-scopes-builder",
+          "doc_id": "d-20260515-000000-f43740",
           "title": "Scope Lifecycle",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260515-000000-f43740.json"
         },
         {
-          "doc_id": "docs-viewer-semantic-references",
+          "doc_id": "d-20260518-214029-eb6598",
           "title": "Semantic References",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260518-214029-eb6598.json",
           "ui_status": "report"
         },
         {
-          "doc_id": "docs-viewer-semantic-references-editor",
+          "doc_id": "d-20260623-180405-631ef4",
           "title": "Semantic References Editor",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references-editor.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260623-180405-631ef4.json"
         },
         {
-          "doc_id": "docs-viewer-semantic-references-implementation",
+          "doc_id": "d-20260602-210246-394018",
           "title": "Semantic References Implementation",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-references-implementation.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-210246-394018.json"
         },
         {
-          "doc_id": "docs-viewer-source-config-report",
+          "doc_id": "d-20260514-123140-83239c",
           "title": "Source Config Report",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-config-report.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260514-123140-83239c.json",
           "ui_status": "report"
         },
         {
-          "doc_id": "docs-viewer-source-organisation",
+          "doc_id": "d-20260423-000000-8fd731",
           "title": "Source Organisation",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-source-organisation.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-000000-8fd731.json"
         },
         {
-          "doc_id": "docs-viewer-toolbar-model",
+          "doc_id": "d-20260531-152622-ed2451",
           "title": "Toolbar Model",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-toolbar-model.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260531-152622-ed2451.json"
         },
         {
-          "doc_id": "doc-ui-status",
+          "doc_id": "d-20260513-214100-0a7f44",
           "title": "UI Status",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/doc-ui-status.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260513-214100-0a7f44.json"
         },
         {
-          "doc_id": "docs-viewer-viewable-field",
+          "doc_id": "d-20260424-000000-e2408a",
           "title": "Viewable field",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-viewable-field.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-e2408a.json"
         }
       ]
     },
     {
-      "doc_id": "local-setup",
+      "doc_id": "d-20260413-000000-d314b7",
       "title": "Local Setup",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260413-000000-d314b7.json",
       "children": [
         {
-          "doc_id": "scripts-local-studio",
+          "doc_id": "d-20260422-174736-9bd0fc",
           "title": "Local Runners",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-local-studio.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260422-174736-9bd0fc.json"
         },
         {
-          "doc_id": "local-setup-environment",
+          "doc_id": "d-20260519-210908-965f46",
           "title": "Local Setup Environment",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-environment.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-210908-965f46.json"
         },
         {
-          "doc_id": "local-setup-github-codex",
+          "doc_id": "d-20260519-210908-8fb78d",
           "title": "Local Setup GitHub And Codex Notes",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-github-codex.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-210908-8fb78d.json"
         },
         {
-          "doc_id": "local-setup-public-site-preview",
+          "doc_id": "d-20260523-203756-b41c00",
           "title": "Local Setup Public Site Preview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-public-site-preview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260523-203756-b41c00.json"
         },
         {
-          "doc_id": "local-setup-recovery",
+          "doc_id": "d-20260519-210908-88abe4",
           "title": "Local Setup Recovery",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-recovery.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-210908-88abe4.json"
         },
         {
-          "doc_id": "local-setup-toolchain",
+          "doc_id": "d-20260519-210908-2f8f00",
           "title": "Local Setup Toolchain",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-toolchain.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-210908-2f8f00.json"
         }
       ]
     },
     {
-      "doc_id": "roadmap",
+      "doc_id": "d-20260428-000000-f5ff18",
       "title": "Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/roadmap.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260428-000000-f5ff18.json",
       "children": [
         {
-          "doc_id": "admin-roadmap",
+          "doc_id": "d-20260715-092247-85515f",
           "title": "Admin Roadmap",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-roadmap.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-85515f.json",
           "children": [
             {
-              "doc_id": "admin-checks-operational-reports",
+              "doc_id": "d-20260610-225919-188d54",
               "title": "Admin Checks Operational Reports",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-operational-reports.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260610-225919-188d54.json",
               "ui_status": "deferred",
               "children": [
                 {
-                  "doc_id": "admin-checks-generated-payloads-delivery",
+                  "doc_id": "d-20260610-114020-8e5197",
                   "title": "Generated Payloads Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-generated-payloads-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260610-114020-8e5197.json",
                   "ui_status": "draft"
                 },
                 {
-                  "doc_id": "admin-checks-runtime-checks-delivery",
+                  "doc_id": "d-20260610-114020-b56fed",
                   "title": "Runtime Checks Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-runtime-checks-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260610-114020-b56fed.json",
                   "ui_status": "draft"
                 }
               ]
             },
             {
-              "doc_id": "admin-checks-responsibility-reports",
+              "doc_id": "d-20260531-000000-6679ea",
               "title": "Admin Checks Responsibility Reports",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-responsibility-reports.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260531-000000-6679ea.json",
               "ui_status": "in-progress",
               "children": [
                 {
-                  "doc_id": "admin-checks-code-surface-delivery",
+                  "doc_id": "d-20260610-225919-78b56a",
                   "title": "Code Surface Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-code-surface-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260610-225919-78b56a.json",
                   "ui_status": "draft"
                 },
                 {
-                  "doc_id": "admin-checks-git-history-delivery",
+                  "doc_id": "d-20260609-212515-e7f0ac",
                   "title": "Git History Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-git-history-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260609-212515-e7f0ac.json",
                   "ui_status": "draft"
                 },
                 {
-                  "doc_id": "admin-checks-imports-delivery",
+                  "doc_id": "d-20260609-212515-520398",
                   "title": "Imports Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-imports-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260609-212515-520398.json",
                   "ui_status": "draft"
                 },
                 {
-                  "doc_id": "admin-checks-dependencies-delivery",
+                  "doc_id": "d-20260609-212515-238344",
                   "title": "Report Dependencies",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-dependencies-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260609-212515-238344.json",
                   "ui_status": "draft"
                 },
                 {
-                  "doc_id": "admin-checks-static-searches-delivery",
+                  "doc_id": "d-20260610-114020-544e51",
                   "title": "Static Searches Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-static-searches-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260610-114020-544e51.json",
                   "ui_status": "draft"
                 },
                 {
-                  "doc_id": "admin-checks-tests-delivery",
+                  "doc_id": "d-20260609-212515-6d8aa2",
                   "title": "Tests Report",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-tests-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260609-212515-6d8aa2.json",
                   "ui_status": "draft"
                 }
               ]
@@ -734,85 +739,85 @@
           ]
         },
         {
-          "doc_id": "analytics-roadmap",
+          "doc_id": "d-20260715-092247-c67bbf",
           "title": "Analytics Roadmap",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-roadmap.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-c67bbf.json",
           "children": [
             {
-              "doc_id": "analytics-llm-integration",
+              "doc_id": "d-20260416-000000-1744c6",
               "title": "LLM Integration",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260416-000000-1744c6.json",
               "ui_status": "paused",
               "children": [
                 {
-                  "doc_id": "analytics-llm-integration-architecture",
+                  "doc_id": "d-20260715-092247-1c5d85",
                   "title": "LLM Integration Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-architecture.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-1c5d85.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "analytics-llm-integration-concept",
+                  "doc_id": "d-20260416-000000-7b5d77",
                   "title": "LLM Integration Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260416-000000-7b5d77.json",
                   "ui_status": "paused"
                 },
                 {
-                  "doc_id": "analytics-llm-integration-delivery",
+                  "doc_id": "d-20260715-092247-81535b",
                   "title": "LLM Library Summary Proposals Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-81535b.json",
                   "ui_status": "paused"
                 }
               ]
             },
             {
-              "doc_id": "analytics-portable-document-packages",
+              "doc_id": "d-20260715-092247-4b7382",
               "title": "Portable Document Packages",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-portable-document-packages.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-4b7382.json",
               "children": [
                 {
-                  "doc_id": "data-sharing-full-document-package-delivery",
+                  "doc_id": "d-20260711-012238-8a04a6",
                   "title": "Full Document Export Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-full-document-package-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260711-012238-8a04a6.json",
                   "ui_status": "in-progress"
                 }
               ]
             },
             {
-              "doc_id": "analytics-shareable-content-blocks",
+              "doc_id": "d-20260623-000000-8b3359",
               "title": "Shareable Content Blocks",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-shareable-content-blocks.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260623-000000-8b3359.json",
               "ui_status": "draft",
               "children": [
                 {
-                  "doc_id": "analytics-shareable-content-blocks-concept",
+                  "doc_id": "d-20260623-190947-78e88b",
                   "title": "Shareable Content Blocks Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-shareable-content-blocks-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260623-190947-78e88b.json",
                   "ui_status": "draft"
                 }
               ]
             },
             {
-              "doc_id": "analytics-tag-dimensions",
+              "doc_id": "d-20260715-092247-659e29",
               "title": "Tag Dimensions",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-659e29.json",
               "ui_status": "paused",
               "children": [
                 {
-                  "doc_id": "analytics-tag-dimensions-delivery",
+                  "doc_id": "d-20260715-092247-5e1795",
                   "title": "Small Tag Dimension Set Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-5e1795.json",
                   "ui_status": "paused"
                 },
                 {
-                  "doc_id": "analytics-tag-dimensions-architecture",
+                  "doc_id": "d-20260715-092247-053d06",
                   "title": "Tag Dimensions Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions-architecture.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-053d06.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "analytics-tag-dimensions-concept",
+                  "doc_id": "d-20260715-092247-ab3eff",
                   "title": "Tag Dimensions Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-ab3eff.json",
                   "ui_status": "paused"
                 }
               ]
@@ -820,99 +825,73 @@
           ]
         },
         {
-          "doc_id": "docs-viewer-roadmap",
+          "doc_id": "d-20260714-234030-1e0af6",
           "title": "Docs Viewer Roadmap",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-roadmap.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
           "ui_status": "in-progress",
           "children": [
             {
-              "doc_id": "d-20260715-094411-1c5fa7",
-              "title": "Document Identity",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-1c5fa7.json",
-              "ui_status": "ready",
-              "children": [
-                {
-                  "doc_id": "d-20260715-094411-599c3d",
-                  "title": "Document Identity Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-599c3d.json",
-                  "ui_status": "proposed"
-                },
-                {
-                  "doc_id": "d-20260715-094411-2b6e65",
-                  "title": "Document Identity Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-2b6e65.json",
-                  "ui_status": "ready"
-                },
-                {
-                  "doc_id": "d-20260715-094411-e46323",
-                  "title": "Document Identity Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-e46323.json",
-                  "ui_status": "ready"
-                }
-              ]
-            },
-            {
-              "doc_id": "docs-viewer-external-asset-collections",
+              "doc_id": "d-20260714-194217-b2bdd7",
               "title": "External Asset Collections",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-194217-b2bdd7.json",
               "ui_status": "proposed",
               "children": [
                 {
-                  "doc_id": "docs-viewer-external-asset-collections-architecture",
+                  "doc_id": "d-20260714-234030-19a064",
                   "title": "External Asset Collections Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-architecture.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-19a064.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "docs-viewer-external-asset-collections-concept",
+                  "doc_id": "d-20260714-234030-f2b36c",
                   "title": "External Asset Collections Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-f2b36c.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "docs-viewer-external-asset-lifecycle-delivery",
+                  "doc_id": "d-20260714-234030-a63b0b",
                   "title": "External Asset Lifecycle Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-lifecycle-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-a63b0b.json",
                   "ui_status": "planned"
                 }
               ]
             },
             {
-              "doc_id": "docs-viewer-index-multiple-selection",
+              "doc_id": "d-20260714-151900-6fa23e",
               "title": "Index Multiple Selection",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-151900-6fa23e.json",
               "ui_status": "proposed",
               "children": [
                 {
-                  "doc_id": "docs-viewer-index-multiple-selection-architecture",
+                  "doc_id": "d-20260714-234030-f30d01",
                   "title": "Index Multiple Selection Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-architecture.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-f30d01.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "docs-viewer-index-multiple-selection-concept",
+                  "doc_id": "d-20260714-234030-876066",
                   "title": "Index Multiple Selection Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-876066.json",
                   "ui_status": "proposed"
                 }
               ]
             },
             {
-              "doc_id": "docs-viewer-semantic-reference-authoring",
+              "doc_id": "d-20260527-105208-c1a4d0",
               "title": "Semantic Reference Authoring",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260527-105208-c1a4d0.json",
               "ui_status": "proposed",
               "children": [
                 {
-                  "doc_id": "docs-viewer-semantic-reference-authoring-architecture",
+                  "doc_id": "d-20260714-234030-434069",
                   "title": "Semantic Reference Authoring Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-architecture.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-434069.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "docs-viewer-semantic-reference-authoring-concept",
+                  "doc_id": "d-20260714-234030-cb2789",
                   "title": "Semantic Reference Authoring Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-cb2789.json",
                   "ui_status": "proposed"
                 }
               ]
@@ -920,39 +899,39 @@
           ]
         },
         {
-          "doc_id": "repository-roadmap",
+          "doc_id": "d-20260715-092247-f3fd52",
           "title": "Repository Roadmap",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-roadmap.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-f3fd52.json",
           "children": [
             {
-              "doc_id": "repository-maintenance",
+              "doc_id": "d-20260715-084611-7c7c8d",
               "title": "Repository Maintenance",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-maintenance.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-7c7c8d.json"
             },
             {
-              "doc_id": "repository-search-mechanics",
+              "doc_id": "d-20260715-092247-6bbb5e",
               "title": "Search Mechanics",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-search-mechanics.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-6bbb5e.json",
               "ui_status": "paused",
               "children": [
                 {
-                  "doc_id": "repository-search-mechanics-review-delivery",
+                  "doc_id": "d-20260715-084611-c2fa6f",
                   "title": "Search Mechanics Review Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-search-mechanics-review-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-c2fa6f.json",
                   "ui_status": "paused"
                 }
               ]
             },
             {
-              "doc_id": "repository-source-documentation-and-linting",
+              "doc_id": "d-20260713-000000-d9bad2",
               "title": "Source Documentation and Linting",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-source-documentation-and-linting.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260713-000000-d9bad2.json",
               "ui_status": "draft",
               "children": [
                 {
-                  "doc_id": "repository-source-documentation-and-linting-concept",
+                  "doc_id": "d-20260713-133928-c786c7",
                   "title": "Source Documentation and Linting Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-source-documentation-and-linting-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260713-133928-c786c7.json",
                   "ui_status": "draft"
                 }
               ]
@@ -960,32 +939,32 @@
           ]
         },
         {
-          "doc_id": "studio-roadmap",
+          "doc_id": "d-20260715-092247-81d19a",
           "title": "Studio Roadmap",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-roadmap.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-81d19a.json",
           "children": [
             {
-              "doc_id": "studio-moments-composition-workspace",
+              "doc_id": "d-20260712-000000-45286c",
               "title": "Moments Composition Workspace",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace.json",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260712-000000-45286c.json",
               "ui_status": "proposed",
               "children": [
                 {
-                  "doc_id": "studio-moments-composition-workspace-delivery",
+                  "doc_id": "d-20260715-092247-595d47",
                   "title": "Moments Basic Axis Editor Delivery",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-delivery.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-595d47.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "studio-moments-composition-workspace-architecture",
+                  "doc_id": "d-20260715-092247-da73da",
                   "title": "Moments Composition Workspace Architecture",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-architecture.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-092247-da73da.json",
                   "ui_status": "proposed"
                 },
                 {
-                  "doc_id": "studio-moments-composition-workspace-concept",
+                  "doc_id": "d-20260712-000000-f49032",
                   "title": "Moments Composition Workspace Concept",
-                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-concept.json",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260712-000000-f49032.json",
                   "ui_status": "proposed"
                 }
               ]
@@ -995,270 +974,270 @@
       ]
     },
     {
-      "doc_id": "search",
+      "doc_id": "d-20260331-000000-5dcf32",
       "title": "Search",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/search.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-5dcf32.json",
       "children": [
         {
-          "doc_id": "search-catalogue-infrastructure",
+          "doc_id": "d-20260602-160839-4ebe27",
           "title": "Catalogue Search",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/search-catalogue-infrastructure.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-160839-4ebe27.json",
           "children": [
             {
-              "doc_id": "config-search-build-json",
+              "doc_id": "d-20260425-154733-c6062c",
               "title": "Catalogue Search Build Config",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-build-json.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260425-154733-c6062c.json"
             },
             {
-              "doc_id": "config-search-policy-json",
+              "doc_id": "d-20260331-154730-885d0f",
               "title": "Catalogue Search Policy",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/config-search-policy-json.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-154730-885d0f.json"
             }
           ]
         },
         {
-          "doc_id": "search-docs-viewer-infrastructure",
+          "doc_id": "d-20260602-160839-6d3cbb",
           "title": "Docs Viewer Search",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/search-docs-viewer-infrastructure.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-160839-6d3cbb.json"
         },
         {
-          "doc_id": "search-build-pipeline-architecture",
+          "doc_id": "d-20260519-210908-69d0e9",
           "title": "Search Build Pipeline",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/search-build-pipeline-architecture.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-210908-69d0e9.json"
         }
       ]
     },
     {
-      "doc_id": "ui",
+      "doc_id": "d-20260505-181739-bb5223",
       "title": "Shared UI",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260505-181739-bb5223.json",
       "children": [
         {
-          "doc_id": "ui-pattern-file-picker",
+          "doc_id": "d-20260614-155753-e87844",
           "title": "File Picker",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-file-picker.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260614-155753-e87844.json"
         },
         {
-          "doc_id": "ui-pattern-record-action-list",
+          "doc_id": "d-20260614-201632-79c9cb",
           "title": "Record List And Actions",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-record-action-list.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260614-201632-79c9cb.json"
         },
         {
-          "doc_id": "ui-search-list-component",
+          "doc_id": "d-20260715-084611-99ee19",
           "title": "Search List",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-search-list-component.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-99ee19.json"
         },
         {
-          "doc_id": "ui-selectable-list-component",
+          "doc_id": "d-20260627-144244-b9cdf0",
           "title": "Selectable List",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-selectable-list-component.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260627-144244-b9cdf0.json"
         }
       ]
     },
     {
-      "doc_id": "studio",
+      "doc_id": "d-20260423-000000-d015e6",
       "title": "Studio",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-000000-d015e6.json",
       "children": [
         {
-          "doc_id": "bulk-add-work",
+          "doc_id": "d-20260419-000000-cb98dd",
           "title": "Bulk Add Work",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/bulk-add-work.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260419-000000-cb98dd.json"
         },
         {
-          "doc_id": "data-models-catalogue",
+          "doc_id": "d-20260401-000000-a11bf3",
           "title": "Catalogue Architecture",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260401-000000-a11bf3.json"
         },
         {
-          "doc_id": "catalogue-status",
+          "doc_id": "d-20260418-000000-16bf7e",
           "title": "Catalogue Drafts",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-status.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260418-000000-16bf7e.json"
         },
         {
-          "doc_id": "catalogue-field-registry-review",
+          "doc_id": "d-20260501-172902-96e85d",
           "title": "Catalogue Field Registry",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-field-registry-review.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260501-172902-96e85d.json"
         },
         {
-          "doc_id": "scripts-verify-catalogue-field-registry",
+          "doc_id": "d-20260501-161457-55c016",
           "title": "Catalogue Field Registry Verification",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-verify-catalogue-field-registry.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260501-161457-55c016.json"
         },
         {
-          "doc_id": "data-models-catalogue-indexes",
+          "doc_id": "d-20260519-202931-b05d27",
           "title": "Catalogue Indexes And Payloads",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-indexes.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-202931-b05d27.json"
         },
         {
-          "doc_id": "scripts-catalogue-lookup",
+          "doc_id": "d-20260417-225554-85387d",
           "title": "Catalogue Lookup Export",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-lookup.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260417-225554-85387d.json"
         },
         {
-          "doc_id": "config-pipeline-json",
+          "doc_id": "d-20260331-154730-b019e0",
           "title": "Catalogue Media Pipeline Config",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-pipeline-json.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-154730-b019e0.json"
         },
         {
-          "doc_id": "catalogue-per-work-detail-source",
+          "doc_id": "d-20260622-160612-b986f3",
           "title": "Catalogue Per-Work Detail Source",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-per-work-detail-source.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260622-160612-b986f3.json"
         },
         {
-          "doc_id": "catalogue-series-editor",
+          "doc_id": "d-20260422-000000-ec1a69",
           "title": "Catalogue Series Editor",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-series-editor.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260422-000000-ec1a69.json"
         },
         {
-          "doc_id": "scripts-catalogue-write-server",
+          "doc_id": "d-20260422-000000-fb2894",
           "title": "Catalogue Services",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260422-000000-fb2894.json",
           "children": [
             {
-              "doc_id": "scripts-catalogue-write-server-build-lookup",
+              "doc_id": "d-20260519-202931-0c703e",
               "title": "Catalogue Build And Lookup Refresh",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-build-lookup.json"
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-202931-0c703e.json"
             }
           ]
         },
         {
-          "doc_id": "data-models-catalogue-source",
+          "doc_id": "d-20260519-000000-a0da45",
           "title": "Catalogue Source Model",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-catalogue-source.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260519-000000-a0da45.json"
         },
         {
-          "doc_id": "scripts-catalogue-source",
+          "doc_id": "d-20260418-000000-2f2773",
           "title": "Catalogue Source Validation",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-source.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260418-000000-2f2773.json"
         },
         {
-          "doc_id": "catalogue-work-editor",
+          "doc_id": "d-20260422-000000-45a776",
           "title": "Catalogue Work Editor",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/catalogue-work-editor.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260422-000000-45a776.json"
         },
         {
-          "doc_id": "studio-works",
+          "doc_id": "d-20260401-000000-ebf14a",
           "title": "Catalogue Works",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-works.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260401-000000-ebf14a.json"
         },
         {
-          "doc_id": "config-files-inventory",
+          "doc_id": "d-20260602-234732-ea94b3",
           "title": "Configuration Map",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-files-inventory.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-234732-ea94b3.json"
         },
         {
-          "doc_id": "local-studio-apis",
+          "doc_id": "d-20260602-111803-019594",
           "title": "Local Studio APIs",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-apis.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-111803-019594.json"
         },
         {
-          "doc_id": "local-studio-app",
+          "doc_id": "d-20260522-080600-a2b102",
           "title": "Local Studio App",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260522-080600-a2b102.json"
         },
         {
-          "doc_id": "local-studio-routes",
+          "doc_id": "d-20260602-111803-6d22ef",
           "title": "Local Studio Routes",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-routes.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-111803-6d22ef.json"
         },
         {
-          "doc_id": "project-state-page",
+          "doc_id": "d-20260427-223830-ad1ab0",
           "title": "Project State",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/project-state-page.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260427-223830-ad1ab0.json"
         },
         {
-          "doc_id": "scripts-project-state-report",
+          "doc_id": "d-20260427-223830-e0b422",
           "title": "Project State Report",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-project-state-report.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260427-223830-e0b422.json"
         },
         {
-          "doc_id": "data-flow",
+          "doc_id": "d-20260331-000000-33a9c5",
           "title": "Public Catalogue Data Flow",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/data-flow.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-33a9c5.json"
         },
         {
-          "doc_id": "scripts-publish-media-to-r2",
+          "doc_id": "d-20260508-093841-3e27b1",
           "title": "Publish Media To R2",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-publish-media-to-r2.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260508-093841-3e27b1.json"
         },
         {
-          "doc_id": "scripts-build-catalogue-json",
+          "doc_id": "d-20260418-000000-4ec702",
           "title": "Scoped JSON Catalogue Build",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-build-catalogue-json.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260418-000000-4ec702.json"
         },
         {
-          "doc_id": "sorting-architecture",
+          "doc_id": "d-20260331-000000-f43340",
           "title": "Series Sorting",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/sorting-architecture.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-f43340.json"
         },
         {
-          "doc_id": "scripts-srcset-builder",
+          "doc_id": "d-20260331-000000-0a1f71",
           "title": "Srcset Builder",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-srcset-builder.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260331-000000-0a1f71.json"
         },
         {
-          "doc_id": "config-studio-config-json",
+          "doc_id": "d-20260424-000000-315c1c",
           "title": "Studio Config JSON",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-315c1c.json"
         },
         {
-          "doc_id": "config-studio-data-configs",
+          "doc_id": "d-20260602-234732-8a5aae",
           "title": "Studio Domain Config",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-data-configs.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260602-234732-8a5aae.json"
         },
         {
-          "doc_id": "studio-overview",
+          "doc_id": "d-20260715-084611-ae9636",
           "title": "Studio Overview",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-overview.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-084611-ae9636.json"
         },
         {
-          "doc_id": "studio-config-and-save-flow",
+          "doc_id": "d-20260422-000000-c3135c",
           "title": "Studio Read And Save Flow",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-config-and-save-flow.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260422-000000-c3135c.json"
         },
         {
-          "doc_id": "studio-runtime",
+          "doc_id": "d-20260424-000000-15b6f2",
           "title": "Studio Runtime",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260424-000000-15b6f2.json"
         }
       ]
     },
     {
-      "doc_id": "testing",
+      "doc_id": "d-20260501-174746-efd581",
       "title": "Testing",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/testing.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260501-174746-efd581.json",
       "children": [
         {
-          "doc_id": "smoke-testing",
+          "doc_id": "d-20260501-000000-49b626",
           "title": "Browser Smoke Testing",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/smoke-testing.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260501-000000-49b626.json"
         },
         {
-          "doc_id": "testing-pytest",
+          "doc_id": "d-20260514-135716-c70591",
           "title": "Pytest",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/testing-pytest.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260514-135716-c70591.json"
         },
         {
-          "doc_id": "test-contract-discipline",
+          "doc_id": "d-20260627-212121-7cf7de",
           "title": "Test Contract Discipline",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/test-contract-discipline.json"
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260627-212121-7cf7de.json"
         }
       ]
     },
     {
-      "doc_id": "workspaces",
+      "doc_id": "d-20260712-213026-ee0f22",
       "title": "Workspaces",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/workspaces.json",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260712-213026-ee0f22.json",
       "children": [
         {
-          "doc_id": "workspace-scope-eligibility",
+          "doc_id": "d-20260712-221626-5d13e6",
           "title": "Workspace Scope Eligibility",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/workspace-scope-eligibility.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260712-221626-5d13e6.json",
           "ui_status": "proposed"
         }
       ]
     }
   ],
-  "generated_at": "2026-07-15T08:48:16Z"
+  "generated_at": "2026-07-15T09:32:02Z"
 }
