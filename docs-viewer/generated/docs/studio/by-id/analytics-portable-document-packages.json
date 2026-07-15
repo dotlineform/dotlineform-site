@@ -1,0 +1,9 @@
+{
+  "doc_id": "analytics-portable-document-packages",
+  "title": "Portable Document Packages",
+  "added_date": "2026-07-15",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=analytics-portable-document-packages",
+  "parent_id": "analytics-roadmap",
+  "content_html": "<h1>Portable Document Packages</h1>\n<p>Explore Data Sharing packages that preserve canonical document source and its owned dependencies when rendered-content exchange is insufficient.</p>\n<h2>Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=data-sharing-full-document-package-delivery\">Full Document Export Delivery</a> — current source-faithful, export-only package work.</li>\n</ul>\n<p>Current durable Data Sharing architecture remains authoritative. This feature does not imply that source-faithful packages support return import; any future return path needs its own reviewed validation and apply boundary.</p>\n"
+}

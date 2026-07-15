@@ -2,7 +2,7 @@
   "doc_id": "docs-viewer-embedded-detail-documents",
   "title": "Embedded Detail Documents",
   "added_date": "2026-06-23",
-  "last_updated": "2026-07-14",
+  "last_updated": "2026-07-15",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-embedded-detail-documents",
   "parent_id": "docs-viewer",
   "summary": "Durable source, payload, URL, manifest, lifecycle, and runtime contract for report-hosted detail documents outside the main index.",

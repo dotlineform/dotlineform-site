@@ -14,7 +14,7 @@ Studio, Analytics, Docs Viewer, Data Sharing, and the public Analysis scope are 
 
 The ambition is not only to publish documents or manage a catalogue. It is to create a system in which structured data, human interpretation, AI-assisted development, media, and relationships can be assembled into accessible knowledge collections and repeatedly developed over time.
 
-This document owns that cross-system product vision. Feature requests and architecture documents should link here rather than restating the conceptual model inside technical implementation plans.
+This document owns that cross-system product vision. Roadmap features and architecture documents should link here rather than restating the conceptual model inside technical delivery plans.
 
 ## End State
 
@@ -142,6 +142,6 @@ Each project should remain independently reviewable. The vision explains why the
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Data Sharing](/docs/?scope=studio&doc=data-sharing)
-- [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=site-request-data-sharing-full-document-package)
+- [Data Sharing Full Document Export Package](/docs/?scope=studio&doc=data-sharing-full-document-package-delivery)
 - [Docs Review](/docs/?scope=studio&doc=docs-viewer-review)
 - [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)

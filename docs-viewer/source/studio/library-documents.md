@@ -26,7 +26,7 @@ The report reads the generated Library docs index tree:
 
 - `site/assets/data/docs/scopes/library/index-tree.json`
 
-The report uses `viewer_report_scope: library`, so it reads Library docs even though this request document lives in the Studio docs scope.
+The report uses `viewer_report_scope: library`, so it reads Library docs even though this document lives in the Studio docs scope.
 When local generated-data reads are available, the report can read the generated Library index tree through the Docs Viewer service.
 Otherwise, it reads the static generated JSON asset.
 

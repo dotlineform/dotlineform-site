@@ -5,7 +5,7 @@ added_date: 2026-07-14
 last_updated: 2026-07-14
 ui_status: proposed
 summary: Product concept for optional semantic-reference authoring improvements beyond the current picker.
-parent_id: site-request-docs-viewer-semantic-reference-editor
+parent_id: docs-viewer-semantic-reference-authoring
 viewable: true
 ---
 # Semantic Reference Authoring Concept
@@ -37,15 +37,15 @@ These are separate opportunities, not one v2 deliverable.
 - The builder remains parse/render authority.
 - Reports own stale-target and suspicious-token audits.
 
-High-cardinality tags depend on a settled embedded-detail route. Returned text exchange remains owned by [Shareable Content Blocks](/docs/?scope=studio&doc=site-request-shareable-content-blocks).
+High-cardinality tags depend on a settled embedded-detail route. Returned text exchange remains owned by [Shareable Content Blocks](/docs/?scope=studio&doc=analytics-shareable-content-blocks).
 
 Semantic directives such as inserting fields or related lists are larger than editor assistance. They change registry, resolver, builder, provenance, and rendering behavior and should become a separate feature concept if promoted.
 
 ## Delivery
 
-Small finishable candidates live on the [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap). None is currently scheduled or has a request.
+Small finishable candidates live on the [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap). None is currently scheduled or has a delivery.
 
-Each future request should deliver one authoring improvement without using “v2” as permission to absorb the rest of this list.
+Each future delivery should complete one authoring improvement without using “v2” as permission to absorb the rest of this list.
 
 ## Questions To Resolve When Relevant
 

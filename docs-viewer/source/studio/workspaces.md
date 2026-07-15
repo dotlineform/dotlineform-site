@@ -2,7 +2,7 @@
 doc_id: workspaces
 title: Workspaces
 added_date: 2026-07-12
-last_updated: 2026-07-12
+last_updated: 2026-07-15
 parent_id: ""
 viewable: true
 summary: Entry point for coordinated tool workspaces that combine app modes, panels, controls, commands, settings, previews, and specialised rendering engines.
@@ -29,7 +29,7 @@ A workspace may need to:
 - load specialised frontend modules and CSS only while they are needed
 - produce more than one kind of derived output
 
-The first planned consumer is the [Moments Composition Workspace](/docs/?scope=studio&doc=site-request-moments-composition-workspace).
+The first planned consumer is the [Moments Composition Workspace](/docs/?scope=studio&doc=studio-moments-composition-workspace).
 
 ## Core Boundaries
 
@@ -70,6 +70,6 @@ Do not allow a first implementation to become an implicit permanent contract mer
 
 ## Current Documents
 
-- [Workspace Scope Eligibility](/docs/?scope=studio&doc=site-request-workspace-scope-eligibility) defines the first shared routing and availability task for Analysis semantic tools and Moments composition tools.
-- [Moments Composition Workspace](/docs/?scope=studio&doc=site-request-moments-composition-workspace) summarises the proposed plain-text composition environment, engine model, recipes, previews, settings, commands, and output kinds.
-- [Moments Composition Workspace Roadmap](/docs/?scope=studio&doc=site-request-moments-composition-workspace-roadmap) sequences the work from a basic word-axis editor through multiple engines, data visualisation, and complex generative composition.
+- [Workspace Scope Eligibility](/docs/?scope=studio&doc=workspace-scope-eligibility) defines the first shared routing and availability delivery for Analysis semantic tools and Moments composition tools.
+- [Moments Composition Workspace](/docs/?scope=studio&doc=studio-moments-composition-workspace) routes to the proposed concept, architecture, and first delivery.
+- [Studio Roadmap](/docs/?scope=studio&doc=studio-roadmap) sequences later composition outcomes without making the entire idea one build.

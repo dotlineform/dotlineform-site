@@ -5,7 +5,7 @@ added_date: 2026-07-14
 last_updated: 2026-07-14
 ui_status: proposed
 summary: Proposed extension and ownership boundaries for semantic-reference authoring improvements.
-parent_id: site-request-docs-viewer-semantic-reference-editor
+parent_id: docs-viewer-semantic-reference-authoring
 viewable: true
 ---
 # Semantic Reference Authoring Architecture
@@ -71,4 +71,4 @@ Field insertion, related lists, and other non-link directives need dedicated res
 - Custom labels can drift from canonical titles.
 - Directive actions could turn a narrow registry into an unowned execution framework.
 
-The [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap) owns promotion and sequence. Proposed architecture does not create implementation priority.
+The [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap) owns promotion and sequence. Proposed architecture does not create implementation priority.

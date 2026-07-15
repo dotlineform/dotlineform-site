@@ -32,7 +32,7 @@
         "date_display": "June 2026",
         "added_date": "2026-06-01",
         "last_updated": "2026-06-01",
-        "parent_id": "site-request-rubyless-app-runtimes",
+        "parent_id": "sample-roadmap-feature",
         "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
         "content_url": "/docs-viewer/generated/docs/studio/by-id/contract-fixture.json",
         "content_text_length": 84
@@ -56,7 +56,7 @@
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
         "content_url": "/docs-viewer/generated/docs/studio/by-id/contract-fixture.json",
-        "parent_id": "site-request-rubyless-app-runtimes",
+        "parent_id": "sample-roadmap-feature",
         "ui_status": "done"
       },
       "allowed_doc_entry_keys": [
@@ -78,8 +78,8 @@
         "title": "Contract Fixture",
         "content_url": "/docs-viewer/generated/docs/studio/by-id/contract-fixture.json",
         "added_date": "2026-06-01",
-        "parent_id": "site-request-rubyless-app-runtimes",
-        "parent_title": "Rubyless App Runtimes Request"
+        "parent_id": "sample-roadmap-feature",
+        "parent_title": "Sample Roadmap Feature"
       },
       "allowed_doc_entry_keys": [
         "doc_id",
@@ -109,13 +109,13 @@
         "date_display": "June 2026",
         "added_date": "2026-06-01",
         "last_updated": "2026-06-01",
-        "parent_id": "site-request-rubyless-app-runtimes",
+        "parent_id": "sample-roadmap-feature",
         "viewer_url": "/docs/?scope=studio&doc=contract-fixture",
-        "content_html": "<h1 id=\"contract-fixture\">Contract Fixture</h1>\n<p>Intro with <a href=\"/docs/?scope=studio&doc=site-request-rubyless-app-runtimes\">request link</a> and <code>inline code</code>.</p>\n<ul>\n<li>First item</li>\n</ul>\n<pre><code>literal token [[ref:work:00638]]</code></pre>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n<details><summary>Raw summary</summary><p>Trusted raw body</p></details>\n"
+        "content_html": "<h1 id=\"contract-fixture\">Contract Fixture</h1>\n<p>Intro with <a href=\"/docs/?scope=studio&doc=sample-roadmap-feature\">feature link</a> and <code>inline code</code>.</p>\n<ul>\n<li>First item</li>\n</ul>\n<pre><code>literal token [[ref:work:00638]]</code></pre>\n<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody><tr><td>Alpha</td><td>1</td></tr></tbody></table>\n<details><summary>Raw summary</summary><p>Trusted raw body</p></details>\n"
       },
       "html_semantics_contains": [
         "<h1 id=\"contract-fixture\">Contract Fixture</h1>",
-        "<a href=\"/docs/?scope=studio&doc=site-request-rubyless-app-runtimes\">request link</a>",
+        "<a href=\"/docs/?scope=studio&doc=sample-roadmap-feature\">feature link</a>",
         "<code>inline code</code>",
         "<ul>",
         "<pre><code>literal token [[ref:work:00638]]</code></pre>",
@@ -243,24 +243,23 @@
         "title": "Contract Fixture",
         "href": "/docs/?scope=studio&doc=contract-fixture",
         "last_updated": "2026-06-01",
-        "parent_id": "site-request-rubyless-app-runtimes",
-        "parent_title": "Rubyless App Runtimes Request",
-        "display_meta": "2026-06-01 - Rubyless App Runtimes Request",
+        "parent_id": "sample-roadmap-feature",
+        "parent_title": "Sample Roadmap Feature",
+        "display_meta": "2026-06-01 - Sample Roadmap Feature",
         "search_terms": [
           "contract-fixture",
           "contract",
           "fixture",
-          "rubyless app runtimes request",
-          "rubyless",
-          "app",
-          "runtimes",
-          "request",
+          "sample roadmap feature",
+          "sample",
+          "roadmap",
+          "feature",
           "2026-06-01",
           "2026",
           "06",
           "01"
         ],
-        "search_text": "contract-fixture contract fixture rubyless app runtimes request rubyless app runtimes request 2026-06-01 2026 06 01"
+        "search_text": "contract-fixture contract fixture sample roadmap feature sample roadmap feature 2026-06-01 2026 06 01"
       }
     }
   },

@@ -18,7 +18,7 @@ Implemented reports:
 - [Files Report](/docs/?scope=studio&doc=admin-checks-report-files) — counts and sizes for selected source files.
 - [Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map) — ownership, shared-dependency, boundary, and config-drift evidence.
 
-Future reports remain delivery requests until their producer, registry entry, artifact contract, UI support, and tests are complete.
+Future reports remain roadmap deliveries until their producer, registry entry, artifact contract, UI support, and tests are complete.
 
 ## Targeting Model
 

@@ -1,0 +1,11 @@
+{
+  "doc_id": "docs-viewer-semantic-reference-authoring",
+  "title": "Semantic Reference Authoring",
+  "added_date": "2026-05-27",
+  "last_updated": "2026-07-14",
+  "viewer_url": "/docs/?scope=studio&doc=docs-viewer-semantic-reference-authoring",
+  "parent_id": "docs-viewer-roadmap",
+  "summary": "Feature parent for possible semantic-reference authoring enhancements beyond the shipped editor.",
+  "ui_status": "proposed",
+  "content_html": "<h1>Semantic Reference Authoring</h1>\n<h2>Purpose</h2>\n<p>Group possible authoring improvements beyond the current Semantic References Editor without treating every idea as one v2 delivery.</p>\n<h2>Current Feature</h2>\n<p>The shipped editor, registry, rendering, and audit behavior is documented in:</p>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-semantic-references-editor\">Semantic References Editor</a></li>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-semantic-references-implementation\">Semantic References Implementation</a></li>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-semantic-references\">Semantic References</a></li>\n</ul>\n<p>Those durable documents and the code are the authority for v1.</p>\n<h2>Proposed Feature Documents</h2>\n<ul>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-semantic-reference-authoring-concept\">Concept</a> — possible authoring improvements and product boundaries.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-semantic-reference-authoring-architecture\">Architecture</a> — current extension method, proposed pressure points, and public/write boundaries.</li>\n<li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-roadmap\">Docs Viewer Roadmap</a> — unsequenced finishable candidates.</li>\n</ul>\n<p>No delivery is active. Promote one useful outcome only when it becomes important; do not reopen a permanent “v2 backlog.”</p>\n"
+}

@@ -15,7 +15,7 @@ It helps an author search supported semantic targets and insert syntactically va
 The existing Markdown source editor still owns source loading, dirty state, write/rebuild, and return to rendered document view.
 
 Registry, lookup, builder, and generated artifact internals are documented in [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation).
-Possible authoring enhancements are separated under [Semantic Reference Authoring](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor). None is an active delivery request.
+Possible authoring enhancements are separated under [Semantic Reference Authoring](/docs/?scope=studio&doc=docs-viewer-semantic-reference-authoring). None is an active delivery.
 
 ## Product Shape
 

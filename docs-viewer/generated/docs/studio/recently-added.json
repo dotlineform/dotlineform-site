@@ -19,12 +19,28 @@
       "parent_title": "Admin"
     },
     {
+      "doc_id": "admin-roadmap",
+      "title": "Admin Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-roadmap.json",
+      "added_date": "2026-07-15",
+      "parent_id": "roadmap",
+      "parent_title": "Roadmap"
+    },
+    {
       "doc_id": "analytics-overview",
       "title": "Analytics Overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-overview.json",
       "added_date": "2026-07-15",
       "parent_id": "analytics",
       "parent_title": "Analytics"
+    },
+    {
+      "doc_id": "analytics-roadmap",
+      "title": "Analytics Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-roadmap.json",
+      "added_date": "2026-07-15",
+      "parent_id": "roadmap",
+      "parent_title": "Roadmap"
     },
     {
       "doc_id": "data-sharing-overview",
@@ -35,53 +51,37 @@
       "parent_title": "Data Sharing"
     },
     {
-      "doc_id": "analytics-dimension-exploration",
-      "title": "Dimension Model Exploration",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-dimension-exploration.json",
+      "doc_id": "analytics-llm-integration-architecture",
+      "title": "LLM Integration Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-architecture.json",
       "added_date": "2026-07-15",
-      "parent_id": "analytics",
-      "parent_title": "Analytics"
+      "parent_id": "analytics-llm-integration",
+      "parent_title": "LLM Integration"
     },
     {
-      "doc_id": "ui-search-list-component",
-      "title": "Search List",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-search-list-component.json",
+      "doc_id": "analytics-llm-integration-delivery",
+      "title": "LLM Library Summary Proposals Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-delivery.json",
       "added_date": "2026-07-15",
-      "parent_id": "ui",
-      "parent_title": "Shared UI"
+      "parent_id": "analytics-llm-integration",
+      "parent_title": "LLM Integration"
     },
     {
-      "doc_id": "site-request-search-policy-review",
-      "title": "Search Policy Review",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-search-policy-review.json",
+      "doc_id": "studio-moments-composition-workspace-delivery",
+      "title": "Moments Basic Axis Editor Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-delivery.json",
       "added_date": "2026-07-15",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
+      "parent_id": "studio-moments-composition-workspace",
+      "parent_title": "Moments Composition Workspace"
     },
     {
-      "doc_id": "studio-overview",
-      "title": "Studio Overview",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-overview.json",
+      "doc_id": "studio-moments-composition-workspace-architecture",
+      "title": "Moments Composition Workspace Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-architecture.json",
       "added_date": "2026-07-15",
-      "parent_id": "studio",
-      "parent_title": "Studio"
-    },
-    {
-      "doc_id": "docs-viewer-delivery-roadmap",
-      "title": "Docs Viewer Delivery Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-delivery-roadmap.json",
-      "added_date": "2026-07-14",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-external-asset-lifecycle-ownership",
-      "title": "External Asset Collection Lifecycle Ownership",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-lifecycle-ownership.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-external-asset-collections",
-      "parent_title": "External Asset Collections"
+      "parent_id": "studio-moments-composition-workspace",
+      "parent_title": "Moments Composition Workspace"
     }
   ],
-  "generated_at": "2026-07-15T07:37:10Z"
+  "generated_at": "2026-07-15T08:08:22Z"
 }

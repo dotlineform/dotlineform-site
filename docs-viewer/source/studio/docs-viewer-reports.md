@@ -55,7 +55,7 @@ Public execution also requires a code/config promotion slice:
 - the public route must expose the browser-safe config and generated data roots the report needs
 - the report implementation must avoid local services, management actions, source paths, credentials, and manage-only data
 
-Treat `public` as a design-time requirement or a change request for an existing report until those promotion conditions are satisfied.
+Treat `public` as a design-time requirement or a roadmap delivery for an existing report until those promotion conditions are satisfied.
 If the public route sees a report with `viewer_report_access: public` that has not been promoted, it should render a contained unavailable state rather than importing arbitrary report code.
 
 `manage` is not a supported report access value.

@@ -48,7 +48,7 @@ Consequences:
 - source comments/reference definitions/custom syntax/media tokens may be lost or transformed;
 - returned content is a text-oriented candidate, not proof that the original source dependency set survived.
 
-The separate full-source export request owns any future exact Markdown/assets package and is export-only unless a later request deliberately designs a trusted return path.
+The separate full-source export delivery owns any future exact Markdown/assets package and is export-only unless a later delivery deliberately designs a trusted return path.
 
 ## Return Eligibility
 

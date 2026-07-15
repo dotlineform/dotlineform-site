@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-07-14
+last_updated: 2026-07-15
 summary: Entry point for using, operating, and changing the shared Docs Viewer reader and its local management and review surfaces.
 parent_id: ""
 viewable: true
@@ -50,5 +50,5 @@ Prefer code/config search for exact modules, endpoints, fields, and files. Copyi
 
 ## Plan Docs Viewer Work
 
-- [Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap) — current importance, dependencies, and finishable outcomes outside individual requests.
-- [Change Requests](/docs/?scope=studio&doc=change-requests) — implementation-ready delivery contracts, each limited to one complete outcome.
+- [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap) — current importance, dependencies, features, and finishable outcomes.
+- [Roadmap](/docs/?scope=studio&doc=roadmap) — the shared app-roadmap, feature, concept, architecture, and delivery model.

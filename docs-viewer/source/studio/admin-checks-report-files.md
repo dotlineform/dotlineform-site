@@ -40,6 +40,6 @@ var/admin/checks/<run-id>/files/
 
 ## Interpretation
 
-Line/byte size is a navigation and concentration signal. It does not prove that a file is badly designed or that splitting it is the right change. Review dominant files in their route/workflow context and use dependency/ownership evidence before creating a refactor request.
+Line/byte size is a navigation and concentration signal. It does not prove that a file is badly designed or that splitting it is the right change. Review dominant files in their route/workflow context and use dependency/ownership evidence before promoting a refactor delivery.
 
 The producer and tests are the exact authority for report schema and column names.

@@ -5,7 +5,7 @@ added_date: 2026-07-14
 last_updated: 2026-07-14
 ui_status: proposed
 summary: Product concept for fast manage-mode index selection that remains distinct from the open document.
-parent_id: site-request-docs-viewer-index-multiple-selection
+parent_id: docs-viewer-index-multiple-selection
 viewable: true
 ---
 # Index Multiple Selection Concept
@@ -16,7 +16,7 @@ The manage-mode index currently acts on one document at a time. Reparenting seve
 
 The feature should make selection feel like ordinary desktop tree selection while keeping the open document, selected rows, and action target explicit.
 
-The original drag/drop idea also exposed a wider need: controls in the toolbar, Actions menu, context menu, and selection surface should share a coherent understanding of what an action targets and which capability makes it available. That long-term direction is part of the feature concept even though it should not be implemented as one enormous drag/drop request.
+The original drag/drop idea also exposed a wider need: controls in the toolbar, Actions menu, context menu, and selection surface should share a coherent understanding of what an action targets and which capability makes it available. That long-term direction is part of the feature concept even though it should not be implemented as one enormous drag/drop delivery.
 
 ## Desired Interaction
 
@@ -44,9 +44,9 @@ Keyboard range extension, direct toggle shortcuts, batch delete, and other consu
 
 ## Delivery
 
-The action-target prerequisite is already shipped and has its durable owner. Remaining complete outcomes live on the [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap), not as unfinished phases in this feature parent.
+The action-target prerequisite is already shipped and has its durable owner. Remaining complete outcomes live on the [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap), not as unfinished phases in this feature parent.
 
-When pointer selection becomes current work, its request should deliver the complete visible selection foundation without also changing drag/drop or backend mutation contracts. Group movement is a separate delivery after selection is proven.
+When pointer selection becomes current work, its delivery should provide the complete visible selection foundation without also changing drag/drop or backend mutation contracts. Group movement is a separate delivery after selection is proven.
 
 ## Questions To Resolve When Relevant
 
@@ -55,4 +55,4 @@ When pointer selection becomes current work, its request should deliver the comp
 - Should selection survive an index reload after unrelated changes?
 - Which concrete action, if any, should follow group movement as the next multi-document consumer?
 
-These questions belong to the roadmap outcome they can change. They do not keep a broad request open.
+These questions belong to the roadmap outcome they can change. They do not keep a broad feature open.

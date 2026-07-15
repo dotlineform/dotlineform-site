@@ -1,0 +1,49 @@
+---
+doc_id: studio-moments-composition-workspace-delivery
+title: Moments Basic Axis Editor Delivery
+added_date: 2026-07-15
+last_updated: 2026-07-15
+ui_status: proposed
+parent_id: studio-moments-composition-workspace
+viewable: true
+---
+# Moments Basic Axis Editor Delivery
+
+## Outcome
+
+A Moments author can choose an axis word in one source line, request measured split suggestions for a selected block, review the resulting source change, and apply it as one undoable editor action.
+
+This proves direct composition assistance without first building the multi-engine workspace.
+
+## Why This Delivery
+
+The current CSS proof establishes the visual effect but materialises algorithm-specific spans by hand. A small source-editor workflow tests whether the idea is useful and exposes the minimum reusable command, scope-eligibility, and source-range boundaries.
+
+## In Scope
+
+- complete-source and replace-range access through the active source-editor adapter;
+- select a word and make it the first word after the axis;
+- measured-width suggestions for a selected or enclosing block;
+- preservation of blank-line groups;
+- correction of an existing axis choice;
+- one undoable apply action;
+- one command used by both its control and keyboard binding;
+- Moments-only manage-mode eligibility;
+- focused transformation, editor, eligibility, and interaction evidence.
+
+## Not In Scope
+
+- the split editor/preview workspace;
+- multiple engines or an engine registry;
+- durable multi-engine recipes;
+- public runtime rendering changes;
+- generated image output or asset persistence;
+- a general command or layout refactor beyond what this outcome proves.
+
+## Decision Gate
+
+Before the editor permanently writes algorithm-specific markup, choose the smallest recipe or source representation that preserves canonical text and can be revised by selecting a different axis word.
+
+## Durable Owners
+
+Shipped source-editor, command, control, and mode boundaries move into the relevant current Docs Viewer architecture documents. User-visible Moments behavior moves into the durable Moments documentation. This delivery retains only unresolved follow-up direction.

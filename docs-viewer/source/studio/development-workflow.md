@@ -17,7 +17,7 @@ Use this page to move work from an idea to one complete, verifiable delivery. Us
 1. Name the user/maintenance outcome and the current code/config owner.
 2. Decide whether this is a small direct change, concept exploration, or roadmap delivery.
 3. Resolve decisions that would fundamentally change the outcome.
-4. Split the work until one request can finish completely.
+4. Split the work until one delivery can finish completely.
 5. Implement through current owners; do not create transitional aliases as an end state.
 6. Run the smallest evidence that proves the changed contract.
 7. Update one durable documentation owner when its behavior/navigation changed.
@@ -30,28 +30,28 @@ broad need or discussion
   -> concept (what/why/open questions)
   -> proposed architecture (structure/ownership/weak spots)
   -> roadmap (priority and finishable sequence)
-  -> one delivery request per complete outcome
+  -> one delivery per complete outcome
   -> code + focused evidence
   -> durable owner updated
 ```
 
 ### Concept
 
-Use a concept document when useful questions remain open. It may explain the long-term aim without pretending the entire aim is one request.
+Use a concept document when useful questions remain open. It may explain the long-term aim without pretending the entire aim is one delivery.
 
 ### Feature Parent
 
-A substantial feature may have one short parent under [Change Requests](/docs/?scope=studio&doc=change-requests). It routes between concept, proposed architecture, roadmap, and active delivery documents. It does not repeat them.
+A substantial feature may have one short parent under its [app roadmap](/docs/?scope=studio&doc=roadmap). It routes between concept, proposed architecture, and delivery documents. It does not repeat them.
 
 ### Roadmap
 
-The owning roadmap states priority, sequence, dependencies, current status, and the active delivery request. “This must precede that” belongs here, not as a note buried at the top of one request.
+The owning roadmap states priority, sequence, dependencies, current status, and the active delivery. “This must precede that” belongs here, not as a note buried at the top of one feature or delivery.
 
 Every roadmap row should be independently useful and finishable. Split a row before work starts if “partly complete” would be an acceptable stopping state.
 
-### Delivery Request
+### Delivery
 
-One request owns one complete result and one documentation boundary. It may cross modules, but every change must serve the same verifiable outcome. Use a child task tracker only when coordination inside that bounded result genuinely needs one.
+One delivery owns one complete result and one documentation boundary. It may cross modules, but every change must serve the same verifiable outcome. Use a child task tracker only when coordination inside that bounded result genuinely needs one.
 
 Small fixes, documentation cleanup, and mechanical maintenance normally need none of this machinery.
 
@@ -66,7 +66,7 @@ Before editing:
 - prefer existing primitives/providers/services over route-local duplication;
 - investigate first when deleting config or compatibility code; history explains but does not prove current use.
 
-If implementation reveals another useful outcome, add/split it on the roadmap. Do not silently widen the active request.
+If implementation reveals another useful outcome, add or split it on the roadmap. Do not silently widen the active delivery.
 
 ## Verify Proportionally
 
@@ -93,7 +93,7 @@ Update a durable doc only when its current workflow, architecture, methodology, 
 - Code/config/tests remain exact authority.
 - Overview docs map capabilities and owners; they do not list every module/field/route.
 - Focused contract docs may contain exact inventories when the inventory is the point.
-- A change request records delivery decisions, not permanent implementation detail.
+- A delivery document records outcome decisions, not permanent implementation detail.
 - Avoid generic Related lists; link only to an authority, prerequisite, or next action.
 - Do not update several docs “in case” some wording becomes useful later.
 
@@ -109,4 +109,4 @@ Report:
 - known gaps/risks;
 - any separate roadmap outcome created.
 
-Mark a delivery request done only when its whole outcome works, durable docs describe shipped behavior, and remaining work is genuinely separate. Never hide unfinished phases inside a completed request.
+Mark a delivery done only when its whole outcome works, durable docs describe shipped behavior, and remaining work is genuinely separate. Never hide unfinished phases inside a completed delivery.

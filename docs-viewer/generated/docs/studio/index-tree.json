@@ -107,12 +107,6 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-overview.json"
         },
         {
-          "doc_id": "analytics-dimension-exploration",
-          "title": "Dimension Model Exploration",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-dimension-exploration.json",
-          "ui_status": "paused"
-        },
-        {
           "doc_id": "series-tags",
           "title": "Series Tags",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/series-tags.json"
@@ -189,173 +183,6 @@
           "doc_id": "source-tree-ownership",
           "title": "Source Tree Ownership",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/source-tree-ownership.json"
-        }
-      ]
-    },
-    {
-      "doc_id": "change-requests",
-      "title": "Change Requests",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/change-requests.json",
-      "children": [
-        {
-          "doc_id": "site-request-admin-checks-operational-reports",
-          "title": "Admin Checks Operational Reports",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-operational-reports.json",
-          "ui_status": "deferred",
-          "children": [
-            {
-              "doc_id": "site-request-report-generated-payloads",
-              "title": "Generated Payloads Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-generated-payloads.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-runtime-checks",
-              "title": "Runtime Checks Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-runtime-checks.json",
-              "ui_status": "draft"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-admin-checks-reports",
-          "title": "Admin Checks Reports",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-admin-checks-reports.json",
-          "ui_status": "in-progress",
-          "children": [
-            {
-              "doc_id": "site-request-report-code-surface",
-              "title": "Code Surface Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-code-surface.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-git-history",
-              "title": "Git History Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-git-history.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-imports",
-              "title": "Imports Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-imports.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-dependencies",
-              "title": "Report Dependencies",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-dependencies.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-static-searches",
-              "title": "Static Searches Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-static-searches.json",
-              "ui_status": "draft"
-            },
-            {
-              "doc_id": "site-request-report-tests",
-              "title": "Tests Report",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-report-tests.json",
-              "ui_status": "draft"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-data-sharing-full-document-package",
-          "title": "Data Sharing Full Document Export Package",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-data-sharing-full-document-package.json",
-          "ui_status": "in-progress"
-        },
-        {
-          "doc_id": "site-request-docs-viewer-external-asset-collections",
-          "title": "External Asset Collections",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-collections.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "site-request-docs-viewer-external-asset-lifecycle-ownership",
-              "title": "External Asset Collection Lifecycle Ownership",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-lifecycle-ownership.json",
-              "ui_status": "planned"
-            },
-            {
-              "doc_id": "docs-viewer-external-asset-collections-architecture",
-              "title": "External Asset Collections Architecture",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-architecture.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "docs-viewer-external-asset-collections-concept",
-              "title": "External Asset Collections Concept",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-concept.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-docs-viewer-index-multiple-selection",
-          "title": "Index Multiple Selection",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "docs-viewer-index-multiple-selection-architecture",
-              "title": "Index Multiple Selection Architecture",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-architecture.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "docs-viewer-index-multiple-selection-concept",
-              "title": "Index Multiple Selection Concept",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-concept.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-llm-semantic-enrichment",
-          "title": "LLM Semantic Enrichment",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-llm-semantic-enrichment.json",
-          "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-search-policy-review",
-          "title": "Search Policy Review",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-search-policy-review.json",
-          "ui_status": "paused"
-        },
-        {
-          "doc_id": "site-request-docs-viewer-semantic-reference-editor",
-          "title": "Semantic Reference Authoring",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-semantic-reference-editor.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "docs-viewer-semantic-reference-authoring-architecture",
-              "title": "Semantic Reference Authoring Architecture",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-architecture.json",
-              "ui_status": "proposed"
-            },
-            {
-              "doc_id": "docs-viewer-semantic-reference-authoring-concept",
-              "title": "Semantic Reference Authoring Concept",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-concept.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-shareable-content-blocks",
-          "title": "Shareable Content Blocks Request",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-shareable-content-blocks.json",
-          "ui_status": "draft"
-        },
-        {
-          "doc_id": "site-request-source-documentation-and-linting",
-          "title": "Source Documentation and Linting",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-source-documentation-and-linting.json",
-          "ui_status": "draft"
         }
       ]
     },
@@ -543,12 +370,6 @@
           "doc_id": "scripts-docs-builder",
           "title": "Docs Viewer Builder",
           "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-builder.json"
-        },
-        {
-          "doc_id": "docs-viewer-delivery-roadmap",
-          "title": "Docs Viewer Delivery Roadmap",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-delivery-roadmap.json",
-          "ui_status": "in-progress"
         },
         {
           "doc_id": "docs-viewer-public-route-shell-template",
@@ -837,6 +658,293 @@
       ]
     },
     {
+      "doc_id": "roadmap",
+      "title": "Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/roadmap.json",
+      "children": [
+        {
+          "doc_id": "admin-roadmap",
+          "title": "Admin Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-roadmap.json",
+          "children": [
+            {
+              "doc_id": "admin-checks-operational-reports",
+              "title": "Admin Checks Operational Reports",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-operational-reports.json",
+              "ui_status": "deferred",
+              "children": [
+                {
+                  "doc_id": "admin-checks-generated-payloads-delivery",
+                  "title": "Generated Payloads Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-generated-payloads-delivery.json",
+                  "ui_status": "draft"
+                },
+                {
+                  "doc_id": "admin-checks-runtime-checks-delivery",
+                  "title": "Runtime Checks Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-runtime-checks-delivery.json",
+                  "ui_status": "draft"
+                }
+              ]
+            },
+            {
+              "doc_id": "admin-checks-responsibility-reports",
+              "title": "Admin Checks Responsibility Reports",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-responsibility-reports.json",
+              "ui_status": "in-progress",
+              "children": [
+                {
+                  "doc_id": "admin-checks-code-surface-delivery",
+                  "title": "Code Surface Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-code-surface-delivery.json",
+                  "ui_status": "draft"
+                },
+                {
+                  "doc_id": "admin-checks-git-history-delivery",
+                  "title": "Git History Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-git-history-delivery.json",
+                  "ui_status": "draft"
+                },
+                {
+                  "doc_id": "admin-checks-imports-delivery",
+                  "title": "Imports Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-imports-delivery.json",
+                  "ui_status": "draft"
+                },
+                {
+                  "doc_id": "admin-checks-dependencies-delivery",
+                  "title": "Report Dependencies",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-dependencies-delivery.json",
+                  "ui_status": "draft"
+                },
+                {
+                  "doc_id": "admin-checks-static-searches-delivery",
+                  "title": "Static Searches Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-static-searches-delivery.json",
+                  "ui_status": "draft"
+                },
+                {
+                  "doc_id": "admin-checks-tests-delivery",
+                  "title": "Tests Report",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-checks-tests-delivery.json",
+                  "ui_status": "draft"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "doc_id": "analytics-roadmap",
+          "title": "Analytics Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-roadmap.json",
+          "children": [
+            {
+              "doc_id": "analytics-llm-integration",
+              "title": "LLM Integration",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration.json",
+              "ui_status": "paused",
+              "children": [
+                {
+                  "doc_id": "analytics-llm-integration-architecture",
+                  "title": "LLM Integration Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-architecture.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "analytics-llm-integration-concept",
+                  "title": "LLM Integration Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-concept.json",
+                  "ui_status": "paused"
+                },
+                {
+                  "doc_id": "analytics-llm-integration-delivery",
+                  "title": "LLM Library Summary Proposals Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-delivery.json",
+                  "ui_status": "paused"
+                }
+              ]
+            },
+            {
+              "doc_id": "analytics-portable-document-packages",
+              "title": "Portable Document Packages",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-portable-document-packages.json",
+              "children": [
+                {
+                  "doc_id": "data-sharing-full-document-package-delivery",
+                  "title": "Full Document Export Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-full-document-package-delivery.json",
+                  "ui_status": "in-progress"
+                }
+              ]
+            },
+            {
+              "doc_id": "analytics-shareable-content-blocks",
+              "title": "Shareable Content Blocks",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-shareable-content-blocks.json",
+              "ui_status": "draft"
+            },
+            {
+              "doc_id": "analytics-tag-dimensions",
+              "title": "Tag Dimensions",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions.json",
+              "ui_status": "paused",
+              "children": [
+                {
+                  "doc_id": "analytics-tag-dimensions-delivery",
+                  "title": "Small Tag Dimension Set Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions-delivery.json",
+                  "ui_status": "paused"
+                },
+                {
+                  "doc_id": "analytics-tag-dimensions-architecture",
+                  "title": "Tag Dimensions Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions-architecture.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "analytics-tag-dimensions-concept",
+                  "title": "Tag Dimensions Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-tag-dimensions-concept.json",
+                  "ui_status": "paused"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "doc_id": "docs-viewer-roadmap",
+          "title": "Docs Viewer Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-roadmap.json",
+          "ui_status": "in-progress",
+          "children": [
+            {
+              "doc_id": "docs-viewer-external-asset-collections",
+              "title": "External Asset Collections",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "docs-viewer-external-asset-collections-architecture",
+                  "title": "External Asset Collections Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-architecture.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "docs-viewer-external-asset-collections-concept",
+                  "title": "External Asset Collections Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-concept.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "docs-viewer-external-asset-lifecycle-delivery",
+                  "title": "External Asset Lifecycle Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-lifecycle-delivery.json",
+                  "ui_status": "planned"
+                }
+              ]
+            },
+            {
+              "doc_id": "docs-viewer-index-multiple-selection",
+              "title": "Index Multiple Selection",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "docs-viewer-index-multiple-selection-architecture",
+                  "title": "Index Multiple Selection Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-architecture.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "docs-viewer-index-multiple-selection-concept",
+                  "title": "Index Multiple Selection Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-concept.json",
+                  "ui_status": "proposed"
+                }
+              ]
+            },
+            {
+              "doc_id": "docs-viewer-semantic-reference-authoring",
+              "title": "Semantic Reference Authoring",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "docs-viewer-semantic-reference-authoring-architecture",
+                  "title": "Semantic Reference Authoring Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-architecture.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "docs-viewer-semantic-reference-authoring-concept",
+                  "title": "Semantic Reference Authoring Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-concept.json",
+                  "ui_status": "proposed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "doc_id": "repository-roadmap",
+          "title": "Repository Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-roadmap.json",
+          "children": [
+            {
+              "doc_id": "repository-maintenance",
+              "title": "Repository Maintenance",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-maintenance.json"
+            },
+            {
+              "doc_id": "search-mechanics-review",
+              "title": "Search Mechanics Review",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/search-mechanics-review.json",
+              "ui_status": "paused"
+            },
+            {
+              "doc_id": "repository-source-documentation-and-linting",
+              "title": "Source Documentation and Linting",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-source-documentation-and-linting.json",
+              "ui_status": "draft"
+            }
+          ]
+        },
+        {
+          "doc_id": "studio-roadmap",
+          "title": "Studio Roadmap",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-roadmap.json",
+          "children": [
+            {
+              "doc_id": "studio-moments-composition-workspace",
+              "title": "Moments Composition Workspace",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "studio-moments-composition-workspace-delivery",
+                  "title": "Moments Basic Axis Editor Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-delivery.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "studio-moments-composition-workspace-architecture",
+                  "title": "Moments Composition Workspace Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-architecture.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "studio-moments-composition-workspace-concept",
+                  "title": "Moments Composition Workspace Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-concept.json",
+                  "ui_status": "proposed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "doc_id": "search",
       "title": "Search",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/search.json",
@@ -1094,27 +1202,13 @@
       "content_url": "/docs-viewer/generated/docs/studio/by-id/workspaces.json",
       "children": [
         {
-          "doc_id": "site-request-moments-composition-workspace",
-          "title": "Moments Composition Workspace",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-moments-composition-workspace.json",
-          "ui_status": "proposed",
-          "children": [
-            {
-              "doc_id": "site-request-moments-composition-workspace-roadmap",
-              "title": "Moments Composition Workspace Roadmap",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-moments-composition-workspace-roadmap.json",
-              "ui_status": "proposed"
-            }
-          ]
-        },
-        {
-          "doc_id": "site-request-workspace-scope-eligibility",
+          "doc_id": "workspace-scope-eligibility",
           "title": "Workspace Scope Eligibility",
-          "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-workspace-scope-eligibility.json",
+          "content_url": "/docs-viewer/generated/docs/studio/by-id/workspace-scope-eligibility.json",
           "ui_status": "proposed"
         }
       ]
     }
   ],
-  "generated_at": "2026-07-15T07:37:10Z"
+  "generated_at": "2026-07-15T08:08:22Z"
 }

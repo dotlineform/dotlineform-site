@@ -12,7 +12,7 @@ viewable: true
 
 Risk review chooses a focused improvement that reduces likely breakage, drift, repair cost, or strategic blockage. It is not a permanent scorecard and does not justify speculative refactoring.
 
-Current evidence should come from code/config inspection, focused runtime checks, Admin Checks reports, audits, tests, and measured workflow behavior. The result belongs in a finishable change request or concrete maintenance action.
+Current evidence should come from code/config inspection, focused runtime checks, Admin Checks reports, audits, tests, and measured workflow behavior. The result belongs in a finishable delivery or concrete maintenance action.
 
 ## Review Units
 
@@ -74,4 +74,4 @@ A useful review ends with:
 3. verification that matches the risk;
 4. durable architecture/workflow documentation only if the stable boundary changed.
 
-Do not maintain empty per-app risk inventory pages. Use [Admin Checks](/docs/?scope=studio&doc=admin-checks) for repeatable evidence and change requests for current action.
+Do not maintain empty per-app risk inventory pages. Use [Admin Checks](/docs/?scope=studio&doc=admin-checks) for repeatable evidence and bounded deliveries for current action.

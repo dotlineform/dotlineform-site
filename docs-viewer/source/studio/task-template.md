@@ -2,7 +2,7 @@
 doc_id: task-template
 title: Task Template
 added_date: "2026-06-04 20:59"
-last_updated: 2026-07-14
+last_updated: 2026-07-15
 ui_status: planned
 parent_id: dev-home
 ---
@@ -10,7 +10,7 @@ parent_id: dev-home
 
 This is the specification for task [#] in [link to tasks tracker document].
 
-Use a child task note only for an exceptional handoff inside one bounded request. If this task has an independently useful outcome or separate priority, promote it to the roadmap and give it its own request instead.
+Use a child task note only for an exceptional handoff inside one bounded delivery. If this task has an independently useful outcome or separate priority, promote it to the roadmap and give it its own delivery instead.
 
 Status: `planned` | `in progress` | `done` | `deferred`
 
@@ -28,7 +28,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
 
 ## Deliverables
 
-[update the request's named durable documentation owner; create another durable document only when it has a genuinely separate subject]
+[update the delivery's named durable documentation owner; create another durable document only when it has a genuinely separate subject]
 
 - state the expected deliverables:
     - changed or new functionality
@@ -37,7 +37,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
 
 ## Implementation and policy guidance
 
-- explain the key drivers from the parent request specification that are relevant to this task:
+- explain the key drivers from the parent delivery specification that are relevant to this task:
     - expected design
     - how it should be implemented
     - what policies it must adhere to
@@ -56,7 +56,7 @@ Status: `planned` | `in progress` | `done` | `deferred`
 
 [to be completed during the task]
 
-- keep only work required to complete the current request here
+- keep only work required to complete the current delivery here
 - move independently finishable follow-on outcomes to the roadmap
 
 ## task close

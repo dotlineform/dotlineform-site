@@ -22,7 +22,7 @@ viewable: true
 
 - [Development Workflow](/docs/?scope=studio&doc=development-workflow) — concept, architecture, roadmap, delivery, verification, documentation, closeout.
 - [Development Checklist](/docs/?scope=studio&doc=development-checklist) — cross-cutting implementation guardrails.
-- [Change Requests](/docs/?scope=studio&doc=change-requests) — feature parents and bounded active deliveries.
+- [Roadmap](/docs/?scope=studio&doc=roadmap) — app roadmaps, feature direction, and bounded deliveries.
 - [Testing](/docs/?scope=studio&doc=testing) and [Run Checks](/docs/?scope=studio&doc=scripts-run-checks) — select evidence and profiles.
 
 ## Structure And Environment

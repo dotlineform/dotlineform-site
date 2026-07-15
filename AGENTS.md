@@ -3,7 +3,7 @@
 - Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
 - For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
 - Use `docs-viewer/source/studio/development-checklist.md` as the project implementation checklist. Keep durable repo guardrails there.
-- Use `docs-viewer/source/studio/development-workflow.md` when lifecycle decisions, change requests, task trackers, or closeout state need more context.
+- Use `docs-viewer/source/studio/development-workflow.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
 - If you find compatibility layers during new feature development, report and fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.

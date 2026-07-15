@@ -28,7 +28,7 @@ Analytics hosts the browser and HTTP boundary for [Data Sharing](/docs/?scope=st
 
 ## Paused Exploration
 
-[Dimension Model Exploration](/docs/?scope=studio&doc=analytics-dimension-exploration) records the useful conclusions from the unimplemented dimension/scoring discussion. It is context, not a current runtime contract or active delivery plan.
+[Tag Dimensions](/docs/?scope=studio&doc=analytics-tag-dimensions) separates the unimplemented dimension/scoring concept, proposed architecture, and a possible first delivery. None is a current runtime contract.
 
 ## Run
 

@@ -38,13 +38,13 @@ def test_watcher_imports_source_model_helpers_directly() -> None:
 def test_watcher_accumulates_changed_files_during_debounce() -> None:
     module = load_docs_live_rebuild_watcher_module()
 
-    assert module.merge_changed_filenames(["new-request.md"], ["change-requests.md"]) == [
-        "new-request.md",
-        "change-requests.md",
+    assert module.merge_changed_filenames(["new-doc.md"], ["roadmap.md"]) == [
+        "new-doc.md",
+        "roadmap.md",
     ]
-    assert module.merge_changed_filenames(["new-request.md"], ["new-request.md", "change-requests.md"]) == [
-        "new-request.md",
-        "change-requests.md",
+    assert module.merge_changed_filenames(["new-doc.md"], ["new-doc.md", "roadmap.md"]) == [
+        "new-doc.md",
+        "roadmap.md",
     ]
 
 

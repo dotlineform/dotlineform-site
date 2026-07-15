@@ -5,7 +5,7 @@ added_date: 2026-07-14
 last_updated: 2026-07-14
 ui_status: proposed
 summary: Product concept for a local-only inventory of user-owned project files that stay outside the Docs Viewer document tree.
-parent_id: site-request-docs-viewer-external-asset-collections
+parent_id: docs-viewer-external-asset-collections
 viewable: true
 ---
 # External Asset Collections Concept
@@ -42,9 +42,9 @@ The [Architecture](/docs/?scope=studio&doc=docs-viewer-external-asset-collection
 
 ## Delivery
 
-The ordered, finishable outcomes live in the [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap). The [feature parent](/docs/?scope=studio&doc=site-request-docs-viewer-external-asset-collections) groups this concept, its architecture, and promoted requests. This concept does not own implementation status.
+The ordered, finishable outcomes live in the [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap). The [feature parent](/docs/?scope=studio&doc=docs-viewer-external-asset-collections) groups this concept, its architecture, and promoted deliveries. This concept does not own implementation status.
 
-Only the first ready outcome has a request. Later requests should be created after the preceding delivery has exposed the real boundary, not copied out of a speculative multi-phase plan in advance.
+Only the first ready outcome has a delivery document. Later deliveries should be added after the preceding outcome has exposed the real boundary, not copied out of a speculative multi-phase plan in advance.
 
 The first user-visible inventory delivery should establish one durable `External Asset Collections` feature document. It will own shipped configuration, workflow, execution path, extension method, security boundary, and known weak spots. This concept can then retain only genuinely unresolved future capability or be retired.
 

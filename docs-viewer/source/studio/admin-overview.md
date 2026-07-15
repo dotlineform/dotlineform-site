@@ -67,7 +67,7 @@ Activity is written by domain services through the shared activity contract and 
 - `admin_app_config.py` projects the route registry into both `app.routes` and runtime `views`, creating two shapes for the same route data.
 - The checks target map is hand-maintained policy and already contains inventory-only paths for retired surfaces; the target-map audit is essential, and an inventory row is not proof of an active route.
 - Checks, audits, Activity, and Testing have related but separate artifact/result shapes rather than one normalized operational-result model.
-- The risk method is documentation guidance, not a live Admin risk dashboard. Current action should live in a change request or checks run, not an empty per-app inventory page.
+- The risk method is documentation guidance, not a live Admin risk dashboard. Current action should live in a bounded delivery or checks run, not an empty per-app inventory page.
 
 ## Where To Look First
 

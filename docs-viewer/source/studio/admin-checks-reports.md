@@ -23,4 +23,4 @@ The report registry in `admin-checks-reports.json` is the exact inventory.
 
 Avoid wide exhaustive Markdown tables. If a report cannot state what decision its Markdown helps make, it is not ready to become an implemented report.
 
-Conceptual report ideas and sequencing belong under [Admin Checks Reports request](/docs/?scope=studio&doc=site-request-admin-checks-reports) until delivered.
+Conceptual report ideas and sequencing belong under [Admin Checks Responsibility Reports](/docs/?scope=studio&doc=admin-checks-responsibility-reports) until delivered.

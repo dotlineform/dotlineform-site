@@ -30,4 +30,4 @@ Current semantic-reference docs:
 
 - [Semantic References Implementation](/docs/?scope=studio&doc=docs-viewer-semantic-references-implementation) documents registry, lookup, builder, generated artifacts, browser helpers, and report inputs.
 - [Semantic References Editor](/docs/?scope=studio&doc=docs-viewer-semantic-references-editor) documents the manage-mode source-editor picker and token insertion workflow.
-- [Semantic Reference Authoring](/docs/?scope=studio&doc=site-request-docs-viewer-semantic-reference-editor) groups unsequenced enhancement concepts outside the current feature docs.
+- [Semantic Reference Authoring](/docs/?scope=studio&doc=docs-viewer-semantic-reference-authoring) groups unsequenced enhancement concepts outside the current feature docs.

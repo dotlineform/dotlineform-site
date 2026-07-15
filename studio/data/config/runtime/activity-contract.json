@@ -2,8 +2,8 @@
   "schema": "activity_contract_v1",
   "status": "v1_initial_contract",
   "last_updated": "2026-05-31",
-  "source_doc": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
-  "inventory_doc": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
+  "source_doc": "/docs/?scope=studio&doc=config-studio-data-configs",
+  "inventory_doc": "/docs/?scope=studio&doc=activity",
   "description": "Registry for Studio user actions and the script-purpose rows that may appear in the unified activity log.",
   "pages": {
     "catalogue-work": {

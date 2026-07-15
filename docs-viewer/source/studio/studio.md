@@ -51,4 +51,5 @@ Use code/config search for exact fields, routes, endpoints, or modules. Copying 
 
 ## Plan Studio Work
 
-- [Change Requests](/docs/?scope=studio&doc=change-requests) — feature parents and finishable delivery requests.
+- [Studio Roadmap](/docs/?scope=studio&doc=studio-roadmap) — current features and finishable deliveries.
+- [Roadmap](/docs/?scope=studio&doc=roadmap) — the shared app-roadmap, feature, concept, architecture, and delivery model.

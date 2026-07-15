@@ -5,7 +5,7 @@ added_date: 2026-07-14
 last_updated: 2026-07-14
 ui_status: proposed
 summary: Proposed ownership, execution, extension, and safety boundaries for External Asset Collections.
-parent_id: site-request-docs-viewer-external-asset-collections
+parent_id: docs-viewer-external-asset-collections
 viewable: true
 ---
 # External Asset Collections Architecture
@@ -82,7 +82,7 @@ Filesystem inventory is runtime data, not another registry. Do not add a plugin,
 - The existing `/docs/media/` contract is flat and classed as `img|files`.
 - Project State has a proven metadata traversal, but its walker is mixed with catalogue-specific filtering and cannot be reused directly.
 
-These are inspection starting points, not an exhaustive implementation list. A delivery request should update only the owners required for its outcome.
+These are inspection starting points, not an exhaustive implementation list. A delivery should update only the owners required for its outcome.
 
 ## Known Weak Spots
 
@@ -93,4 +93,4 @@ These are inspection starting points, not an exhaustive implementation list. A d
 
 ## Delivery Boundary
 
-The [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap) owns sequence. Each promoted request must deliver one complete improvement to this architecture and transfer shipped behavior to the named durable owner.
+The [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap) owns sequence. Each promoted delivery must complete one improvement to this architecture and transfer shipped behavior to the named durable owner.

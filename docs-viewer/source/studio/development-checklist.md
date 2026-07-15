@@ -103,6 +103,6 @@ viewable: true
 
 - [ ] Update one durable owner when behavior/architecture/methodology/extension/gaps changed.
 - [ ] Do not mirror exhaustive code/config inventories into overview docs or add generic Related lists.
-- [ ] Update request/roadmap status only when its outcome/sequence actually changed.
+- [ ] Update delivery/roadmap status only when its outcome/sequence actually changed.
 - [ ] Report outcome, changed owners, checks/results, generated follow-through, risks, and separate next outcomes.
-- [ ] Close only a complete outcome; reshape the roadmap rather than leaving a half-finished request.
+- [ ] Close only a complete outcome; reshape the roadmap rather than leaving a half-finished delivery.

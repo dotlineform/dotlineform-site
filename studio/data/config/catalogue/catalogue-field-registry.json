@@ -2,8 +2,8 @@
   "schema": "catalogue_field_registry_v1",
   "status": "task_2_initial_registry",
   "last_updated": "2026-05-02",
-  "source_doc": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
-  "inventory_doc": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
+  "source_doc": "/docs/?scope=studio&doc=data-models-catalogue-source",
+  "inventory_doc": "/docs/?scope=studio&doc=catalogue-field-registry-review",
   "description": "Field-to-artifact dependency registry for catalogue source edits. Task 2 records current selected behavior and target behavior; later tasks wire the target rules into build planning.",
   "artifact_families": {
     "source-json": "Canonical Studio catalogue source JSON.",

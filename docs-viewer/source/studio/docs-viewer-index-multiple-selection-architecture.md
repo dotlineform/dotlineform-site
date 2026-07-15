@@ -5,7 +5,7 @@ added_date: 2026-07-14
 last_updated: 2026-07-14
 ui_status: proposed
 summary: Proposed manage-only selection, action-target, drag/drop, and group-mutation boundaries.
-parent_id: site-request-docs-viewer-index-multiple-selection
+parent_id: docs-viewer-index-multiple-selection
 viewable: true
 ---
 # Index Multiple Selection Architecture
@@ -27,7 +27,7 @@ Current runtime still supplies a one-document selection context, so this foundat
 
 ## Long-Term Capability Direction
 
-The drag/drop request exposed a Docs Viewer-wide concern larger than selection: an operation may be placed by the view registry, targeted by action definitions, enabled by route features, and authorized by live backend capabilities.
+The drag/drop discussion exposed a Docs Viewer-wide concern larger than selection: an operation may be placed by the view registry, targeted by action definitions, enabled by route features, and authorized by live backend capabilities.
 
 The long-term aim is a coherent model across toolbar, Actions-menu, context-menu, and selection consumers, with each decision still owned in the correct layer:
 
@@ -37,7 +37,7 @@ The long-term aim is a coherent model across toolbar, Actions-menu, context-menu
 - live backend capabilities state real service authority
 - focused controllers own workflow and state
 
-That may justify further registry or diagnostic work when another concrete consumer proves the need. It is not a reason to fold a whole-application capability refactor into the pointer-selection or group-move request.
+That may justify further registry or diagnostic work when another concrete consumer proves the need. It is not a reason to fold a whole-application capability refactor into the pointer-selection or group-move delivery.
 
 ## Proposed Selection State
 
@@ -103,4 +103,4 @@ Do not broaden an action to `all` merely because selection exists. Each multi-do
 - Parent-plus-descendant moves can flatten a subtree if effective roots are not normalized consistently.
 - Duplicate targeting rules across toolbar, Actions-menu, and context-menu renderers would make identical actions disagree.
 
-The [Docs Viewer Delivery Roadmap](/docs/?scope=studio&doc=docs-viewer-delivery-roadmap) owns delivery order. This proposed architecture is not an implementation checklist.
+The [Docs Viewer Roadmap](/docs/?scope=studio&doc=docs-viewer-roadmap) owns delivery order. This proposed architecture is not an implementation checklist.

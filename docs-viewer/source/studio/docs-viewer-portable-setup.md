@@ -67,4 +67,4 @@ Only then should a fresh code-derived manifest or installer be produced. A stati
 - public snapshot boundary: [Public Scopes](/docs/?scope=studio&doc=docs-viewer-public-scopes)
 - Python requirements: [Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies)
 
-If work resumes, create a focused change request with one durable portability owner. Until then, this snapshot has no documentation follow-through obligation.
+If work resumes, add one focused delivery with one durable portability owner. Until then, this snapshot has no documentation follow-through obligation.

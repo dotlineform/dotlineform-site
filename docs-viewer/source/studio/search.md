@@ -57,4 +57,4 @@ For Catalogue, treat the build config as the dependency registry. A new emitted 
 
 Those are the useful review points. Exact fields, scores, selectors, messages, and consumer lists belong in code and config.
 
-The mechanics review belongs to [Search Policy Review](/docs/?scope=studio&doc=site-request-search-policy-review), not to the current architecture pages.
+The mechanics review belongs to [Search Mechanics](/docs/?scope=studio&doc=repository-search-mechanics), not to the current architecture pages.

@@ -52,7 +52,7 @@ That is Temurin/OpenJDK 17.0.19+10 from Eclipse Adoptium. macOS cannot find any 
 
 When work begins, review whether implementation also needs to:
 
-- Investigate use of Processing-specific Javadoc or Java checks. This aligns with similar work for JS and Python ([Source Documentation and Linting](/docs/?scope=studio&doc=site-request-source-documentation-and-linting))
+- Investigate use of Processing-specific Javadoc or Java checks. This aligns with similar work for JS and Python ([Source Documentation and Linting](/docs/?scope=studio&doc=repository-source-documentation-and-linting))
 - update `source-tree-ownership.md` if a new top-level `processing/` source area is adopted
 - update repository setup or dependency documentation once the required Processing version and libraries are known
 
@@ -151,7 +151,7 @@ in Docs Viewer. Before moving it, decide:
   machine-specific absolute paths
 
 This is a cross-cutting Docs Viewer asset-management question. Record a focused
-Studio change request before changing the import or storage model; do not make
+Studio roadmap delivery before changing the import or storage model; do not make
 the Processing recovery slice carry that redesign vertically.
 
 ## First Import Boundary
