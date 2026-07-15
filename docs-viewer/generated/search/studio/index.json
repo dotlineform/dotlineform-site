@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cd0fe9bda4d3e7701d237fc5d8a1a317",
-    "generated_at_utc": "2026-07-15T08:09:47Z",
-    "count": 217
+    "version": "blake2b-47a5a0653b0310f522815dd1632118a4",
+    "generated_at_utc": "2026-07-15T08:48:17Z",
+    "count": 224
   },
   "entries": [
     {
@@ -3459,10 +3459,10 @@
       "kind": "doc",
       "title": "Shareable Content Blocks",
       "href": "/docs/?scope=studio&doc=analytics-shareable-content-blocks",
-      "last_updated": "2026-06-23",
+      "last_updated": "2026-07-15",
       "parent_id": "analytics-roadmap",
       "parent_title": "Analytics Roadmap",
-      "display_meta": "2026-06-23 • Analytics Roadmap",
+      "display_meta": "2026-07-15 • Analytics Roadmap",
       "search_terms": [
         "analytics-shareable-content-blocks",
         "analytics",
@@ -3472,12 +3472,37 @@
         "shareable content blocks",
         "analytics roadmap",
         "roadmap",
-        "2026-06-23",
+        "2026-07-15",
         "2026",
-        "06",
-        "23"
+        "07",
+        "15"
       ],
-      "search_text": "analytics-shareable-content-blocks analytics shareable content blocks shareable content blocks analytics roadmap roadmap 2026-06-23 2026 06 23"
+      "search_text": "analytics-shareable-content-blocks analytics shareable content blocks shareable content blocks analytics roadmap roadmap 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "analytics-shareable-content-blocks-concept",
+      "kind": "doc",
+      "title": "Shareable Content Blocks Concept",
+      "href": "/docs/?scope=studio&doc=analytics-shareable-content-blocks-concept",
+      "last_updated": "2026-07-15",
+      "parent_id": "analytics-shareable-content-blocks",
+      "parent_title": "Shareable Content Blocks",
+      "display_meta": "2026-07-15 • Shareable Content Blocks",
+      "search_terms": [
+        "analytics-shareable-content-blocks-concept",
+        "analytics",
+        "shareable",
+        "content",
+        "blocks",
+        "concept",
+        "shareable content blocks concept",
+        "shareable content blocks",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "analytics-shareable-content-blocks-concept analytics shareable content blocks concept shareable content blocks concept shareable content blocks 2026-07-15 2026 07 15"
     },
     {
       "id": "analytics-tag-dimensions",
@@ -3599,6 +3624,116 @@
         "15"
       ],
       "search_text": "docs-viewer-roadmap docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "d-20260715-094411-1c5fa7",
+      "kind": "doc",
+      "title": "Document Identity",
+      "href": "/docs/?scope=studio&doc=d-20260715-094411-1c5fa7",
+      "last_updated": "2026-07-15",
+      "parent_id": "docs-viewer-roadmap",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "search_terms": [
+        "d-20260715-094411-1c5fa7",
+        "d",
+        "20260715",
+        "094411",
+        "1c5fa7",
+        "document identity",
+        "document",
+        "identity",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "d-20260715-094411-1c5fa7 d 20260715 094411 1c5fa7 document identity document identity docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "d-20260715-094411-599c3d",
+      "kind": "doc",
+      "title": "Document Identity Architecture",
+      "href": "/docs/?scope=studio&doc=d-20260715-094411-599c3d",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-094411-1c5fa7",
+      "parent_title": "Document Identity",
+      "display_meta": "2026-07-15 • Document Identity",
+      "search_terms": [
+        "d-20260715-094411-599c3d",
+        "d",
+        "20260715",
+        "094411",
+        "599c3d",
+        "document identity architecture",
+        "document",
+        "identity",
+        "architecture",
+        "document identity",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "d-20260715-094411-599c3d d 20260715 094411 599c3d document identity architecture document identity architecture document identity 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "d-20260715-094411-2b6e65",
+      "kind": "doc",
+      "title": "Document Identity Concept",
+      "href": "/docs/?scope=studio&doc=d-20260715-094411-2b6e65",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-094411-1c5fa7",
+      "parent_title": "Document Identity",
+      "display_meta": "2026-07-15 • Document Identity",
+      "search_terms": [
+        "d-20260715-094411-2b6e65",
+        "d",
+        "20260715",
+        "094411",
+        "2b6e65",
+        "document identity concept",
+        "document",
+        "identity",
+        "concept",
+        "document identity",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "d-20260715-094411-2b6e65 d 20260715 094411 2b6e65 document identity concept document identity concept document identity 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "d-20260715-094411-e46323",
+      "kind": "doc",
+      "title": "Document Identity Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260715-094411-e46323",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-094411-1c5fa7",
+      "parent_title": "Document Identity",
+      "display_meta": "2026-07-15 • Document Identity",
+      "search_terms": [
+        "d-20260715-094411-e46323",
+        "d",
+        "20260715",
+        "094411",
+        "e46323",
+        "document identity delivery",
+        "document",
+        "identity",
+        "delivery",
+        "document identity",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "d-20260715-094411-e46323 d 20260715 094411 e46323 document identity delivery document identity delivery document identity 2026-07-15 2026 07 15"
     },
     {
       "id": "docs-viewer-external-asset-collections",
@@ -3906,39 +4041,63 @@
       "search_text": "repository-maintenance repository maintenance repository maintenance repository roadmap roadmap 2026-07-15 2026 07 15"
     },
     {
-      "id": "search-mechanics-review",
+      "id": "repository-search-mechanics",
       "kind": "doc",
-      "title": "Search Mechanics Review",
-      "href": "/docs/?scope=studio&doc=search-mechanics-review",
+      "title": "Search Mechanics",
+      "href": "/docs/?scope=studio&doc=repository-search-mechanics",
       "last_updated": "2026-07-15",
       "parent_id": "repository-roadmap",
       "parent_title": "Repository Roadmap",
       "display_meta": "2026-07-15 • Repository Roadmap",
       "search_terms": [
-        "search-mechanics-review",
+        "repository-search-mechanics",
+        "repository",
         "search",
         "mechanics",
-        "review",
-        "search mechanics review",
+        "search mechanics",
         "repository roadmap",
-        "repository",
         "roadmap",
         "2026-07-15",
         "2026",
         "07",
         "15"
       ],
-      "search_text": "search-mechanics-review search mechanics review search mechanics review repository roadmap repository roadmap 2026-07-15 2026 07 15"
+      "search_text": "repository-search-mechanics repository search mechanics search mechanics repository roadmap roadmap 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "repository-search-mechanics-review-delivery",
+      "kind": "doc",
+      "title": "Search Mechanics Review Delivery",
+      "href": "/docs/?scope=studio&doc=repository-search-mechanics-review-delivery",
+      "last_updated": "2026-07-15",
+      "parent_id": "repository-search-mechanics",
+      "parent_title": "Search Mechanics",
+      "display_meta": "2026-07-15 • Search Mechanics",
+      "search_terms": [
+        "repository-search-mechanics-review-delivery",
+        "repository",
+        "search",
+        "mechanics",
+        "review",
+        "delivery",
+        "search mechanics review delivery",
+        "search mechanics",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "repository-search-mechanics-review-delivery repository search mechanics review delivery search mechanics review delivery search mechanics 2026-07-15 2026 07 15"
     },
     {
       "id": "repository-source-documentation-and-linting",
       "kind": "doc",
       "title": "Source Documentation and Linting",
       "href": "/docs/?scope=studio&doc=repository-source-documentation-and-linting",
-      "last_updated": "2026-07-13",
+      "last_updated": "2026-07-15",
       "parent_id": "repository-roadmap",
       "parent_title": "Repository Roadmap",
-      "display_meta": "2026-07-13 • Repository Roadmap",
+      "display_meta": "2026-07-15 • Repository Roadmap",
       "search_terms": [
         "repository-source-documentation-and-linting",
         "repository",
@@ -3949,12 +4108,38 @@
         "source documentation and linting",
         "repository roadmap",
         "roadmap",
-        "2026-07-13",
+        "2026-07-15",
         "2026",
         "07",
-        "13"
+        "15"
       ],
-      "search_text": "repository-source-documentation-and-linting repository source documentation and linting source documentation and linting repository roadmap roadmap 2026-07-13 2026 07 13"
+      "search_text": "repository-source-documentation-and-linting repository source documentation and linting source documentation and linting repository roadmap roadmap 2026-07-15 2026 07 15"
+    },
+    {
+      "id": "repository-source-documentation-and-linting-concept",
+      "kind": "doc",
+      "title": "Source Documentation and Linting Concept",
+      "href": "/docs/?scope=studio&doc=repository-source-documentation-and-linting-concept",
+      "last_updated": "2026-07-15",
+      "parent_id": "repository-source-documentation-and-linting",
+      "parent_title": "Source Documentation and Linting",
+      "display_meta": "2026-07-15 • Source Documentation and Linting",
+      "search_terms": [
+        "repository-source-documentation-and-linting-concept",
+        "repository",
+        "source",
+        "documentation",
+        "and",
+        "linting",
+        "concept",
+        "source documentation and linting concept",
+        "source documentation and linting",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15"
+      ],
+      "search_text": "repository-source-documentation-and-linting-concept repository source documentation and linting concept source documentation and linting concept source documentation and linting 2026-07-15 2026 07 15"
     },
     {
       "id": "studio-roadmap",

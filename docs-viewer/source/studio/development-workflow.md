@@ -39,6 +39,8 @@ broad need or discussion
 
 Use a concept document when useful questions remain open. It may explain the long-term aim without pretending the entire aim is one delivery.
 
+After implementation, retain it when the feature still benefits from a short durable explanation of purpose, mental model, and invariants. Rewrite it as current documentation, remove resolved speculation, and keep its immutable `doc_id`. Do not retain it as a decision diary.
+
 ### Feature Parent
 
 A substantial feature may have one short parent under its [app roadmap](/docs/?scope=studio&doc=roadmap). It routes between concept, proposed architecture, and delivery documents. It does not repeat them.
@@ -110,3 +112,5 @@ Report:
 - any separate roadmap outcome created.
 
 Mark a delivery done only when its whole outcome works, durable docs describe shipped behavior, and remaining work is genuinely separate. Never hide unfinished phases inside a completed delivery.
+
+At feature closeout, promote a still-useful concept into the durable app tree. Retire the temporary feature router, proposed architecture, delivery, and tracker documents once they no longer route unresolved work.

@@ -3,6 +3,38 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260715-094411-1c5fa7",
+      "title": "Document Identity",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-1c5fa7.json",
+      "added_date": "2026-07-15 09:44:11",
+      "parent_id": "docs-viewer-roadmap",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260715-094411-599c3d",
+      "title": "Document Identity Architecture",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-599c3d.json",
+      "added_date": "2026-07-15 09:44:11",
+      "parent_id": "d-20260715-094411-1c5fa7",
+      "parent_title": "Document Identity"
+    },
+    {
+      "doc_id": "d-20260715-094411-2b6e65",
+      "title": "Document Identity Concept",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-2b6e65.json",
+      "added_date": "2026-07-15 09:44:11",
+      "parent_id": "d-20260715-094411-1c5fa7",
+      "parent_title": "Document Identity"
+    },
+    {
+      "doc_id": "d-20260715-094411-e46323",
+      "title": "Document Identity Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-e46323.json",
+      "added_date": "2026-07-15 09:44:11",
+      "parent_id": "d-20260715-094411-1c5fa7",
+      "parent_title": "Document Identity"
+    },
+    {
       "doc_id": "config-admin-config-json",
       "title": "Admin Config JSON",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-admin-config-json.json",
@@ -49,39 +81,7 @@
       "added_date": "2026-07-15",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing"
-    },
-    {
-      "doc_id": "analytics-llm-integration-architecture",
-      "title": "LLM Integration Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-architecture.json",
-      "added_date": "2026-07-15",
-      "parent_id": "analytics-llm-integration",
-      "parent_title": "LLM Integration"
-    },
-    {
-      "doc_id": "analytics-llm-integration-delivery",
-      "title": "LLM Library Summary Proposals Delivery",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-llm-integration-delivery.json",
-      "added_date": "2026-07-15",
-      "parent_id": "analytics-llm-integration",
-      "parent_title": "LLM Integration"
-    },
-    {
-      "doc_id": "studio-moments-composition-workspace-delivery",
-      "title": "Moments Basic Axis Editor Delivery",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-delivery.json",
-      "added_date": "2026-07-15",
-      "parent_id": "studio-moments-composition-workspace",
-      "parent_title": "Moments Composition Workspace"
-    },
-    {
-      "doc_id": "studio-moments-composition-workspace-architecture",
-      "title": "Moments Composition Workspace Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-moments-composition-workspace-architecture.json",
-      "added_date": "2026-07-15",
-      "parent_id": "studio-moments-composition-workspace",
-      "parent_title": "Moments Composition Workspace"
     }
   ],
-  "generated_at": "2026-07-15T08:08:22Z"
+  "generated_at": "2026-07-15T08:48:16Z"
 }

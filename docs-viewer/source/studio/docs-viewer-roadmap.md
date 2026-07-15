@@ -24,6 +24,7 @@ The roadmap stays short. Design detail belongs in the concept or architecture; i
 | ID | status | delivery | depends on | delivery or owner |
 | --- | --- | --- | --- | --- |
 | DV-01 | done | install the Docs Viewer documentation and delivery model | — | [Docs Viewer](/docs/?scope=studio&doc=docs-viewer) and [Roadmap](/docs/?scope=studio&doc=roadmap) |
+| DI-01 | ready, next | replace title-derived document identities with immutable timestamp codes and migrate repository-owned scopes | DV-01 done | [Document Identity Delivery](/docs/?scope=studio&doc=d-20260715-094411-e46323) |
 | EAC-01 | ready, not active | make scope lifecycle explicitly preserve user-owned external asset roots on delete and refuse unsafe rename | DV-01 done | [Lifecycle Delivery](/docs/?scope=studio&doc=docs-viewer-external-asset-lifecycle-delivery) |
 | EAC-02 | queued | extract a confined metadata-only filesystem inventory primitive and migrate Project State without behavior change | EAC-01 | add delivery when promoted |
 | EAC-03 | queued | give Processing a useful read-only metadata inventory report, without file-opening actions | EAC-02 | add delivery when promoted |
@@ -32,6 +33,8 @@ The roadmap stays short. Design detail belongs in the concept or architecture; i
 | EAC-06 | queued | measure the I Ching collection, decide whether performance machinery is justified, and close the initial feature | EAC-05 | add delivery when promoted |
 
 The External Asset Collections sequence comes from its [feature parent](/docs/?scope=studio&doc=docs-viewer-external-asset-collections), which separates concept, architecture, and promoted delivery documents. Only EAC-01 has a delivery document because later rows should be reconsidered against what the earlier delivery actually proves.
+
+DI-01 comes from [Document Identity](/docs/?scope=studio&doc=d-20260715-094411-1c5fa7). Its concept is intended to become the durable feature overview; the feature router, proposed architecture, and delivery retire when the migration is complete.
 
 ## Unsequenced Concepts
 

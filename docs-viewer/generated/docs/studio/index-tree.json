@@ -781,7 +781,15 @@
               "doc_id": "analytics-shareable-content-blocks",
               "title": "Shareable Content Blocks",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-shareable-content-blocks.json",
-              "ui_status": "draft"
+              "ui_status": "draft",
+              "children": [
+                {
+                  "doc_id": "analytics-shareable-content-blocks-concept",
+                  "title": "Shareable Content Blocks Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-shareable-content-blocks-concept.json",
+                  "ui_status": "draft"
+                }
+              ]
             },
             {
               "doc_id": "analytics-tag-dimensions",
@@ -817,6 +825,32 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-roadmap.json",
           "ui_status": "in-progress",
           "children": [
+            {
+              "doc_id": "d-20260715-094411-1c5fa7",
+              "title": "Document Identity",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-1c5fa7.json",
+              "ui_status": "ready",
+              "children": [
+                {
+                  "doc_id": "d-20260715-094411-599c3d",
+                  "title": "Document Identity Architecture",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-599c3d.json",
+                  "ui_status": "proposed"
+                },
+                {
+                  "doc_id": "d-20260715-094411-2b6e65",
+                  "title": "Document Identity Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-2b6e65.json",
+                  "ui_status": "ready"
+                },
+                {
+                  "doc_id": "d-20260715-094411-e46323",
+                  "title": "Document Identity Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-094411-e46323.json",
+                  "ui_status": "ready"
+                }
+              ]
+            },
             {
               "doc_id": "docs-viewer-external-asset-collections",
               "title": "External Asset Collections",
@@ -896,16 +930,32 @@
               "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-maintenance.json"
             },
             {
-              "doc_id": "search-mechanics-review",
-              "title": "Search Mechanics Review",
-              "content_url": "/docs-viewer/generated/docs/studio/by-id/search-mechanics-review.json",
-              "ui_status": "paused"
+              "doc_id": "repository-search-mechanics",
+              "title": "Search Mechanics",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-search-mechanics.json",
+              "ui_status": "paused",
+              "children": [
+                {
+                  "doc_id": "repository-search-mechanics-review-delivery",
+                  "title": "Search Mechanics Review Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-search-mechanics-review-delivery.json",
+                  "ui_status": "paused"
+                }
+              ]
             },
             {
               "doc_id": "repository-source-documentation-and-linting",
               "title": "Source Documentation and Linting",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-source-documentation-and-linting.json",
-              "ui_status": "draft"
+              "ui_status": "draft",
+              "children": [
+                {
+                  "doc_id": "repository-source-documentation-and-linting-concept",
+                  "title": "Source Documentation and Linting Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/repository-source-documentation-and-linting-concept.json",
+                  "ui_status": "draft"
+                }
+              ]
             }
           ]
         },
@@ -1210,5 +1260,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-15T08:08:22Z"
+  "generated_at": "2026-07-15T08:48:16Z"
 }
