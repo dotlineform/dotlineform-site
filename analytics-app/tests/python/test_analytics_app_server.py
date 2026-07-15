@@ -146,6 +146,7 @@ def test_static_path_policy_serves_analytics_paths_and_shared_data_sharing_confi
     assert allowed("/analytics/app/frontend/routes/tag-registry.html") is True
     assert allowed("/analytics/app/frontend/config/analytics-config.json") is True
     assert allowed("/analytics/app/assets/css/analytics.css") is True
+    assert allowed("/apple-touch-icon-precomposed.png") is True
     assert allowed("/shared/frontend/js/selectable-list.js") is True
     assert allowed("/shared/frontend/css/selectable-list.css") is True
     assert allowed("/data-sharing/config/adapters.json") is False

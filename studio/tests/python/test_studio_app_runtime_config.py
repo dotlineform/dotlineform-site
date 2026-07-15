@@ -216,6 +216,7 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
+    assert allowed("/apple-touch-icon-precomposed.png") is True
     assert allowed("/shared/frontend/js/search-list.js") is True
     assert allowed("/shared/frontend/css/search-list.css") is True
     assert allowed("/studio/data/generated/activity/index.json") is False

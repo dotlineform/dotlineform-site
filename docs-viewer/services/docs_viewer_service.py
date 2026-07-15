@@ -22,6 +22,10 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
+from studio.shared.python.local_browser_assets import (
+    LOCAL_BROWSER_ASSET_PATHS,
+    render_local_browser_icon_links,
+)
 from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
@@ -74,14 +78,7 @@ SHARED_STATIC_ROUTES = {
         "site/docs-viewer/config/routes/docs-viewer-public-routes.json"
     ),
 }
-STATIC_FILES = {
-    "/apple-touch-icon.png",
-    "/favicon.ico",
-    "/favicon-16x16.png",
-    "/favicon-32x32.png",
-    "/safari-pinned-tab.svg",
-    "/site.webmanifest",
-}
+STATIC_FILES = set(LOCAL_BROWSER_ASSET_PATHS)
 RETIRED_STATIC_PATHS = {
     "/docs-viewer/runtime/js/docs-viewer.js",
     "/docs-viewer/static/css/docs-viewer-base.css",
@@ -618,7 +615,8 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if not resolved_path.is_file():
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
-        body = resolved_path.read_bytes()
+        shell = resolved_path.read_text(encoding="utf-8")
+        body = render_local_browser_icon_links(shell).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Cache-Control", "no-store")

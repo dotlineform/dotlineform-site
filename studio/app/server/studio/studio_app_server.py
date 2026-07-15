@@ -20,12 +20,16 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
 from studio.shared.python.catalogue_media_paths import (
     CATALOGUE_MEDIA_ROUTE_PREFIX,
     configured_catalogue_media_workspace,
     resolve_catalogue_media_request_path,
 )
+from studio.shared.python.local_browser_assets import (
+    LOCAL_BROWSER_ASSET_PATHS,
+    render_local_browser_icon_links,
+)
+from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
@@ -57,12 +61,7 @@ STATIC_PREFIXES = (
     "/studio/data/generated/catalogue-lookup/",
 )
 STATIC_FILES = {
-    "/favicon.ico",
-    "/favicon-16x16.png",
-    "/favicon-32x32.png",
-    "/apple-touch-icon.png",
-    "/safari-pinned-tab.svg",
-    "/site.webmanifest",
+    *LOCAL_BROWSER_ASSET_PATHS,
     "/studio/data/generated/activity/work-storage-index.json",
 }
 MAX_BODY_BYTES = 1024 * 1024
@@ -257,7 +256,8 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         except OSError:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
-        self.send_html(shell.replace(STUDIO_ASSET_VERSION_TOKEN, self.version))
+        rendered_shell = shell.replace(STUDIO_ASSET_VERSION_TOKEN, self.version)
+        self.send_html(render_local_browser_icon_links(rendered_shell))
 
     def send_static(self, request_path: str) -> None:
         if request_path.startswith("/assets/"):

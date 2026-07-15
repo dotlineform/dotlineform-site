@@ -97,6 +97,7 @@ def test_static_path_policy_serves_only_admin_app_assets() -> None:
     assert allowed("/admin/app/frontend/routes/admin-checks.html") is True
     assert allowed("/admin/app/frontend/config/admin-config.json") is True
     assert allowed("/admin/app/frontend/js/admin-ui-text.js") is True
+    assert allowed("/apple-touch-icon-precomposed.png") is True
 
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/analytics/app/assets/css/analytics.css") is False

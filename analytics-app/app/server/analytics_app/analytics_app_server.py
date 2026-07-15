@@ -21,6 +21,10 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
+from studio.shared.python.local_browser_assets import (
+    LOCAL_BROWSER_ASSET_PATHS,
+    render_local_browser_icon_links,
+)
 from studio.shared.python.local_http_logging import QuietErrorLoggingMixin
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
@@ -53,14 +57,7 @@ STATIC_PREFIXES = (
     "/analytics/app/frontend/routes/",
     "/shared/frontend/",
 )
-STATIC_FILES = {
-    "/favicon.ico",
-    "/favicon-16x16.png",
-    "/favicon-32x32.png",
-    "/apple-touch-icon.png",
-    "/safari-pinned-tab.svg",
-    "/site.webmanifest",
-}
+STATIC_FILES = set(LOCAL_BROWSER_ASSET_PATHS)
 MAX_BODY_BYTES = 1024 * 1024
 ENABLED_VALUES = {"1", "on", "true", "yes"}
 
@@ -272,7 +269,7 @@ class AnalyticsAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler)
         }
         for token, value in replacements.items():
             shell = shell.replace(token, value)
-        return shell
+        return render_local_browser_icon_links(shell)
 
     def send_static(self, request_path: str) -> None:
         if request_path.startswith("/analytics/app/"):
