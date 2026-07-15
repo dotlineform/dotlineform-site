@@ -831,6 +831,20 @@
           "ui_status": "in-progress",
           "children": [
             {
+              "doc_id": "d-20260715-181845-0158f9",
+              "title": "Document Visualisations",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-181845-0158f9.json",
+              "ui_status": "proposed",
+              "children": [
+                {
+                  "doc_id": "d-20260715-181845-524859",
+                  "title": "Document Visualisations Concept",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-181845-524859.json",
+                  "ui_status": "proposed"
+                }
+              ]
+            },
+            {
               "doc_id": "d-20260714-194217-b2bdd7",
               "title": "External Asset Collections",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-194217-b2bdd7.json",
@@ -1239,5 +1253,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-15T09:32:02Z"
+  "generated_at": "2026-07-15T17:19:49Z"
 }

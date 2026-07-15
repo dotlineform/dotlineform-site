@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2b3a3f489d4a907a4d847f65beb0744e",
-    "generated_at_utc": "2026-07-15T09:32:12Z",
-    "count": 221
+    "version": "blake2b-8a3db5170e883c3a629f0a6fb71439c7",
+    "generated_at_utc": "2026-07-15T17:19:49Z",
+    "count": 223
   },
   "entries": [
     {
@@ -3528,6 +3528,54 @@
         "d-20260714-234030-1e0af6"
       ],
       "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260714-234030-1e0af6"
+    },
+    {
+      "id": "d-20260715-181845-0158f9",
+      "kind": "doc",
+      "title": "Document Visualisations",
+      "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "search_terms": [
+        "document visualisations",
+        "document",
+        "visualisations",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-181845-0158f9"
+      ],
+      "search_text": "document visualisations document visualisations docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-181845-0158f9"
+    },
+    {
+      "id": "d-20260715-181845-524859",
+      "kind": "doc",
+      "title": "Document Visualisations Concept",
+      "href": "/docs/?scope=studio&doc=d-20260715-181845-524859",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-181845-0158f9",
+      "parent_title": "Document Visualisations",
+      "display_meta": "2026-07-15 • Document Visualisations",
+      "search_terms": [
+        "document visualisations concept",
+        "document",
+        "visualisations",
+        "concept",
+        "document visualisations",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-181845-524859"
+      ],
+      "search_text": "document visualisations concept document visualisations concept document visualisations 2026-07-15 2026 07 15 d-20260715-181845-524859"
     },
     {
       "id": "d-20260714-194217-b2bdd7",
