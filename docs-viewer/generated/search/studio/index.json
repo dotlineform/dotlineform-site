@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7ce2bbce3ee8954c1b612f61cdf4ed67",
-    "generated_at_utc": "2026-07-15T19:56:21Z",
-    "count": 227
+    "version": "blake2b-69880b60edd926de69e23f4e8ca55db8",
+    "generated_at_utc": "2026-07-15T21:22:01Z",
+    "count": 232
   },
   "entries": [
     {
@@ -3776,10 +3776,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection",
       "href": "/docs/?scope=studio&doc=d-20260714-151900-6fa23e",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-15",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-14 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
       "search_terms": [
         "index multiple selection",
         "index",
@@ -3789,23 +3789,23 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-14",
+        "2026-07-15",
         "2026",
         "07",
-        "14",
+        "15",
         "d-20260714-151900-6fa23e"
       ],
-      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-14 2026 07 14 d-20260714-151900-6fa23e"
+      "search_text": "index multiple selection index multiple selection docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260714-151900-6fa23e"
     },
     {
       "id": "d-20260714-234030-f30d01",
       "kind": "doc",
       "title": "Index Multiple Selection Architecture",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-f30d01",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-15",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-14 • Index Multiple Selection",
+      "display_meta": "2026-07-15 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection architecture",
         "index",
@@ -3813,13 +3813,13 @@
         "selection",
         "architecture",
         "index multiple selection",
-        "2026-07-14",
+        "2026-07-15",
         "2026",
         "07",
-        "14",
+        "15",
         "d-20260714-234030-f30d01"
       ],
-      "search_text": "index multiple selection architecture index multiple selection architecture index multiple selection 2026-07-14 2026 07 14 d-20260714-234030-f30d01"
+      "search_text": "index multiple selection architecture index multiple selection architecture index multiple selection 2026-07-15 2026 07 15 d-20260714-234030-f30d01"
     },
     {
       "id": "d-20260714-234030-876066",
@@ -3844,6 +3844,135 @@
         "d-20260714-234030-876066"
       ],
       "search_text": "index multiple selection concept index multiple selection concept index multiple selection 2026-07-15 2026 07 15 d-20260714-234030-876066"
+    },
+    {
+      "id": "d-20260715-215355-54ede0",
+      "kind": "doc",
+      "title": "Local Tree Move Projection",
+      "href": "/docs/?scope=studio&doc=d-20260715-215355-54ede0",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "search_terms": [
+        "local tree move projection",
+        "local",
+        "tree",
+        "move",
+        "projection",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-215355-54ede0"
+      ],
+      "search_text": "local tree move projection local tree move projection docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-215355-54ede0"
+    },
+    {
+      "id": "d-20260715-215355-9a559b",
+      "kind": "doc",
+      "title": "Local Tree Move Projection Architecture",
+      "href": "/docs/?scope=studio&doc=d-20260715-215355-9a559b",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-215355-54ede0",
+      "parent_title": "Local Tree Move Projection",
+      "display_meta": "2026-07-15 • Local Tree Move Projection",
+      "search_terms": [
+        "local tree move projection architecture",
+        "local",
+        "tree",
+        "move",
+        "projection",
+        "architecture",
+        "local tree move projection",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-215355-9a559b"
+      ],
+      "search_text": "local tree move projection architecture local tree move projection architecture local tree move projection 2026-07-15 2026 07 15 d-20260715-215355-9a559b"
+    },
+    {
+      "id": "d-20260715-215355-ff7123",
+      "kind": "doc",
+      "title": "Local Tree Move Projection Concept",
+      "href": "/docs/?scope=studio&doc=d-20260715-215355-ff7123",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-215355-54ede0",
+      "parent_title": "Local Tree Move Projection",
+      "display_meta": "2026-07-15 • Local Tree Move Projection",
+      "search_terms": [
+        "local tree move projection concept",
+        "local",
+        "tree",
+        "move",
+        "projection",
+        "concept",
+        "local tree move projection",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-215355-ff7123"
+      ],
+      "search_text": "local tree move projection concept local tree move projection concept local tree move projection 2026-07-15 2026 07 15 d-20260715-215355-ff7123"
+    },
+    {
+      "id": "d-20260715-213643-54d952",
+      "kind": "doc",
+      "title": "Local Tree Move Projection Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260715-213643-54d952",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-215355-54ede0",
+      "parent_title": "Local Tree Move Projection",
+      "display_meta": "2026-07-15 • Local Tree Move Projection",
+      "search_terms": [
+        "local tree move projection delivery",
+        "local",
+        "tree",
+        "move",
+        "projection",
+        "delivery",
+        "local tree move projection",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-213643-54d952"
+      ],
+      "search_text": "local tree move projection delivery local tree move projection delivery local tree move projection 2026-07-15 2026 07 15 d-20260715-213643-54d952"
+    },
+    {
+      "id": "d-20260715-222129-8253ee",
+      "kind": "doc",
+      "title": "Recent Added And Edited",
+      "href": "/docs/?scope=studio&doc=d-20260715-222129-8253ee",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "search_terms": [
+        "recent added and edited",
+        "recent",
+        "added",
+        "and",
+        "edited",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-222129-8253ee"
+      ],
+      "search_text": "recent added and edited recent added and edited docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-222129-8253ee"
     },
     {
       "id": "d-20260527-105208-c1a4d0",
