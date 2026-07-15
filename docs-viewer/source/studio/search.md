@@ -2,40 +2,59 @@
 doc_id: search
 title: Search
 added_date: 2026-03-31
-last_updated: "2026-06-02"
+last_updated: 2026-07-15
 parent_id: ""
 ---
 # Search
 
-This section describes the current search implementation and the direction toward separate domain search products.
+Search is two domain-owned static-index systems, not one global product.
 
-Current live search surfaces:
+## Current Surfaces
 
-- Catalogue search on `/catalogue/search/`
-- Studio docs search inline on `/docs/`
-- Library docs search inline on `/library/`
-- Analysis docs search inline on `/analysis/`
+- [Catalogue Search](/docs/?scope=studio&doc=search-catalogue-infrastructure) serves `/catalogue/search/` for public works and series.
+- [Docs Viewer Search](/docs/?scope=studio&doc=search-docs-viewer-infrastructure) is embedded in Docs Viewer routes such as `/docs/`, `/library/`, and `/analysis/`.
 
-Architecture direction:
+Both build compact JSON indexes ahead of runtime and rank them in the browser. They share broad conventions—identity, title, derived search terms, deterministic ranking—but have separate builders, records, UI, and ownership.
 
-- Catalogue search and Docs search are separate data-domain products.
-- Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`.
-- Catalogue search owns structured artwork/catalogue lookup.
-- The retired top-level `/search/` route should not return as a generic merged-result search product.
-- The retired `/studio/search/` dashboard should not return as a standalone Studio search domain. Catalogue search administration belongs under `/studio/catalogue/`; document search administration belongs in Docs Viewer manage mode.
+## Find The Authority
 
-## Current Implementation
+| Question | Authority |
+| --- | --- |
+| Catalogue source families and field dependencies | `studio/services/catalogue/search/build_config.json` |
+| Catalogue record construction | `studio/services/catalogue/search/build_search.py` |
+| Catalogue ranking and rendering | `site/assets/js/search/catalogue-search-runtime.js` |
+| Catalogue page timing, messages, and index URL | `site/assets/data/search/policy.json` |
+| Docs scope source and generated/published output paths | `docs-viewer/config/scopes/docs_scopes.json` |
+| Docs search record construction | `docs-viewer/build/build_search.py` |
+| Docs ranking | `site/docs-viewer/runtime/js/shared/docs-viewer-search.js` |
+| Docs loading, route state, and result rendering | `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js` |
 
-- [Overview](/docs/?scope=studio&doc=search-overview) - a concise overview of the site search subsystem.
-- [Domain Review Patterns](/docs/?scope=studio&doc=search-domain-review-patterns) - shared review questions for separate domain search systems.
-- [Catalogue Infrastructure](/docs/?scope=studio&doc=search-catalogue-infrastructure) - current Catalogue search config, pipeline, ranking, runtime, and targeted-update surfaces.
-- [Docs Viewer Infrastructure](/docs/?scope=studio&doc=search-docs-viewer-infrastructure) - current Docs Viewer search config, pipeline, ranking, runtime, and targeted-update surfaces.
-- [Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) - defines the Catalogue-owned `/catalogue/search/` route and entry-point model.
-- [Index Schema](/docs/?scope=studio&doc=search-index-schema) - describes the current catalogue search index shape.
-- [Catalogue Field Registry](/docs/?scope=studio&doc=search-field-registry-table) - separates “field exists in schema” from “field participates in search and how.”
-- [Ranking Model](/docs/?scope=studio&doc=search-ranking-model) - explain current relevance behaviour separately from schema and field policy.
-- [UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) - separates browser behaviour from ranking and indexing
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) - explains how source content becomes the generated index.
-- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape) - describes the current search artifact shape for the Studio and Library docs scopes.
-- [Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) - describes token preparation, deduplication, hyphen/space handling, and similar preprocessing rules.
-- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan) - additive-only catalogue targeted search boundary and remaining follow-on work.
+Use [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) for commands and the source-to-runtime flow.
+
+## Design Method
+
+- Keep canonical source and search projections separate.
+- Let each domain decide which source fields are safe and useful for retrieval.
+- Keep public indexes small enough for client-side loading and ranking.
+- Prefer explicit deterministic relevance over an opaque general search service.
+- Rebuild the owning domain only; a Catalogue source change should not require a Docs search build.
+
+## Extension Rule
+
+Add a field or source at the domain boundary. Update its builder/config, generated record, runtime matching, and focused tests together. Do not add a shared search abstraction merely because both products use similar score bands.
+
+For a new Docs Viewer scope, configure its source/output/published paths and runtime index URL; the generic docs builder and runtime should then work without scope-specific ranking code.
+
+For Catalogue, treat the build config as the dependency registry. A new emitted field must declare its source family before the builder accepts it.
+
+## Current Weak Spots
+
+- Normalization and score bands are duplicated between the two domains. The similarity is useful, but changes can drift.
+- Catalogue runtime policy exists both as checked-in JSON and JavaScript defaults.
+- Docs runtime config exposes both legacy `search_index_url` and nested `search.index_url` values.
+- Exact index schemas are Python/JavaScript contracts rather than validated standalone schemas.
+- Client-side indexes impose a practical payload ceiling; body-heavy or semantic search needs a separate design decision.
+
+Those are the useful review points. Exact fields, scores, selectors, messages, and consumer lists belong in code and config.
+
+The mechanics review belongs to [Search Policy Review](/docs/?scope=studio&doc=site-request-search-policy-review), not to the current architecture pages.

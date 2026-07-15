@@ -1,33 +1,40 @@
 ---
 doc_id: ui
-title: UI
+title: Shared UI
 added_date: 2026-05-05
-last_updated: 2026-06-10
+last_updated: 2026-07-15
 parent_id: ""
 ---
-# UI
+# Shared UI
 
-This section is the entry point for UI design and implementation rules across the local tools and site apps.
+Use this section only for browser components shared across routes or apps. The code is the exact component contract; these pages explain which primitive to start with and where its ownership ends.
 
-Use this page in change requests when the work includes visible UI, interaction behavior, app shell layout, form controls, modals, command feedback, or route navigation. A request can say "follow UI guidance" and this is the contract to start from.
+## Choose The Smallest Primitive
 
-For every UI change:
+- [Record List And Actions](/docs/?scope=studio&doc=ui-pattern-record-action-list): fixed columns, optional single-row selection, and a separate action toolbar.
+- [Selectable List](/docs/?scope=studio&doc=ui-selectable-list-component): single or multiple checkbox selection, including optional parent/child tree behaviour.
+- [Search List](/docs/?scope=studio&doc=ui-search-list-component): autocomplete/listbox behaviour around a caller-owned text input and option loader.
+- [File Picker](/docs/?scope=studio&doc=ui-pattern-file-picker): load a folder, an optional subfolder, and one or more files through caller-provided loaders.
 
-1. Classify the UI surface: command, navigation link, field, list, panel, modal, menu, result message, route shell, or page-specific composition.
-2. Check the current shared component, primitive, or pattern guidance for the nearest live-system structure.
-3. Map the structure into the live app namespace.
-4. Use stable JS hooks such as `id`, `data-role`, or feature-scoped `data-*` for behavior. Do not bind JS to presentation classes.
-5. Put visible runtime copy in the owning app's normal UI text source when the app is config-backed.
-6. Verify the live route, not only the demo.
-7. If the route cannot be judged because the primitive or pattern is missing or incomplete, record a UI coverage gap.
+The components share styling and interaction behaviour, not domain workflows. Routes still own loading, normalization, mutations, persistence, and workflow state.
 
-## Namespace Rules
+## Maintenance Rule
 
-Use app-owned namespaces for production UI:
+For route-specific UI, inspect the live app and make the new behaviour match its established forms, modals, controls, and feedback. Do not document each route composition. If consistency cannot be achieved from current code, record the missing shared primitive or cross-app gap instead.
 
-- `docsViewer*` for Docs Viewer runtime and management surfaces
-- Admin app route-owned namespaces for Admin tools
-- route-owned or app-owned namespaces
-- public-site namespaces for public page patterns
+Shared UI code lives under:
 
-Do not introduce new `tagStudio*` classes. Existing `tagStudio*` classes may still appear in older Studio CSS and docs as current legacy implementation details, but new work should either use the owning app or route namespace, or first define a shared replacement namespace as part of a focused UI cleanup.
+- `shared/frontend/js/`
+- `shared/frontend/css/`
+
+An app adapter translates its records into component input, receives events, updates canonical route state, and renders again. A shared component should not know about catalogue records, Data Sharing adapters, Docs Viewer scopes, or server endpoints.
+
+If a proposed option only makes sense for one route, keep it in the adapter. Extend the shared component only when the behaviour is reusable and can be described without naming the first consumer.
+
+## Weak Spots
+
+- The primitives are independent rather than a single UI framework, so similar needs can still be implemented twice.
+- Shared options are ordinary JavaScript objects; code and focused tests are the only exact schema.
+- Older app surfaces do not consistently follow the current namespace and ownership rules. Do not introduce new `tagStudio*` classes.
+
+Treat those as reasons to inspect the live consumer, not as reasons to add a complete consumer inventory here.

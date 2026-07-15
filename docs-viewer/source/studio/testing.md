@@ -2,194 +2,88 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: 2026-06-25
+last_updated: 2026-07-15
 parent_id: ""
 ---
 # Testing
 
-Use this page to choose practical verification for a change request.
+## Policy
 
-The repo uses lightweight, opt-in checks rather than a mandatory full test suite. The standard runner is:
+Choose the smallest evidence that proves the durable contract changed.
 
-```bash
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
-```
+Permanent automation should protect:
 
-Choose the smallest profile or focused command that gives evidence for the risk you changed. Do not run broad profiles just to produce more output.
+- pure domain/planner/parser behavior;
+- service/API inputs, outputs, validation, and write boundaries;
+- config and generated-data contracts;
+- public/private ownership boundaries;
+- route boot, module wiring, and shared ready/busy integration when only a browser can prove them.
 
-## Test Policy
-
-Permanent automated tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration points.
-
-Do not add or expand permanent tests just to prove UI choreography: modal timing, button placement, cursor changes, hover state, focus movement, labels, copy tone, layout, and ordinary user click paths are better covered by manual or temporary in-app verification. If a UI change exposes a real product contract, test the underlying server response, request payload, generated data shape, or shared component contract instead of the full screen workflow.
-
-Browser smoke checks are allowed when the durable risk is route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract. Existing UI-heavy smoke scripts are legacy cleanup targets; do not extend them for routine UI work.
+Do not make permanent tests police normal UI choreography: wording, placement, focus timing, hover/cursor state, modal feel, or ordinary click sequences. Use manual or temporary browser inspection for those.
 
 ## Review Gate
 
-Before adding or expanding a permanent test, answer these questions:
+Before adding or expanding a test:
 
-- Can this be tested as pure function or service behavior?
-- Can this be tested by a direct HTTP/API request?
-- Is a browser required to verify a product contract, or only to mimic user clicks?
-- Will this test fail because copy, layout, focus, hover state, or modal timing changed?
+1. Can a pure function prove it?
+2. Can a service call or direct HTTP request prove it?
+3. Does a generator/output assertion prove it?
+4. Is the browser required for route/module/asset/request integration, or only imitating a user?
+5. Will ordinary copy/layout/timing changes cause false failures?
 
-Choose the lowest layer that proves the durable contract. If the test mostly mimics a user path, skip it unless the change request explicitly asks for browser acceptance coverage or the browser is the only place the contract exists.
+Use the first adequate layer. A broad end-to-end path is not stronger evidence when a lower-level contract is the real risk.
 
-## What To Run
+## Evidence Map
 
-Use this as the first-pass decision table.
-
-| change area | usual evidence |
+| Change | Default evidence |
 | --- | --- |
-| narrow docs copy | manual read-through, then `git diff --check` |
-| generated Studio docs/search contracts | `--profile docs` or focused docs builder/tests |
-| Docs Viewer services, config, or generated data | `--profile docs` or focused `docs-viewer/tests/python/...` |
-| Docs Viewer public runtime or management route boundary | focused route/module smoke only when boot, public/private assets, payload reads, or local API reachability changed |
-| catalogue source, build, or publication behavior | `--profile catalogue`, focused `studio/tests/python/...`, or a narrow catalogue build preview |
-| Admin app checks, reports, risk, or operations pages | focused `admin-app/tests/python/...`; add `--profile admin-smoke` only for route boot or API reachability |
-| Analytics tags or data sharing | focused `analytics-app/tests/python/...`; add `--profile analytics-smoke` only for route/API boundaries |
-| public site or Studio-owned route behavior | `--profile studio-smoke` or a focused script under `studio/tests/smoke/` when the public route contract changed |
-| shared server, config, runner, or ownership boundary | `--profile quick`, then add owner-specific focused checks |
-
-Manual checks are still expected when the behavior depends on layout judgment, pointer feel, mobile ergonomics, or copy tone.
-
-## Runner Profiles
-
-`admin-app/commands/run_checks.py` writes logs under `var/admin/test-runs/` and prints the summary path.
-
-Common profiles:
-
-```bash
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile catalogue
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile docs-viewer-smoke
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile admin-smoke
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile analytics-smoke
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile studio-smoke
-```
-
-Profile roles:
-
-| profile | role |
-| --- | --- |
-| `quick` | whitespace, Python syntax, core pytest checks, projection contract, route ready-state audit, and key JSON parsing. |
-| `catalogue` | focused catalogue pytest checks plus a narrow field-aware build preview. |
-| `docs` | Docs Viewer pytest checks, Analytics Data Sharing adapter checks, and Studio docs/search rebuilds. |
-| `docs-viewer-smoke` | `site/` validation plus Docs Viewer public read-only, standalone manage-service, and fixture-backed Docs Review route smoke checks. |
-| `admin-smoke` | local Admin home and operations route smoke checks. |
-| `analytics-smoke` | local Analytics tag APIs, route shells, ready-state, and Data Sharing route/API boundary smoke checks. |
-| `studio-smoke` | `site/` validation plus public-site and Studio-owned catalogue smoke checks. |
-| `full` | runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`; it does not include `docs-viewer-smoke` or `analytics-smoke`. |
-
-Smoke profiles that need public-site files validate and read the checked-in `site/` root.
+| docs | read-through, link/build checks when publication is in scope, `git diff --check` |
+| Python model/service/parser | focused pytest |
+| local HTTP boundary | focused API test or direct request |
+| JavaScript helper/component | focused module/DOM contract |
+| generator/config projection | dry run plus output/schema assertion |
+| public/local route boot or asset boundary | focused browser smoke |
+| visual/tactile UI | manual/temporary browser check |
+| broad ownership change | narrowest `run_checks.py` profile |
 
 ## App Ownership
 
-Keep checks with the app that owns the behavior.
+Tests live with the app/domain they prove:
 
-Docs Viewer:
+- `studio/tests/`
+- `admin-app/tests/`
+- `analytics-app/tests/`
+- `docs-viewer/tests/`
 
-- Python checks: `docs-viewer/tests/python/`
-- Browser smoke checks: `docs-viewer/tests/smoke/`
-- Fixtures: `docs-viewer/tests/fixtures/`
-- Typical profiles: `docs`, `docs-viewer-smoke`
-- Use `docs-viewer-smoke`, or at least `public_docs_viewer_readonly.py` against `site/`, when a change touches the public runtime, route shell, public config, payload-loading contract, or management-only module boundary.
+Public-site behavior may be exercised by the app that owns its runtime. Do not place a test in Studio merely because it uses a browser or reads `site/`.
 
-Admin app:
+## Runner
 
-- Python checks: `admin-app/tests/python/`
-- Browser smoke checks: `admin-app/tests/smoke/`
-- Typical profiles: `quick`, `admin-smoke`
+[Run Checks](/docs/?scope=studio&doc=scripts-run-checks) describes the optional profile runner. Use `--list` for the exact current profile/command inventory. Profiles are convenience groupings, not mandatory gates.
 
-Analytics app:
+Typical focused command:
 
-- Python checks: `analytics-app/tests/python/`
-- Browser and API smoke checks: `analytics-app/tests/smoke/`
-- Typical profiles: `quick`, `docs` for Data Sharing adapter coverage, `analytics-smoke`
-- Tag management now belongs to Analytics. New Analytics checks should not use `tagStudio` naming.
-
-Studio and public site:
-
-- Python checks: `studio/tests/python/`
-- Browser smoke checks: `studio/tests/smoke/`
-- Typical profiles: `quick`, `catalogue`, `studio-smoke`
-- Studio-owned smokes cover public-site behavior and retained catalogue/public-route behavior. They should not absorb Docs Viewer, Admin, or Analytics smoke responsibilities.
-
-Cross-app checks:
-
-- Runner, audit, risk, activity, and inventory checks live under `admin-app/` when they are development infrastructure rather than product behavior.
-- See [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) for the maintained ownership boundary.
-
-## Browser Smoke Testing
-
-Browser smokes are useful when code changes affect route loading, module wiring, local services, public payload reads, public/private asset boundaries, or shared route ready/busy state.
-
-They should not be expanded to prove routine modal behavior or other UI choreography. Use manual verification, temporary scripts, or shared component tests for that work, and keep permanent checks focused on durable route and data contracts.
-
-Do not use a raw `file://` URL for routes that depend on module imports, same-origin asset paths, or local APIs. Use a running local app, the checked-in `site/` root through a static server, or the route-specific setup expected by the smoke script.
-
-See [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) for Playwright readiness, click, setup, and manual-check guidance.
-
-## Python Test Style
-
-Python checks should stay small, deterministic, and local.
-
-Current conventions:
-
-- keep tests under the owning app test directory
-- use plain `assert`
-- prefer direct module tests over broad end-to-end setup unless the integration boundary is the behavior being tested
-- test server responses, request payloads, and data transformations before browser-visible UI outcomes
-- run grouped checks through `admin-app/commands/run_checks.py`, which invokes pytest with the same Python interpreter
-- run focused checks with `$HOME/miniconda3/bin/python3 -m pytest <test-path>`
-- avoid network access
-- use temporary directories or small fixtures when repo data would make the test brittle
-- keep direct script execution working where practical for narrow opt-in checks
-- wrap reusable verifier scripts with real `test_*` functions so pytest collection cannot silently skip them
-- add the test to the smallest relevant runner profile when it protects a repeated risk
-
-See [Pytest](/docs/?scope=studio&doc=testing-pytest) for focused command examples and local install notes.
-
-## Close-Out
-
-When Codex runs checks, the final response should report:
-
-- which profiles or focused commands ran
-- pass/fail status
-- the `var/admin/test-runs/.../summary.md` path when `run_checks.py` was used
-- any failed command log paths
-- manual checks still needed
-
-Example:
-
-```text
-Automated checks:
-- quick: pass
-- catalogue: pass
-
-Logs:
-- var/admin/test-runs/20260610-171530/summary.md
-
-Manual checks:
-- Open /studio/catalogue-field-registry/
-- Search downloads
-- Clear search
+```bash
+$HOME/miniconda3/bin/python3 -m pytest <owning-test-path> -q
 ```
+
+Loopback servers and browser smokes need local port/browser permissions. Pure tests, JSON parsing, syntax checks, and diff checks remain sandboxed.
+
+## Browser Boundary
+
+[Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) owns harness mechanics. Retain a permanent smoke only when it proves route boot, module loading, public/private assets, ready-state wiring, API reachability, or browser request/response agreement.
+
+Existing UI-heavy smokes are cleanup candidates, not patterns to extend.
+
+## Closeout
+
+Report the focused command/profile, pass/fail result, and the summary path when the profile runner was used. State what the evidence proves and any manual visual/tactile check still needed.
+
+Do not repair unrelated brittle test behavior inside a focused feature slice without explicitly widening scope.
 
 ## Current Gaps
 
-The testing framework is intentionally incomplete.
-
-Known gaps:
-
-- there is no CI contract
-- there is no automatic full-suite run before every change
-- several smoke scripts are still opt-in because their setup requirements need owner review
-- profile names still preserve some historical Studio terminology
-- cross-app route coverage is uneven
-- route-ready smoke coverage is intentionally focused on route boot, module wiring, API reachability, and stable unavailable states
-- visual and tactile UI confidence still depends on manual or temporary browser review
-
-Treat these gaps as work to plan, not as permission to make new tests vague. Add a check only when it captures repeatable risk that would otherwise be hard to verify.
+- Browser coverage still contains historical UI choreography.
+- Some Python tests retain direct-script compatibility and process-global assumptions.
+- Profile membership is manually curated and can lag current ownership.
+- A passing broad profile is not evidence for omitted app-smoke profiles or unexercised external workspaces.

@@ -2,55 +2,56 @@
 doc_id: analytics-tag-services
 title: Tag Services
 added_date: 2026-06-02
-last_updated: 2026-06-02
+last_updated: 2026-07-15
 parent_id: analytics
 ---
 # Tag Services
 
-Tag write routes run through the standalone Local Analytics app server:
+## Stable Structure
 
-- API module: `analytics-app/app/server/analytics_app/analytics_api.py`
-- route constants: `analytics-app/app/server/analytics_app/tag_services/tag_routes.py`
-- local API base: `/analytics/api`
-- operational log: `var/studio/logs/analytics_app.log`
+```text
+Analytics route controller
+  -> analytics_api.py dispatch by allowlisted path
+  -> tag_write_api/ translates HTTP body/result
+  -> tag_services/ validates and plans domain change
+  -> tag_write_transactions.py atomic replace
+  -> canonical tag JSON + optional activity row
+```
 
-Reusable analytics owners:
+Reads and writes are served by the standalone Local Analytics server under `/analytics/api`. Endpoint constants in `tag_services/tag_routes.py` and dispatch maps in `analytics_api.py` are the exact route inventory.
 
-- `analytics-app/app/server/analytics_app/tag_services/tag_activity.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_source_paths.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_source_model.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_assignment_service.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_registry_mutations.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_alias_mutations.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_promotion_mutations.py`
-- `analytics-app/app/server/analytics_app/tag_services/tag_write_transactions.py`
+## Ownership
 
-## Active Endpoints
+- `tag_source_paths.py` — canonical path contract.
+- `tag_source_model.py` — IDs, limits, normalization, schema validation, comparison helpers.
+- `tag_assignment_service.py` — series/work save plus offline import preview/apply.
+- focused registry/alias/promotion mutation modules — cross-file plans and impact summaries.
+- `tag_write_api/` — request parsing, activity context, and service response shaping.
+- `tag_write_transactions.py` — atomic single/multi-file replacement and rollback on partial failure.
+- `analytics_api.py` — GET/POST allowlists only.
 
-The Local Analytics app exposes these tag write endpoints under `/analytics/api`:
+## Mutation Families
 
-- `POST /save-tags`
-- `POST /import-tag-registry`
-- `POST /import-tag-aliases`
-- `POST /delete-tag-alias`
-- `POST /mutate-tag-alias-preview`
-- `POST /mutate-tag-alias`
-- `POST /promote-tag-alias-preview`
-- `POST /promote-tag-alias`
-- `POST /import-tag-assignments-preview`
-- `POST /import-tag-assignments`
-- `POST /demote-tag-preview`
-- `POST /demote-tag`
-- `POST /mutate-tag-preview`
-- `POST /mutate-tag`
+- save or import assignments;
+- import/create/edit/delete registry tags;
+- import/create/edit/delete aliases;
+- promote an alias into a canonical tag;
+- demote a canonical tag into an alias;
+- preview destructive/cross-file effects before apply.
 
-## Write Policy
+Exact request fields belong to the handlers/tests. The important common contract is: validate IDs and current source, plan effects without writing, then apply through the fixed transaction boundary.
 
-Tag writes are allowlisted to:
+## Safety And Failure
 
-- `analytics-app/data/canonical/tag-assignments.json`
-- `analytics-app/data/canonical/tag-registry.json`
-- `analytics-app/data/canonical/tag-aliases.json`
+- writes are confined to Registry, Aliases, and Assignments source paths;
+- subprocesses and arbitrary browser paths are not part of this service;
+- multi-file replacements retain original bytes for in-process rollback;
+- successful local mutations can append one normalized Admin activity row;
+- dry-run paths return planned effects without canonical writes;
+- browser patch/offline fallbacks do not share the server transaction guarantee until reconciled.
 
-Writes use atomic replacement and in-process rollback without writing backup files.
-Unified activity rows are written through `studio/shared/python/studio_activity.py`.
+## Extension Method
+
+Add the narrowest domain function first, then an API wrapper and one allowlisted route. Cover validation, dry-run/no-write, cross-file effects, rollback, activity, and HTTP dispatch at the smallest useful level.
+
+Do not add a generic mutation endpoint or browser-selected source path. If a new workflow changes several canonical files, its service should own one explicit plan and one atomic apply boundary.

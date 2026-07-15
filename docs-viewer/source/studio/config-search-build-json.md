@@ -1,83 +1,39 @@
 ---
 doc_id: config-search-build-json
-title: Build Config JSON
+title: Catalogue Search Build Config
 added_date: 2026-04-25
-last_updated: 2026-06-01
+last_updated: 2026-07-15
 parent_id: search-catalogue-infrastructure
 viewable: true
 ---
-# Search Build Config JSON
+# Catalogue Search Build Config
 
-Config file:
+`studio/services/catalogue/search/build_config.json` is the Catalogue search dependency registry.
 
-- `scripts/search/build_config.json`
+## It Owns
 
-## Scope
+- source-family ids and their Catalogue ownership
+- targeted-update policy and allowed operations per source family
+- scope-level targeted policy
+- mapping from every emitted index field to one or more source families
+- whether a field is derived from those sources
 
-`build_config.json` is the Catalogue search source-family and field-dependency contract used behind `studio/services/catalogue/search/build_search.py --scope catalogue`.
-Docs Viewer search no longer uses this file.
+`studio/services/catalogue/search/build_search.py` loads and validates the registry before constructing output. The build fails when it emits a field without a declared source family.
 
-Current responsibilities include:
+## Current Policy
 
-- declaring source artifact families used by Catalogue search
-- declaring each source family's `targeted_policy`
-- declaring `targeted_operations` for policies that allow targeted updates
-- mapping emitted search fields to their source families
-- documenting that current search artifacts stay combined per scope
+Catalogue search is `additive_only` for `create`. New works and series can be merged into an existing index. Updates and deletes require a full same-domain rebuild.
 
-## What calls it
+The supported policy vocabulary also includes `record_update` and `full_rebuild`, but changing the declaration does not implement missing invalidation behaviour. Builder support and tests must change with the config.
 
-Current caller:
+## It Does Not Own
 
-- `studio/services/catalogue/search/build_search.py --scope catalogue`
-
-The Catalogue builder loads this config at startup, validates the config shape, and then checks that emitted entry fields have source-family declarations.
-
-## When it is read
-
-- once per `./studio/services/catalogue/search/build_search.py --scope catalogue` invocation
-- before build output is written or skipped
-
-## Current boundaries
-
-What stays here:
-
-- source-family names
-- scope eligibility for each source family
-- targeted policy values such as `record_update`, `additive_only`, and `full_rebuild`
-- field-to-source-family declarations
-- Catalogue-only field dependency checks
-
-What does not stay here:
-
-- Docs Viewer scope lists, docs-search input paths, or docs-search field policy
 - record-construction algorithms
-- ranking rules
-- runtime UI policy
-- operation logs or targeted-update provenance
+- ranking or normalization
+- runtime labels, timing, or messages
+- Docs Viewer search scopes
+- generated-operation history
 
-Those remain in builder code, search runtime code, CLI/server output, or the dedicated runtime policy files as appropriate.
+Those belong to the builder/runtime or to [Catalogue Search Policy](/docs/?scope=studio&doc=config-search-policy-json).
 
-## Targeted Policy Values
-
-Current policy values:
-
-- `record_update`
-  Supported by the shared policy vocabulary and used by Docs Viewer search, but not currently declared in this Catalogue-owned config.
-- `additive_only`
-  Used by the first catalogue targeted-search slice, where only new work, series, and moment entries are safe to insert without changing existing records.
-- `full_rebuild`
-  Used when a source family or scope should not use targeted updates.
-
-The policy value is intentionally more explicit than a boolean because catalogue can become partly targetable without making every catalogue source-family change safe for targeted updates.
-
-Validation rejects the old `targeted` boolean form. Policies that allow targeted updates must declare `targeted_operations`; `full_rebuild` entries must omit it. Operation values must also match the policy: `record_update` allows `create`, `update`, and `delete`; `additive_only` allows `create`.
-
-## Heavy-index readiness
-
-The config exists so future body, summary, or prose-heavy indexing can add source-family declarations before adding heavier fields to the public search artifacts.
-For Docs Viewer body or summary indexing, update the Docs Viewer search builder/config surfaces rather than this Catalogue config.
-
-The first implementation deliberately avoids per-record checksums and sidecar payloads. The current fallback remains a full same-scope rebuild when a dependency cannot be invalidated cheaply and explicitly.
-
-For the broader build flow, see [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture).
+When adding a source or search field, update this registry first so the dependency boundary remains explicit. Read the JSON and its validator for the exact current inventory.

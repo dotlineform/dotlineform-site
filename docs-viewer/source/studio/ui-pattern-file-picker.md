@@ -1,135 +1,69 @@
 ---
 doc_id: ui-pattern-file-picker
-title: File Picker Pattern
+title: File Picker
 added_date: 2026-06-14
-last_updated: 2026-06-14
+last_updated: 2026-07-15
 parent_id: ui
 viewable: true
 ---
-# File Picker Pattern
+# File Picker
 
-File Picker is the shared production control for choosing a file from a folder plus one optional subfolder level.
+Use File Picker to choose one or more files from a folder and one optional subfolder level. The caller supplies the meaning of the root and the functions that load available folders and files.
 
-The shared assets are:
+## Authority
 
-- behavior: `shared/frontend/js/file-picker.js`
-- baseline styling: `shared/frontend/css/file-picker.css`
-- component config: `shared/frontend/js/file-picker-config.js`
-- browser import path: `/shared/frontend/js/file-picker.js`
-- stylesheet path: `/shared/frontend/css/file-picker.css`
+- behaviour: `shared/frontend/js/file-picker.js`
+- defaults and text: `shared/frontend/js/file-picker-config.js`
+- styles: `shared/frontend/css/file-picker.css`
+- current adapter: `studio/app/frontend/js/catalogue-project-media-picker.js`
 
-## Scope
+Search imports from `/shared/frontend/js/file-picker.js` for the current consumer set.
 
-Use File Picker when:
+## Stable Structure
 
-- the user is choosing one file, not editing path text directly
-- folder search should be transient until a folder is selected
-- the caller needs structured path parts: `folder`, `subfolder`, and `filename`
-- the same picker behavior may be reused across Studio, Analytics, Docs Viewer, or other local app surfaces
+`createFilePicker(root, options)` owns:
 
-The component is intentionally not named for projects.
-Studio currently maps `folder` to `project_folder`, but another caller may map the same component to a different source root.
+- prefix search across loaded folders
+- a parent row and one level of subfolders
+- custom keyboard/mouse listboxes
+- single- or multiple-file transient selection
+- select-all/deselect-all for multiple mode
+- missing-selection and loader status inside the control
+- validation and a structured selection on submit
 
-## Behavior Contract
+The caller owns:
 
-The shared component owns:
+- modal or page composition
+- the source-root and scope meaning
+- `loadFolders` and `loadFiles` callbacks
+- server authorization and path validation behind those callbacks
+- mapping the returned folder, subfolder, filename, or filenames into route state
+- dirty state, persistence, and workflow errors
 
-- picker-specific defaults for labels, status text, search behavior, and subfolder display
-- folder search with prefix matching
-- Escape reset for the folder search popup
-- one-level subfolder listbox
-- parent-folder row at the top of the subfolder listbox, so selecting a subfolder is reversible without reselecting the folder
-- file listbox
-- mouse wheel selection inside listboxes without scrolling the page
-- custom ARIA listbox focus and keyboard behavior
-- Enter and double-click submit from the file list
-- missing-current-file status inside the picker
-- returning a structured selection only after submit
+Typing in folder search is transient. It must not mark a route dirty; only a confirmed selection should update durable draft state.
 
-The consuming route owns:
+## Returned Boundary
 
-- modal shell or page placement
-- optional picker config overrides
-- source-root meaning
-- folder and file loader callbacks
-- mapping returned `folder`, `subfolder`, and `filename` into route state
-- page-level dirty state and save behavior
+The selection identifies `scope`, `folder`, `subfolder`, and either a single filename or a filename list. Exact option names, accepted loader record aliases, status text keys, and controller methods live in the two JavaScript modules above.
 
-Do not mark a route dirty while the user types in the folder search.
-Typing is reversible picker state; only confirming a file selection should update durable route draft fields.
+The component normalizes a few historical folder/file field names for current consumers. New adapters should use the direct `folder`, `subfolder`, and `filename` shape rather than extending the alias set.
 
-The subfolder and file lists are custom listboxes, not native `<select size>` controls.
-This keeps focus trapping, Tab order, arrow keys, wheel selection, and Enter behavior under the shared component's control across browsers.
+## Method And Weak Spots
 
-The folder search input, subfolder listbox, and file listbox rely on accessible names rather than visible field labels by default.
-The modal title and the selected folder row provide the local context.
-
-## API
-
-`createFilePicker(rootNode, options)` renders the picker into `rootNode`.
-
-Supported options:
-
-- `id`: stable id prefix
-- `scope`: optional caller-owned root identifier
-- `config`: optional picker-specific config created with `createFilePickerConfig(overrides)`
-- `primaryNode`: optional submit button to enable or disable
-- `initialSelection`: optional `{ scope, folder, subfolder, filename }`
-- `loadFolders({ scope, query })`: returns folder records or strings
-- `loadFiles({ scope, folder, subfolder, query })`: returns `{ subfolders, files }`
-- `onSubmit()`: called when file-list Enter or double-click requests submit
-
-The picker module also exports:
-
-- `FILE_PICKER_DEFAULT_CONFIG`
-- `createFilePickerConfig(overrides)`
-- `filePickerText(config, key, tokens)`
-
-Config sections:
-
-- `text`: picker-specific strings such as `modalTitle`, `cancelButton`, `confirmButton`, `folderLabel`, status messages, and validation messages
-- `search`: folder-search settings such as `maxFolderResults` and `openFolderSearchOnFocus`
-- `subfolders`: parent row fallback label and subfolder prefix
-
-Returned controller methods:
-
-- `ready`: promise for initial folder/file loading
-- `submit()`: validates and returns `{ selection }` or `{ ok: false, status }`
-- `focus()`: focuses the folder search input
-- `destroy()`: removes shared search-list listeners
-- `getSelection()`: returns the current transient selection
-
-Folder records may expose `folder`, `project_folder`, or `value`.
-Subfolder records may expose `subfolder`, `project_subfolder`, or `value`.
-File records may expose `filename`, `file`, or `value`.
-
-## Current Consumers
-
-- `studio/app/frontend/js/catalogue-project-media-picker.js`: adapts the generic picker to Catalogue Work source-image fields
-
-The Studio adapter uses shared picker config for the file-picker modal title and action labels.
-It should not map picker text through Studio's broad `ui-text` keys such as `entry_modal_cancel_button`.
-
-The Work editor stores the confirmed selection as:
-
-- `project_folder = selection.folder`
-- `project_subfolder = selection.subfolder`
-- `project_filename = selection.filename`
-
-The page fields are read-only labels backed by hidden form values.
-The modal is the only editing surface for those three fields.
+- The hierarchy is intentionally limited to a folder plus one optional subfolder. It is not a general filesystem browser.
+- Custom listboxes provide consistent multi-select, wheel, and submit behaviour, but require focused accessibility and keyboard verification.
+- Loader callbacks make the control reusable but can blur responsibility. API errors and security remain route/server concerns even when the component displays their message.
+- The picker returns path parts, not proof that a file is safe or still exists. The server must validate again before a write.
 
 ## Verification
 
-Do not add permanent route or modal workflow smokes for ordinary picker interaction.
-Use the test review gate from [Testing](/docs/?scope=studio&doc=testing): prove durable contracts at the lowest layer, and use manual or temporary browser checks for tactile interaction, focus feel, and modal choreography.
+Protect:
 
-Durable checks should focus on:
+- loader arguments and normalized results
+- single- and multiple-selection output
+- missing initial selections
+- config text and validation messages
+- route mapping from returned selection into draft/source fields
+- server-side path and source-root validation
 
-- config mapping and returned selection shape
-- loader request arguments for folder, subfolder, and query changes
-- route adapter mapping from `{ folder, subfolder, filename }` into draft fields
-- server/API behavior that supplies folder and file records
-- generated or saved source fields after confirmed selection, when the route owns persistence
-
-Manual or temporary browser checks remain appropriate for listbox keyboard behavior, wheel interaction, focus trapping, labels, modal button placement, and visual fit.
+Use manual browser checks for listbox keyboard behaviour, wheel interaction, focus flow, and modal fit.

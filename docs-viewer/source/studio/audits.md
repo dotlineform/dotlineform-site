@@ -2,54 +2,38 @@
 doc_id: audits
 title: Audits
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-15
 parent_id: admin
+viewable: true
 ---
 # Audits
 
-Route:
+## Workflow
 
-- `/admin/audits/`
+`/admin/audits/` lists the audits registered by `admin-app/app/server/admin_app/audit_runner.py`.
 
-The audit page surfaces local maintenance audits inside Admin.
+1. The route probes the audit API and loads the server-side allowlist.
+2. Run posts one audit ID plus normalized Admin activity context.
+3. The runner executes its fixed argv without a shell.
+4. The response separates status, exit code, counts, findings, timing, stdout, and stderr.
+5. The route keeps results visible and records the user-initiated audit in Activity.
 
-The first version lists the route ready-state audit and provides a Run command. Results show pass/fail state, exit code, warning/error counts, run timestamp, findings when present, and a collapsible raw output block for debugging.
+Audit failure is a valid execution result, not an HTTP transport failure. Unknown IDs or invalid requests are request errors.
 
-## Runtime
+## Ownership
 
-The page uses:
+- route controller: `admin-app/app/frontend/js/admin-audits.js`
+- browser endpoints: `admin-transport.js`
+- HTTP adapter: `admin_audit_api.py`
+- allowlist and execution: `audit_runner.py`
+- audit implementations: `admin-app/checks/`
 
-- `admin-app/app/frontend/js/admin-audits.js`
-- `admin-app/app/frontend/js/admin-transport.js`
-- `admin-app/app/server/admin_app/admin_audit_api.py`
-- `admin-app/app/server/admin_app/audit_runner.py`
-- `admin-app/checks/audit_route_ready_state.py`
+The browser never sends commands, paths, flags, environment, or working directories.
 
-Visible runtime copy is code-owned by the Admin frontend modules.
+## Extension And Weak Spots
 
-The local service endpoint definitions live in `admin-app/app/frontend/js/admin-transport.js`, matching the Admin transport pattern.
-The active browser endpoints are hosted by the Admin app server under `/admin/api/audits/...`.
+Add only deterministic maintenance checks with structured output and a clear reason to run them interactively. Register the audit server-side and cover both direct runner and API behavior.
 
-## Ready State
+The route includes a fallback audit list for unavailable/malformed list responses. That improves resilience but duplicates allowlist metadata in the browser; the server registry remains authoritative.
 
-The route root is `#studioAuditsRoot`.
-
-The page exposes:
-
-- `data-studio-route="studio-audits"`
-- `data-studio-ready`
-- `data-studio-busy`
-- `data-studio-mode="summary|running|result|unavailable"`
-- `data-studio-service="available|unavailable"`
-
-The page marks busy while an audit run is in progress and returns to ready after the service response or request failure settles.
-
-## Service Behavior
-
-When the local app audit API is unavailable, the page stays readable, disables the Run command, and exposes `data-studio-service="unavailable"`.
-
-When the service is available, the page fetches `/admin/api/audits/audits` to list allowlisted audits. It currently expects:
-
-- `route-ready-state`
-
-Running the audit posts only the audit ID to `/admin/api/audits/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.
+The route uses `#studioAuditsRoot` with Admin-prefixed ready/busy attributes. The historical DOM name is not an ownership signal.

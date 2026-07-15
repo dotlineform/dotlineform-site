@@ -1,181 +1,56 @@
 ---
 doc_id: search-docs-viewer-infrastructure
-title: Docs Viewer Infrastructure
+title: Docs Viewer Search
 added_date: 2026-06-02
-last_updated: 2026-06-02
-ui_status: review
+last_updated: 2026-07-15
 parent_id: search
 viewable: true
 ---
-# Docs Viewer Search Infrastructure
+# Docs Viewer Search
 
-## Domain
+Docs Viewer Search provides inline document lookup for every configured Docs Viewer scope.
 
-Docs Viewer search owns document-corpus lookup for Docs Viewer scopes.
+## Execution Path
 
-Current live surfaces:
+1. `docs-viewer/config/scopes/docs_scopes.json` identifies the scope source and generated/published search paths.
+2. `docs-viewer/build/build_search.py` reads source front matter and writes a scope-specific static index.
+3. Docs Viewer route config supplies the index URL and expected schema.
+4. the collection provider loads the index for the active route/scope
+5. `docs-viewer-search.js` normalizes and ranks entries
+6. `docs-viewer-search-controller.js` owns query/history state, loading, paging, and result rendering
 
-- `/docs/`
-- `/library/`
-- `/analysis/`
+Public scopes publish their indexes to `site/assets/data/search/`; local scopes keep local generated output or serve it through the Docs Viewer service.
 
-Current outputs:
+## Capability Summary
 
-- `docs-viewer/generated/search/studio/index.json`
-- `docs-viewer/generated/search/tmp/index.json`
-- `site/assets/data/search/library/index.json`
-- `site/assets/data/search/analysis/index.json`
+- indexes viewable documents only
+- searches document id, title, parent title, and update metadata
+- preserves parent context for display and ranking
+- updates create/change/delete targets without rebuilding an unrelated scope
+- supports inline query history and incremental result display
+- shares one runtime across local, public, and external-local scopes
 
-Docs Viewer search is separate from Catalogue search.
-It does not index works, series, moments, or public catalogue route state.
+Document body Markdown and rendered HTML are not indexed. Search is a navigation index, not full-text retrieval.
 
-## Config Surface
+## Configuration Boundary
 
-Current scope config:
+- source and filesystem publication: `docs_scopes.json`
+- local runtime URLs and expected schema: `docs-viewer/config/defaults/docs-viewer-config.json`
+- public route URLs: `site/docs-viewer/config/routes/docs-viewer-public-routes.json`
+- local external reads: Docs Viewer service routes from the configured external data root
 
-- `docs-viewer/config/scopes/docs_scopes.json`
+Keep filesystem paths out of browser config. A scope's type and publish paths determine whether its index is local or public.
 
-Current responsibilities:
+## Extension Method
 
-- declare Docs Viewer scopes
-- declare source Markdown roots
-- declare generated docs output paths
-- declare generated search output paths
-- declare viewer base routes and scope routing behavior
-- declare viewability and manage-only scope settings used by generated docs payloads
+Adding a normal scope should be configuration work, not a new builder/runtime branch. Add code only when the new scope requires a genuinely different source shape or retrieval method.
 
-Docs Viewer browser config is generated from the same scope config by:
+For new searchable metadata, update source parsing, entry construction, normalization/ranking, and focused tests together. Adding body content would materially change payload size and relevance behaviour and should be treated as a separate feature.
 
-- `docs-viewer/build/build_docs.py`
+## Weak Spots
 
-The generated browser config includes per-scope docs tree, recently-added, selected-payload, and search index URLs.
-It also emits a Docs Viewer search policy payload with the docs-domain `record_update` targeted policy.
-
-Docs Viewer search does not use `studio/services/catalogue/search/build_config.json`.
-
-## Build Pipeline
-
-Current build entrypoint:
-
-```bash
-./docs-viewer/build/build_search.py --scope studio
-```
-
-Write command:
-
-```bash
-./docs-viewer/build/build_search.py --scope studio --write
-```
-
-The same entrypoint supports any configured Docs Viewer scope, including `studio`, `library`, `analysis`, and `tmp`.
-
-Current source input:
-
-- the configured Docs Viewer source root for the requested scope
-
-Current pipeline shape:
-
-1. load the requested scope from `docs-viewer/config/scopes/docs_scopes.json`
-2. resolve source docs root and search output paths from that scope config
-3. parse source document front matter
-4. filter out non-viewable and manage-only docs
-5. derive one search entry per viewable doc
-6. derive `search_terms` and `search_text`
-7. compute a content hash in the artifact header
-8. write only when changed, forced, or targeted changes require it
-
-Docs search is downstream of the Docs Viewer source model, not public route payloads.
-It does not read retired public docs `index.json` artifacts during search-index generation.
-
-## Index Schema
-
-Current top-level shape:
-
-- `header`
-- `entries`
-
-Current entry fields include:
-
-- `id`
-- `kind`
-- `title`
-- `href`
-- `last_updated`
-- `parent_id`
-- `parent_title`
-- `display_meta`
-- `search_terms`
-- `search_text`
-
-Current included record kind:
-
-- `doc`
-
-Current exclusions:
-
-- Catalogue records
-- raw Markdown
-- raw rendered HTML
-- full body prose
-- section-level records
-- generated snippets or summaries
-
-## Ranking Runtime
-
-Current runtime modules:
-
-- `site/docs-viewer/runtime/js/shared/docs-viewer-search-controller.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-search.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js`
-- `site/docs-viewer/runtime/js/shared/docs-viewer-render.js`
-
-The Docs Viewer app receives the current scope's `search_index_url` from normalized browser config.
-The search controller loads that index through the generated-data runtime, normalizes doc entries, evaluates matches, sorts results, and renders them into the active Docs Viewer route context.
-
-Current ranking is docs-domain-specific.
-It weights exact id/title matches first, then phrase and prefix matches, then title-token coverage, then parent-title matches, then broader `search_text` matches.
-
-Docs Viewer recently-added mode reads the scope's generated `recently-added.json` payload.
-Search ranking remains separate and uses the search payload.
-
-## Targeted Updates
-
-Docs targeted mode uses:
-
-```bash
-./docs-viewer/build/build_search.py --scope studio --only-doc-ids <doc_id> --remove-missing
-```
-
-Current targeted behavior:
-
-- create or update entries by `doc_id`
-- remove affected ids that are missing or no longer viewable when `--remove-missing` is passed
-- fall back to a full search payload when the existing search artifact is unavailable
-- report changed, removed, unchanged, and fallback counts in CLI/server output
-
-Docs management writes and the Docs Live Rebuild Watcher use the same Docs Viewer search builder for same-scope follow-through.
-The explicit docs rebuild endpoint can still run a full same-scope docs-search rebuild.
-
-Unsupported Catalogue flags fail closed:
-
-- `--only-records`
-
-## Domain Review Questions
-
-Docs Viewer-specific review should ask:
-
-- Are doc title, parent title, date, and id enough for real docs lookup?
-- Should headings, summaries, or body excerpts enter search, and what payload cost would that add?
-- Are non-viewable and manage-only docs filtered correctly?
-- Does ranking reflect document lookup rather than catalogue lookup?
-- Do results open in the correct Docs Viewer scope and route mode?
-- Are targeted updates safe for source renames, parent changes, and visibility changes?
-- Does portable Docs Viewer setup avoid depending on Catalogue search files?
-
-Related docs:
-
-- [Domain Review Patterns](/docs/?scope=studio&doc=search-domain-review-patterns)
-- [Studio Scope](/docs/?scope=studio&doc=search-build-pipeline-studio)
-- [Library Scope](/docs/?scope=studio&doc=search-build-pipeline-library)
-- [Analysis Scope](/docs/?scope=studio&doc=search-build-pipeline-analysis)
-- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- Search records use front matter directly while document payload generation performs richer rendering; both builders must continue to agree on identity and visibility.
+- Parent-title changes affect child entries and require correct affected-id expansion by the watcher.
+- Runtime config retains both legacy and nested search URL fields.
+- Ranking policy is embedded in JavaScript rather than a registry or schema.
+- A large document corpus may outgrow client-side static-index loading.

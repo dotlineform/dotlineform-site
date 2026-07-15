@@ -2,60 +2,40 @@
 doc_id: sorting-architecture
 title: Series Sorting
 added_date: 2026-03-31
-last_updated: "2026-05-09 21:28"
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
-# Sorting Architecture
+# Series Sorting
 
-This document records the current canonical ordering rules across generated artifacts and runtime pages.
+## Ownership
 
-It is an architecture note because it defines where ordering is owned and how different runtime surfaces stay aligned. It is not a field-by-field schema reference.
+Canonical sort policy is `sort_fields` on each Series record in `studio/data/canonical/catalogue/series.json`.
 
-## Canonical Source Of Truth
+The catalogue generator applies that policy to canonical member Works and writes the resulting ordered Work IDs to `site/assets/data/series_index.json`. That ordered list is the shared runtime authority for Series membership order.
 
-- Canonical per-series work order is `site/assets/data/series_index.json`:
-  - `series.<series_id>.works` is the ordered `work_id` list.
-  - `series.<series_id>.sort_fields` records the declared sort strategy (for example `title,work_id`).
-- Runtime card metadata comes from:
-  - `site/assets/data/works_index.json` (`works.<work_id>.*`)
+`site/assets/data/works_index.json` supplies lightweight Work card metadata but does not independently decide Series order.
 
-## Cached Derivative
+## Consumers
 
-- `_works/<work_id>.md` contains `series_sort`.
-- `series_sort` is a cache derived by the catalogue generator during scoped JSON rebuilds.
-- `series_sort` is still used by some build-time Liquid/JS sorting paths (for example the works index `seriessort` sort key).
+- the public Series grid uses ordered membership from `series_index.json`;
+- Work previous/next navigation uses the same ordered list;
+- Studio Works derives its Series-order sort from the Series index;
+- recent/public record generation may use the same generator-computed ordering context.
 
-## Runtime Usage By Page
+There is no separate hand-maintained ordering table or active Work front-matter cache to update.
 
-- `series` page grid (`_layouts/series.html`):
-  - Uses `site/assets/data/series_index.json` for ordered works in series.
-  - Uses `site/assets/data/works_index.json` for card text metadata; thumb URLs are derived from `work_id`.
-- Work page series navigation (`_layouts/work.html`):
-  - Runtime prev/next and counter use `site/assets/data/series_index.json`.
-  - Runtime series-link visibility (`| series`) uses `site/assets/data/series_index.json`.
-- Works index (`works/index.md`):
-  - Uses per-row data attributes and JS sorting.
-  - Supports `seriessort` key via work front matter `series_sort`.
+## Change Flow
 
-## Regeneration Contract
-
-Whenever series ordering might change (new work in series, title/year edits affecting sort, or source `series.<series_id>.sort_fields` changes):
-
-1. Regenerate `work-pages` for affected series (refresh `_works` `series_sort` cache).
-2. Regenerate `series-index-json` (refresh canonical runtime JSON order).
-3. Regenerate `works-index-json` when work card metadata changes (for example title/year/series fields).
-
-Recommended command:
-
-```bash
-$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --series-id <series_id> --write
+```text
+Series sort_fields or sortable Work metadata changes
+  -> generator recomputes affected Series order
+  -> series_index.json is rewritten
+  -> dependent Work/aggregate payloads are selected by the field-aware build plan
 ```
 
-This command is the live scoped rebuild path for JSON-led catalogue maintenance.
+Use the scoped catalogue build for the affected Series. The field registry decides which additional artifacts are necessary when sortable Work metadata changes.
 
-## Why This Hybrid Exists
+## Weak Spot
 
-- `site/assets/data/series_index.json` order is the canonical cross-page runtime order.
-- Front-matter `series_sort` remains useful as a fast build-time cache for Liquid templates.
-- The regeneration contract keeps both aligned.
+Ordering is computed in generation code and then consumed by several runtimes. A new sort token therefore needs source validation, generator support, Studio/public consumer compatibility, and tests. Do not document a token as supported until those authorities agree.

@@ -2,81 +2,45 @@
 doc_id: scripts-verify-catalogue-field-registry
 title: Catalogue Field Registry Verification
 added_date: 2026-05-01
-last_updated: "2026-06-02"
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Field Registry Verification
 
-Script:
+## Command
 
 ```bash
 $HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py
 ```
 
-Test wrapper:
+Pytest wrapper:
 
-```bash
+```text
 studio/tests/python/test_catalogue_field_registry.py
 ```
 
-This read-only helper verifies representative catalogue field-registry build plans and checks that the registry stays aligned with the canonical catalogue source field sets.
+## What It Proves
 
-## Purpose
+The verifier loads the registry path from `studio-config.json` and checks two directions of agreement:
 
-Use this script after changing:
+- representative fields select the intended public artifacts, generator modes, search work, local media, and fallback behavior;
+- active Work, Series, and detail source fields are classified consistently as identity, derived, editable metadata, or explicit exemption.
 
-- `studio/data/config/catalogue/catalogue-field-registry.json`
-- `studio/services/catalogue/catalogue_field_registry.py`
-- `studio/services/catalogue/catalogue_source.py`
-- `studio/services/catalogue/moment_sources.py`
-- field-aware preview or save-time build planning
-- the optional `catalogue` check profile in `$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py`
+It also rejects duplicate field ownership within a record family/operation and checks serializer omit-empty behavior for optional fields.
 
-It loads the registry path through `studio/app/frontend/config/studio-config.json`, then checks that target rules and fallback defaults still produce the expected artifact, generator, catalogue-search, and local-media selections.
+## When To Run It
 
-It also verifies source/registry drift:
+Run it after changing:
 
-- registry fields must be known source fields or explicit verifier exemptions
-- active editable source fields must have a `metadata_update` rule or explicit verifier exemption
-- identity and derived fields must not be classified as normal metadata edits
-- duplicate field ownership within a record family and operation fails
-- optional omit-empty source fields keep their serialization behavior
+- `catalogue-field-registry.json`;
+- catalogue source fields or normalization;
+- field-aware build or lookup planning;
+- a field's public/search/media behavior;
+- registry loading or fallback policy.
 
-## Checked Cases
+The script does not write source or generated files. It does not prove browser UI behavior or execute a catalogue build.
 
-The verification covers:
+## Ownership Boundary
 
-- work-local public metadata such as `downloads` and `links`
-- work editor-only metadata such as `provenance`
-- work media source fields such as `project_filename`
-- work search enrichment fields such as `medium_type`
-- work display fields with a related series `sort_fields` dependency
-- work publication and membership fields such as `series_ids`
-- work-detail public section metadata such as `section_title` and `sort_order`
-- work-detail source media fields such as `details_subfolder` and `project_filename`
-- series publication fields
-- moment display fields and moment media source fields
-- unknown-field fallback
-- mixed dependency-class fallback
-- series saves that also change member work rows
-- source/registry coverage for work, work-detail, series, and moment fields
-- optional source serialization for work `project_subfolder`, detail `details_subfolder`, and detail `sort_order`
-
-## Output
-
-Successful output:
-
-```text
-catalogue field registry verification passed (17 checks)
-```
-
-The exact check count may increase as source/registry guardrails are added.
-
-A failing check exits non-zero and reports the first mismatched plan field.
-
-## Boundaries
-
-This script verifies planner behavior and source/registry coverage. It does not make the registry the owner of source serialization. Field order, normalization, and omit-empty behavior still live in `studio/services/catalogue/catalogue_source.py` and `studio/services/catalogue/moment_sources.py`.
-
-It does not write generated files, run local media generation, rebuild catalogue search, or verify browser UI behavior.
+`catalogue_source.py` owns field existence and serialization. `catalogue_field_registry.py` owns dependency-plan interpretation. The JSON registry owns checked policy. The verifier ensures they agree without making any one of them a second copy of the others.

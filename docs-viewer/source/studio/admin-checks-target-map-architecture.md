@@ -1,220 +1,70 @@
 ---
 doc_id: admin-checks-target-map-architecture
-title: Config and Target Map
+title: Target Map Architecture
 added_date: 2026-06-09
-last_updated: 2026-06-10
+last_updated: 2026-07-15
 parent_id: admin-checks
+viewable: true
 ---
-# Config and Target Map
+# Target Map Architecture
 
-This document explains the relationship between the Admin checks config, the target-map resolver, the target-map audit, and the later `target-map` report.
-
-## Core Idea
-
-The target map has one durable source of truth:
+## Stable Structure
 
 ```text
-admin-app/checks/config/admin-checks.json
+admin-checks.json
+  -> admin_checks_config.py validates policy
+  -> target_map_resolver.py resolves source files and boundary flags
+     -> audit_target_map.py reviews config health across the repository
+     -> reports/target_map.py answers one selected run question
 ```
 
-Report metadata and defaults live in:
+The audit and report have different purposes but must share resolution mechanics.
 
-```text
-admin-app/checks/config/admin-checks-reports.json
-```
+## Maintenance Audit
 
-The target-map config defines scopes, file families, functional areas, routes, exclusions, and shared dependencies.
-It should contain stable path and filename patterns, not a hand-maintained per-file inventory.
+`audit_target_map.py` asks whether the maintained map still fits the repository:
 
-The audit and report use shared resolver logic.
-They must not maintain separate implementations of path matching, target resolution, stale-pattern detection, shared dependency resolution, or boundary flag counts.
+- which patterns are stale or unexpectedly broad;
+- which files are unclassified or likely unmapped;
+- where files match several families, areas, or routes;
+- which dependencies are shared across targets;
+- whether route inventory and ownership need review.
 
-The current module shape is:
+It normally inspects the whole config and may write a local maintenance snapshot under `var/admin/checks/target-map-audit/`.
 
-```text
-admin-app/checks/
-  admin_checks_config.py
-  target_map_resolver.py
-  audit_target_map.py
-  reports/
-    target_map.py
-```
+The audit is not a user-selected report and should not change behavior based on one checks run.
 
-## Current State
+## Run-Scoped Report
 
-Risk Evidence Producers Batch 2 promoted the draft target rules into `admin-app/checks/config/admin-checks.json`.
-`admin-app/checks/audit_target_map.py` now reads that durable target-map config and calls `admin-app/checks/target_map_resolver.py`.
+The `target-map` report asks how files in one selected scope/filter set are classified. It runs through `run_reports.py`, writes ordinary report artifacts under the run ID, and appears in Admin Checks.
 
-Current durable implementation:
+It is evidence rather than pass/fail policy. Cross-route or cross-area files may be valid shared infrastructure; the report makes them visible for review.
 
-- `admin-app/checks/config/admin-checks.json` defines the target map.
-- `admin-app/checks/config/admin-checks-reports.json` defines the report registry and defaults.
-- `admin-app/checks/admin_checks_config.py` validates the config and run requests.
-- `admin-app/checks/target_map_resolver.py` resolves scopes, families, areas, routes, shared dependencies, stale patterns, broad patterns, and boundary flags.
-- `admin-app/checks/audit_target_map.py` is a maintenance CLI wrapper around the config loader and resolver.
-- `admin-app/checks/reports/target_map.py` is the normal run-scoped checks report producer for target-map evidence.
+## Resolver Contract
 
-## Target Layers
+The resolver owns:
 
-The current target map has six scopes:
+- source-file discovery after exclusions;
+- direct and shared matches for scopes/families/areas/routes;
+- selected target intersection;
+- pattern status;
+- unclassified and boundary flags;
+- structured counts and file rows for both callers.
 
-```text
-admin
-analytics
-docs-viewer
-public-site
-studio
-all
-```
-
-Families are the most deterministic layer because they follow technical structure:
-
-```text
-admin-route
-build
-config
-public-route
-runtime-assets
-runtime-js
-services
-tests
-```
-
-Areas are workflow/product concepts and are intentionally less complete:
-
-```text
-activity
-catalogue
-config
-docs-build
-import-export
-management
-search
-```
-
-Routes are deterministic inventory entries derived from route configs, server dispatch, and public route files.
-Routes may be `mapped` or `inventory-only`.
-
-`mapped` routes have reviewed ownership patterns and can be selected by normal checks runs.
-`inventory-only` routes are present for surface-area tracking but still need ownership review before they become route filters.
-
-Current route status counts:
-
-```text
-mapped: 5
-inventory-only: 40
-```
-
-Docs Viewer management uses one route path, `/docs/`.
-The query state such as `?scope=studio&doc=...` is route state, not separate route ids.
-
-## Responsibility Split
-
-| File | Role |
-| --- | --- |
-| `admin-app/checks/config/admin-checks.json` | Durable target map contract. |
-| `admin-app/checks/config/admin-checks-reports.json` | Report registry, default options, allowed options, and artifact metadata. |
-| `admin-app/checks/admin_checks_config.py` | Config and run-request validation. |
-| `admin-app/checks/target_map_resolver.py` | Shared resolver for matching files to scopes, families, areas, routes, shared dependencies, stale patterns, and boundary flags. |
-| `admin-app/checks/audit_target_map.py` | Maintenance guardrail for config drift across the repo. |
-| `admin-app/checks/reports/target_map.py` | Normal report producer for target-map evidence in a checks run. |
-
-Docs Viewer publish-gate files are classified with the existing `/docs/` route plus the `management` and `docs-build` areas.
-Do not add a separate publishing area unless the workflow grows beyond the local management/build boundary.
-
-## Why Keep The Audit
-
-The audit is a config-maintenance guardrail.
-It asks whether the target map is still coherent after the repo changes.
-
-Run it when adding or changing:
-
-- routes
-- feature areas
-- app layers
-- shared helpers
-- report scripts
-- config files
-- significant file moves or renames
-
-By default, the audit should inspect the whole config, not just one selected run scope.
-It should make drift visible:
-
-- `_unclassified` files
-- files matching multiple families
-- cross-area files
-- cross-route files
-- stale patterns
-- unexpectedly broad patterns
-- likely area or route files that are not mapped
-- shared dependencies used by many targets
-- generated, cache, dependency, build, and local run paths excluded by scope rules
-- Markdown source documents are excluded from checks input; report artifacts such as `report.md` remain normal outputs.
-
-The audit can later grow stricter maintenance modes such as `--strict` or `--changed-files`.
-Those modes should remain config guardrails, not report-run behavior.
-
-## Why Keep The Report
-
-The `target-map` report is a user-facing checks report.
-It should run through the normal orchestrator and write normal report artifacts:
-
-```text
-var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/target-map/
-  report.json
-  report.md
-```
-
-The report answers a selected evidence question for a run.
-It should respect selected scope, family, area, and route filters from the run request.
-Normal report runs should only allow routes whose config status is `mapped`.
-Routes with status `inventory-only` are present for surface-area tracking but still need ownership review before they become route filters.
-
-The report can expose many of the same metrics as the audit, but its contract is different:
-
-- it is allowlisted in `admin-checks-reports.json`
-- it runs through `run_reports.py`
-- it writes under a timestamped checks run
-- it is displayed in `/admin/checks/`
-- it reports evidence for the selected run target
-
-If the report runs with `scope=all`, it may look similar to the audit.
-The difference is interpretation: the report is evidence for a run, while the audit is a guardrail for maintaining the target map itself.
-
-## Shared Resolver Contract
-
-The resolver should be the only implementation of target-map mechanics.
-
-It should provide structured data for both callers:
-
-- included files by scope after exclusions
-- excluded files and exclusion reasons
-- matched families, areas, routes, and shared dependencies per file
-- `_unclassified` family assignment
-- multi-family, cross-area, and cross-route flags
-- stale and broad pattern status
-- likely unmapped area and route hints
-- summary counts
-
-The audit may request all scopes and full pattern diagnostics.
-The report may request only one resolved run plan.
-Both should receive their data from the same resolver.
+Neither caller should reimplement glob matching or infer shared dependencies independently.
 
 ## Artifact Ownership
 
-Durable assets live under `admin-app/`.
-Generated snapshots live under `var/`.
+- durable target policy: `admin-app/checks/config/`;
+- shared implementation: config loader and target-map resolver;
+- maintenance snapshot: `var/admin/checks/target-map-audit/`;
+- selected report evidence: `var/admin/checks/<run-id>/target-map/`.
 
-Use this split:
+Do not commit a resolved per-file map as permanent architecture. It would immediately create another inventory that must be updated for every move.
 
-| Kind | Path |
-| --- | --- |
-| Target-map config | `admin-app/checks/config/admin-checks.json` |
-| Report registry | `admin-app/checks/config/admin-checks-reports.json` |
-| Shared resolver | `admin-app/checks/target_map_resolver.py` |
-| Maintenance audit CLI | `admin-app/checks/audit_target_map.py` |
-| Report producer | `admin-app/checks/reports/target_map.py` |
-| Audit snapshots | `var/admin/checks/target-map-audit/` |
-| Report run artifacts | `var/admin/checks/<run-id>/target-map/` |
+## Weak Spots
 
-Do not commit a full resolved per-file target map as a permanent contract unless it is a small test fixture or an explicitly approved baseline.
+- Route discovery and route ownership are not yet cleanly separated in the config lifecycle.
+- Broad patterns can conceal missing focused mappings.
+- The all-repo scope is useful for maintenance but easy to mistake for a meaningful product boundary.
+- Boundary flags identify review candidates; without a decision/action workflow they can become another accumulating dashboard.

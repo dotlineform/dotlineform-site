@@ -2,85 +2,71 @@
 doc_id: local-studio-apis
 title: Local Studio APIs
 added_date: 2026-06-02
-last_updated: 2026-06-06
+last_updated: 2026-07-15
+summary: Exact loopback Studio app and catalogue API inventory, adapter boundaries, and extension rules.
 parent_id: studio
 viewable: true
 ---
 # Local Studio APIs
 
-This document is the endpoint and adapter inventory for the Local Studio app server.
-Use [Local Studio App](/docs/?scope=studio&doc=local-studio-app) for the server boundary and [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for route shell ownership.
+## Authority
 
-## Ownership Rules
+`studio_app_server.py` owns HTTP dispatch. `studio_catalogue_api.py` owns the catalogue adapter. `catalogue_write_service.SERVICE_POST_PATHS` and the adapter’s explicit read/import/report branches are the executable endpoint authority.
 
-Local Studio APIs are loopback-only operational endpoints.
-Browser requests should select from explicit local actions; they should not provide arbitrary command text, unchecked filesystem paths, environment values, or unvalidated script flags.
+## App Endpoints
 
-Endpoint ownership is split by adapter:
+| method | path | purpose |
+| --- | --- | --- |
+| `GET` | `/health` | Studio app health |
+| `GET` | `/studio/runtime-config.json` | validated browser runtime config |
 
-- `studio/app/server/studio/studio_app_server.py`
-  owns request dispatch, health, runtime config routing, and process startup
-- `studio/app/server/studio/studio_catalogue_api.py`
-  owns Catalogue read/write/build/publication/import/report adapters
+## Catalogue Reads
 
-## App And Runtime Endpoints
+| method | path | purpose |
+| --- | --- | --- |
+| `GET` | `/studio/api/catalogue/health` | catalogue service availability |
+| `GET` | `/studio/api/catalogue/read` | allowlisted catalogue source and lookup reads |
+| `GET` | `/studio/api/catalogue/project-media` | confined project folder and image selection |
 
-Current app-level endpoints:
+The `read` endpoint accepts only server-owned keys and any required record id. It is not an arbitrary path reader.
 
-- `/health`
-- `/studio/runtime-config.json`
+## Catalogue Operations
 
-## Catalogue API
+| group | POST paths |
+| --- | --- |
+| workbook import | `/import-preview`, `/import-apply` |
+| project report | `/project-state-report`, `/project-state-open-report` |
+| work | `/work/create`, `/work/save` |
+| detail sections | `/work-detail-section/create`, `/work-detail-section/save` |
+| series | `/series/create`, `/series/save` |
+| bulk edit | `/bulk-save` |
+| delete | `/delete-preview`, `/delete-apply` |
+| public status | `/publication-preview`, `/publication-apply` |
+| remote media | `/media-publish-preview`, `/media-publish-apply` |
+| scoped build | `/build-preview`, `/build-apply` |
 
-Current Catalogue endpoints:
+Every path is beneath `/studio/api/catalogue`.
 
-- `/studio/api/catalogue/health`
-- `/studio/api/catalogue/read`
-- `POST /studio/api/catalogue/import-preview`
-- `POST /studio/api/catalogue/import-apply`
-- `POST /studio/api/catalogue/project-state-report`
-- `POST /studio/api/catalogue/project-state-open-report`
-- `POST /studio/api/catalogue/bulk-save`
-- `POST /studio/api/catalogue/work/create`
-- `POST /studio/api/catalogue/work/save`
-- `POST /studio/api/catalogue/work-detail/create`
-- `POST /studio/api/catalogue/work-detail/save`
-- `POST /studio/api/catalogue/series/create`
-- `POST /studio/api/catalogue/series/save`
-- `POST /studio/api/catalogue/delete-preview`
-- `POST /studio/api/catalogue/delete-apply`
-- `POST /studio/api/catalogue/publication-preview`
-- `POST /studio/api/catalogue/publication-apply`
-- `POST /studio/api/catalogue/build-preview`
-- `POST /studio/api/catalogue/build-apply`
-- `POST /studio/api/catalogue/prose/import-preview`
-- `POST /studio/api/catalogue/prose/import-apply`
-- `POST /studio/api/catalogue/moment/import-preview`
-- `POST /studio/api/catalogue/moment/import-apply`
-- `POST /studio/api/catalogue/moment/preview`
-- `POST /studio/api/catalogue/moment/save`
+## Adapter Boundary
 
-The local app adapter routes editor save, bulk save, build, publication, delete, moment prose import, and moment import flows through focused catalogue service modules.
-`bin/local-studio` no longer starts a standalone catalogue write server; catalogue APIs are owned by the Local Studio app server.
+The HTTP adapter parses the named request and delegates:
 
-Current local generated Studio feeds surfaced through this API:
+- import and Project State behavior to their focused services
+- catalogue mutations to `catalogue_write_service.py`
+- the write dispatcher to work, series, detail-section, bulk, delete, publication, media, or build services
 
-- unified Studio activity via `GET /studio/api/catalogue/read?key=activity_log`
+The adapter does not own source schemas, mutation policy, build planning, or public projection.
 
-Current mutable catalogue data surfaced through this API:
+## Safety And Extension
 
-- catalogue source records
-- catalogue lookup/search records
-- editor save/create/delete/publication/build/prose-import/moment API flows
-- workbook import preview/apply flows
-- project-state report generation and local report opening
+- endpoints are loopback-only and accept explicit JSON objects or allowlisted query keys
+- filesystem and environment paths are resolved on the server
+- preview endpoints remain write-free; apply endpoints revalidate
+- source writes use focused validation and atomic catalogue transactions
+- browser visibility or a runtime-config service entry does not grant authority
 
-Catalogue editors and Catalogue Drafts show their existing unavailable/load-failed states instead of reading stale static source JSON.
+To add an operation, define its domain owner first, add one narrow adapter branch, expose a browser client method only when needed, and cover the service contract directly. Update this inventory when the HTTP surface changes.
 
-## Checks
+## Known Weak Spot
 
-Current focused API checks:
-
-- `studio/tests/python/test_studio_app_server.py`
-- route-level smoke checks listed in [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
-- Docs Viewer service checks listed in [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+`studio-transport.js` currently hardcodes the complete browser endpoint set, while `studio_app_config.py` publishes a smaller catalogue service map. The executable paths agree for shared entries, but endpoint discovery is not yet owned by one projection.

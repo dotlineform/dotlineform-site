@@ -1,0 +1,82 @@
+---
+doc_id: analytics-overview
+title: Analytics Overview
+added_date: 2026-07-15
+last_updated: 2026-07-15
+parent_id: analytics
+viewable: true
+---
+# Analytics Overview
+
+## What Analytics Is
+
+Analytics is the loopback-only app for developing relationships across catalogue records. Its implemented core is a canonical tag vocabulary, aliases, series/work assignments, coverage scoring, and Data Sharing workflows.
+
+The app does not own catalogue records, public catalogue rendering, documents, or generic local administration. It reads catalogue indexes and delegates Data Sharing work to the headless Data Sharing subsystem.
+
+## Capabilities
+
+- review the tag-group taxonomy;
+- create, edit, import, delete, promote, and demote canonical tag/alias records;
+- review tag coverage across series;
+- edit series tags and per-work override deltas;
+- stage assignment changes offline and reconcile them through preview/apply;
+- prepare and review Data Sharing packages through registered domain adapters.
+
+## Execution Path
+
+```text
+browser /analytics route
+  -> Analytics server serves analytics-shell.html
+  -> browser loads projected runtime config
+  -> route registry loads one template + controller
+  -> controller reads catalogue/tag data
+  -> direct tag API or Data Sharing API
+  -> validated domain planner/service
+  -> atomic canonical write or external workspace artifact
+```
+
+Stable route structure belongs in HTML templates. Browser modules own interaction/state. Python owns config projection, path resolution, validation, write transactions, and Data Sharing dispatch.
+
+## Authority Boundaries
+
+### Routes And Browser Policy
+
+`analytics-config.json` owns the route registry, browser-visible catalogue data paths, tag-group ordering, and RAG thresholds. `analytics_app_config.py` validates it and projects server-owned services, sites, media, pipeline, and editor settings.
+
+### Tag Data
+
+`analytics-app/data/canonical/` owns registry, aliases, assignments, and group descriptions. `tag_services/tag_source_model.py` owns validation and normalization; focused mutation modules own planning; `tag_write_transactions.py` owns atomic multi-file replacement and in-process rollback.
+
+### Catalogue Inputs
+
+`site/assets/data/series_index.json` and `works_index.json` are Analytics read dependencies, not Analytics-owned source. Assignment integrity therefore crosses an app boundary and is checked by focused service tests and the site consistency audit.
+
+### Data Sharing
+
+The Analytics app is a gateway. `data-sharing/` owns adapters, capability projection, packages, external-workspace paths, and workflow semantics. Analytics adapters translate the generic service boundary into HTTP responses.
+
+## Extension Method
+
+- New route: template/controller plus one registry row and route/server tests.
+- New tag mutation: pure planner/validation first, then one allowlisted API handler and focused activity/write tests.
+- New tag field: update the canonical model, every mutation/import path, comparison logic, Data Sharing adapter, and audits before UI.
+- New Data Sharing domain/capability: extend the Data Sharing registry and adapter; do not hard-code it into Analytics bootstrap config.
+- New scoring policy: declare policy in Analytics config only when an implemented consumer exists.
+
+## Known Weak Spots
+
+- Tag Registry/Aliases use manual patch snippets when the local write service is unavailable, while assignments use a structured offline session. Both are real fallbacks, but the two models increase conceptual and test surface.
+- Runtime config projects route data into a second `app.runtime.views` shape for the browser.
+- Tag integrity depends on public catalogue indexes owned by another app and can drift after catalogue membership changes.
+- Registry, aliases, assignments, and groups are separate for good ownership reasons, but cross-file mutations make validation and rollback critical.
+- `analytics_app_config.py` still contains broad media maps, including historical families not used by every active route; consumers, not presence in the runtime payload, prove capability.
+- Dimension/scoring design is not implemented. Draft model notes must not be mistaken for current Analytics capability.
+
+## Where To Look First
+
+- route boot/navigation: `analytics-config.json`, `analytics-route-registry.js`, template/controller;
+- tag schema or write issue: `tag_source_model.py`, the focused mutation/planner, then `tag_write_api/`;
+- assignment/offline issue: assignment service plus offline-session and import-workflow modules;
+- coverage status: `analysis-tag-scoring.js` plus `analysis.rag` config;
+- Data Sharing issue: Analytics API adapter, Data Sharing service dispatch, then the selected domain adapter.

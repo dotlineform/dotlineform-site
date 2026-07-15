@@ -2,144 +2,47 @@
 doc_id: admin-checks-report-target-map
 title: Target Map Report
 added_date: 2026-06-10
-last_updated: 2026-06-10
+last_updated: 2026-07-15
 parent_id: admin-checks-reports
+viewable: true
 ---
 # Target Map Report
 
-This document defines the durable contract for the `target-map` report in [Admin Checks](/docs/?scope=studio&doc=admin-checks).
+## Questions
 
-## Purpose
+For the selected checks target:
 
-The `target-map` report provides ownership, shared dependency, and boundary-crossing evidence for a selected checks scope and optional target filters.
+- which files are unclassified or match several boundaries;
+- which files are explicit shared dependencies;
+- which route/area mappings may be missing;
+- which configured patterns are stale or unexpectedly broad?
 
-The report is evidence, not pass/fail policy.
-Cross-boundary files can be legitimate shared utilities, route registries, config loaders, or orchestration scripts.
-Markdown source documents are excluded from checks input; the report focuses on code, config, and structured data files.
+Report ID `target-map` is produced by `admin-app/checks/reports/target_map.py`.
 
-## Report Contract
+## Method
 
-Report id:
+The producer reads the validated run manifest and calls the shared target-map resolver. It does not own path matching or config policy.
 
-```text
-target-map
-```
+The result contains selected file classifications, family/area/route counts, shared dependencies, review flags, and pattern status. `limit` and `pattern_limit` control only the focused Markdown presentation; complete evidence remains in JSON.
 
-Source script:
-
-```text
-admin-app/checks/reports/target_map.py
-```
-
-Output artifacts:
+## Outputs
 
 ```text
-var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/target-map/
+var/admin/checks/<run-id>/target-map/
   report.json
   report.md
 ```
 
-## Inputs
+Markdown uses compact summaries and narrow text blocks to answer the review questions. It should not reproduce every field or every selected file.
 
-The report reads the selected scope and target filters from the run manifest written by `admin-app/checks/run_reports.py`.
-It resolves files through `admin-app/checks/target_map_resolver.py`.
-It must not duplicate target-map matching logic locally.
-Report defaults and allowed options are loaded from `admin-app/checks/config/admin-checks-reports.json`.
+## Interpretation
 
-Supported options:
+The report is evidence, not a failure policy:
 
-| Option | Default | Purpose |
-| --- | --- | --- |
-| `limit` | `20` | Maximum number of per-file rows shown per markdown review block. |
-| `pattern_limit` | `20` | Maximum number of stale or broad pattern rows shown in markdown. |
+- multi-family or cross-route files may be legitimate infrastructure;
+- `_unclassified` means missing family mapping, not necessarily misplaced code;
+- a stale pattern usually means config maintenance is needed;
+- a broad pattern may be intentional but deserves ownership review;
+- likely-unmapped hints require code/context inspection before config change.
 
-## Metrics
-
-Report schema version: `admin_checks_target_map_report_v1`
-
-| Metric | Description |
-| --- | --- |
-| `totals.files` | Included file count after scope exclusions and selected target filters. |
-| `totals.unclassified_files` | Included files without a configured family. |
-| `totals.multi_family_files` | Included files matching more than one family. |
-| `totals.cross_area_files` | Included files matching more than one direct or shared functional area. |
-| `totals.cross_route_files` | Included files matching more than one direct or shared route target. |
-| `totals.shared_dependency_files` | Included files explicitly matched by shared dependency rules. |
-| `totals.stale_patterns` | Configured target patterns that match no current source files. |
-| `totals.broad_patterns` | Configured target patterns with unusually broad match counts. |
-| `totals.likely_unmapped_area_files` | Included files whose path terms imply an area not mapped for that file. |
-| `totals.likely_unmapped_route_files` | Included files whose path terms imply a route not mapped for that file. |
-| `files[].path` | Repo-relative file path. |
-| `files[].families` | File families matched by the file. |
-| `files[].areas` | Functional areas directly matched by the file. |
-| `files[].routes` | Route targets directly matched by the file. |
-| `files[].shared_areas` | Functional areas that include the file through shared dependency rules. |
-| `files[].shared_routes` | Route targets that include the file through shared dependency rules. |
-| `files[].boundary_flags` | Boundary-crossing or unclear-ownership flags assigned by the shared resolver. |
-| `patterns[].status` | Pattern status, currently `active`, `stale`, or `broad`. |
-
-## Markdown Shape
-
-The markdown report is the quick human review surface.
-It should answer a small set of review questions, not expose every captured field.
-Complete evidence remains in `report.json`.
-
-The target-map markdown should answer:
-
-- Are any in-scope code files unclassified?
-- Do any files cross multiple families, areas, or routes?
-- Which files are intentional shared dependencies?
-- Which configured target patterns need cleanup?
-
-The markdown report uses bullets and fenced `text` blocks with space-padded columns.
-It intentionally avoids Markdown tables because target-map evidence often becomes too wide for plain Markdown previews.
-Scoped file rows should prefer the filename as the immediate identifier; the full repo-relative path remains available in `report.json`.
-
-The markdown report includes:
-
-- report id, run id, selected scope, and selected filters
-- top-level target-map totals
-- review-question counts
-- family, area, and route match counts in aligned text blocks
-- shared dependency review rows in aligned text blocks
-- boundary finding rows by flag in aligned text blocks
-- stale and broad pattern rows in aligned text blocks
-- interpretation notes that separate evidence from pass/fail policy
-
-Example:
-
-````text
-# Target Map Report
-
-- report: `target-map`
-- run: `<run-id>`
-- scope: `docs-viewer`
-- families: _all_
-- areas: _all_
-- routes: _all_
-- files: x
-- unclassified files: x
-- multi-family files: x
-- cross-area files: x
-- cross-route files: x
-- shared dependency files: x
-- stale patterns: x
-- broad patterns: x
-
-## Review Questions
-
-- Are any in-scope code files unclassified? x
-- Do any files cross multiple families, areas, or routes? x
-- Which files are intentional shared dependencies? x
-- Which configured target patterns need cleanup? x
-
-## Boundary Findings
-
-### unclassified-family
-
-```text
-File                                Families                  Areas                         Routes
-----------------------------------  ------------------------  ----------------------------  --------------------------
-docs-viewer-management.js           _unclassified             management                    /docs/
-```
-````
+Use [Target Map Architecture](/docs/?scope=studio&doc=admin-checks-target-map-architecture) to distinguish this selected report from the whole-config maintenance audit.

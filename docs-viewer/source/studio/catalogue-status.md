@@ -2,88 +2,34 @@
 doc_id: catalogue-status
 title: Catalogue Drafts
 added_date: 2026-04-18
-last_updated: "2026-06-16"
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Drafts
 
-This document describes the Studio drafts page at `/studio/catalogue-status/`.
-The route shell is hosted by the local Studio app server.
+## What It Does
 
-Family views:
+`/studio/catalogue-status/` lists canonical Works and Series whose normalized status is `draft`.
 
-- `/studio/catalogue-status/`
-- `/studio/catalogue-status/?family=works`
-- `/studio/catalogue-status/?family=moments`
+It is a recovery and maintenance surface: creating or unpublishing a record does not require it to be published in the same session, so this page makes unfinished source records easy to find again.
 
-## Purpose
+Use `?family=works` to open the Work view. The default family is Series. Legacy draft-Works and draft-Series query values are normalized by the route controller.
 
-The page lists canonical catalogue source records whose normalized `status` is `draft`.
+## Workflow
 
-It is the recovery surface for draft catalogue records created without publishing in the same session.
+- The page probes the Local Studio catalogue read API.
+- It reads canonical Works and Series through the logical paths in `studio-config.json`.
+- It filters to draft records in the browser.
+- Family pills show counts; search and column sorting narrow the current family.
+- Each row opens the appropriate focused editor in a new tab so the draft list remains available.
 
-## Route Ready State
+The page does not edit, validate, publish, or rebuild records. Work details, downloads, and links are not independent draft families because they do not own publication status.
 
-The page root `#catalogueStatusRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+## Ownership And Weak Spots
 
-- no route-level commands set busy
-- `data-studio-mode="empty|list"`
-- `data-studio-service="available|unavailable"`
-- `data-studio-record-loaded="true|false"`
+`studio/app/frontend/js/catalogue-status.js` owns the supported family registry, row projection, filtering, sorting, and editor links. The code is the authority for the current families; adding canonical data to the wider catalogue does not automatically make it a Studio-editable draft family.
 
-## Current Inputs
+The route reads full canonical Work and Series maps to construct a simple local report. That is acceptable at the current corpus size, but a service-owned draft projection would be the cleaner boundary if the data or filtering needs grow.
 
-The page reads canonical source JSON through the local Studio app catalogue API:
-
-- `GET /studio/api/catalogue/read?key=catalogue_works`
-- `GET /studio/api/catalogue/read?key=catalogue_series`
-- `GET /studio/api/catalogue/read?key=catalogue_moments`
-
-The logical keys are configured through `studio/app/frontend/config/studio-config.json` under `paths.data.studio`.
-The canonical source files now live under `studio/data/canonical/catalogue/`, and public output excludes Studio-only catalogue source data.
-
-## Current Behavior
-
-The page:
-
-- loads the source record families that still own publication status
-- filters to rows where normalized status is `draft`
-- offers three draft-family pills in this order: `series`, `works`, `moments`
-- shows draft counts by record family
-- supports a simple search across id, status, title, and parent/reference fields
-- shows id, type, status, title, and reference columns
-- supports header-click sorting on `id`, `type`, `status`, `title`, and `reference`
-- links each row into the focused editor for its record family, opening those editor links in a new browser tab so the status report stays available
-
-It remains a review surface rather than an editor. Editing still happens on the focused record pages.
-
-Work-owned `downloads`, `links`, and work detail records are not listed here because they do not have independent `status` or `published_date` fields.
-
-## Family Views
-
-The default view shows draft series records. Use the family pills or `?family=<family>` to switch families.
-
-Supported family keys:
-
-- `series`
-- `works`
-- `moments`
-
-Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.
-The local route preserves the selected `family` filter when family filters are changed.
-
-## Boundaries
-
-What this page is for:
-
-- early review of records that still need publication or cleanup
-- quick visibility into draft records
-- a daily maintenance entry point while editors are added incrementally
-
-What it is not for:
-
-- validation diagnostics beyond status visibility
-- bulk editing
-- publish/rebuild actions
+The route uses `#catalogueStatusRoot` for the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state).

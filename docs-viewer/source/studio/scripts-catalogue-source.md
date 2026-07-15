@@ -1,90 +1,39 @@
 ---
 doc_id: scripts-catalogue-source
-title: Catalogue Source Utilities
+title: Catalogue Source Validation
 added_date: 2026-04-18
-last_updated: "2026-05-09 21:28"
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
-# Catalogue Source Utilities
+# Catalogue Source Validation
 
-These utilities validate and inspect the canonical catalogue source JSON.
-
-They do not write runtime-critical public catalogue artifacts. They work against canonical source JSON under:
-
-```text
-assets/studio/data/catalogue/
-```
-
-The Phase 0 workbook export fixture is now retired. Canonical source JSON is maintained directly through Studio and the configured bulk-import flow.
-
-## Validate
+## Command
 
 ```bash
 $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
 ```
 
-Validation checks the source JSON for core relationship errors:
+This is the direct validation entry point for canonical Works, Series, and per-Work detail files under `studio/data/canonical/catalogue/`.
 
-- malformed work, detail, and series IDs
-- source fields that are not part of the canonical source schema
-- source map keys that do not match normalized record IDs
-- work `series_ids` references to unknown series
-- series `primary_work_id` references to unknown works
-- series `primary_work_id` values that are not members of that series
-- work details that reference unknown works when actionable
+It checks schema fields, normalized IDs and map keys, Work-to-Series membership, Series primary-Work relationships, detail parentage, and aggregate structure. Run `--help` for any stricter migration/schema modes still supported by the script; do not copy those temporary flags into the durable model documentation.
 
-Use the target media-section schema check for the current migrated source shape:
+## Shared Authority
 
-```bash
-$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py --target-media-section-schema
-```
+`studio/services/catalogue/catalogue_source.py` owns source paths, fields, normalization, deterministic serialization, and combined-source validation. Catalogue services and import/build tools reuse it so a browser save, workbook import, and direct validation do not invent different source rules.
 
-The target check requires detail `section_id` and `section_title`, accepts `details_subfolder`, validates `sort_order`, and rejects legacy detail `project_subfolder`.
+The [Catalogue Source Model](/docs/?scope=studio&doc=data-models-catalogue-source) summarizes ownership. Code is the authority for the exact field inventory.
 
-## Project State Report
+## Adding A Field
 
-```bash
-$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py --write
-```
+1. add the field to the correct source family and normalization rules;
+2. classify it as identity, derived, or editable metadata;
+3. add or change the field-registry rule when it affects lookups, public output, search, or media;
+4. update the relevant editor/projection/serializer owner;
+5. run source validation and the field-registry verifier.
 
-The project-state report compares `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `studio/data/canonical/catalogue/works.json`, then writes `var/studio/reports/project-state.md`.
+The field registry does not own source serialization, and the source schema does not by itself make a field public.
 
-Use this when you need to find source project folders or primary-image candidates that have not yet been represented in `works.json`. By default it scans only direct project folders; pass `--include-subfolders` when the review should include nested source folders too.
+## Related Operational Report
 
-## Shared Module
-
-Shared source loading, normalization, and validation logic lives in:
-
-```text
-studio/services/catalogue/catalogue_source.py
-```
-
-This module is the shared source-data helper for current JSON source records. Workbook parsing helpers live beside the only retained Excel flow in `studio/services/catalogue/catalogue_workbook_import.py`.
-
-## Source Field Ownership
-
-`studio/services/catalogue/catalogue_source.py` owns source field order, shared catalogue id-list and detail-uid normalization, source normalization, and omit-empty serialization for work, work-detail, and series records.
-
-The field registry at `studio/data/config/catalogue/catalogue-field-registry.json` owns changed-field dependency planning for public build work and Studio lookup refresh selection. It does not drive source serialization.
-
-When adding a source field:
-
-1. add it to the relevant source field list in `studio/services/catalogue/catalogue_source.py`, or to the moment metadata field list in `studio/services/catalogue/moment_sources.py`
-2. decide whether it is identity, derived, or editable metadata
-3. add a matching registry rule when it is editable metadata
-4. run `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`
-
-Optional persisted fields currently omitted when empty:
-
-- work `project_subfolder`
-- detail `details_subfolder`
-- detail `sort_order`
-
-Required fields such as detail `section_id` and `section_title` must not be added to the omit-empty set. The field-registry verifier checks these source serialization boundaries.
-
-## Related References
-
-- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
-- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
-- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+[Project State](/docs/?scope=studio&doc=scripts-project-state-report) compares valid Work media references with files in the configured projects tree. It is a reconciliation report, not a substitute for schema validation.

@@ -2,248 +2,79 @@
 doc_id: data-models-catalogue-source
 title: Catalogue Source Model
 added_date: 2026-05-19
-last_updated: 2026-06-22
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Source Model
 
-## Scope Boundary
+## Canonical Families
 
-Current checked-in catalogue model families:
+Catalogue authoring source lives below `studio/data/canonical/`:
 
-- canonical source records:
-  - `studio/data/canonical/catalogue/works.json`
-  - `studio/data/canonical/catalogue/series.json`
-  - `studio/data/canonical/catalogue/work_details/<work_id>.json`
-- canonical prose sources:
-  - `_docs_catalogue/works/<work_id>.md`
-  - `_docs_catalogue/series/<series_id>.md`
-  - `_docs_catalogue/moments/<moment_id>.md`
-- fixed public route shells:
-  - `works/index.md`
-  - `series/index.md`
-  - `work-details/index.md`
-  - `moments/index.md`
-- shared indexes:
-  - `site/assets/data/series_index.json`
-  - `site/assets/data/works_index.json`
-  - `site/assets/data/recent_index.json`
-  - `site/assets/data/moments_index.json`
-- per-record payloads:
-  - `site/assets/series/index/<series_id>.json`
-  - `site/assets/works/index/<work_id>.json`
-  - `site/assets/moments/index/<moment_id>.json`
-- scope search:
-  - `site/assets/data/search/catalogue/index.json`
-- Studio planning/support data:
-  - `studio/data/config/catalogue/catalogue-field-registry.json`
+| Family | Canonical location | Owns |
+| --- | --- | --- |
+| Works | `catalogue/works.json` | Work identity, metadata, publication, project-media reference, downloads, links, media version |
+| Series | `catalogue/series.json` | Series metadata, publication, primary Work, sort policy |
+| Work details | `catalogue/work_details/<work_id>.json` | Work-owned detail sections and nested detail records |
+| Work prose | `catalogue-markdown/works/<work_id>.md` | optional generator-rendered Work prose |
+| Series prose | `catalogue-markdown/series/<series_id>.md` | optional generator-rendered Series prose |
 
-Primary writers:
+`studio/services/catalogue/catalogue_source.py` is the exact authority for fields, ordering, normalization, omit-empty rules, and validation. Documentation summarizes ownership rather than reproducing its lists.
 
-- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) for the live rebuild path that refreshes shared indexes and per-record catalogue payloads
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline-architecture) for `site/assets/data/search/catalogue/index.json`
+## Core Invariants
 
-Primary validator:
+### Works
 
-- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)
+- `work_id` is stable and repeated in the record.
+- `series_ids` is ordered; membership must resolve to canonical Series.
+- project folder, optional direct subfolder, and filename identify source media without storing an absolute path.
+- dimensions and `media_version` are source fields maintained by media workflows, not ordinary free-form edits.
+- downloads and links are optional Work-owned arrays; there are no standalone file/link source families.
+- prose is optional and ID-derived; metadata does not carry a prose path override.
 
-## Source Record Shape
+### Series
 
-### Source File Headers
+- `sort_fields` is the canonical ordering policy.
+- a draft may temporarily lack a primary Work.
+- publication requires a primary Work that belongs to the Series and at least one publishable member Work.
+- membership itself is held on each Work, so a Series membership change may update `series.json` and `works.json` together.
 
-Catalogue source JSON files use a deterministic top-level header plus one primary map.
+### Details
 
-Typical shape:
+- a Work with details has one aggregate file; a Work with none has no file.
+- sections own their identity, label, source-media subfolder, and ordering policy.
+- nested details own detail identity, filename, title, dimensions, and media version.
+- parent Work publication controls public visibility; details do not own independent status.
 
-```json
-{
-  "header": {
-    "schema": "catalogue_source_works_v1",
-    "count": 0
-  },
-  "works": {}
-}
-```
+See [Catalogue Per-Work Detail Source](/docs/?scope=studio&doc=catalogue-per-work-detail-source) for the focused aggregate method.
 
-Header fields:
+## Headers And Serialization
 
-- `schema`: stable schema identifier for the source file family
-- `count`: number of records in the primary map, where the file owns record rows
+Canonical JSON files use a stable schema header and deterministic record ordering. Volatile write timestamps do not belong in source files; activity and service logs record operational time.
 
-Source headers avoid volatile timestamps so ordinary source edits produce focused Git diffs. Write timestamps belong in Studio activity artifacts and JSONL logs, not canonical catalogue source records.
+Empty optional fields are omitted where the serializer defines that contract. Writers must use catalogue source helpers rather than producing plausible-looking JSON independently.
 
-### Work Source Records
+## Field Registry
 
-Work records in `studio/data/canonical/catalogue/works.json` own the primary work source-image path:
+`studio/data/config/catalogue/catalogue-field-registry.json` describes how source-field changes affect Studio lookups, public artifacts, search, and media work.
 
-- `project_folder`
-- optional `project_subfolder`
-- `project_filename`
+It does not own schema or normalization. Its job is dependency planning. The [Catalogue Field Registry](/docs/?scope=studio&doc=catalogue-field-registry-review) page makes it searchable; `verify_catalogue_field_registry.py` checks that registry and source knowledge stay aligned.
 
-`project_subfolder` is persisted only when non-empty. Public runtime work images still resolve generated media by `work_id`; the source path fields are for Studio editing, local media readiness, and generator/source media lookup.
+## Source Versus Output
 
-Other work source-model notes:
+The following are derived, not canonical:
 
-- `work_id` is duplicated inside each record for readability and import/export compatibility.
-- `series_ids` is an ordered array; the first item is the primary series for work-level context.
-- `width_px` and `height_px` are source metadata once measured, but they are generator/media-maintained rather than normal user-editable metadata.
-- work prose is ID-derived from `_docs_catalogue/works/<work_id>.md`; source records no longer carry a prose filename override field.
-- source-only fields such as `provenance` stay out of public projections unless an explicit runtime contract includes them.
-- retired `notes` fields are no longer part of the work or series source schema; use `_docs_catalogue/works/` and `_docs_catalogue/series/` Markdown prose for catalogue narrative text.
+- `studio/data/generated/catalogue-lookup/`;
+- `site/assets/data/series_index.json`, `works_index.json`, and `recent_index.json`;
+- `site/assets/series/index/` and `site/assets/works/index/`;
+- catalogue search and public thumbnails;
+- staged primary media below the external projects base.
 
-### Work Detail Source Records
+Source changes should be made through catalogue services or source-aware tools so validation, atomic writes, and affected-output planning remain in one workflow.
 
-Work-detail source lives in one nested file per detailed work under `studio/data/canonical/catalogue/work_details/<work_id>.json`.
-Works with no detail sections have no companion detail-source file.
+## Weak Spots
 
-Each per-work file has a `detail_sections` array. Each section owns:
-
-- `section_id`: stable generated public-section key, such as `00001-1`
-- `details_subfolder`: optional source-image folder under the parent work's `project_folder`
-- `section_title`: public section label
-- `section_order`: optional section ordering value
-- `detail_sort`: optional section-level detail ordering mode (`detail_id` or `title`)
-- `details`: nested detail records
-
-Nested detail records own individual detail metadata:
-
-- `detail_uid`
-- `detail_id`
-- `project_filename`
-- `title`
-- generated/media-maintained dimensions such as `width_px` and `height_px`
-
-`work_id` is implied by the file name and top-level `work_id`; `section_id` is implied by the containing section.
-Detail records do not repeat `details_subfolder`, `section_title`, or section ordering metadata. Detail records no longer use legacy `project_subfolder`.
-Detail records do not own `status` or `published_date`; parent work publication controls whether detail records appear in public output.
-
-### Series Source Records
-
-Series records in `studio/data/canonical/catalogue/series.json` own series metadata and publication state.
-
-Current source-model notes:
-
-- `sort_fields` is the current JSON-source replacement for the retired workbook `SeriesSort` table.
-- `primary_work_id` must reference a work whose `series_ids` includes the series before the series can be published; draft series may temporarily omit it.
-- `series_type` remains explicit because Studio distinguishes primary series from other holdings or curated groups.
-- series prose is ID-derived from `_docs_catalogue/series/<series_id>.md`; source records no longer carry a prose filename override field.
-
-### Per-Work Runtime JSON
-
-`site/assets/works/index/<work_id>.json` groups published detail records under `sections[]`.
-
-Each section owns:
-
-- `section_id`
-- `section_title`
-- optional `section_order`
-- optional `detail_sort`
-- `details[]`
-
-Nested `details[]` records do not repeat section-level metadata. Detail records within a section are generated in section `detail_sort` order, defaulting to `detail_id`.
-
-## Catalogue Field Registry
-
-### `studio/data/config/catalogue/catalogue-field-registry.json`
-
-Purpose:
-
-- source of truth for field-aware catalogue build scoping rules
-- reviewable registry for the Studio field-registry page
-- bridge between the Task 1 dependency inventory and later executable build-planning implementation
-
-Location:
-
-- exposed through `studio/app/frontend/config/studio-config.json` at `paths.data.studio.catalogue_field_registry`
-
-Current content families:
-
-- `artifact_families` labels the artifact family vocabulary used by the planner
-- `rules[]` groups fields by record family, operation, current behavior, and target behavior
-- `rules[].current` describes broad behavior currently selected by the planner, lookup invalidation, or media workflow
-- `rules[].target` describes the narrower behavior used by save-time write-server planning and by later preview/dry-run tasks
-- `defaults` defines fallback behavior for unknown fields and mixed dependency classes
-- `defaults.*.target.artifacts_by_record_family` owns fallback artifact sets for `work`, `work_detail`, `series`, and `moment`
-- `retired_fields[]` records fields intentionally removed from active source rules
-
-Planner output:
-
-- `field_plan.explanations[]` is derived from the registry rather than stored in the registry file
-- each explanation row includes `artifact`, `fields`, `rule_ids`, `fallback`, `fallback_reason`, `reason`, and the artifact-family `description` when one is available
-- fallback plans derive broad artifact selection and explanation rows from registry defaults instead of Python-only fallback tables
-
-Verification:
-
-- `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py` checks representative target rules, fallback defaults, duplicate field ownership, source/registry field coverage, and optional omit-empty source serialization against the live registry
-
-Notes:
-
-- the registry is JSON so Studio can display it directly
-- current and target rules stay separate so review surfaces can compare historical broad behavior with active narrowed behavior
-- the registry should be updated before adding a new active catalogue source field
-- the registry does not own source field order, normalization, or omit-empty behavior; those live in `studio/services/catalogue/catalogue_source.py` and `studio/services/catalogue/moment_sources.py`
-
-## Work-Owned Files And Links
-
-Files and links are now work-owned metadata in `site/assets/studio/data/catalogue/works.json`.
-
-The current source fields are:
-
-- `downloads`
-  optional array of `{ "filename": "...", "label": "..." }`
-- `links`
-  optional array of `{ "url": "...", "label": "..." }`
-
-Empty arrays are omitted from source records.
-
-Retired standalone file/link source files are no longer canonical source, and live source records no longer expose derived file/link compatibility maps. Workbook import helpers may still read legacy file/link sheets only to fold those rows into work-owned `downloads` and `links`.
-
-## Fixed Route Shells
-
-The public catalogue shells are:
-
-- `/works/`, with selected state in `?work=<work_id>`
-- `/series/`, with selected state in `?series=<series_id>`
-- `/work-details/`, with selected state in `?detail=<detail_uid>`
-- `/moments/`, with selected state in `?moment=<moment_id>`
-
-The canonical work, series, and moment runtime payloads live under `site/assets/works/index/`, `site/assets/series/index/`, and `site/assets/moments/index/`.
-Work-detail pages resolve through the parent work payload so sibling ordering, section grouping, and detail metadata stay consistent with the owning work.
-
-## Canonical Moment Source
-
-### `site/assets/studio/data/catalogue/moments.json`
-
-Purpose:
-
-- canonical source records for moment metadata
-
-Current content families:
-
-- `moment_id`
-- `title`
-- `status`
-- `published_date`
-- `date`
-- optional `date_display`
-- optional `source_image_file`
-- optional `image_alt`
-
-Notes:
-
-- this file is the metadata source of truth for moments
-- generated runtime payloads under `site/assets/moments/index/` are not canonical source
-- source images remain a separate media concern
-
-### `_docs_catalogue/moments/<moment_id>.md`
-
-Purpose:
-
-- canonical body-only moment prose source
-
-Notes:
-
-- files are ID-derived by `moment_id`
-- files do not own canonical metadata front matter
-- existing `<pre class="moment-text">...</pre>` wrappers remain accepted during migration
+- Optional prose has no active Studio editor and can therefore drift from metadata workflow expectations.
+- Some global validators and builders flatten the per-Work detail files into maps, which is useful but can hide accidental whole-corpus work.
+- Public payload fields are deliberately narrower than canonical source; adding a source field does not imply publication.

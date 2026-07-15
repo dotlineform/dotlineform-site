@@ -2,77 +2,39 @@
 doc_id: bulk-add-work
 title: Bulk Add Work
 added_date: 2026-04-19
-last_updated: 2026-05-22
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Bulk Add Work
 
-Route:
+## What It Does
 
-- `/studio/bulk-add-work/`
+`/studio/bulk-add-work/` imports new Works or Work details from the configured workbook into canonical catalogue JSON.
 
-This page runs the configured bulk-import workbook flow from `data/works_bulk_import.xlsx` into canonical catalogue source JSON.
-The route shell is served by the local Studio app.
-The browser module still uses the existing sibling catalogue import preview/apply endpoints until those APIs are consolidated into the local app server.
+The workbook path comes from the runtime projection of `_data/pipeline.json`; its current default is `data/works_bulk_import.xlsx`.
 
-## Current Scope
+This is a one-way create workflow:
 
-The first implementation covers one route with two modes:
-
-- `works`
-  - import new work records only
-- `work details`
-  - import new work-detail records only
-
-Current rules:
-
-- workbook source is configured in `_data/pipeline.json` and currently points to `data/works_bulk_import.xlsx`
-- imports are one-way into canonical JSON
-- imported records default to `draft`
-- workbook `status` fields are ignored
-- existing source records are reported as duplicates, not updated
-- works import requires referenced series to already exist
-- work-details import requires the parent work to already exist
-- blocked rows must be fixed in the workbook before apply
-- future workbook column changes are treated as explicit pipeline change requests rather than something the importer is expected to discover and adapt to automatically
-
-Current workbook check:
-
-- `Works` retains the required headers `work_id`, `series_ids`, and `title`
-- `WorkDetails` retains the required headers `work_id`, `detail_id`, and `title`
-- every additional retained header in the current workbook is already an eligible import field
-- no current workbook headers fall outside the importer's recognized field set
+- imported records are drafts;
+- existing IDs are duplicates and are not updated;
+- the workbook is never uploaded, edited, or written by Studio;
+- schema changes are explicit importer/pipeline changes, not automatically inferred from new columns.
 
 ## Preview And Apply
 
-Current flow:
+1. Choose `works` or `work_details` mode.
+2. Preview reads and validates the configured workbook without writing.
+3. The result separates importable, duplicate, and blocked rows and explains blocked reasons.
+4. Apply remains disabled while blockers exist.
+5. Apply repeats the plan against the current workbook, writes only importable new records, refreshes derived lookups, and records aggregated Studio Activity.
 
-1. choose import mode
-2. `POST /studio/api/catalogue/import-preview` reads the configured workbook path and reports:
-   - candidate row count
-   - importable row count
-   - duplicate row count
-   - blocked row count
-   - blocked reasons and sample rows
-3. if the preview has blocked rows, apply is disabled
-4. `POST /studio/api/catalogue/import-apply` re-runs the same plan and writes only new records into canonical source JSON
-5. successful apply refreshes derived lookup payloads, writes an aggregated Studio Activity entry, and appends unified Studio activity rows for import and lookup refresh
+Works require their referenced Series to exist. Work details require their parent Work and a valid section resolution. The server owns workbook parsing, field eligibility, source validation, and transaction behavior.
 
-This page does not upload workbook files, edit workbook rows, or write anything back into Excel.
+## Ownership And Weak Spots
 
-## Route Ready State
+`studio/app/frontend/js/bulk-add-work.js` coordinates the route. `bulk-add-work-workflow.js` owns workflow state and result projection. Browser endpoints are registered in `studio-transport.js`; Local Studio dispatches them through `studio_catalogue_api.py` to `catalogue_workbook_import.py` and the catalogue import service.
 
-The page root `#bulkAddWorkRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+The workbook is intentionally an operational input rather than a general interchange format. The import flow creates records but does not try to model every editor capability, publication step, or media workflow. That narrow boundary prevents spreadsheet shape from becoming the catalogue architecture.
 
-- preview and import set route busy
-- `data-studio-mode` is `idle` before a preview and `preview` after a preview result is loaded
-- `data-studio-service` reports whether the Catalogue Write Server is available
-- `data-studio-record-loaded` is `true` when a preview result is loaded
-
-## Related References
-
-- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
-- [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
-- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+The route uses `#bulkAddWorkRoot` for the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state). Preview and apply are the route-level busy operations.

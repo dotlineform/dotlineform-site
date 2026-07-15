@@ -2,34 +2,25 @@
 doc_id: admin-checks-reports
 title: Reports
 added_date: 2026-06-09
-last_updated: 2026-06-10
+last_updated: 2026-07-15
 parent_id: admin-checks
+viewable: true
 ---
 # Admin Checks Reports
 
-This section describes the reports that surface admin checks metrics through the route `/admin/checks/`.
+## Implemented
 
-Implemented reports:
+- `files` — file count, line count, byte size, and target-match context; writes JSON, focused Markdown, and CSV.
+- `target-map` — classification, shared dependencies, boundary flags, and pattern status; writes JSON and focused Markdown.
 
-| Report | Status | Durable doc |
-| --- | --- | --- |
-| `files` | implemented | [Files Report](/docs/?scope=studio&doc=admin-checks-report-files) |
-| `target-map` | implemented | [Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map) |
+The report registry in `admin-checks-reports.json` is the exact inventory.
 
-## Markdown Report Design
+## Output Rule
 
-Admin Checks reports can capture broad evidence, but the Markdown artifact should stay focused on immediate review.
-Use `report.json` for complete structured data and `report.csv` when a report needs full-field spreadsheet review.
+- JSON holds complete structured evidence.
+- Markdown answers a small set of immediate review questions.
+- CSV is used for full tabular review where useful.
 
-Markdown reports should:
+Avoid wide exhaustive Markdown tables. If a report cannot state what decision its Markdown helps make, it is not ready to become an implemented report.
 
-- answer a small set of named review questions
-- avoid Markdown tables by default
-- use fenced `text` blocks with space-padded columns when alignment helps
-- prefer short identifiers, such as filenames, when scoped paths repeat the same prefix
-- limit wide record lists and point to `report.json` or `report.csv` for complete data
-- include only the fields needed to answer the section's question
-
-Markdown tables are acceptable only when the table is narrow and purposeful.
-As a rule of thumb, keep them to three columns, or four when the extra columns are short consistent values like counts or sizes.
-If a section needs more columns than that, redesign the section around the question it is answering or move the detail to JSON/CSV.
+Conceptual report ideas and sequencing belong under [Admin Checks Reports request](/docs/?scope=studio&doc=site-request-admin-checks-reports) until delivered.

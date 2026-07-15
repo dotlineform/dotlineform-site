@@ -1,183 +1,59 @@
 ---
 doc_id: search-catalogue-infrastructure
-title: Catalogue Infrastructure
+title: Catalogue Search
 added_date: 2026-06-02
-last_updated: 2026-06-02
-ui_status: review
+last_updated: 2026-07-15
 parent_id: search
 viewable: true
 ---
-# Catalogue Search Infrastructure
+# Catalogue Search
 
-## Domain
+Catalogue Search is the public known-item and metadata lookup for works and series at `/catalogue/search/`.
 
-Catalogue search owns structured artwork/catalogue lookup.
+## Execution Path
 
-Current live surface:
+1. Catalogue builders produce public series/works indexes and per-work payloads.
+2. `studio/services/catalogue/search/build_search.py` projects those records into the public search index.
+3. `studio/services/catalogue/search/build_config.json` validates source-family and emitted-field dependencies.
+4. `/catalogue/search/` loads runtime policy and the static index.
+5. `site/assets/js/search/catalogue-search-runtime.js` normalizes, filters, scores, sorts, and renders results in the browser.
 
-- `/catalogue/search/`
+Catalogue search deliberately consumes public catalogue projections rather than canonical source or Analytics tag data. This keeps the public search payload inside the same publication boundary as the routes it links to.
 
-Current output:
+## Capability Summary
 
-- `site/assets/data/search/catalogue/index.json`
+- searches works and series together
+- supports exact and prefix identity/title matches
+- uses structured series and medium context below known-item matches
+- requires every query token to be represented before scoring a result
+- filters by record kind in the client
+- loads additional results in fixed batches
+- offers opt-in performance instrumentation through query/storage flags
 
-Catalogue search is separate from Docs Viewer search.
-It does not index Studio docs, Library docs, Analysis docs, or Docs Viewer source Markdown.
+The exact score bands and entry fields are code. `search_text` is broad fallback; it is not a full-text body index.
 
-## Config Surface
+## Registries And Config
 
-Current config:
+- [Search Build Config](/docs/?scope=studio&doc=config-search-build-json) owns build dependencies and targeted-update policy.
+- [Catalogue Search Policy](/docs/?scope=studio&doc=config-search-policy-json) owns the public route's timing, labels, messages, and index URL.
+- `studio/services/catalogue/catalogue_public_paths.py` owns public catalogue/search paths used by Python services.
 
-- `studio/services/catalogue/search/build_config.json`
+## Extension Method
 
-Current responsibilities:
+For a new searchable Catalogue field:
 
-- declare Catalogue source families
-- declare source-family eligibility for the `catalogue` scope
-- declare targeted policy values such as `additive_only`
-- map emitted fields to source families
-- keep field/source dependency review separate from record-generation code
+1. confirm it belongs in a public projection
+2. add its source-family mapping to build config
+3. project it in the builder
+4. decide whether it affects matching, display, or filtering in the runtime
+5. update focused builder/runtime coverage
 
-The config is not a ranking policy and is not a record-construction DSL.
-The Python builder owns how records are derived, sorted, normalized, hashed, and merged.
+Do not publish canonical-only fields just to make search easier.
 
-Runtime UI policy lives separately in:
+## Weak Spots
 
-- `site/assets/data/search/policy.json`
-
-That policy controls the public `/catalogue/search/` browser surface, including enabled scope, index path, input labels, batching, debounce, and messages.
-
-## Build Pipeline
-
-Current build entrypoint:
-
-```bash
-./studio/services/catalogue/search/build_search.py --scope catalogue
-```
-
-Write command:
-
-```bash
-./studio/services/catalogue/search/build_search.py --scope catalogue --write
-```
-
-Catalogue build orchestration constructs the same command through:
-
-- `studio/services/catalogue/catalogue_build_commands.py`
-
-Current source inputs:
-
-- `site/assets/data/series_index.json`
-- `site/assets/data/works_index.json`
-- `site/assets/data/moments_index.json`
-- `site/assets/works/index/<work_id>.json` for work-level enrichment
-
-The search builder treats the generated catalogue JSON artifacts as canonical from the site point of view.
-Drift between those artifacts and upstream non-repo source systems is outside search ownership.
-
-Current pipeline shape:
-
-1. validate `studio/services/catalogue/search/build_config.json`
-2. load generated series, works, and moments indexes
-3. derive one search entry per series, work, and moment
-4. enrich work entries from per-work JSON where available
-5. derive `search_terms` and `search_text`
-6. sort by kind, title, and id
-7. compute a content hash in the artifact header
-8. write only when changed, forced, or targeted changes require it
-
-## Index Schema
-
-Current top-level shape:
-
-- `header`
-- `entries`
-
-Current entry identity and display fields include:
-
-- `kind`
-- `id`
-- `title`
-- `year`
-- `date`
-- `display_meta`
-- `series_ids`
-- `series_titles`
-- `medium_type`
-- `series_type`
-- `search_terms`
-- `search_text`
-
-Current included record kinds:
-
-- `series`
-- `work`
-- `moment`
-
-Current exclusions:
-
-- docs content
-- body prose
-- Studio/admin pages
-- public route strings that can be derived from `kind` and `id`
-- operation logs or targeted-update provenance
-
-## Ranking Runtime
-
-Current runtime modules:
-
-- `site/assets/js/catalogue-search.js`
-- `site/assets/js/search/catalogue-search-runtime.js`
-- `site/assets/js/search/search-policy.js`
-- `site/assets/js/search/search-performance.js`
-
-The runtime loads `site/assets/data/search/policy.json`, fetches the configured Catalogue index, normalizes entries, evaluates matches, sorts results, and renders result HTML.
-
-Current ranking is Catalogue-specific.
-It weights exact id/title matches first, then phrase and prefix matches, then domain relationship matches such as series title, medium type, and series type, then broader `search_text` matches.
-
-Result URLs are derived in the browser from catalogue route rules for works, series, and moments rather than serialized into the search artifact.
-
-## Targeted Updates
-
-Catalogue targeted mode uses:
-
-```bash
-./studio/services/catalogue/search/build_search.py --scope catalogue --only-records work:<id>
-```
-
-Accepted target forms:
-
-- `work:<id>`
-- `series:<id>`
-- `moment:<id>`
-
-Current targeted policy is additive-only.
-Missing entries can be inserted from current generated catalogue JSON.
-Identical existing entries are treated as unchanged.
-Changed existing entries are refused and require a full Catalogue search rebuild.
-
-Unsupported Docs Viewer flags fail closed:
-
-- `--only-doc-ids`
-- `--source-index`
-- `--remove-missing`
-
-## Domain Review Questions
-
-Catalogue-specific review should ask:
-
-- Are work, series, and moment fields enough for real catalogue lookup?
-- Should more structured catalogue fields, status fields, or tag-derived labels participate in search?
-- Are relationship fields such as series membership weighted correctly?
-- Is additive-only targeted search sufficient for current catalogue write flows?
-- Are generated artifacts compact enough for public browser loading?
-- Are public result routes still derivable from `kind` and `id`?
-- Does the build remain downstream of canonical generated catalogue JSON?
-
-Related docs:
-
-- [Domain Review Patterns](/docs/?scope=studio&doc=search-domain-review-patterns)
-- [Catalogue Scope](/docs/?scope=studio&doc=search-build-pipeline-catalogue)
-- [Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
-- [Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)
+- Targeted updates are create-only. Updates and deletes fall back to a full search build.
+- Build config validates provenance declarations, but it is not a full JSON schema for index records.
+- The policy JSON has JavaScript fallback defaults, so changes must keep both deliberate.
+- Similar normalization and scoring code exists in Docs Viewer search but is not shared.
+- `tagLabels` is normalized by the runtime although the current builder does not emit Analytics tags; it should not be mistaken for an active integration.

@@ -2,193 +2,43 @@
 doc_id: studio-works
 title: Catalogue Works
 added_date: 2026-04-01
-last_updated: 2026-06-06
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Works
 
-Route:
+## What It Does
 
-- `/studio/studio-works/`
+`/studio/studio-works/` is a read-only catalogue index with Studio-only storage context and curator sorting.
 
-Purpose:
+Use it to:
 
-- review works with Studio-specific sort-state wiring
+- scan all public Work rows;
+- sort by catalogue ID, year, title, Series, or storage location;
+- focus the list on one Series with `?series=<series_id>`;
+- preserve sort and Series context when following public Work links;
+- copy the alphabetical Series-title list.
 
-## Route Ready State
+Editing belongs in the [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor).
 
-The page root `#worksStudioRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+## Data And Ownership
 
-- initial config, works, series, and Studio storage data loading set route busy
-- `data-studio-mode` is `list` for the full index, `single` for a series-filtered view, and `empty` when no rows can be rendered
-- `data-studio-record-loaded` is `true` when work rows are loaded
+The page deliberately combines three read models:
 
-## Page / Template Structure
+- `/assets/data/works_index.json` for public Work rows;
+- `/assets/data/series_index.json` for public Series context and Series ordering;
+- `/studio/data/generated/activity/work-storage-index.json` for curator-only storage values.
 
-Primary template:
+The public indexes define what the published catalogue exposes. The Studio-only storage index augments those rows without leaking curator metadata into public catalogue payloads.
 
-- `studio/app/server/studio/studio_app_views.py`
+`studio/app/frontend/js/studio-works.js` owns loading, filtering, sorting, link-state propagation, and rendering. `catalogue-public-links.js` resolves public-preview URLs when Studio and the preview site use different local hosts.
 
-Page controller:
+## Extension And Weak Spots
 
-- `studio/app/frontend/js/studio-works.js`
+- Add a public display column only when its value belongs in the public index.
+- Add curator-only context through a Studio-owned projection, not by expanding public payloads.
+- Keep sort keys and row data attributes aligned in `studio-works.js` and the route template.
+- The page depends on generated public and Studio indexes being mutually current; it is not a canonical-source diagnostic surface.
 
-Supporting modules:
-
-- `studio/app/frontend/js/studio-ui.js`
-- `studio/app/frontend/js/studio-data.js`
-
-Current data sources:
-
-- `site/assets/data/works_index.json`
-- `site/assets/data/series_index.json`
-- `studio/data/generated/activity/work-storage-index.json`
-
-Top-level structure:
-
-- Studio layout wrapper from `_layouts/studio.html`
-  - shared site header with Studio-specific links, plus the page title row
-- `#worksStudioRoot[data-role="studio-works"]`
-  - page root and runtime data source
-- `#worksListCopySeriesButton`
-  - copies the plain-text series list to the clipboard
-- `[data-role="sort-button"]`
-  - shared sort-button hooks on dense-list header controls
-
-## Named UI Sections
-
-### Sort header
-
-User-facing name:
-
-- works sort header
-
-DOM / CSS:
-
-- `.worksList__head`
-- `.tagStudioList__head`
-- `.tagStudioList__sortBtn[data-role="sort-button"]`
-- `.tagStudioList__sortIndicator`
-
-JS owner:
-
-- `initStudioWorksPage()`
-- `updateHeaderState(key, dir)`
-
-Meaning:
-
-- dense-list sort controls bound through the shared Studio role/state contract
-
-### Meta actions
-
-User-facing name:
-
-- works meta actions
-
-DOM / CSS:
-
-- `.worksList__metaRow`
-- `.worksList__metaActions`
-- `#worksListCopySeriesButton`
-
-JS owner:
-
-- `initStudioWorksPage()`
-
-Meaning:
-
-- provides the `copy series` clipboard action alongside the site-map link
-- copies plain-text series titles, one per line, in alphabetical order
-
-### Works list
-
-User-facing name:
-
-- works list
-
-DOM / CSS:
-
-- `.worksList__item`
-- `.tagStudioList__rows`
-- `.tagStudioList__row`
-- `.tagStudioList__cellLink`
-- `.tagStudioList__cellTitle`
-- `.tagStudioList__cellMeta`
-
-Meaning:
-
-- the existing Studio works rows and links
-- curator-only storage values are merged in from the Studio-only work storage index rather than the public works index
-- work links carry Studio sort/filter return state so the work-page back link returns to `/studio/studio-works/`
-- work and series links resolve through the configured public-site preview base in local Studio sessions rather than remaining on the Studio app host
-
-## UI Layout and Styling
-
-Primary CSS:
-
-- `site/assets/css/main.css`
-- `site/assets/studio/css/studio.css`
-
-Shared primitives used:
-
-- `tagStudioList`
-- `tagStudioList--dense`
-- `tagStudioList__head`
-- `tagStudioList__sortBtn`
-- `tagStudioList__sortIndicator`
-- `tagStudioList__rows`
-- `tagStudioList__row`
-- `tagStudioList__cellLink`
-- `tagStudioList__cellTitle`
-- `tagStudioList__cellMeta`
-- `data-role="sort-button"`
-- `data-state="active"`
-
-Page-specific classes retained:
-
-- `worksList--studio`, `worksList--singleSeries`, and focused `worksList__*` cell classes for column templates, route-local link behavior, and series-filter variants
-
-## DOM Rendering and Event Wiring
-
-Page boot:
-
-- `initStudioWorksPage()`
-
-Main event wiring:
-
-- click handlers on `[data-role="sort-button"]`
-- click handler on `#worksListCopySeriesButton`
-
-Meaning:
-
-- the page renders rows with the shared dense list primitive while keeping works-specific sort/filter state in the controller
-- the page now also loads Studio config for the copy-button label
-
-## Local App Migration
-
-The page shell is mounted in the local Studio app server and reuses the existing `studio/app/frontend/js/studio-works.js` browser module.
-
-Because Studio and the public preview have separate local hosts, the controller uses the local Studio public-site link resolver for work and series links.
-
-Focused smoke coverage:
-
-- `studio/tests/smoke/local_studio_app_studio_works_route.py`
-
-## UI Contract
-
-- classes define presentation
-- `data-role` defines JS selectors
-- `data-state` defines active sort state
-
-`studio/app/frontend/js/studio-ui.js` holds the role selector and state token used by `studio-works.js`.
-
-## Change Guidance
-
-If a request refers to:
-
-- “sort buttons”
-  - start with `[data-role="sort-button"]` and `.tagStudioList__sortBtn`
-- “active sort state”
-  - start with `updateHeaderState(...)` in `studio/app/frontend/js/studio-works.js`
+The route uses `#worksStudioRoot` for the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state). Focused smoke coverage begins in `studio/tests/smoke/local_studio_app_studio_works_route.py`.

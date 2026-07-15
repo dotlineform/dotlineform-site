@@ -3,9 +3,8 @@ doc_id: docs-viewer-delivery-roadmap
 title: Docs Viewer Delivery Roadmap
 added_date: 2026-07-14
 last_updated: 2026-07-14
-summary: Ordered Docs Viewer deliverables, separated from broad concepts and implementation-ready change requests.
+ui_status: in-progress
 parent_id: docs-viewer
-viewable: true
 ---
 # Docs Viewer Delivery Roadmap
 

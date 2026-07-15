@@ -1,140 +1,68 @@
 ---
 doc_id: data-sharing-tags-adapter-structure
-title: Tags Data Sharing Adapter Structure
+title: Tags Data Sharing Adapter
 added_date: "2026-06-21 00:00"
-last_updated: 2026-06-21
+last_updated: 2026-07-15
 parent_id: data-sharing
 viewable: true
 ---
-# Tags Data Sharing Adapter Structure
+# Tags Data Sharing Adapter
 
-The Analytics tags adapter implements Data Sharing for canonical Analytics tag data.
-It follows the shared [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture) and keeps tag-family behavior out of `adapter.py`.
+## Role
 
-## Layout
+The tags adapter packages canonical Analytics registry/alias/assignment data and reviews/applies supported returned changes through Analytics tag planners and atomic transactions.
+
+## Structure
 
 ```text
-data-sharing/adapters/tags/
-  adapter.py
-  context.py
-  prepare.py
-  returned.py
-
-  families/
-    registry.py
-    aliases.py
-    assignments.py
-    bundle.py
+adapter.py       handler wiring
+context.py       configured sources, JSON I/O, metadata, selection, activity
+prepare.py       profile -> family, selection, package write
+returned.py      staged parsing, family detection, review/apply dispatch
+families/
+  registry.py
+  aliases.py
+  assignments.py
+  bundle.py
 ```
 
-`adapter.py` only wires `DataSharingAdapterHandlers` for module `analytics.tags`.
+## Current Families
 
-`context.py` owns tags adapter support:
-
-- adapter validation for module `analytics.tags`
-- shared runtime path resolution
-- JSON and JSONL reads/writes
-- current tag registry, aliases, and assignments loading
-- supporting series and works index loading
-- prepare profile lookup
-- package metadata helpers
-- selected record-id validation for prepare exports
-- selected record-index validation
-- activity append helpers
-
-`prepare.py` resolves a prepare `config_id` to a tag family and writes outbound JSON packages.
-Tags prepare is profile-driven.
-Profiles can be profile-only, or they can expose selectable source records through the active family.
-The current `tag-registry` profile exposes tag records and uses selected `record_ids` to limit the exported registry package.
-
-`returned.py` lists staged JSON/JSONL files, parses returned packages, detects tag family, builds review payloads, and dispatches apply actions.
-It owns the `ReturnedPackage` contract shared by returned-package family code.
-
-## Families
-
-| Family | Module | Prepare | Review | Apply |
-| --- | --- | --- | --- | --- |
-| `registry` | `families/registry.py` | selectable tag records and tag registry package | registry row preview | `registry_apply` |
-| `aliases` | `families/aliases.py` | tag aliases package | alias row preview | `aliases_apply` |
-| `assignments` | `families/assignments.py` | tag assignment package | series assignment preview | `assignments_apply` |
-| `bundle` | `families/bundle.py` | combined package | none | none |
-
-`bundle` is prepare-only.
-It composes registry, aliases, and assignments package payloads for export.
-A returned bundle workflow would need an explicit design before review/apply support is added.
-
-## Profiles
-
-Current prepare profiles map to families like this:
-
-| Profile | Family | Selection |
+| Family/profile | Prepare selection | Returned support |
 | --- | --- | --- |
-| `tag-registry` | `registry` | `explicit_record_ids` |
-| `tag-aliases` | `aliases` | `none` |
-| `tag-assignments` | `assignments` | `none` |
-| `tags-bundle` | `bundle` | `none` |
+| `registry` / `tag-registry` | explicit canonical tag IDs | review + `registry_apply` |
+| `aliases` / `tag-aliases` | whole alias source | review + `aliases_apply` |
+| `assignments` / `tag-assignments` | whole assignment source | review + `assignments_apply` |
+| `bundle` / `tags-bundle` | combined whole sources | export only; no review/apply |
 
-The profile mapping comes from the tags `prepare` capability in `data-sharing/config/adapters.json`.
-If no valid profile list is configured, `context.py` falls back to the built-in default profile map.
+This focused table is useful because the family/profile boundary drives workflow. Exact labels, formats, and action copy live in `adapters.json`.
 
-Adding a new tags profile can be config-only when it uses an existing family and only changes family-supported options.
-Adding a new tags family requires code in `families/`, returned-package detection when imports are supported, and focused tests.
+## Prepare
 
-## Prepare Selection
+The registry family exposes generic `{id, name}` rows and rejects unknown selected IDs. Other current families are profile-only exports; their configs do not pretend to support record selection before the family defines what one selected record means.
 
-The `tag-registry` profile uses the shared generic prepare list.
-`families/registry.py` loads `tag_registry.tags[]` and returns records with the shared `id` and `name` fields:
+## Returned Path
 
-```json
-{ "id": "subject:trees", "name": "trees" }
-```
+`returned.py` uses package content plus trusted metadata to select a family, then the family validates against current Analytics source:
 
-The family can include tag-specific fields such as `tag_id` and `group`, but the browser selection UI must use `id` and `name`.
-When the prepare request includes `selection.record_ids`, `prepare.py` validates the ids and passes them to `families/registry.py`.
-The registry package builder exports only matching source tags, sorted by tag display name with tag id as a stable tiebreaker.
-Unknown selected tag ids fail validation instead of being silently ignored.
+- registry/aliases support configured add, merge, or replace semantics;
+- assignments use series-session comparison and current series/work membership;
+- preview reports additions/overwrites/removals, conflicts, invalid references, missing records, and skipped rows;
+- confirmed apply delegates to Analytics tag mutation/write services.
 
-The alias, assignment, and bundle profiles currently remain profile-only exports.
-They do not expose selectable prepare records until their families define what selected records mean for those package shapes.
+Data Sharing does not implement a second tag validator or JSON write path.
 
-## Source Files
+## Configured Sources
 
-The tags adapter reads and writes configured paths from `data-sharing/config/adapters.json`.
-Current source/write target keys are:
+Canonical registry, aliases, and assignments are read/write targets. Public series/work indexes are supporting read dependencies for assignment validation only. The registry owns the exact safe relative paths.
 
-- `tag_registry`
-- `tag_aliases`
-- `tag_assignments`
-- `series`
-- `works`
+## Known Weak Spots
 
-Registry, aliases, and assignments writes use Analytics tag mutation helpers.
-Assignments review also uses the series and works indexes to validate returned assignment payloads and attach activity record groups.
+- `context.py` has a built-in default profile map when config lacks a valid list; resilience can conceal config drift.
+- The combined bundle is prepare-only and needs an explicit returned-package design before it becomes actionable.
+- Family detection from returned shape is domain code and must remain consistent with export metadata/profile identity.
+- Apply families depend on Analytics internals; changes to tag source schemas cross both app and Data Sharing tests.
 
-## Returned Packages
+## Extension Rule
 
-`returned.py` detects returned package family from JSON or JSONL payload shape.
-Supported package indicators include:
-
-- `import_registry` or `tags`
-- `import_aliases` or `aliases`
-- `import_assignments` or `series`
-
-Registry and alias imports support `add`, `merge`, and `replace` modes.
-Assignment imports use assignment-session payloads and validate applicability against current assignments and catalogue context.
-
-## Verification
-
-Run these focused checks after tags adapter changes:
-
-```bash
-$HOME/miniconda3/bin/python3 -m py_compile data-sharing/adapters/tags/*.py data-sharing/adapters/tags/families/*.py
-$HOME/miniconda3/bin/python3 -m pytest analytics-app/tests/python/test_tags_data_sharing_adapter.py -q
-$HOME/miniconda3/bin/python3 -m pytest analytics-app/tests/python/test_data_sharing_adapters.py analytics-app/tests/python/test_data_sharing_service.py analytics-app/tests/python/test_analytics_data_sharing_api.py -q
-```
-
-Run the local route smoke when handler wiring or browser-visible behavior changes:
-
-```bash
-$HOME/miniconda3/bin/python3 analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py
-```
+Config-only changes may vary an existing family's supported options. New selection meaning, package shape, returned detection, validation, or apply behaviour requires family code and focused adapter/API tests.

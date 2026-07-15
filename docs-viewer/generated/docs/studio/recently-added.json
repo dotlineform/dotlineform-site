@@ -3,6 +3,70 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "config-admin-config-json",
+      "title": "Admin Config JSON",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/config-admin-config-json.json",
+      "added_date": "2026-07-15",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
+      "doc_id": "admin-overview",
+      "title": "Admin Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/admin-overview.json",
+      "added_date": "2026-07-15",
+      "parent_id": "admin",
+      "parent_title": "Admin"
+    },
+    {
+      "doc_id": "analytics-overview",
+      "title": "Analytics Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-overview.json",
+      "added_date": "2026-07-15",
+      "parent_id": "analytics",
+      "parent_title": "Analytics"
+    },
+    {
+      "doc_id": "data-sharing-overview",
+      "title": "Data Sharing Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/data-sharing-overview.json",
+      "added_date": "2026-07-15",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing"
+    },
+    {
+      "doc_id": "analytics-dimension-exploration",
+      "title": "Dimension Model Exploration",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/analytics-dimension-exploration.json",
+      "added_date": "2026-07-15",
+      "parent_id": "analytics",
+      "parent_title": "Analytics"
+    },
+    {
+      "doc_id": "ui-search-list-component",
+      "title": "Search List",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-search-list-component.json",
+      "added_date": "2026-07-15",
+      "parent_id": "ui",
+      "parent_title": "Shared UI"
+    },
+    {
+      "doc_id": "site-request-search-policy-review",
+      "title": "Search Policy Review",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-search-policy-review.json",
+      "added_date": "2026-07-15",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests"
+    },
+    {
+      "doc_id": "studio-overview",
+      "title": "Studio Overview",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-overview.json",
+      "added_date": "2026-07-15",
+      "parent_id": "studio",
+      "parent_title": "Studio"
+    },
+    {
       "doc_id": "docs-viewer-delivery-roadmap",
       "title": "Docs Viewer Delivery Roadmap",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-delivery-roadmap.json",
@@ -17,71 +81,7 @@
       "added_date": "2026-07-14",
       "parent_id": "site-request-docs-viewer-external-asset-collections",
       "parent_title": "External Asset Collections"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-external-asset-collections",
-      "title": "External Asset Collections",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-external-asset-collections.json",
-      "added_date": "2026-07-14",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "docs-viewer-external-asset-collections-architecture",
-      "title": "External Asset Collections Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-architecture.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-external-asset-collections",
-      "parent_title": "External Asset Collections"
-    },
-    {
-      "doc_id": "docs-viewer-external-asset-collections-concept",
-      "title": "External Asset Collections Concept",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-external-asset-collections-concept.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-external-asset-collections",
-      "parent_title": "External Asset Collections"
-    },
-    {
-      "doc_id": "site-request-docs-viewer-index-multiple-selection",
-      "title": "Index Multiple Selection",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-index-multiple-selection.json",
-      "added_date": "2026-07-14",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests"
-    },
-    {
-      "doc_id": "docs-viewer-index-multiple-selection-architecture",
-      "title": "Index Multiple Selection Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-architecture.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-index-multiple-selection",
-      "parent_title": "Index Multiple Selection"
-    },
-    {
-      "doc_id": "docs-viewer-index-multiple-selection-concept",
-      "title": "Index Multiple Selection Concept",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-index-multiple-selection-concept.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-index-multiple-selection",
-      "parent_title": "Index Multiple Selection"
-    },
-    {
-      "doc_id": "docs-viewer-semantic-reference-authoring-architecture",
-      "title": "Semantic Reference Authoring Architecture",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-architecture.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-semantic-reference-editor",
-      "parent_title": "Semantic Reference Authoring"
-    },
-    {
-      "doc_id": "docs-viewer-semantic-reference-authoring-concept",
-      "title": "Semantic Reference Authoring Concept",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-semantic-reference-authoring-concept.json",
-      "added_date": "2026-07-14",
-      "parent_id": "site-request-docs-viewer-semantic-reference-editor",
-      "parent_title": "Semantic Reference Authoring"
     }
   ],
-  "generated_at": "2026-07-14T22:30:08Z"
+  "generated_at": "2026-07-15T07:37:10Z"
 }

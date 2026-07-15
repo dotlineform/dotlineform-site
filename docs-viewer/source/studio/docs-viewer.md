@@ -46,7 +46,7 @@ Use documentation to find the relevant boundary, then verify exact behaviour in:
 - `docs-viewer/services/` for local reads, writes, imports, exports, review, and scope workflows
 - `docs-viewer/build/` and `docs-viewer/tests/` for generated contracts and executable evidence
 
-Prefer code search or the focused inventories for exact modules, endpoints, fields, and files. Copying those lists into overview pages makes them harder to trust.
+Prefer code/config search for exact modules, endpoints, fields, and files. Copying those lists into overview pages makes them harder to trust.
 
 ## Plan Docs Viewer Work
 

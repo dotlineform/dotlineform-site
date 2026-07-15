@@ -2,69 +2,34 @@
 doc_id: catalogue-field-registry-review
 title: Catalogue Field Registry
 added_date: 2026-05-01
-last_updated: 2026-06-02
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Field Registry
 
-Route:
+## What It Does
 
-- `/studio/catalogue-field-registry/`
+`/studio/catalogue-field-registry/` is a read-only view of `studio/data/config/catalogue/catalogue-field-registry.json`.
 
-This Studio page is a read-only review surface for `studio/data/config/catalogue/catalogue-field-registry.json`.
-It is hosted by the local Studio app server.
+Use it to answer a focused question: when a catalogue field changes, which generated artifact families and build behavior can that change affect?
 
-## Route Ready State
+Search returns the complete matching rule rather than a browser-reimplemented interpretation. An empty search shows the whole registry.
 
-The page root `#fieldRegistryReviewRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+## Why The Registry Exists
 
-- no route-level commands set busy
-- `data-studio-mode="registry"`
-- `data-studio-service="available|unavailable"`
-- `data-studio-record-loaded="true|false"`
+The registry lets save and build planning distinguish editor-only fields, public metadata, search/index dependencies, and media-source changes. It keeps field-to-artifact policy in checked configuration instead of scattering conditionals through editor and generator modules.
 
-## Purpose
+The browser view is deliberately simple. It does not edit rules or compute a build plan. Planning and verification remain server/tool responsibilities so the review page cannot become a second policy engine.
 
-Use this page to inspect the active field-to-artifact registry that catalogue build planning uses for field-aware previews and save-time public updates.
+## Ownership And Change Method
 
-The page intentionally renders the registry source directly rather than recreating planner behavior in the browser.
+- Source authority: `studio/data/config/catalogue/catalogue-field-registry.json`
+- Browser path registration: `studio/app/frontend/config/studio-config.json`
+- Review controller: `studio/app/frontend/js/catalogue-field-registry-review.js`
+- Planning: `studio/services/catalogue/catalogue_build_field_plan.py`
+- Verification: `studio/services/catalogue/verify_catalogue_field_registry.py`
 
-The current registry includes the migrated work-detail media-section fields. `details_subfolder` and `project_filename` are source-media fields, while `section_title` and `sort_order` are parent work JSON section metadata fields.
+When adding or changing a catalogue field, update the canonical schema/adapter and registry rule together, then run the registry verifier and the affected build-planning tests. Do not add a UI-only rule copy to this page.
 
-## Behavior
-
-The page:
-
-- loads the registry path from `studio/app/frontend/config/studio-config.json` through `paths.data.studio.catalogue_field_registry`
-- displays the formatted registry JSON in a read-only text box
-- accepts a field-name search
-- when search is empty, shows the whole registry
-- when search has an exact field-name match, shows the complete rule object that contains the field
-- when no exact match exists, shows any complete rules whose field names contain the search text
-- leaves the source registry unchanged
-
-## Local App Migration
-
-The page shell is mounted in the local Studio app server and reuses `studio/app/frontend/js/catalogue-field-registry-review.js`.
-
-Focused smoke coverage:
-
-- `studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`
-
-## Current Scope
-
-This first review page is deliberately simple.
-
-It does not:
-
-- edit registry rules
-- compute build plans
-- group rules into a custom table or tree
-- replace `./scripts/verify_catalogue_field_registry.py`
-
-## Related References
-
-- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)
-- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
+The route uses `#fieldRegistryReviewRoot` for the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state).

@@ -2,129 +2,100 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: 2026-06-26
+last_updated: 2026-07-15
+summary: Checked-in Local Studio route registry and browser-safe data-path source, plus its validated runtime projection.
 parent_id: studio
 viewable: true
 ---
 # Studio Config JSON
 
-Config file:
+## Authority
 
-- `studio/app/frontend/config/studio-config.json`
+`studio/app/frontend/config/studio-config.json` is the checked-in browser bootstrap source for Local Studio.
 
-See also:
+It owns only:
 
-- [Config Files Inventory](/docs/?scope=studio&doc=config-files-inventory)
-- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- `app.routes` — the Studio route registry
+- `paths.data.studio` — browser-safe Studio data paths
 
-## Contract Role
+It does not own Analytics or Docs Viewer routes, Data Sharing adapters, public catalogue route policy, catalogue write endpoints, canonical schemas, generated payload schemas, or route-local UI copy.
 
-`studio-config.json` is the source browser-facing manifest for the Local Studio app.
-The local app server reads it, validates the Local Studio route registry, injects runtime details, and serves the combined payload as the Studio runtime config.
+## Route Registry
 
-The file currently owns:
+Each `app.routes` record declares:
 
-- Local Studio route shell metadata under `app.routes`
-- Studio data path lookup under `paths.data.studio`
+- route id from the object key
+- label and title
+- `/studio/` path
+- stable HTML template
+- route script
+- navigation flag
+- shell type
+- route-ready id
 
-It does not own:
+`studio_app_config.py` validates the registry before it is served. [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) is the readable exact inventory; the JSON and validation tests remain authoritative.
 
-- Analytics app routes or Analytics tag runtime policy
-- Data Sharing adapter behavior or source-write policy
-- Docs Viewer scope, route, status, or UI copy
-- public catalogue route construction policy
-- service endpoint contracts injected by the local app server
-- generated payload schemas
+## Browser-Safe Data Paths
 
-## What Reads It
+Current `paths.data.studio` keys are:
 
-Current readers include:
+| key | role |
+| --- | --- |
+| `catalogue_works` | canonical works fallback read |
+| `catalogue_series` | canonical series fallback read |
+| `catalogue_lookup_work_search` | generated work search fallback |
+| `catalogue_lookup_series_search` | generated series search fallback |
+| `catalogue_lookup_series_base` | generated per-series lookup base |
+| `catalogue_work_record` | focused work read URL |
+| `catalogue_work_detail_record` | focused detail read URL |
+| `catalogue_field_registry` | field-registry review and current service resolver path |
 
-- `studio/app/server/studio/studio_app_config.py`, which loads the file, validates `app.routes`, injects `app.runtime`, and serves the runtime config
-- `studio/app/frontend/js/studio-config.js`, which fetches the served runtime config and exposes route, data-path, and copy helpers
-- `studio/app/frontend/js/studio-app.js`, `studio-navigation.js`, and `studio-route-registry.js`, which use `app.routes` for shell boot and navigation
-- route modules that call `loadStudioConfig()` and `getStudioText(...)`
-- `studio/app/frontend/js/studio-data.js`, which uses Studio data paths for static fallback reads when catalogue server reads are unavailable
-- `studio/services/catalogue/catalogue_field_registry.py`, which resolves the catalogue field registry path from `paths.data.studio.catalogue_field_registry`
+These are read addresses, not source-write contracts. Server-backed workflows should use allowlisted catalogue reads when available. Do not add source paths, write targets, adapter configuration, activity logs, or inactive generated outputs.
 
-## Runtime Shape
+## Runtime Projection
 
-The source file is not the full runtime payload.
-`studio_app_config.py` adds `app.runtime` at serve time.
+The source JSON is not the final browser payload. `studio_app_config.py` injects `app.runtime` with:
 
-Runtime-injected values include:
+- host and asset version
+- health and runtime-config paths
+- a catalogue service endpoint map
+- public-preview and production site bases
+- the `paths.data` projection
+- media and thumbnail settings
+- pipeline variants, encoding, and workbook settings
+- route records copied as runtime views
+- navigation and modal metadata
 
-- local app host and asset version
-- runtime endpoint paths such as `/studio/runtime-config.json`
-- Local Studio service endpoint paths
-- public preview and production site bases
-- media and pipeline defaults
-- resolved view records derived from `app.routes`
-- navigation and modal runtime metadata
+Those values come from Python constants, environment, `_data/pipeline.json`, filesystem mtimes, and the checked-in source config. Do not copy runtime-injected values back into `studio-config.json`.
 
-Do not add those injected values to the source JSON unless the server contract changes.
+## Browser Loader
 
-## Edit Class
+`studio/app/frontend/js/studio-config.js`:
 
-This file is maintainer-editable code infrastructure.
-It is not a user preference file.
+- requires the runtime-config URL from the outer shell meta tag
+- fetches and caches the runtime payload
+- resolves repo-rooted asset paths
+- exposes focused route and data-path accessors
+- supplies code-owned Studio UI text through `studio-ui-text.js`
 
-Safe edits require matching code/tests when they change:
+It is an accessor layer, not a second config registry or route controller. Local write transport remains in `studio-transport.js`.
 
-- route ids, paths, scripts, navigation flags, shell type, or ready-state ids
-- data path keys used by route modules
-- catalogue option lists used by route modules
+## Changing Config
 
-## Active Sections
+For route changes, update the record, template, script, server validation expectations, and focused route check together.
 
-### `app.routes`
+For a data-path change:
 
-Local Studio route shell registry.
-Each route entry must match a served Local Studio route and JavaScript route script.
+1. verify active browser and service consumers
+2. classify the value as browser-safe static read, focused server URL, server-only path, or generated output
+3. keep only browser-safe or intentionally projected read values here
+4. update the positive allowed-key tests
 
-Validation catches:
+## Weak Spots
 
-- missing required fields
-- duplicate route paths
-- unsupported shell types
-- missing route scripts
-- route ids or paths that do not match current served routes
-- Studio route metadata left in `paths.routes`
+- Runtime route records are duplicated into `app.runtime.views`.
+- Runtime catalogue services and hardcoded browser endpoint constants are overlapping discovery surfaces.
+- `catalogue_field_registry` is both a browser path and a current server resolver dependency.
+- Some paths can be used as static fallback while focused record reads are server URLs, so the key family is not semantically uniform.
 
-### `paths.data.studio`
-
-Studio data-path lookup.
-The current keys are active browser static fallback or config-file read inputs:
-
-- `catalogue_works` and `catalogue_series`: canonical catalogue source fallback reads used when the Local Studio catalogue API is unavailable
-- `catalogue_lookup_work_search` and `catalogue_lookup_series_search`: generated lookup search fallback payloads for catalogue editor modals
-- `catalogue_lookup_series_base`: generated lookup record fallback base for opening catalogue series records
-- `catalogue_work_record` and `catalogue_work_detail_record`: server-only read keys for focused work and detail editor projections
-- `catalogue_field_registry`: field-registry review UI input and the current service resolver path for catalogue field build planning
-
-Server-backed catalogue reads should prefer the Local Studio catalogue API when available.
-Static paths are fallback/runtime asset paths, not write contracts.
-The Studio activity route reads `activity_log` through the Local Studio catalogue API, so `paths.data.studio.activity_log` is not exposed as a browser fallback path.
-Do not add source-write targets, adapter contracts, generated metadata payloads, or inactive build outputs here.
-
-## Cleanup Review
-
-Completed cleanup:
-
-- `paths.routes` has been removed from the source file
-- stale public/content route keys such as `library_page`, `search`, `series_page_base`, `works_page_base`, `moments_page_base`, and stale `work_details_page_base` have been removed from Local Studio config
-- unused `studio-config.js` helper exports for site data, Docs scope data, search scope indexes, and search policy paths have been removed
-- public moment URL construction now lives with the public catalogue link helper instead of generic Studio route lookup
-- focused tests assert that runtime `data_paths` exposes only `studio`
-- focused tests assert the active `paths.data.studio` key set so this browser-facing surface does not widen silently
-- Studio UI-text bundle paths and files have been removed; visible route copy is code-owned by Studio frontend modules
-- unused `paths.data.studio.catalogue_lookup_meta` and the generated lookup metadata payload have been removed
-- unused `paths.data.studio.activity_log` has been removed; `activity_log` remains an active catalogue API read key, not a Studio config path
-- `catalogue.series_type_options` has been removed from broad Studio bootstrap config; the Series editor owns its current option list in `catalogue-series-fields.js`
-- the 2026-06-03 `paths.data.studio` review retained the catalogue source fallback reads, generated lookup fallback reads, and `catalogue_field_registry` because active call sites still consume those browser read paths
-
-Recommended verification for the cleanup pass:
-
-- `$HOME/miniconda3/bin/python3 -m json.tool studio/app/frontend/config/studio-config.json`
-- `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py`
-- focused browser/module smoke for Studio navigation and catalogue public links
+Focused runtime-config tests in `studio/tests/python/test_studio_app_runtime_config.py` protect the route registry, allowed Studio data keys, and sibling-app exclusions.

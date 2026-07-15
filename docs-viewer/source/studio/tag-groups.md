@@ -2,154 +2,43 @@
 doc_id: tag-groups
 title: Tag Groups
 added_date: 2026-03-31
-last_updated: 2026-06-22
+last_updated: 2026-07-15
 parent_id: analytics
 ---
 # Tag Groups
 
-Route:
+## Capability
 
-- `/analytics/tag-groups/`
+`/analytics/tag-groups/` is the read-only taxonomy reference. It shows the configured short and long description for each tag group in Analytics order.
 
-Purpose:
+It does not edit group identity or policy. Group descriptions come from `analytics-app/data/canonical/tag-groups.json`; group order and coverage participation come from `analytics-config.json`; allowed registry groups are enforced by registry policy/model validation.
 
-- review configured Analytics tag groups and their short/long descriptions
+## Execution Path
 
-## Route Ready State
+```text
+tag-groups.html
+  -> tag-groups.js
+  -> analytics-data.js
+  -> GET /analytics/api/tag-groups
+  -> tag-groups.json
+  + analysis.groups ordering from runtime config
+```
 
-The page root `#tag-groups` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Analytics attributes.
-Route-specific details:
+The route has no commands and never sets busy. Its Analytics ready-state root moves to list or empty after load.
 
-- no route-level commands set busy
-- `data-analytics-mode` is `list` when groups are shown and `empty` for empty or failed loads
-- `data-analytics-record-loaded` is `true` when group descriptions are loaded
+## Code Map
 
-## Page / Template Structure
+- template: `analytics-app/app/frontend/routes/tag-groups.html`
+- controller: `analytics-app/app/frontend/js/tag-groups.js`
+- shared selectors/styles: `analytics-ui.js`, `analytics.css`
+- API read map: `analytics_api.py::READ_ENDPOINTS`
+- canonical prose: `analytics-app/data/canonical/tag-groups.json`
+- order/coverage policy: `analytics-config.json::analysis.groups`
 
-Static route template:
+## Change Method
 
-- `analytics-app/app/frontend/routes/tag-groups.html`
+- prose change: edit `tag-groups.json`;
+- display order or coverage membership: edit Analytics config and scoring tests;
+- new group identity: treat it as a registry-model change, then update descriptions, policy, UI/scoring assumptions, imports, and tests together.
 
-App shell:
-
-- `analytics-app/app/frontend/analytics-shell.html`
-
-Page controller:
-
-- `analytics-app/app/frontend/js/tag-groups.js`
-
-Supporting modules:
-
-- `analytics-app/app/frontend/js/analytics-ui.js`
-
-Top-level structure:
-
-- `.tagGroupsPage`
-  - page scope for Studio CSS variables
-- `#tag-groups[data-role="tag-groups"]`
-  - page root
-- `[data-role="content"]`
-  - template-owned render target inside the shared Studio panel shell
-
-## Named UI Sections
-
-### Group sections
-
-User-facing name:
-
-- group sections
-
-DOM / CSS:
-
-- `.tagGroups__sections`
-- `.analytics__groupInfoSection.tagGroups__section`
-- `.analytics__groupInfoHead`
-- `.analytics__groupInfoText`
-- `.tagGroups__short`
-
-JS owner:
-
-- `renderGroups(content, groups, config)`
-
-Meaning:
-
-- the ordered set of configured group descriptions
-
-### Group chip
-
-User-facing name:
-
-- group chip
-
-DOM / CSS:
-
-- `.analytics__keyPill`
-- `.analytics__chip--subject`
-- `.analytics__chip--domain`
-- `.analytics__chip--form`
-- `.analytics__chip--theme`
-
-Meaning:
-
-- the shared Studio chip treatment used for each group heading
-
-## UI Layout and Styling
-
-Primary CSS:
-
-- `analytics-app/app/assets/css/analytics.css`
-
-Shared primitives used:
-
-- `analytics__panel`
-- `analytics__keyPill`
-- `analytics__empty`
-- `analytics__groupInfo*`
-
-Page-specific classes retained:
-
-- `tagGroups__*` for page layout and short-description spacing
-
-## DOM Rendering and Event Wiring
-
-Page boot:
-
-- `initTagGroupsPage()`
-
-Main render function:
-
-- `renderGroups(content, groups, config)`
-
-Event wiring:
-
-- none
-
-## UI Contract
-
-- classes define presentation
-- `data-role` defines JS selectors
-
-`analytics-app/app/frontend/js/analytics-ui.js` holds the role selectors plus generated style class tokens used by `tag-groups.js`.
-
-## Data Access
-
-Primary data access:
-
-- group descriptions from `/analytics/api/tag-groups` in the Local Analytics app
-- group ordering from `analytics-app/app/frontend/config/analytics-config.json`
-
-Loaded through:
-
-- `analytics-app/app/frontend/js/analytics-data.js`
-- `analytics-app/app/frontend/js/analytics-config.js`
-
-## Change Guidance
-
-If a request refers to:
-
-- “group section”
-  - start with `.analytics__groupInfoSection.tagGroups__section`
-- “group chip”
-  - start with `.analytics__keyPill`
-- “long description”
-  - start with `.analytics__groupInfoText`
+Do not use this page as a second exhaustive list of group values. Current JSON and config show the exact set.

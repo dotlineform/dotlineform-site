@@ -2,69 +2,58 @@
 doc_id: audit-runner
 title: Audit Runner
 added_date: 2026-06-07
-last_updated: 2026-06-07
+last_updated: 2026-07-15
 parent_id: admin
 ---
 # Audit Runner
 
-Script:
+## Role
 
-```bash
-$HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id route-ready-state
+`audit_runner.py` is the allowlist and process boundary behind `/admin/audits/`. It turns a stable audit ID into fixed server-owned command arguments and normalizes the structured result for the Admin API.
+
+Only `route-ready-state` is currently registered. The registry in code is the exhaustive authority.
+
+## Execution Path
+
+```text
+Admin Audits route
+  -> POST audit_id to Admin audit API
+  -> audit_runner allowlist lookup
+  -> fixed argv, cwd, and structured-output mode
+  -> audit subprocess without a shell
+  -> normalized result + optional Admin activity row
 ```
 
-- Normal local sessions do not start a standalone audit service because the Admin app server owns the active audit HTTP surface through `admin-app/app/server/admin_app/admin_audit_api.py`.
-- For Codex automation, call `admin-app/app/server/admin_app/audit_runner.py` directly instead of starting a sibling localhost service.
-- Risk-related audits follow the same rule: use the Admin app server and allowlisted audit runner, not a separate risk server.
+The browser cannot provide command text, paths, flags, environment, or working directory.
 
-## Purpose
+## Direct Use
 
-The audit runner owns the allowlisted maintenance audit registry and direct audit execution behavior.
-The active Admin browser endpoints are served by `admin-app/app/server/admin_app/admin_audit_api.py`, which imports the runner module.
-
-The first allowlisted audit is:
-
-- `route-ready-state`
-
-List allowlisted audits:
+List or run the current allowlist without starting a separate service:
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --list
-```
-
-Run the default ready-state audit:
-
-```bash
 $HOME/miniconda3/bin/python3 admin-app/app/server/admin_app/audit_runner.py --audit-id route-ready-state
 ```
 
-## Endpoints
+The active HTTP surface belongs to `admin_app_server.py` and `admin_audit_api.py`. There is no standalone audit server to start.
 
-| Method | Path | Purpose |
-|---|---|---|
-| `GET` | `/admin/api/audits/health` | service availability check in the Admin app |
-| `GET` | `/admin/api/audits/audits` | list allowlisted audit IDs and labels in the Admin app |
-| `POST` | `/admin/api/audits/audits/run` | run one allowlisted audit by ID in the Admin app |
+## Extension Method
 
-Run request:
+A new Admin audit needs:
 
-```json
-{
-  "audit_id": "route-ready-state"
-}
-```
+- a deterministic script with structured JSON output;
+- one explicit `AuditDefinition` in `build_audit_registry()`;
+- a concise UI label and description;
+- focused runner/API tests;
+- a reason it is an operator-triggered audit rather than a normal check-profile step or an Admin Checks report.
 
-The response includes `status`, `exit_code`, `summary`, `totals`, `findings`, timestamps, and raw `stdout` / `stderr`.
+Keep the registry small. Direct maintenance audits and configurable evidence reports are different workflows; do not make one generic command launcher.
 
-Audit failures are returned as successful service responses with `status: "failed"` and a non-zero `exit_code`. Invalid audit IDs return a request error.
+## Artifacts And Failure Semantics
 
-When the request includes valid Admin activity context from `/admin/audits/`, the Admin API appends one unified activity row with script purpose `run audit`. The detail items include the audit label, pass/warn/fail status, error and warning counts, and duration.
+- the subprocess result is returned even when the audit reports failure;
+- invalid IDs and invalid structured output are request/runtime errors;
+- minimal runner logs live under `var/admin/audits/logs/`;
+- an Admin-originated run may append a normalized activity entry.
 
-## Security Boundary
-
-- accepts audit IDs only, not command text
-- runs command arguments from a server-side allowlist
-- does not accept browser-controlled paths, flags, environment, or working directories
-- runs commands without a shell
-- writes only minimal local logs under `var/admin/audits/logs/`
-- writes unified activity rows only through the fixed local activity feed paths
+Endpoint paths and response fields are projected by `admin_app_config.py` and implemented by `admin_audit_api.py`; read those files when an exact contract matters.

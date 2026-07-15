@@ -2,45 +2,26 @@
 doc_id: scripts-css-token-audit
 title: CSS Token Audit
 added_date: 2026-03-31
-last_updated: "2026-05-26"
-parent_id: ui
+last_updated: 2026-07-15
+parent_id: scripts
 viewable: true
 ---
 # CSS Token Audit
 
-Script:
+Run the lightweight CSS literal report with:
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/checks/css_token_audit.py
 ```
 
-## Optional Flags
+## What It Does
 
-- `--md-out var/studio/reports/css-audit-latest.md`: override Markdown output path
-- `site/assets/css/main.css assets/studio/css/studio.css`: optional file-list override
+- scans the supplied CSS files for raw `font-size` values and direct color literals
+- reports repeated values and source line numbers
+- writes `var/studio/reports/css-audit-latest.md` by default
 
-## Behavior
+The default inputs are `site/assets/css/main.css` and `studio/app/assets/css/studio.css`. Pass file paths explicitly to inspect a different surface, and use `--md-out` to change the report path.
 
-- scans CSS for `font-size` declarations and color literals
-- reports repeated raw typography values and direct color literals
-- writes the current snapshot to `var/studio/reports/css-audit-latest.md`
+This is a heuristic maintenance report, not a complete unused-selector, cascade, or visual-regression audit. Read `admin-app/checks/css_token_audit.py` for the exact detection rules.
 
-## Source And Target Artifacts
-
-Source artifacts:
-
-- default CSS inputs are whatever file list the command receives
-- current common inputs are:
-  - `site/assets/css/main.css`
-  - `site/assets/studio/css/studio.css`
-
-Target artifact:
-
-- Markdown audit snapshot at `var/studio/reports/css-audit-latest.md` by default
-- or the path passed through `--md-out`
-
-## Related References
-
-- [Scripts](/docs/?scope=studio&doc=scripts)
-- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
-- CSS Audit Latest
+The script is also part of the Admin checks configuration; use the checks runner when the report is needed as part of a wider validation profile.

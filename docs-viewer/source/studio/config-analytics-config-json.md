@@ -2,72 +2,60 @@
 doc_id: config-analytics-config-json
 title: Analytics Config JSON
 added_date: 2026-06-02
-last_updated: 2026-06-26
+last_updated: 2026-07-15
 parent_id: analytics
 ---
 # Analytics Config JSON
 
-Config file:
+## Owner
 
-- `analytics-app/app/frontend/config/analytics-config.json`
+`analytics-app/app/frontend/config/analytics-config.json` is checked source configuration for the Analytics browser app.
 
-## Contract Role
+It owns:
 
-`analytics-config.json` is the browser-facing bootstrap manifest for the Local Analytics app.
-It owns Analytics route shell metadata under `app.routes` and public catalogue index data lookup.
-It also owns the Analytics tag grouping and RAG scoring policy under `analysis`.
+- `app.routes` — route ID, path, template, controller, shell type, and navigation flag;
+- `paths.data.site` — browser paths for the public series/work indexes Analytics reads;
+- `analysis.groups` — display/coverage group order;
+- `analysis.rag` — implemented tag-completeness thresholds and rules.
 
-It is separate from Local Studio config.
-Studio routes should not read Analytics route keys, tag config, or Data Sharing route config from `studio/app/frontend/config/studio-config.json`.
+It does not own API paths, filesystem roots, public-site base URLs, media hosts, pipeline variants, Data Sharing adapter config, or UI copy. Those are server-, subsystem-, pipeline-, or code-owned.
 
-## What Reads It
+## Projection Path
 
-The Analytics app frontend config loader reads this file once per Analytics page session and caches the payload.
-Analytics route modules use it for:
+```text
+analytics-config.json
+  -> analytics_app_config.py validates routes/files
+  -> server adds environment + service + media + pipeline settings
+  -> /analytics/runtime-config.json
+  -> analytics-config.js caches browser config
+  -> route registry/data/scoring consumers
+```
 
-- route URL lookup from `app.routes` for tag registry, aliases, groups, series tags, series tag editor, and Data Sharing prepare/review
-- site data lookup for series and works indexes
-- tag group order and coverage groups under `analysis.groups`
-- RAG scoring thresholds under `analysis.rag`
+The source JSON is not the complete runtime payload. Exact service endpoints live in `ANALYTICS_SERVICE_ENDPOINTS` and the Data Sharing API projection.
 
-Analytics-hosted Data Sharing routes get workflow metadata from `/analytics/api/data-sharing/config`.
-They should not read `data-sharing/config/adapters.json` or `data-sharing/adapters/documents/config/prepare-profiles.json` directly through Analytics bootstrap config or static file serving.
+## Change Method
 
-The Analytics app server also treats this file as part of the local app route/runtime contract when serving Analytics pages.
-It validates `app.routes` against currently served route shells, checks script paths, rejects duplicate paths, and rejects Analytics route metadata left in `paths.routes`.
+### Route
 
-## Edit Class
+Add or remove the template/controller and registry row together. The server rejects missing fields/files, duplicate paths, unsupported shell types, and route metadata placed in the old `paths.routes` location.
 
-This file is maintainer-editable code infrastructure.
-It is not a user-facing preference file.
+### Catalogue Input
 
-Allowed edits include:
+Keep a data path only while an active browser loader consumes it. A path exposes a dependency; it does not transfer ownership of that artifact to Analytics.
 
-- adding or retiring Analytics route keys with matching route/server/test changes
-- changing data path ownership when a data source moves
+### Group Or RAG Policy
 
-Do not add Local Studio route keys, Docs Viewer internals, generated payload schemas, or scoring implementations here.
-Scoring policy belongs here, but scoring implementation belongs in `analytics-app/app/frontend/js/analysis-tag-scoring.js`.
+Change policy here and implementation/tests in `analysis-tag-scoring.js` together. Do not turn config into an inventory of possible future scoring models.
 
-## Cleanup Review
+### Data Sharing
 
-Completed cleanup:
+Change `data-sharing/config/adapters.json` or the selected adapter config. Analytics routes obtain a safe projection from `/analytics/api/data-sharing/config`; they must not read subsystem config files directly.
 
-- stale public-content route keys `library_page`, `analysis_page`, `series_page_base`, and `works_page_base` were removed from `paths.routes`
-- Analytics app-route metadata moved from `paths.routes` to `app.routes`
-- Analytics public catalogue links now use fixed public shells with query-state, matching the current public route contract
-- Data Sharing config paths were removed from Analytics bootstrap config; Analytics-hosted Data Sharing routes now use the read-only Data Sharing config API endpoint
-- Analytics UI-text bundle paths were removed; visible route copy is code-owned by the Analytics frontend modules
-- tag grouping and RAG scoring policy are now explicit in the source JSON rather than only present in JavaScript fallback defaults
-- tests assert the removed public route keys stay absent
-- tests assert Analytics route metadata stays out of `paths.routes`
+## Weak Spots
 
-Site data path cleanup review:
+- runtime config also projects routes as `app.runtime.views`, so source and runtime shapes are intentionally different;
+- scoring functions retain code defaults for resilience, which can conceal missing config unless tests assert the projection;
+- all current route rows have `nav: false`, so the route registry is broader than the visible navigation model;
+- media and service settings are Python constants rather than checked JSON policy.
 
-- `paths.data.site.series_index` is retained because `series-tags.js`, `tag-registry.js`, and the series tag editor load the public series index through `loadSiteSeriesIndexJson(...)`
-- `paths.data.site.works_index` is retained because the series tag editor loads the public works index through `loadSiteWorksIndexJson(...)`
-- keeping these two paths in Analytics config makes the browser read dependency explicit; moving them into hidden loader constants would not remove a runtime dependency
-- focused tests assert the runtime site data paths stay present
-
-Subsequent sessions should also keep Data Sharing source config files server-owned.
-Analytics browser routes should continue to use `/analytics/api/data-sharing/config` and should not restore direct `/data-sharing/config/...` reads or Analytics bootstrap keys for those files.
+When an exact key inventory matters, read the JSON and `runtime_config()` directly. This page owns the boundary and edit method, not a duplicate schema.

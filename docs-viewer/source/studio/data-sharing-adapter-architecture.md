@@ -2,153 +2,71 @@
 doc_id: data-sharing-adapter-architecture
 title: Data Sharing Adapter Architecture
 added_date: "2026-06-21 00:00"
-last_updated: 2026-06-21
+last_updated: 2026-07-15
 parent_id: data-sharing
 viewable: true
 ---
 # Data Sharing Adapter Architecture
 
-Data Sharing adapters are headless service modules under `data-sharing/adapters/`.
-They translate shared Data Sharing operations into domain-specific package, review, and apply behavior while keeping Analytics browser routes generic.
+## Method
 
-The shared UI and dispatcher should not know whether a record is a document, tag, alias, series, or future domain object.
-Adapters normalize domain data into shared request and response contracts.
+Adapters keep shared orchestration independent of document/tag source shapes. The generic layer knows domain, operation, selection, paths, and normalized results; a family knows how one kind of canonical record becomes a package, review row, and apply plan.
 
-## Layout Pattern
+```text
+registry resolution
+  -> DataSharingAdapterHandlers
+  -> adapter operation module
+  -> family selected by profile/package identity
+  -> domain helper
+```
 
-Adapters should follow this structure:
+## Layout
 
 ```text
 data-sharing/adapters/<domain>/
-  adapter.py
-  context.py
-  prepare.py
-  returned.py
-
+  adapter.py       # handler wiring only
+  context.py       # shared paths, dependencies, validation, I/O helpers
+  prepare.py       # profile/family prepare orchestration
+  returned.py      # staged-file parsing, family detection, review/apply dispatch
   families/
-    <family>.py
+    <family>.py    # source + package + review + apply semantics
 ```
 
-`adapter.py` is the public dispatch wiring.
-It should only build `DataSharingAdapterHandlers` and delegate to operation modules.
-It should not re-export implementation helpers, keep compatibility aliases, parse package contents, or contain family-specific package/apply logic.
+This is a methodology, not a required file count. Split only where responsibility exists; do not preserve compatibility exports after moving an owner.
 
-`context.py` owns shared adapter support:
+## Profile Versus Family
 
-- adapter validation
-- dependency dataclasses
-- path/source/config helpers
-- common normalization
-- logging/activity helpers
-- source loading helpers that apply across families
+- **Profile**: a configured operator choice using behaviour a family already supports.
+- **Family**: code for a materially distinct source shape, package shape, selector, returned-package identity, review model, validation, or apply action.
 
-`prepare.py` owns generic prepare orchestration for the adapter.
-It resolves the selected profile, maps that profile to a family, calls the family package builder, writes the outbound package when not dry-running, and returns the shared prepare payload.
+A label/default/limit/format option may be config-only. A new record selection meaning or package/review shape is code even when config can describe it.
 
-`returned.py` owns returned-package orchestration.
-It lists staged files, parses returned packages, detects package family, dispatches review behavior, and dispatches apply behavior.
-Returned-package parsing can live here when it is shared across families.
+## Generic Selection Contract
 
-`families/<family>.py` owns behavior for records that share a source shape, package shape, review model, validation model, and apply semantics.
-Family modules may call domain helper services, but they should not own HTTP routing or browser UI behavior.
-
-## Profiles And Families
-
-A profile is a configured option exposed to package preparation.
-A family is the implementation unit that knows how to build, review, and apply records.
-
-Adding or changing a profile can be config-only when it uses an existing family and only changes options the family already supports.
-Examples include label, enabled state, supported format, selection defaults, limits, or family-owned options.
-
-Adding a new family is a code change.
-Use a new family when the work needs a new source shape, package shape, returned-package detection rule, review row model, apply action, validation model, or selector behavior.
-
-Adapters may support multiple profiles through one family.
-Adapters may also support multiple families when profiles need materially different record behavior.
-Avoid one large domain script that accumulates all profile behavior.
-
-## Selectable Records
-
-Prepare selectable records use a generic contract:
+Prepare selection rows expose at least:
 
 ```json
 { "id": "record-id", "name": "Display name" }
 ```
 
-Adapters may include domain-specific fields for their own use, but browser selection UI must use `id` and `name`.
-The UI should not infer record type from fields such as `doc_id`, `tag_id`, `series_id`, `title`, or `label`.
+Domain fields may accompany them, but generic browser code selects `id`. Selectors such as `docs_scope` need registry declaration, request validation, and family implementation.
 
-Selectors, such as `docs_scope` or a future tag-group filter, need both config and code:
+## Boundary Rules
 
-- config declares that the selector exists and how the UI should expose it
-- API requests carry the selected value
-- adapter/family code implements filtering and validation
+- `adapter.py` wires handlers; it does not accumulate family logic.
+- `data-sharing/` remains headless; Analytics owns browser/HTTP code.
+- domain helpers remain canonical authorities for validation/writes.
+- adapter resolution is config-driven; package-family detection is code-driven and must fail closed.
+- apply actions are narrow and explicitly confirmed; no generic “write returned data” hook.
+- moved internals get updated imports/tests, not indefinite aliases.
 
-## Example Change: Selectable Tags
+## Weak Spots
 
-Suppose the tags prepare profile needs to show tag records in the prepare list so an export can use selected tags as the export records.
-That change crosses config, prepare dispatch, family behavior, and tests.
+- Documents currently have one broad family while tags have several; the right family granularity is proven by differing behaviour, not symmetry.
+- `returned.py` can become a second family registry if package detection and orchestration keep growing.
+- Thin `workflows/*.py` modules mostly name ownership around dispatch; avoid adding more layers without behaviour.
+- Shared response shapes can hide domain-specific assurance unless review rows/issues and apply counts remain explicit.
 
-The generic flow is:
+## Extension Checklist
 
-1. `prepare.selectable_records(...)` returns records for the active profile instead of an empty list.
-2. The relevant family module loads source records and normalizes them to `{id, name}` for the UI.
-3. `prepare.prepare_package(...)` reads selected record ids from the request selection.
-4. The family package builder receives those selected ids and exports only the selected records.
-5. Tests cover both direct adapter modules and Analytics API dispatch.
-
-For the current tags adapter, the likely files are:
-
-- `data-sharing/adapters/tags/prepare.py`
-  dispatch selectable-record requests by profile or family, read selected ids during package preparation, and pass them to the family builder
-- `data-sharing/adapters/tags/families/registry.py`
-  load tag registry rows, expose generic selectable tag records, and build a registry package from selected tag ids
-- `data-sharing/adapters/tags/context.py`
-  add shared selection normalization or validation helpers if more than one family needs them
-- `data-sharing/config/adapters.json`
-  declare the relevant profile or selector metadata that the UI needs
-- `analytics-app/tests/python/test_tags_data_sharing_adapter.py`
-  cover selectable tag records and selected-tag package output
-- `analytics-app/tests/python/test_analytics_data_sharing_api.py`
-  cover any browser-facing config projection or dispatch changes
-
-This is not a config-only change because the adapter must implement how source tags become selectable records and how selected ids constrain package output.
-Config can declare the profile or selector, but family code owns the source shape, filtering, and package behavior.
-
-## No Compatibility Layers
-
-Do not keep adapter-level compatibility aliases for moved functions.
-When implementation moves from `adapter.py` into `prepare.py`, `returned.py`, `context.py`, or a family module, update imports and tests to use the owning module.
-
-Compatibility aliases are allowed only with an explicit migration reason and removal criteria.
-Ordinary local test imports are not a reason to preserve an old surface.
-
-## Browser Boundary
-
-`data-sharing/` remains headless.
-Browser route modules live in `analytics-app/` and call same-origin Analytics Data Sharing APIs.
-Browser code reads the Analytics API's UI-safe config projection; it must not read `data-sharing/config/...` files directly.
-
-Adapters can call domain helpers:
-
-- documents adapter calls Docs Viewer data-sharing helpers
-- tags adapter calls Analytics tag helper services
-
-Those helpers are domain implementation details, not Data Sharing API hosts.
-
-## Verification
-
-After adapter structure changes, run focused checks for the adapter and dispatch boundary.
-Typical checks:
-
-```bash
-$HOME/miniconda3/bin/python3 -m py_compile data-sharing/adapters/<domain>/*.py data-sharing/adapters/<domain>/families/*.py
-$HOME/miniconda3/bin/python3 -m pytest analytics-app/tests/python/test_data_sharing_service.py analytics-app/tests/python/test_analytics_data_sharing_api.py -q
-```
-
-Run the adapter-specific tests listed in that adapter's implementation document.
-Use the local Data Sharing route smoke when server wiring or browser-facing route behavior changes:
-
-```bash
-$HOME/miniconda3/bin/python3 analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py
-```
+For a new family: source loader, selectable-record meaning, prepare package, identity/detection, review rows/issues, apply/non-apply decision, registry profile/capability, safe browser projection, and focused domain/API tests.

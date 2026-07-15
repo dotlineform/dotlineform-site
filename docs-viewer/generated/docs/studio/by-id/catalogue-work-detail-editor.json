@@ -1,9 +1,0 @@
-{
-  "doc_id": "catalogue-work-detail-editor",
-  "title": "Catalogue Work Detail Editing",
-  "added_date": "2026-04-22",
-  "last_updated": "2026-06-22",
-  "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-  "parent_id": "studio",
-  "content_html": "<h1>Catalogue Work Detail Editing</h1>\n<p>Work-detail browsing lives on <a href=\"/docs/?scope=studio&amp;doc=catalogue-work-editor\">Catalogue Work Editor</a>. That browser reads the service-only <code>catalogue_work_record</code> projection, where section metadata is projected once per section and nested detail summaries contain only detail-owned fields.</p>\n<p>Canonical work-detail source is stored as one file per detailed work under <code>studio/data/canonical/catalogue/work_details/&lt;work_id&gt;.json</code>:</p>\n<ul>\n<li>section records own <code>details_subfolder</code>, <code>section_title</code>, <code>section_order</code>, <code>detail_sort</code>, and nested details</li>\n<li>nested details own <code>detail_uid</code>, <code>detail_id</code>, <code>title</code>, <code>project_filename</code>, and generated dimensions</li>\n<li><code>work_id</code> is implied by the file and <code>section_id</code> is implied by the containing section</li>\n</ul>\n"
-}

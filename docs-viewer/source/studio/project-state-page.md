@@ -1,60 +1,46 @@
 ---
 doc_id: project-state-page
-title: Project State Page
+title: Project State
 added_date: 2026-04-27
-last_updated: 2026-05-26
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
-# Project State Page
+# Project State
 
-Route:
+## What It Does
 
-- `/studio/project-state/`
+`/studio/project-state/` compares primary Work media references in canonical catalogue source with image files below `$DOTLINEFORM_PROJECTS_BASE_DIR/projects`.
 
-This page runs the project-state report and writes `var/studio/reports/project-state.md`.
-The route shell is served by the local Studio app.
-The browser module uses Local Studio for both report generation and local report opening:
+It writes a local operational snapshot to `var/studio/reports/project-state.md` and can open that Markdown file in the configured editor. The report is not Docs Viewer source and is not a canonical catalogue artifact.
 
-- `GET /studio/api/catalogue/health`
-- `POST /studio/api/catalogue/project-state-report`
-- `POST /studio/api/catalogue/project-state-open-report`
+## Report Questions
 
-## Current Scope
+The report identifies:
 
-The report compares:
+- project folders not represented by any Work;
+- unreferenced top-level images inside represented folders;
+- catalogue project folders or primary filenames that do not resolve;
+- Work records missing project-folder or project-filename metadata.
 
-- source project folders under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects`
-- primary work image references from `site/assets/studio/data/catalogue/works.json`
+Work-detail images are intentionally out of scope. Known detail subfolders are skipped so they are not misclassified as unimported primary Work images.
 
-Work details are out of scope. The scanner skips known detail subfolders and folders named `details` so detail images are not treated as missing primary work imports.
+`include sub-folders` expands folder discovery below each direct project folder. It does not change detail-folder exclusions or turn every nested image into a primary Work candidate.
 
-The report currently includes:
+## Execution And Ownership
 
-- source folders that do not match any `Works.project_folder`
-- top-level source images inside represented folders that do not match any `Works.project_folder` plus `Works.project_filename`
-- catalogue folders and primary image references that no longer resolve to scanned source files
-- work records missing `project_folder` or `project_filename`
+1. The browser probes the report and local-file-open capabilities separately.
+2. Run sends the subfolder option to the catalogue API.
+3. `studio/services/catalogue/project_state_report.py` loads canonical Work metadata, scans the confined projects root, writes the report, and returns summary counts.
+4. The page renders the counts and records one Studio Activity row.
+5. Open file uses a separate Local Studio capability because launching a local editor is not part of report generation.
 
-The page shows the output path and summary counts after a successful run.
-The Markdown report is a local operational snapshot under `var/studio/reports/`, not Docs Viewer source.
-Use the page's file-open command to inspect the latest local snapshot.
-Successful report generation also appends one unified Studio activity row for `run project-state report` with the output path and summary counts.
+`studio/app/frontend/js/project-state.js` owns route state and result rendering. Endpoints are registered in `studio-transport.js` and dispatched by `studio_catalogue_api.py`.
 
-The `include sub-folders` checkbox is off by default. When unchecked, the report scans every direct `/projects/<project_folder>` directory. Image mismatch sections still inspect only direct image files inside those folders. When checked, the report also includes `/projects/<project_folder>/<sub-folder>` directories, while still skipping detail folders.
+## Boundary And Weak Spots
 
-## Route Ready State
+This is a source-media reconciliation report, not a general catalogue validator. Canonical schema errors, publication readiness, detail integrity, derivative state, and remote media state belong to their respective validators and workflows.
 
-The page root `#projectStateRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+The report uses filename and configured-path evidence; it cannot infer artistic intent or whether an extra image should become a Work. Treat its findings as review prompts rather than automatic cleanup instructions.
 
-- report generation sets route busy
-- `data-studio-mode` is `idle` before a report and `summary` after summary counts are loaded
-- `data-studio-service` is `available` when the local catalogue report API is available, and `unavailable` when it is unavailable
-- `data-studio-record-loaded` is `true` when report summary data is loaded
-
-## Related References
-
-- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report)
-- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
-- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+The route uses `#projectStateRoot` for the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state). Report generation is the route-level busy operation.

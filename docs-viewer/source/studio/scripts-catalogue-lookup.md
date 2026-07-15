@@ -2,72 +2,36 @@
 doc_id: scripts-catalogue-lookup
 title: Catalogue Lookup Export
 added_date: 2026-04-17
-last_updated: 2026-06-22
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Lookup Export
 
-Script:
+## Command
+
+Preview or write the complete Studio lookup family:
 
 ```bash
 $HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write
 ```
 
-## Purpose
+Defaults:
 
-This script builds the derived Studio lookup payloads used by the catalogue editors in Phase 8.
+- source: `studio/data/canonical/catalogue/`
+- output: `studio/data/generated/catalogue-lookup/`
 
-The lookup payloads are explicitly non-canonical. They exist to support:
+`--source-dir` and `--lookup-dir` override those roots for focused testing or migration work.
 
-- lightweight work search
-- lightweight series search
-- focused per-record reads for series routes
+## What It Produces
 
-Work and work-detail focused reads are service projections from canonical source, not generated lookup files.
-Lookup payloads do not include full-source `record_hash` values. Studio save endpoints apply submitted changes to the current source record and return the normalized saved record.
+The exporter builds Work search, Series search, and focused Series list projections used by Studio. They are non-canonical and can be regenerated from catalogue source.
 
-Canonical write ownership remains with:
+Focused Work and detail editor records are service projections, not generated per-record lookup files. The [Catalogue Indexes And Payloads](/docs/?scope=studio&doc=data-models-catalogue-indexes) page explains that read split.
 
-- `studio/data/canonical/catalogue/works.json`
-- `studio/data/canonical/catalogue/work_details/<work_id>.json`
-- `studio/data/canonical/catalogue/series.json`
+## Normal Refresh Path
 
-## Optional Flags
+Catalogue mutations use `catalogue_lookup_refresh.py` to select a focused, related, or complete refresh. Run the exporter directly when a deliberate full refresh is needed outside a mutation workflow.
 
-- `--source-dir studio/data/canonical/catalogue`: canonical source input directory
-- `--lookup-dir studio/data/generated/catalogue-lookup`: derived lookup output directory
-- `--write`: write the lookup files
-
-Without `--write`, the script prints the export plan only.
-
-## Outputs
-
-Root lookup files:
-
-- `site/assets/studio/data/catalogue_lookup/work_search.json`
-- `site/assets/studio/data/catalogue_lookup/series_search.json`
-
-Focused record lookup files:
-
-- `site/assets/studio/data/catalogue_lookup/series/<series_id>.json`
-
-Retired lookup outputs live under `studio/data/generated/catalogue-lookup/retired/` only for migration comparison.
-Runtime code must not read generated `works/<work_id>.json`, `work_details/<detail_uid>.json`, or `work_detail_search.json`.
-
-## Runtime Use
-
-The catalogue editors use these files as follows:
-
-- work editor:
-  - search from `work_search.json`
-  - focused record load from `GET /studio/api/catalogue/read?key=catalogue_work_record&record_id=<work_id>`
-- series editor:
-  - search from `series_search.json`
-  - focused record load from `series/<series_id>.json`
-  - add-work validation from `work_search.json`
-
-## Refresh Flow
-
-The catalogue write server refreshes these lookup payloads after canonical catalogue source writes.
-Run the export script manually when a full derived lookup refresh is needed outside a write flow.
+`catalogue_lookup.py` owns payload schemas and serializers; `export_catalogue_lookup.py` owns only CLI input/output and full-export orchestration.

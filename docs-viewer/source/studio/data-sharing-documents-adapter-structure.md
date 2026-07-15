@@ -1,132 +1,73 @@
 ---
 doc_id: data-sharing-documents-adapter-structure
-title: Documents Data Sharing Adapter Structure
+title: Documents Data Sharing Adapter
 added_date: "2026-06-21 00:00"
-last_updated: 2026-07-12
+last_updated: 2026-07-15
 parent_id: data-sharing
 viewable: true
 ---
-# Documents Data Sharing Adapter Structure
+# Documents Data Sharing Adapter
 
-The documents adapter implements Data Sharing for Docs Viewer-backed document records.
-It follows the shared [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture) and delegates document-record behavior to the `documents` family.
+## Role
 
-## Layout
+The documents adapter translates Data Sharing operations into Docs Viewer-backed document selection, package creation, returned-package review, narrow front-matter updates, and validated Docs Review projections.
+
+The adapter does not own document source or collection import. Docs Viewer source helpers remain authoritative; Docs Import owns create/overwrite/skip into a configured collection.
+
+## Structure
 
 ```text
-data-sharing/adapters/documents/
-  adapter.py
-  context.py
-  import_content.py
-  prepare.py
-  returned.py
-
-  families/
-    documents.py
+adapter.py             handler wiring
+context.py             scope/dependency/path validation
+prepare.py             prepare delegation
+returned.py            list/review/apply delegation + import normalization
+import_content.py      returned package -> generic ImportContent
+families/documents.py  document workflow implementation
+       |
+docs-viewer/services/docs_data_sharing/
+  source context, package, review, projection, apply, write/rebuild
 ```
 
-`adapter.py` only wires `DataSharingAdapterHandlers` for module `documents`.
+## Source And Scope
 
-`context.py` owns documents adapter support:
+`selection.docs_scope` identifies a configured Docs Viewer source scope. Selectable records and export content come from source Markdown/front matter through Docs Viewer source/rendering context.
 
-- adapter validation for module `documents`
-- `DocumentsDataSharingDependencies`
-- Docs Viewer write dependency bridging
-- adapter context attachment
-- selection model lookup
-- Docs Viewer scope normalization
-- adapter-domain scope fallback through `domain.scope` or `domain.docs_scope`
-- request selection validation
-
-`prepare.py` delegates prepare operations to the document-record family.
-
-`import_content.py` owns Data Sharing wrapper mapping into the generic Docs Import `ImportContent` record. The active reviewed-package contract is compact `document-content`; Data Sharing identity is adapter provenance and is not required by the generic record. The lower-level `document-full-source` parsing branch is not an enabled product workflow and is scheduled for removal by the export-only package request.
-
-`returned.py` delegates returned-package list, review, and apply operations to the document-record family and exposes the documents import-content normalizer.
-
-`families/documents.py` owns document-record implementation.
-It calls Docs Viewer data-sharing helpers for selectable records, package preparation, returned package listing, returned package review, temporary review source-folder creation, and source apply actions.
-
-## Scope And Selectable Records
-
-Document selection is scoped by `selection.docs_scope`.
-When a request omits that value, the adapter can fall back to the configured adapter domain scope.
-If neither request nor domain config supplies a scope for a required operation, scope validation fails.
-
-Selectable records come from Docs Viewer source context, not generated publication payloads.
-The documents adapter calls `selectable_document_records(...)`, which returns generic selectable records for the prepare UI.
-Records must include the shared `id` and `name` fields; document-specific fields such as `doc_id` and `title` are implementation details.
-
-Generated Docs Viewer tree, by-id, search, recently-added, report, and generated metadata payloads are not fallback metadata inputs for Data Sharing.
+Generated tree, by-id, search, recently-added, report, or metadata payloads are never fallback canonical input.
 
 ## Prepare
 
-The documents prepare flow uses export configs from:
+`prepare-profiles.json` chooses the existing document family, record shape, content/container formats, selection rules, field mappings, context, limits, and returned-import eligibility. The documents adapter passes validated selection/profile inputs to Docs Viewer package helpers and attaches generic Data Sharing metadata/activity.
 
-```text
-data-sharing/adapters/documents/config/prepare-profiles.json
-```
+## Returned Path
 
-Those configs are documented in [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles).
+The family:
 
-`families/documents.py` passes the selected docs, target format, missing-summary option, output root, and config path to Docs Viewer package helpers.
-The adapter adds Data Sharing context and summary text, and logs a `docs-export` event through dependencies.
+- lists staged files through trusted export metadata;
+- parses returned rows against the metadata-selected profile;
+- produces normalized review rows/issues;
+- writes focused Markdown review evidence;
+- for supported content packages, can publish an immutable validated Docs Review folder;
+- previews/applies the configured summary or hierarchy action through Docs Viewer writes and focused docs/search rebuild follow-through.
 
-## Returned Packages
+The validated review folder has `docs_review_validated_package_v1`, a safe metadata-derived ID, source Markdown projection, validation diagnostics, and generated read-only output. It is not a registered Docs Viewer scope and does not mutate canonical documents.
 
-Returned packages are staged under the shared Data Sharing import-staging root.
-The documents adapter delegates staged-file parsing and persistent review-package generation to Docs Viewer returned-package helpers. Returned `document-content` materialization normalizes rows through `import_content.py` before producing read-only Markdown.
+## Apply Boundary
 
-Returned-record loading produces document-oriented review rows from the selected staged file.
-Review produces one Markdown review document for the selected rows.
+Current actions are intentionally narrow:
 
-The documents review handler routes `review_action: "content"` and `review_action: "source_folder"` for returned `document-content` packages to the same Data Sharing producer.
-That producer validates the complete staged file and materialized Markdown set, derives a safe package id from internal export metadata, and publishes:
+- `summary_apply` updates `summary` only;
+- `hierarchy_apply` updates `parent_id` only.
 
-```text
-$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview/<folder_id>/
-  manifest.json
-  source/*.md
-```
+Both reparse staged input, validate current source, support dry-run, require confirmation for writes, and use Docs Viewer write/rebuild dependencies. They do not create missing documents or apply returned body content.
 
-The manifest uses `docs_review_validated_package_v1`, a matching `package_id`, `status: validated`, and `source_scope`. Each source record retains its `replace`, `preserve-existing`, or `empty-new` intent. The package is written to its timestamped folder only after safe document identities and package-local hierarchy pass in-memory validation. Because compact exports may contain only selected documents, a parent outside the package is removed from the temporary projection and preserved as a validation warning; package-local cycles remain fatal.
+## Known Weak Spots
 
-Those folders are disposable inputs for `/docs-review/`.
-They are not Docs Viewer scopes, are not registered in scope config, and do not mutate canonical source Markdown. Timestamped package folders are immutable; repeating the action for the same export is rejected.
+- `document-content` is reconstructed from rendered-derived Markdown/plain text, so source-only syntax/media constructs may be absent from the review projection.
+- `import_content.py` still recognizes a lower-level `document-full-source` contract even though no enabled returned-import profile owns it.
+- The single `documents` family now spans selectable records, multiple package shapes, review evidence, Docs Review publication, and two apply actions; split only when a second behaviour family becomes real.
+- Scope can fall back from request to domain configuration, which is convenient but can conceal a missing explicit selector.
+- Data Sharing apply and Docs Import are adjacent mutation paths; keep narrow field update distinct from collection import.
 
-The `document-content` package remains a rendered-derived, text-only projection. Managed Docs Import may use it as an explicit canonical-source replacement, with missing source-only constructs and media tokens left for user-managed editing.
+## Extension Rule
 
-The planned `document-full-source` profile is an exact-source and asset export with `supports_return_import: false`. Existing lower-level parsing branches for that profile do not constitute supported intake and should be removed when the export profile is implemented.
-
-Current apply actions are:
-
-- `summary_apply`
-- `hierarchy_apply`
-
-Apply requires `DocumentsDataSharingDependencies` because source writes must run through Docs Viewer write/rebuild dependencies.
-Successful applies can update source Markdown and trigger Docs/search rebuild follow-through through Docs Viewer helpers.
-
-## Family Boundary
-
-The current documents family is `documents`.
-It is about document records, not a selected Docs Viewer scope.
-The existing Library export configs are one current use of that family because they select `docs_scope: library`.
-
-Add a new documents family when a document-backed profile needs a different source record shape, package contract, returned-package parser, review row model, apply action, or validation model.
-Do not add those branches to `adapter.py`.
-
-## Verification
-
-Run these focused checks after documents adapter changes:
-
-```bash
-$HOME/miniconda3/bin/python3 -m py_compile data-sharing/adapters/documents/*.py data-sharing/adapters/documents/families/*.py
-$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_import_service.py docs-viewer/tests/python/test_docs_management_service.py docs-viewer/tests/python/test_docs_data_sharing_source_context.py -q
-$HOME/miniconda3/bin/python3 -m pytest analytics-app/tests/python/test_data_sharing_adapters.py analytics-app/tests/python/test_data_sharing_service.py analytics-app/tests/python/test_analytics_data_sharing_api.py -q
-```
-
-Run the local route smoke when handler wiring or browser-visible behavior changes:
-
-```bash
-$HOME/miniconda3/bin/python3 analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py
-```
+Use another profile for options an existing family implements. Use another family for a different source/package/review/apply model. Never add document behaviour to `adapter.py` or make generated Docs Viewer payloads canonical inputs.

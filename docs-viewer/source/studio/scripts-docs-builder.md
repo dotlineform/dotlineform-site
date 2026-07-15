@@ -1,326 +1,91 @@
 ---
 doc_id: scripts-docs-builder
-title: Builder
+title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: 2026-06-24
+last_updated: 2026-07-15
 parent_id: docs-viewer
 viewable: true
 ---
 # Docs Viewer Builder
 
-Script:
-
-```bash
-./docs-viewer/build/build_docs.py --write
-```
-
-The operational entrypoint is the Docs Viewer-owned builder above.
-There is no root `scripts/` wrapper for this command; use the full path so command ownership stays visible.
-
-## Scope
-
-Source location:
-
-- `docs-viewer/source/studio/`
-- `docs-viewer/source/analysis/`
-- `docs-viewer/source/library/`
-
-Viewer route:
-
-- Studio docs: `/docs/`
-- Analysis docs: `/analysis/`
-- Library docs: `/library/`
-
-Working generated outputs:
-
-- `docs-viewer/generated/docs/studio/index-tree.json`
-- `docs-viewer/generated/docs/studio/recently-added.json`
-- `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
-- `docs-viewer/generated/docs/studio/references/index.json`
-- `docs-viewer/generated/docs/studio/references/by-doc/<doc_id>.json`
-- `docs-viewer/generated/docs/studio/references/by-target/<target_kind>/<target_id_slug>.json`
-- `docs-viewer/generated/docs/analysis/index-tree.json`
-- `docs-viewer/generated/docs/analysis/recently-added.json`
-- `docs-viewer/generated/docs/analysis/by-id/<doc_id>.json`
-- `docs-viewer/generated/docs/library/index-tree.json`
-- `docs-viewer/generated/docs/library/recently-added.json`
-- `docs-viewer/generated/docs/library/by-id/<doc_id>.json`
-
-Public route asset outputs after the `/docs/` Publish action:
-
-- `site/assets/data/docs/scopes/analysis/index-tree.json`
-- `site/assets/data/docs/scopes/analysis/recently-added.json`
-- `site/assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
-- `site/assets/data/search/analysis/index.json`
-- `site/assets/data/docs/scopes/library/index-tree.json`
-- `site/assets/data/docs/scopes/library/recently-added.json`
-- `site/assets/data/docs/scopes/library/by-id/<doc_id>.json`
-- `site/assets/data/search/library/index.json`
-
-The builder writes the working generated outputs only.
-For public scopes, the `/docs/` toolbar exposes `Publish` while viewing that public scope, with the same command retained in the Actions menu.
-That button is a local copy/promote step: it copies the reviewed working docs/search JSON from `docs-viewer/generated/` into the `site/assets/data/` roots that `/library/`, `/analysis/`, and other public routes read.
-It does not deploy the site or upload data anywhere.
-For local scopes such as Studio, the same menu item is visible but disabled because there is no public route asset target to copy into.
-
-Scope configuration:
-
-- `docs-viewer/config/scopes/docs_scopes.json`
-
-This config is the shared source of truth for docs scope ids, Markdown source roots, generated docs output roots, generated search output paths, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
-`./docs-viewer/build/build_docs.py`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
-The `output` field owns the working generated docs payload root.
-The `search_output` field owns the working generated docs-search index path.
-For public scopes only, `publish_output` and `publish_search_output` own the public route asset roots under `site/assets/data/`.
-Those paths are written by the `/docs/` Publish action, not by the docs builder itself.
-
-## What The Builder Does
-
-The command entrypoint remains `docs-viewer/build/build_docs.py`.
-The implementation is split into focused modules under `docs-viewer/build/docs_builder/` so source loading, rendering, semantic references, reference artifacts, write planning, browser config, and CLI dispatch can evolve independently.
-
-- reads Markdown source docs from each configured scope source root
-- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, and optional `viewable`
-- renders each Markdown body to HTML using the shared Python Markdown renderer at `studio/shared/python/markdown_renderer.py`
-- passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
-- resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
-- resolves <code>&#91;&#91;interactive-html:...&#93;&#93;</code> tokens to same-scope sandboxed iframes for repo-local interactive HTML assets
-- resolves registry-supported <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;|&lt;label&gt;&#93;&#93;</code> semantic-reference tokens before Markdown rendering
-- rewrites same-scope doc-to-doc links onto the scope-owned viewer route
-- adds missing image `title` attributes from image `alt` text so rendered docs images expose the same text on hover without changing explicit titles
-- emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
-- writes one index payload plus one per-doc payload for each configured scope
-- writes incremental semantic-reference relationship artifacts under `references/`
-- writes `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from `docs-viewer/config/scopes/docs_scopes.json`, including route/scope data, scope menu `meta`, and the `docs_viewer` browser settings used by local manage mode and public read-only routes
-- writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
-- supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
-- leaves semantic target lookup generation to `docs-viewer/build/build_semantic_target_lookup.py`
-
-## Source Inclusion And Viewability
-
-- every root-level `.md` file in `docs-viewer/source/studio/` is included in generated docs payloads
-- every root-level `.md` file in `docs-viewer/source/library/` is included in generated docs payloads
-- every `.md` file under `docs-viewer/source/analysis/` is included in generated docs payloads, including nested docs
-- nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
-- nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id` and `parent_id`
-- add front matter with `viewable: false` to generate a doc but keep it out of public/default tree, search, and recently-added views
-- docs can contain ordinary Markdown, raw HTML, or a mix of both
-- generated index rows omit default fields such as empty `parent_id`, default row `scope`, and `viewable: true`; non-viewable rows include `viewable: false`
-- generated index rows include `content_text_length`, derived from rendered HTML after plain-text extraction and title stripping, so Studio tooling can cheaply find docs with no body content
-- Library source docs may temporarily contain imported `parent_id` values that do not resolve to current Library docs; the builder preserves those values in source but emits them as root-level generated relationships so `/library/` remains navigable
-- if front matter is omitted, the builder falls back to:
-  - `doc_id`: filename stem
-  - `title`: first Markdown `#` heading, or a humanized filename
-
-## Common Front Matter Fields
-
-- `doc_id`
-  stable ID used by the scope-owned viewer route
-- `title`
-  label used in the viewer index and page title
-- `added_date`
-  generated docs recently-added metadata; legacy source docs without this field fall back to `last_updated`; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
-- `last_updated`
-  selected-document metadata for the info panel and search metadata for docs-domain search; date-only `YYYY-MM-DD` and minute-precision `YYYY-MM-DD HH:MM` values are both valid
-- `summary`
-  optional plain-text summary carried into docs-viewer per-doc payloads
-- `ui_status`
-  optional UI status key carried into docs-viewer tree and per-doc payloads; the builder normalizes whitespace but does not validate the value against viewer config
-- `parent_id`
-  empty string for a top-level doc
-- `viewable`
-  optional boolean; set `false` to keep a generated doc out of public/default Docs Viewer discovery
-
-Index tree ordering is generated from source metadata: root siblings and each parent’s child list are sorted case-insensitively by `title`, with `doc_id` as a stable tie-breaker.
-
-## Link And Media Conventions
-
-Practical authoring guidance:
-
-- for task-level guidance on where docs images should be saved and what syntax to type, use [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
-
-Internal doc links:
-
-- preferred Studio public link format: `/docs/?scope=studio&doc=<doc_id>`
-- preferred Analysis public link format: `/analysis/?doc=<doc_id>`
-- preferred Library public link format: `/library/?doc=<doc_id>`
-- optional anchors should use the normal hash suffix on the scope-owned route
-- the builder rewrites scope-owned viewer links and relative `.md` links onto the current scope-owned viewer route
-- cross-scope viewer links are preserved when the linked viewer path or explicit `scope` query belongs to another docs scope
-- the builder no longer rewrites legacy `/docs/.../` path links
-
-Docs media tokens:
-
-- use the literal token <code>&#91;&#91;media:path/to/file.jpg&#93;&#93;</code> in Markdown or raw HTML doc bodies
-- the builder resolves this token against `_config.yml` `media_base`
-- examples:
-
-<pre><code>![Example](&#91;&#91;media:library/example.jpg&#93;&#93;)
-![Example](&#91;&#91;media:library/example.jpg width=800 height=600&#93;&#93;)
-&lt;img src="&#91;&#91;media:library/example.jpg&#93;&#93;" alt="Example"&gt;</code></pre>
-
-- Markdown image media tokens support optional positive-integer <code>width</code> and <code>height</code> attributes
-- this is intended for remotely hosted docs media, keeping the repo free of full-size docs images
-- repo-local docs assets are ordinary public asset paths such as `/assets/docs/...`; they are not a builder token
-
-Interactive HTML tokens:
-
-- use the literal token <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> when a doc needs to embed a repo-local interactive HTML asset
-- add an optional pixel height as <code>&#91;&#91;interactive-html:filename.html height=546&#93;&#93;</code> when the default iframe height is too tall or too short for that asset
-- filenames are same-scope only; do not include a scope name, slash, nested path, absolute path, or `..`
-- the builder resolves the token to `site/assets/docs/interactive/<scope>/filename.html` and fails the build if that file is missing
-- the rendered doc receives a sandboxed iframe with `sandbox="allow-scripts"` so the embedded file's JavaScript runs inside the iframe, not in the main Docs Viewer page
-- start from `site/assets/docs/interactive/template.html`, save the finished file under the current scope folder, and test it directly in a browser before adding the token
-- Docs Import can copy staged HTML files marked with `<meta name="dlf:docs-import-role" content="interactive-html">` into the matching scope folder, but the source doc still needs a manual token where each iframe should appear
-- example for a Library doc:
-  - source asset: `site/assets/docs/interactive/library/coincidence-salience.html`
-  - Markdown token: <code>&#91;&#91;interactive-html:coincidence-salience.html height=546&#93;&#93;</code>
-
-Semantic reference tokens:
-
-- use the literal token <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;|&lt;label&gt;&#93;&#93;</code> when a doc should render a normal link and record a generated relationship to a stable registry record
-- omit the label as <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;&#93;&#93;</code> to use the current resolved catalogue title
-- v1 supports `work`, `series`, and `moment`
-- v1 supports only `action=link`, which is also the default
-- published catalogue targets open in a new browser tab with `target="_blank"` and `rel="noopener noreferrer"` so the current doc remains in place
-- unsupported actions, unsupported kinds, missing ids, and draft catalogue targets render as inert annotated text and produce build warnings
-- semantic-reference tokens are ignored inside fenced code blocks and inline code
-- normal Markdown links remain plain links and do not create semantic-reference records
-- examples:
-  - <code>&#91;&#91;ref:work:00638|3 symbols&#93;&#93;</code>
-  - <code>&#91;&#91;ref:work:00638&#93;&#93;</code>
-  - <code>&#91;&#91;ref:series:026|collected 1989-1998&#93;&#93;</code>
+The Docs Viewer builders turn canonical Markdown and front matter into generated reader and search payloads. They do not deploy the site.
 
 ## Commands
 
-Default command:
-
 ```bash
-./docs-viewer/build/build_docs.py --write
+$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio
+$HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --scope studio --write
+
+$HOME/miniconda3/bin/python3 docs-viewer/build/build_search.py --scope studio
+$HOME/miniconda3/bin/python3 docs-viewer/build/build_search.py --scope studio --write
 ```
 
-Dry run:
+Dry-run is the default. Use `--help` for current flags rather than relying on a copied inventory here. `--only-doc-ids` exists for orchestration that has already calculated a safe affected set; use a full scope build for manual repair or initialization.
 
-```bash
-./docs-viewer/build/build_docs.py
-```
+## Registry And Owners
 
-Flags:
+`docs-viewer/config/scopes/docs_scopes.json` owns:
 
-- `--scope NAME`
-  limit the build to a named docs scope
-  current values: `studio`, `analysis`, `library`
-  if omitted, the builder runs for all configured scopes
-- `--source PATH`
-  override docs source directory for a single selected scope
-- `--output PATH`
-  override output directory for generated JSON payloads for a single selected scope
-- `--viewer-base-url URL`
-  override viewer route base used when generating `viewer_url` values and rewritten internal doc links for a single selected scope
-- `--only-doc-ids IDS`
-  comma-separated doc ids for a targeted same-scope payload rebuild; this requires exactly one selected scope and is intended for docs-management and watcher orchestration, not broad manual cleanup
-- `--write`
-  persist generated files; if omitted, the script prints a dry-run summary only
+- scope ids and types
+- source roots
+- working docs and search output paths
+- viewer routes and default documents
+- public publish paths where applicable
+- nested/sub-scope rules
+- media storage policy and browser-safe viewer settings
 
-Targeted dry run:
+`build_docs.py` delegates focused work to `docs-viewer/build/docs_builder/`. `build_search.py` owns Docs Viewer search projection. Both consume the scope registry; neither should contain a hand-maintained list of scopes.
 
-```bash
-./docs-viewer/build/build_docs.py --scope studio --only-doc-ids docs-build-management-import-export-improvements
-```
+## Docs Build Flow
 
-Targeted write:
+1. load and validate the configured source corpus
+2. parse identity/tree metadata from front matter
+3. resolve supported media, interactive, and semantic-reference tokens
+4. render Markdown and permitted raw HTML
+5. build the tree, recently-added, per-document, reference, and browser-config projections
+6. compare content versions, write changed payloads, and remove stale owned payloads
 
-```bash
-./docs-viewer/build/build_docs.py --scope studio --write --only-doc-ids docs-build-management-import-export-improvements
-```
+The source Markdown is canonical. Generated JSON is a projection and can be rebuilt.
 
-## Output And Diagnostics
+## Source Contract
 
-By default, each selected scope prints a compact human summary:
+The common front matter is `doc_id`, `title`, `parent_id`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, and optional `viewable`. Exact defaults and validation are in the builder/source model.
 
-```text
-Docs build (dry-run) scope=studio
-  docs total: 233
-  docs would write: 0
-  docs would remove: 0
-  references total: 0
-  references would write: 0
-  references would remove: 0
-  indexes would write: 0
-  warnings: 0
-```
+- `viewable: false` keeps a payload available to management while removing it from default tree/search/recent discovery.
+- hierarchy comes from `parent_id`, not folders.
+- whether nested Markdown is allowed comes from scope config.
+- sibling order is title-based with a stable id tie-breaker.
 
-Automation that needs machine-readable diagnostics should pass `--diagnostics`.
-With that flag, each selected scope also prints one compact diagnostics line after the human summary:
+Authoring extensions supported by the renderer include:
 
-```text
-Docs builder diagnostics: {"scope":"studio",...}
-```
+- <code>&#91;&#91;media:...&#93;&#93;</code> for configured docs media
+- <code>&#91;&#91;interactive-html:...&#93;&#93;</code> for same-scope sandboxed interactive assets
+- <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;|&lt;label&gt;&#93;&#93;</code> for registry-backed semantic links and relationship artifacts
 
-The diagnostics payload is console output only.
-It does not change the generated Docs Viewer JSON schema.
+Use [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images) for authoring guidance and `docs-viewer/build/docs_builder/` for the exact token rules.
 
-Current fields:
+## Publication Boundary
 
-- `scope`
-- `build_mode`
-- `only_doc_ids`
-- `source_files_scanned`
-- `docs_emitted`
-- `doc_payloads_changed`
-- `doc_payloads_removed`
-- `reference_index_changed`
-- `reference_by_doc_payloads_changed`
-- `reference_by_doc_payloads_removed`
-- `reference_by_target_payloads_changed`
-- `reference_by_target_payloads_removed`
-- `warning_count`
-- `warnings`
-- `elapsed_seconds`
+Working generated output and public route assets are separate. For a public scope, the manage-route Publish action copies reviewed docs/search payloads from the configured working roots into configured `site/assets/data/` roots. That is a local promotion step; the manual GitHub Actions workflow remains the gate that publishes the tracked public site.
 
-## Operational Notes
+Local scopes have no public publish target by default.
 
-- The Python Docs Viewer v2 renderer helper is `studio/shared/python/markdown_renderer.py`; it starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule, allows raw HTML by default, performs no sanitization, and enables no external renderer plugins.
-- Renderer acceptance fixtures live in `studio/tests/python/test_markdown_renderer_acceptance.py` and cover headings, links, lists, fenced code, inline code, raw HTML, tables, generated plain text, and HTML semantics.
-- Custom-token contract fixtures live in `docs-viewer/tests/fixtures/docs_viewer_v2_custom_tokens.json`, with validation coverage in `docs-viewer/tests/python/test_docs_viewer_v2_custom_token_fixtures.py`.
-- `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `docs-viewer/source/studio/*.md`, `docs-viewer/source/analysis/*.md`, and `docs-viewer/source/library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
-- if you disable the watcher or want explicit control while the dev runner is already running, re-run `./docs-viewer/build/build_docs.py --scope <scope> --write`
-- Docs Viewer manage mode rebuilds the current docs scope through the standalone Docs Viewer service
-- manual `./docs-viewer/build/build_docs.py --scope <scope> --write` remains a low-level docs-payload rebuild only
-- live Docs Viewer management actions chain same-scope docs search through the Docs Viewer service rather than through `build_docs.py` itself
-- changing only the docs data does not require any separate asset pipeline
-- manual `./docs-viewer/build/build_docs.py --write` with no `--scope` rebuilds all configured docs scopes, currently `studio`, `analysis`, and `library`
-- current write behavior is incremental within the rebuilt scope:
-  - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
-  - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
-  - unchanged semantic-reference by-doc and by-target payloads are not rewritten
-  - stale semantic-reference by-doc and by-target payloads are removed when references or source docs no longer generate them
-- targeted `--only-doc-ids` writes still rebuild the scope index from current source metadata, including title-based sibling ordering, but render and write only selected per-doc payloads; unchanged unselected rows keep their existing generated payload text length
-- targeted semantic-reference writes rebuild the selected docs' by-doc records and derive by-target buckets from the refreshed selected records plus existing unselected by-doc records, so stale target buckets are removed when a selected doc changes or drops references
-- targeted writes require existing full-scope generated output for the scope; use a full `./docs-viewer/build/build_docs.py --scope <scope> --write` first when initializing or repairing an output tree
-- if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
+## Diagnostics And Safety
 
-Local runtime values shared with media/generation scripts live in `.env.local`:
+- the builder prints a compact human summary; `--diagnostics` adds machine-readable console diagnostics
+- unchanged content is skipped unless forced
+- targeted writes require an existing full-scope output tree
+- renderer output allows raw HTML and is not a sanitization boundary
+- management/service writes validate source and paths before calling builders
+- the live watcher may rebuild docs and search after source changes; generated diffs are expected follow-through
 
-```bash
-export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
-export MAKE_SRCSET_JOBS=4
-```
+## Change Guide
 
-Pipeline policy config:
+- scope/source/output change: `docs_scopes.json` and scope-config tests
+- Markdown/front-matter parsing: builder source model
+- rendered document behaviour: renderer/token modules and acceptance fixtures
+- search fields: `build_search.py` and Docs Viewer search runtime
+- public promotion: management publish service and configured publish paths
+- watcher invalidation: Docs live rebuild watcher
 
-- shared pipeline defaults live in `_data/pipeline.json`
-- that config stores env var names and repo-local media staging subpaths
-- the default env var names remain `DOTLINEFORM_PROJECTS_BASE_DIR` and `MAKE_SRCSET_JOBS`
-- srcset manifest env var names also live there; defaults remain `MAKE_SRCSET_WORK_IDS_FILE` and `MAKE_SRCSET_SUCCESS_IDS_FILE`
-- CLI flags still override config-derived defaults
-
-## Related References
-
-- [Scripts](/docs/?scope=studio&doc=scripts)
-- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
-- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
-- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
-- [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
-- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
-- CSS Audit Latest
+Keep exhaustive output filenames, diagnostics fields, and CLI flags in code. This page should change when the build boundary changes.

@@ -1,0 +1,9 @@
+{
+  "doc_id": "config-admin-config-json",
+  "title": "Admin Config JSON",
+  "added_date": "2026-07-15",
+  "last_updated": "2026-07-15",
+  "viewer_url": "/docs/?scope=studio&doc=config-admin-config-json",
+  "parent_id": "admin",
+  "content_html": "<h1>Admin Config JSON</h1>\n<h2>Source Contract</h2>\n<p><code>admin-app/app/frontend/config/admin-config.json</code> owns Admin route registration and sibling-link defaults.</p>\n<p>Each route registers:</p>\n<ul>\n<li>stable route ID, label, title, and path;</li>\n<li>HTML template and JavaScript entry module;</li>\n<li>shell type;</li>\n<li>navigation visibility.</li>\n</ul>\n<p><code>admin_app_config.py</code> validates required fields, unique normalized paths, file existence, shell type, and boolean navigation before serving the app.</p>\n<h2>Runtime Projection</h2>\n<p>The server copies checked config and adds <code>app.runtime</code> with asset version, route/service metadata, and known local output paths. Service endpoints are code-owned rather than editable JSON because they must stay aligned with server dispatch.</p>\n<p>The browser loads the projection once and resolves routes/templates from it. Do not add a second JavaScript route inventory.</p>\n<h2>Change Method</h2>\n<ol>\n<li>add or change the route template and script;</li>\n<li>update the checked route entry;</li>\n<li>update the appropriate API adapter only if the route needs a new server capability;</li>\n<li>cover config validation, shell dispatch, and route-ready behavior;</li>\n<li>update <a href=\"/docs/?scope=studio&amp;doc=local-admin-app\">Local Admin App</a> only when the capability/ownership boundary changes.</li>\n</ol>\n<h2>Weak Spot</h2>\n<p>Runtime config currently exposes route data as checked <code>app.routes</code> plus a derived <code>app.runtime.views</code> list. Consumers should prefer one registry method; new features should not extend both shapes independently.</p>\n"
+}

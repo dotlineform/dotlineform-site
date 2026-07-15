@@ -2,95 +2,74 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: 2026-06-12
+last_updated: 2026-07-15
+summary: Operational boundary of the loopback Studio app server, runtime config, static serving, and catalogue API adapter.
 parent_id: studio
 viewable: true
 ---
 # Local Studio App
 
-This document defines the operational boundary for the Local Studio app server.
-
-- Use [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) for the browser shell, route registry, shared runtime modules, and sibling-app boundary.
-- Use [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) for the mounted route inventory and route template ownership.
-- Use [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) for endpoint groups and server adapter ownership.
-
-Local Studio is intentionally separate from the public dotlineform.com site.
-
-- Use `bin/local-studio` for Studio authoring and `bin/site-preview` or `bin/site-validate` for public static preview/validation work.
-
-The public publishing boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
-
 ## Server Boundary
 
-The Python local Studio app server can be started directly:
+The Local Studio app is a loopback Python server. It owns:
+
+- registered `/studio/...` page shells
+- `/studio/runtime-config.json`
+- catalogue APIs under `/studio/api/catalogue/...`
+- confined Studio-owned static and project-media reads
+
+It does not serve the deployed public site or proxy Docs Viewer, Analytics, Data Sharing, or Admin.
+
+Start it through `bin/local-studio`. Direct execution is useful for focused service work:
 
 ```bash
 $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --port 8765
 ```
 
-`bin/local-studio` starts this app server.
-Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
-HTTP access logging is quiet by default so normal browser use does not flood the terminal.
-Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
-
-The app server owns:
-
-- `/studio/` and active Local Studio catalogue route shells
-- `/studio/runtime-config.json`
-- Catalogue read/write APIs under `/studio/api/catalogue/...`
-- local report-opening adapters for Studio-owned workflows
+`STUDIO_APP_PORT` changes the runner port, `STUDIO_APP_ENABLED=0` suppresses the server, and `STUDIO_APP_ACCESS_LOG=1` enables ordinary access logs.
 
 ## Runtime Config
 
-Local app views declare the runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
-`/studio/runtime-config.json` exposes the local app runtime contract for migrated views:
+The server reads and validates `studio/app/frontend/config/studio-config.json`, then builds `/studio/runtime-config.json` from:
 
-- `app.routes` route ids, labels, paths, templates, scripts, shell types, ready-state route IDs, and navigation visibility
-- runtime view records derived from `app.routes`
-- local service endpoints such as `/studio/api/catalogue`
-- generated data, search, and UI-text paths from checked-in Studio config
-- media and thumbnail bases used by Studio previews
-- pipeline variant, encoding, and workbook metadata from `_data/pipeline.json`
-- modal event constants
+- checked-in `app.routes` and `paths.data.studio`
+- Python-owned service endpoint, media, modal, and production-site constants
+- environment-backed public preview configuration
+- pipeline variants, encoding, and workbook paths from `_data/pipeline.json`
+- derived asset version and runtime view records
 
-The browser-side route and navigation contract is documented in [Studio Runtime](/docs/?scope=studio&doc=studio-runtime).
+The source JSON is therefore not the complete runtime payload. [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json) owns the source and projection contract.
+
+## Request Dispatch
+
+- `studio_app_server.py` owns HTTP parsing, shell/static responses, runtime-config dispatch, catalogue prefix dispatch, containment, limits, and process startup.
+- `studio_app_config.py` owns config loading, route validation, runtime projection, and asset versioning.
+- `studio_catalogue_api.py` owns the HTTP-to-catalogue adapter and delegates mutations to focused services under `studio/services/catalogue/`.
+
+The server entrypoint should remain a dispatcher. New catalogue behavior belongs in a domain service before it is exposed through the adapter.
 
 ## Sibling Services
 
-Docs Viewer is a standalone developer resource handled by the standalone Docs Viewer service.
-Local Studio does not expose Docs Viewer route metadata, Docs Viewer external-link config, Docs Viewer static/runtime assets, Docs Viewer generated-data passthroughs, or Docs Viewer API adapters.
-Use the standalone Docs Viewer service directly when developer documentation is needed.
+- Docs Viewer serves `/docs/` and its own management APIs.
+- Local Analytics serves `/analytics/...` and Analytics-hosted Data Sharing APIs.
+- Local Admin serves `/admin/...` operational routes.
+- `bin/site-preview` serves tracked `site/` output without Studio authority.
 
-Analytics and Data Sharing routes are handled by the standalone Local Analytics app, not Local Studio.
-The active route shells are served by `bin/local-analytics` under `/analytics/...`.
-The active tag APIs are under `/analytics/api/...`, and active Data Sharing APIs are under `/analytics/api/data-sharing/...`.
-Retired Studio paths such as `/studio/analytics/...`, `/studio/data-sharing/...`, `/studio/api/analytics/...`, and `/studio/api/data-sharing/...` intentionally have no aliases, proxies, or static shims.
+Retired `/studio/analytics/...`, `/studio/data-sharing/...`, and related API paths have no aliases or proxies.
 
-Public-site preview and validation have explicit commands: `bin/site-preview` and `bin/site-validate`.
-`bin/site-preview` serves the checked-in `site/` root and does not start Studio services.
+## Safety And Failure
 
-## Server Modules
+- The service is loopback-only and accepts explicit request shapes.
+- Static and project-media paths are resolved beneath allowlisted roots.
+- JSON bodies have a size limit and must be objects.
+- Catalogue writes remain behind server-side validation and atomic source transactions.
+- When the service is unavailable, Studio routes expose unavailable state; there is no offline write mode.
 
-The app server is split by ownership:
+## Code And Test Authority
 
-- `studio/app/server/studio/studio_app_server.py`
-  owns request dispatch and process startup
-- `studio/app/server/studio/studio_app_config.py`
-  owns local runtime/view config loading and validation
-- `studio/app/server/studio/studio_app_views.py`
-  owns the shared HTML bootstrap
-- `studio/app/server/studio/studio_catalogue_api.py`
-  owns the Catalogue API adapter
+- server: `studio/app/server/studio/`
+- catalogue domain: `studio/services/catalogue/`
+- server/config tests: `studio/tests/python/test_studio_app_runtime_config.py` and route/API tests under `studio/tests/python/`
+- route integration: focused checks under `studio/tests/smoke/`
 
-Ordinary Studio route body markup is owned by route-local browser shell modules that run inside `studio-app.js`.
-New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
-
-## Current Checks
-
-Current focused Local Studio checks are grouped by ownership:
-
-- server and config: `studio/tests/python/test_studio_app_server.py`
-- navigation/runtime adapter: `studio/tests/smoke/local_studio_navigation_adapter.py`
-- route shells: see [Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes)
-- Docs Viewer boundary: `studio/tests/smoke/local_studio_app_docs_viewer.py`
-- Local Analytics sibling routes and APIs: `analytics-app/tests/python/test_analytics_app_server.py`, `analytics-app/tests/python/test_analytics_data_sharing_api.py`, `analytics-app/tests/smoke/local_analytics_app_tag_routes.py`, and `analytics-app/tests/smoke/local_analytics_app_data_sharing_routes.py`
+[Local Studio Routes](/docs/?scope=studio&doc=local-studio-routes) and [Local Studio APIs](/docs/?scope=studio&doc=local-studio-apis) hold the exact current inventories.

@@ -1,336 +1,68 @@
 ---
 doc_id: admin-checks-config
-title: Checks Config
+title: Checks Config And Targeting
 added_date: 2026-06-08
-last_updated: 2026-06-10
+last_updated: 2026-07-15
 ui_status: ""
 parent_id: admin-checks
+viewable: true
 ---
-# Admin Checks Config
+# Checks Config And Targeting
 
-```text
-admin-app/checks/config/admin-checks.json
-admin-app/checks/config/admin-checks-reports.json
-```
-Target-map config top-level keys: `jq 'keys' admin-app/checks/config/admin-checks.json`
+## Two Config Owners
 
-```json
-[
-  "areas",
-  "config_id",
-  "families",
-  "routes",
-  "scopes",
-  "source",
-  "version"
-]
-```
+`admin-app/checks/config/admin-checks.json` owns the repository target map:
 
-Report registry keys: `jq 'keys' admin-app/checks/config/admin-checks-reports.json`
+- scopes and exclusions;
+- technical families;
+- workflow areas;
+- route inventory/mapping;
+- explicit shared dependencies.
 
-The config files define:
+`admin-checks-reports.json` owns executable report policy:
 
-- `scopes` - the apps: scope ids, labels, included path prefixes, and exclusions
-- `families` - the technical layers: file family ids and path/pattern rules
-- `areas` - the functional/workflow areas and path/pattern rules
-- `routes` - UI/API route targets: route ids, URLs, API path links, and path/pattern rules
-- `admin-checks-reports.json` - report ids, scripts, labels, CSV artifact metadata, defaults, and allowed options
+- report ID, label, description, and producer path;
+- default options and allowed option schema;
+- whether CSV is produced.
 
-Families tell us technical layer; routes tell us surface boundary; areas tell us workflow ownership.
+Target selection and report execution are separate contracts so adding a report does not duplicate repository mapping.
 
-The family map should be close to stable and mostly path-based. Areas and routes are less deterministic because they describe product/workflow ownership, which can cut across services, runtime JS, config, docs, and tests.
+## Layer Semantics
 
-The current filter model is:
+### Scope
 
-```
-scope first
--> then optional families
--> then optional areas
--> then optional routes
-```
+Required safety boundary. It defines the broad source roots and exclusions for one app/surface or the deliberate all-repo view.
 
-Those optional layers are intersected. So a run like: 
+### Family
 
-`scope=docs-viewer + family=runtime-js + area=search + route=/library/`
+Technical structure. Families should be mostly path-derived and comparatively stable: runtime, service, build, config, test, or route assets.
 
-means “files inside Docs Viewer scope that satisfy all selected target layers, including explicit shared dependencies where configured.”
+### Area
 
-`route` is the user-facing surface:
+Workflow ownership. Areas cross technical layers and can span routes/apps, so they require more judgment and should remain a small normalized vocabulary.
 
-```text
-/admin/checks/
-/docs/
-/library/
-/analysis/
-```
+### Route
 
-A route answers: “where does this capability appear?”
+User-facing surface plus reviewed implementation patterns and shared dependencies. Route existence should be discovered/validated from app registries and public route files; ownership mapping remains explicit policy.
 
-`area` is the workflow or capability inside or across those surfaces:
+Routes marked `inventory-only` are visible drift evidence but are not normal selectable report targets. `mapped` means reviewed for target resolution, not “the route is healthy.”
 
-```text
-search
-management
-import-export
-config
-activity
-catalogue
-docs-build
-```
+## Resolution Rules
 
-An area answers: “what is the user/system trying to do?”
+Filters intersect within the selected scope. Explicit shared dependencies may bring in a file that does not directly match the area or route pattern. A file with no matched family is retained as `_unclassified` evidence rather than silently dropped.
 
-So a route can contain several areas. `/docs/` can involve:
+`target_map_resolver.py` must be the only implementation of pattern matching, exclusions, shared dependency expansion, target intersection, and boundary flags. Audits and reports consume its structured result.
 
-```text
-management
-import-export
-docs-build
-config
-activity
-```
+## Change Method
 
-And an area can span several routes. `search` can involve:
+1. Update the narrowest stable pattern, not a per-file inventory.
+2. Run config validation and the target-map maintenance audit.
+3. Review stale/broad patterns, unclassified files, and likely unmapped routes/areas.
+4. Promote an inventory-only route to mapped only after its implementation/shared ownership is reviewed.
+5. Change report defaults/options in the report registry, not in browser code.
 
-```text
-/library/
-/analysis/
-catalogue/search/
-docs-viewer runtime/search files
-build search scripts
-```
+Do not send raw include patterns, script paths, or option schemas to the browser when a smaller label/ID projection is enough.
 
-## scopes
+## Weak Spot
 
-`jq -r '.scopes | keys[]' admin-app/checks/config/admin-checks.json`
-
-```
-admin
-all
-analytics
-docs-viewer
-public-site
-studio
-```
-
-```
-{
-  "scopes": {
-    "admin": {
-      "label": "Admin",
-      "include": [
-        "admin-app/"
-      ],
-      "exclude": [
-        "admin-app/**/__pycache__/**"
-      ]
-    },
-    "analytics": {
-      "label": "Analytics",
-      "include": [
-        "analytics-app/"
-      ],
-      "exclude": [
-        "analytics-app/**/__pycache__/**",
-        "analytics-app/data/canonical/"
-      ]
-    etc...
-```
-
-## families
-
-`families` are complete in terms of definitions and file coverage.
-
-```
-"families": {
-    "runtime-js": {
-      "label": "Runtime JavaScript",
-      "include": [
-        "admin-app/app/frontend/js/",
-        "analytics-app/app/frontend/js/",
-        "assets/js/",
-        "docs-viewer/runtime/js/",
-        "studio/app/frontend/js/"
-      ]
-    },
-    etc...
-```
-
-list the families:
-```
-jq -r '.families | keys[]' admin-app/checks/config/admin-checks.json
-jq -r '.families | to_entries[] | "\(.key): \(.value.label)"' admin-app/checks/config/admin-checks.json
-```
-
-```
-runtime-js: Runtime JavaScript
-runtime-assets: Runtime assets
-services: Services
-build: Build scripts
-config: Configuration
-tests: Tests and smokes
-admin-route: Admin routes
-public-route: Public routes
-```
-
-Families are the most deterministic layer because they mostly follow technical structure:
-
-```text
-runtime-js       -> frontend JS runtime paths
-runtime-assets   -> CSS/static app assets and shell/static assets
-services         -> backend/service modules
-build            -> build/check/command scripts
-config           -> config files and config directories
-tests            -> tests and smokes
-admin-route      -> Admin route surface files
-public-route     -> public route surface files
-```
-
-The main wrinkle is that some files legitimately match more than one family. For example, Admin frontend config can be both `config` and `admin-route`; public Docs Viewer route config can be both `config` and `public-route`. That is fine as evidence, not necessarily a problem.
-
-Markdown source documents are not checks input.
-The checks source-file discovery includes code, config, and structured data such as JSON and CSS, but excludes `*.md` files.
-
-## areas
-
-`areas` are used to group files into functional/workflow areas and path/pattern rules.
-
-```
-"areas": {
-    "search": {
-      "label": "Search",
-      "include": [
-        "**/*search*",
-        "assets/js/search/",
-        "catalogue/search/",
-        "site/docs-viewer/runtime/js/shared/docs-viewer-search*",
-        "docs-viewer/build/*search*",
-        "docs-viewer/tests/**/*search*",
-        "studio/services/catalogue/search/"
-      ],
-      "shared": ["site/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js"],
-      "routes": ["/library/", "/analysis/"]
-    },
-    etc...
-```
-
-list the areas: `jq -r '.areas | keys[]' admin-app/checks/config/admin-checks.json`
-
-```
-activity
-catalogue
-config
-docs-build
-import-export
-management
-search
-```
-
-- Areas are workflow/product concepts, not folder concepts.
-- Areas should be a normalized cross-app vocabulary for workflows.
-- They will always need more judgment than families.
-- The current list is a seed, not complete.
-
-The process for defining areas is:
-
-1. Look at each app and list its real workflows.
-   Examples: search, import/export, management, catalogue editing, activity logging, config/settings, docs build.
-
-2. Consolidate those into repo-level area ids where the concept is meaningfully shared.
-   For example, `import-export` can cover Docs Viewer imports, data-sharing exports, and Analytics review/import flows.
-
-3. Avoid app-specific area ids unless the workflow is genuinely unique and important enough.
-   Prefer `management` over `docs-viewer-management`, `config` over `studio-config`, `activity` over `admin-activity`.
-
-4. Let one file match multiple areas when that reflects reality.
-   A data-sharing config file can be both `config` and `import-export`. That is useful evidence.
-
-5. Keep areas smaller than “whole app”, but broader than one implementation file.
-   If an area only maps to one script, it may be a route or report detail instead of an area.
-
-## routes
-
-current config status:
-```
-mapped:         5
-inventory-only: 40
-total routes:   45
-```
-
-```
-"routes": {
-    "/admin/checks/": {
-      "label": "Admin Checks",
-      "path": "/admin/checks/",
-      "include": [
-        "admin-app/checks/audit_target_map.py",
-        "admin-app/checks/config/",
-        "admin-app/checks/reports/",
-        "admin-app/checks/run_reports.py",
-        "admin-app/app/frontend/js/admin-checks.js",
-        "admin-app/app/frontend/js/admin-ui-text.js",
-        "admin-app/app/server/admin_app/admin_checks_api.py"
-      ],
-      "shared": ["admin-app/app/server/admin_app/admin_app_server.py"],
-      "areas": ["config"]
-    },
-  etc...
-```
-Mapped routes include:
-
-```
-/admin/checks/
-/analysis/
-/docs/
-/library/
-```
-The **route ids/paths themselves** should be deterministic and discoverable from source:
-
-```text
-Docs Viewer route config
-Admin server route handlers
-Analytics server route handlers
-frontend route config
-```
-
-So we should not hand-invent route existence, we should derive or validate the route list from those route registries/server definitions.
-
-But the **route target map** is more than the URL. It includes related files:
-
-```text
-route shell/template
-frontend JS
-server/API handlers
-config
-UI text
-tests/smokes
-docs
-shared dependencies
-```
-
-That part often needs explicit mapping rules and review. For example, `/admin/checks/` can be discovered as a route, but the system still needs to know that these belong to it:
-
-```text
-admin-app/checks/run_reports.py
-admin-app/checks/config/admin-checks.json
-admin-app/app/server/admin_app/admin_checks_api.py
-admin-app/app/frontend/js/admin-checks.js
-admin-app/tests/...
-```
-
-So:
-
-- **route inventory** should be deterministic/discovered
-- **route ownership map** is pattern-based and reviewed
-- **shared dependencies** must be explicit
-
-Docs Viewer is different: `/docs/` is the route, while `?scope=studio&doc=...` is route state/query, not separate route ids. So keeping `/docs/` as the single route target is right.
-
-The target-map audit is the current guardrail for comparing discovered and configured route ownership. It should report:
-
-```text
-route exists but is not mapped
-mapped route no longer exists
-route has handler/config files that are not included
-route pattern is stale or too broad
-```
+The target map is not generated architecture. It intentionally combines discovered file evidence with maintained ownership judgment. As a result, entries can lag route deletion or file moves; the current map contains such historical inventory rows. Treat the audit as the mechanism for correction, not the config as proof that a surface still exists.

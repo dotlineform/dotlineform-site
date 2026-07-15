@@ -3,7 +3,6 @@ doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
 last_updated: 2026-07-14
-ui_status: review
 summary: Concise model of Docs Viewer capabilities, public/manage/review surfaces, architecture, and source-to-reader flow.
 parent_id: docs-viewer
 ---
@@ -69,7 +68,7 @@ Use these focused references when exact detail matters:
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) for source roots and hierarchy
 - [Builder](/docs/?scope=studio&doc=scripts-docs-builder) for build and publish commands
 - [Generated Data Contracts](/docs/?scope=studio&doc=docs-viewer-generated-data-contracts) for payload and read ownership
-- [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for current browser-code responsibility
+- [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) for grouped browser-code responsibility
 - [Management Endpoints](/docs/?scope=studio&doc=scripts-docs-management-endpoints) for local HTTP ownership
 
 ## Where The Code Lives
@@ -83,4 +82,4 @@ The stable code map is deliberately short:
 - builders: `docs-viewer/build/`
 - contract and boundary checks: `docs-viewer/tests/`
 
-For an exact module list, use [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) or search the code. This overview should change only when the architectural model changes, not whenever a helper is added or renamed.
+Use [Runtime Module Ownership](/docs/?scope=studio&doc=docs-viewer-runtime-module-ownership) to choose a responsibility area, then search the code for the exact modules. This overview should change only when the architectural model changes, not whenever a helper is added or renamed.

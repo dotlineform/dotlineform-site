@@ -2,239 +2,94 @@
 doc_id: admin-checks
 title: Checks
 added_date: 2026-06-08
-last_updated: 2026-06-10
+last_updated: 2026-07-15
 ui_status: ""
 parent_id: admin
+viewable: true
 ---
 # Admin Checks
 
-Admin Checks is the durable home for the `/admin/checks/` report system.
+## What Checks Does
 
-## Purpose
+`/admin/checks/` runs allowlisted evidence reports against a configured slice of the repository and stores ignored local artifacts for review.
 
-Admin Checks runs allowlisted reports against configured repo scopes and stores local report artifacts for review in Admin.
-Checks input is code, config, and structured data; Markdown source documents are excluded from target resolution and reports.
+Implemented reports:
 
-Implemented reports include [Admin Checks Files Report](/docs/?scope=studio&doc=admin-checks-report-files) and [Admin Checks Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map).
-Subsequent reports should get their own child docs once implemented.
-Future report request docs live under [Admin Checks Reports](/docs/?scope=studio&doc=site-request-admin-checks-reports) until a report is implemented and promoted into this durable Admin Checks section.
+- [Files Report](/docs/?scope=studio&doc=admin-checks-report-files) — counts and sizes for selected source files.
+- [Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map) — ownership, shared-dependency, boundary, and config-drift evidence.
 
-## Ownership
-
-- Admin owns the checks route, API, orchestrator, report scripts, config, and ignored local artifacts.
-- The local route is `/admin/checks/`.
-- The API namespace is `/admin/api/checks/`.
-- The report orchestrator is `admin-app/checks/run_reports.py`.
-- Report scripts live under `admin-app/checks/reports/`.
-- Checks target-map config lives at `admin-app/checks/config/admin-checks.json`.
-- Checks report registry and defaults live at `admin-app/checks/config/admin-checks-reports.json`.
-- Local report artifacts live under `var/admin/checks/`.
-
-## Config
-
-```text
-admin-app/checks/config/admin-checks.json
-admin-app/checks/config/admin-checks-reports.json
-```
-
-Target-map config top-level keys:
-
-```json
-{
-  "config_id": "admin-checks",
-  "version": 1,
-  "scopes": {},
-  "families": {},
-  "areas": {},
-  "routes": {}
-}
-```
-
-Report registry top-level shape:
-
-```json
-{
-  "<report-id>": {
-    "label": "",
-    "script": "",
-    "description": "",
-    "produces_csv": false,
-    "default_options": {},
-    "allowed_options": {}
-  }
-}
-```
-
-The config files define:
-
-- `scopes` - the apps: scope ids, labels, included path prefixes, and exclusions
-- `families` - the technical layers: file family ids and path/pattern rules
-- `areas` - the functional/workflow areas and path/pattern rules
-- `routes` - UI/API route targets: route ids, URLs, API path links, and path/pattern rules
-- `reports` - report ids, scripts, labels, CSV artifact metadata, defaults, and allowed options
-
-Routes may be `mapped` or `inventory-only`.
-Mapped routes are reviewed route targets and can be selected by normal checks runs.
-Inventory-only routes are deterministic route inventory entries that are visible to the audit but are not ready for route-scoped evidence runs.
-
-The browser may receive safe projected metadata from the merged checks config.
-The browser must not receive arbitrary local paths, command strings, environment values, or report option schemas.
-Admin UI runs use report defaults from `admin-app/checks/config/admin-checks-reports.json`; edit that file directly when report options need different defaults.
+Future reports remain delivery requests until their producer, registry entry, artifact contract, UI support, and tests are complete.
 
 ## Targeting Model
 
-Checks use layered targeting:
-
 ```text
-scope
-  -> file family
-  -> functional area
-  -> route
+required scope
+  -> optional technical families
+  -> optional workflow areas
+  -> optional mapped routes
+  -> explicit shared dependencies
+  -> selected source files
 ```
 
-`scope` is the safety boundary.
-Families, areas, and routes are optional filters within the selected scope.
+Filters intersect. Scope is the safety boundary; the other layers describe different ways to narrow within it.
 
-Target filters are intersected for a run:
+- **Family**: technical layer such as runtime JavaScript, services, config, or tests.
+- **Area**: workflow concept such as search, management, import/export, or catalogue.
+- **Route**: reviewed user-facing surface and its owned implementation files.
 
-- selecting only a scope includes the scoped files after exclusions
-- selecting families narrows to technical/layer targets
-- selecting areas narrows to functional/workflow targets
-- selecting routes narrows to UI/API route targets
+Markdown source is excluded from report input. Generated payloads, canonical data, dependencies, caches, and local run output are excluded according to scope policy.
 
-Explicitly configured shared dependencies can be included for selected `areas` or `routes`, e.g. specific docs viewer runtime files, data sharing files.
+## Run Workflow
 
-Files that match a scope but no configured family are reported as `_unclassified`.
-Those findings are mapping data and can be used by later risk reports when relevant.
-Markdown source documents do not enter this targeting model; `report.md` and `run-summary.md` remain normal human-readable output artifacts.
+1. The browser loads safe projected targets and report metadata.
+2. The user selects one report, scope, and optional filters.
+3. The API turns that selection into a validated run request using report defaults.
+4. `run_reports.py` resolves the target set and writes a manifest/plan.
+5. It invokes each registered report by argv list without a shell.
+6. Reports write JSON plus focused Markdown; tabular reports may also write CSV.
+7. The route displays summaries/reports and can delete one confined run snapshot.
 
-## Target Map Audit
+Dry-run planning does not create artifacts. Write runs live below `var/admin/checks/<run-id>/`.
 
-The target-map architecture note is [Admin Checks Target Map Architecture](/docs/?scope=studio&doc=admin-checks-target-map-architecture).
+## Configuration And Authority
 
-The target map is maintained by:
+- `admin-checks.json` — scopes, families, areas, routes, exclusions, and shared dependencies.
+- `admin-checks-reports.json` — report IDs, producer scripts, defaults, allowed options, and artifact types.
+- `admin_checks_config.py` — schema and request validation.
+- `target_map_resolver.py` — the only target matching/resolution implementation.
+- `run_reports.py` — planning, subprocess execution, run artifacts, and summaries.
+- `reports/` — focused evidence producers.
+- `admin_checks_api.py` — browser-safe projection and confined run reads/deletes.
 
-```text
-admin-app/checks/audit_target_map.py
-```
+See [Checks Config And Targeting](/docs/?scope=studio&doc=admin-checks-config) for extension rules and [Target Map Architecture](/docs/?scope=studio&doc=admin-checks-target-map-architecture) for audit-versus-report ownership.
 
-The audit resolves `admin-checks.json` against real repo files and can write:
+## API Boundary
 
-```text
-var/admin/checks/target-map-audit/
-  target-map.json
-  target-map.md
-```
+The `/admin/api/checks/` group exposes health, safe report/target metadata, recent runs, run creation, focused summary/report reads, and deletion of one validated run ID.
 
-The audit is used to maintain the config map and review drift.
+The browser cannot provide command strings, script paths, environment, working directories, output roots, arbitrary filesystem paths, or unconstrained report options. IDs and resolved paths are validated before read/delete.
 
-The run-scoped target-map report is [Target Map Report](/docs/?scope=studio&doc=admin-checks-report-target-map).
+## Artifact Boundary
 
-Run the target-map audit when adding new routes, feature areas, app layers, or significant file moves.
+A write run contains:
 
-## Run Requests
+- manifest and command records explaining the plan and execution;
+- machine-readable run summary;
+- compact human-readable run summary;
+- one directory per report with JSON, Markdown, and optional CSV.
 
-The orchestrator accepts a JSON run request from a file path or standard input.
+JSON is the exhaustive evidence. Markdown answers immediate review questions. CSV is for complete tabular inspection. Do not force all evidence into a wide Markdown document.
 
-Example:
+## Extension And Weak Spots
 
-```json
-{
-  "scope": "docs-viewer",
-  "families": ["runtime-js", "services"],
-  "areas": ["search"],
-  "routes": [],
-  "reports": ["files", "target-map"],
-  "write": true
-}
-```
+Add a report as one finishable delivery: producer, registry, validated options, artifacts, API/UI visibility, tests, and durable report summary.
 
-Rules:
+Known pressure points:
 
-- scope, family, area, route, and report ids are allowlisted by config
-- report options for Admin UI runs come from config defaults
-- report scripts are invoked by path and argv list
-- browser-provided command strings, shell flags, environment values, arbitrary paths, output roots, and report option overrides are prohibited
-- dry runs resolve the plan without writing run artifacts
-- write runs create ignored local artifacts under `var/admin/checks/`
+- the target map mixes deterministic discovery with judgment-heavy route/area ownership;
+- inventory-only routes can go stale and are not selectable evidence targets;
+- current scope/family mappings include historical paths, so the maintenance audit must be treated as normal upkeep;
+- one broad config file maps the whole repository and can become an attractive but misleading second architecture inventory;
+- reports should produce decisions, not accumulate metrics because they are easy to count.
 
-## API
-
-The local Admin checks API is registered under:
-
-```text
-/admin/api/checks/
-```
-
-Endpoints:
-
-| Method | Path | Purpose |
-| --- | --- | --- |
-| `GET` | `/admin/api/checks/health` | Service health, config id, config version, runs root, and configured reports. |
-| `GET` | `/admin/api/checks/reports` | Safe metadata for scopes, families, areas, routes, and reports. |
-| `GET` | `/admin/api/checks/runs` | Recent run summaries under `var/admin/checks/`. |
-| `POST` | `/admin/api/checks/runs` | Create a dry run or write run from a validated JSON run request. |
-| `GET` | `/admin/api/checks/runs/<run-id>/summary` | Read `run-summary.json` and raw `run-summary.md`. |
-| `GET` | `/admin/api/checks/runs/<run-id>/reports/<report-id>` | Read `report.json`, raw `report.md`, and optional CSV artifact metadata. |
-| `DELETE` | `/admin/api/checks/runs/<run-id>` | Delete one local run snapshot under `var/admin/checks/`. |
-
-The API validates run ids and report ids before reading or deleting local artifacts.
-It rejects paths that resolve outside the checks runs directory.
-It does not expose arbitrary local file reads, shell command strings, environment values, script paths, or output roots.
-
-## Artifacts
-
-Each write run creates:
-
-```text
-var/admin/checks/<YYYYMMDD-HHMMSS>-<scope>/
-  manifest.json
-  commands.json
-  run-summary.json
-  run-summary.md
-  <report>/
-    report.json
-    report.md
-    report.csv  [optional]
-```
-
-Run-level artifacts:
-
-- `manifest.json`: run id, run directory, config path, selected targets, reports, options, write flag, created and finished timestamps, command contract version, status, manifest path, and target-match counts
-- `commands.json`: orchestrator/report argv lists, working directories, timestamps, exit codes, duration, status, stdout/stderr excerpts, and errors when present
-- `run-summary.json`: machine-readable per-report status, artifact paths, errors, totals, selected targets, target-match counts, and run status
-- `run-summary.md`: compact human-readable summary for Admin display
-
-Report-level artifacts:
-
-- `report.json`: raw report metrics and selected target metadata
-- `report.md`: structured human-readable report
-- `report.csv`: optional full row export for reports that list files or similarly tabular records
-
-## Verification
-
-The focused Admin Checks profile is:
-
-```text
-admin-app/commands/run_checks.py --profile admin-checks
-```
-
-It runs the target-map resolver, config validation, orchestrator, `files` report, `target-map` report, and checks API tests.
-
-## Markdown Display
-
-Keep markdown display simple.
-The API reads markdown artifacts and returns raw strings such as `summary_markdown` or `report_markdown`.
-The browser escapes those strings and displays them as preformatted text.
-
-Do not add server-side markdown-to-HTML rendering or browser markdown rendering unless a later request changes this contract.
-
-## Snapshot Deletion
-
-The Admin Checks UI may delete a selected local run snapshot.
-Deletion must:
-
-- validate the run id
-- reject paths outside the checks runs root
-- delete only ignored local artifacts under `var/admin/checks/`
-- never delete source files or arbitrary local paths
+Focused verification is the `admin-checks` profile plus report/config/API tests under `admin-app/tests/python/`.

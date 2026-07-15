@@ -1,57 +1,47 @@
 ---
 doc_id: config-studio-data-configs
-title: Studio Data Config Files
+title: Studio Domain Config
 added_date: 2026-06-02
-last_updated: 2026-06-03
+last_updated: 2026-07-15
+summary: Checked-in catalogue field-impact and cross-app activity presentation contracts owned under Studio data config.
 parent_id: studio
 viewable: true
 ---
-# Studio Data Config Files
+# Studio Domain Config
 
-Config files:
+## Config Files
 
 - `studio/data/config/catalogue/catalogue-field-registry.json`
 - `studio/data/config/runtime/activity-contract.json`
 
+These are maintainer-edited domain contracts, not user preferences or browser route configuration.
+
 ## Catalogue Field Registry
 
-`catalogue-field-registry.json` maps catalogue fields to artifact/build consequences.
-Catalogue services and review UI use it to explain which generated artifacts are affected by a proposed source edit.
+The field registry maps catalogue fields to their build and artifact consequences. It drives:
 
-Current readers include:
+- catalogue source-change and build planning
+- artifact impact ordering
+- field-registry verification
+- the Local Studio field-registry review route
 
-- `studio/services/catalogue/catalogue_field_registry.py`
-- Local Studio field-registry review UI through the configured path in `studio/app/frontend/config/studio-config.json`
-- catalogue build and source-change planning flows that need artifact impact ordering
+`studio/services/catalogue/catalogue_field_registry.py` owns loading and interpretation. The browser reads the same checked-in file through the configured `catalogue_field_registry` path.
 
-Edit class: maintainer-editable domain config.
-
-This is not user preference data.
-Changing rules changes build planning and must be covered by focused catalogue registry tests.
+Change it when a source field or generated artifact relationship changes. Pair changes with registry verification and representative build-plan tests; do not reproduce its mapping in workflow docs.
 
 ## Activity Contract
 
-`activity-contract.json` defines activity grouping and display contract data for the unified runtime activity feed.
-It belongs to runtime data presentation and activity interpretation, not route boot or service endpoint configuration.
-Current activity surfaces include Local Studio routes, Docs Viewer management actions, Analytics routes, and Analytics-hosted Data Sharing actions.
+The activity contract defines grouping and presentation metadata for the unified local activity feed. Current emitters span Studio, Docs Viewer, Analytics, and Analytics-hosted Data Sharing actions.
 
-Edit class: code infrastructure.
+It does not authorize operations or define route availability. Services emit activity records; app/report code interprets them through this presentation contract.
 
-Changing it should be paired with activity-log tests or runtime activity contract checks.
+Change it when emitted activity families or statuses change. Pair changes with activity-contract and feed tests.
 
-## Cleanup Review
+## Extension And Weak Spots
 
-For `catalogue-field-registry.json`:
+- New catalogue artifacts need an explicit field-impact model before registry entries are added.
+- Retired artifacts and activity families should be removed after active emitter and build scans, not retained as history.
+- Visible route copy belongs in frontend modules, not these data contracts.
+- The catalogue field registry remains exposed through broad Studio data-path config as well as used by server code; a narrower server-owned resolver may eventually separate those concerns.
 
-- verify all configured artifact ids still map to active build artifacts
-- remove rules for retired generated outputs
-- keep fallback defaults aligned with catalogue generator behavior
-- keep the file path resolved from `paths.data.studio.catalogue_field_registry` until a narrower resolver replaces that dependency
-- the 2026-06-03 cleanup review retained the current registry payload because the verifier covers the configured artifact family names, source-field coverage, fallback defaults, and representative field-aware build plans
-
-For `activity-contract.json`:
-
-- verify each grouping/status value is still emitted by current services
-- remove retired activity families
-- keep visible copy in route frontend modules rather than in the activity contract
-- the 2026-06-03 cleanup review retained the current contract rows because the listed Studio, Docs, Analytics, and Data Sharing actions still have live emitters; the verifier now validates Analytics routes as a first-class activity surface
+[Configuration Map](/docs/?scope=studio&doc=config-files-inventory) places these owners beside the other app configuration families.

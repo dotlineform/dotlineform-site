@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: 2026-07-14
+last_updated: 2026-07-15
 parent_id: ""
 ---
 # Change Requests
@@ -14,6 +14,7 @@ Change requests are delivery contracts for work that is ready to implement. Each
 | layer | owns | does not own |
 | --- | --- | --- |
 | feature parent | navigation between the feature's concept, architecture, and delivery documents | detailed discussion or implementation tracking |
+| maintenance index | curated links to actionable gaps in durable documentation | design, priority, backlog detail, or implementation tracking |
 | concept | the problem, desired capability, options, and open questions | priority or implementation tracking |
 | architecture | the proposed structure, ownership boundaries, extension method, and known pressure points | shipped current-state authority or delivery sequence |
 | roadmap | delivery order, importance, dependency, and status | detailed design or task history |
@@ -22,6 +23,8 @@ Change requests are delivery contracts for work that is ready to implement. Each
 | durable document | shipped behavior, current architecture, extension method, and known weak spots | proposal history |
 
 A long discussion is not automatically a change request. Keep it as a concept until its decisions are clear enough to split into roadmap deliverables.
+
+[Repository Maintenance](/docs/?scope=studio&doc=site-request-repository-maintenance) is the single maintenance index. It preserves selected follow-ups without turning them into permanent half-open requests.
 
 For a substantial feature, add one short feature parent beneath Change Requests. Use children to keep concept, architecture, and promoted delivery requests separate. The parent is a router, not another place to repeat their content.
 

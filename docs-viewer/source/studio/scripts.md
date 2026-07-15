@@ -51,7 +51,7 @@ focused standalone audit commands:
 ## Catalogue
 
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) covers focused catalogue source rebuilds, generated route payloads, and related search refresh behavior.
-- [Catalogue Write Services](/docs/?scope=studio&doc=scripts-catalogue-write-server) is the parent page for write endpoints, build/lookup behavior, operations, and the service extraction history.
+- [Catalogue Services](/docs/?scope=studio&doc=scripts-catalogue-write-server) explains the active adapter, mutation, transaction, and safety boundary.
 - [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source) covers source validation and source-adjacent inspection.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup), [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry), and [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report) cover focused catalogue maintenance utilities.
 

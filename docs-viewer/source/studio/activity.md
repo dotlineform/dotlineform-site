@@ -1,66 +1,48 @@
 ---
 doc_id: activity
-title: Activity Report
+title: Activity
 added_date: 2026-05-08
-last_updated: 2026-06-06
+last_updated: 2026-07-15
 parent_id: admin
+viewable: true
 ---
-# Activity Report
+# Activity
 
-The Activity page `/admin/activity/` is the unified activity report for local authoring and operational actions. It lists script-level activity rows while preserving the page and button action that initiated them:
+## What It Shows
 
-- correlated Studio activity reporting
-- risk-operation activity rows for user-initiated audits or generated reports
-- reviewing the downstream effects of a button click
+`/admin/activity/` is the read-only feed of meaningful user-initiated local operations emitted by Studio, Admin, Analytics/Data Sharing, and Docs Viewer workflows.
 
-## Current coverage
+Rows preserve three levels of context:
 
-- Studio: catalogue editor: save/create/delete/publication actions, workbook import apply, moment import apply, project-state report generation.
-- Docs Viewer: docs source import, broken-links audit.
-- Analytics: series tag saves/imports, tag registry writes, and tag alias writes, Data Sharing package/apply actions.
-Most initiating pages live under `/studio/`; Docs source import is a Docs Viewer manage-mode activity and is recorded with `surface: "docs"` in `site/assets/studio/data/activity_contract.json`.
-The retired split source-side and build-side report pages have been removed; this is the only active unified activity report.
+- the initiating page/surface;
+- the user action;
+- the script/service purpose and affected record groups.
 
-## Route Ready State
+Selecting a status marker opens the row's normalized detail items.
 
-The page root `#studioActivityRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+## Data Flow
 
-- no route-level commands set busy
-- `data-studio-mode="empty|list"`
-- `data-studio-service="available|unavailable"`
-- `data-studio-record-loaded="true|false"`
+```text
+domain workflow
+  -> shared activity context + emitter
+  -> var/admin/activity/activity_log.jsonl (journal)
+  -> var/admin/activity/activity_log.json (capped feed)
+  -> /admin/api/activity/feed
+  -> Admin Activity route
+```
 
-## Inputs
+`studio/data/config/runtime/activity-contract.json` owns label/grouping policy. `studio/shared/python/studio_activity.py` owns shared paths and append mechanics. Domain services decide when an action is meaningful and provide their record groups/details.
 
-The page reads the unified feed through the local Admin app activity API:
+## Boundary
 
-- `GET /admin/api/activity/feed`
+Route loads, background watchers, and trivial local UI interactions should not create activity. User-triggered writes, publications, imports, reports, audits, and package operations are appropriate when the row helps explain a durable side effect.
 
-That service-backed read returns:
+Activity is an operational trace, not an event-sourcing or rollback system. Canonical data remains authoritative; missing or failed activity append must not make the source operation fictitiously incomplete.
 
-- `var/admin/activity/activity_log.json`
+## Weak Spots
 
-The fuller local journal lives beside the capped feed outside published route data:
+- The shared helper still lives under `studio/shared/python/` although the feed is Admin-owned and used cross-app.
+- Record-group vocabulary includes compatibility families that may outlive active UI capabilities.
+- Labels come from checked config while emitters supply raw IDs/context, so contract verification is required when adding an action.
 
-- `var/admin/activity/activity_log.jsonl`
-
-The feed labels hydrate from:
-
-- `studio/data/config/runtime/activity-contract.json`
-
-## Row Shape
-
-Each feed row includes:
-
-- date-time
-- compact status marker
-- page label
-- user action label
-- script purpose label
-- affected record groups
-- detail items for the modal
-
-Affected record group summaries include catalogue records plus docs, files, tags, aliases, and search rows when the emitting service supplies those groups.
-
-Clicking the status marker opens the detail modal for that row.
+The route uses `#studioActivityRoot` with Admin-prefixed ready/busy state; the historical DOM name is not an ownership signal.

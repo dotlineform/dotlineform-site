@@ -2,137 +2,77 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapter Registry
 added_date: "2026-05-06 11:35"
-last_updated: 2026-07-11
+last_updated: 2026-07-15
 parent_id: data-sharing
 viewable: true
 ---
 # Data Sharing Adapter Registry
 
-Config files:
+## Owner
 
-- `data-sharing/config/adapters.json`
-- `data-sharing/config/adapters.schema.json`
+`data-sharing/config/adapters.json` is checked policy for Data Sharing dispatch and capability projection. `adapters.schema.json` validates the structural contract; `analytics-app/.../data_sharing_adapters.py` adds semantic and path validation.
 
-`adapters.json` is the source-controlled registry for Data Sharing dispatch.
-It answers one question: for a given `data_domain` and canonical `operation`, which configured adapter handles the request?
-It also records the browser-safe metadata the Analytics Data Sharing UI needs to present domains, profiles, file formats, review rows, and apply actions.
+The registry answers:
 
-The registry is config, not implementation.
-It can enable an existing adapter, connect a data domain to an adapter, declare capabilities, expose UI metadata, and point adapters at source/config files.
-It cannot add a new package shape, selector type, review model, returned-package parser, or apply behavior without adapter code that implements that behavior.
+- which adapter handles a domain/operation;
+- which canonical capabilities and apply actions are active;
+- where the domain's canonical reads/writes/config live;
+- which external workspace root each operation may use;
+- what safe labels/options/actions the browser may be shown.
 
-See [Data Sharing Adapter Architecture](/docs/?scope=studio&doc=data-sharing-adapter-architecture) for the code structure used by adapters.
+It does not implement selectors, package shapes, review parsing, validation, or writes.
 
-## Registry Shape
-
-The root object contains:
-
-- `schema_version`: currently `data_sharing_adapters_v3`
-- `paths`: shared runtime artifact roots
-- `dispatch`: operation routing from data domain to adapter id
-- `adapters`: adapter declarations and their per-domain capability metadata
-
-The active runtime artifact roots are shared by all adapters:
+## Stable Shape
 
 ```text
-$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports
-$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging
-$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview
-$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta
+paths
+  -> exports, import-staging, import-preview, meta
+
+dispatch[data_domain + operation]
+  -> adapter id
+     -> data domain ownership/sources/write targets/config
+     -> capability for prepare | list_returned | review | apply
+        -> profiles, path contract, review rows, apply actions, activity
 ```
 
-The validator requires:
+Exact adapters, profiles, actions, formats, and copy belong in the current JSON. Do not duplicate their inventory here.
 
-- `paths.outbound_package_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports`
-- `paths.returned_package_staging_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging`
-- `paths.review_output_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-preview`
-- `paths.metadata_root`: `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta`
+## Dispatch Rules
 
-These marker paths are editable but must remain distinct descendants of `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/`. Runtime services resolve them through the shared workspace resolver and never store user-specific absolute paths in checked-in config.
+- Canonical operations are only `prepare`, `list_returned`, `review`, and `apply`.
+- Each `(data_domain, operation)` pair resolves to exactly one active adapter.
+- Domain-specific choices such as `summary_apply` are `apply_actions`, not top-level operations.
+- A profile/family/selector is the variation mechanism inside an adapter; duplicate dispatch rows are not.
+- Status can describe planned/stub/disabled declarations, but active UI capability requires implemented handlers and an available workspace.
 
-`import-staging/` is the consistent user-facing drop-zone, not an application-exclusive inbox. Data Sharing uses it for returned packages, and every Docs Viewer import format consumes the same resolved `DataSharingWorkspacePaths.import_staging` root. The applicable app is determined by the file format/schema and user action. Do not add another Docs-specific staging path to this registry. See [Docs Import Source Registry](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec).
+## Path And Source Rules
 
-Do not add per-domain runtime package roots or fallback reads for retired locations such as `var/studio/data-sharing/...` or `var/studio/export-import/...`.
+- Runtime roots must be distinct descendants of `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` and are resolved through `services/paths.py`.
+- `import-staging/` is the shared drop-zone for returned packages and Docs Import inputs; file schema and user action decide the consumer.
+- Canonical source and write-target paths are safe repo-relative paths.
+- Document domains point to Docs Viewer scope config/source helpers, never generated tree/by-id/search payloads.
+- Tag sources point to Analytics canonical JSON and supporting public catalogue indexes.
+- No retired `var/studio/...` or Studio route/API fallback is supported.
 
-## Dispatch
+## Browser Projection
 
-Each dispatch row binds one canonical operation:
+`/analytics/api/data-sharing/config` whitelists domain labels, capability status, selection/profile options, apply UI/confirmation/result metadata, Docs scope options, and workspace availability.
 
-- `prepare`
-- `list_returned`
-- `review`
-- `apply`
+It must not expose:
 
-Adapter-specific apply choices belong inside the `apply` capability's `apply_actions` list.
-Do not add registry-level operations such as `export`, `import_files`, `import_preview`, `summary_apply`, or `hierarchy_apply`.
+- filesystem roots or path contracts;
+- source/write targets;
+- implementation modules;
+- output filename patterns/internal metadata contracts;
+- activity emission metadata;
+- arbitrary profile internals.
 
-Each `(data_domain, operation)` pair must resolve to exactly one adapter id.
-If the same domain and operation need different behavior, add a profile, family, selector, or adapter-owned implementation path rather than adding ambiguous dispatch rows.
+## Change Method
 
-## Data Domains
+1. Identify whether the change is dispatch, profile configuration, or new behaviour.
+2. Change code first when a family/selector/review/apply contract is new.
+3. Update registry/schema and public projection only with the minimum fields required.
+4. Cover semantic validation, unsafe paths, ambiguous dispatch, handler availability, and projection redaction.
+5. Update focused docs only if the ownership or extension rule changed.
 
-Each adapter declares one or more `data_domains`.
-A data domain entry defines:
-
-- `app`: UI grouping, one of `docs-viewer`, `studio`, or `analytics`
-- `label`
-- `status`
-- `selection_model`
-- optional `record_selectors`
-- `sources`
-- `source_write_targets`
-- `config`
-
-Docs Viewer scope selection is record selection, not a Data Sharing data domain.
-Document-backed domains carry selected scope through `selection.docs_scope` and may declare `record_selectors.docs_scope` so the UI can present scope options from Docs Viewer scope config.
-Generic Data Sharing config must not use an unqualified `scope` field.
-
-For document-backed domains, `sources.docs_scope_config` records the Docs Viewer scope config path.
-The registry must not declare generated docs indexes, generated by-id payload roots, public tree/search/recently-added payloads, or generated metadata JSON as document Data Sharing metadata sources.
-Those generated artifacts belong to Docs Viewer publication, preview, management, report, route, or search workflows.
-
-For Analytics tags, configured sources and write targets point at canonical tag registry, aliases, assignments, and supporting site indexes.
-
-## Capabilities
-
-Each capability declares:
-
-- `operation`
-- `status`
-- `selection_model`
-- supported `input_formats` and `output_formats`
-- `path_contract` keys that refer to shared `paths`
-- optional `sharing_profiles` for prepare
-- optional `review_rows` metadata for review
-- optional `apply_actions` for apply
-- `activity` metadata
-
-The browser-facing Analytics API projects only UI-needed metadata from this config.
-Server-only details such as source paths, write targets, output path patterns, activity emit metadata, and package internals remain server-owned.
-
-## Current Registry
-
-The current adapters are:
-
-| Data domain | App | Adapter id | Module |
-| --- | --- | --- | --- |
-| `documents` | `docs-viewer` | `documents` | `documents` |
-| `tags` | `analytics` | `analytics-tags` | `analytics.tags` |
-
-The documents adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
-Its current apply actions are `summary_apply` and `hierarchy_apply`.
-Its prepare profiles are defined in `data-sharing/adapters/documents/config/prepare-profiles.json`, documented separately in [Documents Prepare Profiles](/docs/?scope=studio&doc=data-sharing-documents-prepare-profiles).
-
-The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
-Its current apply actions are `registry_apply`, `aliases_apply`, and `assignments_apply`.
-Its prepare profiles are declared in the adapter registry under the tags `prepare` capability.
-
-## Runtime Owners
-
-- `analytics-app/app/server/analytics_app/data_sharing_adapters.py` validates and resolves registry entries at the Analytics HTTP boundary.
-- `data-sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection.
-- `data-sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose headless workflow entry points.
-- `analytics-app/app/server/analytics_app/` owns same-origin `/analytics/api/data-sharing/...` endpoints.
-- Adapter implementation lives under `data-sharing/adapters/`.
-
-Local Studio must not reintroduce Data Sharing route/API aliases, proxy handlers, config serving, or static shims.
+The current registry is intentionally exhaustive; this page is its map and safety explanation.

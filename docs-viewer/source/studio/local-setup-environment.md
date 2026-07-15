@@ -2,130 +2,68 @@
 doc_id: local-setup-environment
 title: Local Setup Environment
 added_date: 2026-05-19
-last_updated: 2026-07-13
+last_updated: 2026-07-15
 parent_id: local-setup
 ---
 # Local Setup Environment
 
-## Repo-local env file
+## Local Source
 
-Use a gitignored repo-local env file for runtime paths, local runner options, and R2 credentials:
+Use the gitignored repo-local `.env.local` for machine-specific workspace roots, runner overrides, concurrency, and publishing credentials.
 
 ```bash
 $EDITOR .env.local
 ```
 
-Recommended shape:
+Local runners/services load it server-side. Browser code must never read it or receive credentials. In cloud/Codespaces, use configured environment variables and secret stores instead.
 
-```bash
-export DOTLINEFORM_PROJECTS_BASE_DIR="/absolute/path/to/dotlineform"
-export MAKE_SRCSET_JOBS=4
+The shared loader gives `.env.local` precedence over inherited process values for local runs; if the file is absent, process environment remains available for cloud/container use.
 
-export R2_ACCOUNT_ID="..."
-export R2_ACCESS_KEY_ID="..."
-export R2_SECRET_ACCESS_KEY="..."
-export R2_BUCKET="..."
-export R2_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
-```
+## Stable Variable Families
 
-Local repo scripts, `bin/local-studio`, `bin/local-admin`, `bin/local-analytics`, `bin/local-all`, and `docs-viewer/bin/docs-viewer` read this file directly.
-Do not duplicate these repo-specific values in shell startup files.
+### External Workspaces
 
-What the shared variables mean:
+`DOTLINEFORM_PROJECTS_BASE_DIR` is the base for marker-rooted external workspaces such as:
 
-- `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory for source-media trees and external local application workspaces
-- `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
+- `data-sharing/` — exports, shared import staging, metadata, review previews;
+- `docs-viewer/` — external local scopes;
+- catalogue/media working roots owned by media configuration/resolvers.
 
-Docs Viewer external local scopes also use `DOTLINEFORM_PROJECTS_BASE_DIR`.
-For those scopes, create the external Docs Viewer data root before using the New scope action:
+Create the required child workspace before using that capability. There is no repo-local fallback for these external roots.
 
-```bash
-mkdir -p "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
-mkdir -p "$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing"
-```
+### Runners
 
-Docs Viewer then derives external local source and generated JSON paths below that fixed directory.
-The New scope modal does not accept a custom external path.
+Each local app/server owns host, port, logging, and enable/disable overrides in its runner/server source. `bin/local-all` composes sibling enable flags; it does not change their independent ownership.
 
-Data Sharing and Docs Review use the fixed `data-sharing/` workspace for exports, returned-package staging, metadata, and preview sessions. Active Data Sharing capabilities are unavailable with setup guidance when this directory is missing, unreadable, or unwritable.
+Read the runner and `.env.local.example` if present for exact current variable names. Do not maintain an exhaustive list here.
 
-Common local app runner variables:
+### Media Concurrency/Manifests
 
-- `STUDIO_APP_HOST`, `STUDIO_APP_PORT`, `STUDIO_APP_ACCESS_LOG`
-- `ADMIN_APP_HOST`, `ADMIN_APP_PORT`, `ADMIN_APP_ACCESS_LOG`
-- `ANALYTICS_APP_HOST`, `ANALYTICS_APP_PORT`, `ANALYTICS_APP_ACCESS_LOG`
-- `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, `DOCS_VIEWER_BASE_URL`, `DOCS_VIEWER_REVIEW_ENABLED`
-- `SITE_ENABLED`, `SITE_HOST`, `SITE_PORT`, `SITE_ROOT`, `SITE_PREVIEW_BASE`
+Media/srcset scripts may read shared concurrency or per-run manifest variables. Prefer per-command/internal orchestration for temporary manifest paths rather than persisting them globally.
 
-`bin/local-all` also reads `SITE_ENABLED`, `STUDIO_APP_ENABLED`, `ADMIN_APP_ENABLED`, and `ANALYTICS_APP_ENABLED` so a full-stack session can skip one of the supervised children without changing the independent runners.
+### Remote Publishing
 
-Media staging, generated srcset output, and staged work downloads are external under `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media/`.
-The shared external-workspace resolver derives that fixed root from `DOTLINEFORM_PROJECTS_BASE_DIR`; there is no repo-local fallback.
-The media root is generated working output and can be recreated when needed.
-The same resolver owns the fixed Data Sharing, external Docs Viewer, and Docs static-export roots; their domain adapters only declare child paths and domain-specific messages.
+R2 account/key/bucket/endpoint values belong only in `.env.local` or a platform secret store. Publisher errors may name missing variables but must not print values.
 
-R2 media publishing also requires:
+## Change Method
 
-- `R2_ACCOUNT_ID`
-- `R2_ACCESS_KEY_ID`
-- `R2_SECRET_ACCESS_KEY`
-- `R2_BUCKET`
-- `R2_ENDPOINT`
+- Add a variable only for a real environment-specific choice; stable product policy belongs in checked config.
+- Define/default/read it in one runner/service owner.
+- Keep browser runtime projection free of secrets and private absolute paths.
+- Use marker paths in responses/docs when an external workspace must be displayed.
+- Update this page only when a variable family, precedence rule, or workspace ownership changes.
 
-Do not commit R2 credential values.
-The publisher script reports missing variable names without printing configured values.
-`.env.local` is gitignored, so it is local-only.
+## Operating Baseline
 
-The R2 publisher reads `.env.local` by default:
+- run commands from `dotlineform-site/`;
+- use the configured Miniconda interpreter locally;
+- use project-local `bin/`/script entrypoints;
+- keep canonical catalogue/tag/docs source in its current app-owned tree;
+- treat generated media and local logs/reports as disposable/ignored outputs unless a focused workflow says otherwise.
 
-```bash
-$HOME/miniconda3/bin/python3 studio/services/media/publish_media_to_r2.py --scope catalogue --kind works --id 01007
-```
+## Weak Spots
 
-Two additional env vars are used by the srcset wrapper, but they are usually set per-command by pipeline scripts rather than persisted globally:
-
-- `MAKE_SRCSET_WORK_IDS_FILE`
-- `MAKE_SRCSET_SUCCESS_IDS_FILE`
-
-Those manifest env vars do not normally need to be added to your shell startup files.
-
-## .env.local versus process environment
-
-For local runs, `.env.local` is the canonical source for repo-specific runtime configuration.
-The shared Python loader reads it directly, and values from this file win over inherited shell values when the same key appears in both places.
-
-- `.env.local` is a repo-specific source file that keeps local paths and credentials in one predictable place.
-- Local CLI scripts and local services read `.env.local` server-side; browser code must never read this file or receive R2 credentials.
-- If `.env.local` is absent, scripts fall back to process environment variables for cloud/Codespaces runs.
-- In cloud/Codespaces, use platform secret stores or configured environment variables instead of creating, committing, or syncing a `.env.local` file.
-
-The practical reason for this convention is that media handling is increasingly driven by local Studio actions.
-Keeping repo-specific runtime config in `.env.local` gives CLI commands, local write services, and future UI-triggered orchestration one consistent source of local configuration without relying on shell startup files.
-
-
-## Repo-specific operating notes
-
-- Run project commands from `dotlineform-site/`.
-- Prefer the project-local script form: `./scripts/...`.
-- canonical catalogue metadata now lives under `studio/data/canonical/catalogue/`.
-- `data/works_bulk_import.xlsx` is only used for the separate bulk-import workflow for new works and new work details.
-- Shared env var names and media subpaths are defined in `_data/pipeline.json`.
-- The pipeline currently generates primary image variants at `800`, `1200`, and `1600` widths.
-- Thumb sizes are currently `96` and `192`.
-- The repo still accepts some legacy `2400` references in compatibility checks, but new moment variants should stay at `800`, `1200`, and `1600`.
-- HEIC/HEIF input conversion uses macOS `sips` when available and otherwise falls back to `heif-convert`.
-- Image derivative generation requires `ffmpeg`; the scripts fail fast if it is missing.
-- Script logs are written locally under `logs/` and `var/studio/logs/`.
-
-Common commands:
-
-```bash
-$HOME/miniconda3/bin/python3 admin-app/checks/audit_site_consistency.py --strict
-$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
-$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
-$HOME/miniconda3/bin/python3 admin-app/checks/css_token_audit.py
-bin/local-studio
-bin/local-admin
-bin/local-analytics
-docs-viewer/bin/docs-viewer
-```
+- `.env.local` is shell syntax and can become an unvalidated second config file.
+- One base directory serves several external-workspace families; misconfigured ownership can affect multiple apps.
+- Runner variable inventories drift quickly, so code discovery is required for exact names/defaults.
+- Local precedence over process environment can surprise a shell user who expects an exported override to win.

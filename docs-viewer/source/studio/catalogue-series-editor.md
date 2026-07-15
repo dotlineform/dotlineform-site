@@ -2,157 +2,83 @@
 doc_id: catalogue-series-editor
 title: Catalogue Series Editor
 added_date: 2026-04-22
-last_updated: 2026-06-17
+last_updated: 2026-07-15
 parent_id: studio
 viewable: true
 ---
 # Catalogue Series Editor
 
-Route:
+## What It Does
 
-- `/studio/catalogue-series/`
-- focused record selection uses `?series=<series_id>`
-- new draft mode uses `?mode=new`
+Use `/studio/catalogue-series/` to create, find, edit, publish, unpublish, or delete catalogue Series.
 
-The route shell is hosted by the local Studio app server.
+- `?series=<series_id>` opens one Series.
+- `?mode=new` creates a draft Series.
+- Series membership is edited here because one save can update the Series and the affected Works atomically.
 
-This page edits one canonical series source record from `site/assets/studio/data/catalogue/series.json` through the local catalogue service and can also write affected work membership records in `site/assets/studio/data/catalogue/works.json`.
+Canonical Series metadata lives in `studio/data/canonical/catalogue/series.json`. Membership is represented by each Work's ordered `series_ids` in `studio/data/canonical/catalogue/works.json`.
 
-## Current Scope
+The editor does not manage Series prose. Existing Markdown remains a generator input until a separate prose workflow owns it.
 
-The first implementation covers:
+## Main Workflow
 
-- search by series title with `series_id` shown in results through the shared search-list control
-- open one series record
-- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
-- create a draft series from the same route with `New` or `/studio/catalogue-series/?mode=new`
-- edit core scalar metadata fields
-- show `status` with the Readonly Display treatment controlled by `Publish` / `Unpublish`
-- edit `sort_fields`
-- edit `primary_work_id`
-- list current member works as thumbnail-led rows through the shared record-list component
-- show shared record-list toolbar buttons for member-work actions, with `New` opening the Work editor in preselected series create mode and Delete staging a guarded membership removal
-- preview the scoped public update impact for the current series
-- save metadata, with published-series saves updating the public catalogue internally
-- publish draft series through a dedicated `Publish` command
-- unpublish public series through a dedicated `Unpublish` command
-- delete one series source record and remove its membership from affected works
-- show the primary work image in the right-hand side panel with a title/year caption
+### Open Or Create
 
-Series prose is no longer edited or imported through the series metadata editor. Existing permanent Markdown under `studio/data/canonical/catalogue-markdown/series/<series_id>.md` remains a generator input until a separate prose management workflow replaces it.
+- Search reads the derived Series search payload.
+- Opening a record requests the focused Series projection, including member Work summaries.
+- New mode creates a draft source record only; publication, membership, primary-Work, and delete commands remain unavailable until it exists.
+- Exact required fields and field rules live in `catalogue-series-fields.js`, not in this overview.
 
-The previous current-record side panel contents have been removed. The Series editor no longer renders side-panel readonly fields, public-link summary rows, build-impact text, runtime-state text, readiness rows, or a loaded-record status message. The side panel now renders only the primary work media preview. Save, publish, unpublish, and delete status remains in the route status/result message area and clears on the next ordinary route click through the shared Catalogue message handler.
+### Edit Membership
+
+- Member order remains the order held by each Work's `series_ids`; the save path does not silently sort it.
+- `New` opens the Work editor with the current Series preselected.
+- Removing a member stages a Work membership change and persists it only with the parent Series save.
+- The primary Work cannot be removed until another primary is selected.
+- A Work cannot be left with no Series through this workflow; use the Work editor for the larger unpublish or delete decision.
+
+Membership is route-local rather than a generic controller because its validation, primary-Work rule, and atomic write belong to the Series workflow.
+
+### Save And Publication
+
+1. The browser sends the normalized Series patch, its expected hash, and only changed Work membership rows.
+2. The catalogue service validates the full combined source state and writes `series.json` and `works.json` atomically when both change.
+3. Derived Studio lookups are refreshed.
+4. A published Series receives its scoped public update; a draft save remains source-only.
+5. The editor reloads the focused Series projection and reports the result.
+
+Publication rules are stricter than draft-save rules:
+
+- a published Series needs a valid primary Work that belongs to it;
+- at least one member Work must be published;
+- publishing a Series promotes its attached draft Works in the same canonical transaction;
+- unpublishing returns the Series to draft and cleans public output.
+
+Delete uses preview and apply requests. The server removes the Series and its membership from affected Works atomically, then cleans generated/public artifacts. Browser confirmation does not replace server dependency validation.
 
 ## Runtime Ownership
 
-The Series Editor route is split into route orchestration, action workflows, field rules, and membership behavior:
+The browser implementation is grouped under `studio/app/frontend/js/`:
 
-- `site/assets/studio/js/catalogue-series-editor.js` owns route bootstrap, generated lookup reads, create/edit mode transitions, validation orchestration, field rendering, and membership UI coordination.
-- `site/assets/studio/js/catalogue-series-actions.js` owns save/create/build-preview/build/publication/delete sequencing, service-client calls, public-update outcome handling, activity context shaping, and final status/result copy for those commands.
-- `site/assets/studio/js/catalogue-series-selection.js` owns title/id search matching, shared search-list option rendering, Open-button behavior, focused-series opening, and initial route selection.
-- `site/assets/studio/js/catalogue-series-fields.js` owns field definitions, id normalization, draft shaping, payload shaping, and draft validation.
-- `site/assets/studio/js/catalogue-series-membership.js` owns focused lookup membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, shared member record-list rendering, and member toolbar actions.
-- `site/assets/studio/js/catalogue-series-sections.js` owns the primary-work image preview in the side panel.
+- `catalogue-series-editor.js`, `catalogue-series-editor-state.js`, and `catalogue-series-editor-events.js` coordinate the route.
+- `catalogue-series-form.js` and `catalogue-series-fields.js` own field presentation and record shaping.
+- `catalogue-series-selection.js` owns search and route selection.
+- `catalogue-series-membership.js` owns member state, validation, and changed Work rows.
+- `catalogue-series-actions.js` owns source, publication, build, and delete sequencing.
+- `catalogue-series-sections.js` owns the primary-Work preview.
+- `catalogue-editor-service-client.js` is the browser transport boundary.
 
-Membership remains route-local to the Series Editor because it edits affected work `series_ids` arrays as part of the series workflow.
-It is not a generic Catalogue membership controller.
+Server dispatch begins in `studio/app/server/studio/studio_catalogue_api.py`. Canonical mutation behavior lives in the focused services under `studio/services/catalogue/`.
 
-Local app migration:
+## Extension And Weak Spots
 
-- the page shell now lives in `studio/app/server/studio/studio_app_views.py`
-- the local app mounts it at `/studio/catalogue-series/`
-- `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py` covers the local route shell and unavailable-service state
+Add field behavior through the field registry and field adapter. Add mutation behavior to the focused catalogue service that owns the transaction. Keep Series-specific membership rules here unless a second real consumer proves a shared abstraction is useful.
 
-## Route Ready State
+Known pressure points:
 
-The page root `#catalogueSeriesRoot` participates in [Route Ready State](/docs/?scope=studio&doc=route-ready-state) with Studio attributes.
-Route-specific details:
+- one command may update two canonical files and several derived projections;
+- publishing a Series can change member Work status, so its blast radius is intentionally larger than an ordinary Series save;
+- the route/action modules remain sizeable and should not absorb unrelated catalogue capabilities;
+- prose still has a generator-owned legacy source without a Studio editing workflow.
 
-- save, create, publish, unpublish, build, and delete commands set route busy
-- `data-studio-mode="empty|single|new"`
-- `data-studio-service="available|unavailable"`
-- `data-studio-record-loaded="true|false"`
-
-Draft/publish rule:
-
-- new series are created as draft source records only
-- draft series may be saved without `primary_work_id`
-- draft series may temporarily lose or omit `primary_work_id` when member works are removed or deleted
-- edit-mode saves require `year` and `year_display`
-- published series must have a valid `primary_work_id` that belongs to the series
-- published series must have at least one published member work because the public thumbnail comes from the primary work
-- publishing a draft series also publishes all draft works currently attached to that series
-- scoped rebuild is blocked until the series status is `published` and at least one attached work is published
-
-## New Mode
-
-`New` switches the editor into draft-create mode on `/studio/catalogue-series/?mode=new`.
-
-In new mode:
-
-- the top input is the new `series_id` input
-- when `?mode=new` and `?series=<series_id>` are both present, the `series` value is treated as the draft `series_id`
-- the suggested next id is prefilled
-- `series_type` renders as a fixed select owned by `studio/app/frontend/js/catalogue-series-fields.js`
-- `series_type` defaults to `primary`
-- `title`, `series_type`, `year`, and `year_display` are required
-- `status` is visible and fixed to `draft`
-- `published_date`, `primary_work_id`, member editing, publication, and delete actions remain disabled until the source record exists
-- `Create` writes through `POST /studio/api/catalogue/series/create`
-- successful create opens `/studio/catalogue-series/?series=<series_id>` in normal edit mode
-
-Create mode does not update the public site. The member-work `New` action opens the Work editor with the current series preselected; edit remains a placeholder until that workflow is implemented. Set a valid `primary_work_id`, save the draft, and then use `Publish` when ready.
-
-## Membership Constraints
-
-Locked constraints for this phase:
-
-- each work's `series_ids` order is preserved exactly as edited
-- membership save does not sort a work's series list
-- the member list uses the shared record-list component with work thumbnails, work ids, and titles
-- the member toolbar uses shared record-list action buttons
-- member `New` opens `/studio/catalogue-work/?mode=new&series=<series_id>` in a new tab
-- member Delete opens a modal and means remove the selected work from the current series, not delete the work source record
-- member Delete is blocked when the selected work is the current `primary_work_id`; set a different primary work first
-- member Delete is blocked when the selected work has no other `series_ids`; use the Work editor to unpublish or delete that work completely
-- member Edit is not implemented yet; the toolbar button is a placeholder until its modal or link is designed
-
-## Save Boundary
-
-Current action labels:
-
-- `Save`
-  writes series source JSON and any changed work membership rows. If the series is already `published`, the save also runs the internal public catalogue update.
-- `Publish`
-  appears for saved draft series when the form is clean and required publication fields are valid. Publishing a series also promotes all attached draft works to `published` in the same source transaction.
-- `Unpublish`
-  appears for published series, ignores unsaved form edits after confirmation, changes source status back to `draft`, and cleans public catalogue output
-- `Delete`
-  removes the current series source record and its membership from affected work records after preview/confirmation
-
-Current save/publication flow:
-
-1. page loads derived series-search and work-search lookup payloads through `GET /studio/api/catalogue/read`, not full canonical source maps
-2. opening a series fetches one focused lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_series_base&record_id=<series_id>`
-3. member Delete stages membership edits in the UI by removing the current series id from the selected work's `series_ids`; the change is persisted only after Save
-4. `POST /studio/api/catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and local app adapter reject saves where `year` or `year_display` is blank
-5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command
-6. the local app adapter validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
-7. the page reloads its focused series lookup payload
-8. `POST /studio/api/catalogue/build-preview` reports scoped public-update impact for published series plus affected published works
-9. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`; series publish writes `series.json` and any attached draft-work status changes in one atomic transaction
-
-Delete flow:
-
-1. page requests `POST /studio/api/catalogue/delete-preview`
-2. preview reports affected member works and any validation blockers
-3. if preview is clean, the page confirms and sends `POST /studio/api/catalogue/delete-apply`
-4. the server deletes the series source record and removes that `series_id` from affected work records in one atomic write bundle
-5. the server removes generated series artifacts, updates affected work runtime/index records, removes the series tag-assignment row, updates public indexes, and rebuilds catalogue search
-
-## Related References
-
-- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
-- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
-- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+The route exposes the shared [Route Ready State](/docs/?scope=studio&doc=route-ready-state) contract on `#catalogueSeriesRoot`. Focused smoke coverage begins in `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`; code and tests are the authority for exact current fields and endpoints.

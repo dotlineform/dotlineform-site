@@ -1,9 +1,0 @@
-{
-  "doc_id": "data-models-studio",
-  "title": "Scope",
-  "added_date": "2026-04-19",
-  "last_updated": "2026-06-06",
-  "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
-  "parent_id": "studio",
-  "content_html": "<h1>Studio Scope</h1>\n<p>This document covers the current checked-in data model for the Studio scope.</p>\n<h2>Local Service-Backed Activity Data</h2>\n<p>Unified activity is now Admin-owned and written under:</p>\n<ul>\n<li><code>var/admin/activity/activity_log.json</code></li>\n<li><code>var/admin/activity/activity_log.jsonl</code></li>\n</ul>\n<p>Studio catalogue workflows can still append activity rows through <code>studio/shared/python/studio_activity.py</code>, but the route/API surface is <code>/admin/activity/</code> and <code>/admin/api/activity/feed</code>.</p>\n<h2>Config</h2>\n<ul>\n<li><code>studio/app/frontend/config/studio-config.json</code></li>\n<li><code>studio/app/frontend/js/studio-config.js</code></li>\n</ul>\n<h2><code>work_storage_index.json</code></h2>\n<p>Purpose:</p>\n<ul>\n<li>provide Studio-only work storage lookups without putting curator-only storage data into the public <code>works_index.json</code></li>\n</ul>\n<p>Current content families:</p>\n<ul>\n<li>header metadata</li>\n<li><code>works</code> map keyed by <code>work_id</code></li>\n<li>per-work storage values only where storage is populated</li>\n</ul>\n<p>Current consumers:</p>\n<ul>\n<li><code>/studio/studio-works/</code></li>\n</ul>\n<p>Why it is separate:</p>\n<ul>\n<li><code>storage</code> is useful to the curator but does not belong in the current public works summary index</li>\n<li>the Studio works page needs one lightweight bulk lookup, not one per-work JSON fetch per row</li>\n</ul>\n"
-}

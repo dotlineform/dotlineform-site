@@ -1,66 +1,33 @@
 ---
 doc_id: config-search-policy-json
-title: Catalogue Search Policy JSON
+title: Catalogue Search Policy
 added_date: 2026-03-31
-last_updated: "2026-05-11 14:10"
+last_updated: 2026-07-15
 parent_id: search-catalogue-infrastructure
 viewable: true
 ---
-# Search Policy JSON
+# Catalogue Search Policy
 
-Config file:
+`site/assets/data/search/policy.json` configures the public `/catalogue/search/` route.
 
-- `site/assets/data/search/policy.json`
+## It Owns
 
-## Scope
+- live/Enter search behaviour and minimum query length
+- debounce and result batch sizes
+- enabled search scopes
+- static index URL and back-route presentation
+- input labels, status messages, result labels, and instrumentation copy
 
-`policy.json` is the dedicated runtime policy file for the Catalogue-owned `/catalogue/search/` page.
+`site/assets/js/catalogue-search.js` loads the file at route startup. `site/assets/js/search/search-policy.js` validates values and supplies fallback defaults.
 
-Current responsibilities include:
+## Boundary
 
-- live-search and Enter-to-search behavior
-- minimum query length
-- debounce timing
-- initial and incremental result batch sizes
-- the supported Catalogue search scope and label
-- the Catalogue static search index path
-- the Catalogue back-link href for the search shell
-- dedicated search-shell messages, result labels, and performance summary copy
+The policy affects Catalogue route behaviour, not record construction or relevance. Build dependencies live in [Catalogue Search Build Config](/docs/?scope=studio&doc=config-search-build-json); ranking lives in `catalogue-search-runtime.js`.
 
-## What calls it
+Docs Viewer searches do not use this file. Their URLs and expected schemas come from Docs Viewer scope/route config.
 
-Current runtime path:
+## Weak Spot
 
-1. `site/assets/js/catalogue-search.js` imports `site/assets/js/search/search-policy.js`
-2. `site/assets/js/catalogue-search.js` loads `/assets/data/search/policy.json` directly
-3. `site/assets/js/catalogue-search.js` uses the Catalogue policy entry to resolve labels, back links, messages, and the static search index path
+The complete default policy is duplicated in `search-policy.js` so the public route can fail soft when JSON cannot load. Treat that as resilience with a synchronization cost: change both deliberately and keep the external JSON as the normal runtime authority.
 
-The policy helpers in `site/assets/js/search/search-policy.js` then expose:
-
-- runtime behavior values
-- per-scope UI policy
-- shared message strings
-
-## When it is read
-
-- once per `/catalogue/search/` page load
-- before the dedicated search page fetches the Catalogue search index
-
-The public `/catalogue/search/` page does not fetch `studio/app/frontend/config/studio-config.json` for normal operation.
-This keeps the public search shell independent from Studio bootstrap config size.
-
-## Current scope boundary
-
-Current live dedicated-route scope:
-
-- `catalogue`
-
-Current non-users of this file:
-
-- inline Studio docs search on `/docs/`
-- inline Library docs search on `/library/`
-- inline Analysis docs search on `/analysis/`
-
-Those docs-domain searches use the shared Docs Viewer runtime instead of the dedicated Catalogue search shell.
-
-For the wider search subsystem, see **[Search Overview](/docs/?scope=studio&doc=search-overview)**.
+Read the JSON for the exact current values rather than copying them into documentation.

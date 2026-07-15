@@ -2,76 +2,54 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: 2026-06-13
+last_updated: 2026-07-15
 parent_id: dev-home
 ---
 # Run Checks
 
-`$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py` runs optional repo check profiles and writes local logs under `var/admin/test-runs/`.
+## Role
 
-It is not a mandatory gate for every change. Use it when the change is broad enough that manual checks alone are not a good fit.
+`admin-app/commands/run_checks.py` coordinates optional repo check profiles and writes one local evidence snapshot under `var/admin/test-runs/`.
 
-## Usage
+It is not a mandatory gate. Use a focused command when one owner changed; use a profile when several checks form useful evidence for one blast radius.
 
-List profiles:
+## Commands
 
 ```bash
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --list
-```
-
-Run a profile:
-
-```bash
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick
-```
-
-Combine profiles:
-
-```bash
 $HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile quick --profile catalogue
 ```
 
-Run the broad profile:
+`--list` and the profile definitions in code are the exact current command inventory.
 
-```bash
-$HOME/miniconda3/bin/python3 admin-app/commands/run_checks.py --profile full
-```
+## Profile Intent
 
-## Profiles
+- `quick` — cheap repo/config/projection/readiness/Python confidence.
+- `catalogue` — catalogue Python contracts plus representative build preview.
+- `docs` — Docs Viewer/Data Sharing Python contracts plus Studio docs/search generation.
+- `admin-checks` — Admin Checks Python contracts.
+- `admin-smoke`, `analytics-smoke`, `docs-viewer-smoke`, `studio-smoke` — app-owned browser/runtime boundaries.
+- `full` — the broad configured aggregate; inspect `--list` because it does not imply every app smoke.
 
-- `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, grouped pytest checks for the quick-profile Python modules, the route ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Admin audit runner, and core lightweight test modules.
-- `catalogue`
-  Runs grouped pytest checks for catalogue-profile Python modules and a representative field-aware build preview.
-- `docs`
-  Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management service, Docs routes, Docs Broken Links behavior, and Docs Viewer contract fixtures from `docs-viewer/tests/python/`, plus Analytics-owned Data Sharing checks; then rebuilds generated Studio docs payloads and Studio docs search payloads.
-- `docs-viewer-smoke`
-  Validates `site/` and runs retained Docs Viewer route, standalone manage/review service, and public read-only smoke checks. Browser module-contract suites are not required smoke targets.
-- `studio-smoke`
-  Validates `site/` and runs retained Studio-owned browser smoke checks, including public-site theme behavior and catalogue route/module checks. Docs Viewer smoke checks live only in `docs-viewer-smoke`; Analytics smoke checks live only in `analytics-smoke`.
-- `admin-smoke`
-  Runs Admin home and Admin operational route smoke checks.
-- `analytics-smoke`
-  Runs Local Analytics route/API/module/modal/ready-state smoke checks for tag workflows and Analytics-owned Data Sharing prepare/review behavior.
-- `full`
-  Runs `quick`, `catalogue`, `docs`, `admin-smoke`, and `studio-smoke`. It does not run `docs-viewer-smoke` or `analytics-smoke`; run those profiles explicitly when those browser/runtime surfaces are in scope.
+Do not mirror every child command here; that list changes with code.
 
 ## Outputs
 
-Each run creates:
+Each run writes:
 
 - `var/admin/test-runs/<run-id>/summary.md`
 - `var/admin/test-runs/<run-id>/summary.json`
-- one `.log` file per command
+- one log per command
 
-The summary file is the path Codex should report in close-out.
-Smoke profiles that need public-site files validate and use the checked-in `site/` root.
+Closeout should report profile, pass/fail, and the Markdown summary path.
 
-## Related References
+## Extension Method
 
-- [Testing](/docs/?scope=studio&doc=testing)
-- [Local Admin App](/docs/?scope=studio&doc=local-admin-app)
-- [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing)
-- [Route Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-route-ready-state)
-- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)
-- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- add a command only when it proves a durable contract;
+- assign it to the app/profile that owns the behavior;
+- keep expensive/niche checks focused unless routine grouped confidence is valuable;
+- do not add UI choreography merely because a browser harness exists;
+- keep `full` composition intentional and visible in `--list`.
+
+[Testing](/docs/?scope=studio&doc=testing) owns evidence selection. [Browser Smoke Testing](/docs/?scope=studio&doc=smoke-testing) owns browser harness rules.
