@@ -100,7 +100,7 @@
       "search_output": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/search/notes/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "tmp",
+      "default_doc_id": "d-20260526-000000-04ce37",
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "allow_unresolved_parent_ids": false,

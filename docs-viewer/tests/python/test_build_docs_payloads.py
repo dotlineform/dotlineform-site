@@ -7,7 +7,14 @@ import json
 import tempfile
 from pathlib import Path
 
-from build_docs_test_support import prepare_repo, read_json, run_builder, write_source_docs
+from build_docs_test_support import (
+    CHILD_DOC_ID,
+    PARENT_DOC_ID,
+    prepare_repo,
+    read_json,
+    run_builder,
+    write_source_docs,
+)
 
 def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
@@ -17,28 +24,28 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
 
         index_tree = read_json(root / "docs-viewer/generated/docs/studio/index-tree.json")
         recently_added = read_json(root / "docs-viewer/generated/docs/studio/recently-added.json")
-        child = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
+        child = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
         references_index = read_json(root / "docs-viewer/generated/docs/studio/references/index.json")
         target_payload = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json")
-        by_doc = read_json(root / "docs-viewer/generated/docs/studio/references/by-doc/child.json")
+        by_doc = read_json(root / f"docs-viewer/generated/docs/studio/references/by-doc/{CHILD_DOC_ID}.json")
 
     docs = result["index_payload"]["docs"]
-    assert [doc["doc_id"] for doc in docs] == ["parent", "child"]
+    assert [doc["doc_id"] for doc in docs] == [PARENT_DOC_ID, CHILD_DOC_ID]
     assert docs[1]["summary"] == "Child summary"
     assert docs[1]["date"] == "2026-06-02"
     assert docs[1]["date_display"] == "June 2026"
     assert docs[1]["ui_status"] == "done"
-    assert docs[1]["content_url"] == "/docs-viewer/generated/docs/studio/by-id/child.json"
+    assert docs[1]["content_url"] == f"/docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json"
     assert isinstance(docs[1]["content_text_length"], int)
 
     assert index_tree["schema"] == "docs_index_tree_v1"
-    assert [doc["doc_id"] for doc in index_tree["docs"]] == ["parent"]
-    assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == ["child"]
+    assert [doc["doc_id"] for doc in index_tree["docs"]] == [PARENT_DOC_ID]
+    assert [doc["doc_id"] for doc in index_tree["docs"][0]["children"]] == [CHILD_DOC_ID]
     tree_child = index_tree["docs"][0]["children"][0]
     assert tree_child == {
-        "doc_id": "child",
+        "doc_id": CHILD_DOC_ID,
         "title": "Child",
-        "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
+        "content_url": f"/docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json",
         "ui_status": "done",
     }
     assert "parent_id" not in tree_child
@@ -51,12 +58,12 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
 
     assert recently_added["schema"] == "docs_recently_added_v1"
     assert recently_added["limit"] == 10
-    assert recently_added["docs"][0]["doc_id"] == "child"
+    assert recently_added["docs"][0]["doc_id"] == CHILD_DOC_ID
     assert recently_added["docs"][0]["added_date"] == "2026-06-01"
     assert recently_added["docs"][0]["parent_title"] == "Parent"
 
     content_html = child["content_html"]
-    assert 'href="/docs/?scope=studio&amp;doc=parent"' in content_html
+    assert f'href="/docs/?scope=studio&amp;doc={PARENT_DOC_ID}"' in content_html
     assert 'src="https://media.example.test/docs/studio/diagram.png"' in content_html
     assert (
         '<img src="https://media.example.test/docs/studio/measured-diagram.png" '
@@ -81,7 +88,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert references_index["targets"][0]["bucket_url"] == "/docs-viewer/generated/docs/studio/references/by-target/work/00638.json"
     assert target_payload["header"]["schema"] == "docs_semantic_references_by_target_v1"
     assert target_payload["target_kind"] == "work"
-    assert target_payload["references"][0]["source_doc_id"] == "child"
+    assert target_payload["references"][0]["source_doc_id"] == CHILD_DOC_ID
     assert by_doc["references"][0]["label"] == "three signs"
     assert result["diagnostics"]["docs_emitted"] == 2
     assert result["diagnostics"]["index_tree_changed"] == 1
@@ -92,17 +99,17 @@ def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -
         root = Path(temp_path)
         prepare_repo(root)
         run_builder(root)
-        parent_before = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
+        parent_before = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{PARENT_DOC_ID}.json")
         write_source_docs(root, child_body_suffix="Updated targeted body.")
-        result = run_builder(root, only_doc_ids=["child"])
-        parent_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
-        child_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
+        result = run_builder(root, only_doc_ids=[CHILD_DOC_ID])
+        parent_after = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{PARENT_DOC_ID}.json")
+        child_after = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
 
     assert parent_after == parent_before
     assert "Updated targeted body." in child_after["content_html"]
     assert result["diagnostics"]["build_mode"] == "targeted"
-    assert result["diagnostics"]["only_doc_ids"] == ["child"]
-    assert "parent" not in result["write_plan"]["changed_item_ids"]
+    assert result["diagnostics"]["only_doc_ids"] == [CHILD_DOC_ID]
+    assert PARENT_DOC_ID not in result["write_plan"]["changed_item_ids"]
 
 def test_python_docs_builder_registry_backed_references_do_not_validate_target_existence() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
@@ -110,7 +117,7 @@ def test_python_docs_builder_registry_backed_references_do_not_validate_target_e
         prepare_repo(root)
         write_source_docs(root, child_body_suffix="Missing target [[ref:work:99999|still links]].")
         result = run_builder(root)
-        child = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
+        child = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
         missing_target = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/99999.json")
 
     assert result["diagnostics"]["warning_count"] == 0

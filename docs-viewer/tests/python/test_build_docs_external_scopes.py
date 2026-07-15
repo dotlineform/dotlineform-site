@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 from build_docs_test_support import (
+    PRIVATE_DOC_ID,
     read_json,
     run_cli,
     write_catalogue_records,
@@ -28,9 +29,9 @@ def test_python_docs_builder_writes_external_local_scope_outputs() -> None:
         write_catalogue_records(root)
         write_external_scope_config(root, external_root)
         write_text(
-            external_root / "source/private/private.md",
-            """---
-doc_id: private
+            external_root / f"source/private/{PRIVATE_DOC_ID}.md",
+            f"""---
+doc_id: {PRIVATE_DOC_ID}
 title: Private
 added_date: 2026-06-01
 last_updated: 2026-06-01
@@ -43,7 +44,7 @@ External body.
         try:
             exit_code, stdout, stderr = run_cli(root, ["--scope", "private", "--write"])
             index_tree = read_json(external_root / "generated/docs/private/index-tree.json")
-            payload = read_json(external_root / "generated/docs/private/by-id/private.json")
+            payload = read_json(external_root / f"generated/docs/private/by-id/{PRIVATE_DOC_ID}.json")
         finally:
             if old_projects_base is None:
                 os.environ.pop("DOTLINEFORM_PROJECTS_BASE_DIR", None)
@@ -53,5 +54,5 @@ External body.
     assert exit_code == 0
     assert stderr == ""
     assert "scope=private" in stdout
-    assert index_tree["docs"][0]["content_url"] == "/docs/generated/payload?scope=private&doc_id=private"
-    assert payload["doc_id"] == "private"
+    assert index_tree["docs"][0]["content_url"] == f"/docs/generated/payload?scope=private&doc_id={PRIVATE_DOC_ID}"
+    assert payload["doc_id"] == PRIVATE_DOC_ID

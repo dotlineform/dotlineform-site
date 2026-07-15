@@ -31,6 +31,13 @@ import build_docs  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+PARENT_DOC_ID = "d-20260601-000000-000001"
+CHILD_DOC_ID = "d-20260601-000000-000002"
+HIDDEN_DOC_ID = "d-20260601-000000-000003"
+HIDDEN_CHILD_DOC_ID = "d-20260601-000000-000004"
+MANAGE_ROOT_DOC_ID = "d-20260601-000000-000005"
+MANAGE_CHILD_DOC_ID = "d-20260601-000000-000006"
+PRIVATE_DOC_ID = "d-20260601-000000-000007"
 
 
 def write_semantic_reference_registry(root: Path) -> None:
@@ -95,7 +102,7 @@ def write_scope_config(root: Path) -> None:
                 "search_output": "docs-viewer/generated/search/studio/index.json",
                 "viewer_base_url": "/docs/",
                 "include_scope_param": True,
-                "default_doc_id": "parent",
+                "default_doc_id": PARENT_DOC_ID,
                 "non_loadable_doc_ids": [],
                 "manage_only_tree_root_ids": [],
                 "allow_unresolved_parent_ids": False,
@@ -127,7 +134,7 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
                 "search_output": f"{EXTERNAL_DATA_ROOT_MARKER}/generated/search/private/index.json",
                 "viewer_base_url": "/docs/",
                 "include_scope_param": True,
-                "default_doc_id": "private",
+                "default_doc_id": PRIVATE_DOC_ID,
                 "non_loadable_doc_ids": [],
                 "manage_only_tree_root_ids": [],
                 "allow_unresolved_parent_ids": False,
@@ -152,9 +159,9 @@ def write_public_scope_config(root: Path) -> None:
                 "publish_search_output": "site/assets/data/search/library/index.json",
                 "viewer_base_url": "/library/",
                 "include_scope_param": False,
-                "default_doc_id": "parent",
+                "default_doc_id": PARENT_DOC_ID,
                 "non_loadable_doc_ids": [],
-                "manage_only_tree_root_ids": ["manage-root"],
+                "manage_only_tree_root_ids": [MANAGE_ROOT_DOC_ID],
                 "allow_unresolved_parent_ids": False,
             }
         ],
@@ -180,9 +187,9 @@ def write_catalogue_records(root: Path) -> None:
 
 def write_source_docs(root: Path, *, child_body_suffix: str = "") -> None:
     write_text(
-        root / "docs-viewer/source/studio/parent.md",
-        """---
-doc_id: parent
+        root / f"docs-viewer/source/studio/{PARENT_DOC_ID}.md",
+        f"""---
+doc_id: {PARENT_DOC_ID}
 title: Parent
 added_date: 2026-06-01
 last_updated: 2026-06-01
@@ -194,9 +201,9 @@ Parent body.
 """,
     )
     write_text(
-        root / "docs-viewer/source/studio/child.md",
+        root / f"docs-viewer/source/studio/{CHILD_DOC_ID}.md",
         f"""---
-doc_id: child
+doc_id: {CHILD_DOC_ID}
 title: Child
 date: 2026-06-02
 date_display: June 2026
@@ -204,13 +211,13 @@ added_date: 2026-06-01
 last_updated: 2026-06-01
 summary: Child summary
 ui_status: done
-parent_id: parent
+parent_id: {PARENT_DOC_ID}
 viewer_report: semantic_references
 viewer_report_subscope: tags
 ---
 # Child
 
-Intro with [parent](/docs/?scope=studio&doc=parent), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
+Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media:docs/studio/diagram.png]]), and [[ref:work:638|three signs]].
 
 ![Measured diagram]([[media:docs/studio/measured-diagram.png width=800 height=600]])
 
@@ -237,17 +244,17 @@ Intro with [parent](/docs/?scope=studio&doc=parent), ![Diagram]([[media:docs/stu
 
 def write_public_source_docs(root: Path) -> None:
     rows = [
-        ("parent", "Parent", "2026-06-01", "2026-06-01", "", True),
-        ("child", "Child", "2026-06-03", "2026-06-03", "parent", True),
-        ("hidden", "Hidden", "2026-06-04", "2026-06-04", "parent", False),
-        ("hidden-child", "Hidden Child", "2026-06-05", "2026-06-05", "hidden", True),
-        ("manage-root", "Manage Root", "2026-06-05", "2026-06-05", "", True),
-        ("manage-child", "Manage Child", "2026-06-06", "2026-06-06", "manage-root", True),
+        (PARENT_DOC_ID, "Parent", "2026-06-01", "2026-06-01", "", True),
+        (CHILD_DOC_ID, "Child", "2026-06-03", "2026-06-03", PARENT_DOC_ID, True),
+        (HIDDEN_DOC_ID, "Hidden", "2026-06-04", "2026-06-04", PARENT_DOC_ID, False),
+        (HIDDEN_CHILD_DOC_ID, "Hidden Child", "2026-06-05", "2026-06-05", HIDDEN_DOC_ID, True),
+        (MANAGE_ROOT_DOC_ID, "Manage Root", "2026-06-05", "2026-06-05", "", True),
+        (MANAGE_CHILD_DOC_ID, "Manage Child", "2026-06-06", "2026-06-06", MANAGE_ROOT_DOC_ID, True),
     ]
     for doc_id, title, added_date, last_updated, parent_id, viewable in rows:
         viewable_line = "" if viewable else "viewable: false\n"
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
-        date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == "child" else ""
+        date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == CHILD_DOC_ID else ""
         write_text(
             root / f"docs-viewer/source/library/{doc_id}.md",
             f"""---

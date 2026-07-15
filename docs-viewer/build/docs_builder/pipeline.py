@@ -62,6 +62,7 @@ class DocsDataBuilder(
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
         docs = self.load_docs()
+        self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         if self.targeted_build:

@@ -169,3 +169,123 @@ def test_apply_plan_rewrites_source_hierarchy_links_and_config(tmp_path: Path) -
         "viewer_link_rewrites_remaining": 0,
         "config_files": 2,
     }
+
+
+def test_external_scope_plan_apply_and_verify_use_configured_marker(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo_root = tmp_path / "repo"
+    projects_root = tmp_path / "projects"
+    external_source = projects_root / "docs-viewer/source/notes"
+    monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", projects_root.as_posix())
+
+    parent_source = _source("tmp", "Temporary Notes", "")
+    child_source = _source(
+        "child",
+        "Child",
+        "tmp",
+        (
+            "[Parent](/docs/?scope=notes&doc=tmp)\n"
+            "[Studio](/docs/?scope=studio&doc=legacy-studio)\n"
+        ),
+    )
+    _write(external_source / "tmp.md", parent_source)
+    _write(external_source / "child.md", child_source)
+    _write(
+        repo_root / migration.SOURCE_CONFIG_PATH,
+        json.dumps(
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "notes",
+                        "scope_type": "local_external",
+                        "source": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes",
+                        "default_doc_id": "tmp",
+                        "non_loadable_doc_ids": [],
+                        "manage_only_tree_root_ids": [],
+                    }
+                ],
+            }
+        )
+        + "\n",
+    )
+    _write(
+        repo_root / migration.SCOPE_MANIFEST_PATH,
+        json.dumps(
+            {
+                "schema_version": "docs_scope_manifest_v1",
+                "scopes": [
+                    {
+                        "scope_id": "notes",
+                        "source_config": {"default_doc_id": "tmp"},
+                        "source_file": (external_source / "tmp.md").as_posix(),
+                    }
+                ],
+            }
+        )
+        + "\n",
+    )
+
+    studio_id = "d-20260714-120000-cccccc"
+    plan = migration.build_plan(
+        repo_root,
+        include_external=True,
+        scope_ids={"notes"},
+        additional_link_rows=[
+            {
+                "namespace": "studio",
+                "scope": "studio",
+                "sub_scope": "",
+                "old_doc_id": "legacy-studio",
+                "new_doc_id": studio_id,
+            }
+        ],
+    )
+    rows = plan["documents"]
+    by_old_id = {row["old_doc_id"]: row for row in rows}
+    parent_id = by_old_id["tmp"]["new_doc_id"]
+    child_id = by_old_id["child"]["new_doc_id"]
+
+    assert plan["summary"]["scopes"] == ["notes"]
+    assert plan["summary"]["renames"] == 2
+    assert plan["summary"]["viewer_link_rewrites"] == 2
+    assert any(
+        row["namespace"] == "studio" and row["new_doc_id"] == studio_id
+        for row in plan["viewer_link_mappings"]
+    )
+    assert by_old_id["tmp"]["source_path"] == (
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/tmp.md"
+    )
+    assert by_old_id["tmp"]["normalized_added_date"] == "2026-07-15 00:00:00"
+    assert by_old_id["tmp"]["timestamp_evidence"] == "midnight-default"
+    assert by_old_id["child"]["new_parent_id"] == parent_id
+    assert migration.is_immutable_doc_id(parent_id)
+    assert migration.is_immutable_doc_id(child_id)
+
+    result = migration.apply_plan(repo_root, plan)
+
+    assert result == {"documents": 2, "renamed": 2, "source_writes": 2, "config_writes": 2}
+    assert not (external_source / "tmp.md").exists()
+    assert not (external_source / "child.md").exists()
+    child_text = (external_source / f"{child_id}.md").read_text(encoding="utf-8")
+    assert f"parent_id: {parent_id}" in child_text
+    assert f"scope=notes&doc={parent_id}" in child_text
+    assert f"scope=studio&doc={studio_id}" in child_text
+    updated_config = json.loads(
+        (repo_root / migration.SOURCE_CONFIG_PATH).read_text(encoding="utf-8")
+    )
+    assert updated_config["scopes"][0]["default_doc_id"] == parent_id
+    updated_manifest = json.loads(
+        (repo_root / migration.SCOPE_MANIFEST_PATH).read_text(encoding="utf-8")
+    )
+    assert updated_manifest["scopes"][0]["source_file"] == (
+        external_source / f"{parent_id}.md"
+    ).as_posix()
+    assert migration.verify_applied_plan(repo_root, plan) == {
+        "documents": 2,
+        "source_paths": 2,
+        "viewer_link_rewrites_remaining": 0,
+        "config_files": 2,
+    }

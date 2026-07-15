@@ -108,7 +108,7 @@
       "meta": "external local",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "tmp",
+      "default_doc_id": "d-20260526-000000-04ce37",
       "media_path_prefix": "docs/notes",
       "index_tree_url": "/docs/generated/index-tree?scope=notes",
       "recently_added_url": "/docs/generated/recently-added?scope=notes",

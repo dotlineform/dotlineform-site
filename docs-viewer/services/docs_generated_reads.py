@@ -9,10 +9,10 @@ from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import urlparse
 
+from docs_document_identity import is_immutable_doc_id
 from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, resolve_scope_path, scope_uses_external_data
 
 
-SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_KIND_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_TARGET_SLUG_PATTERN = re.compile(r"^[A-Za-z0-9_.%+-]+$")
 
@@ -45,8 +45,8 @@ def generated_recently_added_path(repo_root: Path, scope: str) -> Path:
 
 
 def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
-    if not SAFE_DOC_ID_PATTERN.match(doc_id):
-        raise ValueError("doc_id contains unsupported characters")
+    if not is_immutable_doc_id(doc_id):
+        raise ValueError("doc_id must use the immutable document ID format")
     return generated_docs_output_root(repo_root, scope) / "by-id" / f"{doc_id}.json"
 
 
@@ -120,8 +120,8 @@ def read_generated_reference_target(repo_root: Path, scope: str, target_kind: st
 
 
 def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
-    if not SAFE_DOC_ID_PATTERN.match(doc_id):
-        raise ValueError("doc_id contains unsupported characters")
+    if not is_immutable_doc_id(doc_id):
+        raise ValueError("doc_id must use the immutable document ID format")
 
     index_payload = read_generated_docs_index_tree(repo_root, scope)
     docs = index_payload.get("docs")

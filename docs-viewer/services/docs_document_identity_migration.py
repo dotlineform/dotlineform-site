@@ -46,6 +46,7 @@ IDENTITY_CONFIG_FIELDS = {
     "non_loadable_doc_ids",
     "manage_only_tree_root_ids",
 }
+PROJECTS_BASE_DIR_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR"
 
 
 def _clean_scalar(value: str) -> str:
@@ -106,39 +107,91 @@ def _json_text(payload: Any) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
-def _namespace_specs(repo_root: Path) -> list[dict[str, Any]]:
+def _resolve_source_locator(repo_root: Path, locator: str) -> Path:
+    value = str(locator or "").strip()
+    if value.startswith(PROJECTS_BASE_DIR_MARKER):
+        projects_base = str(os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR") or "").strip()
+        if not projects_base:
+            raise ValueError("DOTLINEFORM_PROJECTS_BASE_DIR is required for external document migration")
+        suffix = value.removeprefix(PROJECTS_BASE_DIR_MARKER).lstrip("/")
+        return (Path(projects_base).expanduser() / suffix).resolve()
+    path = Path(value)
+    if path.is_absolute():
+        raise ValueError(f"document migration source locator must use a configured marker: {value}")
+    return (repo_root / path).resolve()
+
+
+def _source_locator_for_path(spec: dict[str, Any], path: Path) -> str:
+    relative_path = path.resolve().relative_to(Path(spec["root_path"]).resolve())
+    return (Path(spec["root"]) / relative_path).as_posix()
+
+
+def _namespace_specs(
+    repo_root: Path,
+    *,
+    include_external: bool = False,
+    scope_ids: set[str] | None = None,
+) -> list[dict[str, Any]]:
     config = json.loads((repo_root / SOURCE_CONFIG_PATH).read_text(encoding="utf-8"))
+    selected_scopes = {str(scope_id or "").strip() for scope_id in (scope_ids or set()) if str(scope_id or "").strip()}
+    configured_scopes = {
+        str(scope.get("scope_id") or "").strip()
+        for scope in config.get("scopes") or []
+        if isinstance(scope, dict)
+    }
+    unknown_scopes = sorted(selected_scopes - configured_scopes)
+    if unknown_scopes:
+        raise ValueError(f"unknown document migration scope: {', '.join(unknown_scopes)}")
     specs: list[dict[str, Any]] = []
     for scope in config.get("scopes") or []:
-        if not isinstance(scope, dict) or scope.get("scope_type") == "local_external":
+        if not isinstance(scope, dict):
             continue
         scope_id = str(scope.get("scope_id") or "").strip()
+        if selected_scopes and scope_id not in selected_scopes:
+            continue
+        scope_type = str(scope.get("scope_type") or "").strip()
+        if scope_type == "local_external" and not include_external:
+            if scope_id in selected_scopes:
+                raise ValueError(
+                    f"document migration scope {scope_id!r} is external-local; pass --include-external"
+                )
+            continue
         source = str(scope.get("source") or "").strip()
-        if not scope_id or not source or source.startswith("$"):
+        if not scope_id or not source:
+            continue
+        if source.startswith("$") and scope_type != "local_external":
             continue
         sub_sources: set[Path] = set()
         for sub_scope in scope.get("sub_scopes") or []:
             if not isinstance(sub_scope, dict):
                 continue
             sub_id = str(sub_scope.get("sub_scope") or "").strip()
-            sub_source = Path(str(sub_scope.get("source") or "").strip())
-            if not sub_id or not str(sub_source) or str(sub_source).startswith("$"):
+            sub_source = str(sub_scope.get("source") or "").strip()
+            if not sub_id or not sub_source:
                 continue
-            sub_sources.add(sub_source)
+            if sub_source.startswith("$") and scope_type != "local_external":
+                continue
+            sub_source_path = _resolve_source_locator(repo_root, sub_source)
+            sub_sources.add(sub_source_path)
             specs.append(
                 {
                     "namespace": f"{scope_id}/{sub_id}",
                     "scope": scope_id,
                     "sub_scope": sub_id,
-                    "root": sub_source.as_posix(),
+                    "scope_type": scope_type,
+                    "root": Path(sub_source).as_posix(),
+                    "root_path": sub_source_path,
                 }
             )
+        source_path = _resolve_source_locator(repo_root, source)
         specs.append(
             {
                 "namespace": scope_id,
                 "scope": scope_id,
                 "sub_scope": "",
+                "scope_type": scope_type,
                 "root": Path(source).as_posix(),
+                "root_path": source_path,
                 "excluded_roots": [path.as_posix() for path in sorted(sub_sources)],
             }
         )
@@ -146,13 +199,10 @@ def _namespace_specs(repo_root: Path) -> list[dict[str, Any]]:
 
 
 def _paths_for_spec(repo_root: Path, spec: dict[str, Any]) -> list[Path]:
-    root = (repo_root / spec["root"]).resolve()
-    root.relative_to(repo_root.resolve())
-    if spec.get("sub_scope"):
-        paths = sorted(root.glob("*.md"))
-    else:
-        paths = sorted(root.glob("*.md"))
-    return paths
+    root = Path(spec.get("root_path") or _resolve_source_locator(repo_root, spec["root"])).resolve()
+    if spec.get("scope_type") != "local_external":
+        root.relative_to(repo_root.resolve())
+    return sorted(root.glob("*.md"))
 
 
 def _git_first_added(repo_root: Path, relative_path: str) -> str:
@@ -207,6 +257,29 @@ def _mapping_indexes(rows: list[dict[str, Any]]) -> tuple[dict[str, dict[str, st
     return by_namespace, sub_namespaces
 
 
+def _link_mapping_rows(rows: list[dict[str, Any]]) -> list[dict[str, str]]:
+    mappings: dict[tuple[str, str], dict[str, str]] = {}
+    for row in rows:
+        namespace = str(row.get("namespace") or "").strip()
+        old_doc_id = str(row.get("old_doc_id") or "").strip()
+        new_doc_id = str(row.get("new_doc_id") or "").strip()
+        if not namespace or not old_doc_id or not new_doc_id:
+            continue
+        mappings[(namespace, old_doc_id)] = {
+            "namespace": namespace,
+            "scope": str(row.get("scope") or namespace.split("/", 1)[0]).strip(),
+            "sub_scope": str(row.get("sub_scope") or "").strip(),
+            "old_doc_id": old_doc_id,
+            "new_doc_id": new_doc_id,
+        }
+    return [mappings[key] for key in sorted(mappings)]
+
+
+def _plan_link_rows(plan: dict[str, Any], rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    mappings = plan.get("viewer_link_mappings")
+    return mappings if isinstance(mappings, list) and mappings else rows
+
+
 def _query_value(url: str, key: str) -> str:
     match = re.search(rf"(?:[?&]){re.escape(key)}=([^&#]*)", url)
     return match.group(1) if match else ""
@@ -255,11 +328,24 @@ def rewrite_viewer_links(source_text: str, rows: list[dict[str, Any]]) -> tuple[
     return URL_PATTERN.sub(replace_url, source_text), changed
 
 
-def build_plan(repo_root: Path) -> dict[str, Any]:
+def build_plan(
+    repo_root: Path,
+    *,
+    include_external: bool = False,
+    scope_ids: set[str] | None = None,
+    additional_link_rows: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
-    specs = _namespace_specs(repo_root)
+    specs = _namespace_specs(
+        repo_root,
+        include_external=include_external,
+        scope_ids=scope_ids,
+    )
+    if not specs:
+        raise ValueError("document migration selection has no configured source namespaces")
     unavailable: set[str] = set()
-    for spec in specs:
+    identity_specs = _namespace_specs(repo_root, include_external=include_external)
+    for spec in identity_specs:
         for path in _paths_for_spec(repo_root, spec):
             fields = _front_matter_fields(path.read_text(encoding="utf-8"), path)
             doc_id = fields.get("doc_id", "")
@@ -268,18 +354,20 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
     seen_by_namespace: dict[str, set[str]] = {}
     for spec in specs:
         for path in _paths_for_spec(repo_root, spec):
-            relative_path = path.relative_to(repo_root).as_posix()
+            source_path = _source_locator_for_path(spec, path)
             source_text = path.read_text(encoding="utf-8")
             fields = _front_matter_fields(source_text, path)
             old_doc_id = fields.get("doc_id", "")
             if not old_doc_id:
-                raise ValueError(f"missing doc_id: {relative_path}")
+                raise ValueError(f"missing doc_id: {source_path}")
             if old_doc_id in seen_by_namespace.setdefault(spec["namespace"], set()):
                 raise ValueError(f"duplicate {spec['namespace']} doc_id: {old_doc_id}")
             seen_by_namespace[spec["namespace"]].add(old_doc_id)
             if path.stem != old_doc_id:
-                raise ValueError(f"source filename does not match doc_id: {relative_path}")
-            git_added = _git_first_added(repo_root, relative_path)
+                raise ValueError(f"source filename does not match doc_id: {source_path}")
+            git_added = ""
+            if spec.get("scope_type") != "local_external":
+                git_added = _git_first_added(repo_root, source_path)
             normalized_date, evidence_method = normalize_added_date(
                 fields.get("added_date", ""),
                 git_added,
@@ -287,7 +375,7 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
             if is_immutable_doc_id(old_doc_id):
                 if not doc_id_matches_added_date(old_doc_id, normalized_date):
                     raise ValueError(
-                        f"existing immutable ID timestamp does not match added_date: {relative_path}"
+                        f"existing immutable ID timestamp does not match added_date: {source_path}"
                     )
                 new_doc_id = old_doc_id
             else:
@@ -298,8 +386,9 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
                     "namespace": spec["namespace"],
                     "scope": spec["scope"],
                     "sub_scope": spec["sub_scope"],
+                    "scope_type": spec.get("scope_type") or "",
                     "title": fields.get("title", ""),
-                    "source_path": relative_path,
+                    "source_path": source_path,
                     "source_sha256": _sha256_text(source_text),
                     "old_doc_id": old_doc_id,
                     "new_doc_id": new_doc_id,
@@ -326,10 +415,11 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
                 )
             row["new_parent_id"] = parent_map[old_parent_id]
 
+    link_rows = _link_mapping_rows([*(additional_link_rows or []), *rows])
     link_changes = 0
     for row in rows:
-        source_text = (repo_root / row["source_path"]).read_text(encoding="utf-8")
-        _rewritten, count = rewrite_viewer_links(source_text, rows)
+        source_text = _resolve_source_locator(repo_root, row["source_path"]).read_text(encoding="utf-8")
+        _rewritten, count = rewrite_viewer_links(source_text, link_rows)
         row["viewer_link_rewrites"] = count
         link_changes += count
 
@@ -337,7 +427,7 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
     for row in rows:
         evidence = row["timestamp_evidence"]
         evidence_counts[evidence] = evidence_counts.get(evidence, 0) + 1
-    return {
+    plan = {
         "schema_version": PLAN_SCHEMA,
         "created_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
         "repository": repo_root.resolve().as_posix(),
@@ -349,9 +439,13 @@ def build_plan(repo_root: Path) -> dict[str, Any]:
             "preserved_immutable_ids": sum(row["old_doc_id"] == row["new_doc_id"] for row in rows),
             "viewer_link_rewrites": link_changes,
             "timestamp_evidence": evidence_counts,
+            "scopes": sorted({row["scope"] for row in rows}),
         },
         "documents": rows,
     }
+    if additional_link_rows:
+        plan["viewer_link_mappings"] = link_rows
+    return plan
 
 
 def _rewrite_identity_config(value: Any, identity_map: dict[str, str]) -> Any:
@@ -400,10 +494,13 @@ def _rewritten_config_texts(repo_root: Path, rows: list[dict[str, Any]]) -> dict
 
     manifest_path = repo_root / SCOPE_MANIFEST_PATH
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    source_path_map = {
-        row["source_path"]: str(Path(row["source_path"]).with_name(row["new_filename"]))
-        for row in rows
-    }
+    source_path_map: dict[str, str] = {}
+    for row in rows:
+        old_locator = str(row["source_path"])
+        new_locator = str(Path(old_locator).with_name(row["new_filename"]))
+        source_path_map[old_locator] = new_locator
+        old_resolved = _resolve_source_locator(repo_root, old_locator)
+        source_path_map[old_resolved.as_posix()] = old_resolved.with_name(row["new_filename"]).as_posix()
     for scope in manifest.get("scopes") or []:
         if not isinstance(scope, dict):
             continue
@@ -417,15 +514,30 @@ def _rewritten_config_texts(repo_root: Path, rows: list[dict[str, Any]]) -> dict
     return outputs
 
 
+def _plan_namespace_specs(repo_root: Path, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    scope_ids = {str(row.get("scope") or "").strip() for row in rows}
+    include_external = any(
+        row.get("scope_type") == "local_external"
+        or str(row.get("source_path") or "").startswith(PROJECTS_BASE_DIR_MARKER)
+        for row in rows
+    )
+    return _namespace_specs(
+        repo_root,
+        include_external=include_external,
+        scope_ids=scope_ids,
+    )
+
+
 def apply_plan(repo_root: Path, plan: dict[str, Any]) -> dict[str, int]:
     if plan.get("schema_version") != PLAN_SCHEMA:
         raise ValueError(f"unsupported migration plan schema: {plan.get('schema_version')!r}")
     rows = plan.get("documents")
     if not isinstance(rows, list) or not rows:
         raise ValueError("migration plan has no document rows")
+    link_rows = _plan_link_rows(plan, rows)
     current_paths = {
-        path.relative_to(repo_root).as_posix()
-        for spec in _namespace_specs(repo_root)
+        _source_locator_for_path(spec, path)
+        for spec in _plan_namespace_specs(repo_root, rows)
         for path in _paths_for_spec(repo_root, spec)
     }
     planned_paths = {str(row.get("source_path") or "") for row in rows if isinstance(row, dict)}
@@ -435,15 +547,16 @@ def apply_plan(repo_root: Path, plan: dict[str, Any]) -> dict[str, int]:
     rewritten_sources: dict[Path, str] = {}
     old_paths_to_delete: list[Path] = []
     for row in rows:
-        source_path = (repo_root / row["source_path"]).resolve()
-        source_path.relative_to(repo_root.resolve())
+        source_path = _resolve_source_locator(repo_root, row["source_path"])
         source_text = source_path.read_text(encoding="utf-8")
         if _sha256_text(source_text) != row["source_sha256"]:
             raise ValueError(f"source changed after plan creation: {row['source_path']}")
         target_path = source_path.with_name(row["new_filename"])
-        target_path.relative_to(repo_root.resolve())
+        if row.get("scope_type") != "local_external":
+            target_path.relative_to(repo_root.resolve())
         if target_path != source_path and target_path.exists():
-            raise ValueError(f"migration destination already exists: {target_path.relative_to(repo_root)}")
+            target_locator = str(Path(row["source_path"]).with_name(row["new_filename"]))
+            raise ValueError(f"migration destination already exists: {target_locator}")
         rewritten = _replace_front_matter_field(source_text, "doc_id", row["new_doc_id"])
         rewritten = _replace_front_matter_field(
             rewritten,
@@ -452,7 +565,7 @@ def apply_plan(repo_root: Path, plan: dict[str, Any]) -> dict[str, int]:
         )
         if row["old_parent_id"]:
             rewritten = _replace_front_matter_field(rewritten, "parent_id", row["new_parent_id"])
-        rewritten, _link_count = rewrite_viewer_links(rewritten, rows)
+        rewritten, _link_count = rewrite_viewer_links(rewritten, link_rows)
         rewritten_sources[target_path] = rewritten
         if target_path != source_path:
             old_paths_to_delete.append(source_path)
@@ -478,29 +591,31 @@ def verify_applied_plan(repo_root: Path, plan: dict[str, Any]) -> dict[str, int]
     rows = plan.get("documents")
     if not isinstance(rows, list) or not rows:
         raise ValueError("migration plan has no document rows")
+    link_rows = _plan_link_rows(plan, rows)
     expected_paths = {
         str(Path(row["source_path"]).with_name(row["new_filename"]))
         for row in rows
     }
     current_paths = {
-        path.relative_to(repo_root).as_posix()
-        for spec in _namespace_specs(repo_root)
+        _source_locator_for_path(spec, path)
+        for spec in _plan_namespace_specs(repo_root, rows)
         for path in _paths_for_spec(repo_root, spec)
     }
     if current_paths != expected_paths:
         raise ValueError("applied repository-owned source set does not match the migration plan")
     link_rewrites_remaining = 0
     for row in rows:
-        target_path = repo_root / Path(row["source_path"]).with_name(row["new_filename"])
+        target_locator = str(Path(row["source_path"]).with_name(row["new_filename"]))
+        target_path = _resolve_source_locator(repo_root, target_locator)
         source_text = target_path.read_text(encoding="utf-8")
         fields = _front_matter_fields(source_text, target_path)
         if fields.get("doc_id") != row["new_doc_id"]:
-            raise ValueError(f"applied doc_id does not match plan: {target_path.relative_to(repo_root)}")
+            raise ValueError(f"applied doc_id does not match plan: {target_locator}")
         if fields.get("added_date") != row["normalized_added_date"]:
-            raise ValueError(f"applied added_date does not match plan: {target_path.relative_to(repo_root)}")
+            raise ValueError(f"applied added_date does not match plan: {target_locator}")
         if fields.get("parent_id", "") != row["new_parent_id"]:
-            raise ValueError(f"applied parent_id does not match plan: {target_path.relative_to(repo_root)}")
-        _rewritten, count = rewrite_viewer_links(source_text, rows)
+            raise ValueError(f"applied parent_id does not match plan: {target_locator}")
+        _rewritten, count = rewrite_viewer_links(source_text, link_rows)
         link_rewrites_remaining += count
     if link_rewrites_remaining:
         raise ValueError(f"{link_rewrites_remaining} old viewer links remain after migration")
@@ -521,6 +636,24 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("command", choices=("plan", "apply", "verify"))
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     parser.add_argument("--plan", type=Path, default=DEFAULT_PLAN_PATH)
+    parser.add_argument(
+        "--scope",
+        action="append",
+        default=[],
+        help="Limit a new plan to one configured scope; repeat to select more than one.",
+    )
+    parser.add_argument(
+        "--include-external",
+        action="store_true",
+        help="Allow selected external-local scopes in a new migration plan.",
+    )
+    parser.add_argument(
+        "--link-plan",
+        action="append",
+        type=Path,
+        default=[],
+        help="Use document mappings from another plan when rewriting cross-scope links.",
+    )
     return parser
 
 
@@ -536,7 +669,20 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = args.repo_root.resolve()
     plan_path = args.plan if args.plan.is_absolute() else repo_root / args.plan
     if args.command == "plan":
-        plan = build_plan(repo_root)
+        additional_link_rows: list[dict[str, Any]] = []
+        for link_plan_arg in args.link_plan:
+            link_plan_path = link_plan_arg if link_plan_arg.is_absolute() else repo_root / link_plan_arg
+            link_plan = json.loads(link_plan_path.read_text(encoding="utf-8"))
+            link_rows = link_plan.get("viewer_link_mappings") or link_plan.get("documents")
+            if not isinstance(link_rows, list):
+                raise ValueError(f"link plan has no document mappings: {link_plan_path}")
+            additional_link_rows.extend(link_rows)
+        plan = build_plan(
+            repo_root,
+            include_external=args.include_external,
+            scope_ids=set(args.scope),
+            additional_link_rows=additional_link_rows,
+        )
         _write_text_atomic(plan_path, _json_text(plan))
         print(_json_text({"plan": _plan_display_path(repo_root, plan_path), **plan["summary"]}), end="")
         return 0

@@ -10,6 +10,8 @@ import build_docs
 from docs_scope_config import load_docs_scope_configs
 
 from build_docs_test_support import (
+    CHILD_DOC_ID,
+    PARENT_DOC_ID,
     diagnostics_from_stdout,
     prepare_repo,
     read_json,
@@ -20,6 +22,11 @@ from build_docs_test_support import (
     write_site_tools_config,
     write_text,
 )
+
+
+TAGS_REPORT_DOC_ID = "d-20260620-000000-000011"
+DETAIL_DOC_ID = "d-20260620-000000-000012"
+RELATED_DOC_ID = "d-20260622-000000-000013"
 
 def test_python_docs_builder_excludes_configured_sub_scope_sources() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
@@ -36,9 +43,9 @@ def test_python_docs_builder_excludes_configured_sub_scope_sources() -> None:
         ]
         write_json(config_path, payload)
         write_text(
-            root / "docs-viewer/source/studio/tags/detail.md",
-            """---
-doc_id: detail
+            root / f"docs-viewer/source/studio/tags/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
 title: Detail
 ---
 # Detail
@@ -51,9 +58,9 @@ Sub-scope detail body.
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
         browser_config = build_docs.browser_scope_config_payload(root, [config])
 
-        assert not (root / "docs-viewer/generated/docs/studio/by-id/detail.json").exists()
+        assert not (root / f"docs-viewer/generated/docs/studio/by-id/{DETAIL_DOC_ID}.json").exists()
 
-    assert [doc["doc_id"] for doc in result["index_payload"]["docs"]] == ["parent", "child"]
+    assert [doc["doc_id"] for doc in result["index_payload"]["docs"]] == [PARENT_DOC_ID, CHILD_DOC_ID]
     assert result["diagnostics"]["source_files_scanned"] == 2
     assert browser_config["scopes"][0]["sub_scopes"] == [
         {
@@ -80,9 +87,9 @@ def test_python_docs_builder_writes_sub_scope_payloads_and_minimal_manifest() ->
         ]
         write_json(config_path, payload)
         write_text(
-            root / "docs-viewer/source/studio/tags-report.md",
-            """---
-doc_id: tags-report
+            root / f"docs-viewer/source/studio/{TAGS_REPORT_DOC_ID}.md",
+            f"""---
+doc_id: {TAGS_REPORT_DOC_ID}
 title: Tags
 added_date: 2026-06-20
 last_updated: 2026-06-21
@@ -94,9 +101,9 @@ viewer_report_subscope: tags
 """,
         )
         write_text(
-            root / "docs-viewer/source/studio/tags/detail.md",
-            """---
-doc_id: detail
+            root / f"docs-viewer/source/studio/tags/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
 title: Detail
 added_date: 2026-06-20
 last_updated: 2026-06-21
@@ -108,13 +115,13 @@ Sub-scope detail body with [related](related.md).
 """,
         )
         write_text(
-            root / "docs-viewer/source/studio/tags/related.md",
-            """---
-doc_id: related
+            root / f"docs-viewer/source/studio/tags/{RELATED_DOC_ID}.md",
+            f"""---
+doc_id: {RELATED_DOC_ID}
 title: Related
 added_date: 2026-06-22
 last_updated: 2026-06-23
-parent_id: detail
+parent_id: {DETAIL_DOC_ID}
 ---
 # Related
 
@@ -125,8 +132,8 @@ Related body.
 
         exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--sub-scope", "tags", "--write", "--diagnostics"])
         manifest = read_json(root / "docs-viewer/generated/docs/studio/tags/manifest.json")
-        detail = read_json(root / "docs-viewer/generated/docs/studio/tags/by-id/detail.json")
-        related = read_json(root / "docs-viewer/generated/docs/studio/tags/by-id/related.json")
+        detail = read_json(root / f"docs-viewer/generated/docs/studio/tags/by-id/{DETAIL_DOC_ID}.json")
+        related = read_json(root / f"docs-viewer/generated/docs/studio/tags/by-id/{RELATED_DOC_ID}.json")
 
     assert exit_code == 0
     assert stderr == ""
@@ -137,17 +144,17 @@ Related body.
     assert diagnostics["docs_emitted"] == 2
     assert manifest == {
         "docs": [
-            {"doc_id": "detail", "title": "Detail"},
-            {"doc_id": "related", "title": "Related"},
+            {"doc_id": DETAIL_DOC_ID, "title": "Detail"},
+            {"doc_id": RELATED_DOC_ID, "title": "Related"},
         ]
     }
-    assert detail["doc_id"] == "detail"
+    assert detail["doc_id"] == DETAIL_DOC_ID
     assert detail["title"] == "Detail"
     assert detail["last_updated"] == "2026-06-21"
     assert "source_path" not in detail
-    assert detail["viewer_url"] == "/docs/?scope=studio&doc=tags-report&subdoc=detail"
+    assert detail["viewer_url"] == f"/docs/?scope=studio&doc={TAGS_REPORT_DOC_ID}&subdoc={DETAIL_DOC_ID}"
     assert 'href="related.md"' in detail["content_html"]
-    assert related["parent_id"] == "detail"
+    assert related["parent_id"] == DETAIL_DOC_ID
     assert not (root / "docs-viewer/generated/docs/studio/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/index-tree.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/recently-added.json").exists()
@@ -171,9 +178,9 @@ def test_python_docs_builder_public_sub_scope_uses_publish_url_base() -> None:
         ]
         write_json(config_path, payload)
         write_text(
-            root / "docs-viewer/source/library/tags/detail.md",
-            """---
-doc_id: detail
+            root / f"docs-viewer/source/library/tags/{DETAIL_DOC_ID}.md",
+            f"""---
+doc_id: {DETAIL_DOC_ID}
 title: Detail
 added_date: 2026-06-20
 last_updated: 2026-06-21
@@ -183,12 +190,12 @@ last_updated: 2026-06-21
         )
 
         exit_code, _stdout, stderr = run_cli(root, ["--scope", "library", "--sub-scope", "tags", "--write"])
-        detail = read_json(root / "docs-viewer/generated/docs/library/tags/by-id/detail.json")
+        detail = read_json(root / f"docs-viewer/generated/docs/library/tags/by-id/{DETAIL_DOC_ID}.json")
         browser_config = build_docs.browser_scope_config_payload(root, [load_docs_scope_configs(root)["library"]])
 
     assert exit_code == 0
     assert stderr == ""
-    assert detail["doc_id"] == "detail"
+    assert detail["doc_id"] == DETAIL_DOC_ID
     assert browser_config["scopes"][0]["sub_scopes"] == [
         {
             "sub_scope": "tags",

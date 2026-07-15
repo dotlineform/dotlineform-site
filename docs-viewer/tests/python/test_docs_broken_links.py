@@ -3,11 +3,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+from contextlib import contextmanager
 import importlib.util
 import json
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -28,6 +31,10 @@ def load_docs_broken_links_module():
 
 
 docs_broken_links = load_docs_broken_links_module()
+FIXTURE_SCOPE_OUTPUT_DIRS = {
+    scope: Path("docs-viewer/generated/docs") / scope
+    for scope in docs_broken_links.SCOPE_OUTPUT_DIRS
+}
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -58,48 +65,70 @@ def write_public_reader_doc_payload(repo_root: Path, scope: str, doc_id: str, ti
     )
 
 
-def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
-    temp_dir = tempfile.TemporaryDirectory()
-    repo_root = Path(temp_dir.name)
-    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
-    write_json(
-        repo_root / "docs-viewer/generated/docs/studio/index-tree.json",
-        {
-            "schema": "docs_index_tree_v1",
-            "docs": [
+@contextmanager
+def make_repo(content_html: str) -> Iterator[str]:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        with patch.object(docs_broken_links, "SCOPE_OUTPUT_DIRS", FIXTURE_SCOPE_OUTPUT_DIRS):
+            (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
+            (repo_root / "site-tools/config/site-tools.json").write_text(
+                '{"schema_version":"site_tools_config_v1"}\n',
+                encoding="utf-8",
+            )
+            write_json(
+                repo_root / "docs-viewer/generated/docs/studio/index-tree.json",
                 {
-                    "doc_id": "source",
-                    "title": "Source",
-                    "content_url": "/docs-viewer/generated/docs/studio/by-id/source.json",
-                }
-            ]
-        },
-    )
-    for scope, output_dir in docs_broken_links.SCOPE_OUTPUT_DIRS.items():
-        if scope == "studio":
-            continue
-        write_json(repo_root / output_dir / "index-tree.json", {"schema": "docs_index_tree_v1", "docs": []})
-    write_doc_payload(repo_root, "studio", "source", content_html)
-    return temp_dir
+                    "schema": "docs_index_tree_v1",
+                    "docs": [
+                        {
+                            "doc_id": "source",
+                            "title": "Source",
+                            "content_url": "/docs-viewer/generated/docs/studio/by-id/source.json",
+                        }
+                    ],
+                },
+            )
+            for scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
+                if scope == "studio":
+                    continue
+                write_json(
+                    repo_root / output_dir / "index-tree.json",
+                    {"schema": "docs_index_tree_v1", "docs": []},
+                )
+            write_doc_payload(repo_root, "studio", "source", content_html)
+            yield temp_path
 
 
-def make_public_repo(scope: str, content_html: str) -> tempfile.TemporaryDirectory[str]:
-    temp_dir = tempfile.TemporaryDirectory()
-    repo_root = Path(temp_dir.name)
-    (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True); (repo_root / "site-tools/config/site-tools.json").write_text("{\"schema_version\":\"site_tools_config_v1\"}\n", encoding="utf-8")
-    for known_scope, output_dir in docs_broken_links.SCOPE_OUTPUT_DIRS.items():
-        docs = []
-        if known_scope == scope:
-            docs = [
-                {
-                    "doc_id": "source",
-                    "title": "Source",
-                    "content_url": f"/assets/data/docs/scopes/{scope}/by-id/source.json",
-                }
-            ]
-        write_json(repo_root / output_dir / "index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
-    write_public_reader_doc_payload(repo_root, scope, "source", "Source", content_html)
-    return temp_dir
+@contextmanager
+def make_public_repo(scope: str, content_html: str) -> Iterator[str]:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        with patch.object(docs_broken_links, "SCOPE_OUTPUT_DIRS", FIXTURE_SCOPE_OUTPUT_DIRS):
+            (repo_root / "site-tools/config").mkdir(parents=True, exist_ok=True)
+            (repo_root / "site-tools/config/site-tools.json").write_text(
+                '{"schema_version":"site_tools_config_v1"}\n',
+                encoding="utf-8",
+            )
+            for known_scope, output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.items():
+                docs = []
+                if known_scope == scope:
+                    docs = [
+                        {
+                            "doc_id": "source",
+                            "title": "Source",
+                            "content_url": f"/assets/data/docs/scopes/{scope}/by-id/source.json",
+                        }
+                    ]
+                write_json(
+                    repo_root / output_dir / "index-tree.json",
+                    {"schema": "docs_index_tree_v1", "docs": docs},
+                )
+            write_public_reader_doc_payload(repo_root, scope, "source", "Source", content_html)
+            yield temp_path
+
+
+def test_fixture_scope_outputs_are_repo_relative() -> None:
+    assert all(not output_dir.is_absolute() for output_dir in FIXTURE_SCOPE_OUTPUT_DIRS.values())
 
 
 def test_missing_docs_links_inside_code_blocks_are_ignored() -> None:

@@ -19,6 +19,14 @@ import docs_generated_reads as generated_reads  # noqa: E402
 from docs_scope_config import load_docs_scope_configs  # noqa: E402
 
 EXTERNAL_DATA_ROOT_MARKER = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
+NON_VIEWABLE_DOC_ID = "d-20260101-000000-000001"
+CHILD_DOC_ID = "d-20260101-000000-000002"
+LIBRARY_DOC_ID = "d-20260101-000000-000003"
+LIBRARY_CHILD_DOC_ID = "d-20260101-000000-000004"
+RESEARCH_DOC_ID = "d-20260101-000000-000005"
+FINDING_DOC_ID = "d-20260101-000000-000006"
+PRIVATE_DOC_ID = "d-20260101-000000-000007"
+UNLISTED_DOC_ID = "d-20260101-000000-000008"
 
 
 def write_json(path: Path, payload: dict[str, object]) -> None:
@@ -79,17 +87,17 @@ def write_generated_docs(root: Path) -> None:
     docs = [
         {
             "scope": "studio",
-            "doc_id": "non-viewable-doc",
+            "doc_id": NON_VIEWABLE_DOC_ID,
             "title": "Non-viewable Doc",
             "viewable": False,
-            "content_url": "/docs-viewer/generated/docs/studio/by-id/non-viewable-doc.json",
+            "content_url": f"/docs-viewer/generated/docs/studio/by-id/{NON_VIEWABLE_DOC_ID}.json",
         },
         {
             "scope": "studio",
-            "doc_id": "child",
+            "doc_id": CHILD_DOC_ID,
             "title": "Child",
             "viewable": True,
-            "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
+            "content_url": f"/docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json",
         },
     ]
     write_json(
@@ -100,8 +108,8 @@ def write_generated_docs(root: Path) -> None:
         root / "docs-viewer/generated/docs/studio/recently-added.json",
         {"schema": "docs_recently_added_v1", "limit": 10, "docs": [docs[1]]},
     )
-    write_json(root / "docs-viewer/generated/docs/studio/by-id/non-viewable-doc.json", {"doc_id": "non-viewable-doc"})
-    write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
+    write_json(root / f"docs-viewer/generated/docs/studio/by-id/{NON_VIEWABLE_DOC_ID}.json", {"doc_id": NON_VIEWABLE_DOC_ID})
+    write_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json", {"doc_id": CHILD_DOC_ID})
     write_json(
         root / "docs-viewer/generated/docs/studio/references/index.json",
         {"targets": [{"target_kind": "work", "target_id": "00638"}]},
@@ -110,21 +118,21 @@ def write_generated_docs(root: Path) -> None:
         root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json",
         {"target_kind": "work", "target_id": "00638", "references": []},
     )
-    write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
+    write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": CHILD_DOC_ID}]})
 
 
 def write_public_generated_docs(root: Path) -> None:
     write_scope_config(root)
     docs = [
         {
-            "doc_id": "library",
+            "doc_id": LIBRARY_DOC_ID,
             "title": "Library",
-            "content_url": "/assets/data/docs/scopes/library/by-id/library.json",
+            "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_DOC_ID}.json",
             "children": [
                 {
-                    "doc_id": "child",
+                    "doc_id": LIBRARY_CHILD_DOC_ID,
                     "title": "Child",
-                    "content_url": "/assets/data/docs/scopes/library/by-id/child.json",
+                    "content_url": f"/assets/data/docs/scopes/library/by-id/{LIBRARY_CHILD_DOC_ID}.json",
                 }
             ],
         }
@@ -138,11 +146,11 @@ def write_public_generated_docs(root: Path) -> None:
         {"schema": "docs_recently_added_v1", "limit": 10, "docs": docs},
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/by-id/library.json",
+        root / f"docs-viewer/generated/docs/library/by-id/{LIBRARY_DOC_ID}.json",
         {"title": "Library", "content_html": "<h1>Library</h1>"},
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/by-id/child.json",
+        root / f"docs-viewer/generated/docs/library/by-id/{LIBRARY_CHILD_DOC_ID}.json",
         {"title": "Child", "content_html": "<h1>Child</h1>"},
     )
 
@@ -174,9 +182,9 @@ def test_generated_doc_payload_allows_non_viewable_tree_doc() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
-        payload = generated_reads.read_generated_doc_payload(repo_root, "studio", "non-viewable-doc")
+        payload = generated_reads.read_generated_doc_payload(repo_root, "studio", NON_VIEWABLE_DOC_ID)
 
-    assert payload["doc_id"] == "non-viewable-doc"
+    assert payload["doc_id"] == NON_VIEWABLE_DOC_ID
 
 
 def test_generated_doc_payload_rejects_unsafe_doc_id() -> None:
@@ -186,9 +194,21 @@ def test_generated_doc_payload_rejects_unsafe_doc_id() -> None:
         try:
             generated_reads.read_generated_doc_payload(repo_root, "studio", "../child")
         except ValueError as exc:
-            assert "unsupported characters" in str(exc)
+            assert "immutable document ID format" in str(exc)
         else:
             raise AssertionError("Expected unsafe generated payload doc_id to be rejected")
+
+
+def test_generated_doc_payload_rejects_legacy_doc_id() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+        try:
+            generated_reads.read_generated_doc_payload(repo_root, "studio", "child")
+        except ValueError as exc:
+            assert "immutable document ID format" in str(exc)
+        else:
+            raise AssertionError("Expected legacy generated payload doc_id to be rejected")
 
 
 def test_generated_doc_payload_requires_tree_record() -> None:
@@ -196,11 +216,11 @@ def test_generated_doc_payload_requires_tree_record() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "docs-viewer/generated/docs/studio/by-id/unlisted.json",
-            {"doc_id": "unlisted"},
+            repo_root / f"docs-viewer/generated/docs/studio/by-id/{UNLISTED_DOC_ID}.json",
+            {"doc_id": UNLISTED_DOC_ID},
         )
         try:
-            generated_reads.read_generated_doc_payload(repo_root, "studio", "unlisted")
+            generated_reads.read_generated_doc_payload(repo_root, "studio", UNLISTED_DOC_ID)
         except FileNotFoundError as exc:
             assert "not found" in str(exc)
         else:
@@ -217,14 +237,14 @@ def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
                 "schema": "docs_index_tree_v1",
                 "docs": [
                     {
-                        "doc_id": "child",
-                        "content_url": "/assets/data/docs/scopes/library/by-id/child.json",
+                        "doc_id": CHILD_DOC_ID,
+                        "content_url": f"/assets/data/docs/scopes/library/by-id/{CHILD_DOC_ID}.json",
                     }
                 ]
             },
         )
         try:
-            generated_reads.read_generated_doc_payload(repo_root, "studio", "child")
+            generated_reads.read_generated_doc_payload(repo_root, "studio", CHILD_DOC_ID)
         except RuntimeError as exc:
             assert "unexpected payload path" in str(exc)
         else:
@@ -241,15 +261,15 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
                 "schema": "docs_index_tree_v1",
                 "docs": [
                     {
-                        "doc_id": "child",
-                        "content_url": "https://example.com/docs-viewer/generated/docs/studio/by-id/child.json",
+                        "doc_id": CHILD_DOC_ID,
+                        "content_url": f"https://example.com/docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json",
                     }
                 ]
             },
         )
-        payload = generated_reads.read_generated_doc_payload(repo_root, "studio", "child")
+        payload = generated_reads.read_generated_doc_payload(repo_root, "studio", CHILD_DOC_ID)
 
-    assert payload["doc_id"] == "child"
+    assert payload["doc_id"] == CHILD_DOC_ID
 
 
 def test_generated_references_reads_scope_index_and_target() -> None:
@@ -273,17 +293,17 @@ def test_generated_tree_and_recently_added_reads_scope_payloads() -> None:
         recently_added = generated_reads.read_generated_recently_added(repo_root, "studio")
 
     assert index_tree["schema"] == "docs_index_tree_v1"
-    assert index_tree["docs"][0]["doc_id"] == "non-viewable-doc"
+    assert index_tree["docs"][0]["doc_id"] == NON_VIEWABLE_DOC_ID
     assert recently_added["schema"] == "docs_recently_added_v1"
-    assert recently_added["docs"][0]["doc_id"] == "child"
+    assert recently_added["docs"][0]["doc_id"] == CHILD_DOC_ID
 
 
 def test_public_generated_doc_payload_uses_tree_without_flat_index() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
         write_public_generated_docs(repo_root)
-        payload = generated_reads.read_generated_doc_payload(repo_root, "library", "library")
-        child_payload = generated_reads.read_generated_doc_payload(repo_root, "library", "child")
+        payload = generated_reads.read_generated_doc_payload(repo_root, "library", LIBRARY_DOC_ID)
+        child_payload = generated_reads.read_generated_doc_payload(repo_root, "library", LIBRARY_CHILD_DOC_ID)
 
         assert payload["title"] == "Library"
         assert child_payload["title"] == "Child"
@@ -317,27 +337,27 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
         )
         docs = [
             {
-                "doc_id": "research",
-                "content_url": "/custom/generated/research/by-id/research.json",
+                "doc_id": RESEARCH_DOC_ID,
+                "content_url": f"/custom/generated/research/by-id/{RESEARCH_DOC_ID}.json",
                 "children": [
                     {
-                        "doc_id": "finding",
-                        "content_url": "/custom/generated/research/by-id/finding.json",
+                        "doc_id": FINDING_DOC_ID,
+                        "content_url": f"/custom/generated/research/by-id/{FINDING_DOC_ID}.json",
                     }
                 ],
             }
         ]
         write_json(repo_root / "custom/generated/research/index-tree.json", {"schema": "docs_index_tree_v1", "docs": docs})
-        write_json(repo_root / "custom/generated/research/by-id/research.json", {"doc_id": "research"})
-        write_json(repo_root / "custom/generated/research/by-id/finding.json", {"doc_id": "finding"})
+        write_json(repo_root / f"custom/generated/research/by-id/{RESEARCH_DOC_ID}.json", {"doc_id": RESEARCH_DOC_ID})
+        write_json(repo_root / f"custom/generated/research/by-id/{FINDING_DOC_ID}.json", {"doc_id": FINDING_DOC_ID})
 
         assert (
             generated_reads.generated_docs_index_tree_path(repo_root, "research")
             == repo_root / "custom/generated/research/index-tree.json"
         )
-        payload = generated_reads.read_generated_doc_payload(repo_root, "research", "finding")
+        payload = generated_reads.read_generated_doc_payload(repo_root, "research", FINDING_DOC_ID)
 
-    assert payload["doc_id"] == "finding"
+    assert payload["doc_id"] == FINDING_DOC_ID
 
 
 def test_generated_search_path_uses_scope_config_search_output() -> None:
@@ -355,7 +375,7 @@ def test_generated_search_path_uses_scope_config_search_output() -> None:
         )
         write_json(
             repo_root / "custom/generated/search/research/index.json",
-            {"entries": [{"doc_id": "research"}]},
+            {"entries": [{"doc_id": RESEARCH_DOC_ID}]},
         )
 
         assert (
@@ -364,7 +384,7 @@ def test_generated_search_path_uses_scope_config_search_output() -> None:
         )
         payload = generated_reads.read_generated_search_index(repo_root, "research")
 
-    assert payload["entries"][0]["doc_id"] == "research"
+    assert payload["entries"][0]["doc_id"] == RESEARCH_DOC_ID
 
 
 def test_generated_reads_support_external_local_scope_payloads() -> None:
@@ -383,17 +403,17 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
                 "schema": "docs_index_tree_v1",
                 "docs": [
                     {
-                        "doc_id": "private",
-                        "content_url": "/docs/generated/payload?scope=private&doc_id=private",
+                        "doc_id": PRIVATE_DOC_ID,
+                        "content_url": f"/docs/generated/payload?scope=private&doc_id={PRIVATE_DOC_ID}",
                     }
                 ],
             },
         )
-        write_json(docs_root / "by-id/private.json", {"doc_id": "private"})
-        write_json(external_root / "generated/search/private/index.json", {"entries": [{"id": "private"}]})
+        write_json(docs_root / f"by-id/{PRIVATE_DOC_ID}.json", {"doc_id": PRIVATE_DOC_ID})
+        write_json(external_root / "generated/search/private/index.json", {"entries": [{"id": PRIVATE_DOC_ID}]})
 
         try:
-            payload = generated_reads.read_generated_doc_payload(repo_root, "private", "private")
+            payload = generated_reads.read_generated_doc_payload(repo_root, "private", PRIVATE_DOC_ID)
             search = generated_reads.read_generated_search_index(repo_root, "private")
         finally:
             if old_projects_base is None:
@@ -401,8 +421,8 @@ def test_generated_reads_support_external_local_scope_payloads() -> None:
             else:
                 os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = old_projects_base
 
-    assert payload == {"doc_id": "private"}
-    assert search["entries"] == [{"id": "private"}]
+    assert payload == {"doc_id": PRIVATE_DOC_ID}
+    assert search["entries"] == [{"id": PRIVATE_DOC_ID}]
 
 
 def test_read_generated_json_reports_invalid_json() -> None:

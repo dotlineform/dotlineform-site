@@ -42,7 +42,9 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def parent_report_doc_id(self) -> str:
         if self._parent_report_doc_id is not None:
             return self._parent_report_doc_id
-        parent_docs = DocsDataBuilder(repo_root=self.repo_root, config=self.config).load_docs()
+        parent_builder = DocsDataBuilder(repo_root=self.repo_root, config=self.config)
+        parent_docs = parent_builder.load_docs()
+        parent_builder.validate_canonical_doc_ids(parent_docs)
         matching = [
             doc.doc_id for doc in parent_docs
             if doc.viewer_report == "docs_subscope" and doc.viewer_report_subscope == self.sub_scope_id
@@ -87,6 +89,7 @@ class SubScopeDocsBuilder(DocsDataBuilder):
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
         docs = self.load_docs()
+        self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
         semantic_references_by_doc: dict[str, list[dict[str, Any]]] = {}
         item_payloads = {

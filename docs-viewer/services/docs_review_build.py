@@ -14,6 +14,7 @@ if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
 from docs_builder.pipeline import DocsDataBuilder  # noqa: E402
+from docs_builder.source import DocRecord  # noqa: E402
 from docs_scope_config import (  # noqa: E402
     LOCAL_EXTERNAL_SCOPE_TYPE,
     DocsImportMediaConfig,
@@ -32,6 +33,11 @@ class DocsReviewDataBuilder(DocsDataBuilder):
     @property
     def public_readonly_scope(self) -> bool:
         return False
+
+    def validate_canonical_doc_ids(self, docs: list[DocRecord]) -> None:
+        # Review documents retain package record identity until Docs Import maps
+        # a create to a new local identity or an overwrite to an existing one.
+        return None
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         url = f"/docs-review/?package={quote(self.package_id)}&doc={quote(str(doc_id))}"

@@ -15,7 +15,7 @@ from .common import (
     load_docs_scope_configs,
 )
 from .pipeline import DocsDataBuilder
-from .source import FrontMatterSyntaxError, MissingDocIdError
+from .source import FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError
 from .sub_scope import SubScopeDocsBuilder, selected_sub_scope
 
 
@@ -94,7 +94,7 @@ def main(argv: list[str] | None = None) -> int:
                 only_doc_ids=only_doc_ids,
             )
             builder.run(write=args.write, emit_diagnostics=args.diagnostics)
-    except (FrontMatterSyntaxError, MissingDocIdError) as exc:
+    except (FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError) as exc:
         print(exc, file=sys.stderr)
         return 1
     return 0

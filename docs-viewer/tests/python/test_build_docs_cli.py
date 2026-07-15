@@ -10,6 +10,8 @@ from pathlib import Path
 
 from build_docs_test_support import (
     BUILD_DIR,
+    CHILD_DOC_ID,
+    PARENT_DOC_ID,
     diagnostics_from_stdout,
     prepare_repo,
     read_json,
@@ -111,12 +113,15 @@ def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> N
         root = Path(temp_path)
         prepare_repo(root)
         run_cli(root, ["--scope", "studio", "--write"])
-        parent_before = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
+        parent_before = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{PARENT_DOC_ID}.json")
         write_source_docs(root, child_body_suffix="CLI targeted update.")
 
-        exit_code, stdout, stderr = run_cli(root, ["--scope", "studio", "--only-doc-ids", "child", "--write", "--diagnostics"])
-        parent_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/parent.json")
-        child_after = read_json(root / "docs-viewer/generated/docs/studio/by-id/child.json")
+        exit_code, stdout, stderr = run_cli(
+            root,
+            ["--scope", "studio", "--only-doc-ids", CHILD_DOC_ID, "--write", "--diagnostics"],
+        )
+        parent_after = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{PARENT_DOC_ID}.json")
+        child_after = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
         diagnostics = diagnostics_from_stdout(stdout)
 
     assert exit_code == 0
@@ -126,7 +131,7 @@ def test_python_docs_builder_cli_targeted_write_updates_selected_doc_only() -> N
     assert "Docs build (write) scope=studio" in stdout
     assert "docs wrote: 1" in stdout
     assert diagnostics["build_mode"] == "targeted"
-    assert diagnostics["only_doc_ids"] == ["child"]
+    assert diagnostics["only_doc_ids"] == [CHILD_DOC_ID]
     assert diagnostics["doc_payloads_changed"] == 1
 
 def test_python_docs_builder_script_reports_front_matter_errors_without_traceback() -> None:
@@ -177,4 +182,30 @@ title: Missing Doc Id
 
     assert completed.returncode == 1
     assert "Missing required doc_id in missing-doc-id.md" in completed.stderr
+    assert "Traceback" not in completed.stderr
+
+
+def test_python_docs_builder_script_rejects_legacy_doc_id_without_traceback() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        prepare_repo(root)
+        write_text(
+            root / "docs-viewer/source/studio/legacy.md",
+            """---
+doc_id: legacy
+title: Legacy
+---
+# Legacy
+""",
+        )
+        completed = subprocess.run(
+            [sys.executable, str(BUILD_DIR / "build_docs.py"), "--scope", "studio", "--write"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    assert completed.returncode == 1
+    assert "doc_id must use the immutable document ID format in legacy.md" in completed.stderr
     assert "Traceback" not in completed.stderr

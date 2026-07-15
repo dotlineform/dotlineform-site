@@ -16,6 +16,9 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
 import docs_source_model as source_model  # noqa: E402
 
 
+FIXTURE_DOC_ID = "d-20260101-000000-000001"
+
+
 def write_doc(root: Path, scope_root: str, filename: str, front_matter: dict[str, object], body: str = "# Body\n") -> None:
     path = root / scope_root / filename
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -90,8 +93,8 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "docs-viewer/source/studio", "first.md", {"doc_id": "duplicate", "title": "First"})
-        write_doc(root, "docs-viewer/source/studio", "second.md", {"doc_id": "duplicate", "title": "Second"})
+        write_doc(root, "docs-viewer/source/studio", "first.md", {"doc_id": FIXTURE_DOC_ID, "title": "First"})
+        write_doc(root, "docs-viewer/source/studio", "second.md", {"doc_id": FIXTURE_DOC_ID, "title": "Second"})
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -100,7 +103,7 @@ def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
         else:
             raise AssertionError("duplicate doc_id should fail")
 
-    assert "Duplicate doc_id 'duplicate'" in message
+    assert f"Duplicate doc_id '{FIXTURE_DOC_ID}'" in message
 
 
 def test_load_scope_docs_rejects_missing_doc_id() -> None:
@@ -121,7 +124,12 @@ def test_load_scope_docs_rejects_missing_doc_id() -> None:
 def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "docs-viewer/source/studio", "child.md", {"doc_id": "child", "title": "Child", "parent_id": "missing"})
+        write_doc(
+            root,
+            "docs-viewer/source/studio",
+            "child.md",
+            {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "missing"},
+        )
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -130,7 +138,7 @@ def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
         else:
             raise AssertionError("unknown Studio parent_id should fail")
 
-    assert "Unknown parent_id 'missing' for doc 'child'" in message
+    assert f"Unknown parent_id 'missing' for doc '{FIXTURE_DOC_ID}'" in message
 
 
 def test_load_scope_docs_allows_unknown_library_parent() -> None:
@@ -140,12 +148,12 @@ def test_load_scope_docs_allows_unknown_library_parent() -> None:
             root,
             "docs-viewer/source/library",
             "child.md",
-            {"doc_id": "child", "title": "Child", "parent_id": "external-parent"},
+            {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "external-parent"},
         )
 
         docs = source_model.load_scope_docs(root, "library")
 
-    assert [doc.doc_id for doc in docs] == ["child"]
+    assert [doc.doc_id for doc in docs] == [FIXTURE_DOC_ID]
     assert docs[0].parent_id == "external-parent"
 
 

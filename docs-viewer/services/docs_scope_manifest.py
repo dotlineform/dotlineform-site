@@ -42,7 +42,6 @@ LIFECYCLE_PREVIEW_SCHEMA_VERSION = "docs_scope_lifecycle_preview_v1"
 LIFECYCLE_APPLY_SCHEMA_VERSION = "docs_scope_lifecycle_apply_v1"
 TOOL_ID = "docs-viewer-scope-lifecycle"
 SAFE_SCOPE_ID_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
-SAFE_DOC_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 PUBLIC_MODE = "public_readonly"
 LOCAL_COMMITTED_MODE = "local_committed"
 LOCAL_EXTERNAL_MODE = "local_external"
@@ -206,15 +205,6 @@ def normalize_scope_id(value: Any) -> str:
     if not SAFE_SCOPE_ID_PATTERN.match(scope_id):
         raise ValueError("scope_id must use lowercase letters, numbers, and single hyphen separators")
     return scope_id
-
-
-def normalize_doc_id(value: Any) -> str:
-    doc_id = str(value or "").strip().lower()
-    if not doc_id:
-        raise ValueError("default_doc_id is required")
-    if not SAFE_DOC_ID_PATTERN.match(doc_id):
-        raise ValueError("default_doc_id must use lowercase letters, numbers, and hyphens")
-    return doc_id
 
 
 def normalize_title(value: Any) -> str:

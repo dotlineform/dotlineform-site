@@ -18,6 +18,7 @@ from .common import (
     scope_uses_external_data,
     path_is_under_configured_sub_scope_source,
 )
+from docs_document_identity import is_immutable_doc_id
 
 
 class FrontMatterSyntaxError(Exception):
@@ -25,6 +26,10 @@ class FrontMatterSyntaxError(Exception):
 
 
 class MissingDocIdError(Exception):
+    pass
+
+
+class InvalidDocIdError(Exception):
     pass
 
 
@@ -169,6 +174,13 @@ class SourceLoadingMixin:
                 )
             )
         return docs
+
+    def validate_canonical_doc_ids(self, docs: list[DocRecord]) -> None:
+        for doc in docs:
+            if not is_immutable_doc_id(doc.doc_id):
+                raise InvalidDocIdError(
+                    f"doc_id must use the immutable document ID format in {doc.source_path}"
+                )
 
     def validate_docs(self, docs: list[DocRecord]) -> None:
         by_id: dict[str, DocRecord] = {}
