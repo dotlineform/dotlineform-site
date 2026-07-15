@@ -3,8 +3,16 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260715-225512-80198b",
+      "title": "Recently Edited Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-225512-80198b.json",
+      "added_date": "2026-07-15 22:55:12",
+      "parent_id": "d-20260715-222129-8253ee",
+      "parent_title": "Recently Edited"
+    },
+    {
       "doc_id": "d-20260715-222129-8253ee",
-      "title": "Recent Added And Edited",
+      "title": "Recently Edited",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-222129-8253ee.json",
       "added_date": "2026-07-15 22:21:29",
       "parent_id": "d-20260714-234030-1e0af6",
@@ -73,15 +81,7 @@
       "added_date": "2026-07-15 20:52:12",
       "parent_id": "d-20260715-205212-78f243",
       "parent_title": "Control Surfaces"
-    },
-    {
-      "doc_id": "d-20260715-181845-0158f9",
-      "title": "Document Visualisations",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-181845-0158f9.json",
-      "added_date": "2026-07-15 18:18:45",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
     }
   ],
-  "generated_at": "2026-07-15T21:22:01Z"
+  "generated_at": "2026-07-15T21:56:35Z"
 }

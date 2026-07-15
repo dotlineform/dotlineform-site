@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-69880b60edd926de69e23f4e8ca55db8",
-    "generated_at_utc": "2026-07-15T21:22:01Z",
-    "count": 232
+    "version": "blake2b-b358cf93399527d3da51c8e391af538e",
+    "generated_at_utc": "2026-07-15T21:56:36Z",
+    "count": 233
   },
   "entries": [
     {
@@ -3950,17 +3950,15 @@
     {
       "id": "d-20260715-222129-8253ee",
       "kind": "doc",
-      "title": "Recent Added And Edited",
+      "title": "Recently Edited",
       "href": "/docs/?scope=studio&doc=d-20260715-222129-8253ee",
       "last_updated": "2026-07-15",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
       "display_meta": "2026-07-15 • Docs Viewer Roadmap",
       "search_terms": [
-        "recent added and edited",
-        "recent",
-        "added",
-        "and",
+        "recently edited",
+        "recently",
         "edited",
         "docs viewer roadmap",
         "docs",
@@ -3972,7 +3970,30 @@
         "15",
         "d-20260715-222129-8253ee"
       ],
-      "search_text": "recent added and edited recent added and edited docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-222129-8253ee"
+      "search_text": "recently edited recently edited docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-222129-8253ee"
+    },
+    {
+      "id": "d-20260715-225512-80198b",
+      "kind": "doc",
+      "title": "Recently Edited Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260715-225512-80198b",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-222129-8253ee",
+      "parent_title": "Recently Edited",
+      "display_meta": "2026-07-15 • Recently Edited",
+      "search_terms": [
+        "recently edited delivery",
+        "recently",
+        "edited",
+        "delivery",
+        "recently edited",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-225512-80198b"
+      ],
+      "search_text": "recently edited delivery recently edited delivery recently edited 2026-07-15 2026 07 15 d-20260715-225512-80198b"
     },
     {
       "id": "d-20260527-105208-c1a4d0",
