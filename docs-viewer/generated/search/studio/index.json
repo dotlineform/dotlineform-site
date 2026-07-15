@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8a3db5170e883c3a629f0a6fb71439c7",
-    "generated_at_utc": "2026-07-15T17:19:49Z",
-    "count": 223
+    "version": "blake2b-7ce2bbce3ee8954c1b612f61cdf4ed67",
+    "generated_at_utc": "2026-07-15T19:56:21Z",
+    "count": 227
   },
   "entries": [
     {
@@ -3530,6 +3530,101 @@
       "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260714-234030-1e0af6"
     },
     {
+      "id": "d-20260715-205212-78f243",
+      "kind": "doc",
+      "title": "Control Surfaces",
+      "href": "/docs/?scope=studio&doc=d-20260715-205212-78f243",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "search_terms": [
+        "control surfaces",
+        "control",
+        "surfaces",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-205212-78f243"
+      ],
+      "search_text": "control surfaces control surfaces docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-205212-78f243"
+    },
+    {
+      "id": "d-20260715-205212-66b4a5",
+      "kind": "doc",
+      "title": "Control Surfaces Architecture",
+      "href": "/docs/?scope=studio&doc=d-20260715-205212-66b4a5",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-205212-78f243",
+      "parent_title": "Control Surfaces",
+      "display_meta": "2026-07-15 • Control Surfaces",
+      "search_terms": [
+        "control surfaces architecture",
+        "control",
+        "surfaces",
+        "architecture",
+        "control surfaces",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-205212-66b4a5"
+      ],
+      "search_text": "control surfaces architecture control surfaces architecture control surfaces 2026-07-15 2026 07 15 d-20260715-205212-66b4a5"
+    },
+    {
+      "id": "d-20260715-205212-4782bc",
+      "kind": "doc",
+      "title": "Control Surfaces Concept",
+      "href": "/docs/?scope=studio&doc=d-20260715-205212-4782bc",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-205212-78f243",
+      "parent_title": "Control Surfaces",
+      "display_meta": "2026-07-15 • Control Surfaces",
+      "search_terms": [
+        "control surfaces concept",
+        "control",
+        "surfaces",
+        "concept",
+        "control surfaces",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-205212-4782bc"
+      ],
+      "search_text": "control surfaces concept control surfaces concept control surfaces 2026-07-15 2026 07 15 d-20260715-205212-4782bc"
+    },
+    {
+      "id": "d-20260715-205212-3268e2",
+      "kind": "doc",
+      "title": "Control Surfaces Foundation Delivery",
+      "href": "/docs/?scope=studio&doc=d-20260715-205212-3268e2",
+      "last_updated": "2026-07-15",
+      "parent_id": "d-20260715-205212-78f243",
+      "parent_title": "Control Surfaces",
+      "display_meta": "2026-07-15 • Control Surfaces",
+      "search_terms": [
+        "control surfaces foundation delivery",
+        "control",
+        "surfaces",
+        "foundation",
+        "delivery",
+        "control surfaces",
+        "2026-07-15",
+        "2026",
+        "07",
+        "15",
+        "d-20260715-205212-3268e2"
+      ],
+      "search_text": "control surfaces foundation delivery control surfaces foundation delivery control surfaces 2026-07-15 2026 07 15 d-20260715-205212-3268e2"
+    },
+    {
       "id": "d-20260715-181845-0158f9",
       "kind": "doc",
       "title": "Document Visualisations",
@@ -3731,10 +3826,10 @@
       "kind": "doc",
       "title": "Index Multiple Selection Concept",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-876066",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-15",
       "parent_id": "d-20260714-151900-6fa23e",
       "parent_title": "Index Multiple Selection",
-      "display_meta": "2026-07-14 • Index Multiple Selection",
+      "display_meta": "2026-07-15 • Index Multiple Selection",
       "search_terms": [
         "index multiple selection concept",
         "index",
@@ -3742,13 +3837,13 @@
         "selection",
         "concept",
         "index multiple selection",
-        "2026-07-14",
+        "2026-07-15",
         "2026",
         "07",
-        "14",
+        "15",
         "d-20260714-234030-876066"
       ],
-      "search_text": "index multiple selection concept index multiple selection concept index multiple selection 2026-07-14 2026 07 14 d-20260714-234030-876066"
+      "search_text": "index multiple selection concept index multiple selection concept index multiple selection 2026-07-15 2026 07 15 d-20260714-234030-876066"
     },
     {
       "id": "d-20260527-105208-c1a4d0",
