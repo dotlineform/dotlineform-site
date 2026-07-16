@@ -23,7 +23,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
         result = run_builder(root)
 
         index_tree = read_json(root / "docs-viewer/generated/docs/studio/index-tree.json")
-        recently_added = read_json(root / "docs-viewer/generated/docs/studio/recently-added.json")
+        recent = read_json(root / "docs-viewer/generated/docs/studio/recent.json")
         child = read_json(root / f"docs-viewer/generated/docs/studio/by-id/{CHILD_DOC_ID}.json")
         references_index = read_json(root / "docs-viewer/generated/docs/studio/references/index.json")
         target_payload = read_json(root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json")
@@ -56,11 +56,12 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert "viewer_url" not in tree_child
     assert "content_text_length" not in tree_child
 
-    assert recently_added["schema"] == "docs_recently_added_v1"
-    assert recently_added["limit"] == 10
-    assert recently_added["docs"][0]["doc_id"] == CHILD_DOC_ID
-    assert recently_added["docs"][0]["added_date"] == "2026-06-01"
-    assert recently_added["docs"][0]["parent_title"] == "Parent"
+    assert recent["schema"] == "docs_recent_v1"
+    assert recent["basis"] == "edited"
+    assert recent["limit"] == 10
+    assert recent["docs"][0]["doc_id"] == CHILD_DOC_ID
+    assert recent["docs"][0]["timestamp"] == "2026-06-02 10:00:00"
+    assert recent["docs"][0]["parent_title"] == "Parent"
 
     content_html = child["content_html"]
     assert f'href="/docs/?scope=studio&amp;doc={PARENT_DOC_ID}"' in content_html
@@ -92,7 +93,7 @@ def test_python_docs_builder_writes_docs_payloads_and_references() -> None:
     assert by_doc["references"][0]["label"] == "three signs"
     assert result["diagnostics"]["docs_emitted"] == 2
     assert result["diagnostics"]["index_tree_changed"] == 1
-    assert result["diagnostics"]["recently_added_changed"] == 1
+    assert result["diagnostics"]["recent_changed"] == 1
 
 def test_python_docs_builder_preserves_existing_payloads_for_targeted_builds() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

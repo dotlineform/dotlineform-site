@@ -104,6 +104,7 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
         }
 
     monkeypatch.setattr(source_service.write_rebuild, "perform_source_write_and_rebuild", fake_rebuild)
+    monkeypatch.setattr(source_service.source_model, "current_doc_timestamp", lambda: "2026-07-16 12:34:56")
 
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -147,9 +148,42 @@ def test_rebuild_source_body_preserves_front_matter_exactly_and_targets_selected
         "# keep comment\n"
         "doc_id: target\n"
         "viewable: true\n"
+        "added_date: \"2026-07-16 12:34:56\"\n"
+        "last_updated: \"2026-07-16 12:34:56\"\n"
         "---\n"
         "# New\n\nBody\n"
     )
+
+
+def test_rebuild_source_body_noops_without_timestamp_or_rebuild(monkeypatch) -> None:
+    calls: list[object] = []
+    monkeypatch.setattr(
+        source_service.write_rebuild,
+        "perform_source_write_and_rebuild",
+        lambda *_args, **_kwargs: calls.append(object()),
+    )
+
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        source_path = repo_root / "docs-viewer/source/studio/target.md"
+        before = source_path.read_text(encoding="utf-8")
+        read_payload = source_service.read_source_body(repo_root, {"scope": ["studio"], "doc_id": ["target"]})
+        payload = source_service.rebuild_source_body(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "target",
+                "source_revision": read_payload["source_revision"],
+                "source_body": read_payload["source_body"],
+            },
+            dry_run=False,
+        )
+        after = source_path.read_text(encoding="utf-8")
+
+    assert calls == []
+    assert before == after
+    assert payload["source_changed"] is False
+    assert payload["rebuild"] is None
 
 
 def main() -> None:

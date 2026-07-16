@@ -104,7 +104,7 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     if source_revision != current_revision:
         raise ValueError("source revision is stale; reload source before rebuilding")
 
-    front_matter_source, front_matter, _current_source_body = split_source_exact(current_source_text)
+    front_matter_source, front_matter, current_source_body = split_source_exact(current_source_text)
     existing_doc_id = str(front_matter.get("doc_id") or "").strip()
     if not existing_doc_id:
         raise ValueError("existing source front matter is missing doc_id")
@@ -112,11 +112,17 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
 
     next_source_body = normalize_source_body(body.get("source_body"))
+    source_changed = next_source_body != normalize_source_body(current_source_body)
     next_source_text = front_matter_source + next_source_body
-    next_revision = source_revision_for_text(next_source_text)
     rebuild = None
 
-    if not dry_run:
+    if not dry_run and source_changed:
+        next_front_matter_source = source_model.rewrite_front_matter_source_timestamp(
+            front_matter_source,
+            front_matter,
+        )
+        next_source_text = next_front_matter_source + next_source_body
+
         def write_operation() -> None:
             source_model.write_text_atomic(target.path, next_source_text)
 
@@ -139,6 +145,8 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             },
         )
 
+    next_revision = source_revision_for_text(next_source_text)
+
     return {
         "ok": True,
         "scope": scope,
@@ -146,7 +154,12 @@ def rebuild_source_body(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         "source_revision": next_revision,
         "path": path_label(repo_root, target.path),
         "rebuild": rebuild,
-        "summary_text": f"Rebuilt {target.doc_id}.",
+        "summary_text": (
+            f"Rebuilt {target.doc_id}."
+            if source_changed
+            else f"No source changes for {target.doc_id}."
+        ),
+        "source_changed": source_changed,
         "dry_run": dry_run,
     }
 

@@ -1,20 +1,25 @@
 {
-  "schema": "docs_recently_added_v1",
+  "schema": "docs_recent_v1",
+  "basis": "edited",
   "limit": 10,
   "docs": [
+    {
+      "doc_id": "d-20260714-164200-381988",
+      "title": "Processing Project Setup",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-164200-381988.json",
+      "timestamp": "2026-07-15 10:59:32"
+    },
+    {
+      "doc_id": "d-20260714-174600-cedc85",
+      "title": "InkEngine",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-174600-cedc85.json",
+      "timestamp": "2026-07-14 19:09:49"
+    },
     {
       "doc_id": "d-20260714-181200-ca6556",
       "title": "De Bruijn B8 3 Linear",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-181200-ca6556.json",
-      "added_date": "2026-07-14 18:12:00",
-      "parent_id": "d-20260714-173500-48f96d",
-      "parent_title": "unsorted"
-    },
-    {
-      "doc_id": "d-20260714-181100-447f40",
-      "title": "Video Overlay Reverse Ffmpeg Macos",
-      "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-181100-447f40.json",
-      "added_date": "2026-07-14 18:11:00",
+      "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted"
     },
@@ -22,21 +27,13 @@
       "doc_id": "d-20260714-180800-4dcaca",
       "title": "files",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180800-4dcaca.json",
-      "added_date": "2026-07-14 18:08:00"
+      "timestamp": "2026-07-14 18:21:12"
     },
     {
       "doc_id": "d-20260714-180700-4bb3af",
       "title": "N7 Subset Selection Strategies",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-4bb3af.json",
-      "added_date": "2026-07-14 18:07:00",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-0b8789",
-      "title": "N7 Subset Selection Strategies Advanced",
-      "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-0b8789.json",
-      "added_date": "2026-07-14 18:07:00",
+      "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
     },
@@ -44,7 +41,7 @@
       "doc_id": "d-20260714-180700-5d809c",
       "title": "N9 Sjt 1min All Fps",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-5d809c.json",
-      "added_date": "2026-07-14 18:07:00",
+      "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
     },
@@ -52,15 +49,7 @@
       "doc_id": "d-20260714-180700-b5896f",
       "title": "Permutation Subsets Fps 24 25 30 60",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-b5896f.json",
-      "added_date": "2026-07-14 18:07:00",
-      "parent_id": "d-20260714-180800-4dcaca",
-      "parent_title": "files"
-    },
-    {
-      "doc_id": "d-20260714-180700-1ae2b7",
-      "title": "Permutation Subsets N7 N8 Advanced",
-      "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-1ae2b7.json",
-      "added_date": "2026-07-14 18:07:00",
+      "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
     },
@@ -68,7 +57,7 @@
       "doc_id": "d-20260714-180700-5ba007",
       "title": "Permutation Subsets N7 N8 With Durations",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-5ba007.json",
-      "added_date": "2026-07-14 18:07:00",
+      "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
     },
@@ -76,10 +65,18 @@
       "doc_id": "d-20260714-180700-c98a19",
       "title": "Permutations 3to6 Indexed",
       "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-c98a19.json",
-      "added_date": "2026-07-14 18:07:00",
+      "timestamp": "2026-07-14 18:21:12",
+      "parent_id": "d-20260714-180800-4dcaca",
+      "parent_title": "files"
+    },
+    {
+      "doc_id": "d-20260714-180700-a15d97",
+      "title": "Permutations 3to6 With Counts",
+      "content_url": "/docs-viewer/generated/docs/processing/by-id/d-20260714-180700-a15d97.json",
+      "timestamp": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files"
     }
   ],
-  "generated_at": "2026-07-15T09:17:35Z"
+  "generated_at": "2026-07-16T17:15:51Z"
 }

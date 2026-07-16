@@ -383,10 +383,11 @@ def assert_route_config_scope_default(page: Page) -> None:
                 features: [
                     'configured-scope-discovery',
                     'search',
-                    'recently-added',
+                    'recent',
                     'bookmarks',
                     'reports'
                 ],
+                recent_basis: 'edited',
                 access: {
                     allow_scope_query: false,
                     management_ui: false
@@ -398,7 +399,7 @@ def assert_route_config_scope_default(page: Page) -> None:
                 },
                 docs_paths: {
                     index_tree_url: '/assets/data/docs/scopes/library/index-tree.json',
-                    recently_added_url: '/assets/data/docs/scopes/library/recently-added.json',
+                    recent_url: '/assets/data/docs/scopes/library/recent.json',
                     search_index_url: '/assets/data/search/library/index.json'
                 },
                 config_urls: {
@@ -425,7 +426,7 @@ def assert_route_config_scope_default(page: Page) -> None:
                 includeScopeParam: false,
                 viewerBaseUrl: '/library/',
                 indexTreeUrl: '/assets/data/docs/scopes/library/index-tree.json',
-                recentlyAddedUrl: '/assets/data/docs/scopes/library/recently-added.json',
+                recentUrl: '/assets/data/docs/scopes/library/recent.json',
                 searchIndexUrl: '/assets/data/search/library/index.json'
             }, { allowScopeQuery: false });
             return {
@@ -547,7 +548,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 mount: searchToolbarMount,
                 routeContext: { appContext: { featurePolicy: selected } }
             });
-            const recentOnly = routeFeatures.normalizeDocsViewerRouteFeatures(['recently-added']);
+            const recentOnly = routeFeatures.normalizeDocsViewerRouteFeatures(['recent']);
             const recentToolbarMount = document.createElement('div');
             toolbarRenderer.renderDocsViewerViewerToolbar({
                 document,
@@ -567,7 +568,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 configService: {
                     fetchDocsViewerConfig: () => Promise.resolve({
                         schema_version: 'docs_viewer_config_v1',
-                        docs_viewer: { recently_added_limit: 7 }
+                        docs_viewer: { recent_limit: 7 }
                     })
                 },
                 defaultRecentLimit: 10,
@@ -598,7 +599,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 minimal,
                 minimalCalls,
                 optionalUrls: {
-                    recent: resolvedMinimalRoute.recentlyAddedUrl,
+                    recent: resolvedMinimalRoute.recentUrl,
                     report: resolvedMinimalRoute.reportRegistryUrl,
                     search: resolvedMinimalRoute.searchIndexUrl
                 },
@@ -635,7 +636,7 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
         raise AssertionError(f"feature-aware startup order changed: {result!r}")
     if result["minimalCalls"] != ["bind-events", "viewer-settings", "index"]:
         raise AssertionError(f"disabled startup features still ran: {result!r}")
-    if result["selected"]["search"] is not True or result["selected"]["recentlyAdded"] is not False:
+    if result["selected"]["search"] is not True or result["selected"]["recent"] is not False:
         raise AssertionError(f"selected feature projection changed: {result!r}")
     if result["settingsOnly"] != {
         "recentLimit": 7,
@@ -884,7 +885,7 @@ def assert_configured_scope_provider(page: Page) -> None:
                 readDocsIndexTree: (options) => { calls.push(['index', options]); return Promise.resolve({ docs: [] }); },
                 readDocumentPayload: (doc, options) => { calls.push(['document', doc.doc_id, options]); return Promise.resolve({ doc_id: doc.doc_id }); },
                 readSearchIndex: (options) => { calls.push(['search', options]); return Promise.resolve({ entries: [] }); },
-                readRecentlyAdded: (options) => { calls.push(['recent', options]); return Promise.resolve({ docs: [] }); },
+                readRecent: (options) => { calls.push(['recent', options]); return Promise.resolve({ docs: [] }); },
                 readReferencesIndex: (options) => { calls.push(['references-index', options]); return Promise.resolve({ targets: [] }); },
                 readReferenceTarget: (options) => { calls.push(['reference-target', options]); return Promise.resolve({ docs: [] }); }
             };
@@ -894,13 +895,13 @@ def assert_configured_scope_provider(page: Page) -> None:
                     ['alpha', {
                         scopeId: 'alpha',
                         indexTreeUrl: '/data/alpha/index-tree.json',
-                        recentlyAddedUrl: '/data/alpha/recently-added.json',
+                        recentUrl: '/data/alpha/recent.json',
                         searchIndexUrl: '/search/alpha/index.json'
                     }],
                     ['beta', {
                         scopeId: 'beta',
                         indexTreeUrl: '/data/beta/index-tree.json',
-                        recentlyAddedUrl: '/data/beta/recently-added.json',
+                        recentUrl: '/data/beta/recent.json',
                         searchIndexUrl: '/search/beta/index.json'
                     }]
                 ])
@@ -914,7 +915,7 @@ def assert_configured_scope_provider(page: Page) -> None:
             await readOnly.readIndex();
             await readOnly.readDocument({ doc_id: 'doc-a', content_url: '/data/alpha/by-id/doc-a.json' });
             await readOnly.readSearch();
-            await readOnly.readRecentlyAdded();
+            await readOnly.readRecent();
             await readOnly.readReferences({ scope: 'beta' });
             await readOnly.readReferences({
                 scope: 'beta',
@@ -982,7 +983,7 @@ def assert_configured_scope_provider(page: Page) -> None:
     expected_read_only_keys = [
         "readDocument",
         "readIndex",
-        "readRecentlyAdded",
+        "readRecent",
         "readReferences",
         "readSearch",
     ]
@@ -1003,7 +1004,7 @@ def assert_configured_scope_provider(page: Page) -> None:
         ["index", {"indexTreeUrl": "/data/alpha/index-tree.json", "viewerScope": "alpha"}],
         ["document", "doc-a", {"docId": "doc-a", "viewerScope": "alpha"}],
         ["search", {"searchIndexUrl": "/search/alpha/index.json", "viewerScope": "alpha"}],
-        ["recent", {"recentlyAddedUrl": "/data/alpha/recently-added.json", "viewerScope": "alpha"}],
+        ["recent", {"recentUrl": "/data/alpha/recent.json", "viewerScope": "alpha"}],
         ["references-index", {"baseUrl": "/data/beta", "viewerScope": "beta"}],
         ["reference-target", {
             "staticUrl": "/data/beta/references/by-target/work/a%20b.json",

@@ -116,13 +116,12 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
     )
     target_root = source_model.scope_root(repo_root, scope)
     target_path = target_root / f"{doc_id}.md"
-    front_matter = {
+    front_matter = source_model.advance_doc_front_matter({
         "doc_id": doc_id,
         "title": title,
         "added_date": timestamp,
-        "last_updated": timestamp,
         "parent_id": parent_id,
-    }
+    }, timestamp=timestamp)
     if not source_model.default_viewable_for_scope(scope):
         front_matter["viewable"] = False
     viewable = source_model.default_viewable_for_scope(scope)
@@ -231,11 +230,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             },
         )
 
-    timestamp = source_model.current_doc_timestamp()
     updated_front_matter = dict(target.front_matter)
-    updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-    ).strip()
     updated_front_matter["title"] = title
     if summary_was_provided:
         if summary:
@@ -264,6 +259,12 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             updated_front_matter["viewable"] = False
     updated_front_matter["parent_id"] = parent_id
     updated_front_matter.pop("sort_order", None)
+    updated_front_matter = source_model.advance_front_matter_for_recent_edit(
+        target.front_matter,
+        target.body,
+        updated_front_matter,
+        target.body,
+    )
 
     search_doc_ids = metadata_search_doc_ids(docs, target.doc_id, title_changed=title_changed)
     if status_changed and not (title_changed or parent_changed or summary_changed or viewable_changed):

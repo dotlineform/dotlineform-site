@@ -34,8 +34,8 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
 
     if path in {routes.GENERATED_INDEX_TREE_PATH, routes.GENERATED_INDEX_TREE_ALT_PATH}:
         return docs_generated_reads.read_generated_docs_index_tree(repo_root, scope)
-    if path in {routes.GENERATED_RECENTLY_ADDED_PATH, routes.GENERATED_RECENTLY_ADDED_ALT_PATH}:
-        return docs_generated_reads.read_generated_recently_added(repo_root, scope)
+    if path in {routes.GENERATED_RECENT_PATH, routes.GENERATED_RECENT_ALT_PATH}:
+        return docs_generated_reads.read_generated_recent(repo_root, scope)
     if path in {routes.GENERATED_SEARCH_PATH, routes.GENERATED_SEARCH_ALT_PATH}:
         return docs_generated_reads.read_generated_search_index(repo_root, scope)
     if path in {routes.GENERATED_PAYLOAD_PATH, routes.GENERATED_PAYLOAD_ALT_PATH}:
@@ -62,8 +62,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path in {
         routes.GENERATED_INDEX_TREE_PATH,
         routes.GENERATED_INDEX_TREE_ALT_PATH,
-        routes.GENERATED_RECENTLY_ADDED_PATH,
-        routes.GENERATED_RECENTLY_ADDED_ALT_PATH,
+        routes.GENERATED_RECENT_PATH,
+        routes.GENERATED_RECENT_ALT_PATH,
         routes.GENERATED_PAYLOAD_PATH,
         routes.GENERATED_PAYLOAD_ALT_PATH,
         routes.GENERATED_SEARCH_PATH,

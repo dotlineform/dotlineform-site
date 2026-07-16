@@ -65,12 +65,14 @@ def main(argv: list[str] | None = None) -> int:
             public_readonly_configs(all_configs),
             path=DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
             label="Docs Viewer public browser config",
+            published=True,
         )
         write_browser_config(
             repo_root,
             public_readonly_configs(all_configs),
             path=SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
             label="Docs Viewer site public browser config",
+            published=True,
         )
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]
     try:

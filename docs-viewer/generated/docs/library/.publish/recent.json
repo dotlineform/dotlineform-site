@@ -1,0 +1,68 @@
+{
+  "schema": "docs_recent_v1",
+  "basis": "edited",
+  "limit": 10,
+  "docs": [
+    {
+      "doc_id": "d-20260507-172400-74807b",
+      "title": "Beauty",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-172400-74807b.json",
+      "timestamp": "2026-07-15 10:59:32"
+    },
+    {
+      "doc_id": "d-20260330-172255-8399b7",
+      "title": "Library",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260330-172255-8399b7.json",
+      "timestamp": "2026-06-24 13:41:03"
+    },
+    {
+      "doc_id": "d-20260507-170100-089703",
+      "title": "Beauty × Memory × Meaning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-170100-089703.json",
+      "timestamp": "2026-05-16 16:44:27"
+    },
+    {
+      "doc_id": "d-20260516-094500-c346e9",
+      "title": "Coincidence Salience Worksheet",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-094500-c346e9.json",
+      "timestamp": "2026-05-16 16:37:16"
+    },
+    {
+      "doc_id": "d-20260516-085800-d87bbb",
+      "title": "Coincidence Inevitability",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-085800-d87bbb.json",
+      "timestamp": "2026-05-16 09:53:04"
+    },
+    {
+      "doc_id": "d-20260507-212900-ae8262",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-212900-ae8262.json",
+      "timestamp": "2026-05-07 21:41:49"
+    },
+    {
+      "doc_id": "d-20260507-190900-d1823e",
+      "title": "Beyond Conscious vs. Subconscious",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-190900-d1823e.json",
+      "timestamp": "2026-05-07 21:24:51"
+    },
+    {
+      "doc_id": "d-20260423-214445-aa9f19",
+      "title": "Can the Brain Comprehend How It Works?",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260423-214445-aa9f19.json",
+      "timestamp": "2026-05-07 21:24:51"
+    },
+    {
+      "doc_id": "d-20260507-164300-37db8d",
+      "title": "Abstract Thought and Physical Processes",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-164300-37db8d.json",
+      "timestamp": "2026-05-07 17:07:35"
+    },
+    {
+      "doc_id": "d-20260507-165500-ac372d",
+      "title": "Bayesian Reasoning",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-165500-ac372d.json",
+      "timestamp": "2026-05-07 17:07:35"
+    }
+  ],
+  "generated_at": "2026-07-16T17:15:46Z"
+}

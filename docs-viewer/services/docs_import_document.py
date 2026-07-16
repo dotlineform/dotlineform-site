@@ -20,6 +20,8 @@ from docs_import_source_interactive import materialize_interactive_html_assets
 from docs_management_mutations import metadata_search_doc_ids
 from docs_source_model import (
     ScopeDoc,
+    advance_doc_front_matter,
+    advance_front_matter_for_recent_edit,
     allocate_doc_id,
     current_doc_timestamp,
     default_viewable_for_scope,
@@ -161,13 +163,12 @@ def _create_source(
         raise ValueError("preserve-existing content requires an existing import target")
     parent_id = _clean_text(record.parent_id)
     default_viewable = default_viewable_for_scope(scope)
-    front_matter: dict[str, Any] = {
+    front_matter: dict[str, Any] = advance_doc_front_matter({
         "doc_id": record.doc_id,
         "title": record.title,
         "added_date": added_date,
-        "last_updated": added_date,
         "parent_id": parent_id,
-    }
+    }, timestamp=added_date)
     if not default_viewable:
         front_matter["viewable"] = False
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
@@ -188,14 +189,9 @@ def _overwrite_source(
 ) -> tuple[str, str, bool]:
     if record.content_intent == CONTENT_INTENT_EMPTY_NEW:
         raise ValueError("empty-new content cannot overwrite an existing import target")
-    timestamp = current_doc_timestamp()
     front_matter = dict(target.front_matter)
     front_matter["doc_id"] = target.doc_id
     front_matter["title"] = record.title
-    front_matter["added_date"] = _clean_text(
-        front_matter.get("added_date") or front_matter.get("last_updated") or timestamp
-    )
-    front_matter["last_updated"] = timestamp
 
     if record.content_intent == CONTENT_INTENT_REPLACE:
         # Retain the ordinary single-source overwrite cleanup contract.
@@ -212,6 +208,15 @@ def _overwrite_source(
         _replacement_body(import_preview, record.title)
         if record.content_intent == CONTENT_INTENT_REPLACE
         else target.body
+    )
+    candidate_source = format_source(front_matter, body)
+    if candidate_source == target.source_text:
+        return target.source_text, parent_id, viewable
+    front_matter = advance_front_matter_for_recent_edit(
+        target.front_matter,
+        target.body,
+        front_matter,
+        body,
     )
     return format_source(front_matter, body), parent_id, viewable
 
@@ -369,7 +374,8 @@ def materialize_import_document_media(
 def apply_import_document_source(plan: ImportDocumentPlan) -> None:
     """Atomically write only one already-validated planned source."""
 
-    write_text_atomic(plan.target_path, plan.source_text)
+    if plan.target is None or plan.source_text != plan.target.source_text:
+        write_text_atomic(plan.target_path, plan.source_text)
 
 
 def import_document_activity(

@@ -191,7 +191,7 @@ export function createDocsViewerSharedViewDefinitions() {
       },
       { id: "rendered-document", label: "Document", panel: "main" },
       { id: "search-results", label: "Search results", panel: "main", features: ["search"] },
-      { id: "recent-results", label: "Recently added", panel: "main", features: ["recently-added"] },
+      { id: "recent-results", label: "Recent", panel: "main", features: ["recent"] },
       {
         id: "metadata-info",
         label: "Metadata info",
@@ -207,11 +207,11 @@ export function createDocsViewerSharedViewDefinitions() {
     ],
     controls: [
       {
-        id: "recently-added",
-        label: "recently added",
+        id: "recent",
+        label: "Recent",
         ownerType: "app",
         surfaceId: "app-viewer",
-        features: ["recently-added"],
+        features: ["recent"],
         renderer: "recent-button"
       },
       {

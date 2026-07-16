@@ -40,8 +40,8 @@ def generated_docs_index_tree_path(repo_root: Path, scope: str) -> Path:
     return generated_docs_output_root(repo_root, scope) / "index-tree.json"
 
 
-def generated_recently_added_path(repo_root: Path, scope: str) -> Path:
-    return generated_docs_output_root(repo_root, scope) / "recently-added.json"
+def generated_recent_path(repo_root: Path, scope: str) -> Path:
+    return generated_docs_output_root(repo_root, scope) / "recent.json"
 
 
 def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
@@ -91,10 +91,10 @@ def read_generated_docs_index_tree(repo_root: Path, scope: str) -> Dict[str, Any
     )
 
 
-def read_generated_recently_added(repo_root: Path, scope: str) -> Dict[str, Any]:
+def read_generated_recent(repo_root: Path, scope: str) -> Dict[str, Any]:
     return read_generated_json(
-        generated_recently_added_path(repo_root, scope),
-        f"generated recently added docs for {scope}",
+        generated_recent_path(repo_root, scope),
+        f"generated Recent docs for {scope}",
     )
 
 

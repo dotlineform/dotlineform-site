@@ -91,7 +91,7 @@ export function initDocsViewerConfigController(context) {
       includeScopeParam: rawScope.include_scope_param === true,
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
       indexTreeUrl: String(rawScope.index_tree_url || "").trim(),
-      recentlyAddedUrl: String(rawScope.recently_added_url || "").trim(),
+      recentUrl: String(rawScope.recent_url || "").trim(),
       searchIndexUrl: String(rawScope.search_index_url || "").trim(),
       subScopes: subScopes,
       subScopesById: new Map(subScopes.map(function (config) {
@@ -136,8 +136,8 @@ export function initDocsViewerConfigController(context) {
       if (!config.indexTreeUrl) {
         throw new Error("Docs Viewer scope " + config.scopeId + " is missing index_tree_url.");
       }
-      if (context.featurePolicy && context.featurePolicy.recentlyAdded && !config.recentlyAddedUrl) {
-        throw new Error("Docs Viewer scope " + config.scopeId + " is missing recently_added_url.");
+      if (context.featurePolicy && context.featurePolicy.recent && !config.recentUrl) {
+        throw new Error("Docs Viewer scope " + config.scopeId + " is missing recent_url.");
       }
       if (context.featurePolicy && context.featurePolicy.search && !config.searchIndexUrl) {
         throw new Error("Docs Viewer scope " + config.scopeId + " is missing search_index_url.");
@@ -231,7 +231,7 @@ export function initDocsViewerConfigController(context) {
     }
     root.dataset.viewerScope = scope;
     root.dataset.indexTreeUrl = config.indexTreeUrl;
-    root.dataset.recentlyAddedUrl = config.recentlyAddedUrl;
+    root.dataset.recentUrl = config.recentUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
     root.dataset.defaultDocId = config.defaultDocId;
     root.dataset.viewerBaseUrl = routeProjection.viewerBaseUrl;
@@ -335,7 +335,7 @@ export function initDocsViewerConfigController(context) {
   function applyViewerConfig(config) {
     scopeConfig.viewerConfig = config || {};
     scopeConfig.viewerConfigLoaded = true;
-    scopeConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recently_added_limit"), context.defaultRecentLimit);
+    scopeConfig.recentLimit = positiveInteger(getConfigValue(config, "docs_viewer.recent_limit"), context.defaultRecentLimit);
     searchRecent.recentLimit = scopeConfig.recentLimit;
     scopeConfig.uiStatuses = normalizeUiStatuses(config, context.viewerScope());
     scopeConfig.uiStatusByValue = new Map(scopeConfig.uiStatuses.map(function (status) {
@@ -345,7 +345,7 @@ export function initDocsViewerConfigController(context) {
     if (nonViewableColor) {
       root.style.setProperty("--docs-viewer-draft-color", nonViewableColor);
     }
-    if (typeof context.setRecentControlLabel === "function") context.setRecentControlLabel("recent");
+    if (typeof context.setRecentControlLabel === "function") context.setRecentControlLabel("Recent");
     if (context.managementController()) {
       context.managementController().applyConfig(config);
     }

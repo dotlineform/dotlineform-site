@@ -17,6 +17,14 @@ def current_doc_timestamp() -> str:
     return dt.datetime.now().astimezone().strftime(DOC_TIMESTAMP_FORMAT)
 
 
+def is_doc_timestamp(value: Any) -> bool:
+    try:
+        dt.datetime.strptime(str(value or "").strip(), DOC_TIMESTAMP_FORMAT)
+    except ValueError:
+        return False
+    return True
+
+
 def is_immutable_doc_id(value: Any) -> bool:
     return bool(IMMUTABLE_DOC_ID_PATTERN.fullmatch(str(value or "").strip()))
 
@@ -56,5 +64,6 @@ __all__ = [
     "allocate_doc_id",
     "current_doc_timestamp",
     "doc_id_matches_added_date",
+    "is_doc_timestamp",
     "is_immutable_doc_id",
 ]

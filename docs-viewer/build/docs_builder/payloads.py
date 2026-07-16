@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
 
 from .common import (
     CONFIG_REL_PATH,
-    DEFAULT_RECENTLY_ADDED_LIMIT,
+    DEFAULT_RECENT_LIMIT,
     DOCS_INDEX_TREE_SCHEMA_VERSION,
-    DOCS_RECENTLY_ADDED_SCHEMA_VERSION,
+    DOCS_RECENT_SCHEMA_VERSION,
     plain_text_from_html,
     read_json,
     render_markdown_to_html,
@@ -15,6 +16,7 @@ from .common import (
 )
 from .rendering import add_missing_image_titles
 from .source import DocRecord
+from docs_document_identity import is_doc_timestamp
 
 
 class PayloadBuilderMixin:
@@ -121,25 +123,32 @@ class PayloadBuilderMixin:
             "generated_at": self.effective_generated_at_for_payload(self.output_dir / "index-tree.json", comparable),
         }
 
-    def recently_added_limit(self) -> int:
+    def recent_limit(self) -> int:
         try:
             payload = json.loads((self.repo_root / CONFIG_REL_PATH).read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
-            return DEFAULT_RECENTLY_ADDED_LIMIT
+            return DEFAULT_RECENT_LIMIT
         settings = payload.get("docs_viewer") if isinstance(payload, dict) else None
-        raw_limit = settings.get("recently_added_limit") if isinstance(settings, dict) else None
+        raw_limit = settings.get("recent_limit") if isinstance(settings, dict) else None
         try:
             limit = int(raw_limit)
         except (TypeError, ValueError):
-            return DEFAULT_RECENTLY_ADDED_LIMIT
-        return limit if limit > 0 else DEFAULT_RECENTLY_ADDED_LIMIT
+            return DEFAULT_RECENT_LIMIT
+        return limit if limit > 0 else DEFAULT_RECENT_LIMIT
 
-    def recently_added_entry(self, doc: DocRecord, docs: list[DocRecord], title_by_id: dict[str, str]) -> dict[str, Any]:
+    def recent_entry(
+        self,
+        doc: DocRecord,
+        docs: list[DocRecord],
+        title_by_id: dict[str, str],
+        *,
+        basis: str,
+    ) -> dict[str, Any]:
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
             "title": doc.title,
             "content_url": doc.content_url,
-            "added_date": doc.added_date,
+            "timestamp": doc.added_date if basis == "added" else doc.last_updated,
         }
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id and parent_id in title_by_id:
@@ -147,23 +156,53 @@ class PayloadBuilderMixin:
             entry["parent_title"] = title_by_id[parent_id]
         return entry
 
-    def recently_added_payload(self, docs: list[DocRecord]) -> dict[str, Any]:
-        limit = self.recently_added_limit()
+    def recent_payload(
+        self,
+        docs: list[DocRecord],
+        *,
+        basis: str,
+        output_path: Path,
+    ) -> dict[str, Any]:
+        if basis not in {"added", "edited"}:
+            raise ValueError(f"unsupported Recent basis {basis!r}")
+        limit = self.recent_limit()
         included_docs = docs
         title_by_id = {doc.doc_id: doc.title for doc in included_docs}
         ordered_docs = sorted(included_docs, key=lambda doc: (doc.title.lower(), doc.doc_id))
-        ordered_docs.sort(key=lambda doc: doc.added_date, reverse=True)
+        ordered_docs.sort(
+            key=lambda doc: doc.added_date if basis == "added" else doc.last_updated,
+            reverse=True,
+        )
         rows = [
-            self.recently_added_entry(doc, docs, title_by_id)
+            self.recent_entry(doc, docs, title_by_id, basis=basis)
             for doc in ordered_docs
-            if doc.added_date
+            if (basis == "added" and doc.added_date)
+            or (basis == "edited" and is_doc_timestamp(doc.last_updated))
         ][:limit]
         comparable = {
-            "schema": DOCS_RECENTLY_ADDED_SCHEMA_VERSION,
+            "schema": DOCS_RECENT_SCHEMA_VERSION,
+            "basis": basis,
             "limit": limit,
             "docs": rows,
         }
         return {
             **comparable,
-            "generated_at": self.effective_generated_at_for_payload(self.output_dir / "recently-added.json", comparable),
+            "generated_at": self.effective_generated_at_for_payload(output_path, comparable),
         }
+
+    def public_recent_docs(self, docs: list[DocRecord]) -> list[DocRecord]:
+        hidden_ids = set(self.manage_only_tree_root_ids)
+        hidden_ids.update(doc.doc_id for doc in docs if not doc.viewable)
+        children_by_parent: dict[str, list[str]] = {}
+        for doc in docs:
+            if doc.parent_id:
+                children_by_parent.setdefault(doc.parent_id, []).append(doc.doc_id)
+        queue = list(hidden_ids)
+        while queue:
+            parent_id = queue.pop(0)
+            for child_id in children_by_parent.get(parent_id, []):
+                if child_id in hidden_ids:
+                    continue
+                hidden_ids.add(child_id)
+                queue.append(child_id)
+        return [doc for doc in docs if doc.doc_id not in hidden_ids]

@@ -11,7 +11,7 @@
       "default_doc_id": "d-20260419-000000-d2e47b",
       "media_path_prefix": "docs/studio",
       "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
-      "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
+      "recent_url": "/docs-viewer/generated/docs/studio/recent.json",
       "search_index_url": "/docs-viewer/generated/search/studio/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -33,13 +33,13 @@
       "include_scope_param": false,
       "default_doc_id": "d-20260330-172255-8399b7",
       "media_path_prefix": "docs/library",
-      "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
-      "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
-      "search_index_url": "/assets/data/search/library/index.json",
+      "index_tree_url": "/docs-viewer/generated/docs/library/index-tree.json",
+      "recent_url": "/docs-viewer/generated/docs/library/recent.json",
+      "search_index_url": "/docs-viewer/generated/search/library/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_library_v1",
-        "index_url": "/assets/data/search/library/index.json",
+        "index_url": "/docs-viewer/generated/search/library/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -56,13 +56,13 @@
       "include_scope_param": false,
       "default_doc_id": "d-20260426-164043-e14f49",
       "media_path_prefix": "docs/analysis",
-      "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
-      "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
-      "search_index_url": "/assets/data/search/analysis/index.json",
+      "index_tree_url": "/docs-viewer/generated/docs/analysis/index-tree.json",
+      "recent_url": "/docs-viewer/generated/docs/analysis/recent.json",
+      "search_index_url": "/docs-viewer/generated/search/analysis/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_analysis_v1",
-        "index_url": "/assets/data/search/analysis/index.json",
+        "index_url": "/docs-viewer/generated/search/analysis/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -87,13 +87,13 @@
       "include_scope_param": false,
       "default_doc_id": "",
       "media_path_prefix": "docs/moments",
-      "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
-      "recently_added_url": "/assets/data/docs/scopes/moments/recently-added.json",
-      "search_index_url": "/assets/data/search/moments/index.json",
+      "index_tree_url": "/docs-viewer/generated/docs/moments/index-tree.json",
+      "recent_url": "/docs-viewer/generated/docs/moments/recent.json",
+      "search_index_url": "/docs-viewer/generated/search/moments/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_moments_v1",
-        "index_url": "/assets/data/search/moments/index.json",
+        "index_url": "/docs-viewer/generated/search/moments/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",
@@ -111,7 +111,7 @@
       "default_doc_id": "d-20260526-000000-04ce37",
       "media_path_prefix": "docs/notes",
       "index_tree_url": "/docs/generated/index-tree?scope=notes",
-      "recently_added_url": "/docs/generated/recently-added?scope=notes",
+      "recent_url": "/docs/generated/recent?scope=notes",
       "search_index_url": "/docs/generated/search?scope=notes",
       "search": {
         "domain": "docs_viewer",
@@ -134,7 +134,7 @@
       "default_doc_id": "d-20260714-092047-06a5db",
       "media_path_prefix": "docs/processing",
       "index_tree_url": "/docs-viewer/generated/docs/processing/index-tree.json",
-      "recently_added_url": "/docs-viewer/generated/docs/processing/recently-added.json",
+      "recent_url": "/docs-viewer/generated/docs/processing/recent.json",
       "search_index_url": "/docs-viewer/generated/search/processing/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -150,7 +150,7 @@
     }
   ],
   "docs_viewer": {
-    "recently_added_limit": 10,
+    "recent_limit": 10,
     "non_viewable_nav_color": "var(--muted)",
     "doc_non_viewable_emoji": "🚫",
     "scope_type_badges": {

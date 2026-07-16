@@ -456,10 +456,10 @@ function lifecycleFileRows(payload, records) {
   var labels = {
     default_source_doc: "default doc",
     generated_docs_index_tree: "index",
-    generated_docs_recently_added: "recently added",
+    generated_docs_recent: "Recent",
     generated_search_index: "search index",
     published_docs_index_tree: "index",
-    published_docs_recently_added: "recently added",
+    published_docs_recent: "Recent",
     published_search_index: "search index",
     route_file: "public route",
     scope_config: "scope config",

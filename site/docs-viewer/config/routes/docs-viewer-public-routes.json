@@ -12,10 +12,11 @@
       "features": [
         "configured-scope-discovery",
         "search",
-        "recently-added",
+        "recent",
         "bookmarks",
         "reports"
       ],
+      "recent_basis": "edited",
       "access": {
         "allow_scope_query": false,
         "management_ui": false
@@ -27,7 +28,7 @@
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
-        "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
+        "recent_url": "/assets/data/docs/scopes/library/recent.json",
         "search_index_url": "/assets/data/search/library/index.json"
       },
       "config_urls": {
@@ -60,10 +61,11 @@
       "features": [
         "configured-scope-discovery",
         "search",
-        "recently-added",
+        "recent",
         "bookmarks",
         "reports"
       ],
+      "recent_basis": "edited",
       "access": {
         "allow_scope_query": false,
         "management_ui": false
@@ -75,7 +77,7 @@
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
-        "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
+        "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
         "search_index_url": "/assets/data/search/analysis/index.json"
       },
       "config_urls": {
@@ -108,10 +110,11 @@
       "features": [
         "configured-scope-discovery",
         "search",
-        "recently-added",
+        "recent",
         "bookmarks",
         "reports"
       ],
+      "recent_basis": "added",
       "access": {
         "allow_scope_query": false,
         "management_ui": false
@@ -123,7 +126,7 @@
       },
       "docs_paths": {
         "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
-        "recently_added_url": "/assets/data/docs/scopes/moments/recently-added.json",
+        "recent_url": "/assets/data/docs/scopes/moments/recent.json",
         "search_index_url": "/assets/data/search/moments/index.json"
       },
       "config_urls": {

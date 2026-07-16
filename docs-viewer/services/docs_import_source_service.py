@@ -37,7 +37,6 @@ from docs_import_preview import (
 from docs_import_review_handoff import attach_review_package_associations
 from docs_import_source_helpers import (
     apply_replacement_doc_id_to_preview,
-    apply_replacement_title_to_preview,
     interactive_html_overwrite_summary,
     relative_path,
 )
@@ -119,7 +118,6 @@ def handle_import_source(
     confirm_overwrite = bool(body.get("confirm_overwrite"))
     preview_only = bool(body.get("preview_only"))
     replacement_doc_id = str(body.get("replacement_doc_id") or "").strip()
-    replacement_title = str(body.get("replacement_title") or "").strip()
     source_path = resolve_staged_import_source(staging_root, staged_filename)
     source_format = data_sharing_documents_source_format(
         repo_root,
@@ -195,18 +193,6 @@ def handle_import_source(
                 scope,
             )
         retarget_inline_raster_media_plans(repo_root, staging_root, workspace_root, preview, scope)
-    elif replacement_title:
-        apply_replacement_title_to_preview(preview, replacement_title)
-        if source_path.is_dir():
-            retarget_markdown_package_media_plans(
-                repo_root,
-                staging_root,
-                workspace_root,
-                source_path,
-                preview,
-                scope,
-            )
-        retarget_inline_raster_media_plans(repo_root, staging_root, workspace_root, preview, scope)
 
     docs = load_scope_docs(repo_root, scope)
     proposed_doc_id = str(preview["proposed_doc_id"])
@@ -224,7 +210,6 @@ def handle_import_source(
     preview["doc_id_collision"] = collision
     replacement_required = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
     preview["replacement_doc_id_required"] = replacement_required
-    preview["replacement_title_required"] = replacement_required
 
     if overwrite_doc_id and collision_doc is None:
         raise ValueError("overwrite_doc_id is only allowed when the generated import target collides with an existing doc")
@@ -262,7 +247,6 @@ def handle_import_source(
                 "requires_doc_overwrite_confirmation": requires_doc_overwrite_confirmation,
                 "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
                 "replacement_doc_id_required": bool(preview.get("replacement_doc_id_required")),
-                "replacement_title_required": bool(preview.get("replacement_title_required")),
             },
         )
         return {
@@ -275,7 +259,6 @@ def handle_import_source(
             "requires_doc_overwrite_confirmation": requires_doc_overwrite_confirmation,
             "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
             "replacement_doc_id_required": bool(preview.get("replacement_doc_id_required")),
-            "replacement_title_required": bool(preview.get("replacement_title_required")),
             "collision": collision,
             "import_preview": preview,
             "summary_text": (

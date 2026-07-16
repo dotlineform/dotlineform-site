@@ -46,13 +46,13 @@ function normalizeRecentDoc(row) {
   var docId = cleanString(row.doc_id);
   var title = cleanString(row.title);
   var contentUrl = cleanString(row.content_url);
-  var addedDate = cleanString(row.added_date);
-  if (!docId || !title || !contentUrl || !addedDate) return null;
+  var timestamp = cleanString(row.timestamp);
+  if (!docId || !title || !contentUrl || !timestamp) return null;
   var doc = {
     doc_id: docId,
     title: title,
     content_url: contentUrl,
-    added_date: addedDate
+    timestamp: timestamp
   };
   var parentId = optionalStringRecordValue(row, "parent_id");
   var parentTitle = optionalStringRecordValue(row, "parent_title");
@@ -82,19 +82,24 @@ export function normalizeDocsIndexTreePayload(payload) {
   };
 }
 
-export function normalizeRecentlyAddedPayload(payload) {
+export function normalizeRecentPayload(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-    throw new Error("Recently-added docs payload must be a JSON object.");
+    throw new Error("Recent docs payload must be a JSON object.");
   }
-  if (cleanString(payload.schema) !== "docs_recently_added_v1") {
-    throw new Error("Recently-added docs payload has an unsupported schema.");
+  if (cleanString(payload.schema) !== "docs_recent_v1") {
+    throw new Error("Recent docs payload has an unsupported schema.");
   }
   if (!Array.isArray(payload.docs)) {
-    throw new Error("Recently-added docs payload requires docs array.");
+    throw new Error("Recent docs payload requires docs array.");
+  }
+  var basis = cleanString(payload.basis);
+  if (basis !== "added" && basis !== "edited") {
+    throw new Error("Recent docs payload requires an added or edited basis.");
   }
   var limit = parseInt(payload.limit, 10);
   return {
-    schema: "docs_recently_added_v1",
+    schema: "docs_recent_v1",
+    basis: basis,
     generated_at: cleanString(payload.generated_at),
     limit: limit > 0 ? limit : payload.docs.length,
     docs: payload.docs.map(normalizeRecentDoc).filter(Boolean)

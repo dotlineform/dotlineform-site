@@ -51,8 +51,8 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_recently_added",
-          "path": "site/assets/data/docs/scopes/analysis/recently-added.json",
+          "kind": "generated_docs_recent",
+          "path": "site/assets/data/docs/scopes/analysis/recent.json",
           "action": "track",
           "exists": true
         },
@@ -123,8 +123,8 @@
           "exists": true
         },
         {
-          "kind": "generated_docs_recently_added",
-          "path": "site/assets/data/docs/scopes/library/recently-added.json",
+          "kind": "generated_docs_recent",
+          "path": "site/assets/data/docs/scopes/library/recent.json",
           "action": "track",
           "exists": true
         },
@@ -249,8 +249,8 @@
           "exists": false
         },
         {
-          "kind": "generated_docs_recently_added",
-          "path": "docs-viewer/generated/docs/moments/recently-added.json",
+          "kind": "generated_docs_recent",
+          "path": "docs-viewer/generated/docs/moments/recent.json",
           "action": "track",
           "exists": false
         },
@@ -279,8 +279,8 @@
           "exists": false
         },
         {
-          "kind": "published_docs_recently_added",
-          "path": "site/assets/data/docs/scopes/moments/recently-added.json",
+          "kind": "published_docs_recent",
+          "path": "site/assets/data/docs/scopes/moments/recent.json",
           "action": "track",
           "exists": false
         },
@@ -362,8 +362,8 @@
           "exists": false
         },
         {
-          "kind": "generated_docs_recently_added",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/generated/docs/notes/recently-added.json",
+          "kind": "generated_docs_recent",
+          "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/generated/docs/notes/recent.json",
           "location": "external",
           "action": "track",
           "exists": false
@@ -438,8 +438,8 @@
           "exists": false
         },
         {
-          "kind": "generated_docs_recently_added",
-          "path": "docs-viewer/generated/docs/processing/recently-added.json",
+          "kind": "generated_docs_recent",
+          "path": "docs-viewer/generated/docs/processing/recent.json",
           "location": "repo",
           "action": "track",
           "exists": false

@@ -52,13 +52,13 @@ export function normalizeRecentEntries(entries) {
         doc_id: String(entry.doc_id || "").trim(),
         title: String(entry.title || "").trim(),
         content_url: String(entry.content_url || "").trim(),
-        added_date: String(entry.added_date || "").trim(),
+        timestamp: String(entry.timestamp || "").trim(),
         parent_id: String(entry.parent_id || "").trim(),
         parent_title: String(entry.parent_title || "").trim()
       };
     })
     .filter(function (entry) {
-      return entry.doc_id && entry.title && entry.added_date;
+      return entry.doc_id && entry.title && entry.timestamp;
     });
 }
 
@@ -110,8 +110,8 @@ export function collectSearchMatches(entries, query) {
 }
 
 export function compareRecentDocs(left, right) {
-  var leftDate = String(left.added_date || left.last_updated || "");
-  var rightDate = String(right.added_date || right.last_updated || "");
+  var leftDate = String(left.timestamp || "");
+  var rightDate = String(right.timestamp || "");
   if (leftDate !== rightDate) return rightDate.localeCompare(leftDate);
   var titleCmp = String(left.title || "").localeCompare(String(right.title || ""), undefined, { sensitivity: "base", numeric: true });
   if (titleCmp !== 0) return titleCmp;

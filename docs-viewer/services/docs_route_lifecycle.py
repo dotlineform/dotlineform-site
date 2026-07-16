@@ -87,10 +87,11 @@ def public_route_record(
         "features": [
             "configured-scope-discovery",
             "search",
-            "recently-added",
+            "recent",
             "bookmarks",
             "reports",
         ],
+        "recent_basis": "edited",
         "access": {
             "allow_scope_query": False,
             "management_ui": False,
@@ -102,7 +103,7 @@ def public_route_record(
         },
         "docs_paths": {
             "index_tree_url": f"/assets/data/docs/scopes/{scope_id}/index-tree.json",
-            "recently_added_url": f"/assets/data/docs/scopes/{scope_id}/recently-added.json",
+            "recent_url": f"/assets/data/docs/scopes/{scope_id}/recent.json",
             "search_index_url": f"/assets/data/search/{scope_id}/index.json",
         },
         "config_urls": {

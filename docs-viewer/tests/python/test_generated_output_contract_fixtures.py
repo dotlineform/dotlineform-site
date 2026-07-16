@@ -129,17 +129,18 @@ def test_docs_viewer_index_tree_contract_fixture() -> None:
     assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "tree content URL by-id path")
 
 
-def test_docs_viewer_recently_added_contract_fixture() -> None:
-    fixture = load_fixture()["docs_viewer"]["recently_added_json"]
+def test_docs_viewer_recent_contract_fixture() -> None:
+    fixture = load_fixture()["docs_viewer"]["recent_json"]
     doc_entry = fixture["doc_entry"]
 
-    assert_equal(fixture["path_pattern"], "<docs_scope.output>/recently-added.json", "recent path pattern")
-    assert_equal(fixture["schema"], "docs_recently_added_v1", "recent schema")
+    assert_equal(fixture["path_pattern"], "<docs_scope.output>/recent.json", "recent path pattern")
+    assert_equal(fixture["schema"], "docs_recent_v1", "recent schema")
+    assert_equal(fixture["basis"], "edited", "recent basis")
     assert_equal(fixture["limit"], 10, "recent limit")
-    assert_equal(fixture["required_top_level_keys"], ["schema", "docs", "generated_at", "limit"], "recent keys")
+    assert_equal(fixture["required_top_level_keys"], ["schema", "basis", "docs", "generated_at", "limit"], "recent keys")
     assert_allowed_keys(doc_entry, fixture["allowed_doc_entry_keys"], "recent entry")
     assert_contains(doc_entry["content_url"], "/by-id/contract-fixture.json", "recent content URL by-id path")
-    assert_true(doc_entry["added_date"], "recent entry added date")
+    assert_true(doc_entry["timestamp"], "recent entry timestamp")
 
 
 def test_docs_viewer_by_id_contract_fixture() -> None:
@@ -252,7 +253,7 @@ def main() -> None:
     test_fixture_declares_contract_policy()
     test_docs_viewer_index_contract_fixture()
     test_docs_viewer_index_tree_contract_fixture()
-    test_docs_viewer_recently_added_contract_fixture()
+    test_docs_viewer_recent_contract_fixture()
     test_docs_viewer_by_id_contract_fixture()
     test_docs_viewer_public_by_id_contract_fixture()
     test_docs_viewer_reference_payload_contract_fixtures()

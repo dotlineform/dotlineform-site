@@ -85,13 +85,11 @@ def test_library_import_hierarchy_apply_writes_source_placement() -> None:
     assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["diagnostics"]["search"]["mode"] == "targeted"
-    assert alpha_front_matter == {
-        "doc_id": "alpha",
-        "title": "Alpha",
-        "added_date": "2026-05-01",
-        "last_updated": "2026-05-01",
-        "parent_id": "",
-    }
+    assert alpha_front_matter["doc_id"] == "alpha"
+    assert alpha_front_matter["title"] == "Alpha"
+    assert alpha_front_matter["added_date"] == "2026-05-01"
+    assert alpha_front_matter["last_updated"] == "2026-05-01"
+    assert alpha_front_matter["parent_id"] == ""
     assert library_front_matter["parent_id"] == ""
 
 def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_write() -> None:

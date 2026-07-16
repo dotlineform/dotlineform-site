@@ -226,7 +226,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
 
     assert preview_payload["preview_only"] is True
     assert preview_payload["replacement_doc_id_required"] is True
-    assert preview_payload["replacement_title_required"] is True
+    assert "replacement_title_required" not in preview_payload
     assert preview_payload["collision"]["doc_id"] == "reference-file"
     assert apply_payload["ok"] is True
     assert apply_payload["operation"] == "create"

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a580fe2f211feeeb9aab7febefae8105",
-    "generated_at_utc": "2026-07-16T12:26:59Z",
-    "count": 229
+    "version": "blake2b-58cbeefb69bcd20a14ccae62e1e1efbf",
+    "generated_at_utc": "2026-07-16T18:01:52Z",
+    "count": 230
   },
   "entries": [
     {
@@ -1053,10 +1053,10 @@
       "kind": "doc",
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=d-20260523-000000-bf7161",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-16 13:05:47",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-16 • Dev Home",
+      "display_meta": "2026-07-16 13:05:47 • Dev Home",
       "search_terms": [
         "development workflow",
         "development",
@@ -1064,13 +1064,16 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-16",
+        "2026-07-16 13:05:47",
         "2026",
         "07",
         "16",
+        "13",
+        "05",
+        "47",
         "d-20260523-000000-bf7161"
       ],
-      "search_text": "development workflow development workflow dev home dev home 2026-07-16 2026 07 16 d-20260523-000000-bf7161"
+      "search_text": "development workflow development workflow dev home dev home 2026-07-16 13:05:47 2026 07 16 13 05 47 d-20260523-000000-bf7161"
     },
     {
       "id": "d-20260612-153500-7eadc8",
@@ -1431,23 +1434,26 @@
       "kind": "doc",
       "title": "Docs Data",
       "href": "/docs/?scope=studio&doc=d-20260419-000000-0516ab",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-06-05 • Docs Viewer",
+      "display_meta": "2026-07-16 17:52:03 • Docs Viewer",
       "search_terms": [
         "docs data",
         "docs",
         "data",
         "docs viewer",
         "viewer",
-        "2026-06-05",
+        "2026-07-16 17:52:03",
         "2026",
-        "06",
-        "05",
+        "07",
+        "16",
+        "17",
+        "52",
+        "03",
         "d-20260419-000000-0516ab"
       ],
-      "search_text": "docs data docs data docs viewer viewer 2026-06-05 2026 06 05 d-20260419-000000-0516ab"
+      "search_text": "docs data docs data docs viewer viewer 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260419-000000-0516ab"
     },
     {
       "id": "d-20260423-155039-e36925",
@@ -1549,23 +1555,26 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=d-20260423-000000-c9f3ea",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-15 • Docs Viewer",
+      "display_meta": "2026-07-16 17:52:03 • Docs Viewer",
       "search_terms": [
         "docs viewer builder",
         "docs",
         "viewer",
         "builder",
         "docs viewer",
-        "2026-07-15",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
-        "15",
+        "16",
+        "17",
+        "52",
+        "03",
         "d-20260423-000000-c9f3ea"
       ],
-      "search_text": "docs viewer builder docs viewer builder docs viewer 2026-07-15 2026 07 15 d-20260423-000000-c9f3ea"
+      "search_text": "docs viewer builder docs viewer builder docs viewer 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260423-000000-c9f3ea"
     },
     {
       "id": "d-20260613-115624-3d377c",
@@ -1598,10 +1607,10 @@
       "kind": "doc",
       "title": "Document Identity",
       "href": "/docs/?scope=studio&doc=d-20260715-094411-2b6e65",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-15 • Docs Viewer",
+      "display_meta": "2026-07-16 17:52:03 • Docs Viewer",
       "search_terms": [
         "document identity",
         "document",
@@ -1609,13 +1618,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-15",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
-        "15",
+        "16",
+        "17",
+        "52",
+        "03",
         "d-20260715-094411-2b6e65"
       ],
-      "search_text": "document identity document identity docs viewer docs viewer 2026-07-15 2026 07 15 d-20260715-094411-2b6e65"
+      "search_text": "document identity document identity docs viewer docs viewer 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260715-094411-2b6e65"
     },
     {
       "id": "d-20260503-150500-b0f1df",
@@ -1841,10 +1853,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-78a47c",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16 19:01:41",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-15 • Endpoint Overview",
+      "display_meta": "2026-07-16 19:01:41 • Endpoint Overview",
       "search_terms": [
         "create and import endpoints",
         "create",
@@ -1854,13 +1866,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-15",
+        "2026-07-16 19:01:41",
         "2026",
         "07",
-        "15",
+        "16",
+        "19",
+        "01",
+        "41",
         "d-20260607-222033-78a47c"
       ],
-      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-15 2026 07 15 d-20260607-222033-78a47c"
+      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-16 19:01:41 2026 07 16 19 01 41 d-20260607-222033-78a47c"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -1892,10 +1907,10 @@
       "kind": "doc",
       "title": "Generated Read Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-d06f35",
-      "last_updated": "2026-06-07",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-06-07 • Endpoint Overview",
+      "display_meta": "2026-07-16 17:52:03 • Endpoint Overview",
       "search_terms": [
         "generated read endpoints",
         "generated",
@@ -1904,13 +1919,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-06-07",
+        "2026-07-16 17:52:03",
         "2026",
-        "06",
         "07",
+        "16",
+        "17",
+        "52",
+        "03",
         "d-20260607-222033-d06f35"
       ],
-      "search_text": "generated read endpoints generated read endpoints endpoint overview endpoint overview 2026-06-07 2026 06 07 d-20260607-222033-d06f35"
+      "search_text": "generated read endpoints generated read endpoints endpoint overview endpoint overview 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260607-222033-d06f35"
     },
     {
       "id": "d-20260607-222033-5d82a6",
@@ -2356,10 +2374,10 @@
       "kind": "doc",
       "title": "Panel Hosts and Control Surfaces",
       "href": "/docs/?scope=studio&doc=d-20260528-224754-964108",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-16 13:05:47",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 • Docs Viewer",
+      "display_meta": "2026-07-16 13:05:47 • Docs Viewer",
       "search_terms": [
         "panel hosts and control surfaces",
         "panel",
@@ -2370,13 +2388,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-16",
+        "2026-07-16 13:05:47",
         "2026",
         "07",
         "16",
+        "13",
+        "05",
+        "47",
         "d-20260528-224754-964108"
       ],
-      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-16 2026 07 16 d-20260528-224754-964108"
+      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-16 13:05:47 2026 07 16 13 05 47 d-20260528-224754-964108"
     },
     {
       "id": "d-20260511-120352-90ffa6",
@@ -2407,10 +2428,10 @@
       "kind": "doc",
       "title": "Public Scopes",
       "href": "/docs/?scope=studio&doc=d-20260331-000000-f992b9",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-16 17:52:03 • Docs Viewer",
       "search_terms": [
         "public scopes",
         "public",
@@ -2418,13 +2439,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-14",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
-        "14",
+        "16",
+        "17",
+        "52",
+        "03",
         "d-20260331-000000-f992b9"
       ],
-      "search_text": "public scopes public scopes docs viewer docs viewer 2026-07-14 2026 07 14 d-20260331-000000-f992b9"
+      "search_text": "public scopes public scopes docs viewer docs viewer 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260331-000000-f992b9"
     },
     {
       "id": "d-20260513-105343-6de36b",
@@ -2475,23 +2499,26 @@
       "kind": "doc",
       "title": "Generated Data Contracts",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-c68916",
-      "last_updated": "2026-07-11",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-11 • Runtime",
+      "display_meta": "2026-07-16 17:52:03 • Runtime",
       "search_terms": [
         "generated data contracts",
         "generated",
         "data",
         "contracts",
         "runtime",
-        "2026-07-11",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
-        "11",
+        "16",
+        "17",
+        "52",
+        "03",
         "d-20260605-125108-c68916"
       ],
-      "search_text": "generated data contracts generated data contracts runtime 2026-07-11 2026 07 11 d-20260605-125108-c68916"
+      "search_text": "generated data contracts generated data contracts runtime 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260605-125108-c68916"
     },
     {
       "id": "d-20260605-125108-1d1ef3",
@@ -2666,10 +2693,10 @@
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=d-20260531-152622-ed2451",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-16 13:05:47",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 • Docs Viewer",
+      "display_meta": "2026-07-16 13:05:47 • Docs Viewer",
       "search_terms": [
         "toolbar model",
         "toolbar",
@@ -2677,13 +2704,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-16",
+        "2026-07-16 13:05:47",
         "2026",
         "07",
         "16",
+        "13",
+        "05",
+        "47",
         "d-20260531-152622-ed2451"
       ],
-      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-16 2026 07 16 d-20260531-152622-ed2451"
+      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-16 13:05:47 2026 07 16 13 05 47 d-20260531-152622-ed2451"
     },
     {
       "id": "d-20260513-214100-0a7f44",
@@ -2902,17 +2932,20 @@
       "kind": "doc",
       "title": "Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260428-000000-f5ff18",
-      "last_updated": "2026-07-16",
-      "display_meta": "2026-07-16",
+      "last_updated": "2026-07-16 13:14:43",
+      "display_meta": "2026-07-16 13:14:43",
       "search_terms": [
         "roadmap",
-        "2026-07-16",
+        "2026-07-16 13:14:43",
         "2026",
         "07",
         "16",
+        "13",
+        "14",
+        "43",
         "d-20260428-000000-f5ff18"
       ],
-      "search_text": "roadmap 2026-07-16 2026 07 16 d-20260428-000000-f5ff18"
+      "search_text": "roadmap 2026-07-16 13:14:43 2026 07 16 13 14 43 d-20260428-000000-f5ff18"
     },
     {
       "id": "d-20260715-092247-85515f",
@@ -3515,22 +3548,25 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-16 • Roadmap",
+      "display_meta": "2026-07-16 17:52:03 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
         "16",
+        "17",
+        "52",
+        "03",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260715-181845-0158f9",
@@ -3785,10 +3821,10 @@
       "kind": "doc",
       "title": "Local Tree Move Projection Architecture",
       "href": "/docs/?scope=studio&doc=d-20260715-215355-9a559b",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-15 22:24:47",
       "parent_id": "d-20260715-215355-54ede0",
       "parent_title": "Local Tree Move Projection",
-      "display_meta": "2026-07-15 • Local Tree Move Projection",
+      "display_meta": "2026-07-15 22:24:47 • Local Tree Move Projection",
       "search_terms": [
         "local tree move projection architecture",
         "local",
@@ -3797,23 +3833,26 @@
         "projection",
         "architecture",
         "local tree move projection",
-        "2026-07-15",
+        "2026-07-15 22:24:47",
         "2026",
         "07",
         "15",
+        "22",
+        "24",
+        "47",
         "d-20260715-215355-9a559b"
       ],
-      "search_text": "local tree move projection architecture local tree move projection architecture local tree move projection 2026-07-15 2026 07 15 d-20260715-215355-9a559b"
+      "search_text": "local tree move projection architecture local tree move projection architecture local tree move projection 2026-07-15 22:24:47 2026 07 15 22 24 47 d-20260715-215355-9a559b"
     },
     {
       "id": "d-20260715-215355-ff7123",
       "kind": "doc",
       "title": "Local Tree Move Projection Concept",
       "href": "/docs/?scope=studio&doc=d-20260715-215355-ff7123",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-15 22:24:47",
       "parent_id": "d-20260715-215355-54ede0",
       "parent_title": "Local Tree Move Projection",
-      "display_meta": "2026-07-15 • Local Tree Move Projection",
+      "display_meta": "2026-07-15 22:24:47 • Local Tree Move Projection",
       "search_terms": [
         "local tree move projection concept",
         "local",
@@ -3822,13 +3861,16 @@
         "projection",
         "concept",
         "local tree move projection",
-        "2026-07-15",
+        "2026-07-15 22:24:47",
         "2026",
         "07",
         "15",
+        "22",
+        "24",
+        "47",
         "d-20260715-215355-ff7123"
       ],
-      "search_text": "local tree move projection concept local tree move projection concept local tree move projection 2026-07-15 2026 07 15 d-20260715-215355-ff7123"
+      "search_text": "local tree move projection concept local tree move projection concept local tree move projection 2026-07-15 22:24:47 2026 07 15 22 24 47 d-20260715-215355-ff7123"
     },
     {
       "id": "d-20260715-213643-54d952",
@@ -3860,10 +3902,10 @@
       "kind": "doc",
       "title": "Recent Documents",
       "href": "/docs/?scope=studio&doc=d-20260715-222129-8253ee",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-16 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 17:52:03 • Docs Viewer Roadmap",
       "search_terms": [
         "recent documents",
         "recent",
@@ -3872,36 +3914,69 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
         "16",
+        "17",
+        "52",
+        "03",
         "d-20260715-222129-8253ee"
       ],
-      "search_text": "recent documents recent documents docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260715-222129-8253ee"
+      "search_text": "recent documents recent documents docs viewer roadmap docs viewer roadmap 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260715-222129-8253ee"
     },
     {
       "id": "d-20260715-225512-80198b",
       "kind": "doc",
       "title": "Recent Documents Delivery",
       "href": "/docs/?scope=studio&doc=d-20260715-225512-80198b",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-16 17:52:03",
       "parent_id": "d-20260715-222129-8253ee",
       "parent_title": "Recent Documents",
-      "display_meta": "2026-07-16 • Recent Documents",
+      "display_meta": "2026-07-16 17:52:03 • Recent Documents",
       "search_terms": [
         "recent documents delivery",
         "recent",
         "documents",
         "delivery",
         "recent documents",
-        "2026-07-16",
+        "2026-07-16 17:52:03",
         "2026",
         "07",
         "16",
+        "17",
+        "52",
+        "03",
         "d-20260715-225512-80198b"
       ],
-      "search_text": "recent documents delivery recent documents delivery recent documents 2026-07-16 2026 07 16 d-20260715-225512-80198b"
+      "search_text": "recent documents delivery recent documents delivery recent documents 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260715-225512-80198b"
+    },
+    {
+      "id": "d-20260716-164217-a3c7e1",
+      "kind": "doc",
+      "title": "Recent Documents Working Notes",
+      "href": "/docs/?scope=studio&doc=d-20260716-164217-a3c7e1",
+      "last_updated": "2026-07-16 18:16:53",
+      "parent_id": "d-20260715-225512-80198b",
+      "parent_title": "Recent Documents Delivery",
+      "display_meta": "2026-07-16 18:16:53 • Recent Documents Delivery",
+      "search_terms": [
+        "recent documents working notes",
+        "recent",
+        "documents",
+        "working",
+        "notes",
+        "recent documents delivery",
+        "delivery",
+        "2026-07-16 18:16:53",
+        "2026",
+        "07",
+        "16",
+        "18",
+        "53",
+        "d-20260716-164217-a3c7e1"
+      ],
+      "search_text": "recent documents working notes recent documents working notes recent documents delivery delivery 2026-07-16 18:16:53 2026 07 16 18 53 d-20260716-164217-a3c7e1"
     },
     {
       "id": "d-20260527-105208-c1a4d0",

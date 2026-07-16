@@ -162,8 +162,8 @@ def assert_manage_route_contract(state: dict[str, object], base_url: str) -> Non
         raise AssertionError(f"manage route did not receive service base URL: {state!r}")
     if docs_paths.get("index_tree_url") != "/docs-viewer/generated/docs/studio/index-tree.json":
         raise AssertionError(f"manage route config missing index_tree_url: {state!r}")
-    if docs_paths.get("recently_added_url") != "/docs-viewer/generated/docs/studio/recently-added.json":
-        raise AssertionError(f"manage route config missing recently_added_url: {state!r}")
+    if docs_paths.get("recent_url") != "/docs-viewer/generated/docs/studio/recent.json":
+        raise AssertionError(f"manage route config missing recent_url: {state!r}")
     if docs_paths.get("search_index_url") != "/docs-viewer/generated/search/studio/index.json":
         raise AssertionError(f"manage route config missing search_index_url: {state!r}")
 

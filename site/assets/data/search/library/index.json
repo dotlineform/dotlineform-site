@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-920e44484d997fc5359e04e1c3503ea7",
-    "generated_at_utc": "2026-07-15T09:18:19Z",
+    "version": "blake2b-42229f797f301bfda01c7a9fe48ddfef",
+    "generated_at_utc": "2026-07-16T17:15:46Z",
     "count": 14
   },
   "entries": [
@@ -12,8 +12,8 @@
       "kind": "doc",
       "title": "Abstract Thought and Physical Processes",
       "href": "/library/?doc=d-20260507-164300-37db8d",
-      "last_updated": "2026-05-07 22:13",
-      "display_meta": "2026-05-07 22:13",
+      "last_updated": "2026-05-07 17:07:35",
+      "display_meta": "2026-05-07 17:07:35",
       "search_terms": [
         "abstract thought and physical processes",
         "abstract",
@@ -21,108 +21,110 @@
         "and",
         "physical",
         "processes",
-        "2026-05-07 22:13",
+        "2026-05-07 17:07:35",
         "2026",
         "05",
         "07",
-        "22",
-        "13",
+        "17",
+        "35",
         "d-20260507-164300-37db8d"
       ],
-      "search_text": "abstract thought and physical processes abstract thought and physical processes 2026-05-07 22:13 2026 05 07 22 13 d-20260507-164300-37db8d"
+      "search_text": "abstract thought and physical processes abstract thought and physical processes 2026-05-07 17:07:35 2026 05 07 17 35 d-20260507-164300-37db8d"
     },
     {
       "id": "d-20260507-165500-ac372d",
       "kind": "doc",
       "title": "Bayesian Reasoning",
       "href": "/library/?doc=d-20260507-165500-ac372d",
-      "last_updated": "2026-05-07 22:13",
-      "display_meta": "2026-05-07 22:13",
+      "last_updated": "2026-05-07 17:07:35",
+      "display_meta": "2026-05-07 17:07:35",
       "search_terms": [
         "bayesian reasoning",
         "bayesian",
         "reasoning",
-        "2026-05-07 22:13",
+        "2026-05-07 17:07:35",
         "2026",
         "05",
         "07",
-        "22",
-        "13",
+        "17",
+        "35",
         "d-20260507-165500-ac372d"
       ],
-      "search_text": "bayesian reasoning bayesian reasoning 2026-05-07 22:13 2026 05 07 22 13 d-20260507-165500-ac372d"
+      "search_text": "bayesian reasoning bayesian reasoning 2026-05-07 17:07:35 2026 05 07 17 35 d-20260507-165500-ac372d"
     },
     {
       "id": "d-20260507-172400-74807b",
       "kind": "doc",
       "title": "Beauty",
       "href": "/library/?doc=d-20260507-172400-74807b",
-      "last_updated": "2026-05-07 22:13",
-      "display_meta": "2026-05-07 22:13",
+      "last_updated": "2026-07-15 10:59:32",
+      "display_meta": "2026-07-15 10:59:32",
       "search_terms": [
         "beauty",
-        "2026-05-07 22:13",
+        "2026-07-15 10:59:32",
         "2026",
-        "05",
         "07",
-        "22",
-        "13",
+        "15",
+        "10",
+        "59",
+        "32",
         "d-20260507-172400-74807b"
       ],
-      "search_text": "beauty 2026-05-07 22:13 2026 05 07 22 13 d-20260507-172400-74807b"
+      "search_text": "beauty 2026-07-15 10:59:32 2026 07 15 10 59 32 d-20260507-172400-74807b"
     },
     {
       "id": "d-20260507-170100-089703",
       "kind": "doc",
       "title": "Beauty × Memory × Meaning",
       "href": "/library/?doc=d-20260507-170100-089703",
-      "last_updated": "2026-05-07 22:13",
-      "display_meta": "2026-05-07 22:13",
+      "last_updated": "2026-05-16 16:44:27",
+      "display_meta": "2026-05-16 16:44:27",
       "search_terms": [
         "beauty × memory × meaning",
         "beauty",
         "memory",
         "meaning",
-        "2026-05-07 22:13",
+        "2026-05-16 16:44:27",
         "2026",
         "05",
-        "07",
-        "22",
-        "13",
+        "16",
+        "44",
+        "27",
         "d-20260507-170100-089703"
       ],
-      "search_text": "beauty × memory × meaning beauty memory meaning 2026-05-07 22:13 2026 05 07 22 13 d-20260507-170100-089703"
+      "search_text": "beauty × memory × meaning beauty memory meaning 2026-05-16 16:44:27 2026 05 16 44 27 d-20260507-170100-089703"
     },
     {
       "id": "d-20260507-190900-d1823e",
       "kind": "doc",
       "title": "Beyond Conscious vs. Subconscious",
       "href": "/library/?doc=d-20260507-190900-d1823e",
-      "last_updated": "2026-05-07 22:13",
-      "display_meta": "2026-05-07 22:13",
+      "last_updated": "2026-05-07 21:24:51",
+      "display_meta": "2026-05-07 21:24:51",
       "search_terms": [
         "beyond conscious vs. subconscious",
         "beyond",
         "conscious",
         "vs",
         "subconscious",
-        "2026-05-07 22:13",
+        "2026-05-07 21:24:51",
         "2026",
         "05",
         "07",
-        "22",
-        "13",
+        "21",
+        "24",
+        "51",
         "d-20260507-190900-d1823e"
       ],
-      "search_text": "beyond conscious vs. subconscious beyond conscious vs subconscious 2026-05-07 22:13 2026 05 07 22 13 d-20260507-190900-d1823e"
+      "search_text": "beyond conscious vs. subconscious beyond conscious vs subconscious 2026-05-07 21:24:51 2026 05 07 21 24 51 d-20260507-190900-d1823e"
     },
     {
       "id": "d-20260423-214445-aa9f19",
       "kind": "doc",
       "title": "Can the Brain Comprehend How It Works?",
       "href": "/library/?doc=d-20260423-214445-aa9f19",
-      "last_updated": "2026-05-07 21:18",
-      "display_meta": "2026-05-07 21:18",
+      "last_updated": "2026-05-07 21:24:51",
+      "display_meta": "2026-05-07 21:24:51",
       "search_terms": [
         "can the brain comprehend how it works?",
         "can",
@@ -132,58 +134,59 @@
         "how",
         "it",
         "works",
-        "2026-05-07 21:18",
+        "2026-05-07 21:24:51",
         "2026",
         "05",
         "07",
         "21",
-        "18",
+        "24",
+        "51",
         "d-20260423-214445-aa9f19"
       ],
-      "search_text": "can the brain comprehend how it works? can the brain comprehend how it works 2026-05-07 21:18 2026 05 07 21 18 d-20260423-214445-aa9f19"
+      "search_text": "can the brain comprehend how it works? can the brain comprehend how it works 2026-05-07 21:24:51 2026 05 07 21 24 51 d-20260423-214445-aa9f19"
     },
     {
       "id": "d-20260516-085800-d87bbb",
       "kind": "doc",
       "title": "Coincidence Inevitability",
       "href": "/library/?doc=d-20260516-085800-d87bbb",
-      "last_updated": "2026-05-16 08:58",
-      "display_meta": "2026-05-16 08:58",
+      "last_updated": "2026-05-16 09:53:04",
+      "display_meta": "2026-05-16 09:53:04",
       "search_terms": [
         "coincidence inevitability",
         "coincidence",
         "inevitability",
-        "2026-05-16 08:58",
+        "2026-05-16 09:53:04",
         "2026",
         "05",
         "16",
-        "08",
-        "58",
+        "09",
+        "53",
+        "04",
         "d-20260516-085800-d87bbb"
       ],
-      "search_text": "coincidence inevitability coincidence inevitability 2026-05-16 08:58 2026 05 16 08 58 d-20260516-085800-d87bbb"
+      "search_text": "coincidence inevitability coincidence inevitability 2026-05-16 09:53:04 2026 05 16 09 53 04 d-20260516-085800-d87bbb"
     },
     {
       "id": "d-20260516-094500-c346e9",
       "kind": "doc",
       "title": "Coincidence Salience Worksheet",
       "href": "/library/?doc=d-20260516-094500-c346e9",
-      "last_updated": "2026-05-16 15:31",
-      "display_meta": "2026-05-16 15:31",
+      "last_updated": "2026-05-16 16:37:16",
+      "display_meta": "2026-05-16 16:37:16",
       "search_terms": [
         "coincidence salience worksheet",
         "coincidence",
         "salience",
         "worksheet",
-        "2026-05-16 15:31",
+        "2026-05-16 16:37:16",
         "2026",
         "05",
         "16",
-        "15",
-        "31",
+        "37",
         "d-20260516-094500-c346e9"
       ],
-      "search_text": "coincidence salience worksheet coincidence salience worksheet 2026-05-16 15:31 2026 05 16 15 31 d-20260516-094500-c346e9"
+      "search_text": "coincidence salience worksheet coincidence salience worksheet 2026-05-16 16:37:16 2026 05 16 37 d-20260516-094500-c346e9"
     },
     {
       "id": "d-20260424-000000-8eb1d9",
@@ -213,28 +216,31 @@
       "kind": "doc",
       "title": "Dreaming is Active",
       "href": "/library/?doc=d-20260424-091029-8f0a95",
-      "last_updated": "2026-04-25",
-      "display_meta": "2026-04-25",
+      "last_updated": "2026-04-25 22:48:06",
+      "display_meta": "2026-04-25 22:48:06",
       "search_terms": [
         "dreaming is active",
         "dreaming",
         "is",
         "active",
-        "2026-04-25",
+        "2026-04-25 22:48:06",
         "2026",
         "04",
         "25",
+        "22",
+        "48",
+        "06",
         "d-20260424-091029-8f0a95"
       ],
-      "search_text": "dreaming is active dreaming is active 2026-04-25 2026 04 25 d-20260424-091029-8f0a95"
+      "search_text": "dreaming is active dreaming is active 2026-04-25 22:48:06 2026 04 25 22 48 06 d-20260424-091029-8f0a95"
     },
     {
       "id": "d-20260507-212900-ae8262",
       "kind": "doc",
       "title": "Entropy & Evolution Under Two Cosmologies",
       "href": "/library/?doc=d-20260507-212900-ae8262",
-      "last_updated": "2026-05-07 22:12",
-      "display_meta": "2026-05-07 22:12",
+      "last_updated": "2026-05-07 21:41:49",
+      "display_meta": "2026-05-07 21:41:49",
       "search_terms": [
         "entropy & evolution under two cosmologies",
         "entropy",
@@ -242,15 +248,16 @@
         "under",
         "two",
         "cosmologies",
-        "2026-05-07 22:12",
+        "2026-05-07 21:41:49",
         "2026",
         "05",
         "07",
-        "22",
-        "12",
+        "21",
+        "41",
+        "49",
         "d-20260507-212900-ae8262"
       ],
-      "search_text": "entropy & evolution under two cosmologies entropy evolution under two cosmologies 2026-05-07 22:12 2026 05 07 22 12 d-20260507-212900-ae8262"
+      "search_text": "entropy & evolution under two cosmologies entropy evolution under two cosmologies 2026-05-07 21:41:49 2026 05 07 21 41 49 d-20260507-212900-ae8262"
     },
     {
       "id": "d-20260423-231122-d0dd6d",
@@ -277,8 +284,8 @@
       "kind": "doc",
       "title": "From 3D Space to Many Dimensions",
       "href": "/library/?doc=d-20260507-155600-5389bb",
-      "last_updated": "2026-05-07 16:37",
-      "display_meta": "2026-05-07 16:37",
+      "last_updated": "2026-05-07 16:36:29",
+      "display_meta": "2026-05-07 16:36:29",
       "search_terms": [
         "from 3d space to many dimensions",
         "from",
@@ -287,32 +294,36 @@
         "to",
         "many",
         "dimensions",
-        "2026-05-07 16:37",
+        "2026-05-07 16:36:29",
         "2026",
         "05",
         "07",
         "16",
-        "37",
+        "36",
+        "29",
         "d-20260507-155600-5389bb"
       ],
-      "search_text": "from 3d space to many dimensions from 3d space to many dimensions 2026-05-07 16:37 2026 05 07 16 37 d-20260507-155600-5389bb"
+      "search_text": "from 3d space to many dimensions from 3d space to many dimensions 2026-05-07 16:36:29 2026 05 07 16 36 29 d-20260507-155600-5389bb"
     },
     {
       "id": "d-20260330-172255-8399b7",
       "kind": "doc",
       "title": "Library",
       "href": "/library/?doc=d-20260330-172255-8399b7",
-      "last_updated": "2026-05-04",
-      "display_meta": "2026-05-04",
+      "last_updated": "2026-06-24 13:41:03",
+      "display_meta": "2026-06-24 13:41:03",
       "search_terms": [
         "library",
-        "2026-05-04",
+        "2026-06-24 13:41:03",
         "2026",
-        "05",
-        "04",
+        "06",
+        "24",
+        "13",
+        "41",
+        "03",
         "d-20260330-172255-8399b7"
       ],
-      "search_text": "library 2026-05-04 2026 05 04 d-20260330-172255-8399b7"
+      "search_text": "library 2026-06-24 13:41:03 2026 06 24 13 41 03 d-20260330-172255-8399b7"
     }
   ]
 }

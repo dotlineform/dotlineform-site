@@ -74,7 +74,8 @@ export function createDocsViewerRouteContext(options) {
     docsViewerConfigUrl: routeConfig.docsViewerConfigUrl,
     routeViewerBaseUrl: routeViewerBaseUrl,
     indexTreeUrl: appendAssetVersion(routeConfig.indexTreeUrl, assetVersion),
-    recentlyAddedUrl: appendAssetVersion(routeConfig.recentlyAddedUrl, assetVersion),
+    recentUrl: appendAssetVersion(routeConfig.recentUrl, assetVersion),
+    recentBasis: routeConfig.recentBasis,
     viewerBaseUrl: viewerBaseUrl,
     viewerScope: routeConfig.defaultScopeId,
     includeScopeParam: Boolean(routeConfig.includeScopeParam),
@@ -120,7 +121,7 @@ export function updateDocsViewerRouteContext(context, values, options) {
   var nextContext = Object.assign({}, current, {
     viewerScope: cleanString(values && values.viewerScope),
     indexTreeUrl: values && values.indexTreeUrl ? values.indexTreeUrl : "",
-    recentlyAddedUrl: values && values.recentlyAddedUrl ? values.recentlyAddedUrl : "",
+    recentUrl: values && values.recentUrl ? values.recentUrl : "",
     searchIndexUrl: values && values.searchIndexUrl ? values.searchIndexUrl : "",
     subScopes: Array.isArray(values && values.subScopes) ? values.subScopes : [],
     subScopesById: values && values.subScopesById instanceof Map ? values.subScopesById : new Map(),
@@ -132,7 +133,7 @@ export function updateDocsViewerRouteContext(context, values, options) {
   nextContext.routeConfig = Object.assign({}, current.routeConfig || {}, {
     defaultScopeId: nextContext.viewerScope,
     indexTreeUrl: nextContext.indexTreeUrl,
-    recentlyAddedUrl: nextContext.recentlyAddedUrl,
+    recentUrl: nextContext.recentUrl,
     searchIndexUrl: nextContext.searchIndexUrl,
     subScopes: nextContext.subScopes,
     viewerBaseUrl: nextContext.viewerBaseUrl

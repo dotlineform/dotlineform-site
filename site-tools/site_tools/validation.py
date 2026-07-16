@@ -12,7 +12,7 @@ DOCS_VIEWER_ROUTE_FEATURE_IDS = {
     "configured-scope-discovery",
     "scope-selection",
     "search",
-    "recently-added",
+    "recent",
     "bookmarks",
     "reports",
     "source-editing",
@@ -134,8 +134,15 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
         }
         if "search" in features:
             required_fields.add(("docs_paths", "search_index_url"))
-        if "recently-added" in features:
-            required_fields.add(("docs_paths", "recently_added_url"))
+        recent_basis = route.get("recent_basis")
+        if "recent" in features:
+            required_fields.add(("docs_paths", "recent_url"))
+            if recent_basis not in {"added", "edited"}:
+                raise RuntimeError(
+                    f"Docs Viewer route {route_id} with Recent enabled must define recent_basis as added or edited"
+                )
+        elif recent_basis:
+            raise RuntimeError(f"Docs Viewer route {route_id} cannot define recent_basis without Recent")
         if "reports" in features:
             required_fields.add(("config_urls", "report_registry"))
         for section_name, field_name in required_fields:

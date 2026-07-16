@@ -52,7 +52,7 @@ BLOCKED_SCOPE_FIELDS = {
 }
 
 DEFERRED_GLOBAL_FIELDS = {
-    "recently_added_limit": "Global Docs Viewer setting; deferred until the settings UI supports global fields.",
+    "recent_limit": "Global Docs Viewer setting; deferred until the settings UI supports global fields.",
 }
 
 

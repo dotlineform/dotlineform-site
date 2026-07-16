@@ -136,7 +136,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                 "generated": {
                     "docs_output": path_label(repo_root, config.output),
                     "docs_index_tree": path_label(repo_root, generated_docs_index_tree_path(repo_root, config)),
-                    "recently_added": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "recently-added.json"),
+                    "recent": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "recent.json"),
                     "docs_payload_root": path_label(repo_root, resolve_scope_path(repo_root, config.output) / "by-id"),
                     "search_index": path_label(repo_root, config.search_output),
                     "publish_output": config.publish_output.as_posix(),

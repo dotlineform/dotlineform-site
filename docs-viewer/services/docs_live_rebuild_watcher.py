@@ -34,7 +34,7 @@ for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from docs_source_model import load_scope_docs, scope_doc_sort_key
+from docs_source_model import is_doc_timestamp, load_scope_docs, recent_edit_content, scope_doc_sort_key
 from docs_scope_config import (
     CONFIG_REL_PATH,
     DOCS_SCOPE_CONFIGS,
@@ -298,6 +298,9 @@ def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]
             "title": doc.title,
             "parent_id": doc.parent_id,
             "viewable": doc.viewable,
+            "added_date": str(doc.front_matter.get("added_date") or "").strip(),
+            "last_updated": str(doc.front_matter.get("last_updated") or "").strip(),
+            "recent_edit_content": recent_edit_content(doc.front_matter, doc.body),
             "sort_key": scope_doc_sort_key(doc),
         }
         for doc in docs
@@ -351,6 +354,61 @@ def affected_search_doc_ids(
             affected.extend(direct_child_doc_ids(current_docs, current_doc_id))
 
     return ordered_unique(affected), ""
+
+
+def direct_edit_timestamp_issues(
+    previous_docs: Optional[Dict[str, Dict[str, Any]]],
+    current_docs: Dict[str, Dict[str, Any]],
+    changed_files: list[str],
+) -> list[Dict[str, str]]:
+    """Describe changed source whose explicit write timestamp evidence is missing."""
+
+    if previous_docs is None:
+        return []
+    removed_previous = [
+        previous_docs[filename]
+        for filename in changed_files
+        if filename in previous_docs and filename not in current_docs
+    ]
+    issues: list[Dict[str, str]] = []
+    for filename in changed_files:
+        current = current_docs.get(filename)
+        if current is None:
+            continue
+        previous = previous_docs.get(filename)
+        if previous is None:
+            same_doc_id = [
+                row
+                for row in previous_docs.values()
+                if str(row.get("doc_id") or "") == str(current.get("doc_id") or "")
+            ]
+            if len(same_doc_id) == 1:
+                previous = same_doc_id[0]
+        if previous is None:
+            same_content = [
+                row
+                for row in removed_previous
+                if row.get("recent_edit_content") == current.get("recent_edit_content")
+            ]
+            if len(same_content) == 1:
+                previous = same_content[0]
+        if previous is not None and previous.get("recent_edit_content") == current.get("recent_edit_content"):
+            continue
+        last_updated = str(current.get("last_updated") or "").strip()
+        if not is_doc_timestamp(last_updated):
+            reason = "new source lacks a full last_updated timestamp" if previous is None else "last_updated is not a full timestamp"
+        elif previous is not None and last_updated == str(previous.get("last_updated") or "").strip():
+            reason = "last_updated did not advance"
+        else:
+            continue
+        issues.append(
+            {
+                "filename": filename,
+                "doc_id": str(current.get("doc_id") or "").strip(),
+                "reason": reason,
+            }
+        )
+    return issues
 
 
 def rebuild_scope(
@@ -592,6 +650,15 @@ def main() -> int:
                     if snapshot_error:
                         log(f"{ready_scope} targeted search fallback; affected ids unavailable: {snapshot_error}")
                     else:
+                        for issue in direct_edit_timestamp_issues(
+                            state["doc_snapshot"],
+                            current_doc_snapshot,
+                            changed_files,
+                        ):
+                            log(
+                                f"{ready_scope} timestamp evidence warning for {issue['filename']} "
+                                f"({issue['doc_id']}): {issue['reason']}; advance last_updated for this direct source edit."
+                            )
                         search_doc_ids, fallback_reason = affected_search_doc_ids(
                             state["doc_snapshot"],
                             current_doc_snapshot,

@@ -250,7 +250,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     created_files.extend(
         [
             path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json", action="create"),
-            path_record(repo_root, "generated_docs_recently_added", docs_output / "recently-added.json", action="create"),
+            path_record(repo_root, "generated_docs_recent", docs_output / "recent.json", action="create"),
             path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id", action="create"),
             path_record(
                 repo_root,
@@ -271,7 +271,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         publish_files.extend(
             [
                 path_record(repo_root, "published_docs_index_tree", published_output / "index-tree.json", action="publish"),
-                path_record(repo_root, "published_docs_recently_added", published_output / "recently-added.json", action="publish"),
+                path_record(repo_root, "published_docs_recent", published_output / "recent.json", action="publish"),
                 path_record(repo_root, "published_docs_payload_root", published_output / "by-id", action="publish"),
             ]
         )

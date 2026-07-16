@@ -919,13 +919,21 @@
               "doc_id": "d-20260715-222129-8253ee",
               "title": "Recent Documents",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-222129-8253ee.json",
-              "ui_status": "proposed",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260715-225512-80198b",
                   "title": "Recent Documents Delivery",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-225512-80198b.json",
-                  "ui_status": "proposed"
+                  "ui_status": "done",
+                  "children": [
+                    {
+                      "doc_id": "d-20260716-164217-a3c7e1",
+                      "title": "Recent Documents Working Notes",
+                      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-164217-a3c7e1.json",
+                      "ui_status": "done"
+                    }
+                  ]
                 }
               ]
             },
@@ -1292,5 +1300,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T12:26:58Z"
+  "generated_at": "2026-07-16T16:27:05Z"
 }

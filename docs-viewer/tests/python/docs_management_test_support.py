@@ -201,9 +201,10 @@ def write_generated_docs(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/studio/recently-added.json",
+        root / "docs-viewer/generated/docs/studio/recent.json",
         {
-            "schema": "docs_recently_added_v1",
+            "schema": "docs_recent_v1",
+            "basis": "edited",
             "limit": 10,
             "docs": [docs[1]],
         },
@@ -239,7 +240,7 @@ def write_docs_scope_config(root: Path) -> None:
                 }
             ],
             "docs_viewer": {
-                "recently_added_limit": 10,
+                "recent_limit": 10,
                 "ui_statuses_by_scope": {
                     "studio": [
                         {"ui_status": "draft", "label": "Draft", "emoji": "D"},
@@ -264,12 +265,12 @@ def write_docs_viewer_browser_config(root: Path) -> None:
                     "default_doc_id": "child",
                     "media_path_prefix": "docs/studio",
                     "index_tree_url": "/docs-viewer/generated/docs/studio/index-tree.json",
-                    "recently_added_url": "/docs-viewer/generated/docs/studio/recently-added.json",
+                    "recent_url": "/docs-viewer/generated/docs/studio/recent.json",
                     "search_index_url": "/docs-viewer/generated/search/studio/index.json",
                 }
             ],
             "docs_viewer": {
-                "recently_added_limit": 10,
+                "recent_limit": 10,
             },
         },
     )

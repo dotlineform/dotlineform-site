@@ -86,7 +86,7 @@ export function startDocsViewerRuntime(options) {
   var bookmarksEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks");
   var configuredScopeDiscoveryEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "configured-scope-discovery");
   var managementEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "management");
-  var recentlyAddedEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recently-added");
+  var recentEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recent");
   var searchEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "search");
   var sourceEditingEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "source-editing");
   var allowScopeQuery = routeAccess.allowScopeQuery;
@@ -139,7 +139,7 @@ export function startDocsViewerRuntime(options) {
   var documentIndex = null;
   var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
-  var recentControlLabel = "recently added";
+  var recentControlLabel = "Recent";
   var appViewerControlOwners = new Map();
   var appViewerControlHost = null;
   var appManagementControlStates = new Map();
@@ -361,7 +361,7 @@ export function startDocsViewerRuntime(options) {
     showRecentPane: showRecentPane,
     showSearchPane: showSearchPane
   };
-  searchController = searchEnabled || recentlyAddedEnabled ? initDocsViewerSearchController({
+  searchController = searchEnabled || recentEnabled ? initDocsViewerSearchController({
     clearSearchInput: function () {
       if (searchInput) searchInput.value = "";
     },
@@ -378,13 +378,14 @@ export function startDocsViewerRuntime(options) {
     searchDebounceMs: SEARCH_DEBOUNCE_MS,
     searchEnabled: searchEnabled,
     searchRecent: appSession.domains.searchRecent,
-    recentlyAddedEnabled: recentlyAddedEnabled,
+    recentEnabled: recentEnabled,
+    recentBasis: routeContext.recentBasis,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     setStatus: statusController.setStatus,
     startBusy: statusController.startBusy
   }) : null;
-  appViewerControlOwners.set("recently-added", function () {
+  appViewerControlOwners.set("recent", function () {
     if (searchController) searchController.handleRecentControl();
   });
   appViewerControlOwners.set("search", function (detail) {
@@ -402,7 +403,7 @@ export function startDocsViewerRuntime(options) {
       return managementRuntime ? managementRuntime.controller() : null;
     },
     setRecentControlLabel: function (label) {
-      recentControlLabel = String(label || "recent");
+      recentControlLabel = String(label || "Recent");
       renderAppViewerControls();
     },
     renderRecentMode: renderRecentMode,
@@ -551,7 +552,7 @@ export function startDocsViewerRuntime(options) {
     if (!appViewerControlHost) return [];
     return appViewerControlHost.render({
       controlStateById: {
-        "recently-added": {
+        "recent": {
           label: recentControlLabel,
           pressed: appSession.domains.searchRecent.recentModeActive
         },

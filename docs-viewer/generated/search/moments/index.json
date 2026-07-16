@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_moments_v1",
     "scope": "moments",
-    "version": "blake2b-2b32672726829ba18f0ab0721fc0f526",
-    "generated_at_utc": "2026-07-15T09:18:20Z",
+    "version": "blake2b-687d368a0f418821a1c2b65a74ee0120",
+    "generated_at_utc": "2026-07-16T17:15:51Z",
     "count": 56
   },
   "entries": [
@@ -27,13 +27,22 @@
       "kind": "doc",
       "title": "4 stories",
       "href": "/moments/?doc=d-20260401-000000-2d7630",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "4 stories",
         "4",
         "stories",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260401-000000-2d7630"
       ],
-      "search_text": "4 stories 4 stories d-20260401-000000-2d7630"
+      "search_text": "4 stories 4 stories 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260401-000000-2d7630"
     },
     {
       "id": "d-20260215-000000-2d8bed",
@@ -112,15 +121,24 @@
       "kind": "doc",
       "title": "a light inside a flower",
       "href": "/moments/?doc=d-20260215-000000-e2a906",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "a light inside a flower",
         "a",
         "light",
         "inside",
         "flower",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-e2a906"
       ],
-      "search_text": "a light inside a flower a light inside flower d-20260215-000000-e2a906"
+      "search_text": "a light inside a flower a light inside flower 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-e2a906"
     },
     {
       "id": "d-20260215-000000-c53845",
@@ -142,15 +160,24 @@
       "kind": "doc",
       "title": "a poem about purity",
       "href": "/moments/?doc=d-20260215-000000-d37a8a",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "a poem about purity",
         "a",
         "poem",
         "about",
         "purity",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-d37a8a"
       ],
-      "search_text": "a poem about purity a poem about purity d-20260215-000000-d37a8a"
+      "search_text": "a poem about purity a poem about purity 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-d37a8a"
     },
     {
       "id": "d-20260215-000000-c6f320",
@@ -170,28 +197,46 @@
       "kind": "doc",
       "title": "a selina",
       "href": "/moments/?doc=d-20260215-000000-ff9762",
+      "last_updated": "2026-06-18 00:11:52",
+      "display_meta": "2026-06-18 00:11:52",
       "search_terms": [
         "a selina",
         "a",
         "selina",
+        "2026-06-18 00:11:52",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "11",
+        "52",
         "d-20260215-000000-ff9762"
       ],
-      "search_text": "a selina a selina d-20260215-000000-ff9762"
+      "search_text": "a selina a selina 2026-06-18 00:11:52 2026 06 18 00 11 52 d-20260215-000000-ff9762"
     },
     {
       "id": "d-20260215-000000-f5f727",
       "kind": "doc",
       "title": "all the little cracks",
       "href": "/moments/?doc=d-20260215-000000-f5f727",
+      "last_updated": "2026-07-12 21:30:26",
+      "display_meta": "2026-07-12 21:30:26",
       "search_terms": [
         "all the little cracks",
         "all",
         "the",
         "little",
         "cracks",
+        "2026-07-12 21:30:26",
+        "2026",
+        "07",
+        "12",
+        "21",
+        "30",
+        "26",
         "d-20260215-000000-f5f727"
       ],
-      "search_text": "all the little cracks all the little cracks d-20260215-000000-f5f727"
+      "search_text": "all the little cracks all the little cracks 2026-07-12 21:30:26 2026 07 12 21 30 26 d-20260215-000000-f5f727"
     },
     {
       "id": "d-20260215-000000-3b0cc8",
@@ -333,13 +378,22 @@
       "kind": "doc",
       "title": "healing forms",
       "href": "/moments/?doc=d-20260215-000000-ee27e1",
+      "last_updated": "2026-06-18 00:11:52",
+      "display_meta": "2026-06-18 00:11:52",
       "search_terms": [
         "healing forms",
         "healing",
         "forms",
+        "2026-06-18 00:11:52",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "11",
+        "52",
         "d-20260215-000000-ee27e1"
       ],
-      "search_text": "healing forms healing forms d-20260215-000000-ee27e1"
+      "search_text": "healing forms healing forms 2026-06-18 00:11:52 2026 06 18 00 11 52 d-20260215-000000-ee27e1"
     },
     {
       "id": "d-20260215-000000-c04e75",
@@ -408,14 +462,23 @@
       "kind": "doc",
       "title": "little clear vessel",
       "href": "/moments/?doc=d-20260215-000000-da0340",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "little clear vessel",
         "little",
         "clear",
         "vessel",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-da0340"
       ],
-      "search_text": "little clear vessel little clear vessel d-20260215-000000-da0340"
+      "search_text": "little clear vessel little clear vessel 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-da0340"
     },
     {
       "id": "d-20260215-000000-6ce9cf",
@@ -457,11 +520,20 @@
       "kind": "doc",
       "title": "particles",
       "href": "/moments/?doc=d-20260215-000000-fb286f",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "particles",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-fb286f"
       ],
-      "search_text": "particles d-20260215-000000-fb286f"
+      "search_text": "particles 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-fb286f"
     },
     {
       "id": "d-20260215-000000-22de5f",
@@ -482,14 +554,23 @@
       "kind": "doc",
       "title": "perfection of flowers",
       "href": "/moments/?doc=d-20260215-000000-d446d8",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "perfection of flowers",
         "perfection",
         "of",
         "flowers",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-d446d8"
       ],
-      "search_text": "perfection of flowers perfection of flowers d-20260215-000000-d446d8"
+      "search_text": "perfection of flowers perfection of flowers 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-d446d8"
     },
     {
       "id": "d-20260215-000000-4ddc7d",
@@ -507,26 +588,44 @@
       "kind": "doc",
       "title": "sadness love",
       "href": "/moments/?doc=d-20260215-000000-f81753",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "sadness love",
         "sadness",
         "love",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-f81753"
       ],
-      "search_text": "sadness love sadness love d-20260215-000000-f81753"
+      "search_text": "sadness love sadness love 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-f81753"
     },
     {
       "id": "d-20260215-000000-e6723f",
       "kind": "doc",
       "title": "Samuel Beckett",
       "href": "/moments/?doc=d-20260215-000000-e6723f",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "samuel beckett",
         "samuel",
         "beckett",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-e6723f"
       ],
-      "search_text": "samuel beckett samuel beckett d-20260215-000000-e6723f"
+      "search_text": "samuel beckett samuel beckett 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-e6723f"
     },
     {
       "id": "d-20260215-000000-55070c",
@@ -568,14 +667,23 @@
       "kind": "doc",
       "title": "the moment collector",
       "href": "/moments/?doc=d-20260215-000000-f1b2bb",
+      "last_updated": "2026-06-18 00:21:30",
+      "display_meta": "2026-06-18 00:21:30",
       "search_terms": [
         "the moment collector",
         "the",
         "moment",
         "collector",
+        "2026-06-18 00:21:30",
+        "2026",
+        "06",
+        "18",
+        "00",
+        "21",
+        "30",
         "d-20260215-000000-f1b2bb"
       ],
-      "search_text": "the moment collector the moment collector d-20260215-000000-f1b2bb"
+      "search_text": "the moment collector the moment collector 2026-06-18 00:21:30 2026 06 18 00 21 30 d-20260215-000000-f1b2bb"
     },
     {
       "id": "d-20260215-000000-1caadb",

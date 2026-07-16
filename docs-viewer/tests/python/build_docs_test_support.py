@@ -88,7 +88,34 @@ def write_site_tools_config(root: Path, *, media_base: str = "https://media.exam
     write_fixture_site_tools_config(root, media_base=media_base)
 
 
+def write_route_config(root: Path, *, public_scope: str = "", public_basis: str = "edited") -> None:
+    routes = [
+        {
+            "route_id": "docs-manage",
+            "app_kind": "manage",
+            "default_scope_id": "studio",
+            "features": ["recent"],
+            "recent_basis": "edited",
+        }
+    ]
+    if public_scope:
+        routes.append(
+            {
+                "route_id": public_scope,
+                "app_kind": "public",
+                "default_scope_id": public_scope,
+                "features": ["recent"],
+                "recent_basis": public_basis,
+            }
+        )
+    write_json(
+        root / "docs-viewer/config/routes/docs-viewer-routes.json",
+        {"schema_version": "docs_viewer_routes_v1", "routes": routes},
+    )
+
+
 def write_scope_config(root: Path) -> None:
+    write_route_config(root)
     write_docs_scope_config(
         root,
         [
@@ -109,7 +136,7 @@ def write_scope_config(root: Path) -> None:
             }
         ],
         {
-            "recently_added_limit": 10,
+            "recent_limit": 10,
             "ui_statuses_by_scope": {
                 "studio": [{"ui_status": "done", "label": "Done"}],
                 "library": [{"ui_status": "draft", "label": "Draft"}],
@@ -120,6 +147,7 @@ def write_scope_config(root: Path) -> None:
 
 def write_external_scope_config(root: Path, external_root: Path) -> None:
     del external_root
+    write_route_config(root)
     write_docs_scope_config(
         root,
         [
@@ -144,6 +172,7 @@ def write_external_scope_config(root: Path, external_root: Path) -> None:
 
 
 def write_public_scope_config(root: Path) -> None:
+    write_route_config(root, public_scope="library", public_basis="edited")
     write_docs_scope_config(
         root,
         [
@@ -165,7 +194,7 @@ def write_public_scope_config(root: Path) -> None:
                 "allow_unresolved_parent_ids": False,
             }
         ],
-        {"recently_added_limit": 2},
+        {"recent_limit": 2},
     )
 
 
@@ -192,7 +221,7 @@ def write_source_docs(root: Path, *, child_body_suffix: str = "") -> None:
 doc_id: {PARENT_DOC_ID}
 title: Parent
 added_date: 2026-06-01
-last_updated: 2026-06-01
+last_updated: 2026-06-01 10:00:00
 parent_id: ""
 ---
 # Parent
@@ -208,7 +237,7 @@ title: Child
 date: 2026-06-02
 date_display: June 2026
 added_date: 2026-06-01
-last_updated: 2026-06-01
+last_updated: 2026-06-02 10:00:00
 summary: Child summary
 ui_status: done
 parent_id: {PARENT_DOC_ID}
@@ -244,12 +273,12 @@ Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media
 
 def write_public_source_docs(root: Path) -> None:
     rows = [
-        (PARENT_DOC_ID, "Parent", "2026-06-01", "2026-06-01", "", True),
-        (CHILD_DOC_ID, "Child", "2026-06-03", "2026-06-03", PARENT_DOC_ID, True),
-        (HIDDEN_DOC_ID, "Hidden", "2026-06-04", "2026-06-04", PARENT_DOC_ID, False),
-        (HIDDEN_CHILD_DOC_ID, "Hidden Child", "2026-06-05", "2026-06-05", HIDDEN_DOC_ID, True),
-        (MANAGE_ROOT_DOC_ID, "Manage Root", "2026-06-05", "2026-06-05", "", True),
-        (MANAGE_CHILD_DOC_ID, "Manage Child", "2026-06-06", "2026-06-06", MANAGE_ROOT_DOC_ID, True),
+        (PARENT_DOC_ID, "Parent", "2026-06-01", "2026-06-01 10:00:00", "", True),
+        (CHILD_DOC_ID, "Child", "2026-06-03", "2026-06-03 10:00:00", PARENT_DOC_ID, True),
+        (HIDDEN_DOC_ID, "Hidden", "2026-06-04", "2026-06-04 10:00:00", PARENT_DOC_ID, False),
+        (HIDDEN_CHILD_DOC_ID, "Hidden Child", "2026-06-05", "2026-06-05 10:00:00", HIDDEN_DOC_ID, True),
+        (MANAGE_ROOT_DOC_ID, "Manage Root", "2026-06-05", "2026-06-05 10:00:00", "", True),
+        (MANAGE_CHILD_DOC_ID, "Manage Child", "2026-06-06", "2026-06-06 10:00:00", MANAGE_ROOT_DOC_ID, True),
     ]
     for doc_id, title, added_date, last_updated, parent_id, viewable in rows:
         viewable_line = "" if viewable else "viewable: false\n"

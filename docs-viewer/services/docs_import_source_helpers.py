@@ -19,22 +19,6 @@ def viewer_url_for(scope: str, doc_id: str) -> str:
     return f"/docs/?scope={normalized_scope}&doc={doc_id}"
 
 
-def apply_replacement_title_to_preview(preview: Dict[str, Any], replacement_title: str) -> None:
-    title = str(replacement_title or "").strip()
-    if not title:
-        raise ValueError("replacement_title is required when the proposed doc_id collides")
-    preview["title"] = title
-    preview["title_source"] = "replacement_title"
-    preview["proposed_doc_id"] = slugify(title)
-    preview["proposed_doc_id_source"] = "replacement_title"
-    markdown = str(preview.get("markdown_preview") or "")
-    if markdown.startswith("# "):
-        lines = markdown.splitlines()
-        if lines:
-            lines[0] = f"# {title}"
-            preview["markdown_preview"] = "\n".join(lines)
-
-
 def apply_replacement_doc_id_to_preview(preview: Dict[str, Any], replacement_doc_id: str) -> None:
     raw_doc_id = str(replacement_doc_id or "").strip()
     doc_id = slugify(raw_doc_id)

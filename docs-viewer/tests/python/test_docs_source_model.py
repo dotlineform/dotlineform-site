@@ -175,7 +175,7 @@ def test_descendant_helper_handles_cycles_without_looping() -> None:
     assert source_model.descendant_doc_ids([alpha, beta], "alpha") == {"alpha", "beta"}
 
 
-def test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter() -> None:
+def test_source_rewrite_advances_only_for_recent_edit_content() -> None:
     original_timestamp = source_model.current_doc_timestamp
     source_model.current_doc_timestamp = lambda: "2026-05-09 13:00:00"
     try:
@@ -203,7 +203,7 @@ def test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter() -> Non
         "doc_id": "sample",
         "title": "Updated",
         "added_date": "2026-01-01",
-        "last_updated": "2026-01-02 09:00",
+        "last_updated": "2026-05-09 13:00:00",
         "parent_id": "parent",
         "viewable": False,
     }
@@ -215,6 +215,47 @@ def test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter() -> Non
         "parent_id": "",
         "viewable": True,
     }
+
+
+def test_recent_edit_content_positive_allowlist_is_body_title_and_summary() -> None:
+    previous = {
+        "doc_id": "sample",
+        "title": "Title",
+        "summary": "Summary",
+        "parent_id": "",
+        "future_field": "old",
+    }
+    structural = {
+        **previous,
+        "parent_id": "parent",
+        "future_field": "new",
+    }
+
+    assert source_model.recent_edit_content(previous, "# Body\n") == source_model.recent_edit_content(
+        structural,
+        "# Body\n",
+    )
+    assert source_model.recent_edit_content(previous, "# Body\n") != source_model.recent_edit_content(
+        {**structural, "title": "Changed"},
+        "# Body\n",
+    )
+    assert source_model.recent_edit_content(previous, "# Body\n") != source_model.recent_edit_content(
+        {**structural, "summary": "Changed"},
+        "# Body\n",
+    )
+    assert source_model.recent_edit_content(previous, "# Body\n") != source_model.recent_edit_content(
+        structural,
+        "# Changed body\n",
+    )
+
+
+def test_advance_doc_front_matter_requires_a_full_timestamp() -> None:
+    try:
+        source_model.advance_doc_front_matter({}, timestamp="2026-07-16")
+    except ValueError as exc:
+        assert "YYYY-MM-DD HH:MM:SS" in str(exc)
+    else:
+        raise AssertionError("date-only document write timestamp should be rejected")
 
 
 def test_allocate_doc_id_uses_timestamp_and_retries_collisions() -> None:
@@ -239,7 +280,9 @@ def main() -> None:
         test_load_scope_docs_allows_unknown_library_parent,
         test_title_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
-        test_source_rewrite_preserves_doc_dates_and_normalizes_front_matter,
+        test_source_rewrite_advances_only_for_recent_edit_content,
+        test_recent_edit_content_positive_allowlist_is_body_title_and_summary,
+        test_advance_doc_front_matter_requires_a_full_timestamp,
         test_allocate_doc_id_uses_timestamp_and_retries_collisions,
     ]
     for test in tests:

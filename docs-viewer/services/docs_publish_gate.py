@@ -181,17 +181,6 @@ def public_index_tree_payload(payload: Any, hidden_doc_ids: set[str]) -> dict[st
     return {**payload, "docs": rows}
 
 
-def public_recently_added_payload(payload: Any, hidden_doc_ids: set[str]) -> dict[str, Any]:
-    if not isinstance(payload, dict):
-        return payload
-    rows = [
-        row
-        for row in payload.get("docs", [])
-        if isinstance(row, dict) and clean_doc_id(row.get("doc_id")) not in hidden_doc_ids
-    ]
-    return {**payload, "docs": rows}
-
-
 def public_reference_target_payload(payload: Any, hidden_doc_ids: set[str]) -> dict[str, Any] | None:
     if not isinstance(payload, dict):
         return payload
@@ -250,17 +239,27 @@ def doc_id_for_reference_by_doc_path(relative_path: Path) -> str:
     return ""
 
 
-def publishable_docs_files(working_root: Path, published_root: Path) -> dict[Path, bytes]:
+def publishable_docs_files(
+    working_root: Path,
+    published_root: Path,
+    *,
+    require_publication_recent: bool = False,
+) -> dict[Path, bytes]:
     index_tree_path = working_root / "index-tree.json"
     hidden_doc_ids: set[str] = set()
     if index_tree_path.exists():
         hidden_doc_ids = hidden_doc_ids_from_tree(read_json(index_tree_path))
+    publication_recent_path = working_root / ".publish/recent.json"
+    if require_publication_recent and not publication_recent_path.is_file():
+        raise FileNotFoundError(f"working publication Recent projection not found: {publication_recent_path}")
 
     files: dict[Path, bytes] = {}
     reference_target_payloads: dict[Path, dict[str, Any]] = {}
     references_index_payload: Any = None
     for source_path in iter_files(working_root):
         relative_path = source_path.relative_to(working_root)
+        if relative_path.parts and relative_path.parts[0] == ".publish":
+            continue
         by_id_doc_id = doc_id_for_by_id_path(relative_path)
         if by_id_doc_id and by_id_doc_id in hidden_doc_ids:
             continue
@@ -270,8 +269,11 @@ def publishable_docs_files(working_root: Path, published_root: Path) -> dict[Pat
         if relative_path == Path("index-tree.json"):
             files[relative_path] = json_bytes(public_index_tree_payload(read_json(source_path), hidden_doc_ids))
             continue
-        if relative_path == Path("recently-added.json"):
-            files[relative_path] = json_bytes(public_recently_added_payload(read_json(source_path), hidden_doc_ids))
+        if relative_path == Path("recent.json"):
+            if publication_recent_path.is_file():
+                files[relative_path] = publication_recent_path.read_bytes()
+            else:
+                files[relative_path] = source_path.read_bytes()
             continue
         if relative_path == Path("references/index.json"):
             references_index_payload = read_json(source_path)
@@ -301,7 +303,7 @@ def publishable_docs_files(working_root: Path, published_root: Path) -> dict[Pat
 
 
 def publishable_parent_docs_files(config: DocsScopeConfig, working_root: Path, published_root: Path) -> dict[Path, bytes]:
-    files = publishable_docs_files(working_root, published_root)
+    files = publishable_docs_files(working_root, published_root, require_publication_recent=True)
     sub_scope_prefixes = sub_scope_relative_prefixes(config)
     if not sub_scope_prefixes:
         return files

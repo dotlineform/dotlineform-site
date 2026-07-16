@@ -157,7 +157,7 @@ Related body.
     assert related["parent_id"] == DETAIL_DOC_ID
     assert not (root / "docs-viewer/generated/docs/studio/tags/by-id/stale.json").exists()
     assert not (root / "docs-viewer/generated/docs/studio/tags/index-tree.json").exists()
-    assert not (root / "docs-viewer/generated/docs/studio/tags/recently-added.json").exists()
+    assert not (root / "docs-viewer/generated/docs/studio/tags/recent.json").exists()
 
 def test_python_docs_builder_public_sub_scope_uses_publish_url_base() -> None:
     with tempfile.TemporaryDirectory() as temp_path:

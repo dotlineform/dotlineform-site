@@ -1,0 +1,68 @@
+{
+  "schema": "docs_recent_v1",
+  "basis": "edited",
+  "limit": 10,
+  "docs": [
+    {
+      "doc_id": "d-20260215-000000-f5f727",
+      "title": "all the little cracks",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-f5f727.json",
+      "timestamp": "2026-07-12 21:30:26"
+    },
+    {
+      "doc_id": "d-20260401-000000-2d7630",
+      "title": "4 stories",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260401-000000-2d7630.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-e2a906",
+      "title": "a light inside a flower",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-e2a906.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-d37a8a",
+      "title": "a poem about purity",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-d37a8a.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-da0340",
+      "title": "little clear vessel",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-da0340.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-fb286f",
+      "title": "particles",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-fb286f.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-d446d8",
+      "title": "perfection of flowers",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-d446d8.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-f81753",
+      "title": "sadness love",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-f81753.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-e6723f",
+      "title": "Samuel Beckett",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-e6723f.json",
+      "timestamp": "2026-06-18 00:21:30"
+    },
+    {
+      "doc_id": "d-20260215-000000-f1b2bb",
+      "title": "the moment collector",
+      "content_url": "/assets/data/docs/scopes/moments/by-id/d-20260215-000000-f1b2bb.json",
+      "timestamp": "2026-06-18 00:21:30"
+    }
+  ],
+  "generated_at": "2026-07-16T17:15:51Z"
+}

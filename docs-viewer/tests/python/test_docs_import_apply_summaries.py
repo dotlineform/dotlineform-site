@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 import docs_write_rebuild as write_rebuild
 
@@ -100,7 +101,8 @@ def test_library_import_summary_apply_writes_source() -> None:
     assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
     assert payload["rebuild"]["diagnostics"]["docs"]["build_mode"] == "targeted"
-    assert "last_updated: 2026-05-01" in source_text
+    assert "last_updated: 2026-05-01" not in source_text
+    assert re.search(r'last_updated: "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"', source_text)
     assert "summary: New summary." in source_text
 
 def test_documents_data_sharing_apply_uses_python_docs_rebuild_commands() -> None:

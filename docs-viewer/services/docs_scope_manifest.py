@@ -117,7 +117,7 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
     files.extend(
         [
             path_record(repo_root, "generated_docs_index_tree", docs_output / "index-tree.json"),
-            path_record(repo_root, "generated_docs_recently_added", docs_output / "recently-added.json"),
+            path_record(repo_root, "generated_docs_recent", docs_output / "recent.json"),
             path_record(repo_root, "generated_docs_payload_root", docs_output / "by-id"),
             path_record(repo_root, "generated_search_index", generated_search_index_path(repo_root, config)),
         ]
@@ -127,7 +127,7 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
             [
                 path_record(repo_root, "published_docs_root", repo_root / config.publish_output),
                 path_record(repo_root, "published_docs_index_tree", repo_root / config.publish_output / "index-tree.json"),
-                path_record(repo_root, "published_docs_recently_added", repo_root / config.publish_output / "recently-added.json"),
+                path_record(repo_root, "published_docs_recent", repo_root / config.publish_output / "recent.json"),
                 path_record(repo_root, "published_docs_payload_root", repo_root / config.publish_output / "by-id"),
                 path_record(repo_root, "published_search_index", published_search_index_path(repo_root, config)),
             ]

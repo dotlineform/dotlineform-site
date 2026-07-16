@@ -99,12 +99,23 @@ def prepare_publish_repo(root: Path) -> None:
         },
     )
     write_json(
-        root / "docs-viewer/generated/docs/library/recently-added.json",
+        root / "docs-viewer/generated/docs/library/recent.json",
         {
-            "schema": "docs_recently_added_v1",
+            "schema": "docs_recent_v1",
+            "basis": "edited",
             "docs": [
-                {"doc_id": "hidden", "title": "Hidden", "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json", "added_date": "2026-06-02"},
-                {"doc_id": "library", "title": "Library", "content_url": "/assets/data/docs/scopes/library/by-id/library.json", "added_date": "2026-06-01"},
+                {"doc_id": "hidden", "title": "Hidden", "content_url": "/assets/data/docs/scopes/library/by-id/hidden.json", "timestamp": "2026-06-02 10:00:00"},
+                {"doc_id": "library", "title": "Library", "content_url": "/assets/data/docs/scopes/library/by-id/library.json", "timestamp": "2026-06-01 10:00:00"},
+            ],
+        },
+    )
+    write_json(
+        root / "docs-viewer/generated/docs/library/.publish/recent.json",
+        {
+            "schema": "docs_recent_v1",
+            "basis": "edited",
+            "docs": [
+                {"doc_id": "library", "title": "Library", "content_url": "/assets/data/docs/scopes/library/by-id/library.json", "timestamp": "2026-06-01 10:00:00"},
             ],
         },
     )
@@ -161,7 +172,7 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert "site/assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
-        recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recently-added.json").read_text(encoding="utf-8"))
+        recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
         references = json.loads((repo_root / "site/assets/data/docs/scopes/library/references/index.json").read_text(encoding="utf-8"))
 
         assert public_tree["docs"][0]["doc_id"] == "library"

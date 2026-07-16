@@ -8,7 +8,7 @@ import {
 } from "./docs-viewer-data.js";
 import {
   normalizeDocsIndexTreePayload,
-  normalizeRecentlyAddedPayload
+  normalizeRecentPayload
 } from "./docs-viewer-tree-payload-adapter.js";
 
 export function createDocsViewerGeneratedDataRuntime(options) {
@@ -161,18 +161,18 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     );
   }
 
-  function readRecentlyAdded(options) {
+  function readRecent(options) {
     var requestSettings = options || {};
     var viewerScope = requestSettings.viewerScope || currentViewerScope();
     return fetchPreferredGeneratedJson(
-      requestSettings.recentlyAddedUrl,
-      "Failed to load recently added docs",
-      managementReloadPath("/docs/generated/recently-added", { scope: viewerScope }),
+      requestSettings.recentUrl,
+      "Failed to load Recent docs",
+      managementReloadPath("/docs/generated/recent", { scope: viewerScope }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false,
         viewerScope: viewerScope
       }))
-    ).then(normalizeRecentlyAddedPayload);
+    ).then(normalizeRecentPayload);
   }
 
   function readReferencesIndex(options) {
@@ -220,7 +220,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     dataRequestOptions: dataRequestOptions,
     readDocsIndexTree: readDocsIndexTree,
     readDocumentPayload: readDocumentPayload,
-    readRecentlyAdded: readRecentlyAdded,
+    readRecent: readRecent,
     readReferenceTarget: readReferenceTarget,
     readReferencesIndex: readReferencesIndex,
     readSearchIndex: readSearchIndex,

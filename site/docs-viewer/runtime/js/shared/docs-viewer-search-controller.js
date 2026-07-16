@@ -54,7 +54,13 @@ export function initDocsViewerSearchController(context) {
   }
 
   function recentIsEnabled() {
-    return Boolean(context.recentlyAddedEnabled && results && more);
+    return Boolean(context.recentEnabled && results && more);
+  }
+
+  function recentLanguage() {
+    return context.recentBasis === "added"
+      ? { adjective: "recently added", title: "Recently Added" }
+      : { adjective: "recently edited", title: "Recently Edited" };
   }
 
   function applyCurrentRoute(options) {
@@ -136,7 +142,7 @@ export function initDocsViewerSearchController(context) {
 
   function loadRecentEntries() {
     if (!recentIsEnabled()) {
-      return Promise.reject(new Error("Recently added unavailable."));
+      return Promise.reject(new Error("Recent documents unavailable."));
     }
     if (searchRecent.recentLoaded) {
       return Promise.resolve(searchRecent.recentEntries);
@@ -147,9 +153,13 @@ export function initDocsViewerSearchController(context) {
 
     var stopBusy = typeof context.startBusy === "function" ? context.startBusy() : function () {};
 
-    searchRecent.recentRequestPromise = context.collectionProvider.readRecentlyAdded()
+    searchRecent.recentRequestPromise = context.collectionProvider.readRecent()
       .then(function (payload) {
+        if (!payload || payload.basis !== context.recentBasis) {
+          throw new Error("Recent documents payload basis does not match the route policy.");
+        }
         searchRecent.recentEntries = normalizeRecentEntries(payload && Array.isArray(payload.docs) ? payload.docs : []);
+        searchRecent.recentBasis = payload.basis;
         searchRecent.recentLoaded = true;
         return searchRecent.recentEntries;
       })
@@ -188,8 +198,8 @@ export function initDocsViewerSearchController(context) {
   function displayRecentMetaForDoc(doc) {
     if (!doc) return "";
     var parts = [];
-    var addedDate = String(doc.added_date || doc.last_updated || "").trim();
-    if (addedDate) parts.push(addedDate);
+    var timestamp = String(doc.timestamp || "").trim();
+    if (timestamp) parts.push(timestamp);
     if (doc.parent_title) {
       parts.push(String(doc.parent_title || "").trim());
     } else if (doc.parent_id) {
@@ -210,11 +220,12 @@ export function initDocsViewerSearchController(context) {
 
   function renderRecentMode() {
     if (!recentIsEnabled()) return;
+    var language = recentLanguage();
     context.setRecentModeActive(true);
     showRecentPane();
-    document.title = "Recently Added | dotlineform";
+    document.title = language.title + " | dotlineform";
     if (!searchRecent.recentLoaded) {
-      setResultsStatus("Loading recently added docs...", false);
+      setResultsStatus("Loading " + language.adjective + " docs...", false);
       results.innerHTML = "";
       more.innerHTML = "";
       more.hidden = true;
@@ -224,7 +235,7 @@ export function initDocsViewerSearchController(context) {
         })
         .catch(function (error) {
           if (!searchRecent.recentModeActive) return;
-          setResultsStatus(error.message || "Failed to load recently added docs.", true);
+          setResultsStatus(error.message || "Failed to load Recent docs.", true);
           results.innerHTML = "";
           more.innerHTML = "";
           more.hidden = true;
@@ -233,14 +244,16 @@ export function initDocsViewerSearchController(context) {
     }
     var recentDocs = collectRecentDocs(searchRecent.recentEntries || [], searchRecent.recentLimit);
     if (!recentDocs.length) {
-      setResultsStatus("No recently added docs.", false);
+      setResultsStatus("No " + language.adjective + " docs.", false);
       results.innerHTML = "";
       more.innerHTML = "";
       more.hidden = true;
       return;
     }
 
-    setResultsStatus(recentDocs.length === 1 ? "1 recently added doc" : recentDocs.length + " recently added docs", false);
+    setResultsStatus(recentDocs.length === 1
+      ? "1 " + language.adjective + " doc"
+      : recentDocs.length + " " + language.adjective + " docs", false);
     results.innerHTML = recentDocs.map(renderRecentResultEntry).join("");
     more.innerHTML = "";
     more.hidden = true;

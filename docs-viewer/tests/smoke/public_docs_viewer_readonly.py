@@ -130,15 +130,15 @@ def assert_public_route_contract(route: str, state: dict[str, object]) -> None:
         raise AssertionError(f"{route} used unexpected route id: {state!r}")
     if not str(docs_paths.get("index_tree_url") or "").endswith("/index-tree.json"):
         raise AssertionError(f"{route} route config missing index_tree_url: {state!r}")
-    if not str(docs_paths.get("recently_added_url") or "").endswith("/recently-added.json"):
-        raise AssertionError(f"{route} route config missing recently_added_url: {state!r}")
+    if not str(docs_paths.get("recent_url") or "").endswith("/recent.json"):
+        raise AssertionError(f"{route} route config missing recent_url: {state!r}")
     if not str(docs_paths.get("search_index_url") or "").endswith("/index.json"):
         raise AssertionError(f"{route} route config missing search_index_url: {state!r}")
 
 
 def assert_payload_requests(route: str, paths: set[str], scope: str, doc_id: str) -> None:
     expected_tree = f"/assets/data/docs/scopes/{scope}/index-tree.json"
-    expected_recent = f"/assets/data/docs/scopes/{scope}/recently-added.json"
+    expected_recent = f"/assets/data/docs/scopes/{scope}/recent.json"
     expected_doc = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
     expected_search = f"/assets/data/search/{scope}/index.json"
     missing = [path for path in [expected_tree, expected_recent, expected_doc, expected_search] if path not in paths]
@@ -220,10 +220,11 @@ def exercise_public_route(
             raise AssertionError(f"{route} rendered intentionally hidden document controls")
     page.locator("#docsViewerRecentButton").click()
     page.wait_for_function(
-        """() => {
+        """(recentAdjective) => {
             const status = document.querySelector("#docsViewerResultsStatus");
-            return status && !status.hidden && /recently added docs?/.test(status.textContent);
+            return status && !status.hidden && status.textContent.includes(recentAdjective);
         }""",
+        arg="recently added" if urlparse(route).path.startswith("/moments/") else "recently edited",
         timeout=timeout_ms,
     )
     exercise_search(page, route, title, timeout_ms)

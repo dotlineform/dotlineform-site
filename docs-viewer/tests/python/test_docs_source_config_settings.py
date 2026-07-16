@@ -27,7 +27,7 @@ def test_source_config_settings_contract_exposes_default_doc_id() -> None:
             "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
         }
     ]
-    assert payload["deferred_global_fields"][0]["field"] == "recently_added_limit"
+    assert payload["deferred_global_fields"][0]["field"] == "recent_limit"
     assert any(field["field"] == "source" for field in payload["blocked_scope_fields"])
     assert not any(field["field"] == "default_doc_id" for field in payload["blocked_scope_fields"])
     scope = payload["scopes"][0]
@@ -111,9 +111,9 @@ def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
             docs_management_service.docs_source_config_settings.validate_scope_settings_change(
                 repo_root,
                 "studio",
-                {"recently_added_limit": 12},
+                {"recent_limit": 12},
             )
         except ValueError as exc:
-            assert "recently_added_limit" in str(exc)
+            assert "recent_limit" in str(exc)
         else:
             raise AssertionError("deferred global field should be rejected")

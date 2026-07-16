@@ -17,6 +17,7 @@ from docs_document_identity import (
     allocate_doc_id,
     current_doc_timestamp,
     doc_id_matches_added_date,
+    is_doc_timestamp,
     is_immutable_doc_id,
 )
 
@@ -32,6 +33,7 @@ FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
+RECENT_EDIT_FRONT_MATTER_FIELDS = ("title", "summary")
 
 
 @dataclass
@@ -82,12 +84,11 @@ def parse_front_matter_value(raw_value: str) -> Any:
     return value
 
 
-def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
-    raw = path.read_text(encoding="utf-8")
+def parse_source_text(raw: str, *, source_name: str = "source") -> tuple[Dict[str, Any], str]:
     match = FRONT_MATTER_PATTERN.match(raw)
     if not match:
         if raw.startswith("---"):
-            raise ValueError(f"front matter could not be parsed in {path.name}")
+            raise ValueError(f"front matter could not be parsed in {source_name}")
         return {}, raw
 
     front_matter: Dict[str, Any] = {}
@@ -99,6 +100,10 @@ def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
         front_matter[key.strip()] = parse_front_matter_value(raw_value)
     body = raw[match.end():]
     return front_matter, body
+
+
+def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
+    return parse_source_text(path.read_text(encoding="utf-8"), source_name=path.name)
 
 
 def format_front_matter_value(value: Any) -> str:
@@ -153,6 +158,103 @@ def write_text_atomic(path: Path, text: str) -> None:
                 temp_path.unlink()
             except OSError:
                 pass
+
+
+def advance_doc_front_matter(
+    front_matter: Dict[str, Any],
+    *,
+    timestamp: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Return copied front matter with one canonical document write timestamp."""
+
+    next_timestamp = str(timestamp or current_doc_timestamp()).strip()
+    if not is_doc_timestamp(next_timestamp):
+        raise ValueError("document write timestamp must use YYYY-MM-DD HH:MM:SS")
+    updated_front_matter = dict(front_matter)
+    updated_front_matter["added_date"] = str(
+        updated_front_matter.get("added_date")
+        or updated_front_matter.get("last_updated")
+        or next_timestamp
+    ).strip()
+    updated_front_matter["last_updated"] = next_timestamp
+    return updated_front_matter
+
+
+def recent_edit_content(front_matter: Dict[str, Any], body: str) -> tuple[str, str, str]:
+    """Return only the canonical source values that make a document recently edited."""
+
+    return (
+        str(body),
+        str(front_matter.get(RECENT_EDIT_FRONT_MATTER_FIELDS[0]) or "").strip(),
+        str(front_matter.get(RECENT_EDIT_FRONT_MATTER_FIELDS[1]) or "").strip(),
+    )
+
+
+def advance_front_matter_for_recent_edit(
+    previous_front_matter: Dict[str, Any],
+    previous_body: str,
+    updated_front_matter: Dict[str, Any],
+    updated_body: str,
+    *,
+    timestamp: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Advance last_updated only when body, title, or summary changed."""
+
+    if recent_edit_content(previous_front_matter, previous_body) == recent_edit_content(
+        updated_front_matter,
+        updated_body,
+    ):
+        return dict(updated_front_matter)
+    return advance_doc_front_matter(updated_front_matter, timestamp=timestamp)
+
+
+def rewrite_front_matter_source_timestamp(
+    front_matter_source: str,
+    front_matter: Dict[str, Any],
+    *,
+    timestamp: Optional[str] = None,
+) -> str:
+    """Advance timestamp fields while preserving other raw front-matter lines."""
+
+    updated_front_matter = advance_doc_front_matter(front_matter, timestamp=timestamp)
+    lines = front_matter_source.splitlines(keepends=True)
+    if len(lines) < 2:
+        raise ValueError("source front matter could not be updated")
+
+    field_indices: Dict[str, int] = {}
+    closing_index = -1
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if index > 0 and stripped.startswith("---"):
+            closing_index = index
+        for key in ("added_date", "last_updated"):
+            if re.match(rf"^[ \t]*{re.escape(key)}[ \t]*:", line):
+                field_indices[key] = index
+    if closing_index < 1:
+        raise ValueError("source front matter closing delimiter could not be found")
+
+    for key in ("added_date", "last_updated"):
+        rendered = f"{key}: {format_front_matter_value(updated_front_matter[key])}\n"
+        index = field_indices.get(key)
+        if index is not None:
+            newline = "\r\n" if lines[index].endswith("\r\n") else "\n"
+            lines[index] = rendered.rstrip("\n") + newline
+            continue
+        if key == "added_date" and "last_updated" in field_indices:
+            insert_at = field_indices["last_updated"]
+        elif key == "last_updated" and "added_date" in field_indices:
+            insert_at = field_indices["added_date"] + 1
+        else:
+            insert_at = closing_index
+        lines.insert(insert_at, rendered)
+        closing_index += 1
+        field_indices = {
+            field: (field_index + 1 if field_index >= insert_at else field_index)
+            for field, field_index in field_indices.items()
+        }
+        field_indices[key] = insert_at
+
+    return "".join(lines)
 
 
 def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
@@ -285,26 +387,21 @@ def direct_child_doc_ids(docs: list[ScopeDoc], doc_id: str) -> list[str]:
 
 
 def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
-    timestamp = current_doc_timestamp()
     updated_front_matter = dict(doc.front_matter)
-    updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-    ).strip()
     for key, value in front_matter_updates.items():
         if value is None:
             updated_front_matter.pop(key, None)
         else:
             updated_front_matter[key] = value
     updated_front_matter.pop("sort_order", None)
+    updated_front_matter = advance_front_matter_for_recent_edit(
+        doc.front_matter,
+        doc.body,
+        updated_front_matter,
+        doc.body,
+    )
     return format_source(updated_front_matter, doc.body)
 
 
 def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str) -> str:
-    timestamp = current_doc_timestamp()
-    updated_front_matter = dict(doc.front_matter)
-    updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-    ).strip()
-    updated_front_matter["parent_id"] = parent_id
-    updated_front_matter.pop("sort_order", None)
-    return format_source(updated_front_matter, doc.body)
+    return rewrite_doc_source(doc, {"parent_id": parent_id})

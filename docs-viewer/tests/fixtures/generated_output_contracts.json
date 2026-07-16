@@ -68,16 +68,17 @@
         "ui_status"
       ]
     },
-    "recently_added_json": {
-      "path_pattern": "<docs_scope.output>/recently-added.json",
-      "required_top_level_keys": ["schema", "docs", "generated_at", "limit"],
-      "schema": "docs_recently_added_v1",
+    "recent_json": {
+      "path_pattern": "<docs_scope.output>/recent.json",
+      "required_top_level_keys": ["schema", "basis", "docs", "generated_at", "limit"],
+      "schema": "docs_recent_v1",
+      "basis": "edited",
       "limit": 10,
       "doc_entry": {
         "doc_id": "contract-fixture",
         "title": "Contract Fixture",
         "content_url": "/docs-viewer/generated/docs/studio/by-id/contract-fixture.json",
-        "added_date": "2026-06-01",
+        "timestamp": "2026-06-01 10:00:00",
         "parent_id": "sample-roadmap-feature",
         "parent_title": "Sample Roadmap Feature"
       },
@@ -85,7 +86,7 @@
         "doc_id",
         "title",
         "content_url",
-        "added_date",
+        "timestamp",
         "parent_id",
         "parent_title"
       ]

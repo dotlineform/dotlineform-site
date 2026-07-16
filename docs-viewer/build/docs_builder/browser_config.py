@@ -33,41 +33,41 @@ def raw_scope_items(repo_root: Path) -> dict[str, dict[str, Any]]:
     }
 
 
-def browser_docs_index_tree_url(config: DocsScopeConfig) -> str:
+def browser_docs_index_tree_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
         return f"/docs/generated/index-tree?scope={quote(config.scope_id)}"
-    output = config.publish_output if is_public_readonly_scope(
+    output = config.publish_output if published and is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ) else config.output
     return f"{browser_path_for_repo_relative(output)}/index-tree.json"
 
 
-def browser_docs_recently_added_url(config: DocsScopeConfig) -> str:
+def browser_docs_recent_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
-        return f"/docs/generated/recently-added?scope={quote(config.scope_id)}"
-    output = config.publish_output if is_public_readonly_scope(
+        return f"/docs/generated/recent?scope={quote(config.scope_id)}"
+    output = config.publish_output if published and is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ) else config.output
-    return f"{browser_path_for_repo_relative(output)}/recently-added.json"
+    return f"{browser_path_for_repo_relative(output)}/recent.json"
 
 
-def browser_search_index_url(config: DocsScopeConfig) -> str:
+def browser_search_index_url(config: DocsScopeConfig, *, published: bool = False) -> str:
     if scope_uses_external_data(config):
         return f"/docs/generated/search?scope={quote(config.scope_id)}"
-    output = config.publish_search_output if is_public_readonly_scope(
+    output = config.publish_search_output if published and is_public_readonly_scope(
         viewer_base_url=config.viewer_base_url,
         include_scope_param=config.include_scope_param,
     ) else config.search_output
     return browser_path_for_repo_relative(output)
 
 
-def browser_search_policy_payload(config: DocsScopeConfig) -> dict[str, Any]:
+def browser_search_policy_payload(config: DocsScopeConfig, *, published: bool = False) -> dict[str, Any]:
     return {
         "domain": "docs_viewer",
         "schema": f"search_index_{config.scope_id}_v1",
-        "index_url": browser_search_index_url(config),
+        "index_url": browser_search_index_url(config, published=published),
         "targeted_policy": "record_update",
         "targeted_operations": ["create", "update", "delete"],
     }
@@ -115,7 +115,13 @@ def docs_viewer_settings_payload(repo_root: Path, scope_ids: list[str]) -> dict[
     return settings
 
 
-def browser_scope_record(repo_root: Path, raw_by_scope: dict[str, dict[str, Any]], config: DocsScopeConfig) -> dict[str, Any]:
+def browser_scope_record(
+    repo_root: Path,
+    raw_by_scope: dict[str, dict[str, Any]],
+    config: DocsScopeConfig,
+    *,
+    published: bool = False,
+) -> dict[str, Any]:
     record = {
         "scope_id": config.scope_id,
         "scope_type": config.scope_type,
@@ -124,10 +130,10 @@ def browser_scope_record(repo_root: Path, raw_by_scope: dict[str, dict[str, Any]
         "include_scope_param": config.include_scope_param is True,
         "default_doc_id": config.default_doc_id,
         "media_path_prefix": config.media_path_prefix.as_posix(),
-        "index_tree_url": browser_docs_index_tree_url(config),
-        "recently_added_url": browser_docs_recently_added_url(config),
-        "search_index_url": browser_search_index_url(config),
-        "search": browser_search_policy_payload(config),
+        "index_tree_url": browser_docs_index_tree_url(config, published=published),
+        "recent_url": browser_docs_recent_url(config, published=published),
+        "search_index_url": browser_search_index_url(config, published=published),
+        "search": browser_search_policy_payload(config, published=published),
     }
     sub_scopes = browser_sub_scope_records(config)
     if sub_scopes:
@@ -135,13 +141,21 @@ def browser_scope_record(repo_root: Path, raw_by_scope: dict[str, dict[str, Any]
     return record
 
 
-def browser_scope_config_payload(repo_root: Path, configs: list[DocsScopeConfig]) -> dict[str, Any]:
+def browser_scope_config_payload(
+    repo_root: Path,
+    configs: list[DocsScopeConfig],
+    *,
+    published: bool = False,
+) -> dict[str, Any]:
     raw_by_scope = raw_scope_items(repo_root)
     scope_ids = [config.scope_id for config in configs]
     payload = {
         "schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
         "default_scope_id": configs[0].scope_id if configs else "",
-        "scopes": [browser_scope_record(repo_root, raw_by_scope, config) for config in configs],
+        "scopes": [
+            browser_scope_record(repo_root, raw_by_scope, config, published=published)
+            for config in configs
+        ],
     }
     settings = docs_viewer_settings_payload(repo_root, scope_ids)
     if settings:
@@ -149,8 +163,15 @@ def browser_scope_config_payload(repo_root: Path, configs: list[DocsScopeConfig]
     return payload
 
 
-def write_browser_config(repo_root: Path, configs: list[DocsScopeConfig], *, path: Path, label: str) -> None:
-    text = json_text(browser_scope_config_payload(repo_root, configs))
+def write_browser_config(
+    repo_root: Path,
+    configs: list[DocsScopeConfig],
+    *,
+    path: Path,
+    label: str,
+    published: bool = False,
+) -> None:
+    text = json_text(browser_scope_config_payload(repo_root, configs, published=published))
     target = repo_root / path
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists() and target.read_text(encoding="utf-8") == text:

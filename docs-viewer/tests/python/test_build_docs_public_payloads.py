@@ -35,17 +35,18 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
         config = load_docs_scope_configs(root)["library"]
         result = build_docs.DocsDataBuilder(repo_root=root, config=config).run(write=True)
         index_tree = read_json(root / "docs-viewer/generated/docs/library/index-tree.json")
-        recently_added = read_json(root / "docs-viewer/generated/docs/library/recently-added.json")
+        recent = read_json(root / "docs-viewer/generated/docs/library/recent.json")
+        publication_recent = read_json(root / "docs-viewer/generated/docs/library/.publish/recent.json")
         child_payload = read_json(root / f"docs-viewer/generated/docs/library/by-id/{CHILD_DOC_ID}.json")
         hidden_payload = read_json(root / f"docs-viewer/generated/docs/library/by-id/{HIDDEN_DOC_ID}.json")
-        browser_config = build_docs.browser_scope_config_payload(root, [config])
+        manage_browser_config = build_docs.browser_scope_config_payload(root, [config])
+        public_browser_config = build_docs.browser_scope_config_payload(root, [config], published=True)
 
     assert result["diagnostics"]["docs_emitted"] == 6
     public_tree_forbidden_keys = {
         "summary",
         "date",
         "date_display",
-        "added_date",
         "last_updated",
         "source_path",
         "viewer_url",
@@ -103,22 +104,29 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
     assert all("parent_id" not in doc for doc in flattened_tree_docs)
     assert index_tree["docs"][1]["children"][1]["viewable"] is False
     assert all(public_tree_forbidden_keys.isdisjoint(doc) for doc in flattened_tree_docs)
-    assert recently_added["schema"] == "docs_recently_added_v1"
-    assert recently_added["limit"] == 2
-    assert [doc["doc_id"] for doc in recently_added["docs"]] == [MANAGE_CHILD_DOC_ID, HIDDEN_CHILD_DOC_ID]
-    assert recently_added["docs"][0]["parent_title"] == "Manage Root"
-    assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in recently_added["docs"])
+    assert recent["schema"] == "docs_recent_v1"
+    assert recent["basis"] == "edited"
+    assert recent["limit"] == 2
+    assert [doc["doc_id"] for doc in recent["docs"]] == [MANAGE_CHILD_DOC_ID, HIDDEN_CHILD_DOC_ID]
+    assert recent["docs"][0]["timestamp"] == "2026-06-06 10:00:00"
+    assert recent["docs"][0]["parent_title"] == "Manage Root"
+    assert publication_recent["basis"] == "edited"
+    assert [doc["doc_id"] for doc in publication_recent["docs"]] == [CHILD_DOC_ID, PARENT_DOC_ID]
+    assert all(public_recent_forbidden_keys.isdisjoint(doc) for doc in publication_recent["docs"])
     assert set(child_payload) == {"content_html", "date", "date_display", "last_updated", "summary", "title"}
     assert child_payload["title"] == "Child"
     assert child_payload["date"] == "2026-06-02"
     assert child_payload["date_display"] == "June 2026"
     assert child_payload["summary"] == "Child summary"
-    assert child_payload["last_updated"] == "2026-06-03"
+    assert child_payload["last_updated"] == "2026-06-03 10:00:00"
     assert "content_html" in child_payload
     assert public_by_id_forbidden_keys.isdisjoint(child_payload)
     assert hidden_payload["title"] == "Hidden"
-    assert browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
-    assert browser_config["scopes"][0]["recently_added_url"] == "/assets/data/docs/scopes/library/recently-added.json"
+    assert manage_browser_config["scopes"][0]["index_tree_url"] == "/docs-viewer/generated/docs/library/index-tree.json"
+    assert manage_browser_config["scopes"][0]["recent_url"] == "/docs-viewer/generated/docs/library/recent.json"
+    assert public_browser_config["scopes"][0]["index_tree_url"] == "/assets/data/docs/scopes/library/index-tree.json"
+    assert public_browser_config["scopes"][0]["recent_url"] == "/assets/data/docs/scopes/library/recent.json"
+    assert public_browser_config["scopes"][0]["search"]["index_url"] == "/assets/data/search/library/index.json"
     assert index_tree["docs"][1]["content_url"] == f"/assets/data/docs/scopes/library/by-id/{PARENT_DOC_ID}.json"
 
 def test_python_docs_builder_public_payloads_include_promoted_report_metadata() -> None:

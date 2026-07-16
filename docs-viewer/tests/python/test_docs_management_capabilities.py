@@ -103,8 +103,8 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["source"] == "docs-viewer/source/studio"
     assert payload["scopes"][0]["browser_config"]["index_tree_url"] == "/docs-viewer/generated/docs/studio/index-tree.json"
-    assert payload["scopes"][0]["browser_config"]["recently_added_url"] == "/docs-viewer/generated/docs/studio/recently-added.json"
+    assert payload["scopes"][0]["browser_config"]["recent_url"] == "/docs-viewer/generated/docs/studio/recent.json"
     assert payload["scopes"][0]["generated"]["docs_index_tree"] == "docs-viewer/generated/docs/studio/index-tree.json"
-    assert payload["scopes"][0]["generated"]["recently_added"] == "docs-viewer/generated/docs/studio/recently-added.json"
+    assert payload["scopes"][0]["generated"]["recent"] == "docs-viewer/generated/docs/studio/recent.json"
     assert payload["scopes"][0]["generated"]["search_index"] == "docs-viewer/generated/search/studio/index.json"
     assert payload["scopes"][0]["warnings"] == []

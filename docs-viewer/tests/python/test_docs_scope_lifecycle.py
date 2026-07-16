@@ -97,7 +97,7 @@ def test_scope_create_preview_reports_local_tracked_outputs() -> None:
     assert not any(file["kind"] == "route_file" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/docs/notes" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/docs/notes/index-tree.json" for file in payload["created_files"])
-    assert any(file["path"] == "docs-viewer/generated/docs/notes/recently-added.json" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes/recent.json" for file in payload["created_files"])
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/docs/scopes/notes") for file in payload["created_files"])
     assert not any(file["path"].startswith("site/assets/data/search/notes") for file in payload["created_files"])
@@ -473,7 +473,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert records["research"]["metadata"]["external_data_root"] == EXTERNAL_DATA_ROOT_MARKER
     recorded_paths = {file["path"] for file in records["research"]["files"]}
     assert (external_root / "generated/docs/research/index-tree.json").as_posix() in recorded_paths
-    assert (external_root / "generated/docs/research/recently-added.json").as_posix() in recorded_paths
+    assert (external_root / "generated/docs/research/recent.json").as_posix() in recorded_paths
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["research"]["files"])
     assert "docs-viewer/runtime/js/docs-viewer-public.js" not in recorded_paths
@@ -691,7 +691,9 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
         docs_output = repo_root / "docs-viewer/generated/docs" / scope
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
-        (docs_output / "recently-added.json").write_text("{}", encoding="utf-8")
+        (docs_output / "recent.json").write_text("{}", encoding="utf-8")
+        (docs_output / ".publish").mkdir()
+        (docs_output / ".publish/recent.json").write_text("{}", encoding="utf-8")
         (docs_output / f"by-id/{scope}.json").write_text(json.dumps({"doc_id": scope}), encoding="utf-8")
         search_output = repo_root / "docs-viewer/generated/search" / scope
         search_output.mkdir(parents=True)
@@ -739,10 +741,11 @@ def test_scope_create_apply_writes_public_site_route_config_and_payloads() -> No
     assert public_routes["routes"][0]["features"] == [
         "configured-scope-discovery",
         "search",
-        "recently-added",
+        "recent",
         "bookmarks",
         "reports",
     ]
+    assert public_routes["routes"][0]["recent_basis"] == "edited"
     assert public_routes["routes"][0]["docs_paths"]["index_tree_url"] == "/assets/data/docs/scopes/research/index-tree.json"
     assert any(route["route_id"] == "research" for route in all_routes["routes"])
     assert public_doc_exists is True
@@ -796,7 +799,7 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert records["notes"]["scope_type"] == "local"
     assert any(file["path"] == "docs-viewer/generated/docs/notes" for file in records["notes"]["files"])
     assert any(file["path"] == "docs-viewer/generated/docs/notes/index-tree.json" for file in records["notes"]["files"])
-    assert any(file["path"] == "docs-viewer/generated/docs/notes/recently-added.json" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes/recent.json" for file in records["notes"]["files"])
     assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in records["notes"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 
@@ -970,7 +973,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
         docs_output = repo_root / "docs-viewer/generated/docs" / scope
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
-        (docs_output / "recently-added.json").write_text("{}", encoding="utf-8")
+        (docs_output / "recent.json").write_text("{}", encoding="utf-8")
         (docs_output / "by-id/research.json").write_text("{}", encoding="utf-8")
         search_output = repo_root / "docs-viewer/generated/search" / scope
         search_output.mkdir(parents=True)
@@ -1062,7 +1065,9 @@ def test_scope_delete_apply_removes_user_created_public_route_and_payloads() -> 
         docs_output = repo_root / "docs-viewer/generated/docs" / scope
         (docs_output / "by-id").mkdir(parents=True)
         (docs_output / "index-tree.json").write_text("{}", encoding="utf-8")
-        (docs_output / "recently-added.json").write_text("{}", encoding="utf-8")
+        (docs_output / "recent.json").write_text("{}", encoding="utf-8")
+        (docs_output / ".publish").mkdir()
+        (docs_output / ".publish/recent.json").write_text("{}", encoding="utf-8")
         (docs_output / f"by-id/{scope}.json").write_text(json.dumps({"doc_id": scope}), encoding="utf-8")
         search_output = repo_root / "docs-viewer/generated/search" / scope
         search_output.mkdir(parents=True)

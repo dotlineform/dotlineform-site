@@ -55,7 +55,7 @@ export function createDocsViewerConfiguredScopeProvider(options) {
       return {
         scopeId: targetScope,
         indexTreeUrl: cleanString(route.indexTreeUrl),
-        recentlyAddedUrl: cleanString(route.recentlyAddedUrl),
+        recentUrl: cleanString(route.recentUrl),
         searchIndexUrl: cleanString(route.searchIndexUrl)
       };
     }
@@ -98,11 +98,11 @@ export function createDocsViewerConfiguredScopeProvider(options) {
     });
   }
 
-  function readRecentlyAdded(optionsForRead) {
+  function readRecent(optionsForRead) {
     var request = collectionRequest(optionsForRead);
     if (!request.config) return Promise.reject(new Error("Docs scope is not configured: " + request.scope));
-    return generatedData.readRecentlyAdded({
-      recentlyAddedUrl: cleanString(request.config.recentlyAddedUrl),
+    return generatedData.readRecent({
+      recentUrl: cleanString(request.config.recentUrl),
       viewerScope: request.scope
     });
   }
@@ -140,7 +140,7 @@ export function createDocsViewerConfiguredScopeProvider(options) {
   var provider = {
     readDocument: readDocument,
     readIndex: readIndex,
-    readRecentlyAdded: readRecentlyAdded,
+    readRecent: readRecent,
     readReferences: readReferences,
     readSearch: readSearch
   };

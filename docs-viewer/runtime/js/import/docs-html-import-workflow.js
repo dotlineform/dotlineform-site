@@ -178,7 +178,7 @@ async function importFileWithPrompts(state, file, context = {}) {
       managementBaseUrl: context.managementBaseUrl
     }, nextOptions);
 
-    if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
+    if (payload.preview_only && payload.replacement_doc_id_required) {
       renderDocsHtmlImportWarnings(state, payload.import_preview && payload.import_preview.warnings);
       setStatus(
         state.statusNode,

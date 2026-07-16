@@ -15,6 +15,7 @@ from .common import (
 )
 from .payloads import PayloadBuilderMixin
 from .reference_artifacts import ReferenceArtifactsMixin
+from .recent_policy import recent_basis_for_route
 from .rendering import ContentRenderingMixin
 from .semantic_registry import load_semantic_reference_registry
 from .semantic_references import SemanticReferencesMixin
@@ -88,11 +89,31 @@ class DocsDataBuilder(
             "docs": flat_doc_rows,
         }
         index_tree_payload = self.index_tree_payload(docs, viewer_options)
-        recently_added_payload = self.recently_added_payload(docs)
+        recent_basis = recent_basis_for_route(self.repo_root, app_kind="manage")
+        recent_payload = self.recent_payload(
+            docs,
+            basis=recent_basis,
+            output_path=self.output_dir / "recent.json",
+        )
+        public_recent_basis = recent_basis_for_route(
+            self.repo_root,
+            app_kind="public",
+            scope=self.scope_id,
+        )
+        publication_recent_payload = (
+            self.recent_payload(
+                self.public_recent_docs(docs),
+                basis=public_recent_basis,
+                output_path=self.output_dir / ".publish/recent.json",
+            )
+            if public_recent_basis
+            else None
+        )
         reference_payloads = self.build_reference_payloads(docs, semantic_references_by_doc)
         write_plan = self.build_write_plan(
             index_tree_payload,
-            recently_added_payload,
+            recent_payload,
+            publication_recent_payload,
             item_payloads,
             reference_payloads,
             target_doc_ids=target_doc_ids if self.targeted_build else None,
@@ -108,17 +129,18 @@ class DocsDataBuilder(
                 write_plan,
                 docs_total=len(index_payload["docs"]),
                 tree_total=len(index_tree_payload["docs"]),
-                recently_added_total=len(recently_added_payload["docs"]),
+                recent_total=len(recent_payload["docs"]),
                 reference_total=reference_payloads["index"]["header"]["count"],
             )
         else:
-            self.print_dry_run(index_payload, index_tree_payload, recently_added_payload, reference_payloads, write_plan)
+            self.print_dry_run(index_payload, index_tree_payload, recent_payload, reference_payloads, write_plan)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
             "index_payload": index_payload,
             "index_tree_payload": index_tree_payload,
-            "recently_added_payload": recently_added_payload,
+            "recent_payload": recent_payload,
+            "publication_recent_payload": publication_recent_payload,
             "item_payloads": item_payloads,
             "reference_payloads": reference_payloads,
             "write_plan": write_plan,

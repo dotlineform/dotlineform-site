@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-ebdbf62c2639efabf88637dcf3fcd1c9",
-    "generated_at_utc": "2026-07-15T09:18:21Z",
+    "version": "blake2b-62102c07be274b2669913b0b677f1790",
+    "generated_at_utc": "2026-07-16T17:15:51Z",
     "count": 135
   },
   "entries": [
@@ -235,19 +235,20 @@
       "kind": "doc",
       "title": "files",
       "href": "/docs/?scope=processing&doc=d-20260714-180800-4dcaca",
-      "last_updated": "2026-07-14 18:08",
-      "display_meta": "2026-07-14 18:08",
+      "last_updated": "2026-07-14 18:21:12",
+      "display_meta": "2026-07-14 18:21:12",
       "search_terms": [
         "files",
-        "2026-07-14 18:08",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
-        "08",
+        "21",
+        "12",
         "d-20260714-180800-4dcaca"
       ],
-      "search_text": "files 2026-07-14 18:08 2026 07 14 18 08 d-20260714-180800-4dcaca"
+      "search_text": "files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180800-4dcaca"
     },
     {
       "id": "d-20260714-180600-1b8f03",
@@ -414,10 +415,10 @@
       "kind": "doc",
       "title": "N7 Subset Selection Strategies",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-4bb3af",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "n7 subset selection strategies",
         "n7",
@@ -425,14 +426,16 @@
         "selection",
         "strategies",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-4bb3af"
       ],
-      "search_text": "n7 subset selection strategies n7 subset selection strategies files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-4bb3af"
+      "search_text": "n7 subset selection strategies n7 subset selection strategies files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-4bb3af"
     },
     {
       "id": "d-20260714-180700-0b8789",
@@ -465,10 +468,10 @@
       "kind": "doc",
       "title": "N9 Sjt 1min All Fps",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-5d809c",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "n9 sjt 1min all fps",
         "n9",
@@ -477,24 +480,26 @@
         "all",
         "fps",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-5d809c"
       ],
-      "search_text": "n9 sjt 1min all fps n9 sjt 1min all fps files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-5d809c"
+      "search_text": "n9 sjt 1min all fps n9 sjt 1min all fps files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-5d809c"
     },
     {
       "id": "d-20260714-180700-b5896f",
       "kind": "doc",
       "title": "Permutation Subsets Fps 24 25 30 60",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-b5896f",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "permutation subsets fps 24 25 30 60",
         "permutation",
@@ -505,14 +510,16 @@
         "30",
         "60",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-b5896f"
       ],
-      "search_text": "permutation subsets fps 24 25 30 60 permutation subsets fps 24 25 30 60 files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-b5896f"
+      "search_text": "permutation subsets fps 24 25 30 60 permutation subsets fps 24 25 30 60 files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-b5896f"
     },
     {
       "id": "d-20260714-180700-1ae2b7",
@@ -545,10 +552,10 @@
       "kind": "doc",
       "title": "Permutation Subsets N7 N8 With Durations",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-5ba007",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "permutation subsets n7 n8 with durations",
         "permutation",
@@ -558,38 +565,42 @@
         "with",
         "durations",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-5ba007"
       ],
-      "search_text": "permutation subsets n7 n8 with durations permutation subsets n7 n8 with durations files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-5ba007"
+      "search_text": "permutation subsets n7 n8 with durations permutation subsets n7 n8 with durations files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-5ba007"
     },
     {
       "id": "d-20260714-180700-c98a19",
       "kind": "doc",
       "title": "Permutations 3to6 Indexed",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-c98a19",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "permutations 3to6 indexed",
         "permutations",
         "3to6",
         "indexed",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-c98a19"
       ],
-      "search_text": "permutations 3to6 indexed permutations 3to6 indexed files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-c98a19"
+      "search_text": "permutations 3to6 indexed permutations 3to6 indexed files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-c98a19"
     },
     {
       "id": "d-20260714-180700-0b4a0f",
@@ -646,10 +657,10 @@
       "kind": "doc",
       "title": "Permutations 3to6 With Counts",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-a15d97",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "permutations 3to6 with counts",
         "permutations",
@@ -657,24 +668,26 @@
         "with",
         "counts",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-a15d97"
       ],
-      "search_text": "permutations 3to6 with counts permutations 3to6 with counts files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-a15d97"
+      "search_text": "permutations 3to6 with counts permutations 3to6 with counts files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-a15d97"
     },
     {
       "id": "d-20260714-180700-6e2963",
       "kind": "doc",
       "title": "Permutations 3to7 Sjt Indexed With Properties",
       "href": "/docs/?scope=processing&doc=d-20260714-180700-6e2963",
-      "last_updated": "2026-07-14 18:07",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-180800-4dcaca",
       "parent_title": "files",
-      "display_meta": "2026-07-14 18:07 • files",
+      "display_meta": "2026-07-14 18:21:12 • files",
       "search_terms": [
         "permutations 3to7 sjt indexed with properties",
         "permutations",
@@ -684,14 +697,16 @@
         "with",
         "properties",
         "files",
-        "2026-07-14 18:07",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
+        "12",
         "d-20260714-180700-6e2963"
       ],
-      "search_text": "permutations 3to7 sjt indexed with properties permutations 3to7 sjt indexed with properties files 2026-07-14 18:07 2026 07 14 18 d-20260714-180700-6e2963"
+      "search_text": "permutations 3to7 sjt indexed with properties permutations 3to7 sjt indexed with properties files 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-180700-6e2963"
     },
     {
       "id": "d-20260714-174200-720410",
@@ -985,19 +1000,20 @@
       "kind": "doc",
       "title": "InkEngine",
       "href": "/docs/?scope=processing&doc=d-20260714-174600-cedc85",
-      "last_updated": "2026-07-14 19:00",
-      "display_meta": "2026-07-14 19:00",
+      "last_updated": "2026-07-14 19:09:49",
+      "display_meta": "2026-07-14 19:09:49",
       "search_terms": [
         "inkengine",
-        "2026-07-14 19:00",
+        "2026-07-14 19:09:49",
         "2026",
         "07",
         "14",
         "19",
-        "00",
+        "09",
+        "49",
         "d-20260714-174600-cedc85"
       ],
-      "search_text": "inkengine 2026-07-14 19:00 2026 07 14 19 00 d-20260714-174600-cedc85"
+      "search_text": "inkengine 2026-07-14 19:09:49 2026 07 14 19 09 49 d-20260714-174600-cedc85"
     },
     {
       "id": "d-20260714-174700-a994cf",
@@ -1705,22 +1721,23 @@
       "kind": "doc",
       "title": "Processing Project Setup",
       "href": "/docs/?scope=processing&doc=d-20260714-164200-381988",
-      "last_updated": "2026-07-14 19:00",
-      "display_meta": "2026-07-14 19:00",
+      "last_updated": "2026-07-15 10:59:32",
+      "display_meta": "2026-07-15 10:59:32",
       "search_terms": [
         "processing project setup",
         "processing",
         "project",
         "setup",
-        "2026-07-14 19:00",
+        "2026-07-15 10:59:32",
         "2026",
         "07",
-        "14",
-        "19",
-        "00",
+        "15",
+        "10",
+        "59",
+        "32",
         "d-20260714-164200-381988"
       ],
-      "search_text": "processing project setup processing project setup 2026-07-14 19:00 2026 07 14 19 00 d-20260714-164200-381988"
+      "search_text": "processing project setup processing project setup 2026-07-15 10:59:32 2026 07 15 10 59 32 d-20260714-164200-381988"
     },
     {
       "id": "d-20260714-173500-48f96d",
@@ -2117,10 +2134,10 @@
       "kind": "doc",
       "title": "De Bruijn B8 3 Linear",
       "href": "/docs/?scope=processing&doc=d-20260714-181200-ca6556",
-      "last_updated": "2026-07-14 18:12",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
-      "display_meta": "2026-07-14 18:12 • unsorted",
+      "display_meta": "2026-07-14 18:21:12 • unsorted",
       "search_terms": [
         "de bruijn b8 3 linear",
         "de",
@@ -2129,15 +2146,16 @@
         "3",
         "linear",
         "unsorted",
-        "2026-07-14 18:12",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
+        "21",
         "12",
         "d-20260714-181200-ca6556"
       ],
-      "search_text": "de bruijn b8 3 linear de bruijn b8 3 linear unsorted 2026-07-14 18:12 2026 07 14 18 12 d-20260714-181200-ca6556"
+      "search_text": "de bruijn b8 3 linear de bruijn b8 3 linear unsorted 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-181200-ca6556"
     },
     {
       "id": "d-20260714-175700-5946e7",
@@ -3485,10 +3503,10 @@
       "kind": "doc",
       "title": "Video Overlay Reverse Ffmpeg Macos",
       "href": "/docs/?scope=processing&doc=d-20260714-181100-447f40",
-      "last_updated": "2026-07-14 18:11",
+      "last_updated": "2026-07-14 18:21:12",
       "parent_id": "d-20260714-173500-48f96d",
       "parent_title": "unsorted",
-      "display_meta": "2026-07-14 18:11 • unsorted",
+      "display_meta": "2026-07-14 18:21:12 • unsorted",
       "search_terms": [
         "video overlay reverse ffmpeg macos",
         "video",
@@ -3497,15 +3515,16 @@
         "ffmpeg",
         "macos",
         "unsorted",
-        "2026-07-14 18:11",
+        "2026-07-14 18:21:12",
         "2026",
         "07",
         "14",
         "18",
-        "11",
+        "21",
+        "12",
         "d-20260714-181100-447f40"
       ],
-      "search_text": "video overlay reverse ffmpeg macos video overlay reverse ffmpeg macos unsorted 2026-07-14 18:11 2026 07 14 18 11 d-20260714-181100-447f40"
+      "search_text": "video overlay reverse ffmpeg macos video overlay reverse ffmpeg macos unsorted 2026-07-14 18:21:12 2026 07 14 18 21 12 d-20260714-181100-447f40"
     },
     {
       "id": "d-20260714-174700-ba44be",

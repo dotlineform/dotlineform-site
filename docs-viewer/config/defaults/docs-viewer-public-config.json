@@ -11,7 +11,7 @@
       "default_doc_id": "d-20260330-172255-8399b7",
       "media_path_prefix": "docs/library",
       "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
-      "recently_added_url": "/assets/data/docs/scopes/library/recently-added.json",
+      "recent_url": "/assets/data/docs/scopes/library/recent.json",
       "search_index_url": "/assets/data/search/library/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -34,7 +34,7 @@
       "default_doc_id": "d-20260426-164043-e14f49",
       "media_path_prefix": "docs/analysis",
       "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",
-      "recently_added_url": "/assets/data/docs/scopes/analysis/recently-added.json",
+      "recent_url": "/assets/data/docs/scopes/analysis/recent.json",
       "search_index_url": "/assets/data/search/analysis/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -65,7 +65,7 @@
       "default_doc_id": "",
       "media_path_prefix": "docs/moments",
       "index_tree_url": "/assets/data/docs/scopes/moments/index-tree.json",
-      "recently_added_url": "/assets/data/docs/scopes/moments/recently-added.json",
+      "recent_url": "/assets/data/docs/scopes/moments/recent.json",
       "search_index_url": "/assets/data/search/moments/index.json",
       "search": {
         "domain": "docs_viewer",
@@ -81,7 +81,7 @@
     }
   ],
   "docs_viewer": {
-    "recently_added_limit": 10,
+    "recent_limit": 10,
     "non_viewable_nav_color": "var(--muted)",
     "doc_non_viewable_emoji": "🚫",
     "scope_type_badges": {

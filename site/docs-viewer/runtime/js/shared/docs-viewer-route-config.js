@@ -241,6 +241,17 @@ function normalizeServiceSurfaces(rawServices) {
   };
 }
 
+function normalizeRecentBasis(value, enabled) {
+  var basis = cleanString(value).toLowerCase();
+  if (enabled && basis !== "added" && basis !== "edited") {
+    throw new Error("Docs Viewer routes with Recent enabled must declare recent_basis as added or edited.");
+  }
+  if (!enabled && basis) {
+    throw new Error("Docs Viewer routes cannot declare recent_basis without the Recent feature.");
+  }
+  return basis;
+}
+
 export function resolveDocsViewerRouteConfig(options) {
   var settings = options || {};
   var resolvedSource = routeConfigSource(settings);
@@ -269,7 +280,8 @@ export function resolveDocsViewerRouteConfig(options) {
     throw new Error("Docs Viewer route config has an unsupported schema.");
   }
   var searchEnabled = docsViewerRouteFeatureEnabled(features, "search");
-  var recentlyAddedEnabled = docsViewerRouteFeatureEnabled(features, "recently-added");
+  var recentEnabled = docsViewerRouteFeatureEnabled(features, "recent");
+  var recentBasis = normalizeRecentBasis(rawConfig.recent_basis, recentEnabled);
   var reportsEnabled = docsViewerRouteFeatureEnabled(features, "reports");
   return {
     schemaVersion: schemaVersion,
@@ -286,9 +298,10 @@ export function resolveDocsViewerRouteConfig(options) {
       ? requireRouteConfigField(configUrls.report_registry, "config_urls.report_registry")
       : cleanString(configUrls.report_registry),
     indexTreeUrl: normalizePath(requireRouteConfigField(docsPaths.index_tree_url, "docs_paths.index_tree_url")),
-    recentlyAddedUrl: normalizePath(recentlyAddedEnabled
-      ? requireRouteConfigField(docsPaths.recently_added_url, "docs_paths.recently_added_url")
-      : docsPaths.recently_added_url),
+    recentUrl: normalizePath(recentEnabled
+      ? requireRouteConfigField(docsPaths.recent_url, "docs_paths.recent_url")
+      : docsPaths.recent_url),
+    recentBasis: recentBasis,
     searchIndexUrl: normalizePath(searchEnabled
       ? requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")
       : docsPaths.search_index_url),
@@ -339,7 +352,7 @@ export function routeConfigScopeProjection(scopeConfig, options) {
     defaultRouteDocId: cleanString(config.defaultDocId),
     includeScopeParam: includeScopeParam,
     indexTreeUrl: appendAssetVersion(config.indexTreeUrl || "", settings.assetVersion),
-    recentlyAddedUrl: appendAssetVersion(config.recentlyAddedUrl || "", settings.assetVersion),
+    recentUrl: appendAssetVersion(config.recentUrl || "", settings.assetVersion),
     searchIndexUrl: appendAssetVersion(config.searchIndexUrl || "", settings.assetVersion),
     viewerBaseUrl: viewerBaseUrl,
     viewerPathname: windowRef && windowRef.location

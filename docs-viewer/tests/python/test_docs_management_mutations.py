@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import sys
 import tempfile
+import re
 from pathlib import Path
 
 
@@ -154,7 +155,9 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
     assert "title: Renamed Target" in plan.source_writes[0].text
     assert "date: 2026-05-04" in plan.source_writes[0].text
     assert "date_display: early May 2026" in plan.source_writes[0].text
-    assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
+    assert 'added_date: "2026-05-01 10:00"' in plan.source_writes[0].text
+    assert 'last_updated: "2026-05-01 10:00"' not in plan.source_writes[0].text
+    assert re.search(r'last_updated: "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"', plan.source_writes[0].text)
 
 
 def test_metadata_plan_removes_empty_date_fields() -> None:
@@ -214,6 +217,7 @@ def test_metadata_viewable_plan_writes_current_viewability() -> None:
     assert plan.response["record"]["viewable"] is False
     assert "viewable: false" in plan.source_writes[0].text
     assert "hidden:" not in plan.source_writes[0].text
+    assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
 def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() -> None:

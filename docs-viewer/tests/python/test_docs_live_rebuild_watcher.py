@@ -161,6 +161,100 @@ def test_watcher_formats_affected_doc_ids_for_logs() -> None:
     assert module.affected_doc_ids_log_text(["parent", "child"]) == "parent, child"
 
 
+def test_watcher_surfaces_direct_edits_without_advanced_full_timestamp() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    previous = {
+        "changed.md": {
+            "doc_id": "changed",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("old body", "Changed", ""),
+        },
+        "invalid.md": {
+            "doc_id": "invalid",
+            "last_updated": "2026-07-15 10:00:00",
+            "recent_edit_content": ("body", "Invalid", "old summary"),
+        },
+        "valid.md": {
+            "doc_id": "valid",
+            "last_updated": "2026-07-15 10:00:00",
+            "recent_edit_content": ("body", "Valid", ""),
+        },
+        "metadata.md": {
+            "doc_id": "metadata",
+            "last_updated": "2026-07-15",
+            "recent_edit_content": ("body", "Metadata", ""),
+        },
+        "old-name.md": {
+            "doc_id": "old-id",
+            "last_updated": "2026-07-15",
+            "recent_edit_content": ("renamed body", "Renamed", ""),
+        },
+    }
+    current = {
+        "changed.md": {
+            "doc_id": "changed",
+            "last_updated": "2026-07-16 10:00:00",
+            "recent_edit_content": ("new body", "Changed", ""),
+        },
+        "invalid.md": {
+            "doc_id": "invalid",
+            "last_updated": "2026-07-16",
+            "recent_edit_content": ("body", "Invalid", "new summary"),
+        },
+        "valid.md": {
+            "doc_id": "valid",
+            "last_updated": "2026-07-16 11:00:00",
+            "recent_edit_content": ("body", "Valid title", ""),
+        },
+        "metadata.md": {
+            "doc_id": "metadata",
+            "last_updated": "2026-07-15",
+            "recent_edit_content": ("body", "Metadata", ""),
+        },
+        "new-name.md": {
+            "doc_id": "new-id",
+            "last_updated": "2026-07-15",
+            "recent_edit_content": ("renamed body", "Renamed", ""),
+        },
+        "new.md": {
+            "doc_id": "new",
+            "last_updated": "",
+            "recent_edit_content": ("new body", "New", ""),
+        },
+    }
+
+    assert module.direct_edit_timestamp_issues(
+        previous,
+        current,
+        [
+            "changed.md",
+            "invalid.md",
+            "valid.md",
+            "metadata.md",
+            "old-name.md",
+            "new-name.md",
+            "new.md",
+            "deleted.md",
+        ],
+    ) == [
+        {
+            "filename": "changed.md",
+            "doc_id": "changed",
+            "reason": "last_updated did not advance",
+        },
+        {
+            "filename": "invalid.md",
+            "doc_id": "invalid",
+            "reason": "last_updated is not a full timestamp",
+        },
+        {
+            "filename": "new.md",
+            "doc_id": "new",
+            "reason": "new source lacks a full last_updated timestamp",
+        },
+    ]
+
+
 def test_watcher_formats_docs_builder_diagnostics_on_separate_lines() -> None:
     module = load_docs_live_rebuild_watcher_module()
     stdout = (
@@ -226,6 +320,7 @@ def main() -> None:
     test_watcher_imports_source_model_helpers_directly()
     test_watcher_accumulates_changed_files_during_debounce()
     test_watcher_formats_affected_doc_ids_for_logs()
+    test_watcher_surfaces_direct_edits_without_advanced_full_timestamp()
     test_watcher_formats_docs_builder_diagnostics_on_separate_lines()
     test_watcher_falls_back_to_full_docs_build_when_targeted_payloads_are_missing()
 
