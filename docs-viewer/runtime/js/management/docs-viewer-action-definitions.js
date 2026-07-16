@@ -29,6 +29,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
   ACTIVE_DOCUMENT: "active-document",
+  DOCUMENT: "document",
   SCOPE: "scope",
   SELECTION: "selection"
 });
@@ -69,7 +70,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.NEW_SIBLING]: actionDefinition(IDS.NEW_SIBLING, TARGETS.SELECTION, POLICIES.PRIMARY),
   [IDS.NEW_SUB_SCOPE]: actionDefinition(IDS.NEW_SUB_SCOPE, TARGETS.SCOPE),
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.SELECTION, POLICIES.PRIMARY),
-  [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.SELECTION, POLICIES.PRIMARY),
+  [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
   [IDS.PUBLISH_DOCS]: actionDefinition(IDS.PUBLISH_DOCS, TARGETS.SCOPE),
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.SCOPE),
   [IDS.RENAME_SCOPE]: actionDefinition(IDS.RENAME_SCOPE, TARGETS.SCOPE),
@@ -109,6 +110,7 @@ export function createDocsViewerActionContext(options = {}) {
   if (!primaryDocId && selectedDocIds.length === 1) primaryDocId = selectedDocIds[0];
   return {
     activeDocId: activeDocId,
+    invocationDocId: invocationDocId,
     primaryDocId: primaryDocId,
     selectedDocIds: selectedDocIds
   };
@@ -121,6 +123,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
   }
 
   var activeDocId = normalizeId(context.activeDocId);
+  var invocationDocId = normalizeId(context.invocationDocId);
   var primaryDocId = normalizeId(context.primaryDocId);
   var selectedDocIds = normalizeIds(context.selectedDocIds);
   var targetDocIds = [];
@@ -129,6 +132,10 @@ export function resolveDocsViewerAction(actionId, context = {}) {
   if (definition.target === TARGETS.ACTIVE_DOCUMENT) {
     if (activeDocId) targetDocIds = [activeDocId];
     else disabledReason = "No active document.";
+  } else if (definition.target === TARGETS.DOCUMENT) {
+    var documentId = invocationDocId || activeDocId;
+    if (documentId) targetDocIds = [documentId];
+    else disabledReason = "No document.";
   } else if (definition.target === TARGETS.SELECTION) {
     if (definition.selectionPolicy === POLICIES.PRIMARY) {
       if (!primaryDocId) disabledReason = "No primary document.";

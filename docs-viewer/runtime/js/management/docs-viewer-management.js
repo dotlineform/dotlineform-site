@@ -184,6 +184,10 @@ export function initDocsViewerManagement(context) {
         hidden: actionsHidden,
         disabled: actionsDisabled
       });
+      context.projectMainViewControlState("open-vscode", {
+        hidden: actionsHidden,
+        disabled: actionsDisabled
+      });
       context.projectMainViewControlState("markdown-source", {
         hidden: actionsHidden,
         disabled: actionsDisabled,
@@ -227,6 +231,7 @@ export function initDocsViewerManagement(context) {
         var doc = actionTargetDoc(resolution);
         if (doc) metadataWorkflow.openForDocId(doc.doc_id);
       }],
+      ["open-vscode", function () { actionController.handleOpenSource("vscode"); }],
       ["markdown-source", function () { actionController.handleMarkdownSource(); }],
       ["save-markdown-source", function () { actionController.handleMarkdownSave(); }]
     ]);
@@ -562,11 +567,13 @@ export function initDocsViewerManagement(context) {
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE) {
-          actionController.handleOpenSource("vscode");
+          var vscodeDoc = currentContextMenuDoc();
+          if (vscodeDoc) actionController.handleOpenSource("vscode", vscodeDoc.doc_id);
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN) {
-          actionController.handleOpenSource("default");
+          var defaultDoc = currentContextMenuDoc();
+          if (defaultDoc) actionController.handleOpenSource("default", defaultDoc.doc_id);
         }
       },
       onEditDoc: function (docId) {

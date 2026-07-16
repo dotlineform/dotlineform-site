@@ -9,7 +9,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.COPY_LINK + '" aria-label="Copy Link">Copy Link</button>',
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.OPEN + '">Open</button>',
-  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.OPEN_VSCODE + '">Open In VS Code</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.OPEN_VSCODE + '">Open in VS Code</button>',
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_SIBLING + '">New Sibling</button>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_CHILD + '">New Child</button>',

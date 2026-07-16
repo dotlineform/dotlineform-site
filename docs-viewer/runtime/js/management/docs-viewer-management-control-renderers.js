@@ -27,6 +27,20 @@ export function createDocsViewerManagementControlRenderers() {
         emoji: "✏️"
       });
     },
+    "manage-open-vscode": function (context) {
+      var button = renderDocumentActionButton(context, {
+        id: "docsViewerManageOpenVsCodeButton",
+        emoji: ""
+      });
+      var icon = context.document.createElement("img");
+      icon.src = new URL("./icons/vscode.svg", import.meta.url).href;
+      icon.alt = "";
+      icon.width = 20;
+      icon.height = 20;
+      icon.setAttribute("aria-hidden", "true");
+      button.replaceChildren(icon);
+      return button;
+    },
     "markdown-source-toggle": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageSourceButton",

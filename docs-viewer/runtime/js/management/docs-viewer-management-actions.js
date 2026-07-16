@@ -612,17 +612,18 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleOpenSource(editor) {
-    var contextDoc = currentContextMenuDoc();
+  function handleOpenSource(editor, targetDocId) {
     var actionId = editor === "vscode" ? DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE : DOCS_VIEWER_ACTION_IDS.OPEN;
-    var doc = contextDoc ? actionTargetDoc(actionId, contextDoc.doc_id) : null;
+    var doc = arguments.length > 1
+      ? actionTargetDoc(actionId, targetDocId)
+      : actionTargetDoc(actionId);
     if (!doc) return;
 
     setManagementBusy(true);
     hideContextMenu();
     setManagementMessage("Opening source for " + doc.title + "...", false);
 
-    openManagedDocSource(doc.doc_id, editor, managementClientOptions())
+    return openManagedDocSource(doc.doc_id, editor, managementClientOptions())
       .then(function () {
         setManagementMessage("", false);
       })

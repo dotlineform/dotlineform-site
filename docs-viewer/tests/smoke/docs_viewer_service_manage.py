@@ -235,6 +235,7 @@ def assert_action_target_definitions(page: Page) -> None:
             return {
                 active: groupedIds('active-document'),
                 all: groupedIds('selection', 'all'),
+                document: groupedIds('document'),
                 exactlyOne: groupedIds('selection', 'exactly-one'),
                 primary: groupedIds('selection', 'primary'),
                 scope: groupedIds('scope'),
@@ -250,7 +251,9 @@ def assert_action_target_definitions(page: Page) -> None:
                     scope: module.resolveDocsViewerAction('export-docs', multiContext),
                     emptyDelete: module.resolveDocsViewerAction('delete', emptySelectionContext),
                     multiMove: module.resolveDocsViewerAction('move', multiSelectionContext),
-                    contextCopy: module.resolveDocsViewerAction('copy-link', invocationContext)
+                    contextCopy: module.resolveDocsViewerAction('copy-link', invocationContext),
+                    toolbarOpenVsCode: module.resolveDocsViewerAction('open-vscode', emptySelectionContext),
+                    contextOpenVsCode: module.resolveDocsViewerAction('open-vscode', invocationContext)
                 },
                 surfaceActionIds: Array.from(new Set(surfaceActionIds)).sort(),
                 unknownRejected,
@@ -261,13 +264,13 @@ def assert_action_target_definitions(page: Page) -> None:
     expected = {
         "active": ["bookmark", "copy-subtree", "edit-metadata", "info", "markdown-save", "markdown-source"],
         "all": ["move"],
+        "document": ["open-vscode"],
         "exactlyOne": ["delete", "show"],
         "primary": [
             "copy-link",
             "new-child",
             "new-sibling",
             "open",
-            "open-vscode",
         ],
         "scope": [
             "delete-scope",
@@ -285,16 +288,19 @@ def assert_action_target_definitions(page: Page) -> None:
         ],
         "emptySelectionContext": {
             "activeDocId": "active",
+            "invocationDocId": "",
             "primaryDocId": "",
             "selectedDocIds": [],
         },
         "multiSelectionContext": {
             "activeDocId": "active",
+            "invocationDocId": "",
             "primaryDocId": "second",
             "selectedDocIds": ["first", "second"],
         },
         "invocationContext": {
             "activeDocId": "active",
+            "invocationDocId": "context",
             "primaryDocId": "context",
             "selectedDocIds": [],
         },
@@ -371,6 +377,22 @@ def assert_action_target_definitions(page: Page) -> None:
                 "target": "selection",
                 "targetDocIds": ["context"],
             },
+            "toolbarOpenVsCode": {
+                "actionId": "open-vscode",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "",
+                "target": "document",
+                "targetDocIds": ["active"],
+            },
+            "contextOpenVsCode": {
+                "actionId": "open-vscode",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "",
+                "target": "document",
+                "targetDocIds": ["context"],
+            },
         },
         "surfaceActionIds": [
             "bookmark",
@@ -403,6 +425,73 @@ def assert_action_target_definitions(page: Page) -> None:
     }
     if result != expected:
         raise AssertionError(f"unexpected Docs Viewer action target contract: {result!r}")
+
+
+def assert_open_source_target_handoff(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const definitions = await import('/docs-viewer/runtime/js/management/docs-viewer-action-definitions.js');
+            const actions = await import('/docs-viewer/runtime/js/management/docs-viewer-management-actions.js');
+            const requests = [];
+            let hiddenCount = 0;
+            const controller = actions.createDocsViewerManagementActionController({
+                root: null,
+                documentIndex: {
+                    docsById: new Map([
+                        ['active', { doc_id: 'active', title: 'Active' }],
+                        ['invoked', { doc_id: 'invoked', title: 'Invoked' }]
+                    ])
+                },
+                management: {},
+                selectedDocument: {},
+                context: {},
+                resolveAction: function (actionId, targetDocId) {
+                    const options = { activeDocId: 'active', selectedDocIds: [] };
+                    if (arguments.length > 1) options.invocationDocId = targetDocId;
+                    return definitions.resolveDocsViewerAction(
+                        actionId,
+                        definitions.createDocsViewerActionContext(options)
+                    );
+                },
+                callbacks: {
+                    hideContextMenu: () => { hiddenCount += 1; },
+                    managementClientOptions: () => ({
+                        baseUrl: 'http://docs.test',
+                        scope: 'studio',
+                        fetch: (url, options) => {
+                            requests.push({ url, body: JSON.parse(options.body) });
+                            return Promise.resolve({
+                                ok: true,
+                                status: 200,
+                                json: () => Promise.resolve({ ok: true })
+                            });
+                        }
+                    }),
+                    renderManagementUi: () => {},
+                    setManagementBusy: () => {},
+                    setManagementMessage: () => {}
+                }
+            });
+            await controller.handleOpenSource('vscode');
+            await controller.handleOpenSource('vscode', 'invoked');
+            return { hiddenCount, requests };
+        }"""
+    )
+    expected = {
+        "hiddenCount": 2,
+        "requests": [
+            {
+                "url": "http://docs.test/docs/open-source",
+                "body": {"scope": "studio", "doc_id": "active", "editor": "vscode"},
+            },
+            {
+                "url": "http://docs.test/docs/open-source",
+                "body": {"scope": "studio", "doc_id": "invoked", "editor": "vscode"},
+            },
+        ],
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected source-open target handoff: {result!r}")
 
 
 def assert_copy_subtree_module_contract(page: Page) -> None:
@@ -505,6 +594,7 @@ def exercise_manage_route(
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
     assert_action_target_definitions(page)
+    assert_open_source_target_handoff(page)
     assert_delete_uses_first_remaining_root(page)
     assert_manage_route_contract(manage_route_state(page), base_url)
     if import_module_requests:
@@ -513,6 +603,28 @@ def exercise_manage_route(
         raise AssertionError(f"scope lifecycle flow loaded before a lifecycle action: {scope_lifecycle_requests!r}")
     if copy_subtree_requests:
         raise AssertionError(f"copy subtree flow loaded before the copy action: {copy_subtree_requests!r}")
+
+    vscode_button = page.locator("#docsViewerManageOpenVsCodeButton")
+    if vscode_button.count() != 1 or vscode_button.is_hidden() or vscode_button.is_disabled():
+        raise AssertionError("Open in VS Code should be an enabled document-toolbar action")
+    if vscode_button.get_attribute("data-docs-viewer-control-surface") != "main-view":
+        raise AssertionError("Open in VS Code should be owned by the main-view control surface")
+    if vscode_button.get_attribute("data-docs-viewer-action") != "open-vscode":
+        raise AssertionError("Document-toolbar control should invoke the shared open-vscode action")
+    if vscode_button.get_attribute("title") != "Open in VS Code":
+        raise AssertionError("Open in VS Code document-toolbar action should have an explicit label")
+    page.wait_for_function(
+        """() => {
+            const icon = document.querySelector('#docsViewerManageOpenVsCodeButton img');
+            return icon && icon.complete && icon.naturalWidth === 100 && icon.naturalHeight === 100;
+        }""",
+        timeout=timeout_ms,
+    )
+    vscode_icon = vscode_button.locator("img")
+    if not vscode_icon.get_attribute("src").endswith("/docs-viewer/runtime/js/management/icons/vscode.svg"):
+        raise AssertionError("Open in VS Code should use the official stable icon asset")
+    if vscode_icon.get_attribute("alt") != "" or vscode_icon.get_attribute("aria-hidden") != "true":
+        raise AssertionError("Decorative VS Code icon should defer its accessible name to the button")
 
     copy_button = page.locator("#docsViewerManageCopySubtreeButton")
     if copy_button.count() != 1 or copy_button.is_hidden() or copy_button.is_disabled():
@@ -602,7 +714,7 @@ def exercise_manage_route(
             const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
             return root?.dataset.documentDisplayMode === 'markdown-source'
                 && actions
-                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'save-markdown-source,markdown-source,info'
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'open-vscode,save-markdown-source,markdown-source,info'
                 && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled;
         }""",
         timeout=timeout_ms,

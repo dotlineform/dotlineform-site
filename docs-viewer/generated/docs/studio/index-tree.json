@@ -833,7 +833,7 @@
               "doc_id": "d-20260716-204013-3be4e1",
               "title": "Button Placement",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-204013-3be4e1.json",
-              "ui_status": "proposed"
+              "ui_status": "done"
             },
             {
               "doc_id": "d-20260716-193410-6d4efe",
@@ -1326,5 +1326,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T20:30:47Z"
+  "generated_at": "2026-07-16T21:43:47Z"
 }

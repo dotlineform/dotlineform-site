@@ -7,9 +7,33 @@
       "doc_id": "d-20260716-204013-3be4e1",
       "title": "Button Placement",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-204013-3be4e1.json",
-      "timestamp": "2026-07-16 22:29:31",
+      "timestamp": "2026-07-16 22:42:25",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260714-234030-1e0af6",
+      "title": "Docs Viewer Roadmap",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
+      "timestamp": "2026-07-16 22:42:25",
+      "parent_id": "d-20260428-000000-f5ff18",
+      "parent_title": "Roadmap"
+    },
+    {
+      "doc_id": "d-20260528-224754-964108",
+      "title": "Panel Hosts and Control Surfaces",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260528-224754-964108.json",
+      "timestamp": "2026-07-16 22:42:25",
+      "parent_id": "d-20260424-000000-50b63f",
+      "parent_title": "Docs Viewer"
+    },
+    {
+      "doc_id": "d-20260605-125108-1d1ef3",
+      "title": "Runtime Module Ownership",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260605-125108-1d1ef3.json",
+      "timestamp": "2026-07-16 22:42:25",
+      "parent_id": "d-20260331-000000-c313fd",
+      "parent_title": "Runtime"
     },
     {
       "doc_id": "d-20260716-193410-6d4efe",
@@ -36,14 +60,6 @@
       "parent_title": "Endpoint Overview"
     },
     {
-      "doc_id": "d-20260714-234030-1e0af6",
-      "title": "Docs Viewer Roadmap",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-16 21:33:10",
-      "parent_id": "d-20260428-000000-f5ff18",
-      "parent_title": "Roadmap"
-    },
-    {
       "doc_id": "d-20260531-152622-ed2451",
       "title": "Toolbar Model",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260531-152622-ed2451.json",
@@ -66,23 +82,7 @@
       "timestamp": "2026-07-16 18:16:53",
       "parent_id": "d-20260715-225512-80198b",
       "parent_title": "Recent Documents Delivery"
-    },
-    {
-      "doc_id": "d-20260419-000000-0516ab",
-      "title": "Docs Data",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260419-000000-0516ab.json",
-      "timestamp": "2026-07-16 17:52:03",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260423-000000-c9f3ea",
-      "title": "Docs Viewer Builder",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260423-000000-c9f3ea.json",
-      "timestamp": "2026-07-16 17:52:03",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
     }
   ],
-  "generated_at": "2026-07-16T21:30:23Z"
+  "generated_at": "2026-07-16T21:43:47Z"
 }

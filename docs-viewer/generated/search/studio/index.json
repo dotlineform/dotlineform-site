@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7a35f144c97c942776769e316604681e",
-    "generated_at_utc": "2026-07-16T21:30:23Z",
+    "version": "blake2b-4ecef20ab63497aad6cba8c35ff9e7bc",
+    "generated_at_utc": "2026-07-16T21:43:47Z",
     "count": 234
   },
   "entries": [
@@ -2374,10 +2374,10 @@
       "kind": "doc",
       "title": "Panel Hosts and Control Surfaces",
       "href": "/docs/?scope=studio&doc=d-20260528-224754-964108",
-      "last_updated": "2026-07-16 13:05:47",
+      "last_updated": "2026-07-16 22:42:25",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 13:05:47 • Docs Viewer",
+      "display_meta": "2026-07-16 22:42:25 • Docs Viewer",
       "search_terms": [
         "panel hosts and control surfaces",
         "panel",
@@ -2388,16 +2388,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-16 13:05:47",
+        "2026-07-16 22:42:25",
         "2026",
         "07",
         "16",
-        "13",
-        "05",
-        "47",
+        "22",
+        "42",
+        "25",
         "d-20260528-224754-964108"
       ],
-      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-16 13:05:47 2026 07 16 13 05 47 d-20260528-224754-964108"
+      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-16 22:42:25 2026 07 16 22 42 25 d-20260528-224754-964108"
     },
     {
       "id": "d-20260511-120352-90ffa6",
@@ -2525,22 +2525,25 @@
       "kind": "doc",
       "title": "Runtime Module Ownership",
       "href": "/docs/?scope=studio&doc=d-20260605-125108-1d1ef3",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16 22:42:25",
       "parent_id": "d-20260331-000000-c313fd",
       "parent_title": "Runtime",
-      "display_meta": "2026-07-15 • Runtime",
+      "display_meta": "2026-07-16 22:42:25 • Runtime",
       "search_terms": [
         "runtime module ownership",
         "runtime",
         "module",
         "ownership",
-        "2026-07-15",
+        "2026-07-16 22:42:25",
         "2026",
         "07",
-        "15",
+        "16",
+        "22",
+        "42",
+        "25",
         "d-20260605-125108-1d1ef3"
       ],
-      "search_text": "runtime module ownership runtime module ownership 2026-07-15 2026 07 15 d-20260605-125108-1d1ef3"
+      "search_text": "runtime module ownership runtime module ownership 2026-07-16 22:42:25 2026 07 16 22 42 25 d-20260605-125108-1d1ef3"
     },
     {
       "id": "d-20260515-000000-f43740",
@@ -3548,35 +3551,35 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-16 21:33:10",
+      "last_updated": "2026-07-16 22:42:25",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-16 21:33:10 • Roadmap",
+      "display_meta": "2026-07-16 22:42:25 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16 21:33:10",
+        "2026-07-16 22:42:25",
         "2026",
         "07",
         "16",
-        "21",
-        "33",
-        "10",
+        "22",
+        "42",
+        "25",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 21:33:10 2026 07 16 21 33 10 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 22:42:25 2026 07 16 22 42 25 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260716-204013-3be4e1",
       "kind": "doc",
       "title": "Button Placement",
       "href": "/docs/?scope=studio&doc=d-20260716-204013-3be4e1",
-      "last_updated": "2026-07-16 22:29:31",
+      "last_updated": "2026-07-16 22:42:25",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-16 22:29:31 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 22:42:25 • Docs Viewer Roadmap",
       "search_terms": [
         "button placement",
         "button",
@@ -3585,16 +3588,16 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16 22:29:31",
+        "2026-07-16 22:42:25",
         "2026",
         "07",
         "16",
         "22",
-        "29",
-        "31",
+        "42",
+        "25",
         "d-20260716-204013-3be4e1"
       ],
-      "search_text": "button placement button placement docs viewer roadmap docs viewer roadmap 2026-07-16 22:29:31 2026 07 16 22 29 31 d-20260716-204013-3be4e1"
+      "search_text": "button placement button placement docs viewer roadmap docs viewer roadmap 2026-07-16 22:42:25 2026 07 16 22 42 25 d-20260716-204013-3be4e1"
     },
     {
       "id": "d-20260716-193410-6d4efe",

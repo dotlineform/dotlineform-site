@@ -136,6 +136,18 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-edit"
       },
       {
+        id: "open-vscode",
+        actionId: DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE,
+        label: "Open in VS Code",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document", "markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-open-vscode"
+      },
+      {
         id: "save-markdown-source",
         actionId: "markdown-save",
         label: "Save Markdown source",
