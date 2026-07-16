@@ -830,6 +830,26 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
           "children": [
             {
+              "doc_id": "d-20260716-193410-6d4efe",
+              "title": "Copy Subtree To Scope",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-6d4efe.json",
+              "ui_status": "planned",
+              "children": [
+                {
+                  "doc_id": "d-20260716-193410-bd64e3",
+                  "title": "Copy Subtree To Scope Delivery",
+                  "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-bd64e3.json",
+                  "ui_status": "planned"
+                }
+              ]
+            },
+            {
+              "doc_id": "d-20260716-193410-98d1a8",
+              "title": "Dated Export Snapshots",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-98d1a8.json",
+              "ui_status": "proposed"
+            },
+            {
               "doc_id": "d-20260715-181845-0158f9",
               "title": "Document Visualisations",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-181845-0158f9.json",
@@ -1300,5 +1320,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T16:27:05Z"
+  "generated_at": "2026-07-16T18:35:56Z"
 }
