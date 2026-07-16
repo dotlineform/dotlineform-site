@@ -917,13 +917,13 @@
             },
             {
               "doc_id": "d-20260715-222129-8253ee",
-              "title": "Recently Edited",
+              "title": "Recent Documents",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-222129-8253ee.json",
               "ui_status": "proposed",
               "children": [
                 {
                   "doc_id": "d-20260715-225512-80198b",
-                  "title": "Recently Edited Delivery",
+                  "title": "Recent Documents Delivery",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-225512-80198b.json",
                   "ui_status": "proposed"
                 }
@@ -1292,5 +1292,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T11:51:57Z"
+  "generated_at": "2026-07-16T12:26:58Z"
 }

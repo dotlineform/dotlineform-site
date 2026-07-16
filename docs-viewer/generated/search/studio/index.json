@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-347a673d0fac82ee334ed3c6395b020a",
-    "generated_at_utc": "2026-07-16T12:05:08Z",
+    "version": "blake2b-a580fe2f211feeeb9aab7febefae8105",
+    "generated_at_utc": "2026-07-16T12:26:59Z",
     "count": 229
   },
   "entries": [
@@ -3858,50 +3858,50 @@
     {
       "id": "d-20260715-222129-8253ee",
       "kind": "doc",
-      "title": "Recently Edited",
+      "title": "Recent Documents",
       "href": "/docs/?scope=studio&doc=d-20260715-222129-8253ee",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 • Docs Viewer Roadmap",
       "search_terms": [
-        "recently edited",
-        "recently",
-        "edited",
+        "recent documents",
+        "recent",
+        "documents",
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-15",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260715-222129-8253ee"
       ],
-      "search_text": "recently edited recently edited docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-222129-8253ee"
+      "search_text": "recent documents recent documents docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260715-222129-8253ee"
     },
     {
       "id": "d-20260715-225512-80198b",
       "kind": "doc",
-      "title": "Recently Edited Delivery",
+      "title": "Recent Documents Delivery",
       "href": "/docs/?scope=studio&doc=d-20260715-225512-80198b",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260715-222129-8253ee",
-      "parent_title": "Recently Edited",
-      "display_meta": "2026-07-15 • Recently Edited",
+      "parent_title": "Recent Documents",
+      "display_meta": "2026-07-16 • Recent Documents",
       "search_terms": [
-        "recently edited delivery",
-        "recently",
-        "edited",
+        "recent documents delivery",
+        "recent",
+        "documents",
         "delivery",
-        "recently edited",
-        "2026-07-15",
+        "recent documents",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260715-225512-80198b"
       ],
-      "search_text": "recently edited delivery recently edited delivery recently edited 2026-07-15 2026 07 15 d-20260715-225512-80198b"
+      "search_text": "recent documents delivery recent documents delivery recent documents 2026-07-16 2026 07 16 d-20260715-225512-80198b"
     },
     {
       "id": "d-20260527-105208-c1a4d0",

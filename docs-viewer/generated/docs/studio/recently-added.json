@@ -4,15 +4,15 @@
   "docs": [
     {
       "doc_id": "d-20260715-225512-80198b",
-      "title": "Recently Edited Delivery",
+      "title": "Recent Documents Delivery",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-225512-80198b.json",
       "added_date": "2026-07-15 22:55:12",
       "parent_id": "d-20260715-222129-8253ee",
-      "parent_title": "Recently Edited"
+      "parent_title": "Recent Documents"
     },
     {
       "doc_id": "d-20260715-222129-8253ee",
-      "title": "Recently Edited",
+      "title": "Recent Documents",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-222129-8253ee.json",
       "added_date": "2026-07-15 22:21:29",
       "parent_id": "d-20260714-234030-1e0af6",
@@ -83,5 +83,5 @@
       "parent_title": "Roadmap"
     }
   ],
-  "generated_at": "2026-07-16T11:51:57Z"
+  "generated_at": "2026-07-16T12:26:58Z"
 }
