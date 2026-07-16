@@ -42,12 +42,11 @@ export function initDocsViewerSearchController(context) {
   var resultsStatus = context.resultsStatus;
   var results = context.results;
   var more = context.more;
-  var searchInput = context.searchInput;
   var paneCommands = context.paneCommands || {};
   var routeCommands = context.routeCommands || {};
 
   function searchIsEnabled() {
-    return Boolean(context.searchEnabled && searchInput && results && more);
+    return Boolean(context.searchEnabled && results && more);
   }
 
   function searchControlsAvailable() {
@@ -55,7 +54,7 @@ export function initDocsViewerSearchController(context) {
   }
 
   function recentIsEnabled() {
-    return Boolean(context.recentlyAddedEnabled && context.recentButton && results && more);
+    return Boolean(context.recentlyAddedEnabled && results && more);
   }
 
   function applyCurrentRoute(options) {
@@ -331,24 +330,6 @@ export function initDocsViewerSearchController(context) {
   }
 
   function bind() {
-    if (context.recentButton) {
-      context.recentButton.addEventListener("click", function () {
-        context.hideContextMenu();
-        cancelSearchDebounce();
-        var activeDocId = selectedDocument.selectedDocId || resolveDocId().docId || defaultDocId();
-        searchRecent.searchQuery = "";
-        searchRecent.searchRouteActive = false;
-        searchRecent.searchVisibleCount = context.searchBatchSize;
-        if (searchInput) {
-          searchInput.value = "";
-        }
-        if (activeDocId) {
-          setHistory(activeDocId, "", "", "push");
-        }
-        renderRecentMode();
-      });
-    }
-
     if (!searchControlsAvailable()) return;
 
     more.addEventListener("click", function (event) {
@@ -358,42 +339,54 @@ export function initDocsViewerSearchController(context) {
       renderSearchMode();
     });
 
+  }
+
+  function handleRecentControl() {
+    if (!recentIsEnabled()) return;
+    context.hideContextMenu();
+    cancelSearchDebounce();
+    var activeDocId = selectedDocument.selectedDocId || resolveDocId().docId || defaultDocId();
+    searchRecent.searchQuery = "";
+    searchRecent.searchRouteActive = false;
+    searchRecent.searchVisibleCount = context.searchBatchSize;
+    if (typeof context.clearSearchInput === "function") context.clearSearchInput();
+    if (activeDocId) setHistory(activeDocId, "", "", "push");
+    renderRecentMode();
+  }
+
+  function handleSearchInput(value) {
     if (!searchIsEnabled()) return;
+    var nextQuery = String(value || "").trim();
+    var nextModeActive = Boolean(normalizeSearchText(nextQuery));
+    var previousModeActive = searchRecent.searchRouteActive;
+    var activeDocId = selectedDocument.selectedDocId || resolveDocId().docId || "";
 
-    searchInput.addEventListener("input", function () {
-      var nextQuery = String(searchInput.value || "").trim();
-      var nextModeActive = Boolean(normalizeSearchText(nextQuery));
-      var previousModeActive = searchRecent.searchRouteActive;
-      var activeDocId = selectedDocument.selectedDocId || resolveDocId().docId || "";
+    cancelSearchDebounce();
+    context.setRecentModeActive(false);
+    searchRecent.searchQuery = nextQuery;
+    searchRecent.searchVisibleCount = context.searchBatchSize;
 
-      cancelSearchDebounce();
-      context.setRecentModeActive(false);
-      searchRecent.searchQuery = nextQuery;
-      searchRecent.searchVisibleCount = context.searchBatchSize;
+    if (!activeDocId) return;
+    if (!nextModeActive) {
+      searchRecent.searchRouteActive = false;
+      setHistory(activeDocId, "", "", previousModeActive ? "replace" : "none");
+      applyCurrentRoute({ historyMode: "none", hash: "" });
+      return;
+    }
 
-      if (!activeDocId) {
-        return;
-      }
-
-      if (!nextModeActive) {
-        searchRecent.searchRouteActive = false;
-        setHistory(activeDocId, "", "", previousModeActive ? "replace" : "none");
-        applyCurrentRoute({ historyMode: "none", hash: "" });
-        return;
-      }
-
-      searchRecent.searchRouteActive = true;
-      setHistory(activeDocId, "", nextQuery, previousModeActive ? "replace" : "push");
-      renderSearchPendingState();
-      searchRecent.searchDebounceId = window.setTimeout(function () {
-        searchRecent.searchDebounceId = null;
-        applyCurrentRoute({ historyMode: "none", hash: "" });
-      }, context.searchDebounceMs);
-    });
+    searchRecent.searchRouteActive = true;
+    setHistory(activeDocId, "", nextQuery, previousModeActive ? "replace" : "push");
+    renderSearchPendingState();
+    searchRecent.searchDebounceId = window.setTimeout(function () {
+      searchRecent.searchDebounceId = null;
+      applyCurrentRoute({ historyMode: "none", hash: "" });
+    }, context.searchDebounceMs);
   }
 
   return {
     bind: bind,
+    handleRecentControl: handleRecentControl,
+    handleSearchInput: handleSearchInput,
     renderRecentMode: renderRecentMode,
     renderSearchMode: renderSearchMode,
     renderSearchPendingState: renderSearchPendingState

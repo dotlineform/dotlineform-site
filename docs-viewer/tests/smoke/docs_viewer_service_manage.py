@@ -101,7 +101,7 @@ def wait_for_manage_doc(page: Page, title: str, timeout_ms: int) -> None:
     page.wait_for_function(
         """expectedTitle => {
             const heading = document.querySelector("#docsViewerContent h1");
-            const actions = document.querySelector(".docsViewer__manageActions");
+            const actions = document.querySelector('[data-docs-viewer-control-surface-mount="app-management"]');
             const button = document.querySelector("#docsViewerManageActionsButton");
             return heading &&
                 heading.textContent.trim() === expectedTitle &&
@@ -210,14 +210,19 @@ def assert_action_target_definitions(page: Page) -> None:
                 primaryDocId: 'second',
                 selectedDocIds: ['first', 'second', 'first']
             };
-            const singleContext = module.createDocsViewerSingleDocumentActionContext({ activeDocId: 'active' });
-            const targetedContext = module.createDocsViewerSingleDocumentActionContext({
+            const emptySelectionContext = module.createDocsViewerActionContext({ activeDocId: 'active' });
+            const multiSelectionContext = module.createDocsViewerActionContext({
                 activeDocId: 'active',
-                targetDocId: 'context'
+                primaryDocId: 'second',
+                selectedDocIds: ['first', 'second', 'first']
+            });
+            const invocationContext = module.createDocsViewerActionContext({
+                activeDocId: 'active',
+                invocationDocId: 'context'
             });
             let unknownRejected = false;
             try {
-                module.resolveDocsViewerAction('invented-action', singleContext);
+                module.resolveDocsViewerAction('invented-action', emptySelectionContext);
             } catch (error) {
                 unknownRejected = /Unknown Docs Viewer action/.test(String(error && error.message || ''));
             }
@@ -233,14 +238,18 @@ def assert_action_target_definitions(page: Page) -> None:
                 exactlyOne: groupedIds('selection', 'exactly-one'),
                 primary: groupedIds('selection', 'primary'),
                 scope: groupedIds('scope'),
-                singleContext,
-                targetedContext,
+                emptySelectionContext,
+                multiSelectionContext,
+                invocationContext,
                 resolutions: {
                     active: module.resolveDocsViewerAction('bookmark', multiContext),
                     all: module.resolveDocsViewerAction('move', multiContext),
                     exactlyOne: module.resolveDocsViewerAction('delete', multiContext),
                     primary: module.resolveDocsViewerAction('info', multiContext),
-                    scope: module.resolveDocsViewerAction('export-docs', multiContext)
+                    scope: module.resolveDocsViewerAction('export-docs', multiContext),
+                    emptyDelete: module.resolveDocsViewerAction('delete', emptySelectionContext),
+                    multiMove: module.resolveDocsViewerAction('move', multiSelectionContext),
+                    contextCopy: module.resolveDocsViewerAction('copy-link', invocationContext)
                 },
                 surfaceActionIds: Array.from(new Set(surfaceActionIds)).sort(),
                 unknownRejected,
@@ -249,13 +258,11 @@ def assert_action_target_definitions(page: Page) -> None:
         }"""
     )
     expected = {
-        "active": ["bookmark", "markdown-save", "markdown-source"],
+        "active": ["bookmark", "edit-metadata", "info", "markdown-save", "markdown-source"],
         "all": ["move"],
         "exactlyOne": ["delete", "show"],
         "primary": [
             "copy-link",
-            "edit-metadata",
-            "info",
             "new-child",
             "new-sibling",
             "open",
@@ -275,15 +282,20 @@ def assert_action_target_definitions(page: Page) -> None:
             "settings",
             "show-non-viewable",
         ],
-        "singleContext": {
+        "emptySelectionContext": {
             "activeDocId": "active",
-            "primaryDocId": "active",
-            "selectedDocIds": ["active"],
+            "primaryDocId": "",
+            "selectedDocIds": [],
         },
-        "targetedContext": {
+        "multiSelectionContext": {
+            "activeDocId": "active",
+            "primaryDocId": "second",
+            "selectedDocIds": ["first", "second"],
+        },
+        "invocationContext": {
             "activeDocId": "active",
             "primaryDocId": "context",
-            "selectedDocIds": ["context"],
+            "selectedDocIds": [],
         },
         "resolutions": {
             "active": {
@@ -314,9 +326,9 @@ def assert_action_target_definitions(page: Page) -> None:
                 "actionId": "info",
                 "disabledReason": "",
                 "enabled": True,
-                "selectionPolicy": "primary",
-                "target": "selection",
-                "targetDocIds": ["second"],
+                "selectionPolicy": "",
+                "target": "active-document",
+                "targetDocIds": ["active"],
             },
             "scope": {
                 "actionId": "export-docs",
@@ -325,6 +337,30 @@ def assert_action_target_definitions(page: Page) -> None:
                 "selectionPolicy": "",
                 "target": "scope",
                 "targetDocIds": [],
+            },
+            "emptyDelete": {
+                "actionId": "delete",
+                "disabledReason": "Select one document.",
+                "enabled": False,
+                "selectionPolicy": "exactly-one",
+                "target": "selection",
+                "targetDocIds": [],
+            },
+            "multiMove": {
+                "actionId": "move",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "all",
+                "target": "selection",
+                "targetDocIds": ["first", "second"],
+            },
+            "contextCopy": {
+                "actionId": "copy-link",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "primary",
+                "target": "selection",
+                "targetDocIds": ["context"],
             },
         },
         "surfaceActionIds": [
@@ -337,7 +373,6 @@ def assert_action_target_definitions(page: Page) -> None:
             "export-docs",
             "import",
             "info",
-            "markdown-save",
             "markdown-source",
             "new",
             "new-child",
@@ -431,6 +466,24 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         timeout=timeout_ms,
     )
     page.locator("#docsViewerMetadataCancelButton").evaluate("button => button.click()")
+
+    page.locator("#docsViewerManageSourceButton").evaluate("button => button.click()")
+    page.wait_for_function(
+        """() => {
+            const root = document.querySelector('#docsViewerRoot');
+            const actions = document.querySelector('[data-docs-viewer-control-surface-mount="main-view"]');
+            return root?.dataset.documentDisplayMode === 'markdown-source'
+                && actions
+                && Array.from(actions.children).map(node => node.dataset.docsViewerControl).join(',') === 'save-markdown-source,markdown-source,info'
+                && !document.querySelector('#docsViewerManageSourceSaveButton')?.disabled;
+        }""",
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerManageSourceButton").evaluate("button => button.click()")
+    page.wait_for_function(
+        "() => document.querySelector('#docsViewerRoot')?.dataset.documentDisplayMode === 'rendered-document'",
+        timeout=timeout_ms,
+    )
 
     page.locator("#docsViewerManageSettingsButton").evaluate("button => button.click()")
     page.wait_for_function(

@@ -52,7 +52,6 @@ export function initDocsViewerConfigController(context) {
     scopeSelect: scopeSelect,
     window: window
   });
-  var recentButton = context.recentButton;
   if (!Array.isArray(scopeConfig.scopeConfigs)) scopeConfig.scopeConfigs = [];
   if (!scopeConfig.scopeConfigsById) scopeConfig.scopeConfigsById = new Map();
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
@@ -346,12 +345,7 @@ export function initDocsViewerConfigController(context) {
     if (nonViewableColor) {
       root.style.setProperty("--docs-viewer-draft-color", nonViewableColor);
     }
-    if (recentButton) {
-      var label = "recent";
-      recentButton.textContent = label;
-      recentButton.setAttribute("aria-label", label);
-      recentButton.title = label;
-    }
+    if (typeof context.setRecentControlLabel === "function") context.setRecentControlLabel("recent");
     if (context.managementController()) {
       context.managementController().applyConfig(config);
     }

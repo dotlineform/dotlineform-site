@@ -50,9 +50,252 @@ def install_fixture(page: Page) -> None:
             const documentViewCoordinator = await import('/docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js');
             const generatedDataRuntime = await import('/docs-viewer/runtime/js/shared/docs-viewer-generated-data-runtime.js');
             const statusController = await import('/docs-viewer/runtime/js/shared/docs-viewer-status-controller.js');
-            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController };
+            const controlSurfaceHost = await import('/docs-viewer/runtime/js/shared/docs-viewer-control-surface-host.js');
+            const appControlRenderers = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-control-renderers.js');
+            const appShell = await import('/docs-viewer/runtime/js/shared/docs-viewer-app-shell.js');
+            window.__docsViewerRouterModuleSmoke = { router, routeConfig, appContext, serviceContext, configuredScopeProvider, routeFeatures, appComposition, toolbarRenderer, configController, viewRegistry, mainViewRenderer, appSession, documentViewCoordinator, generatedDataRuntime, statusController, controlSurfaceHost, appControlRenderers, appShell };
         }"""
     )
+
+
+def assert_control_surface_host(page: Page) -> None:
+    result = page.evaluate(
+        """() => {
+            const { controlSurfaceHost, routeFeatures, viewRegistry } = window.__docsViewerRouterModuleSmoke;
+            const definitions = [
+                viewRegistry.createDocsViewerSharedViewDefinitions(),
+                { controls: [
+                    {
+                        id: 'select-index',
+                        label: 'Select',
+                        ownerType: 'view',
+                        ownerViewId: 'index-tree',
+                        surfaceId: 'index-view',
+                        appKinds: ['manage'],
+                        renderer: 'synthetic-button'
+                    },
+                    {
+                        id: 'second-index-control',
+                        label: 'Second',
+                        ownerType: 'view',
+                        ownerViewId: 'index-tree',
+                        surfaceId: 'index-view',
+                        appKinds: ['manage'],
+                        renderer: 'synthetic-button'
+                    }
+                ] }
+            ];
+            const manageRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: definitions,
+                projectionInputs: {
+                    appContext: {
+                        kind: 'manage',
+                        featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures(['management'])
+                    }
+                }
+            });
+            const publicRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: definitions,
+                projectionInputs: {
+                    appContext: {
+                        kind: 'public',
+                        featurePolicy: routeFeatures.normalizeDocsViewerRouteFeatures([])
+                    }
+                }
+            });
+            const mount = document.createElement('div');
+            const dispatches = [];
+            const renderer = ({ control, document: documentRef }) => {
+                if (control.id === 'second-index-control') {
+                    const root = documentRef.createElement('div');
+                    const button = documentRef.createElement('button');
+                    button.type = 'button';
+                    button.dataset.docsViewerAction = 'nested-action';
+                    root.appendChild(button);
+                    return { root, interactive: button };
+                }
+                const button = documentRef.createElement('button');
+                button.type = 'button';
+                button.textContent = control.label;
+                return button;
+            };
+            const host = controlSurfaceHost.createDocsViewerControlSurfaceHost({
+                mount,
+                registry: manageRegistry,
+                renderers: { 'synthetic-button': renderer },
+                surfaceId: 'index-view',
+                onDispatch: detail => dispatches.push({
+                    actionId: detail.actionId,
+                    controlId: detail.controlId,
+                    eventType: detail.eventType,
+                    surfaceId: detail.surfaceId
+                })
+            });
+            const projected = host.render({
+                activeViewId: 'index-tree',
+                controlStateById: {
+                    'select-index': { disabled: false, pressed: true, label: 'Select documents', count: 2 }
+                }
+            });
+            const selectButton = mount.querySelector('[data-docs-viewer-control="select-index"]');
+            selectButton.click();
+            mount.querySelector('[data-docs-viewer-action="nested-action"]').click();
+            const populated = {
+                count: projected.length,
+                hidden: mount.hidden,
+                ids: Array.from(mount.children).map(node => node.dataset.docsViewerControl),
+                select: {
+                    count: selectButton.dataset.docsViewerControlCount,
+                    label: selectButton.getAttribute('aria-label'),
+                    pressed: selectButton.getAttribute('aria-pressed'),
+                    surface: selectButton.dataset.docsViewerControlSurface
+                }
+            };
+            const publicMount = document.createElement('div');
+            const publicHost = controlSurfaceHost.createDocsViewerControlSurfaceHost({
+                mount: publicMount,
+                registry: publicRegistry,
+                renderers: { 'synthetic-button': renderer },
+                surfaceId: 'index-view'
+            });
+            const publicProjected = publicHost.render({ activeViewId: 'index-tree' });
+            const optionalHost = controlSurfaceHost.createDocsViewerControlSurfaceHost({
+                mount: null,
+                registry: manageRegistry,
+                renderers: { 'synthetic-button': renderer },
+                surfaceId: 'index-view'
+            });
+            return {
+                dispatches,
+                optionalCount: optionalHost.render({ activeViewId: 'index-tree' }).length,
+                populated,
+                publicCount: publicProjected.length,
+                publicHidden: publicMount.hidden
+            };
+        }"""
+    )
+    expected = {
+        "dispatches": [{
+            "actionId": "",
+            "controlId": "select-index",
+            "eventType": "click",
+            "surfaceId": "index-view",
+        }, {
+            "actionId": "nested-action",
+            "controlId": "second-index-control",
+            "eventType": "click",
+            "surfaceId": "index-view",
+        }],
+        "optionalCount": 0,
+        "populated": {
+            "count": 2,
+            "hidden": False,
+            "ids": ["select-index", "second-index-control"],
+            "select": {
+                "count": "2",
+                "label": "Select documents",
+                "pressed": "true",
+                "surface": "index-view",
+            },
+        },
+        "publicCount": 0,
+        "publicHidden": True,
+    }
+    if result != expected:
+        raise AssertionError(f"control-surface host contract changed: {result!r}")
+
+
+def assert_app_shell_control_surface_mounts(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const { appShell, routeFeatures, viewRegistry } = window.__docsViewerRouterModuleSmoke;
+            const makeRoot = () => {
+                const root = document.createElement('div');
+                [
+                    'header-controls',
+                    'index-panel',
+                    'main-view',
+                    'info-panel',
+                    'management-shell'
+                ].forEach(name => {
+                    const mount = document.createElement('div');
+                    mount.setAttribute(`data-docs-viewer-${name}-mount`, '');
+                    root.appendChild(mount);
+                });
+                return root;
+            };
+            const manageFeatures = routeFeatures.normalizeDocsViewerRouteFeatures([
+                'bookmarks', 'source-editing', 'management'
+            ]);
+            const manageRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: [
+                    viewRegistry.createDocsViewerSharedViewDefinitions(),
+                    {
+                        modes: [{
+                            id: 'markdown-source',
+                            ownerViewId: 'rendered-document',
+                            appKinds: ['manage'],
+                            features: ['source-editing']
+                        }],
+                        controls: [{
+                            id: 'manage-control',
+                            ownerType: 'view',
+                            ownerViewId: 'rendered-document',
+                            surfaceId: 'main-view',
+                            appKinds: ['manage'],
+                            renderer: 'manage-control'
+                        }]
+                    }
+                ],
+                projectionInputs: { appContext: { kind: 'manage', featurePolicy: manageFeatures } }
+            });
+            const manageRoot = makeRoot();
+            await appShell.initDocsViewerAppShell({
+                root: manageRoot,
+                document,
+                routeContext: {
+                    appContext: {
+                        kind: 'manage',
+                        featurePolicy: manageFeatures,
+                        routeAccess: { managementUi: true }
+                    }
+                },
+                viewRegistry: manageRegistry
+            });
+            const publicFeatures = routeFeatures.normalizeDocsViewerRouteFeatures([]);
+            const publicRegistry = viewRegistry.createDocsViewerViewRegistry({
+                definitionSets: [viewRegistry.createDocsViewerSharedViewDefinitions()],
+                projectionInputs: { appContext: { kind: 'public', featurePolicy: publicFeatures } },
+                routePolicy: { hiddenControls: ['bookmark', 'info'] }
+            });
+            const publicRoot = makeRoot();
+            await appShell.initDocsViewerAppShell({
+                root: publicRoot,
+                document,
+                routeContext: {
+                    appContext: {
+                        kind: 'public',
+                        featurePolicy: publicFeatures,
+                        routeAccess: { managementUi: false }
+                    }
+                },
+                viewRegistry: publicRegistry
+            });
+            const counts = root => ({
+                appViewer: root.querySelectorAll('[data-docs-viewer-control-surface-mount="app-viewer"]').length,
+                appManagement: root.querySelectorAll('[data-docs-viewer-control-surface-mount="app-management"]').length,
+                indexView: root.querySelectorAll('[data-docs-viewer-control-surface-mount="index-view"]').length,
+                mainView: root.querySelectorAll('[data-docs-viewer-control-surface-mount="main-view"]').length
+            });
+            return { manage: counts(manageRoot), optionalPublic: counts(publicRoot) };
+        }"""
+    )
+    expected = {
+        "manage": {"appViewer": 1, "appManagement": 1, "indexView": 1, "mainView": 1},
+        "optionalPublic": {"appViewer": 1, "appManagement": 0, "indexView": 1, "mainView": 0},
+    }
+    if result != expected:
+        raise AssertionError(f"app-shell control-surface mounts changed: {result!r}")
 
 
 def assert_missing_doc_history(page: Page) -> None:
@@ -207,7 +450,7 @@ def assert_route_config_scope_default(page: Page) -> None:
 def assert_route_feature_projection_and_startup(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const { routeConfig, routeFeatures, appComposition, toolbarRenderer, configController } = window.__docsViewerRouterModuleSmoke;
+            const { routeConfig, routeFeatures, appComposition, toolbarRenderer, configController, controlSurfaceHost, appControlRenderers, viewRegistry } = window.__docsViewerRouterModuleSmoke;
             const minimal = routeFeatures.normalizeDocsViewerRouteFeatures([]);
             const selected = routeFeatures.normalizeDocsViewerRouteFeatures([
                 'configured-scope-discovery',
@@ -283,6 +526,21 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 mount: minimalToolbarMount,
                 routeContext: { appContext: { featurePolicy: minimal } }
             });
+            const renderToolbarControls = (toolbarMount, featurePolicy) => {
+                const registry = viewRegistry.createDocsViewerViewRegistry({
+                    definitionSets: [viewRegistry.createDocsViewerSharedViewDefinitions()],
+                    projectionInputs: { appContext: { kind: 'public', featurePolicy } }
+                });
+                const mount = toolbarMount.querySelector('[data-docs-viewer-control-surface-mount="app-viewer"]');
+                controlSurfaceHost.createDocsViewerControlSurfaceHost({
+                    mount,
+                    registry,
+                    renderers: appControlRenderers.createDocsViewerSharedControlRenderers(),
+                    surfaceId: 'app-viewer'
+                }).render({
+                    controlStateById: { 'index-view-switch': { hidden: true } }
+                });
+            };
             const searchToolbarMount = document.createElement('div');
             toolbarRenderer.renderDocsViewerViewerToolbar({
                 document,
@@ -296,6 +554,9 @@ def assert_route_feature_projection_and_startup(page: Page) -> None:
                 mount: recentToolbarMount,
                 routeContext: { appContext: { featurePolicy: recentOnly } }
             });
+            renderToolbarControls(minimalToolbarMount, minimal);
+            renderToolbarControls(searchToolbarMount, selected);
+            renderToolbarControls(recentToolbarMount, recentOnly);
             const viewerSettingsState = {
                 scopeConfig: {},
                 searchRecent: {},
@@ -468,9 +729,11 @@ def assert_view_mode_control_registry(page: Page) -> None:
                     id: 'markdown-source', ownerViewId: 'rendered-document', appKinds: ['manage'], features: ['source-editing']
                 }],
                 controls: [
-                    { id: 'edit', ownerViewId: 'rendered-document', modeIds: ['rendered-document'], appKinds: ['manage'], features: ['management'] },
-                    { id: 'markdown-source', ownerViewId: 'rendered-document', modeIds: ['rendered-document', 'markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
-                    { id: 'save-markdown-source', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['manage'], features: ['source-editing'] }
+                    { id: 'edit', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['rendered-document'], appKinds: ['manage'], features: ['management'] },
+                    { id: 'markdown-source', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['rendered-document', 'markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
+                    { id: 'save-markdown-source', ownerType: 'view', surfaceId: 'main-view', ownerViewId: 'rendered-document', modeIds: ['markdown-source'], appKinds: ['manage'], features: ['source-editing'] },
+                    { id: 'viewer-app-control', ownerType: 'app', surfaceId: 'app-viewer', appKinds: ['manage'] },
+                    { id: 'index-view-control', ownerType: 'view', surfaceId: 'index-view', ownerViewId: 'index-tree', appKinds: ['manage'] }
                 ]
             };
             const definitionSets = [viewRegistry.createDocsViewerSharedViewDefinitions(), manageDefinitions];
@@ -492,6 +755,8 @@ def assert_view_mode_control_registry(page: Page) -> None:
                     viewRegistry.createDocsViewerSharedViewDefinitions(),
                     { controls: [{
                         id: 'capability-control',
+                        ownerType: 'view',
+                        surfaceId: 'main-view',
                         ownerViewId: 'rendered-document',
                         requiredCapabilities: ['documents.write']
                     }] }
@@ -505,6 +770,8 @@ def assert_view_mode_control_registry(page: Page) -> None:
             const toolbarMount = document.createElement('div');
             mainViewRenderer.renderDocsViewerMainView({ document, mount, toolbarMount, viewRegistry: narrowedRegistry });
             let duplicateRejected = false;
+            let missingOwnerRejected = false;
+            let mismatchedSurfaceRejected = false;
             let unknownPolicyRejected = false;
             try {
                 viewRegistry.createDocsViewerViewRegistry({
@@ -519,6 +786,33 @@ def assert_view_mode_control_registry(page: Page) -> None:
             }
             try {
                 viewRegistry.createDocsViewerViewRegistry({
+                    definitionSets: [
+                        viewRegistry.createDocsViewerSharedViewDefinitions(),
+                        { controls: [{ id: 'missing-owner', surfaceId: 'app-viewer' }] }
+                    ],
+                    projectionInputs: { appContext: publicContext }
+                });
+            } catch (error) {
+                missingOwnerRejected = /requires ownerType app or view/.test(String(error && error.message || ''));
+            }
+            try {
+                viewRegistry.createDocsViewerViewRegistry({
+                    definitionSets: [
+                        viewRegistry.createDocsViewerSharedViewDefinitions(),
+                        { controls: [{
+                            id: 'mismatched-surface',
+                            ownerType: 'view',
+                            surfaceId: 'index-view',
+                            ownerViewId: 'rendered-document'
+                        }] }
+                    ],
+                    projectionInputs: { appContext: publicContext }
+                });
+            } catch (error) {
+                mismatchedSurfaceRejected = /surface that does not match/.test(String(error && error.message || ''));
+            }
+            try {
+                viewRegistry.createDocsViewerViewRegistry({
                     definitionSets,
                     projectionInputs: { appContext: publicContext },
                     routePolicy: { hiddenControls: ['invented-control'] }
@@ -526,19 +820,31 @@ def assert_view_mode_control_registry(page: Page) -> None:
             } catch (error) {
                 unknownPolicyRejected = /Unknown Docs Viewer route-policy control/.test(String(error && error.message || ''));
             }
+            const appControl = manageRegistry.projectControls({
+                surfaceId: 'app-viewer',
+                controlStateById: {
+                    'viewer-app-control': { hidden: 1, disabled: 0, label: ' Active ', count: '4', ignored: true }
+                }
+            }).find((control) => control.id === 'viewer-app-control');
             return {
+                appControl: { id: appControl.id, state: appControl.state },
                 capabilityDenied: !capabilityRegistry.resolveControl('capability-control', {
                     activeViewId: 'rendered-document', activeModeId: 'rendered-document'
                 }).available,
                 duplicateRejected,
                 emptyToolbar: toolbarMount.querySelector('#docsViewerMainViewToolbar') === null,
+                indexViewControls: manageRegistry.projectControls({
+                    surfaceId: 'index-view', activeViewId: 'index-tree'
+                }).map((control) => control.id),
                 manageMarkdownMode: manageRegistry.resolveMode('markdown-source').available,
                 manageRenderedControls: manageRegistry.projectControls({
-                    activeViewId: 'rendered-document', activeModeId: 'rendered-document'
-                }).map((control) => control.id).sort(),
+                    surfaceId: 'main-view', activeViewId: 'rendered-document', activeModeId: 'rendered-document'
+                }).map((control) => control.id),
                 manageSourceControls: manageRegistry.projectControls({
-                    activeViewId: 'rendered-document', activeModeId: 'markdown-source'
-                }).map((control) => control.id).sort(),
+                    surfaceId: 'main-view', activeViewId: 'rendered-document', activeModeId: 'markdown-source'
+                }).map((control) => control.id),
+                mismatchedSurfaceRejected,
+                missingOwnerRejected,
                 publicEdit: publicRegistry.resolveControl('edit', {
                     activeViewId: 'rendered-document', activeModeId: 'rendered-document'
                 }).available,
@@ -548,12 +854,19 @@ def assert_view_mode_control_registry(page: Page) -> None:
         }"""
     )
     expected = {
+        "appControl": {
+            "id": "viewer-app-control",
+            "state": {"hidden": True, "disabled": False, "label": "Active", "count": 4},
+        },
         "capabilityDenied": True,
         "duplicateRejected": True,
         "emptyToolbar": True,
+        "indexViewControls": ["index-view-control"],
         "manageMarkdownMode": True,
-        "manageRenderedControls": ["bookmark", "edit", "info", "markdown-source"],
+        "manageRenderedControls": ["bookmark", "info", "edit", "markdown-source"],
         "manageSourceControls": ["info", "markdown-source", "save-markdown-source"],
+        "mismatchedSurfaceRejected": True,
+        "missingOwnerRejected": True,
         "publicEdit": False,
         "publicMarkdownMode": False,
         "unknownPolicyRejected": True,
@@ -788,6 +1101,8 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                         }],
                         controls: [{
                             id: 'save-markdown-source',
+                            ownerType: 'view',
+                            surfaceId: 'main-view',
                             ownerViewId: 'rendered-document',
                             modeIds: ['markdown-source'],
                             appKinds: ['manage'],
@@ -805,7 +1120,6 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                 collectionProvider: {},
                 documentIndex: { allDocsById: new Map(), docsById: new Map() },
                 infoPanelRefs: { body: document.createElement('div') },
-                infoToggle: null,
                 mount: document.createElement('div'),
                 panelLayout: {
                     projectInfoPanel: () => {},
@@ -814,7 +1128,7 @@ def assert_phase_five_runtime_owners(page: Page) -> None:
                 },
                 panelView: { viewState },
                 projectMainView: () => {},
-                renderDocumentControls: () => { controlProjectionCount += 1; },
+                projectControlStates: () => { controlProjectionCount += 1; },
                 root: document.createElement('div'),
                 scopeConfig: { uiStatusByValue: new Map() },
                 selectedDocument: { payloadCache: new Map(), selectedDocId: '' },
@@ -880,6 +1194,8 @@ def run_smoke(page: Page, base_url: str) -> None:
     assert_route_feature_projection_and_startup(page)
     assert_explicit_app_and_service_context(page)
     assert_view_mode_control_registry(page)
+    assert_control_surface_host(page)
+    assert_app_shell_control_surface_mounts(page)
     assert_configured_scope_provider(page)
     assert_phase_five_runtime_owners(page)
 

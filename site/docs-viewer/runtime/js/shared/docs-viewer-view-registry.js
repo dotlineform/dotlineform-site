@@ -7,6 +7,20 @@ import {
 
 var PANELS = ["index", "main", "info"];
 var APP_KINDS = ["public", "manage", "review"];
+var CONTROL_OWNER_TYPES = ["app", "view"];
+var CONTROL_SURFACES = ["app-viewer", "app-management", "index-view", "main-view"];
+
+export const DOCS_VIEWER_CONTROL_OWNER_TYPES = Object.freeze({
+  APP: "app",
+  VIEW: "view"
+});
+
+export const DOCS_VIEWER_CONTROL_SURFACES = Object.freeze({
+  APP_VIEWER: "app-viewer",
+  APP_MANAGEMENT: "app-management",
+  INDEX_VIEW: "index-view",
+  MAIN_VIEW: "main-view"
+});
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -81,12 +95,60 @@ function normalizeMode(record) {
 
 function normalizeControl(record) {
   var source = record || {};
+  var ownerType = cleanString(source.ownerType);
+  if (CONTROL_OWNER_TYPES.indexOf(ownerType) === -1) {
+    throw new Error("Docs Viewer control " + cleanString(source.id) + " requires ownerType app or view.");
+  }
+  var surfaceId = cleanString(source.surfaceId);
+  if (CONTROL_SURFACES.indexOf(surfaceId) === -1) {
+    throw new Error("Docs Viewer control " + cleanString(source.id) + " has unknown surface: " + surfaceId);
+  }
+  var ownerViewId = cleanString(source.ownerViewId);
+  var modeIds = cleanStringList(source.modeIds);
+  if (ownerType === DOCS_VIEWER_CONTROL_OWNER_TYPES.APP) {
+    if (ownerViewId) {
+      throw new Error("Docs Viewer app control " + cleanString(source.id) + " cannot declare an owner view.");
+    }
+    if (modeIds.length) {
+      throw new Error("Docs Viewer app control " + cleanString(source.id) + " cannot declare owner modes.");
+    }
+    if (
+      surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.APP_VIEWER
+      && surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.APP_MANAGEMENT
+    ) {
+      throw new Error("Docs Viewer app control " + cleanString(source.id) + " requires an app control surface.");
+    }
+  } else {
+    ownerViewId = cleanId(ownerViewId, "control owner view");
+    if (
+      surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.INDEX_VIEW
+      && surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.MAIN_VIEW
+    ) {
+      throw new Error("Docs Viewer view control " + cleanString(source.id) + " requires a view control surface.");
+    }
+  }
   return Object.assign(normalizeCommon(source, "control"), {
     actionId: cleanString(source.actionId),
-    ownerViewId: cleanId(source.ownerViewId, "control owner view"),
-    modeIds: cleanStringList(source.modeIds),
+    ownerType: ownerType,
+    ownerViewId: ownerViewId,
+    modeIds: modeIds,
+    surfaceId: surfaceId,
     renderer: cleanString(source.renderer)
   });
+}
+
+export function normalizeDocsViewerControlState(record) {
+  var source = record && typeof record === "object" && !Array.isArray(record) ? record : {};
+  var state = {};
+  ["hidden", "disabled", "pressed", "busy", "expanded"].forEach(function (key) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) state[key] = Boolean(source[key]);
+  });
+  if (Object.prototype.hasOwnProperty.call(source, "label")) state.label = cleanString(source.label);
+  if (Object.prototype.hasOwnProperty.call(source, "count")) {
+    var count = Number(source.count);
+    state.count = Number.isFinite(count) ? count : 0;
+  }
+  return state;
 }
 
 function insertDefinition(map, record, type) {
@@ -125,7 +187,7 @@ export function createDocsViewerSharedViewDefinitions() {
         label: "Index tree",
         panel: "index",
         renderer: "index-tree",
-        capabilities: { layoutStates: ["normal", "collapsed"], toolbar: false }
+        capabilities: { layoutStates: ["normal", "collapsed"] }
       },
       { id: "rendered-document", label: "Document", panel: "main" },
       { id: "search-results", label: "Search results", panel: "main", features: ["search"] },
@@ -145,11 +207,36 @@ export function createDocsViewerSharedViewDefinitions() {
     ],
     controls: [
       {
+        id: "recently-added",
+        label: "recently added",
+        ownerType: "app",
+        surfaceId: "app-viewer",
+        features: ["recently-added"],
+        renderer: "recent-button"
+      },
+      {
+        id: "search",
+        label: "Search docs",
+        ownerType: "app",
+        surfaceId: "app-viewer",
+        features: ["search"],
+        renderer: "search-input"
+      },
+      {
+        id: "index-view-switch",
+        label: "Tree index view",
+        ownerType: "app",
+        surfaceId: "app-viewer",
+        renderer: "index-view-toggle"
+      },
+      {
         id: "bookmark",
         actionId: "bookmark",
         label: "Bookmark",
+        ownerType: "view",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document"],
+        surfaceId: "main-view",
         features: ["bookmarks"],
         renderer: "bookmark-toggle"
       },
@@ -157,11 +244,24 @@ export function createDocsViewerSharedViewDefinitions() {
         id: "info",
         actionId: "info",
         label: "Document info",
+        ownerType: "view",
         ownerViewId: "rendered-document",
+        surfaceId: "main-view",
         renderer: "info-toggle"
       }
     ]
   };
+}
+
+export function composeDocsViewerViewDefinitionSets(contributions) {
+  var shared = createDocsViewerSharedViewDefinitions();
+  var appControls = shared.controls.filter(function (control) { return control.ownerType === "app"; });
+  var viewControls = shared.controls.filter(function (control) { return control.ownerType === "view"; });
+  return [
+    { views: shared.views, modes: shared.modes, controls: appControls },
+    contributions || {},
+    { controls: viewControls }
+  ];
 }
 
 export function createDocsViewerViewRegistry(options) {
@@ -192,15 +292,26 @@ export function createDocsViewerViewRegistry(options) {
     }
   });
   controls.forEach(function (control) {
-    if (!views.has(control.ownerViewId)) {
-      throw new Error("Docs Viewer control " + control.id + " has unknown owner view: " + control.ownerViewId);
-    }
-    control.modeIds.forEach(function (modeId) {
-      var mode = modes.get(modeId);
-      if (!mode || mode.ownerViewId !== control.ownerViewId) {
-        throw new Error("Docs Viewer control " + control.id + " has unknown owner mode: " + modeId);
+    if (control.ownerType === DOCS_VIEWER_CONTROL_OWNER_TYPES.VIEW) {
+      var ownerView = views.get(control.ownerViewId) || null;
+      if (!ownerView) {
+        throw new Error("Docs Viewer control " + control.id + " has unknown owner view: " + control.ownerViewId);
       }
-    });
+      var expectedSurface = ownerView.panel === "index"
+        ? DOCS_VIEWER_CONTROL_SURFACES.INDEX_VIEW
+        : ownerView.panel === "main"
+          ? DOCS_VIEWER_CONTROL_SURFACES.MAIN_VIEW
+          : "";
+      if (!expectedSurface || control.surfaceId !== expectedSurface) {
+        throw new Error("Docs Viewer control " + control.id + " has a surface that does not match its owner view.");
+      }
+      control.modeIds.forEach(function (modeId) {
+        var mode = modes.get(modeId);
+        if (!mode || mode.ownerViewId !== control.ownerViewId) {
+          throw new Error("Docs Viewer control " + control.id + " has unknown owner mode: " + modeId);
+        }
+      });
+    }
   });
 
   policy.hiddenViews.forEach(function (id) {
@@ -243,7 +354,7 @@ export function createDocsViewerViewRegistry(options) {
         ? policy.hiddenModes
         : policy.hiddenControls;
     if (hidden.indexOf(record.id) !== -1) return { available: false, reason: "policy" };
-    if (type === "mode" || type === "control") {
+    if (type === "mode" || (type === "control" && record.ownerType === DOCS_VIEWER_CONTROL_OWNER_TYPES.VIEW)) {
       var ownerStatus = statusFor(views.get(record.ownerViewId) || null, "view");
       if (!ownerStatus.available) return { available: false, reason: "owner-view" };
     }
@@ -271,8 +382,22 @@ export function createDocsViewerViewRegistry(options) {
   }
 
   function controlActive(control, activeViewId, activeModeId) {
-    if (!control || control.ownerViewId !== cleanString(activeViewId)) return false;
+    if (!control) return false;
+    if (control.ownerType === DOCS_VIEWER_CONTROL_OWNER_TYPES.APP) return true;
+    if (control.ownerViewId !== cleanString(activeViewId)) return false;
     return !control.modeIds.length || control.modeIds.indexOf(cleanString(activeModeId)) !== -1;
+  }
+
+  function controlState(control, stateById) {
+    var states = stateById && typeof stateById === "object" ? stateById : {};
+    return normalizeDocsViewerControlState(states[control.id]);
+  }
+
+  function controlProjection(control, activeState) {
+    var state = activeState || {};
+    return Object.assign(projection(control, "control"), {
+      state: controlState(control, state.controlStateById)
+    });
   }
 
   return {
@@ -291,10 +416,14 @@ export function createDocsViewerViewRegistry(options) {
     listControls: function (optionsForList) {
       var listSettings = optionsForList || {};
       var ownerId = cleanString(listSettings.ownerViewId);
+      var ownerType = cleanString(listSettings.ownerType);
+      var surfaceId = cleanString(listSettings.surfaceId);
       return Array.from(controls.values()).filter(function (control) {
-        return !ownerId || control.ownerViewId === ownerId;
+        return (!ownerId || control.ownerViewId === ownerId)
+          && (!ownerType || control.ownerType === ownerType)
+          && (!surfaceId || control.surfaceId === surfaceId);
       }).map(function (control) {
-        return Object.assign(projection(control, "control"), {
+        return Object.assign(controlProjection(control, listSettings), {
           active: statusFor(control, "control").available && controlActive(
             control,
             listSettings.activeViewId,
@@ -305,10 +434,12 @@ export function createDocsViewerViewRegistry(options) {
     },
     projectControls: function (activeState) {
       var state = activeState || {};
+      var surfaceId = cleanString(state.surfaceId);
       return Array.from(controls.values()).filter(function (control) {
-        return statusFor(control, "control").available
+        return (!surfaceId || control.surfaceId === surfaceId)
+          && statusFor(control, "control").available
           && controlActive(control, state.activeViewId, state.activeModeId);
-      }).map(function (control) { return projection(control, "control"); });
+      }).map(function (control) { return controlProjection(control, state); });
     },
     resolveView: function (id) { return resolved(views.get(cleanString(id)) || null, "view"); },
     resolveMode: function (id) { return resolved(modes.get(cleanString(id)) || null, "mode"); },

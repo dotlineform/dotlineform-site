@@ -29,7 +29,7 @@ import {
 } from "./docs-viewer-management-actions.js";
 import {
   DOCS_VIEWER_ACTION_IDS,
-  createDocsViewerSingleDocumentActionContext,
+  createDocsViewerActionContext,
   resolveDocsViewerAction
 } from "./docs-viewer-action-definitions.js";
 
@@ -76,9 +76,6 @@ export function initDocsViewerManagement(context) {
   var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
   var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
-  var manageEditButton = document.getElementById("docsViewerManageEditButton");
-  var manageSourceButton = document.getElementById("docsViewerManageSourceButton");
-  var manageSourceSaveButton = document.getElementById("docsViewerManageSourceSaveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
@@ -114,12 +111,13 @@ export function initDocsViewerManagement(context) {
 
   function resolveAction(actionId, targetDocId) {
     var contextOptions = {
-      activeDocId: selectedDocument.selectedDocId
+      activeDocId: selectedDocument.selectedDocId,
+      selectedDocIds: Array.isArray(management.selectedDocIds) ? management.selectedDocIds : []
     };
-    if (arguments.length > 1) contextOptions.targetDocId = targetDocId;
+    if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
     return resolveDocsViewerAction(
       actionId,
-      createDocsViewerSingleDocumentActionContext(contextOptions)
+      createDocsViewerActionContext(contextOptions)
     );
   }
 
@@ -177,28 +175,67 @@ export function initDocsViewerManagement(context) {
     var actionsDisabled = Boolean(disabled);
     var documentMode = root && root.dataset ? String(root.dataset.documentDisplayMode || "") : "";
     var markdownMode = documentMode === "markdown-source";
-    var activeControlIds = new Set();
-    if (context.viewRegistry && typeof context.viewRegistry.projectControls === "function") {
-      context.viewRegistry.projectControls(
-        typeof context.activeViewState === "function" ? context.activeViewState() : {}
-      ).forEach(function (control) { activeControlIds.add(control.id); });
+    if (typeof context.projectMainViewControlState === "function") {
+      context.projectMainViewControlState("edit", {
+        hidden: actionsHidden,
+        disabled: actionsDisabled
+      });
+      context.projectMainViewControlState("markdown-source", {
+        hidden: actionsHidden,
+        disabled: actionsDisabled,
+        pressed: markdownMode,
+        label: markdownMode ? "Show rendered document" : "Show Markdown source"
+      });
+      context.projectMainViewControlState("save-markdown-source", {
+        hidden: actionsHidden,
+        disabled: actionsDisabled
+      });
     }
-    if (manageEditButton) {
-      manageEditButton.hidden = actionsHidden || !activeControlIds.has("edit");
-      manageEditButton.disabled = actionsDisabled || !activeControlIds.has("edit");
+  }
+
+  function projectAppControl(controlId, controlState) {
+    if (typeof context.projectAppManagementControlState === "function") {
+      context.projectAppManagementControlState(controlId, controlState);
     }
-    if (manageSourceButton) {
-      manageSourceButton.hidden = actionsHidden || !activeControlIds.has("markdown-source");
-      manageSourceButton.disabled = actionsDisabled || !activeControlIds.has("markdown-source");
-      manageSourceButton.setAttribute("aria-pressed", markdownMode ? "true" : "false");
-      manageSourceButton.setAttribute("aria-label", markdownMode ? "Show rendered document" : "Show Markdown source");
-      manageSourceButton.title = markdownMode ? "Show rendered document" : "Show Markdown source";
-      manageSourceButton.textContent = markdownMode ? "📄" : "☰";
-    }
-    if (manageSourceSaveButton) {
-      manageSourceSaveButton.hidden = actionsHidden || !activeControlIds.has("save-markdown-source");
-      manageSourceSaveButton.disabled = actionsDisabled || !activeControlIds.has("save-markdown-source");
-    }
+  }
+
+  function hideAppManagementControls() {
+    [
+      "manage-import",
+      "manage-actions",
+      "manage-publish",
+      "manage-show",
+      "manage-show-non-viewable",
+      "manage-scope",
+      "manage-theme"
+    ].forEach(function (controlId) {
+      projectAppControl(controlId, { hidden: true, disabled: true });
+    });
+  }
+
+  function handleMainViewControl(detail) {
+    var controlId = String(detail && detail.controlId || "").trim();
+    var actionId = String(detail && detail.actionId || "").trim();
+    var resolution = actionId ? resolveAction(actionId) : null;
+    if (actionId && (!resolution || !resolution.enabled)) return false;
+    var owners = new Map([
+      ["edit", function () {
+        var doc = actionTargetDoc(resolution);
+        if (doc) metadataWorkflow.openForDocId(doc.doc_id);
+      }],
+      ["markdown-source", function () { actionController.handleMarkdownSource(); }],
+      ["save-markdown-source", function () { actionController.handleMarkdownSave(); }]
+    ]);
+    var owner = owners.get(controlId);
+    if (!owner) return false;
+    owner();
+    return true;
+  }
+
+  function handleAppManagementControl(detail) {
+    var actionId = String(detail && detail.actionId || "").trim();
+    if (actionId && !resolveAction(actionId).enabled) return false;
+    return eventRouter.handleAppManagementControl(detail);
   }
 
   function renderManagementUi() {
@@ -207,13 +244,14 @@ export function initDocsViewerManagement(context) {
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
-      manageRow.hidden = true;
+      hideAppManagementControls();
       projectDocumentActionButtons(true, true);
       eventRouter.hideManageActionsMenu();
       return;
     }
 
     manageRow.hidden = false;
+    var managementActionsHidden = !management.managementChecked || !management.managementAvailable;
     if (manageActions) {
       manageActions.hidden = !management.managementChecked || !management.managementAvailable;
       if (manageActions.hidden) {
@@ -257,6 +295,37 @@ export function initDocsViewerManagement(context) {
       searchRecent.searchRouteActive ||
       !draftDoc
     );
+    var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
+    var exportAvailable = management.managementAvailable && scopeStaticHtmlExportSupported(management.managementCapabilities, viewerScope());
+    var themeIsDark = document.documentElement && document.documentElement.getAttribute("data-theme") === "dark";
+
+    projectAppControl("manage-import", {
+      hidden: managementActionsHidden,
+      disabled: management.managementBusy || !management.managementAvailable
+    });
+    projectAppControl("manage-actions", {
+      hidden: managementActionsHidden,
+      disabled: management.managementBusy || !management.managementAvailable
+    });
+    projectAppControl("manage-publish", {
+      hidden: managementActionsHidden || !publishAvailable,
+      disabled: management.managementBusy || !publishAvailable
+    });
+    projectAppControl("manage-show", {
+      hidden: managementActionsHidden,
+      disabled: !management.managementAvailable || viewableDisabled
+    });
+    projectAppControl("manage-show-non-viewable", {
+      hidden: managementActionsHidden,
+      disabled: !management.managementAvailable || management.managementBusy,
+      pressed: documentIndex.showNonViewable
+    });
+    projectAppControl("manage-scope", { hidden: managementActionsHidden });
+    projectAppControl("manage-theme", {
+      hidden: false,
+      pressed: themeIsDark,
+      label: themeIsDark ? "Switch to light mode" : "Switch to dark mode"
+    });
 
     manageRebuildButton.disabled = management.managementBusy || !management.managementAvailable;
     if (manageActionsButton) {
@@ -266,13 +335,11 @@ export function initDocsViewerManagement(context) {
       }
     }
     if (scopeLifecycleController) scopeLifecycleController.render();
-    var publishAvailable = management.managementAvailable && scopePublishSupported(management.managementCapabilities, viewerScope());
     managePublishButtons.forEach(function (button) {
       button.disabled = management.managementBusy || !publishAvailable;
     });
     if (manageToolbarPublishButton) manageToolbarPublishButton.hidden = !publishAvailable;
     if (manageExportButton) {
-      var exportAvailable = management.managementAvailable && scopeStaticHtmlExportSupported(management.managementCapabilities, viewerScope());
       manageExportButton.hidden = !exportAvailable;
       manageExportButton.disabled = management.managementBusy || !exportAvailable;
     }
@@ -505,42 +572,28 @@ export function initDocsViewerManagement(context) {
 
   eventRouter = createDocsViewerManagementEventRouter({
     refs: {
-      deleteButton: manageDeleteButton,
-      draftToggle: draftToggle,
-      editButton: manageEditButton,
-      exportButton: manageExportButton,
-      importButtons: manageImportButtons,
       manageActionsButton: manageActionsButton,
-      manageActionsMenu: manageActionsMenu,
-      newButton: manageNewButton,
-      publishButtons: managePublishButtons,
-      rebuildButton: manageRebuildButton,
-      settingsButton: manageSettingsButton,
-      sourceButton: manageSourceButton,
-      sourceSaveButton: manageSourceSaveButton,
-      viewableButton: manageViewableButton
+      manageActionsMenu: manageActionsMenu
     },
     commands: {
       createDoc: function () { actionController.handleCreateDoc(); },
+      createScope: function () { scopeLifecycleController.createScope(); },
+      createSubScope: function () { scopeLifecycleController.createSubScope(); },
       deleteDoc: function () { actionController.handleDeleteDoc(); },
-      editCurrent: function () {
-        var doc = actionTargetDoc(resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_METADATA));
-        if (doc) metadataWorkflow.openForDocId(doc.doc_id);
-      },
+      deleteScope: function () { scopeLifecycleController.deleteScope(); },
+      deleteSubScope: function () { scopeLifecycleController.deleteSubScope(); },
       exportDocs: function () { actionController.handleExportDocs(); },
       makeViewable: function () { actionController.handleMakeViewable(); },
       openImport: function () { importController.open(); },
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublishDocs(); },
+      renameScope: function () { scopeLifecycleController.renameScope(); },
       rebuild: function () { actionController.handleRebuildDocs(); },
-      saveMarkdownSource: function () { actionController.handleMarkdownSave(); },
-      showMarkdownSource: function () { actionController.handleMarkdownSource(); },
       toggleDraft: handleDraftToggleChange
     },
     controllers: {
       interaction: function () { return interactionController; },
-      modal: function () { return modalController; },
-      scopeLifecycle: function () { return scopeLifecycleController; }
+      modal: function () { return modalController; }
     }
   });
 
@@ -625,6 +678,8 @@ export function initDocsViewerManagement(context) {
     applyConfig: applyConfig,
     canDragCurrentDoc: canDragCurrentDoc,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
+    handleAppManagementControl: handleAppManagementControl,
+    handleMainViewControl: handleMainViewControl,
     handleRootClick: eventRouter.handleRootClick,
     hideContextMenu: hideContextMenu,
     initialize: initializeManagement,

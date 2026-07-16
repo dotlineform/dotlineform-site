@@ -13,9 +13,11 @@ function routeAllowsManagement(routeContext) {
 
 function appendManageToolbarMount(documentRef, topBar) {
   var mount = documentRef.createElement("div");
-  mount.className = "docsViewer__manageToolbarMount";
-  mount.id = "docsViewerManageActionsMount";
+  mount.className = "docsViewer__manageToolbarMount docsViewer__manageRow";
+  mount.id = "docsViewerManageRow";
+  mount.hidden = true;
   mount.setAttribute("data-docs-viewer-management-actions-mount", "");
+  mount.setAttribute("data-docs-viewer-control-surface-mount", "app-management");
   topBar.appendChild(mount);
   return mount;
 }

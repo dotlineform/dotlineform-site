@@ -125,18 +125,20 @@ def assert_management_interaction_terminal_drop(page: Page) -> None:
             const moveCalls = [];
             const controller = module.createDocsViewerManagementInteractionController({
                 nav,
-                state: {
-                    managementContext: true,
-                    managementAvailable: true,
-                    managementBusy: false,
-                    searchRouteActive: false,
-                    selectedDocId: 'moving',
+                documentIndex: {
                     docsById: new Map([
                         ['moving', { doc_id: 'moving', title: 'Moving', parent_id: 'root-b' }],
                         ['root-b', { doc_id: 'root-b', title: 'Root B' }]
                     ]),
                     childrenByParent: new Map()
                 },
+                management: {
+                    managementAvailable: true,
+                    managementBusy: false
+                },
+                routeSession: { managementContext: true },
+                searchRecent: { searchRouteActive: false },
+                selectedDocument: { selectedDocId: 'moving' },
                 context: {
                     cssEscape: (value) => CSS.escape(value)
                 },
@@ -205,12 +207,7 @@ def assert_management_interaction_first_child_drop(page: Page) -> None:
             const moveCalls = [];
             const controller = module.createDocsViewerManagementInteractionController({
                 nav,
-                state: {
-                    managementContext: true,
-                    managementAvailable: true,
-                    managementBusy: false,
-                    searchRouteActive: false,
-                    selectedDocId: 'moving',
+                documentIndex: {
                     docsById: new Map([
                         ['moving', { doc_id: 'moving', title: 'Moving' }],
                         ['parent', { doc_id: 'parent', title: 'Parent' }],
@@ -220,6 +217,13 @@ def assert_management_interaction_first_child_drop(page: Page) -> None:
                         ['parent', [{ doc_id: 'child-a', title: 'Child A', parent_id: 'parent' }]]
                     ])
                 },
+                management: {
+                    managementAvailable: true,
+                    managementBusy: false
+                },
+                routeSession: { managementContext: true },
+                searchRecent: { searchRouteActive: false },
+                selectedDocument: { selectedDocId: 'moving' },
                 context: {
                     cssEscape: (value) => CSS.escape(value)
                 },

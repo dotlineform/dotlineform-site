@@ -78,7 +78,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   }
 
   function projectControlState() {
-    if (typeof settings.renderDocumentControls === "function") settings.renderDocumentControls();
+    if (typeof settings.projectControlStates === "function") settings.projectControlStates();
     if (infoPanelController) infoPanelController.renderToggleState();
   }
 
@@ -96,10 +96,9 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   infoPanelController = createDocsViewerInfoPanelController({
     buildTrail: settings.buildTrail,
     documentIndex: settings.documentIndex,
-    infoToggle: settings.infoToggle,
     controlActive: controlActive,
     panelView: panelView,
-    projectMainView: settings.projectMainView,
+    projectControlState: settings.projectControlState,
     projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
     projectViewState: function () { return panelLayout.projectViewState(); },
     refs: settings.infoPanelRefs,
@@ -170,6 +169,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
         return configuredViewId && configuredViewId !== "metadata-info" && configuredViewId === cleanString(viewId);
       });
     },
+    handleInfoControl: function () { return infoPanelController.handleControl(); },
     openInfoView: function (viewId) { return infoPanelController.openView(viewId); },
     renderInfoToggle: function () { return infoPanelController.renderToggleState(); },
     requestDocumentMode: requestDocumentMode,

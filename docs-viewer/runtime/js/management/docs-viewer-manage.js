@@ -11,10 +11,21 @@ import {
   createDocsViewerManagementShellRenderers
 } from "./docs-viewer-management-shell-composition.js";
 import {
+  createDocsViewerManagementControlRenderers
+} from "./docs-viewer-management-control-renderers.js";
+import {
+  createDocsViewerManagementAppControlRenderers
+} from "./docs-viewer-management-actions-renderer.js";
+import {
   createDocsViewerManagementSourceAdapter
 } from "./docs-viewer-management-source-adapter.js";
 
 startDocsViewerManageApp({
+  controlRendererContributions: Object.assign(
+    {},
+    createDocsViewerManagementAppControlRenderers(),
+    createDocsViewerManagementControlRenderers()
+  ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   viewRegistryContributions: createDocsViewerManagementViewDefinitions(),
   infoPanelDefaultViewByDocumentMode: {

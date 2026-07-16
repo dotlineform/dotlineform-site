@@ -26,7 +26,7 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
         for path in graph
     }
 
-    assert "docs-viewer/runtime/js/management/docs-viewer-management-document-actions-renderer.js" not in graph_paths
+    assert "docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js" not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-report-service.js" not in graph_paths

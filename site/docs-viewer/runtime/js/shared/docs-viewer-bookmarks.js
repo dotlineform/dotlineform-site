@@ -27,7 +27,6 @@ export function initDocsViewerBookmarks(context) {
   var selectedDocument = context.selectedDocument;
   var searchRecent = context.searchRecent;
   var bookmarkRow = context.bookmarkRow;
-  var bookmarkToggle = context.bookmarkToggle;
   var routeCommands = context.routeCommands || {};
   var searchResetCommand = context.searchResetCommand || {};
 
@@ -97,20 +96,17 @@ export function initDocsViewerBookmarks(context) {
   }
 
   function renderToggle() {
-    if (!bookmarkToggle) return;
     var doc = documentIndex.docsById.get(selectedDocument.selectedDocId);
     var eligible = typeof context.controlActive !== "function" || context.controlActive("bookmark");
     var canShow = eligible && Boolean(doc) && bookmarkState.bookmarksLoaded && bookmarkState.bookmarkSupport && !searchRecent.searchRouteActive;
-    bookmarkToggle.hidden = !canShow;
-    if (!canShow) return;
-
-    var record = getBookmarkForDoc(doc.doc_id);
-    var active = Boolean(record);
-    bookmarkToggle.classList.toggle("is-active", active);
-    bookmarkToggle.textContent = active ? "★" : "☆";
-    bookmarkToggle.setAttribute("aria-pressed", active ? "true" : "false");
-    bookmarkToggle.setAttribute("aria-label", active ? "Remove bookmark" : "Add bookmark");
-    bookmarkToggle.title = active ? "Remove bookmark" : "Add bookmark";
+    var active = canShow && Boolean(getBookmarkForDoc(doc.doc_id));
+    if (typeof context.projectControlState === "function") {
+      context.projectControlState("bookmark", {
+        hidden: !canShow,
+        pressed: active,
+        label: active ? "Remove bookmark" : "Add bookmark"
+      });
+    }
   }
 
   function renderRow() {
@@ -307,12 +303,6 @@ export function initDocsViewerBookmarks(context) {
   }
 
   function bind() {
-    if (bookmarkToggle) {
-      bookmarkToggle.addEventListener("click", function () {
-        context.hideContextMenu();
-        toggleCurrentBookmark();
-      });
-    }
     if (!bookmarkRow) return;
 
     bookmarkRow.addEventListener("click", function (event) {
@@ -365,6 +355,10 @@ export function initDocsViewerBookmarks(context) {
 
   return {
     bind: bind,
+    handleControl: function () {
+      context.hideContextMenu();
+      toggleCurrentBookmark();
+    },
     initialize: initialize,
     renderToggle: renderToggle,
     renderUi: renderUi

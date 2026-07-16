@@ -6,6 +6,54 @@ function createButton(documentRef, label) {
   return button;
 }
 
+export function createDocsViewerReviewViewDefinitions() {
+  return {
+    controls: [{
+      id: "review-package-controls",
+      label: "Review package",
+      ownerType: "app",
+      surfaceId: "app-viewer",
+      appKinds: ["review"],
+      renderer: "review-package-controls"
+    }]
+  };
+}
+
+function renderReviewPackageControls(context) {
+  var mount = context.existingRoot;
+  if (!mount || mount.id !== "docsViewerReviewControlsMount") {
+    mount = context.document.createElement("div");
+    mount.id = "docsViewerReviewControlsMount";
+    mount.className = "docsViewer__reviewControls";
+    mount.setAttribute("role", "group");
+    mount.setAttribute("aria-label", "Review package controls");
+
+    var select = context.document.createElement("select");
+    select.className = "docsViewer__searchInput docsViewer__reviewPackageSelect";
+    select.setAttribute("aria-label", "Review package");
+    var buildButton = createButton(context.document, "Repair");
+    buildButton.setAttribute("data-docs-viewer-review-action", "repair");
+    var assetsButton = createButton(context.document, "Assets");
+    assetsButton.setAttribute("data-docs-viewer-review-action", "assets");
+    var importLink = context.document.createElement("a");
+    importLink.className = "docsViewer__actionButton docsViewer__reviewImportLink";
+    importLink.textContent = "Import";
+    importLink.hidden = true;
+    var canonicalLink = context.document.createElement("a");
+    canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
+    canonicalLink.textContent = "Open canonical";
+    canonicalLink.target = "_blank";
+    canonicalLink.rel = "noopener";
+    canonicalLink.hidden = true;
+    mount.append(select, buildButton, assetsButton, importLink, canonicalLink);
+  }
+  return { root: mount, interactive: mount.querySelector("select") };
+}
+
+export function createDocsViewerReviewControlRenderers() {
+  return { "review-package-controls": renderReviewPackageControls };
+}
+
 export function createDocsViewerReviewController(options) {
   var settings = options || {};
   var documentRef = settings.document || document;
@@ -49,30 +97,14 @@ export function createDocsViewerReviewController(options) {
   function start() {
     var mount = documentRef.getElementById("docsViewerReviewControlsMount");
     if (!mount || !provider) return Promise.resolve(null);
-    var viewerToolbar = documentRef.getElementById("docsViewerViewerToolbar");
-    var panelControls = documentRef.getElementById("docsViewerPanelControls");
-    if (viewerToolbar && mount.parentElement !== viewerToolbar) {
-      viewerToolbar.insertBefore(mount, panelControls && panelControls.parentElement === viewerToolbar ? panelControls : null);
+    var select = mount.querySelector("select");
+    var buildButton = mount.querySelector('[data-docs-viewer-review-action="repair"]');
+    var assetsButton = mount.querySelector('[data-docs-viewer-review-action="assets"]');
+    importLink = mount.querySelector(".docsViewer__reviewImportLink");
+    canonicalLink = mount.querySelector(".docsViewer__reviewCanonicalLink");
+    if (!select || !buildButton || !assetsButton || !importLink || !canonicalLink) {
+      return Promise.reject(new Error("Docs Review package controls failed to render."));
     }
-    mount.textContent = "";
-    mount.setAttribute("role", "group");
-    mount.setAttribute("aria-label", "Review package controls");
-    var select = documentRef.createElement("select");
-    select.className = "docsViewer__searchInput docsViewer__reviewPackageSelect";
-    select.setAttribute("aria-label", "Review package");
-    var buildButton = createButton(documentRef, "Repair");
-    var assetsButton = createButton(documentRef, "Assets");
-    importLink = documentRef.createElement("a");
-    importLink.className = "docsViewer__actionButton docsViewer__reviewImportLink";
-    importLink.textContent = "Import";
-    importLink.hidden = true;
-    canonicalLink = documentRef.createElement("a");
-    canonicalLink.className = "docsViewer__actionButton docsViewer__reviewCanonicalLink";
-    canonicalLink.textContent = "Open canonical";
-    canonicalLink.target = "_blank";
-    canonicalLink.rel = "noopener";
-    canonicalLink.hidden = true;
-    mount.append(select, buildButton, assetsButton, importLink, canonicalLink);
 
     select.addEventListener("change", function () {
       var url = new URL(windowRef.location.href);

@@ -11,10 +11,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     return typeof controllers.modal === "function" ? controllers.modal() : null;
   }
 
-  function scopeLifecycleController() {
-    return typeof controllers.scopeLifecycle === "function" ? controllers.scopeLifecycle() : null;
-  }
-
   function hideContextMenu() {
     var interaction = interactionController();
     if (interaction) interaction.hideContextMenu();
@@ -42,17 +38,10 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     if (typeof commands[commandName] === "function") commands[commandName]();
   }
 
-  function bind(ref, eventName, commandName, commandOptions) {
-    if (!ref) return;
-    ref.addEventListener(eventName, function () {
-      invoke(commandName, commandOptions);
-    });
-  }
-
   function handleRootClick(event) {
     var interaction = interactionController();
     if (interaction) interaction.handleRootClick(event);
-    if (refs.manageActionsMenu && !event.target.closest(".docsViewer__manageActions")) {
+    if (refs.manageActionsMenu && !event.target.closest('[data-docs-viewer-control="manage-actions"]')) {
       hideManageActionsMenu();
     }
     var modal = modalController();
@@ -71,62 +60,47 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     return modal ? modal.handleDocumentKeydown(event) : false;
   }
 
+  function handleAppManagementControl(detail) {
+    var controlId = String(detail && detail.controlId || "").trim();
+    var actionId = String(detail && detail.actionId || "").trim();
+    if (controlId === "manage-actions" && !actionId && detail.eventType === "click") {
+      toggleManageActionsMenu();
+      return true;
+    }
+    if (controlId === "manage-show-non-viewable" && detail.eventType === "change") {
+      invoke("toggleDraft", { hideContextMenu: true });
+      return true;
+    }
+    var commandsByAction = new Map([
+      ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["import", ["openImport", {}]],
+      ["settings", ["openSettings", {}]],
+      ["publish-docs", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["export-docs", ["exportDocs", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["delete", ["deleteDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["show", ["makeViewable", { hideContextMenu: true }]],
+      ["new-scope", ["createScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["rename-scope", ["renameScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["delete-scope", ["deleteScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["new-sub-scope", ["createSubScope", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["delete-sub-scope", ["deleteSubScope", { hideContextMenu: true, hideManageActionsMenu: true }]]
+    ]);
+    var command = commandsByAction.get(actionId);
+    if (!command || detail.eventType !== "click") return false;
+    invoke(command[0], command[1]);
+    return true;
+  }
+
   function wireEvents() {
     var interaction = interactionController();
     if (interaction) interaction.wireEvents();
-
-    bind(refs.rebuildButton, "click", "rebuild", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
-    });
-    (refs.importButtons || []).forEach(function (importButton) {
-      bind(importButton, "click", "openImport");
-    });
-    bind(refs.settingsButton, "click", "openSettings");
-    (refs.publishButtons || []).forEach(function (publishButton) {
-      bind(publishButton, "click", "publish", {
-        hideContextMenu: true,
-        hideManageActionsMenu: true
-      });
-    });
-    bind(refs.exportButton, "click", "exportDocs", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
-    });
-    if (refs.manageActionsButton) refs.manageActionsButton.addEventListener("click", toggleManageActionsMenu);
-    bind(refs.newButton, "click", "createDoc", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
-    });
-    bind(refs.editButton, "click", "editCurrent", {
-      hideManageActionsMenu: true
-    });
-    bind(refs.sourceButton, "click", "showMarkdownSource", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
-    });
-    bind(refs.sourceSaveButton, "click", "saveMarkdownSource", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
-    });
-    bind(refs.deleteButton, "click", "deleteDoc", {
-      hideContextMenu: true,
-      hideManageActionsMenu: true
-    });
-    bind(refs.viewableButton, "click", "makeViewable", {
-      hideContextMenu: true
-    });
-    bind(refs.draftToggle, "change", "toggleDraft", {
-      hideContextMenu: true
-    });
-
     var modal = modalController();
     if (modal) modal.wireEvents();
-    var lifecycle = scopeLifecycleController();
-    if (lifecycle) lifecycle.wireEvents();
   }
 
   return {
+    handleAppManagementControl: handleAppManagementControl,
     handleDocumentKeydown: handleDocumentKeydown,
     handleRootClick: handleRootClick,
     hideManageActionsMenu: hideManageActionsMenu,

@@ -54,10 +54,10 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.SELECTION, POLICIES.EXACTLY_ONE),
   [IDS.DELETE_SCOPE]: actionDefinition(IDS.DELETE_SCOPE, TARGETS.SCOPE),
   [IDS.DELETE_SUB_SCOPE]: actionDefinition(IDS.DELETE_SUB_SCOPE, TARGETS.SCOPE),
-  [IDS.EDIT_METADATA]: actionDefinition(IDS.EDIT_METADATA, TARGETS.SELECTION, POLICIES.PRIMARY),
+  [IDS.EDIT_METADATA]: actionDefinition(IDS.EDIT_METADATA, TARGETS.ACTIVE_DOCUMENT),
   [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.SCOPE),
   [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.SCOPE),
-  [IDS.INFO]: actionDefinition(IDS.INFO, TARGETS.SELECTION, POLICIES.PRIMARY),
+  [IDS.INFO]: actionDefinition(IDS.INFO, TARGETS.ACTIVE_DOCUMENT),
   [IDS.MARKDOWN_SAVE]: actionDefinition(IDS.MARKDOWN_SAVE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.MARKDOWN_SOURCE]: actionDefinition(IDS.MARKDOWN_SOURCE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.MOVE]: actionDefinition(IDS.MOVE, TARGETS.SELECTION, POLICIES.ALL),
@@ -99,15 +99,16 @@ export function listDocsViewerActionDefinitions() {
   });
 }
 
-export function createDocsViewerSingleDocumentActionContext(options = {}) {
+export function createDocsViewerActionContext(options = {}) {
   var activeDocId = normalizeId(options.activeDocId);
-  var targetDocId = Object.prototype.hasOwnProperty.call(options, "targetDocId")
-    ? normalizeId(options.targetDocId)
-    : activeDocId;
+  var selectedDocIds = normalizeIds(options.selectedDocIds);
+  var invocationDocId = normalizeId(options.invocationDocId);
+  var primaryDocId = invocationDocId || normalizeId(options.primaryDocId);
+  if (!primaryDocId && selectedDocIds.length === 1) primaryDocId = selectedDocIds[0];
   return {
     activeDocId: activeDocId,
-    primaryDocId: targetDocId,
-    selectedDocIds: targetDocId ? [targetDocId] : []
+    primaryDocId: primaryDocId,
+    selectedDocIds: selectedDocIds
   };
 }
 
@@ -129,7 +130,6 @@ export function resolveDocsViewerAction(actionId, context = {}) {
   } else if (definition.target === TARGETS.SELECTION) {
     if (definition.selectionPolicy === POLICIES.PRIMARY) {
       if (!primaryDocId) disabledReason = "No primary document.";
-      else if (selectedDocIds.indexOf(primaryDocId) === -1) disabledReason = "Primary document is not selected.";
       else targetDocIds = [primaryDocId];
     } else if (definition.selectionPolicy === POLICIES.ALL) {
       if (!selectedDocIds.length) disabledReason = "Select one or more documents.";

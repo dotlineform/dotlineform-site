@@ -198,11 +198,12 @@ export function createDocsViewerAppComposition(options) {
     panels: routeConfig.panels,
     routeId: routeConfig.routeId,
     indexPanelRefs: appShellRefs.indexPanel,
-    indexViewToggleRefs: appShellRefs.viewerToolbar,
     mainViewRefs: appShellRefs.mainView,
     infoPanelRefs: appShellRefs.infoPanel,
     viewRegistry: viewRegistry,
-    indexPanelAvailable: settings.indexPanelAvailable
+    indexPanelAvailable: settings.indexPanelAvailable,
+    onBeforePanelInteraction: settings.onBeforePanelInteraction,
+    onIndexProjection: settings.onIndexProjection
   });
   var appSession = createDocsViewerAppSession({
     defaultRecentLimit: constants.defaultRecentLimit,

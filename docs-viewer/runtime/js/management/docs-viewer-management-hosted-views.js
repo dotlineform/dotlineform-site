@@ -1,3 +1,7 @@
+import {
+  DOCS_VIEWER_ACTION_IDS
+} from "./docs-viewer-action-definitions.js";
+
 export function createDocsViewerManagementViewDefinitions() {
   return {
     views: [
@@ -9,9 +13,7 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "index-placeholder",
         placeholderText: "Graph index placeholder",
         capabilities: {
-          layoutStates: ["normal", "collapsed", "expanded"],
-          toolbar: true,
-          toolbarView: "index-graph-toolbar"
+          layoutStates: ["normal", "collapsed", "expanded"]
         }
       },
       {
@@ -43,34 +45,107 @@ export function createDocsViewerManagementViewDefinitions() {
     }],
     controls: [
       {
+        id: "manage-import",
+        actionId: DOCS_VIEWER_ACTION_IDS.IMPORT,
+        label: "Import",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-toolbar-import"
+      },
+      {
+        id: "manage-actions",
+        label: "Actions",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-actions-menu"
+      },
+      {
+        id: "manage-publish",
+        actionId: DOCS_VIEWER_ACTION_IDS.PUBLISH_DOCS,
+        label: "Publish",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-toolbar-publish"
+      },
+      {
+        id: "manage-show",
+        actionId: DOCS_VIEWER_ACTION_IDS.SHOW,
+        label: "Show",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-show"
+      },
+      {
+        id: "manage-show-non-viewable",
+        actionId: DOCS_VIEWER_ACTION_IDS.SHOW_NON_VIEWABLE,
+        label: "Show non-viewable docs",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-show-non-viewable"
+      },
+      {
+        id: "manage-scope",
+        label: "Docs scope",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["scope-selection"],
+        renderer: "manage-scope-select"
+      },
+      {
+        id: "manage-theme",
+        label: "Switch to dark mode",
+        ownerType: "app",
+        surfaceId: "app-management",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-theme-toggle"
+      },
+      {
         id: "edit",
         actionId: "edit-metadata",
         label: "Edit",
+        ownerType: "view",
         ownerViewId: "rendered-document",
         modeIds: ["rendered-document"],
+        surfaceId: "main-view",
         appKinds: ["manage"],
         features: ["management"],
         renderer: "manage-edit"
       },
       {
-        id: "markdown-source",
-        actionId: "markdown-source",
-        label: "Markdown source",
-        ownerViewId: "rendered-document",
-        modeIds: ["rendered-document", "markdown-source"],
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        renderer: "markdown-source-toggle"
-      },
-      {
         id: "save-markdown-source",
         actionId: "markdown-save",
         label: "Save Markdown source",
+        ownerType: "view",
         ownerViewId: "rendered-document",
         modeIds: ["markdown-source"],
+        surfaceId: "main-view",
         appKinds: ["manage"],
         features: ["source-editing"],
         renderer: "markdown-source-save"
+      },
+      {
+        id: "markdown-source",
+        actionId: "markdown-source",
+        label: "Markdown source",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document", "markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "markdown-source-toggle"
       }
     ]
   };

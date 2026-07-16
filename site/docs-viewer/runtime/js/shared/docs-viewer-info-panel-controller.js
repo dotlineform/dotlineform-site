@@ -64,16 +64,17 @@ export function createDocsViewerInfoPanelController(options) {
   }
 
   function renderToggleState() {
-    if (!settings.infoToggle) return;
     var eligible = typeof settings.controlActive !== "function" || settings.controlActive("info");
     var canShow = eligible && Boolean(currentSelectedDoc() && metadataInfoAvailable());
     var open = host.isOpen();
     var label = open ? "Hide document info" : "Show document info";
-    settings.projectMainView({
-      infoToggleHidden: !canShow,
-      infoToggleLabel: label,
-      infoTogglePressed: open
-    });
+    if (typeof settings.projectControlState === "function") {
+      settings.projectControlState("info", {
+        hidden: !canShow,
+        expanded: open,
+        label: label
+      });
+    }
   }
 
   function update() {
@@ -105,14 +106,6 @@ export function createDocsViewerInfoPanelController(options) {
   }
 
   function bind() {
-    if (settings.infoToggle) {
-      settings.infoToggle.addEventListener("click", function () {
-        if (!closeIfOpen()) {
-          openView("");
-        }
-      });
-    }
-
     if (refs.closeButton) {
       refs.closeButton.addEventListener("click", function () {
         close();
@@ -127,6 +120,9 @@ export function createDocsViewerInfoPanelController(options) {
     closeIfOpen: closeIfOpen,
     currentSelectedDoc: currentSelectedDoc,
     isOpen: function () { return host.isOpen(); },
+    handleControl: function () {
+      if (!closeIfOpen()) openView("");
+    },
     openView: openView,
     renderToggleState: renderToggleState,
     update: update

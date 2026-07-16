@@ -79,7 +79,14 @@ def assert_handoff_modules(page: Page) -> None:
             }
           });
 
-          document.body.innerHTML = '<div id="docsViewerReviewControlsMount"></div><p id="docsViewerStatus"></p>';
+          document.body.innerHTML = '<div id="review-controls-host"></div><p id="docsViewerStatus"></p>';
+          const reviewControls = reviewModule.createDocsViewerReviewControlRenderers()['review-package-controls']({
+            control: { label: 'Review package controls', state: {} },
+            document,
+            existingRoot: null,
+            mount: document.querySelector('#review-controls-host')
+          });
+          document.querySelector('#review-controls-host').appendChild(reviewControls.root);
           const reviewController = reviewModule.createDocsViewerReviewController({ document, window });
           reviewController.setProvider({
             activeCollectionId: () => 'fixture-review',

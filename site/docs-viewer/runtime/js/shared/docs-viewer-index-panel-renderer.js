@@ -24,6 +24,11 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   const controls = documentRef.createElement("div");
   controls.className = "docsViewer__sidebarControls";
 
+  const viewControls = documentRef.createElement("div");
+  viewControls.className = "docsViewer__indexViewControls";
+  viewControls.hidden = true;
+  viewControls.setAttribute("data-docs-viewer-control-surface-mount", "index-view");
+
   const sidebarToggle = renderSidebarToggle(documentRef, {
     id: "docsViewerSidebarToggle",
     label: "Collapse docs index",
@@ -46,7 +51,7 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   placeholder.hidden = true;
 
   controls.append(sidebarToggle, sidebarExpand);
-  header.appendChild(controls);
+  header.append(viewControls, controls);
   inner.append(header, nav, placeholder);
   aside.appendChild(inner);
   mount.replaceChildren(aside);
@@ -61,6 +66,7 @@ export function findDocsViewerIndexPanelRefs(options = {}) {
     sidebar: root.querySelector(".docsViewer__sidebar"),
     nav: root.querySelector("#docsViewerNav"),
     indexPlaceholder: root.querySelector("#docsViewerIndexPlaceholder"),
+    viewControls: root.querySelector('[data-docs-viewer-control-surface-mount="index-view"]'),
     sidebarToggle: root.querySelector("#docsViewerSidebarToggle"),
     sidebarExpand: root.querySelector("#docsViewerSidebarExpand")
   };

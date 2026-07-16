@@ -149,21 +149,12 @@ export function createDocsViewerManagementScopeLifecycleController(options = {})
     }
   }
 
-  function wireEvents() {
-    if (refs.createScopeButton) refs.createScopeButton.addEventListener("click", createScope);
-    if (refs.deleteScopeButton) refs.deleteScopeButton.addEventListener("click", deleteScope);
-    if (refs.renameScopeButton) refs.renameScopeButton.addEventListener("click", renameScope);
-    if (refs.createSubScopeButton) refs.createSubScopeButton.addEventListener("click", createSubScope);
-    if (refs.deleteSubScopeButton) refs.deleteSubScopeButton.addEventListener("click", deleteSubScope);
-  }
-
   return {
     createScope: createScope,
     createSubScope: createSubScope,
     deleteScope: deleteScope,
     renameScope: renameScope,
     deleteSubScope: deleteSubScope,
-    render: render,
-    wireEvents: wireEvents
+    render: render
   };
 }

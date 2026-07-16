@@ -95,7 +95,12 @@ function dirtyNow(state) {
 function projectDirty(state) {
   state.dirtyValue = dirtyNow(state);
   setHidden(state.dirty, !state.dirtyValue);
-  if (state.toolbarSave) state.toolbarSave.disabled = state.busy || !state.loaded;
+  if (typeof state.projectMainViewControlState === "function") {
+    state.projectMainViewControlState("save-markdown-source", {
+      busy: state.busy,
+      disabled: state.busy || !state.loaded
+    });
+  }
 }
 
 function setBusy(state, busy) {
@@ -267,8 +272,8 @@ function leaveSource(context, state) {
 
 function bindEvents(context, state) {
   var root = context.root || document;
-  var ownerDocument = context.mount && context.mount.ownerDocument ? context.mount.ownerDocument : document;
-  state.toolbarSave = ownerDocument.getElementById("docsViewerManageSourceSaveButton");
+  var services = context.sourceEditorServices || {};
+  state.projectMainViewControlState = services.projectMainViewControlState;
   state.onInput = function () {
     projectDirty(state);
     emitSelectionChange(state);
@@ -315,7 +320,7 @@ function unbindEvents(context, state) {
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
-  state.toolbarSave = null;
+  state.projectMainViewControlState = null;
 }
 
 export function createDocsViewerSourceEditorMode() {
@@ -330,7 +335,7 @@ export function createDocsViewerSourceEditorMode() {
     selectionListeners: new Set(),
     status: null,
     textarea: null,
-    toolbarSave: null
+    projectMainViewControlState: null
   };
 
   return {

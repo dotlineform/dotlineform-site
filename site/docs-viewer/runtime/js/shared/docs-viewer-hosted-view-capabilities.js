@@ -4,10 +4,6 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function normalizeBoolean(value) {
-  return value === true || value === "true";
-}
-
 function normalizeLayoutStates(value, fallback) {
   const values = Array.isArray(value) ? value : [];
   const states = [];
@@ -29,9 +25,7 @@ export function normalizeHostedViewCapabilities(rawCapabilities, defaults) {
   const rawLayoutStates = raw.layout_states || raw.layoutStates;
   const fallbackLayoutStates = fallback.layoutStates || fallback.layout_states || ["normal"];
   return {
-    layoutStates: normalizeLayoutStates(rawLayoutStates, fallbackLayoutStates),
-    toolbar: raw.toolbar == null ? normalizeBoolean(fallback.toolbar) : normalizeBoolean(raw.toolbar),
-    toolbarView: cleanString(raw.toolbar_view || raw.toolbarView || fallback.toolbarView || fallback.toolbar_view)
+    layoutStates: normalizeLayoutStates(rawLayoutStates, fallbackLayoutStates)
   };
 }
 

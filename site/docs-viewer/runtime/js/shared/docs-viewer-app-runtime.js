@@ -47,6 +47,12 @@ import {
 import {
   createDocsViewerStatusController
 } from "./docs-viewer-status-controller.js";
+import {
+  createDocsViewerSharedControlRenderers
+} from "./docs-viewer-app-control-renderers.js";
+import {
+  createDocsViewerControlSurfaceHost
+} from "./docs-viewer-control-surface-host.js";
 
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
@@ -61,21 +67,15 @@ export function startDocsViewerRuntime(options) {
 
   var indexPanelRefs = appShellRefs.indexPanel;
   var nav = indexPanelRefs.nav;
-  var viewerToolbarRefs = appShellRefs.viewerToolbar || {};
-  var indexViewToggle = viewerToolbarRefs.indexViewToggle;
-  var sidebarToggle = indexPanelRefs.sidebarToggle;
-  var sidebarExpand = indexPanelRefs.sidebarExpand;
+  var controlSurfaceRefs = appShellRefs.controlSurfaces || {};
   var mainViewRefs = appShellRefs.mainView;
   var infoPanelRefs = appShellRefs.infoPanel;
   var mainViewToolbar = mainViewRefs.toolbar;
   var pathEl = mainViewRefs.pathEl;
   var bookmarkRow = appShellRefs.bookmarkRow;
-  var infoToggle = mainViewRefs.infoToggle;
-  var bookmarkToggle = mainViewRefs.bookmarkToggle;
   var content = mainViewRefs.content;
-  var scopeSelect = appShellRefs.headerControls.scopeSelect;
-  var recentButton = appShellRefs.headerControls.recentButton;
-  var searchInput = appShellRefs.headerControls.searchInput;
+  var scopeSelect = null;
+  var searchInput = null;
   var resultsStatus = mainViewRefs.resultsStatus;
   var results = mainViewRefs.results;
   var more = mainViewRefs.more;
@@ -120,7 +120,9 @@ export function startDocsViewerRuntime(options) {
     createSourceAdapter: settings.createSourceAdapter,
     viewRegistry: settings.viewRegistry,
     viewerScope: function () { return viewerScope; },
-    indexPanelAvailable: sidebarCollapseAvailable
+    indexPanelAvailable: sidebarCollapseAvailable,
+    onBeforePanelInteraction: hideContextMenu,
+    onIndexProjection: function () { renderAppViewerControls(); }
   });
   var viewRegistry = composition.viewRegistry;
   var serviceContext = composition.serviceContext;
@@ -131,14 +133,84 @@ export function startDocsViewerRuntime(options) {
   var panelLayout = composition.panelLayout;
   var managementRuntime = null;
   var bookmarkController = null;
+  var searchController = null;
   var documentController = null;
   var routeWorkflow = null;
   var documentIndex = null;
   var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
+  var recentControlLabel = "recently added";
+  var appViewerControlOwners = new Map();
+  var appViewerControlHost = null;
+  var appManagementControlStates = new Map();
+  var appManagementControlHost = null;
+  var mainViewControlOwners = new Map();
+  var mainViewControlStates = new Map();
+  var mainViewControlHost = null;
 
   var appSession = composition.appSession;
   var state = appSession.state;
+  appViewerControlHost = createDocsViewerControlSurfaceHost({
+    mount: controlSurfaceRefs.appViewer,
+    registry: viewRegistry,
+    renderers: Object.assign(
+      {},
+      createDocsViewerSharedControlRenderers(),
+      settings.controlRendererContributions || {}
+    ),
+    surfaceId: "app-viewer",
+    onDispatch: function (detail) {
+      var owner = appViewerControlOwners.get(detail.controlId);
+      if (typeof owner === "function") owner(detail);
+    }
+  });
+  appViewerControlOwners.set("index-view-switch", function () {
+    panelLayout.activateNextIndexView();
+  });
+  appManagementControlHost = createDocsViewerControlSurfaceHost({
+    mount: controlSurfaceRefs.appManagement,
+    registry: viewRegistry,
+    renderers: settings.controlRendererContributions || {},
+    surfaceId: "app-management",
+    onDispatch: function (detail) {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (controller && typeof controller.handleAppManagementControl === "function") {
+        controller.handleAppManagementControl(detail);
+      }
+    }
+  });
+  mainViewControlHost = createDocsViewerControlSurfaceHost({
+    mount: controlSurfaceRefs.mainView,
+    registry: viewRegistry,
+    renderers: Object.assign(
+      {},
+      createDocsViewerSharedControlRenderers(),
+      settings.controlRendererContributions || {}
+    ),
+    surfaceId: "main-view",
+    onDispatch: function (detail) {
+      var owner = mainViewControlOwners.get(detail.controlId);
+      if (typeof owner === "function") {
+        owner(detail);
+        return;
+      }
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (controller && typeof controller.handleMainViewControl === "function") {
+        controller.handleMainViewControl(detail);
+      }
+    }
+  });
+  mainViewControlOwners.set("bookmark", function () {
+    if (bookmarkController) bookmarkController.handleControl();
+  });
+  mainViewControlOwners.set("info", function () {
+    if (documentViewCoordinator) documentViewCoordinator.handleInfoControl();
+  });
+  renderAppViewerControls();
+  renderAppManagementControls();
+  renderMainViewControls();
+  searchInput = controlSurfaceElement("appViewer", "search", "#docsViewerSearchInput");
+  scopeSelect = controlSurfaceElement("appManagement", "manage-scope", "#docsViewerScopeSelect");
   documentIndex = composition.documentIndex;
   var generatedDataRuntime = composition.generatedDataRuntime;
   var collectionProvider = composition.collectionProvider;
@@ -169,15 +241,17 @@ export function startDocsViewerRuntime(options) {
     documentIndex: appSession.domains.documentIndex,
     infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
     infoPanelRefs: infoPanelRefs,
-    infoToggle: infoToggle,
     mount: content,
     panelLayout: panelLayout,
     panelView: appSession.domains.panelView,
     projectMainView: panelLayout.projectMainView,
-    renderDocumentControls: function () {
+    projectControlStates: function () {
       renderBookmarkControl();
       renderManagementUi();
-      renderDocumentControlsContribution();
+      renderMainViewControls();
+    },
+    projectControlState: function (controlId, controlState) {
+      projectMainViewControlState("info-panel", controlId, controlState);
     },
     root: root,
     scopeConfig: appSession.domains.scopeConfig,
@@ -287,14 +361,16 @@ export function startDocsViewerRuntime(options) {
     showRecentPane: showRecentPane,
     showSearchPane: showSearchPane
   };
-  var searchController = searchEnabled || recentlyAddedEnabled ? initDocsViewerSearchController({
+  searchController = searchEnabled || recentlyAddedEnabled ? initDocsViewerSearchController({
+    clearSearchInput: function () {
+      if (searchInput) searchInput.value = "";
+    },
     collectionProvider: collectionProvider,
     hideContextMenu: hideContextMenu,
     hasActiveQuery: hasActiveQuery,
     documentIndex: appSession.domains.documentIndex,
     more: more,
     paneCommands: searchPaneCommands,
-    recentButton: recentButton,
     resultsStatus: resultsStatus,
     results: results,
     routeCommands: searchRouteCommands,
@@ -303,12 +379,19 @@ export function startDocsViewerRuntime(options) {
     searchEnabled: searchEnabled,
     searchRecent: appSession.domains.searchRecent,
     recentlyAddedEnabled: recentlyAddedEnabled,
-    searchInput: searchInput,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     setStatus: statusController.setStatus,
     startBusy: statusController.startBusy
   }) : null;
+  appViewerControlOwners.set("recently-added", function () {
+    if (searchController) searchController.handleRecentControl();
+  });
+  appViewerControlOwners.set("search", function (detail) {
+    if (searchController && detail.eventType === "input") {
+      searchController.handleSearchInput(detail.event && detail.event.target ? detail.event.target.value : "");
+    }
+  });
   var configController = initDocsViewerConfigController({
     allowScopeQuery: allowScopeQuery,
     configService: composition.configService,
@@ -318,7 +401,10 @@ export function startDocsViewerRuntime(options) {
     managementController: function () {
       return managementRuntime ? managementRuntime.controller() : null;
     },
-    recentButton: recentButton,
+    setRecentControlLabel: function (label) {
+      recentControlLabel = String(label || "recent");
+      renderAppViewerControls();
+    },
     renderRecentMode: renderRecentMode,
     renderSidebar: renderSidebar,
     root: root,
@@ -374,6 +460,10 @@ export function startDocsViewerRuntime(options) {
       managementShellRefs: appShellRefs.managementShell || {},
       viewRegistry: viewRegistry,
       activeViewState: documentViewCoordinator.activeViewState,
+      projectAppManagementControlState: projectAppManagementControlState,
+      projectMainViewControlState: function (controlId, controlState) {
+        projectMainViewControlState("management", controlId, controlState);
+      },
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,
@@ -442,13 +532,96 @@ export function startDocsViewerRuntime(options) {
   }
 
   function setRecentModeActive(active) {
-    appSession.domains.searchRecent.recentModeActive = Boolean(active);
-    renderRecentButtonState();
+    var nextActive = Boolean(active);
+    if (appSession.domains.searchRecent.recentModeActive === nextActive) return;
+    appSession.domains.searchRecent.recentModeActive = nextActive;
+    renderAppViewerControls();
   }
 
-  function renderRecentButtonState() {
-    if (!recentButton) return;
-    recentButton.setAttribute("aria-pressed", appSession.domains.searchRecent.recentModeActive ? "true" : "false");
+  function controlSurfaceElement(surfaceKey, controlId, selector) {
+    var mount = controlSurfaceRefs[surfaceKey] || null;
+    if (!mount) return null;
+    var controlRoot = Array.from(mount.children).find(function (child) {
+      return child.dataset && child.dataset.docsViewerControl === controlId;
+    }) || null;
+    return controlRoot && selector ? controlRoot.querySelector(selector) : controlRoot;
+  }
+
+  function renderAppViewerControls() {
+    if (!appViewerControlHost) return [];
+    return appViewerControlHost.render({
+      controlStateById: {
+        "recently-added": {
+          label: recentControlLabel,
+          pressed: appSession.domains.searchRecent.recentModeActive
+        },
+        "search": { label: "Search docs" },
+        "index-view-switch": panelLayout.indexViewSwitchControlState()
+      }
+    });
+  }
+
+  function projectAppManagementControlState(controlId, controlState) {
+    var id = String(controlId || "").trim();
+    if (!id) return;
+    appManagementControlStates.set(id, controlState || {});
+    renderAppManagementControls();
+  }
+
+  function renderAppManagementControls() {
+    if (!appManagementControlHost) return [];
+    var controlStateById = {};
+    viewRegistry.listControls({ surfaceId: "app-management" }).forEach(function (control) {
+      controlStateById[control.id] = appManagementControlStates.has(control.id)
+        ? appManagementControlStates.get(control.id)
+        : { hidden: true };
+    });
+    return appManagementControlHost.render({ controlStateById: controlStateById });
+  }
+
+  function projectMainViewControlState(ownerId, controlId, controlState) {
+    var owner = String(ownerId || "").trim();
+    var id = String(controlId || "").trim();
+    if (!owner || !id) return;
+    var statesByOwner = mainViewControlStates.get(id) || new Map();
+    statesByOwner.set(owner, controlState || {});
+    mainViewControlStates.set(id, statesByOwner);
+    renderMainViewControls();
+  }
+
+  function mergedMainViewControlState(controlId) {
+    var statesByOwner = mainViewControlStates.get(controlId);
+    if (!statesByOwner || !statesByOwner.size) return { hidden: true };
+    var merged = {};
+    statesByOwner.forEach(function (state) {
+      var current = state || {};
+      ["hidden", "disabled", "busy"].forEach(function (key) {
+        if (Object.prototype.hasOwnProperty.call(current, key)) {
+          merged[key] = Boolean(merged[key]) || Boolean(current[key]);
+        }
+      });
+      ["pressed", "expanded", "label", "count"].forEach(function (key) {
+        if (Object.prototype.hasOwnProperty.call(current, key)) merged[key] = current[key];
+      });
+    });
+    return merged;
+  }
+
+  function renderMainViewControls() {
+    if (!mainViewControlHost) return [];
+    var activeState = documentViewCoordinator ? documentViewCoordinator.activeViewState() : {
+      activeViewId: "rendered-document",
+      activeModeId: "rendered-document"
+    };
+    var controlStateById = {};
+    viewRegistry.listControls({ surfaceId: "main-view" }).forEach(function (control) {
+      controlStateById[control.id] = mergedMainViewControlState(control.id);
+    });
+    return mainViewControlHost.render({
+      activeViewId: activeState.activeViewId,
+      activeModeId: activeState.activeModeId,
+      controlStateById: controlStateById
+    });
   }
 
   function sidebarCollapseAvailable() {
@@ -458,23 +631,6 @@ export function startDocsViewerRuntime(options) {
 
   function renderIndexPanelState() {
     panelLayout.renderIndexPanelState();
-  }
-
-  function toggleIndexPanelState() {
-    hideContextMenu();
-    state.indexPanelState = panelLayout.toggleIndexPanelState();
-  }
-
-  function expandIndexPanelState() {
-    hideContextMenu();
-    state.indexPanelState = panelLayout.expandIndexPanelState();
-  }
-
-  function setActiveIndexView(viewId) {
-    hideContextMenu();
-    panelLayout.setActiveIndexView(viewId);
-    state.indexPanelState = panelLayout.indexPanelState();
-    state.viewState = panelLayout.projectViewState();
   }
 
   function loadViewerSettings() {
@@ -523,6 +679,9 @@ export function startDocsViewerRuntime(options) {
       getActiveSourceEditorContextAdapter: function () {
         return activeSourceEditorContextAdapter;
       },
+      projectMainViewControlState: function (controlId, controlState) {
+        projectMainViewControlState("source-editor", controlId, controlState);
+      },
       setActiveSourceEditorContextAdapter: function (adapter) {
         activeSourceEditorContextAdapter = adapter || null;
         if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();
@@ -530,25 +689,6 @@ export function startDocsViewerRuntime(options) {
       setStatus: statusController.setStatus,
       startBusy: statusController.startBusy
     };
-  }
-
-  function renderDocumentControlsContribution() {
-    if (typeof settings.renderDocumentControls !== "function") return;
-    settings.renderDocumentControls({
-      activeViewState: documentViewCoordinator ? documentViewCoordinator.activeViewState() : {
-        activeViewId: "rendered-document",
-        activeModeId: "rendered-document"
-      },
-      document: document,
-      requestDocumentMode: function (modeId, requestOptions) {
-        return documentViewCoordinator
-          ? documentViewCoordinator.requestDocumentMode(modeId, requestOptions)
-          : false;
-      },
-      root: root,
-      viewRegistry: viewRegistry,
-      window: window
-    });
   }
 
   function renderBookmarkUi() {
@@ -568,7 +708,7 @@ export function startDocsViewerRuntime(options) {
       bookmarkController.renderToggle();
       return;
     }
-    if (bookmarkToggle) bookmarkToggle.hidden = true;
+    projectMainViewControlState("bookmarks", "bookmark", { hidden: true });
   }
 
   function initializeBookmarks() {
@@ -719,24 +859,7 @@ export function startDocsViewerRuntime(options) {
 
   function bindLinkInterception() {
     routeWorkflow.bindRouteLinks();
-
-    if (sidebarToggle) {
-      sidebarToggle.addEventListener("click", function () {
-        toggleIndexPanelState();
-      });
-    }
-
-    if (sidebarExpand) {
-      sidebarExpand.addEventListener("click", function () {
-        expandIndexPanelState();
-      });
-    }
-
-    if (indexViewToggle) {
-      indexViewToggle.addEventListener("click", function () {
-        setActiveIndexView(indexViewToggle.dataset.indexPanelView);
-      });
-    }
+    panelLayout.bindPanelChrome();
 
     documentViewCoordinator.bind();
 
@@ -804,7 +927,6 @@ export function startDocsViewerRuntime(options) {
       bookmarks: appSession.domains.bookmarks,
       bookmarkRow: bookmarkRow,
       bookmarkScope: function () { return bookmarkScope; },
-      bookmarkToggle: bookmarkToggle,
       controlActive: documentViewCoordinator.controlActive,
       cssEscape: cssEscape,
       dbName: BOOKMARK_DB_NAME,
@@ -812,6 +934,9 @@ export function startDocsViewerRuntime(options) {
       documentIndex: appSession.domains.documentIndex,
       hideContextMenu: hideContextMenu,
       routeCommands: bookmarkRouteCommands,
+      projectControlState: function (controlId, controlState) {
+        projectMainViewControlState("bookmarks", controlId, controlState);
+      },
       searchRecent: appSession.domains.searchRecent,
       searchResetCommand: bookmarkSearchResetCommand,
       selectedDocument: appSession.domains.selectedDocument,

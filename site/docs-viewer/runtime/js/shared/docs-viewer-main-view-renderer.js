@@ -10,7 +10,7 @@ export function renderDocsViewerMainView(options = {}) {
   const mount = options.mount || null;
   const toolbarMount = options.toolbarMount || null;
   const controls = options.viewRegistry
-    ? options.viewRegistry.listControls({ ownerViewId: "rendered-document" }).filter(function (control) {
+    ? options.viewRegistry.listControls({ surfaceId: "main-view" }).filter(function (control) {
         return control.available;
       })
     : [];
@@ -35,30 +35,7 @@ export function renderDocsViewerMainView(options = {}) {
 
   const actions = documentRef.createElement("div");
   actions.className = "docsViewer__mainViewToolbarActions";
-
-  controls.forEach(function (control) {
-    var button = null;
-    if (control.renderer === "info-toggle") {
-      button = renderControlButton(documentRef, {
-        actionId: control.actionId,
-        className: "docsViewer__infoToggle",
-        id: "docsViewerInfoToggle",
-        label: "Show document info",
-        text: "i"
-      });
-      button.setAttribute("aria-expanded", "false");
-    } else if (control.renderer === "bookmark-toggle") {
-      button = renderControlButton(documentRef, {
-        actionId: control.actionId,
-        className: "docsViewer__bookmarkToggle",
-        id: "docsViewerBookmarkToggle",
-        label: "Add bookmark",
-        text: "☆"
-      });
-      button.setAttribute("aria-pressed", "false");
-    }
-    if (button) actions.append(button);
-  });
+  actions.setAttribute("data-docs-viewer-control-surface-mount", "main-view");
 
   if (toolbar) toolbar.append(path, actions);
   if (toolbarMount && toolbar) {
@@ -102,8 +79,6 @@ export function findDocsViewerMainViewRefs(options = {}) {
     main: root.querySelector(".docsViewer__main"),
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
     pathEl: root.querySelector("#docsViewerPath"),
-    infoToggle: root.querySelector("#docsViewerInfoToggle"),
-    bookmarkToggle: root.querySelector("#docsViewerBookmarkToggle"),
     content: root.querySelector("#docsViewerContent"),
     resultsStatus: root.querySelector("#docsViewerResultsStatus"),
     results: root.querySelector("#docsViewerResults"),
@@ -121,22 +96,6 @@ export function applyDocsViewerMainViewProjection(options = {}) {
   applyHidden(refs.results, projection, "resultsHidden");
   applyHidden(refs.more, projection, "moreHidden");
 
-  if (refs.infoToggle) {
-    if (Object.prototype.hasOwnProperty.call(projection, "infoToggleHidden")) {
-      refs.infoToggle.hidden = Boolean(projection.infoToggleHidden);
-    }
-    if (Object.prototype.hasOwnProperty.call(projection, "infoTogglePressed")) {
-      refs.infoToggle.classList.toggle("is-active", Boolean(projection.infoTogglePressed));
-      refs.infoToggle.setAttribute("aria-expanded", projection.infoTogglePressed ? "true" : "false");
-    }
-    if (Object.prototype.hasOwnProperty.call(projection, "infoToggleLabel")) {
-      refs.infoToggle.setAttribute("aria-label", projection.infoToggleLabel || "Show document info");
-      refs.infoToggle.title = projection.infoToggleLabel || "Show document info";
-    }
-  }
-  if (refs.bookmarkToggle && Object.prototype.hasOwnProperty.call(projection, "bookmarkToggleHidden")) {
-    refs.bookmarkToggle.hidden = Boolean(projection.bookmarkToggleHidden);
-  }
   if (refs.resultsStatus) {
     if (Object.prototype.hasOwnProperty.call(projection, "resultsStatusText")) {
       refs.resultsStatus.textContent = String(projection.resultsStatusText || "");
@@ -156,19 +115,6 @@ function renderParagraph(documentRef, id, className) {
   paragraph.className = className;
   paragraph.id = id;
   return paragraph;
-}
-
-function renderControlButton(documentRef, options) {
-  const button = documentRef.createElement("button");
-  button.className = options.className;
-  button.id = options.id;
-  button.type = "button";
-  button.hidden = true;
-  if (options.actionId) button.dataset.docsViewerAction = options.actionId;
-  button.setAttribute("aria-label", options.label);
-  button.title = options.label;
-  button.textContent = options.text;
-  return button;
 }
 
 function applyHidden(element, projection, key) {

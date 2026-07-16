@@ -206,6 +206,18 @@ body.docs-viewer-service{
   gap: 0.35rem;
 }
 
+.docsViewer__indexViewControls,
+.docsViewer__viewerAppControls{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.docsViewer__indexViewControls[hidden],
+.docsViewer__viewerAppControls[hidden]{
+  display: none;
+}
+
 .docsViewer__sidebarToggle{
   box-sizing: border-box;
   appearance: none;

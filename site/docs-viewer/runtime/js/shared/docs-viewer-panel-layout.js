@@ -8,7 +8,6 @@ import {
 } from "./docs-viewer-index-panel.js";
 import {
   renderDocsViewerAppShellMainViewState,
-  renderDocsViewerAppShellIndexViewToggleState,
   renderDocsViewerAppShellInfoPanelState,
   renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
@@ -27,8 +26,7 @@ var DEFAULT_INDEX_VIEW = {
   label: "Index tree",
   renderer: "index-tree",
   capabilities: {
-    layoutStates: ["normal", "collapsed"],
-    toolbar: false
+    layoutStates: ["normal", "collapsed"]
   }
 };
 
@@ -37,7 +35,6 @@ export function createDocsViewerPanelLayout(options) {
   var root = settings.root || null;
   var storage = settings.storage || null;
   var indexPanelRefs = settings.indexPanelRefs || {};
-  var indexViewToggleRefs = settings.indexViewToggleRefs || {};
   var mainViewRefs = settings.mainViewRefs || {};
   var infoPanelRefs = settings.infoPanelRefs || {};
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
@@ -184,10 +181,7 @@ export function createDocsViewerPanelLayout(options) {
       refs: indexPanelRefs,
       projection: projection
     });
-    renderDocsViewerAppShellIndexViewToggleState({
-      refs: indexViewToggleRefs,
-      projection: projection
-    });
+    if (typeof settings.onIndexProjection === "function") settings.onIndexProjection(projection);
     renderInfoPanelState();
     return projection;
   }
@@ -270,6 +264,40 @@ export function createDocsViewerPanelLayout(options) {
     return resolved.view;
   }
 
+  function indexViewSwitchControlState() {
+    var activeView = activeIndexView();
+    var activeViewId = activeView && activeView.id ? activeView.id : "";
+    var activeLabel = activeView && activeView.label ? activeView.label : activeViewId || "Index view";
+    if (activeViewId === "index-tree") activeLabel = "Tree index view";
+    if (activeViewId === "index-graph") activeLabel = "Graph index view";
+    return {
+      hidden: !nextIndexViewId(activeView),
+      label: activeLabel
+    };
+  }
+
+  function activateNextIndexView() {
+    var nextViewId = nextIndexViewId(activeIndexView());
+    if (!nextViewId) return activeIndexView();
+    if (typeof settings.onBeforePanelInteraction === "function") settings.onBeforePanelInteraction();
+    return setActiveIndexView(nextViewId);
+  }
+
+  function bindPanelChrome() {
+    if (indexPanelRefs.sidebarToggle) {
+      indexPanelRefs.sidebarToggle.addEventListener("click", function () {
+        if (typeof settings.onBeforePanelInteraction === "function") settings.onBeforePanelInteraction();
+        toggleIndexPanelState();
+      });
+    }
+    if (indexPanelRefs.sidebarExpand) {
+      indexPanelRefs.sidebarExpand.addEventListener("click", function () {
+        if (typeof settings.onBeforePanelInteraction === "function") settings.onBeforePanelInteraction();
+        expandIndexPanelState();
+      });
+    }
+  }
+
   function setActiveMainView(viewId) {
     var targetViewId = String(viewId || "").trim();
     var resolved = viewRegistry && typeof viewRegistry.resolveView === "function"
@@ -285,8 +313,11 @@ export function createDocsViewerPanelLayout(options) {
   }
 
   return {
+    activateNextIndexView: activateNextIndexView,
+    bindPanelChrome: bindPanelChrome,
     expandIndexPanelState: expandIndexPanelState,
     indexPanelState: function () { return indexPanelState; },
+    indexViewSwitchControlState: indexViewSwitchControlState,
     projectInfoPanel: projectInfoPanel,
     projectMainView: projectMainView,
     projectViewState: projectViewState,

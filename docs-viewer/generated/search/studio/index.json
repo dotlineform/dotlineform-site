@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b358cf93399527d3da51c8e391af538e",
-    "generated_at_utc": "2026-07-15T21:56:36Z",
-    "count": 233
+    "version": "blake2b-347a673d0fac82ee334ed3c6395b020a",
+    "generated_at_utc": "2026-07-16T12:05:08Z",
+    "count": 229
   },
   "entries": [
     {
@@ -1053,10 +1053,10 @@
       "kind": "doc",
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=d-20260523-000000-bf7161",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Dev Home",
-      "display_meta": "2026-07-15 • Dev Home",
+      "display_meta": "2026-07-16 • Dev Home",
       "search_terms": [
         "development workflow",
         "development",
@@ -1064,13 +1064,13 @@
         "dev home",
         "dev",
         "home",
-        "2026-07-15",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260523-000000-bf7161"
       ],
-      "search_text": "development workflow development workflow dev home dev home 2026-07-15 2026 07 15 d-20260523-000000-bf7161"
+      "search_text": "development workflow development workflow dev home dev home 2026-07-16 2026 07 16 d-20260523-000000-bf7161"
     },
     {
       "id": "d-20260612-153500-7eadc8",
@@ -2354,26 +2354,29 @@
     {
       "id": "d-20260528-224754-964108",
       "kind": "doc",
-      "title": "Panel Hosts",
+      "title": "Panel Hosts and Control Surfaces",
       "href": "/docs/?scope=studio&doc=d-20260528-224754-964108",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-16 • Docs Viewer",
       "search_terms": [
-        "panel hosts",
+        "panel hosts and control surfaces",
         "panel",
         "hosts",
+        "and",
+        "control",
+        "surfaces",
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-14",
+        "2026-07-16",
         "2026",
         "07",
-        "14",
+        "16",
         "d-20260528-224754-964108"
       ],
-      "search_text": "panel hosts panel hosts docs viewer docs viewer 2026-07-14 2026 07 14 d-20260528-224754-964108"
+      "search_text": "panel hosts and control surfaces panel hosts and control surfaces docs viewer docs viewer 2026-07-16 2026 07 16 d-20260528-224754-964108"
     },
     {
       "id": "d-20260511-120352-90ffa6",
@@ -2663,10 +2666,10 @@
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=d-20260531-152622-ed2451",
-      "last_updated": "2026-07-14",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-14 • Docs Viewer",
+      "display_meta": "2026-07-16 • Docs Viewer",
       "search_terms": [
         "toolbar model",
         "toolbar",
@@ -2674,13 +2677,13 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-14",
+        "2026-07-16",
         "2026",
         "07",
-        "14",
+        "16",
         "d-20260531-152622-ed2451"
       ],
-      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-14 2026 07 14 d-20260531-152622-ed2451"
+      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-16 2026 07 16 d-20260531-152622-ed2451"
     },
     {
       "id": "d-20260513-214100-0a7f44",
@@ -2899,17 +2902,17 @@
       "kind": "doc",
       "title": "Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260428-000000-f5ff18",
-      "last_updated": "2026-07-15",
-      "display_meta": "2026-07-15",
+      "last_updated": "2026-07-16",
+      "display_meta": "2026-07-16",
       "search_terms": [
         "roadmap",
-        "2026-07-15",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260428-000000-f5ff18"
       ],
-      "search_text": "roadmap 2026-07-15 2026 07 15 d-20260428-000000-f5ff18"
+      "search_text": "roadmap 2026-07-16 2026 07 16 d-20260428-000000-f5ff18"
     },
     {
       "id": "d-20260715-092247-85515f",
@@ -3512,117 +3515,22 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-15",
+      "last_updated": "2026-07-16",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-15 • Roadmap",
+      "display_meta": "2026-07-16 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-15",
+        "2026-07-16",
         "2026",
         "07",
-        "15",
+        "16",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260714-234030-1e0af6"
-    },
-    {
-      "id": "d-20260715-205212-78f243",
-      "kind": "doc",
-      "title": "Control Surfaces",
-      "href": "/docs/?scope=studio&doc=d-20260715-205212-78f243",
-      "last_updated": "2026-07-15",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-15 • Docs Viewer Roadmap",
-      "search_terms": [
-        "control surfaces",
-        "control",
-        "surfaces",
-        "docs viewer roadmap",
-        "docs",
-        "viewer",
-        "roadmap",
-        "2026-07-15",
-        "2026",
-        "07",
-        "15",
-        "d-20260715-205212-78f243"
-      ],
-      "search_text": "control surfaces control surfaces docs viewer roadmap docs viewer roadmap 2026-07-15 2026 07 15 d-20260715-205212-78f243"
-    },
-    {
-      "id": "d-20260715-205212-66b4a5",
-      "kind": "doc",
-      "title": "Control Surfaces Architecture",
-      "href": "/docs/?scope=studio&doc=d-20260715-205212-66b4a5",
-      "last_updated": "2026-07-15",
-      "parent_id": "d-20260715-205212-78f243",
-      "parent_title": "Control Surfaces",
-      "display_meta": "2026-07-15 • Control Surfaces",
-      "search_terms": [
-        "control surfaces architecture",
-        "control",
-        "surfaces",
-        "architecture",
-        "control surfaces",
-        "2026-07-15",
-        "2026",
-        "07",
-        "15",
-        "d-20260715-205212-66b4a5"
-      ],
-      "search_text": "control surfaces architecture control surfaces architecture control surfaces 2026-07-15 2026 07 15 d-20260715-205212-66b4a5"
-    },
-    {
-      "id": "d-20260715-205212-4782bc",
-      "kind": "doc",
-      "title": "Control Surfaces Concept",
-      "href": "/docs/?scope=studio&doc=d-20260715-205212-4782bc",
-      "last_updated": "2026-07-15",
-      "parent_id": "d-20260715-205212-78f243",
-      "parent_title": "Control Surfaces",
-      "display_meta": "2026-07-15 • Control Surfaces",
-      "search_terms": [
-        "control surfaces concept",
-        "control",
-        "surfaces",
-        "concept",
-        "control surfaces",
-        "2026-07-15",
-        "2026",
-        "07",
-        "15",
-        "d-20260715-205212-4782bc"
-      ],
-      "search_text": "control surfaces concept control surfaces concept control surfaces 2026-07-15 2026 07 15 d-20260715-205212-4782bc"
-    },
-    {
-      "id": "d-20260715-205212-3268e2",
-      "kind": "doc",
-      "title": "Control Surfaces Foundation Delivery",
-      "href": "/docs/?scope=studio&doc=d-20260715-205212-3268e2",
-      "last_updated": "2026-07-15",
-      "parent_id": "d-20260715-205212-78f243",
-      "parent_title": "Control Surfaces",
-      "display_meta": "2026-07-15 • Control Surfaces",
-      "search_terms": [
-        "control surfaces foundation delivery",
-        "control",
-        "surfaces",
-        "foundation",
-        "delivery",
-        "control surfaces",
-        "2026-07-15",
-        "2026",
-        "07",
-        "15",
-        "d-20260715-205212-3268e2"
-      ],
-      "search_text": "control surfaces foundation delivery control surfaces foundation delivery control surfaces 2026-07-15 2026 07 15 d-20260715-205212-3268e2"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260714-234030-1e0af6"
     },
     {
       "id": "d-20260715-181845-0158f9",

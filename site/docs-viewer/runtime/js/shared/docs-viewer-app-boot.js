@@ -18,7 +18,7 @@ import {
   docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
 import {
-  createDocsViewerSharedViewDefinitions,
+  composeDocsViewerViewDefinitionSets,
   createDocsViewerViewRegistry
 } from "./docs-viewer-view-registry.js";
 
@@ -173,10 +173,7 @@ export function resolveDocsViewerAppBootContext(options) {
       resolvedRouteConfig: resolvedRouteConfig
     });
     var viewRegistry = createDocsViewerViewRegistry({
-      definitionSets: [
-        createDocsViewerSharedViewDefinitions(),
-        settings.viewRegistryContributions || {}
-      ],
+      definitionSets: composeDocsViewerViewDefinitionSets(settings.viewRegistryContributions),
       projectionInputs: {
         appContext: routeContext.appContext
       },
@@ -198,10 +195,10 @@ export function resolveDocsViewerAppBootContext(options) {
         assetVersion: assetVersion,
         createCollectionProvider: settings.createCollectionProvider,
         createSourceAdapter: settings.createSourceAdapter,
+        controlRendererContributions: settings.controlRendererContributions || {},
         routeContext: routeContext,
         viewRegistry: viewRegistry,
         infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
-        renderDocumentControls: settings.renderDocumentControls,
         mountDocumentExtras: settings.mountDocumentExtras,
         appShellReady: Promise.resolve(appShellResult),
         appShellResult: appShellResult,

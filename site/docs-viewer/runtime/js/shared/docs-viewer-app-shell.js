@@ -63,11 +63,6 @@ function mainViewToolbarMount(root) {
   return root.querySelector("[data-docs-viewer-main-view-toolbar-mount]");
 }
 
-function managementActionsMount(root) {
-  if (!root) return null;
-  return root.querySelector("[data-docs-viewer-management-actions-mount]");
-}
-
 function managementShellMount(root) {
   if (!root) return null;
   return root.querySelector("[data-docs-viewer-management-shell-mount]");
@@ -85,9 +80,7 @@ function canRenderManagementShell(renderers) {
   return Boolean(
     renderers
     && (
-      typeof renderers.renderActions === "function"
-      || typeof renderers.renderShell === "function"
-      || typeof renderers.renderDocumentActions === "function"
+      typeof renderers.renderShell === "function"
     )
   );
 }
@@ -99,12 +92,10 @@ function appShellResult(parts) {
   return {
     topBar: parts.topBar,
     viewerToolbar: parts.viewerToolbar,
-    headerControls: parts.headerControls,
     mainView: parts.mainView,
     infoPanel: parts.infoPanel,
     indexPanel: parts.indexPanel,
     routeContext: parts.routeContext,
-    managementActions: parts.managementActions || null,
     managementShell: parts.managementShell || null
   };
 }
@@ -121,7 +112,6 @@ export function initDocsViewerAppShell(options) {
     mount: settings.headerControlsMount || headerControlsMount(root),
     routeContext: routeContext
   });
-  var headerControls = topBar && topBar.viewerToolbar;
   var mainView = renderDocsViewerMainView({
     document: documentRef,
     root: root,
@@ -139,17 +129,12 @@ export function initDocsViewerAppShell(options) {
     root: root,
     mount: settings.infoPanelMount || infoPanelMount(root)
   });
-  var actionMount = settings.managementActionsMount || settings.mount || (topBar && topBar.manageToolbarMount) || managementActionsMount(root);
   var shellMount = settings.managementShellMount || managementShellMount(root);
-  if (actionMount) {
-    actionMount.replaceChildren();
-  }
   if (shellMount) {
     shellMount.replaceChildren();
   }
   if (!managementAllowed(routeContext) || !canRenderManagementShell(renderers)) {
     return Promise.resolve(appShellResult({
-      headerControls: headerControls,
       topBar: topBar && topBar.topBar,
       viewerToolbar: topBar && topBar.viewerToolbar,
       mainView: mainView,
@@ -157,20 +142,12 @@ export function initDocsViewerAppShell(options) {
       indexPanel: indexPanel,
       routeContext: routeContext,
       root: root,
-      managementActions: null,
       managementShell: null
     }));
   }
 
   return Promise.resolve()
     .then(function () {
-      var row = actionMount && typeof renderers.renderActions === "function"
-        ? renderers.renderActions({
-        document: documentRef,
-        featurePolicy: routeContext.appContext.featurePolicy,
-        mount: actionMount
-        })
-        : null;
       var managementShell = shellMount && typeof renderers.renderShell === "function"
         ? renderers.renderShell({
         document: documentRef,
@@ -178,19 +155,7 @@ export function initDocsViewerAppShell(options) {
         mount: shellMount
         })
         : emptyManagementShell(documentRef);
-      if (typeof renderers.renderDocumentActions === "function") {
-        renderers.renderDocumentActions({
-          document: documentRef,
-          viewRegistry: settings.viewRegistry,
-          root: root
-        });
-        mainView = findDocsViewerMainViewRefs({
-          document: documentRef,
-          root: root
-        });
-      }
       return appShellResult({
-        headerControls: headerControls,
         topBar: topBar && topBar.topBar,
         viewerToolbar: topBar && topBar.viewerToolbar,
         mainView: mainView,
@@ -198,14 +163,12 @@ export function initDocsViewerAppShell(options) {
         indexPanel: indexPanel,
         routeContext: routeContext,
         root: root,
-        managementActions: row,
         managementShell: managementShell
       });
     })
     .catch(function (error) {
       console.warn("docs_viewer: management shell failed to initialize", error);
       return appShellResult({
-        headerControls: headerControls,
         topBar: topBar && topBar.topBar,
         viewerToolbar: topBar && topBar.viewerToolbar,
         mainView: mainView,
@@ -213,7 +176,6 @@ export function initDocsViewerAppShell(options) {
         indexPanel: indexPanel,
         routeContext: routeContext,
         root: root,
-        managementActions: null,
         managementShell: null
       });
     });
@@ -256,30 +218,24 @@ export function getDocsViewerAppShellRefs(options) {
   var documentRef = settings.document || document;
   var root = settings.root || null;
   return {
-    headerControls: {
-      scopeSelect: documentRef.getElementById("docsViewerScopeSelect"),
-      recentButton: documentRef.getElementById("docsViewerRecentButton"),
-      searchInput: documentRef.getElementById("docsViewerSearchInput")
+    controlSurfaces: {
+      appViewer: root ? root.querySelector('[data-docs-viewer-control-surface-mount="app-viewer"]') : null,
+      appManagement: root ? root.querySelector('[data-docs-viewer-control-surface-mount="app-management"]') : null,
+      indexView: root ? root.querySelector('[data-docs-viewer-control-surface-mount="index-view"]') : null,
+      mainView: root ? root.querySelector('[data-docs-viewer-control-surface-mount="main-view"]') : null
     },
     topBar: {
       root: documentRef.getElementById("docsViewerTopBar")
     },
     viewerToolbar: {
-      root: documentRef.getElementById("docsViewerViewerToolbar"),
-      indexViewToggle: documentRef.getElementById("docsViewerIndexViewToggle")
+      root: documentRef.getElementById("docsViewerViewerToolbar")
     },
     indexPanel: getDocsViewerAppShellIndexPanelRefs({ root: root, document: documentRef }),
     mainView: getDocsViewerAppShellMainViewRefs({ root: root, document: documentRef }),
     infoPanel: getDocsViewerAppShellInfoPanelRefs({ root: root, document: documentRef }),
     managementShell: getDocsViewerAppShellManagementShellRefs({ root: root, document: documentRef }),
     status: documentRef.getElementById("docsViewerStatus"),
-    bookmarkRow: documentRef.getElementById("docsViewerBookmarkRow"),
-    managementActions: {
-      mount: documentRef.getElementById("docsViewerManageActionsMount"),
-      row: documentRef.getElementById("docsViewerManageRow"),
-      actionsButton: documentRef.getElementById("docsViewerManageActionsButton"),
-      actionsMenu: documentRef.getElementById("docsViewerManageActionsMenu")
-    }
+    bookmarkRow: documentRef.getElementById("docsViewerBookmarkRow")
   };
 }
 
@@ -293,23 +249,4 @@ export function renderDocsViewerAppShellMainViewState(options) {
 
 export function renderDocsViewerAppShellInfoPanelState(options) {
   applyDocsViewerInfoPanelProjection(options || {});
-}
-
-export function renderDocsViewerAppShellIndexViewToggleState(options) {
-  var settings = options || {};
-  var refs = settings.refs || {};
-  var projection = settings.projection || {};
-  var button = refs.indexViewToggle || null;
-  if (!button) return;
-  var activeViewId = projection.activeViewId || "";
-  var targetViewId = projection.nextViewId || "";
-  var activeLabel = projection.activeViewLabel || activeViewId || "Index view";
-  if (activeViewId === "index-tree") activeLabel = "Tree index view";
-  if (activeViewId === "index-graph") activeLabel = "Graph index view";
-  button.hidden = Boolean(projection.toggleHidden);
-  button.dataset.indexPanelView = targetViewId;
-  button.dataset.activeIndexPanelView = activeViewId;
-  button.textContent = activeViewId === "index-graph" ? "🕸️" : "📁";
-  button.setAttribute("aria-label", activeLabel);
-  button.title = activeLabel;
 }

@@ -587,8 +587,9 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleMoveDoc(docId, parentId) {
-    if (!docId) return;
-    var movingDoc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.MOVE, docId);
+    var movingDocId = String(docId || "").trim();
+    if (!movingDocId) return;
+    var movingDoc = documentIndex.docsById.get(movingDocId) || null;
     var nextParentId = String(parentId || "").trim();
     if (!movingDoc) return;
     if (nextParentId && !documentIndex.docsById.has(nextParentId)) return;

@@ -59,17 +59,17 @@ def assert_index_panel_helpers(page: Page) -> None:
             const normalProjection = module.projectIndexPanelState('normal', { available: true });
             const treeProjection = module.projectIndexPanelState('normal', {
                 available: true,
-                capabilities: { layoutStates: ['normal', 'collapsed'], toolbar: false }
+                capabilities: { layoutStates: ['normal', 'collapsed'] }
             });
             const treeExpandedProjection = module.projectIndexPanelState('expanded', {
                 available: true,
-                capabilities: { layoutStates: ['normal', 'collapsed'], toolbar: false }
+                capabilities: { layoutStates: ['normal', 'collapsed'] }
             });
             module.persistIndexPanelState({
                 storage: storageAdapter,
                 storageKey,
                 state: 'expanded',
-                capabilities: { layoutStates: ['normal', 'collapsed'], toolbar: false }
+                capabilities: { layoutStates: ['normal', 'collapsed'] }
             });
             const cappedStoredExpanded = module.readIndexPanelState({ storage: storageAdapter, storageKey });
             const expandedProjection = module.projectIndexPanelState('expanded', { available: true });
@@ -130,7 +130,7 @@ def run(site_root: Path) -> None:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
-            page.goto(f"{base_url}/", wait_until="domcontentloaded")
+            page.goto(f"{base_url}/404.html", wait_until="domcontentloaded")
             assert_index_panel_helpers(page)
             browser.close()
     finally:

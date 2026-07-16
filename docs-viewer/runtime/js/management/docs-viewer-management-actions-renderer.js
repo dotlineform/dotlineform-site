@@ -120,60 +120,110 @@ function renderScopeSelect() {
   ].join("");
 }
 
-function managementActionsMarkup(options) {
-  var settings = options || {};
-  var featurePolicy = settings.featurePolicy || {};
-  return [
-  '<div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>',
-  '  <div class="docsViewer__manageActions" role="toolbar" aria-label="Management actions">',
-  '    <button class="docsViewer__actionButton docsViewer__actionButton--iconOnly" type="button" id="docsViewerManageToolbarImportButton" data-docs-viewer-action="' + ACTION_IDS.IMPORT + '" aria-label="Import" title="Import"><span aria-hidden="true">📥</span></button>',
-  '    <div class="docsViewer__actionsMenuHost">',
-  '      <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
-  '      <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',
-  MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
-  '      </div>',
-  '    </div>',
-  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageToolbarPublishButton" data-docs-viewer-action="' + ACTION_IDS.PUBLISH_DOCS + '" aria-label="Publish" title="Publish" hidden>Publish</button>',
-  '    <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton" data-docs-viewer-action="' + ACTION_IDS.SHOW + '" aria-label="Show" title="Show">Show</button>',
-  '    <label class="docsViewer__draftToggle">',
-  '      <input class="docsViewer__draftInput" id="docsViewerDraftToggle" data-docs-viewer-action="' + ACTION_IDS.SHOW_NON_VIEWABLE + '" type="checkbox" aria-label="Show non-viewable docs">',
-  '      <span class="docsViewer__draftLabel">Show non-viewable</span>',
-  '    </label>',
-  featurePolicy.scopeSelection === true ? renderScopeSelect() : "",
-  '  </div>',
-  '  <button class="docsViewer__themeToggle" type="button" data-docs-viewer-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode">',
-  '    <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">',
-  '      <circle cx="12" cy="12" r="4"></circle>',
-  '      <path d="M12 2v2"></path>',
-  '      <path d="M12 20v2"></path>',
-  '      <path d="M4.93 4.93l1.41 1.41"></path>',
-  '      <path d="M17.66 17.66l1.41 1.41"></path>',
-  '      <path d="M2 12h2"></path>',
-  '      <path d="M20 12h2"></path>',
-  '      <path d="M4.93 19.07l1.41-1.41"></path>',
-  '      <path d="M17.66 6.34l1.41-1.41"></path>',
-  '    </svg>',
-  '    <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden>',
-  '      <path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path>',
-  '    </svg>',
-  '  </button>',
-  '</div>'
-  ].join("");
+function elementFromMarkup(documentRef, markup) {
+  var template = documentRef.createElement("template");
+  template.innerHTML = markup;
+  return template.content.firstElementChild;
 }
 
-export function renderDocsViewerManagementActions(options) {
+function renderActionButton(context, options) {
   var settings = options || {};
-  var documentRef = settings.document || document;
-  var mount = settings.mount;
-  if (!mount) return null;
+  var button = context.existingRoot;
+  if (!button || button.tagName !== "BUTTON") {
+    button = context.document.createElement("button");
+    button.className = settings.className || "docsViewer__actionButton";
+    button.id = settings.id || "";
+    button.type = "button";
+  }
+  button.textContent = "";
+  if (settings.iconOnly) {
+    var icon = context.document.createElement("span");
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = settings.text || "";
+    button.appendChild(icon);
+  } else {
+    button.textContent = settings.text || context.control.label;
+  }
+  return button;
+}
 
-  mount.replaceChildren();
+function renderManagementActionsMenu(context) {
+  var root = context.existingRoot;
+  if (!root || !root.querySelector("#docsViewerManageActionsButton")) {
+    root = elementFromMarkup(context.document, [
+      '<div class="docsViewer__actionsMenuHost">',
+      '  <button class="docsViewer__actionButton" type="button" id="docsViewerManageActionsButton" aria-haspopup="menu" aria-expanded="false" aria-controls="docsViewerManageActionsMenu">Actions</button>',
+      '  <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>',
+      MANAGEMENT_ACTION_MENU_ITEMS.map(renderActionMenuItem).join(""),
+      "  </div>",
+      "</div>"
+    ].join(""));
+  }
+  return { root: root, interactive: root.querySelector("#docsViewerManageActionsButton") };
+}
 
-  var template = documentRef.createElement("template");
-  template.innerHTML = managementActionsMarkup(settings);
-  var row = template.content.firstElementChild;
-  if (!row) return null;
+function renderDraftToggle(context) {
+  var root = context.existingRoot;
+  var input = root ? root.querySelector("#docsViewerDraftToggle") : null;
+  if (!root || !input) {
+    root = elementFromMarkup(context.document, [
+      '<label class="docsViewer__draftToggle">',
+      '  <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox" aria-label="Show non-viewable docs">',
+      '  <span class="docsViewer__draftLabel">Show non-viewable</span>',
+      "</label>"
+    ].join(""));
+    input = root.querySelector("#docsViewerDraftToggle");
+  }
+  input.checked = Boolean(context.control.state && context.control.state.pressed);
+  return { root: root, interactive: input };
+}
 
-  mount.appendChild(row);
-  return row;
+function renderScopeControl(context) {
+  var root = context.existingRoot;
+  if (!root || !root.querySelector("#docsViewerScopeSelect")) {
+    root = elementFromMarkup(context.document, renderScopeSelect().trim());
+  }
+  return { root: root, interactive: root.querySelector("#docsViewerScopeSelect") };
+}
+
+function renderThemeToggle(context) {
+  var button = context.existingRoot;
+  if (!button || button.tagName !== "BUTTON") {
+    button = elementFromMarkup(context.document, [
+      '<button class="docsViewer__themeToggle" type="button" data-docs-viewer-theme-toggle>',
+      '  <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">',
+      '    <circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path>',
+      "  </svg>",
+      '  <svg class="docsViewer__themeIcon" data-docs-viewer-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M21 12.79A8.5 8.5 0 1 1 11.21 3 6.5 6.5 0 0 0 21 12.79z"></path></svg>',
+      "</button>"
+    ].join(""));
+  }
+  var dark = Boolean(context.control.state && context.control.state.pressed);
+  button.querySelectorAll("[data-docs-viewer-theme-icon]").forEach(function (icon) {
+    icon.hidden = icon.dataset.docsViewerThemeIcon !== (dark ? "dark" : "light");
+  });
+  return button;
+}
+
+export function createDocsViewerManagementAppControlRenderers() {
+  return {
+    "manage-toolbar-import": function (context) {
+      return renderActionButton(context, {
+        className: "docsViewer__actionButton docsViewer__actionButton--iconOnly",
+        id: "docsViewerManageToolbarImportButton",
+        iconOnly: true,
+        text: "📥"
+      });
+    },
+    "manage-actions-menu": renderManagementActionsMenu,
+    "manage-toolbar-publish": function (context) {
+      return renderActionButton(context, { id: "docsViewerManageToolbarPublishButton", text: "Publish" });
+    },
+    "manage-show": function (context) {
+      return renderActionButton(context, { id: "docsViewerManageViewableButton", text: "Show" });
+    },
+    "manage-show-non-viewable": renderDraftToggle,
+    "manage-scope-select": renderScopeControl,
+    "manage-theme-toggle": renderThemeToggle
+  };
 }
