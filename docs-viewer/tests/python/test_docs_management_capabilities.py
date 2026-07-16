@@ -15,7 +15,10 @@ from docs_management_test_support import (
     write_docs_viewer_browser_config,
     write_generated_docs,
 )
-from docs_management_capabilities_service import capability_scope_root_label
+from docs_management_capabilities_service import (
+    capability_scope_root_label,
+    copy_subtree_target_available,
+)
 
 def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
@@ -60,7 +63,20 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["create_eligible"] is True
     assert payload["capabilities"]["scopes"]["studio"]["sub_scope_lifecycle"]["sub_scopes"] == []
     assert payload["capabilities"]["scopes"]["studio"]["scope_lifecycle"]["rename_eligible"] is False
+    assert payload["capabilities"]["scopes"]["studio"]["scope_type"] == "local"
     assert payload["capabilities"]["scopes"]["studio"]["copy_subtree_target"] is True
+
+
+def test_public_scope_is_not_a_copy_subtree_target(tmp_path: Path) -> None:
+    source_root = tmp_path / "docs-viewer/source/public"
+    source_root.mkdir(parents=True)
+    config = SimpleNamespace(
+        scope_id="public",
+        scope_type="public",
+        source=Path("docs-viewer/source/public"),
+    )
+
+    assert copy_subtree_target_available(tmp_path, config) is False
 
 
 def test_external_scope_capability_uses_portable_root_label() -> None:

@@ -64,6 +64,11 @@ function renderModalFrame(options) {
 export function openDocsViewerManagementModal(options = {}) {
   var host = createModalHost({ root: options.root });
   var restoreFocus = document.activeElement;
+  var scrollRoots = [document.documentElement, document.body].filter(Boolean).map(function (node) {
+    var overflow = node.style.overflow;
+    node.style.overflow = "hidden";
+    return { node: node, overflow: overflow };
+  });
   host.innerHTML = renderModalFrame(options);
 
   var modal = host.querySelector('[data-role="docs-viewer-management-modal"]');
@@ -88,6 +93,9 @@ export function openDocsViewerManagementModal(options = {}) {
     function cleanup() {
       host.innerHTML = "";
       document.removeEventListener("keydown", onKeydown);
+      scrollRoots.forEach(function (record) {
+        record.node.style.overflow = record.overflow;
+      });
       try {
         if (restoreFocus && typeof restoreFocus.focus === "function") {
           restoreFocus.focus({ preventScroll: true });
@@ -121,6 +129,16 @@ export function openDocsViewerManagementModal(options = {}) {
     }
 
     function onKeydown(event) {
+      if (modal && (
+        event.key === "Tab" ||
+        event.key === "ArrowDown" ||
+        event.key === "ArrowRight" ||
+        event.key === "ArrowUp" ||
+        event.key === "ArrowLeft"
+      )) {
+        modal.dataset.keyboardNavigation = "true";
+      }
+      if (navigateDocsViewerModalRadioGroup(event, modal)) return;
       if (trapDocsViewerModalFocus(event, modal)) return;
       if (event.key === "Escape") {
         event.preventDefault();
@@ -140,6 +158,9 @@ export function openDocsViewerManagementModal(options = {}) {
       });
     }
     if (modal) {
+      modal.addEventListener("pointerdown", function () {
+        delete modal.dataset.keyboardNavigation;
+      });
       modal.addEventListener("click", function (event) {
         if (event.target === modal) cancel();
       });
@@ -150,7 +171,7 @@ export function openDocsViewerManagementModal(options = {}) {
 
     window.setTimeout(function () {
       try {
-        if (focusTarget && typeof focusTarget.focus === "function") focusTarget.focus();
+        if (focusTarget && typeof focusTarget.focus === "function") focusTarget.focus({ preventScroll: true });
         if (focusTarget && typeof focusTarget.select === "function") focusTarget.select();
       } catch (_error) {
         // Focus is a convenience only.
@@ -161,7 +182,7 @@ export function openDocsViewerManagementModal(options = {}) {
 
 function focusableControls(container) {
   if (!container) return [];
-  return Array.from(container.querySelectorAll([
+  var controls = Array.from(container.querySelectorAll([
     "button:not([disabled])",
     "input:not([disabled])",
     "select:not([disabled])",
@@ -171,6 +192,50 @@ function focusableControls(container) {
   ].join(","))).filter(function (node) {
     return !node.hidden && node.getClientRects && node.getClientRects().length;
   });
+  return controls.filter(function (node) {
+    if (node.type !== "radio" || !node.name) return true;
+    var group = controls.filter(function (candidate) {
+      return candidate.type === "radio" &&
+        candidate.name === node.name &&
+        candidate.form === node.form;
+    });
+    var checked = group.find(function (candidate) { return candidate.checked; });
+    return node === (checked || group[0]);
+  });
+}
+
+export function navigateDocsViewerModalRadioGroup(event, modal) {
+  var directions = {
+    ArrowDown: 1,
+    ArrowRight: 1,
+    ArrowUp: -1,
+    ArrowLeft: -1
+  };
+  var direction = directions[event && event.key];
+  if (!direction || !modal) return false;
+  var documentRef = modal.ownerDocument || document;
+  var active = documentRef.activeElement;
+  if (!active || !modal.contains(active) || active.type !== "radio" || !active.name) return false;
+  var radios = Array.from(modal.querySelectorAll('input[type="radio"]')).filter(function (candidate) {
+    return !candidate.disabled &&
+      !candidate.hidden &&
+      candidate.name === active.name &&
+      candidate.form === active.form &&
+      candidate.getClientRects &&
+      candidate.getClientRects().length;
+  });
+  var activeIndex = radios.indexOf(active);
+  if (activeIndex < 0 || !radios.length) return false;
+
+  event.preventDefault();
+  var nextIndex = (activeIndex + direction + radios.length) % radios.length;
+  var next = radios[nextIndex];
+  if (next === active) return true;
+  next.checked = true;
+  next.focus({ preventScroll: true });
+  next.dispatchEvent(new Event("input", { bubbles: true }));
+  next.dispatchEvent(new Event("change", { bubbles: true }));
+  return true;
 }
 
 export function trapDocsViewerModalFocus(event, modal) {
@@ -187,7 +252,7 @@ export function trapDocsViewerModalFocus(event, modal) {
     nextIndex = activeIndex < 0 || activeIndex >= controls.length - 1 ? 0 : activeIndex + 1;
   }
   event.preventDefault();
-  controls[nextIndex].focus();
+  controls[nextIndex].focus({ preventScroll: true });
   return true;
 }
 

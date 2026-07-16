@@ -277,6 +277,10 @@ body.docs-viewer-service{
     margin: 0;
   }
 
+  .docsViewer[data-index-panel-state="collapsed"] .docsViewer__indexViewControls{
+    display: none;
+  }
+
   .docsViewer[data-index-panel-state="collapsed"] .docsViewer__nav{
     display: none;
   }

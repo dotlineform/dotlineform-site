@@ -129,8 +129,10 @@ export function copySubtreeTargetScopes(capabilities, activeScope) {
     };
   }).filter(function (record) {
     var scopeCaps = scopes[record.scopeId] || {};
+    var scopeType = String(scopeCaps.scope_type || "").trim();
     return (
       record.scopeId !== currentScope &&
+      (scopeType === "local" || scopeType === "local_external") &&
       scopeCaps.available === true &&
       scopeCaps.copy_subtree_target === true
     );

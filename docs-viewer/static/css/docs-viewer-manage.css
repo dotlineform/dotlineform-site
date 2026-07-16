@@ -510,6 +510,14 @@ select.docsViewer__fieldInput--listbox{
   textarea:not([disabled]),
   a[href],
   [tabindex]:not([tabindex="-1"])
+):focus-visible,
+.docsViewer__modal[data-keyboard-navigation="true"] :is(
+  button:not([disabled]),
+  input:not([disabled]),
+  select:not([disabled]),
+  textarea:not([disabled]),
+  a[href],
+  [tabindex]:not([tabindex="-1"])
 ):focus{
   outline: 2px solid var(--docs-viewer-text, var(--text, #111));
   outline-offset: 2px;

@@ -95,6 +95,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         )
         scopes[scope] = {
             "available": root.exists(),
+            "scope_type": config.scope_type,
             "root": capability_scope_root_label(repo_root, scope, config),
             "generated_data_reads": generated_data_path.exists(),
             "generated_search_reads": resolve_scope_path(repo_root, config.search_output).exists(),

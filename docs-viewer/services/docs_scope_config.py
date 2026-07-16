@@ -32,6 +32,7 @@ PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 WORKING_DOCS_OUTPUT_ROOT = Path("docs-viewer/generated/docs")
 WORKING_SEARCH_OUTPUT_ROOT = Path("docs-viewer/generated/search")
+PUBLIC_SCOPE_TYPE = "public"
 LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
 DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"

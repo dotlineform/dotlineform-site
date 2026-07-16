@@ -159,7 +159,7 @@ def scope_snapshot(repo_root: Path, scope: str) -> dict[str, bytes]:
 
 
 def test_plan_copy_subtree_is_complete_ordered_and_write_free(tmp_path: Path) -> None:
-    repo_root = make_repo(tmp_path, target_type="public")
+    repo_root = make_repo(tmp_path)
     before = source_snapshot(repo_root)
 
     plan = subtree_copy.plan_copy_subtree(
@@ -264,10 +264,25 @@ def test_plan_copy_subtree_handles_leaf_and_duplicate_titles(tmp_path: Path) -> 
     assert leaf_plan.preview_payload()["descendant_count"] == 0
 
 
+def test_plan_copy_subtree_rejects_public_target(tmp_path: Path) -> None:
+    repo_root = make_repo(tmp_path, target_type="public")
+
+    with pytest.raises(
+        ValueError,
+        match="public target scope 'target' is not available for subtree copy",
+    ):
+        subtree_copy.plan_copy_subtree(
+            repo_root,
+            source_scope="source",
+            source_doc_id="root",
+            target_scope="target",
+        )
+
+
 def test_transform_copy_subtree_preserves_content_and_rewrites_only_copied_links(
     tmp_path: Path,
 ) -> None:
-    repo_root = make_repo(tmp_path, target_type="public")
+    repo_root = make_repo(tmp_path)
     root_body = (
         "# Root\n\n"
         "[Copied child](/docs/?scope=source&doc=alpha#details)\n"
@@ -343,7 +358,6 @@ def test_transform_copy_subtree_preserves_content_and_rewrites_only_copied_links
         "summary": "Preserve this summary",
         "ui_status": "ready",
         "parent_id": "",
-        "viewable": False,
         "custom_field": "kept",
         "sort_order": 7,
     }
@@ -351,9 +365,12 @@ def test_transform_copy_subtree_preserves_content_and_rewrites_only_copied_links
     assert alpha_front_matter["parent_id"] == plan.id_map["root"]
     assert alpha_front_matter["added_date"] == "2026-07-16 20:00:00"
     assert alpha_front_matter["last_updated"] == "2026-07-16 20:00:00"
-    assert alpha_front_matter["viewable"] is False
+    assert "viewable" not in alpha_front_matter
     assert "copied_from" not in root_front_matter
-    assert f"[Copied child](/target/?doc={plan.id_map['alpha']}#details)" in rewritten_root_body
+    assert (
+        f"[Copied child](/docs/?scope=target&doc={plan.id_map['alpha']}#details)"
+        in rewritten_root_body
+    )
     assert "[Outside subtree](/docs/?scope=source&doc=other#keep)" in rewritten_root_body
     assert "[Existing target](/target/?doc=d-20260716-200000-aaaaaa)" in rewritten_root_body
     assert "[External host](https://example.com/docs/?scope=source&doc=alpha)" in rewritten_root_body
@@ -363,13 +380,13 @@ def test_transform_copy_subtree_preserves_content_and_rewrites_only_copied_links
     assert "[Download](/downloads/source.zip)" in rewritten_root_body
     assert '<script src="/interactive/source.js"></script>' in rewritten_root_body
     assert (
-        f"[Copied root](/target/?doc={plan.id_map['root']}&mode=outline#top)"
+        f"[Copied root](/docs/?doc={plan.id_map['root']}&scope=target&mode=outline#top)"
         in rewritten_alpha_body
     )
     for document in result.documents:
         front_matter, _body = source_model.parse_source_text(document.source_text)
         assert front_matter["doc_id"] == document.planned_document.target_doc_id
-        assert source_model.doc_is_viewable(front_matter) is False
+        assert source_model.doc_is_viewable(front_matter) is True
 
 
 def test_restore_copy_subtree_apply_plan_round_trips_previewed_plan(tmp_path: Path) -> None:

@@ -413,10 +413,12 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
             const payload = {
                 copy_subtree: { preview: true, apply: true },
                 scopes: {
-                    studio: { available: true, copy_subtree_target: true, root: 'source/studio' },
-                    public: { available: true, copy_subtree_target: true, root: 'source/public' },
-                    missing: { available: false, copy_subtree_target: true, root: 'source/missing' },
-                    readonly: { available: true, copy_subtree_target: false, root: 'source/readonly' }
+                    studio: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'source/studio' },
+                    public: { scope_type: 'public', available: true, copy_subtree_target: true, root: 'source/public' },
+                    notes: { scope_type: 'local_external', available: true, copy_subtree_target: true, root: 'source/notes' },
+                    processing: { scope_type: 'local', available: true, copy_subtree_target: true, root: 'source/processing' },
+                    missing: { scope_type: 'local', available: false, copy_subtree_target: true, root: 'source/missing' },
+                    readonly: { scope_type: 'local', available: true, copy_subtree_target: false, root: 'source/readonly' }
                 }
             };
             const requests = [];
@@ -428,7 +430,7 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
                     json: () => Promise.resolve({ ok: true })
                 });
             };
-            await client.previewManagedDocSubtreeCopy('source-doc', 'public', {
+            await client.previewManagedDocSubtreeCopy('source-doc', 'notes', {
                 baseUrl: 'http://manage.test', scope: 'studio', fetch
             });
             await client.applyManagedDocSubtreeCopy({ schema_version: 'receipt' }, {
@@ -443,11 +445,14 @@ def assert_copy_subtree_module_contract(page: Page) -> None:
     )
     expected = {
         "supported": True,
-        "targets": [{"scopeId": "public", "label": "public", "root": "source/public"}],
+        "targets": [
+            {"scopeId": "notes", "label": "notes", "root": "source/notes"},
+            {"scopeId": "processing", "label": "processing", "root": "source/processing"},
+        ],
         "requests": [
             {
                 "url": "http://manage.test/docs/copy-subtree-preview",
-                "body": {"scope": "studio", "source_doc_id": "source-doc", "target_scope": "public"},
+                "body": {"scope": "studio", "source_doc_id": "source-doc", "target_scope": "notes"},
             },
             {
                 "url": "http://manage.test/docs/copy-subtree-apply",
@@ -514,6 +519,34 @@ def exercise_manage_route(
         raise AssertionError("Copy subtree should be an enabled index-toolbar action for the active document")
     if copy_button.get_attribute("data-docs-viewer-control-surface") != "index-view":
         raise AssertionError("Copy subtree action should be owned by the index-view control surface")
+    index_toolbar = page.locator('[data-docs-viewer-control-surface-mount="index-view"]')
+    index_panel_toggle = page.locator("#docsViewerSidebarToggle")
+    index_panel_toggle.click()
+    page.wait_for_function(
+        """() => {
+            const root = document.querySelector('#docsViewerRoot');
+            const toolbar = document.querySelector('[data-docs-viewer-control-surface-mount="index-view"]');
+            const toggle = document.querySelector('#docsViewerSidebarToggle');
+            return root?.dataset.indexPanelState === 'collapsed' &&
+                toolbar && getComputedStyle(toolbar).display === 'none' &&
+                toggle && !toggle.hidden && toggle.getAttribute('aria-label') === 'Restore index panel';
+        }""",
+        timeout=timeout_ms,
+    )
+    if not copy_button.is_hidden():
+        raise AssertionError("Collapsed index panel should hide the complete index-view toolbar")
+    index_panel_toggle.click()
+    page.wait_for_function(
+        """() => {
+            const root = document.querySelector('#docsViewerRoot');
+            const toolbar = document.querySelector('[data-docs-viewer-control-surface-mount="index-view"]');
+            return root?.dataset.indexPanelState === 'normal' &&
+                toolbar && getComputedStyle(toolbar).display !== 'none';
+        }""",
+        timeout=timeout_ms,
+    )
+    if index_toolbar.is_hidden() or copy_button.is_hidden():
+        raise AssertionError("Restored index panel should show its index-view toolbar")
     with page.expect_request(
         lambda request: urlparse(request.url).path.endswith("/docs-viewer-copy-subtree-workflow.js"),
         timeout=timeout_ms,

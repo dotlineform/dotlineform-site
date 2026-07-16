@@ -222,6 +222,7 @@ def write_docs_scope_config(root: Path) -> None:
             "scopes": [
                 {
                     "scope_id": "studio",
+                    "scope_type": "local",
                     "source": "docs-viewer/source/studio",
                     "media_path_prefix": "docs/studio",
                     "output": "docs-viewer/generated/docs/studio",

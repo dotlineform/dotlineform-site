@@ -13,7 +13,12 @@ from typing import Any, Callable
 from urllib.parse import quote, unquote_plus
 
 import docs_source_model as source_model
-from docs_scope_config import DocsScopeConfig, load_docs_scope_configs, resolve_scope_path
+from docs_scope_config import (
+    DocsScopeConfig,
+    PUBLIC_SCOPE_TYPE,
+    load_docs_scope_configs,
+    resolve_scope_path,
+)
 
 
 COPY_SUBTREE_PREVIEW_SCHEMA_VERSION = "docs_copy_subtree_preview_v1"
@@ -168,6 +173,10 @@ def require_copy_source_root(
     *,
     require_writable: bool,
 ) -> Path:
+    if require_writable and config.scope_type == PUBLIC_SCOPE_TYPE:
+        raise ValueError(
+            f"public target scope {config.scope_id!r} is not available for subtree copy"
+        )
     root = resolve_scope_path(repo_root, config.source)
     if not root.exists() or not root.is_dir():
         raise ValueError(f"source root for scope {config.scope_id!r} is unavailable")
@@ -331,7 +340,6 @@ def rewrite_copied_viewer_links(
 def transform_copy_subtree(plan: CopySubtreePlan) -> CopySubtreeTransformation:
     """Render candidate canonical target sources without writing them."""
 
-    target_viewable = source_model.default_viewable_for_config(plan.target_config)
     transformed: list[CopySubtreeSourceTransform] = []
     for planned_document in plan.documents:
         front_matter = dict(planned_document.source_doc.front_matter)
@@ -339,10 +347,7 @@ def transform_copy_subtree(plan: CopySubtreePlan) -> CopySubtreeTransformation:
         front_matter["added_date"] = plan.copy_timestamp
         front_matter["last_updated"] = plan.copy_timestamp
         front_matter["parent_id"] = planned_document.target_parent_id
-        if target_viewable:
-            front_matter.pop("viewable", None)
-        else:
-            front_matter["viewable"] = False
+        front_matter.pop("viewable", None)
         body, viewer_link_rewrites = rewrite_copied_viewer_links(
             planned_document.source_doc.body,
             plan,
