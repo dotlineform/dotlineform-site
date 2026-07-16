@@ -830,16 +830,22 @@
           "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
           "children": [
             {
+              "doc_id": "d-20260716-204013-3be4e1",
+              "title": "Button Placement",
+              "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-204013-3be4e1.json",
+              "ui_status": "proposed"
+            },
+            {
               "doc_id": "d-20260716-193410-6d4efe",
               "title": "Copy Subtree To Scope",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-6d4efe.json",
-              "ui_status": "planned",
+              "ui_status": "done",
               "children": [
                 {
                   "doc_id": "d-20260716-193410-bd64e3",
                   "title": "Copy Subtree To Scope Delivery",
                   "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-bd64e3.json",
-                  "ui_status": "planned"
+                  "ui_status": "done"
                 }
               ]
             },
@@ -1320,5 +1326,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T18:35:56Z"
+  "generated_at": "2026-07-16T20:30:47Z"
 }

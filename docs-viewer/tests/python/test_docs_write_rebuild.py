@@ -359,6 +359,37 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
     ]
 
 
+def test_current_scope_source_root_uses_fresh_repo_config() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+        config_path.parent.mkdir(parents=True)
+        config_path.write_text(
+            """{
+  "schema_version": "docs_scopes_v1",
+  "scopes": [
+    {
+      "scope_id": "fresh-scope",
+      "scope_type": "local",
+      "source": "docs-viewer/source/fresh-scope",
+      "media_path_prefix": "docs/fresh-scope",
+      "output": "docs-viewer/generated/docs/fresh-scope",
+      "search_output": "docs-viewer/generated/search/fresh-scope/index.json",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": ""
+    }
+  ]
+}
+""",
+            encoding="utf-8",
+        )
+
+        root = write_rebuild.current_scope_source_root(repo_root, "fresh-scope")
+
+    assert root == repo_root / "docs-viewer/source/fresh-scope"
+
+
 def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
     events: list[tuple[str, str, list[str]]] = []
     original_set = write_rebuild.set_watch_suppressions

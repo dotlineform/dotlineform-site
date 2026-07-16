@@ -57,12 +57,18 @@ def test_static_html_export_routes_are_management_owned() -> None:
     assert routes.STATIC_HTML_EXPORT_DELETE_PATH in routes.POST_PATHS
 
 
+def test_copy_subtree_routes_are_management_owned() -> None:
+    assert routes.COPY_SUBTREE_PREVIEW_PATH in routes.POST_PATHS
+    assert routes.COPY_SUBTREE_APPLY_PATH in routes.POST_PATHS
+
+
 def main() -> None:
     test_get_routes_are_unique()
     test_post_routes_are_unique()
     test_options_routes_are_get_and_post_routes()
     test_review_session_routes_are_management_owned()
     test_static_html_export_routes_are_management_owned()
+    test_copy_subtree_routes_are_management_owned()
     print("Docs Management route tests OK")
 
 

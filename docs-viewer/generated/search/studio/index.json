@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dbf4d4cb0779f79de125c5141ccbc358",
-    "generated_at_utc": "2026-07-16T18:35:56Z",
-    "count": 233
+    "version": "blake2b-0b268a8fbce4f344572d6bb0004e188d",
+    "generated_at_utc": "2026-07-16T20:33:23Z",
+    "count": 234
   },
   "entries": [
     {
@@ -1853,10 +1853,10 @@
       "kind": "doc",
       "title": "Create And Import Endpoints",
       "href": "/docs/?scope=studio&doc=d-20260607-222033-78a47c",
-      "last_updated": "2026-07-16 19:01:41",
+      "last_updated": "2026-07-16 21:28:13",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview",
-      "display_meta": "2026-07-16 19:01:41 • Endpoint Overview",
+      "display_meta": "2026-07-16 21:28:13 • Endpoint Overview",
       "search_terms": [
         "create and import endpoints",
         "create",
@@ -1866,16 +1866,16 @@
         "endpoint overview",
         "endpoint",
         "overview",
-        "2026-07-16 19:01:41",
+        "2026-07-16 21:28:13",
         "2026",
         "07",
         "16",
-        "19",
-        "01",
-        "41",
+        "21",
+        "28",
+        "13",
         "d-20260607-222033-78a47c"
       ],
-      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-16 19:01:41 2026 07 16 19 01 41 d-20260607-222033-78a47c"
+      "search_text": "create and import endpoints create and import endpoints endpoint overview endpoint overview 2026-07-16 21:28:13 2026 07 16 21 28 13 d-20260607-222033-78a47c"
     },
     {
       "id": "d-20260711-214307-6d6d46",
@@ -2693,10 +2693,10 @@
       "kind": "doc",
       "title": "Toolbar Model",
       "href": "/docs/?scope=studio&doc=d-20260531-152622-ed2451",
-      "last_updated": "2026-07-16 13:05:47",
+      "last_updated": "2026-07-16 20:40:13",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 13:05:47 • Docs Viewer",
+      "display_meta": "2026-07-16 20:40:13 • Docs Viewer",
       "search_terms": [
         "toolbar model",
         "toolbar",
@@ -2704,16 +2704,16 @@
         "docs viewer",
         "docs",
         "viewer",
-        "2026-07-16 13:05:47",
+        "2026-07-16 20:40:13",
         "2026",
         "07",
         "16",
+        "20",
+        "40",
         "13",
-        "05",
-        "47",
         "d-20260531-152622-ed2451"
       ],
-      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-16 13:05:47 2026 07 16 13 05 47 d-20260531-152622-ed2451"
+      "search_text": "toolbar model toolbar model docs viewer docs viewer 2026-07-16 20:40:13 2026 07 16 20 40 13 d-20260531-152622-ed2451"
     },
     {
       "id": "d-20260513-214100-0a7f44",
@@ -3548,35 +3548,63 @@
       "kind": "doc",
       "title": "Docs Viewer Roadmap",
       "href": "/docs/?scope=studio&doc=d-20260714-234030-1e0af6",
-      "last_updated": "2026-07-16 19:34:10",
+      "last_updated": "2026-07-16 21:33:10",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap",
-      "display_meta": "2026-07-16 19:34:10 • Roadmap",
+      "display_meta": "2026-07-16 21:33:10 • Roadmap",
       "search_terms": [
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16 19:34:10",
+        "2026-07-16 21:33:10",
         "2026",
         "07",
         "16",
-        "19",
-        "34",
+        "21",
+        "33",
         "10",
         "d-20260714-234030-1e0af6"
       ],
-      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 19:34:10 2026 07 16 19 34 10 d-20260714-234030-1e0af6"
+      "search_text": "docs viewer roadmap docs viewer roadmap 2026-07-16 21:33:10 2026 07 16 21 33 10 d-20260714-234030-1e0af6"
+    },
+    {
+      "id": "d-20260716-204013-3be4e1",
+      "kind": "doc",
+      "title": "Button Placement",
+      "href": "/docs/?scope=studio&doc=d-20260716-204013-3be4e1",
+      "last_updated": "2026-07-16 21:33:10",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 21:33:10 • Docs Viewer Roadmap",
+      "search_terms": [
+        "button placement",
+        "button",
+        "placement",
+        "docs viewer roadmap",
+        "docs",
+        "viewer",
+        "roadmap",
+        "2026-07-16 21:33:10",
+        "2026",
+        "07",
+        "16",
+        "21",
+        "33",
+        "10",
+        "d-20260716-204013-3be4e1"
+      ],
+      "search_text": "button placement button placement docs viewer roadmap docs viewer roadmap 2026-07-16 21:33:10 2026 07 16 21 33 10 d-20260716-204013-3be4e1"
     },
     {
       "id": "d-20260716-193410-6d4efe",
       "kind": "doc",
       "title": "Copy Subtree To Scope",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-6d4efe",
-      "last_updated": "2026-07-16 19:34:10",
+      "last_updated": "2026-07-16 21:30:10",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-16 19:34:10 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-16 21:30:10 • Docs Viewer Roadmap",
       "search_terms": [
         "copy subtree to scope",
         "copy",
@@ -3587,26 +3615,26 @@
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16 19:34:10",
+        "2026-07-16 21:30:10",
         "2026",
         "07",
         "16",
-        "19",
-        "34",
+        "21",
+        "30",
         "10",
         "d-20260716-193410-6d4efe"
       ],
-      "search_text": "copy subtree to scope copy subtree to scope docs viewer roadmap docs viewer roadmap 2026-07-16 19:34:10 2026 07 16 19 34 10 d-20260716-193410-6d4efe"
+      "search_text": "copy subtree to scope copy subtree to scope docs viewer roadmap docs viewer roadmap 2026-07-16 21:30:10 2026 07 16 21 30 10 d-20260716-193410-6d4efe"
     },
     {
       "id": "d-20260716-193410-bd64e3",
       "kind": "doc",
       "title": "Copy Subtree To Scope Delivery",
       "href": "/docs/?scope=studio&doc=d-20260716-193410-bd64e3",
-      "last_updated": "2026-07-16 19:34:10",
+      "last_updated": "2026-07-16 21:30:10",
       "parent_id": "d-20260716-193410-6d4efe",
       "parent_title": "Copy Subtree To Scope",
-      "display_meta": "2026-07-16 19:34:10 • Copy Subtree To Scope",
+      "display_meta": "2026-07-16 21:30:10 • Copy Subtree To Scope",
       "search_terms": [
         "copy subtree to scope delivery",
         "copy",
@@ -3615,16 +3643,16 @@
         "scope",
         "delivery",
         "copy subtree to scope",
-        "2026-07-16 19:34:10",
+        "2026-07-16 21:30:10",
         "2026",
         "07",
         "16",
-        "19",
-        "34",
+        "21",
+        "30",
         "10",
         "d-20260716-193410-bd64e3"
       ],
-      "search_text": "copy subtree to scope delivery copy subtree to scope delivery copy subtree to scope 2026-07-16 19:34:10 2026 07 16 19 34 10 d-20260716-193410-bd64e3"
+      "search_text": "copy subtree to scope delivery copy subtree to scope delivery copy subtree to scope 2026-07-16 21:30:10 2026 07 16 21 30 10 d-20260716-193410-bd64e3"
     },
     {
       "id": "d-20260716-193410-98d1a8",

@@ -15,6 +15,12 @@ function renderDocumentActionButton(context, options) {
 
 export function createDocsViewerManagementControlRenderers() {
   return {
+    "manage-copy-subtree": function (context) {
+      return renderDocumentActionButton(context, {
+        id: "docsViewerManageCopySubtreeButton",
+        emoji: "⧉"
+      });
+    },
     "manage-edit": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageEditButton",

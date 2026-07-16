@@ -90,6 +90,25 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
     assert "viewable: false" in formatted
 
 
+def test_atomic_new_source_write_refuses_existing_destination() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        existing = root / "existing.md"
+        created = root / "created.md"
+        existing.write_text("original\n", encoding="utf-8")
+
+        try:
+            source_model.write_text_atomic_new(existing, "replacement\n")
+        except FileExistsError as exc:
+            assert "source path already exists" in str(exc)
+        else:
+            raise AssertionError("atomic new source write should refuse overwrite")
+        source_model.write_text_atomic_new(created, "created\n")
+
+        assert existing.read_text(encoding="utf-8") == "original\n"
+        assert created.read_text(encoding="utf-8") == "created\n"
+
+
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
@@ -275,6 +294,7 @@ def test_allocate_doc_id_uses_timestamp_and_retries_collisions() -> None:
 def main() -> None:
     tests = [
         test_front_matter_parses_and_formats_supported_scalar_values,
+        test_atomic_new_source_write_refuses_existing_destination,
         test_load_scope_docs_rejects_duplicate_doc_ids,
         test_load_scope_docs_rejects_unknown_studio_parent,
         test_load_scope_docs_allows_unknown_library_parent,

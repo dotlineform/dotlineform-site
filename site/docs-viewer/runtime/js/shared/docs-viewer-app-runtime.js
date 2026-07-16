@@ -110,6 +110,7 @@ export function startDocsViewerRuntime(options) {
   var UI_STATUS_EMOJI_MAX_LENGTH = runtimeDefaults.uiStatusEmojiMaxLength;
   var SIDEBAR_COLLAPSE_MEDIA = runtimeDefaults.sidebarCollapseMedia;
   var bookmarkScope = routeContext.bookmarkScope;
+  var latestIndexProjection = null;
   var composition = createDocsViewerAppComposition({
     root: root,
     window: window,
@@ -122,7 +123,11 @@ export function startDocsViewerRuntime(options) {
     viewerScope: function () { return viewerScope; },
     indexPanelAvailable: sidebarCollapseAvailable,
     onBeforePanelInteraction: hideContextMenu,
-    onIndexProjection: function () { renderAppViewerControls(); }
+    onIndexProjection: function (projection) {
+      latestIndexProjection = projection || null;
+      renderAppViewerControls();
+      renderIndexViewControls();
+    }
   });
   var viewRegistry = composition.viewRegistry;
   var serviceContext = composition.serviceContext;
@@ -144,6 +149,8 @@ export function startDocsViewerRuntime(options) {
   var appViewerControlHost = null;
   var appManagementControlStates = new Map();
   var appManagementControlHost = null;
+  var indexViewControlStates = new Map();
+  var indexViewControlHost = null;
   var mainViewControlOwners = new Map();
   var mainViewControlStates = new Map();
   var mainViewControlHost = null;
@@ -179,6 +186,22 @@ export function startDocsViewerRuntime(options) {
       }
     }
   });
+  indexViewControlHost = createDocsViewerControlSurfaceHost({
+    mount: controlSurfaceRefs.indexView,
+    registry: viewRegistry,
+    renderers: Object.assign(
+      {},
+      createDocsViewerSharedControlRenderers(),
+      settings.controlRendererContributions || {}
+    ),
+    surfaceId: "index-view",
+    onDispatch: function (detail) {
+      var controller = managementRuntime ? managementRuntime.controller() : null;
+      if (controller && typeof controller.handleIndexViewControl === "function") {
+        controller.handleIndexViewControl(detail);
+      }
+    }
+  });
   mainViewControlHost = createDocsViewerControlSurfaceHost({
     mount: controlSurfaceRefs.mainView,
     registry: viewRegistry,
@@ -208,6 +231,7 @@ export function startDocsViewerRuntime(options) {
   });
   renderAppViewerControls();
   renderAppManagementControls();
+  renderIndexViewControls();
   renderMainViewControls();
   searchInput = controlSurfaceElement("appViewer", "search", "#docsViewerSearchInput");
   scopeSelect = controlSurfaceElement("appManagement", "manage-scope", "#docsViewerScopeSelect");
@@ -462,6 +486,7 @@ export function startDocsViewerRuntime(options) {
       viewRegistry: viewRegistry,
       activeViewState: documentViewCoordinator.activeViewState,
       projectAppManagementControlState: projectAppManagementControlState,
+      projectIndexViewControlState: projectIndexViewControlState,
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("management", controlId, controlState);
       },
@@ -578,6 +603,30 @@ export function startDocsViewerRuntime(options) {
         : { hidden: true };
     });
     return appManagementControlHost.render({ controlStateById: controlStateById });
+  }
+
+  function projectIndexViewControlState(controlId, controlState) {
+    var id = String(controlId || "").trim();
+    if (!id) return;
+    indexViewControlStates.set(id, controlState || {});
+    renderIndexViewControls();
+  }
+
+  function renderIndexViewControls() {
+    if (!indexViewControlHost) return [];
+    var activeViewId = latestIndexProjection && latestIndexProjection.activeViewId
+      ? latestIndexProjection.activeViewId
+      : panelLayout.projectViewState().index.activeViewId;
+    var controlStateById = {};
+    viewRegistry.listControls({ surfaceId: "index-view" }).forEach(function (control) {
+      controlStateById[control.id] = indexViewControlStates.has(control.id)
+        ? indexViewControlStates.get(control.id)
+        : { hidden: true };
+    });
+    return indexViewControlHost.render({
+      activeViewId: activeViewId,
+      controlStateById: controlStateById
+    });
   }
 
   function projectMainViewControlState(ownerId, controlId, controlState) {

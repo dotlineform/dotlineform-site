@@ -243,6 +243,7 @@ def assert_action_target_definitions(page: Page) -> None:
                 invocationContext,
                 resolutions: {
                     active: module.resolveDocsViewerAction('bookmark', multiContext),
+                    copySubtree: module.resolveDocsViewerAction('copy-subtree', multiContext),
                     all: module.resolveDocsViewerAction('move', multiContext),
                     exactlyOne: module.resolveDocsViewerAction('delete', multiContext),
                     primary: module.resolveDocsViewerAction('info', multiContext),
@@ -258,7 +259,7 @@ def assert_action_target_definitions(page: Page) -> None:
         }"""
     )
     expected = {
-        "active": ["bookmark", "edit-metadata", "info", "markdown-save", "markdown-source"],
+        "active": ["bookmark", "copy-subtree", "edit-metadata", "info", "markdown-save", "markdown-source"],
         "all": ["move"],
         "exactlyOne": ["delete", "show"],
         "primary": [
@@ -300,6 +301,14 @@ def assert_action_target_definitions(page: Page) -> None:
         "resolutions": {
             "active": {
                 "actionId": "bookmark",
+                "disabledReason": "",
+                "enabled": True,
+                "selectionPolicy": "",
+                "target": "active-document",
+                "targetDocIds": ["active"],
+            },
+            "copySubtree": {
+                "actionId": "copy-subtree",
                 "disabledReason": "",
                 "enabled": True,
                 "selectionPolicy": "",
@@ -366,6 +375,7 @@ def assert_action_target_definitions(page: Page) -> None:
         "surfaceActionIds": [
             "bookmark",
             "copy-link",
+            "copy-subtree",
             "delete",
             "delete-scope",
             "delete-sub-scope",
@@ -395,10 +405,73 @@ def assert_action_target_definitions(page: Page) -> None:
         raise AssertionError(f"unexpected Docs Viewer action target contract: {result!r}")
 
 
-def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[set[str], set[str], set[str], str]:
+def assert_copy_subtree_module_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const capabilities = await import('/docs-viewer/runtime/js/management/docs-viewer-management-capabilities.js');
+            const client = await import('/docs-viewer/runtime/js/management/docs-viewer-management-client.js');
+            const payload = {
+                copy_subtree: { preview: true, apply: true },
+                scopes: {
+                    studio: { available: true, copy_subtree_target: true, root: 'source/studio' },
+                    public: { available: true, copy_subtree_target: true, root: 'source/public' },
+                    missing: { available: false, copy_subtree_target: true, root: 'source/missing' },
+                    readonly: { available: true, copy_subtree_target: false, root: 'source/readonly' }
+                }
+            };
+            const requests = [];
+            const fetch = (url, options) => {
+                requests.push({ url, body: JSON.parse(options.body) });
+                return Promise.resolve({
+                    ok: true,
+                    status: 200,
+                    json: () => Promise.resolve({ ok: true })
+                });
+            };
+            await client.previewManagedDocSubtreeCopy('source-doc', 'public', {
+                baseUrl: 'http://manage.test', scope: 'studio', fetch
+            });
+            await client.applyManagedDocSubtreeCopy({ schema_version: 'receipt' }, {
+                baseUrl: 'http://manage.test', scope: 'studio', fetch
+            });
+            return {
+                supported: capabilities.copySubtreeSupported(payload),
+                targets: capabilities.copySubtreeTargetScopes(payload, 'studio'),
+                requests
+            };
+        }"""
+    )
+    expected = {
+        "supported": True,
+        "targets": [{"scopeId": "public", "label": "public", "root": "source/public"}],
+        "requests": [
+            {
+                "url": "http://manage.test/docs/copy-subtree-preview",
+                "body": {"scope": "studio", "source_doc_id": "source-doc", "target_scope": "public"},
+            },
+            {
+                "url": "http://manage.test/docs/copy-subtree-apply",
+                "body": {
+                    "scope": "studio",
+                    "apply_plan": {"schema_version": "receipt"},
+                    "confirm": True,
+                },
+            },
+        ],
+    }
+    if result != expected:
+        raise AssertionError(f"unexpected Copy Subtree module contract: {result!r}")
+
+
+def exercise_manage_route(
+    page: Page,
+    base_url: str,
+    timeout_ms: int,
+) -> tuple[set[str], set[str], set[str], set[str], str]:
     generated_requests: list[str] = []
     import_module_requests: list[str] = []
     scope_lifecycle_requests: list[str] = []
+    copy_subtree_requests: list[str] = []
     page.on(
         "request",
         lambda request: generated_requests.append(request.url)
@@ -417,6 +490,12 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         if "/docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js" in request.url
         else None,
     )
+    page.on(
+        "request",
+        lambda request: copy_subtree_requests.append(request.url)
+        if "/docs-viewer/runtime/js/management/docs-viewer-copy-subtree-workflow.js" in request.url
+        else None,
+    )
 
     page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
     wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
@@ -427,6 +506,22 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         raise AssertionError(f"Docs Import modules loaded before the import action: {import_module_requests!r}")
     if scope_lifecycle_requests:
         raise AssertionError(f"scope lifecycle flow loaded before a lifecycle action: {scope_lifecycle_requests!r}")
+    if copy_subtree_requests:
+        raise AssertionError(f"copy subtree flow loaded before the copy action: {copy_subtree_requests!r}")
+
+    copy_button = page.locator("#docsViewerManageCopySubtreeButton")
+    if copy_button.count() != 1 or copy_button.is_hidden() or copy_button.is_disabled():
+        raise AssertionError("Copy subtree should be an enabled index-toolbar action for the active document")
+    if copy_button.get_attribute("data-docs-viewer-control-surface") != "index-view":
+        raise AssertionError("Copy subtree action should be owned by the index-view control surface")
+    with page.expect_request(
+        lambda request: urlparse(request.url).path.endswith("/docs-viewer-copy-subtree-workflow.js"),
+        timeout=timeout_ms,
+    ):
+        copy_button.click()
+    page.goto(f"{base_url}/docs/?scope=studio&doc={DOCS_VIEWER_DOC_ID}", wait_until="domcontentloaded")
+    wait_for_manage_doc(page, "Docs Viewer", timeout_ms)
+    assert_copy_subtree_module_contract(page)
 
     page.locator("#docsViewerManageActionsButton").click()
     page.wait_for_function(
@@ -543,6 +638,7 @@ def exercise_manage_route(page: Page, base_url: str, timeout_ms: int) -> tuple[s
         request_paths(generated_requests),
         request_paths(import_module_requests),
         request_paths(scope_lifecycle_requests),
+        request_paths(copy_subtree_requests),
         page.url,
     )
 
@@ -563,7 +659,13 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 page = browser.new_page()
                 page.on("pageerror", lambda exc: errors.append(exc.stack or str(exc)))
-                generated_paths, import_module_paths, scope_lifecycle_paths, final_url = exercise_manage_route(
+                (
+                    generated_paths,
+                    import_module_paths,
+                    scope_lifecycle_paths,
+                    copy_subtree_paths,
+                    final_url,
+                ) = exercise_manage_route(
                     page,
                     base_url,
                     args.timeout_ms,
@@ -576,6 +678,8 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected lazy Docs Import module request; saw {sorted(import_module_paths)!r}")
         if "/docs-viewer/runtime/js/management/docs-viewer-scope-lifecycle.js" not in scope_lifecycle_paths:
             raise AssertionError(f"expected lazy scope lifecycle module request; saw {sorted(scope_lifecycle_paths)!r}")
+        if "/docs-viewer/runtime/js/management/docs-viewer-copy-subtree-workflow.js" not in copy_subtree_paths:
+            raise AssertionError(f"expected lazy copy subtree module request; saw {sorted(copy_subtree_paths)!r}")
         if query_value(final_url, "mode"):
             raise AssertionError(f"expected clean manage URL without mode query, got {final_url}")
         if errors:

@@ -24,6 +24,7 @@ from docs_document_identity import (
 from docs_scope_config import (
     DOCS_SCOPE_CONFIGS,
     SCOPE_ROOTS,
+    DocsScopeConfig,
     path_is_under_configured_sub_scope_source,
     resolve_scope_path,
 )
@@ -160,6 +161,27 @@ def write_text_atomic(path: Path, text: str) -> None:
                 pass
 
 
+def write_text_atomic_new(path: Path, text: str) -> None:
+    """Atomically create one text file while refusing an existing destination."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        try:
+            os.link(temp_path, path)
+        except FileExistsError as exc:
+            raise FileExistsError(f"source path already exists: {path.name}") from exc
+    finally:
+        if temp_path.exists():
+            try:
+                temp_path.unlink()
+            except OSError:
+                pass
+
+
 def advance_doc_front_matter(
     front_matter: Dict[str, Any],
     *,
@@ -275,7 +297,11 @@ def normalize_ui_status(value: Any) -> str:
 
 
 def default_viewable_for_scope(scope: str) -> bool:
-    return DOCS_SCOPE_CONFIGS[scope].scope_type != "public"
+    return default_viewable_for_config(DOCS_SCOPE_CONFIGS[scope])
+
+
+def default_viewable_for_config(config: DocsScopeConfig) -> bool:
+    return config.scope_type != "public"
 
 
 def normalize_scope(scope: Any) -> str:
@@ -304,8 +330,9 @@ def scope_markdown_paths(root: Path, scope: str) -> list[Path]:
     return paths
 
 
-def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
-    root = scope_root(repo_root, scope)
+def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list[ScopeDoc]:
+    scope = config.scope_id
+    root = resolve_scope_path(repo_root, config.source)
     if not root.exists():
         raise ValueError(f"missing source root for scope {scope}: {root}")
 
@@ -335,9 +362,13 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
         )
     validate_scope_docs(
         docs,
-        allow_unknown_parent_ids=DOCS_SCOPE_CONFIGS[scope].allow_unresolved_parent_ids,
+        allow_unknown_parent_ids=config.allow_unresolved_parent_ids,
     )
     return docs
+
+
+def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
+    return load_scope_docs_for_config(repo_root, DOCS_SCOPE_CONFIGS[scope])
 
 
 def validate_scope_docs(docs: list[ScopeDoc], *, allow_unknown_parent_ids: bool = False) -> None:
@@ -363,6 +394,33 @@ def scope_doc_sort_key(doc: ScopeDoc) -> tuple[Any, ...]:
 
 def sorted_siblings(docs: list[ScopeDoc], parent_id: str) -> list[ScopeDoc]:
     return sorted((doc for doc in docs if doc.parent_id == parent_id), key=scope_doc_sort_key)
+
+
+def subtree_docs_in_tree_order(docs: list[ScopeDoc], root_doc_id: str) -> list[ScopeDoc]:
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    root = docs_by_id.get(root_doc_id)
+    if root is None:
+        raise FileNotFoundError(f"doc {root_doc_id!r} not found")
+
+    children_by_parent: dict[str, list[ScopeDoc]] = {}
+    for doc in docs:
+        children_by_parent.setdefault(doc.parent_id, []).append(doc)
+    for children in children_by_parent.values():
+        children.sort(key=scope_doc_sort_key)
+
+    ordered: list[ScopeDoc] = []
+    seen: set[str] = set()
+
+    def append_subtree(doc: ScopeDoc) -> None:
+        if doc.doc_id in seen:
+            return
+        seen.add(doc.doc_id)
+        ordered.append(doc)
+        for child in children_by_parent.get(doc.doc_id, []):
+            append_subtree(child)
+
+    append_subtree(root)
+    return ordered
 
 
 def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:

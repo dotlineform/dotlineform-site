@@ -108,6 +108,35 @@ export function scopeStaticHtmlExportSupported(capabilities, scope) {
   );
 }
 
+export function copySubtreeSupported(capabilities) {
+  var copySubtree = capabilities && capabilities.copy_subtree && typeof capabilities.copy_subtree === "object"
+    ? capabilities.copy_subtree
+    : null;
+  return Boolean(copySubtree && copySubtree.preview && copySubtree.apply);
+}
+
+export function copySubtreeTargetScopes(capabilities, activeScope) {
+  var currentScope = normalizeScopeId(activeScope);
+  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
+    ? capabilities.scopes
+    : {};
+  return Object.keys(scopes).sort().map(function (scopeId) {
+    var scopeCaps = scopes[scopeId] || {};
+    return {
+      scopeId: scopeId,
+      label: scopeId,
+      root: String(scopeCaps.root || "").trim()
+    };
+  }).filter(function (record) {
+    var scopeCaps = scopes[record.scopeId] || {};
+    return (
+      record.scopeId !== currentScope &&
+      scopeCaps.available === true &&
+      scopeCaps.copy_subtree_target === true
+    );
+  });
+}
+
 export function scopeLifecycleDeleteTargets(capabilities) {
   var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
     ? capabilities.scopes

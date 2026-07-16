@@ -192,6 +192,20 @@ export function moveManagedDoc(docId, parentId, options) {
   }, options), options);
 }
 
+export function previewManagedDocSubtreeCopy(sourceDocId, targetScope, options) {
+  return fetchManagementJson("/docs/copy-subtree-preview", "POST", scopedPayload({
+    source_doc_id: sourceDocId,
+    target_scope: targetScope
+  }, options), options);
+}
+
+export function applyManagedDocSubtreeCopy(applyPlan, options) {
+  return fetchManagementJson("/docs/copy-subtree-apply", "POST", scopedPayload({
+    apply_plan: applyPlan,
+    confirm: true
+  }, options), options);
+}
+
 export function openManagedDocSource(docId, editor, options) {
   return fetchManagementJson("/docs/open-source", "POST", scopedPayload({
     doc_id: docId,

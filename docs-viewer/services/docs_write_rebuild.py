@@ -29,6 +29,17 @@ DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
 SEARCH_BUILDER_SCRIPT = "docs-viewer/build/build_search.py"
 
 
+def current_scope_source_root(repo_root: Path, scope: str) -> Path:
+    try:
+        configs = load_docs_scope_configs(repo_root)
+    except FileNotFoundError:
+        return scope_root(repo_root, scope)
+    config = configs.get(scope)
+    if config is None:
+        raise ValueError(f"scope {scope!r} is not configured")
+    return resolve_scope_path(repo_root, config.source)
+
+
 def python_builder_command(script: str, *args: str) -> list[str]:
     return [PYTHON_EXECUTABLE, script, *args]
 
@@ -261,7 +272,7 @@ def perform_source_write_and_rebuild(
     docs_doc_ids: Optional[list[str]] = None,
     written_paths: Optional[list[Path]] = None,
 ) -> Dict[str, Any]:
-    root = scope_root(repo_root, scope)
+    root = current_scope_source_root(repo_root, scope)
     filenames = sorted(
         {
             path.resolve().relative_to(root.resolve()).as_posix()
@@ -324,7 +335,7 @@ def perform_multi_scope_source_write_and_rebuild(
     suppressions: list[tuple[str, list[str]]] = []
     for plan in rebuild_plans:
         scope = str(plan.get("scope") or "").strip()
-        root = scope_root(repo_root, scope)
+        root = current_scope_source_root(repo_root, scope)
         filenames = sorted(
             {
                 path.resolve().relative_to(root.resolve()).as_posix()

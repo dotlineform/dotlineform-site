@@ -112,6 +112,18 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-theme-toggle"
       },
       {
+        id: "copy-subtree",
+        actionId: DOCS_VIEWER_ACTION_IDS.COPY_SUBTREE,
+        label: "Copy subtree to scope…",
+        ownerType: "view",
+        ownerViewId: "index-tree",
+        surfaceId: "index-view",
+        appKinds: ["manage"],
+        features: ["management"],
+        requiredCapabilities: ["copy_subtree.preview", "copy_subtree.apply"],
+        renderer: "manage-copy-subtree"
+      },
+      {
         id: "edit",
         actionId: "edit-metadata",
         label: "Edit",

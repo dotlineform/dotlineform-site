@@ -25,6 +25,9 @@ import {
   createDocsViewerManagementScopeLifecycleController
 } from "./docs-viewer-management-scope-lifecycle-controller.js";
 import {
+  createDocsViewerCopySubtreeController
+} from "./docs-viewer-copy-subtree-controller.js";
+import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
 import {
@@ -82,6 +85,7 @@ export function initDocsViewerManagement(context) {
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var capabilityController = null;
+  var copySubtreeController = null;
   var eventRouter = null;
   var importController = null;
   var interactionController = null;
@@ -232,6 +236,17 @@ export function initDocsViewerManagement(context) {
     return true;
   }
 
+  function handleIndexViewControl(detail) {
+    var controlId = String(detail && detail.controlId || "").trim();
+    var actionId = String(detail && detail.actionId || "").trim();
+    if (controlId !== "copy-subtree" || actionId !== DOCS_VIEWER_ACTION_IDS.COPY_SUBTREE) return false;
+    var resolution = resolveAction(actionId);
+    var sourceDoc = actionTargetDoc(resolution);
+    if (!sourceDoc || !copySubtreeController) return false;
+    copySubtreeController.copy(sourceDoc);
+    return true;
+  }
+
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
     if (actionId && !resolveAction(actionId).enabled) return false;
@@ -246,6 +261,7 @@ export function initDocsViewerManagement(context) {
       syncManagementStatus("", false);
       hideAppManagementControls();
       projectDocumentActionButtons(true, true);
+      if (copySubtreeController) copySubtreeController.render();
       eventRouter.hideManageActionsMenu();
       return;
     }
@@ -271,6 +287,7 @@ export function initDocsViewerManagement(context) {
       noteIsError = management.managementMessageIsError;
     }
     syncManagementStatus(noteText, noteIsError);
+    if (copySubtreeController) copySubtreeController.render();
 
     if (!manageRebuildButton || !manageNewButton || !manageDeleteButton || !manageViewableButton) return;
 
@@ -498,6 +515,26 @@ export function initDocsViewerManagement(context) {
     }
   });
 
+  copySubtreeController = createDocsViewerCopySubtreeController({
+    root: root,
+    management: management,
+    callbacks: {
+      currentActiveDoc: currentActiveDoc,
+      managementClientOptions: managementClientOptions,
+      managementContext: function () { return routeSession.managementContext; },
+      onApplied: function (payload) {
+        var targetUrl = String(payload && payload.target_viewer_url || "").trim();
+        if (!targetUrl) throw new Error("Copy subtree result did not include a target URL.");
+        window.location.assign(new URL(targetUrl, window.location.href).toString());
+      },
+      projectControlState: context.projectIndexViewControlState,
+      render: renderManagementUi,
+      setBusy: setManagementBusy,
+      setMessage: setManagementMessage,
+      viewerScope: viewerScope
+    }
+  });
+
   interactionController = createDocsViewerManagementInteractionController({
     nav: nav,
     documentIndex: documentIndex,
@@ -679,6 +716,7 @@ export function initDocsViewerManagement(context) {
     canDragCurrentDoc: canDragCurrentDoc,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
+    handleIndexViewControl: handleIndexViewControl,
     handleMainViewControl: handleMainViewControl,
     handleRootClick: eventRouter.handleRootClick,
     hideContextMenu: hideContextMenu,

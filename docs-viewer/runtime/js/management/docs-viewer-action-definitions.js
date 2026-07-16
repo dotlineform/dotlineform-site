@@ -1,6 +1,7 @@
 export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   BOOKMARK: "bookmark",
   COPY_LINK: "copy-link",
+  COPY_SUBTREE: "copy-subtree",
   DELETE: "delete",
   DELETE_SCOPE: "delete-scope",
   DELETE_SUB_SCOPE: "delete-sub-scope",
@@ -51,6 +52,7 @@ var IDS = DOCS_VIEWER_ACTION_IDS;
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.BOOKMARK]: actionDefinition(IDS.BOOKMARK, TARGETS.ACTIVE_DOCUMENT),
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.SELECTION, POLICIES.PRIMARY),
+  [IDS.COPY_SUBTREE]: actionDefinition(IDS.COPY_SUBTREE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.SELECTION, POLICIES.EXACTLY_ONE),
   [IDS.DELETE_SCOPE]: actionDefinition(IDS.DELETE_SCOPE, TARGETS.SCOPE),
   [IDS.DELETE_SUB_SCOPE]: actionDefinition(IDS.DELETE_SUB_SCOPE, TARGETS.SCOPE),
