@@ -4,10 +4,34 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260717-132231-5eae95",
+      "title": "Docs Viewer Source And Publication Model Refactor",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-5eae95.json",
+      "timestamp": "2026-07-17 15:00:57",
+      "parent_id": "d-20260714-234030-1e0af6",
+      "parent_title": "Docs Viewer Roadmap"
+    },
+    {
+      "doc_id": "d-20260717-132231-8cfc4d",
+      "title": "Docs Viewer Source And Publication Model Refactor Delivery",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
+      "timestamp": "2026-07-17 15:00:57",
+      "parent_id": "d-20260717-132231-5eae95",
+      "parent_title": "Docs Viewer Source And Publication Model Refactor"
+    },
+    {
+      "doc_id": "d-20260717-142549-d66485",
+      "title": "Source, Build, Published, And Location Concept",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260717-142549-d66485.json",
+      "timestamp": "2026-07-17 15:00:57",
+      "parent_id": "d-20260717-132231-5eae95",
+      "parent_title": "Docs Viewer Source And Publication Model Refactor"
+    },
+    {
       "doc_id": "d-20260714-234030-1e0af6",
       "title": "Docs Viewer Roadmap",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260714-234030-1e0af6.json",
-      "timestamp": "2026-07-16 23:56:30",
+      "timestamp": "2026-07-17 14:38:45",
       "parent_id": "d-20260428-000000-f5ff18",
       "parent_title": "Roadmap"
     },
@@ -58,31 +82,7 @@
       "timestamp": "2026-07-16 22:19:35",
       "parent_id": "d-20260607-222033-647b52",
       "parent_title": "Endpoint Overview"
-    },
-    {
-      "doc_id": "d-20260531-152622-ed2451",
-      "title": "Toolbar Model",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260531-152622-ed2451.json",
-      "timestamp": "2026-07-16 20:40:13",
-      "parent_id": "d-20260424-000000-50b63f",
-      "parent_title": "Docs Viewer"
-    },
-    {
-      "doc_id": "d-20260716-193410-98d1a8",
-      "title": "Dated Export Snapshots",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-193410-98d1a8.json",
-      "timestamp": "2026-07-16 19:34:10",
-      "parent_id": "d-20260714-234030-1e0af6",
-      "parent_title": "Docs Viewer Roadmap"
-    },
-    {
-      "doc_id": "d-20260716-164217-a3c7e1",
-      "title": "Recent Documents Working Notes",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260716-164217-a3c7e1.json",
-      "timestamp": "2026-07-16 18:16:53",
-      "parent_id": "d-20260715-225512-80198b",
-      "parent_title": "Recent Documents Delivery"
     }
   ],
-  "generated_at": "2026-07-16T23:13:30Z"
+  "generated_at": "2026-07-17T14:01:45Z"
 }
