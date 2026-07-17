@@ -97,11 +97,16 @@ def apply_create_scope(
     manifest = load_manifest(repo_root)
     scope_id = str(preview["scope_id"])
     source_root = planned_source_output_path(repo_root, preview["planned_scope_config"])
-    default_doc_path = source_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
+    raw_source = preview["planned_scope_config"]["source"]
+    documents_root = source_root / str(raw_source["documents_path"])
+    sub_scopes_root = source_root / str(raw_source["sub_scopes_path"])
+    default_doc_path = documents_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
     rebuild = None
 
     if not dry_run:
         source_root.mkdir(parents=True, exist_ok=False)
+        documents_root.mkdir(exist_ok=False)
+        sub_scopes_root.mkdir(exist_ok=False)
         if preview["publishing_mode"] != PUBLIC_MODE:
             ensure_media_directory_structure(
                 source_root / "media",
@@ -221,9 +226,14 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
 
     created_source_root = planned_source_output_path(repo_root, planned_scope_config)
+    raw_source = planned_scope_config["source"]
+    created_documents_root = created_source_root / str(raw_source["documents_path"])
+    created_sub_scopes_root = created_source_root / str(raw_source["sub_scopes_path"])
     created_files = [
         path_record(repo_root, "source_root", created_source_root, action="create"),
-        path_record(repo_root, "default_source_doc", created_source_root / f"{default_doc_id}.md", action="create"),
+        path_record(repo_root, "source_documents_root", created_documents_root, action="create"),
+        path_record(repo_root, "default_source_doc", created_documents_root / f"{default_doc_id}.md", action="create"),
+        path_record(repo_root, "source_sub_scopes_root", created_sub_scopes_root, action="create"),
     ]
     if publishing_mode != PUBLIC_MODE:
         created_files.extend(

@@ -30,23 +30,23 @@ def sub_scope_record(
         "source": {
             "location": {
                 "provider": "repository",
-                "path": source_path or f"docs-viewer/source/{scope_id}/{sub_scope}",
+                "path": source_path or f"docs-viewer/source/{scope_id}/sub-scopes/{sub_scope}",
             },
-            "documents_path": ".",
+            "documents_path": "documents",
             "build_media": {},
-            "sub_scopes_path": ".",
+            "sub_scopes_path": "sub-scopes",
         },
         "published": {
             "documents": {
                 "location": {
                     "provider": "repository",
-                    "path": f"docs-viewer/published/docs/{scope_id}/{sub_scope}",
+                    "path": f"docs-viewer/published/docs/{scope_id}/sub-scopes/{sub_scope}",
                 }
             },
             "search": {
                 "location": {
                     "provider": "repository",
-                    "path": f"docs-viewer/published/search/{scope_id}/{sub_scope}/index.json",
+                    "path": f"docs-viewer/published/search/{scope_id}/sub-scopes/{sub_scope}/index.json",
                 }
             },
             "media": {},
@@ -77,6 +77,22 @@ def test_docs_scope_config_requires_published_search_role() -> None:
             assert "scopes[0].published.search" in str(exc)
         else:
             raise AssertionError("Expected docs scope config to require a published search role")
+
+
+def test_docs_scope_config_requires_named_document_and_sub_scope_children() -> None:
+    for field in ("documents_path", "sub_scopes_path"):
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            record = docs_scope_record("studio", default_doc_id="child")
+            record["source"][field] = "."  # type: ignore[index]
+            write_scope_record(repo_root, record)
+            try:
+                docs_scope_config.load_docs_scope_configs(repo_root)
+            except ValueError as exc:
+                expected = "documents" if field == "documents_path" else "sub-scopes"
+                assert f"{field} must be {expected}" in str(exc)
+            else:
+                raise AssertionError(f"Expected docs scope config to reject source {field}=.")
 
 
 def test_docs_scope_config_rejects_local_published_payloads_in_public_assets() -> None:
@@ -131,8 +147,12 @@ def test_docs_scope_config_accepts_nested_sub_scopes() -> None:
 
     sub_scope = config.sub_scopes[0]
     assert sub_scope.sub_scope == "tags"
-    assert docs_scope_config.document_source_path(sub_scope).as_posix() == "docs-viewer/source/research/tags"
-    assert docs_scope_config.published_documents_path(sub_scope).as_posix() == "docs-viewer/published/docs/research/tags"
+    assert docs_scope_config.document_source_path(sub_scope).as_posix() == (
+        "docs-viewer/source/research/sub-scopes/tags/documents"
+    )
+    assert docs_scope_config.published_documents_path(sub_scope).as_posix() == (
+        "docs-viewer/published/docs/research/sub-scopes/tags"
+    )
     assert docs_scope_config.public_documents_path(sub_scope).as_posix() == "site/assets/data/docs/scopes/research/tags"
 
 
@@ -144,7 +164,7 @@ def test_docs_scope_config_rejects_duplicate_sub_scopes() -> None:
         payload = json.loads(config_path.read_text(encoding="utf-8"))
         payload["scopes"][0]["sub_scopes"] = [
             sub_scope_record("studio", "tags"),
-            sub_scope_record("studio", "tags", source_path="docs-viewer/source/studio/more-tags"),
+            sub_scope_record("studio", "tags", source_path="docs-viewer/source/studio/sub-scopes/more-tags"),
         ]
         for item in payload["scopes"][0]["sub_scopes"]:
             item["public_projection"] = None
@@ -171,7 +191,7 @@ def test_docs_scope_config_rejects_sub_scope_paths_outside_parent() -> None:
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
             assert "sub-scope studio/tags" in str(exc)
-            assert "source must be beneath" in str(exc)
+            assert "source must be docs-viewer/source/studio/sub-scopes/tags" in str(exc)
         else:
             raise AssertionError("Expected sub_scope source paths outside the parent source to be rejected")
 
@@ -198,6 +218,6 @@ def test_docs_scope_config_rejects_public_sub_scope_projection_outside_parent() 
             docs_scope_config.load_docs_scope_configs(repo_root)
         except ValueError as exc:
             assert "sub-scope research/tags" in str(exc)
-            assert "public documents must be beneath the parent" in str(exc)
+            assert "public documents must be site/assets/data/docs/scopes/research/tags" in str(exc)
         else:
             raise AssertionError("Expected public sub_scope projection outside the parent root to be rejected")

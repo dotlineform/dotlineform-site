@@ -77,7 +77,7 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/assets/docs/library/img/example.png") is True
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is False
-    assert allowed("/docs-viewer/source/studio/docs-viewer.md") is False
+    assert allowed("/docs-viewer/source/studio/documents/docs-viewer.md") is False
 
 def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
     assert docs_viewer_service.runtime_static_relative_path(

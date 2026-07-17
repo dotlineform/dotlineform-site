@@ -411,7 +411,7 @@ def test_review_source_folder_preserves_existing_body_and_materializes_empty_new
         )
         write_content_meta(root, export_id)
         _current_front_matter, current_alpha_body = source_model.parse_source(
-            root / "docs-viewer/source/library/alpha.md"
+            root / "docs-viewer/source/library/documents/alpha.md"
         )
 
         payload = handle_documents_import_preview(

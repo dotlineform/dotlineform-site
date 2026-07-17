@@ -252,7 +252,7 @@ def test_targeted_docs_build_uses_index_tree_without_flat_index() -> None:
                 )
             ],
         )
-        source_root = repo_root / "docs-viewer/source/library"
+        source_root = repo_root / "docs-viewer/source/library/documents"
         source_root.mkdir(parents=True)
         (source_root / "library.md").write_text("---\ndoc_id: library\ntitle: Library\n---\n# Library\n", encoding="utf-8")
         (source_root / "child.md").write_text("---\ndoc_id: child\ntitle: Child\n---\n# Child\n", encoding="utf-8")
@@ -296,7 +296,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
     original_run = write_rebuild.subprocess.run
 
     def fake_run(_command, **_kwargs):
-        return Completed(returncode=1, stderr="problem with front-matter on doc docs-viewer/source/studio/bad.md at line 7 column 1: could not find expected ':'")
+        return Completed(returncode=1, stderr="problem with front-matter on doc docs-viewer/source/studio/documents/bad.md at line 7 column 1: could not find expected ':'")
 
     write_rebuild.subprocess.run = fake_run
     try:
@@ -311,7 +311,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
         write_rebuild.subprocess.run = original_run
         write_rebuild.PYTHON_EXECUTABLE = original_python
 
-    assert message == "problem with front-matter on doc docs-viewer/source/studio/bad.md at line 7 column 1: could not find expected ':'"
+    assert message == "problem with front-matter on doc docs-viewer/source/studio/documents/bad.md at line 7 column 1: could not find expected ':'"
 
 
 def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
@@ -336,7 +336,7 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_path = repo_root / "docs-viewer/source/studio" / "child.md"
+            source_path = repo_root / "docs-viewer/source/studio/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             result = write_rebuild.perform_source_write_and_rebuild(
@@ -368,7 +368,7 @@ def test_current_scope_source_root_uses_fresh_repo_config() -> None:
 
         root = write_rebuild.current_scope_source_root(repo_root, "fresh-scope")
 
-    assert root == repo_root / "docs-viewer/source/fresh-scope"
+    assert root == repo_root / "docs-viewer/source/fresh-scope/documents"
 
 
 def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
@@ -389,7 +389,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_path = repo_root / "docs-viewer/source/studio" / "child.md"
+            source_path = repo_root / "docs-viewer/source/studio/documents" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             try:
@@ -433,7 +433,7 @@ def test_perform_source_write_and_rebuild_completes_only_reported_written_paths(
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_root = repo_root / "docs-viewer/source/studio"
+            source_root = repo_root / "docs-viewer/source/studio/documents"
             source_root.mkdir(parents=True)
             first = source_root / "first.md"
             second = source_root / "second.md"

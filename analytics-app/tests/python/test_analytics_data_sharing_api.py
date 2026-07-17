@@ -68,7 +68,7 @@ def test_config_payload_publishes_public_workflow_metadata_without_static_paths(
         {
             "id": "library",
             "label": "Library",
-            "source": "docs-viewer/source/library",
+            "source": "docs-viewer/source/library/documents",
         }
     ]
     assert adapter["data_domains"]["documents"] == {

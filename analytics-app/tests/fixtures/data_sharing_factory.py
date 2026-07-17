@@ -43,7 +43,7 @@ def write_source_doc(
     if not viewable:
         lines.append("viewable: false")
     lines.extend(["---", "", f"# {title}", "", body])
-    path = root / "docs-viewer/source/library" / filename
+    path = root / "docs-viewer/source/library/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -52,25 +52,69 @@ def write_docs_scope_config(root: Path) -> None:
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
-            "schema_version": "docs_scopes_v1",
+            "schema_version": "docs_scopes_v2",
             "scopes": [
                 {
                     "scope_id": "library",
                     "scope_type": "public",
-                    "source": "docs-viewer/source/library",
-                    "media_path_prefix": "docs/library",
-                    "output": "docs-viewer/generated/docs/library",
-                    "search_output": "docs-viewer/generated/search/library/index.json",
-                    "publish_output": "site/assets/data/docs/scopes/library",
-                    "publish_search_output": "site/assets/data/search/library/index.json",
+                    "source": {
+                        "location": {"provider": "repository", "path": "docs-viewer/source/library"},
+                        "documents_path": "documents",
+                        "build_media": {},
+                        "sub_scopes_path": "sub-scopes",
+                    },
+                    "published": {
+                        "documents": {
+                            "location": {"provider": "repository", "path": "docs-viewer/published/docs/library"}
+                        },
+                        "search": {
+                            "location": {
+                                "provider": "repository",
+                                "path": "docs-viewer/published/search/library/index.json",
+                            }
+                        },
+                        "media": {
+                            "img": {
+                                "reference_prefix": "docs/library/img",
+                                "location": {
+                                    "provider": "repository",
+                                    "path": "docs-viewer/source/library/media/img",
+                                },
+                                "served_path_prefix": "/docs/media/library/img",
+                                "build_inputs": [],
+                            },
+                            "files": {
+                                "reference_prefix": "docs/library/files",
+                                "location": {
+                                    "provider": "repository",
+                                    "path": "docs-viewer/source/library/media/files",
+                                },
+                                "served_path_prefix": "/docs/media/library/files",
+                                "build_inputs": [],
+                            },
+                        },
+                    },
+                    "public_projection": {
+                        "documents": {
+                            "location": {
+                                "provider": "repository",
+                                "path": "site/assets/data/docs/scopes/library",
+                            }
+                        },
+                        "search": {
+                            "location": {
+                                "provider": "repository",
+                                "path": "site/assets/data/search/library/index.json",
+                            }
+                        },
+                    },
                     "viewer_base_url": "/library/",
                     "include_scope_param": False,
                     "default_doc_id": "library",
-                    "allow_nested_source": False,
                     "non_loadable_doc_ids": [],
                     "manage_only_tree_root_ids": [],
-                    "show_updated_date": True,
                     "allow_unresolved_parent_ids": False,
+                    "sub_scopes": [],
                 }
             ],
             "docs_viewer": {

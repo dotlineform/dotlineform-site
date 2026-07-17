@@ -24,10 +24,10 @@ def test_management_request_refreshes_scope_model_from_config() -> None:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
-            source_model.DOCUMENT_SOURCE_ROOTS["retired"] = Path("docs-viewer/source/retired")
+            source_model.DOCUMENT_SOURCE_ROOTS["retired"] = Path("docs-viewer/source/retired/documents")
             docs_management_service.refresh_source_model_scope_configs(repo_root)
             assert list(source_model.DOCUMENT_SOURCE_ROOTS) == ["studio"]
-            assert source_model.DOCUMENT_SOURCE_ROOTS["studio"] == Path("docs-viewer/source/studio")
+            assert source_model.DOCUMENT_SOURCE_ROOTS["studio"] == Path("docs-viewer/source/studio/documents")
     finally:
         source_model.DOCS_SCOPE_CONFIGS.clear()
         source_model.DOCS_SCOPE_CONFIGS.update(original_configs)
@@ -109,8 +109,9 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
     projects_base = tmp_path / "projects-base"
     external_root = projects_base / "docs-viewer"
     source_root = external_root / "source/dlf"
-    source_root.mkdir(parents=True)
-    target_path = source_root / "dlf.md"
+    documents_root = source_root / "documents"
+    documents_root.mkdir(parents=True)
+    target_path = documents_root / "dlf.md"
     target_path.write_text(
         docs_management_mutations.source_model.format_source(
             {
@@ -122,7 +123,7 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         ),
         encoding="utf-8",
     )
-    (source_root / "analytics.md").write_text(
+    (documents_root / "analytics.md").write_text(
         docs_management_mutations.source_model.format_source(
             {
                 "doc_id": "analytics",
@@ -174,9 +175,9 @@ def test_external_scope_default_doc_delete_uses_workspace_relative_path(tmp_path
         source_model.DOCUMENT_SOURCE_ROOTS.update(original_roots)
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
-    assert preview["path"] == "source/dlf/dlf.md"
+    assert preview["path"] == "source/dlf/documents/dlf.md"
     assert preview["default_doc_id_changed"] is True
-    assert result["path"] == "source/dlf/dlf.md"
+    assert result["path"] == "source/dlf/documents/dlf.md"
     assert result["default_doc_id_changed"] is True
     assert result["default_doc_id"] == ""
     assert result["rebuild"] == {"ok": True}

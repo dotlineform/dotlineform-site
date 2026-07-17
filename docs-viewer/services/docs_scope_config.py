@@ -50,6 +50,8 @@ PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs/scopes")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 PUBLISHED_DOCS_OUTPUT_ROOT = Path("docs-viewer/published/docs")
 PUBLISHED_SEARCH_OUTPUT_ROOT = Path("docs-viewer/published/search")
+SOURCE_DOCUMENTS_PATH = Path("documents")
+SOURCE_SUB_SCOPES_PATH = Path("sub-scopes")
 PUBLIC_SCOPE_TYPE = "public"
 LOCAL_SCOPE_TYPE = "local"
 LOCAL_EXTERNAL_SCOPE_TYPE = "local_external"
@@ -356,19 +358,27 @@ def normalize_build_media(raw: Any, *, field: str) -> dict[str, DocsBuildMediaCo
 def normalize_source(raw: Any, *, field: str) -> DocsSourceConfig:
     if not isinstance(raw, dict):
         raise ValueError(f"docs scope config field {field} must be an object")
+    documents_path = safe_relative_path(
+        raw.get("documents_path"),
+        field=f"{field}.documents_path",
+    )
+    if documents_path != SOURCE_DOCUMENTS_PATH:
+        raise ValueError(
+            f"docs scope config field {field}.documents_path must be {SOURCE_DOCUMENTS_PATH.as_posix()}"
+        )
+    sub_scopes_path = safe_relative_path(
+        raw.get("sub_scopes_path"),
+        field=f"{field}.sub_scopes_path",
+    )
+    if sub_scopes_path != SOURCE_SUB_SCOPES_PATH:
+        raise ValueError(
+            f"docs scope config field {field}.sub_scopes_path must be {SOURCE_SUB_SCOPES_PATH.as_posix()}"
+        )
     source = DocsSourceConfig(
         location=normalize_location(raw.get("location"), field=f"{field}.location"),
-        documents_path=safe_relative_path(
-            raw.get("documents_path"),
-            field=f"{field}.documents_path",
-            allow_current=True,
-        ),
+        documents_path=documents_path,
         build_media=normalize_build_media(raw.get("build_media"), field=f"{field}.build_media"),
-        sub_scopes_path=safe_relative_path(
-            raw.get("sub_scopes_path"),
-            field=f"{field}.sub_scopes_path",
-            allow_current=True,
-        ),
+        sub_scopes_path=sub_scopes_path,
     )
     require_location_capabilities(source.location, SOURCE_CAPABILITIES, role=f"{field}.documents")
     return source
@@ -620,31 +630,42 @@ def normalize_sub_scope_configs(
         )
         if source.location.provider != parent.source.location.provider:
             raise ValueError(f"docs scope config sub-scope {parent.scope_id}/{sub_scope} must use its parent source provider")
-        expected_source_parent = location_child_path(parent.source.location, parent.source.sub_scopes_path)
-        if not path_is_strict_relative_to(source.location.path, expected_source_parent):
+        expected_source = location_child_path(parent.source.location, parent.source.sub_scopes_path) / sub_scope
+        if source.location.path != expected_source:
             raise ValueError(
-                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} source must be beneath the parent sub_scopes_path"
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} source must be "
+                f"{expected_source.as_posix()}"
             )
-        if published.documents.location.provider != parent.published.documents.location.provider:
-            raise ValueError(f"docs scope config sub-scope {parent.scope_id}/{sub_scope} must use its parent payload provider")
-        if not path_is_strict_relative_to(
-            published.documents.location.path,
-            parent.published.documents.location.path,
+        if (
+            published.documents.location.provider != parent.published.documents.location.provider
+            or published.search.location.provider != parent.published.search.location.provider
         ):
+            raise ValueError(f"docs scope config sub-scope {parent.scope_id}/{sub_scope} must use its parent payload provider")
+        expected_published_documents = parent.published.documents.location.path / SOURCE_SUB_SCOPES_PATH / sub_scope
+        if published.documents.location.path != expected_published_documents:
             raise ValueError(
-                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} published documents must be beneath the parent"
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} published documents must be "
+                f"{expected_published_documents.as_posix()}"
+            )
+        expected_published_search = (
+            parent.published.search.location.path.parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json"
+        )
+        if published.search.location.path != expected_published_search:
+            raise ValueError(
+                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} published search must be "
+                f"{expected_published_search.as_posix()}"
             )
         if bool(projection) != bool(parent.public_projection):
             raise ValueError(
                 f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public_projection must match its parent exposure"
             )
-        if projection and parent.public_projection and not path_is_strict_relative_to(
-            projection.documents.location.path,
-            parent.public_projection.documents.location.path,
-        ):
-            raise ValueError(
-                f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public documents must be beneath the parent"
-            )
+        if projection and parent.public_projection:
+            expected_public_documents = parent.public_projection.documents.location.path / sub_scope
+            if projection.documents.location.path != expected_public_documents:
+                raise ValueError(
+                    f"docs scope config sub-scope {parent.scope_id}/{sub_scope} public documents must be "
+                    f"{expected_public_documents.as_posix()}"
+                )
         configs.append(
             DocsSubScopeConfig(
                 sub_scope=sub_scope,
@@ -655,30 +676,6 @@ def normalize_sub_scope_configs(
             )
         )
     return tuple(configs)
-
-
-def configured_sub_scope_source_relpaths(config: DocsScopeConfig) -> tuple[Path, ...]:
-    parent_source = document_source_path(config)
-    relpaths: list[Path] = []
-    for sub_scope in config.sub_scopes:
-        try:
-            relpath = document_source_path(sub_scope).relative_to(parent_source)
-        except ValueError:
-            continue
-        if relpath.parts:
-            relpaths.append(relpath)
-    return tuple(relpaths)
-
-
-def path_is_under_configured_sub_scope_source(path: Path, source_dir: Path, config: DocsScopeConfig) -> bool:
-    try:
-        relpath = path.relative_to(source_dir)
-    except ValueError:
-        return False
-    return any(
-        path_is_relative_to(relpath, sub_scope_relpath)
-        for sub_scope_relpath in configured_sub_scope_source_relpaths(config)
-    )
 
 
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
@@ -778,7 +775,8 @@ __all__ = [
     "PUBLIC_SCOPE_TYPE",
     "PUBLIC_SEARCH_OUTPUT_ROOT",
     "SCHEMA_VERSION",
-    "configured_sub_scope_source_relpaths",
+    "SOURCE_DOCUMENTS_PATH",
+    "SOURCE_SUB_SCOPES_PATH",
     "default_repo_root",
     "document_source_path",
     "is_public_readonly_scope",
@@ -788,7 +786,6 @@ __all__ = [
     "normalize_sub_scope_id",
     "path_is_relative_to",
     "path_is_strict_relative_to",
-    "path_is_under_configured_sub_scope_source",
     "path_label",
     "public_documents_path",
     "public_search_path",

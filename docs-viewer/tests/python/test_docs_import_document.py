@@ -305,4 +305,4 @@ def test_create_plan_treats_external_identity_as_provenance_not_a_local_path() -
 
     assert source_model.is_immutable_doc_id(plan.doc_id)
     assert plan.record.provenance["source_doc_id"] == "../outside"
-    assert plan.target_path.parent.name == "library"
+    assert plan.target_path.parent.name == "documents"

@@ -33,6 +33,7 @@ PLAN_SCHEMA = "docs_document_identity_migration_v1"
 SOURCE_CONFIG_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCOPE_MANIFEST_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
 SOURCE_CONFIG_SCHEMA = "docs_scopes_v2"
+SOURCE_DOCUMENTS_PATH = "documents"
 DEFAULT_PLAN_PATH = Path("var/docs/document-identity/mapping.json")
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(?P<header>.*?)\n---(?P<tail>\s*\n?)", re.DOTALL)
 URL_PATTERN = re.compile(r"/(?:docs|library|analysis|moments)/\?[^\s)>'\"<]+")
@@ -134,9 +135,13 @@ def _configured_source_root(value: Any, *, field: str) -> str:
     if not isinstance(location, dict):
         raise ValueError(f"document migration {field}.location must be an object")
     root = str(location.get("path") or "").strip()
-    documents_path = str(value.get("documents_path") or ".").strip()
+    documents_path = str(value.get("documents_path") or "").strip()
     if not root or not documents_path:
         raise ValueError(f"document migration {field} requires location.path and documents_path")
+    if documents_path != SOURCE_DOCUMENTS_PATH:
+        raise ValueError(
+            f"document migration {field}.documents_path must be {SOURCE_DOCUMENTS_PATH}"
+        )
     return (Path(root) / documents_path).as_posix()
 
 

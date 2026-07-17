@@ -89,7 +89,7 @@ def test_library_import_summary_apply_writes_source() -> None:
                 {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "content.jsonl", "record_indices": [0], "confirm": True},
                 dry_run=False,
             )
-            source_text = (root / "docs-viewer/source/library/alpha.md").read_text(encoding="utf-8")
+            source_text = (root / "docs-viewer/source/library/documents/alpha.md").read_text(encoding="utf-8")
     finally:
         write_rebuild.perform_source_write_and_rebuild = original_rebuild
 

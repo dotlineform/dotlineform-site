@@ -23,7 +23,6 @@ from docs_scope_config import (  # noqa: E402
     is_public_readonly_scope,
     load_docs_scope_configs,
     normalize_viewer_base_url,
-    path_is_under_configured_sub_scope_source,
     public_documents_path,
     public_search_path,
     publication_documents_path,

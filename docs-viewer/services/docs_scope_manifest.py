@@ -17,6 +17,8 @@ from docs_scope_config import (
     PUBLISHED_SEARCH_OUTPUT_ROOT,
     PUBLIC_DOCS_OUTPUT_ROOT,
     PUBLIC_SEARCH_OUTPUT_ROOT,
+    SOURCE_DOCUMENTS_PATH,
+    SOURCE_SUB_SCOPES_PATH,
     DocsScopeConfig,
     document_source_path,
     load_docs_scope_configs,
@@ -28,6 +30,7 @@ from docs_scope_config import (
     resolve_scope_path,
     safe_relative_path,
     safe_scope_data_path,
+    source_container_path,
 )
 from docs_lifecycle_paths import (
     load_json_object,
@@ -167,13 +170,20 @@ def default_source_doc_record(repo_root: Path, config: DocsScopeConfig) -> dict[
 
 
 def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[str, Any]:
-    source_root = resolve_scope_path(repo_root, document_source_path(config))
+    source_root = resolve_scope_path(repo_root, source_container_path(config))
+    source_documents_root = resolve_scope_path(repo_root, document_source_path(config))
+    source_sub_scopes_root = resolve_scope_path(
+        repo_root,
+        source_container_path(config) / config.source.sub_scopes_path,
+    )
     route_path = route_file_for_config(repo_root, config)
     readonly_route = route_is_readonly(route_path)
     scope_type = "public" if readonly_route else "local"
     repo_status = "tracked" if scope_type == "public" else git_path_status(repo_root, source_root)
     files = [
         path_record(repo_root, "source_root", source_root),
+        path_record(repo_root, "source_documents_root", source_documents_root),
+        path_record(repo_root, "source_sub_scopes_root", source_sub_scopes_root),
         path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH),
     ]
     default_doc = default_source_doc_record(repo_root, config)
@@ -480,9 +490,9 @@ def planned_scope_config_record(
         "meta": planned_scope_meta(publishing_mode),
         "source": {
             "location": {"provider": local_provider, "path": source_path},
-            "documents_path": ".",
+            "documents_path": SOURCE_DOCUMENTS_PATH.as_posix(),
             "build_media": {},
-            "sub_scopes_path": ".",
+            "sub_scopes_path": SOURCE_SUB_SCOPES_PATH.as_posix(),
         },
         "published": {
             "documents": {"location": {"provider": local_provider, "path": docs_path}},

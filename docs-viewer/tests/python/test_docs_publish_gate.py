@@ -185,8 +185,8 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        write_json(repo_root / "docs-viewer/published/docs/library/tags/manifest.json", {"doc_ids": "scale"})
-        write_json(repo_root / "docs-viewer/published/docs/library/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
+        write_json(repo_root / "docs-viewer/published/docs/library/sub-scopes/tags/manifest.json", {"doc_ids": "scale"})
+        write_json(repo_root / "docs-viewer/published/docs/library/sub-scopes/tags/by-id/scale.json", {"doc_id": "scale", "title": "Scale"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json", {"doc_ids": "old"})
         write_json(repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json", {"doc_id": "old"})
 
@@ -226,7 +226,7 @@ def test_publish_rejects_configured_sub_scope_without_manifest() -> None:
             docs_sub_scope_record("library", "tags", title="Tags", scope_type="public")
         ]
         write_json(config_path, config)
-        (repo_root / "docs-viewer/published/docs/library/tags").mkdir(parents=True)
+        (repo_root / "docs-viewer/published/docs/library/sub-scopes/tags").mkdir(parents=True)
 
         try:
             docs_publish_gate.publish_confirm(repo_root, {"scope": "library"})

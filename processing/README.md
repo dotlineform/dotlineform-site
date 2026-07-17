@@ -20,7 +20,7 @@ repeated renders, and print masters belong outside Git under
 should be copied back into this directory.
 
 Docs Viewer source and its managed attachments are separate from this
-sketchbook. They live under `docs-viewer/source/processing/`.
+sketchbook. They live under `docs-viewer/source/processing/documents/`.
 
 ## Projects
 

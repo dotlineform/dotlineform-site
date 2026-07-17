@@ -7,9 +7,9 @@
       "meta": "local management",
       "source": {
         "location": { "provider": "repository", "path": "docs-viewer/source/studio" },
-        "documents_path": ".",
+        "documents_path": "documents",
         "build_media": {},
-        "sub_scopes_path": "."
+        "sub_scopes_path": "sub-scopes"
       },
       "published": {
         "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/studio" } },
@@ -44,9 +44,9 @@
       "meta": "public scope",
       "source": {
         "location": { "provider": "repository", "path": "docs-viewer/source/library" },
-        "documents_path": ".",
+        "documents_path": "documents",
         "build_media": {},
-        "sub_scopes_path": "."
+        "sub_scopes_path": "sub-scopes"
       },
       "published": {
         "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/library" } },
@@ -90,9 +90,9 @@
       "meta": "public scope",
       "source": {
         "location": { "provider": "repository", "path": "docs-viewer/source/analysis" },
-        "documents_path": ".",
+        "documents_path": "documents",
         "build_media": {},
-        "sub_scopes_path": "."
+        "sub_scopes_path": "sub-scopes"
       },
       "published": {
         "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/analysis" } },
@@ -127,14 +127,14 @@
           "sub_scope": "tags",
           "title": "Tags",
           "source": {
-            "location": { "provider": "repository", "path": "docs-viewer/source/analysis/tags" },
-            "documents_path": ".",
+            "location": { "provider": "repository", "path": "docs-viewer/source/analysis/sub-scopes/tags" },
+            "documents_path": "documents",
             "build_media": {},
-            "sub_scopes_path": "."
+            "sub_scopes_path": "sub-scopes"
           },
           "published": {
-            "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/analysis/tags" } },
-            "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/analysis/tags/index.json" } },
+            "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/analysis/sub-scopes/tags" } },
+            "search": { "location": { "provider": "repository", "path": "docs-viewer/published/search/analysis/sub-scopes/tags/index.json" } },
             "media": {}
           },
           "public_projection": {
@@ -150,9 +150,9 @@
       "meta": "public scope",
       "source": {
         "location": { "provider": "repository", "path": "docs-viewer/source/moments" },
-        "documents_path": ".",
+        "documents_path": "documents",
         "build_media": {},
-        "sub_scopes_path": "."
+        "sub_scopes_path": "sub-scopes"
       },
       "published": {
         "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/moments" } },
@@ -190,9 +190,9 @@
       "meta": "external local",
       "source": {
         "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes" },
-        "documents_path": ".",
+        "documents_path": "documents",
         "build_media": {},
-        "sub_scopes_path": "."
+        "sub_scopes_path": "sub-scopes"
       },
       "published": {
         "documents": { "location": { "provider": "external_local", "path": "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/published/docs/notes" } },
@@ -227,9 +227,9 @@
       "meta": "local management",
       "source": {
         "location": { "provider": "repository", "path": "docs-viewer/source/processing" },
-        "documents_path": ".",
+        "documents_path": "documents",
         "build_media": {},
-        "sub_scopes_path": "."
+        "sub_scopes_path": "sub-scopes"
       },
       "published": {
         "documents": { "location": { "provider": "repository", "path": "docs-viewer/published/docs/processing" } },

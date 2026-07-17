@@ -40,7 +40,7 @@ def make_doc(
     body = f"# {front_matter['title']}\n"
     return source_model.ScopeDoc(
         scope="studio",
-        path=Path(f"docs-viewer/source/studio/{stem or doc_id}.md"),
+        path=Path(f"docs-viewer/source/studio/documents/{stem or doc_id}.md"),
         source_text=source_model.format_source(front_matter, body),
         front_matter=front_matter,
         body=body,
@@ -112,8 +112,8 @@ def test_atomic_new_source_write_refuses_existing_destination() -> None:
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "docs-viewer/source/studio", "first.md", {"doc_id": FIXTURE_DOC_ID, "title": "First"})
-        write_doc(root, "docs-viewer/source/studio", "second.md", {"doc_id": FIXTURE_DOC_ID, "title": "Second"})
+        write_doc(root, "docs-viewer/source/studio/documents", "first.md", {"doc_id": FIXTURE_DOC_ID, "title": "First"})
+        write_doc(root, "docs-viewer/source/studio/documents", "second.md", {"doc_id": FIXTURE_DOC_ID, "title": "Second"})
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -128,7 +128,7 @@ def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
 def test_load_scope_docs_rejects_missing_doc_id() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "docs-viewer/source/studio", "missing.md", {"title": "Missing"})
+        write_doc(root, "docs-viewer/source/studio/documents", "missing.md", {"title": "Missing"})
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -145,7 +145,7 @@ def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
         root = Path(temp)
         write_doc(
             root,
-            "docs-viewer/source/studio",
+            "docs-viewer/source/studio/documents",
             "child.md",
             {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "missing"},
         )
@@ -165,7 +165,7 @@ def test_load_scope_docs_allows_unknown_library_parent() -> None:
         root = Path(temp)
         write_doc(
             root,
-            "docs-viewer/source/library",
+            "docs-viewer/source/library/documents",
             "child.md",
             {"doc_id": FIXTURE_DOC_ID, "title": "Child", "parent_id": "external-parent"},
         )

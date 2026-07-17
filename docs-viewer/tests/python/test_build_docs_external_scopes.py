@@ -29,7 +29,7 @@ def test_python_docs_builder_writes_external_local_scope_outputs() -> None:
         write_catalogue_records(root)
         write_external_scope_config(root, external_root)
         write_text(
-            external_root / f"source/private/{PRIVATE_DOC_ID}.md",
+            external_root / f"source/private/documents/{PRIVATE_DOC_ID}.md",
             f"""---
 doc_id: {PRIVATE_DOC_ID}
 title: Private

@@ -25,7 +25,7 @@ def write_doc(
     body: str | None = None,
     scope: str = "studio",
 ) -> None:
-    path = root / "docs-viewer/source" / scope / filename
+    path = root / "docs-viewer/source" / scope / "documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         source_model.format_source(front_matter, body if body is not None else f"# {front_matter['title']}\n"),

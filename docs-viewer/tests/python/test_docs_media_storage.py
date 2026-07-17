@@ -396,7 +396,7 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
     assert all((repo_source / "media" / media_class / ".gitkeep").is_file() for media_class in ("files", "img"))
     assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
     assert not any((external_source / "media" / media_class / ".gitkeep").exists() for media_class in ("files", "img"))
-    assert not (tmp_path / "docs-viewer/source/library/media").exists()
+    assert not (tmp_path / "docs-viewer/source/library/documents/media").exists()
 
 
 def test_external_import_materializes_below_scope_source_media_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

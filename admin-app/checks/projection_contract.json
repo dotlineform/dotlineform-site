@@ -125,7 +125,7 @@
       "id": "studio_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "docs-viewer/source/studio/*.md"
+        "docs-viewer/source/studio/documents/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
@@ -139,14 +139,14 @@
       "id": "studio_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "docs-viewer/generated/docs/studio/index.json",
-        "docs-viewer/generated/docs/studio/by-id/*.json",
-        "docs-viewer/generated/docs/studio/references/**"
+        "docs-viewer/published/docs/studio/index-tree.json",
+        "docs-viewer/published/docs/studio/by-id/*.json",
+        "docs-viewer/published/docs/studio/references/**"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/generated/docs/studio"
+          "docs-viewer/published/docs/studio"
         ]
       },
       "owner_doc": "data-models-studio"
@@ -155,12 +155,12 @@
       "id": "studio_docs_search",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "docs-viewer/generated/search/studio/index.json"
+        "docs-viewer/published/search/studio/index.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "docs-viewer/generated/search/studio"
+          "docs-viewer/published/search/studio"
         ]
       },
       "owner_doc": "search-build-pipeline-studio"
@@ -169,7 +169,7 @@
       "id": "library_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "docs-viewer/source/library/*.md"
+        "docs-viewer/source/library/documents/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
@@ -183,13 +183,13 @@
       "id": "library_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "site/assets/data/docs/scopes/library/index.json",
+        "site/assets/data/docs/scopes/library/index-tree.json",
         "site/assets/data/docs/scopes/library/by-id/*.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/data/docs/scopes/library/index.json",
+          "assets/data/docs/scopes/library/index-tree.json",
           "assets/data/docs/scopes/library/by-id/*.json"
         ]
       },
@@ -213,7 +213,8 @@
       "id": "analysis_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "docs-viewer/source/analysis/**/*.md"
+        "docs-viewer/source/analysis/documents/*.md",
+        "docs-viewer/source/analysis/sub-scopes/*/documents/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
@@ -227,14 +228,14 @@
       "id": "analysis_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "site/assets/data/docs/scopes/analysis/index.json",
+        "site/assets/data/docs/scopes/analysis/index-tree.json",
         "site/assets/data/docs/scopes/analysis/by-id/*.json",
         "site/assets/data/docs/scopes/analysis/references/**"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/data/docs/scopes/analysis/index.json",
+          "assets/data/docs/scopes/analysis/index-tree.json",
           "assets/data/docs/scopes/analysis/by-id/*.json"
         ]
       },

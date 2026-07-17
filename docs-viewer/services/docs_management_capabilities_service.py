@@ -34,7 +34,7 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
         return source_model.load_scope_docs(repo_root, scope)
 
     docs = []
-    for path in source_model.scope_markdown_paths(root, scope):
+    for path in source_model.scope_markdown_paths(root):
         front_matter, body = source_model.parse_source(path)
         doc_id = str(front_matter.get("doc_id") or "").strip()
         if not doc_id:

@@ -25,7 +25,7 @@ if str(DATA_SHARING_ROOT) not in sys.path:
 
 import script_logging  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
-from docs_scope_config import load_docs_scope_configs  # noqa: E402
+from docs_scope_config import document_source_path, load_docs_scope_configs  # noqa: E402
 from adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from adapters.documents import context as documents_data_sharing_context  # noqa: E402
 from adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
@@ -120,7 +120,7 @@ def docs_scope_options(repo_root: Path) -> list[dict[str, object]]:
         {
             "id": scope_id,
             "label": scope_id.replace("-", " ").replace("_", " ").title(),
-            "source": config.source.as_posix(),
+            "source": document_source_path(config).as_posix(),
         }
         for scope_id, config in configs.items()
     ]

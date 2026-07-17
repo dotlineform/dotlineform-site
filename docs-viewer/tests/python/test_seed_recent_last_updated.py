@@ -81,8 +81,8 @@ def test_dirty_candidate_does_not_regress_a_current_full_timestamp() -> None:
 
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        source_path = repo_root / "docs-viewer/source/studio/example.md"
-        dirty_paths = {"docs-viewer/source/studio/example.md"}
+        source_path = repo_root / "docs-viewer/source/studio/documents/example.md"
+        dirty_paths = {"docs-viewer/source/studio/documents/example.md"}
 
         current = module._candidate_for_doc(
             repo_root,

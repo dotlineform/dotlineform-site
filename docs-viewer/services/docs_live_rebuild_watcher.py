@@ -41,7 +41,6 @@ from docs_scope_config import (
     DOCUMENT_SOURCE_ROOTS,
     document_source_path,
     load_docs_scope_configs,
-    path_is_under_configured_sub_scope_source,
     resolve_scope_path,
 )
 from docs_write_rebuild import targeted_docs_build_fallback_reason
@@ -91,9 +90,6 @@ def snapshot_scope(root: Path, scope: str) -> Dict[str, tuple[int, int]]:
 
     snapshot: Dict[str, tuple[int, int]] = {}
     for path in sorted(root.glob("**/*.md")):
-        config = DOCS_SCOPE_CONFIGS.get(scope)
-        if config and path_is_under_configured_sub_scope_source(path, root, config):
-            continue
         try:
             stat = path.stat()
         except FileNotFoundError:

@@ -72,7 +72,7 @@ def test_html_import_create_allocates_identity_independent_of_staged_filename() 
     assert payload["ok"] is True
     assert payload["operation"] == "create"
     assert payload["doc_id"].startswith("d-")
-    assert payload["path"] == f"docs-viewer/source/library/{payload['doc_id']}.md"
+    assert payload["path"] == f"docs-viewer/source/library/documents/{payload['doc_id']}.md"
     assert payload["title"] == "An Overly Descriptive Document Title"
     assert payload["import_preview"]["proposed_doc_id_source"] == "allocated-local-identity"
     assert payload["import_preview"]["source_doc_id"] == "compact-name"

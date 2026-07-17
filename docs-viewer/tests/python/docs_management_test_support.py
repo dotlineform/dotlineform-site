@@ -136,12 +136,12 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 },
                             },
                             "source_write_targets": {
-                                "documents": "docs-viewer/source/library",
+                                "documents": "docs-viewer/source/library/documents",
                             },
                             "sources": {
                                 "docs_scope_config": "docs-viewer/config/scopes/docs_scopes.json",
                                 "docs_payload_root": "site/assets/data/docs/scopes/library/by-id",
-                                "source_root": "docs-viewer/source/library",
+                                "source_root": "docs-viewer/source/library/documents",
                             },
                             "config": {
                                 "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",

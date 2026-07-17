@@ -81,7 +81,7 @@ def test_viewer_link_rewrite_maps_main_and_subscope_ids_without_touching_media()
 
 def test_apply_plan_rewrites_source_hierarchy_links_and_config(tmp_path: Path) -> None:
     root = tmp_path
-    source_root = root / "docs-viewer/source/studio"
+    source_root = root / "docs-viewer/source/studio/documents"
     parent_source = _source("parent", "Parent", "")
     child_source = _source(
         "child",
@@ -120,7 +120,7 @@ def test_apply_plan_rewrites_source_hierarchy_links_and_config(tmp_path: Path) -
             "namespace": "studio",
             "scope": "studio",
             "sub_scope": "",
-            "source_path": "docs-viewer/source/studio/parent.md",
+            "source_path": "docs-viewer/source/studio/documents/parent.md",
             "source_sha256": migration._sha256_text(parent_source),
             "old_doc_id": "parent",
             "new_doc_id": parent_id,
@@ -133,7 +133,7 @@ def test_apply_plan_rewrites_source_hierarchy_links_and_config(tmp_path: Path) -
             "namespace": "studio",
             "scope": "studio",
             "sub_scope": "",
-            "source_path": "docs-viewer/source/studio/child.md",
+            "source_path": "docs-viewer/source/studio/documents/child.md",
             "source_sha256": migration._sha256_text(child_source),
             "old_doc_id": "child",
             "new_doc_id": child_id,
@@ -171,7 +171,7 @@ def test_external_scope_plan_apply_and_verify_use_configured_marker(
 ) -> None:
     repo_root = tmp_path / "repo"
     projects_root = tmp_path / "projects"
-    external_source = projects_root / "docs-viewer/source/notes"
+    external_source = projects_root / "docs-viewer/source/notes/documents"
     monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", projects_root.as_posix())
 
     parent_source = _source("tmp", "Temporary Notes", "")
@@ -243,7 +243,7 @@ def test_external_scope_plan_apply_and_verify_use_configured_marker(
         for row in plan["viewer_link_mappings"]
     )
     assert by_old_id["tmp"]["source_path"] == (
-        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/tmp.md"
+        "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/source/notes/documents/tmp.md"
     )
     assert by_old_id["tmp"]["normalized_added_date"] == "2026-07-15 00:00:00"
     assert by_old_id["tmp"]["timestamp_evidence"] == "midnight-default"

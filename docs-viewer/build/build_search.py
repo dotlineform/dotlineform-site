@@ -33,7 +33,6 @@ from docs_scope_config import (  # noqa: E402
     DocsScopeConfig,
     document_source_path,
     load_docs_scope_configs,
-    path_is_under_configured_sub_scope_source,
     published_search_path,
     resolve_scope_path,
 )
@@ -211,10 +210,7 @@ class DocsViewerSearchDataBuilder:
 
     def load_source_docs(self) -> list[SearchDocRecord]:
         source_dir = resolve_scope_path(self.repo_root, document_source_path(self.scope_config))
-        paths = [
-            path for path in sorted(source_dir.glob("**/*.md"))
-            if not path_is_under_configured_sub_scope_source(path, source_dir, self.scope_config)
-        ]
+        paths = sorted(source_dir.glob("**/*.md"))
         nested_paths = [path for path in paths if path.parent != source_dir]
         if nested_paths:
             nested = ", ".join(path.relative_to(source_dir).as_posix() for path in nested_paths)

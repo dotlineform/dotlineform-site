@@ -58,12 +58,12 @@ def attach_adapter_context(report: Dict[str, Any], adapter: Any) -> Dict[str, An
 
 
 def default_docs_scope() -> str:
-    if not source_model.SCOPE_ROOTS:
+    if not source_model.DOCUMENT_SOURCE_ROOTS:
         raise ValueError("no Docs Viewer scopes are configured")
     for scope in ("library", "analytics", "catalogue"):
-        if scope in source_model.SCOPE_ROOTS:
+        if scope in source_model.DOCUMENT_SOURCE_ROOTS:
             return scope
-    scopes = list(source_model.SCOPE_ROOTS.keys())
+    scopes = list(source_model.DOCUMENT_SOURCE_ROOTS.keys())
     return scopes[0]
 
 

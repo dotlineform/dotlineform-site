@@ -110,7 +110,7 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             scope_type="local",
             source=SimpleNamespace(
                 location=SimpleNamespace(path=Path(source)),
-                documents_path=Path("."),
+                documents_path=Path("documents"),
             ),
             sub_scopes=tuple(sub_scopes),
         )
@@ -124,7 +124,7 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             baseline=False,
         )
         assert changes == {"added": ["notes"], "removed": [], "reloaded": []}
-        assert states["notes"]["root"] == tmp_path / "docs-viewer/source/notes"
+        assert states["notes"]["root"] == tmp_path / "docs-viewer/source/notes/documents"
 
         changes = module.reconcile_watch_states(
             tmp_path,
@@ -133,13 +133,13 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             baseline=False,
         )
         assert changes == {"added": [], "removed": [], "reloaded": ["notes"]}
-        assert states["notes"]["root"] == tmp_path / "external/source/notes"
+        assert states["notes"]["root"] == tmp_path / "external/source/notes/documents"
 
         tags = SimpleNamespace(
             sub_scope="tags",
             source=SimpleNamespace(
                 location=SimpleNamespace(path=Path("external/source/archive/tags")),
-                documents_path=Path("."),
+                documents_path=Path("documents"),
             ),
         )
         changes = module.reconcile_watch_states(
@@ -154,7 +154,7 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
             "reloaded": [],
         }
         assert sorted(states) == ["archive", "archive/tags"]
-        assert module.DOCUMENT_SOURCE_ROOTS == {"archive": Path("external/source/archive")}
+        assert module.DOCUMENT_SOURCE_ROOTS == {"archive": Path("external/source/archive/documents")}
     finally:
         module.DOCS_SCOPE_CONFIGS.clear()
         module.DOCS_SCOPE_CONFIGS.update(original_configs)

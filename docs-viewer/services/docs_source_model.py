@@ -26,7 +26,6 @@ from docs_scope_config import (
     DOCUMENT_SOURCE_ROOTS,
     DocsScopeConfig,
     document_source_path,
-    path_is_under_configured_sub_scope_source,
     resolve_scope_path,
 )
 
@@ -316,14 +315,8 @@ def scope_root(repo_root: Path, scope: str) -> Path:
     return resolve_scope_path(repo_root, DOCUMENT_SOURCE_ROOTS[scope])
 
 
-def scope_markdown_paths(root: Path, scope: str) -> list[Path]:
+def scope_markdown_paths(root: Path) -> list[Path]:
     paths = sorted(root.glob("**/*.md"))
-    config = DOCS_SCOPE_CONFIGS.get(scope)
-    if config:
-        paths = [
-            path for path in paths
-            if not path_is_under_configured_sub_scope_source(path, root, config)
-        ]
     nested_paths = [path for path in paths if path.parent != root]
     if nested_paths:
         nested = ", ".join(path.relative_to(root).as_posix() for path in nested_paths)
@@ -338,7 +331,7 @@ def load_scope_docs_for_config(repo_root: Path, config: DocsScopeConfig) -> list
         raise ValueError(f"missing source root for scope {scope}: {root}")
 
     docs: list[ScopeDoc] = []
-    for path in scope_markdown_paths(root, scope):
+    for path in scope_markdown_paths(root):
         front_matter, body = parse_source(path)
         doc_id = str(front_matter.get("doc_id") or "").strip()
         if not doc_id:

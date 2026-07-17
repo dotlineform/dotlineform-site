@@ -16,13 +16,15 @@ from docs_lifecycle_paths import (
 )
 from docs_scope_config import (
     CONFIG_REL_PATH,
+    SOURCE_DOCUMENTS_PATH,
+    SOURCE_SUB_SCOPES_PATH,
     DocsScopeConfig,
-    document_source_path,
     load_docs_scope_configs,
     normalize_sub_scope_id,
     public_documents_path,
     published_documents_path,
     resolve_scope_path,
+    source_container_path,
 )
 from docs_scope_manifest import (
     LIFECYCLE_APPLY_SCHEMA_VERSION,
@@ -87,7 +89,7 @@ def planned_sub_scope_config_record(
         raise ValueError("parent published role must be an object")
     source_location = child_location(
         raw_source,
-        str(raw_source.get("sub_scopes_path") or "."),
+        str(raw_source.get("sub_scopes_path") or SOURCE_SUB_SCOPES_PATH.as_posix()),
         sub_scope,
         field="parent source",
     )
@@ -95,7 +97,7 @@ def planned_sub_scope_config_record(
     published_search = raw_published.get("search")
     search_location = raw_location(published_search, field="parent published search")
     search_location["path"] = (
-        Path(search_location["path"]).parent / sub_scope / "index.json"
+        Path(search_location["path"]).parent / SOURCE_SUB_SCOPES_PATH / sub_scope / "index.json"
     ).as_posix()
     raw_projection = raw_parent_config.get("public_projection")
     projection = None
@@ -117,14 +119,15 @@ def planned_sub_scope_config_record(
         "title": title,
         "source": {
             "location": source_location,
-            "documents_path": ".",
+            "documents_path": SOURCE_DOCUMENTS_PATH.as_posix(),
             "build_media": {},
-            "sub_scopes_path": ".",
+            "sub_scopes_path": SOURCE_SUB_SCOPES_PATH.as_posix(),
         },
         "published": {
             "documents": {
                 "location": child_location(
                     published_documents,
+                    SOURCE_SUB_SCOPES_PATH.as_posix(),
                     sub_scope,
                     field="parent published documents",
                 )
@@ -214,9 +217,16 @@ def sub_scope_path_records(repo_root: Path, parent_config: DocsScopeConfig, sub_
         repo_root,
         parent_config.source.location.path / parent_config.source.sub_scopes_path / sub_scope,
     )
-    docs_output = resolve_scope_path(repo_root, published_documents_path(parent_config) / sub_scope)
+    source_documents_root = source_root / SOURCE_DOCUMENTS_PATH
+    source_sub_scopes_root = source_root / SOURCE_SUB_SCOPES_PATH
+    docs_output = resolve_scope_path(
+        repo_root,
+        published_documents_path(parent_config) / SOURCE_SUB_SCOPES_PATH / sub_scope,
+    )
     records = [
         path_record(repo_root, "sub_scope_source_root", source_root, action="create"),
+        path_record(repo_root, "sub_scope_source_documents_root", source_documents_root, action="create"),
+        path_record(repo_root, "sub_scope_source_sub_scopes_root", source_sub_scopes_root, action="create"),
         path_record(repo_root, "sub_scope_published_docs_root", docs_output, action="create"),
         path_record(repo_root, "sub_scope_published_docs_payload_root", docs_output / "by-id", action="create"),
     ]
@@ -324,7 +334,7 @@ def apply_create_sub_scope(repo_root: Path, body: dict[str, Any], *, dry_run: bo
 
 def sub_scope_delete_path_records(repo_root: Path, sub_scope_config: Any, parent_config: DocsScopeConfig) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     candidate_paths = [
-        ("sub_scope_source_root", resolve_scope_path(repo_root, document_source_path(sub_scope_config))),
+        ("sub_scope_source_root", resolve_scope_path(repo_root, source_container_path(sub_scope_config))),
         ("sub_scope_published_docs_root", resolve_scope_path(repo_root, published_documents_path(sub_scope_config))),
     ]
     public_output = public_documents_path(sub_scope_config)

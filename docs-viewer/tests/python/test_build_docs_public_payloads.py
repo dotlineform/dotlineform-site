@@ -136,7 +136,7 @@ def test_python_docs_builder_public_payloads_include_promoted_report_metadata() 
         write_public_scope_config(root)
         write_public_source_docs(root)
         write_text(
-            root / f"docs-viewer/source/library/{REPORT_DOC_ID}.md",
+            root / f"docs-viewer/source/library/documents/{REPORT_DOC_ID}.md",
             f"""---
 doc_id: {REPORT_DOC_ID}
 title: Report

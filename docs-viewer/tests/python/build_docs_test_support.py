@@ -189,7 +189,7 @@ def write_catalogue_records(root: Path) -> None:
 
 def write_source_docs(root: Path, *, child_body_suffix: str = "") -> None:
     write_text(
-        root / f"docs-viewer/source/studio/{PARENT_DOC_ID}.md",
+        root / f"docs-viewer/source/studio/documents/{PARENT_DOC_ID}.md",
         f"""---
 doc_id: {PARENT_DOC_ID}
 title: Parent
@@ -203,7 +203,7 @@ Parent body.
 """,
     )
     write_text(
-        root / f"docs-viewer/source/studio/{CHILD_DOC_ID}.md",
+        root / f"docs-viewer/source/studio/documents/{CHILD_DOC_ID}.md",
         f"""---
 doc_id: {CHILD_DOC_ID}
 title: Child
@@ -258,7 +258,7 @@ def write_public_source_docs(root: Path) -> None:
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         date_lines = "date: 2026-06-02\ndate_display: June 2026\n" if doc_id == CHILD_DOC_ID else ""
         write_text(
-            root / f"docs-viewer/source/library/{doc_id}.md",
+            root / f"docs-viewer/source/library/documents/{doc_id}.md",
             f"""---
 doc_id: {doc_id}
 title: {json.dumps(title)}

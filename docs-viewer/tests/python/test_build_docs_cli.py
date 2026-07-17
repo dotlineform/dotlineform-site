@@ -139,7 +139,7 @@ def test_python_docs_builder_script_reports_front_matter_errors_without_tracebac
         root = Path(temp_path)
         prepare_repo(root)
         write_text(
-            root / "docs-viewer/source/studio/bad.md",
+            root / "docs-viewer/source/studio/documents/bad.md",
             """---
 doc_id: bad
 invalid front matter
@@ -165,7 +165,7 @@ def test_python_docs_builder_script_requires_doc_id_without_traceback() -> None:
         root = Path(temp_path)
         prepare_repo(root)
         write_text(
-            root / "docs-viewer/source/studio/missing-doc-id.md",
+            root / "docs-viewer/source/studio/documents/missing-doc-id.md",
             """---
 title: Missing Doc Id
 ---
@@ -190,7 +190,7 @@ def test_python_docs_builder_script_rejects_legacy_doc_id_without_traceback() ->
         root = Path(temp_path)
         prepare_repo(root)
         write_text(
-            root / "docs-viewer/source/studio/legacy.md",
+            root / "docs-viewer/source/studio/documents/legacy.md",
             """---
 doc_id: legacy
 title: Legacy

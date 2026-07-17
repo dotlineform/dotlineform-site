@@ -17,12 +17,12 @@ from docs_scope_config import (
     CONFIG_REL_PATH,
     EXTERNAL_DATA_ROOT_MARKER,
     LOCAL_EXTERNAL_SCOPE_TYPE,
-    document_source_path,
     load_docs_scope_configs,
     path_label,
     published_documents_path,
     published_search_path,
     resolve_external_data_root,
+    source_container_path,
 )
 from docs_scope_external_validation import external_scope_id_sync_blocker
 from docs_scope_manifest import (
@@ -201,7 +201,7 @@ def plan_rename_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         old_roots = external_scope_roots(external_root, old_scope_id)
         new_roots = external_scope_roots(external_root, new_scope_id)
         configured_paths = {
-            "source_root": document_source_path(config),
+            "source_root": source_container_path(config),
             "published_docs_root": published_documents_path(config),
             "published_search_root": published_search_path(config).parent,
         }

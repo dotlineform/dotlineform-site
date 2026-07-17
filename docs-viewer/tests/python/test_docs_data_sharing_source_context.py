@@ -106,7 +106,7 @@ def write_doc(
     if ui_status:
         lines.append(f"ui_status: {ui_status}")
     lines.extend(["---", "", body])
-    write_text(root / f"docs-viewer/source/{scope}/{filename}", "\n".join(lines))
+    write_text(root / f"docs-viewer/source/{scope}/documents/{filename}", "\n".join(lines))
 
 
 def test_source_records_include_locked_fields_and_rendered_text() -> None:
@@ -146,7 +146,7 @@ def test_source_records_include_locked_fields_and_rendered_text() -> None:
     assert child.parent_id == "parent"
     assert child.parent_title == "Parent"
     assert child.ui_status == "draft"
-    assert child.source_path == "docs-viewer/source/studio/child.md"
+    assert child.source_path == "docs-viewer/source/studio/documents/child.md"
     assert child.viewer_url == "/docs/?scope=studio&doc=child"
     assert child.content_text_length == len("Details\n\nChild body with parent.")
     assert rendered_content.doc_headings(context, "child") == ["Details"]
@@ -325,7 +325,7 @@ def test_unknown_doc_path_safety() -> None:
         else:
             raise AssertionError("Expected unsafe unknown doc_id to be rejected")
 
-    assert context.records_by_id["nested-doc"].source_path == "docs-viewer/source/nested/nested-doc.md"
+    assert context.records_by_id["nested-doc"].source_path == "docs-viewer/source/nested/documents/nested-doc.md"
 
 
 def test_nested_source_markdown_is_rejected() -> None:

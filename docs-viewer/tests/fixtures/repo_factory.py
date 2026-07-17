@@ -144,9 +144,9 @@ def docs_scope_record(
         "meta": meta or scope_type.replace("_", " "),
         "source": {
             "location": {"provider": local_provider, "path": source},
-            "documents_path": ".",
+            "documents_path": "documents",
             "build_media": {},
-            "sub_scopes_path": ".",
+            "sub_scopes_path": "sub-scopes",
         },
         "published": {
             "documents": {"location": {"provider": local_provider, "path": published_docs}},
@@ -179,28 +179,28 @@ def docs_sub_scope_record(
     provider = "external_local" if external else "repository"
     marker = "$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer"
     source = source_path or (
-        f"{marker}/source/{scope_id}/{sub_scope}"
+        f"{marker}/source/{scope_id}/sub-scopes/{sub_scope}"
         if external
-        else f"docs-viewer/source/{scope_id}/{sub_scope}"
+        else f"docs-viewer/source/{scope_id}/sub-scopes/{sub_scope}"
     )
     published_docs = published_docs_path or (
-        f"{marker}/published/docs/{scope_id}/{sub_scope}"
+        f"{marker}/published/docs/{scope_id}/sub-scopes/{sub_scope}"
         if external
-        else f"docs-viewer/published/docs/{scope_id}/{sub_scope}"
+        else f"docs-viewer/published/docs/{scope_id}/sub-scopes/{sub_scope}"
     )
     published_search = published_search_path or (
-        f"{marker}/published/search/{scope_id}/{sub_scope}/index.json"
+        f"{marker}/published/search/{scope_id}/sub-scopes/{sub_scope}/index.json"
         if external
-        else f"docs-viewer/published/search/{scope_id}/{sub_scope}/index.json"
+        else f"docs-viewer/published/search/{scope_id}/sub-scopes/{sub_scope}/index.json"
     )
     return {
         "sub_scope": sub_scope,
         "title": title,
         "source": {
             "location": {"provider": provider, "path": source},
-            "documents_path": ".",
+            "documents_path": "documents",
             "build_media": {},
-            "sub_scopes_path": ".",
+            "sub_scopes_path": "sub-scopes",
         },
         "published": {
             "documents": {"location": {"provider": provider, "path": published_docs}},
@@ -236,7 +236,7 @@ def write_doc(
     for key, value in front_matter.items():
         lines.append(f"{key}: {format_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "docs-viewer/source" / scope / filename
+    path = root / "docs-viewer/source" / scope / "documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -397,10 +397,10 @@ def write_documents_data_sharing_registry(root: Path) -> None:
                             "status": "active",
                             "selection_model": "documents",
                             "source_write_targets": {
-                                "documents": "docs-viewer/source/library",
+                                "documents": "docs-viewer/source/library/documents",
                             },
                             "sources": {
-                                "source_root": "docs-viewer/source/library",
+                                "source_root": "docs-viewer/source/library/documents",
                             },
                             "config": {
                                 "sharing_profiles_path": "data-sharing/adapters/documents/config/prepare-profiles.json",

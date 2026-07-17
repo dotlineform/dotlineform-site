@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-07-17T18:48:59Z",
+  "updated_at": "2026-07-17T20:05:15Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -12,11 +12,23 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-07-17T18:48:59Z",
+      "updated_at": "2026-07-17T20:05:15Z",
       "files": [
         {
           "kind": "source_root",
           "path": "docs-viewer/source/analysis",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_documents_root",
+          "path": "docs-viewer/source/analysis/documents",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_sub_scopes_root",
+          "path": "docs-viewer/source/analysis/sub-scopes",
           "action": "track",
           "exists": true
         },
@@ -28,7 +40,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/analysis/d-20260426-164043-e14f49.md",
+          "path": "docs-viewer/source/analysis/documents/d-20260426-164043-e14f49.md",
           "action": "track",
           "exists": true
         },
@@ -114,11 +126,23 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-07-17T18:48:59Z",
+      "updated_at": "2026-07-17T20:05:15Z",
       "files": [
         {
           "kind": "source_root",
           "path": "docs-viewer/source/library",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_documents_root",
+          "path": "docs-viewer/source/library/documents",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_sub_scopes_root",
+          "path": "docs-viewer/source/library/sub-scopes",
           "action": "track",
           "exists": true
         },
@@ -130,7 +154,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/library/d-20260330-172255-8399b7.md",
+          "path": "docs-viewer/source/library/documents/d-20260330-172255-8399b7.md",
           "action": "track",
           "exists": true
         },
@@ -216,11 +240,23 @@
       "tool_id": "",
       "repo_status_at_creation": "tracked",
       "created_at": "",
-      "updated_at": "2026-07-17T18:48:59Z",
+      "updated_at": "2026-07-17T20:05:15Z",
       "files": [
         {
           "kind": "source_root",
           "path": "docs-viewer/source/studio",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_documents_root",
+          "path": "docs-viewer/source/studio/documents",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_sub_scopes_root",
+          "path": "docs-viewer/source/studio/sub-scopes",
           "action": "track",
           "exists": true
         },
@@ -232,7 +268,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/studio/d-20260419-000000-d2e47b.md",
+          "path": "docs-viewer/source/studio/documents/d-20260419-000000-d2e47b.md",
           "action": "track",
           "exists": true
         },
@@ -282,7 +318,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-06-17T21:33:28Z",
-      "updated_at": "2026-07-17T18:48:59Z",
+      "updated_at": "2026-07-17T20:05:15Z",
       "files": [
         {
           "kind": "source_root",
@@ -291,8 +327,14 @@
           "exists": true
         },
         {
-          "kind": "default_source_doc",
-          "path": "docs-viewer/source/moments/moments.md",
+          "kind": "source_documents_root",
+          "path": "docs-viewer/source/moments/documents",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_sub_scopes_root",
+          "path": "docs-viewer/source/moments/sub-scopes",
           "action": "track",
           "exists": true
         },
@@ -397,7 +439,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "external",
       "created_at": "2026-07-13T21:21:25Z",
-      "updated_at": "2026-07-17T18:48:59Z",
+      "updated_at": "2026-07-17T20:05:15Z",
       "files": [
         {
           "kind": "source_root",
@@ -407,8 +449,22 @@
           "exists": true
         },
         {
+          "kind": "source_documents_root",
+          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/source/notes/documents",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_sub_scopes_root",
+          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/source/notes/sub-scopes",
+          "location": "external",
+          "action": "track",
+          "exists": true
+        },
+        {
           "kind": "default_source_doc",
-          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/source/notes/d-20260526-000000-04ce37.md",
+          "path": "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/docs-viewer/source/notes/documents/d-20260526-000000-04ce37.md",
           "location": "external",
           "action": "track",
           "exists": true
@@ -468,7 +524,7 @@
       "tool_id": "docs-viewer-scope-lifecycle",
       "repo_status_at_creation": "tracked",
       "created_at": "2026-07-14T08:09:45Z",
-      "updated_at": "2026-07-17T18:48:59Z",
+      "updated_at": "2026-07-17T20:05:15Z",
       "files": [
         {
           "kind": "source_root",
@@ -478,8 +534,22 @@
           "exists": true
         },
         {
+          "kind": "source_documents_root",
+          "path": "docs-viewer/source/processing/documents",
+          "location": "repo",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "source_sub_scopes_root",
+          "path": "docs-viewer/source/processing/sub-scopes",
+          "location": "repo",
+          "action": "track",
+          "exists": true
+        },
+        {
           "kind": "default_source_doc",
-          "path": "docs-viewer/source/processing/d-20260714-092047-06a5db.md",
+          "path": "docs-viewer/source/processing/documents/d-20260714-092047-06a5db.md",
           "location": "repo",
           "action": "track",
           "exists": true

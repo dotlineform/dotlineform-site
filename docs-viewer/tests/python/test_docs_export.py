@@ -152,7 +152,7 @@ def write_doc(
     if not viewable:
         lines.append("viewable: false")
     lines.extend(["---", "", body])
-    path = root / "docs-viewer/source/library" / filename
+    path = root / "docs-viewer/source/library/documents" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -774,7 +774,7 @@ def test_missing_source_context_returns_structured_export_error() -> None:
     assert report["ok"] is False
     assert report["counts"] == {"selected": 0, "exported": 0, "skipped": 0, "failed": 0, "truncated": 0}
     assert report["output_written"] is False
-    assert "source context: missing source root for scope library: docs-viewer/source/missing-library" in report["errors"]
+    assert "source context: missing source root for scope library: docs-viewer/source/missing-library/documents" in report["errors"]
 
 
 def test_repo_representative_library_exports_dry_run_successfully() -> None:

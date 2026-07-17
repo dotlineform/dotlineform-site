@@ -65,7 +65,7 @@ def write_source_doc(root: Path, doc_id: str, title: str, *, parent_id: str = ""
     if parent_id:
         lines.append(f"parent_id: {parent_id}")
     lines.extend(["---", "", f"# {title}", "", "Body text."])
-    write_text(root / f"docs-viewer/source/library/{doc_id}.md", "\n".join(lines))
+    write_text(root / f"docs-viewer/source/library/documents/{doc_id}.md", "\n".join(lines))
 
 
 def write_staged(root: Path, filename: str, payload: object | str) -> None:

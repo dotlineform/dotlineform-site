@@ -82,7 +82,7 @@ def write_source_docs(root: Path, *, child_title: str = "Child", child_viewable:
         viewable_line = "" if viewable else "viewable: false\n"
         parent_line = f"parent_id: {parent_id}\n" if parent_id else ""
         write_text(
-            root / f"docs-viewer/source/studio/{doc_id}.md",
+            root / f"docs-viewer/source/studio/documents/{doc_id}.md",
             f"""---
 doc_id: {doc_id}
 title: {json.dumps(title)}
@@ -172,7 +172,7 @@ def test_python_docs_search_builder_excludes_configured_sub_scope_sources() -> N
         ]
         write_json(config_path, payload)
         write_text(
-            root / "docs-viewer/source/studio/tags/detail.md",
+            root / "docs-viewer/source/studio/sub-scopes/tags/documents/detail.md",
             """---
 doc_id: detail
 title: Detail
@@ -302,7 +302,7 @@ def test_python_docs_search_builder_writes_external_local_scope_index() -> None:
         os.environ["DOTLINEFORM_PROJECTS_BASE_DIR"] = projects_root.as_posix()
         write_external_scope_config(root, external_root)
         write_text(
-            external_root / "source/private/private.md",
+            external_root / "source/private/documents/private.md",
             """---
 doc_id: private
 title: Private Search

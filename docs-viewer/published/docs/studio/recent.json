@@ -7,7 +7,7 @@
       "doc_id": "d-20260717-132231-8cfc4d",
       "title": "Docs Viewer Source And Publication Model Refactor Delivery",
       "content_url": "/docs-viewer/published/docs/studio/by-id/d-20260717-132231-8cfc4d.json",
-      "timestamp": "2026-07-17 20:28:08",
+      "timestamp": "2026-07-17 21:09:06",
       "parent_id": "d-20260717-132231-5eae95",
       "parent_title": "Docs Viewer Source And Publication Model Refactor"
     },
@@ -84,5 +84,5 @@
       "parent_title": "Copy Subtree To Scope"
     }
   ],
-  "generated_at": "2026-07-17T19:28:42Z"
+  "generated_at": "2026-07-17T20:09:43Z"
 }
