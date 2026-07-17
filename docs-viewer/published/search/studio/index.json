@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-da0c727b3eeab4ab47b0a977afbb4784",
-    "generated_at_utc": "2026-07-17T20:09:44Z",
+    "version": "blake2b-c14c7aee0ac5c9fb2fb171beca0fb8ed",
+    "generated_at_utc": "2026-07-17T20:41:55Z",
     "count": 239
   },
   "entries": [
@@ -1460,10 +1460,10 @@
       "kind": "doc",
       "title": "Docs Images And Assets",
       "href": "/docs/?scope=studio&doc=d-20260423-155039-e36925",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-17 21:30:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 • Docs Viewer",
+      "display_meta": "2026-07-17 21:30:19 • Docs Viewer",
       "search_terms": [
         "docs images and assets",
         "docs",
@@ -1472,36 +1472,42 @@
         "assets",
         "docs viewer",
         "viewer",
-        "2026-07-16",
+        "2026-07-17 21:30:19",
         "2026",
         "07",
-        "16",
+        "17",
+        "21",
+        "30",
+        "19",
         "d-20260423-155039-e36925"
       ],
-      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-16 2026 07 16 d-20260423-155039-e36925"
+      "search_text": "docs images and assets docs images and assets docs viewer viewer 2026-07-17 21:30:19 2026 07 17 21 30 19 d-20260423-155039-e36925"
     },
     {
       "id": "d-20260424-000000-fc8b5d",
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=d-20260424-000000-fc8b5d",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-17 21:30:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 • Docs Viewer",
+      "display_meta": "2026-07-17 21:30:19 • Docs Viewer",
       "search_terms": [
         "docs import",
         "docs",
         "import",
         "docs viewer",
         "viewer",
-        "2026-07-16",
+        "2026-07-17 21:30:19",
         "2026",
         "07",
-        "16",
+        "17",
+        "21",
+        "30",
+        "19",
         "d-20260424-000000-fc8b5d"
       ],
-      "search_text": "docs import docs import docs viewer viewer 2026-07-16 2026 07 16 d-20260424-000000-fc8b5d"
+      "search_text": "docs import docs import docs viewer viewer 2026-07-17 21:30:19 2026 07 17 21 30 19 d-20260424-000000-fc8b5d"
     },
     {
       "id": "d-20260514-164722-3de65e",
@@ -1555,26 +1561,26 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=d-20260423-000000-c9f3ea",
-      "last_updated": "2026-07-16 17:52:03",
+      "last_updated": "2026-07-17 21:30:19",
       "parent_id": "d-20260424-000000-50b63f",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-07-16 17:52:03 • Docs Viewer",
+      "display_meta": "2026-07-17 21:30:19 • Docs Viewer",
       "search_terms": [
         "docs viewer builder",
         "docs",
         "viewer",
         "builder",
         "docs viewer",
-        "2026-07-16 17:52:03",
+        "2026-07-17 21:30:19",
         "2026",
         "07",
-        "16",
         "17",
-        "52",
-        "03",
+        "21",
+        "30",
+        "19",
         "d-20260423-000000-c9f3ea"
       ],
-      "search_text": "docs viewer builder docs viewer builder docs viewer 2026-07-16 17:52:03 2026 07 16 17 52 03 d-20260423-000000-c9f3ea"
+      "search_text": "docs viewer builder docs viewer builder docs viewer 2026-07-17 21:30:19 2026 07 17 21 30 19 d-20260423-000000-c9f3ea"
     },
     {
       "id": "d-20260613-115624-3d377c",
@@ -3768,10 +3774,10 @@
       "kind": "doc",
       "title": "Docs Viewer Source And Publication Model Refactor Delivery",
       "href": "/docs/?scope=studio&doc=d-20260717-132231-8cfc4d",
-      "last_updated": "2026-07-17 21:09:06",
+      "last_updated": "2026-07-17 21:41:22",
       "parent_id": "d-20260717-132231-5eae95",
       "parent_title": "Docs Viewer Source And Publication Model Refactor",
-      "display_meta": "2026-07-17 21:09:06 • Docs Viewer Source And Publication Model Refactor",
+      "display_meta": "2026-07-17 21:41:22 • Docs Viewer Source And Publication Model Refactor",
       "search_terms": [
         "docs viewer source and publication model refactor delivery",
         "docs",
@@ -3783,16 +3789,16 @@
         "refactor",
         "delivery",
         "docs viewer source and publication model refactor",
-        "2026-07-17 21:09:06",
+        "2026-07-17 21:41:22",
         "2026",
         "07",
         "17",
         "21",
-        "09",
-        "06",
+        "41",
+        "22",
         "d-20260717-132231-8cfc4d"
       ],
-      "search_text": "docs viewer source and publication model refactor delivery docs viewer source and publication model refactor delivery docs viewer source and publication model refactor 2026-07-17 21:09:06 2026 07 17 21 09 06 d-20260717-132231-8cfc4d"
+      "search_text": "docs viewer source and publication model refactor delivery docs viewer source and publication model refactor delivery docs viewer source and publication model refactor 2026-07-17 21:41:22 2026 07 17 21 41 22 d-20260717-132231-8cfc4d"
     },
     {
       "id": "d-20260717-170057-b9c4e3",

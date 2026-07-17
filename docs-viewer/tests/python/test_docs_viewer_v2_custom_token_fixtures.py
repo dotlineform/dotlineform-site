@@ -12,7 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_PATH = REPO_ROOT / "docs-viewer" / "tests" / "fixtures" / "docs_viewer_v2_custom_tokens.json"
 REQUIRED_COVERAGE = {
     "media_token",
-    "interactive_html_token",
+    "html_media_token",
     "semantic_reference_token",
     "invalid_missing_reference",
     "code_block_skip_behavior",

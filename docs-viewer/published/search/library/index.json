@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-42229f797f301bfda01c7a9fe48ddfef",
-    "generated_at_utc": "2026-07-16T17:15:46Z",
+    "version": "blake2b-25bda73768bedb8739a336863e84885f",
+    "generated_at_utc": "2026-07-17T20:40:51Z",
     "count": 14
   },
   "entries": [
@@ -172,21 +172,23 @@
       "kind": "doc",
       "title": "Coincidence Salience Worksheet",
       "href": "/library/?doc=d-20260516-094500-c346e9",
-      "last_updated": "2026-05-16 16:37:16",
-      "display_meta": "2026-05-16 16:37:16",
+      "last_updated": "2026-07-17 21:30:19",
+      "display_meta": "2026-07-17 21:30:19",
       "search_terms": [
         "coincidence salience worksheet",
         "coincidence",
         "salience",
         "worksheet",
-        "2026-05-16 16:37:16",
+        "2026-07-17 21:30:19",
         "2026",
-        "05",
-        "16",
-        "37",
+        "07",
+        "17",
+        "21",
+        "30",
+        "19",
         "d-20260516-094500-c346e9"
       ],
-      "search_text": "coincidence salience worksheet coincidence salience worksheet 2026-05-16 16:37:16 2026 05 16 37 d-20260516-094500-c346e9"
+      "search_text": "coincidence salience worksheet coincidence salience worksheet 2026-07-17 21:30:19 2026 07 17 21 30 19 d-20260516-094500-c346e9"
     },
     {
       "id": "d-20260424-000000-8eb1d9",

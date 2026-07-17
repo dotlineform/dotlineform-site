@@ -117,15 +117,23 @@ def write_route_config(root: Path, *, public_scope: str = "", public_basis: str 
 
 def write_scope_config(root: Path) -> None:
     write_route_config(root)
+    studio = docs_scope_record(
+        "studio",
+        meta="local management",
+        default_doc_id=PARENT_DOC_ID,
+    )
+    studio["published"]["media"]["html"] = {  # type: ignore[index]
+        "reference_prefix": "docs/studio/html",
+        "location": {
+            "provider": "repository",
+            "path": "site/assets/data/docs/scopes/studio/media/html",
+        },
+        "served_path_prefix": "/assets/data/docs/scopes/studio/media/html",
+        "build_inputs": [],
+    }
     write_docs_scope_config(
         root,
-        [
-            docs_scope_record(
-                "studio",
-                meta="local management",
-                default_doc_id=PARENT_DOC_ID,
-            )
-        ],
+        [studio],
         {
             "recent_limit": 10,
             "ui_statuses_by_scope": {
@@ -235,7 +243,7 @@ Intro with [parent](/docs/?scope=studio&doc={PARENT_DOC_ID}), ![Diagram]([[media
 [[ref:moment:dark-sky]]
 ```
 
-[[interactive-html:chart.html height=420]]
+[[html-media:docs/studio/html/chart.html height=420]]
 
 <img src="/image.jpg" alt="Alt text">
 
@@ -279,7 +287,10 @@ def prepare_repo(root: Path) -> None:
     write_scope_config(root)
     write_semantic_reference_registry(root)
     write_catalogue_records(root)
-    write_text(root / "site/assets/docs/interactive/studio/chart.html", "<!doctype html><title>Chart</title>")
+    write_text(
+        root / "site/assets/data/docs/scopes/studio/media/html/chart.html",
+        "<!doctype html><title>Chart</title>",
+    )
     write_source_docs(root)
 
 

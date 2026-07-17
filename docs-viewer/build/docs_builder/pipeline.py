@@ -15,6 +15,7 @@ from .common import (
     resolve_scope_path,
     utc_timestamp,
 )
+from .media_builds import run_registered_media_builds
 from .payloads import PayloadBuilderMixin
 from .reference_artifacts import ReferenceArtifactsMixin
 from .recent_policy import recent_basis_for_route
@@ -64,6 +65,11 @@ class DocsDataBuilder(
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
+        media_builds = (
+            []
+            if self.targeted_build
+            else run_registered_media_builds(self.repo_root, self.config, write=write)
+        )
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
@@ -147,6 +153,7 @@ class DocsDataBuilder(
             "reference_payloads": reference_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
+            "media_builds": media_builds,
         }
 
     @property

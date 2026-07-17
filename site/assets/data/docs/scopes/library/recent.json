@@ -4,6 +4,12 @@
   "limit": 10,
   "docs": [
     {
+      "doc_id": "d-20260516-094500-c346e9",
+      "title": "Coincidence Salience Worksheet",
+      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-094500-c346e9.json",
+      "timestamp": "2026-07-17 21:30:19"
+    },
+    {
       "doc_id": "d-20260507-172400-74807b",
       "title": "Beauty",
       "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-172400-74807b.json",
@@ -20,12 +26,6 @@
       "title": "Beauty × Memory × Meaning",
       "content_url": "/assets/data/docs/scopes/library/by-id/d-20260507-170100-089703.json",
       "timestamp": "2026-05-16 16:44:27"
-    },
-    {
-      "doc_id": "d-20260516-094500-c346e9",
-      "title": "Coincidence Salience Worksheet",
-      "content_url": "/assets/data/docs/scopes/library/by-id/d-20260516-094500-c346e9.json",
-      "timestamp": "2026-05-16 16:37:16"
     },
     {
       "doc_id": "d-20260516-085800-d87bbb",
@@ -64,5 +64,5 @@
       "timestamp": "2026-05-07 17:07:35"
     }
   ],
-  "generated_at": "2026-07-16T17:15:46Z"
+  "generated_at": "2026-07-17T20:40:51Z"
 }

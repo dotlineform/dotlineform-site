@@ -57,7 +57,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        media_path = root / "docs-viewer/source/library/media/img/inline-diagram-image-01.png"
+        media_path = root / "site/assets/data/docs/scopes/library/media/img/inline-diagram-image-01.png"
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -98,7 +98,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        media_path = root / "docs-viewer/source/library/media/img/inline-note-image-02.png"
+        media_path = root / "site/assets/data/docs/scopes/library/media/img/inline-note-image-02.png"
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -135,7 +135,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        media_path = root / "docs-viewer/source/library/media/img/mixed-inline-image-01.png"
+        media_path = root / "site/assets/data/docs/scopes/library/media/img/mixed-inline-image-01.png"
         media_bytes = media_path.read_bytes()
 
     assert payload["ok"] is True
@@ -185,8 +185,8 @@ Some text.
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        webp_path = root / "docs-viewer/source/library/media/img/my-note-image-01.webp"
-        attachment_path = root / "docs-viewer/source/library/media/files/my-note-attachment-01.pdf"
+        webp_path = root / "site/assets/data/docs/scopes/library/media/img/my-note-image-01.webp"
+        attachment_path = root / "site/assets/data/docs/scopes/library/media/files/my-note-attachment-01.pdf"
         from PIL import Image
 
         with Image.open(webp_path) as converted:

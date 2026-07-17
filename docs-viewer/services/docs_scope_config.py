@@ -60,6 +60,8 @@ DOTLINEFORM_PROJECTS_BASE_DIR_ENV = "DOTLINEFORM_PROJECTS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_PROJECTS_BASE_DIR_ENV}/docs-viewer"
 SUB_SCOPE_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 MEDIA_TYPE_PATTERN = re.compile(r"\A[a-z][a-z0-9_-]*\Z")
+PUBLISHED_MEDIA_TYPES = frozenset({"files", "html", "img"})
+BUILD_MEDIA_TYPES = frozenset({"mermaid"})
 
 SOURCE_CAPABILITIES = frozenset(
     {
@@ -343,12 +345,24 @@ def normalize_build_media(raw: Any, *, field: str) -> dict[str, DocsBuildMediaCo
         item_field = f"{field}.{normalized_type}"
         if not MEDIA_TYPE_PATTERN.fullmatch(normalized_type) or not isinstance(item, dict):
             raise ValueError(f"docs scope config field {item_field} must be a named media object")
+        if normalized_type not in BUILD_MEDIA_TYPES:
+            supported = ", ".join(sorted(BUILD_MEDIA_TYPES))
+            raise ValueError(
+                f"docs scope config field {item_field} uses an unsupported build media type; "
+                f"supported: {supported}"
+            )
         producer = str(item.get("producer") or "").strip()
         publishes_to = str(item.get("publishes_to") or "").strip().lower()
         if not producer or not publishes_to:
             raise ValueError(f"docs scope config field {item_field} requires producer and publishes_to")
+        path = safe_relative_path(item.get("path"), field=f"{item_field}.path")
+        expected_path = Path("media") / normalized_type
+        if path != expected_path:
+            raise ValueError(
+                f"docs scope config field {item_field}.path must be {expected_path.as_posix()}"
+            )
         result[normalized_type] = DocsBuildMediaConfig(
-            path=safe_relative_path(item.get("path"), field=f"{item_field}.path"),
+            path=path,
             producer=producer,
             publishes_to=publishes_to,
         )
@@ -393,6 +407,12 @@ def normalize_published_media(raw: Any, *, scope_id: str, field: str) -> dict[st
         item_field = f"{field}.{normalized_type}"
         if not MEDIA_TYPE_PATTERN.fullmatch(normalized_type) or not isinstance(item, dict):
             raise ValueError(f"docs scope config field {item_field} must be a named media object")
+        if normalized_type not in PUBLISHED_MEDIA_TYPES:
+            supported = ", ".join(sorted(PUBLISHED_MEDIA_TYPES))
+            raise ValueError(
+                f"docs scope config field {item_field} uses an unsupported published media type; "
+                f"supported: {supported}"
+            )
         reference_prefix = safe_relative_path(item.get("reference_prefix"), field=f"{item_field}.reference_prefix")
         expected_reference = Path("docs") / scope_id / normalized_type
         if reference_prefix != expected_reference:
@@ -592,6 +612,33 @@ def validate_scope_policy(config: DocsScopeConfig, *, field: str) -> None:
                 f"docs scope config {field}.source.build_media.{build_type}.publishes_to "
                 f"references unconfigured media type {build.publishes_to!r}"
             )
+        declared_inputs = config.published.media[build.publishes_to].build_inputs
+        if build_type not in declared_inputs:
+            raise ValueError(
+                f"docs scope config {field}.published.media.{build.publishes_to}.build_inputs "
+                f"must include {build_type!r}"
+            )
+    producer_targets: dict[str, str] = {}
+    for build_type, build in config.source.build_media.items():
+        competing = producer_targets.get(build.publishes_to)
+        if competing is not None:
+            raise ValueError(
+                f"docs scope config {field} build media types {competing!r} and {build_type!r} "
+                f"compete for published media {build.publishes_to!r}"
+            )
+        producer_targets[build.publishes_to] = build_type
+    for media_type, media in config.published.media.items():
+        if len(set(media.build_inputs)) != len(media.build_inputs):
+            raise ValueError(
+                f"docs scope config {field}.published.media.{media_type}.build_inputs must not contain duplicates"
+            )
+        for build_type in media.build_inputs:
+            build = config.source.build_media.get(build_type)
+            if build is None or build.publishes_to != media_type:
+                raise ValueError(
+                    f"docs scope config {field}.published.media.{media_type}.build_inputs references "
+                    f"unconfigured build media {build_type!r}"
+                )
 
 
 def normalize_sub_scope_configs(
@@ -770,10 +817,12 @@ __all__ = [
     "LOCAL_EXTERNAL_SCOPE_TYPE",
     "LOCAL_SCOPE_TYPE",
     "PUBLISHED_DOCS_OUTPUT_ROOT",
+    "PUBLISHED_MEDIA_TYPES",
     "PUBLISHED_SEARCH_OUTPUT_ROOT",
     "PUBLIC_DOCS_OUTPUT_ROOT",
     "PUBLIC_SCOPE_TYPE",
     "PUBLIC_SEARCH_OUTPUT_ROOT",
+    "BUILD_MEDIA_TYPES",
     "SCHEMA_VERSION",
     "SOURCE_DOCUMENTS_PATH",
     "SOURCE_SUB_SCOPES_PATH",

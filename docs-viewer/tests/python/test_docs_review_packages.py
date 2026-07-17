@@ -99,7 +99,7 @@ def test_package_asset_inventory_drives_media_and_sandboxed_interactive_renderin
     source_path.write_text(
         source_path.read_text(encoding="utf-8")
         + "\n![Preview]([[media:docs/library/img/preview.png]])\n\n"
-        + "[[interactive-html:demo.html height=320]]\n",
+        + "[[html-media:docs/library/html/demo.html height=320]]\n",
         encoding="utf-8",
     )
     media = package / "assets/media/preview.png"
@@ -120,7 +120,7 @@ def test_package_asset_inventory_drives_media_and_sandboxed_interactive_renderin
                 },
                 {
                     "kind": "interactive",
-                    "token_path": "demo.html",
+                    "token_path": "docs/library/html/demo.html",
                     "package_path": "assets/interactive/demo.html",
                 },
             ],

@@ -103,7 +103,11 @@ def scope_config(
         else Path(f"docs-viewer/published/search/{scope}/index.json")
     )
     media_root = media_location_root or (
-        Path(f"docs/{scope}") if media_provider == R2_PROVIDER else source_path / "media"
+        Path(f"docs/{scope}")
+        if media_provider == R2_PROVIDER
+        else source_path / "media"
+        if media_provider == EXTERNAL_LOCAL_PROVIDER
+        else Path(f"docs-viewer/published/docs/{scope}/media")
     )
     served_root = (
         f"https://media.example.test/docs/{scope}"
@@ -323,7 +327,7 @@ def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> N
     assert public["published"]["media"]["img"]["location"]["provider"] == R2_PROVIDER  # type: ignore[index]
     assert local["published"]["media"]["img"]["location"] == {  # type: ignore[index]
         "provider": REPOSITORY_PROVIDER,
-        "path": "docs-viewer/source/notes/media/img",
+        "path": "docs-viewer/published/docs/notes/media/img",
     }
     assert external["published"]["media"]["img"]["location"] == {  # type: ignore[index]
         "provider": EXTERNAL_LOCAL_PROVIDER,
@@ -333,7 +337,7 @@ def test_new_scope_defaults_follow_scope_owned_media_policy(tmp_path: Path) -> N
 
 def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_config = scope_config("studio", scope_type="local", media_provider=REPOSITORY_PROVIDER)
-    repo_file = tmp_path / "docs-viewer/source/studio/media/img/diagram.png"
+    repo_file = tmp_path / "docs-viewer/published/docs/studio/media/img/diagram.png"
     repo_file.parent.mkdir(parents=True)
     repo_file.write_bytes(b"diagram")
     monkeypatch.setattr("docs_media_storage.load_docs_scope_configs", lambda _repo_root: {"studio": repo_config})
@@ -351,7 +355,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
             local_media_path_from_route(tmp_path, "/docs/media/studio/img/escaped.png")
     html = tmp_path / "widget.html"
     html.write_text("<script>alert(1)</script>", encoding="utf-8")
-    with pytest.raises(ValueError, match="Interactive HTML"):
+    with pytest.raises(ValueError, match="HTML media"):
         safe_content_type(html)
 
     external_root = tmp_path / "external/docs-viewer"
@@ -373,8 +377,7 @@ def test_local_media_route_confines_repo_and_external_scope_assets(tmp_path: Pat
 
 
 def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> None:
-    repo_source = tmp_path / "docs-viewer/source/studio"
-    repo_source.mkdir(parents=True)
+    repo_media = tmp_path / "docs-viewer/published/docs/studio/media"
     external_source = tmp_path / "external/docs-viewer/source/notes"
     external_source.mkdir(parents=True)
     configs = {
@@ -392,8 +395,8 @@ def test_configured_local_media_directories_are_materialized(tmp_path: Path) -> 
     ensure_configured_scope_owned_media_directories(tmp_path, configs)
 
     assert set(materialized) == {"notes", "studio"}
-    assert all((repo_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
-    assert all((repo_source / "media" / media_class / ".gitkeep").is_file() for media_class in ("files", "img"))
+    assert all((repo_media / media_class).is_dir() for media_class in ("files", "img"))
+    assert all((repo_media / media_class / ".gitkeep").is_file() for media_class in ("files", "img"))
     assert all((external_source / "media" / media_class).is_dir() for media_class in ("files", "img"))
     assert not any((external_source / "media" / media_class / ".gitkeep").exists() for media_class in ("files", "img"))
     assert not (tmp_path / "docs-viewer/source/library/documents/media").exists()

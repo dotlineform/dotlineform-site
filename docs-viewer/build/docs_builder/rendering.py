@@ -8,17 +8,19 @@ from urllib.parse import parse_qs, urlparse
 
 from .common import (
     HTML_ATTR_PATTERN_TEMPLATE,
+    HTML_MEDIA_HEIGHT_PATTERN,
+    HTML_MEDIA_TOKEN_PATTERN,
     IMG_PATTERN,
-    INTERACTIVE_HTML_FILENAME_PATTERN,
-    INTERACTIVE_HTML_HEIGHT_PATTERN,
-    INTERACTIVE_HTML_TOKEN_PATTERN,
     MEDIA_IMAGE_TOKEN_PATTERN,
     MEDIA_TOKEN_ALLOWED_ATTRS,
     MEDIA_TOKEN_DIMENSION_PATTERN,
     MEDIA_TOKEN_PATTERN,
     html_attr,
+    local_artifact_path,
     load_docs_scope_configs,
     normalize_viewer_base_url,
+    normalize_artifact_identity,
+    published_media_config,
 )
 from .source import DocRecord
 
@@ -96,7 +98,7 @@ class ContentRenderingMixin:
         doc: DocRecord,
         references_by_doc: dict[str, list[dict[str, Any]]],
     ) -> str:
-        resolved = self.resolve_interactive_html_tokens(self.resolve_media_tokens(markdown))
+        resolved = self.resolve_html_media_tokens(self.resolve_media_tokens(markdown))
         return self.resolve_semantic_ref_tokens(resolved, doc=doc, references_by_doc=references_by_doc)
 
     def resolve_media_tokens(self, markdown: str) -> str:
@@ -151,21 +153,26 @@ class ContentRenderingMixin:
         media_base = str(media.get("base") if isinstance(media, dict) else "").strip()
         return f"/{clean_path}" if not media_base else f"{media_base.rstrip('/')}/{clean_path}"
 
-    def resolve_interactive_html_tokens(self, markdown: str) -> str:
-        if "[[interactive-html:" not in markdown:
+    def resolve_html_media_tokens(self, markdown: str) -> str:
+        if "[[html-media:" not in markdown:
             return markdown
-        return INTERACTIVE_HTML_TOKEN_PATTERN.sub(lambda match: self.interactive_html_iframe(match.group(1)), markdown)
+        return HTML_MEDIA_TOKEN_PATTERN.sub(lambda match: self.html_media_iframe(match.group(1)), markdown)
 
-    def interactive_html_iframe(self, raw_body: str) -> str:
-        token = self.parse_interactive_html_token(raw_body)
-        filename = token["filename"]
-        asset_path = self.repo_root / self.interactive_html_asset_relative_path(filename)
-        if not asset_path.exists():
+    def html_media_iframe(self, raw_body: str) -> str:
+        token = self.parse_html_media_token(raw_body)
+        media_path = token["media_path"]
+        identity = token["identity"]
+        media = published_media_config(self.config, "html")
+        expected_prefix = media.reference_prefix.as_posix().strip("/")
+        if media_path != expected_prefix and not media_path.startswith(f"{expected_prefix}/"):
             raise RuntimeError(
-                f"Interactive HTML asset not found for scope {self.scope_id}: "
-                f"{self.interactive_html_asset_relative_path(filename)}"
+                f"HTML media token must use the configured same-scope prefix {expected_prefix}/"
             )
-        public_path = f"/assets/docs/interactive/{self.scope_id}/{filename}"
+        asset_path = local_artifact_path(self.repo_root, media.location, identity)
+        if asset_path is not None and not asset_path.is_file():
+            raise RuntimeError(f"HTML media not found for scope {self.scope_id}: {media_path}")
+        public_path = self.resolve_media_url(media_path)
+        filename = Path(identity).name
         title = f"Interactive HTML: {filename}"
         style_attr = f' style="--docs-viewer-interactive-height: {token["height"]}px"' if token.get("height") else ""
         return (
@@ -173,23 +180,30 @@ class ContentRenderingMixin:
             f'sandbox="allow-scripts" loading="lazy" title="{html.escape(title, quote=True)}"{style_attr}></iframe>'
         )
 
-    def parse_interactive_html_token(self, raw_body: str) -> dict[str, Any]:
+    def parse_html_media_token(self, raw_body: str) -> dict[str, Any]:
         parts = raw_body.strip().split()
-        filename = parts.pop(0) if parts else ""
-        if not INTERACTIVE_HTML_FILENAME_PATTERN.fullmatch(filename):
-            raise RuntimeError(f"Invalid interactive HTML token {filename!r}; use a same-scope .html filename only")
-        token: dict[str, Any] = {"filename": filename}
+        media_path = parts.pop(0).lstrip("/") if parts else ""
+        try:
+            normalized_path = normalize_artifact_identity(media_path)
+        except ValueError as exc:
+            raise RuntimeError(f"Invalid HTML media token path {media_path!r}") from exc
+        path_parts = Path(normalized_path).parts
+        if len(path_parts) < 4 or path_parts[0] != "docs" or path_parts[2] != "html":
+            raise RuntimeError(
+                f"Invalid HTML media token {media_path!r}; use docs/<scope>/html/<filename>.html"
+            )
+        identity = Path(*path_parts[3:]).as_posix()
+        if Path(identity).suffix.lower() != ".html":
+            raise RuntimeError(f"Invalid HTML media token {media_path!r}; published HTML media must end in .html")
+        token: dict[str, Any] = {"media_path": normalized_path, "identity": identity}
         for part in parts:
             key, _, value = part.partition("=")
             if key != "height":
-                raise RuntimeError(f"Invalid interactive HTML token attribute {part!r}; supported attributes: height")
-            if not INTERACTIVE_HTML_HEIGHT_PATTERN.fullmatch(value):
-                raise RuntimeError(f"Invalid interactive HTML token height in {raw_body!r}; use height=<positive pixel integer>")
+                raise RuntimeError(f"Invalid HTML media token attribute {part!r}; supported attributes: height")
+            if not HTML_MEDIA_HEIGHT_PATTERN.fullmatch(value):
+                raise RuntimeError(f"Invalid HTML media token height in {raw_body!r}; use height=<positive pixel integer>")
             token["height"] = int(value)
         return token
-
-    def interactive_html_asset_relative_path(self, filename: str) -> Path:
-        return Path("site/assets/docs/interactive") / self.scope_id / filename
 
     def html_attrs(self, attrs: dict[str, Any]) -> str:
         return " ".join(f'{key}="{html.escape(str(value), quote=True)}"' for key, value in attrs.items())

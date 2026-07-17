@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from docs_management_test_support import docs_scope_config, make_repo, write_docs_scope_config, write_json
@@ -221,3 +222,81 @@ def test_docs_scope_config_rejects_public_sub_scope_projection_outside_parent() 
             assert "public documents must be site/assets/data/docs/scopes/research/tags" in str(exc)
         else:
             raise AssertionError("Expected public sub_scope projection outside the parent root to be rejected")
+
+
+def test_docs_scope_config_accepts_explicit_mermaid_to_img_build_contract() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        record = docs_scope_record("studio", default_doc_id="child")
+        record["source"]["build_media"] = {  # type: ignore[index]
+            "mermaid": {
+                "path": "media/mermaid",
+                "producer": "mermaid-cli",
+                "publishes_to": "img",
+            }
+        }
+        record["published"]["media"]["img"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
+        write_scope_record(repo_root, record)
+
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
+
+    assert config.source.build_media["mermaid"].path == Path("media/mermaid")
+    assert config.published.media["img"].build_inputs == ("mermaid",)
+
+
+def test_docs_scope_config_rejects_unhandled_media_types() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        record = docs_scope_record("studio", default_doc_id="child")
+        record["published"]["media"]["video"] = {  # type: ignore[index]
+            "reference_prefix": "docs/studio/video",
+            "location": {
+                "provider": "repository",
+                "path": "docs-viewer/published/docs/studio/media/video",
+            },
+            "served_path_prefix": "/docs/media/studio/video",
+            "build_inputs": [],
+        }
+        write_scope_record(repo_root, record)
+
+        try:
+            docs_scope_config.load_docs_scope_configs(repo_root)
+        except ValueError as exc:
+            assert "unsupported published media type" in str(exc)
+        else:
+            raise AssertionError("Expected unhandled published media type to require an explicit contract")
+
+
+def test_docs_scope_policy_rejects_competing_producers_for_one_published_type() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        record = docs_scope_record("studio", default_doc_id="child")
+        write_scope_record(repo_root, record)
+        config = docs_scope_config.load_docs_scope_configs(repo_root)["studio"]
+
+    builds = {
+        "mermaid": docs_scope_config.DocsBuildMediaConfig(
+            path=Path("media/mermaid"),
+            producer="first",
+            publishes_to="img",
+        ),
+        "other": docs_scope_config.DocsBuildMediaConfig(
+            path=Path("media/other"),
+            producer="second",
+            publishes_to="img",
+        ),
+    }
+    media = dict(config.published.media)
+    media["img"] = replace(media["img"], build_inputs=("mermaid", "other"))
+    competing = replace(
+        config,
+        source=replace(config.source, build_media=builds),
+        published=replace(config.published, media=media),
+    )
+
+    try:
+        docs_scope_config.validate_scope_policy(competing, field="scopes[0]")
+    except ValueError as exc:
+        assert "compete for published media 'img'" in str(exc)
+    else:
+        raise AssertionError("Expected competing media producers to be rejected")

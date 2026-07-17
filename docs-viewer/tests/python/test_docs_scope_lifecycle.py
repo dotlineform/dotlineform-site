@@ -806,11 +806,11 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             default_doc_id = source_payload["scopes"][1]["default_doc_id"]
             default_doc_text = (repo_root / f"docs-viewer/source/notes/documents/{default_doc_id}.md").read_text(encoding="utf-8")
             media_directories_exist = all(
-                (repo_root / "docs-viewer/source/notes/media" / media_class).is_dir()
+                (repo_root / "docs-viewer/published/docs/notes/media" / media_class).is_dir()
                 for media_class in ("files", "img")
             )
             media_markers_exist = all(
-                (repo_root / "docs-viewer/source/notes/media" / media_class / ".gitkeep").is_file()
+                (repo_root / "docs-viewer/published/docs/notes/media" / media_class / ".gitkeep").is_file()
                 for media_class in ("files", "img")
             )
             route_exists = (repo_root / "notes/index.md").exists()

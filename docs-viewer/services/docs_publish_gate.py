@@ -18,6 +18,7 @@ from docs_scope_config import (
     public_search_path,
     published_documents_path,
     published_search_path,
+    resolve_location_path,
     resolve_scope_path,
 )
 
@@ -314,15 +315,33 @@ def publishable_docs_files(
     return files
 
 
-def publishable_parent_docs_files(config: DocsScopeConfig, working_root: Path, published_root: Path) -> dict[Path, bytes]:
+def media_relative_prefixes(repo_root: Path, config: DocsScopeConfig, root: Path) -> tuple[Path, ...]:
+    resolved_root = root.resolve()
+    prefixes: list[Path] = []
+    for media in config.published.media.values():
+        try:
+            media_root = resolve_location_path(repo_root, media.location).resolve()
+        except ValueError:
+            continue
+        if media_root != resolved_root and path_is_relative_to(media_root, resolved_root):
+            prefixes.append(media_root.relative_to(resolved_root))
+    return tuple(sorted(set(prefixes)))
+
+
+def publishable_parent_docs_files(
+    repo_root: Path,
+    config: DocsScopeConfig,
+    working_root: Path,
+    published_root: Path,
+) -> dict[Path, bytes]:
     files = publishable_docs_files(working_root, published_root, require_publication_recent=True)
-    sub_scope_prefixes = sub_scope_relative_prefixes(config)
-    if not sub_scope_prefixes:
+    excluded_prefixes = sub_scope_relative_prefixes(config) + media_relative_prefixes(repo_root, config, working_root)
+    if not excluded_prefixes:
         return files
     return {
         rel: source_bytes
         for rel, source_bytes in files.items()
-        if not any(path_is_relative_to(rel, prefix) for prefix in sub_scope_prefixes)
+        if not any(path_is_relative_to(rel, prefix) for prefix in excluded_prefixes)
     }
 
 
@@ -364,12 +383,21 @@ def docs_diff(
 
 
 def parent_docs_diff(repo_root: Path, config: DocsScopeConfig, working_root: Path, published_root: Path) -> dict[str, list[str]]:
+    ignored_prefixes = (
+        sub_scope_relative_prefixes(config)
+        + media_relative_prefixes(repo_root, config, published_root)
+    )
     return docs_diff(
         repo_root,
         working_root,
         published_root,
-        publishable_files=publishable_parent_docs_files(config, working_root, published_root.relative_to(repo_root.resolve())),
-        ignored_existing_prefixes=sub_scope_relative_prefixes(config),
+        publishable_files=publishable_parent_docs_files(
+            repo_root,
+            config,
+            working_root,
+            published_root.relative_to(repo_root.resolve()),
+        ),
+        ignored_existing_prefixes=ignored_prefixes,
     )
 
 
@@ -487,11 +515,15 @@ def publish_apply(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         paths["working_docs_root"],
         paths["published_docs_root"],
         publishable_files=publishable_parent_docs_files(
+            repo_root,
             config,
             paths["working_docs_root"],
             paths["published_docs_root"].relative_to(repo_root.resolve()),
         ),
-        ignored_existing_prefixes=sub_scope_relative_prefixes(config),
+        ignored_existing_prefixes=(
+            sub_scope_relative_prefixes(config)
+            + media_relative_prefixes(repo_root, config, paths["published_docs_root"])
+        ),
     )
     for sub_scope in config.sub_scopes:
         sub_paths = sub_scope_paths[sub_scope.sub_scope]

@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from docs_lifecycle_paths import path_record, write_text_atomic
-from docs_media_storage import ensure_media_directory_structure
+from docs_media_storage import ensure_configured_scope_owned_media_directories
 from docs_route_lifecycle import (
     append_public_route_record,
     normalize_route_path,
@@ -107,11 +107,6 @@ def apply_create_scope(
         source_root.mkdir(parents=True, exist_ok=False)
         documents_root.mkdir(exist_ok=False)
         sub_scopes_root.mkdir(exist_ok=False)
-        if preview["publishing_mode"] != PUBLIC_MODE:
-            ensure_media_directory_structure(
-                source_root / "media",
-                keep_in_source_control=preview["publishing_mode"] == LOCAL_COMMITTED_MODE,
-            )
         write_text_atomic(
             default_doc_path,
             default_source_doc_text(
@@ -121,6 +116,11 @@ def apply_create_scope(
             ),
         )
         append_scope_config(repo_root, preview["planned_scope_config"])
+        created_config = load_docs_scope_configs(repo_root)[scope_id]
+        ensure_configured_scope_owned_media_directories(
+            repo_root,
+            {scope_id: created_config},
+        )
         if preview["urls"]["public"]:
             route_path = route_file_for_public_path(repo_root, str(preview["urls"]["public"]))
             write_text_atomic(
@@ -236,11 +236,19 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         path_record(repo_root, "source_sub_scopes_root", created_sub_scopes_root, action="create"),
     ]
     if publishing_mode != PUBLIC_MODE:
+        raw_media = planned_scope_config["published"]["media"]
+        media_paths = {
+            media_type: (
+                created_source_root / "media" / media_type
+                if publishing_mode == LOCAL_EXTERNAL_MODE
+                else repo_root / str(raw_media[media_type]["location"]["path"])
+            )
+            for media_type in ("files", "img")
+        }
         created_files.extend(
             [
-                path_record(repo_root, "scope_media_root", created_source_root / "media", action="create"),
-                path_record(repo_root, "scope_media_img_root", created_source_root / "media" / "img", action="create"),
-                path_record(repo_root, "scope_media_files_root", created_source_root / "media" / "files", action="create"),
+                path_record(repo_root, "scope_media_img_root", media_paths["img"], action="create"),
+                path_record(repo_root, "scope_media_files_root", media_paths["files"], action="create"),
             ]
         )
     if publishing_mode == LOCAL_COMMITTED_MODE:
@@ -249,13 +257,13 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
                 path_record(
                     repo_root,
                     "scope_media_img_marker",
-                    created_source_root / "media" / "img" / ".gitkeep",
+                    media_paths["img"] / ".gitkeep",
                     action="create",
                 ),
                 path_record(
                     repo_root,
                     "scope_media_files_marker",
-                    created_source_root / "media" / "files" / ".gitkeep",
+                    media_paths["files"] / ".gitkeep",
                     action="create",
                 ),
             ]

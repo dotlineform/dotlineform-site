@@ -48,7 +48,7 @@
         },
         "html": {
           "reference_prefix": "docs/library/html",
-          "served_path_prefix": "/assets/docs/interactive/library"
+          "served_path_prefix": "/assets/data/docs/scopes/library/media/html"
         },
         "img": {
           "reference_prefix": "docs/library/img",

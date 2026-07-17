@@ -22,16 +22,19 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
 )
 from docs_scope_config import (
+    PUBLISHED_MEDIA_TYPES,
     DocsPublishedMediaConfig,
     DocsScopeConfig,
     load_docs_scope_configs,
     published_media_config,
+    resolve_location_path,
 )
 from services.paths import configured_workspace_paths
 from studio.services.media.publish_media_to_r2 import content_type_for, file_md5
 
 
-DOCS_MEDIA_CLASSES = {"files", "img"}
+DOCS_MEDIA_CLASSES = set(PUBLISHED_MEDIA_TYPES)
+DOCS_MEDIA_ROUTE_CLASSES = {"files", "img"}
 DOCS_MEDIA_ROUTE_PREFIX = "/docs/media/"
 SUCCESSFUL_UPLOAD_STATUSES = {"unchanged", "uploaded", "overwritten"}
 
@@ -62,6 +65,14 @@ def validate_media_class(value: str) -> str:
     if media_class not in DOCS_MEDIA_CLASSES:
         supported = ", ".join(sorted(DOCS_MEDIA_CLASSES))
         raise ValueError(f"Docs media class must be one of: {supported}")
+    return media_class
+
+
+def validate_route_media_class(value: str) -> str:
+    media_class = str(value or "").strip().lower()
+    if media_class not in DOCS_MEDIA_ROUTE_CLASSES:
+        supported = ", ".join(sorted(DOCS_MEDIA_ROUTE_CLASSES))
+        raise ValueError(f"Docs media route class must be one of: {supported}")
     return media_class
 
 
@@ -347,44 +358,6 @@ def local_media_config(config: DocsScopeConfig, media_class: str) -> DocsPublish
     return media
 
 
-def scope_owned_media_root_for_scope(repo_root: Path, config: DocsScopeConfig) -> Path:
-    roots = {
-        artifact_location_adapter(repo_root, local_media_config(config, media_class).location).root.parent
-        for media_class in sorted(DOCS_MEDIA_CLASSES)
-    }
-    if len(roots) != 1:
-        raise ValueError(f"Docs scope {config.scope_id!r} local media types do not share one owned media root")
-    return next(iter(roots))
-
-
-def ensure_media_directory_structure(
-    media_root: Path,
-    *,
-    keep_in_source_control: bool = False,
-) -> tuple[Path, ...]:
-    resolved_media_root = media_root.resolve()
-    source_root = resolved_media_root.parent
-    if not source_root.is_dir():
-        raise FileNotFoundError(f"Docs scope source root does not exist: {source_root}")
-    directories = (
-        resolved_media_root,
-        *(resolved_media_root / media_class for media_class in sorted(DOCS_MEDIA_CLASSES)),
-    )
-    for directory in directories:
-        if directory.is_symlink():
-            raise ValueError(f"Configured Docs media directory must not be a symlink: {directory}")
-        if directory.exists() and not directory.is_dir():
-            raise NotADirectoryError(f"Configured Docs media directory is not a directory: {directory}")
-        directory.mkdir(exist_ok=True)
-    if keep_in_source_control:
-        for directory in directories[1:]:
-            marker = directory / ".gitkeep"
-            if marker.is_symlink() or (marker.exists() and not marker.is_file()):
-                raise ValueError(f"Configured Docs media marker must be a regular file: {marker}")
-            marker.touch(exist_ok=True)
-    return directories
-
-
 def ensure_configured_scope_owned_media_directories(
     repo_root: Path,
     configs: Mapping[str, DocsScopeConfig] | None = None,
@@ -392,18 +365,30 @@ def ensure_configured_scope_owned_media_directories(
     configured_scopes = configs if configs is not None else load_docs_scope_configs(repo_root)
     materialized: dict[str, tuple[Path, ...]] = {}
     for scope_id, config in configured_scopes.items():
-        providers = {
-            media.location.provider
-            for media_type, media in config.published.media.items()
-            if media_type in DOCS_MEDIA_CLASSES
-        }
-        if not providers or not providers.issubset({REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}):
-            continue
-        media_root = scope_owned_media_root_for_scope(repo_root, config)
-        materialized[scope_id] = ensure_media_directory_structure(
-            media_root,
-            keep_in_source_control=providers == {REPOSITORY_PROVIDER},
-        )
+        directories: list[Path] = []
+        for media in config.published.media.values():
+            if media.location.provider not in {REPOSITORY_PROVIDER, EXTERNAL_LOCAL_PROVIDER}:
+                continue
+            media_root = resolve_location_path(repo_root, media.location)
+            unresolved_root = (
+                repo_root.resolve() / media.location.path
+                if media.location.provider == REPOSITORY_PROVIDER
+                else media.location.path
+            )
+            if unresolved_root.is_symlink():
+                raise ValueError(f"Configured Docs media directory must not be a symlink: {unresolved_root}")
+            if unresolved_root.exists() and not unresolved_root.is_dir():
+                raise NotADirectoryError(f"Configured Docs media directory is not a directory: {unresolved_root}")
+            media_root.mkdir(parents=True, exist_ok=True)
+            if media.location.provider == REPOSITORY_PROVIDER:
+                marker = media_root / ".gitkeep"
+                if marker.is_symlink() or (marker.exists() and not marker.is_file()):
+                    raise ValueError(f"Configured Docs media marker must be a regular file: {marker}")
+                if not any(media_root.iterdir()):
+                    marker.touch()
+            directories.append(media_root)
+        if directories:
+            materialized[scope_id] = tuple(sorted(directories))
     return materialized
 
 
@@ -411,7 +396,10 @@ def local_media_route(scope: str, media_class: str, filename: str) -> str:
     normalized_scope = str(scope or "").strip().lower()
     if not normalized_scope or "/" in normalized_scope or "\\" in normalized_scope:
         raise ValueError("Docs media scope must be one safe scope id")
-    return f"{DOCS_MEDIA_ROUTE_PREFIX}{normalized_scope}/{validate_media_class(media_class)}/{validate_media_filename(filename)}"
+    return (
+        f"{DOCS_MEDIA_ROUTE_PREFIX}{normalized_scope}/"
+        f"{validate_route_media_class(media_class)}/{validate_media_filename(filename)}"
+    )
 
 
 def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Path, str]:
@@ -421,7 +409,7 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
     if len(parts) != 3:
         raise ValueError("Invalid Docs media route")
     scope, media_class, filename = parts
-    normalized_class = validate_media_class(media_class)
+    normalized_class = validate_route_media_class(media_class)
     normalized_filename = validate_media_filename(filename)
     config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
@@ -437,13 +425,14 @@ def local_media_path_from_route(repo_root: Path, request_path: str) -> tuple[Pat
 def safe_content_type(path: Path) -> str:
     content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
     if content_type in {"text/html", "application/xhtml+xml"}:
-        raise ValueError("Interactive HTML is not served through the ordinary Docs media route")
+        raise ValueError("HTML media is not served through the ordinary Docs media route")
     return content_type
 
 
 __all__ = [
     "DOCS_MEDIA_CLASSES",
     "DOCS_MEDIA_ROUTE_PREFIX",
+    "DOCS_MEDIA_ROUTE_CLASSES",
     "DocsMediaFile",
     "DocsMediaPublishResult",
     "artifact_matches",
@@ -451,7 +440,6 @@ __all__ = [
     "docs_publish_report",
     "docs_publish_succeeded",
     "ensure_configured_scope_owned_media_directories",
-    "ensure_media_directory_structure",
     "local_media_config",
     "local_media_path_from_route",
     "local_media_route",
@@ -460,5 +448,4 @@ __all__ = [
     "publish_docs_media_files",
     "run_docs_staged_media_publish",
     "safe_content_type",
-    "scope_owned_media_root_for_scope",
 ]

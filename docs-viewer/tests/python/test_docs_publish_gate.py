@@ -30,19 +30,29 @@ def write_text(path: Path, text: str) -> None:
 
 
 def write_scope_config(root: Path) -> None:
+    library = docs_scope_record(
+        "library",
+        scope_type="public",
+        viewer_base_url="/library/",
+        include_scope_param=False,
+        default_doc_id="library",
+    )
+    library["published"]["media"]["html"] = {  # type: ignore[index]
+        "reference_prefix": "docs/library/html",
+        "location": {
+            "provider": "repository",
+            "path": "site/assets/data/docs/scopes/library/media/html",
+        },
+        "served_path_prefix": "/assets/data/docs/scopes/library/media/html",
+        "build_inputs": [],
+    }
     write_json(
         root / "docs-viewer/config/scopes/docs_scopes.json",
         {
             "schema_version": "docs_scopes_v2",
             "scopes": [
                 docs_scope_record("studio", default_doc_id="studio"),
-                docs_scope_record(
-                    "library",
-                    scope_type="public",
-                    viewer_base_url="/library/",
-                    include_scope_param=False,
-                    default_doc_id="library",
-                ),
+                library,
             ],
         },
     )
@@ -141,6 +151,10 @@ def prepare_publish_repo(root: Path) -> None:
     write_json(root / "site/assets/data/docs/scopes/library/index-tree.json", {"docs": []})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/stale.json", {"title": "Stale"})
     write_json(root / "site/assets/data/docs/scopes/library/by-id/hidden.json", {"title": "Old Hidden"})
+    write_text(
+        root / "site/assets/data/docs/scopes/library/media/html/widget.html",
+        "<!doctype html><title>Widget</title>",
+    )
     write_json(root / "site/assets/data/search/library/index.json", {"entries": []})
 
 
@@ -156,6 +170,7 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert preview["changed_count"] >= 3
         assert "site/assets/data/docs/scopes/library/by-id/stale.json" in preview["docs"]["removed"]
         assert "site/assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
+        assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["removed"]
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
         recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
@@ -172,6 +187,7 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-doc/hidden.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-target/work/00638.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").exists()
+        assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
         assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
 
 

@@ -17,13 +17,13 @@
         "media": {
           "img": {
             "reference_prefix": "docs/studio/img",
-            "location": { "provider": "repository", "path": "docs-viewer/source/studio/media/img" },
+            "location": { "provider": "repository", "path": "docs-viewer/published/docs/studio/media/img" },
             "served_path_prefix": "/docs/media/studio/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/studio/files",
-            "location": { "provider": "repository", "path": "docs-viewer/source/studio/media/files" },
+            "location": { "provider": "repository", "path": "docs-viewer/published/docs/studio/media/files" },
             "served_path_prefix": "/docs/media/studio/files",
             "build_inputs": []
           }
@@ -66,8 +66,8 @@
           },
           "html": {
             "reference_prefix": "docs/library/html",
-            "location": { "provider": "repository", "path": "site/assets/docs/interactive/library" },
-            "served_path_prefix": "/assets/docs/interactive/library",
+            "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/library/media/html" },
+            "served_path_prefix": "/assets/data/docs/scopes/library/media/html",
             "build_inputs": []
           }
         }
@@ -237,13 +237,13 @@
         "media": {
           "img": {
             "reference_prefix": "docs/processing/img",
-            "location": { "provider": "repository", "path": "docs-viewer/source/processing/media/img" },
+            "location": { "provider": "repository", "path": "docs-viewer/published/docs/processing/media/img" },
             "served_path_prefix": "/docs/media/processing/img",
             "build_inputs": []
           },
           "files": {
             "reference_prefix": "docs/processing/files",
-            "location": { "provider": "repository", "path": "docs-viewer/source/processing/media/files" },
+            "location": { "provider": "repository", "path": "docs-viewer/published/docs/processing/media/files" },
             "served_path_prefix": "/docs/media/processing/files",
             "build_inputs": []
           }

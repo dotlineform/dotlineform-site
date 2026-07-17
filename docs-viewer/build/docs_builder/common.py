@@ -27,10 +27,12 @@ from docs_scope_config import (  # noqa: E402
     public_search_path,
     publication_documents_path,
     published_documents_path,
+    published_media_config,
     published_search_path,
     resolve_scope_path,
     scope_uses_external_data,
 )
+from docs_artifact_locations import local_artifact_path, normalize_artifact_identity  # noqa: E402
 from markdown_renderer import plain_text_from_html, render_markdown_to_html  # noqa: E402
 
 
@@ -44,10 +46,9 @@ DEFAULT_RECENT_LIMIT = 10
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")
 MEDIA_IMAGE_TOKEN_PATTERN = re.compile(r"!\[(?P<alt>(?:\\.|[^\]\\])*)\]\(\s*\[\[media:(?P<body>.+?)\]\]\s*\)")
-INTERACTIVE_HTML_TOKEN_PATTERN = re.compile(r"\[\[interactive-html:(.+?)\]\]")
+HTML_MEDIA_TOKEN_PATTERN = re.compile(r"\[\[html-media:(.+?)\]\]")
 SEMANTIC_REF_TOKEN_PATTERN = re.compile(r"\[\[ref:(.*?)\]\](\{[^}\n]*\})?", re.DOTALL)
-INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9._-]*\.html\Z", re.IGNORECASE)
-INTERACTIVE_HTML_HEIGHT_PATTERN = re.compile(r"\A[1-9][0-9]{0,3}\Z")
+HTML_MEDIA_HEIGHT_PATTERN = re.compile(r"\A[1-9][0-9]{0,3}\Z")
 IMG_PATTERN = re.compile(r"<img\b([^>]*)>", re.IGNORECASE)
 HTML_ATTR_PATTERN_TEMPLATE = r"\b{}\s*=\s*([\"'])(.*?)\1"
 INTEGER_PATTERN = re.compile(r"^-?\d+$")

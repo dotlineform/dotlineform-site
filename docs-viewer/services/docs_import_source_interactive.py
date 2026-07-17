@@ -1,20 +1,35 @@
 #!/usr/bin/env python3
-"""Interactive HTML asset handling for staged Docs source imports."""
+"""Sandboxed HTML media handling for staged Docs source imports."""
 
 from __future__ import annotations
 
 import re
-import shutil
+import tempfile
 from pathlib import Path
 from typing import Any, Dict
 
+from docs_artifact_locations import artifact_location_adapter, authenticated_remote_client_for_locations
 from docs_import_common import HTML_STAGED_SUFFIXES, is_interactive_html_import_asset
-from docs_import_source_helpers import relative_path
+from docs_media_storage import docs_media_file, docs_publish_succeeded, publish_docs_media_files
+from docs_scope_config import load_docs_scope_configs, published_media_config
 from docs_source_model import normalize_scope, slugify
 from services.paths import marker_path
 
-INTERACTIVE_HTML_ASSET_REL_ROOT = Path("site/assets/docs/interactive")
 INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
+
+
+def _html_media_adapter(repo_root: Path, scope: str):
+    config = load_docs_scope_configs(repo_root).get(scope)
+    if config is None:
+        raise ValueError(f"Unknown Docs media scope: {scope!r}")
+    media = published_media_config(config, "html")
+    remote_client = authenticated_remote_client_for_locations(repo_root, [media.location])
+    return config, media, artifact_location_adapter(
+        repo_root,
+        media.location,
+        served_path_prefix=media.served_path_prefix,
+        remote_client=remote_client,
+    )
 
 def interactive_html_staged_paths(staging_root: Path) -> list[Path]:
     staging_root = staging_root.resolve()
@@ -41,22 +56,20 @@ def interactive_html_asset_plan_for_path(
         raise ValueError(f"Interactive HTML asset filename must be a simple slug ending in .html: {filename}")
 
     normalized_scope = normalize_scope(scope)
-    target_rel = INTERACTIVE_HTML_ASSET_REL_ROOT / normalized_scope / filename
-    target_root = (repo_root / INTERACTIVE_HTML_ASSET_REL_ROOT / normalized_scope).resolve()
-    target_path = (repo_root / target_rel).resolve()
-    if not target_path.is_relative_to(target_root):
-        raise ValueError(f"Interactive HTML target escapes scope asset root: {target_rel.as_posix()}")
+    _config, media, adapter = _html_media_adapter(repo_root, normalized_scope)
+    media_path = f"{media.reference_prefix.as_posix()}/{filename}"
 
     return {
+        "scope": normalized_scope,
         "source_path": marker_path(source_path, workspace_root=workspace_root),
-        "target_path": target_rel.as_posix(),
-        "public_path": f"/assets/docs/interactive/{normalized_scope}/{filename}",
-        "token": f"[[interactive-html:{filename}]]",
+        "target_path": media_path,
+        "public_path": adapter.served_reference(filename),
+        "token": f"[[html-media:{media_path}]]",
         "filename": filename,
         "staged_filename": source_path.name,
         "display_name": Path(filename).stem,
         "result_type": "script file",
-        "target_exists": target_path.exists(),
+        "target_exists": adapter.stat(filename) is not None,
     }
 
 
@@ -103,29 +116,45 @@ def materialize_interactive_html_asset(
     if staged_path.is_symlink():
         raise ValueError("Interactive HTML asset source must not be a symlink.")
     source_path = staged_path.resolve()
-    target_path = (repo_root / str(plan.get("target_path") or "")).resolve()
     staging_root = staging_root.resolve()
-    target_root = (repo_root / INTERACTIVE_HTML_ASSET_REL_ROOT / target_path.parent.name).resolve()
     if not source_path.is_relative_to(staging_root):
         raise ValueError("Interactive HTML asset source escapes import staging root.")
-    if not target_path.is_relative_to(target_root):
-        raise ValueError("Interactive HTML asset target escapes scope asset root.")
-    target_existed = target_path.exists()
+    scope = normalize_scope(str(plan.get("scope") or ""))
+    config, _media, adapter = _html_media_adapter(repo_root, scope)
+    target_existed = adapter.stat(staged_filename if not plan.get("filename") else str(plan["filename"])) is not None
     if target_existed and not allow_overwrite:
         raise FileExistsError(
-            f"Interactive HTML asset already exists: {relative_path(repo_root, target_path)}"
+            f"Interactive HTML asset already exists: {plan.get('target_path')}"
         )
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source_path, target_path)
+    target_filename = str(plan.get("filename") or source_path.name)
+    with tempfile.TemporaryDirectory(prefix="docs-html-media-") as temp_dir:
+        publication_root = Path(temp_dir)
+        publication_path = publication_root / target_filename
+        publication_path.write_bytes(source_path.read_bytes())
+        item = docs_media_file(
+            config,
+            media_class="html",
+            local_path=publication_path,
+            source_root=publication_root,
+        )
+        results = publish_docs_media_files(
+            repo_root,
+            [item],
+            write=True,
+            force=allow_overwrite,
+        )
+    if not docs_publish_succeeded(results):
+        status = results[0].status if results else "not_attempted"
+        raise RuntimeError(f"HTML media publication did not complete: {status}")
     return {
         "source_path": str(plan.get("source_path") or ""),
-        "target_path": relative_path(repo_root, target_path),
+        "target_path": str(plan.get("target_path") or ""),
         "public_path": str(plan.get("public_path") or ""),
         "token": str(plan.get("token") or ""),
-        "filename": str(plan.get("filename") or target_path.name),
-        "display_name": str(plan.get("display_name") or target_path.stem),
+        "filename": item.filename,
+        "display_name": str(plan.get("display_name") or Path(item.filename).stem),
         "result_type": "script file",
-        "size_bytes": target_path.stat().st_size,
+        "size_bytes": item.size,
         "overwrote": target_existed,
     }
 

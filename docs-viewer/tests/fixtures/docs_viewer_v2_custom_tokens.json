@@ -16,7 +16,7 @@
       "viewer_url": "/library/?doc=token-fixture"
     },
     "media_base": "https://media.dotlineform.com",
-    "interactive_asset_root": "assets/docs/interactive/library",
+    "html_media_root": "site/assets/data/docs/scopes/library/media/html",
     "catalogue_records": {
       "work": {
         "00638": {
@@ -77,16 +77,16 @@
       }
     },
     {
-      "id": "interactive_html_iframe",
-      "covers": ["interactive_html_token", "generated_search_text"],
-      "source_markdown": "[[interactive-html:coincidence-salience.html height=546]]",
+      "id": "html_media_iframe",
+      "covers": ["html_media_token", "generated_search_text"],
+      "source_markdown": "[[html-media:docs/library/html/coincidence-salience.html height=546]]",
       "context": {
         "interactive_assets": ["coincidence-salience.html"]
       },
       "expected": {
         "html_contains": [
           "class=\"docsViewer__interactiveFrame\"",
-          "src=\"/assets/docs/interactive/library/coincidence-salience.html\"",
+          "src=\"/assets/data/docs/scopes/library/media/html/coincidence-salience.html\"",
           "sandbox=\"allow-scripts\"",
           "loading=\"lazy\"",
           "title=\"Interactive HTML: coincidence-salience.html\"",
@@ -98,13 +98,13 @@
       }
     },
     {
-      "id": "interactive_html_missing_asset",
-      "covers": ["interactive_html_token", "invalid_missing_reference"],
-      "source_markdown": "[[interactive-html:missing.html]]",
+      "id": "html_media_missing_asset",
+      "covers": ["html_media_token", "invalid_missing_reference"],
+      "source_markdown": "[[html-media:docs/library/html/missing.html]]",
       "context": {
         "interactive_assets": []
       },
-      "expected_error": "Interactive HTML asset not found for scope library: assets/docs/interactive/library/missing.html"
+      "expected_error": "HTML media not found for scope library: docs/library/html/missing.html"
     },
     {
       "id": "semantic_ref_published_work_with_label",

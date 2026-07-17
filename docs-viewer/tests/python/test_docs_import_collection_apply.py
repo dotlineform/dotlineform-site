@@ -490,7 +490,7 @@ def test_collection_apply_materializes_inline_media_and_blocks_source_when_publi
 
         payload = apply_package(root, "media.jsonl", [], rebuild=fake_rebuild([]))
         local_doc_id = payload["records"][0]["doc_id"]
-        media_path = root / "docs-viewer/source/library/media/img" / f"{local_doc_id}-image-01.png"
+        media_path = root / "site/assets/data/docs/scopes/library/media/img" / f"{local_doc_id}-image-01.png"
         _front_matter, body = docs_source_model.parse_source(
                 root / "docs-viewer/source/library/documents" / f"{payload['records'][0]['doc_id']}.md"
         )

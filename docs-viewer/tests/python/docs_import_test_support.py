@@ -100,8 +100,9 @@ def write_scope_config(root: Path) -> None:
                 default_doc_id="library",
                 allow_unresolved_parent_ids=True,
                 media_provider="repository",
-                media_location_root="docs-viewer/source/library/media",
-                media_served_root="/docs/media/library",
+                media_location_root="site/assets/data/docs/scopes/library/media",
+                media_served_root="/assets/data/docs/scopes/library/media",
+                media_types=("img", "files", "html"),
             )
         ],
     )

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_processing_v1",
     "scope": "processing",
-    "version": "blake2b-62102c07be274b2669913b0b677f1790",
-    "generated_at_utc": "2026-07-16T17:15:51Z",
+    "version": "blake2b-cb360cd9949d8d45daf3a75395bfa962",
+    "generated_at_utc": "2026-07-17T20:40:52Z",
     "count": 135
   },
   "entries": [
@@ -1721,23 +1721,23 @@
       "kind": "doc",
       "title": "Processing Project Setup",
       "href": "/docs/?scope=processing&doc=d-20260714-164200-381988",
-      "last_updated": "2026-07-15 10:59:32",
-      "display_meta": "2026-07-15 10:59:32",
+      "last_updated": "2026-07-17 21:30:19",
+      "display_meta": "2026-07-17 21:30:19",
       "search_terms": [
         "processing project setup",
         "processing",
         "project",
         "setup",
-        "2026-07-15 10:59:32",
+        "2026-07-17 21:30:19",
         "2026",
         "07",
-        "15",
-        "10",
-        "59",
-        "32",
+        "17",
+        "21",
+        "30",
+        "19",
         "d-20260714-164200-381988"
       ],
-      "search_text": "processing project setup processing project setup 2026-07-15 10:59:32 2026 07 15 10 59 32 d-20260714-164200-381988"
+      "search_text": "processing project setup processing project setup 2026-07-17 21:30:19 2026 07 17 21 30 19 d-20260714-164200-381988"
     },
     {
       "id": "d-20260714-173500-48f96d",

@@ -474,6 +474,10 @@ def planned_scope_config_record(
             media_provider = "r2"
             media_path = f"docs/{scope_id}/{media_type}"
             served_path = f"https://media.dotlineform.com/docs/{scope_id}/{media_type}"
+        elif publishing_mode == LOCAL_COMMITTED_MODE:
+            media_provider = local_provider
+            media_path = f"{planned_published_docs_path(scope_id, publishing_mode).as_posix()}/media/{media_type}"
+            served_path = f"/docs/media/{scope_id}/{media_type}"
         else:
             media_provider = local_provider
             media_path = f"{source_path}/media/{media_type}"

@@ -77,6 +77,7 @@ def docs_scope_record(
     media_provider: str | None = None,
     media_location_root: str | None = None,
     media_served_root: str | None = None,
+    media_types: tuple[str, ...] = ("img", "files"),
     public_docs_path: str | None = None,
     public_search_path: str | None = None,
     sub_scopes: list[dict[str, object]] | None = None,
@@ -103,7 +104,11 @@ def docs_scope_record(
         "external_local" if external else ("r2" if scope_type == "public" else "repository")
     )
     media_root = media_location_root or (
-        f"{source}/media" if resolved_media_provider in {"repository", "external_local"} else f"docs/{scope_id}"
+        f"{source}/media"
+        if resolved_media_provider == "external_local"
+        else f"docs-viewer/published/docs/{scope_id}/media"
+        if resolved_media_provider == "repository"
+        else f"docs/{scope_id}"
     )
     served_root = (media_served_root or (
         f"https://media.example.test/docs/{scope_id}"
@@ -120,7 +125,7 @@ def docs_scope_record(
             "served_path_prefix": f"{served_root}/{media_type}",
             "build_inputs": [],
         }
-        for media_type in ("img", "files")
+        for media_type in media_types
     }
     public_projection = None
     if scope_type == "public":
@@ -298,8 +303,9 @@ def write_library_scope_config(root: Path, *, allow_unresolved_parent_ids: bool 
                 default_doc_id="library",
                 allow_unresolved_parent_ids=allow_unresolved_parent_ids,
                 media_provider="repository",
-                media_location_root="docs-viewer/source/library/media",
-                media_served_root="/docs/media/library",
+                media_location_root="site/assets/data/docs/scopes/library/media",
+                media_served_root="/assets/data/docs/scopes/library/media",
+                media_types=("img", "files", "html"),
             )
         ],
     )

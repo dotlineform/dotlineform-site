@@ -79,12 +79,13 @@ class DocsReviewDataBuilder(DocsDataBuilder):
             raise RuntimeError(f"Review package media asset is not inventoried: {relative_path}")
         return self._asset_url(str(record.get("package_path") or ""))
 
-    def interactive_html_iframe(self, raw_body: str) -> str:
-        token = self.parse_interactive_html_token(raw_body)
-        filename = token["filename"]
-        record = self._asset_record(filename, kind="interactive")
+    def html_media_iframe(self, raw_body: str) -> str:
+        token = self.parse_html_media_token(raw_body)
+        media_path = token["media_path"]
+        filename = Path(token["identity"]).name
+        record = self._asset_record(media_path, kind="interactive")
         if record is None:
-            raise RuntimeError(f"Review package interactive asset is not inventoried: {filename}")
+            raise RuntimeError(f"Review package HTML media is not inventoried: {media_path}")
         title = f"Interactive HTML: {filename}"
         style_attr = f' style="--docs-viewer-interactive-height: {token["height"]}px"' if token.get("height") else ""
         return (

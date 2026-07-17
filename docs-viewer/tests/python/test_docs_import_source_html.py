@@ -134,18 +134,18 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
             docs_import_preview.validate_markdown_preview = original_validation
 
         source_text = (root / payload["path"]).read_text(encoding="utf-8")
-        asset_path = root / "site/assets/docs/interactive/library/worksheet-widget.html"
+        asset_path = root / "site/assets/data/docs/scopes/library/media/html/worksheet-widget.html"
         asset_text = asset_path.read_text(encoding="utf-8")
-        second_asset_path = root / "site/assets/docs/interactive/library/second-widget.html"
+        second_asset_path = root / "site/assets/data/docs/scopes/library/media/html/second-widget.html"
         second_asset_text = second_asset_path.read_text(encoding="utf-8")
 
     assert payload["ok"] is True
-    assert "[[interactive-html:worksheet-widget.html]]" not in source_text
-    assert payload["import_preview"]["interactive_html_plans"][0]["token"] == "[[interactive-html:second-widget.html]]"
-    assert payload["import_preview"]["interactive_html_plans"][1]["token"] == "[[interactive-html:worksheet-widget.html]]"
+    assert "[[html-media:docs/library/html/worksheet-widget.html]]" not in source_text
+    assert payload["import_preview"]["interactive_html_plans"][0]["token"] == "[[html-media:docs/library/html/second-widget.html]]"
+    assert payload["import_preview"]["interactive_html_plans"][1]["token"] == "[[html-media:docs/library/html/worksheet-widget.html]]"
     assert [item["target_path"] for item in payload["interactive_html_written"]] == [
-        "site/assets/docs/interactive/library/second-widget.html",
-        "site/assets/docs/interactive/library/worksheet-widget.html",
+        "docs/library/html/second-widget.html",
+        "docs/library/html/worksheet-widget.html",
     ]
     assert payload["interactive_html_written"][1]["display_name"] == "worksheet-widget"
     assert payload["interactive_html_written"][1]["result_type"] == "script file"
@@ -187,11 +187,11 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
             write_rebuild.perform_source_write_and_rebuild = original_rebuild
             docs_import_preview.validate_markdown_preview = original_validation
 
-        asset_exists = (root / "site/assets/docs/interactive/library/worksheet-widget.html").exists()
+        asset_exists = (root / "site/assets/data/docs/scopes/library/media/html/worksheet-widget.html").exists()
 
     assert payload["ok"] is True
     assert payload["preview_only"] is True
-    assert payload["import_preview"]["interactive_html_plans"][0]["target_path"] == "site/assets/docs/interactive/library/worksheet-widget.html"
+    assert payload["import_preview"]["interactive_html_plans"][0]["target_path"] == "docs/library/html/worksheet-widget.html"
     assert [file["filename"] for file in files] == ["worksheet.html"]
     assert asset_exists is False
 
@@ -211,7 +211,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
             </html>
             """,
         )
-        existing_asset = root / "site/assets/docs/interactive/library/worksheet-widget.html"
+        existing_asset = root / "site/assets/data/docs/scopes/library/media/html/worksheet-widget.html"
         existing_asset.parent.mkdir(parents=True, exist_ok=True)
         existing_asset.write_text("existing\n", encoding="utf-8")
         original_rebuild = stub_rebuild()
@@ -242,7 +242,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
     assert preview_payload["ok"] is True
     assert preview_payload["preview_only"] is True
     assert preview_payload["requires_interactive_html_confirmation"] is True
-    assert preview_payload["summary_text"] == "Interactive HTML asset overwrite required for site/assets/docs/interactive/library/worksheet-widget.html."
+    assert preview_payload["summary_text"] == "Interactive HTML asset overwrite required for docs/library/html/worksheet-widget.html."
     assert apply_payload["ok"] is True
     assert apply_payload["interactive_html_written"][0]["overwrote"] is True
     assert f"doc_id: {apply_payload['doc_id']}" in source_text
