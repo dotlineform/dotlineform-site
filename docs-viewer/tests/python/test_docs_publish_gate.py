@@ -37,6 +37,15 @@ def write_scope_config(root: Path) -> None:
         include_scope_param=False,
         default_doc_id="library",
     )
+    library["published"]["media"]["img"] = {  # type: ignore[index]
+        "reference_prefix": "docs/library/img",
+        "location": {
+            "provider": "repository",
+            "path": "site/assets/data/docs/scopes/library/media/img",
+        },
+        "served_path_prefix": "/assets/data/docs/scopes/library/media/img",
+        "build_inputs": [],
+    }
     library["published"]["media"]["html"] = {  # type: ignore[index]
         "reference_prefix": "docs/library/html",
         "location": {
@@ -155,6 +164,7 @@ def prepare_publish_repo(root: Path) -> None:
         root / "site/assets/data/docs/scopes/library/media/html/widget.html",
         "<!doctype html><title>Widget</title>",
     )
+    write_text(root / "site/assets/data/docs/scopes/library/media/img/diagram.png", "image bytes")
     write_json(root / "site/assets/data/search/library/index.json", {"entries": []})
 
 
@@ -171,6 +181,7 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert "site/assets/data/docs/scopes/library/by-id/stale.json" in preview["docs"]["removed"]
         assert "site/assets/data/docs/scopes/library/by-id/hidden.json" in preview["docs"]["removed"]
         assert "site/assets/data/docs/scopes/library/media/html/widget.html" not in preview["docs"]["removed"]
+        assert "site/assets/data/docs/scopes/library/media/img/diagram.png" not in preview["docs"]["removed"]
         assert applied["operation"] == "apply"
         public_tree = json.loads((repo_root / "site/assets/data/docs/scopes/library/index-tree.json").read_text(encoding="utf-8"))
         recent = json.loads((repo_root / "site/assets/data/docs/scopes/library/recent.json").read_text(encoding="utf-8"))
@@ -188,6 +199,7 @@ def test_publish_confirm_reports_changes_and_apply_syncs_stale_files() -> None:
         assert not (repo_root / "site/assets/data/docs/scopes/library/references/by-target/work/00638.json").exists()
         assert not (repo_root / "site/assets/data/docs/scopes/library/by-id/stale.json").exists()
         assert (repo_root / "site/assets/data/docs/scopes/library/media/html/widget.html").is_file()
+        assert (repo_root / "site/assets/data/docs/scopes/library/media/img/diagram.png").is_file()
         assert json.loads((repo_root / "site/assets/data/search/library/index.json").read_text(encoding="utf-8"))["entries"][0]["id"] == "library"
 
 
@@ -223,6 +235,7 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
             }
         ]
         assert "site/assets/data/docs/scopes/library/tags/by-id/old.json" not in preview["docs"]["removed"]
+        assert not any("/sub-scopes/tags/" in path for path in preview["docs"]["changed"])
         assert applied["operation"] == "apply"
         public_manifest = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/manifest.json").read_text(encoding="utf-8"))
         public_scale = json.loads((repo_root / "site/assets/data/docs/scopes/library/tags/by-id/scale.json").read_text(encoding="utf-8"))
@@ -230,6 +243,7 @@ def test_publish_confirm_and_apply_include_configured_sub_scope_payloads() -> No
         assert public_manifest == {"doc_ids": "scale"}
         assert public_scale["title"] == "Scale"
         assert not (repo_root / "site/assets/data/docs/scopes/library/tags/by-id/old.json").exists()
+        assert not (repo_root / "site/assets/data/docs/scopes/library/sub-scopes/tags").exists()
 
 
 def test_publish_rejects_configured_sub_scope_without_manifest() -> None:

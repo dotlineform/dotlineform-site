@@ -20,7 +20,7 @@
         },
         "img": {
           "reference_prefix": "docs/library/img",
-          "served_path_prefix": "https://media.dotlineform.com/docs/library/img"
+          "served_path_prefix": "/assets/data/docs/scopes/library/media/img"
         }
       },
       "index_tree_url": "/assets/data/docs/scopes/library/index-tree.json",
@@ -52,7 +52,7 @@
         },
         "img": {
           "reference_prefix": "docs/analysis/img",
-          "served_path_prefix": "https://media.dotlineform.com/docs/analysis/img"
+          "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img"
         }
       },
       "index_tree_url": "/assets/data/docs/scopes/analysis/index-tree.json",

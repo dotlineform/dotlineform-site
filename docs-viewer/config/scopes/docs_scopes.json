@@ -54,8 +54,8 @@
         "media": {
           "img": {
             "reference_prefix": "docs/library/img",
-            "location": { "provider": "r2", "path": "docs/library/img" },
-            "served_path_prefix": "https://media.dotlineform.com/docs/library/img",
+            "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/library/media/img" },
+            "served_path_prefix": "/assets/data/docs/scopes/library/media/img",
             "build_inputs": []
           },
           "files": {
@@ -100,8 +100,8 @@
         "media": {
           "img": {
             "reference_prefix": "docs/analysis/img",
-            "location": { "provider": "r2", "path": "docs/analysis/img" },
-            "served_path_prefix": "https://media.dotlineform.com/docs/analysis/img",
+            "location": { "provider": "repository", "path": "site/assets/data/docs/scopes/analysis/media/img" },
+            "served_path_prefix": "/assets/data/docs/scopes/analysis/media/img",
             "build_inputs": []
           },
           "files": {
