@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9700c683e18638ddf659147027102e2e",
-    "generated_at_utc": "2026-07-16T23:13:40Z",
+    "version": "blake2b-7aa6f2210adb70ff8deb835bbcf80c9f",
+    "generated_at_utc": "2026-07-17T09:33:55Z",
     "count": 235
   },
   "entries": [
@@ -3689,27 +3689,25 @@
     {
       "id": "d-20260715-181845-0158f9",
       "kind": "doc",
-      "title": "Document Visualisations",
+      "title": "Diagrams",
       "href": "/docs/?scope=studio&doc=d-20260715-181845-0158f9",
-      "last_updated": "2026-07-16",
+      "last_updated": "2026-07-17",
       "parent_id": "d-20260714-234030-1e0af6",
       "parent_title": "Docs Viewer Roadmap",
-      "display_meta": "2026-07-16 • Docs Viewer Roadmap",
+      "display_meta": "2026-07-17 • Docs Viewer Roadmap",
       "search_terms": [
-        "document visualisations",
-        "document",
-        "visualisations",
+        "diagrams",
         "docs viewer roadmap",
         "docs",
         "viewer",
         "roadmap",
-        "2026-07-16",
+        "2026-07-17",
         "2026",
         "07",
-        "16",
+        "17",
         "d-20260715-181845-0158f9"
       ],
-      "search_text": "document visualisations document visualisations docs viewer roadmap docs viewer roadmap 2026-07-16 2026 07 16 d-20260715-181845-0158f9"
+      "search_text": "diagrams docs viewer roadmap docs viewer roadmap 2026-07-17 2026 07 17 d-20260715-181845-0158f9"
     },
     {
       "id": "d-20260715-181845-524859",
@@ -3718,21 +3716,21 @@
       "href": "/docs/?scope=studio&doc=d-20260715-181845-524859",
       "last_updated": "2026-07-17",
       "parent_id": "d-20260715-181845-0158f9",
-      "parent_title": "Document Visualisations",
-      "display_meta": "2026-07-17 • Document Visualisations",
+      "parent_title": "Diagrams",
+      "display_meta": "2026-07-17 • Diagrams",
       "search_terms": [
         "document visualisations concept",
         "document",
         "visualisations",
         "concept",
-        "document visualisations",
+        "diagrams",
         "2026-07-17",
         "2026",
         "07",
         "17",
         "d-20260715-181845-524859"
       ],
-      "search_text": "document visualisations concept document visualisations concept document visualisations 2026-07-17 2026 07 17 d-20260715-181845-524859"
+      "search_text": "document visualisations concept document visualisations concept diagrams 2026-07-17 2026 07 17 d-20260715-181845-524859"
     },
     {
       "id": "d-20260714-194217-b2bdd7",

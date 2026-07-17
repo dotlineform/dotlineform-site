@@ -857,7 +857,7 @@
             },
             {
               "doc_id": "d-20260715-181845-0158f9",
-              "title": "Document Visualisations",
+              "title": "Diagrams",
               "content_url": "/docs-viewer/generated/docs/studio/by-id/d-20260715-181845-0158f9.json",
               "ui_status": "proposed",
               "children": [
@@ -1332,5 +1332,5 @@
       ]
     }
   ],
-  "generated_at": "2026-07-16T22:58:34Z"
+  "generated_at": "2026-07-17T09:33:54Z"
 }
